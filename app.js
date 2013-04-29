@@ -8,9 +8,8 @@ Ext.application({
             layout: 'fit',
             items: [
                 {
-                    xtype: 'panel',
-                    title: 'Probenauswahlmaske',
-                    html: 'Probenliste wird hier angezeigt.'
+                    xtype: 'probenlist',
+                    title: 'Probenauswahlmaske'
                 }
             ]
         });

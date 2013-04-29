@@ -1,5 +1,8 @@
 Ext.define('Lada.controller.Proben', {
     extend: 'Ext.app.Controller',
+    views: [
+        'proben.List'
+    ],
     init: function() {
         console.log('Initialising the Proben controller');
         this.control({
