@@ -6,10 +6,10 @@ Ext.application({
         console.log('Launching the application');
         Ext.create('Ext.container.Viewport', {
             layout: 'fit',
+            title: 'Probenauswahlmaske',
             items: [
                 {
-                    xtype: 'sqllist',
-                    title: 'Probenauswahlmaske'
+                    xtype: 'sqllist'
                 }
             ]
         });
