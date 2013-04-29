@@ -3,6 +3,9 @@ Ext.define('Lada.controller.Sql', {
     views: [
         'sql.List'
     ],
+    stores: [
+        'Sql'
+    ],
     init: function() {
         console.log('Initialising the Sql controller');
         this.control({
