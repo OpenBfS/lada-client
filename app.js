@@ -6,8 +6,11 @@ Ext.application({
     launch: function() {
         // Start the application.
         console.log('Launching the application');
-        Ext.create('Ext.container.Viewport', {
-            layout: 'fit',
+
+        // This code works here, but this should usually be done in the
+        // Viewport.js class.
+        Ext.create('Ext.panel.Panel', {
+            renderTo: Ext.getBody(),
             title: 'Probenauswahlmaske',
             items: [
                 {
