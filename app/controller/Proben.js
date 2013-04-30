@@ -3,6 +3,12 @@ Ext.define('Lada.controller.Proben', {
     views: [
         'proben.List'
     ],
+    stores: [
+        'Proben'
+    ],
+    models: [
+        'Probe'
+    ],
     init: function() {
         console.log('Initialising the Proben controller');
         this.control({
