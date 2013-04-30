@@ -1,7 +1,6 @@
 Ext.define('Lada.view.proben.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.probenlist',
-    title: 'Alle Proben',
     store: 'Proben',
 
     initComponent: function() {
