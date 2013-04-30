@@ -1,7 +1,6 @@
 Ext.define('Lada.view.sql.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.sqllist',
-    title: 'SQL-Auswahl',
     store: 'Sql',
 
     initComponent: function() {
