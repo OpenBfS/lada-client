@@ -11,10 +11,52 @@ Ext.application({
         // Viewport.js class.
         Ext.create('Ext.panel.Panel', {
             renderTo: Ext.getBody(),
-            title: 'Probenauswahlmaske',
-            items: [
+            title: '<center>Probenauswahlmaske</center>',
+            items:[
                 {
-                    xtype: 'probenlist'
+                    xtype: 'panel',
+                    id: 'searchSelection',
+                    border: false,
+                    padding: '10 10 10 10',
+                    items: [
+                        // 1. SQL-Selection
+                        // 1.1 Just a small texttual field
+                        {
+                            xtype: 'displayfield',
+                            padding : '10 0',
+                            fieldLabel: '<b>SQL-Auswahl</b>'
+                        },
+                        // 1.2 Selection of prepared sql statements
+                        {
+                            xtype: 'sqllist'
+                        }
+                    ]
+                },
+                {
+                    xtype: 'panel',
+                    id: 'searchVariables',
+                    hidden: true,
+                    border: false,
+                    padding: '10 10 10 10',
+                    items: [
+                        // 2. Variable-Definition. Depending on the SQL-Selection we
+                        // need to show a small form to be able to diefine some values
+                        // within the preselected Search-statement.
+                        // 2.1 Just a small texttual field
+                        {
+                            xtype: 'displayfield',
+                            padding : '10 0',
+                            fieldLabel: '<b>Variablenbelegung (Zeiten in UTC)</b>',
+                            labelWidth: 500
+                        }
+
+                    ]
+                },
+                {
+                    xtype: 'probenlist',
+                    id: 'searchResult',
+                    hidden: true,
+                    padding: '10 10 10 10'
                 }
             ]
         });
