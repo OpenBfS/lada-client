@@ -9,7 +9,7 @@ Ext.application({
             title: 'Probenauswahlmaske',
             items: [
                 {
-                    xtype: 'sqllist'
+                    xtype: 'probenlist'
                 }
             ]
         });
