@@ -5,7 +5,10 @@ Ext.define('Lada.store.Proben', {
     autoLoad: true,
     proxy: {
         type: 'ajax',
-        url: 'data/proben.json',
+        api: {
+            read: 'data/proben.json',
+            update: 'data/proben2.json'
+        },
         reader: {
             type: 'json',
             root: 'proben'
