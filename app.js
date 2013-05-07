@@ -17,7 +17,6 @@ Ext.application({
                     xtype: 'panel',
                     id: 'searchSelection',
                     border: false,
-                    padding: '10 10 10 10',
                     items: [
                         // 1. SQL-Selection
                         // 1.1 Just a small texttual field
@@ -37,7 +36,6 @@ Ext.application({
                     id: 'searchVariables',
                     hidden: true,
                     border: false,
-                    padding: '10 10 10 10',
                     items: [
                         // 2. Variable-Definition. Depending on the SQL-Selection we
                         // need to show a small form to be able to diefine some values
@@ -56,7 +54,6 @@ Ext.application({
                     xtype: 'probenlist',
                     id: 'searchResult',
                     hidden: true,
-                    padding: '10 10 10 10'
                 }
             ]
         });
