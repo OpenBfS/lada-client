@@ -23,17 +23,17 @@ Ext.define('Lada.view.proben.Edit', {
                         items: [
                             {
                                 xtype: 'textfield',
-                                name: 'x1',
+                                name: 'mstId',
                                 fieldLabel: 'Messstelle'
                             },
                             {
                                 xtype: 'textfield',
-                                name: 'x2',
+                                name: 'hauptprobenNr',
                                 fieldLabel: 'Hauptprobennr.'
                             },
                             {
                                 xtype: 'textfield',
-                                name: 'x3',
+                                name: 'probeId',
                                 fieldLabel: 'Probe-ID'
                             },
                             {
@@ -54,12 +54,12 @@ Ext.define('Lada.view.proben.Edit', {
                                     },
                                     {
                                         xtype: 'textfield',
-                                        name: 'x6',
+                                        name: 'test',
                                         fieldLabel: 'Testdatensatz'
                                     },
                                     {
                                         xtype: 'textfield',
-                                        name: 'x7',
+                                        name: 'probenartId',
                                         fieldLabel: 'Probenart'
                                     },
                                     {
@@ -74,7 +74,7 @@ Ext.define('Lada.view.proben.Edit', {
                                     },
                                     {
                                         xtype: 'textfield',
-                                        name: 'x10',
+                                        name: 'probenartId',
                                         fieldLabel: 'Probennehmer'
                                     },
                                     {
@@ -96,17 +96,17 @@ Ext.define('Lada.view.proben.Edit', {
                         items: [
                                 {
                                     xtype: 'textfield',
-                                    name: 'x12',
+                                    name: 'umwId',
                                     fieldLabel: 'Umweltbereich'
                                 },
                                 {
                                     xtype: 'textfield',
-                                    name: 'x13',
+                                    name: 'media',
                                     fieldLabel: 'Medienbezeichnung'
                                 },
                                 {
                                     xtype: 'textfield',
-                                    name: 'x14',
+                                    name: 'mediaDesk',
                                     fieldLabel: 'Deskriptoren'
                                 },
                                 {
@@ -130,19 +130,19 @@ Ext.define('Lada.view.proben.Edit', {
                         items: [
                             {
                                 fieldLabel: 'Probennahme Beginn',
-                                name: 'z1'
+                                name: 'probeentnahmeBeginn'
                             },
                             {
                                 fieldLabel: 'Probennahme Ende',
-                                name: 'z2'
+                                name: 'probeentnahmeEnde'
                             },
                             {
                                 fieldLabel: 'Sollzeit Von',
-                                name: 'z3'
+                                name: 'solldatumBeginn'
                             },
                             {
                                 fieldLabel: 'Sollzeit Bis',
-                                name: 'z4'
+                                name: 'solldatumEnde'
                             },
                             {
                                 fieldLabel: 'Ursprungszeit',
@@ -369,3 +369,4 @@ Ext.define('Lada.view.proben.Edit', {
         return fields;
     }
 });
+
