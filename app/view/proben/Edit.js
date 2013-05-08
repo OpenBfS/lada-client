@@ -3,15 +3,19 @@ Ext.define('Lada.view.proben.Edit', {
     alias: 'widget.probenedit',
 
     title: 'Maske für §3-Proben',
-    width: 800,
-    layout: 'fit',
+    width: 600,
+    height: 600,
     autoShow: true,
+    autoScroll: true,
+    modal: true,
 
     initComponent: function() {
         this.items = [
             {
                 //Define the form
                 xtype: 'form',
+                bodyPadding: '10 10',
+                border: 0,
                 items: [
                     // Probenangaben
                     {

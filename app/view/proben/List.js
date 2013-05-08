@@ -1,8 +1,8 @@
 Ext.define('Lada.view.proben.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.probenlist',
+    maxHeight: 350,
     store: 'Proben',
-
     initComponent: function() {
         this.columns = [
             {header: 'Datenbasis',  dataIndex: 'datenbasisId', width: 70},

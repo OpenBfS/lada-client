@@ -7,8 +7,7 @@ Ext.define('Lada.store.Proben', {
             read: 'server/rest/proben'
         },
         reader: {
-            type: 'json',
-            contentType: "application/json; charset=utf-8;"
+            type: 'json'
         }
     }
 });

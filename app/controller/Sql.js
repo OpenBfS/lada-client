@@ -24,26 +24,28 @@ Ext.define('Lada.controller.Sql', {
     },
     selectSql: function(grid, record) {
         var selection = record.get('id');
-        var variables = Ext.getCmp('searchVariables');
-        console.log('Selected SQL' + selection);
-        // Set correct form for the current SQL-Selection
-        console.log('Length is ' + variables.items.length);
-        if (variables.items.length > 1) {
-            console.log('Length is > than 1');
-            variables.remove(currentVar.id);
-        }
-        if (selection == 1) {
-            currentVar = variables1;
-        }
-        else {
-            currentVar = variables2;
-        }
-        variables.add(currentVar);
-        // Show the panel for the variable definiton.
-        variables.show();
+        var variables = Ext.getCmp('variables');
+        var result = Ext.getCmp('result');
+        console.log('Selected SQL ' + selection);
+        //// Set correct form for the current SQL-Selection
+        //console.log('Length is ' + variables.items.length);
+        //if (variables.items.length > 1) {
+        //    console.log('Length is > than 1');
+        //    variables.remove(currentVar.id);
+        //}
+        //if (selection == 1) {
+        //    currentVar = variables1;
+        //}
+        //else {
+        //    currentVar = variables2;
+        //}
+        //variables.add(currentVar);
+        //// Show the panel for the variable definiton.
+        //variables.show();
 
         // Show the results.
-        Ext.getCmp('searchResult').show();
+        result.getStore().load();
+        result.show();
     }
 });
 

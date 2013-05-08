@@ -13,4 +13,3 @@ Ext.define('Lada.view.sql.List' ,{
         this.callParent(arguments);
     }
 });
-
