@@ -2,3 +2,13 @@ Hinweise zur Installation
 =========================
 Für die Installation ist es notwenig in dem Wurzelordner die ExtJS-Bibliothek
 in der Version 4.2.0 unter dem Namen "extjs" zur Verfügung zu stellen.
+
+Diese lässt sich unter der folgenden URL herunterladen:
+http://cdn.sencha.com/ext/gpl/ext-4.2.0-gpl.zip
+
+SHA1 Checksum: 2ce990d9e90c48a76078e8533c72b5452f9ed809
+
+Beispiel:
+curl -O http://cdn.sencha.com/ext/gpl/ext-4.2.0-gpl.zip
+unzip ext-4.2.0-gpl.zip
+ln -s ext-4.2.0-gpl extjs
