@@ -1,0 +1,4 @@
+Hinweise zur Installation
+=========================
+Für die Installation ist es notwenig in dem Wurzelordner die ExtJS-Bibliothek
+in der Version 4.2.0 unter dem Namen "extjs" zur Verfügung zu stellen.
