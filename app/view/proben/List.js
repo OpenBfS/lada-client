@@ -6,7 +6,7 @@ Ext.define('Lada.view.proben.List' ,{
     initComponent: function() {
         this.columns = [
             {header: 'Datenbasis',  dataIndex: 'datenbasisId', width: 70},
-            {header: 'MLP',  dataIndex: 'mlpId', width: 50},
+            {header: 'MPL',  dataIndex: 'mplId', width: 50},
             {header: 'UWB',  dataIndex: 'umwId', width: 50},
             {header: 'HPNR',  dataIndex: 'hauptprobenNr'},
             {header: 'NPNR',  dataIndex: '', width: 50},
