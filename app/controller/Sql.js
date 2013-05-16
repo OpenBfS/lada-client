@@ -1,7 +1,7 @@
 Ext.define('Lada.controller.Sql', {
     extend: 'Ext.app.Controller',
     views: [
-        'sql.List'
+        'search.List'
     ],
     stores: [
         'Sql'
@@ -11,19 +11,20 @@ Ext.define('Lada.controller.Sql', {
         this.control({
             // CSS like selector to select element in the viewport. See
             // ComponentQuery documentation for more details.
-            'sqllist': {
+            'queryselector': {
                 // Map the "render" event to the given function.
                 render: this.onPanelRendered,
                 // Map Doubleclick on rows of the probenlist.
-                itemclick: this.selectSql
+                select: this.selectSql
             }
         });
     },
     onPanelRendered: function() {
         console.log('The panel was rendered');
     },
-    selectSql: function(grid, record) {
-        var selection = record.get('id');
+    selectSql: function(element, record, index) {
+        //var selection = record.get('id');
+        var selection = index;
         var variables = Ext.getCmp('variables');
         var result = Ext.getCmp('result');
         console.log('Selected SQL ' + selection);
@@ -44,7 +45,9 @@ Ext.define('Lada.controller.Sql', {
         //variables.show();
 
         // Show the results.
+        console.log('Loading store');
         result.getStore().load();
+        console.log('Store loaded');
         result.show();
     }
 });

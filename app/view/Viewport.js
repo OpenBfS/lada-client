@@ -1,8 +1,8 @@
 Ext.define('Lada.view.Viewport' ,{
     extend: 'Ext.container.Viewport',
     requires: [
-        'Lada.view.sql.List',
-        'Lada.view.sql.Variables',
+        'Lada.view.search.List',
+        'Lada.view.search.Variables',
         'Lada.view.proben.List'
     ],
     initComponent: function() {
@@ -13,7 +13,7 @@ Ext.define('Lada.view.Viewport' ,{
             bodyPadding: '10 10',
             items: [
                 {
-                    xtype: 'sqllist',
+                    xtype: 'queryselector',
                     margin: '0 0 10 0'
                 },
                 // Variables settings for the current selected sql statement.

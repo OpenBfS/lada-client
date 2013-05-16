@@ -1,4 +1,4 @@
-Ext.define('Lada.view.sql.Variables' ,{
+Ext.define('Lada.view.search.Variables' ,{
     extend: 'Ext.panel.Panel',
     alias: 'widget.variables',
     border: false,
