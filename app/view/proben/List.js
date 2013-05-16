@@ -9,7 +9,6 @@ Ext.define('Lada.view.proben.List' ,{
             {header: 'MPL',  dataIndex: 'mplId', width: 50},
             {header: 'UWB',  dataIndex: 'umwId', width: 50},
             {header: 'HPNR',  dataIndex: 'hauptprobenNr'},
-            {header: 'NPNR',  dataIndex: '', width: 50},
             {header: 'E.Gemeinde',  dataIndex: '', flex: 1},
             {header: 'Ursprungsgemeinde',  dataIndex: '', flex: 1},
             {header: 'ProbeID', dataIndex: 'probeId'},
