@@ -2,10 +2,10 @@
 Ext.define('Lada.view.widgets.Uwb' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.uwb',
-        store: 'Sql',
-        displayField:'name',
-        valueField: 'id',
-        emptyText:'Wählen Sie eine Abfrage',
+        store: 'Uwb',
+        displayField:'umwId',
+        valueField: 'umwId',
+        emptyText:'Wählen Sie einen Umweltbereich',
     initComponent: function() {
         this.callParent(arguments);
     }

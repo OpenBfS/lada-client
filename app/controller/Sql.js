@@ -5,7 +5,8 @@ Ext.define('Lada.controller.Sql', {
         'search.List'
     ],
     stores: [
-        'Sql'
+        'Sql',
+        'Uwb'
     ],
     init: function() {
         console.log('Initialising the Sql controller');
