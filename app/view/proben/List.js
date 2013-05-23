@@ -1,8 +1,15 @@
 Ext.define('Lada.view.proben.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.probenlist',
-    maxHeight: 350,
     store: 'Proben',
+    viewConfig: {
+        maxHeight: 350,
+        emptyText: 'Keine Proben gefunden.',
+        // minHeight and deferEmptyText are needed to be able to show the
+        // emptyText message.
+        minHeight: 35,
+        deferEmptyText: false
+    },
     initComponent: function() {
         this.columns = [
             {header: 'Datenbasis',  dataIndex: 'datenbasisId', width: 70},
