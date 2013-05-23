@@ -3,8 +3,8 @@ Ext.define('Lada.store.Proben', {
     model: 'Lada.model.Probe',
     proxy: {
         type: 'ajax',
+        url: 'server/rest/proben',
         api: {
-        read: 'server/rest/proben'
         },
         reader: {
             type: 'json'
