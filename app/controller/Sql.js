@@ -6,7 +6,8 @@ Ext.define('Lada.controller.Sql', {
     ],
     stores: [
         'Sql',
-        'Uwb'
+        'Uwb',
+        'Mst'
     ],
     init: function() {
         console.log('Initialising the Sql controller');
