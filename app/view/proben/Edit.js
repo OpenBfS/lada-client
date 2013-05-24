@@ -78,11 +78,6 @@ Ext.define('Lada.view.proben.Edit', {
                                     },
                                     {
                                         xtype: 'textfield',
-                                        name: 'x8',
-                                        fieldLabel: 'Phase'
-                                    },
-                                    {
-                                        xtype: 'textfield',
                                         name: 'x9',
                                         fieldLabel: 'Szenario'
                                     },
