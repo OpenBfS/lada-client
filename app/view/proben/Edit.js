@@ -9,6 +9,10 @@ Ext.define('Lada.view.proben.Edit', {
     autoScroll: true,
     modal: true,
 
+    requires: [
+        'Lada.view.widgets.Probenart'
+    ],
+
     initComponent: function() {
         this.items = [
             {
@@ -62,7 +66,9 @@ Ext.define('Lada.view.proben.Edit', {
                                         fieldLabel: 'Testdatensatz'
                                     },
                                     {
-                                        xtype: 'textfield',
+                                        xtype: 'probenart',
+                                        id: 'probenart',
+                                        editable: false,
                                         name: 'probenartId',
                                         fieldLabel: 'Probenart'
                                     },
