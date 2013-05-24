@@ -10,6 +10,7 @@ Ext.define('Lada.view.proben.Edit', {
     modal: true,
 
     requires: [
+        'Lada.view.widgets.Uwb',
         'Lada.view.widgets.Datenbasis',
         'Lada.view.widgets.Probenart'
     ],
