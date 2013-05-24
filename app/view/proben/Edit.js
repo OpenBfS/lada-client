@@ -381,6 +381,20 @@ Ext.define('Lada.view.proben.Edit', {
             fields[$i] = {fieldLabel: 'S'+$i, name: 's'+$i};
         }
         return fields;
+    },
+    listeners: {
+        afterrender: function() {
+            // FIXME: This does not work! I do not know how to set the correct
+            // value in the combobox based on the model value.
+            // Will iterate over defined comboboxes and set the value
+            var combos = ['probenart', 'datenbasis'];
+            for (var i = combos.length - 1; i >= 0; i--){
+                console.log('Searching for ' + combos[i]);
+                var element = Ext.getCmp(combos[i]);
+                // Statically set to 2. Must be the value from the model.
+                element.setValue(2);
+            }
+        }
     }
 });
 
