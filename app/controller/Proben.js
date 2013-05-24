@@ -8,7 +8,8 @@ Ext.define('Lada.controller.Proben', {
         'Proben',
         'Uwb',
         'Datenbasis',
-        'Probenart'
+        'Probenart',
+        'Betriebsart'
     ],
     models: [
         'Probe'

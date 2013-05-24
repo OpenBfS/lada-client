@@ -12,7 +12,8 @@ Ext.define('Lada.view.proben.Edit', {
     requires: [
         'Lada.view.widgets.Uwb',
         'Lada.view.widgets.Datenbasis',
-        'Lada.view.widgets.Probenart'
+        'Lada.view.widgets.Probenart',
+        'Lada.view.widgets.Betriebsart'
     ],
 
     initComponent: function() {
@@ -60,9 +61,9 @@ Ext.define('Lada.view.proben.Edit', {
                                         fieldLabel: 'Datenbasis'
                                     },
                                     {
-                                        xtype: 'textfield',
-                                        name: 'x5',
-                                        fieldLabel: 'RB/IB'
+                                        xtype: 'betriebsart',
+                                        name: 'baId',
+                                        fieldLabel: 'Betriebsart'
                                     },
                                     {
                                         xtype: 'textfield',
