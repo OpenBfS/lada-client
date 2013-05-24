@@ -99,7 +99,7 @@ Ext.define('Lada.view.proben.Edit', {
                         },
                         items: [
                                 {
-                                    xtype: 'textfield',
+                                    xtype: 'uwb',
                                     name: 'umwId',
                                     fieldLabel: 'Umweltbereich'
                                 },
