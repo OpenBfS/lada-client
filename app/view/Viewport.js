@@ -4,7 +4,8 @@ Ext.define('Lada.view.Viewport' ,{
         'Lada.view.search.List',
         'Lada.view.search.Query1',
         'Lada.view.search.Query2',
-        'Lada.view.proben.List'
+        'Lada.view.proben.List',
+        'Lada.view.proben.Edit'
     ],
     initComponent: function() {
         console.log('Setting up Viewport');
