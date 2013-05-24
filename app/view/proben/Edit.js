@@ -10,6 +10,7 @@ Ext.define('Lada.view.proben.Edit', {
     modal: true,
 
     requires: [
+        'Lada.view.widgets.Datenbasis',
         'Lada.view.widgets.Probenart'
     ],
 
@@ -51,9 +52,11 @@ Ext.define('Lada.view.proben.Edit', {
                                 collapsed: true,
                                 items: [
                                     {
-                                        xtype: 'textfield',
-                                        name: 'x4',
-                                        fieldLabel: 'Datebasis'
+                                        xtype: 'datenbasis',
+                                        id: 'datenbasis',
+                                        editable: false,
+                                        name: 'datenbasisId',
+                                        fieldLabel: 'Datenbasis'
                                     },
                                     {
                                         xtype: 'textfield',
