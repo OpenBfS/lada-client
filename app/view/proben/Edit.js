@@ -15,7 +15,8 @@ Ext.define('Lada.view.proben.Edit', {
         'Lada.view.widgets.Uwb',
         'Lada.view.widgets.Datenbasis',
         'Lada.view.widgets.Probenart',
-        'Lada.view.widgets.Betriebsart'
+        'Lada.view.widgets.Betriebsart',
+        'Lada.view.widgets.Testdatensatz'
     ],
 
     initComponent: function() {
@@ -68,7 +69,7 @@ Ext.define('Lada.view.proben.Edit', {
                                         fieldLabel: 'Betriebsart'
                                     },
                                     {
-                                        xtype: 'textfield',
+                                        xtype: 'testdatensatz',
                                         name: 'test',
                                         fieldLabel: 'Testdatensatz'
                                     },

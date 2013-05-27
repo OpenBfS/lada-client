@@ -9,7 +9,8 @@ Ext.define('Lada.controller.Proben', {
         'Uwb',
         'Datenbasis',
         'Probenart',
-        'Betriebsart'
+        'Betriebsart',
+        'Testdatensatz'
     ],
     models: [
         'Probe'
