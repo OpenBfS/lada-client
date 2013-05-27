@@ -1,6 +1,7 @@
 Ext.define('Lada.model.Probe', {
     extend: 'Ext.data.Model',
     fields: [
+        {name: "probeId"},
         {name: "baId"},
         {name: "datenbasisId"},
         {name: "erzeugerId"},
@@ -23,7 +24,17 @@ Ext.define('Lada.model.Probe', {
         {name: "solldatumEnde", type: 'date', convert: ts2date},
         {name: "test"},
         {name: "umwId"}
-    ]
+    ],
+    proxy: {
+        type: 'rest',
+        appendId: true, //default
+        url: 'server/rest/proben',
+        api: {
+        },
+        reader: {
+            type: 'json'
+        }
+    }
 });
 
 function ts2date(v, record){
