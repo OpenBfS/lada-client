@@ -8,6 +8,7 @@ Ext.define('Lada.view.search.List' ,{
             {
                 id: 'search',
                 xtype: 'combobox',
+                editable: false,
                 store: 'Sql',
                 displayField:'name',
                 valueField:'id',
