@@ -3,8 +3,10 @@ Ext.define('Lada.view.proben.Edit', {
     alias: 'widget.probenedit',
 
     title: 'Maske für §3-Proben',
-    width: 600,
-    height: 600,
+    // Make size of the dialog dependend of the available space.
+    // TODO: Handle resizing the browser window.
+    width: Ext.getBody().getViewSize().width - 30,
+    height: Ext.getBody().getViewSize().height - 30,
     autoShow: true,
     autoScroll: true,
     modal: true,
