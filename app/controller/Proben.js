@@ -35,7 +35,7 @@ Ext.define('Lada.controller.Proben', {
         console.log('The panel was rendered');
     },
     editProbe: function(grid, record) {
-        console.log('Double click on ' + record.get('name'));
+        console.log('Double click on ' + record.get('probeId'));
         // Create new window to edit the seletced record.
         var view = Ext.widget('probenedit');
         view.down('form').loadRecord(record);
