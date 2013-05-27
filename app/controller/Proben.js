@@ -38,7 +38,13 @@ Ext.define('Lada.controller.Proben', {
         console.log('Double click on ' + record.get('probeId'));
         // Create new window to edit the seletced record.
         var view = Ext.widget('probenedit');
-        view.down('form').loadRecord(record);
+        //console.log(Ext.ModelManager.getModel('Lada.model.Probe'));
+        Ext.ModelManager.getModel('Lada.model.Probe').load(record.get('probeId'), {
+            success: function(record) {
+                view.down('form').loadRecord(record);
+                console.log("Loaded probe with ID " + record.getId()); //outputs ID
+            }
+        });
     },
     updateProbe: function(button) {
         console.log('Click save');
