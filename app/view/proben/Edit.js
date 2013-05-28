@@ -16,7 +16,8 @@ Ext.define('Lada.view.proben.Edit', {
         'Lada.view.widgets.Datenbasis',
         'Lada.view.widgets.Probenart',
         'Lada.view.widgets.Betriebsart',
-        'Lada.view.widgets.Testdatensatz'
+        'Lada.view.widgets.Testdatensatz',
+        'Lada.view.kommentare.List'
     ],
 
     initComponent: function() {
@@ -263,35 +264,7 @@ Ext.define('Lada.view.proben.Edit', {
                         padding: '10 10',
                         items: [
                             {
-                                xtype: 'grid',
-                                dockedItems: [
-                                    {
-                                        xtype: 'toolbar',
-                                        dock: 'top',
-                                        items: [
-                                            {
-                                                text: 'Hinzufügen',
-                                                icon: 'gfx/plus.gif'
-                                            },
-                                            {
-                                                text: 'Löschen',
-                                                icon: 'gfx/minus.gif'
-                                            }
-                                        ]
-                                    }
-                                ],
-                                columns: [
-                                    {
-                                        text: 'Erzeuger'
-                                    },
-                                    {
-                                        text: 'Datum'
-                                    },
-                                    {
-                                        text: 'Text',
-                                        flex: 1
-                                    }
-                                ]
+                                xtype: 'kommentarelist'
                             }
                         ]
                     },
