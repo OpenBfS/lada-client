@@ -11,6 +11,7 @@ Ext.application({
     // first before the application "launch" function is called.
     controllers: [
         'Proben',
+        'Kommentare',
         'Sql'
     ]
 });
