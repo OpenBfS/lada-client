@@ -18,11 +18,13 @@ Ext.define('Lada.view.kommentare.List' ,{
                 items: [
                     {
                         text: 'Hinzufügen',
-                        icon: 'gfx/plus.gif'
+                        icon: 'gfx/plus.gif',
+                        action: 'add'
                     },
                     {
                         text: 'Löschen',
-                        icon: 'gfx/minus.gif'
+                        icon: 'gfx/minus.gif',
+                        action: 'delete'
                     }
                 ]
             }
