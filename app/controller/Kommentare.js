@@ -18,10 +18,29 @@ Ext.define('Lada.controller.Kommentare', {
             'kommentarelist': {
                 // Map Doubleclick on rows of the probenlist.
                 itemdblclick: this.editKommentar
+            },
+            'kommentarelist toolbar button[action=delete]': {
+                click: this.deleteKommentar
             }
             //'probenedit button[action=save]': {
             //    click: this.updateProbe
             //}
+        });
+    },
+    deleteKommentar: function(button) {
+        // Get selected item in grid
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection()[0];
+        console.log("Searching grid");
+        Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn){
+            if(btn === 'yes'){
+                var store = grid.getStore();
+                store.remove(selection);
+                store.sync();
+                console.log('Deleting Kommentar');
+            } else {
+                console.log('Cancel Deleting Kommentar');
+            }
         });
     },
     editKommentar: function(grid, record) {
