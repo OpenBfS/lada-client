@@ -19,13 +19,27 @@ Ext.define('Lada.controller.Kommentare', {
                 // Map Doubleclick on rows of the probenlist.
                 itemdblclick: this.editKommentar
             },
+            'kommentarelist toolbar button[action=add]': {
+                click: this.addKommentar
+            },
             'kommentarelist toolbar button[action=delete]': {
                 click: this.deleteKommentar
+            },
+            'kommentaredit button[action=save]': {
+                click: this.saveKommentar
             }
             //'probenedit button[action=save]': {
             //    click: this.updateProbe
             //}
         });
+    },
+    addKommentar: function(button) {
+        console.log('Adding new Kommentar');
+        var view = Ext.widget('kommentaredit');
+        var form = view.down('form');
+        // Create a new Kommentar
+        var record = Ext.create('Lada.model.Kommentar');
+        form.loadRecord(record);
     },
     deleteKommentar: function(button) {
         // Get selected item in grid
@@ -66,5 +80,16 @@ Ext.define('Lada.controller.Kommentare', {
         //// NOTE: The function 'getProbenStore' will be generated
         //// dynamically based on the Name of the configured Store!!!
         //this.getProbenStore().sync();
+    saveKommentar: function(button) {
+        var win = button.up('window');
+        var form = win.down('form');
+        var record = form.getRecord();
+        var values = form.getValues();
+        var store = this.getKommentareStore();
+        record.set(values);
+        store.add(record);
+        store.sync();
+        console.log('Saving Kommentar');
+        win.close();
     }
 });
