@@ -11,6 +11,19 @@ Ext.define('Lada.view.proben.List' ,{
         deferEmptyText: false
     },
     initComponent: function() {
+        this.dockedItems = [
+            {
+                xtype: 'toolbar',
+                dock: 'top',
+                items: [
+                    {
+                        text: 'Hinzufügen',
+                        icon: 'gfx/plus.gif',
+                        action: 'add'
+                    }
+                ]
+            }
+        ];
         this.columns = [
             {header: 'Datenbasis',  dataIndex: 'datenbasisId', width: 70},
             {header: 'MPL',  dataIndex: 'mplId', width: 50},
