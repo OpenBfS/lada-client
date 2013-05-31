@@ -2,7 +2,8 @@ Ext.define('Lada.controller.Proben', {
     extend: 'Ext.app.Controller',
     views: [
         'proben.List',
-        'proben.Edit'
+        'proben.Edit',
+        'proben.Create'
     ],
     stores: [
         'Proben',
@@ -40,7 +41,7 @@ Ext.define('Lada.controller.Proben', {
     },
     addProbe: function(button) {
         console.log('Adding new Probe');
-        var view = Ext.widget('probenedit');
+        var view = Ext.widget('probencreate');
         var form = view.down('form');
         // Create a new Kommentar
         var record = Ext.create('Lada.model.Probe');
