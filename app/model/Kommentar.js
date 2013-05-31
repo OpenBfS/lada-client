@@ -8,6 +8,9 @@ Ext.define('Lada.model.Kommentar', {
         {name: "kdatum"},
         {name: "ktext"}
     ],
+    // TODO: This id field is currently a combined field of probeId and kid
+    // which cases problems when generating a request with this id to the
+    // server.
     idProperty: "id",
     proxy: {
         type: 'rest',
