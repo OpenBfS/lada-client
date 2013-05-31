@@ -26,6 +26,10 @@ Ext.define('Lada.controller.Proben', {
                 // Map Doubleclick on rows of the probenlist.
                 itemdblclick: this.editProbe
             },
+            'probenlist toolbar button[action=add]': {
+                // Map Doubleclick on rows of the probenlist.
+                click: this.addProbe
+            },
             'probenedit button[action=save]': {
                 click: this.updateProbe
             }
@@ -33,6 +37,14 @@ Ext.define('Lada.controller.Proben', {
     },
     onPanelRendered: function() {
         console.log('The panel was rendered');
+    },
+    addProbe: function(button) {
+        console.log('Adding new Probe');
+        var view = Ext.widget('probenedit');
+        var form = view.down('form');
+        // Create a new Kommentar
+        var record = Ext.create('Lada.model.Probe');
+        form.loadRecord(record);
     },
     editProbe: function(grid, record) {
         console.log('Double click on ' + record.get('probeId'));
