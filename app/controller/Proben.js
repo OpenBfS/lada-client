@@ -27,11 +27,18 @@ Ext.define('Lada.controller.Proben', {
             'probenlist toolbar button[action=add]': {
                 click: this.addProbe
             },
+            'probencreate form': {
+                savesuccess: this.createSuccess,
+                savefailure: this.createFailure
+            },
+            'probenedit form': {
+                savesuccess: this.editSuccess,
+                savefailure: this.editFailure
             }
         });
     },
     addProbe: function(button) {
-        console.log('Adding new Probe');
+        console.log('Adding new Probe 1');
         var view = Ext.widget('probencreate');
     },
     editProbe: function(grid, record) {
@@ -56,5 +63,25 @@ Ext.define('Lada.controller.Proben', {
     createSuccess: function(form, record, operation) {
         var win = form.up('window');
         win.close();
+    },
+    createFailure: function(form, record, operation) {
+        Ext.MessageBox.show({
+            title: 'Fehler beim Speichern',
+            msg: 'Es gab Fehler beim Anlegen der Probe',
+            icon: Ext.MessageBox.ERROR,
+            buttons: Ext.Msg.OK
+        });
+    },
+    editSuccess: function(form, record, operation) {
+        var win = form.up('window');
+        win.close();
+    },
+    editFailure: function(form, record, operation) {
+        Ext.MessageBox.show({
+            title: 'Fehler beim Speichern',
+            msg: 'Es gab Fehler beim Speichern der Probe',
+            icon: Ext.MessageBox.ERROR,
+            buttons: Ext.Msg.OK
+        });
     }
 });
