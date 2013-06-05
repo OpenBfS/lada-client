@@ -86,6 +86,14 @@ Ext.define('Lada.view.widgets.LadaForm', {
 
     onModelLoadFailure: function(record, operation) {
         this.fireEvent('loadfailure', this, record, operation);
+    },
+
+    translateReturnCodes: function(codes) {
+        var translated = {};
+        for (var k in codes) {
+            translated[k] = Lada.getApplication().bundle.getMsg(codes[k]);
+        }
+        return translated;
     }
 
 });
