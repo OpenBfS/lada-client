@@ -54,7 +54,7 @@ Ext.define('Lada.controller.Proben', {
     createFailure: function(form, record, operation) {
         Ext.MessageBox.show({
             title: 'Fehler beim Speichern',
-            msg: 'Es gab Fehler beim Anlegen der Probe',
+            msg: form.message,
             icon: Ext.MessageBox.ERROR,
             buttons: Ext.Msg.OK
         });
@@ -66,7 +66,7 @@ Ext.define('Lada.controller.Proben', {
     editFailure: function(form, record, operation) {
         Ext.MessageBox.show({
             title: 'Fehler beim Speichern',
-            msg: 'Es gab Fehler beim Speichern der Probe',
+            msg: form.message,
             icon: Ext.MessageBox.ERROR,
             buttons: Ext.Msg.OK
         });
