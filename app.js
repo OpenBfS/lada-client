@@ -2,6 +2,13 @@ Ext.application({
     name: 'Lada',
     // Setting this variable to true should trigger loading the Viewport.js
     // file which sets ob the viewport. But this does not happen.
+    requires: ['Ext.i18n.Bundle'],
+    bundle: {
+        bundle: 'Lada',
+        lang: 'de-DE',
+        path: 'resources',
+        noCache: true
+    },
     autoCreateViewport: true,
     launch: function() {
         // Start the application.
