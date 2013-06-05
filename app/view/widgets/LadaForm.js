@@ -18,6 +18,10 @@ Ext.define('Lada.view.widgets.LadaForm', {
     bodyPadding: '10 10',
     border: 0,
 
+    errors: null,
+    warnings: null,
+    message: null,
+
     initComponent: function() {
 
         this.callParent();
@@ -66,8 +70,10 @@ Ext.define('Lada.view.widgets.LadaForm', {
                         this.fireEvent('savesuccess', this, records, operation);
                     } else {
                         console.log('Save was not successfull');
-                        var errors = operation.request.scope.reader.jsonData["errors"];
-                        this.form.markInvalid(errors);
+                        this.errors = this.translateReturnCodes(operation.request.scope.reader.jsonData["errors"]);
+                        this.warnings = this.translateReturnCodes(operation.request.scope.reader.jsonData["warnings"]);
+                        this.message = Lada.getApplication().bundle.getMsg(operation.request.scope.reader.jsonData["message"]);
+                        this.form.markInvalid(this.errors);
                         this.fireEvent('savefailure', this, records, operation);
                     }
                     if (callback) {
