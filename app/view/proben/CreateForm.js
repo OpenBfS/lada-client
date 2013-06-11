@@ -49,18 +49,17 @@ Ext.define('Lada.view.proben.CreateForm', {
                                 name: 'test',
                                 fieldLabel: 'Testdatensatz'
                             },
-                            // TODO: Fix Probenart, Is sent as list which
-                            // causes an error on server side.
-                            //{
-                            //    xtype: 'probenart',
-                            //    id: 'probenart',
-                            //    editable: false,
-                            //    name: 'probenartId',
-                            //    fieldLabel: 'Probenart'
-                            //},
+                            {
+                                xtype: 'probenart',
+                                id: 'probenart',
+                                editable: false,
+                                name: 'probenartId',
+                                fieldLabel: 'Probenart',
+                                allowBlank: false
+                            },
                             {
                                 xtype: 'textfield',
-                                name: 'probenartId',
+                                name: 'probeNehmerId',
                                 fieldLabel: 'Probennehmer'
                             },
                             {
