@@ -60,7 +60,7 @@ Ext.define('Lada.view.widgets.LadaForm', {
     },
 
     commit: function(callback, scope) {
-        if (this.form.isDirty()) {
+        if (this.form.isDirty() && this.form.isValid()) {
             this.form.updateRecord(this.model);
 
             this.model.save({
