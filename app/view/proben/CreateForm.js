@@ -31,7 +31,7 @@ Ext.define('Lada.view.proben.CreateForm', {
                         xtype: 'fieldset',
                         title: 'Erweiterte Probenangaben',
                         collapsible: true,
-                        collapsed: true,
+                        collapsed: false,
                         items: [
                             {
                                 xtype: 'datenbasis',
