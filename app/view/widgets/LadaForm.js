@@ -65,14 +65,12 @@ Ext.define('Lada.view.widgets.LadaForm', {
 
             this.model.save({
                 callback: function(records, operation) {
+                    this.parseResponse(operation);
                     if (operation.wasSuccessful()) {
                         console.log('Save was successfull');
                         this.fireEvent('savesuccess', this, records, operation);
                     } else {
                         console.log('Save was not successfull');
-                        this.errors = this.translateReturnCodes(operation.request.scope.reader.jsonData["errors"]);
-                        this.warnings = this.translateReturnCodes(operation.request.scope.reader.jsonData["warnings"]);
-                        this.message = Lada.getApplication().bundle.getMsg(operation.request.scope.reader.jsonData["message"]);
                         this.form.markInvalid(this.errors);
                         this.fireEvent('savefailure', this, records, operation);
                     }
@@ -87,10 +85,12 @@ Ext.define('Lada.view.widgets.LadaForm', {
 
     onModelLoadSuccess: function(record, operation) {
         this.bindModel(record);
+        this.parseResponse(operation);
         this.fireEvent('loadsuccess', this, record, operation);
     },
 
     onModelLoadFailure: function(record, operation) {
+        this.parseResponse(operation);
         this.fireEvent('loadfailure', this, record, operation);
     },
 
@@ -100,6 +100,11 @@ Ext.define('Lada.view.widgets.LadaForm', {
             translated[k] = Lada.getApplication().bundle.getMsg(codes[k]);
         }
         return translated;
+    },
+    parseResponse: function(operation) {
+        this.errors = this.translateReturnCodes(operation.request.scope.reader.jsonData["errors"]);
+        this.warnings = this.translateReturnCodes(operation.request.scope.reader.jsonData["warnings"]);
+        this.message = Lada.getApplication().bundle.getMsg(operation.request.scope.reader.jsonData["message"]);
     }
 
 });
