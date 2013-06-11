@@ -14,7 +14,8 @@ Ext.define('Lada.view.proben.CreateForm', {
                     {
                         xtype: 'textfield',
                         name: 'mstId',
-                        fieldLabel: 'Messstelle'
+                        fieldLabel: 'Messstelle',
+                        allowBlank: false
                     },
                     {
                         xtype: 'textfield',
@@ -82,7 +83,8 @@ Ext.define('Lada.view.proben.CreateForm', {
                         {
                             xtype: 'uwb',
                             name: 'umwId',
-                            fieldLabel: 'Umweltbereich'
+                            fieldLabel: 'Umweltbereich',
+                            allowBlank: false
                         },
                         {
                             xtype: 'textfield',
