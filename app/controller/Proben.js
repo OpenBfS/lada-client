@@ -48,6 +48,9 @@ Ext.define('Lada.controller.Proben', {
         console.log("Loaded Probe with ID " + record.getId()); //outputs ID
     },
     createSuccess: function(form, record, operation) {
+        // Reload store
+        var store = this.getProbenStore();
+        store.reload();
         var win = form.up('window');
         win.close();
     },
@@ -60,6 +63,9 @@ Ext.define('Lada.controller.Proben', {
         });
     },
     editSuccess: function(form, record, operation) {
+        // Reload store
+        var store = this.getProbenStore();
+        store.reload();
         var win = form.up('window');
         win.close();
     },
