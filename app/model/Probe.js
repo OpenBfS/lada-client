@@ -17,11 +17,11 @@ Ext.define('Lada.model.Probe', {
         {name: "netzbetreiberId"},
         {name: "probeId"},
         {name: "probeNehmerId"},
-        {name: "probeentnahmeBeginn", type: 'date', convert: ts2date},
-        {name: "probeentnahmeEnde", type: 'date', convert: ts2date},
+        {name: "probeentnahmeBeginn", type: 'date', convert: ts2date, defaultValue: new Date()},
+        {name: "probeentnahmeEnde", type: 'date', convert: ts2date, defaultValue: new Date()},
         {name: "probenartId"},
-        {name: "solldatumBeginn", type: 'date', convert: ts2date},
-        {name: "solldatumEnde", type: 'date', convert: ts2date},
+        {name: "solldatumBeginn", type: 'date', convert: ts2date, defaultValue: new Date()},
+        {name: "solldatumEnde", type: 'date', convert: ts2date, defaultValue: new Date()},
         {name: "test"},
         {name: "umwId"}
     ],
@@ -33,7 +33,8 @@ Ext.define('Lada.model.Probe', {
         api: {
         },
         reader: {
-            type: 'json'
+            type: 'json',
+            root: 'data'
         }
     }
 });
