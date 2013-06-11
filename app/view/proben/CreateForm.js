@@ -65,6 +65,12 @@ Ext.define('Lada.view.proben.CreateForm', {
                             },
                             {
                                 xtype: 'textfield',
+                                name: 'netzbetreiberId',
+                                fieldLabel: 'Netzbetreiber',
+                                allowBlank: false
+                            },
+                            {
+                                xtype: 'textfield',
                                 name: 'x11',
                                 fieldLabel: 'Datensatzerzeuger'
                             }

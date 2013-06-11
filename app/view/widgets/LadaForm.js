@@ -21,6 +21,7 @@ Ext.define('Lada.view.widgets.LadaForm', {
     errors: null,
     warnings: null,
     message: null,
+    readonly: false,
 
     initComponent: function() {
 
@@ -111,6 +112,7 @@ Ext.define('Lada.view.widgets.LadaForm', {
         this.errors = this.translateReturnCodes(operation.request.scope.reader.jsonData["errors"]);
         this.warnings = this.translateReturnCodes(operation.request.scope.reader.jsonData["warnings"]);
         this.message = Lada.getApplication().bundle.getMsg(operation.request.scope.reader.jsonData["message"]);
+        //this.setReadOnly(true);
     }
 
 });
