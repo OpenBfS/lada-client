@@ -21,11 +21,11 @@ Ext.define('Lada.view.proben.CreateForm', {
                         name: 'hauptprobenNr',
                         fieldLabel: 'Hauptprobennr.'
                     },
-                    {
-                        xtype: 'textfield',
-                        name: 'probeId',
-                        fieldLabel: 'Probe-ID'
-                    },
+                    //{
+                    //    xtype: 'textfield',
+                    //    name: 'probeId',
+                    //    fieldLabel: 'Probe-ID'
+                    //},
                     {
                         xtype: 'fieldset',
                         title: 'Erweiterte Probenangaben',
