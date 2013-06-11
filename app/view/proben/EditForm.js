@@ -12,7 +12,7 @@ Ext.define('Lada.view.proben.EditForm', {
                 },
                 items: [
                     {
-                        xtype: 'textfield',
+                        xtype: 'mst',
                         name: 'mstId',
                         fieldLabel: 'Messstelle'
                     },
