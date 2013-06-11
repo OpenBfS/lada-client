@@ -101,6 +101,12 @@ Ext.define('Lada.view.widgets.LadaForm', {
         }
         return translated;
     },
+    setReadOnly: function (bReadOnly) {
+        this.getForm().getFields().each (function (field) {
+            //field.setDisabled(bReadOnly);
+            field.setReadOnly(bReadOnly);
+        });
+    },
     parseResponse: function(operation) {
         this.errors = this.translateReturnCodes(operation.request.scope.reader.jsonData["errors"]);
         this.warnings = this.translateReturnCodes(operation.request.scope.reader.jsonData["warnings"]);
