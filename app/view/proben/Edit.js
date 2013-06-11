@@ -18,6 +18,7 @@ Ext.define('Lada.view.proben.Edit', {
         'Lada.view.widgets.Probenart',
         'Lada.view.widgets.Betriebsart',
         'Lada.view.widgets.Testdatensatz',
+        'Lada.view.widgets.Netzbetreiber',
         'Lada.view.kommentare.List'
     ],
 

@@ -17,6 +17,7 @@ Ext.define('Lada.view.proben.Create', {
         'Lada.view.widgets.Datenbasis',
         'Lada.view.widgets.Probenart',
         'Lada.view.widgets.Betriebsart',
+        'Lada.view.widgets.Netzbetreiber',
         'Lada.view.widgets.Testdatensatz'
     ],
     initComponent: function() {
