@@ -148,42 +148,7 @@ Ext.define('Lada.view.proben.EditForm', {
                 padding: '10 10',
                 items: [
                     {
-                        xtype: 'grid',
-                        dockedItems: [
-                            {
-                                xtype: 'toolbar',
-                                dock: 'top',
-                                items: [
-                                    {
-                                        text: 'Hinzufügen',
-                                        icon: 'gfx/plus.gif'
-                                    },
-                                    {
-                                        text: 'Löschen',
-                                        icon: 'gfx/minus.gif'
-                                    }
-                                ]
-                            }
-                        ],
-                        columns: [
-                            {
-                                text: 'Typ'
-                            },
-                            {
-                                text: 'Staat'
-                            },
-                            {
-                                text: 'Gem-ID'
-                            },
-                            {
-                                text: 'Gemeindebezeichnung',
-                                flex: 1
-                            },
-                            {
-                                text: 'Messpunkt',
-                                flex: 1
-                            }
-                        ]
+                        xtype: 'ortelist'
                     }
                 ]
             },

@@ -7,6 +7,7 @@ Ext.define('Lada.controller.Proben', {
     ],
     stores: [
         'Proben',
+        'Orte',
         'Uwb',
         'Datenbasis',
         'Probenart',

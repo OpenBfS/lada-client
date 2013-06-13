@@ -19,7 +19,8 @@ Ext.define('Lada.view.proben.Edit', {
         'Lada.view.widgets.Betriebsart',
         'Lada.view.widgets.Testdatensatz',
         'Lada.view.widgets.Netzbetreiber',
-        'Lada.view.kommentare.List'
+        'Lada.view.kommentare.List',
+        'Lada.view.orte.List'
     ],
 
     initComponent: function() {
@@ -32,6 +33,15 @@ Ext.define('Lada.view.proben.Edit', {
         var kommentare = form.down('kommentarelist'); //form.down('kommentare');
         var kstore = kommentare.getStore();
         kstore.load({
+            params: {
+                probe: this.initialConfig['modelId']
+                //probe: record.data['probeId']
+            }
+        });
+        // Load Orte
+        var orte = form.down('ortelist');
+        var ostore = orte.getStore();
+        ostore.load({
             params: {
                 probe: this.initialConfig['modelId']
                 //probe: record.data['probeId']
