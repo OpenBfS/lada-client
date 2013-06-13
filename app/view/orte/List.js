@@ -34,7 +34,7 @@ Ext.define('Lada.view.orte.List' ,{
             {header: 'ID', dataIndex: 'ortId'},
             {header: 'Staat', dataIndex: ''},
             {header: 'Gem-ID', dataIndex: ''},
-            {header: 'Gemeindebezeichnung', dataIndex: 'bezeichnung'},
+            {header: 'Gemeindebezeichnung', dataIndex: 'bezeichnung', flex: 1},
             {header: 'Messpunkt', dataIndex: ''}
         ];
         this.callParent(arguments);
