@@ -7,7 +7,8 @@ Ext.define('Lada.store.Uwb', {
         read: 'server/rest/uwb'
         },
         reader: {
-            type: 'json'
+            type: 'json',
+            root: 'data'
         }
     }
 });

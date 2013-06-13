@@ -8,7 +8,8 @@ Ext.define('Lada.store.Probenart', {
         read: 'server/rest/probenart'
         },
         reader: {
-            type: 'json'
+            type: 'json',
+            root: 'data'
         }
     }
 });

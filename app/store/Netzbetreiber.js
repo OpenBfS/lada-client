@@ -7,7 +7,8 @@ Ext.define('Lada.store.Netzbetreiber', {
         read: 'server/rest/netzbetreiber'
         },
         reader: {
-            type: 'json'
+            type: 'json',
+            root: 'data'
         }
     }
 });

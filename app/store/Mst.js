@@ -7,7 +7,8 @@ Ext.define('Lada.store.Mst', {
         read: 'server/rest/mst'
         },
         reader: {
-            type: 'json'
+            type: 'json',
+            root: 'data'
         }
     }
 });

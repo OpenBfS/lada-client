@@ -7,7 +7,8 @@ Ext.define('Lada.store.Datenbasis', {
         read: 'server/rest/datenbasis'
         },
         reader: {
-            type: 'json'
+            type: 'json',
+            root: 'data'
         }
     }
 });
