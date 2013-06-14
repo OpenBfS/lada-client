@@ -53,12 +53,20 @@ Ext.define('Lada.controller.Sql', {
         // Get search parameters:
         var searchParams = {};
         if (Ext.getCmp('search').getValue() == 1) {
-            searchParams['mst'] = Ext.getCmp('mst').getValue();
-            searchParams['uwb'] = Ext.getCmp('uwb').getValue();
+            var mst = Ext.getCmp('mst').getValue();
+            var uwb = Ext.getCmp('uwb').getValue();
+            if (mst !== null) {
+                searchParams['mst'] = mst;
+            }
+            if (uwb !== null) {
+                searchParams['uwb'] = uwb;
+            }
         } else {
             // Get date object an convert it into a timestamp (ms since epoch)
             var ts = Ext.getCmp('pbegin').getValue().getTime();
-            searchParams['begin'] = ts;
+            if (ts !== null) {
+                searchParams['begin'] = ts;
+            }
         }
         result.getStore().load({
             params: searchParams
