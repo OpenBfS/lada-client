@@ -15,7 +15,6 @@ Ext.define('Lada.model.Probe', {
         {name: "mprId"},
         {name: "mstId"},
         {name: "netzbetreiberId"},
-        {name: "probeId"},
         {name: "probeNehmerId"},
         {name: "probeentnahmeBeginn", type: 'date', convert: ts2date, defaultValue: new Date()},
         {name: "probeentnahmeEnde", type: 'date', convert: ts2date, defaultValue: new Date()},
