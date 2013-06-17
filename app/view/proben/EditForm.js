@@ -222,57 +222,10 @@ Ext.define('Lada.view.proben.EditForm', {
                 padding: '10 10',
                 items: [
                     {
-                        xtype: 'grid',
-                        dockedItems: [
-                            {
-                                xtype: 'toolbar',
-                                dock: 'top',
-                                items: [
-                                    {
-                                        text: 'Hinzufügen',
-                                        icon: 'gfx/plus.gif'
-                                    },
-                                    {
-                                        text: 'Löschen',
-                                        icon: 'gfx/minus.gif'
-                                    }
-                                ]
-                            }
-                        ],
-                        columns: [
-                            {
-                                text: 'Mess.ID',
-                                width: 50
-                            },
-                            {
-                                text: 'NPR-Nr.',
-                                width: 50
-                            },
-                            {
-                                text: 'MMT',
-                                width: 50
-                            },
-                            {
-                                text: 'Messzeit'
-                            },
-                            {
-                                text: 'Status'
-                            },
-                            {
-                                text: 'OK-Flag'
-                            },
-                            {
-                                text: 'Anzahl Nuklide'
-                            },
-                            {
-                                text: 'Anzahl Kommentare',
-                                flex: 1
-                            }
-                        ]
+                        xtype: 'messungenlist'
                     }
                 ]
             }
-
         ];
         this.callParent();
     },

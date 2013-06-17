@@ -13,7 +13,8 @@ Ext.define('Lada.controller.Proben', {
         'Probenart',
         'Betriebsart',
         'Netzbetreiber',
-        'Testdatensatz'
+        'Testdatensatz',
+        'Messungen'
     ],
     models: [
         'Probe'

@@ -20,7 +20,8 @@ Ext.define('Lada.view.proben.Edit', {
         'Lada.view.widgets.Testdatensatz',
         'Lada.view.widgets.Netzbetreiber',
         'Lada.view.kommentare.List',
-        'Lada.view.orte.List'
+        'Lada.view.orte.List',
+        'Lada.view.messungen.List'
     ],
 
     initComponent: function() {
@@ -42,6 +43,15 @@ Ext.define('Lada.view.proben.Edit', {
         var orte = form.down('ortelist');
         var ostore = orte.getStore();
         ostore.load({
+            params: {
+                probe: this.initialConfig['modelId']
+                //probe: record.data['probeId']
+            }
+        });
+        // Load Messungen 
+        var messungen = form.down('messungenlist');
+        var mstore = messungen.getStore();
+        mstore.load({
             params: {
                 probe: this.initialConfig['modelId']
                 //probe: record.data['probeId']
