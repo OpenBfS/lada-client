@@ -32,8 +32,8 @@ Ext.define('Lada.view.orte.List' ,{
         this.columns = [
             {header: 'Typ', dataIndex: 'otyp'},
             {header: 'ID', dataIndex: 'ortId'},
-            {header: 'Staat', dataIndex: ''},
-            {header: 'Gem-ID', dataIndex: ''},
+            {header: 'Staat', dataIndex: 'staatId'},
+            {header: 'Gem-ID', dataIndex: 'gemId'},
             {header: 'Gemeindebezeichnung', dataIndex: 'bezeichnung', flex: 1},
             {header: 'Messpunkt', dataIndex: ''}
         ];

@@ -6,6 +6,8 @@ Ext.define('Lada.model.Ort', {
         {name: "otyp", mapping:"ort.otyp"},
         {name: "bezeichnung", mapping:"ort.bezeichnung"},
         {name: "beschreibung", mapping:"ort.beschreibung"},
+        {name: "gemId", mapping:"ort.gemId"},
+        {name: "staatId", mapping:"ort.staatId"},
         {name: "unscharf", mapping:"ort.unscharf"},
         {name: "nutsCode", mapping:"ort.nutsCode"},
         {name: "koordXExtern", mapping:"ort.koordXExtern"},
