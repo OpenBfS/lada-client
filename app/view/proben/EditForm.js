@@ -160,46 +160,7 @@ Ext.define('Lada.view.proben.EditForm', {
                 collapsed: true,
                 padding: '10 10',
                 items: [
-                    {
-                        xtype: 'grid',
-                        dockedItems: [
-                            {
-                                xtype: 'toolbar',
-                                dock: 'top',
-                                items: [
-                                    {
-                                        text: 'Hinzufügen',
-                                        icon: 'gfx/plus.gif'
-                                    },
-                                    {
-                                        text: 'Löschen',
-                                        icon: 'gfx/minus.gif'
-                                    }
-                                ]
-                            }
-                        ],
-                        columns: [
-                            {
-                                text: 'PZW-ID'
-                            },
-                            {
-                                text: 'PZW-Größe'
-                            },
-                            {
-                                text: '&lt; NWG'
-                            },
-                            {
-                                text: '&lt; PZW'
-                            },
-                            {
-                                text: 'rel. Unsich.[%]'
-                            },
-                            {
-                                text: 'Maßeinheit',
-                                flex: 1
-                            }
-                        ]
-                    }
+                    { xtype: 'zusatzwertelist' }
                 ]
             },
             // Probenkommentar

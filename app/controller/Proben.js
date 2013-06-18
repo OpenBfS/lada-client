@@ -14,7 +14,8 @@ Ext.define('Lada.controller.Proben', {
         'Betriebsart',
         'Netzbetreiber',
         'Testdatensatz',
-        'Messungen'
+        'Messungen',
+        'Zusatzwerte'
     ],
     models: [
         'Probe'

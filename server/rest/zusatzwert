@@ -1,0 +1,1 @@
+{"success":true,"message":"200","data":[{"id":{"probeId":"000007578314X","pzsId":"A76"},"probeId":"000007578314X","messwertNwg":null,"messwertPzs":13.0,"messfehler":30.0,"mehId":2,"letzteAenderung":1341898845000,"sprobenZusatz":{"pzsId":"A76","mehId":2,"beschreibung":"A0-Horizont (Humusauflage)","zusatzwert":"A0-HZT","eudfKeyword":null}}],"errors":{},"warnings":{}}
