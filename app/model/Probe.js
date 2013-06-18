@@ -1,6 +1,7 @@
 Ext.define('Lada.model.Probe', {
     extend: 'Ext.data.Model',
     fields: [
+        {name: "id", type: "string", convert: buildId},
         {name: "probeId"},
         {name: "baId"},
         {name: "datenbasisId"},
@@ -28,19 +29,22 @@ Ext.define('Lada.model.Probe', {
         {name: "test"},
         {name: "umwId"}
     ],
-    idProperty: "probeId",
+    idProperty: "id",
     proxy: {
         type: 'rest',
         appendId: true, //default
         url: 'server/rest/proben',
-        api: {
-        },
         reader: {
             type: 'json',
             root: 'data'
         }
     }
 });
+
+function buildId(v, record){
+    var newId = record.get('probeId') + record.get('nebenprobenNr');
+    return newId;
+}
 
 function ts2date(v, record){
     // Converts a timestamp into a date object.
