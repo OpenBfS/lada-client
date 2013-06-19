@@ -19,6 +19,8 @@ Ext.application({
     controllers: [
         'Proben',
         'Kommentare',
-        'Sql'
+        'Sql',
+        'Messungen'
+
     ]
 });
