@@ -6,7 +6,7 @@ Ext.define('Lada.model.Kommentar', {
         {name: "convertedId", convert:buildId},
         {name: "probeId"},
         {name: "erzeuger"},
-        {name: "kdatum"},
+        {name: "kdatum", type: 'date', convert: ts2date, defaultValue: new Date()},
         {name: "ktext"}
     ],
     idProperty: "convertedId",
@@ -23,4 +23,9 @@ Ext.define('Lada.model.Kommentar', {
 
 function buildId(v, record){
     return record.get('probeId') + record.get('kid');
+}
+
+function ts2date(v, record){
+    // Converts a timestamp into a date object.
+    return new Date(v);
 }

@@ -4,7 +4,8 @@ Ext.define('Lada.view.widgets.Mst' ,{
         alias: 'widget.mst',
         store: 'Mst',
         displayField:'mstId',
-        valueField: 'mstId' ,
+        valueField: 'mstId',
+        typeAhead: true,
         emptyText:'Wählen Sie eine Messstelle',
     initComponent: function() {
         this.callParent(arguments);

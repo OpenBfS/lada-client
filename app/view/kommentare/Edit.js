@@ -29,7 +29,7 @@ Ext.define('Lada.view.kommentare.Edit', {
                         fieldLabel: 'Erzeuger'
                     },
                     {
-                        xtype: 'textfield',
+                        xtype: 'datefield',
                         name: 'kdatum',
                         fieldLabel: 'Datum'
                     },

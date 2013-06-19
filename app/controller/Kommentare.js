@@ -2,7 +2,8 @@ Ext.define('Lada.controller.Kommentare', {
     extend: 'Ext.app.Controller',
     views: [
         'kommentare.List',
-        'kommentare.Edit'
+        'kommentare.Edit',
+        'kommentare.Create'
     ],
     stores: [
         'Kommentare'
@@ -32,11 +33,13 @@ Ext.define('Lada.controller.Kommentare', {
     },
     addKommentar: function(button) {
         console.log('Adding new Kommentar');
-        var view = Ext.widget('kommentaredit');
+        var view = Ext.create('Lada.view.kommentare.Create');
         var form = view.down('form');
-        // Create a new Kommentar
-        var record = Ext.create('Lada.model.Kommentar');
-        form.loadRecord(record);
+        // Set probeId
+        var probenform = button.up('form');
+        var probe = probenform.getRecord();
+        var probeId = probe.get('probeId');
+        form.model.set('probeId', probeId);
     },
     deleteKommentar: function(button) {
         // Get selected item in grid
