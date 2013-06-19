@@ -2,7 +2,6 @@ Ext.define('Lada.controller.Kommentare', {
     extend: 'Ext.app.Controller',
     views: [
         'kommentare.List',
-        'kommentare.Edit',
         'kommentare.Create'
     ],
     stores: [
@@ -17,7 +16,6 @@ Ext.define('Lada.controller.Kommentare', {
             // CSS like selector to select element in the viewport. See
             // ComponentQuery documentation for more details.
             'kommentarelist': {
-                // Map Doubleclick on rows of the probenlist.
                 itemdblclick: this.editKommentar
             },
             'kommentarelist toolbar button[action=add]': {
@@ -26,20 +24,24 @@ Ext.define('Lada.controller.Kommentare', {
             'kommentarelist toolbar button[action=delete]': {
                 click: this.deleteKommentar
             },
-            'kommentaredit button[action=save]': {
-                click: this.saveKommentar
+            'kommentarecreate form': {
+                savesuccess: this.createSuccess,
+                savefailure: this.createFailure
+            },
+            'kommentareedit form': {
+                savesuccess: this.editSuccess,
+                savefailure: this.editFailure
             }
         });
     },
     addKommentar: function(button) {
         console.log('Adding new Kommentar');
-        var view = Ext.create('Lada.view.kommentare.Create');
-        var form = view.down('form');
-        // Set probeId
-        var probenform = button.up('form');
-        var probe = probenform.getRecord();
-        var probeId = probe.get('probeId');
-        form.model.set('probeId', probeId);
+        var view = Ext.widget('kommentarecreate');
+    },
+    editKommentar: function(grid, record) {
+        console.log('Editing Kommentar');
+        var view = Ext.widget('kommentarecreate', {model: record});
+        console.log("Loaded Kommentar with ID " + record.getId()); //outputs ID
     },
     deleteKommentar: function(button) {
         // Get selected item in grid
@@ -56,22 +58,34 @@ Ext.define('Lada.controller.Kommentare', {
             }
         });
     },
-    editKommentar: function(grid, record) {
-        // Create new window to edit the seletced record.
-        var view = Ext.widget('kommentaredit');
-        var form = view.down('form');
-        form.loadRecord(record);
-    },
-    saveKommentar: function(button) {
-        var win = button.up('window');
-        var form = win.down('form');
-        var record = form.getRecord();
-        var values = form.getValues();
+    createSuccess: function(form, record, operation) {
+        // Reload store
         var store = this.getKommentareStore();
-        record.set(values);
-        store.add(record);
-        store.sync();
-        console.log('Saving Kommentar');
+        store.reload();
+        var win = form.up('window');
         win.close();
+    },
+    createFailure: function(form, record, operation) {
+        Ext.MessageBox.show({
+            title: 'Fehler beim Speichern',
+            msg: form.message,
+            icon: Ext.MessageBox.ERROR,
+            buttons: Ext.Msg.OK
+        });
+    },
+    editSuccess: function(form, record, operation) {
+        // Reload store
+        var store = this.getKommentareStore();
+        store.reload();
+        var win = form.up('window');
+        win.close();
+    },
+    editFailure: function(form, record, operation) {
+        Ext.MessageBox.show({
+            title: 'Fehler beim Speichern',
+            msg: form.message,
+            icon: Ext.MessageBox.ERROR,
+            buttons: Ext.Msg.OK
+        });
     }
 });
