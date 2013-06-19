@@ -12,7 +12,9 @@ Ext.define('Lada.view.zusatzwerte.Create', {
     modal: true,
 
     requires: [
-        'Lada.view.zusatzwerte.CreateForm'
+        'Lada.view.zusatzwerte.CreateForm',
+        'Lada.view.widgets.Zusatzwert',
+        'Lada.view.widgets.Messeinheit'
     ],
     initComponent: function() {
         var form = Ext.create('Lada.view.zusatzwerte.CreateForm');

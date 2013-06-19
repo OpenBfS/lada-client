@@ -3,21 +3,36 @@ Ext.define('Lada.view.zusatzwerte.CreateForm', {
     model: 'Lada.model.Zusatzwert',
     initComponent: function() {
         this.items = [
-            //{
-            //    xtype: 'textfield',
-            //    name: 'erzeuger',
-            //    fieldLabel: 'Erzeuger'
-            //},
-            //{
-            //    xtype: 'datefield',
-            //    name: 'kdatum',
-            //    fieldLabel: 'Datum'
-            //},
-            //{
-            //    xtype: 'textareafield',
-            //    name: 'ktext',
-            //    fieldLabel: 'Text'
-            //}
+            {
+                xtype: 'zusatzwert',
+                name: 'pzsId',
+                fieldLabel: 'PWZ-ID'
+            },
+            {
+                xtype: 'textfield',
+                name: 'erzeuger',
+                fieldLabel: 'PWZ-Größe'
+            },
+            {
+                xtype: 'textfield',
+                name: 'messwertNwg',
+                fieldLabel: '&lt;NWG'
+            },
+            {
+                xtype: 'textfield',
+                name: 'messwertPzs',
+                fieldLabel: '&lt;PZW'
+            },
+            {
+                xtype: 'textfield',
+                name: 'messfehler',
+                fieldLabel: 'rel. Unsich.[%]'
+            },
+            {
+                xtype: 'messeinheit',
+                name: 'mehId',
+                fieldLabel: 'Maßeinheit'
+            }
         ];
         this.callParent();
     }
