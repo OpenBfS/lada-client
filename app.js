@@ -20,6 +20,7 @@ Ext.application({
         'Proben',
         'Kommentare',
         'Sql',
+        'Zusatzwerte',
         'Orte',
         'Messungen'
 
