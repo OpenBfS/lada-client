@@ -17,7 +17,7 @@ Ext.define('Lada.view.zusatzwerte.Create', {
         'Lada.view.widgets.Messeinheit'
     ],
     initComponent: function() {
-        var form = Ext.create('Lada.view.zusatzwerte.CreateForm');
+        var form = Ext.create('Lada.view.zusatzwerte.CreateForm', this.initialConfig);
         this.items = [form];
         this.buttons = [
             {

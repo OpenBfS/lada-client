@@ -30,12 +30,11 @@ Ext.define('Lada.view.zusatzwerte.List' ,{
             }
         ];
         this.columns = [
-            {header: 'PZW-ID', dataIndex: 'pzsId'},
-            {header: 'PWZ-Größe', dataIndex: ''},
-            {header: '&lt;NWG', dataIndex: 'messwertNwg'},
-            {header: '&lt;PZW', dataIndex: 'messwertPzs'},
+            {header: 'PZW-ID', dataIndex: 'sprobenZusatz_pzsId'},
+            {header: 'PZW-Größe', dataIndex: 'sprobenZusatz_beschreibung', flex: 1},
+            {header: 'Messwert', dataIndex: 'messwertPzs'},
             {header: 'rel. Unsich.[%]', dataIndex: 'messfehler'},
-            {header: 'Maßeinheit', dataIndex: ''}
+            {header: 'Maßeinheit', dataIndex: 'sprobenZusatz_mehId'}
         ];
         this.callParent(arguments);
     }

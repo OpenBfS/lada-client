@@ -5,23 +5,13 @@ Ext.define('Lada.view.zusatzwerte.CreateForm', {
         this.items = [
             {
                 xtype: 'zusatzwert',
-                name: 'pzsId',
-                fieldLabel: 'PWZ-ID'
-            },
-            {
-                xtype: 'textfield',
-                name: 'erzeuger',
-                fieldLabel: 'PWZ-Größe'
-            },
-            {
-                xtype: 'textfield',
-                name: 'messwertNwg',
-                fieldLabel: '&lt;NWG'
+                name: 'sprobenZusatz_pzsId',
+                fieldLabel: 'PZW-Größe'
             },
             {
                 xtype: 'textfield',
                 name: 'messwertPzs',
-                fieldLabel: '&lt;PZW'
+                fieldLabel: 'Messwert'
             },
             {
                 xtype: 'textfield',
@@ -29,9 +19,9 @@ Ext.define('Lada.view.zusatzwerte.CreateForm', {
                 fieldLabel: 'rel. Unsich.[%]'
             },
             {
-                xtype: 'messeinheit',
-                name: 'mehId',
-                fieldLabel: 'Maßeinheit'
+                xtype: 'textfield',
+                name: 'nwgZuMesswert',
+                fieldLabel: 'Nachweisgrenze'
             }
         ];
         this.callParent();
