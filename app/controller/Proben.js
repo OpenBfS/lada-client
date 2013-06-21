@@ -1,26 +1,16 @@
 Ext.define('Lada.controller.Proben', {
     extend: 'Ext.app.Controller',
     views: [
-        'proben.List',
         'proben.Edit',
         'proben.Create'
     ],
     stores: [
-        'Proben',
-        'Orte',
-        'Uwb',
-        'Datenbasis',
-        'Probenart',
-        'Betriebsart',
-        'Netzbetreiber',
-        'Testdatensatz',
-        'Messungen',
-        'Zusatzwerte',
-        'Messeinheit',
-        'Probenzusatzwert'
-    ],
-    models: [
-        'Probe'
+        'Proben'
+    //    'Orte',
+    //    'Messungen',
+    //    'Zusatzwerte',
+    //    'Messeinheit',
+    //    'Probenzusatzwert'
     ],
     init: function() {
         console.log('Initialising the Proben controller');

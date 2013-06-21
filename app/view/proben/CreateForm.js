@@ -1,7 +1,14 @@
 Ext.define('Lada.view.proben.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
+    requires: [
+        'Lada.view.widgets.Datenbasis',
+        'Lada.view.widgets.Netzbetreiber',
+        'Lada.view.widgets.Betriebsart',
+        'Lada.view.widgets.Testdatensatz',
+        'Lada.view.widgets.Probenart',
+        'Lada.view.widgets.Uwb'
+    ],
     model: 'Lada.model.Probe',
-
     initComponent: function() {
        this.items = [
             {
@@ -22,11 +29,6 @@ Ext.define('Lada.view.proben.CreateForm', {
                         name: 'hauptprobenNr',
                         fieldLabel: 'Hauptprobennr.'
                     },
-                    //{
-                    //    xtype: 'textfield',
-                    //    name: 'probeId',
-                    //    fieldLabel: 'Probe-ID'
-                    //},
                     {
                         xtype: 'fieldset',
                         title: 'Erweiterte Probenangaben',
@@ -145,13 +147,6 @@ Ext.define('Lada.view.proben.CreateForm', {
                 ]
             }
         ];
-        //this.buttons = [
-        //    {
-        //        text: 'Speichern',
-        //        handler: this.commit,
-        //        scope: this
-        //    }
-        //];
         this.callParent();
     },
     buildDescriptors: function() {

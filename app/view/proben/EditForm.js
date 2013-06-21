@@ -1,6 +1,15 @@
 Ext.define('Lada.view.proben.EditForm', {
     extend: 'Lada.view.widgets.LadaForm',
+    requires: [
+        'Lada.view.widgets.Datenbasis',
+        'Lada.view.widgets.Netzbetreiber',
+        'Lada.view.widgets.Betriebsart',
+        'Lada.view.widgets.Testdatensatz',
+        'Lada.view.widgets.Probenart',
+        'Lada.view.widgets.Uwb'
+    ],
     model: 'Lada.model.Probe',
+    alias: 'widget.probeneditform',
 
     initComponent: function() {
        this.items = [
@@ -21,11 +30,6 @@ Ext.define('Lada.view.proben.EditForm', {
                         name: 'hauptprobenNr',
                         fieldLabel: 'Hauptprobennr.'
                     },
-                    //{
-                    //    xtype: 'textfield',
-                    //    name: 'probeId',
-                    //    fieldLabel: 'Probe-ID'
-                    //},
                     {
                         xtype: 'fieldset',
                         title: 'Erweiterte Probenangaben',
@@ -141,52 +145,52 @@ Ext.define('Lada.view.proben.EditForm', {
                     }
                 ]
             },
-            // Ortsangaben
-            {
-                xtype: 'fieldset',
-                title: 'Ortsangaben',
-                padding: '10 10',
-                items: [
-                    {
-                        xtype: 'ortelist'
-                    }
-                ]
-            },
-            // Probenzusatzwerte
-            {
-                xtype: 'fieldset',
-                title: 'Probenzusatzwerte',
-                collapsible: true,
-                collapsed: true,
-                padding: '10 10',
-                items: [
-                    { xtype: 'zusatzwertelist' }
-                ]
-            },
-            // Probenkommentar
-            {
-                xtype: 'fieldset',
-                title: 'Probenkommentare',
-                collapsible: true,
-                collapsed: true,
-                padding: '10 10',
-                items: [
-                    {
-                        xtype: 'kommentarelist'
-                    }
-                ]
-            },
-            // Messungsangaben
-            {
-                xtype: 'fieldset',
-                title: 'Messungsangaben',
-                padding: '10 10',
-                items: [
-                    {
-                        xtype: 'messungenlist'
-                    }
-                ]
-            }
+            //// Ortsangaben
+            //{
+            //    xtype: 'fieldset',
+            //    title: 'Ortsangaben',
+            //    padding: '10 10',
+            //    items: [
+            //        {
+            //            xtype: 'ortelist'
+            //        }
+            //    ]
+            //},
+            //// Probenzusatzwerte
+            //{
+            //    xtype: 'fieldset',
+            //    title: 'Probenzusatzwerte',
+            //    collapsible: true,
+            //    collapsed: true,
+            //    padding: '10 10',
+            //    items: [
+            //        { xtype: 'zusatzwertelist' }
+            //    ]
+            //},
+            //// Probenkommentar
+            //{
+            //    xtype: 'fieldset',
+            //    title: 'Probenkommentare',
+            //    collapsible: true,
+            //    collapsed: true,
+            //    padding: '10 10',
+            //    items: [
+            //        {
+            //            xtype: 'kommentarelist'
+            //        }
+            //    ]
+            //},
+            //// Messungsangaben
+            //{
+            //    xtype: 'fieldset',
+            //    title: 'Messungsangaben',
+            //    padding: '10 10',
+            //    items: [
+            //        {
+            //            xtype: 'messungenlist'
+            //        }
+            //    ]
+            //}
         ];
         this.callParent();
     },

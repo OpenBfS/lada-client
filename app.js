@@ -26,8 +26,8 @@ Ext.application({
     // Define the controllers of the application. They will be initialized
     // first before the application "launch" function is called.
     controllers: [
-        'Sql'
-        //'Proben',
+        'Sql',
+        'Proben'
         //'Kommentare',
         //'Sql',
         //'Zusatzwerte',

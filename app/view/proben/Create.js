@@ -10,16 +10,6 @@ Ext.define('Lada.view.proben.Create', {
     autoShow: true,
     autoScroll: true,
     modal: true,
-
-    requires: [
-        'Lada.view.proben.CreateForm',
-        'Lada.view.widgets.Uwb',
-        'Lada.view.widgets.Datenbasis',
-        'Lada.view.widgets.Probenart',
-        'Lada.view.widgets.Betriebsart',
-        'Lada.view.widgets.Netzbetreiber',
-        'Lada.view.widgets.Testdatensatz'
-    ],
     initComponent: function() {
         var form = Ext.create('Lada.view.proben.CreateForm');
         this.items = [form];

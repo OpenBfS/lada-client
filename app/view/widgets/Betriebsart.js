@@ -1,8 +1,16 @@
-// Combobox for Umweltbereich
+// Combobox for Betriebsart
+var betriebsartStore = Ext.create('Ext.data.Store', {
+    fields: ['betriebsartId', 'betriebsart'],
+    data: [
+        {"betriebsartId":"1", "betriebsart":"Normal-/Routinebtrieb"},
+        {"betriebsartId":"2", "betriebsart":"Störfall/Intensivbetrieb"}
+    ]
+});
+
 Ext.define('Lada.view.widgets.Betriebsart' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.betriebsart',
-        store: 'Betriebsart',
+        store: betriebsartStore,
         queryMode: 'local',
         displayField:'betriebsart',
         valueField: 'betriebsartId',
