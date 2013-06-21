@@ -1,7 +1,7 @@
 Ext.application({
     name: 'Lada',
-    // Setting this variable to true should trigger loading the Viewport.js
-    // file which sets ob the viewport. But this does not happen.
+    // Setting up translations. This is done using a ext-plgin which can be
+    // found on https://github.com/elmasse/Ext.i18n.Bundle
     requires: ['Ext.i18n.Bundle'],
     bundle: {
         bundle: 'Lada',
@@ -9,11 +9,16 @@ Ext.application({
         path: 'resources',
         noCache: true
     },
+    // Setting this variable to true triggers loading the Viewport.js
+    // file which sets ob the viewport.
     autoCreateViewport: true,
+
+
+    // Start the application.
     launch: function() {
-        // Start the application.
         console.log('Launching the application');
     },
+
     // Define the controllers of the application. They will be initialized
     // first before the application "launch" function is called.
     controllers: [
@@ -23,6 +28,5 @@ Ext.application({
         'Zusatzwerte',
         'Orte',
         'Messungen'
-
     ]
 });
