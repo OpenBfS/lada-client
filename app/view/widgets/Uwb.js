@@ -1,8 +1,22 @@
 // Combobox for Umweltbereich
+var uwbStore = Ext.create('Ext.data.Store', {
+    fields: ['umwId'],
+    proxy: {
+        type: 'ajax',
+        api: {
+        read: 'server/rest/uwb'
+        },
+        reader: {
+            type: 'json',
+            root: 'data'
+        }
+    }
+});
+
 Ext.define('Lada.view.widgets.Uwb' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.uwb',
-        store: 'Uwb',
+        store: uwbStore,
         displayField:'umwId',
         valueField: 'umwId',
         emptyText:'Wählen Sie einen Umweltbereich',

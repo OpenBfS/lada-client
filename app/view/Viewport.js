@@ -4,8 +4,7 @@ Ext.define('Lada.view.Viewport' ,{
         'Lada.view.search.List',
         'Lada.view.search.Query1',
         'Lada.view.search.Query2',
-        'Lada.view.proben.List',
-        'Lada.view.proben.Edit'
+        'Lada.view.proben.List'
     ],
     initComponent: function() {
         console.log('Setting up Viewport');
@@ -31,6 +30,7 @@ Ext.define('Lada.view.Viewport' ,{
                     hidden: true
 
                 },
+                // Buttons to trigger the search.
                 {
                     id: 'SearchBtnPanel',
                     xtype: 'panel',
@@ -52,7 +52,6 @@ Ext.define('Lada.view.Viewport' ,{
                     hidden: true
 
                 },
-                // Buttons to trigger the search.
                 // Resultlist for the query.
                 {
                     id: 'result',

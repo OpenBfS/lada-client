@@ -1,13 +1,8 @@
 var queries = new Array('query1', 'query2');
 Ext.define('Lada.controller.Sql', {
     extend: 'Ext.app.Controller',
-    views: [
-        'search.List'
-    ],
     stores: [
-        'Sql',
-        'Uwb',
-        'Mst'
+        'Proben'    // List of found Proben
     ],
     init: function() {
         console.log('Initialising the Sql controller');
