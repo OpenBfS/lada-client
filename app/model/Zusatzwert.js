@@ -10,14 +10,15 @@ Ext.define('Lada.model.Zusatzwert', {
         {name: "nwgZuMesswert", type: 'float'},
         {name: "messwertPzs", type: 'float'},
         {name: "messfehler", type: 'float'},
-        {name: "letzteAenderung", type: 'date', convert: ts2date, defaultValue: new Date()}
+        {name: "letzteAenderung", type: 'date', convert: ts2date, defaultValue: new Date()},
 
-        //// This are fields from the s_zusatzwert_table. They are currently not
-        //// needed for displaying values in the grid.
-        //{name: "sprobenZusatz"},
-        //{name: "sprobenZusatz_beschreibung", mapping: "sprobenZusatz.beschreibung"},
-        //{name: "sprobenZusatz_pzsId", mapping: "sprobenZusatz.pzsId"},
-        //{name: "sprobenZusatz_mehId", mapping: "sprobenZusatz.mehId"}
+        // Field for the nested Probenzusatzobject. This one is needed to have
+        // access to the nested data in the grid.
+        // TODO: I would have expected that this field does not need to be
+        // defined explicitly as there is the hasOne asscociation defined
+        // which name and associationKey named "sprobenZusatz". Anyway it does
+        // not seem to make problems.
+        {name: "sprobenZusatz"}
     ],
     hasOne: [
         {
