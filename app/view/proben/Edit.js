@@ -11,15 +11,6 @@ Ext.define('Lada.view.proben.Edit', {
     autoScroll: true,
     modal: true,
 
-    requires: [
-        //'Lada.view.proben.EditForm',
-        //'Lada.view.widgets.Uwb',
-        //'Lada.view.kommentare.List',
-        //'Lada.view.orte.List',
-        //'Lada.view.messungen.List',
-        //'Lada.view.zusatzwerte.List'
-    ],
-
     initComponent: function() {
         // InitialConfig is the config object passed to the constructor on
         // creation of this window. We need to pass it throuh to the form as
@@ -39,15 +30,6 @@ Ext.define('Lada.view.proben.Edit', {
         //var orte = form.down('ortelist');
         //var ostore = orte.getStore();
         //ostore.load({
-        //    params: {
-        //        probe: this.initialConfig['modelId']
-        //        //probe: record.data['probeId']
-        //    }
-        //});
-        //// Load Zusatzwerte
-        //var zwerte = form.down('zusatzwertelist');
-        //var zstore = zwerte.getStore();
-        //zstore.load({
         //    params: {
         //        probe: this.initialConfig['modelId']
         //        //probe: record.data['probeId']

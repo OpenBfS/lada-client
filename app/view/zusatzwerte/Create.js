@@ -11,19 +11,15 @@ Ext.define('Lada.view.zusatzwerte.Create', {
     autoScroll: true,
     modal: true,
 
-    requires: [
-        'Lada.view.zusatzwerte.CreateForm',
-        'Lada.view.widgets.Zusatzwert',
-        'Lada.view.widgets.Messeinheit'
-    ],
     initComponent: function() {
         var form = Ext.create('Lada.view.zusatzwerte.CreateForm', this.initialConfig);
         this.items = [form];
         this.buttons = [
             {
                 text: 'Speichern',
-                handler: form.commit,
-                scope: form
+                //handler: form.commit,
+                scope: form,
+                action: 'save'
             }
         ];
         this.callParent();

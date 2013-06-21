@@ -5,10 +5,10 @@ Ext.define('Lada.controller.Proben', {
         'proben.Create'
     ],
     stores: [
-        'Proben'
+        'Proben',
+        'Zusatzwerte'
     //    'Orte',
     //    'Messungen',
-    //    'Zusatzwerte',
     //    'Messeinheit',
     //    'Probenzusatzwert'
     ],
@@ -41,6 +41,14 @@ Ext.define('Lada.controller.Proben', {
         console.log('Editing Probe');
         var id = record.get('probeId');
         var view = Ext.widget('probenedit', {modelId: id});
+
+        // Load Zusatzwerte
+        var zstore = this.getZusatzwerteStore();
+        zstore.load({
+            params: {
+                probe: id
+            }
+        });
         console.log("Loaded Probe with ID " + record.getId()); //outputs ID
     },
     createSuccess: function(form, record, operation) {

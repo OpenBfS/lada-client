@@ -27,11 +27,31 @@ Ext.application({
     // first before the application "launch" function is called.
     controllers: [
         'Sql',
-        'Proben'
+        'Proben',
+        'Zusatzwerte'
         //'Kommentare',
         //'Sql',
-        //'Zusatzwerte',
         //'Orte',
         //'Messungen'
     ]
+});
+
+Ext.data.writer.Json.override({
+    getRecordData: function(record, getEverything) {
+        if(this.writeEverything || record.writeEverything){
+            console.log('getRecordData', this,arguments);
+            return record.getAllData();
+        } else {
+            return this.callOverridden(arguments);
+        }
+    }
+});
+
+Ext.data.Model.addMembers({
+    getAllData: function() {
+        var data1 = this.getData();
+        var data2 = this.getAssociatedData( );
+        var dataMerged = Ext.Object.merge(data1, data2);
+        return dataMerged;
+    }
 });

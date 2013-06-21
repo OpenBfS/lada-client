@@ -6,7 +6,8 @@ Ext.define('Lada.view.proben.EditForm', {
         'Lada.view.widgets.Betriebsart',
         'Lada.view.widgets.Testdatensatz',
         'Lada.view.widgets.Probenart',
-        'Lada.view.widgets.Uwb'
+        'Lada.view.widgets.Uwb',
+        'Lada.view.zusatzwerte.List'
     ],
     model: 'Lada.model.Probe',
     alias: 'widget.probeneditform',
@@ -156,17 +157,17 @@ Ext.define('Lada.view.proben.EditForm', {
             //        }
             //    ]
             //},
-            //// Probenzusatzwerte
-            //{
-            //    xtype: 'fieldset',
-            //    title: 'Probenzusatzwerte',
-            //    collapsible: true,
-            //    collapsed: true,
-            //    padding: '10 10',
-            //    items: [
-            //        { xtype: 'zusatzwertelist' }
-            //    ]
-            //},
+            // Probenzusatzwerte
+            {
+                xtype: 'fieldset',
+                title: 'Probenzusatzwerte',
+                collapsible: true,
+                collapsed: true,
+                padding: '10 10',
+                items: [
+                    { xtype: 'zusatzwertelist' }
+                ]
+            }
             //// Probenkommentar
             //{
             //    xtype: 'fieldset',

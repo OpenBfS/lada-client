@@ -1,13 +1,11 @@
 Ext.define('Lada.controller.Zusatzwerte', {
     extend: 'Ext.app.Controller',
     views: [
-        'zusatzwerte.List',
         'zusatzwerte.Create'
     ],
     stores: [
-    ],
-    models: [
-        'Zusatzwert'
+        'Zusatzwerte',
+        'Probenzusatzwerte'
     ],
     init: function() {
         console.log('Initialising the Zusatzwerte controller');
@@ -27,11 +25,27 @@ Ext.define('Lada.controller.Zusatzwerte', {
                 savesuccess: this.createSuccess,
                 savefailure: this.createFailure
             },
+            'zusatzwertecreate button[action=save]': {
+                click: this.saveZusatzwert
+            },
             'zusatzwerteedit form': {
                 savesuccess: this.editSuccess,
                 savefailure: this.editFailure
             }
         });
+    },
+    saveZusatzwert: function(button) {
+        console.log('Saving Zusatzwert');
+        var form = button.up('window').down('form');
+        var values = form.getForm().getValues();
+        var model = form.model;
+        // Set Probenzusatzwert and rebind the model to the form.
+        var xxx = this.getProbenzusatzwerteStore();
+        var probenzusatz = xxx.getAt(xxx.find('pzsId', values.pzsId));
+        model.setProbenzusatz(probenzusatz);
+        // Set ProbenId
+        // model.probeId = 
+        form.commit();
     },
     addZusatzwert: function(button) {
         console.log('Adding new Zusatzwert');
