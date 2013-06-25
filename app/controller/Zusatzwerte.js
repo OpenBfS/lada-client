@@ -63,10 +63,7 @@ Ext.define('Lada.controller.Zusatzwerte', {
         Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn){
             if(btn === 'yes'){
                 var store = grid.getStore();
-                var sprobenZusatz = selection.get('sprobenZusatz');
-                var pzsId =  sprobenZusatz.pzsId;
-                var probeId = selection.get('probeId');
-                var deleteUrl = selection.getProxy().url + "/" + pzsId + "/" + probeId;
+                var deleteUrl = selection.getProxy().url + selection.getEidi();
                 Ext.Ajax.request({
                     url: deleteUrl,
                     method: 'DELETE',
