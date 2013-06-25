@@ -5,7 +5,9 @@ Ext.define('Lada.model.Zusatzwert', {
     ],
     fields: [
         {name: "id"},
-        {name: "pzsId", mapping: "id.pzsId"},
+        // Commented out as pzsId must not be submitted to the server. On
+        // serverside the pzsId is taken from the nested sprobenZusatz object.
+        //{name: "pzsId", mapping: "id.pzsId"},
         {name: "probeId", mapping: "id.probeId"},
         {name: "nwgZuMesswert", type: 'float'},
         {name: "messwertPzs", type: 'float'},
