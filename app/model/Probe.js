@@ -1,7 +1,6 @@
 Ext.define('Lada.model.Probe', {
     extend: 'Ext.data.Model',
     fields: [
-        {name: "id", type: "string", convert: buildId},
         {name: "probeId"},
         {name: "baId"},
         {name: "datenbasisId"},
@@ -29,7 +28,6 @@ Ext.define('Lada.model.Probe', {
         {name: "test"},
         {name: "umwId"}
     ],
-    idProperty: "id",
     proxy: {
         type: 'rest',
         appendId: true, //default
