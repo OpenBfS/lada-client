@@ -53,5 +53,8 @@ Ext.data.Model.addMembers({
         var data2 = this.getAssociatedData( );
         var dataMerged = Ext.Object.merge(data1, data2);
         return dataMerged;
+    },
+    getEidi: function() {
+        return "/" + this.getId();
     }
 });
