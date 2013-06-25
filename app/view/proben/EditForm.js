@@ -165,7 +165,10 @@ Ext.define('Lada.view.proben.EditForm', {
                 collapsed: true,
                 padding: '10 10',
                 items: [
-                    { xtype: 'zusatzwertelist' }
+                    {
+                        xtype: 'zusatzwertelist',
+                        probeId: this.modelId
+                    }
                 ]
             }
             //// Probenkommentar
