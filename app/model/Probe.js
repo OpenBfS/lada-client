@@ -28,6 +28,7 @@ Ext.define('Lada.model.Probe', {
         {name: "test"},
         {name: "umwId"}
     ],
+    idProperty: "probeId",
     proxy: {
         type: 'rest',
         appendId: true, //default
