@@ -46,6 +46,12 @@ Ext.define('Lada.model.Zusatzwert', {
             type: 'json',
             writeEverything : true
         }
+    },
+    getEidi: function () {
+        var sprobenZusatz = this.get('sprobenZusatz');
+        var pzsId =  sprobenZusatz.pzsId;
+        var probeId = this.get('probeId');
+        return "/" + pzsId + "/" + probeId;
     }
 });
 
