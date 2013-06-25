@@ -24,7 +24,8 @@ Ext.define('Lada.view.proben.EditForm', {
                     {
                         xtype: 'mst',
                         name: 'mstId',
-                        fieldLabel: 'Messstelle'
+                        fieldLabel: 'Messstelle',
+                        allowBlank: false
                     },
                     {
                         xtype: 'textfield',
@@ -52,14 +53,16 @@ Ext.define('Lada.view.proben.EditForm', {
                             {
                                 xtype: 'testdatensatz',
                                 name: 'test',
-                                fieldLabel: 'Testdatensatz'
+                                fieldLabel: 'Testdatensatz',
+                                allowBlank: false
                             },
                             {
                                 xtype: 'probenart',
                                 id: 'probenart',
                                 editable: false,
                                 name: 'probenartId',
-                                fieldLabel: 'Probenart'
+                                fieldLabel: 'Probenart',
+                                allowBlank: false
                             },
                             {
                                 xtype: 'textfield',
@@ -93,7 +96,8 @@ Ext.define('Lada.view.proben.EditForm', {
                         {
                             xtype: 'uwb',
                             name: 'umwId',
-                            fieldLabel: 'Umweltbereich'
+                            fieldLabel: 'Umweltbereich',
+                            allowBlank: false
                         },
                         {
                             xtype: 'textfield',

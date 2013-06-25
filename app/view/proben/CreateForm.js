@@ -50,7 +50,8 @@ Ext.define('Lada.view.proben.CreateForm', {
                             {
                                 xtype: 'testdatensatz',
                                 name: 'test',
-                                fieldLabel: 'Testdatensatz'
+                                fieldLabel: 'Testdatensatz',
+                                allowBlank: false
                             },
                             {
                                 xtype: 'probenart',
