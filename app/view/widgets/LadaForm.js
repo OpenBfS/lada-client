@@ -21,6 +21,7 @@ Ext.define('Lada.view.widgets.LadaForm', {
     errors: null,
     warnings: null,
     message: null,
+    success: null,
     readonly: false,
 
     initComponent: function() {
@@ -64,23 +65,50 @@ Ext.define('Lada.view.widgets.LadaForm', {
         if (this.form.isDirty() && this.form.isValid()) {
             this.form.updateRecord(this.model);
 
-            this.model.save({
-                callback: function(records, operation) {
-                    this.parseResponse(operation);
-                    if (operation.wasSuccessful()) {
+            var data = this.model.getAllData();
+            var baseUrl = this.model.getProxy().url;
+            var url = baseUrl;
+            var method = "POST";
+            if (this.model.getId()) {
+                url += this.model.getEidi();
+                method = "PUT";
+            }
+
+            Ext.Ajax.request({
+                url: url,
+                jsonData: data,
+                method: method,
+                callback: function(option, success, response) {
+                    this.parseResponse(response);
+                    if (this.success) {
                         console.log('Save was successfull');
-                        this.fireEvent('savesuccess', this, records, operation);
+                        this.fireEvent('savesuccess', this);
                     } else {
                         console.log('Save was not successfull');
                         this.form.markInvalid(this.errors);
-                        this.fireEvent('savefailure', this, records, operation);
-                    }
-                    if (callback) {
-                        callback.call(scope || this, this, operation.wasSuccessful(), this.model);
+                        this.fireEvent('savefailure', this);
                     }
                 },
                 scope: this
             });
+
+            //this.model.save({
+            //    callback: function(records, operation) {
+            //        this.parseResponse(operation);
+            //        if (operation.wasSuccessful()) {
+            //            console.log('Save was successfull');
+            //            this.fireEvent('savesuccess', this, records, operation);
+            //        } else {
+            //            console.log('Save was not successfull');
+            //            this.form.markInvalid(this.errors);
+            //            this.fireEvent('savefailure', this, records, operation);
+            //        }
+            //        if (callback) {
+            //            callback.call(scope || this, this, operation.wasSuccessful(), this.model);
+            //        }
+            //    },
+            //    scope: this
+            //});
         }
     },
 
@@ -108,11 +136,24 @@ Ext.define('Lada.view.widgets.LadaForm', {
             field.setReadOnly(bReadOnly);
         });
     },
-    parseResponse: function(operation) {
-        this.errors = this.translateReturnCodes(operation.request.scope.reader.jsonData["errors"]);
-        this.warnings = this.translateReturnCodes(operation.request.scope.reader.jsonData["warnings"]);
-        this.message = Lada.getApplication().bundle.getMsg(operation.request.scope.reader.jsonData["message"]);
+    parseResponse: function(response) {
+        var json = Ext.decode(response.responseText);
+        if (json) {
+            this.success = json.success;
+            this.errors = this.translateReturnCodes(json.errors);
+            this.warnings = this.translateReturnCodes(json.warnings);
+            this.message = Lada.getApplication().bundle.getMsg(json.message);
+        }
         //this.setReadOnly(true);
     }
+    // This parse method is used if the model.save() method is used to trigger
+    // a request on the server side. In this case the response object is
+    // different.
+    //parseResponse: function(operation) {
+    //    this.errors = this.translateReturnCodes(operation.request.scope.reader.jsonData["errors"]);
+    //    this.warnings = this.translateReturnCodes(operation.request.scope.reader.jsonData["warnings"]);
+    //    this.message = Lada.getApplication().bundle.getMsg(operation.request.scope.reader.jsonData["message"]);
+    //    //this.setReadOnly(true);
+    //}
 
 });
