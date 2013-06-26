@@ -37,12 +37,6 @@ Ext.define('Lada.controller.Zusatzwerte', {
     saveZusatzwert: function(button) {
         console.log('Saving Zusatzwert');
         var form = button.up('window').down('form');
-        var values = form.getForm().getValues();
-        var model = form.model;
-        // Set Probenzusatzwert and rebind the model to the form.
-        var xxx = this.getProbenzusatzwerteStore();
-        var probenzusatz = xxx.getAt(xxx.find('pzsId', values.pzsId));
-        model.setProbenzusatz(probenzusatz);
         form.commit();
     },
     addZusatzwert: function(button) {

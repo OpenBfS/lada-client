@@ -1,7 +1,6 @@
 Ext.define('Lada.model.Zusatzwert', {
     extend: 'Ext.data.Model',
     fields: [
-        {name: "id"},
         {name: "pzsId", mapping: "id.pzsId"},
         {name: "probeId", mapping: "id.probeId"},
         {name: "nwgZuMesswert", type: 'float'},
@@ -9,7 +8,7 @@ Ext.define('Lada.model.Zusatzwert', {
         {name: "messfehler", type: 'float'},
         {name: "letzteAenderung", type: 'date', convert: ts2date, defaultValue: new Date()}
     ],
-    idProperty: "id",
+    idProperty: "pzsId",
     proxy: {
         type: 'rest',
         appendId: true, //default
