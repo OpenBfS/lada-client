@@ -1,8 +1,8 @@
 Ext.define('Lada.model.Zusatzwert', {
     extend: 'Ext.data.Model',
     fields: [
-        {name: "pzsId", mapping: "id.pzsId"},
-        {name: "probeId", mapping: "id.probeId"},
+        {name: "pzsId"},
+        {name: "probeId"},
         {name: "nwgZuMesswert", type: 'float'},
         {name: "messwertPzs", type: 'float'},
         {name: "messfehler", type: 'float'},
