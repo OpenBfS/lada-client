@@ -1,37 +1,13 @@
 Ext.define('Lada.model.Zusatzwert', {
     extend: 'Ext.data.Model',
-    requires: [
-        'Lada.model.Probenzusatzwert'
-    ],
     fields: [
         {name: "id"},
-        // Commented out as pzsId must not be submitted to the server. On
-        // serverside the pzsId is taken from the nested sprobenZusatz object.
-        //{name: "pzsId", mapping: "id.pzsId"},
+        {name: "pzsId", mapping: "id.pzsId"},
         {name: "probeId", mapping: "id.probeId"},
         {name: "nwgZuMesswert", type: 'float'},
         {name: "messwertPzs", type: 'float'},
         {name: "messfehler", type: 'float'},
-        {name: "letzteAenderung", type: 'date', convert: ts2date, defaultValue: new Date()},
-
-        // Field for the nested Probenzusatzobject. This one is needed to have
-        // access to the nested data in the grid.
-        // TODO: I would have expected that this field does not need to be
-        // defined explicitly as there is the hasOne asscociation defined
-        // which name and associationKey named "sprobenZusatz". Anyway it does
-        // not seem to make problems.
-        {name: "sprobenZusatz"}
-    ],
-    hasOne: [
-        {
-            model: 'Lada.model.Probenzusatzwert',
-            primaryKey: 'pzsId',
-            name: 'sprobenZusatz',
-            associationKey: 'sprobenZusatz',
-            foreignKey: 'pzsId',
-            getterName: 'getProbenzusatz',
-            setterName: 'setProbenzusatz'
-        }
+        {name: "letzteAenderung", type: 'date', convert: ts2date, defaultValue: new Date()}
     ],
     idProperty: "id",
     proxy: {
@@ -48,8 +24,7 @@ Ext.define('Lada.model.Zusatzwert', {
         }
     },
     getEidi: function () {
-        var sprobenZusatz = this.get('sprobenZusatz');
-        var pzsId =  sprobenZusatz.pzsId;
+        var pzsId =  this.get('pzsId');
         var probeId = this.get('probeId');
         return "/" + pzsId + "/" + probeId;
     }

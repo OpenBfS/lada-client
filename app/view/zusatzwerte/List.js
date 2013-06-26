@@ -34,16 +34,15 @@ Ext.define('Lada.view.zusatzwerte.List' ,{
         this.columns = [
             {
                 header: 'PZW-ID',
-                dataIndex: 'sprobenZusatz',
-                renderer: function(value) {
-                    return value.pzsId;
-                }
+                dataIndex: 'pzsId'
             },
             {
                 header: 'PZW-Größe',
-                dataIndex: 'sprobenZusatz',
+                dataIndex: 'pzsId',
                 renderer: function(value) {
-                    return value.beschreibung;
+                    var store = Ext.getStore('Probenzusatzwerte');
+                    var record = store.getById(value);
+                    return record.get('beschreibung');
                 },
                 flex: 1
             },
@@ -51,9 +50,11 @@ Ext.define('Lada.view.zusatzwerte.List' ,{
             {header: 'rel. Unsich.[%]', dataIndex: 'messfehler'},
             {
                 header: 'Maßeinheit',
-                dataIndex: 'sprobenZusatz',
+                dataIndex: 'pzsId',
                 renderer: function(value) {
-                    return value.mehId;
+                    var store = Ext.getStore('Probenzusatzwerte');
+                    var record = store.getById(value);
+                    return record.get('mehId');
                 }
             }
         ];
