@@ -48,7 +48,7 @@ Ext.define('Lada.controller.Proben', {
         var zstore = this.getZusatzwerteStore();
         zstore.load({
             params: {
-                probe: id
+                probeId: id
             }
         });
         console.log("Loaded Probe with ID " + record.getId()); //outputs ID

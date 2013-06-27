@@ -51,10 +51,10 @@ Ext.define('Lada.controller.Sql', {
             var mst = Ext.getCmp('mst').getValue();
             var uwb = Ext.getCmp('uwb').getValue();
             if (mst !== null) {
-                searchParams['mst'] = mst;
+                searchParams['mstId'] = mst;
             }
             if (uwb !== null) {
-                searchParams['uwb'] = uwb;
+                searchParams['umwId'] = uwb;
             }
         } else {
             // Get date object an convert it into a timestamp (ms since epoch)
