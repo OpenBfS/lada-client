@@ -26,6 +26,13 @@ Ext.define('Lada.model.Zusatzwert', {
         var pzsId =  this.get('pzsId');
         var probeId = this.get('probeId');
         return "/" + pzsId + "/" + probeId;
+    },
+    getMesseinheit: function(pzsId) {
+        var zstore = Ext.getStore('Probenzusatzwerte');
+        var mstore = Ext.getStore('Messeinheit');
+        var mehId = zstore.getById(pzsId).get('mehId');
+        var record = mstore.findRecord('mehId', mehId);
+        return record.get('einheit');
     }
 });
 
