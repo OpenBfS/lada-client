@@ -9,12 +9,34 @@ Ext.define('Lada.view.zusatzwerte.CreateForm', {
             {
                 xtype: 'probenzusatzwert',
                 name: 'pzsId',
-                fieldLabel: 'PZW-Größe'
+                fieldLabel: 'PZW-Größe',
+                listeners: {
+                    scope: this,
+                    'change': function (field, newv, oldv, opts) {
+                        console.log(field, oldv, newv, opts);
+                        var ffield = this.getForm().findField("messeinheit");
+                        pzsId = newv;
+                        if (pzsId == undefined) {
+                            pzsId = oldv;
+                        }
+                        ffield.setValue(this.model.getMesseinheit(pzsId));
+                    }
+                }
             },
             {
-                xtype: 'textfield',
-                name: 'messwertPzs',
-                fieldLabel: 'Messwert'
+                layout: "column",
+                border: 0,
+                items: [
+                    {
+                        xtype: 'textfield',
+                        name: 'messwertPzs',
+                        fieldLabel: 'Messwert'
+                    },
+                    {
+                        xtype: 'displayfield',
+                        name: 'messeinheit'
+                    }
+                ]
             },
             {
                 xtype: 'textfield',
@@ -30,3 +52,4 @@ Ext.define('Lada.view.zusatzwerte.CreateForm', {
         this.callParent();
     }
 });
+
