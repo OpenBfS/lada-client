@@ -1,6 +1,7 @@
 Ext.define('Lada.store.Messeinheit', {
     extend: 'Ext.data.Store',
     fields: ['mehId', 'einheit'],
+    autoLoad: true,
     proxy: {
         type: 'ajax',
         api: {

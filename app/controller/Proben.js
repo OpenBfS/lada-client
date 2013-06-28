@@ -10,7 +10,6 @@ Ext.define('Lada.controller.Proben', {
         'Probenzusatzwerte'
     //    'Orte',
     //    'Messungen',
-    //    'Messeinheit',
     ],
     init: function() {
         console.log('Initialising the Proben controller');

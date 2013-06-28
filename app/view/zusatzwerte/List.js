@@ -66,9 +66,11 @@ Ext.define('Lada.view.zusatzwerte.List' ,{
                 header: 'Maßeinheit',
                 dataIndex: 'pzsId',
                 renderer: function(value) {
-                    var store = Ext.getStore('Probenzusatzwerte');
-                    var record = store.getById(value);
-                    return record.get('mehId');
+                    var zstore = Ext.getStore('Probenzusatzwerte');
+                    var mstore = Ext.getStore('Messeinheit');
+                    var mehId = zstore.getById(value).get('mehId');
+                    var record = mstore.findRecord('mehId', mehId);
+                    return record.get('einheit');
                 }
             }
         ];

@@ -5,7 +5,8 @@ Ext.define('Lada.controller.Zusatzwerte', {
     ],
     stores: [
         'Zusatzwerte',
-        'Probenzusatzwerte'
+        'Probenzusatzwerte',
+        'Messeinheit'
     ],
     init: function() {
         console.log('Initialising the Zusatzwerte controller');
