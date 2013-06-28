@@ -46,7 +46,21 @@ Ext.define('Lada.view.zusatzwerte.List' ,{
                 },
                 flex: 1
             },
-            {header: 'Messwert', dataIndex: 'messwertPzs'},
+            {
+                header: 'Messwert',
+                dataIndex: 'pzsId',
+                renderer: function(value) {
+                    var store = Ext.getStore('Zusatzwerte');
+                    var record = store.getById(value);
+                    var messwert = record.get('messwertPzs');
+                    var nwg = record.get('nwgZuMesswert');
+                    if (messwert < nwg ) {
+                        return "<"+messwert;
+                    } else {
+                        return messwert;
+                    }
+                }
+            },
             {header: 'rel. Unsich.[%]', dataIndex: 'messfehler'},
             {
                 header: 'Maßeinheit',
