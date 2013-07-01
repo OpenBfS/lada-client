@@ -1,15 +1,13 @@
 Ext.define('Lada.model.Kommentar', {
     extend: 'Ext.data.Model',
     fields: [
-        {name: "id"},
-        {name: "kid", mapping:"id.kid"},
-        {name: "convertedId", convert:buildId},
+        {name: "kId"},
         {name: "probeId"},
         {name: "erzeuger"},
         {name: "kdatum", type: 'date', convert: ts2date, defaultValue: new Date()},
         {name: "ktext"}
     ],
-    idProperty: "convertedId",
+    idProperty: "kId",
     proxy: {
         type: 'rest',
         appendId: true, //default
@@ -18,12 +16,13 @@ Ext.define('Lada.model.Kommentar', {
             type: 'json',
             root: 'data'
         }
+    },
+    getEidi: function() {
+        var kid =  this.get('kId');
+        var probeId = this.get('probeId');
+        return "/" + kid + "/" + probeId;
     }
 });
-
-function buildId(v, record){
-    return record.get('probeId') + record.get('kid');
-}
 
 function ts2date(v, record){
     // Converts a timestamp into a date object.

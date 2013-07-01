@@ -19,13 +19,6 @@ Ext.define('Lada.view.kommentare.CreateForm', {
                 fieldLabel: 'Text'
             }
         ];
-        //this.buttons = [
-        //    {
-        //        text: 'Speichern',
-        //        handler: this.commit,
-        //        scope: this
-        //    }
-        //];
         this.callParent();
     }
 });

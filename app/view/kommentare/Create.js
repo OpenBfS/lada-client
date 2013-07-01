@@ -15,13 +15,13 @@ Ext.define('Lada.view.kommentare.Create', {
         'Lada.view.kommentare.CreateForm'
     ],
     initComponent: function() {
-        var form = Ext.create('Lada.view.kommentare.CreateForm');
+        var form = Ext.create('Lada.view.kommentare.CreateForm', this.initialConfig);
         this.items = [form];
         this.buttons = [
             {
                 text: 'Speichern',
-                handler: form.commit,
-                scope: form
+                scope: form,
+                action: 'save'
             }
         ];
         this.callParent();

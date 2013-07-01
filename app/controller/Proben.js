@@ -7,7 +7,8 @@ Ext.define('Lada.controller.Proben', {
     stores: [
         'Proben',
         'Zusatzwerte',
-        'Probenzusatzwerte'
+        'Probenzusatzwerte',
+        'Kommentare'
     //    'Orte',
     //    'Messungen',
     ],
@@ -46,6 +47,13 @@ Ext.define('Lada.controller.Proben', {
         pstore.load();
         var zstore = this.getZusatzwerteStore();
         zstore.load({
+            params: {
+                probeId: id
+            }
+        });
+        // Load Kommentare 
+        var kstore = this.getKommentareStore();
+        kstore.load({
             params: {
                 probeId: id
             }

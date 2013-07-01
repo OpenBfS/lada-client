@@ -17,7 +17,6 @@ Ext.define('Lada.view.zusatzwerte.Create', {
         this.buttons = [
             {
                 text: 'Speichern',
-                //handler: form.commit,
                 scope: form,
                 action: 'save'
             }

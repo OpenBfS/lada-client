@@ -16,34 +16,6 @@ Ext.define('Lada.view.proben.Edit', {
         // creation of this window. We need to pass it throuh to the form as
         // we need the "modelId" param to load the correct item.
         var form = Ext.create('Lada.view.proben.EditForm', this.initialConfig);
-        /// Load kommentare
-        ////var record = form.getRecord();
-        //var kommentare = form.down('kommentarelist'); //form.down('kommentare');
-        //var kstore = kommentare.getStore();
-        //kstore.load({
-        //    params: {
-        //        probe: this.initialConfig['modelId']
-        //        //probe: record.data['probeId']
-        //    }
-        //});
-        //// Load Orte
-        //var orte = form.down('ortelist');
-        //var ostore = orte.getStore();
-        //ostore.load({
-        //    params: {
-        //        probe: this.initialConfig['modelId']
-        //        //probe: record.data['probeId']
-        //    }
-        //});
-        //// Load Messungen 
-        //var messungen = form.down('messungenlist');
-        //var mstore = messungen.getStore();
-        //mstore.load({
-        //    params: {
-        //        probe: this.initialConfig['modelId']
-        //        //probe: record.data['probeId']
-        //    }
-        //});
         this.items = [form];
         this.buttons = [
             {

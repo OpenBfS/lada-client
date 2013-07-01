@@ -28,8 +28,8 @@ Ext.application({
     controllers: [
         'Sql',
         'Proben',
-        'Zusatzwerte'
-        //'Kommentare',
+        'Zusatzwerte',
+        'Kommentare'
         //'Sql',
         //'Orte',
         //'Messungen'

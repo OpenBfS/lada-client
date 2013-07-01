@@ -1,7 +1,6 @@
 Ext.define('Lada.controller.Kommentare', {
     extend: 'Ext.app.Controller',
     views: [
-        'kommentare.List',
         'kommentare.Create'
     ],
     stores: [
@@ -24,6 +23,9 @@ Ext.define('Lada.controller.Kommentare', {
             'kommentarelist toolbar button[action=delete]': {
                 click: this.deleteKommentar
             },
+            'kommentarecreate button[action=save]': {
+                click: this.saveKommentar
+            },
             'kommentarecreate form': {
                 savesuccess: this.createSuccess,
                 savefailure: this.createFailure
@@ -34,9 +36,16 @@ Ext.define('Lada.controller.Kommentare', {
             }
         });
     },
+    saveKommentar: function(button) {
+        console.log('Saving Kommentar');
+        var form = button.up('window').down('form');
+        form.commit();
+    },
     addKommentar: function(button) {
-        console.log('Adding new Kommentar');
-        var view = Ext.widget('kommentarecreate');
+        console.log('Adding new Kommentar for Probe ' + button.probeId);
+        var kommentar = Ext.create('Lada.model.Kommentar');
+        kommentar.set('probeId', button.probeId);
+        var view = Ext.widget('kommentarecreate', {model: kommentar});
     },
     editKommentar: function(grid, record) {
         console.log('Editing Kommentar');
@@ -50,8 +59,14 @@ Ext.define('Lada.controller.Kommentare', {
         Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn){
             if(btn === 'yes'){
                 var store = grid.getStore();
-                store.remove(selection);
-                store.sync();
+                var deleteUrl = selection.getProxy().url + selection.getEidi();
+                Ext.Ajax.request({
+                    url: deleteUrl,
+                    method: 'DELETE',
+                    success: function(response, opts) {
+                        store.reload();
+                    }
+                });
                 console.log('Deleting Kommentar');
             } else {
                 console.log('Cancel Deleting Kommentar');
