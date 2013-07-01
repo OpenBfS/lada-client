@@ -10,6 +10,7 @@ Ext.define('Lada.view.orte.List' ,{
         minHeight: 35,
         deferEmptyText: false
     },
+    probeId: null,
     initComponent: function() {
         this.dockedItems = [
             {
@@ -19,7 +20,8 @@ Ext.define('Lada.view.orte.List' ,{
                     {
                         text: 'Hinzufügen',
                         icon: 'gfx/plus.gif',
-                        action: 'add'
+                        action: 'add',
+                        probeId: this.probeId
                     },
                     {
                         text: 'Löschen',
@@ -30,12 +32,50 @@ Ext.define('Lada.view.orte.List' ,{
             }
         ];
         this.columns = [
-            {header: 'Typ', dataIndex: 'otyp'},
-            {header: 'ID', dataIndex: 'ortId'},
-            {header: 'Staat', dataIndex: 'staatId'},
-            {header: 'Gem-ID', dataIndex: 'gemId'},
-            {header: 'Gemeindebezeichnung', dataIndex: 'bezeichnung', flex: 1},
-            {header: 'Messpunkt', dataIndex: ''}
+            {
+                header: 'Typ',
+                dataIndex: 'ortsTyp'
+            },
+            {
+                header: 'Staat',
+                dataIndex: 'ortId',
+                renderer: function(value) {
+                    var store = Ext.getStore('Ortedetails');
+                    var staaten = Ext.getStore('Staaten');
+                    var record = staaten.getById(store.getById(value).get('staatId'));
+                    return record.get('staatIso');
+                }
+
+            },
+            {
+                header: 'Gem-ID',
+                dataIndex: 'ortId',
+                renderer: function(value) {
+                    var store = Ext.getStore('Ortedetails');
+                    var record = store.getById(value);
+                    return record.get('gemId');
+                }
+
+            },
+            {
+                header: 'Gemeindebezeichnung',
+                dataIndex: 'ortId',
+                flex: 1,
+                renderer: function(value) {
+                    var store = Ext.getStore('Ortedetails');
+                    var record = store.getById(value);
+                    return record.get('beschreibung');
+                }
+
+            },
+            {
+                header: 'Messpunkt',
+                dataIndex: 'ortId',
+                renderer: function(value) {
+                    return "???";
+                }
+
+            }
         ];
         this.callParent(arguments);
     }

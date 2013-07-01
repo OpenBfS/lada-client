@@ -8,8 +8,8 @@ Ext.define('Lada.controller.Proben', {
         'Proben',
         'Zusatzwerte',
         'Probenzusatzwerte',
-        'Kommentare'
-    //    'Orte',
+        'Kommentare',
+        'Orte'
     //    'Messungen',
     ],
     init: function() {
@@ -51,9 +51,16 @@ Ext.define('Lada.controller.Proben', {
                 probeId: id
             }
         });
-        // Load Kommentare 
+        // Load Kommentare
         var kstore = this.getKommentareStore();
         kstore.load({
+            params: {
+                probeId: id
+            }
+        });
+        // Load Orte
+        var ostore = this.getOrteStore();
+        ostore.load({
             params: {
                 probeId: id
             }

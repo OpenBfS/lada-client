@@ -29,9 +29,9 @@ Ext.application({
         'Sql',
         'Proben',
         'Zusatzwerte',
-        'Kommentare'
+        'Kommentare',
+        'Orte'
         //'Sql',
-        //'Orte',
         //'Messungen'
     ]
 });

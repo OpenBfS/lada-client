@@ -5,6 +5,10 @@ Ext.define('Lada.controller.Orte', {
         'orte.Create'
     ],
     stores: [
+        'Orte',
+        'Ortedetails',
+        'Staaten',
+        'Verwaltungseinheiten'
     ],
     models: [
         'Ort'
@@ -23,6 +27,9 @@ Ext.define('Lada.controller.Orte', {
             'ortelist toolbar button[action=delete]': {
                 click: this.deleteOrt
             },
+            'ortecreate button[action=save]': {
+                click: this.saveOrt
+            },
             'ortecreate form': {
                 savesuccess: this.createSuccess,
                 savefailure: this.createFailure
@@ -33,9 +40,16 @@ Ext.define('Lada.controller.Orte', {
             }
         });
     },
+    saveOrt: function(button) {
+        console.log('Saving Ort');
+        var form = button.up('window').down('form');
+        form.commit();
+    },
     addOrt: function(button) {
-        console.log('Adding new Ort');
-        var view = Ext.widget('ortecreate');
+        console.log('Adding new Ort for Probe ' + button.probeId);
+        var ort = Ext.create('Lada.model.Ort');
+        ort.set('probeId', button.probeId);
+        var view = Ext.widget('ortecreate', {model: ort});
     },
     editOrt: function(grid, record) {
         console.log('Editing Ort');

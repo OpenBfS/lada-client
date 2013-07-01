@@ -3,10 +3,6 @@ Ext.define('Lada.view.orte.Create', {
     alias: 'widget.ortecreate',
 
     title: 'Maske für Orte',
-    // Make size of the dialog dependend of the available space.
-    // TODO: Handle resizing the browser window.
-    width: Ext.getBody().getViewSize().width - 30,
-    height: Ext.getBody().getViewSize().height - 30,
     autoShow: true,
     autoScroll: true,
     modal: true,
@@ -20,8 +16,8 @@ Ext.define('Lada.view.orte.Create', {
         this.buttons = [
             {
                 text: 'Speichern',
-                handler: form.commit,
-                scope: form
+                scope: form,
+                action: 'save'
             }
         ];
         this.callParent();
