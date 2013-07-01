@@ -77,7 +77,7 @@ Ext.define('Lada.controller.Sql', {
             var toHide = Ext.getCmp(queries[i]);
             toHide.hide();
         }
-        result.hide();
-        buttons.hide();
+        //result.hide();
+        //buttons.hide();
     }
 });
