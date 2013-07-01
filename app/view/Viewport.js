@@ -49,14 +49,14 @@ Ext.define('Lada.view.Viewport' ,{
                             xtype: 'button'
                         }
                     ],
-                    hidden: true
+                    hidden: false
 
                 },
                 // Resultlist for the query.
                 {
                     id: 'result',
                     xtype: 'probenlist',
-                    hidden: true
+                    hidden: false
                 }
             ]
         };
