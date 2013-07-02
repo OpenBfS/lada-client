@@ -8,7 +8,8 @@ Ext.define('Lada.view.proben.EditForm', {
         'Lada.view.widgets.Probenart',
         'Lada.view.widgets.Uwb',
         'Lada.view.zusatzwerte.List',
-        'Lada.view.kommentare.List'
+        'Lada.view.kommentare.List',
+        'Lada.view.orte.List'
     ],
     model: 'Lada.model.Probe',
     alias: 'widget.probeneditform',
@@ -151,17 +152,17 @@ Ext.define('Lada.view.proben.EditForm', {
                     }
                 ]
             },
-            //// Ortsangaben
-            //{
-            //    xtype: 'fieldset',
-            //    title: 'Ortsangaben',
-            //    padding: '10 10',
-            //    items: [
-            //        {
-            //            xtype: 'ortelist'
-            //        }
-            //    ]
-            //},
+            // Ortsangaben
+            {
+                xtype: 'fieldset',
+                title: 'Ortsangaben',
+                padding: '10 10',
+                items: [
+                    {
+                        xtype: 'ortelist'
+                    }
+                ]
+            },
             // Probenzusatzwerte
             {
                 xtype: 'fieldset',
