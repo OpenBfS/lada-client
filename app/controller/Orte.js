@@ -43,7 +43,44 @@ Ext.define('Lada.controller.Orte', {
     saveOrt: function(button) {
         console.log('Saving Ort');
         var form = button.up('window').down('form');
-        form.commit();
+        var fform = form.getForm();
+
+        var ortdetail = null;
+        var ortdetailstore = Ext.getStore('Ortedetails');
+        var newortdetail = true;
+
+        var ortid = fform.findField('ortId').getValue();
+        if (ortid === null) {
+            console.log('New Ortdetail');
+            ortdetail = Ext.create('Lada.model.Ortdetail');
+            ortdetailstore.add(ortdetail);
+            newortdetail = true;
+        } else {
+            console.log('Editing Ortdetail');
+            ortdetail = ortdetailstore.getById(ortid);
+        }
+
+        var fields = ['beschreibung', 'bezeichnung', 'hoeheLand',
+                      'latitude', 'longitude', 'staatId', 'gemId'];
+        for (var i = fields.length - 1; i >= 0; i--){
+            ffield = fform.findField("ort_"+fields[i]);
+            ortdetail.set(fields[i], ffield.getValue());
+        }
+        // Create a new Ortedetail if nessecary
+        ortdetailstore.sync({
+            success: function() {
+                if (newortdetail) {
+                    // TODO: Get ID from new created ortdetail and set it to the ort
+                    ortid = 1;
+                    form.model.set('ortId', ortid);
+                }
+                form.commit();
+            },
+            failure: function() {
+                console.log('Error on saving Ortdetails');
+            }
+        });
+
     },
     addOrt: function(button) {
         console.log('Adding new Ort for Probe ' + button.probeId);

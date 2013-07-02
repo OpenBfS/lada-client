@@ -159,7 +159,8 @@ Ext.define('Lada.view.proben.EditForm', {
                 padding: '10 10',
                 items: [
                     {
-                        xtype: 'ortelist'
+                        xtype: 'ortelist',
+                        probeId: this.modelId
                     }
                 ]
             },

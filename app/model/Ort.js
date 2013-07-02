@@ -6,7 +6,7 @@ Ext.define('Lada.model.Ort', {
         {name: "ortId", type: 'int'},
         {name: "probeId"},
         {name: "ortsTyp"},
-        {name: "ortzusatztext"},
+        {name: "ortszusatztext"},
         {name: "letzteAenderung", type: 'date', convert: ts2date, defaultValue: new Date()}
     ],
     idProperty: "portId",

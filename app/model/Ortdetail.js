@@ -4,7 +4,7 @@ Ext.define('Lada.model.Ortdetail', {
         {name: "ortId"},
         {name: "bezeichnung"},
         {name: "beschreibung"},
-        {name: "usnscharf"},
+        {name: "unscharf"},
         {name: "nutsCode"},
         {name: "koordXExtern"},
         {name: "koordYExtern"},
@@ -14,7 +14,7 @@ Ext.define('Lada.model.Ortdetail', {
         {name: "latitude", type: 'float'},
         {name: "staatId"},
         {name: "gemId"},
-        {name: "oTyp"}
+        {name: "otyp"}
     ],
     idProperty: "ortId",
     proxy: {

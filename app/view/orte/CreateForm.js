@@ -26,10 +26,7 @@ Ext.define('Lada.view.orte.CreateForm', {
                             for (var i = fields.length - 1; i >= 0; i--){
                                 ffield = form.findField("ort_"+fields[i]);
                                 ffield.setValue(ort.get(fields[i]));
-                                ffield.setReadOnly(true);
                             }
-                        } else {
-                            this.setReadOnly(false);
                         }
                     }
                 }
@@ -38,7 +35,7 @@ Ext.define('Lada.view.orte.CreateForm', {
                 xtype: 'textfield',
                 name: 'ortsTyp',
                 maxLength: 1,
-                fieldLabel: 'Type'
+                fieldLabel: 'Typ'
             },
             {
                 xtype: 'textareafield',

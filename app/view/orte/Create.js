@@ -11,7 +11,7 @@ Ext.define('Lada.view.orte.Create', {
         'Lada.view.orte.CreateForm'
     ],
     initComponent: function() {
-        var form = Ext.create('Lada.view.orte.CreateForm');
+        var form = Ext.create('Lada.view.orte.CreateForm', this.initialConfig);
         this.items = [form];
         this.buttons = [
             {
