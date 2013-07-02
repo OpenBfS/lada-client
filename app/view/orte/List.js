@@ -73,7 +73,9 @@ Ext.define('Lada.view.orte.List' ,{
                 header: 'Messpunkt',
                 dataIndex: 'ortId',
                 renderer: function(value) {
-                    return "???";
+                    var store = Ext.getStore('Ortedetails');
+                    var record = store.getById(value);
+                    return record.get('bezeichnung');
                 }
 
             }
