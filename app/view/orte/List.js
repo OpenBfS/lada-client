@@ -63,8 +63,9 @@ Ext.define('Lada.view.orte.List' ,{
                 flex: 1,
                 renderer: function(value) {
                     var store = Ext.getStore('Ortedetails');
-                    var record = store.getById(value);
-                    return record.get('beschreibung');
+                    var gemeinde = Ext.getStore('Verwaltungseinheiten');
+                    var record = gemeinde.findRecord('gemId', store.getById(value).get('gemId'));
+                    return record.get('bezeichnung');
                 }
 
             },
