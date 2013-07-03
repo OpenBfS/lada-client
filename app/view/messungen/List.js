@@ -34,7 +34,24 @@ Ext.define('Lada.view.messungen.List' ,{
             {header: 'NPR-Nr.', dataIndex: "nebenprobenNr", width: 50},
             {header: 'MMT', dataIndex: "mmtId", width: 50},
             {header: 'Messzeit', dataIndex: "messdauer"},
-            {header: 'Status'},
+            {
+                header: 'Status',
+                dataIndex: 'id',
+                renderer: function(value) {
+                    var sstore = Ext.getStore('Status');
+                    sstore.load({
+                        params: {
+                            probeId: value.probeId,
+                            messungsId: value.messungsId
+                        }
+                    });
+                    if (sstore.getTotalCount() === 0) {
+                        return "unbekannt";
+                    } else {
+                        return sstore.last().get('status');
+                    }
+                }
+            },
             {header: 'OK-Flag', dataIndex: "fertig"},
             {
                 header: 'Anzahl Nuklide',
