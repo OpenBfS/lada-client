@@ -1,6 +1,9 @@
 Ext.define('Lada.view.messungen.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
     model: 'Lada.model.Messung',
+    requires: [
+        'Lada.view.widgets.Messmethode'
+    ],
     initComponent: function() {
         this.items = [
             {
@@ -10,7 +13,7 @@ Ext.define('Lada.view.messungen.CreateForm', {
             },
             {
                 xtype: 'textfield',
-                name: 'mmzId',
+                name: 'mmtId',
                 fieldLabel: 'MMT'
             },
             {
