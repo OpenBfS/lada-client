@@ -1,5 +1,8 @@
 Ext.define('Lada.controller.Messungen', {
     extend: 'Ext.app.Controller',
+    views: [
+        'messungen.Create'
+    ],
     stores: [
         'Messungen',
         'Messwerte',
@@ -31,8 +34,10 @@ Ext.define('Lada.controller.Messungen', {
         });
     },
     addZusatzwert: function(button) {
-        console.log('Adding new Zusatzwert');
-        var view = Ext.widget('messungencreate');
+        console.log('Adding new Messung for Probe ' + button.probeId);
+        var messung = Ext.create('Lada.model.Messung');
+        messung.set('probeId', button.probeId);
+        var view = Ext.widget('messungencreate', {model: messung});
     },
     editZusatzwert: function(grid, record) {
         console.log('Editing Zusatzwert');

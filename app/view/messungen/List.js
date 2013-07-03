@@ -10,6 +10,7 @@ Ext.define('Lada.view.messungen.List' ,{
         minHeight: 35,
         deferEmptyText: false
     },
+    probeId: null,
     initComponent: function() {
         this.dockedItems = [
             {
@@ -19,7 +20,8 @@ Ext.define('Lada.view.messungen.List' ,{
                     {
                         text: 'Hinzufügen',
                         icon: 'gfx/plus.gif',
-                        action: 'add'
+                        action: 'add',
+                        probeId: this.probeId
                     },
                     {
                         text: 'Löschen',

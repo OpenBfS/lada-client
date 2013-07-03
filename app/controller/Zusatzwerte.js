@@ -41,7 +41,7 @@ Ext.define('Lada.controller.Zusatzwerte', {
         form.commit();
     },
     addZusatzwert: function(button) {
-        console.log('Adding new Zusatzwert for Probe' + button.probenId);
+        console.log('Adding new Zusatzwert for Probe' + button.probeId);
         var zusatzwert = Ext.create('Lada.model.Zusatzwert');
         zusatzwert.set('probeId', button.probeId);
         var view = Ext.widget('zusatzwertecreate', {model: zusatzwert});
