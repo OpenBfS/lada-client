@@ -40,7 +40,7 @@ Ext.define('Lada.view.messungen.List' ,{
                 header: 'Anzahl Nuklide',
                 dataIndex: 'id',
                 renderer: function(value) {
-                    var mstore = Ext.getStore('Messungen');
+                    var mstore = Ext.getStore('Messwerte');
                     mstore.load({
                         params: {
                             probeId: value.probeId,
