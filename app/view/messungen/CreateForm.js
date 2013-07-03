@@ -3,21 +3,36 @@ Ext.define('Lada.view.messungen.CreateForm', {
     model: 'Lada.model.Messung',
     initComponent: function() {
         this.items = [
-            //{
-            //    xtype: 'textfield',
-            //    name: 'erzeuger',
-            //    fieldLabel: 'Erzeuger'
-            //},
-            //{
-            //    xtype: 'datefield',
-            //    name: 'kdatum',
-            //    fieldLabel: 'Datum'
-            //},
-            //{
-            //    xtype: 'textareafield',
-            //    name: 'ktext',
-            //    fieldLabel: 'Text'
-            //}
+            {
+                xtype: 'textfield',
+                name: 'nebenprobenNr',
+                fieldLabel: 'NPR'
+            },
+            {
+                xtype: 'textfield',
+                name: 'mmzId',
+                fieldLabel: 'MMT'
+            },
+            {
+                xtype: 'datefield',
+                name: 'messzeitpunkt',
+                fieldLabel: 'Messzeitpunkt'
+            },
+            {
+                xtype: 'textfield',
+                name: 'messdauer',
+                fieldLabel: 'Messdauer'
+            },
+            {
+                xtype: 'textfield',
+                name: 'fertig',
+                fieldLabel: 'Fertig'
+            },
+            {
+                xtype: 'textfield',
+                name: 'geplant',
+                fieldLabel: 'Geplant'
+            }
         ];
         this.callParent();
     }
