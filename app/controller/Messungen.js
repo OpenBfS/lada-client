@@ -1,10 +1,8 @@
 Ext.define('Lada.controller.Messungen', {
     extend: 'Ext.app.Controller',
     stores: [
-        'Messungen'
-    ],
-    models: [
-        'Zusatzwert'
+        'Messungen',
+        'MKommentare'
     ],
     init: function() {
         console.log('Initialising the Messungen controller');
