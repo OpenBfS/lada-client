@@ -6,8 +6,24 @@ Ext.define('Lada.view.Viewport' ,{
         'Lada.view.search.Query2',
         'Lada.view.proben.List'
     ],
+
     initComponent: function() {
         console.log('Setting up Viewport');
+        this.initSearch();
+
+        // Development related: 
+        // Disable "initSearch" call and enable one of the following init
+        // methods to get a dialog directly without the need to click through
+        // the whole application.
+        //this.initMessung();
+
+        this.callParent(arguments);
+    },
+    initMessung: function() {
+        var messung = Ext.create('Lada.model.Messung');
+        var win = Ext.create('Lada.view.messungen.Create', {model: messung});
+    },
+    initSearch: function() {
         this.items = {
             xtype: 'panel',
             title: '<center>Probenauswahlmaske</center>',
@@ -60,6 +76,5 @@ Ext.define('Lada.view.Viewport' ,{
                 }
             ]
         };
-        this.callParent(arguments);
     }
 });
