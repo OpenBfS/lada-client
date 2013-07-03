@@ -1,7 +1,8 @@
 Ext.define('Lada.model.Messung', {
     extend: 'Ext.data.Model',
         fields: [
-        {name: "probeId"},
+        {name: "messungsId", mapping:"id.messungsId"},
+        {name: "probeId", mapping:"id.probeId"},
         {name: "mmtId"},
         {name: "nebenprobenNr"},
         {name: "messdauer"},
