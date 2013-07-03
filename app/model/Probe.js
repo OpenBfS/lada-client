@@ -8,8 +8,6 @@ Ext.define('Lada.model.Probe', {
         {name: "hauptprobenNr"},
         {name: "messmethode"},
         {name: "nebenprobenNr"},
-        {name: "bezeichnung"},
-        {name: "kreis"},
         {name: "letzteAenderung", type: 'date', convert: ts2date, defaultValue: new Date()},
         {name: "media"},
         {name: "mediaDesk"},
