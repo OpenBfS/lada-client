@@ -21,7 +21,3 @@ Ext.define('Lada.model.Messung', {
         }
     }
 });
-
-function buildId(v, record){
-    return record.get('probeId') + record.get('messungsId');
-}
