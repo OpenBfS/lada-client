@@ -33,11 +33,30 @@ Ext.define('Lada.view.messungen.List' ,{
             {header: 'Mess.ID', dataIndex: "messungsId", width: 50},
             {header: 'NPR-Nr.', dataIndex: "nebenprobenNr", width: 50},
             {header: 'MMT', dataIndex: "mmtId", width: 50},
-            {header: 'Messzeit', dataIndex: "messdauer"}, 
+            {header: 'Messzeit', dataIndex: "messdauer"},
             {header: 'Status'},
             {header: 'OK-Flag', dataIndex: "fertig"},
-            {header: 'Anzahl Nuklide'},
-            {header: 'Anzahl Kommentare', flex: 1} 
+            {
+                header: 'Anzahl Nuklide',
+                dataIndex: 'messungsId',
+                renderer: function(value) {
+                }
+            },
+            {
+                header: 'Anzahl Kommentare',
+                flex: 1,
+                dataIndex: 'id',
+                renderer: function(value) {
+                    var kstore = Ext.getStore('MKommentare');
+                    kstore.load({
+                        params: {
+                            probeId: value.probeId,
+                            messungsId: value.messungsId
+                        }
+                    });
+                    return kstore.getTotalCount();
+                }
+            }
         ];
         this.callParent(arguments);
     }
