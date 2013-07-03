@@ -1,10 +1,7 @@
 Ext.define('Lada.controller.Messungen', {
     extend: 'Ext.app.Controller',
-    views: [
-        'messungen.List',
-        'messungen.Create'
-    ],
     stores: [
+        'Messungen'
     ],
     models: [
         'Zusatzwert'
