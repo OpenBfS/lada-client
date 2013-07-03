@@ -9,7 +9,8 @@ Ext.define('Lada.view.proben.EditForm', {
         'Lada.view.widgets.Uwb',
         'Lada.view.zusatzwerte.List',
         'Lada.view.kommentare.List',
-        'Lada.view.orte.List'
+        'Lada.view.orte.List',
+        'Lada.view.messungen.List'
     ],
     model: 'Lada.model.Probe',
     alias: 'widget.probeneditform',
@@ -191,18 +192,18 @@ Ext.define('Lada.view.proben.EditForm', {
                         probeId: this.modelId
                     }
                 ]
+            },
+            // Messungsangaben
+            {
+                xtype: 'fieldset',
+                title: 'Messungsangaben',
+                padding: '10 10',
+                items: [
+                    {
+                        xtype: 'messungenlist'
+                    }
+                ]
             }
-            //// Messungsangaben
-            //{
-            //    xtype: 'fieldset',
-            //    title: 'Messungsangaben',
-            //    padding: '10 10',
-            //    items: [
-            //        {
-            //            xtype: 'messungenlist'
-            //        }
-            //    ]
-            //}
         ];
         this.callParent();
     },
