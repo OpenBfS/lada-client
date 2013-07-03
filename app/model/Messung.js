@@ -7,7 +7,7 @@ Ext.define('Lada.model.Messung', {
         {name: "mmtId"},
         {name: "nebenprobenNr"},
         {name: "messdauer"},
-        {name: "messzeitpunkt"},
+        {name: "messzeitpunkt", convert: ts2date},
         {name: "fertig", type: "boolean"},
         {name: "letzteAenderung", type:"date"},
         {name: "geplant", type: "boolean"}
@@ -23,3 +23,8 @@ Ext.define('Lada.model.Messung', {
         }
     }
 });
+
+function ts2date(v, record){
+    // Converts a timestamp into a date object.
+    return new Date(v);
+}

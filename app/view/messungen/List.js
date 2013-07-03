@@ -33,7 +33,7 @@ Ext.define('Lada.view.messungen.List' ,{
             {header: 'Mess.ID', dataIndex: "messungsId", width: 50},
             {header: 'NPR-Nr.', dataIndex: "nebenprobenNr", width: 50},
             {header: 'MMT', dataIndex: "mmtId", width: 50},
-            {header: 'Messzeit', dataIndex: "messdauer"},
+            {header: 'Messzeit', dataIndex: "messzeitpunkt"},
             {
                 header: 'Status',
                 dataIndex: 'id',
