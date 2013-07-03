@@ -1,6 +1,7 @@
 Ext.define('Lada.model.Messung', {
     extend: 'Ext.data.Model',
         fields: [
+        {name: "id"},
         {name: "messungsId", mapping:"id.messungsId"},
         {name: "probeId", mapping:"id.probeId"},
         {name: "mmtId"},
