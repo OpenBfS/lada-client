@@ -40,6 +40,14 @@ Ext.define('Lada.view.messungen.List' ,{
                 header: 'Anzahl Nuklide',
                 dataIndex: 'messungsId',
                 renderer: function(value) {
+                    var mstore = Ext.getStore('Messungen');
+                    mstore.load({
+                        params: {
+                            probeId: value.probeId,
+                            messungsId: value.messungsId
+                        }
+                    });
+                    return mstore.getTotalCount();
                 }
             },
             {
