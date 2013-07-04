@@ -12,7 +12,7 @@ Ext.define('Lada.view.messungen.CreateForm', {
                 fieldLabel: 'NPR'
             },
             {
-                xtype: 'textfield',
+                xtype: 'messmethode',
                 name: 'mmtId',
                 fieldLabel: 'MMT'
             },
