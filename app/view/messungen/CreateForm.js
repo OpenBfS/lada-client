@@ -3,7 +3,10 @@ Ext.define('Lada.view.messungen.CreateForm', {
     model: 'Lada.model.Messung',
     requires: [
         'Lada.view.widgets.Messmethode',
-        'Lada.view.mkommentare.List'
+        'Lada.view.widgets.Testdatensatz',
+        'Lada.view.mkommentare.List',
+        'Lada.view.status.List',
+        'Lada.view.messwerte.List'
     ],
     initComponent: function() {
         this.items = [
@@ -28,14 +31,42 @@ Ext.define('Lada.view.messungen.CreateForm', {
                 fieldLabel: 'Messdauer'
             },
             {
-                xtype: 'textfield',
+                xtype: 'testdatensatz',
                 name: 'fertig',
                 fieldLabel: 'Fertig'
             },
             {
-                xtype: 'textfield',
+                xtype: 'testdatensatz',
                 name: 'geplant',
                 fieldLabel: 'Geplant'
+            },
+            // Messwerte
+            {
+                xtype: 'fieldset',
+                title: 'Messwerte',
+                collapsible: true,
+                collapsed: false,
+                padding: '10 10',
+                items: [
+                    {
+                        xtype: 'messwertelist',
+                        parentId: this.modelId
+                    }
+                ]
+            },
+            // Status
+            {
+                xtype: 'fieldset',
+                title: 'Messungsstatus',
+                collapsible: true,
+                collapsed: false,
+                padding: '10 10',
+                items: [
+                    {
+                        xtype: 'statuslist',
+                        parentId: this.modelId
+                    }
+                ]
             },
             // Messungskommentare
             {

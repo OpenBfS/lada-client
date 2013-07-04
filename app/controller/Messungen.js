@@ -7,7 +7,8 @@ Ext.define('Lada.controller.Messungen', {
         'Messungen',
         'Messwerte',
         'MKommentare',
-        'Status'
+        'Status',
+        'Messgroessen'
     ],
     init: function() {
         console.log('Initialising the Messungen controller');
