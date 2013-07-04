@@ -2,7 +2,8 @@ Ext.define('Lada.view.messungen.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
     model: 'Lada.model.Messung',
     requires: [
-        'Lada.view.widgets.Messmethode'
+        'Lada.view.widgets.Messmethode',
+        'Lada.view.mkommentare.List'
     ],
     initComponent: function() {
         this.items = [
@@ -35,6 +36,20 @@ Ext.define('Lada.view.messungen.CreateForm', {
                 xtype: 'textfield',
                 name: 'geplant',
                 fieldLabel: 'Geplant'
+            },
+            // Messungskommentare
+            {
+                xtype: 'fieldset',
+                title: 'Messungskommentare',
+                collapsible: true,
+                collapsed: false,
+                padding: '10 10',
+                items: [
+                    {
+                        xtype: 'mkommentarelist',
+                        parentId: this.modelId
+                    }
+                ]
             }
         ];
         this.callParent();

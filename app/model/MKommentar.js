@@ -1,14 +1,14 @@
 Ext.define('Lada.model.MKommentar', {
     extend: 'Ext.data.Model',
     fields: [
-        {name: "kId"},
+        {name: "id"},
         {name: "messungsId"},
         {name: "probeId"},
         {name: "erzeuger"},
         {name: "kdatum", type: 'date', convert: ts2date, defaultValue: new Date()},
         {name: "ktext"}
     ],
-    idProperty: "kId",
+    idProperty: "id",
     proxy: {
         type: 'rest',
         appendId: true, //default
@@ -19,7 +19,7 @@ Ext.define('Lada.model.MKommentar', {
         }
     },
     getEidi: function() {
-        var kid =  this.get('kId');
+        var kid =  this.get('id.kid');
         var messId = this.get('messungsId');
         var probeId = this.get('probeId');
         return "/" + kid + "/" + messId + "/" + probeId;

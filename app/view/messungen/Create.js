@@ -3,6 +3,8 @@ Ext.define('Lada.view.messungen.Create', {
     alias: 'widget.messungencreate',
 
     title: 'Maske für Messungen',
+    width: Ext.getBody().getViewSize().width - 30,
+    height: Ext.getBody().getViewSize().height - 30,
     autoShow: true,
     autoScroll: true,
     modal: true,
