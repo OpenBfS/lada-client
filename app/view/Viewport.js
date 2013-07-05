@@ -9,14 +9,15 @@ Ext.define('Lada.view.Viewport' ,{
 
     initComponent: function() {
         console.log('Setting up Viewport');
-        //this.initSearch();
+        this.initSearch();
 
         // Development related: 
         // Disable "initSearch" call and enable one of the following init
         // methods to get a dialog directly without the need to click through
         // the whole application.
-        this.initMessung();
         //this.initOrt();
+        //this.initMessung();
+        //this.initMesswert();
 
         this.callParent(arguments);
     },
@@ -26,6 +27,10 @@ Ext.define('Lada.view.Viewport' ,{
             params: {
                 probeId: "000007575853X",
                 messungsId: "1"
+            },
+            callback: function() {
+                var model = store.data.items[0];
+                var win = Ext.create('Lada.view.messwerte.Create', {model: model});
             }
         });
     },
@@ -36,6 +41,8 @@ Ext.define('Lada.view.Viewport' ,{
     initMessung: function() {
         var store = Ext.getStore('Messungen');
         var kstore = Ext.getStore('MKommentare');
+        var mstore = Ext.getStore('Messwerte');
+        var sstore = Ext.getStore('Status');
         probeId = "000007578314X";
         store.load({
             params: {
@@ -49,13 +56,23 @@ Ext.define('Lada.view.Viewport' ,{
                     params: {
                         probeId: probeId,
                         messungsId: messung.get('messungsId')
-                    },
-                    callback: function() {
-                        console.log('Creating Messung window');
-                        //var messung = Ext.create('Lada.model.Messung');
-                        var win = Ext.create('Lada.view.messungen.Create', {model: messung});
                     }
                 });
+                sstore.load({
+                    params: {
+                        probeId: probeId,
+                        messungsId: messung.get('messungsId')
+                    }
+                });
+                mstore.load({
+                    params: {
+                        probeId: probeId,
+                        messungsId: messung.get('messungsId')
+                    }
+                });
+                console.log('Creating Messung window');
+                //var messung = Ext.create('Lada.model.Messung');
+                var win = Ext.create('Lada.view.messungen.Create', {model: messung});
             }
         });
     },
