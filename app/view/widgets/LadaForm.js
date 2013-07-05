@@ -143,8 +143,10 @@ Ext.define('Lada.view.widgets.LadaForm', {
             this.errors = this.translateReturnCodes(json.errors);
             this.warnings = this.translateReturnCodes(json.warnings);
             this.message = Lada.getApplication().bundle.getMsg(json.message);
+            this.setReadOnly(json.readonly);
+        } else {
+            this.setReadOnly(true);
         }
-        //this.setReadOnly(true);
     }
     // This parse method is used if the model.save() method is used to trigger
     // a request on the server side. In this case the response object is
