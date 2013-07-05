@@ -59,6 +59,11 @@ Ext.define('Lada.view.widgets.LadaForm', {
     bindModel: function(model) {
         this.model = model;
         this.loadRecord(model);
+        // Set the form to readonly if the models readonly attribute is
+        // anything dffernt from true
+        if (model.get('readonly') !== false) {
+            this.setReadOnly(true);
+        }
     },
 
     commit: function(callback, scope) {
@@ -125,7 +130,6 @@ Ext.define('Lada.view.widgets.LadaForm', {
             this.errors = this.translateReturnCodes(json.errors);
             this.warnings = this.translateReturnCodes(json.warnings);
             this.message = Lada.getApplication().bundle.getMsg(json.message);
-            this.setReadOnly(json.readonly);
         } else {
             this.setReadOnly(true);
         }
