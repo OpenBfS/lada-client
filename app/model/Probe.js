@@ -24,7 +24,11 @@ Ext.define('Lada.model.Probe', {
         {name: "solldatumBeginn", type: 'date', convert: ts2date, defaultValue: new Date()},
         {name: "solldatumEnde", type: 'date', convert: ts2date, defaultValue: new Date()},
         {name: "test"},
-        {name: "umwId"}
+        {name: "umwId"},
+
+        // Readonly-Flag (sent additionaly by the server, not part of the
+        // model)
+        {name: "readonly"}
     ],
     idProperty: "probeId",
     proxy: {
