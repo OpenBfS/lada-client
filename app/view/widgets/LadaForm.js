@@ -91,24 +91,6 @@ Ext.define('Lada.view.widgets.LadaForm', {
                 },
                 scope: this
             });
-
-            //this.model.save({
-            //    callback: function(records, operation) {
-            //        this.parseResponse(operation);
-            //        if (operation.wasSuccessful()) {
-            //            console.log('Save was successfull');
-            //            this.fireEvent('savesuccess', this, records, operation);
-            //        } else {
-            //            console.log('Save was not successfull');
-            //            this.form.markInvalid(this.errors);
-            //            this.fireEvent('savefailure', this, records, operation);
-            //        }
-            //        if (callback) {
-            //            callback.call(scope || this, this, operation.wasSuccessful(), this.model);
-            //        }
-            //    },
-            //    scope: this
-            //});
         }
     },
 
@@ -148,14 +130,4 @@ Ext.define('Lada.view.widgets.LadaForm', {
             this.setReadOnly(true);
         }
     }
-    // This parse method is used if the model.save() method is used to trigger
-    // a request on the server side. In this case the response object is
-    // different.
-    //parseResponse: function(operation) {
-    //    this.errors = this.translateReturnCodes(operation.request.scope.reader.jsonData["errors"]);
-    //    this.warnings = this.translateReturnCodes(operation.request.scope.reader.jsonData["warnings"]);
-    //    this.message = Lada.getApplication().bundle.getMsg(operation.request.scope.reader.jsonData["message"]);
-    //    //this.setReadOnly(true);
-    //}
-
 });
