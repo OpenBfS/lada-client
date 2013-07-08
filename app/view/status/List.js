@@ -10,6 +10,7 @@ Ext.define('Lada.view.status.List' ,{
         minHeight: 35,
         deferEmptyText: false
     },
+    parentId: null,
     probeId: null,
     initComponent: function() {
         this.dockedItems = [
@@ -21,7 +22,8 @@ Ext.define('Lada.view.status.List' ,{
                         text: 'Hinzufügen',
                         icon: 'gfx/plus.gif',
                         action: 'add',
-                        probeId: this.probeId
+                        probeId: this.probeId,
+                        parentId: this.parentId
                     },
                     {
                         text: 'Löschen',
