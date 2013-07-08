@@ -5,9 +5,9 @@ Ext.define('Lada.model.Status', {
         {name: "messungsId"},
         {name: "probeId"},
         {name: "erzeuger"},
-        {name: "status"},
+        {name: "status", defaultValue: 1},
         {name: "sdatum", type: 'date', convert: ts2date, defaultValue: new Date()},
-        {name: "stext"}
+        {name: "skommentar"}
     ],
     idProperty: "sId",
     proxy: {
