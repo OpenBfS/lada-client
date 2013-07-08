@@ -37,18 +37,23 @@ Ext.define('Lada.controller.Messungen', {
             }
         });
     },
-    addZusatzwert: function(button) {
+    saveMessung: function(button) {
+        console.log('Saving new Messung for Probe ' + button.probeId);
+        var form = button.up('window').down('form');
+        form.commit();
+    },
+    addMessung: function(button) {
         console.log('Adding new Messung for Probe ' + button.probeId);
         var messung = Ext.create('Lada.model.Messung');
         messung.set('probeId', button.probeId);
         var view = Ext.widget('messungencreate', {model: messung});
     },
-    editZusatzwert: function(grid, record) {
-        console.log('Editing Zusatzwert');
+    editMessung: function(grid, record) {
+        console.log('Editing Messung');
         var view = Ext.widget('messungencreate', {model: record});
-        console.log("Loaded Zusatzwert with ID " + record.getId()); //outputs ID
+        console.log("Loaded Messung with ID " + record.getId()); //outputs ID
     },
-    deleteZusatzwert: function(button) {
+    deleteMessung: function(button) {
         // Get selected item in grid
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
