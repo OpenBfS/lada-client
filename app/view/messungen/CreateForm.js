@@ -50,7 +50,8 @@ Ext.define('Lada.view.messungen.CreateForm', {
                 items: [
                     {
                         xtype: 'messwertelist',
-                        parentId: this.modelId
+                        parentId: this.model.get('messungsId'),
+                        probeId: this.model.get('probeId')
                     }
                 ]
             },
@@ -64,7 +65,8 @@ Ext.define('Lada.view.messungen.CreateForm', {
                 items: [
                     {
                         xtype: 'statuslist',
-                        parentId: this.modelId
+                        parentId: this.model.get('messungsId'),
+                        probeId: this.model.get('probeId')
                     }
                 ]
             },
@@ -78,7 +80,8 @@ Ext.define('Lada.view.messungen.CreateForm', {
                 items: [
                     {
                         xtype: 'mkommentarelist',
-                        parentId: this.modelId
+                        parentId: this.model.get('messungsId'),
+                        probeId: this.model.get('probeId')
                     }
                 ]
             }
