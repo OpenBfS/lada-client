@@ -18,7 +18,8 @@ Ext.define('Lada.view.messungen.Create', {
         this.buttons = [
             {
                 text: 'Speichern',
-                scope: form
+                scope: form,
+                action: 'save'
             }
         ];
         this.callParent();
