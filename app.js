@@ -30,6 +30,7 @@ Ext.application({
         'Proben',
         'Zusatzwerte',
         'Kommentare',
+        'MKommentare',
         'Orte',
         'Messungen',
         'Messwert',
