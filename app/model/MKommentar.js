@@ -19,7 +19,7 @@ Ext.define('Lada.model.MKommentar', {
         }
     },
     getEidi: function() {
-        var kid =  this.get('id.kid');
+        var kid =  this.get('id').kid;
         var messId = this.get('messungsId');
         var probeId = this.get('probeId');
         return "/" + kid + "/" + messId + "/" + probeId;
