@@ -32,7 +32,8 @@ Ext.application({
         'Kommentare',
         'Orte',
         'Messungen',
-        'Messwert'
+        'Messwert',
+        'Status'
     ]
 });
 
