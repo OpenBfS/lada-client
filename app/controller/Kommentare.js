@@ -29,10 +29,6 @@ Ext.define('Lada.controller.Kommentare', {
             'kommentarecreate form': {
                 savesuccess: this.createSuccess,
                 savefailure: this.createFailure
-            },
-            'kommentareedit form': {
-                savesuccess: this.editSuccess,
-                savefailure: this.editFailure
             }
         });
     },
@@ -81,21 +77,6 @@ Ext.define('Lada.controller.Kommentare', {
         win.close();
     },
     createFailure: function(form, record, operation) {
-        Ext.MessageBox.show({
-            title: 'Fehler beim Speichern',
-            msg: form.message,
-            icon: Ext.MessageBox.ERROR,
-            buttons: Ext.Msg.OK
-        });
-    },
-    editSuccess: function(form, record, operation) {
-        // Reload store
-        var store = this.getKommentareStore();
-        store.reload();
-        var win = form.up('window');
-        win.close();
-    },
-    editFailure: function(form, record, operation) {
         Ext.MessageBox.show({
             title: 'Fehler beim Speichern',
             msg: form.message,
