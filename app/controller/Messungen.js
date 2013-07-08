@@ -16,13 +16,16 @@ Ext.define('Lada.controller.Messungen', {
             // CSS like selector to select element in the viewpzusatzwert. See
             // ComponentQuery documentation for more details.
             'messungenlist': {
-                itemdblclick: this.editZusatzwert
+                itemdblclick: this.editMessung
             },
             'messungenlist toolbar button[action=add]': {
-                click: this.addZusatzwert
+                click: this.addMessung
             },
             'messungenlist toolbar button[action=delete]': {
-                click: this.deleteZusatzwert
+                click: this.deleteMessung
+            },
+            'messungencreate button[action=save]': {
+                click: this.saveMessung
             },
             'messungencreate form': {
                 savesuccess: this.createSuccess,
