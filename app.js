@@ -31,7 +31,8 @@ Ext.application({
         'Zusatzwerte',
         'Kommentare',
         'Orte',
-        'Messungen'
+        'Messungen',
+        'Messwert'
     ]
 });
 
