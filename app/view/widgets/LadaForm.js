@@ -60,8 +60,8 @@ Ext.define('Lada.view.widgets.LadaForm', {
         this.model = model;
         this.loadRecord(model);
         // Set the form to readonly if the models readonly attribute is
-        // anything dffernt from true
-        if (model.get('readonly') !== false) {
+        // true
+        if (model.get('readonly') === true) {
             this.setReadOnly(true);
         }
     },
@@ -131,7 +131,7 @@ Ext.define('Lada.view.widgets.LadaForm', {
             this.warnings = this.translateReturnCodes(json.warnings);
             this.message = Lada.getApplication().bundle.getMsg(json.message);
         } else {
-            this.setReadOnly(true);
+            this.setReadOnly(this.model.get('readonly'));
         }
     }
 });
