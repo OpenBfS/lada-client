@@ -38,9 +38,10 @@ Ext.define('Lada.controller.Messwert', {
         form.commit();
     },
     addMesswert: function(button) {
-        console.log('Adding new Messung for Probe ' + button.probeId);
+        console.log('Adding new Messwert for Messung ' + button.parentId + ' for Probe ' + button.probeId);
         var messung = Ext.create('Lada.model.Messwert');
         messung.set('probeId', button.probeId);
+        messung.set('messungsId', button.parentId);
         var view = Ext.widget('messwertecreate', {model: messung});
     },
     editMesswert: function(grid, record) {
