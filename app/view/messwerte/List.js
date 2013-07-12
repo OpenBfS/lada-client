@@ -11,6 +11,7 @@ Ext.define('Lada.view.messwerte.List' ,{
         deferEmptyText: false
     },
     probeId: null,
+    parentId: null,
     initComponent: function() {
         this.dockedItems = [
             {
@@ -21,7 +22,8 @@ Ext.define('Lada.view.messwerte.List' ,{
                         text: 'Hinzufügen',
                         icon: 'gfx/plus.gif',
                         action: 'add',
-                        probeId: this.probeId
+                        probeId: this.probeId,
+                        parentId: this.parentId
                     },
                     {
                         text: 'Löschen',
