@@ -13,6 +13,7 @@ Ext.define('Lada.view.messungen.CreateForm', {
             {
                 xtype: 'textfield',
                 name: 'nebenprobenNr',
+                maxLength: 10,
                 fieldLabel: 'NPR'
             },
             {
