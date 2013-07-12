@@ -55,19 +55,19 @@ Ext.define('Lada.view.Viewport' ,{
                 kstore.load({
                     params: {
                         probeId: probeId,
-                        messungsId: messung.get('messungsId')
+                        messungsId: messung.get('id').messungsId
                     }
                 });
                 sstore.load({
                     params: {
                         probeId: probeId,
-                        messungsId: messung.get('messungsId')
+                        messungsId: messung.get('id').messungsId
                     }
                 });
                 mstore.load({
                     params: {
                         probeId: probeId,
-                        messungsId: messung.get('messungsId')
+                        messungsId: messung.get('id').messungsId
                     }
                 });
                 console.log('Creating Messung window');
