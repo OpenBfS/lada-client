@@ -7,12 +7,12 @@ Ext.define('Lada.model.Messung', {
         {name: "mmtId"},
         {name: "nebenprobenNr"},
         {name: "messdauer"},
-        {name: "messzeitpunkt", convert: ts2date},
+        {name: "messzeitpunkt", convert: ts2date, defaultValue: new Date()},
         {name: "fertig", type: "boolean"},
         {name: "letzteAenderung", type:"date"},
         {name: "geplant", type: "boolean"}
     ],
-    idProperty: "convertedId",
+    idProperty: "id",
     proxy: {
         type: 'rest',
         appendId: true, //default
@@ -21,6 +21,11 @@ Ext.define('Lada.model.Messung', {
             type: 'json',
             root: 'data'
         }
+    },
+    getEidi: function() {
+        var messId = this.get('messungsId');
+        var probeId = this.get('probeId');
+        return "/" + messId + "/" + probeId;
     }
 });
 
