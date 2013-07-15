@@ -50,17 +50,22 @@ Ext.define('Lada.controller.Messwert', {
         console.log("Loaded Messwert with ID " + record.getId()); //outputs ID
     },
     deleteMesswert: function(button) {
-        // Get selected item in grid
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn){
             if(btn === 'yes'){
                 var store = grid.getStore();
-                store.remove(selection);
-                store.sync();
-                console.log('Deleting Kommentar');
+                var deleteUrl = selection.getProxy().url + selection.getEidi();
+                Ext.Ajax.request({
+                    url: deleteUrl,
+                    method: 'DELETE',
+                    success: function(response, opts) {
+                        store.reload();
+                    }
+                });
+                console.log('Deleting Messwert');
             } else {
-                console.log('Cancel Deleting Kommentar');
+                console.log('Cancel Deleting Messwert');
             }
         });
     },
