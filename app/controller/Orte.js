@@ -49,7 +49,8 @@ Ext.define('Lada.controller.Orte', {
         var ortdetailstore = Ext.getStore('Ortedetails');
         var newortdetail = false;
 
-        var ortid = fform.findField('ortId').getValue();
+        var ortidfield = fform.findField('ortId');
+        var ortid = ortidfield.getValue();
         if (ortid === null) {
             console.log('New Ortdetail');
             ortdetail = Ext.create('Lada.model.Ortdetail');
@@ -74,6 +75,7 @@ Ext.define('Lada.controller.Orte', {
                     var response = options.operations.create[0].store.proxy.reader.jsonData;
                     form.model.set('ortId', response.ortId);
                 }
+                ortidfield.setValue(ortid);
                 form.commit();
             },
             failure: function() {
