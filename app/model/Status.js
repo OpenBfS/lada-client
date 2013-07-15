@@ -1,7 +1,7 @@
 Ext.define('Lada.model.Status', {
     extend: 'Ext.data.Model',
     fields: [
-        {name: "sId"},
+        {name: "sid"},
         {name: "messungsId"},
         {name: "probeId"},
         {name: "erzeuger"},
@@ -20,7 +20,7 @@ Ext.define('Lada.model.Status', {
         }
     },
     getEidi: function() {
-        var sid =  this.get('sId');
+        var sid =  this.get('sid');
         var messId = this.get('messungsId');
         var probeId = this.get('probeId');
         return "/" + sid + "/" + messId + "/" + probeId;
