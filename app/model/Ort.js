@@ -20,6 +20,11 @@ Ext.define('Lada.model.Ort', {
             type: 'json',
             root: 'data'
         }
+    },
+    getEidi: function() {
+        var ortId = this.get('portId');
+        var probeId = this.get('probeId');
+        return "/" + ortId + "/" + probeId;
     }
 });
 

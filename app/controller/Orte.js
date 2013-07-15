@@ -102,11 +102,17 @@ Ext.define('Lada.controller.Orte', {
         Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn){
             if(btn === 'yes'){
                 var store = grid.getStore();
-                store.remove(selection);
-                store.sync();
-                console.log('Deleting Kommentar');
+                var deleteUrl = selection.getProxy().url + selection.getEidi();
+                Ext.Ajax.request({
+                    url: deleteUrl,
+                    method: 'DELETE',
+                    success: function(response, opts) {
+                        store.reload();
+                    }
+                });
+                console.log('Deleting Ort');
             } else {
-                console.log('Cancel Deleting Kommentar');
+                console.log('Cancel Deleting Ort');
             }
         });
     },
