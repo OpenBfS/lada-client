@@ -71,7 +71,7 @@ Ext.define('Lada.controller.Orte', {
             success: function(batch, options) {
                 if (newortdetail) {
                     // Get ID from new created ortdetail and set it to the ort
-                    var response = options.operations.update[0].store.proxy.reader.jsonData;
+                    var response = options.operations.create[0].store.proxy.reader.jsonData;
                     form.model.set('ortId', response.ortId);
                 }
                 form.commit();
