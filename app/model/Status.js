@@ -9,7 +9,7 @@ Ext.define('Lada.model.Status', {
         {name: "sdatum", type: 'date', convert: ts2date, defaultValue: new Date()},
         {name: "skommentar"}
     ],
-    idProperty: "sId",
+    idProperty: "sid",
     proxy: {
         type: 'rest',
         appendId: true, //default
