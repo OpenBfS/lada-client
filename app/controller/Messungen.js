@@ -50,30 +50,29 @@ Ext.define('Lada.controller.Messungen', {
     },
     editMessung: function(grid, record) {
         console.log('Editing Messung');
-        var view = Ext.widget('messungencreate', {model: record});
-        console.log("Loaded Messung with ID " + record.getId()); //outputs ID
-
         var kstore = this.getMKommentareStore();
         kstore.load({
             params: {
-                probeId: probeId,
+                probeId: record.get('probeId'),
                 messungsId: record.get('messungsId')
             }
         });
         var sstore = this.getStatusStore();
         sstore.load({
             params: {
-                probeId: probeId,
+                probeId: record.get('probeId'),
                 messungsId: record.get('messungsId')
             }
         });
-        var mstore = this.getMessungwerteStore();
+        var mstore = this.getMesswerteStore();
         mstore.load({
             params: {
-                probeId: probeId,
+                probeId: record.get('probeId'),
                 messungsId: record.get('messungsId')
             }
         });
+        var view = Ext.widget('messungencreate', {model: record});
+        console.log("Loaded Messung with ID " + record.getId()); //outputs ID
     },
     deleteMessung: function(button) {
         // Get selected item in grid
