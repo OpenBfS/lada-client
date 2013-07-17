@@ -15,11 +15,30 @@ Ext.define('Lada.view.Viewport' ,{
         // Disable "initSearch" call and enable one of the following init
         // methods to get a dialog directly without the need to click through
         // the whole application.
+        //this.initProbe();
         //this.initOrt();
         //this.initMessung();
         //this.initMesswert();
 
         this.callParent(arguments);
+    },
+    initProbe: function() {
+        var store = Ext.getStore('Proben');
+        store.load({
+            params: {
+                probeId: "000007575943X"
+            },
+            callback: function() {
+                var mstore = Ext.getStore('Messungen');
+                mstore.load({
+                    params: {
+                        probeId: "000007575943X"
+                    }
+                });
+                var model = store.data.items[0];
+                var win = Ext.create('Lada.view.proben.Edit', {model: model});
+            }
+        });
     },
     initMesswert: function() {
         var store = Ext.getStore('Messwerte');
