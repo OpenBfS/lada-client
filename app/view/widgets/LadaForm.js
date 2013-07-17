@@ -119,14 +119,16 @@ Ext.define('Lada.view.widgets.LadaForm', {
     },
     setReadOnly: function (bReadOnly) {
         /* Iterate over all fields and set them readonly */
-        this.getForm().getFields().each (function (field) {
-            //field.setDisabled(bReadOnly);
-            field.setReadOnly(bReadOnly);
-        });
-        /* Iterate over all toolbars of lists and hide them */
-        var childs = this.query('toolbar');
-        for (var i = childs.length - 1; i >= 0; i--){
-            childs[i].setVisible(false);
+        if (bReadOnly) {
+            this.getForm().getFields().each (function (field) {
+                //field.setDisabled(bReadOnly);
+                field.setReadOnly(true);
+            });
+            /* Iterate over all toolbars of lists and hide them */
+            var childs = this.query('toolbar');
+            for (var i = childs.length - 1; i >= 0; i--){
+                childs[i].setVisible(false);
+            }
         }
     },
     parseResponse: function(response) {
