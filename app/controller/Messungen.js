@@ -4,6 +4,7 @@ Ext.define('Lada.controller.Messungen', {
         'messungen.Create'
     ],
     stores: [
+        'Proben',
         'Messungen',
         'Messwerte',
         'MKommentare',
@@ -71,6 +72,8 @@ Ext.define('Lada.controller.Messungen', {
                 messungsId: record.get('messungsId')
             }
         });
+        var probe = this.getProbenStore().getById(record.get('probeId'));
+        record.set('readonly', probe.get('readonly'));
         var view = Ext.widget('messungencreate', {model: record});
         console.log("Loaded Messung with ID " + record.getId()); //outputs ID
     },
