@@ -3,10 +3,7 @@ Ext.define('Lada.view.messungen.CreateForm', {
     model: 'Lada.model.Messung',
     requires: [
         'Lada.view.widgets.Messmethode',
-        'Lada.view.widgets.Testdatensatz',
-        'Lada.view.mkommentare.List',
-        'Lada.view.status.List',
-        'Lada.view.messwerte.List'
+        'Lada.view.widgets.Testdatensatz'
     ],
     initComponent: function() {
         this.items = [
@@ -40,51 +37,6 @@ Ext.define('Lada.view.messungen.CreateForm', {
                 xtype: 'testdatensatz',
                 name: 'geplant',
                 fieldLabel: 'Geplant'
-            },
-            // Messwerte
-            {
-                xtype: 'fieldset',
-                title: 'Messwerte',
-                collapsible: true,
-                collapsed: false,
-                padding: '10 10',
-                items: [
-                    {
-                        xtype: 'messwertelist',
-                        parentId: this.model.get('messungsId'),
-                        probeId: this.model.get('probeId')
-                    }
-                ]
-            },
-            // Status
-            {
-                xtype: 'fieldset',
-                title: 'Messungsstatus',
-                collapsible: true,
-                collapsed: false,
-                padding: '10 10',
-                items: [
-                    {
-                        xtype: 'statuslist',
-                        parentId: this.model.get('messungsId'),
-                        probeId: this.model.get('probeId')
-                    }
-                ]
-            },
-            // Messungskommentare
-            {
-                xtype: 'fieldset',
-                title: 'Messungskommentare',
-                collapsible: true,
-                collapsed: false,
-                padding: '10 10',
-                items: [
-                    {
-                        xtype: 'mkommentarelist',
-                        parentId: this.model.get('messungsId'),
-                        probeId: this.model.get('probeId')
-                    }
-                ]
             }
         ];
         this.callParent();
