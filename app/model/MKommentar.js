@@ -2,6 +2,7 @@ Ext.define('Lada.model.MKommentar', {
     extend: 'Ext.data.Model',
     fields: [
         {name: "id"},
+        {name: "kid"},
         {name: "messungsId"},
         {name: "probeId"},
         {name: "erzeuger"},
@@ -19,7 +20,7 @@ Ext.define('Lada.model.MKommentar', {
         }
     },
     getEidi: function() {
-        var kid =  this.get('id').kid;
+        var kid =  this.get('kid');
         var messId = this.get('messungsId');
         var probeId = this.get('probeId');
         return "/" + kid + "/" + messId + "/" + probeId;
