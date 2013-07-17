@@ -12,7 +12,7 @@ Ext.define('Lada.model.Messwert', {
         {name: "grenzwertueberschreitung", type: "boolean"},
         {name: "letzteAenderung", type:"date"}
     ],
-    idProperty: "messgroesseId",
+    idProperty: "id",
     proxy: {
         type: 'rest',
         appendId: true, //default
