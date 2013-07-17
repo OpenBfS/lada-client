@@ -1,7 +1,8 @@
 Ext.define('Lada.controller.Messungen', {
     extend: 'Ext.app.Controller',
     views: [
-        'messungen.Create'
+        'messungen.Create',
+        'messungen.Edit'
     ],
     stores: [
         'Proben',
@@ -73,8 +74,11 @@ Ext.define('Lada.controller.Messungen', {
             }
         });
         var probe = this.getProbenStore().getById(record.get('probeId'));
-        record.set('readonly', probe.get('readonly'));
-        var view = Ext.widget('messungencreate', {model: record});
+        var view = Ext.widget('messungenedit', {model: record});
+        if (probe.get('readonly') === true) {
+            var form = view.down('form');
+            form.setReadOnly(true);
+        }
         console.log("Loaded Messung with ID " + record.getId()); //outputs ID
     },
     deleteMessung: function(button) {
