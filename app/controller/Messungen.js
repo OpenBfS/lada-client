@@ -29,6 +29,9 @@ Ext.define('Lada.controller.Messungen', {
             'messungencreate button[action=save]': {
                 click: this.saveMessung
             },
+            'messungenedit button[action=save]': {
+                click: this.saveMessung
+            },
             'messungencreate form': {
                 savesuccess: this.createSuccess,
                 savefailure: this.createFailure
