@@ -10,6 +10,18 @@ Ext.define('Lada.view.proben.List' ,{
         minHeight: 35,
         deferEmptyText: false
     },
+    availableColumns: [
+            {header: 'Datenbasis',  dataIndex: 'datenbasisId', width: 70},
+            {header: 'MPL',  dataIndex: 'mplId', width: 50},
+            {header: 'UWB',  dataIndex: 'umwId', width: 50},
+            {header: 'MMT',  dataIndex: 'messmethode'},
+            {header: 'HPNR',  dataIndex: 'hauptprobenNr'},
+            {header: 'NPNR',  dataIndex: 'nebenprobenNr'},
+            {header: 'E.Gemeinde',  dataIndex: 'bezeichnung', flex: 1},
+            {header: 'Ursprungsgemeinde',  dataIndex: 'kreis', flex: 1},
+            {header: 'ProbeID', dataIndex: 'probeId'},
+            {header: 'MST', dataIndex: 'mstId', width: 50}
+    ],
     initComponent: function() {
         this.dockedItems = [
             {
