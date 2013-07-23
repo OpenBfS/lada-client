@@ -30,6 +30,7 @@ Ext.define('Lada.controller.Sql', {
         console.log('The panel was rendered');
     },
     selectSql: function(element, record, index) {
+        var result = Ext.getCmp('result');
         var selection = element.getValue() - 1;
         console.log('Selected SQL ' + selection);
         for (var i = 0; i < queries.length; ++i) {
@@ -39,6 +40,8 @@ Ext.define('Lada.controller.Sql', {
         var toShow = Ext.getCmp(queries[selection]);
         var buttons = Ext.getCmp('SearchBtnPanel');
         this.reset();
+        var displayFields = record[0].data.fields
+        result.setupColumns(displayFields);
         toShow.show();
         buttons.show();
     },
