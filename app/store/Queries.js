@@ -24,14 +24,14 @@ Ext.define('Lada.store.Queries', {
             'name': 'MST, UWB',
             'description': 'Beschreibung der MST, UWB Abfrage',
             'sql': 'select * from xxx',
-            'fields': []
+            'fields': ['datenbasisId', 'mplId', 'umwId', 'messmethode', 'hauptprobenNr', 'nebenprobenNr', 'bezeichnung', 'kreis', 'probeId', 'mstId']
         },
         {
             'id': '2',
             'name': 'Rbegin',
             'description': 'Beschreibung der Rbegin Abfrage',
             'sql': 'select * from xxx',
-            'fields': []
+            'fields': ['mplId', 'datenbasisId', 'umwId', 'messmethode', 'hauptprobenNr', 'nebenprobenNr', 'bezeichnung', 'kreis', 'probeId', 'mstId']
         }
     ],
 });
