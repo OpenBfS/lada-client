@@ -6,6 +6,7 @@ Ext.define('Lada.model.Query', {
         {name: "description"},
         {name: "sql"},
         {name: "fields"},
+        {name: "filters"},
     ],
     proxy: {
         type: 'memory',
