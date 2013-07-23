@@ -41,7 +41,7 @@ Ext.define('Lada.view.proben.List' ,{
     },
     setupColumns: function(colnames) {
         var cols = []
-        for (var i = colnames.length - 1; i >= 0; i--){
+        for (var i=0; i < colnames.length; i++) {
             col = colnames[i];
             for (var j = this.availableColumns.length - 1; j >= 0; j--){
                 defaultCol = this.availableColumns[j];
