@@ -1,4 +1,5 @@
 var queries = new Array('query1', 'query2');
+
 Ext.define('Lada.controller.Sql', {
     extend: 'Ext.app.Controller',
     stores: [
@@ -31,18 +32,32 @@ Ext.define('Lada.controller.Sql', {
     },
     selectSql: function(element, record, index) {
         var result = Ext.getCmp('result');
-        var selection = element.getValue() - 1;
-        console.log('Selected SQL ' + selection);
-        for (var i = 0; i < queries.length; ++i) {
-            var toHide = Ext.getCmp(queries[i]);
-            toHide.hide();
-        }
-        var toShow = Ext.getCmp(queries[selection]);
+        var filters = Ext.getCmp('queryfilters');
         var buttons = Ext.getCmp('SearchBtnPanel');
+        var displayFields = record[0].data.fields;
+        var filterFields = record[0].data.filters;
         this.reset();
-        var displayFields = record[0].data.fields
+
+        // Setup Columns of the probenlist
         result.setupColumns(displayFields);
-        toShow.show();
+
+        // Setup Columns of the probenlist
+        if (filterFields.length > 0) {
+            var items = filters.items.items;
+            for (var i=0; i < items.length; i++) {
+                var filtername = items[i].id;
+                items[i].hide();
+                for (var j=0; j < filterFields.length; j++) {
+                    if ('filter-'+filterFields[j] === filtername) {
+                        items[i].show();
+                    };
+                };
+
+            };
+            filters.show();
+        } else {
+            filters.hide();
+        };
         buttons.show();
     },
     search: function(element, record, index) {
@@ -77,10 +92,10 @@ Ext.define('Lada.controller.Sql', {
     reset: function(element, record, index) {
         var buttons = Ext.getCmp('SearchBtnPanel');
         var result = Ext.getCmp('result');
-        for (var i = 0; i < queries.length; ++i) {
-            var toHide = Ext.getCmp(queries[i]);
-            toHide.hide();
-        }
+        //for (var i = 0; i < queries.length; ++i) {
+        //    var toHide = Ext.getCmp(queries[i]);
+        //    toHide.hide();
+        //}
         //result.hide();
         //buttons.hide();
     }
