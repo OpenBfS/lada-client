@@ -5,13 +5,15 @@ Ext.define('Lada.model.Query', {
         {name: "name"},
         {name: "description"},
         {name: "sql"},
-        {name: "fields"},
+        {name: "results"},
         {name: "filters"},
     ],
     proxy: {
-        type: 'memory',
+        type: 'rest',
+        url: 'server/rest/query',
         reader: {
-            type: 'json'
+            type: 'json',
+            root: 'data'
         }
     }
 });
