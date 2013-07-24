@@ -33,10 +33,15 @@ Ext.define('Lada.controller.Sql', {
     selectSql: function(element, record, index) {
         var result = Ext.getCmp('result');
         var filters = Ext.getCmp('queryfilters');
+        var sqlquery = Ext.getCmp('sqlquery');
+        var sqldesc = Ext.getCmp('sqldesc');
         var buttons = Ext.getCmp('SearchBtnPanel');
         var displayFields = record[0].data.fields;
         var filterFields = record[0].data.filters;
         this.reset();
+
+        sqlquery.setValue(record[0].data.sql);
+        sqldesc.setValue(record[0].data.description);
 
         // Setup Columns of the probenlist
         result.setupColumns(displayFields);
