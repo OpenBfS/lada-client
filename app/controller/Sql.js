@@ -36,8 +36,9 @@ Ext.define('Lada.controller.Sql', {
         var sqlquery = Ext.getCmp('sqlquery');
         var sqldesc = Ext.getCmp('sqldesc');
         var buttons = Ext.getCmp('SearchBtnPanel');
-        var displayFields = record[0].data.fields;
+        var displayFields = record[0].data.results;
         var filterFields = record[0].data.filters;
+
         this.reset();
 
         sqlquery.setValue(record[0].data.sql);
