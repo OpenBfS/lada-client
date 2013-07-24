@@ -129,7 +129,7 @@ Ext.define('Lada.view.Viewport' ,{
                             hidden: true
                         },
                         {
-                            id: 'pbegin',
+                            id: 'filter-pbegin',
                             xtype: 'datetime',
                             fieldLabel: 'Probenbeginn',
                             labelWidth: 100,
