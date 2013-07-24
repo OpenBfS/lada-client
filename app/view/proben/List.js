@@ -39,17 +39,11 @@ Ext.define('Lada.view.proben.List' ,{
         this.columns = [];
         this.callParent(arguments);
     },
-    setupColumns: function(colnames) {
-        var cols = []
-        for (var i=0; i < colnames.length; i++) {
-            col = colnames[i];
-            for (var j = this.availableColumns.length - 1; j >= 0; j--){
-                defaultCol = this.availableColumns[j];
-                if (defaultCol.dataIndex === col) {
-                    cols.push(this.availableColumns[j])
-                };
-            };
+    setupColumns: function(cols) {
+        var rcols = []
+        for (var i = cols.length - 1; i >= 0; i--){
+            rcols.push(cols[i]);
         };
-        this.reconfigure(this.store, cols);
+        this.reconfigure(this.store, rcols);
     }
 });
