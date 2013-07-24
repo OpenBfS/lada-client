@@ -87,11 +87,11 @@ Ext.define('Lada.view.widgets.LadaForm', {
                     this.parseResponse(response);
                     if (this.success) {
                         console.log('Save was successfull');
-                        this.fireEvent('savesuccess', this);
+                        this.fireEvent('savesuccess', this, this.model, response);
                     } else {
                         console.log('Save was not successfull');
                         this.form.markInvalid(this.errors);
-                        this.fireEvent('savefailure', this);
+                        this.fireEvent('savefailure', this, this.model, response);
                     }
                 },
                 scope: this
