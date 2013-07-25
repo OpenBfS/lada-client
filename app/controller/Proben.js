@@ -75,18 +75,24 @@ Ext.define('Lada.controller.Proben', {
         console.log("Loaded Probe with ID " + record.getId()); //outputs ID
     },
     createSuccess: function(form, record, response) {
-        // Reload store
-        //var store = this.getProbenStore();
-        //store.reload();
+        // Close Createdialog
         var win = form.up('window');
         win.close();
-        // Open Editdialog
-        var json = Ext.decode(response.responseText);
-        if (json) {
-            var probeId = json.data.probeId;
-            record.set('probeId', probeId);
-        }
-        this.editProbe(null, record);
+        // Reload store
+        var store = this.getProbenStore();
+        store.reload({
+            scope: this,
+            callback: function(records, operation, success) {
+                console.log('Reloaded store');
+                // Open Editdialog
+                var json = Ext.decode(response.responseText);
+                if (json) {
+                    var probeId = json.data.probeId;
+                    var probe = store.findRecord("probeId", probeId);
+                    this.editProbe(null, probe);
+                }
+            }
+        });
     },
     createFailure: function(form, record, response) {
         Ext.MessageBox.show({
