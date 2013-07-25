@@ -1,13 +1,14 @@
 Ext.define('Lada.view.Viewport' ,{
     extend: 'Ext.container.Viewport',
     requires: [
+        'Lada.store.Info',
+        'Lada.view.search.List',
         'Lada.view.search.List',
         'Lada.view.proben.List',
         'Lada.view.widgets.Mst',
         'Lada.view.widgets.Uwb',
         'Lada.view.widgets.Datetime'
     ],
-
     initComponent: function() {
         console.log('Setting up Viewport');
         this.initSearch();
@@ -21,7 +22,24 @@ Ext.define('Lada.view.Viewport' ,{
         //this.initMessung();
         //this.initMesswert();
 
+        this.setInfo();
         this.callParent(arguments);
+    },
+    setInfo: function() {
+        var store = Ext.create('Lada.store.Info');
+        store.load({
+            callback: function(a,b,c) {
+                var info = store.data.items[0];
+                var clientVersion = "-/- (-/-)";
+                var user = info.get('user');
+                var groups = info.get('groups');
+                var serverVersion = info.get('version');
+                var info = Ext.getCmp('systeminfo');
+                info.update('Nutzer: '+user+' | Gruppe(n): '+groups+' | Server: '+serverVersion+' | Client: '+clientVersion);
+                info.show();
+                console.log(info);
+            }
+        });
     },
     initProbe: function() {
         var store = Ext.getStore('Proben');
@@ -102,6 +120,13 @@ Ext.define('Lada.view.Viewport' ,{
             title: '<center>Probenauswahlmaske</center>',
             bodyPadding: '10 10',
             items: [
+                // Informationen über Nutzer/Gruppe/Version
+                {
+                    xtype: 'panel',
+                    id:  'systeminfo',
+                    bodyPadding: '5',
+                    hidden: true,
+                },
                 // Auswahl einer Abfrage.
                 {
                     xtype: 'queryselector',
