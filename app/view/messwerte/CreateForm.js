@@ -12,12 +12,12 @@ Ext.define('Lada.view.messwerte.CreateForm', {
     initComponent: function() {
         this.items = [
             {
-                xtype: 'textfield',
+                xtype: 'numberfield',
                 name: 'messwert',
                 fieldLabel: 'Messwert'
             },
             {
-                xtype: 'textfield',
+                xtype: 'numberfield',
                 name: 'messfehler',
                 fieldLabel: 'Messfehler'
             },
@@ -32,7 +32,7 @@ Ext.define('Lada.view.messwerte.CreateForm', {
                 fieldLabel: 'Messeinheit'
             },
             {
-                xtype: 'textfield',
+                xtype: 'numberfield',
                 name: 'nwgZuMesswert',
                 fieldLabel: 'Nachweisgrenze'
             }
