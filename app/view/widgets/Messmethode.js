@@ -1,6 +1,9 @@
 // Combobox for Messmethode
 var mmtStore = Ext.create('Ext.data.Store', {
     fields: ['mmtId', 'messmethhode'],
+    sorters: [{
+        property: 'mmtId',
+    }],
     proxy: {
         type: 'ajax',
         api: {

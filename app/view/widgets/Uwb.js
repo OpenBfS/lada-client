@@ -1,6 +1,9 @@
 // Combobox for Umweltbereich
 var uwbStore = Ext.create('Ext.data.Store', {
     fields: ['umwId'],
+    sorters: [{
+        property: 'umwId',
+    }],
     proxy: {
         type: 'ajax',
         api: {

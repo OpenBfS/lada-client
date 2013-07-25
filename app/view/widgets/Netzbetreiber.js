@@ -1,6 +1,9 @@
 // Combobox for Netzbetreiber
 var netzbetreiberStore = Ext.create('Ext.data.Store', {
     fields: ['netzbetreiberId', 'netzbetreiber'],
+    sorters: [{
+        property: 'netzbetreiber',
+    }],
     proxy: {
         type: 'ajax',
         api: {

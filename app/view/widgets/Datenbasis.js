@@ -1,6 +1,9 @@
 // Combobox for Datenbasis
 var datenbasisStore = Ext.create('Ext.data.Store', {
     fields: ['datenbasisId', 'beschreibung', 'datenbasis'],
+    sorters: [{
+        property: 'datenbasis',
+    }],
     proxy: {
         type: 'ajax',
         api: {
