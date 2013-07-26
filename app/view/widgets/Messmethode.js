@@ -17,6 +17,7 @@ var mmtStore = Ext.create('Ext.data.Store', {
 });
 
 Ext.define('Lada.view.widgets.Messmethode' ,{
+        tpl: '<tpl for="."><div class="x-combo-list-item" >{mmtId} - {messmethhode}</div></tpl>',
         extend: 'Ext.form.ComboBox',
         alias: 'widget.messmethode',
         store: mmtStore,
