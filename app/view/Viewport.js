@@ -30,7 +30,7 @@ Ext.define('Lada.view.Viewport' ,{
         store.load({
             callback: function(a,b,c) {
                 var info = store.data.items[0];
-                var clientVersion = "-/- (-/-)";
+                var clientVersion = "r261 (2013-07-26)";
                 var user = info.get('user');
                 var groups = info.get('groups');
                 var serverVersion = info.get('version');
