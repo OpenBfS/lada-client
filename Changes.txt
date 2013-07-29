@@ -1,6 +1,8 @@
 0.3
 ===
 
+ - Issue34: Das Feld für Kommentare (Proben, Messung) ist nun eine Auswahliste
+   aus den verfügbaren Messstellen.
  - Issue17: Das Auswahlfeld für den Probenzusatzwert ist beim Bearbeiten von
    bestehenden Proben nicht bearbeitbar. (readonly).
 

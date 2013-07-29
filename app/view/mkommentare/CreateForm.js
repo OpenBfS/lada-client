@@ -4,7 +4,7 @@ Ext.define('Lada.view.mkommentare.CreateForm', {
     initComponent: function() {
         this.items = [
             {
-                xtype: 'textfield',
+                xtype: 'mst',
                 name: 'erzeuger',
                 maxLength: 5,
                 fieldLabel: 'Erzeuger'
