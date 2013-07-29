@@ -1,0 +1,10 @@
+0.3
+===
+
+ - Issue17: Das Auswahlfeld für den Probenzusatzwert ist beim Bearbeiten von
+   bestehenden Proben nicht bearbeitbar. (readonly).
+
+0.2
+===
+
+ - Initial Version of the Changes.txt files
