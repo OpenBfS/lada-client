@@ -27,6 +27,7 @@ Ext.define('Lada.view.proben.CreateForm', {
                     {
                         xtype: 'textfield',
                         name: 'hauptprobenNr',
+                        maxLength: 20,
                         fieldLabel: 'Hauptprobennr.'
                     },
                     {

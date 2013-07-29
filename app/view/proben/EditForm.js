@@ -33,6 +33,7 @@ Ext.define('Lada.view.proben.EditForm', {
                     {
                         xtype: 'textfield',
                         name: 'hauptprobenNr',
+                        maxLength: 20,
                         fieldLabel: 'Hauptprobennr.'
                     },
                     {
