@@ -1,6 +1,8 @@
 0.3
 ===
 
+ - Issue16: Das Feld "Ursprungszeit" für die Probe wurde zunächst entfernt. Es
+   findet hierzu noch interne Klärung beim BFS statt.
  - Issue34: Das Feld für Kommentare (Proben, Messung) ist nun eine Auswahliste
    aus den verfügbaren Messstellen.
  - Issue17: Das Auswahlfeld für den Probenzusatzwert ist beim Bearbeiten von

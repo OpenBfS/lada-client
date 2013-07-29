@@ -1,4 +1,4 @@
-Ext.define('Lada.view.proben.EditForm', {
+xt.define('Lada.view.proben.EditForm', {
     extend: 'Lada.view.widgets.LadaForm',
     requires: [
         'Lada.view.widgets.Datenbasis',
@@ -146,10 +146,6 @@ Ext.define('Lada.view.proben.EditForm', {
                     {
                         fieldLabel: 'Sollzeit Bis',
                         name: 'solldatumEnde'
-                    },
-                    {
-                        fieldLabel: 'Ursprungszeit',
-                        name: 'z5'
                     }
                 ]
             },

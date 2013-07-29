@@ -140,10 +140,6 @@ Ext.define('Lada.view.proben.CreateForm', {
                     {
                         fieldLabel: 'Sollzeit Bis',
                         name: 'solldatumEnde'
-                    },
-                    {
-                        fieldLabel: 'Ursprungszeit',
-                        name: 'z5'
                     }
                 ]
             }
