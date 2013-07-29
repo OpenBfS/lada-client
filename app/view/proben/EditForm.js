@@ -1,4 +1,4 @@
-xt.define('Lada.view.proben.EditForm', {
+Ext.define('Lada.view.proben.EditForm', {
     extend: 'Lada.view.widgets.LadaForm',
     requires: [
         'Lada.view.widgets.Datenbasis',
