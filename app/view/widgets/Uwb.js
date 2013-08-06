@@ -17,13 +17,26 @@ var uwbStore = Ext.create('Ext.data.Store', {
 });
 
 Ext.define('Lada.view.widgets.Uwb' ,{
-        tpl: '<tpl for="."><div class="x-combo-list-item" >{umwId} - {umweltBereich}</div></tpl>',
+        tpl: '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >{umwId} - {umweltBereich}</div></tpl>',
         extend: 'Ext.form.ComboBox',
         alias: 'widget.uwb',
         store: uwbStore,
         displayField:'umwId',
         valueField: 'umwId',
         emptyText:'Wählen Sie einen Umweltbereich',
+        // TODO: Set value in disply after selection. Can not figure out why
+        // accessing the recored.data attribute fails here (ti) <2013-08-06 16:52> 
+        //listeners: {
+        //    select: function(combo, record, index) {
+        //        console.log("1");
+        //        console.log(record);
+        //        console.log("2");
+        //        var text = record.data['umwId'] + " - " + record.data['umweltBereich'];
+        //        console.log("3");
+        //        Ext.form.ComboBox.superclass.setValue.call(this, text);
+        //        combo.value = record.id;
+        //    }
+        //},
     initComponent: function() {
         this.callParent(arguments);
     }
