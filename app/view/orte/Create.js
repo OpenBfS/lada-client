@@ -11,15 +11,20 @@ Ext.define('Lada.view.orte.Create', {
         'Lada.view.orte.CreateForm'
     ],
     initComponent: function() {
-        var form = Ext.create('Lada.view.orte.CreateForm', this.initialConfig);
-        this.items = [form];
         this.buttons = [
             {
                 text: 'Speichern',
                 scope: form,
                 action: 'save'
+            },
+            {
+                text: 'Abbrechen',
+                scope: this,
+                handler: this.close,
             }
         ];
+        var form = Ext.create('Lada.view.orte.CreateForm', this.initialConfig);
+        this.items = [form];
         this.callParent();
     }
 });

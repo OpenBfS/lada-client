@@ -8,15 +8,20 @@ Ext.define('Lada.view.zusatzwerte.Create', {
     modal: true,
 
     initComponent: function() {
-        var form = Ext.create('Lada.view.zusatzwerte.CreateForm', this.initialConfig);
-        this.items = [form];
         this.buttons = [
             {
                 text: 'Speichern',
                 scope: form,
                 action: 'save'
+            },
+            {
+                text: 'Abbrechen',
+                scope: this,
+                handler: this.close,
             }
         ];
+        var form = Ext.create('Lada.view.zusatzwerte.CreateForm', this.initialConfig);
+        this.items = [form];
         this.callParent();
     }
 });

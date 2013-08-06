@@ -13,6 +13,11 @@ Ext.define('Lada.view.messwerte.Create', {
                 text: 'Speichern',
                 scope: form,
                 action: 'save'
+            },
+            {
+                text: 'Abbrechen',
+                scope: this,
+                handler: this.close,
             }
         ];
         var form = Ext.create('Lada.view.messwerte.CreateForm', this.initialConfig);

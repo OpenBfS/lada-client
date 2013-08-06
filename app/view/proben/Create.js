@@ -11,8 +11,6 @@ Ext.define('Lada.view.proben.Create', {
     autoScroll: true,
     modal: true,
     initComponent: function() {
-        var form = Ext.create('Lada.view.proben.CreateForm');
-        this.items = [form];
         this.buttons = [
             {
                 text: 'Speichern',
@@ -24,6 +22,8 @@ Ext.define('Lada.view.proben.Create', {
                 handler: this.close,
             }
         ];
+        var form = Ext.create('Lada.view.proben.CreateForm');
+        this.items = [form];
         this.callParent();
     }
 });
