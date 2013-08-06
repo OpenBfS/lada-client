@@ -8,8 +8,6 @@ Ext.define('Lada.view.messwerte.Create', {
     modal: true,
 
     initComponent: function() {
-        var form = Ext.create('Lada.view.messwerte.CreateForm', this.initialConfig);
-        this.items = [form];
         this.buttons = [
             {
                 text: 'Speichern',
@@ -17,6 +15,8 @@ Ext.define('Lada.view.messwerte.Create', {
                 action: 'save'
             }
         ];
+        var form = Ext.create('Lada.view.messwerte.CreateForm', this.initialConfig);
+        this.items = [form];
         this.callParent();
     }
 });

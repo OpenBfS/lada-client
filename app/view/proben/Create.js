@@ -16,8 +16,12 @@ Ext.define('Lada.view.proben.Create', {
         this.buttons = [
             {
                 text: 'Speichern',
-                handler: form.commit,
-                scope: form
+                action: 'save',
+            },
+            {
+                text: 'Abbrechen',
+                scope: this,
+                handler: this.close,
             }
         ];
         this.callParent();

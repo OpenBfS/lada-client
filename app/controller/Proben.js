@@ -23,6 +23,12 @@ Ext.define('Lada.controller.Proben', {
             'probenlist toolbar button[action=add]': {
                 click: this.addProbe
             },
+            'probencreate button[action=save]': {
+                click: this.saveProbe
+            },
+            'probenedit button[action=save]': {
+                click: this.saveProbe
+            },
             'probencreate form': {
                 savesuccess: this.createSuccess,
                 savefailure: this.createFailure
@@ -32,6 +38,11 @@ Ext.define('Lada.controller.Proben', {
                 savefailure: this.editFailure
             }
         });
+    },
+    saveProbe: function(button) {
+        console.log('Saving Probe');
+        var form = button.up('window').down('form');
+        form.commit();
     },
     addProbe: function(button) {
         console.log('Adding new Probe');

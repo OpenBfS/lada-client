@@ -12,19 +12,23 @@ Ext.define('Lada.view.proben.Edit', {
     modal: true,
 
     initComponent: function() {
+        this.buttons = [
+            {
+                text: 'Speichern',
+                action: 'save',
+            },
+            {
+                text: 'Abbrechen',
+                scope: this,
+                handler: this.close,
+            }
+        ];
         // InitialConfig is the config object passed to the constructor on
         // creation of this window. We need to pass it throuh to the form as
         // we need the "modelId" param to load the correct item.
         var form = Ext.create('Lada.view.proben.EditForm', this.initialConfig);
         this.items = [form];
-        this.buttons = [
-            {
-                text: 'Speichern',
-                handler: form.commit,
-                scope: form
-            }
-        ];
         this.callParent();
-    }
+    },
 });
 
