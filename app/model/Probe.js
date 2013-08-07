@@ -1,3 +1,7 @@
+/**
+ * A Probe.
+ * This class represents and defines the model of a "Probe"
+ * */
 Ext.define('Lada.model.Probe', {
     extend: 'Ext.data.Model',
     fields: [
