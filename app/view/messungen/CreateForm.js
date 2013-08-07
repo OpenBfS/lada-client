@@ -19,7 +19,7 @@ Ext.define('Lada.view.messungen.CreateForm', {
                 fieldLabel: 'MMT'
             },
             {
-                xtype: 'datefield',
+                xtype: 'datetime',
                 name: 'messzeitpunkt',
                 fieldLabel: 'Messzeitpunkt'
             },

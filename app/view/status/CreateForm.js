@@ -18,7 +18,7 @@ Ext.define('Lada.view.status.CreateForm', {
                 name: 'status'
             },
             {
-                xtype: 'datefield',
+                xtype: 'datetime',
                 label: 'Datum',
                 name: 'sdatum'
             },

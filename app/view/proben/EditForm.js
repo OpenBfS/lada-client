@@ -127,7 +127,7 @@ Ext.define('Lada.view.proben.EditForm', {
             {
                 xtype: 'fieldset',
                 title: 'Zeit',
-                defaultType: 'datefield',
+                defaultType: 'datetime',
                 defaults: {
                         labelWidth: 150
                 },
