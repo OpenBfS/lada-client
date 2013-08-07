@@ -28,7 +28,7 @@ Ext.define('Lada.view.zusatzwerte.CreateForm', {
                 border: 0,
                 items: [
                     {
-                        xtype: 'textfield',
+                        xtype: 'numberfield',
                         name: 'messwertPzs',
                         fieldLabel: 'Messwert'
                     },
@@ -39,12 +39,12 @@ Ext.define('Lada.view.zusatzwerte.CreateForm', {
                 ]
             },
             {
-                xtype: 'textfield',
+                xtype: 'numberfield',
                 name: 'messfehler',
                 fieldLabel: 'rel. Unsich.[%]'
             },
             {
-                xtype: 'textfield',
+                xtype: 'numberfield',
                 name: 'nwgZuMesswert',
                 fieldLabel: 'Nachweisgrenze'
             }

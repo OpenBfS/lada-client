@@ -63,7 +63,8 @@ Ext.define('Lada.view.proben.CreateForm', {
                                 allowBlank: false
                             },
                             {
-                                xtype: 'textfield',
+                                xtype: 'numberfield',
+                                allowDecimals: false,
                                 name: 'probeNehmerId',
                                 fieldLabel: 'Probennehmer'
                             },
@@ -73,11 +74,6 @@ Ext.define('Lada.view.proben.CreateForm', {
                                 fieldLabel: 'Netzbetreiber',
                                 editable: false,
                                 allowBlank: false
-                            },
-                            {
-                                xtype: 'textfield',
-                                name: 'x11',
-                                fieldLabel: 'Datensatzerzeuger'
                             }
                         ]
                     }
@@ -99,11 +95,13 @@ Ext.define('Lada.view.proben.CreateForm', {
                         },
                         {
                             xtype: 'textfield',
+                            maxLength: 100,
                             name: 'media',
                             fieldLabel: 'Medienbezeichnung'
                         },
                         {
                             xtype: 'textfield',
+                            maxLength: 100,
                             name: 'mediaDesk',
                             fieldLabel: 'Deskriptoren'
                         },

@@ -69,7 +69,8 @@ Ext.define('Lada.view.proben.EditForm', {
                                 allowBlank: false
                             },
                             {
-                                xtype: 'textfield',
+                                xtype: 'numberfield',
+                                allowDecimals: false,
                                 name: 'probeNehmerId',
                                 fieldLabel: 'Probennehmer'
                             },
@@ -105,11 +106,13 @@ Ext.define('Lada.view.proben.EditForm', {
                         },
                         {
                             xtype: 'textfield',
+                            maxLength: 100,
                             name: 'media',
                             fieldLabel: 'Medienbezeichnung'
                         },
                         {
                             xtype: 'textfield',
+                            maxLength: 100,
                             name: 'mediaDesk',
                             fieldLabel: 'Deskriptoren'
                         },

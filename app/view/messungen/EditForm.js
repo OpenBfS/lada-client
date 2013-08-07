@@ -27,7 +27,9 @@ Ext.define('Lada.view.messungen.EditForm', {
                 fieldLabel: 'Messzeitpunkt'
             },
             {
-                xtype: 'textfield',
+                xtype: 'numberfield',
+                allowDecimals: false,
+                minValue: 0,
                 name: 'messdauer',
                 fieldLabel: 'Messdauer'
             },

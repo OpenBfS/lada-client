@@ -52,11 +52,13 @@ Ext.define('Lada.view.orte.CreateForm', {
                 items: [
                     {
                         xtype: 'textfield',
+                        maxLength: 100,
                         name: 'ort_beschreibung',
                         fieldLabel: 'Beschreibung'
                     },
                     {
                         xtype: 'textfield',
+                        maxLength: 10,
                         name: 'ort_bezeichnung',
                         fieldLabel: 'Bezeichnung'
                     },
@@ -71,17 +73,17 @@ Ext.define('Lada.view.orte.CreateForm', {
                         fieldLabel: 'Gemeinde'
                     },
                     {
-                        xtype: 'textfield',
+                        xtype: 'numberfield',
                         name: 'ort_latitude',
                         fieldLabel: 'Lat'
                     },
                     {
-                        xtype: 'textfield',
+                        xtype: 'numberfield',
                         name: 'ort_longitude',
                         fieldLabel: 'Lon'
                     },
                     {
-                        xtype: 'textfield',
+                        xtype: 'numberfield',
                         name: 'ort_hoeheLand',
                         fieldLabel: 'Höhe'
                     }

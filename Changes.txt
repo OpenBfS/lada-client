@@ -1,6 +1,8 @@
 0.3
 ===
 
+ - Issue39: Clientseitige Überprüfung der Datenfelder hinzugefügt: Nutzung von
+   "numberfields" bei Zahlenwerten, maxLength, min/maxValue.
  - Issue51: Alle Datumsfelder haben nun die Möglichkeit auch eine Zeit mit
    anzugeben. Das Format der Datumsfelder wurde auf "deutsch" geändert.
  - Issue16: Das Feld "Ursprungszeit" für die Probe wurde zunächst entfernt. Es
