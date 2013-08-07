@@ -1,6 +1,8 @@
 0.3
 ===
 
+ - Issue51: Alle Datumsfelder haben nun die Möglichkeit auch eine Zeit mit
+   anzugeben. Das Format der Datumsfelder wurde auf "deutsch" geändert.
  - Issue16: Das Feld "Ursprungszeit" für die Probe wurde zunächst entfernt. Es
    findet hierzu noch interne Klärung beim BFS statt.
  - Issue34: Das Feld für Kommentare (Proben, Messung) ist nun eine Auswahliste
