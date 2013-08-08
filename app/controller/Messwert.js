@@ -4,6 +4,7 @@ Ext.define('Lada.controller.Messwert', {
         'messwerte.Create'
     ],
     stores: [
+        'Proben',
         'Messungen',
         'Messwerte',
         'Messeinheit',
@@ -46,7 +47,13 @@ Ext.define('Lada.controller.Messwert', {
     },
     editMesswert: function(grid, record) {
         console.log('Editing Messwert');
+        var probe = this.getProbenStore().getById(record.get('probeId'));
         var view = Ext.widget('messwertecreate', {model: record});
+        if (probe.get('readonly') === true) {
+            var form = view.down('form');
+            form.setReadOnly(true);
+        }
+
         console.log("Loaded Messwert with ID " + record.getId()); //outputs ID
     },
     deleteMesswert: function(button) {
