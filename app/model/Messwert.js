@@ -1,3 +1,6 @@
+/**
+ * Model for Messwerte
+ */
 Ext.define('Lada.model.Messwert', {
     extend: 'Ext.data.Model',
         fields: [
