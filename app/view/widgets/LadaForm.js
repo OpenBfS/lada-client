@@ -1,10 +1,15 @@
+/**
+ * Generic Lada specific form.
+ *
+ * See http://moduscreate.com/expert-ext-js-model-integration-in-forms/ for
+ * more details
+ */
 Ext.define('Lada.view.widgets.LadaForm', {
     extend: 'Ext.form.Panel',
 
     alias: 'widget.ladaform',
-    /**
-     * http://moduscreate.com/expert-ext-js-model-integration-in-forms/
-     */
+    bodyPadding: '10 10',
+    border: 0,
 
     /**
      * Can be a reference to a model instance or a model class name.
@@ -15,13 +20,26 @@ Ext.define('Lada.view.widgets.LadaForm', {
      * Only applicable if model provided is a model class name (string).
      */
     modelId: null,
-    bodyPadding: '10 10',
-    border: 0,
-
+    /**
+     * List of errors in the form. Typically set after the server validates the form submission
+     */
     errors: null,
+    /**
+     * List of warnings in the form. Typically set after the server validates the form submission
+     */
     warnings: null,
+    /**
+     * The generic (error) message for the form. Typically set after the server validates the form submission
+     */
     message: null,
+    /**
+     * Flag to indicate if the validation succeeds. Typically set after the server validates the form submission
+     */
     success: null,
+    /**
+     * Flag to indicate if the form should be rendered in readonly mode. Will
+     * be set after calling the {setReadOnly} function.
+     */
     readonly: false,
 
     initComponent: function() {
