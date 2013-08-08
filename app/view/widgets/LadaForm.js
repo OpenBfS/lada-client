@@ -117,12 +117,32 @@ Ext.define('Lada.view.widgets.LadaForm', {
         }
         return translated;
     },
-    setReadOnly: function (bReadOnly) {
+    /**
+     * Will set the form into readonly state.
+     * @param {Boolean} Flag to indicate if the form should be set to readonly
+     * or not.
+     * @param {Array} [ignoreFields="[]"] A list of fieldnames to ignore.
+     */
+    setReadOnly: function (bReadOnly, ignoreFields) {
+        console.log(ignoreFields);
+        if(typeof(ignoreFields)==='undefined') {
+            ignoreFields = Array();
+        }
         /* Iterate over all fields and set them readonly */
         if (bReadOnly) {
             this.getForm().getFields().each (function (field) {
+                // Check if the field name is in the list of fields to ignore
+                var ignore = false;
+                for (var i = ignoreFields.length - 1; i >= 0; i--){
+                    console.log(ignoreFields[i] + "===" + field.getName());
+                    if (ignoreFields[i] === field.getName(true)) {
+                        ignore = true;
+                    };
+                };
                 //field.setDisabled(bReadOnly);
-                field.setReadOnly(true);
+                if (!ignore) {
+                    field.setReadOnly(true);
+                }
             });
             /* Iterate over all toolbars of lists and hide them */
             var childs = this.query('toolbar');
