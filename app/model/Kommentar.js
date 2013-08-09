@@ -1,10 +1,11 @@
 Ext.define('Lada.model.Kommentar', {
     extend: 'Ext.data.Model',
+    requires: ['Lada.lib.Helpers'],
     fields: [
         {name: "kId"},
         {name: "probeId"},
         {name: "erzeuger"},
-        {name: "kdatum", type: 'date', convert: ts2date, defaultValue: new Date()},
+        {name: "kdatum", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
         {name: "ktext"}
     ],
     idProperty: "kId",
@@ -23,8 +24,3 @@ Ext.define('Lada.model.Kommentar', {
         return "/" + kid + "/" + probeId;
     }
 });
-
-function ts2date(v, record){
-    // Converts a timestamp into a date object.
-    return new Date(v);
-}
