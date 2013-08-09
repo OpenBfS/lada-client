@@ -1,5 +1,6 @@
 Ext.define('Lada.model.Query', {
     extend: 'Ext.data.Model',
+    requires: ['Lada.lib.Helpers'],
     fields: [
         {name: "id"},
         {name: "name"},
