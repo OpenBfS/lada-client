@@ -3,6 +3,7 @@
  */
 Ext.define('Lada.model.Messwert', {
     extend: 'Ext.data.Model',
+    requires: ['Lada.lib.Helpers'],
         fields: [
         {name: "id"},
         {name: "messungsId", mapping:"id.messungsId"},
