@@ -1,5 +1,6 @@
 Ext.define('Lada.model.Messung', {
     extend: 'Ext.data.Model',
+    requires: ['Lada.lib.Helpers'],
         fields: [
         {name: "id"},
         {name: "messungsId", mapping:"id.messungsId"},
@@ -7,7 +8,7 @@ Ext.define('Lada.model.Messung', {
         {name: "mmtId"},
         {name: "nebenprobenNr"},
         {name: "messdauer"},
-        {name: "messzeitpunkt", convert: ts2date, defaultValue: new Date()},
+        {name: "messzeitpunkt", convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
         {name: "fertig", type: "boolean"},
         {name: "letzteAenderung", type:"date"},
         {name: "geplant", type: "boolean"}
