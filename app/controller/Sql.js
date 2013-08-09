@@ -1,5 +1,9 @@
 var queries = new Array('query1', 'query2');
 
+/**
+ * Controller for the Search
+ * This controller handles all logic related to the search
+ */
 Ext.define('Lada.controller.Sql', {
     extend: 'Ext.app.Controller',
     stores: [
@@ -30,6 +34,11 @@ Ext.define('Lada.controller.Sql', {
     onPanelRendered: function() {
         console.log('The panel was rendered');
     },
+    /**
+     * Function called when the user selects a SQL query in the dropdownlist.
+     * The function will hide/display additional element related to the
+     * selected search query
+     */
     selectSql: function(element, record, index) {
         var result = Ext.getCmp('result');
         var filters = Ext.getCmp('queryfilters');
@@ -66,6 +75,10 @@ Ext.define('Lada.controller.Sql', {
         };
         buttons.show();
     },
+    /**
+     * Function is called when the user clicks the search button. The function
+     * will perform a search to the server on refreshes the result list.
+     */
     search: function(element, record, index) {
         var result = Ext.getCmp('result');
         console.log('Loading store');
