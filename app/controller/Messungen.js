@@ -1,5 +1,8 @@
+/**
+ * Controller for Messungen
+ */
 Ext.define('Lada.controller.Messungen', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.Base',
     views: [
         'messungen.Create',
         'messungen.Edit'
@@ -14,23 +17,23 @@ Ext.define('Lada.controller.Messungen', {
     ],
     init: function() {
         console.log('Initialising the Messungen controller');
+    },
+    addListeners: function() {
         this.control({
-            // CSS like selector to select element in the viewpzusatzwert. See
-            // ComponentQuery documentation for more details.
             'messungenlist': {
-                itemdblclick: this.editMessung
+                itemdblclick: this.editItem
             },
             'messungenlist toolbar button[action=add]': {
-                click: this.addMessung
+                click: this.addItem
             },
             'messungenlist toolbar button[action=delete]': {
-                click: this.deleteMessung
+                click: this.deleteItem
             },
             'messungencreate button[action=save]': {
-                click: this.saveMessung
+                click: this.saveItem
             },
             'messungenedit button[action=save]': {
-                click: this.saveMessung
+                click: this.saveItem
             },
             'messungencreate form': {
                 savesuccess: this.createSuccess,
@@ -42,18 +45,18 @@ Ext.define('Lada.controller.Messungen', {
             }
         });
     },
-    saveMessung: function(button) {
+    saveItem: function(button) {
         console.log('Saving new Messung for Probe ' + button.probeId);
         var form = button.up('window').down('form');
         form.commit();
     },
-    addMessung: function(button) {
+    addItem: function(button) {
         console.log('Adding new Messung for Probe ' + button.probeId);
         var messung = Ext.create('Lada.model.Messung');
         messung.set('probeId', button.probeId);
         var view = Ext.widget('messungencreate', {model: messung});
     },
-    editMessung: function(grid, record) {
+    editItem: function(grid, record) {
         console.log('Editing Messung');
         var kstore = this.getMKommentareStore();
         kstore.load({
@@ -89,7 +92,7 @@ Ext.define('Lada.controller.Messungen', {
         }
         console.log("Loaded Messung with ID " + record.getId()); //outputs ID
     },
-    deleteMessung: function(button) {
+    deleteItem: function(button) {
         // Get selected item in grid
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
@@ -111,7 +114,6 @@ Ext.define('Lada.controller.Messungen', {
         });
     },
     createSuccess: function(form, record, operation) {
-        // Reload store
         var store = this.getMessungenStore();
         store.reload();
         var win = form.up('window');
@@ -126,7 +128,6 @@ Ext.define('Lada.controller.Messungen', {
         });
     },
     editSuccess: function(form, record, operation) {
-        // Reload store
         var store = this.getMessungenStore();
         store.reload();
         var win = form.up('window');
