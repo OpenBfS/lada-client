@@ -1,5 +1,8 @@
+/**
+ * Controller for Orte
+ */
 Ext.define('Lada.controller.Orte', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.Base',
     views: [
         'orte.List',
         'orte.Create'
@@ -15,20 +18,21 @@ Ext.define('Lada.controller.Orte', {
     ],
     init: function() {
         console.log('Initialising the Orte controller');
+        this.callParent();
+    },
+    addListeners: function() {
         this.control({
-            // CSS like selector to select element in the viewport. See
-            // ComponentQuery documentation for more details.
             'ortelist': {
-                itemdblclick: this.editOrt
+                itemdblclick: this.editItem
             },
             'ortelist toolbar button[action=add]': {
-                click: this.addOrt
+                click: this.addItem
             },
             'ortelist toolbar button[action=delete]': {
-                click: this.deleteOrt
+                click: this.deleteItem
             },
             'ortecreate button[action=save]': {
-                click: this.saveOrt
+                click: this.saveItem
             },
             'ortecreate form': {
                 savesuccess: this.createSuccess,
@@ -40,7 +44,7 @@ Ext.define('Lada.controller.Orte', {
             }
         });
     },
-    saveOrt: function(button) {
+    saveItem: function(button) {
         console.log('Saving Ort');
         var form = button.up('window').down('form');
         var fform = form.getForm();
@@ -84,37 +88,16 @@ Ext.define('Lada.controller.Orte', {
         });
 
     },
-    addOrt: function(button) {
+    addItem: function(button) {
         console.log('Adding new Ort for Probe ' + button.probeId);
         var ort = Ext.create('Lada.model.Ort');
         ort.set('probeId', button.probeId);
         var view = Ext.widget('ortecreate', {model: ort});
     },
-    editOrt: function(grid, record) {
+    editItem: function(grid, record) {
         console.log('Editing Ort');
         var view = Ext.widget('ortecreate', {model: record});
         console.log("Loaded Ort with ID " + record.getId()); //outputs ID
-    },
-    deleteOrt: function(button) {
-        // Get selected item in grid
-        var grid = button.up('grid');
-        var selection = grid.getView().getSelectionModel().getSelection()[0];
-        Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn){
-            if(btn === 'yes'){
-                var store = grid.getStore();
-                var deleteUrl = selection.getProxy().url + selection.getEidi();
-                Ext.Ajax.request({
-                    url: deleteUrl,
-                    method: 'DELETE',
-                    success: function(response, opts) {
-                        store.reload();
-                    }
-                });
-                console.log('Deleting Ort');
-            } else {
-                console.log('Cancel Deleting Ort');
-            }
-        });
     },
     createSuccess: function(form, record, operation) {
         // Reload store
@@ -123,27 +106,11 @@ Ext.define('Lada.controller.Orte', {
         var win = form.up('window');
         win.close();
     },
-    createFailure: function(form, record, operation) {
-        Ext.MessageBox.show({
-            title: 'Fehler beim Speichern',
-            msg: form.message,
-            icon: Ext.MessageBox.ERROR,
-            buttons: Ext.Msg.OK
-        });
-    },
     editSuccess: function(form, record, operation) {
         // Reload store
         var store = this.getOrteStore();
         store.reload();
         var win = form.up('window');
         win.close();
-    },
-    editFailure: function(form, record, operation) {
-        Ext.MessageBox.show({
-            title: 'Fehler beim Speichern',
-            msg: form.message,
-            icon: Ext.MessageBox.ERROR,
-            buttons: Ext.Msg.OK
-        });
     }
 });
