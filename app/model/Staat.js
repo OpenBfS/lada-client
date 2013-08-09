@@ -1,5 +1,6 @@
 Ext.define('Lada.model.Staat', {
     extend: 'Ext.data.Model',
+    requires: ['Lada.lib.Helpers'],
     fields: [
         {name: "staatId", type: 'int'},
         {name: "staat"},
@@ -19,8 +20,3 @@ Ext.define('Lada.model.Staat', {
         }
     }
 });
-
-function ts2date(v, record){
-    // Converts a timestamp into a date object.
-    return new Date(v);
-}
