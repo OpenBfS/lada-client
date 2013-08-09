@@ -1,5 +1,6 @@
 Ext.define('Lada.model.Ort', {
     extend: 'Ext.data.Model',
+    requires: ['Lada.lib.Helpers'],
     fields: [
         // Field from the l_ort table
         {name: "portId", type: 'int'},
@@ -7,7 +8,7 @@ Ext.define('Lada.model.Ort', {
         {name: "probeId"},
         {name: "ortsTyp"},
         {name: "ortszusatztext"},
-        {name: "letzteAenderung", type: 'date', convert: ts2date, defaultValue: new Date()}
+        {name: "letzteAenderung", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()}
     ],
     idProperty: "portId",
     proxy: {
@@ -27,8 +28,3 @@ Ext.define('Lada.model.Ort', {
         return "/" + ortId + "/" + probeId;
     }
 });
-
-function ts2date(v, record){
-    // Converts a timestamp into a date object.
-    return new Date(v);
-}
