@@ -4,6 +4,7 @@
  * */
 Ext.define('Lada.model.Probe', {
     extend: 'Ext.data.Model',
+    requires: ['Lada.lib.Helpers'],
     fields: [
         {name: "probeId"},
         {name: "baId"},
@@ -12,7 +13,7 @@ Ext.define('Lada.model.Probe', {
         {name: "hauptprobenNr"},
         {name: "messmethode"},
         {name: "nebenprobenNr"},
-        {name: "letzteAenderung", type: 'date', convert: ts2date, defaultValue: new Date()},
+        {name: "letzteAenderung", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
         {name: "media"},
         {name: "mediaDesk"},
         {name: "mittelungsdauer"},
@@ -22,11 +23,11 @@ Ext.define('Lada.model.Probe', {
         {name: "mstId"},
         {name: "netzbetreiberId"},
         {name: "probeNehmerId"},
-        {name: "probeentnahmeBeginn", type: 'date', convert: ts2date, defaultValue: new Date()},
-        {name: "probeentnahmeEnde", type: 'date', convert: ts2date, defaultValue: new Date()},
+        {name: "probeentnahmeBeginn", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
+        {name: "probeentnahmeEnde", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
         {name: "probenartId"},
-        {name: "solldatumBeginn", type: 'date', convert: ts2date, defaultValue: new Date()},
-        {name: "solldatumEnde", type: 'date', convert: ts2date, defaultValue: new Date()},
+        {name: "solldatumBeginn", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
+        {name: "solldatumEnde", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
         {name: "test"},
         {name: "umwId"},
 
@@ -45,13 +46,3 @@ Ext.define('Lada.model.Probe', {
         }
     }
 });
-
-function buildId(v, record){
-    var newId = record.get('probeId') + record.get('nebenprobenNr');
-    return newId;
-}
-
-function ts2date(v, record){
-    // Converts a timestamp into a date object.
-    return new Date(v);
-}
