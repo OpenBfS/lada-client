@@ -1,12 +1,13 @@
 Ext.define('Lada.model.Zusatzwert', {
     extend: 'Ext.data.Model',
+    requires: ['Lada.lib.Helpers'],
     fields: [
         {name: "pzsId"},
         {name: "probeId"},
         {name: "nwgZuMesswert", type: 'float'},
         {name: "messwertPzs", type: 'float'},
         {name: "messfehler", type: 'float'},
-        {name: "letzteAenderung", type: 'date', convert: ts2date, defaultValue: new Date()}
+        {name: "letzteAenderung", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()}
     ],
     idProperty: "pzsId",
     proxy: {
@@ -35,12 +36,3 @@ Ext.define('Lada.model.Zusatzwert', {
         return record.get('einheit');
     }
 });
-
-function buildId(v, record){
-    return record.get('probeId') + ',' + record.get('pzsId');
-}
-
-function ts2date(v, record){
-    // Converts a timestamp into a date object.
-    return new Date(v);
-}
