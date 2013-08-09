@@ -1,5 +1,8 @@
+/**
+ * Controller for Proben
+ */
 Ext.define('Lada.controller.Proben', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.Base',
     views: [
         'proben.Edit',
         'proben.Create'
@@ -14,20 +17,21 @@ Ext.define('Lada.controller.Proben', {
     ],
     init: function() {
         console.log('Initialising the Proben controller');
+        this.callParent();
+    },
+    addListeners: function() {
         this.control({
-            // CSS like selector to select element in the viewport. See
-            // ComponentQuery documentation for more details.
             'probenlist': {
-                itemdblclick: this.editProbe
+                itemdblclick: this.editItem
             },
             'probenlist toolbar button[action=add]': {
-                click: this.addProbe
+                click: this.addItem
             },
             'probencreate button[action=save]': {
-                click: this.saveProbe
+                click: this.saveItem
             },
             'probenedit button[action=save]': {
-                click: this.saveProbe
+                click: this.saveItem
             },
             'probencreate form': {
                 savesuccess: this.createSuccess,
@@ -39,16 +43,11 @@ Ext.define('Lada.controller.Proben', {
             }
         });
     },
-    saveProbe: function(button) {
-        console.log('Saving Probe');
-        var form = button.up('window').down('form');
-        form.commit();
-    },
-    addProbe: function(button) {
+    addItem: function(button) {
         console.log('Adding new Probe');
         var view = Ext.widget('probencreate');
     },
-    editProbe: function(grid, record) {
+    editItem: function(grid, record) {
         console.log('Editing Probe');
         var id = record.get('probeId');
         var view = Ext.widget('probenedit', {modelId: id});
@@ -100,17 +99,9 @@ Ext.define('Lada.controller.Proben', {
                 if (json) {
                     var probeId = json.data.probeId;
                     var probe = store.findRecord("probeId", probeId);
-                    this.editProbe(null, probe);
+                    this.editItem(null, probe);
                 }
             }
-        });
-    },
-    createFailure: function(form, record, response) {
-        Ext.MessageBox.show({
-            title: 'Fehler beim Speichern',
-            msg: form.message,
-            icon: Ext.MessageBox.ERROR,
-            buttons: Ext.Msg.OK
         });
     },
     editSuccess: function(form, record, response) {
@@ -119,13 +110,5 @@ Ext.define('Lada.controller.Proben', {
         store.reload();
         var win = form.up('window');
         win.close();
-    },
-    editFailure: function(form, record, response) {
-        Ext.MessageBox.show({
-            title: 'Fehler beim Speichern',
-            msg: form.message,
-            icon: Ext.MessageBox.ERROR,
-            buttons: Ext.Msg.OK
-        });
     }
 });
