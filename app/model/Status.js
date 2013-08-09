@@ -1,12 +1,13 @@
 Ext.define('Lada.model.Status', {
     extend: 'Ext.data.Model',
+    requires: ['Lada.lib.Helpers'],
     fields: [
         {name: "sid"},
         {name: "messungsId"},
         {name: "probeId"},
         {name: "erzeuger"},
         {name: "status", defaultValue: 1},
-        {name: "sdatum", type: 'date', convert: ts2date, defaultValue: new Date()},
+        {name: "sdatum", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
         {name: "skommentar"}
     ],
     idProperty: "sid",
@@ -26,8 +27,3 @@ Ext.define('Lada.model.Status', {
         return "/" + sid + "/" + messId + "/" + probeId;
     }
 });
-
-function ts2date(v, record){
-    // Converts a timestamp into a date object.
-    return new Date(v);
-}
