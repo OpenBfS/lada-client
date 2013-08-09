@@ -1,5 +1,8 @@
+/**
+ * Controller for Messwerte
+ */
 Ext.define('Lada.controller.Messwert', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.Base',
     views: [
         'messwerte.Create'
     ],
@@ -11,21 +14,22 @@ Ext.define('Lada.controller.Messwert', {
         'Messgroessen'
     ],
     init: function() {
-        console.log('Initialising the Messungen controller');
+        console.log('Initialising the Messwert controller');
+        this.callParent();
+    },
+    addListeners: function() {
         this.control({
-            // CSS like selector to select element in the viewpzusatzwert. See
-            // ComponentQuery documentation for more details.
             'messwertelist': {
-                itemdblclick: this.editMesswert
+                itemdblclick: this.editItem
             },
             'messwertelist toolbar button[action=add]': {
-                click: this.addMesswert
+                click: this.addItem
             },
             'messwertelist toolbar button[action=delete]': {
-                click: this.deleteMesswert
+                click: this.deleteItem
             },
             'messwertecreate button[action=save]': {
-                click: this.saveMesswert
+                click: this.saveItem
             },
             'messwertecreate form': {
                 savesuccess: this.createSuccess,
@@ -33,19 +37,19 @@ Ext.define('Lada.controller.Messwert', {
             }
         });
     },
-    saveMesswert: function(button) {
+    saveItem: function(button) {
         console.log('Saving MesswerMesswert');
         var form = button.up('window').down('form');
         form.commit();
     },
-    addMesswert: function(button) {
+    addItem: function(button) {
         console.log('Adding new Messwert for Messung ' + button.parentId + ' for Probe ' + button.probeId);
         var messung = Ext.create('Lada.model.Messwert');
         messung.set('probeId', button.probeId);
         messung.set('messungsId', button.parentId);
         var view = Ext.widget('messwertecreate', {model: messung});
     },
-    editMesswert: function(grid, record) {
+    editItem: function(grid, record) {
         console.log('Editing Messwert');
         var probe = this.getProbenStore().getById(record.get('probeId'));
         var view = Ext.widget('messwertecreate', {model: record});
@@ -56,7 +60,7 @@ Ext.define('Lada.controller.Messwert', {
 
         console.log("Loaded Messwert with ID " + record.getId()); //outputs ID
     },
-    deleteMesswert: function(button) {
+    deleteItem: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn){
