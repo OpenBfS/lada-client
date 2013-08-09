@@ -1,5 +1,6 @@
 Ext.define('Lada.model.Probenzusatzwert', {
     extend: 'Ext.data.Model',
+    requires: ['Lada.lib.Helpers'],
     fields: [
         {name: "pzsId"},
         {name: "mehId"},
