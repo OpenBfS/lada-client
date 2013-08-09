@@ -1,5 +1,6 @@
 Ext.define('Lada.model.Ortdetail', {
     extend: 'Ext.data.Model',
+    requires: ['Lada.lib.Helpers'],
     fields: [
         {name: "ortId"},
         {name: "bezeichnung"},
@@ -9,7 +10,7 @@ Ext.define('Lada.model.Ortdetail', {
         {name: "koordXExtern"},
         {name: "koordYExtern"},
         {name: "hoeheLand"},
-        {name: "letzteAenderung", type: 'date', convert: ts2date, defaultValue: new Date()},
+        {name: "letzteAenderung", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
         {name: "longitude", type: 'float'},
         {name: "latitude", type: 'float'},
         {name: "staatId"},
@@ -29,9 +30,3 @@ Ext.define('Lada.model.Ortdetail', {
         }
     }
 });
-
-function ts2date(v, record){
-    // Converts a timestamp into a date object.
-    return new Date(v);
-}
-
