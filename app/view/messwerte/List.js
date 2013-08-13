@@ -1,3 +1,6 @@
+/*
+ * Grid to list Messwerte
+ */
 Ext.define('Lada.view.messwerte.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.messwertelist',

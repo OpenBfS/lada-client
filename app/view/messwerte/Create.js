@@ -1,3 +1,6 @@
+/*
+ * Window to create and edit a Messwert
+ */
 Ext.define('Lada.view.messwerte.Create', {
     extend: 'Ext.window.Window',
     alias: 'widget.messwertecreate',

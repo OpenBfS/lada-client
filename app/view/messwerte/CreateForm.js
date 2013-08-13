@@ -1,3 +1,6 @@
+/*
+ * Formular to create and edit a Messwert
+ */
 Ext.define('Lada.view.messwerte.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
     model: 'Lada.model.Messwert',
