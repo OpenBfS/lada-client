@@ -1,3 +1,6 @@
+/*
+ * Grid to list available search queryies
+ */
 Ext.define('Lada.view.search.List' ,{
     extend: 'Ext.form.FieldSet',
     title: 'SQL-Auswahl',
