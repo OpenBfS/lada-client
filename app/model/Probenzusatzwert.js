@@ -1,3 +1,6 @@
+/**
+ * Model class for Probenzusatzwert
+ */
 Ext.define('Lada.model.Probenzusatzwert', {
     extend: 'Ext.data.Model',
     requires: ['Lada.lib.Helpers'],
