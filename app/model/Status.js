@@ -1,3 +1,6 @@
+/**
+ * Model class for Status
+ */
 Ext.define('Lada.model.Status', {
     extend: 'Ext.data.Model',
     requires: ['Lada.lib.Helpers'],
