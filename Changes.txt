@@ -1,6 +1,8 @@
 0.3
 ===
 
+ - Upload von LAF Dateien. Der Upload kann durch den Import-Button an der
+   Probenliste durchgeführt werden.
  - Issue8: Filterung in Comboboxen funktioniert nicht wie erwartet. Die
    Filterung während des Tippens wurde aktiviert.
  - Issue43: Dokumentation erweitert und für die Generierung der Dokumentation
