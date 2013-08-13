@@ -1,3 +1,6 @@
+/*
+ * Formular to create and edit a Status
+ */
 Ext.define('Lada.view.status.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
     requires : [

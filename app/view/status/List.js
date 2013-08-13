@@ -1,3 +1,6 @@
+/*
+ * Grid to list Status
+ */
 Ext.define('Lada.view.status.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.statuslist',

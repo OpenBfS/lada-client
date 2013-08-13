@@ -1,3 +1,6 @@
+/*
+ * Window to create and edit a Status
+ */
 Ext.define('Lada.view.status.Create', {
     extend: 'Ext.window.Window',
     alias: 'widget.statuscreate',
