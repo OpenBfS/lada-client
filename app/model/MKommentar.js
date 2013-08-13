@@ -1,3 +1,6 @@
+/**
+ * Model class for Kommentare on Messungen
+ */
 Ext.define('Lada.model.MKommentar', {
     extend: 'Ext.data.Model',
     requires: ['Lada.lib.Helpers'],
