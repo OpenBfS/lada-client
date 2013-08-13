@@ -1,3 +1,6 @@
+/**
+ * Store for Verwaltungseinheiten
+ */
 Ext.define('Lada.store.Verwaltungseinheiten', {
     extend: 'Ext.data.Store',
     fields: ['gemId', 'bezeichnung'],

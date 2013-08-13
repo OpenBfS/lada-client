@@ -1,3 +1,6 @@
+/**
+ * Store for Messgroessen
+ */
 Ext.define('Lada.store.Messgroessen', {
     extend: 'Ext.data.Store',
     fields: ['messgroesseId', 'messgro0esse'],

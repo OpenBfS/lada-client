@@ -1,3 +1,6 @@
+/**
+ * Store for Messeinheit
+ */
 Ext.define('Lada.store.Messeinheit', {
     extend: 'Ext.data.Store',
     fields: ['mehId', 'einheit'],
