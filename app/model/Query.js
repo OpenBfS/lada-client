@@ -1,3 +1,6 @@
+/**
+ * Model class for SQL-Querys
+ */
 Ext.define('Lada.model.Query', {
     extend: 'Ext.data.Model',
     requires: ['Lada.lib.Helpers'],
