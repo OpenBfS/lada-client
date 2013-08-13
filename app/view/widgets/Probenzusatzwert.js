@@ -8,6 +8,12 @@ Ext.define('Lada.view.widgets.Zusatzwert' ,{
         displayField: 'beschreibung',
         valueField: 'pzsId',
         emptyText:'Wählen Sie einen Zusatzwert',
+        // Enable filtering of comboboxes
+        autoSelect: false,
+        queryMode: 'local',
+        triggerAction : 'all',
+        typeAhead: true,
+        minChars: 0,
     initComponent: function() {
         this.callParent(arguments);
     }

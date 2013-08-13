@@ -26,6 +26,12 @@ Ext.define('Lada.view.widgets.Mst' ,{
         valueField: 'mstId',
         typeAhead: true,
         emptyText:'Wählen Sie eine Messstelle',
+        // Enable filtering of comboboxes
+        autoSelect: false,
+        queryMode: 'local',
+        triggerAction : 'all',
+        typeAhead: true,
+        minChars: 0,
     initComponent: function() {
         this.callParent(arguments);
     }

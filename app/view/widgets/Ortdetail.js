@@ -8,6 +8,12 @@ Ext.define('Lada.view.widgets.Ortdetail' ,{
         displayField: 'bezeichnung',
         valueField: 'ortId',
         emptyText:'Wählen Sie einen Ort',
+        // Enable filtering of comboboxes
+        autoSelect: false,
+        queryMode: 'local',
+        triggerAction : 'all',
+        typeAhead: true,
+        minChars: 0,
     initComponent: function() {
         this.callParent(arguments);
     }

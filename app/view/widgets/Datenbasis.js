@@ -25,6 +25,12 @@ Ext.define('Lada.view.widgets.Datenbasis' ,{
         displayField:'datenbasis',
         valueField: 'datenbasisId',
         emptyText:'Wählen Sie eine Datenbasis',
+        // Enable filtering of comboboxes
+        autoSelect: false,
+        queryMode: 'local',
+        triggerAction : 'all',
+        typeAhead: true,
+        minChars: 0,
     initComponent: function() {
         this.callParent(arguments);
     }

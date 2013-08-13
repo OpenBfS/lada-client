@@ -22,6 +22,12 @@ Ext.define('Lada.view.widgets.Probenart' ,{
         displayField:'probenart',
         valueField: 'probenartId',
         emptyText:'Wählen Sie eine Probenart',
+        // Enable filtering of comboboxes
+        autoSelect: false,
+        queryMode: 'local',
+        triggerAction : 'all',
+        typeAhead: true,
+        minChars: 0,
     initComponent: function() {
         this.callParent(arguments);
     }

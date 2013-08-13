@@ -25,6 +25,12 @@ Ext.define('Lada.view.widgets.Netzbetreiber' ,{
         displayField:'netzbetreiber',
         valueField: 'netzbetreiberId',
         emptyText:'Wählen Sie einen Netzbetreiber',
+        // Enable filtering of comboboxes
+        autoSelect: false,
+        queryMode: 'local',
+        triggerAction : 'all',
+        typeAhead: true,
+        minChars: 0,
     initComponent: function() {
         this.callParent(arguments);
     }

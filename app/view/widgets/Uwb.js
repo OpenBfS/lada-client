@@ -26,6 +26,12 @@ Ext.define('Lada.view.widgets.Uwb' ,{
         displayField:'umwId',
         valueField: 'umwId',
         emptyText:'Wählen Sie einen Umweltbereich',
+        // Enable filtering of comboboxes
+        autoSelect: false,
+        queryMode: 'local',
+        triggerAction : 'all',
+        typeAhead: true,
+        minChars: 0,
         // TODO: Set value in disply after selection. Can not figure out why
         // accessing the recored.data attribute fails here (ti) <2013-08-06 16:52> 
         //listeners: {

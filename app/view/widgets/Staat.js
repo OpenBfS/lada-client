@@ -8,6 +8,12 @@ Ext.define('Lada.view.widgets.Staat' ,{
         displayField: 'staat',
         valueField: 'staatId',
         emptyText:'Wählen Sie einen Staat',
+        // Enable filtering of comboboxes
+        autoSelect: false,
+        queryMode: 'local',
+        triggerAction : 'all',
+        typeAhead: true,
+        minChars: 0,
     initComponent: function() {
         this.callParent(arguments);
     }

@@ -17,7 +17,7 @@ Ext.define('Lada.view.Viewport' ,{
     ],
     initComponent: function() {
         console.log('Setting up Viewport');
-        this.initSearch();
+        //this.initSearch();
 
         // Development related: 
         // Disable "initSearch" call and enable one of the following init
@@ -26,9 +26,9 @@ Ext.define('Lada.view.Viewport' ,{
         //this.initProbe();
         //this.initOrt();
         //this.initMessung();
-        //this.initMesswert();
+        this.initMesswert();
 
-        this.setInfo();
+        //this.setInfo();
         this.callParent(arguments);
     },
     /**

@@ -19,6 +19,12 @@ Ext.define('Lada.view.widgets.Statuswert' ,{
         valueField: 'id',
         typeAhead: true,
         emptyText:'Wählen Sie eine Status',
+        // Enable filtering of comboboxes
+        autoSelect: false,
+        queryMode: 'local',
+        triggerAction : 'all',
+        typeAhead: true,
+        minChars: 0,
     initComponent: function() {
         this.callParent(arguments);
     }

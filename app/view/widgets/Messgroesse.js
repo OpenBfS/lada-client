@@ -8,7 +8,7 @@ Ext.define('Lada.view.widgets.Messegroesse' ,{
         displayField: 'messgro0esse',
         valueField: 'messgroesseId',
         emptyText:'Wählen Sie eine Messgröße',
-        forceSelection: true,
+        // Enable filtering of comboboxes
         autoSelect: false,
         queryMode: 'local',
         triggerAction : 'all',
