@@ -1,3 +1,6 @@
+/**
+ * Model class for Ort
+ */
 Ext.define('Lada.model.Ort', {
     extend: 'Ext.data.Model',
     requires: ['Lada.lib.Helpers'],
