@@ -1,0 +1,22 @@
+{
+    "--title": "Lada Client",
+    "--": [
+        "extjs/src",
+        "app.js",
+        "app"
+    ],
+    "--warnings": [
+        "-no_doc:extjs/src",
+        "-no_doc_member:extjs/src",
+        "-link:extjs/src",
+        "-type_name:extjs/src"
+    ],
+    "--ignore-html": [
+        "locale",
+        "debug"
+    ],
+    "--images": "extjs/docs/images",
+    "--builtin-classes": true,
+    "--seo": true,
+    "--output": "doc"
+}
