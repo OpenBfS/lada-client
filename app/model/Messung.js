@@ -1,3 +1,6 @@
+/**
+ * Model class for Messungen
+ */
 Ext.define('Lada.model.Messung', {
     extend: 'Ext.data.Model',
     requires: ['Lada.lib.Helpers'],
