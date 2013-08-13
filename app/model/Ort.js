@@ -2,8 +2,7 @@
  * Model class for Ort
  */
 Ext.define('Lada.model.Ort', {
-    extend: 'Ext.data.Model',
-    requires: ['Lada.lib.Helpers'],
+    extend: 'Lada.model.Base',
     fields: [
         // Field from the l_ort table
         {name: "portId", type: 'int'},
