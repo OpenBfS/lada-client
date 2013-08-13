@@ -1,3 +1,6 @@
+/*
+ * Formular to create and edit a Kommentar for Messungen
+ */
 Ext.define('Lada.view.mkommentare.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
     model: 'Lada.model.MKommentar',

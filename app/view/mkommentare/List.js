@@ -1,3 +1,6 @@
+/*
+ * Grid to list Kommentare for Messunge
+ */
 Ext.define('Lada.view.mkommentare.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.mkommentarelist',

@@ -1,3 +1,6 @@
+/*
+ * Window to create and edit a Kommentar for Messungen
+ */
 Ext.define('Lada.view.mkommentare.Create', {
     extend: 'Ext.window.Window',
     alias: 'widget.mkommentarecreate',
