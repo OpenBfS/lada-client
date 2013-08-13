@@ -1,3 +1,6 @@
+/**
+ * Model class for Staat
+ */
 Ext.define('Lada.model.Staat', {
     extend: 'Ext.data.Model',
     requires: ['Lada.lib.Helpers'],
