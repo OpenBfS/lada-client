@@ -1,3 +1,6 @@
+/*
+ * Grid to list Kommentare
+ */
 Ext.define('Lada.view.kommentare.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.kommentarelist',

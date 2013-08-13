@@ -1,3 +1,6 @@
+/*
+ * Formular to create and edit a Kommentar
+ */
 Ext.define('Lada.view.kommentare.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
     model: 'Lada.model.Kommentar',

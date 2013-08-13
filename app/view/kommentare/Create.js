@@ -1,3 +1,6 @@
+/*
+ * Window to create and edit a Kommentar
+ */
 Ext.define('Lada.view.kommentare.Create', {
     extend: 'Ext.window.Window',
     alias: 'widget.kommentarecreate',
