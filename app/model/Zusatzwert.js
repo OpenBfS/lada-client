@@ -1,3 +1,6 @@
+/**
+ * Model class for Zusatzwerte
+ */
 Ext.define('Lada.model.Zusatzwert', {
     extend: 'Ext.data.Model',
     requires: ['Lada.lib.Helpers'],
