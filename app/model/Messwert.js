@@ -2,9 +2,8 @@
  * Model class for Messwerte
  */
 Ext.define('Lada.model.Messwert', {
-    extend: 'Ext.data.Model',
-    requires: ['Lada.lib.Helpers'],
-        fields: [
+    extend: 'Lada.model.Base',
+    fields: [
         {name: "id"},
         {name: "messungsId", mapping:"id.messungsId"},
         {name: "probeId", mapping:"id.probeId"},
