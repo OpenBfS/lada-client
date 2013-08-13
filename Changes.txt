@@ -1,6 +1,8 @@
 0.3
 ===
 
+ - Issue43: Dokumentation erweitert und für die Generierung der Dokumentation
+   mit Hilfe von JSDuck vorbereitet.
  - Issue39: Clientseitige Überprüfung der Datenfelder hinzugefügt: Nutzung von
    "numberfields" bei Zahlenwerten, maxLength, min/maxValue.
  - Issue51: Alle Datumsfelder haben nun die Möglichkeit auch eine Zeit mit

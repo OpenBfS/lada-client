@@ -12,3 +12,14 @@ Beispiel:
 curl -O http://cdn.sencha.com/ext/gpl/ext-4.2.0-gpl.zip
 unzip ext-4.2.0-gpl.zip
 ln -s ext-4.2.0-gpl extjs
+
+Dokumentation
+=============
+Die Dokumentation wird mit dem Tool JSDuck erzeugt.
+Im Wurzelordner lässt sich nach der Installation von JSDuck dann mit dem
+Befehl "jsduck" die Dokumentation für den Lada-Clienten erzeugen.
+Die Dokumentation findet sich nach der Generierung in dem Order "doc".
+Einstiegseite ist die Seite template.html.
+
+Einstellung bezüglich der Generierung der Dokumentation ist in der Datei
+jsduck.json hinterlegt.
