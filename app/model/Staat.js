@@ -2,8 +2,7 @@
  * Model class for Staat
  */
 Ext.define('Lada.model.Staat', {
-    extend: 'Ext.data.Model',
-    requires: ['Lada.lib.Helpers'],
+    extend: 'Lada.model.Base',
     fields: [
         {name: "staatId", type: 'int'},
         {name: "staat"},
