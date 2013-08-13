@@ -1,3 +1,6 @@
+/*
+ * Window to edit a Probe
+ */
 Ext.define('Lada.view.proben.Edit', {
     extend: 'Ext.window.Window',
     alias: 'widget.probenedit',

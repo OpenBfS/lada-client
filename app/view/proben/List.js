@@ -1,3 +1,6 @@
+/*
+ * Grid to list Proben
+ */
 Ext.define('Lada.view.proben.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.probenlist',
@@ -39,6 +42,12 @@ Ext.define('Lada.view.proben.List' ,{
         this.columns = [];
         this.callParent(arguments);
     },
+    /**
+     * Setup columns of the Grid dynamically based on a list of given cols.
+     * The function is called from the {@link Lada.controllers.Sql#selectSql
+     * select sql event}
+     * @parameter {Array} List of cols to show in the Grid.
+     */
     setupColumns: function(cols) {
         var rcols = []
         rcols.push({header: 'RW', dataIndex: 'readonly', width: 30, renderer: render_readonly});
@@ -49,6 +58,10 @@ Ext.define('Lada.view.proben.List' ,{
     }
 });
 
+/**
+ * Helper function to render a readonly symbol per row in the grid
+ * @param {Boolean} flag if the symbol is a readonly symbol.
+ */
 function render_readonly (value) {
     if (value) {
         return '&#128274;'

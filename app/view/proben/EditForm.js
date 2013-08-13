@@ -1,3 +1,6 @@
+/*
+ * Formular to edit a Probe
+ */
 Ext.define('Lada.view.proben.EditForm', {
     extend: 'Lada.view.widgets.LadaForm',
     requires: [

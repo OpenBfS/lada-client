@@ -1,3 +1,6 @@
+/*
+ * Window to create a Probe
+ */
 Ext.define('Lada.view.proben.Create', {
     extend: 'Ext.window.Window',
     alias: 'widget.probencreate',
