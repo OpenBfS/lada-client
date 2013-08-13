@@ -3,8 +3,7 @@
  * This class represents and defines the model of a "Probe"
  * */
 Ext.define('Lada.model.Probe', {
-    extend: 'Ext.data.Model',
-    requires: ['Lada.lib.Helpers'],
+    extend: 'Lada.model.Base',
     fields: [
         {name: "probeId"},
         {name: "baId"},
