@@ -1,3 +1,6 @@
+/*
+ * Formular to create and edit a Ort
+ */
 Ext.define('Lada.view.orte.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
     model: 'Lada.model.Ort',

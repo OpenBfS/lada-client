@@ -1,3 +1,6 @@
+/*
+ * Window to create and edit a Ort
+ */
 Ext.define('Lada.view.orte.Create', {
     extend: 'Ext.window.Window',
     alias: 'widget.ortecreate',

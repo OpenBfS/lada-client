@@ -1,3 +1,6 @@
+/*
+ * Grid to list Orte
+ */
 Ext.define('Lada.view.orte.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.ortelist',
