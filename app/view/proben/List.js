@@ -35,6 +35,11 @@ Ext.define('Lada.view.proben.List' ,{
                         text: 'Hinzufügen',
                         icon: 'gfx/plus.gif',
                         action: 'add'
+                    },
+                    {
+                        text: 'Import',
+                        icon: 'gfx/plus.gif',
+                        action: 'import'
                     }
                 ]
             }

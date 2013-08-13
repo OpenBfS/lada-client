@@ -5,7 +5,8 @@ Ext.define('Lada.controller.Proben', {
     extend: 'Lada.controller.Base',
     views: [
         'proben.Edit',
-        'proben.Create'
+        'proben.Create',
+        'proben.Import'
     ],
     stores: [
         'Proben',
@@ -27,11 +28,17 @@ Ext.define('Lada.controller.Proben', {
             'probenlist toolbar button[action=add]': {
                 click: this.addItem
             },
+            'probenlist toolbar button[action=import]': {
+                click: this.selectUploadFile
+            },
             'probencreate button[action=save]': {
                 click: this.saveItem
             },
             'probenedit button[action=save]': {
                 click: this.saveItem
+            },
+            'probenimport button[action=save]': {
+                click: this.uploadItem
             },
             'probencreate form': {
                 savesuccess: this.createSuccess,
@@ -46,6 +53,37 @@ Ext.define('Lada.controller.Proben', {
     addItem: function(button) {
         console.log('Adding new Probe');
         var view = Ext.widget('probencreate');
+    },
+    /**
+     * Opens a window with a file chooser to select the file to upload
+     * @private
+     */
+    selectUploadFile: function(button) {
+        console.log('Importing');
+        var view = Ext.widget('probenimport');
+    },
+    /** Uploads the selected file the the server
+     * @private
+     */
+    uploadItem: function(button) {
+        var win = button.up('window');
+        var form = win.down('form');
+        if(form.isValid()){
+            form.submit({
+                url: 'server/rest/proben/import',
+                waitMsg: 'Importiere...',
+                // TODO: Handle the response correct. o must must contain the
+                // filename (None) <2013-08-13 16:17>
+                success: function(fp, resp) {
+                    Ext.Msg.alert('Erfolg! ', 'Die Datei"' + resp.result.file + '" wurde erfolgreich importiert.');
+                    win.close();
+                },
+                failure: function(fp, resp) {
+                    Ext.Msg.alert('Fehler! ', 'Die Datei"' + resp.result.file + '" wurde nicht importiert.');
+                    win.close();
+                }
+            });
+        }
     },
     editItem: function(grid, record) {
         console.log('Editing Probe');
