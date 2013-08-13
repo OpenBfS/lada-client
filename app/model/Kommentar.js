@@ -1,3 +1,6 @@
+/**
+ * Model class for Kommentare
+ */
 Ext.define('Lada.model.Kommentar', {
     extend: 'Ext.data.Model',
     requires: ['Lada.lib.Helpers'],
