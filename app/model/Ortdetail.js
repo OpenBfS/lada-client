@@ -2,8 +2,7 @@
  * Model class for Ortdetail
  */
 Ext.define('Lada.model.Ortdetail', {
-    extend: 'Ext.data.Model',
-    requires: ['Lada.lib.Helpers'],
+    extend: 'Lada.model.Base',
     fields: [
         {name: "ortId"},
         {name: "bezeichnung"},
