@@ -1,4 +1,6 @@
-// Combobox for Zusatzwert.
+/**
+ * Combobox for Ortdetails
+ */
 Ext.define('Lada.view.widgets.Ortdetail' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.ortdetail',

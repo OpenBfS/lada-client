@@ -1,4 +1,3 @@
-// Combobox for Testdatensatz
 var testdatensatzStore = Ext.create('Ext.data.Store', {
     fields: ['testdatensatzId', 'testdatensatz'],
     data: [
@@ -7,6 +6,10 @@ var testdatensatzStore = Ext.create('Ext.data.Store', {
     ]
 });
 
+/**
+ * Combobox for Testdatensatz.
+ * This widget is also used a generic "Ja/Nein" combobox.
+ */
 Ext.define('Lada.view.widgets.Testdatensatz' ,{
         extend: 'Ext.form.ComboBox',
         editable: false,

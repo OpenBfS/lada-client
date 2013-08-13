@@ -1,4 +1,6 @@
-// Combobox for Zusatzwert.
+/**
+ * Combobox for Zusatzwert
+ */
 Ext.define('Lada.view.widgets.Zusatzwert' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.probenzusatzwert',

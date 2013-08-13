@@ -1,4 +1,3 @@
-// Combobox for Messmethode
 var mmtStore = Ext.create('Ext.data.Store', {
     fields: ['mmtId', 'messmethhode'],
     sorters: [{
@@ -16,6 +15,9 @@ var mmtStore = Ext.create('Ext.data.Store', {
     }
 });
 
+/**
+ * Combobox for Messmethode
+ */
 Ext.define('Lada.view.widgets.Messmethode' ,{
         tpl: '<tpl for="."><div class="x-combo-list-item x-boundlist-item" >{mmtId} - {messmethhode}</div></tpl>',
         extend: 'Ext.form.ComboBox',

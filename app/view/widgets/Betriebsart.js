@@ -1,4 +1,3 @@
-// Combobox for Betriebsart
 var betriebsartStore = Ext.create('Ext.data.Store', {
     fields: ['betriebsartId', 'betriebsart'],
     data: [
@@ -7,6 +6,9 @@ var betriebsartStore = Ext.create('Ext.data.Store', {
     ]
 });
 
+/**
+ * Combobox for Betriebsart
+ */
 Ext.define('Lada.view.widgets.Betriebsart' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.betriebsart',

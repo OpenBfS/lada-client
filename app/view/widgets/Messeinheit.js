@@ -1,4 +1,6 @@
-// Combobox for Umweltbereich
+/**
+ * Combobox for Umweltbereich
+ */
 Ext.define('Lada.view.widgets.Messeinheit' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.messeinheit',

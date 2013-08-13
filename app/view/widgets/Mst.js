@@ -1,4 +1,3 @@
-// Combobox for Messtelle
 var mstStore = Ext.create('Ext.data.Store', {
     fields: ['mstId', 'messStelle'],
     sorters: [{
@@ -16,6 +15,9 @@ var mstStore = Ext.create('Ext.data.Store', {
     }
 });
 
+/**
+ * Combobox for Messstelle
+ */
 Ext.define('Lada.view.widgets.Mst' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.mst',

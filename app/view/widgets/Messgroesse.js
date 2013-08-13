@@ -1,4 +1,6 @@
-// Combobox for Umweltbereich
+/**
+ * Combobox for Messgroesse
+ */
 Ext.define('Lada.view.widgets.Messegroesse' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.messgroesse',

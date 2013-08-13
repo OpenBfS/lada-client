@@ -1,4 +1,6 @@
-// Combobox for Verwaltungseinheit
+/**
+ * Combobox for Verwaltungseinheit
+ */
 Ext.define('Lada.view.widgets.Verwaltungseinheit' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.verwaltungseinheiten',

@@ -1,4 +1,6 @@
-// Combobox for Time and Dates
+/**
+ * Datetimepicker with german date format.
+ */
 Ext.define('Lada.view.widgets.Datetime' ,{
         extend: 'Ext.ux.form.DateTimeField',
         alias: 'widget.datetime',

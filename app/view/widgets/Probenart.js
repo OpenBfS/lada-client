@@ -1,4 +1,3 @@
-// Combobox for Probenart
 var probenartStore = Ext.create('Ext.data.Store', {
     fields: ['probenartId', 'probenart'],
     proxy: {
@@ -13,6 +12,9 @@ var probenartStore = Ext.create('Ext.data.Store', {
     }
 });
 
+/**
+ * Combobox for Probenart
+ */
 Ext.define('Lada.view.widgets.Probenart' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.probenart',

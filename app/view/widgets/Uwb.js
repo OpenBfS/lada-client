@@ -1,4 +1,3 @@
-// Combobox for Umweltbereich
 var uwbStore = Ext.create('Ext.data.Store', {
     fields: ['umwId', 'umweltBereich'],
     sorters: [{
@@ -16,6 +15,9 @@ var uwbStore = Ext.create('Ext.data.Store', {
     }
 });
 
+/**
+ * Combobox for Umweltbereich
+ */
 Ext.define('Lada.view.widgets.Uwb' ,{
         tpl: '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >{umwId} - {umweltBereich}</div></tpl>',
         extend: 'Ext.form.ComboBox',

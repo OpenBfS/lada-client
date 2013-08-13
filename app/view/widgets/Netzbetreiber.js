@@ -1,4 +1,3 @@
-// Combobox for Netzbetreiber
 var netzbetreiberStore = Ext.create('Ext.data.Store', {
     fields: ['netzbetreiberId', 'netzbetreiber'],
     sorters: [{
@@ -16,6 +15,9 @@ var netzbetreiberStore = Ext.create('Ext.data.Store', {
     }
 });
 
+/**
+ * Combobox for Netzbetreiber
+ */
 Ext.define('Lada.view.widgets.Netzbetreiber' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.netzbetreiber',

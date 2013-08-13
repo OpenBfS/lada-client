@@ -1,4 +1,6 @@
-// Combobox for Umweltbereich
+/**
+ * Combobox for Staat
+ */
 Ext.define('Lada.view.widgets.Staat' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.staat',

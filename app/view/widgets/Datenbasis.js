@@ -1,4 +1,3 @@
-// Combobox for Datenbasis
 var datenbasisStore = Ext.create('Ext.data.Store', {
     fields: ['datenbasisId', 'beschreibung', 'datenbasis'],
     sorters: [{
@@ -16,6 +15,9 @@ var datenbasisStore = Ext.create('Ext.data.Store', {
     }
 });
 
+/**
+ * Combobox for Datenbasis
+ */
 Ext.define('Lada.view.widgets.Datenbasis' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.datenbasis',

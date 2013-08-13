@@ -1,4 +1,3 @@
-// Combobox for Statuswerte
 var statuswerteStore = Ext.create('Ext.data.Store', {
     fields: ['id', 'status'],
     data: [
@@ -9,6 +8,9 @@ var statuswerteStore = Ext.create('Ext.data.Store', {
     ]
 });
 
+/**
+ * Combobox for Statuswert
+ */
 Ext.define('Lada.view.widgets.Statuswert' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.statuswert',
