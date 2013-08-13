@@ -2,8 +2,7 @@
  * Model class for Probenzusatzwert
  */
 Ext.define('Lada.model.Probenzusatzwert', {
-    extend: 'Ext.data.Model',
-    requires: ['Lada.lib.Helpers'],
+    extend: 'Lada.model.Base',
     fields: [
         {name: "pzsId"},
         {name: "mehId"},
