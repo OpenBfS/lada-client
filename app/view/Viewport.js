@@ -1,3 +1,10 @@
+/**
+ * Viewport for the Lada-Client
+ *
+ * The viewport initialises the graphical elements of the application. For
+ * debugging it is possible to initialize other components directly see the
+ * initComponent function.
+ */
 Ext.define('Lada.view.Viewport' ,{
     extend: 'Ext.container.Viewport',
     requires: [
@@ -25,6 +32,10 @@ Ext.define('Lada.view.Viewport' ,{
         this.setInfo();
         this.callParent(arguments);
     },
+    /**
+     * Set some information about user, client and server version in the top
+     * of the application window. The data will be fetched from the server.
+     */
     setInfo: function() {
         var store = Ext.create('Lada.store.Info');
         store.load({
@@ -41,6 +52,10 @@ Ext.define('Lada.view.Viewport' ,{
             }
         });
     },
+    /**
+     * Function to initialize the edit window for a priticular probe directly
+     * @private
+     */
     initProbe: function() {
         var store = Ext.getStore('Proben');
         store.load({
@@ -59,6 +74,10 @@ Ext.define('Lada.view.Viewport' ,{
             }
         });
     },
+    /**
+     * Function to initialize the edit window for a priticular messwert directly
+     * @private
+     */
     initMesswert: function() {
         var store = Ext.getStore('Messwerte');
         store.load({
@@ -72,10 +91,18 @@ Ext.define('Lada.view.Viewport' ,{
             }
         });
     },
+    /**
+     * Function to initialize the edit window for a priticular ort directly
+     * @private
+     */
     initOrt: function() {
         var ort = Ext.create('Lada.model.Ort');
         var win = Ext.create('Lada.view.orte.Create', {model: ort});
     },
+    /**
+     * Function to initialize the edit window for a priticular ort directly
+     * @private
+     */
     initMessung: function() {
         var store = Ext.getStore('Messungen');
         var kstore = Ext.getStore('MKommentare');
@@ -114,6 +141,11 @@ Ext.define('Lada.view.Viewport' ,{
             }
         });
     },
+    /**
+     * Function to initialize the search window. This is the default method
+     * called by the {@link Lada.view.Viewport#initComponent initComponent} method.
+     * @private
+     */
     initSearch: function() {
         this.items = {
             xtype: 'panel',
