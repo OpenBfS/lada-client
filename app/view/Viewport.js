@@ -10,7 +10,6 @@ Ext.define('Lada.view.Viewport' ,{
     requires: [
         'Lada.store.Info',
         'Lada.view.search.List',
-        'Lada.view.search.List',
         'Lada.view.proben.List',
         'Lada.view.widgets.Mst',
         'Lada.view.widgets.Uwb',

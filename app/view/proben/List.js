@@ -44,7 +44,7 @@ Ext.define('Lada.view.proben.List' ,{
     },
     /**
      * Setup columns of the Grid dynamically based on a list of given cols.
-     * The function is called from the {@link Lada.controllers.Sql#selectSql
+     * The function is called from the {@link Lada.controller.Sql#selectSql
      * select sql event}
      * @parameter {Array} List of cols to show in the Grid.
      */
