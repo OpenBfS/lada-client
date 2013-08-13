@@ -1,3 +1,6 @@
+/*
+ * Window to create a Messung
+ */
 Ext.define('Lada.view.messungen.Create', {
     extend: 'Ext.window.Window',
     alias: 'widget.messungencreate',

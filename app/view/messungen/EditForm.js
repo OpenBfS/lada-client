@@ -1,3 +1,6 @@
+/*
+ * Formular to edit a Messung
+ */
 Ext.define('Lada.view.messungen.EditForm', {
     extend: 'Lada.view.widgets.LadaForm',
     model: 'Lada.model.Messung',

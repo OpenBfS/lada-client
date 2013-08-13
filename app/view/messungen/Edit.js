@@ -1,3 +1,6 @@
+/*
+ * Window to edit a Messung
+ */
 Ext.define('Lada.view.messungen.Edit', {
     extend: 'Ext.window.Window',
     alias: 'widget.messungenedit',

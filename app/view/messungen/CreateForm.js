@@ -1,3 +1,6 @@
+/*
+ * Formular to create a Messung
+ */
 Ext.define('Lada.view.messungen.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
     model: 'Lada.model.Messung',

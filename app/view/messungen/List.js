@@ -1,3 +1,6 @@
+/*
+ * Grid to list Messungen
+ */
 Ext.define('Lada.view.messungen.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.messungenlist',
