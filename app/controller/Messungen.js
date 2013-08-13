@@ -17,6 +17,7 @@ Ext.define('Lada.controller.Messungen', {
     ],
     init: function() {
         console.log('Initialising the Messungen controller');
+        this.callParent();
     },
     addListeners: function() {
         this.control({
