@@ -1,6 +1,8 @@
 0.3
 ===
 
+ - Issue8: Filterung in Comboboxen funktioniert nicht wie erwartet. Die
+   Filterung während des Tippens wurde aktiviert.
  - Issue43: Dokumentation erweitert und für die Generierung der Dokumentation
    mit Hilfe von JSDuck vorbereitet.
  - Issue39: Clientseitige Überprüfung der Datenfelder hinzugefügt: Nutzung von
