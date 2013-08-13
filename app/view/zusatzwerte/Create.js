@@ -1,3 +1,6 @@
+/*
+ * Window to create and edit a Probenzusatzwert
+ */
 Ext.define('Lada.view.zusatzwerte.Create', {
     extend: 'Ext.window.Window',
     alias: 'widget.zusatzwertecreate',

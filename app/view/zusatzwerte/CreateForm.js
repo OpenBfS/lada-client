@@ -1,3 +1,6 @@
+/*
+ * Formular to create and edit a Probenzusatzwert
+ */
 Ext.define('Lada.view.zusatzwerte.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
     requires : [

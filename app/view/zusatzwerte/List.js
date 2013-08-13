@@ -1,3 +1,6 @@
+/*
+ * Grid to list Probenzusatzwerte
+ */
 Ext.define('Lada.view.zusatzwerte.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.zusatzwertelist',
