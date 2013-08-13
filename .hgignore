@@ -1,0 +1,8 @@
+# use glob syntax.
+syntax: glob
+doc
+extjs
+*.orig
+*.rej
+# switch to regexp syntax.
+syntax: regexp
