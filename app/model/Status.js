@@ -2,8 +2,7 @@
  * Model class for Status
  */
 Ext.define('Lada.model.Status', {
-    extend: 'Ext.data.Model',
-    requires: ['Lada.lib.Helpers'],
+    extend: 'Lada.model.Base',
     fields: [
         {name: "sid"},
         {name: "messungsId"},
