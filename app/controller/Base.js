@@ -114,5 +114,5 @@ Ext.define('Lada.controller.Base', {
             icon: Ext.MessageBox.ERROR,
             buttons: Ext.Msg.OK
         });
-    },
+    }
 });
