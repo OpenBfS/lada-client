@@ -43,8 +43,16 @@ Ext.define('Lada.controller.Status', {
     },
     editItem: function(grid, record) {
         console.log('Editing Status');
-        var view = Ext.widget('statuscreate', {model: record});
+        record.getAuthInfo(this.initEditWindow)
         console.log("Loaded Status with ID " + record.getId()); //outputs ID
+    },
+    initEditWindow: function(record, readonly, owner) {
+        var view = Ext.widget('statuscreate', {model: record});
+        var ignore = Array();
+        if (readonly) {
+            var form = view.down('form');
+            form.setReadOnly(true, ignore);
+        }
     },
     createSuccess: function(form, record, operation) {
         // Reload store

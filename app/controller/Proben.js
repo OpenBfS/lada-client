@@ -88,8 +88,6 @@ Ext.define('Lada.controller.Proben', {
     editItem: function(grid, record) {
         console.log('Editing Probe');
         var id = record.get('probeId');
-        var view = Ext.widget('probenedit', {modelId: id});
-
         // Load Zusatzwerte
         var pstore = this.getProbenzusatzwerteStore();
         pstore.load();
@@ -120,6 +118,7 @@ Ext.define('Lada.controller.Proben', {
                 probeId: id
             }
         });
+        var view = Ext.widget('probenedit', {modelId: id});
         console.log("Loaded Probe with ID " + record.getId()); //outputs ID
     },
     createSuccess: function(form, record, response) {

@@ -44,8 +44,16 @@ Ext.define('Lada.controller.Kommentare', {
     },
     editItem: function(grid, record) {
         console.log('Editing Kommentar');
-        var view = Ext.widget('kommentarecreate', {model: record});
+        record.getAuthInfo(this.initEditWindow)
         console.log("Loaded Kommentar with ID " + record.getId()); //outputs ID
+    },
+    initEditWindow: function(record, readonly, owner) {
+        var view = Ext.widget('kommentarecreate', {model: record});
+        var ignore = Array();
+        if (readonly) {
+            var form = view.down('form');
+            form.setReadOnly(true, ignore);
+        }
     },
     createSuccess: function(form, record, operation) {
         var store = this.getKommentareStore();

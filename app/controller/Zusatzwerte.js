@@ -44,10 +44,18 @@ Ext.define('Lada.controller.Zusatzwerte', {
     },
     editZusatzwert: function(grid, record) {
         console.log('Editing Zusatzwert');
+        record.getAuthInfo(this.initEditWindow)
+        console.log("Loaded Zusatzwert with ID " + record.getId()); //outputs ID
+    },
+    initEditWindow: function(record, readonly, owner) {
         var view = Ext.widget('zusatzwertecreate', {model: record});
         // Mark PZW Selection readonly.
         view.down('probenzusatzwert').disabled = true;
-        console.log("Loaded Zusatzwert with ID " + record.getId()); //outputs ID
+        var ignore = Array();
+        if (readonly) {
+            var form = view.down('form');
+            form.setReadOnly(true, ignore);
+        }
     },
     createSuccess: function(form, record, operation) {
         // Reload store

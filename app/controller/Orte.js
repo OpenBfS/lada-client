@@ -96,8 +96,16 @@ Ext.define('Lada.controller.Orte', {
     },
     editItem: function(grid, record) {
         console.log('Editing Ort');
-        var view = Ext.widget('ortecreate', {model: record});
+        record.getAuthInfo(this.initEditWindow)
         console.log("Loaded Ort with ID " + record.getId()); //outputs ID
+    },
+    initEditWindow: function(record, readonly, owner) {
+        var view = Ext.widget('ortecreate', {model: record});
+        var ignore = Array();
+        if (readonly) {
+            var form = view.down('form');
+            form.setReadOnly(true, ignore);
+        }
     },
     createSuccess: function(form, record, operation) {
         // Reload store

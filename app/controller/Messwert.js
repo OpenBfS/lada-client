@@ -51,14 +51,16 @@ Ext.define('Lada.controller.Messwert', {
     },
     editItem: function(grid, record) {
         console.log('Editing Messwert');
-        var probe = this.getProbenStore().getById(record.get('probeId'));
-        var view = Ext.widget('messwertecreate', {model: record});
-        if (probe.get('readonly') === true) {
-            var form = view.down('form');
-            form.setReadOnly(true);
-        }
-
+        record.getAuthInfo(this.initEditWindow)
         console.log("Loaded Messwert with ID " + record.getId()); //outputs ID
+    },
+    initEditWindow: function(record, readonly, owner) {
+        var view = Ext.widget('messwertecreate', {model: record});
+        var ignore = Array();
+        if (readonly) {
+            var form = view.down('form');
+            form.setReadOnly(true, ignore);
+        }
     },
     deleteItem: function(button) {
         var grid = button.up('grid');

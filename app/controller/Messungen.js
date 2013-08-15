@@ -80,18 +80,19 @@ Ext.define('Lada.controller.Messungen', {
                 messungsId: record.get('messungsId')
             }
         });
-        var probe = this.getProbenStore().getById(record.get('probeId'));
+        record.getAuthInfo(this.initEditWindow);
+        console.log("Loaded Messung with ID " + record.getId()); //outputs ID
+    },
+    initEditWindow: function(record, readonly, owner) {
         var view = Ext.widget('messungenedit', {model: record});
-        if (probe.get('readonly') === true) {
+        var ignore = Array();
+        if (owner) {
+                ignore.push('fertig');
+        }
+        if (readonly) {
             var form = view.down('form');
-            // TODO: Field "fertig" must be editable (issue51). So we need to remove the
-            // readonly status if the user would be allowed to edit the probe
-            // if the "fertig" flag has not been set. (ti) <2013-08-08 10:24> 
-            var ignore = Array();
-            ignore.push('fertig');
             form.setReadOnly(true, ignore);
         }
-        console.log("Loaded Messung with ID " + record.getId()); //outputs ID
     },
     deleteItem: function(button) {
         // Get selected item in grid
