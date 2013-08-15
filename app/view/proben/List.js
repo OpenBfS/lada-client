@@ -54,11 +54,11 @@ Ext.define('Lada.view.proben.List' ,{
      * @parameter {Array} List of cols to show in the Grid.
      */
     setupColumns: function(cols) {
-        var rcols = []
+        var rcols = [];
         rcols.push({header: 'RW', dataIndex: 'readonly', width: 30, renderer: render_readonly});
         for (var i = cols.length - 1; i >= 0; i--){
             rcols.push(cols[i]);
-        };
+        }
         this.reconfigure(this.store, rcols);
     }
 });
