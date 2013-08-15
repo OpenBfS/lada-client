@@ -142,7 +142,6 @@ Ext.define('Lada.view.widgets.LadaForm', {
      * @param {Array} [ignoreFields="[]"] A list of fieldnames to ignore.
      */
     setReadOnly: function (bReadOnly, ignoreFields) {
-        console.log(ignoreFields);
         if(typeof(ignoreFields)==='undefined') {
             ignoreFields = Array();
         }
@@ -167,14 +166,19 @@ Ext.define('Lada.view.widgets.LadaForm', {
             for (var i = childs.length - 1; i >= 0; i--){
                 childs[i].setVisible(false);
             }
-            /* Find Save-Button and hide it */
-            var win = this.up('window');
-            var buttons = win.query('.button');
-            for (var j = buttons.length - 1; j >= 0; j--){
-                if (buttons[j].text === 'Speichern') {
-                    buttons[j].setVisible(false);
+            /*
+             * Find Save-Button and hide it. Only hide it if there are not
+             * fields left in the form which are editable
+             * */
+            if (ignoreFields.length == 0) {
+                var win = this.up('window');
+                var buttons = win.query('.button');
+                for (var j = buttons.length - 1; j >= 0; j--){
+                    if (buttons[j].text === 'Speichern') {
+                        buttons[j].setVisible(false);
+                    };
                 };
-            };
+            }
         }
     },
     parseResponse: function(response) {
