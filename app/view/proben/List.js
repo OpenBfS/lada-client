@@ -69,8 +69,8 @@ Ext.define('Lada.view.proben.List' ,{
  */
 function render_readonly (value) {
     if (value) {
-        return '&#128274;'
+        return '<img src="gfx/lock_16x16.png"/>';
     } else {
-        return '&#128275;'
+        return '<img src="gfx/unlock_16x16.png"/>';
     }
 }
