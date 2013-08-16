@@ -6,5 +6,6 @@ Ext.define('Lada.store.Probenzusatzwerte', {
     sorters: [{
         property: 'beschreibung',
     }],
+    autoLoad: true,
     model: 'Lada.model.Probenzusatzwert'
 });
