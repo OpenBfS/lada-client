@@ -10,6 +10,11 @@ Ext.define('Lada.controller.Sql', {
         'Proben',    // List of found Proben
         'Queries'
     ],
+    requires: [
+        'Lada.view.widgets.Mst',
+        'Lada.view.widgets.Uwb',
+        'Lada.view.widgets.Datetime'
+    ],
     init: function() {
         console.log('Initialising the Sql controller');
         this.control({
@@ -56,22 +61,52 @@ Ext.define('Lada.controller.Sql', {
         // Setup Columns of the probenlist
         result.setupColumns(displayFields);
 
-        // Setup Columns of the probenlist
-        if (filterFields.length > 0) {
-            var items = filters.items.items;
-            for (var i=0; i < items.length; i++) {
-                var filtername = items[i].id;
-                items[i].hide();
-                for (var j=0; j < filterFields.length; j++) {
-                    if ('filter-'+filterFields[j].dataIndex === filtername) {
-                        items[i].show();
-                    }
-                }
+        // Setup Filters of the probenlist
+        //
+        // Allowed types are
+        // * text
+        // * number
+        // * datetime
+        // * listmst
+        // * listumw
+        //
+        // Iterate over all configured filters and add filters dynamically
+        //
+        // 1. Empty filters
+        filters.removeAll();
+        var hide = true;
+        // 2. Iterate over all configured filters
+        for (var j=0; j < filterFields.length; j++) {
+            var type = filterFields[j].type;
+            var name = filterFields[j].dataIndex;
+            var label = filterFields[j].label;
+            var field = null;
+            if (type == "text") {
+                console.log("Found text filter");
+                field = Ext.create('Ext.form.field.Text', { name: name, fieldLabel: label });
+            } else if (type == "number") {
+                console.log("Found number filter");
+                field = Ext.create('Ext.form.field.Number', { name: name, fieldLabel: label });
+            } else if (type == "datetime") {
+                console.log("Found datetime filter");
+                field = Ext.create('Lada.view.widgets.Datetime', { name: name, fieldLabel: label });
+            } else if (type == "listmst") {
+                console.log("Found listmst filter");
+                field = Ext.create('Lada.view.widgets.Mst', { name: name, fieldLabel: label });
+            } else if (type == "listumw") {
+                console.log("Found listumw filter");
+                field = Ext.create('Lada.view.widgets.Uwb', { name: name, fieldLabel: label });
             }
-            filters.show();
-        } else {
+            if (field) {
+                console.log("Pushing field to filters");
+                filters.add(field);
+                filters.show();
+                hide = false;
+            }
+        }
+        if (hide) {
             filters.hide();
-        };
+        }
         buttons.show();
     },
     /**
@@ -80,27 +115,20 @@ Ext.define('Lada.controller.Sql', {
      */
     search: function(element, record, index) {
         var result = Ext.getCmp('result');
-        console.log('Loading store');
+        var filters = Ext.getCmp('queryfilters');
+        var search = Ext.getCmp('search');
 
         // Get search parameters:
         var searchParams = {};
-        if (Ext.getCmp('search').getValue() == 1) {
-            var mst = Ext.getCmp('filter-mstId').getValue();
-            var uwb = Ext.getCmp('filter-umwId').getValue();
-            if (mst !== null) {
-                searchParams['mstId'] = mst;
-            }
-            if (uwb !== null) {
-                searchParams['umwId'] = uwb;
-            }
-        } else {
-            // Get date object an convert it into a timestamp (ms since epoch)
-            var datefield = Ext.getCmp('filter-pbegin').getValue();
-            if (datefield !== null) {
-                var ts = Ext.getCmp('filter-pbegin').getValue().getTime();
-                searchParams['begin'] = ts;
+        searchParams['qid'] = search.getValue();
+        for (var i = filters.items.length - 1; i >= 0; i--){
+            var filter = filters.items.items[i];
+            var value = filter.getValue();
+            if (value) {
+                searchParams[filter.getName()] = filter.getValue();
             }
         }
+        console.log('Loading store with the following search params: ' + searchParams);
         result.getStore().load({
             params: searchParams
         });

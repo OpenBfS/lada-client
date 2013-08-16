@@ -10,10 +10,7 @@ Ext.define('Lada.view.Viewport' ,{
     requires: [
         'Lada.store.Info',
         'Lada.view.search.List',
-        'Lada.view.proben.List',
-        'Lada.view.widgets.Mst',
-        'Lada.view.widgets.Uwb',
-        'Lada.view.widgets.Datetime'
+        'Lada.view.proben.List'
     ],
     initComponent: function() {
         console.log('Setting up Viewport');
@@ -161,6 +158,7 @@ Ext.define('Lada.view.Viewport' ,{
                 // Auswahl einer Abfrage.
                 {
                     xtype: 'queryselector',
+                    id: 'queryselector',
                     margin: '0 0 10 0'
                 },
                 // Variables settings for the current selected sql statement.
@@ -169,29 +167,7 @@ Ext.define('Lada.view.Viewport' ,{
                     id: 'queryfilters',
                     title: 'Variablenbelegung',
                     hidden: true,
-                    items: [
-                        {
-                            id: 'filter-mstId',
-                            xtype: 'mst',
-                            fieldLabel: 'Messstelle',
-                            labelWidth: 100,
-                            hidden: true
-                        },
-                        {
-                            id: 'filter-umwId',
-                            xtype: 'uwb',
-                            fieldLabel: 'Umweltbereich',
-                            labelWidth: 100,
-                            hidden: true
-                        },
-                        {
-                            id: 'filter-pbegin',
-                            xtype: 'datetime',
-                            fieldLabel: 'Probenbeginn',
-                            labelWidth: 100,
-                            hidden: true
-                        }
-                    ]
+                    items: []
                 },
                 // Buttons to trigger the search.
                 {
