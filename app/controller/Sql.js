@@ -63,7 +63,7 @@ Ext.define('Lada.controller.Sql', {
                 var filtername = items[i].id;
                 items[i].hide();
                 for (var j=0; j < filterFields.length; j++) {
-                    if ('filter-'+filterFields[j] === filtername) {
+                    if ('filter-'+filterFields[j].dataIndex === filtername) {
                         items[i].show();
                     };
                 };
