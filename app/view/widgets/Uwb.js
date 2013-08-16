@@ -3,6 +3,7 @@ var uwbStore = Ext.create('Ext.data.Store', {
     sorters: [{
         property: 'umwId',
     }],
+    autoLoad: true,
     proxy: {
         type: 'ajax',
         api: {

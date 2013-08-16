@@ -3,6 +3,7 @@ var mstStore = Ext.create('Ext.data.Store', {
     sorters: [{
         property: 'messStelle',
     }],
+    autoLoad: true,
     proxy: {
         type: 'ajax',
         api: {

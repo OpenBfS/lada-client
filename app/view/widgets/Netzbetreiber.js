@@ -3,6 +3,7 @@ var netzbetreiberStore = Ext.create('Ext.data.Store', {
     sorters: [{
         property: 'netzbetreiber',
     }],
+    autoLoad: true,
     proxy: {
         type: 'ajax',
         api: {

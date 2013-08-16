@@ -1,5 +1,6 @@
 var probenartStore = Ext.create('Ext.data.Store', {
     fields: ['probenartId', 'probenart'],
+    autoLoad: true,
     proxy: {
         type: 'ajax',
         api: {

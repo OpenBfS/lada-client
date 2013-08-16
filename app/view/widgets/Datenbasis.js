@@ -3,6 +3,7 @@ var datenbasisStore = Ext.create('Ext.data.Store', {
     sorters: [{
         property: 'datenbasis',
     }],
+    autoLoad: true,
     proxy: {
         type: 'ajax',
         api: {
