@@ -4,7 +4,7 @@
 Ext.define('Lada.view.proben.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.probenlist',
-    store: 'Proben',
+    store: 'ProbenList',
     viewConfig: {
         maxHeight: 350,
         emptyText: 'Keine Proben gefunden.',
@@ -13,18 +13,6 @@ Ext.define('Lada.view.proben.List' ,{
         minHeight: 35,
         deferEmptyText: false
     },
-    availableColumns: [
-            {header: 'Datenbasis',  dataIndex: 'datenbasisId', width: 70},
-            {header: 'MPL',  dataIndex: 'mplId', width: 50},
-            {header: 'UWB',  dataIndex: 'umwId', width: 50},
-            {header: 'MMT',  dataIndex: 'messmethode'},
-            {header: 'HPNR',  dataIndex: 'hauptprobenNr'},
-            {header: 'NPNR',  dataIndex: 'nebenprobenNr'},
-            {header: 'E.Gemeinde',  dataIndex: 'bezeichnung', flex: 1},
-            {header: 'Ursprungsgemeinde',  dataIndex: 'kreis', flex: 1},
-            {header: 'ProbeID', dataIndex: 'probeId'},
-            {header: 'MST', dataIndex: 'mstId', width: 50}
-    ],
     initComponent: function() {
         this.dockedItems = [
             {
@@ -55,10 +43,15 @@ Ext.define('Lada.view.proben.List' ,{
      */
     setupColumns: function(cols) {
         var rcols = [];
+        var mfields = [];
+
         rcols.push({header: 'RW', dataIndex: 'readonly', width: 30, renderer: render_readonly});
+        mfields.push(new Ext.data.Field({name: 'readonly'}));
         for (var i = cols.length - 1; i >= 0; i--){
             rcols.push(cols[i]);
+            mfields.push(new Ext.data.Field({name: cols[i].dataIndex}));
         }
+        this.store.model.setFields(mfields);
         this.reconfigure(this.store, rcols);
     }
 });

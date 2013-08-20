@@ -8,6 +8,7 @@ Ext.define('Lada.controller.Sql', {
     extend: 'Ext.app.Controller',
     stores: [
         'Proben',    // List of found Proben
+        'ProbenList',    // List of found Proben
         'Queries'
     ],
     requires: [
