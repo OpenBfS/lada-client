@@ -68,8 +68,12 @@ Ext.define('Lada.controller.Sql', {
         // * text
         // * number
         // * datetime
+        // * bool
         // * listmst
         // * listumw
+        // * listver
+        // * listdbasis
+        // * listnetz
         //
         // Iterate over all configured filters and add filters dynamically
         //
@@ -91,12 +95,24 @@ Ext.define('Lada.controller.Sql', {
             } else if (type == "datetime") {
                 console.log("Found datetime filter");
                 field = Ext.create('Lada.view.widgets.Datetime', { name: name, fieldLabel: label });
+            } else if (type == "bool") {
+                console.log("Found bool filter");
+                field = Ext.create('Lada.view.widgets.Testdatensatz', { name: name, fieldLabel: label, emptyText: '' });
             } else if (type == "listmst") {
                 console.log("Found listmst filter");
-                field = Ext.create('Lada.view.widgets.Mst', { name: name, fieldLabel: label });
+                field = Ext.create('Lada.view.widgets.Mst', { name: name, fieldLabel: label, multiSelect: true });
             } else if (type == "listumw") {
                 console.log("Found listumw filter");
-                field = Ext.create('Lada.view.widgets.Uwb', { name: name, fieldLabel: label });
+                field = Ext.create('Lada.view.widgets.Uwb', { name: name, fieldLabel: label, multiSelect: true });
+            } else if (type == "listdbasis") {
+                console.log("Found listdbasis filter");
+                field = Ext.create('Lada.view.widgets.Datenbasis', { name: name, fieldLabel: label, multiSelect: true });
+            } else if (type == "listver") {
+                console.log("Found listver filter");
+                field = Ext.create('Lada.view.widgets.Verwaltungseinheit', { name: name, fieldLabel: label, multiSelect: true });
+            } else if (type == "listnetz") {
+                console.log("Found listnetz filter");
+                field = Ext.create('Lada.view.widgets.Netzbetreiber', { name: name, fieldLabel: label, multiSelect: true });
             }
             if (field) {
                 console.log("Pushing field to filters");
