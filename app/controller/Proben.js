@@ -70,7 +70,7 @@ Ext.define('Lada.controller.Proben', {
         var form = win.down('form');
         if(form.isValid()){
             form.submit({
-                url: 'server/rest/proben/import',
+                url: 'server/rest/import/laf',
                 waitMsg: 'Importiere...',
                 // TODO: Handle the response correct. o must must contain the
                 // filename (None) <2013-08-13 16:17>
