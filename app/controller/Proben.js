@@ -1,6 +1,43 @@
 /**
  * Controller for Proben
  */
+
+function buildImportReport(filename, msg, errors, warnings) {
+    var out = Array();
+    if (msg != 200) {
+        out.push("Der Import der Datei " + filename + " war nicht erfolgreich.");
+        out.push("Bei dem Import sind folgende Fehler und Warnungen aufgetreten");
+        out.push("<br/>");
+        out.push("<strong>Fehler:</strong>");
+        out.push("<br/>");
+        if (errors) {
+            out.push("<ol>");
+            for (var key in errors) {
+                out.push("<li>"+key+"</li>");
+            }
+            out.push("</ol>");
+        } else {
+            out.push("Keine Fehler");
+            out.push("<br/>");
+        }
+        out.push("<strong>Warnungen:</strong>");
+        out.push("<br/>");
+        if (warnings) {
+            out.push("<ol>");
+            for (var key in warnings) {
+                out.push("<li>"+key+"</li>");
+            }
+            out.push("</ol>");
+        } else {
+            out.push("Keine Warnungen");
+            out.push("<br/>");
+        }
+    } else {
+        out.push("Der Import der Datei " + filename + " war erfolgreich.");
+    }
+    return out.join("");
+}
+
 Ext.define('Lada.controller.Proben', {
     extend: 'Lada.controller.Base',
     views: [
@@ -75,11 +112,17 @@ Ext.define('Lada.controller.Proben', {
                 // TODO: Handle the response correct. o must must contain the
                 // filename (None) <2013-08-13 16:17>
                 success: function(fp, resp) {
-                    Ext.Msg.alert('Erfolg! ', 'Die Datei"' + resp.result.file + '" wurde erfolgreich importiert.');
+                    var filename = resp.result.data[2].filename;
+                    Ext.Msg.alert('Erfolg! ', 'Die Datei "' + filename + '" wurde erfolgreich importiert.');
                     win.close();
                 },
                 failure: function(fp, resp) {
-                    Ext.Msg.alert('Fehler! ', 'Die Datei"' + resp.result.file + '" wurde nicht importiert.');
+                    var errors = resp.result.data[0];
+                    var warnings = resp.result.data[1];
+                    var filename = resp.result.data[2].filename;
+                    var message = resp.message;
+                    var dialogbody = buildImportReport(filename, message, errors.parser, warnings)
+                    Ext.Msg.alert('Fehler', dialogbody);
                     win.close();
                 }
             });
