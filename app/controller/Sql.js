@@ -141,7 +141,10 @@ Ext.define('Lada.controller.Sql', {
         for (var i = filters.items.length - 1; i >= 0; i--){
             var filter = filters.items.items[i];
             var value = filter.getValue();
-            searchParams[filter.getName()] = filter.getValue();
+            if (value instanceof Array) {
+                value = value.join(",");
+            }
+            searchParams[filter.getName()] = value;
         }
         console.log('Loading store with the following search params: ' + searchParams);
         result.getStore().load({
