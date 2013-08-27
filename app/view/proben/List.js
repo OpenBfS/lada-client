@@ -28,6 +28,11 @@ Ext.define('Lada.view.proben.List' ,{
                         text: 'Import',
                         icon: 'gfx/plus.gif',
                         action: 'import'
+                    },
+                    {
+                        text: 'Export',
+                        icon: 'gfx/document-save-as-6.png',
+                        action: 'export'
                     }
                 ]
             }
