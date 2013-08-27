@@ -68,6 +68,9 @@ Ext.define('Lada.controller.Proben', {
             'probenlist toolbar button[action=import]': {
                 click: this.selectUploadFile
             },
+            'probenlist toolbar button[action=export]': {
+                click: this.downloadFile
+            },
             'probencreate button[action=save]': {
                 click: this.saveItem
             },
@@ -127,6 +130,15 @@ Ext.define('Lada.controller.Proben', {
                 }
             });
         }
+    },
+    /**
+     * Will download the selected Probe in LAF format in a new window (tab).
+     */
+    downloadFile: function(button) {
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection()[0];
+        var url = "server/rest/export/laf/" + selection.get('probeId');
+        window.open(url, "_blank");
     },
     editItem: function(grid, record) {
         console.log('Editing Probe');
