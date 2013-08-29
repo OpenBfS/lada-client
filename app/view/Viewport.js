@@ -165,11 +165,10 @@ Ext.define('Lada.view.Viewport' ,{
                         }
                     },
                     "->",
-                    "User:",
-                    {xtype: "tbtext", id:"userinfo", text:"test"},
-                    "Blubb",
-                    "Group:",
-                    {xtype: "tbtext", id:"groupinfo", text:"test"}
+                    {xtype: 'box', autoEl: {tag: 'img', src:'gfx/user.png'}},
+                    {xtype: "tbtext", id:"userinfo", text:""},
+                    {xtype: 'box', autoEl: {tag: 'img', src:'gfx/usergroup.png'}},
+                    {xtype: "tbtext", id:"groupinfo", text:""}
                     ]
                 }
             ],
