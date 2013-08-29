@@ -13,7 +13,14 @@ function buildImportReport(filename, msg, errors, warnings) {
         if (errors) {
             out.push("<ol>");
             for (var key in errors) {
-                out.push("<li>"+key+"</li>");
+                out.push("<li>"+key)
+                var msgs = errors[key];
+                out.push("<ol>");
+                for (var i = msgs.length - 1; i >= 0; i--){
+                    out.push("<li>"+msgs[i].key+" ("+msgs[i].code+"): "+msgs[i].value+"</li>")
+                };
+                out.push("</ol>");
+                out.push("</li>");
             }
             out.push("</ol>");
         } else {
@@ -25,7 +32,14 @@ function buildImportReport(filename, msg, errors, warnings) {
         if (warnings) {
             out.push("<ol>");
             for (var key in warnings) {
-                out.push("<li>"+key+"</li>");
+                out.push("<li>"+key)
+                var msgs = warnings[key];
+                out.push("<ol>");
+                for (var i = msgs.length - 1; i >= 0; i--){
+                    out.push("<li>"+msgs[i].key+" ("+msgs[i].code+"): "+msgs[i].value+"</li>")
+                };
+                out.push("</ol>");
+                out.push("</li>");
             }
             out.push("</ol>");
         } else {
@@ -120,11 +134,11 @@ Ext.define('Lada.controller.Proben', {
                     win.close();
                 },
                 failure: function(fp, resp) {
-                    var errors = resp.result.data[0];
-                    var warnings = resp.result.data[1];
-                    var filename = resp.result.data[2].filename;
-                    var message = resp.message;
-                    var dialogbody = buildImportReport(filename, message, errors.parser, warnings)
+                    var errors = resp.result.data.errors;
+                    var warnings = resp.result.data.warnings;
+                    var filename = resp.result.data.filename;
+                    var message = resp.result.message;
+                    var dialogbody = buildImportReport(filename, message, errors, warnings)
                     Ext.Msg.alert('Fehler', dialogbody);
                     win.close();
                 }
