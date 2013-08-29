@@ -42,7 +42,11 @@ Ext.define('Lada.view.Viewport' ,{
                 var groups = info.get('groups');
                 var serverVersion = info.get('version');
                 var info = Ext.getCmp('systeminfo');
-                info.update('Nutzer: '+user+' | Gruppe(n): '+groups+' | Server: '+serverVersion+' | Client: '+clientVersion);
+                var groupinfo = Ext.getCmp('groupinfo');
+                var userinfo = Ext.getCmp('userinfo');
+                userinfo.update(user);
+                groupinfo.update(groups);
+                info.update('Server: '+serverVersion+' | Client: '+clientVersion);
                 info.show();
                 console.log(info);
             }
@@ -143,10 +147,32 @@ Ext.define('Lada.view.Viewport' ,{
      * @private
      */
     initSearch: function() {
-        this.items = {
+        this.items = [{
             xtype: 'panel',
             title: '<center>Probenauswahlmaske</center>',
             bodyPadding: '10 10',
+            dockedItems: [
+                {
+                    xtype: "toolbar",
+                    dock: "top",
+                    items: [{
+                        xtype: "splitbutton",
+                        text: "Info",
+                        menu: {
+                            items: [{
+                                text: "About"
+                            }]
+                        }
+                    },
+                    "->",
+                    "User:",
+                    {xtype: "tbtext", id:"userinfo", text:"test"},
+                    "Blubb",
+                    "Group:",
+                    {xtype: "tbtext", id:"groupinfo", text:"test"}
+                    ]
+                }
+            ],
             items: [
                 // Informationen über Nutzer/Gruppe/Version
                 {
@@ -198,6 +224,6 @@ Ext.define('Lada.view.Viewport' ,{
                     hidden: false
                 }
             ]
-        };
+        }];
     }
 });
