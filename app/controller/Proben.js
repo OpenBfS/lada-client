@@ -6,48 +6,48 @@ function buildImportReport(filename, msg, errors, warnings) {
     var out = Array();
     if (msg != 200) {
         out.push("Der Import der Datei " + filename + " war nicht erfolgreich.");
-        out.push("Bei dem Import sind folgende Fehler und Warnungen aufgetreten");
-        out.push("<br/>");
-        out.push("<strong>Fehler:</strong>");
-        out.push("<br/>");
-        if (errors) {
-            out.push("<ol>");
-            for (var key in errors) {
-                out.push("<li>"+key)
-                var msgs = errors[key];
-                out.push("<ol>");
-                for (var i = msgs.length - 1; i >= 0; i--){
-                    out.push("<li>"+msgs[i].key+" ("+msgs[i].code+"): "+msgs[i].value+"</li>")
-                };
-                out.push("</ol>");
-                out.push("</li>");
-            }
-            out.push("</ol>");
-        } else {
-            out.push("Keine Fehler");
-            out.push("<br/>");
-        }
-        out.push("<strong>Warnungen:</strong>");
-        out.push("<br/>");
-        if (warnings) {
-            out.push("<ol>");
-            for (var key in warnings) {
-                out.push("<li>"+key)
-                var msgs = warnings[key];
-                out.push("<ol>");
-                for (var i = msgs.length - 1; i >= 0; i--){
-                    out.push("<li>"+msgs[i].key+" ("+msgs[i].code+"): "+msgs[i].value+"</li>")
-                };
-                out.push("</ol>");
-                out.push("</li>");
-            }
-            out.push("</ol>");
-        } else {
-            out.push("Keine Warnungen");
-            out.push("<br/>");
-        }
     } else {
         out.push("Der Import der Datei " + filename + " war erfolgreich.");
+    }
+    out.push("Bei dem Import sind folgende Fehler und Warnungen aufgetreten");
+    out.push("<br/>");
+    out.push("<strong>Fehler:</strong>");
+    out.push("<br/>");
+    if (errors) {
+        out.push("<ol>");
+        for (var key in errors) {
+            out.push("<li>"+key)
+            var msgs = errors[key];
+            out.push("<ol>");
+            for (var i = msgs.length - 1; i >= 0; i--){
+                out.push("<li>"+msgs[i].key+" ("+msgs[i].code+"): "+msgs[i].value+"</li>")
+            };
+            out.push("</ol>");
+            out.push("</li>");
+        }
+        out.push("</ol>");
+    } else {
+        out.push("Keine Fehler");
+        out.push("<br/>");
+    }
+    out.push("<strong>Warnungen:</strong>");
+    out.push("<br/>");
+    if (warnings) {
+        out.push("<ol>");
+        for (var key in warnings) {
+            out.push("<li>"+key)
+            var msgs = warnings[key];
+            out.push("<ol>");
+            for (var i = msgs.length - 1; i >= 0; i--){
+                out.push("<li>"+msgs[i].key+" ("+msgs[i].code+"): "+msgs[i].value+"</li>")
+            };
+            out.push("</ol>");
+            out.push("</li>");
+        }
+        out.push("</ol>");
+    } else {
+        out.push("Keine Warnungen");
+        out.push("<br/>");
     }
     return out.join("");
 }
@@ -129,8 +129,13 @@ Ext.define('Lada.controller.Proben', {
                 // TODO: Handle the response correct. o must must contain the
                 // filename (None) <2013-08-13 16:17>
                 success: function(fp, resp) {
-                    var filename = resp.result.data[2].filename;
-                    Ext.Msg.alert('Erfolg! ', 'Die Datei "' + filename + '" wurde erfolgreich importiert.');
+                    var errors = resp.result.data.errors;
+                    var warnings = resp.result.data.warnings;
+                    var filename = resp.result.data.filename;
+                    var message = resp.result.message;
+                    var dialogbody = buildImportReport(filename, message, errors, warnings)
+                    var filename = resp.result.data.filename;
+                    Ext.Msg.alert('Erfolg', dialogbody);
                     win.close();
                 },
                 failure: function(fp, resp) {
