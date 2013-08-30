@@ -9,12 +9,14 @@ Ext.define('Lada.controller.Sql', {
     stores: [
         'Proben',    // List of found Proben
         'ProbenList',    // List of found Proben
-        'Queries'
+        'Queries',
+        'Info',
     ],
     requires: [
         'Lada.view.widgets.Mst',
         'Lada.view.widgets.Uwb',
-        'Lada.view.widgets.Datetime'
+        'Lada.view.widgets.Datetime',
+        'Lada.view.About'
     ],
     init: function() {
         console.log('Initialising the Sql controller');
@@ -34,6 +36,10 @@ Ext.define('Lada.controller.Sql', {
             '#ResetBtn': {
                 // Map click event on Button.
                 click: this.reset
+            },
+            '#AboutBtn': {
+                // Map click event on Button.
+                click: this.about
             }
         });
     },
@@ -162,5 +168,9 @@ Ext.define('Lada.controller.Sql', {
         //}
         //result.hide();
         //buttons.hide();
+    },
+    about: function(element, record, index) {
+        var info = this.getInfoStore();
+        var view = Ext.widget('about', {info: info});
     }
 });

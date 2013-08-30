@@ -40,14 +40,10 @@ Ext.define('Lada.view.Viewport' ,{
                 var clientVersion = "r261 (2013-07-26)";
                 var user = info.get('user');
                 var groups = info.get('groups');
-                var serverVersion = info.get('version');
-                var info = Ext.getCmp('systeminfo');
                 var groupinfo = Ext.getCmp('groupinfo');
                 var userinfo = Ext.getCmp('userinfo');
                 userinfo.update(user);
                 groupinfo.update(groups);
-                info.update('Server: '+serverVersion+' | Client: '+clientVersion);
-                info.show();
                 console.log(info);
             }
         });
@@ -160,6 +156,7 @@ Ext.define('Lada.view.Viewport' ,{
                         text: "Info",
                         menu: {
                             items: [{
+                                id: 'AboutBtn',
                                 text: "About"
                             }]
                         }
@@ -173,13 +170,6 @@ Ext.define('Lada.view.Viewport' ,{
                 }
             ],
             items: [
-                // Informationen über Nutzer/Gruppe/Version
-                {
-                    xtype: 'panel',
-                    id:  'systeminfo',
-                    bodyPadding: '5',
-                    hidden: true,
-                },
                 // Auswahl einer Abfrage.
                 {
                     xtype: 'queryselector',
