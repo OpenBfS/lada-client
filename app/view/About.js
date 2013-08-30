@@ -16,8 +16,8 @@ Ext.define('Lada.view.About', {
     layout: "fit",
 
     initComponent: function() {
-        var sver = "tests"
-        var cver = "testc"
+        var sver = "0.4 (rev. 345)";
+        var cver = "0.4 (rev. 388)";
         this.buttons = [
             {
                 text: 'Abbrechen',
