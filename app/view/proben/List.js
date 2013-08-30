@@ -21,17 +21,17 @@ Ext.define('Lada.view.proben.List' ,{
                 items: [
                     {
                         text: 'Hinzufügen',
-                        icon: 'gfx/plus.gif',
+                        icon: 'gfx/list-add.png',
                         action: 'add'
                     },
                     {
                         text: 'Import',
-                        icon: 'gfx/plus.gif',
+                        icon: 'gfx/svn-commit.png',
                         action: 'import'
                     },
                     {
                         text: 'Export',
-                        icon: 'gfx/document-save-as-6.png',
+                        icon: 'gfx/svn-update.png',
                         action: 'export'
                     }
                 ]

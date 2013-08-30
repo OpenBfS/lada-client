@@ -23,14 +23,14 @@ Ext.define('Lada.view.status.List' ,{
                 items: [
                     {
                         text: 'Hinzufügen',
-                        icon: 'gfx/plus.gif',
+                        icon: 'gfx/list-add.png',
                         action: 'add',
                         probeId: this.probeId,
                         parentId: this.parentId
                     },
                     {
                         text: 'Löschen',
-                        icon: 'gfx/minus.gif',
+                        icon: 'gfx/list-remove.png',
                         action: 'delete'
                     }
                 ]

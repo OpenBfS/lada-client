@@ -22,13 +22,13 @@ Ext.define('Lada.view.messungen.List' ,{
                 items: [
                     {
                         text: 'Hinzufügen',
-                        icon: 'gfx/plus.gif',
+                        icon: 'gfx/list-add.png',
                         action: 'add',
                         probeId: this.probeId
                     },
                     {
                         text: 'Löschen',
-                        icon: 'gfx/minus.gif',
+                        icon: 'gfx/list-remove.png',
                         action: 'delete'
                     }
                 ]
