@@ -8,11 +8,12 @@ Ext.define('Lada.view.About', {
     title: 'Lada Information',
     // Make size of the dialog dependend of the available space.
     // TODO: Handle resizing the browser window.
-    width: Ext.getBody().getViewSize().width - 30,
-    height: Ext.getBody().getViewSize().height - 30,
+    width: 200,
+    height: 200,
     autoShow: true,
     autoScroll: true,
     modal: true,
+    layout: "fit",
 
     initComponent: function() {
         var sver = "tests"
