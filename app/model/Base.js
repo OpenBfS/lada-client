@@ -11,7 +11,7 @@ Ext.define('Lada.model.Base', {
      * as some items can not be identified with a singe id.
      */
     getEidi: function() {
-        return "/" + idProperty;
+        return "/" + this.idProperty;
     },
     /**
      * Helper function to make a AJAX request against the authinfo interface
