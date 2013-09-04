@@ -21,5 +21,11 @@ Befehl "jsduck" die Dokumentation für den Lada-Clienten erzeugen.
 Die Dokumentation findet sich nach der Generierung in dem Order "doc".
 Einstiegseite ist die Seite template.html.
 
+JSDuck ist unter der Adresse
+
+https://github.com/senchalabs/jsduck
+
+zu finden und muss installiert werden.
+
 Einstellung bezüglich der Generierung der Dokumentation ist in der Datei
 jsduck.json hinterlegt.
