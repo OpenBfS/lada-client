@@ -5,6 +5,7 @@ Ext.define('Lada.view.proben.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.probenlist',
     store: 'ProbenList',
+    multiSelect: true,
     viewConfig: {
         maxHeight: 350,
         emptyText: 'Keine Proben gefunden.',

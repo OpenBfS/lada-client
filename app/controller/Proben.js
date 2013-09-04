@@ -155,9 +155,23 @@ Ext.define('Lada.controller.Proben', {
      */
     downloadFile: function(button) {
         var grid = button.up('grid');
-        var selection = grid.getView().getSelectionModel().getSelection()[0];
-        var url = "server/rest/export/laf/" + selection.get('probeId');
-        window.open(url, "_blank");
+        var selection = grid.getView().getSelectionModel().getSelection();
+        var hiddenItems = [];
+        for (var i = 0; i < selection.length; i++) {
+            hiddenItems.push({xtype: 'hiddenfield', name: 'probeId', value: selection[i].get('probeId')});
+        }
+        console.log('create download form.');
+        var hiddenForm = Ext.create('Ext.form.Panel', {
+            title: 'hiddenForm',
+            standardSubmit: true,
+            url: 'server/rest/export/laf',
+            timeout: 120,
+            height: 0,
+            width: 0,
+            hidden: true,
+            items: hiddenItems
+        });
+        hiddenForm.getForm().submit();
     },
     editItem: function(grid, record) {
         console.log('Editing Probe');
