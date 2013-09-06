@@ -9,6 +9,9 @@ Ext.define('Lada.lib.Helpers', {
          */
         ts2date: function(v, record){
             // Converts a timestamp into a date object.
+            if (v === null || v === undefined) {
+                return v;
+            }
             return new Date(v);
         }
     }
