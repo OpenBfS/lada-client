@@ -106,19 +106,19 @@ Ext.define('Lada.controller.Sql', {
                 field = Ext.create('Lada.view.widgets.Testdatensatz', { name: name, fieldLabel: label, emptyText: '' });
             } else if (type == "listmst") {
                 console.log("Found listmst filter");
-                field = Ext.create('Lada.view.widgets.Mst', { name: name, fieldLabel: label, multiSelect: true });
+                field = Ext.create('Lada.view.widgets.Mst', { name: name, fieldLabel: label });
             } else if (type == "listumw") {
                 console.log("Found listumw filter");
-                field = Ext.create('Lada.view.widgets.Uwb', { name: name, fieldLabel: label, multiSelect: true });
+                field = Ext.create('Lada.view.widgets.Uwb', { name: name, fieldLabel: label });
             } else if (type == "listdbasis") {
                 console.log("Found listdbasis filter");
-                field = Ext.create('Lada.view.widgets.Datenbasis', { name: name, fieldLabel: label, multiSelect: true });
+                field = Ext.create('Lada.view.widgets.Datenbasis', { name: name, fieldLabel: label });
             } else if (type == "listver") {
                 console.log("Found listver filter");
-                field = Ext.create('Lada.view.widgets.Verwaltungseinheit', { name: name, fieldLabel: label, multiSelect: true });
+                field = Ext.create('Lada.view.widgets.Verwaltungseinheit', { name: name, fieldLabel: label });
             } else if (type == "listnetz") {
                 console.log("Found listnetz filter");
-                field = Ext.create('Lada.view.widgets.Netzbetreiber', { name: name, fieldLabel: label, multiSelect: true });
+                field = Ext.create('Lada.view.widgets.Netzbetreiber', { name: name, fieldLabel: label });
             }
             if (field) {
                 console.log("Pushing field to filters");
