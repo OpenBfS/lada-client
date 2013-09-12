@@ -213,6 +213,25 @@ Ext.define('Lada.controller.Proben', {
         // Close Createdialog
         var win = form.up('window');
         win.close();
+        var resp = Ext.decode(response.responseText);
+        var warn = Array();
+        var err = Array();
+        if (resp.warnings) {
+            warn.push("<strong>Warnungen:</strong><br>");
+            for (var key in resp.warnings) {
+                warn.push(key + ": ");
+                warn.push(Lada.getApplication().bundle.getMsg(resp.warnings[key]) + "<br>");
+            }
+        }
+        if (resp.errors) {
+            err.push("<strong>Fehler:</strong><br>");
+            for (var key in resp.errors) {
+                err.push(key + ": ");
+                err.push(Lada.getApplication().bundle.getMsg(resp.warnings[key]) + "<br>");
+            }
+        }
+        var msg = warn.join("") + err.join("");
+        Ext.MessageBox.alert("Ergebnis", msg);
         // Reload store
         var store = this.getProbenStore();
         store.reload({
