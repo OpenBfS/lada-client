@@ -119,12 +119,12 @@ Ext.define('Lada.view.widgets.LadaForm', {
 
     onModelLoadSuccess: function(record, operation) {
         this.bindModel(record);
-        this.parseResponse(operation);
+        this.parseResponse(operation.response);
         this.fireEvent('loadsuccess', this, record, operation);
     },
 
     onModelLoadFailure: function(record, operation) {
-        this.parseResponse(operation);
+        this.parseResponse(operation.response);
         this.fireEvent('loadfailure', this, record, operation);
     },
 
@@ -188,8 +188,53 @@ Ext.define('Lada.view.widgets.LadaForm', {
             this.errors = this.translateReturnCodes(json.errors);
             this.warnings = this.translateReturnCodes(json.warnings);
             this.message = Lada.getApplication().bundle.getMsg(json.message);
+            var e = Ext.Object.isEmpty(this.warnings);
+            if (!Ext.Object.isEmpty(this.warnings) ||
+                !Ext.Object.isEmpty(this.errors)) {
+                this.createMessages();
+            }
         } else {
             this.setReadOnly(this.model.get('readonly'));
         }
+    },
+    createMessages: function() {
+        var messages = Ext.create('Ext.form.Panel', {
+            bodyPadding: '5 5 5 5'
+        });
+        for (var key in this.warnings) {
+            var label = Ext.create('Ext.container.Container', {
+                layout: 'hbox',
+                bodyPadding: '5 5 5 5',
+                items: [{
+                    xtype: 'image',
+                    src: 'gfx/icon-warning.gif',
+                    width: 18,
+                    height: 18
+                }, {
+                    xtype: 'label',
+                    text: key + ": " + this.warnings[key],
+                    margin: '4 0 0 5'
+                }]
+            });
+            messages.insert(0, label);
+        }
+        for (var key in this.errors) {
+            var label = Ext.create('Ext.container.Container', {
+                layout: 'hbox',
+                bodyPadding: '5 5 5 5',
+                items: [{
+                    xtype: 'image',
+                    src: 'gfx/icon-error.gif',
+                    width: 18,
+                    height: 18
+                }, {
+                    xtype: 'label',
+                    text: key + ": " + this.errors[key],
+                    margin: '4 0 0 5'
+                }]
+            });
+            messages.insert(0, label);
+        }
+        this.insert(0, messages);
     }
 });
