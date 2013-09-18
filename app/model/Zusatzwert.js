@@ -22,6 +22,8 @@ Ext.define('Lada.model.Zusatzwert', {
         },
         writer: {
             type: 'json',
+            // TODO: Check if this function is really needed (torsten)
+            // <2013-09-18 15:58> 
             writeEverything : true
         }
     },
