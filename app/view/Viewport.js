@@ -49,7 +49,7 @@ Ext.define('Lada.view.Viewport' ,{
         });
     },
     /**
-     * Function to initialize the edit window for a priticular probe directly
+     * Function to initialize the edit window for a particular probe directly
      * @private
      */
     initProbe: function() {
