@@ -66,6 +66,7 @@ Ext.define('Lada.controller.Sql', {
         sqldesc.setValue(record[0].data.description);
 
         // Setup Columns of the probenlist
+        displayFields.reverse();
         result.setupColumns(displayFields);
 
         // Setup Filters of the probenlist
