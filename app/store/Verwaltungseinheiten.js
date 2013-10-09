@@ -7,7 +7,7 @@ Ext.define('Lada.store.Verwaltungseinheiten', {
     sorters: [{
         property: 'bezeichnung',
     }],
-    autoLoad: true,
+    autoLoad: false,
     proxy: {
         type: 'ajax',
         api: {
