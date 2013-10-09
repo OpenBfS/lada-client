@@ -8,12 +8,13 @@ Ext.define('Lada.view.widgets.Verwaltungseinheit' ,{
         displayField: 'bezeichnung',
         valueField: 'gemId',
         emptyText:'Wählen Sie eine Verwaltungseinheit',
+        hideTrigger: true,
         // Enable filtering of comboboxes
         autoSelect: false,
         queryMode: 'remote',
-        triggerAction : 'all',
+        triggerAction : 'type',
         typeAhead: true,
-        minChars: 0,
+        minChars: 2,
     initComponent: function() {
         this.callParent(arguments);
     }
