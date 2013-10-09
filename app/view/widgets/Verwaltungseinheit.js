@@ -10,7 +10,7 @@ Ext.define('Lada.view.widgets.Verwaltungseinheit' ,{
         emptyText:'Wählen Sie eine Verwaltungseinheit',
         // Enable filtering of comboboxes
         autoSelect: false,
-        queryMode: 'local',
+        queryMode: 'remote',
         triggerAction : 'all',
         typeAhead: true,
         minChars: 0,
