@@ -13,12 +13,12 @@ Ext.define('Lada.view.proben.Import', {
         this.buttons = [
             {
                 text: 'Speichern',
-                action: 'save',
+                action: 'save'
             },
             {
                 text: 'Abbrechen',
                 scope: this,
-                handler: this.close,
+                handler: this.close
             }
         ];
         var form = Ext.create('Lada.view.proben.ImportForm');

@@ -25,7 +25,7 @@ Ext.define('Lada.view.mkommentare.Create', {
             {
                 text: 'Abbrechen',
                 scope: this,
-                handler: this.close,
+                handler: this.close
             }
         ];
         var form = Ext.create('Lada.view.mkommentare.CreateForm', this.initialConfig);

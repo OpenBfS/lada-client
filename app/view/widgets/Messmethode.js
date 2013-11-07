@@ -1,7 +1,7 @@
 var mmtStore = Ext.create('Ext.data.Store', {
     fields: ['mmtId', 'messmethhode'],
     sorters: [{
-        property: 'mmtId',
+        property: 'mmtId'
     }],
     autoLoad: true,
     proxy: {

@@ -1,7 +1,7 @@
 var uwbStore = Ext.create('Ext.data.Store', {
     fields: ['umwId', 'umweltBereich'],
     sorters: [{
-        property: 'umwId',
+        property: 'umwId'
     }],
     autoLoad: true,
     proxy: {

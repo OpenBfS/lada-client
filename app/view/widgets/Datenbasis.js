@@ -1,7 +1,7 @@
 var datenbasisStore = Ext.create('Ext.data.Store', {
     fields: ['datenbasisId', 'beschreibung', 'datenbasis'],
     sorters: [{
-        property: 'datenbasis',
+        property: 'datenbasis'
     }],
     autoLoad: true,
     proxy: {

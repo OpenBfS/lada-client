@@ -17,12 +17,12 @@ Ext.define('Lada.view.proben.Create', {
         this.buttons = [
             {
                 text: 'Speichern',
-                action: 'save',
+                action: 'save'
             },
             {
                 text: 'Abbrechen',
                 scope: this,
-                handler: this.close,
+                handler: this.close
             }
         ];
         var form = Ext.create('Lada.view.proben.CreateForm');

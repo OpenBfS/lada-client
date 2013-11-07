@@ -1,7 +1,7 @@
 var netzbetreiberStore = Ext.create('Ext.data.Store', {
     fields: ['netzbetreiberId', 'netzbetreiber'],
     sorters: [{
-        property: 'netzbetreiber',
+        property: 'netzbetreiber'
     }],
     autoLoad: true,
     proxy: {
