@@ -1,3 +1,13 @@
+Ext.Loader.setConfig({
+    enabled: true,
+    paths: {
+        'Ext.ux.form.DateTimeField': 'resources/datetime/UX_DateTimeField.js',
+        'Ext.ux.DateTimeMenu': 'resources/datetime/UX_DateTimeMenu.js',
+        'Ext.ux.DateTimePicker': 'resources/datetime/UX_DateTimePicker.js',
+        'Ext.ux.form.TimePickerField': 'resources/datetime/UX_TimePickerField.js'
+    }
+});
+
 Ext.application({
 
     // Name of the application. Do not change as this name is used in
