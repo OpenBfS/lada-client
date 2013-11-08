@@ -18,7 +18,6 @@ Ext.define('Lada.view.orte.CreateForm', {
                 listeners: {
                     scope: this,
                     'change': function (field, newv, oldv, opts) {
-                        console.log(field, oldv, newv, opts);
                         var orte = Ext.getStore('Ortedetails');
                         var ort = orte.getById(newv);
                         var fields = ['beschreibung', 'bezeichnung', 'hoeheLand',
@@ -35,7 +34,6 @@ Ext.define('Lada.view.orte.CreateForm', {
 
                         var form = this.getForm();
                         if ( ort != undefined ) {
-                            console.log('Found ort');
                             for (var i = fields.length - 1; i >= 0; i--){
                                 ffield = form.findField("ort_"+fields[i]);
                                 ffield.setValue(ort.get(fields[i]));
