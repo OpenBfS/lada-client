@@ -37,7 +37,12 @@ Ext.define('Lada.view.orte.List' ,{
         this.columns = [
             {
                 header: 'Typ',
-                dataIndex: 'ortsTyp'
+                dataIndex: 'ortId',
+                renderer: function(value) {
+                    var store = Ext.getStore('Ortedetails');
+                    var record = store.getById(value);
+                    return record.get('otyp');
+                }
             },
             {
                 header: 'Staat',
@@ -66,8 +71,7 @@ Ext.define('Lada.view.orte.List' ,{
                 flex: 1,
                 renderer: function(value) {
                     var store = Ext.getStore('Ortedetails');
-                    var gemeinde = Ext.getStore('Verwaltungseinheiten');
-                    var record = gemeinde.findRecord('gemId', store.getById(value).get('gemId'));
+                    var record = store.getById(value);
                     return record.get('bezeichnung');
                 }
 
