@@ -9,7 +9,7 @@ Ext.define('Lada.store.Verwaltungseinheiten', {
     }],
     autoLoad: false,
     proxy: {
-        type: 'ajax',
+        type: 'rest',
         api: {
         read: 'server/rest/verwaltungseinheit'
         },
