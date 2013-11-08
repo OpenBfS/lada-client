@@ -7,11 +7,7 @@ Ext.define('Lada.view.proben.List' ,{
     store: 'ProbenList',
     multiSelect: true,
     viewConfig: {
-        maxHeight: 350,
         emptyText: 'Keine Proben gefunden.',
-        // minHeight and deferEmptyText are needed to be able to show the
-        // emptyText message.
-        minHeight: 35,
         deferEmptyText: false
     },
     initComponent: function() {

@@ -214,6 +214,7 @@ Ext.define('Lada.view.Viewport' ,{
                 // Resultlist for the query.
                 {
                     id: 'result',
+                    flex: 1,
                     xtype: 'probenlist',
                     hidden: false
                 }
