@@ -12,6 +12,7 @@ Ext.define('Lada.view.Viewport' ,{
         'Lada.view.search.List',
         'Lada.view.proben.List'
     ],
+    layout: 'fit',
     initComponent: function() {
         console.log('Setting up Viewport');
         this.initSearch();
@@ -147,6 +148,10 @@ Ext.define('Lada.view.Viewport' ,{
             xtype: 'panel',
             title: '<center>Probenauswahlmaske</center>',
             bodyPadding: '10 10',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
             dockedItems: [
                 {
                     xtype: "toolbar",
