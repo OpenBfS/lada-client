@@ -28,9 +28,11 @@ Ext.define('Lada.view.orte.CreateForm', {
                         // would only display the raw value (id) of the
                         // verwaltungseinheit.
                         var verw = Ext.getStore('Verwaltungseinheiten');
-                        verw.load({
-                            id: ort.get('gemId')
-                        });
+                        if (ort) {
+                            verw.load({
+                                id: ort.get('gemId')
+                            });
+                        }
 
                         var form = this.getForm();
                         if ( ort != undefined ) {
