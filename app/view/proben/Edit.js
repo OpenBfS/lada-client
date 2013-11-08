@@ -18,12 +18,12 @@ Ext.define('Lada.view.proben.Edit', {
         this.buttons = [
             {
                 text: 'Speichern',
-                action: 'save',
+                action: 'save'
             },
             {
                 text: 'Abbrechen',
                 scope: this,
-                handler: this.close,
+                handler: this.close
             }
         ];
         // InitialConfig is the config object passed to the constructor on
@@ -32,6 +32,6 @@ Ext.define('Lada.view.proben.Edit', {
         var form = Ext.create('Lada.view.proben.EditForm', this.initialConfig);
         this.items = [form];
         this.callParent();
-    },
+    }
 });
 

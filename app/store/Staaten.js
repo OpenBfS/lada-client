@@ -4,7 +4,7 @@
 Ext.define('Lada.store.Staaten', {
     extend: 'Ext.data.Store',
     sorters: [{
-        property: 'staat',
+        property: 'staat'
     }],
     model: 'Lada.model.Staat',
     autoLoad: true,

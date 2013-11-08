@@ -22,13 +22,13 @@ Ext.define('Lada.view.About', {
             {
                 text: 'Abbrechen',
                 scope: this,
-                handler: this.close,
+                handler: this.close
             }
         ];
         this.items = [ 
             { html: "<h1>Lada</h1>Server version: " + sver + "<br>Client version: " + cver }
         ];
         this.callParent();
-    },
+    }
 });
 

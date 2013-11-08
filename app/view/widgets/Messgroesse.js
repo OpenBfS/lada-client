@@ -1,7 +1,7 @@
 /**
  * Combobox for Messgroesse
  */
-Ext.define('Lada.view.widgets.Messegroesse' ,{
+Ext.define('Lada.view.widgets.Messgroesse' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.messgroesse',
         store: 'Messgroessen',

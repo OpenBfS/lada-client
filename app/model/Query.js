@@ -9,7 +9,7 @@ Ext.define('Lada.model.Query', {
         {name: "description"},
         {name: "sql"},
         {name: "results"},
-        {name: "filters"},
+        {name: "filters"}
     ],
     proxy: {
         type: 'rest',

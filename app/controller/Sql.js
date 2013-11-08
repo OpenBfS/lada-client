@@ -10,7 +10,7 @@ Ext.define('Lada.controller.Sql', {
         'Proben',    // List of found Proben
         'ProbenList',    // List of found Proben
         'Queries',
-        'Info',
+        'Info'
     ],
     requires: [
         'Lada.view.widgets.Mst',

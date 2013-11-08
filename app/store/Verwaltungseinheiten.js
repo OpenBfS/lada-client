@@ -5,7 +5,7 @@ Ext.define('Lada.store.Verwaltungseinheiten', {
     extend: 'Ext.data.Store',
     fields: ['gemId', 'bezeichnung'],
     sorters: [{
-        property: 'bezeichnung',
+        property: 'bezeichnung'
     }],
     autoLoad: false,
     proxy: {

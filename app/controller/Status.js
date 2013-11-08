@@ -67,5 +67,5 @@ Ext.define('Lada.controller.Status', {
         store.reload();
         var win = form.up('window');
         win.close();
-    },
+    }
 });

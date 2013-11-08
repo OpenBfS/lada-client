@@ -20,7 +20,7 @@ Ext.define('Lada.view.zusatzwerte.Create', {
             {
                 text: 'Abbrechen',
                 scope: this,
-                handler: this.close,
+                handler: this.close
             }
         ];
         var form = Ext.create('Lada.view.zusatzwerte.CreateForm', this.initialConfig);
