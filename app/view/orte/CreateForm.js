@@ -23,6 +23,16 @@ Ext.define('Lada.view.orte.CreateForm', {
                         var ort = orte.getById(newv);
                         var fields = ['beschreibung', 'bezeichnung', 'hoeheLand',
                                       'latitude', 'longitude', 'staatId', 'gemId'];
+
+                        // Load currently "selected" verwaltungseinheit.  This
+                        // is needed as without having this record the field
+                        // would only display the raw value (id) of the
+                        // verwaltungseinheit.
+                        var verw = Ext.getStore('Verwaltungseinheiten');
+                        verw.load({
+                            id: ort.get('gemId')
+                        });
+
                         var form = this.getForm();
                         if ( ort != undefined ) {
                             console.log('Found ort');
