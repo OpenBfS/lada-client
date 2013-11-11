@@ -1,7 +1,10 @@
-Hinweise zur Installation
-=========================
-Für die Installation ist es notwenig in dem Wurzelordner die ExtJS-Bibliothek
-in der Version 4.2.0 unter dem Namen "extjs" zur Verfügung zu stellen.
+Lada-Client
+===========
+
+Entwicklung
+-----------
+Für die Entwicklung ist es notwenig in dem Wurzelordner die ExtJS-Bibliothek
+in der Version >=4.2.0 unter dem Namen "extjs" zur Verfügung zu stellen.
 
 Diese lässt sich unter der folgenden URL herunterladen:
 http://cdn.sencha.com/ext/gpl/ext-4.2.0-gpl.zip
@@ -13,8 +16,40 @@ curl -O http://cdn.sencha.com/ext/gpl/ext-4.2.0-gpl.zip
 unzip ext-4.2.0-gpl.zip
 ln -s ext-4.2.0-gpl extjs
 
+Zusätzlich wird für diese Anwendung eine Bibliothek zur Internationalisierung
+verwendet, die unter der URL
+
+https://github.com/elmasse/Ext.i18n.Bundle
+
+verfügbar ist, verwendet.
+Diese muss in dem Ordner 'src' der vorher zur Verfügung gestellten ExtJS
+Bibliothek eingebunden werden. Dazu wird der Ordner 'i18n' in den Ordner 'src' kopiert
+oder verlinkt.
+
+Installation
+------------
+Die Anwendung wird mit Hilfe des von Sencha bereitgestellten Tools 'Sencha Cmd'
+compiliert und minifiziert. Vorbedingung für den Compilevorgang ist die unter
+Entwicklung beschriebene Verzeichnisstruktur.
+
+Sencha Cmd kann unter der URL
+
+http://www.sencha.com/products/sencha-cmd/download
+
+heruntergeladen und dann installiert werden.
+
+Mit dem folgenden Befehl kann dann der Lada-Client compiliert und minifiziert werden:
+
+sencha -sdk /path/to/extjs compile \
+       -classpath=app,app/view/widgets/resources/datetime page -yui \
+       -in index.html -out build/index.html
+
+Dies erzeugt in dem Ordner 'build' die minifizierte Version der Anwendung, die
+alle benötigten Klassen der ExtJS Bibliothek beinhaltet und eine entsprechende
+index.html, die zur Auslieferung in einem Webserver verwendet werden kann.
+
 Dokumentation
-=============
+-------------
 Die Dokumentation wird mit dem Tool JSDuck erzeugt.
 Im Wurzelordner lässt sich nach der Installation von JSDuck dann mit dem
 Befehl "jsduck" die Dokumentation für den Lada-Clienten erzeugen.
