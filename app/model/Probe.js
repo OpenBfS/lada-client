@@ -10,8 +10,6 @@ Ext.define('Lada.model.Probe', {
         {name: "datenbasisId"},
         {name: "erzeugerId"},
         {name: "hauptprobenNr"},
-        {name: "messmethode"},
-        {name: "nebenprobenNr"},
         {name: "letzteAenderung", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
         {name: "media"},
         {name: "mediaDesk"},
