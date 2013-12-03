@@ -6,7 +6,8 @@ Ext.define('Lada.view.messwerte.CreateForm', {
     model: 'Lada.model.Messwert',
     requires: [
         'Lada.view.widgets.Messgroesse',
-        'Lada.view.widgets.Messeinheit'
+        'Lada.view.widgets.Messeinheit',
+        'Lada.view.widgets.Nwg'
     ],
     initComponent: function() {
         this.items = [
@@ -14,6 +15,16 @@ Ext.define('Lada.view.messwerte.CreateForm', {
                 xtype: 'numberfield',
                 name: 'messwert',
                 fieldLabel: 'Messwert'
+            },
+            {
+                xtype: 'nwg',
+                name: 'messwertNwg',
+                fieldLabel: 'Messwert zu NWG'
+            },
+            {
+                xtype: 'numberfield',
+                name: 'nwgZuMesswert',
+                fieldLabel: 'Nachweisgrenze'
             },
             {
                 xtype: 'numberfield',
@@ -29,11 +40,6 @@ Ext.define('Lada.view.messwerte.CreateForm', {
                 xtype: 'messeinheit',
                 name: 'mehId',
                 fieldLabel: 'Messeinheit'
-            },
-            {
-                xtype: 'numberfield',
-                name: 'nwgZuMesswert',
-                fieldLabel: 'Nachweisgrenze'
             }
         ];
         this.callParent();
