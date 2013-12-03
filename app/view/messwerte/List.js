@@ -39,33 +39,11 @@ Ext.define('Lada.view.messwerte.List' ,{
         this.columns = [
             {
                 header: '&lt;NWG',
-                dataIndex: 'messwert',
-                renderer: function(value, row) {
-                    // the seconds argument here is not documented in JQuery
-                    // but it has the current rendererd row and this
-                    // referenced the record.
-                    var nwg = row.record.get('nwgZuMesswert');
-                    if (value < nwg) {
-                        return "<";
-                    } else {
-                        return "";
-                    }
-                }
+                dataIndex: 'messwertNwg'
             },
             {
                 header: 'Messwert',
-                dataIndex: 'messwert',
-                renderer: function(value, row) {
-                    // the seconds argument here is not documented in JQuery
-                    // but it has the current rendererd row and this
-                    // referenced the record.
-                    var nwg = row.record.get('nwgZuMesswert');
-                    if (value < nwg) {
-                        return nwg;
-                    } else {
-                        return value;
-                    }
-                }
+                dataIndex: 'messwert'
             },
             {header: 'Messfehler', dataIndex: 'messfehler'},
             {
