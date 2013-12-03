@@ -51,7 +51,7 @@ Ext.define('Lada.view.messwerte.List' ,{
                 dataIndex: 'messgroesseId',
                 renderer: function(value) {
                     var store = Ext.getStore('Messgroessen');
-                    return store.findRecord('messgroesseId', value).get('messgro0esse');
+                    return store.findRecord('messgroesseId', value).get('messgroesse');
                 }
             },
             {

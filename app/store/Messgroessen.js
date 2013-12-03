@@ -3,9 +3,9 @@
  */
 Ext.define('Lada.store.Messgroessen', {
     extend: 'Ext.data.Store',
-    fields: ['messgroesseId', 'messgro0esse'],
+    fields: ['messgroesseId', 'messgroesse'],
     sorters: [{
-        property: 'messgro0esse',
+        property: 'messgroesse',
         transform: function(val) {
             if (val) {
                 return val.toLowerCase();

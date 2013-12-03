@@ -5,7 +5,7 @@ Ext.define('Lada.view.widgets.Messgroesse' ,{
         extend: 'Ext.form.ComboBox',
         alias: 'widget.messgroesse',
         store: 'Messgroessen',
-        displayField: 'messgro0esse',
+        displayField: 'messgroesse',
         valueField: 'messgroesseId',
         emptyText:'Wählen Sie eine Messgröße',
         // Enable filtering of comboboxes
