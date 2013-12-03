@@ -9,6 +9,7 @@ Ext.define('Lada.model.Messwert', {
         {name: "probeId", mapping:"id.probeId"},
         {name: "messgroesseId", mapping:"id.messgroesseId"},
         {name: "messwert", type:"float"},
+        {name: "messwertNwg"},
         {name: "messfehler", type:"float"},
         {name: "nwgZuMesswert", type:"float"},
         {name: "mehId"},
