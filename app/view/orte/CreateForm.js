@@ -7,8 +7,10 @@ Ext.define('Lada.view.orte.CreateForm', {
     requires: [
         'Lada.view.widgets.Ortdetail',
         'Lada.view.widgets.Staat',
-        'Lada.view.widgets.Verwaltungseinheit'
+        'Lada.view.widgets.Verwaltungseinheit',
+        'Lada.view.orte.CreateOrt'
     ],
+    edit: false,
     initComponent: function() {
         this.items = [
             {
@@ -18,6 +20,9 @@ Ext.define('Lada.view.orte.CreateForm', {
                 listeners: {
                     scope: this,
                     'change': function (field, newv, oldv, opts) {
+                        if (field.up('window')) {
+                            field.up('window').down('fieldset').show();
+                        }
                         var orte = Ext.getStore('Ortedetails');
                         var ort = orte.getById(newv);
                         var fields = ['beschreibung', 'bezeichnung', 'hoeheLand',
@@ -57,8 +62,16 @@ Ext.define('Lada.view.orte.CreateForm', {
                 fieldLabel: 'Ortszusatz'
             },
             {
+                xtype: 'button',
+                name: 'newort',
+                text: 'Neuen Ort Anlegen',
+                hidden: this.edit,
+                action: 'newort'
+            },
+            {
                 xtype: 'fieldset',
                 title: 'Ortsangaben',
+                hidden: !this.edit,
                 defaults: {
                         labelWidth: 150
                 },
