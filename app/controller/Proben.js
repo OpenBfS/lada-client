@@ -213,40 +213,38 @@ Ext.define('Lada.controller.Proben', {
         // Close Createdialog
         var win = form.up('window');
         win.close();
-        var resp = Ext.decode(response.responseText);
-        var warn = Array();
-        var err = Array();
-        if (resp.warnings) {
-            warn.push("<strong>Warnungen:</strong><br>");
-            for (var key in resp.warnings) {
-                warn.push(key + ": ");
-                warn.push(Lada.getApplication().bundle.getMsg(resp.warnings[key]) + "<br>");
-            }
-        }
-        if (resp.errors) {
-            err.push("<strong>Fehler:</strong><br>");
-            for (var key in resp.errors) {
-                err.push(key + ": ");
-                err.push(Lada.getApplication().bundle.getMsg(resp.warnings[key]) + "<br>");
-            }
-        }
-        var msg = warn.join("") + err.join("");
-        Ext.MessageBox.alert("Ergebnis", msg);
-        // Reload store
         var store = this.getProbenStore();
-        store.reload({
-            scope: this,
-            callback: function(records, operation, success) {
-                console.log('Reloaded store');
-                // Open Editdialog
-                var json = Ext.decode(response.responseText);
-                if (json) {
-                    var probeId = json.data.probeId;
-                    var probe = store.findRecord("probeId", probeId);
-                    this.editItem(null, probe);
+        //Load or reload the probenstore.
+        if (store.getCount() === 0) {
+            store.load({
+                scope: this,
+                callback: function(records, operation, success) {
+                    console.log('Loaded store');
+                    // Open Editdialog
+                    var json = Ext.decode(response.responseText);
+                    if (json) {
+                        var probeId = json.data.probeId;
+                        var probe = store.findRecord("probeId", probeId);
+                        this.editItem(null, probe);
+                    }
                 }
-            }
-        });
+            });
+        }
+        else {
+            store.reload({
+                scope: this,
+                callback: function(records, operation, success) {
+                    console.log('Reloaded store');
+                    // Open Editdialog
+                    var json = Ext.decode(response.responseText);
+                    if (json) {
+                        var probeId = json.data.probeId;
+                        var probe = store.findRecord("probeId", probeId);
+                        this.editItem(null, probe);
+                    }
+                }
+            });
+        }
     },
     editSuccess: function(form, record, response) {
         // Reload store
