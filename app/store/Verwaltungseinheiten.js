@@ -3,7 +3,7 @@
  */
 Ext.define('Lada.store.Verwaltungseinheiten', {
     extend: 'Ext.data.Store',
-    fields: ['gemId', 'bezeichnung'],
+    fields: ['gemId', 'bezeichnung', 'longitude', 'latitude'],
     sorters: [{
         property: 'bezeichnung'
     }],
