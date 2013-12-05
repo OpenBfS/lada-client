@@ -28,7 +28,20 @@ Ext.define('Lada.view.orte.CreateOrt', {
             {
                 xtype: 'verwaltungseinheiten',
                 name: 'ort_gemId',
-                fieldLabel: 'Gemeinde'
+                fieldLabel: 'Gemeinde',
+                listeners: {
+                    'select': {
+                        scope: me,
+                        fn: function(field, newValue, oldValue) {
+                            var lon = field.up('window').down(
+                                'numberfield[name=ort_longitude]');
+                            var lat = field.up('window').down(
+                                'numberfield[name=ort_latitude]');
+                            lon.setValue(newValue[0].data.longitude);
+                            lat.setValue(newValue[0].data.latitude);
+                        }
+                    }
+                }
             },
             {
                 xtype: 'numberfield',
