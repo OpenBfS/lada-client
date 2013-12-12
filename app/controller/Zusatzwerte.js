@@ -15,20 +15,20 @@ Ext.define('Lada.controller.Zusatzwerte', {
     addListeners: function() {
         this.control({
             'zusatzwertelist': {
-                itemdblclick: this.editZusatzwert
+                itemdblclick: this.editItem
             },
             'zusatzwertelist toolbar button[action=add]': {
-                click: this.addZusatzwert
+                click: this.addItem
             },
             'zusatzwertelist toolbar button[action=delete]': {
-                click: this.deleteZusatzwert
+                click: this.deleteItem
             },
             'zusatzwertecreate form': {
                 savesuccess: this.createSuccess,
                 savefailure: this.createFailure
             },
             'zusatzwertecreate button[action=save]': {
-                click: this.saveZusatzwert
+                click: this.saveItem
             },
             'zusatzwerteedit form': {
                 savesuccess: this.editSuccess,
@@ -36,13 +36,18 @@ Ext.define('Lada.controller.Zusatzwerte', {
             }
         });
     },
-    addZusatzwert: function(button) {
+    saveItem: function(button) {
+        console.log('Saving new Zusatzwert for Probe ' + button.probeId);
+        var form = button.up('window').down('form');
+        form.commit();
+    },
+    addItem: function(button) {
         console.log('Adding new Zusatzwert for Probe' + button.probeId);
         var zusatzwert = Ext.create('Lada.model.Zusatzwert');
         zusatzwert.set('probeId', button.probeId);
         var view = Ext.widget('zusatzwertecreate', {model: zusatzwert});
     },
-    editZusatzwert: function(grid, record) {
+    editItem: function(grid, record) {
         console.log('Editing Zusatzwert');
         record.getAuthInfo(this.initEditWindow)
         console.log("Loaded Zusatzwert with ID " + record.getId()); //outputs ID
