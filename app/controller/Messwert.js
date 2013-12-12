@@ -51,7 +51,7 @@ Ext.define('Lada.controller.Messwert', {
     },
     editItem: function(grid, record) {
         console.log('Editing Messwert');
-        record.getAuthInfo(this.initEditWindow)
+        record.getAuthInfo(this.initEditWindow);
         console.log("Loaded Messwert with ID " + record.getId()); //outputs ID
     },
     initEditWindow: function(record, readonly, owner) {
@@ -84,7 +84,7 @@ Ext.define('Lada.controller.Messwert', {
     },
     createSuccess: function(form, record, operation) {
         // Reload store
-        var store = this.getMessungenStore();
+        var store = this.getMesswerteStore();
         store.reload();
         var win = form.up('window');
         win.close();
@@ -99,7 +99,7 @@ Ext.define('Lada.controller.Messwert', {
     },
     editSuccess: function(form, record, operation) {
         // Reload store
-        var store = this.getMessungenStore();
+        var store = this.getMesswerteStore();
         store.reload();
         var win = form.up('window');
         win.close();
