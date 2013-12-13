@@ -122,12 +122,12 @@ Ext.define('Lada.controller.Orte', {
                     form.model.set('ortId', response.ortId);
                 }
                 ortidfield.setValue(ortid);
-                form.commit();
             },
             failure: function() {
                 console.log('Error on saving Ortdetails');
             }
         });
+        form.commit();
 
     },
     addItem: function(button) {
