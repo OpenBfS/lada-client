@@ -57,7 +57,17 @@ Ext.define('Lada.view.messungen.List' ,{
                     }
                 }
             },
-            {header: 'OK-Flag', dataIndex: "fertig"},
+            {
+                header: 'OK-Flag',
+                dataIndex: "fertig",
+                renderer: function(value) {
+                    if (value) {
+                        return "Ja";
+                    } else {
+                        return "Nein";
+                    }
+                }
+             },
             {
                 header: 'Anzahl Nuklide',
                 dataIndex: 'id',
