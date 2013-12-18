@@ -51,7 +51,7 @@ Ext.define('Lada.view.orte.List' ,{
 
             },
             {
-                header: 'Gem-ID',
+                header: 'Gemeineschlüssel',
                 dataIndex: 'ortId',
                 renderer: function(value) {
                     var store = Ext.getStore('Ortedetails');
