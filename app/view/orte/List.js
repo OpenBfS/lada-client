@@ -37,12 +37,7 @@ Ext.define('Lada.view.orte.List' ,{
         this.columns = [
             {
                 header: 'Typ',
-                dataIndex: 'ortId',
-                renderer: function(value) {
-                    var store = Ext.getStore('Ortedetails');
-                    var record = store.getById(value);
-                    return record.get('otyp');
-                }
+                dataIndex: 'ortsTyp'
             },
             {
                 header: 'Staat',
