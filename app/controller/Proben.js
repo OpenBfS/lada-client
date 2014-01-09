@@ -2,21 +2,37 @@
  * Controller for Proben
  */
 
+function numOfErrors(proben) {
+    var errors = 0;
+    for (var key in proben) {
+        if (proben[key].length > 0) {
+            errors = errors + 1;
+        }
+    }
+    return errors;
+}
+
 function buildImportReport(filename, msg, errors, warnings) {
     var out = Array();
+    // There is a entry for each imported proben in the errors dict (might be
+    // empty)
+    var num_proben = (Object.keys(errors).length > 0);
+    var num_errors = (numOfErrors(errors));
     var has_warnings = (Object.keys(warnings).length > 0);
-    var has_errors = (Object.keys(errors).length > 0);
     if (msg != 200) {
             out.push("Der Import der Datei " + filename + " war nicht erfolgreich. Der Importvorgang konnte aufgrund eines Fehlers im Server nicht beendet werden.");
     } else {
-        if (has_errors) {
-            out.push("Der Import der Datei " + filename + " war nicht oder nur teilweise erfolgreich.");
-        } else {
-            out.push("Der Import der Datei " + filename + " war erfolgreich.");
+        if (num_errors == num_proben) {
+            out.push("Der Import der Datei " + filename + " war nicht erfolgreich.");
         }
-        out.push("Bei dem Import sind folgende Fehler und Warnungen aufgetreten:");
+        else if (num_errors == 0) {
+            out.push("Der Import der Datei " + filename + " war erfolgreich.");
+        } else {
+            out.push("Der Import der Datei " + filename + " war nicht oder nur teilweise erfolgreich.");
+        }
+        out.push(" Bei dem Import sind folgende Fehler und Warnungen aufgetreten:");
         out.push("<br/>");
-        if (has_errors) {
+        if (num_errors) {
             out.push("<strong>Fehler:</strong>");
             out.push("<br/>");
             out.push("<ol>");
