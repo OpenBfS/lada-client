@@ -4,50 +4,51 @@
 
 function buildImportReport(filename, msg, errors, warnings) {
     var out = Array();
+    var has_warnings = (Object.keys(warnings).length > 0);
+    var has_errors = (Object.keys(errors).length > 0);
     if (msg != 200) {
-        out.push("Der Import der Datei " + filename + " war nicht erfolgreich.");
+            out.push("Der Import der Datei " + filename + " war nicht erfolgreich. Der Importvorgang konnte aufgrund eines Fehlers im Server nicht beendet werden.");
     } else {
-        out.push("Der Import der Datei " + filename + " war erfolgreich.");
-    }
-    out.push("Bei dem Import sind folgende Fehler und Warnungen aufgetreten");
-    out.push("<br/>");
-    out.push("<strong>Fehler:</strong>");
-    out.push("<br/>");
-    if (errors) {
-        out.push("<ol>");
-        for (var key in errors) {
-            out.push("<li>"+key)
-            var msgs = errors[key];
-            out.push("<ol>");
-            for (var i = msgs.length - 1; i >= 0; i--){
-                out.push("<li>"+msgs[i].key+" ("+msgs[i].code+"): "+msgs[i].value+"</li>")
-            };
-            out.push("</ol>");
-            out.push("</li>");
+        if (has_errors) {
+            out.push("Der Import der Datei " + filename + " war nicht oder nur teilweise erfolgreich.");
+        } else {
+            out.push("Der Import der Datei " + filename + " war erfolgreich.");
         }
-        out.push("</ol>");
-    } else {
-        out.push("Keine Fehler");
+        out.push("Bei dem Import sind folgende Fehler und Warnungen aufgetreten:");
         out.push("<br/>");
-    }
-    out.push("<strong>Warnungen:</strong>");
-    out.push("<br/>");
-    if (warnings) {
-        out.push("<ol>");
-        for (var key in warnings) {
-            out.push("<li>"+key)
-            var msgs = warnings[key];
+        if (has_errors) {
+            out.push("<strong>Fehler:</strong>");
+            out.push("<br/>");
             out.push("<ol>");
-            for (var i = msgs.length - 1; i >= 0; i--){
-                out.push("<li>"+msgs[i].key+" ("+msgs[i].code+"): "+msgs[i].value+"</li>")
-            };
+            for (var key in errors) {
+                out.push("<li>Probe: "+key)
+                var msgs = errors[key];
+                out.push("<ol>");
+                for (var i = msgs.length - 1; i >= 0; i--){
+                    out.push("<li>"+msgs[i].key+" ("+Lada.getApplication().bundle.getMsg(msgs[i].code.toString())+"): "+msgs[i].value+"</li>")
+                };
+                out.push("</ol>");
+                out.push("</li>");
+            }
             out.push("</ol>");
-            out.push("</li>");
+            out.push("<br/>");
         }
-        out.push("</ol>");
-    } else {
-        out.push("Keine Warnungen");
-        out.push("<br/>");
+        if (has_warnings) {
+            out.push("<strong>Warnungen:</strong>");
+            out.push("<br/>");
+            out.push("<ol>");
+            for (var key in warnings) {
+                out.push("<li>"+key)
+                var msgs = warnings[key];
+                out.push("<ol>");
+                for (var i = msgs.length - 1; i >= 0; i--){
+                    out.push("<li>"+msgs[i].key+" ("+Lada.getApplication().bundle.getMsg(msgs[i].code.toString())+"): "+msgs[i].value+"</li>")
+                };
+                out.push("</ol>");
+                out.push("</li>");
+            }
+            out.push("</ol>");
+        }
     }
     return out.join("");
 }
