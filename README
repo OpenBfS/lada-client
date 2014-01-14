@@ -121,18 +121,12 @@ der Option "LoadModule" angegeben. Folgende Module werden benötigt:
 
 Einrichtung der Anwendung
 `````````````````````````
-Zunächst hinterlegen wir die Anwendung in dem Server.
+Zunächst hinterlegen wir die Anwendung in dem Server. Hierzu verwenden wir die
+gebaute Version, welche sich im "build" Ordner befindet (Siehe Build).
 
 cd /var/www/html
-hg clone https://scm.wald.intevation.org/hg/lada/lada-client/ lada
-cd lada
-git clone https://github.com/elmasse/Ext.i18n.Bundle.git
-curl -O http://cdn.sencha.com/ext/gpl/ext-4.2.0-gpl.zip
-unzip ext-4.2.0-gpl.zip
-ln -s ext-4.2.0.663 extjs
-rm ext-4.2.0-gpl.zip
-cd extjs/src
-ln -s ../../Ext.i18n.Bundle/i18n i18n
+mkdir lada
+cp build/* lada
 
 # Wichtig um SELinux dazu zu überreden das neue Verzeichnis auch zu
 # servieren:
