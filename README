@@ -14,10 +14,11 @@ Intevation GmbH im Auftrag des Bundesamt für Strahlenschutz im Jahre 2013.
 
 Lizenz
 ------
-Die Software unter der GPL Affero Lizenz verfügbar.
+Die Software unter der GNU GPL v>=3 Lizenz verfügbar. Details siehe die Datei
+COPYING.
 
-Quellen
--------
+Quelltext
+---------
 Die Quelldateien lassen sich wie folgt auschecken:
 hg clone https://scm.wald.intevation.org/hg/lada/lada-client
 
