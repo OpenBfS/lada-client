@@ -1,0 +1,109 @@
+Installation Lada-Client
+========================
+Für allgemeine Informationen schauen Sie in die README Datei.
+
+Installation
+------------
+Für den Betrieb des Lada-Clients muss dieser innerhalb einer Webserver-Umgebung
+installiert werden. Die folgenden Hinweise geben eine Kurze Anleitung zur
+Installation eines Apache-Webserver.
+
+Hinweis: Für den Betrieb einer vollständigen Installation ist neben dem
+Klienten auch die Installation eines Servers und entsprechender Datenbank
+notwendig. Für die Installation des Servers folgen Sie bitte den Hinweisen in
+der README Datei des Server-Pakets. Siehe Projektwebseite. Optional: Die
+Authentifizierung kann gegen einen LDAP-Server durchgeführt werden. Beispiele
+finde sich in dem Installationbeispiel.
+
+Die folgenden Hinweise beziehen sich auf die Installation und Einrichtung auf
+Basis eines Oracle-RedHat Linux Systems.
+
+Installation Apache
+```````````````````
+Zunächst wird der Apache Webserver aus dem Repository installiert:
+
+	yum install httpd mod_ssl
+	service httpd start
+
+Aktivierung der Apache Module
+`````````````````````````````
+
+Die Konfiguration, welche Module beim Start des Apache geladen werden, erfolgt
+in der Datei "/etc/httpd/conf". Die zu ladende Module sind in dieser Datei mit
+der Option "LoadModule" angegeben. Folgende Module werden benötigt:
+
+	* ldap_module: Authenitfizierung gegen den LDAP
+	* headers_module: Setzten der Header nach der Authenitifizierung
+	* proxy_module: Reverse Proxy des Apache zum Jboss-Server
+
+Einrichtung der Anwendung
+`````````````````````````
+Zunächst hinterlegen wir die Anwendung in dem Server. Hierzu verwenden wir die
+gebaute Version, welche sich im "build" Ordner befindet (Siehe Build).
+
+cd /var/www/html
+mkdir lada
+cp build/* lada
+
+# Wichtig um SELinux dazu zu überreden das neue Verzeichnis auch zu
+# servieren:
+restorecon -Rv /var/www/html/
+
+Die Anwendung sollte nun bereits unter der Adresse http://localhost/lada
+erreichbar sein.
+
+Konfiguration Proxy Server
+``````````````````````````
+Damit der Client eine Verbindung zu dem Server aufbauen kann, um von dort
+Daten laden zu können, ist es notwendig den Server weiter zu konfigurieren.
+
+	togglesebool httpd_can_network_connect
+	service httpd restart
+
+Dies erlaubt dem Apache grundsätzlich sich mit einem anderen Dienst zu verbinden.
+Nun muss noch ein Reverse-Proxy eingerichtet werden. Dieser ist nur für
+bestimmte Adressen aktiv
+
+Folgende Datei sollte unter "/etc/httpd/conf.d/lada.conf" angelegt werden:
+
+	<VirtualHost *:80>
+	    ServerAdmin webmaster@localhost
+	    #ServerName dummy-host.example.com
+	    ErrorLog logs/lada-error_log
+	    CustomLog logs/lada-access_log common
+
+	    # Set multiple Proxys
+	    ProxyPass /lada/server http://localhost:8080/lada
+	    ProxyPassReverse /lada/server http://localhost:8080/lada
+	</VirtualHost>
+
+Alle Anfragen an die Adresse "/lada/service", werden nun an den Server weitergeleitet.
+
+Authentifizierung
+`````````````````
+Die Authentifizierung geschieht gegen einen LDAP-Server.
+
+<Location /lada>
+    AuthType basic
+    AuthName "test"
+    AuthBasicProvider ldap
+    AuthLDAPURL "ldap://ike.polyhedra.intevation.de:389/cn=users,dc=icosahedron,dc=polyhedra,dc=intevation,dc=de?uid,memberof??(&(objectClass=inetOrgPerson)(memberOf=*))"
+    Require valid-user
+</Location>
+
+<Location /lada/server>
+    RequestHeader unset Authorization
+    RequestHeader set X-LDAP-User "%{AUTHENTICATE_uid}e"
+    RequestHeader set X-LDAP-Groups "%{AUTHENTICATE_memberof}e"
+</Location>
+
+Sofern gewünscht, kann die Authentifizierung für Testzwecke zu deaktivieren
+werden. Trotz allem müssen die entsprechenden Header gesetzt werden, da der
+Server zur Authentifizierung und Authorisierung erwartet.
+
+# Set Headers to simulate Authentification.
+	<Location /lada/server>
+		RequestHeader set X-LDAP-User "mst_06010"
+		RequestHeader set X-LDAP-Groups "cn=Imis_world,cn=groups,dc=icosahedron,dc=polyhedra,dc=intevation,dc=de;cn=mst_06010,cn=groups,dc=icosahedron,dc=polyhedra,dc=intevation,dc=de;cn=mst_11010,cn=groups,dc=icosahedron,dc=polyhedra,dc=intevation,dc=de"
+	</Location>
+
