@@ -16,8 +16,6 @@ Ext.define('Lada.view.proben.Edit', {
     title: 'Maske für §3-Proben',
     // Make size of the dialog dependend of the available space.
     // TODO: Handle resizing the browser window.
-    width: Ext.getBody().getViewSize().width - 30,
-    height: Ext.getBody().getViewSize().height - 30,
     autoShow: true,
     autoScroll: true,
     modal: true,
@@ -34,6 +32,8 @@ Ext.define('Lada.view.proben.Edit', {
                 handler: this.close
             }
         ];
+        this.width = Ext.getBody().getViewSize().width - 30;
+        this.height = Ext.getBody().getViewSize().height - 30;
         // InitialConfig is the config object passed to the constructor on
         // creation of this window. We need to pass it throuh to the form as
         // we need the "modelId" param to load the correct item.
