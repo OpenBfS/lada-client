@@ -21,7 +21,7 @@ Ext.define('Lada.view.widgets.Verwaltungseinheit' ,{
         autoSelect: false,
         queryMode: 'remote',
         triggerAction : 'type',
-        typeAhead: true,
+        typeAhead: false,
         minChars: 2,
     initComponent: function() {
         this.callParent(arguments);

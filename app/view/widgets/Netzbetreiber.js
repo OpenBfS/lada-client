@@ -38,7 +38,7 @@ Ext.define('Lada.view.widgets.Netzbetreiber' ,{
         autoSelect: false,
         queryMode: 'local',
         triggerAction : 'all',
-        typeAhead: true,
+        typeAhead: false,
         minChars: 0,
     initComponent: function() {
         this.callParent(arguments);

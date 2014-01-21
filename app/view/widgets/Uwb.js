@@ -39,7 +39,7 @@ Ext.define('Lada.view.widgets.Uwb' ,{
         autoSelect: false,
         queryMode: 'local',
         triggerAction : 'all',
-        typeAhead: true,
+        typeAhead: false,
         minChars: 0,
         // TODO: Set value in disply after selection. Can not figure out why
         // accessing the recored.data attribute fails here (ti) <2013-08-06 16:52> 
