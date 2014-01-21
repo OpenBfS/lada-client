@@ -1,8 +1,12 @@
 # use glob syntax.
 syntax: glob
 doc
+css
+gfx
+build
 extjs
 *.orig
+*.jse
 *.rej
 # switch to regexp syntax.
 syntax: regexp
