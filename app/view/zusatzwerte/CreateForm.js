@@ -12,7 +12,8 @@
 Ext.define('Lada.view.zusatzwerte.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
     requires : [
-        'Lada.view.widgets.Probenzusatzwert'
+        'Lada.view.widgets.Probenzusatzwert',
+        'Ext.layout.container.Column'
     ],
     model: 'Lada.model.Zusatzwert',
     initComponent: function() {

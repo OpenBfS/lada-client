@@ -13,6 +13,7 @@ Ext.define('Lada.view.search.List' ,{
     extend: 'Ext.form.FieldSet',
     title: 'SQL-Auswahl',
     alias: 'widget.queryselector',
+    require: ['Ext.layout.container.Column'],
     initComponent: function() {
         this.layout = 'column',
         this.items = [
