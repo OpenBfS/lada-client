@@ -43,7 +43,7 @@ gebaute Version, welche sich im "build" Ordner befindet (Siehe Build).
 
 cd /var/www/html
 mkdir lada
-cp build/* lada
+cp -r build/* lada
 
 # Wichtig um SELinux dazu zu überreden das neue Verzeichnis auch zu
 # servieren:
