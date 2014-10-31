@@ -11,19 +11,24 @@
  */
 Ext.define('Lada.controller.MKommentare', {
     extend: 'Lada.controller.Base',
+
     views: [
         'mkommentare.Create'
     ],
+
     stores: [
         'KommentareM'
     ],
+
     models: [
         'KommentarM'
     ],
+
     init: function() {
         console.log('Initialising the MKommentare controller');
-        this.callParent();
+        this.callParent(arguments);
     },
+
     addListeners: function() {
         this.control({
             'mkommentarelist': {
@@ -44,13 +49,14 @@ Ext.define('Lada.controller.MKommentare', {
             }
         });
     },
+
     addItem: function(button) {
-        console.log('Adding new MKommentar for Messung ' + button.parentId + ' Probe ' + button.probeId);
         var kommentar = Ext.create('Lada.model.KommentarM');
         kommentar.set('probeId', button.probeId);
         kommentar.set('messungsId', button.parentId);
         var view = Ext.widget('mkommentarecreate', {model: kommentar});
     },
+
     editItem: function(grid, record) {
         console.log('Editing Kommentar');
         var mstore = Ext.data.StoreManager.get('Messungen');
@@ -58,14 +64,18 @@ Ext.define('Lada.controller.MKommentare', {
         record.getAuthInfo(this.initEditWindow, messung.get('probeId'))
         console.log("Loaded MKommentar with ID " + record.getId()); //outputs ID
     },
+
     initEditWindow: function(record, readonly, owner) {
-        var view = Ext.widget('mkommentarecreate', {model: record});
+        var view = Ext.widget('mkommentarecreate', {
+            model: record
+        });
         var ignore = Array();
         if (readonly) {
             var form = view.down('form');
             form.setReadOnly(true, ignore);
         }
     },
+
     createSuccess: function(form, record, operation) {
         // Reload store
         var store = this.getKommentareMStore();

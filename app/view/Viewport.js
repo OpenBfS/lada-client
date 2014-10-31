@@ -92,7 +92,9 @@ Ext.define('Lada.view.Viewport' ,{
             },
             callback: function() {
                 var model = store.data.items[0];
-                var win = Ext.create('Lada.view.messwerte.Create', {model: model});
+                var win = Ext.create('Lada.view.messwerte.Create', {
+                    model: model
+                });
             }
         });
     },
@@ -102,7 +104,9 @@ Ext.define('Lada.view.Viewport' ,{
      */
     initOrt: function() {
         var ort = Ext.create('Lada.model.Ort');
-        var win = Ext.create('Lada.view.orte.Create', {model: ort});
+        var win = Ext.create('Lada.view.orte.Create', {
+            model: ort
+        });
     },
     /**
      * Function to initialize the edit window for a priticular ort directly
@@ -160,73 +164,76 @@ Ext.define('Lada.view.Viewport' ,{
                 type: 'vbox',
                 align: 'stretch'
             },
-            dockedItems: [
-                {
-                    xtype: "toolbar",
-                    dock: "top",
-                    items: [{
-                        xtype: "splitbutton",
-                        text: "Info",
-                        menu: {
-                            items: [{
-                                id: 'AboutBtn',
-                                text: "About"
-                            }]
-                        }
-                    },
-                    "->",
-                    {xtype: 'box', autoEl: {tag: 'img', src:'gfx/user-identity.png'}},
-                    {xtype: "tbtext", id:"userinfo", text:""},
-                    {xtype: 'box', autoEl: {tag: 'img', src:'gfx/network-workgroup.png'}},
-                    {xtype: "tbtext", id:"groupinfo", text:""}
-                    ]
-                }
-            ],
-            items: [
+            dockedItems: [{
+                xtype: "toolbar",
+                dock: "top",
+                items: [{
+                    xtype: "splitbutton",
+                    text: "Info",
+                    menu: {
+                        items: [{
+                            id: 'AboutBtn',
+                            text: "About"
+                        }]
+                    }
+                }, "->", {
+                    xtype: 'box',
+                    autoEl: {
+                        tag: 'img',
+                        src:'gfx/user-identity.png'
+                    }
+                }, {
+                    xtype: "tbtext",
+                    id:"userinfo",
+                    text:""
+                }, {
+                    xtype: 'box',
+                    autoEl: {
+                        tag: 'img',
+                        src:'gfx/network-workgroup.png'
+                    }
+                }, {
+                    xtype: "tbtext",
+                    id:"groupinfo",
+                    text:""
+                }]
+            }],
+            items: [{
                 // Auswahl einer Abfrage.
-                {
-                    xtype: 'queryselector',
-                    id: 'queryselector',
-                    margin: '0 0 10 0'
-                },
-                // Variables settings for the current selected sql statement.
-                {
-                    xtype: 'fieldset',
-                    id: 'queryfilters',
-                    title: 'Variablenbelegung',
-                    hidden: true,
-                    items: []
-                },
-                // Buttons to trigger the search.
-                {
-                    id: 'SearchBtnPanel',
-                    xtype: 'panel',
-                    border: false,
-                    margin: '0 0 10 0',
-                    items: [
-                        {
-                            id: 'SearchBtn',
-                            text: 'Suchen',
-                            xtype: 'button',
-                            margin: '0 10 0 0'
-                        },
-                        {
-                            id: 'ResetBtn',
-                            text: 'Zurücksetzen',
-                            xtype: 'button'
-                        }
-                    ],
-                    hidden: false
-
-                },
-                // Resultlist for the query.
-                {
-                    id: 'result',
-                    flex: 1,
-                    xtype: 'probenlist',
-                    hidden: false
-                }
-            ]
+                xtype: 'queryselector',
+                id: 'queryselector',
+                margin: '0 0 10 0'
+            }, {
+            // Variables settings for the current selected sql statement.
+                xtype: 'fieldset',
+                id: 'queryfilters',
+                title: 'Variablenbelegung',
+                hidden: true,
+                items: []
+            }, {
+            // Buttons to trigger the search.
+                id: 'SearchBtnPanel',
+                xtype: 'panel',
+                border: false,
+                margin: '0 0 10 0',
+                items: [{
+                    id: 'SearchBtn',
+                    text: 'Suchen',
+                    xtype: 'button',
+                    margin: '0 10 0 0'
+                }, {
+                    id: 'ResetBtn',
+                    text: 'Zurücksetzen',
+                    xtype: 'button'
+                }],
+                hidden: false
+            }, {
+            // Resultlist for the query.
+                id: 'result',
+                flex: 1,
+                xtype: 'probenlist',
+                hidden: false
+            }]
         }];
     }
 });

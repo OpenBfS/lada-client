@@ -79,11 +79,13 @@ function buildImportReport(filename, msg, errors, warnings) {
 
 Ext.define('Lada.controller.Proben', {
     extend: 'Lada.controller.Base',
+
     views: [
         'proben.Edit',
         'proben.Create',
         'proben.Import'
     ],
+
     stores: [
         'Proben',
         'Zusatzwerte',
@@ -92,10 +94,12 @@ Ext.define('Lada.controller.Proben', {
         'Orte',
         'Messungen'
     ],
+
     init: function() {
         console.log('Initialising the Proben controller');
-        this.callParent();
+        this.callParent(arguments);
     },
+
     addListeners: function() {
         this.control({
             'probenlist': {
@@ -129,10 +133,12 @@ Ext.define('Lada.controller.Proben', {
             }
         });
     },
+
     addItem: function(button) {
         console.log('Adding new Probe');
         var view = Ext.widget('probencreate');
     },
+
     /**
      * Opens a window with a file chooser to select the file to upload
      * @private
@@ -141,13 +147,14 @@ Ext.define('Lada.controller.Proben', {
         console.log('Importing');
         var view = Ext.widget('probenimport');
     },
+
     /** Uploads the selected file the the server
      * @private
      */
     uploadItem: function(button) {
         var win = button.up('window');
         var form = win.down('form');
-        if(form.isValid()){
+        if (form.isValid()) {
             form.submit({
                 url: 'server/rest/import/laf',
                 waitMsg: 'Importiere...',
@@ -175,6 +182,7 @@ Ext.define('Lada.controller.Proben', {
             });
         }
     },
+
     /**
      * Will download the selected Probe in LAF format in a new window (tab).
      */
@@ -183,7 +191,11 @@ Ext.define('Lada.controller.Proben', {
         var selection = grid.getView().getSelectionModel().getSelection();
         var hiddenItems = [];
         for (var i = 0; i < selection.length; i++) {
-            hiddenItems.push({xtype: 'hiddenfield', name: 'probeId', value: selection[i].get('probeId')});
+            hiddenItems.push({
+                xtype: 'hiddenfield',
+                name: 'probeId',
+                value: selection[i].get('probeId')
+            });
         }
         console.log('create download form.');
         var hiddenForm = Ext.create('Ext.form.Panel', {
@@ -198,6 +210,7 @@ Ext.define('Lada.controller.Proben', {
         });
         hiddenForm.getForm().submit();
     },
+
     editItem: function(grid, record) {
         console.log('Editing Probe');
         var id = record.get('id');
@@ -232,10 +245,13 @@ Ext.define('Lada.controller.Proben', {
                 probeId: id
             }
         });
-        var view = Ext.widget('probenedit', {modelId: id});
+        var view = Ext.widget('probenedit', {
+            modelId: id
+        });
         view.show();
         console.log("Loaded Probe with ID " + record.getId()); //outputs ID
     },
+
     createSuccess: function(form, record, response) {
         // Close Createdialog
         var win = form.up('window');
@@ -273,6 +289,7 @@ Ext.define('Lada.controller.Proben', {
             });
         }
     },
+
     editSuccess: function(form, record, response) {
         // Reload store
         var store = this.getProbenStore();

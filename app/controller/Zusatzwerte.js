@@ -11,15 +11,18 @@ Ext.define('Lada.controller.Zusatzwerte', {
     views: [
         'zusatzwerte.Create'
     ],
+
     stores: [
         'Zusatzwerte',
         'StaProbenzusaetze',
         'StaMesseinheiten'
     ],
+
     init: function() {
         console.log('Initialising the Zusatzwerte controller');
-        this.callParent();
+        this.callParent(arguments);
     },
+
     addListeners: function() {
         this.control({
             'zusatzwertelist': {
@@ -44,24 +47,32 @@ Ext.define('Lada.controller.Zusatzwerte', {
             }
         });
     },
+
     saveItem: function(button) {
         console.log('Saving new Zusatzwert for Probe ' + button.probeId);
         var form = button.up('window').down('form');
         form.commit();
     },
+
     addItem: function(button) {
         console.log('Adding new Zusatzwert for Probe' + button.probeId);
         var zusatzwert = Ext.create('Lada.model.Zusatzwert');
         zusatzwert.set('probeId', button.probeId);
-        var view = Ext.widget('zusatzwertecreate', {model: zusatzwert});
+        var view = Ext.widget('zusatzwertecreate', {
+            model: zusatzwert
+        });
     },
+
     editItem: function(grid, record) {
         console.log('Editing Zusatzwert');
         record.getAuthInfo(this.initEditWindow)
         console.log("Loaded Zusatzwert with ID " + record.getId()); //outputs ID
     },
+
     initEditWindow: function(record, readonly, owner) {
-        var view = Ext.widget('zusatzwertecreate', {model: record});
+        var view = Ext.widget('zusatzwertecreate', {
+            model: record
+        });
         // Mark PZW Selection readonly.
         view.down('probenzusatzwert').disabled = true;
         var ignore = Array();
@@ -70,6 +81,7 @@ Ext.define('Lada.controller.Zusatzwerte', {
             form.setReadOnly(true, ignore);
         }
     },
+
     createSuccess: function(form, record, operation) {
         // Reload store
         var store = this.getZusatzwerteStore();
@@ -77,6 +89,7 @@ Ext.define('Lada.controller.Zusatzwerte', {
         var win = form.up('window');
         win.close();
     },
+
     editSuccess: function(form, record, operation) {
         // Reload store
         var store = this.getZusatzwerteStore();

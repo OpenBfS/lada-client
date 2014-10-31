@@ -11,23 +11,44 @@
  */
 Ext.define('Lada.model.StaOrt', {
     extend: 'Lada.model.Base',
-    fields: [
-        {name: "id"},
-        {name: "bezeichnung"},
-        {name: "beschreibung"},
-        {name: "unscharf"},
-        {name: "nutsCode"},
-        {name: "koordXExtern"},
-        {name: "koordYExtern"},
-        {name: "hoeheLand"},
-        {name: "letzteAenderung", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
-        {name: "longitude", type: 'float'},
-        {name: "latitude", type: 'float'},
-        {name: "staatId"},
-        {name: "gemId"},
-        {name: "otyp"}
-    ],
+
+    fields: [{
+        name: "id"
+    }, {
+        name: "bezeichnung"
+    }, {
+        name: "beschreibung"
+    }, {
+        name: "unscharf"
+    }, {
+        name: "nutsCode"
+    }, {
+        name: "koordXExtern"
+    }, {
+        name: "koordYExtern"
+    }, {
+        name: "hoeheLand"
+    }, {
+        name: "letzteAenderung",
+        type: 'date',
+        convert: Lada.lib.Helpers.ts2date,
+        defaultValue: new Date()
+    }, {
+        name: "longitude",
+        type: 'float'
+    }, {
+        name: "latitude",
+        type: 'float'
+    }, {
+        name: "staatId"
+    }, {
+        name: "gemId"
+    }, {
+        name: "otyp"
+    }],
+
     idProperty: "id",
+
     proxy: {
         type: 'rest',
         url: 'server/rest/sta_ort',

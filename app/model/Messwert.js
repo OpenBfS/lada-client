@@ -11,19 +11,36 @@
  */
 Ext.define('Lada.model.Messwert', {
     extend: 'Lada.model.Base',
-    fields: [
-        {name: "id"},
-        {name: "messungsId"},
-        {name: "messgroesseId"},
-        {name: "messwert", type:"float"},
-        {name: "messwertNwg"},
-        {name: "messfehler", type:"float"},
-        {name: "nwgZuMesswert", type:"float"},
-        {name: "mehId"},
-        {name: "grenzwertueberschreitung", type: "boolean"},
-        {name: "letzteAenderung", type:"date"}
-    ],
+
+    fields: [{
+        name: "id"
+    }, {
+        name: "messungsId"
+    }, {
+        name: "messgroesseId"
+    }, {
+        name: "messwert",
+        type:"float"
+    }, {
+        name: "messwertNwg"
+    }, {
+        name: "messfehler",
+        type:"float"
+    }, {
+        name: "nwgZuMesswert",
+        type:"float"
+    }, {
+        name: "mehId"
+    }, {
+        name: "grenzwertueberschreitung",
+        type: "boolean"
+    }, {
+        name: "letzteAenderung",
+        type:"date"
+    }],
+
     idProperty: "id",
+
     proxy: {
         type: 'rest',
         url: 'server/rest/messwert',

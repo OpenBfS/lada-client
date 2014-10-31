@@ -18,19 +18,16 @@ Ext.define('Lada.view.proben.Import', {
     autoScroll: true,
     modal: true,
     initComponent: function() {
-        this.buttons = [
-            {
-                text: 'Speichern',
-                action: 'save'
-            },
-            {
-                text: 'Abbrechen',
-                scope: this,
-                handler: this.close
-            }
-        ];
+        this.buttons = [{
+            text: 'Speichern',
+            action: 'save'
+        }, {
+            text: 'Abbrechen',
+            scope: this,
+            handler: this.close
+        }];
         var form = Ext.create('Lada.view.proben.ImportForm');
         this.items = [form];
-        this.callParent();
+        this.callParent(arguments);
     }
 });

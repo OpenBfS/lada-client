@@ -20,19 +20,20 @@ var statuswerteStore = Ext.create('Ext.data.Store', {
  * Combobox for Statuswert
  */
 Ext.define('Lada.view.widgets.Statuswert' ,{
-        extend: 'Ext.form.ComboBox',
-        alias: 'widget.statuswert',
-        store: statuswerteStore,
-        displayField:'status',
-        valueField: 'id',
-        typeAhead: false,
-        emptyText:'Wählen Sie eine Status',
-        // Enable filtering of comboboxes
-        autoSelect: false,
-        queryMode: 'local',
-        triggerAction : 'all',
-        typeAhead: false,
-        minChars: 0,
+    extend: 'Ext.form.ComboBox',
+    alias: 'widget.statuswert',
+    store: statuswerteStore,
+    displayField:'status',
+    valueField: 'id',
+    typeAhead: false,
+    emptyText:'Wählen Sie eine Status',
+    // Enable filtering of comboboxes
+    autoSelect: false,
+    queryMode: 'local',
+    triggerAction : 'all',
+    typeAhead: false,
+    minChars: 0,
+
     initComponent: function() {
         this.callParent(arguments);
     }

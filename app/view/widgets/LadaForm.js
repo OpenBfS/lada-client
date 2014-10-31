@@ -51,35 +51,35 @@ Ext.define('Lada.view.widgets.LadaForm', {
     readonly: false,
 
     initComponent: function() {
-
-        this.callParent();
+        this.callParent(arguments);
 
         this.getForm().trackResetOnLoad = true; //Workaround
 
         if (Ext.isString(this.model)) {
-
             //Load a model to be updated
             if (this.modelId) {
-
                 Ext.ClassManager.get(this.model).load(this.modelId, {
                     failure: this.onModelLoadFailure,
                     success: this.onModelLoadSuccess,
                     scope: this
                 });
-
             //Load an empty record to be inserted
-            } else {
+            }
+            else {
                 this.bindModel(Ext.create(this.model, {}));
             }
-
-        } else {
+        }
+        else {
 
             //Bind the provided model to be updated
             this.bindModel(this.model);
 
         }
-
-        this.addEvents('loadsuccess', 'loadfailure', 'savesuccess', 'savefailure');
+        this.addEvents(
+            'loadsuccess',
+            'loadfailure',
+            'savesuccess',
+            'savefailure');
     },
 
     bindModel: function(model) {
@@ -114,7 +114,8 @@ Ext.define('Lada.view.widgets.LadaForm', {
                     if (this.success) {
                         console.log('Save was successfull');
                         this.fireEvent('savesuccess', this, this.model, response);
-                    } else {
+                    }
+                    else {
                         console.log('Save was not successfull');
                         this.form.markInvalid(this.errors);
                         this.fireEvent('savefailure', this, this.model, response);
@@ -158,7 +159,7 @@ Ext.define('Lada.view.widgets.LadaForm', {
             this.getForm().getFields().each (function (field) {
                 // Check if the field name is in the list of fields to ignore
                 var ignore = false;
-                for (var i = ignoreFields.length - 1; i >= 0; i--){
+                for (var i = ignoreFields.length - 1; i >= 0; i--) {
                     console.log(ignoreFields[i] + "===" + field.getName());
                     if (ignoreFields[i] === field.getName(true)) {
                         ignore = true;
@@ -171,7 +172,7 @@ Ext.define('Lada.view.widgets.LadaForm', {
             });
             /* Iterate over all toolbars of lists and hide them */
             var childs = this.query('toolbar');
-            for (var i = childs.length - 1; i >= 0; i--){
+            for (var i = childs.length - 1; i >= 0; i--) {
                 childs[i].setVisible(false);
             }
             /*
@@ -181,7 +182,7 @@ Ext.define('Lada.view.widgets.LadaForm', {
             if (ignoreFields.length == 0) {
                 var win = this.up('window');
                 var buttons = win.query('.button');
-                for (var j = buttons.length - 1; j >= 0; j--){
+                for (var j = buttons.length - 1; j >= 0; j--) {
                     if (buttons[j].text === 'Speichern') {
                         buttons[j].setVisible(false);
                     };
@@ -189,6 +190,7 @@ Ext.define('Lada.view.widgets.LadaForm', {
             }
         }
     },
+
     parseResponse: function(response) {
         var json = Ext.decode(response.responseText);
         if (json) {
@@ -201,10 +203,12 @@ Ext.define('Lada.view.widgets.LadaForm', {
                 !Ext.Object.isEmpty(this.errors)) {
                 this.createMessages();
             }
-        } else {
+        }
+        else {
             this.setReadOnly(this.model.get('readonly'));
         }
     },
+
     createMessages: function() {
         var messages = Ext.create('Ext.form.Panel', {
             bodyPadding: '5 5 5 5'

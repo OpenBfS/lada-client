@@ -11,16 +11,31 @@
  */
 Ext.define('Lada.model.Zusatzwert', {
     extend: 'Lada.model.Base',
-    fields: [
-        {name: "id"},
-        {name: "probeId"},
-        {name: "pzsId"},
-        {name: "nwgZuMesswert", type: 'float'},
-        {name: "messwertPzs", type: 'float'},
-        {name: "messfehler", type: 'float'},
-        {name: "letzteAenderung", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()}
-    ],
+
+    fields: [{
+        name: "id"
+    }, {
+        name: "probeId"
+    }, {
+        name: "pzsId"
+    }, {
+        name: "nwgZuMesswert",
+        type: 'float'
+    }, {
+        name: "messwertPzs",
+        type: 'float'
+    }, {
+        name: "messfehler",
+        type: 'float'
+    }, {
+        name: "letzteAenderung",
+        type: 'date',
+        convert: Lada.lib.Helpers.ts2date,
+        defaultValue: new Date()
+    }],
+
     idProperty: "id",
+
     proxy: {
         type: 'rest',
         url: 'server/rest/zusatzwert',
@@ -35,6 +50,7 @@ Ext.define('Lada.model.Zusatzwert', {
             writeEverything : true
         }
     },
+
     getMesseinheit: function(pzsId) {
         var zstore = Ext.getStore('StaProbenzusaetze');
         var mstore = Ext.getStore('StaMesseinheiten');

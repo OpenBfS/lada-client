@@ -27,13 +27,11 @@ Ext.define('Lada.view.orte.CreateOrt', {
                 maxLength: 100,
                 name: 'ort_beschreibung',
                 fieldLabel: 'Beschreibung'
-            },
-            {
+            }, {
                 xtype: 'staat',
                 name: 'ort_staatId',
                 fieldLabel: 'Staat'
-            },
-            {
+            }, {
                 xtype: 'verwaltungseinheiten',
                 name: 'ort_gemId',
                 fieldLabel: 'Gemeinde',
@@ -50,18 +48,15 @@ Ext.define('Lada.view.orte.CreateOrt', {
                         }
                     }
                 }
-            },
-            {
+            }, {
                 xtype: 'numberfield',
                 name: 'ort_latitude',
                 fieldLabel: 'Lat'
-            },
-            {
+            }, {
                 xtype: 'numberfield',
                 name: 'ort_longitude',
                 fieldLabel: 'Lon'
-            },
-            {
+            }, {
                 xtype: 'numberfield',
                 name: 'ort_hoeheLand',
                 fieldLabel: 'Höhe'
@@ -69,18 +64,15 @@ Ext.define('Lada.view.orte.CreateOrt', {
         });
 
         me.items = [form];
-        this.buttons = [
-            {
-                text: 'Speichern',
-                scope: form,
-                action: 'save'
-            },
-            {
-                text: 'Abbrechen',
-                scope: this,
-                handler: this.close
-            }
-        ];
+        this.buttons = [{
+            text: 'Speichern',
+            scope: form,
+            action: 'save'
+        }, {
+            text: 'Abbrechen',
+            scope: this,
+            handler: this.close
+        }];
         this.callParent(arguments);
     }
 });

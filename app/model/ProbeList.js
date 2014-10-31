@@ -12,10 +12,13 @@
  * */
 Ext.define('Lada.model.ProbeList', {
     extend: 'Lada.model.Base',
-    fields: [
-        {name: "readonly"}
-    ],
+
+    fields: [{
+        name: "readonly"
+    }],
+
     idProperty: "id",
+
     proxy: {
         type: 'rest',
         url: 'server/rest/probe',

@@ -11,19 +11,36 @@
  */
 Ext.define('Lada.model.Messung', {
     extend: 'Lada.model.Base',
-    fields: [
-        {name: "id"},
-        {name: "messungsId"},
-        {name: "probeId"},
-        {name: "mmtId"},
-        {name: "nebenprobenNr"},
-        {name: "messdauer"},
-        {name: "messzeitpunkt", convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
-        {name: "fertig", type: "boolean"},
-        {name: "letzteAenderung", type:"date"},
-        {name: "geplant", type: "boolean"}
-    ],
+
+    fields: [{
+        name: "id"
+    }, {
+        name: "messungsId"
+    }, {
+        name: "probeId"
+    }, {
+        name: "mmtId"
+    }, {
+        name: "nebenprobenNr"
+    }, {
+        name: "messdauer"
+    }, {
+        name: "messzeitpunkt",
+        convert: Lada.lib.Helpers.ts2date,
+        defaultValue: new Date()
+    }, {
+        name: "fertig",
+        type: "boolean"
+    }, {
+        name: "letzteAenderung",
+        type:"date"
+    }, {
+        name: "geplant",
+        type: "boolean"
+    }],
+
     idProperty: "id",
+
     proxy: {
         type: 'rest',
         url: 'server/rest/messung',

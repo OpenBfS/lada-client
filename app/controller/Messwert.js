@@ -11,9 +11,11 @@
  */
 Ext.define('Lada.controller.Messwert', {
     extend: 'Lada.controller.Base',
+
     views: [
         'messwerte.Create'
     ],
+
     stores: [
         'Proben',
         'Messungen',
@@ -21,10 +23,12 @@ Ext.define('Lada.controller.Messwert', {
         'StaMesseinheiten',
         'StaMessgroessen'
     ],
+
     init: function() {
         console.log('Initialising the Messwert controller');
-        this.callParent();
+        this.callParent(arguments);
     },
+
     addListeners: function() {
         this.control({
             'messwertelist': {
@@ -45,18 +49,20 @@ Ext.define('Lada.controller.Messwert', {
             }
         });
     },
+
     saveItem: function(button) {
         console.log('Saving MesswerMesswert');
         var form = button.up('window').down('form');
         form.commit();
     },
+
     addItem: function(button) {
-        console.log('Adding new Messwert for Messung ' + button.parentId + ' for Probe ' + button.probeId);
         var messung = Ext.create('Lada.model.Messwert');
         messung.set('probeId', button.probeId);
         messung.set('messungsId', button.parentId);
         var view = Ext.widget('messwertecreate', {model: messung});
     },
+
     editItem: function(grid, record) {
         console.log('Editing Messwert');
         var mstore = Ext.data.StoreManager.get('Messungen');
@@ -65,19 +71,23 @@ Ext.define('Lada.controller.Messwert', {
         record.getAuthInfo(this.initEditWindow, messung.get('probeId'));
         console.log("Loaded Messwert with ID " + record.getId()); //outputs ID
     },
+
     initEditWindow: function(record, readonly, owner) {
-        var view = Ext.widget('messwertecreate', {model: record});
+        var view = Ext.widget('messwertecreate', {
+            model: record
+        });
         var ignore = Array();
         if (readonly) {
             var form = view.down('form');
             form.setReadOnly(true, ignore);
         }
     },
+
     deleteItem: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
-        Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn){
-            if(btn === 'yes'){
+        Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn) {
+            if (btn === 'yes') {
                 var store = grid.getStore();
                 var deleteUrl = selection.getProxy().url + selection.getId();
                 Ext.Ajax.request({
@@ -93,6 +103,7 @@ Ext.define('Lada.controller.Messwert', {
             }
         });
     },
+
     createSuccess: function(form, record, operation) {
         // Reload store
         var store = this.getMesswerteStore();
@@ -100,6 +111,7 @@ Ext.define('Lada.controller.Messwert', {
         var win = form.up('window');
         win.close();
     },
+
     createFailure: function(form, record, operation) {
         Ext.MessageBox.show({
             title: 'Fehler beim Speichern',
@@ -108,6 +120,7 @@ Ext.define('Lada.controller.Messwert', {
             buttons: Ext.Msg.OK
         });
     },
+
     editSuccess: function(form, record, operation) {
         // Reload store
         var store = this.getMesswerteStore();
@@ -115,6 +128,7 @@ Ext.define('Lada.controller.Messwert', {
         var win = form.up('window');
         win.close();
     },
+
     editFailure: function(form, record, operation) {
         Ext.MessageBox.show({
             title: 'Fehler beim Speichern',

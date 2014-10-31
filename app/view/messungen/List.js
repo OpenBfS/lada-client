@@ -12,6 +12,7 @@
 Ext.define('Lada.view.messungen.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.messungenlist',
+
     store: 'Messungen',
     viewConfig: {
         maxHeight: 350,
@@ -21,91 +22,94 @@ Ext.define('Lada.view.messungen.List' ,{
         minHeight: 35,
         deferEmptyText: false
     },
+
     probeId: null,
+
     initComponent: function() {
-        this.dockedItems = [
-            {
-                xtype: 'toolbar',
-                dock: 'top',
-                items: [
-                    {
-                        text: 'Hinzufügen',
-                        icon: 'gfx/list-add.png',
-                        action: 'add',
-                        probeId: this.probeId
-                    },
-                    {
-                        text: 'Löschen',
-                        icon: 'gfx/list-remove.png',
-                        action: 'delete'
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [{
+                text: 'Hinzufügen',
+                icon: 'gfx/list-add.png',
+                action: 'add',
+                probeId: this.probeId
+            }, {
+                text: 'Löschen',
+                icon: 'gfx/list-remove.png',
+                action: 'delete'
+            }]
+        }];
+        this.columns = [{
+            header: 'Mess.ID',
+            dataIndex: "id",
+            width: 50
+        }, {
+            header: 'NPR-Nr.',
+            dataIndex: "nebenprobenNr",
+            width: 50
+        }, {
+            header: 'MMT',
+            dataIndex: "mmtId",
+            width: 50
+        }, {
+            header: 'Messzeit',
+            dataIndex: "messzeitpunkt"
+        }, {
+            header: 'Status',
+            dataIndex: 'id',
+            renderer: function(value) {
+                var sstore = Ext.getStore('Status');
+                sstore.load({
+                    params: {
+                        probeId: value.probeId,
+                        messungsId: value.id
                     }
-                ]
-            }
-        ];
-        this.columns = [
-            {header: 'Mess.ID', dataIndex: "id", width: 50},
-            {header: 'NPR-Nr.', dataIndex: "nebenprobenNr", width: 50},
-            {header: 'MMT', dataIndex: "mmtId", width: 50},
-            {header: 'Messzeit', dataIndex: "messzeitpunkt"},
-            {
-                header: 'Status',
-                dataIndex: 'id',
-                renderer: function(value) {
-                    var sstore = Ext.getStore('Status');
-                    sstore.load({
-                        params: {
-                            probeId: value.probeId,
-                            messungsId: value.id
-                        }
-                    });
-                    if (sstore.getTotalCount() === 0) {
-                        return "unbekannt";
-                    } else {
-                        return sstore.last().get('status');
-                    }
-                }
-            },
-            {
-                header: 'OK-Flag',
-                dataIndex: "fertig",
-                renderer: function(value) {
-                    if (value) {
-                        return "Ja";
-                    } else {
-                        return "Nein";
-                    }
-                }
-             },
-            {
-                header: 'Anzahl Nuklide',
-                dataIndex: 'id',
-                renderer: function(value) {
-                    var mstore = Ext.getStore('Messwerte');
-                    mstore.load({
-                        params: {
-                            probeId: value.probeId,
-                            messungsId: value.id
-                        }
-                    });
-                    return mstore.getTotalCount();
-                }
-            },
-            {
-                header: 'Anzahl Kommentare',
-                flex: 1,
-                dataIndex: 'id',
-                renderer: function(value) {
-                    var kstore = Ext.getStore('KommentareM');
-                    kstore.load({
-                        params: {
-                            probeId: value.probeId,
-                            messungsId: value.id
-                        }
-                    });
-                    return kstore.getTotalCount();
+                });
+                if (sstore.getTotalCount() === 0) {
+                    return "unbekannt";
+                } else {
+                    return sstore.last().get('status');
                 }
             }
-        ];
+        }, {
+            header: 'OK-Flag',
+            dataIndex: "fertig",
+            renderer: function(value) {
+                if (value) {
+                    return "Ja";
+                } else {
+                    return "Nein";
+                }
+            }
+         }, {
+            header: 'Anzahl Nuklide',
+            dataIndex: 'id',
+            renderer: function(value) {
+                var mstore = Ext.getStore('Messwerte');
+                mstore.load({
+                    params: {
+                        probeId: value.probeId,
+                        messungsId: value.id
+                    }
+                });
+                return mstore.getTotalCount();
+            }
+        }, {
+            header: 'Anzahl Kommentare',
+            flex: 1,
+            dataIndex: 'id',
+            renderer: function(value) {
+                var kstore = Ext.getStore('KommentareM');
+                kstore.load({
+                    params: {
+                        probeId: value.probeId,
+                        messungsId: value.id
+                    }
+                });
+                return kstore.getTotalCount();
+            }
+        }];
         this.callParent(arguments);
     }
 });

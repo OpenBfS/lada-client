@@ -11,14 +11,24 @@
  */
 Ext.define('Lada.model.KommentarP', {
     extend: 'Lada.model.Base',
-    fields: [
-        {name: "id"},
-        {name: "probeId"},
-        {name: "erzeuger"},
-        {name: "datum", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
-        {name: "text"}
-    ],
+
+    fields: [{
+        name: "id"
+    }, {
+        name: "probeId"
+    }, {
+        name: "erzeuger"
+    }, {
+        name: "datum",
+        type: 'date',
+        convert: Lada.lib.Helpers.ts2date,
+        defaultValue: new Date()
+    }, {
+        name: "text"
+    }],
+
     idProperty: "id",
+
     proxy: {
         type: 'rest',
         appendId: true, //default

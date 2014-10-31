@@ -8,16 +8,20 @@
 
 Ext.define('Lada.controller.Status', {
     extend: 'Lada.controller.Base',
+
     views: [
         'status.Create'
     ],
+
     stores: [
         'Status'
     ],
+
     init: function() {
         console.log('Initialising the Status controller');
-        this.callParent();
+        this.callParent(arguments);
     },
+
     addListeners: function() {
         this.control({
             'statuslist': {
@@ -42,13 +46,16 @@ Ext.define('Lada.controller.Status', {
             }
         });
     },
+
     addItem: function(button) {
-        console.log('Adding new Status for Messung ' + button.parentId + ' in Probe ' + button.probeId);
         var zusatzwert = Ext.create('Lada.model.Status');
         zusatzwert.set('probeId', button.probeId);
         zusatzwert.set('messungsId', button.parentId);
-        var view = Ext.widget('statuscreate', {model: zusatzwert});
+        var view = Ext.widget('statuscreate', {
+            model: zusatzwert
+        });
     },
+
     editItem: function(grid, record) {
         console.log('Editing Status');
         var mstore = Ext.data.StoreManager.get('Messungen');
@@ -56,14 +63,18 @@ Ext.define('Lada.controller.Status', {
         record.getAuthInfo(this.initEditWindow, messung.get('probeId'));
         console.log("Loaded Status with ID " + record.getId()); //outputs ID
     },
+
     initEditWindow: function(record, readonly, owner) {
-        var view = Ext.widget('statuscreate', {model: record});
+        var view = Ext.widget('statuscreate', {
+            model: record
+        });
         var ignore = Array();
         if (readonly) {
             var form = view.down('form');
             form.setReadOnly(true, ignore);
         }
     },
+
     createSuccess: function(form, record, operation) {
         // Reload store
         var store = this.getStatusStore();
@@ -71,6 +82,7 @@ Ext.define('Lada.controller.Status', {
         var win = form.up('window');
         win.close();
     },
+
     editSuccess: function(form, record, operation) {
         // Reload store
         var store = this.getStatusStore();

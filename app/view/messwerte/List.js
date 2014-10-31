@@ -13,6 +13,7 @@ Ext.define('Lada.view.messwerte.List' ,{
     extend: 'Ext.grid.Panel',
     require: ['Lada.store.StaMesseinheit'],
     alias: 'widget.messwertelist',
+
     store: 'Messwerte',
     viewConfig: {
         maxHeight: 350,
@@ -22,73 +23,66 @@ Ext.define('Lada.view.messwerte.List' ,{
         minHeight: 35,
         deferEmptyText: false
     },
+
     probeId: null,
     parentId: null,
+
     initComponent: function() {
-        this.dockedItems = [
-            {
-                xtype: 'toolbar',
-                dock: 'top',
-                items: [
-                    {
-                        text: 'Hinzufügen',
-                        icon: 'gfx/list-add.png',
-                        action: 'add',
-                        probeId: this.probeId,
-                        parentId: this.parentId
-                    },
-                    {
-                        text: 'Löschen',
-                        icon: 'gfx/list-remove.png',
-                        action: 'delete'
-                    }
-                ]
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [{
+                text: 'Hinzufügen',
+                icon: 'gfx/list-add.png',
+                action: 'add',
+                probeId: this.probeId,
+                parentId: this.parentId
+            }, {
+                text: 'Löschen',
+                icon: 'gfx/list-remove.png',
+                action: 'delete'
+            }]
+        }];
+        this.columns = [{
+            header: '&lt;NWG',
+            dataIndex: 'messwertNwg'
+        }, {
+            header: 'Messwert',
+            dataIndex: 'messwert'
+        }, {
+            header: 'Messfehler',
+            dataIndex: 'messfehler'
+        }, {
+            header: 'Messgröße',
+            dataIndex: 'messgroesseId',
+            renderer: function(value) {
+                var store = Ext.getStore('StaMessgroessen');
+                return store.findRecord('id', value).get('messgroesse');
             }
-        ];
-        this.columns = [
-            {
-                header: '&lt;NWG',
-                dataIndex: 'messwertNwg'
-            },
-            {
-                header: 'Messwert',
-                dataIndex: 'messwert'
-            },
-            {header: 'Messfehler', dataIndex: 'messfehler'},
-            {
-                header: 'Messgröße',
-                dataIndex: 'messgroesseId',
-                renderer: function(value) {
-                    var store = Ext.getStore('StaMessgroessen');
-                    return store.findRecord('id', value).get('messgroesse');
-                }
-            },
-            {
-                header: 'Messeinheit',
-                dataIndex: 'mehId',
-                renderer: function(value) {
-                    console.log('einheit: ' + value);
-                    var store = Ext.data.StoreManager.get('StaMesseinheiten');
+        }, {
+            header: 'Messeinheit',
+            dataIndex: 'mehId',
+            renderer: function(value) {
+                console.log('einheit: ' + value);
+                var store = Ext.data.StoreManager.get('StaMesseinheiten');
 /*                    if (!store) {
-                        store = Ext.create('Lada.store.StaMesseinheiten');
-                    }
-*/                    console.log(store.getById(value));
-                    return store.findRecord('id', value).get('einheit');
+                    store = Ext.create('Lada.store.StaMesseinheiten');
                 }
-            },
-            {
-                header: 'Grenzwertüberschreitung',
-                dataIndex: 'grenzwertueberschreitung',
-                flex: 1,
-                renderer: function(value) {
-                    if (value === true) {
-                        return "Ja";
-                    } else {
-                        return "Nein";
-                    }
+*/                    console.log(store.getById(value));
+                return store.findRecord('id', value).get('einheit');
+            }
+        }, {
+            header: 'Grenzwertüberschreitung',
+            dataIndex: 'grenzwertueberschreitung',
+            flex: 1,
+            renderer: function(value) {
+                if (value === true) {
+                    return "Ja";
+                } else {
+                    return "Nein";
                 }
             }
-        ];
+        }];
         this.callParent(arguments);
     }
 });

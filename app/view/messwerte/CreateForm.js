@@ -11,45 +11,40 @@
  */
 Ext.define('Lada.view.messwerte.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
-    model: 'Lada.model.Messwert',
     requires: [
         'Lada.view.widgets.Messgroesse',
         'Lada.view.widgets.Messeinheit',
         'Lada.view.widgets.Nwg'
     ],
+
+    model: 'Lada.model.Messwert',
+
     initComponent: function() {
-        this.items = [
-            {
-                xtype: 'numberfield',
-                name: 'messwert',
-                fieldLabel: 'Messwert'
-            },
-            {
-                xtype: 'nwg',
-                name: 'messwertNwg',
-                fieldLabel: 'Messwert zu NWG'
-            },
-            {
-                xtype: 'numberfield',
-                name: 'nwgZuMesswert',
-                fieldLabel: 'Nachweisgrenze'
-            },
-            {
-                xtype: 'numberfield',
-                name: 'messfehler',
-                fieldLabel: 'Messfehler'
-            },
-            {
-                xtype: 'messgroesse',
-                name: 'messgroesseId',
-                fieldLabel: 'Messgroesse'
-            },
-            {
-                xtype: 'messeinheit',
-                name: 'mehId',
-                fieldLabel: 'Messeinheit'
-            }
-        ];
-        this.callParent();
+        this.items = [{
+            xtype: 'numberfield',
+            name: 'messwert',
+            fieldLabel: 'Messwert'
+        }, {
+            xtype: 'nwg',
+            name: 'messwertNwg',
+            fieldLabel: 'Messwert zu NWG'
+        }, {
+            xtype: 'numberfield',
+            name: 'nwgZuMesswert',
+            fieldLabel: 'Nachweisgrenze'
+        }, {
+            xtype: 'numberfield',
+            name: 'messfehler',
+            fieldLabel: 'Messfehler'
+        }, {
+            xtype: 'messgroesse',
+            name: 'messgroesseId',
+            fieldLabel: 'Messgroesse'
+        }, {
+            xtype: 'messeinheit',
+            name: 'mehId',
+            fieldLabel: 'Messeinheit'
+        }];
+        this.callParent(arguments);
     }
 });

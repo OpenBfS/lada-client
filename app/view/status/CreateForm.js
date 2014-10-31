@@ -15,31 +15,28 @@ Ext.define('Lada.view.status.CreateForm', {
         'Lada.view.widgets.Mst',
         'Lada.view.widgets.Statuswert'
     ],
+
     model: 'Lada.model.Status',
+
     initComponent: function() {
-        this.items = [
-            {
-                xtype: 'mst',
-                label: 'Erzeuger',
-                name: 'erzeuger'
-            },
-            {
-                xtype: 'statuswert',
-                label: 'Status',
-                name: 'status'
-            },
-            {
-                xtype: 'datetime',
-                label: 'Datum',
-                name: 'datum'
-            },
-            {
-                xtype: 'textarea',
-                label: 'Kommentar',
-                name: 'kommentar'
-            }
-        ];
-        this.callParent();
+        this.items = [{
+            xtype: 'mst',
+            label: 'Erzeuger',
+            name: 'erzeuger'
+        }, {
+            xtype: 'statuswert',
+            label: 'Status',
+            name: 'status'
+        }, {
+            xtype: 'datetime',
+            label: 'Datum',
+            name: 'datum'
+        }, {
+            xtype: 'textarea',
+            label: 'Kommentar',
+            name: 'kommentar'
+        }];
+        this.callParent(arguments);
     }
 });
 

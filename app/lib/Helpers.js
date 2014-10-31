@@ -15,7 +15,7 @@ Ext.define('Lada.lib.Helpers', {
         /**
          * Function to translate a timestamp into a date
          */
-        ts2date: function(v, record){
+        ts2date: function(v, record) {
             // Converts a timestamp into a date object.
             if (v === null || v === undefined) {
                 return v;

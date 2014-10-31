@@ -19,20 +19,18 @@ Ext.define('Lada.view.messwerte.Create', {
     modal: true,
 
     initComponent: function() {
-        this.buttons = [
-            {
-                text: 'Speichern',
-                scope: form,
-                action: 'save'
-            },
-            {
-                text: 'Abbrechen',
-                scope: this,
-                handler: this.close
-            }
-        ];
-        var form = Ext.create('Lada.view.messwerte.CreateForm', this.initialConfig);
+        this.buttons = [{
+            text: 'Speichern',
+            scope: form,
+            action: 'save'
+        }, {
+            text: 'Abbrechen',
+            scope: this,
+            handler: this.close
+        }];
+        var form = Ext.create('Lada.view.messwerte.CreateForm',
+            this.initialConfig);
         this.items = [form];
-        this.callParent();
+        this.callParent(arguments);
     }
 });

@@ -11,15 +11,28 @@
  */
 Ext.define('Lada.model.Ort', {
     extend: 'Lada.model.Base',
-    fields: [
-        {name: "id", type: 'int'},
-        {name: "ortId", type: 'int'},
-        {name: "probeId"},
-        {name: "ortsTyp"},
-        {name: "ortszusatztext"},
-        {name: "letzteAenderung", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()}
-    ],
+
+    fields: [{
+        name: "id",
+        type: 'int'
+    }, {
+        name: "ortId",
+        type: 'int'
+    }, {
+        name: "probeId"
+    }, {
+        name: "ortsTyp"
+    }, {
+        name: "ortszusatztext"
+    }, {
+        name: "letzteAenderung",
+        type: 'date',
+        convert: Lada.lib.Helpers.ts2date,
+        defaultValue: new Date()
+    }],
+
     idProperty: "id",
+
     proxy: {
         type: 'rest',
         url: 'server/rest/ort',

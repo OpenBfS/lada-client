@@ -12,31 +12,29 @@
 Ext.define('Lada.view.messungen.Edit', {
     extend: 'Ext.window.Window',
     alias: 'widget.messungenedit',
+    requires: [
+        'Lada.view.messungen.EditForm'
+    ],
 
     title: 'Maske für Messungen',
     autoShow: true,
     autoScroll: true,
     modal: true,
 
-    requires: [
-        'Lada.view.messungen.EditForm'
-    ],
     initComponent: function() {
-        this.buttons = [
-            {
-                text: 'Speichern',
-                scope: form,
-                action: 'save'
-            },
-            {
-                text: 'Abbrechen',
-                scope: this,
-                handler: this.close
-            }
-        ];
+        this.buttons = [{
+            text: 'Speichern',
+            scope: form,
+            action: 'save'
+        }, {
+            text: 'Abbrechen',
+            scope: this,
+            handler: this.close
+        }];
         this.width = Ext.getBody().getViewSize().width - 30;
         this.height = Ext.getBody().getViewSize().height - 30;
-        var form = Ext.create('Lada.view.messungen.EditForm', this.initialConfig);
+        var form = Ext.create('Lada.view.messungen.EditForm',
+            this.initialConfig);
         this.items = [form];
         this.callParent();
     }

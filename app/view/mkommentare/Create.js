@@ -24,19 +24,17 @@ Ext.define('Lada.view.mkommentare.Create', {
         'Lada.view.mkommentare.CreateForm'
     ],
     initComponent: function() {
-        this.buttons = [
-            {
-                text: 'Speichern',
-                scope: form,
-                action: 'save'
-            },
-            {
-                text: 'Abbrechen',
-                scope: this,
-                handler: this.close
-            }
-        ];
-        var form = Ext.create('Lada.view.mkommentare.CreateForm', this.initialConfig);
+        this.buttons = [{
+            text: 'Speichern',
+            scope: form,
+            action: 'save'
+        }, {
+            text: 'Abbrechen',
+            scope: this,
+            handler: this.close
+        }];
+        var form = Ext.create('Lada.view.mkommentare.CreateForm',
+            this.initialConfig);
         this.items = [form];
         this.callParent();
     }

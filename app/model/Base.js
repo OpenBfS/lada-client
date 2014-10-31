@@ -11,7 +11,9 @@
  */
 Ext.define('Lada.model.Base', {
     extend: 'Ext.data.Model',
+
     requires: ['Lada.lib.Helpers'],
+
     /**
      * Helper function to make a AJAX request against the authinfo interface
      * of the server
@@ -30,7 +32,8 @@ Ext.define('Lada.model.Base', {
                 cb(this, obj.readonly, obj.isOwner);
             },
             failure: function(response, opts) {
-                console.log('server-side failure with status code ' + response.status);
+                console.log('server-side failure with status code ' +
+                    response.status);
                 cb(this, true, false);
             }
         });

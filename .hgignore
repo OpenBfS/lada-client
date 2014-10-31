@@ -8,5 +8,7 @@ extjs
 *.orig
 *.jse
 *.rej
+*/.*
+*.swp
 # switch to regexp syntax.
 syntax: regexp

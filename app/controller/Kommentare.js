@@ -11,19 +11,24 @@
  */
 Ext.define('Lada.controller.Kommentare', {
     extend: 'Lada.controller.Base',
+
     views: [
         'kommentare.Create'
     ],
+
     stores: [
         'KommentareP'
     ],
+
     models: [
         'KommentarP'
     ],
+
     init: function() {
         console.log('Initialising the Kommentare controller');
         this.callParent();
     },
+
     addListeners: function() {
         this.control({
             'kommentarelist': {
@@ -44,25 +49,33 @@ Ext.define('Lada.controller.Kommentare', {
             }
         });
     },
+
     addItem: function(button) {
         console.log('Adding new Kommentar for Probe ' + button.probeId);
         var kommentar = Ext.create('Lada.model.KommentarP');
         kommentar.set('probeId', button.probeId);
-        var view = Ext.widget('kommentarecreate', {model: kommentar});
+        var view = Ext.widget('kommentarecreate', {
+            model: kommentar
+        });
     },
+
     editItem: function(grid, record) {
         console.log('Editing Kommentar');
         record.getAuthInfo(this.initEditWindow)
         console.log("Loaded Kommentar with ID " + record.getId()); //outputs ID
     },
+
     initEditWindow: function(record, readonly, owner) {
-        var view = Ext.widget('kommentarecreate', {model: record});
+        var view = Ext.widget('kommentarecreate', {
+            model: record
+        });
         var ignore = Array();
         if (readonly) {
             var form = view.down('form');
             form.setReadOnly(true, ignore);
         }
     },
+
     createSuccess: function(form, record, operation) {
         var store = this.getKommentarePStore();
         store.reload();

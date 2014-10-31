@@ -23,6 +23,7 @@ Ext.define('Lada.view.widgets.Netzbetreiber' ,{
     triggerAction : 'all',
     typeAhead: false,
     minChars: 0,
+
     initComponent: function() {
         this.store = Ext.data.StoreManager.get('StaNetzbetreiber');
         if (!this.store) {

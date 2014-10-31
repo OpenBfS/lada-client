@@ -28,7 +28,6 @@ Ext.define('Lada.controller.Base', {
      */
     models: [],
     init: function() {
-        console.log('Initialising the Kommentare controller');
         this.addListeners();
     },
     /**
@@ -72,8 +71,8 @@ Ext.define('Lada.controller.Base', {
     deleteItem: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
-        Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn){
-            if(btn === 'yes'){
+        Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn) {
+            if (btn === 'yes') {
                 var store = grid.getStore();
                 var deleteUrl = selection.getProxy().url + selection.getId();
                 Ext.Ajax.request({

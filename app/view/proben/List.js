@@ -12,39 +12,36 @@
 Ext.define('Lada.view.proben.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.probenlist',
+
     store: 'ProbenList',
     multiSelect: true,
     viewConfig: {
         emptyText: 'Keine Proben gefunden.',
         deferEmptyText: false
     },
+
     initComponent: function() {
-        this.dockedItems = [
-            {
-                xtype: 'toolbar',
-                dock: 'top',
-                items: [
-                    {
-                        text: 'Hinzufügen',
-                        icon: 'gfx/list-add.png',
-                        action: 'add'
-                    },
-                    {
-                        text: 'Import',
-                        icon: 'gfx/svn-commit.png',
-                        action: 'import'
-                    },
-                    {
-                        text: 'Export',
-                        icon: 'gfx/svn-update.png',
-                        action: 'export'
-                    }
-                ]
-            }
-        ];
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: [{
+                text: 'Hinzufügen',
+                icon: 'gfx/list-add.png',
+                action: 'add'
+            }, {
+                text: 'Import',
+                icon: 'gfx/svn-commit.png',
+                action: 'import'
+            }, {
+                text: 'Export',
+                icon: 'gfx/svn-update.png',
+                action: 'export'
+            }]
+        }];
         this.columns = [];
         this.callParent(arguments);
     },
+
     /**
      * Setup columns of the Grid dynamically based on a list of given cols.
      * The function is called from the {@link Lada.controller.Sql#selectSql
@@ -55,11 +52,18 @@ Ext.define('Lada.view.proben.List' ,{
         var rcols = [];
         var mfields = [];
 
-        rcols.push({header: 'RW', dataIndex: 'readonly', width: 30, renderer: render_readonly});
+        rcols.push({
+            header: 'RW',
+            dataIndex: 'readonly',
+            width: 30,
+            renderer: render_readonly
+        });
         mfields.push(new Ext.data.Field({name: 'readonly'}));
         for (var i = cols.length - 1; i >= 0; i--){
             rcols.push(cols[i]);
-            mfields.push(new Ext.data.Field({name: cols[i].dataIndex}));
+            mfields.push(new Ext.data.Field({
+                name: cols[i].dataIndex
+            }));
         }
         this.store.model.setFields(mfields);
         this.reconfigure(this.store, rcols);

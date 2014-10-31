@@ -24,7 +24,11 @@ Ext.application({
 
     // Setting up translations. This is done using a ext-plgin which can be
     // found on https://github.com/elmasse/Ext.i18n.Bundle
-    requires: ['Ext.i18n.Bundle', 'Lada.lib.Helpers', 'Ext.layout.container.Column'],
+    requires: [
+        'Ext.i18n.Bundle',
+        'Lada.lib.Helpers',
+        'Ext.layout.container.Column'
+    ],
     bundle: {
         bundle: 'Lada',
         lang: 'de-DE',
@@ -61,7 +65,8 @@ Ext.data.writer.Json.override({
         if(this.writeEverything || record.writeEverything){
             console.log('getRecordData', this,arguments);
             return record.getAllData();
-        } else {
+        }
+        else {
             return this.callOverridden(arguments);
         }
     }

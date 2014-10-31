@@ -11,24 +11,29 @@
  */
 Ext.define('Lada.controller.Orte', {
     extend: 'Lada.controller.Base',
+
     views: [
         'orte.List',
         'orte.Create',
         'orte.CreateOrt'
     ],
+
     stores: [
         'Orte',
         'StaOrte',
         'StaStaaten',
         'StaVerwaltungseinheiten'
     ],
+
     models: [
         'Ort'
     ],
+
     init: function() {
         console.log('Initialising the Orte controller');
-        this.callParent();
+        this.callParent(arguments);
     },
+
     addListeners: function() {
         this.control({
             'ortelist': {
@@ -59,11 +64,13 @@ Ext.define('Lada.controller.Orte', {
             }
         });
     },
+
     createOrt: function(button) {
         console.log('button clicked');
         var win = Ext.create('Lada.view.orte.CreateOrt',{});
         win.show();
     },
+
     saveNewOrt: function(button) {
         console.log('button clicked');
 
@@ -72,7 +79,7 @@ Ext.define('Lada.controller.Orte', {
         var ortdetail = Ext.create('Lada.model.Ortdetail');
         var fields = ['beschreibung', 'hoeheLand',
                       'latitude', 'longitude', 'staatId', 'gemId'];
-        for (var i = fields.length - 1; i >= 0; i--){
+        for (var i = fields.length - 1; i >= 0; i--) {
             var ffield = form.findField("ort_"+fields[i]);
             ortdetail.set(fields[i], ffield.getValue());
         }
@@ -94,6 +101,7 @@ Ext.define('Lada.controller.Orte', {
             }
         });
     },
+
     saveItem: function(button) {
         console.log('Saving Ort');
         var form = button.up('window').down('form');
@@ -126,7 +134,8 @@ Ext.define('Lada.controller.Orte', {
             success: function(batch, options) {
                 if (newortdetail) {
                     // Get ID from new created ortdetail and set it to the ort
-                    var response = options.operations.create[0].store.proxy.reader.jsonData;
+                    var response =
+                        options.operations.create[0].store.proxy.reader.jsonData;
                     form.model.set('ortId', response.ortId);
                 }
                 ortidfield.setValue(ortid);
@@ -136,27 +145,35 @@ Ext.define('Lada.controller.Orte', {
             }
         });
         form.commit();
-
     },
+
     addItem: function(button) {
         console.log('Adding new Ort for Probe ' + button.probeId);
         var ort = Ext.create('Lada.model.Ort');
         ort.set('probeId', button.probeId);
-        var view = Ext.widget('ortecreate', {model: ort});
+        var view = Ext.widget('ortecreate', {
+            model: ort
+        });
     },
+
     editItem: function(grid, record) {
         console.log('Editing Ort');
         record.getAuthInfo(this.initEditWindow)
         console.log("Loaded Ort with ID " + record.getId()); //outputs ID
     },
+
     initEditWindow: function(record, readonly, owner) {
-        var view = Ext.widget('ortecreate', {model: record, edit: true});
+        var view = Ext.widget('ortecreate', {
+            model: record,
+            edit: true
+        });
         var ignore = Array();
         if (readonly) {
             var form = view.down('form');
             form.setReadOnly(true, ignore);
         }
     },
+
     createSuccess: function(form, record, operation) {
         // Reload store
         var store = this.getOrteStore();
@@ -164,6 +181,7 @@ Ext.define('Lada.controller.Orte', {
         var win = form.up('window');
         win.close();
     },
+
     editSuccess: function(form, record, operation) {
         // Reload store
         var store = this.getOrteStore();

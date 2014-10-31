@@ -26,17 +26,16 @@ Ext.define('Lada.view.About', {
     initComponent: function() {
         var sver = "1.0";
         var cver = "1.0";
-        this.buttons = [
-            {
-                text: 'Abbrechen',
-                scope: this,
-                handler: this.close
-            }
+        this.buttons = [{
+            text: 'Abbrechen',
+            scope: this,
+            handler: this.close
+        }];
+        this.items = [{
+            html: "<h1>Lada</h1>Server version: " +
+                sver + "<br>Client version: " +cver }
         ];
-        this.items = [ 
-            { html: "<h1>Lada</h1>Server version: " + sver + "<br>Client version: " + cver }
-        ];
-        this.callParent();
+        this.callParent(arguments);
     }
 });
 

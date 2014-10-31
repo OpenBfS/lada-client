@@ -12,32 +12,30 @@
 Ext.define('Lada.view.messungen.Create', {
     extend: 'Ext.window.Window',
     alias: 'widget.messungencreate',
+    requires: [
+        'Lada.view.messungen.CreateForm'
+    ],
 
     title: 'Maske für Messungen',
     autoShow: true,
     autoScroll: true,
     modal: true,
 
-    requires: [
-        'Lada.view.messungen.CreateForm'
-    ],
     initComponent: function() {
-        this.buttons = [
-            {
-                text: 'Speichern',
-                scope: form,
-                action: 'save'
-            },
-            {
-                text: 'Abbrechen',
-                scope: this,
-                handler: this.close
-            }
-        ];
+        this.buttons = [{
+            text: 'Speichern',
+            scope: form,
+            action: 'save'
+        }, {
+            text: 'Abbrechen',
+            scope: this,
+            handler: this.close
+        }];
         this.width = Ext.getBody().getViewSize().width - 30;
         this.height = Ext.getBody().getViewSize().height - 30;
-        var form = Ext.create('Lada.view.messungen.CreateForm', this.initialConfig);
+        var form = Ext.create('Lada.view.messungen.CreateForm',
+            this.initialConfig);
         this.items = [form];
-        this.callParent();
+        this.callParent(arguments);
     }
 });

@@ -20,17 +20,14 @@ Ext.define('Lada.view.proben.Create', {
     autoScroll: true,
     modal: true,
     initComponent: function() {
-        this.buttons = [
-            {
-                text: 'Speichern',
-                action: 'save'
-            },
-            {
-                text: 'Abbrechen',
-                scope: this,
-                handler: this.close
-            }
-        ];
+        this.buttons = [{
+            text: 'Speichern',
+            action: 'save'
+        }, {
+            text: 'Abbrechen',
+            scope: this,
+            handler: this.close
+        }];
         this.width = Ext.getBody().getViewSize().width - 30;
         this.height = Ext.getBody().getViewSize().height - 30;
         var form = Ext.create('Lada.view.proben.CreateForm');

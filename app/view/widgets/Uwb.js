@@ -37,6 +37,7 @@ Ext.define('Lada.view.widgets.Uwb' ,{
     //        combo.value = record.id;
     //    }
     //},
+
     initComponent: function() {
         this.store = Ext.data.StoreManager.get('StaUmwelt');
         if (!this.store) {

@@ -13,24 +13,20 @@ Ext.define('Lada.view.mkommentare.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
     model: 'Lada.model.KommentarM',
     initComponent: function() {
-        this.items = [
-            {
-                xtype: 'mst',
-                name: 'erzeuger',
-                fieldLabel: 'Erzeuger'
-            },
-            {
-                xtype: 'datetime',
-                name: 'datum',
-                fieldLabel: 'Datum'
-            },
-            {
-                xtype: 'textareafield',
-                maxLength: 1024,
-                name: 'text',
-                fieldLabel: 'Text'
-            }
-        ];
-        this.callParent();
+        this.items = [{
+            xtype: 'mst',
+            name: 'erzeuger',
+            fieldLabel: 'Erzeuger'
+        }, {
+            xtype: 'datetime',
+            name: 'datum',
+            fieldLabel: 'Datum'
+        }, {
+            xtype: 'textareafield',
+            maxLength: 1024,
+            name: 'text',
+            fieldLabel: 'Text'
+        }];
+        this.callParent(arguments);
     }
 });

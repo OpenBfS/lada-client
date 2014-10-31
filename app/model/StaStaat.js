@@ -11,13 +11,20 @@
  */
 Ext.define('Lada.model.StaStaat', {
     extend: 'Lada.model.Base',
-    fields: [
-        {name: "id", type: 'int'},
-        {name: "staat"},
-        {name: "staatIso"},
-        {name: "staatKurz"}
-    ],
+
+    fields: [{
+        name: "id",
+        type: 'int'
+    }, {
+        name: "staat"
+    }, {
+        name: "staatIso"
+    }, {
+        name: "staatKurz"
+    }],
+
     idProperty: "id",
+
     proxy: {
         type: 'rest',
         url: 'server/rest/sta_staat',

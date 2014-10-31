@@ -24,6 +24,7 @@ Ext.define('Lada.view.widgets.Messmethode' ,{
     typeAhead: false,
     minChars: 0,
     tpl: '<tpl for="."><div class="x-combo-list-item x-boundlist-item" >{id} - {messmethode}</div></tpl>',
+
     initComponent: function() {
         this.store = Ext.data.StoreManager.get('StaMessmethoden');
         if (!this.store) {

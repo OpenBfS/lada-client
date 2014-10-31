@@ -11,14 +11,21 @@
  */
 Ext.define('Lada.model.Query', {
     extend: 'Lada.model.Base',
-    fields: [
-        {name: "id"},
-        {name: "name"},
-        {name: "description"},
-        {name: "sql"},
-        {name: "results"},
-        {name: "filters"}
-    ],
+
+    fields: [{
+        name: "id"
+    }, {
+        name: "name"
+    }, {
+        name: "description"
+    }, {
+        name: "sql"
+    }, {
+        name: "results"
+    }, {
+        name: "filters"
+    }],
+
     proxy: {
         type: 'rest',
         url: 'server/rest/query',
