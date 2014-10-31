@@ -15,10 +15,10 @@ Ext.define('Lada.controller.MKommentare', {
         'mkommentare.Create'
     ],
     stores: [
-        'MKommentare'
+        'KommentareM'
     ],
     models: [
-        'MKommentar'
+        'KommentarM'
     ],
     init: function() {
         console.log('Initialising the MKommentare controller');
@@ -46,14 +46,16 @@ Ext.define('Lada.controller.MKommentare', {
     },
     addItem: function(button) {
         console.log('Adding new MKommentar for Messung ' + button.parentId + ' Probe ' + button.probeId);
-        var kommentar = Ext.create('Lada.model.MKommentar');
+        var kommentar = Ext.create('Lada.model.KommentarM');
         kommentar.set('probeId', button.probeId);
         kommentar.set('messungsId', button.parentId);
         var view = Ext.widget('mkommentarecreate', {model: kommentar});
     },
     editItem: function(grid, record) {
         console.log('Editing Kommentar');
-        record.getAuthInfo(this.initEditWindow)
+        var mstore = Ext.data.StoreManager.get('Messungen');
+        var messung = mstore.getById(record.get('messungsId'));
+        record.getAuthInfo(this.initEditWindow, messung.get('probeId'))
         console.log("Loaded MKommentar with ID " + record.getId()); //outputs ID
     },
     initEditWindow: function(record, readonly, owner) {
@@ -66,7 +68,7 @@ Ext.define('Lada.controller.MKommentare', {
     },
     createSuccess: function(form, record, operation) {
         // Reload store
-        var store = this.getMKommentareStore();
+        var store = this.getKommentareMStore();
         store.reload();
         var win = form.up('window');
         win.close();

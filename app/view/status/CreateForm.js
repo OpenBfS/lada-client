@@ -31,12 +31,12 @@ Ext.define('Lada.view.status.CreateForm', {
             {
                 xtype: 'datetime',
                 label: 'Datum',
-                name: 'sdatum'
+                name: 'datum'
             },
             {
                 xtype: 'textarea',
                 label: 'Kommentar',
-                name: 'skommentar'
+                name: 'kommentar'
             }
         ];
         this.callParent();

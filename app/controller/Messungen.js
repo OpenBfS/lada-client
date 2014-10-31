@@ -19,9 +19,9 @@ Ext.define('Lada.controller.Messungen', {
         'Proben',
         'Messungen',
         'Messwerte',
-        'MKommentare',
+        'KommentareM',
         'Status',
-        'Messgroessen'
+        'StaMessgroessen'
     ],
     init: function() {
         console.log('Initialising the Messungen controller');
@@ -67,25 +67,25 @@ Ext.define('Lada.controller.Messungen', {
     },
     editItem: function(grid, record) {
         console.log('Editing Messung');
-        var kstore = this.getMKommentareStore();
+        var kstore = this.getKommentareMStore();
         kstore.load({
             params: {
                 probeId: record.get('probeId'),
-                messungsId: record.get('messungsId')
+                messungsId: record.get('id')
             }
         });
         var sstore = this.getStatusStore();
         sstore.load({
             params: {
                 probeId: record.get('probeId'),
-                messungsId: record.get('messungsId')
+                messungsId: record.get('id')
             }
         });
         var mstore = this.getMesswerteStore();
         mstore.load({
             params: {
                 probeId: record.get('probeId'),
-                messungsId: record.get('messungsId')
+                messungsId: record.get('id')
             }
         });
         record.getAuthInfo(this.initEditWindow);
@@ -109,7 +109,7 @@ Ext.define('Lada.controller.Messungen', {
         Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn){
             if(btn === 'yes'){
                 var store = grid.getStore();
-                var deleteUrl = selection.getProxy().url + selection.getEidi();
+                var deleteUrl = selection.getProxy().url + selection.getId();
                 Ext.Ajax.request({
                     url: deleteUrl,
                     method: 'DELETE',

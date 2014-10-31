@@ -101,7 +101,7 @@ Ext.define('Lada.view.widgets.LadaForm', {
             var url = baseUrl;
             var method = "POST";
             if (this.model.getId()) {
-                url += this.model.getEidi();
+                url += this.model.getId();
                 method = "PUT";
             }
 

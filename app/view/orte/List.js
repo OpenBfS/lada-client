@@ -23,6 +23,10 @@ Ext.define('Lada.view.orte.List' ,{
     },
     probeId: null,
     initComponent: function() {
+        this.store = Ext.data.StoreManager.get('Orte');
+        if (!this.store) {
+            this.store = Ext.create('Lada.store.Orte');
+        }
         this.dockedItems = [
             {
                 xtype: 'toolbar',
@@ -51,8 +55,10 @@ Ext.define('Lada.view.orte.List' ,{
                 header: 'Staat',
                 dataIndex: 'ortId',
                 renderer: function(value) {
-                    var store = Ext.getStore('Ortedetails');
-                    var staaten = Ext.getStore('Staaten');
+                    var store = Ext.getStore('StaOrte');
+                    var staaten = Ext.getStore('StaStaaten');
+                    console.log('staatenstore: ' + staaten);
+                    console.log('the staat: ' + store.getById(value).get("staatId"));
                     var record = staaten.getById(store.getById(value).get('staatId'));
                     return record.get('staatIso');
                 }
@@ -62,7 +68,8 @@ Ext.define('Lada.view.orte.List' ,{
                 header: 'Gemeineschlüssel',
                 dataIndex: 'ortId',
                 renderer: function(value) {
-                    var store = Ext.getStore('Ortedetails');
+                    var store = Ext.getStore('StaOrte');
+                    console.log('value ' + value);
                     var record = store.getById(value);
                     return record.get('gemId');
                 }
@@ -73,11 +80,11 @@ Ext.define('Lada.view.orte.List' ,{
                 dataIndex: 'ortId',
                 flex: 1,
                 renderer: function(value) {
-                    var store = Ext.getStore('Ortedetails');
-                    var gemeinden = Ext.getStore('Verwaltungseinheiten');
+                    var store = Ext.getStore('StaOrte');
+                    var gemeinden = Ext.getStore('StaVerwaltungseinheiten');
                     var record = store.getById(value);
                     var gemid = record.get('gemId');
-                    var record2 = gemeinden.findRecord("gemId", gemid);
+                    var record2 = gemeinden.getById(gemid);
                     return record2.get('bezeichnung');
                 }
 
@@ -86,7 +93,7 @@ Ext.define('Lada.view.orte.List' ,{
                 header: 'Messpunkt',
                 dataIndex: 'ortId',
                 renderer: function(value) {
-                    var store = Ext.getStore('Ortedetails');
+                    var store = Ext.getStore('StaOrte');
                     var record = store.getById(value);
                     return record.get('bezeichnung');
                 }

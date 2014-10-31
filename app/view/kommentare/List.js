@@ -12,7 +12,7 @@
 Ext.define('Lada.view.kommentare.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.kommentarelist',
-    store: 'Kommentare',
+    store: 'KommentareP',
     viewConfig: {
         maxHeight: 350,
         emptyText: 'Keine Kommentaregefunden.',

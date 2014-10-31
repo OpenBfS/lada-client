@@ -10,19 +10,24 @@
  * Combobox for Messeinheit
  */
 Ext.define('Lada.view.widgets.Messeinheit' ,{
-        extend: 'Ext.form.ComboBox',
-        alias: 'widget.messeinheit',
-        store: 'Messeinheit',
-        displayField: 'einheit',
-        valueField: 'mehId',
-        emptyText:'Wählen Sie eine Messeinheit',
-        // Enable filtering of comboboxes
-        autoSelect: false,
-        queryMode: 'local',
-        triggerAction : 'all',
-        typeAhead: false,
-        minChars: 0,
+    extend: 'Ext.form.ComboBox',
+    require: ['Lada.store.StaMesseinheiten'],
+    alias: 'widget.messeinheit',
+    store: 'StaMesseinheiten',
+    displayField: 'einheit',
+    valueField: 'id',
+    emptyText:'Wählen Sie eine Messeinheit',
+    // Enable filtering of comboboxes
+    autoSelect: false,
+    queryMode: 'local',
+    triggerAction : 'all',
+    typeAhead: false,
+    minChars: 0,
     initComponent: function() {
+        this.store = Ext.data.StoreManager.get('StaMesseinheiten');
+        if (!this.store) {
+            this.store = Ext.create('Lada.store.StaMesseinheiten');
+        }
         this.callParent(arguments);
     }
 });

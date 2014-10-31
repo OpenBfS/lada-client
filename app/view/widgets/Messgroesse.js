@@ -10,20 +10,25 @@
  * Combobox for Messgroesse
  */
 Ext.define('Lada.view.widgets.Messgroesse' ,{
-        extend: 'Ext.form.ComboBox',
-        alias: 'widget.messgroesse',
-        store: 'Messgroessen',
-        displayField: 'messgroesse',
-        valueField: 'messgroesseId',
-        emptyText:'Wählen Sie eine Messgröße',
-        // Enable filtering of comboboxes
-        autoSelect: false,
-        queryMode: 'local',
-        triggerAction : 'all',
-        typeAhead: false,
-        minChars: 0,
+    extend: 'Ext.form.ComboBox',
+    require: ['Lada.store.StaMessgroessen'],
+    alias: 'widget.messgroesse',
+    store: 'StaMessgroessen',
+    displayField: 'messgroesse',
+    valueField: 'id',
+    emptyText:'Wählen Sie eine Messgröße',
+    // Enable filtering of comboboxes
+    autoSelect: false,
+    queryMode: 'local',
+    triggerAction : 'all',
+    typeAhead: false,
+    minChars: 0,
 
     initComponent: function() {
+        this.store = Ext.data.StoreManager.get('StaMessgroessen');
+        if (!this.store) {
+            this.store = Ext.create('Lada.store.StaMessgroessen');
+        }
         this.callParent(arguments);
     }
 });

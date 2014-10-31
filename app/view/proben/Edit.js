@@ -11,6 +11,7 @@
  */
 Ext.define('Lada.view.proben.Edit', {
     extend: 'Ext.window.Window',
+    require: ['Lada.view.proben.EditForm'],
     alias: 'widget.probenedit',
 
     title: 'Maske für §3-Proben',
@@ -21,6 +22,7 @@ Ext.define('Lada.view.proben.Edit', {
     modal: true,
 
     initComponent: function() {
+        console.log('open edit...');
         this.buttons = [
             {
                 text: 'Speichern',

@@ -6,41 +6,29 @@
  * the documentation coming with IMIS-Labordaten-Application for details. 
  */
 
-var datenbasisStore = Ext.create('Ext.data.Store', {
-    fields: ['datenbasisId', 'beschreibung', 'datenbasis'],
-    sorters: [{
-        property: 'datenbasis'
-    }],
-    autoLoad: true,
-    proxy: {
-        type: 'ajax',
-        api: {
-        read: 'server/rest/datenbasis'
-        },
-        reader: {
-            type: 'json',
-            root: 'data'
-        }
-    }
-});
-
 /**
  * Combobox for Datenbasis
  */
 Ext.define('Lada.view.widgets.Datenbasis' ,{
-        extend: 'Ext.form.ComboBox',
-        alias: 'widget.datenbasis',
-        store: datenbasisStore,
-        displayField:'datenbasis',
-        valueField: 'datenbasisId',
-        emptyText:'Wählen Sie eine Datenbasis',
-        // Enable filtering of comboboxes
-        autoSelect: false,
-        queryMode: 'local',
-        triggerAction : 'all',
-        typeAhead: false,
-        minChars: 0,
+    extend: 'Ext.form.ComboBox',
+    require: ['Lada.store.StaDatenbasen'],
+    alias: 'widget.datenbasis',
+    store: 'StaDatenbasen',
+    displayField:'datenbasis',
+    valueField: 'id',
+    emptyText:'Wählen Sie eine Datenbasis',
+    // Enable filtering of comboboxes
+    autoSelect: false,
+    queryMode: 'local',
+    triggerAction : 'all',
+    typeAhead: false,
+    minChars: 0,
+
     initComponent: function() {
+        this.store = Ext.data.StoreManager.get('StaDatenbasen');
+        if (!this.store) {
+            this.store = Ext.create('Lada.store.StaDatenbasen');
+        }
         this.callParent(arguments);
     }
 });

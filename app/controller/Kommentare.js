@@ -15,10 +15,10 @@ Ext.define('Lada.controller.Kommentare', {
         'kommentare.Create'
     ],
     stores: [
-        'Kommentare'
+        'KommentareP'
     ],
     models: [
-        'Kommentar'
+        'KommentarP'
     ],
     init: function() {
         console.log('Initialising the Kommentare controller');
@@ -46,7 +46,7 @@ Ext.define('Lada.controller.Kommentare', {
     },
     addItem: function(button) {
         console.log('Adding new Kommentar for Probe ' + button.probeId);
-        var kommentar = Ext.create('Lada.model.Kommentar');
+        var kommentar = Ext.create('Lada.model.KommentarP');
         kommentar.set('probeId', button.probeId);
         var view = Ext.widget('kommentarecreate', {model: kommentar});
     },
@@ -64,7 +64,7 @@ Ext.define('Lada.controller.Kommentare', {
         }
     },
     createSuccess: function(form, record, operation) {
-        var store = this.getKommentareStore();
+        var store = this.getKommentarePStore();
         store.reload();
         var win = form.up('window');
         win.close();

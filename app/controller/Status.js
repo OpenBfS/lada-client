@@ -51,7 +51,9 @@ Ext.define('Lada.controller.Status', {
     },
     editItem: function(grid, record) {
         console.log('Editing Status');
-        record.getAuthInfo(this.initEditWindow)
+        var mstore = Ext.data.StoreManager.get('Messungen');
+        var messung = mstore.getById(record.get('messungsId'));
+        record.getAuthInfo(this.initEditWindow, messung.get('probeId'));
         console.log("Loaded Status with ID " + record.getId()); //outputs ID
     },
     initEditWindow: function(record, readonly, owner) {

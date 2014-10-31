@@ -75,7 +75,7 @@ Ext.define('Lada.controller.Base', {
         Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn){
             if(btn === 'yes'){
                 var store = grid.getStore();
-                var deleteUrl = selection.getProxy().url + selection.getEidi();
+                var deleteUrl = selection.getProxy().url + selection.getId();
                 Ext.Ajax.request({
                     url: deleteUrl,
                     method: 'DELETE',

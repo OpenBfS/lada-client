@@ -45,13 +45,13 @@ Ext.define('Lada.view.zusatzwerte.List' ,{
         this.columns = [
             {
                 header: 'PZW-ID',
-                dataIndex: 'pzsId'
+                dataIndex: 'id'
             },
             {
                 header: 'PZW-Größe',
                 dataIndex: 'pzsId',
                 renderer: function(value) {
-                    var store = Ext.getStore('Probenzusatzwerte');
+                    var store = Ext.getStore('StaProbenzusaetze');
                     var record = store.getById(value);
                     return record.get('beschreibung');
                 },
@@ -59,7 +59,7 @@ Ext.define('Lada.view.zusatzwerte.List' ,{
             },
             {
                 header: 'Messwert',
-                dataIndex: 'pzsId',
+                dataIndex: 'id',
                 renderer: function(value) {
                     var store = Ext.getStore('Zusatzwerte');
                     var record = store.getById(value);
@@ -77,10 +77,11 @@ Ext.define('Lada.view.zusatzwerte.List' ,{
                 header: 'Maßeinheit',
                 dataIndex: 'pzsId',
                 renderer: function(value) {
-                    var zstore = Ext.getStore('Probenzusatzwerte');
-                    var mstore = Ext.getStore('Messeinheit');
+                    var zstore = Ext.getStore('StaProbenzusaetze');
+                    var mstore = Ext.getStore('StaMesseinheiten');
+                    console.log('store: ' + mstore);
                     var mehId = zstore.getById(value).get('mehId');
-                    var record = mstore.findRecord('mehId', mehId);
+                    var record = mstore.findRecord('id', mehId);
                     return record.get('einheit');
                 }
             }

@@ -47,8 +47,8 @@ Ext.define('Lada.view.status.List' ,{
         this.columns = [
             {header: 'Erzeuger', dataIndex: 'erzeuger'},
             {header: 'Status', dataIndex: 'status'},
-            {header: 'Datum', dataIndex: 'sdatum'},
-            {header: 'Text', dataIndex: 'stext', flex: 1}
+            {header: 'Datum', dataIndex: 'datum'},
+            {header: 'Text', dataIndex: 'kommentar', flex: 1}
         ];
         this.callParent(arguments);
     }

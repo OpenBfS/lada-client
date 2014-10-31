@@ -11,6 +11,7 @@
  */
 Ext.define('Lada.view.messwerte.List' ,{
     extend: 'Ext.grid.Panel',
+    require: ['Lada.store.StaMesseinheit'],
     alias: 'widget.messwertelist',
     store: 'Messwerte',
     viewConfig: {
@@ -58,16 +59,21 @@ Ext.define('Lada.view.messwerte.List' ,{
                 header: 'Messgröße',
                 dataIndex: 'messgroesseId',
                 renderer: function(value) {
-                    var store = Ext.getStore('Messgroessen');
-                    return store.findRecord('messgroesseId', value).get('messgroesse');
+                    var store = Ext.getStore('StaMessgroessen');
+                    return store.findRecord('id', value).get('messgroesse');
                 }
             },
             {
                 header: 'Messeinheit',
                 dataIndex: 'mehId',
                 renderer: function(value) {
-                    var store = Ext.getStore('Messeinheit');
-                    return store.findRecord('mehId', value).get('einheit');
+                    console.log('einheit: ' + value);
+                    var store = Ext.data.StoreManager.get('StaMesseinheiten');
+/*                    if (!store) {
+                        store = Ext.create('Lada.store.StaMesseinheiten');
+                    }
+*/                    console.log(store.getById(value));
+                    return store.findRecord('id', value).get('einheit');
                 }
             },
             {

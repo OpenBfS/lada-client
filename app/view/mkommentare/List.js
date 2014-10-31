@@ -12,7 +12,7 @@
 Ext.define('Lada.view.mkommentare.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.mkommentarelist',
-    store: 'MKommentare',
+    store: 'KommentareM',
     viewConfig: {
         maxHeight: 350,
         emptyText: 'Keine Kommentare gefunden.',
@@ -46,8 +46,8 @@ Ext.define('Lada.view.mkommentare.List' ,{
         ];
         this.columns = [
             {header: 'Erzeuger', dataIndex: 'erzeuger'},
-            {header: 'Datum', dataIndex: 'kdatum'},
-            {header: 'Text', dataIndex: 'ktext', flex: 1}
+            {header: 'Datum', dataIndex: 'datum'},
+            {header: 'Text', dataIndex: 'text', flex: 1}
         ];
         this.callParent(arguments);
     }

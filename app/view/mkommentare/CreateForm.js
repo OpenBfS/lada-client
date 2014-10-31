@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.view.mkommentare.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
-    model: 'Lada.model.MKommentar',
+    model: 'Lada.model.KommentarM',
     initComponent: function() {
         this.items = [
             {
@@ -21,13 +21,13 @@ Ext.define('Lada.view.mkommentare.CreateForm', {
             },
             {
                 xtype: 'datetime',
-                name: 'kdatum',
+                name: 'datum',
                 fieldLabel: 'Datum'
             },
             {
                 xtype: 'textareafield',
                 maxLength: 1024,
-                name: 'ktext',
+                name: 'text',
                 fieldLabel: 'Text'
             }
         ];

@@ -6,41 +6,28 @@
  * the documentation coming with IMIS-Labordaten-Application for details. 
  */
 
-var netzbetreiberStore = Ext.create('Ext.data.Store', {
-    fields: ['netzbetreiberId', 'netzbetreiber'],
-    sorters: [{
-        property: 'netzbetreiber'
-    }],
-    autoLoad: true,
-    proxy: {
-        type: 'ajax',
-        api: {
-        read: 'server/rest/netzbetreiber'
-        },
-        reader: {
-            type: 'json',
-            root: 'data'
-        }
-    }
-});
-
 /**
  * Combobox for Netzbetreiber
  */
 Ext.define('Lada.view.widgets.Netzbetreiber' ,{
-        extend: 'Ext.form.ComboBox',
-        alias: 'widget.netzbetreiber',
-        store: netzbetreiberStore,
-        displayField:'netzbetreiber',
-        valueField: 'netzbetreiberId',
-        emptyText:'Wählen Sie einen Netzbetreiber',
-        // Enable filtering of comboboxes
-        autoSelect: false,
-        queryMode: 'local',
-        triggerAction : 'all',
-        typeAhead: false,
-        minChars: 0,
+    extend: 'Ext.form.ComboBox',
+    require: ['Lada.store.StaNetzbetreiber'],
+    alias: 'widget.netzbetreiber',
+    store: 'StaNetzbetreiber',
+    displayField:'netzbetreiber',
+    valueField: 'id',
+    emptyText:'Wählen Sie einen Netzbetreiber',
+    // Enable filtering of comboboxes
+    autoSelect: false,
+    queryMode: 'local',
+    triggerAction : 'all',
+    typeAhead: false,
+    minChars: 0,
     initComponent: function() {
+        this.store = Ext.data.StoreManager.get('StaNetzbetreiber');
+        if (!this.store) {
+            this.store = Ext.create('Lada.store.StaNetzbetreiber');
+        }
         this.callParent(arguments);
     }
 });

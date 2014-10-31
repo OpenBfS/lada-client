@@ -10,19 +10,24 @@
  * Combobox for Ortdetails
  */
 Ext.define('Lada.view.widgets.Ortdetail' ,{
-        extend: 'Ext.form.ComboBox',
-        alias: 'widget.ortdetail',
-        store: 'Ortedetails',
-        displayField: 'bezeichnung',
-        valueField: 'ortId',
-        emptyText:'Wählen Sie einen Ort',
-        // Enable filtering of comboboxes
-        autoSelect: false,
-        queryMode: 'local',
-        triggerAction : 'all',
-        typeAhead: false,
-        minChars: 0,
+    extend: 'Ext.form.ComboBox',
+    require: ['Lada.store.StaOrte'],
+    alias: 'widget.ortdetail',
+    store: 'StaOrte',
+    displayField: 'bezeichnung',
+    valueField: 'id',
+    emptyText:'Wählen Sie einen Ort',
+    // Enable filtering of comboboxes
+    autoSelect: false,
+    queryMode: 'local',
+    triggerAction : 'all',
+    typeAhead: false,
+    minChars: 0,
     initComponent: function() {
+        this.store = Ext.data.StoreManager.get('StaOrte');
+        if (!this.store) {
+            this.store = Ext.create('Lada.store.StaOrte');
+        }
         this.callParent(arguments);
     }
 });

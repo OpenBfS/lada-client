@@ -10,19 +10,24 @@
  * Combobox for Zusatzwert
  */
 Ext.define('Lada.view.widgets.Probenzusatzwert' ,{
-        extend: 'Ext.form.ComboBox',
-        alias: 'widget.probenzusatzwert',
-        store: 'Probenzusatzwerte',
-        displayField: 'beschreibung',
-        valueField: 'pzsId',
-        emptyText:'Wählen Sie einen Zusatzwert',
-        // Enable filtering of comboboxes
-        autoSelect: false,
-        queryMode: 'local',
-        triggerAction : 'all',
-        typeAhead: false,
-        minChars: 0,
+    extend: 'Ext.form.ComboBox',
+    require: ['Lada.store.StaProbenzusaetze'],
+    alias: 'widget.probenzusatzwert',
+    store: 'StaProbenzusaetze',
+    displayField: 'beschreibung',
+    valueField: 'id',
+    emptyText:'Wählen Sie einen Zusatzwert',
+    // Enable filtering of comboboxes
+    autoSelect: false,
+    queryMode: 'local',
+    triggerAction : 'all',
+    typeAhead: false,
+    minChars: 0,
     initComponent: function() {
+        this.store = Ext.data.StoreManager.get('StaProbenzusaetze');
+        if (!this.store) {
+            this.store = Ext.create('Lada.store.StaProbenzusaetze');
+        }
         this.callParent(arguments);
     }
 });

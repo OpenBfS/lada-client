@@ -31,7 +31,7 @@ Ext.define('Lada.view.orte.CreateForm', {
                         if (field.up('window')) {
                             field.up('window').down('fieldset').show();
                         }
-                        var orte = Ext.getStore('Ortedetails');
+                        var orte = Ext.getStore('StaOrte');
                         var ort = orte.getById(newv);
                         var fields = ['beschreibung', 'bezeichnung', 'hoeheLand',
                                       'latitude', 'longitude', 'staatId', 'gemId'];
@@ -40,7 +40,7 @@ Ext.define('Lada.view.orte.CreateForm', {
                         // is needed as without having this record the field
                         // would only display the raw value (id) of the
                         // verwaltungseinheit.
-                        var verw = Ext.getStore('Verwaltungseinheiten');
+                        var verw = Ext.getStore('StaVerwaltungseinheiten');
                         if (ort) {
                             verw.load({
                                 id: ort.get('gemId')

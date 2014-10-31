@@ -110,7 +110,7 @@ Ext.define('Lada.view.Viewport' ,{
      */
     initMessung: function() {
         var store = Ext.getStore('Messungen');
-        var kstore = Ext.getStore('MKommentare');
+        var kstore = Ext.getStore('KommentareM');
         var mstore = Ext.getStore('Messwerte');
         var sstore = Ext.getStore('Status');
         probeId = "000007578314X";

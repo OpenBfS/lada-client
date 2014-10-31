@@ -21,12 +21,12 @@ Ext.define('Lada.view.kommentare.CreateForm', {
             },
             {
                 xtype: 'datetime',
-                name: 'kdatum',
+                name: 'datum',
                 fieldLabel: 'Datum'
             },
             {
                 xtype: 'textareafield',
-                name: 'ktext',
+                name: 'text',
                 fieldLabel: 'Text'
             }
         ];

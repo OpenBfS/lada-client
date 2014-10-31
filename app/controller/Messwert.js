@@ -18,8 +18,8 @@ Ext.define('Lada.controller.Messwert', {
         'Proben',
         'Messungen',
         'Messwerte',
-        'Messeinheit',
-        'Messgroessen'
+        'StaMesseinheiten',
+        'StaMessgroessen'
     ],
     init: function() {
         console.log('Initialising the Messwert controller');
@@ -59,7 +59,10 @@ Ext.define('Lada.controller.Messwert', {
     },
     editItem: function(grid, record) {
         console.log('Editing Messwert');
-        record.getAuthInfo(this.initEditWindow);
+        var mstore = Ext.data.StoreManager.get('Messungen');
+        var pstore = Ext.data.StoreManager.get('Proben');
+        var messung = mstore.getById(record.get('messungsId'))
+        record.getAuthInfo(this.initEditWindow, messung.get('probeId'));
         console.log("Loaded Messwert with ID " + record.getId()); //outputs ID
     },
     initEditWindow: function(record, readonly, owner) {
@@ -76,7 +79,7 @@ Ext.define('Lada.controller.Messwert', {
         Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn){
             if(btn === 'yes'){
                 var store = grid.getStore();
-                var deleteUrl = selection.getProxy().url + selection.getEidi();
+                var deleteUrl = selection.getProxy().url + selection.getId();
                 Ext.Ajax.request({
                     url: deleteUrl,
                     method: 'DELETE',

@@ -10,19 +10,24 @@
  * Combobox for Staat
  */
 Ext.define('Lada.view.widgets.Staat' ,{
-        extend: 'Ext.form.ComboBox',
-        alias: 'widget.staat',
-        store: 'Staaten',
-        displayField: 'staat',
-        valueField: 'staatId',
-        emptyText:'Wählen Sie einen Staat',
-        // Enable filtering of comboboxes
-        autoSelect: false,
-        queryMode: 'local',
-        triggerAction : 'all',
-        typeAhead: false,
-        minChars: 0,
+    extend: 'Ext.form.ComboBox',
+    require: ['Lada.store.StaStaaten'],
+    alias: 'widget.staat',
+    store: 'StaStaaten',
+    displayField: 'staat',
+    valueField: 'id',
+    emptyText:'Wählen Sie einen Staat',
+    // Enable filtering of comboboxes
+    autoSelect: false,
+    queryMode: 'local',
+    triggerAction : 'all',
+    typeAhead: false,
+    minChars: 0,
     initComponent: function() {
+        this.store = Ext.data.StoreManager.get('StaStaaten');
+        if (!this.store) {
+            this.store = Ext.create('Lada.store.StaStaaten');
+        }
         this.callParent(arguments);
     }
 });

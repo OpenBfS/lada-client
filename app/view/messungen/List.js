@@ -43,7 +43,7 @@ Ext.define('Lada.view.messungen.List' ,{
             }
         ];
         this.columns = [
-            {header: 'Mess.ID', dataIndex: "messungsId", width: 50},
+            {header: 'Mess.ID', dataIndex: "id", width: 50},
             {header: 'NPR-Nr.', dataIndex: "nebenprobenNr", width: 50},
             {header: 'MMT', dataIndex: "mmtId", width: 50},
             {header: 'Messzeit', dataIndex: "messzeitpunkt"},
@@ -55,7 +55,7 @@ Ext.define('Lada.view.messungen.List' ,{
                     sstore.load({
                         params: {
                             probeId: value.probeId,
-                            messungsId: value.messungsId
+                            messungsId: value.id
                         }
                     });
                     if (sstore.getTotalCount() === 0) {
@@ -84,7 +84,7 @@ Ext.define('Lada.view.messungen.List' ,{
                     mstore.load({
                         params: {
                             probeId: value.probeId,
-                            messungsId: value.messungsId
+                            messungsId: value.id
                         }
                     });
                     return mstore.getTotalCount();
@@ -95,11 +95,11 @@ Ext.define('Lada.view.messungen.List' ,{
                 flex: 1,
                 dataIndex: 'id',
                 renderer: function(value) {
-                    var kstore = Ext.getStore('MKommentare');
+                    var kstore = Ext.getStore('KommentareM');
                     kstore.load({
                         params: {
                             probeId: value.probeId,
-                            messungsId: value.messungsId
+                            messungsId: value.id
                         }
                     });
                     return kstore.getTotalCount();

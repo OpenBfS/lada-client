@@ -10,20 +10,26 @@
  * Combobox for Verwaltungseinheit
  */
 Ext.define('Lada.view.widgets.Verwaltungseinheit' ,{
-        extend: 'Ext.form.ComboBox',
-        alias: 'widget.verwaltungseinheiten',
-        store: 'Verwaltungseinheiten',
-        displayField: 'bezeichnung',
-        valueField: 'gemId',
-        emptyText:'Wählen Sie eine Verwaltungseinheit',
-        hideTrigger: true,
-        // Enable filtering of comboboxes
-        autoSelect: false,
-        queryMode: 'remote',
-        triggerAction : 'type',
-        typeAhead: false,
-        minChars: 2,
+    extend: 'Ext.form.field.ComboBox',
+    require: ['Lada.store.StaVerwaltungseinheiten'],
+    alias: 'widget.verwaltungseinheiten',
+    store: 'StaVerwaltungseinheiten',
+    displayField: 'bezeichnung',
+    valueField: 'id',
+    emptyText:'Wählen Sie eine Verwaltungseinheit',
+    hideTrigger: true,
+    // Enable filtering of comboboxes
+    autoSelect: false,
+    queryMode: 'remote',
+    triggerAction : 'type',
+    typeAhead: false,
+    minChars: 2,
+
     initComponent: function() {
+        this.store = Ext.data.StoreManager.get('StaVerwaltungseinheiten');
+        if (!this.store) {
+            this.store = Ext.create('Lada.store.StaVerwaltungseinheiten');
+        }
         this.callParent(arguments);
     },
     // This listener is used to load currently "selected" verwaltungseinheit.
