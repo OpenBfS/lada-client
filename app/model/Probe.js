@@ -9,42 +9,43 @@
 /**
  * A Probe.
  * This class represents and defines the model of a "Probe"
- * */
+ **/
 Ext.define('Lada.model.Probe', {
     extend: 'Lada.model.Base',
     fields: [
-        {name: "probeId"},
-        {name: "baId"},
-        {name: "datenbasisId"},
-        {name: "erzeugerId"},
+        {name: "id"},
+        {name: "probeIdAlt"},
         {name: "hauptprobenNr"},
-        {name: "letzteAenderung", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
-        {name: "media"},
+        {name: "test"},
+        {name: "netzbetreiberId"},
+        {name: "mstId"},
+        {name: "datenbasisId"},
+        {name: "baId"},
+        {name: "probenartId"},
         {name: "mediaDesk"},
+        {name: "media"},
+        {name: "umwId"},
+        {name: "probeentnahmeBeginn", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
+        {name: "probeentnahmeEnde", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
         {name: "mittelungsdauer"},
+        {name: "letzteAenderung", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
+        {name: "erzeugerId"},
+        {name: "probeNehmerId"},
         {name: "mpKat"},
         {name: "mplId"},
         {name: "mprId"},
-        {name: "mstId"},
-        {name: "netzbetreiberId"},
-        {name: "probeNehmerId"},
-        {name: "probeentnahmeBeginn", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
-        {name: "probeentnahmeEnde", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
-        {name: "probenartId"},
         {name: "solldatumBeginn", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
         {name: "solldatumEnde", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
-        {name: "test"},
-        {name: "umwId"},
 
         // Readonly-Flag (sent additionaly by the server, not part of the
         // model)
         {name: "readonly"}
     ],
-    idProperty: "probeId",
+    idProperty: "id",
     proxy: {
         type: 'rest',
         appendId: true, //default
-        url: 'server/rest/proben',
+        url: 'server/rest/probe',
         reader: {
             type: 'json',
             root: 'data'

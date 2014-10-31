@@ -7,23 +7,21 @@
  */
 
 /**
- * Model class for Staat
+ * Model class for Kommentare on Messungen
  */
-Ext.define('Lada.model.Staat', {
+Ext.define('Lada.model.KommentarM', {
     extend: 'Lada.model.Base',
     fields: [
-        {name: "staatId", type: 'int'},
-        {name: "staat"},
-        {name: "staatIso"},
-        {name: "staatKurz"}
+        {name: "id"},
+        {name: "messungsId"},
+        {name: "erzeuger"},
+        {name: "datum", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
+        {name: "text"}
     ],
-    idProperty: "staatId",
+    idProperty: "id",
     proxy: {
         type: 'rest',
-        appendId: true, //default
-        url: 'server/rest/staat',
-        api: {
-        },
+        url: 'server/rest/kommentar_m',
         reader: {
             type: 'json',
             root: 'data'

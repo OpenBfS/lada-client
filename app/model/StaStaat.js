@@ -7,22 +7,20 @@
  */
 
 /**
- * Model class for Ort
+ * Model class for Staat Stammdaten
  */
-Ext.define('Lada.model.Ort', {
+Ext.define('Lada.model.StaStaat', {
     extend: 'Lada.model.Base',
     fields: [
         {name: "id", type: 'int'},
-        {name: "ortId", type: 'int'},
-        {name: "probeId"},
-        {name: "ortsTyp"},
-        {name: "ortszusatztext"},
-        {name: "letzteAenderung", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()}
+        {name: "staat"},
+        {name: "staatIso"},
+        {name: "staatKurz"}
     ],
     idProperty: "id",
     proxy: {
         type: 'rest',
-        url: 'server/rest/ort',
+        url: 'server/rest/sta_staat',
         reader: {
             type: 'json',
             root: 'data'

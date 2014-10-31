@@ -12,17 +12,16 @@
 Ext.define('Lada.model.Probenzusatzwert', {
     extend: 'Lada.model.Base',
     fields: [
-        {name: "pzsId"},
+        {name: "id"},
         {name: "mehId"},
         {name: "beschreibung"},
         {name: "zusatzwert"},
         {name: "eudfKeyword"}
     ],
-    idProperty: "pzsId",
+    idProperty: "id",
     proxy: {
         type: 'rest',
-        appendId: true, //default
-        url: 'server/rest/probenzusatz',
+        url: 'server/rest/sta_probenzusatz',
         autoload: true,
         reader: {
             type: 'json',

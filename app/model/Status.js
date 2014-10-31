@@ -12,28 +12,21 @@
 Ext.define('Lada.model.Status', {
     extend: 'Lada.model.Base',
     fields: [
-        {name: "sid"},
+        {name: "id"},
         {name: "messungsId"},
         {name: "probeId"},
         {name: "erzeuger"},
         {name: "status", defaultValue: 1},
-        {name: "sdatum", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
-        {name: "skommentar"}
+        {name: "datum", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()},
+        {name: "kommentar"}
     ],
-    idProperty: "sid",
+    idProperty: "id",
     proxy: {
         type: 'rest',
-        appendId: true, //default
         url: 'server/rest/status',
         reader: {
             type: 'json',
             root: 'data'
         }
-    },
-    getEidi: function() {
-        var sid =  this.get('sid');
-        var messId = this.get('messungsId');
-        var probeId = this.get('probeId');
-        return "/" + sid + "/" + messId + "/" + probeId;
     }
 });

@@ -12,17 +12,17 @@
 Ext.define('Lada.model.Zusatzwert', {
     extend: 'Lada.model.Base',
     fields: [
-        {name: "pzsId"},
+        {name: "id"},
         {name: "probeId"},
+        {name: "pzsId"},
         {name: "nwgZuMesswert", type: 'float'},
         {name: "messwertPzs", type: 'float'},
         {name: "messfehler", type: 'float'},
         {name: "letzteAenderung", type: 'date', convert: Lada.lib.Helpers.ts2date, defaultValue: new Date()}
     ],
-    idProperty: "pzsId",
+    idProperty: "id",
     proxy: {
         type: 'rest',
-        appendId: true, //default
         url: 'server/rest/zusatzwert',
         reader: {
             type: 'json',
@@ -35,16 +35,12 @@ Ext.define('Lada.model.Zusatzwert', {
             writeEverything : true
         }
     },
-    getEidi: function () {
-        var pzsId =  this.get('pzsId');
-        var probeId = this.get('probeId');
-        return "/" + pzsId + "/" + probeId;
-    },
     getMesseinheit: function(pzsId) {
-        var zstore = Ext.getStore('Probenzusatzwerte');
-        var mstore = Ext.getStore('Messeinheit');
+        var zstore = Ext.getStore('StaProbenzusaetze');
+        var mstore = Ext.getStore('StaMesseinheiten');
         var mehId = zstore.getById(pzsId).get('mehId');
-        var record = mstore.findRecord('mehId', mehId);
+        console.log('mehid: ' + mehId);
+        var record = mstore.getById(mehId);
         return record.get('einheit');
     }
 });

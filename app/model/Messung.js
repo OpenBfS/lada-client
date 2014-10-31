@@ -13,8 +13,8 @@ Ext.define('Lada.model.Messung', {
     extend: 'Lada.model.Base',
     fields: [
         {name: "id"},
-        {name: "messungsId", mapping:"id.messungsId"},
-        {name: "probeId", mapping:"id.probeId"},
+        {name: "messungsId"},
+        {name: "probeId"},
         {name: "mmtId"},
         {name: "nebenprobenNr"},
         {name: "messdauer"},
@@ -26,21 +26,10 @@ Ext.define('Lada.model.Messung', {
     idProperty: "id",
     proxy: {
         type: 'rest',
-        appendId: true, //default
         url: 'server/rest/messung',
         reader: {
             type: 'json',
             root: 'data'
         }
-    },
-    getEidi: function() {
-        var messId = this.get('messungsId');
-        var probeId = this.get('probeId');
-        return "/" + messId + "/" + probeId;
     }
 });
-
-function ts2date(v, record){
-    // Converts a timestamp into a date object.
-    return new Date(v);
-}

@@ -7,12 +7,12 @@
  */
 
 /**
- * Model class for Ortdetail
+ * Model class for Ort Stammdaten
  */
-Ext.define('Lada.model.Ortdetail', {
+Ext.define('Lada.model.StaOrt', {
     extend: 'Lada.model.Base',
     fields: [
-        {name: "ortId"},
+        {name: "id"},
         {name: "bezeichnung"},
         {name: "beschreibung"},
         {name: "unscharf"},
@@ -27,16 +27,14 @@ Ext.define('Lada.model.Ortdetail', {
         {name: "gemId"},
         {name: "otyp"}
     ],
-    idProperty: "ortId",
+    idProperty: "id",
     proxy: {
         type: 'rest',
-        appendId: true, //default
-        url: 'server/rest/ortinfo',
-        api: {
-        },
+        url: 'server/rest/sta_ort',
         reader: {
             type: 'json',
             root: 'data'
         }
     }
 });
+

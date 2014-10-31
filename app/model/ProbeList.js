@@ -15,11 +15,10 @@ Ext.define('Lada.model.ProbeList', {
     fields: [
         {name: "readonly"}
     ],
-    idProperty: "probeId",
+    idProperty: "id",
     proxy: {
         type: 'rest',
-        appendId: true, //default
-        url: 'server/rest/proben',
+        url: 'server/rest/probe',
         reader: {
             type: 'json',
             root: 'data'
