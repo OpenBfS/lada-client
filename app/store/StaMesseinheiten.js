@@ -9,28 +9,18 @@
 /**
  * Store for Messeinheit
  */
-Ext.define('Lada.store.Messeinheit', {
+Ext.define('Lada.store.StaMesseinheiten', {
     extend: 'Ext.data.Store',
-    fields: ['mehId', 'einheit'],
+    model: 'Lada.model.StaMesseinheit',
     sorters: [{
         property: 'einheit',
         transform: function(val) {
             if (val) {
-                return val.toLowerCase(); 
+                return val.toLowerCase();
             } else {
                 return "";
             };
         }
     }],
-    autoLoad: true,
-    proxy: {
-        type: 'ajax',
-        api: {
-        read: 'server/rest/messeinheit'
-        },
-        reader: {
-            type: 'json',
-            root: 'data'
-        }
-    }
+    autoLoad: true
 });

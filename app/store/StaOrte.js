@@ -7,23 +7,13 @@
  */
 
 /**
- * Store for Verwaltungseinheiten
+ * Store for Ortedetails
  */
-Ext.define('Lada.store.Verwaltungseinheiten', {
+Ext.define('Lada.store.StaOrte', {
     extend: 'Ext.data.Store',
-    fields: ['gemId', 'bezeichnung', 'longitude', 'latitude'],
+    model: 'Lada.model.StaOrt',
     sorters: [{
         property: 'bezeichnung'
     }],
-    autoLoad: true,
-    proxy: {
-        type: 'rest',
-        api: {
-        read: 'server/rest/verwaltungseinheit'
-        },
-        reader: {
-            type: 'json',
-            root: 'data'
-        }
-    }
+    autoLoad: true
 });

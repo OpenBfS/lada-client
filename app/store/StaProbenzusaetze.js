@@ -7,13 +7,13 @@
  */
 
 /**
- * Store for Messgroessen
+ * Store for Probenzusaetze
  */
-Ext.define('Lada.store.Messgroessen', {
+Ext.define('Lada.store.StaProbenzusaetze', {
     extend: 'Ext.data.Store',
-    fields: ['messgroesseId', 'messgroesse'],
+    model: 'Lada.model.StaProbenzusatz',
     sorters: [{
-        property: 'messgroesse',
+        property: 'zusatzwert',
         transform: function(val) {
             if (val) {
                 return val.toLowerCase();
@@ -22,15 +22,5 @@ Ext.define('Lada.store.Messgroessen', {
             };
         }
     }],
-    autoLoad: true,
-    proxy: {
-        type: 'ajax',
-        api: {
-        read: 'server/rest/messgroesse'
-        },
-        reader: {
-            type: 'json',
-            root: 'data'
-        }
-    }
+    autoLoad: true
 });

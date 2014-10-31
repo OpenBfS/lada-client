@@ -7,20 +7,18 @@
  */
 
 /**
- * Store for Staaten
+ * Store for Verwaltungseinheiten
  */
-Ext.define('Lada.store.Staaten', {
+Ext.define('Lada.store.StaVerwaltungseinheiten', {
     extend: 'Ext.data.Store',
+    fields: ['gemId', 'bezeichnung', 'longitude', 'latitude'],
     sorters: [{
-        property: 'staat'
+        property: 'bezeichnung'
     }],
-    model: 'Lada.model.Staat',
     autoLoad: true,
     proxy: {
-        type: 'ajax',
-        api: {
-        read: 'server/rest/staat'
-        },
+        type: 'rest',
+        url: 'server/rest/sta_verwaltungseinheit',
         reader: {
             type: 'json',
             root: 'data'

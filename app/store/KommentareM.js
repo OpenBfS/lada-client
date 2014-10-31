@@ -7,10 +7,10 @@
  */
 
 /**
- * Store for MKommentare
+ * Store for Kommentare
  */
-Ext.define('Lada.store.MKommentare', {
+Ext.define('Lada.store.KommentareM', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.MKommentar'
+    model: 'Lada.model.KommentarM'
 });
 

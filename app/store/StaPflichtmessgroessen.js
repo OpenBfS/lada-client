@@ -7,10 +7,10 @@
  */
 
 /**
- * Store for Kommentare
+ * Store for Pflichtmessgroessen
  */
-Ext.define('Lada.store.Kommentare', {
+Ext.define('Lada.store.StaPflichtmessgroessen', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Kommentar'
+    model: 'Lada.model.StaPfichtmessgroesse',
+    autoLoad: true
 });
-

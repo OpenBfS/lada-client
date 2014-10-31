@@ -7,13 +7,20 @@
  */
 
 /**
- * Store for Ortedetails
+ * Store for Datenbasis
  */
-Ext.define('Lada.store.Ortedetails', {
+Ext.define('Lada.store.StaDatenbasen', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Ortdetail',
+    model: 'Lada.model.StaDatenbasis',
     sorters: [{
-        property: 'bezeichnung'
+        property: 'datenbasis',
+        transform: function(val) {
+            if (val) {
+                return val.toLowerCase();
+            } else {
+                return "";
+            };
+        }
     }],
     autoLoad: true
 });
