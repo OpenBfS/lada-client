@@ -1,0 +1,50 @@
+{
+    "success":true,
+    "message":"200",
+    "data":[{
+        "id":56,
+        "beschreibung":"Mangan",
+        "messgroesse":"Mn 54",
+        "defaultFarbe":"175175075",
+        "idfNuklidKey":"Mn54",
+        "istLeitnuklid":"0",
+        "eudfNuklidId":50,
+        "kennungBvl":"1925054"
+    },{
+        "id":58,
+        "beschreibung":"Eisen",
+        "messgroesse":"Fe 52",
+        "defaultFarbe":null,
+        "idfNuklidKey":"Fe52",
+        "istLeitnuklid":"0",
+        "eudfNuklidId":null,
+        "kennungBvl":null
+    },{
+        "id":62,
+        "beschreibung":"Cobalt",
+        "messgroesse":"Co 55",
+        "defaultFarbe":null,
+        "idfNuklidKey":"Co55",
+        "istLeitnuklid":"0",
+        "eudfNuklidId":null,
+        "kennungBvl":null
+    },{
+        "id":72,
+        "beschreibung":"Nickel",
+        "messgroesse":"Ni 57",
+        "defaultFarbe":null,
+        "idfNuklidKey":"Ni57",
+        "istLeitnuklid":"0",
+        "eudfNuklidId":null,
+        "kennungBvl":null
+    },{
+        "id":96,
+        "beschreibung":"Gallium",
+        "messgroesse":"Ga 73",
+        "defaultFarbe":null,
+        "idfNuklidKey":"Ga73",
+        "istLeitnuklid":"0",
+        "eudfNuklidId":null,
+        "kennungBvl":null
+    }]
+}

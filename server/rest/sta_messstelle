@@ -1,0 +1,40 @@
+{
+    "success":true,
+    "message":"200",
+    "data":[{
+        "id":"03050",
+        "netzbetreiberId":"03",
+        "beschreibung":"Nds. Landesamt f. Verbraucherschutz und Lebensmittelsicherh., - Veterinärinstitut Hannover, Eintrachtweg 17, 30173 Hannover",
+        "messStelle":"nslm61",
+        "mstTyp":"M",
+        "amtskennung":"032005"
+    },{
+        "id":"03060",
+        "netzbetreiberId":"03",
+        "beschreibung":"Niedersächsischer Landesbetrieb für Wasserwirtschaft, Küsten- und Naturschutz (NLWKN), -Betriebsstelle Hannover-Hildesheim-, Geschäftsber. III/Aufgabenber. V, Postfach 10 10 62, 31110 Hildesheim",
+        "messStelle":"nslm21",
+        "mstTyp":"M",
+        "amtskennung":null
+    },{
+        "id":"03070",
+        "netzbetreiberId":"03",
+        "beschreibung":"Landwirtschaftliche Untersuchungs- und Forschungsanstalt, der Landwirtschaftskammer Weser/Ems, Postfach 25 49, 26015 Oldenburg",
+        "messStelle":"nslm71",
+        "mstTyp":"M",
+        "amtskennung":null
+    },{
+        "id":"03080",
+        "netzbetreiberId":"03",
+        "beschreibung":"Nds. Landesamt f. Verbraucherschutz und Lebensmittelsicherh., - Lebensmittelinstitut Oldenburg, Postfach 24 62, 26014 Oldenburg",
+        "messStelle":"nslm51",
+        "mstTyp":"M",
+        "amtskennung":"032002"
+    },{
+        "id":"03090",
+        "netzbetreiberId":"03",
+        "beschreibung":"Nds. Landesamt f. Verbraucherschutz und Lebensmittelsicherh., - Veterinärinstitut für Fische und Fischwaren, Schleusenstr., 27472 Cuxhaven",
+        "messStelle":"nslm41",
+        "mstTyp":"M",
+        "amtskennung":"032003"
+    }]
+}

@@ -1,0 +1,23 @@
+{
+    "success":true,
+    "message":"200",
+    "data":[{
+        "id":188253,
+        "messungsId":1,
+        "erzeuger":"06010",
+        "datum":1321005677000,
+        "text":"Dies ist ein kommentar zur messung 1"
+    },{
+        "id":188554,
+        "messungsId":2,
+        "erzeuger":"06010",
+        "datum":1321005682000,
+        "text":"Dies ist ein Kommentar zu messung 2"
+    },{
+        "id":202332,
+        "messungsId":4,
+        "erzeuger":"12020",
+        "datum":1334134920000,
+        "text":"Dies ist ein Kommentar zu messung 4"
+    }]
+}

@@ -1,0 +1,23 @@
+{
+    "success":true,
+    "message":"200",
+    "data":[{
+        "id":188653,
+        "probeId":7581036,
+        "erzeuger":"06010",
+        "datum":1321005677000,
+        "text":"Die Probe wurde in Darmstadt gammaspektrometrisch gemessen und für die Sr-Bestimmung verascht. "
+    },{
+        "id":188654,
+        "probeId":"7581036",
+        "erzeuger":"06010",
+        "datum":1321005682000,
+        "text":"DWD-Station"
+    },{
+        "id":202132,
+        "probeId":"7581036",
+        "erzeuger":"12020",
+        "datum":1334134920000,
+        "text":"MLT 2                         /"
+    }]
+}

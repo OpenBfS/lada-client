@@ -1,0 +1,25 @@
+{
+    "success":true,
+    "message":"200",
+    "data":[{
+        "id":9,
+        "beschreibung":"Europa",
+        "datenbasis":"Europa"
+    },{
+        "id":13,
+        "beschreibung":"SPARSE NETWORK",
+        "datenbasis":"SPARSE"
+    },{
+        "id":14,
+        "beschreibung":"DENSE NETWORK",
+        "datenbasis":"DENSE"
+    },{
+        "id":1,
+        "beschreibung":"§2-Daten",
+        "datenbasis":"§2"
+    },{
+        "id":2,
+        "beschreibung":"§3-Daten",
+        "datenbasis":"§3"
+    }]
+}

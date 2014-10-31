@@ -1,0 +1,12 @@
+{
+    "success":true,
+    "message":"200",
+    "data":[{
+        "id":0,
+        "erzeuger":"11010",
+        "messungsId":1,
+        "status":3,
+        "datum":1414758806000,
+        "kommentar":"ikguig"
+    }]
+}
