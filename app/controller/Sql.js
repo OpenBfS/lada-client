@@ -35,8 +35,6 @@ Ext.define('Lada.controller.Sql', {
             // CSS like selector to select element in the viewport. See
             // ComponentQuery documentation for more details.
             '#search': {
-                // Map the "render" event to the given function.
-                render: this.onPanelRendered,
                 // Map Doubleclick on rows of the probenlist.
                 select: this.selectSql
             },
