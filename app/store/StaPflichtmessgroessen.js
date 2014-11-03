@@ -11,6 +11,6 @@
  */
 Ext.define('Lada.store.StaPflichtmessgroessen', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.StaPfichtmessgroesse',
+    model: 'Lada.model.StaPflichtmessgroesse',
     autoLoad: true
 });
