@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 Ext.define('Lada.controller.Status', {
@@ -50,7 +50,7 @@ Ext.define('Lada.controller.Status', {
         var zusatzwert = Ext.create('Lada.model.Status');
         zusatzwert.set('probeId', button.probeId);
         zusatzwert.set('messungsId', button.parentId);
-        var view = Ext.widget('statuscreate', {
+        Ext.widget('statuscreate', {
             model: zusatzwert
         });
     },
@@ -61,18 +61,18 @@ Ext.define('Lada.controller.Status', {
         record.getAuthInfo(this.initEditWindow, messung.get('probeId'));
     },
 
-    initEditWindow: function(record, readonly, owner) {
+    initEditWindow: function(record, readonly) {
         var view = Ext.widget('statuscreate', {
             model: record
         });
-        var ignore = Array();
+        var ignore = [];
         if (readonly) {
             var form = view.down('form');
             form.setReadOnly(true, ignore);
         }
     },
 
-    createSuccess: function(form, record, operation) {
+    createSuccess: function(form) {
         // Reload store
         var store = this.getStatusStore();
         store.reload();
@@ -80,7 +80,7 @@ Ext.define('Lada.controller.Status', {
         win.close();
     },
 
-    editSuccess: function(form, record, operation) {
+    editSuccess: function(form) {
         // Reload store
         var store = this.getStatusStore();
         store.reload();

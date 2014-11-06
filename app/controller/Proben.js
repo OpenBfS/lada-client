@@ -10,6 +10,7 @@
  * Controller for Proben
  */
 
+// TODO: Move these functions into the controller.
 function numOfErrors(proben) {
     var errors = 0;
     for (var key in proben) {
@@ -20,6 +21,7 @@ function numOfErrors(proben) {
     return errors;
 }
 
+// TODO: Use tpl to generate the html document.
 function buildImportReport(filename, msg, errors, warnings) {
     var out = [];
     // There is a entry for each imported proben in the errors dict (might be

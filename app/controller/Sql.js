@@ -3,10 +3,8 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
-
-var queries = new Array('query1', 'query2');
 
 /**
  * Controller for the Search
@@ -58,7 +56,7 @@ Ext.define('Lada.controller.Sql', {
      * The function will hide/display additional element related to the
      * selected search query
      */
-    selectSql: function(element, record, index) {
+    selectSql: function(element, record) {
         var result = Ext.getCmp('result');
         var filters = Ext.getCmp('queryfilters');
         var sqlquery = Ext.getCmp('sqlquery');
@@ -95,66 +93,67 @@ Ext.define('Lada.controller.Sql', {
         filters.removeAll();
         var hide = true;
         // 2. Iterate over all configured filters
-        for (var j=0; j < filterFields.length; j++) {
+        var j;
+        for (j = 0; j < filterFields.length; j++) {
             var type = filterFields[j].type;
             var name = filterFields[j].dataIndex;
             var label = filterFields[j].label;
             var multi = filterFields[j].multiSelect;
             var field = null;
-            if (type == "text") {
+            if (type === 'text') {
                 field = Ext.create('Ext.form.field.Text', {
                     name: name,
                     fieldLabel: label
                 });
             }
-            else if (type == "number") {
+            else if (type === 'number') {
                 field = Ext.create('Ext.form.field.Number', {
                     name: name,
                     fieldLabel: label
                 });
             }
-            else if (type == "datetime") {
+            else if (type === 'datetime') {
                 field = Ext.create('Lada.view.widgets.Datetime', {
                     name: name,
                     fieldLabel: label
                 });
             }
-            else if (type == "bool") {
+            else if (type === 'bool') {
                 field = Ext.create('Lada.view.widgets.Testdatensatz', {
                     name: name,
                     fieldLabel: label,
                     emptyText: ''
                 });
             }
-            else if (type == "listmst") {
+            else if (type === 'listmst') {
                 field = Ext.create('Lada.view.widgets.Mst', {
                     name: name,
                     fieldLabel: label,
                     multiSelect: multi
                 });
             }
-            else if (type == "listumw") {
+            else if (type === 'listumw') {
                 field = Ext.create('Lada.view.widgets.Uwb', {
                     name: name,
                     fieldLabel: label,
                     multiSelect: multi
                 });
             }
-            else if (type == "listdbasis") {
+            else if (type === 'listdbasis') {
                 field = Ext.create('Lada.view.widgets.Datenbasis', {
                     name: name,
                     fieldLabel: label,
                     multiSelect: multi
                 });
             }
-            else if (type == "listver") {
+            else if (type === 'listver') {
                 field = Ext.create('Lada.view.widgets.Verwaltungseinheit', {
                     name: name,
                     fieldLabel: label,
                     multiSelect: multi
                 });
             }
-            else if (type == "listnetz") {
+            else if (type === 'listnetz') {
                 field = Ext.create('Lada.view.widgets.Netzbetreiber', {
                     name: name,
                     fieldLabel: label,
@@ -177,7 +176,7 @@ Ext.define('Lada.controller.Sql', {
      * Function is called when the user clicks the search button. The function
      * will perform a search to the server on refreshes the result list.
      */
-    search: function(element, record, index) {
+    search: function() {
         var result = Ext.getCmp('result');
         var filters = Ext.getCmp('queryfilters');
         var search = Ext.getCmp('search');
@@ -189,7 +188,7 @@ Ext.define('Lada.controller.Sql', {
             var filter = filters.items.items[i];
             var value = filter.getValue();
             if (value instanceof Array) {
-                value = value.join(",");
+                value = value.join(',');
             }
             searchParams[filter.getName()] = value;
         }
@@ -199,20 +198,20 @@ Ext.define('Lada.controller.Sql', {
         result.show();
     },
 
-    reset: function(element, record, index) {
-        var buttons = Ext.getCmp('SearchBtnPanel');
-        var result = Ext.getCmp('result');
-        //for (var i = 0; i < queries.length; ++i) {
-        //    var toHide = Ext.getCmp(queries[i]);
-        //    toHide.hide();
-        //}
-        //result.hide();
-        //buttons.hide();
+    reset: function() {
+        // var buttons = Ext.getCmp('SearchBtnPanel');
+        // var result = Ext.getCmp('result');
+        // for (var i = 0; i < queries.length; ++i) {
+        //     var toHide = Ext.getCmp(queries[i]);
+        //     toHide.hide();
+        // }
+        // result.hide();
+        // buttons.hide();
     },
 
-    about: function(element, record, index) {
+    about: function() {
         var info = this.getInfoStore();
-        var view = Ext.widget('about', {
+        Ext.widget('about', {
             info: info
         });
     }
