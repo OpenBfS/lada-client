@@ -18,6 +18,32 @@ finde sich in dem Installationbeispiel.
 Die folgenden Hinweise beziehen sich auf die Installation und Einrichtung auf
 Basis eines Oracle-RedHat Linux Systems.
 
+Compilieren und Minifizieren der Anwendung
+``````````````````````````````````````````
+Zum Compilieren der Anwendung kommt das Tool Sencha Cmd 4.0.x zum Einsatz.
+Mit Hilfe dieses Tools kann der Quellcode in eine einzelne Datei zusammengefasst
+und minifiziert werden.
+Der Befehl hierzu lautet:
+
+    sencha --sdk /home/rrenkert/lib/ext-4.2.1.883 compile \
+      --classpath=app,resources/datetime,resources/i18n page -str -cla lada.js \
+      -yui -i index.html -o build/index.html
+
+Das Verzeichnis 'build' enthält dann eine Datei 'index.html' und eine Datei
+'lada.js'. Die Datei 'lada.js' ist eine komprimierte Version der Anwendung und
+enthält alle benötigteten Klassen.
+Für die Produktivversion müssen die folgenden Dateien zusätzlich in das
+Verzeichnis 'build' kopiert werden:
+
+    Quelldatei                                              Zieldatei
+    ----------                                              ---------
+extjs/resources/css/ext-all-gray.css                    build/extjs/resources/css/ext-all-gray.css
+extjs/resources/ext-theme-gray/ext-theme-gray-all.css   build/extjs/resources/ext-theme-gray/ext-theme-gray-all.css
+resources/Lada.properties                               build/resources/Lada.properties
+resources/Lada_de-DE.properties                         build/resources/Lada_de-DE.properties
+gfx/*                                                   build/gfx/
+
+
 Installation Apache
 ```````````````````
 Zunächst wird der Apache Webserver aus dem Repository installiert:

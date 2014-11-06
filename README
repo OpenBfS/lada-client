@@ -68,8 +68,8 @@ verwendet, die unter der URL
 https://github.com/elmasse/Ext.i18n.Bundle
 
 verfügbar ist, verwendet.
-Diese muss in dem Ordner 'src' der vorher zur Verfügung gestellten ExtJS
-Bibliothek eingebunden werden. Dazu wird der Ordner 'i18n' in den Ordner 'src' kopiert
+Der darin enthaltene Ordner 'i18n' muss in dem Ordner 'resources' der Anwendung
+eingebunden werden. Dazu wird der Ordner 'i18n' in den Ordner 'resources' kopiert
 oder verlinkt.
 
 Build
