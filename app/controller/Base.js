@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /**
@@ -31,9 +31,10 @@ Ext.define('Lada.controller.Base', {
         this.addListeners();
     },
     /**
-     * Function to add listeners for various events in UI items. The UI Items are selected
-     * with a CSS like selector.See ComponentQuery documentation for more
-     * details. The function is called while initializing the controller.
+     * Function to add listeners for various events in UI items. The UI Items
+     * are selected with a CSS like selector.See ComponentQuery documentation
+     * for more details.
+     * The function is called while initializing the controller.
      *
      * The function should be overwritten by a specfic implementation.
      */
@@ -54,13 +55,17 @@ Ext.define('Lada.controller.Base', {
      * The method is called when the user clicks on the "Add" button in the
      * grid toolbar.
      */
-    addItem: function(button) {},
+    addItem: function() {
+        return;
+    },
     /**
      * Method to open a window to edit the values for an existing kommentar.
      * The method is called when the user doubleclicks on the item in the
      * grid.
      */
-    editItem: function(grid, record) {},
+    editItem: function() {
+        return;
+    },
     /**
      * Method to delete a kommentar. This will trigger the display of a
      * Confirmation dialog. After the deletion the related store will be
@@ -78,12 +83,13 @@ Ext.define('Lada.controller.Base', {
                 Ext.Ajax.request({
                     url: deleteUrl,
                     method: 'DELETE',
-                    success: function(response, opts) {
+                    success: function() {
                         store.reload();
                     }
                 });
                 console.log('Deleting ' + selection);
-            } else {
+            }
+            else {
                 console.log('Cancel Deleting ' + selection);
             }
         });
@@ -92,12 +98,14 @@ Ext.define('Lada.controller.Base', {
      * Method to trigger the action after successfull save (create).
      * In this case the related store is refreshed and the window is closed.
      */
-    createSuccess: function(form, record, operation) {},
+    createSuccess: function() {
+        return;
+    },
     /**
      * Method to trigger the action after save (create) fails.
      * In this case a Message Boss with a general error is shown.
      */
-    createFailure: function(form, record, operation) {
+    createFailure: function(form) {
         Ext.MessageBox.show({
             title: 'Fehler beim Speichern',
             msg: form.message,
@@ -109,12 +117,14 @@ Ext.define('Lada.controller.Base', {
      * Method to trigger the action after successfull save (edit).
      * In this case the related store is refreshed and the window is closed.
      */
-    editSuccess: function(form, record, operation) {},
+    editSuccess: function() {
+        return;
+    },
     /**
      * Method to trigger the action after save ( edit) fails.
      * In this case a Message Boss with a general error is shown.
      */
-    editFailure: function(form, record, operation) {
+    editFailure: function(form) {
         Ext.MessageBox.show({
             title: 'Fehler beim Speichern',
             msg: form.message,

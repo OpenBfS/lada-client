@@ -3,13 +3,13 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /*
  * Grid to list Probenzusatzwerte
  */
-Ext.define('Lada.view.zusatzwerte.List' ,{
+Ext.define('Lada.view.zusatzwerte.List', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.zusatzwertelist',
 
@@ -60,11 +60,10 @@ Ext.define('Lada.view.zusatzwerte.List' ,{
                 var record = store.getById(value);
                 var messwert = record.get('messwertPzs');
                 var nwg = record.get('nwgZuMesswert');
-                if (messwert < nwg ) {
-                    return "<"+messwert;
-                } else {
-                    return messwert;
+                if (messwert < nwg) {
+                    return '<' + messwert;
                 }
+                return messwert;
             }
         }, {
             header: 'rel. Unsich.[%]',

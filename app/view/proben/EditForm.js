@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /*
@@ -11,6 +11,7 @@
  */
 Ext.define('Lada.view.proben.EditForm', {
     extend: 'Lada.view.widgets.LadaForm',
+    alias: 'widget.probeneditform',
     requires: [
         'Lada.view.widgets.Datenbasis',
         'Lada.view.widgets.Netzbetreiber',
@@ -23,11 +24,11 @@ Ext.define('Lada.view.proben.EditForm', {
         'Lada.view.orte.List',
         'Lada.view.messungen.List'
     ],
+
     model: 'Lada.model.Probe',
-    alias: 'widget.probeneditform',
 
     initComponent: function() {
-       this.items = [{
+        this.items = [{
             xtype: 'fieldset',
             title: 'Probenangaben',
             defaults: {
@@ -183,9 +184,11 @@ Ext.define('Lada.view.proben.EditForm', {
     },
 
     buildDescriptors: function() {
-        var fields = new Array();
-        for ($i=0; $i<12; $i++) {
-            fields[$i] = {fieldLabel: 'S'+$i, name: 's'+$i};
+        var fields = [];
+        for (var i = 0; i < 12; i++) {
+            fields[i] = {
+                fieldLabel: 'S' + i, name: 's' + i
+            };
         }
         return fields;
     }

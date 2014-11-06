@@ -3,24 +3,23 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /**
  * Combobox for Probenart
  */
-Ext.define('Lada.view.widgets.Probenart' ,{
+Ext.define('Lada.view.widgets.Probenart', {
     extend: 'Ext.form.ComboBox',
-    require: ['Lada.store.StaProbenarten'],
     alias: 'widget.probenart',
     store: 'StaProbenarten',
-    displayField:'probenart',
+    displayField: 'probenart',
     valueField: 'id',
-    emptyText:'Wählen Sie eine Probenart',
+    emptyText: 'Wählen Sie eine Probenart',
     // Enable filtering of comboboxes
     autoSelect: false,
     queryMode: 'local',
-    triggerAction : 'all',
+    triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
 

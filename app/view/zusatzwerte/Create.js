@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /*
@@ -19,6 +19,8 @@ Ext.define('Lada.view.zusatzwerte.Create', {
     modal: true,
 
     initComponent: function() {
+        var form = Ext.create('Lada.view.zusatzwerte.CreateForm',
+            this.initialConfig);
         this.buttons = [{
             text: 'Speichern',
             scope: form,
@@ -28,8 +30,6 @@ Ext.define('Lada.view.zusatzwerte.Create', {
             scope: this,
             handler: this.close
         }];
-        var form = Ext.create('Lada.view.zusatzwerte.CreateForm',
-            this.initialConfig);
         this.items = [form];
         this.callParent();
     }

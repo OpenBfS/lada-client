@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /**
@@ -12,6 +12,7 @@
 Ext.define('Lada.view.orte.CreateOrt', {
     extend: 'Ext.window.Window',
     alias: 'widget.createortdetail',
+
     title: 'Neuer Ort',
 
     /**
@@ -38,7 +39,7 @@ Ext.define('Lada.view.orte.CreateOrt', {
                 listeners: {
                     'select': {
                         scope: me,
-                        fn: function(field, newValue, oldValue) {
+                        fn: function(field, newValue) {
                             var lon = field.up('window').down(
                                 'numberfield[name=ort_longitude]');
                             var lat = field.up('window').down(
@@ -76,4 +77,3 @@ Ext.define('Lada.view.orte.CreateOrt', {
         this.callParent(arguments);
     }
 });
-

@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /**
@@ -29,19 +29,23 @@ Ext.define('Lada.view.widgets.LadaForm', {
      */
     modelId: null,
     /**
-     * List of errors in the form. Typically set after the server validates the form submission
+     * List of errors in the form.
+     * Typically set after the server validates the form submission
      */
     errors: null,
     /**
-     * List of warnings in the form. Typically set after the server validates the form submission
+     * List of warnings in the form.
+     * Typically set after the server validates the form submission
      */
     warnings: null,
     /**
-     * The generic (error) message for the form. Typically set after the server validates the form submission
+     * The generic (error) message for the form.
+     * Typically set after the server validates the form submission
      */
     message: null,
     /**
-     * Flag to indicate if the validation succeeds. Typically set after the server validates the form submission
+     * Flag to indicate if the validation succeeds.
+     * Typically set after the server validates the form submission
      */
     success: null,
     /**
@@ -53,27 +57,25 @@ Ext.define('Lada.view.widgets.LadaForm', {
     initComponent: function() {
         this.callParent(arguments);
 
-        this.getForm().trackResetOnLoad = true; //Workaround
+        this.getForm().trackResetOnLoad = true; // Workaround
 
         if (Ext.isString(this.model)) {
-            //Load a model to be updated
+            // Load a model to be updated
             if (this.modelId) {
                 Ext.ClassManager.get(this.model).load(this.modelId, {
                     failure: this.onModelLoadFailure,
                     success: this.onModelLoadSuccess,
                     scope: this
                 });
-            //Load an empty record to be inserted
+            // Load an empty record to be inserted
             }
             else {
                 this.bindModel(Ext.create(this.model, {}));
             }
         }
         else {
-
-            //Bind the provided model to be updated
+            // Bind the provided model to be updated
             this.bindModel(this.model);
-
         }
         this.addEvents(
             'loadsuccess',
@@ -92,17 +94,17 @@ Ext.define('Lada.view.widgets.LadaForm', {
         }
     },
 
-    commit: function(callback, scope) {
+    commit: function() {
         if (this.form.isDirty() && this.form.isValid()) {
             this.form.updateRecord(this.model);
 
             var data = this.model.getAllData();
             var baseUrl = this.model.getProxy().url;
             var url = baseUrl;
-            var method = "POST";
+            var method = 'POST';
             if (this.model.getId()) {
                 url += this.model.getId();
-                method = "PUT";
+                method = 'PUT';
             }
 
             Ext.Ajax.request({
@@ -113,12 +115,20 @@ Ext.define('Lada.view.widgets.LadaForm', {
                     this.parseResponse(response);
                     if (this.success) {
                         console.log('Save was successfull');
-                        this.fireEvent('savesuccess', this, this.model, response);
+                        this.fireEvent(
+                            'savesuccess',
+                            this,
+                            this.model,
+                            response);
                     }
                     else {
                         console.log('Save was not successfull');
                         this.form.markInvalid(this.errors);
-                        this.fireEvent('savefailure', this, this.model, response);
+                        this.fireEvent(
+                            'savefailure',
+                            this,
+                            this.model,
+                            response);
                     }
                 },
                 scope: this
@@ -151,21 +161,22 @@ Ext.define('Lada.view.widgets.LadaForm', {
      * @param {Array} [ignoreFields="[]"] A list of fieldnames to ignore.
      */
     setReadOnly: function (bReadOnly, ignoreFields) {
-        if(typeof(ignoreFields)==='undefined') {
-            ignoreFields = Array();
+        if (typeof (ignoreFields) === 'undefined') {
+            ignoreFields = [];
         }
         /* Iterate over all fields and set them readonly */
         if (bReadOnly) {
-            this.getForm().getFields().each (function (field) {
+            this.getForm().getFields().each(function (field) {
                 // Check if the field name is in the list of fields to ignore
                 var ignore = false;
-                for (var i = ignoreFields.length - 1; i >= 0; i--) {
-                    console.log(ignoreFields[i] + "===" + field.getName());
-                    if (ignoreFields[i] === field.getName(true)) {
+                var k;
+                for (k = ignoreFields.length - 1; k >= 0; k--) {
+                    console.log(ignoreFields[k] + '===' + field.getName());
+                    if (ignoreFields[k] === field.getName(true)) {
                         ignore = true;
-                    };
-                };
-                //field.setDisabled(bReadOnly);
+                    }
+                }
+                // field.setDisabled(bReadOnly);
                 if (!ignore) {
                     field.setReadOnly(true);
                 }
@@ -179,14 +190,14 @@ Ext.define('Lada.view.widgets.LadaForm', {
              * Find Save-Button and hide it. Only hide it if there are not
              * fields left in the form which are editable
              * */
-            if (ignoreFields.length == 0) {
+            if (ignoreFields.length === 0) {
                 var win = this.up('window');
                 var buttons = win.query('.button');
                 for (var j = buttons.length - 1; j >= 0; j--) {
                     if (buttons[j].text === 'Speichern') {
                         buttons[j].setVisible(false);
-                    };
-                };
+                    }
+                }
             }
         }
     },
@@ -198,7 +209,6 @@ Ext.define('Lada.view.widgets.LadaForm', {
             this.errors = this.translateReturnCodes(json.errors);
             this.warnings = this.translateReturnCodes(json.warnings);
             this.message = Lada.getApplication().bundle.getMsg(json.message);
-            var e = Ext.Object.isEmpty(this.warnings);
             if (!Ext.Object.isEmpty(this.warnings) ||
                 !Ext.Object.isEmpty(this.errors)) {
                 this.createMessages();
@@ -213,8 +223,10 @@ Ext.define('Lada.view.widgets.LadaForm', {
         var messages = Ext.create('Ext.form.Panel', {
             bodyPadding: '5 5 5 5'
         });
-        for (var key in this.warnings) {
-            var label = Ext.create('Ext.container.Container', {
+        var key;
+        var label;
+        for (key in this.warnings) {
+            label = Ext.create('Ext.container.Container', {
                 layout: 'hbox',
                 bodyPadding: '5 5 5 5',
                 items: [{
@@ -224,14 +236,14 @@ Ext.define('Lada.view.widgets.LadaForm', {
                     height: 18
                 }, {
                     xtype: 'label',
-                    text: key + ": " + this.warnings[key],
+                    text: key + ': ' + this.warnings[key],
                     margin: '4 0 0 5'
                 }]
             });
             messages.insert(0, label);
         }
-        for (var key in this.errors) {
-            var label = Ext.create('Ext.container.Container', {
+        for (key in this.errors) {
+            label = Ext.create('Ext.container.Container', {
                 layout: 'hbox',
                 bodyPadding: '5 5 5 5',
                 items: [{
@@ -241,7 +253,7 @@ Ext.define('Lada.view.widgets.LadaForm', {
                     height: 18
                 }, {
                     xtype: 'label',
-                    text: key + ": " + this.errors[key],
+                    text: key + ': ' + this.errors[key],
                     margin: '4 0 0 5'
                 }]
             });

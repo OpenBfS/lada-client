@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 Ext.define('Lada.controller.Zusatzwerte', {
@@ -56,31 +56,30 @@ Ext.define('Lada.controller.Zusatzwerte', {
         console.log('Adding new Zusatzwert for Probe' + button.probeId);
         var zusatzwert = Ext.create('Lada.model.Zusatzwert');
         zusatzwert.set('probeId', button.probeId);
-        var view = Ext.widget('zusatzwertecreate', {
+        Ext.widget('zusatzwertecreate', {
             model: zusatzwert
         });
     },
 
     editItem: function(grid, record) {
         console.log('Editing Zusatzwert');
-        record.getAuthInfo(this.initEditWindow)
-        console.log("Loaded Zusatzwert with ID " + record.getId()); //outputs ID
+        record.getAuthInfo(this.initEditWindow);
     },
 
-    initEditWindow: function(record, readonly, owner) {
+    initEditWindow: function(record, readonly) {
         var view = Ext.widget('zusatzwertecreate', {
             model: record
         });
         // Mark PZW Selection readonly.
         view.down('probenzusatzwert').disabled = true;
-        var ignore = Array();
+        var ignore = [];
         if (readonly) {
             var form = view.down('form');
             form.setReadOnly(true, ignore);
         }
     },
 
-    createSuccess: function(form, record, operation) {
+    createSuccess: function(form) {
         // Reload store
         var store = this.getZusatzwerteStore();
         store.reload();
@@ -88,7 +87,7 @@ Ext.define('Lada.controller.Zusatzwerte', {
         win.close();
     },
 
-    editSuccess: function(form, record, operation) {
+    editSuccess: function(form) {
         // Reload store
         var store = this.getZusatzwerteStore();
         store.reload();

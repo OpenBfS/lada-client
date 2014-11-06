@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /**
@@ -13,28 +13,28 @@ Ext.define('Lada.model.Zusatzwert', {
     extend: 'Lada.model.Base',
 
     fields: [{
-        name: "id"
+        name: 'id'
     }, {
-        name: "probeId"
+        name: 'probeId'
     }, {
-        name: "pzsId"
+        name: 'pzsId'
     }, {
-        name: "nwgZuMesswert",
+        name: 'nwgZuMesswert',
         type: 'float'
     }, {
-        name: "messwertPzs",
+        name: 'messwertPzs',
         type: 'float'
     }, {
-        name: "messfehler",
+        name: 'messfehler',
         type: 'float'
     }, {
-        name: "letzteAenderung",
+        name: 'letzteAenderung',
         type: 'date',
         convert: Lada.lib.Helpers.ts2date,
         defaultValue: new Date()
     }],
 
-    idProperty: "id",
+    idProperty: 'id',
 
     proxy: {
         type: 'rest',
@@ -46,8 +46,8 @@ Ext.define('Lada.model.Zusatzwert', {
         writer: {
             type: 'json',
             // TODO: Check if this function is really needed (torsten)
-            // <2013-09-18 15:58> 
-            writeEverything : true
+            // <2013-09-18 15:58>
+            writeEverything: true
         }
     },
 

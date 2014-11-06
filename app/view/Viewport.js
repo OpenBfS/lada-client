@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /**
@@ -13,7 +13,7 @@
  * debugging it is possible to initialize other components directly see the
  * initComponent function.
  */
-Ext.define('Lada.view.Viewport' ,{
+Ext.define('Lada.view.Viewport', {
     extend: 'Ext.container.Viewport',
     requires: [
         'Lada.store.Info',
@@ -25,14 +25,14 @@ Ext.define('Lada.view.Viewport' ,{
         console.log('Setting up Viewport');
         this.initSearch();
 
-        // Development related: 
+        // Development related:
         // Disable "initSearch" call and enable one of the following init
         // methods to get a dialog directly without the need to click through
         // the whole application.
-        //this.initProbe();
-        //this.initOrt();
-        //this.initMessung();
-        //this.initMesswert();
+        // this.initProbe();
+        // this.initOrt();
+        // this.initMessung();
+        // this.initMesswert();
 
         this.setInfo();
         this.callParent(arguments);
@@ -44,9 +44,8 @@ Ext.define('Lada.view.Viewport' ,{
     setInfo: function() {
         var store = Ext.create('Lada.store.Info');
         store.load({
-            callback: function(a,b,c) {
+            callback: function() {
                 var info = store.data.items[0];
-                var clientVersion = "r261 (2013-07-26)";
                 var user = info.get('user');
                 var groups = info.get('groups');
                 var groupinfo = Ext.getCmp('groupinfo');
@@ -65,17 +64,19 @@ Ext.define('Lada.view.Viewport' ,{
         var store = Ext.getStore('Proben');
         store.load({
             params: {
-                probeId: "000007575943X"
+                probeId: '000007575943X'
             },
             callback: function() {
                 var mstore = Ext.getStore('Messungen');
                 mstore.load({
                     params: {
-                        probeId: "000007575943X"
+                        probeId: '000007575943X'
                     }
                 });
                 var model = store.data.items[0];
-                var win = Ext.create('Lada.view.proben.Edit', {model: model});
+                Ext.create('Lada.view.proben.Edit', {
+                    model: model
+                });
             }
         });
     },
@@ -87,12 +88,12 @@ Ext.define('Lada.view.Viewport' ,{
         var store = Ext.getStore('Messwerte');
         store.load({
             params: {
-                probeId: "000007575853X",
-                messungsId: "1"
+                probeId: '000007575853X',
+                messungsId: '1'
             },
             callback: function() {
                 var model = store.data.items[0];
-                var win = Ext.create('Lada.view.messwerte.Create', {
+                Ext.create('Lada.view.messwerte.Create', {
                     model: model
                 });
             }
@@ -104,7 +105,7 @@ Ext.define('Lada.view.Viewport' ,{
      */
     initOrt: function() {
         var ort = Ext.create('Lada.model.Ort');
-        var win = Ext.create('Lada.view.orte.Create', {
+        Ext.create('Lada.view.orte.Create', {
             model: ort
         });
     },
@@ -117,12 +118,12 @@ Ext.define('Lada.view.Viewport' ,{
         var kstore = Ext.getStore('KommentareM');
         var mstore = Ext.getStore('Messwerte');
         var sstore = Ext.getStore('Status');
-        probeId = "000007578314X";
+        var probeId = '000007578314X';
         store.load({
             params: {
                 probeId: probeId
             },
-            callback: function () {
+            callback: function() {
                 console.log(store);
                 var messung = store.data.items[0];
                 console.log(store.data.items[0]);
@@ -145,14 +146,17 @@ Ext.define('Lada.view.Viewport' ,{
                     }
                 });
                 console.log('Creating Messung window');
-                //var messung = Ext.create('Lada.model.Messung');
-                var win = Ext.create('Lada.view.messungen.Create', {model: messung});
+                // var messung = Ext.create('Lada.model.Messung');
+                Ext.create('Lada.view.messungen.Create', {
+                    model: messung
+                });
             }
         });
     },
     /**
      * Function to initialize the search window. This is the default method
-     * called by the {@link Lada.view.Viewport#initComponent initComponent} method.
+     * called by the {@link Lada.view.Viewport#initComponent initComponent}
+     * method.
      * @private
      */
     initSearch: function() {
@@ -165,37 +169,37 @@ Ext.define('Lada.view.Viewport' ,{
                 align: 'stretch'
             },
             dockedItems: [{
-                xtype: "toolbar",
-                dock: "top",
+                xtype: 'toolbar',
+                dock: 'top',
                 items: [{
-                    xtype: "splitbutton",
-                    text: "Info",
+                    xtype: 'splitbutton',
+                    text: 'Info',
                     menu: {
                         items: [{
                             id: 'AboutBtn',
-                            text: "About"
+                            text: 'About'
                         }]
                     }
-                }, "->", {
+                }, '->', {
                     xtype: 'box',
                     autoEl: {
                         tag: 'img',
-                        src:'gfx/user-identity.png'
+                        src: 'gfx/user-identity.png'
                     }
                 }, {
-                    xtype: "tbtext",
-                    id:"userinfo",
-                    text:""
+                    xtype: 'tbtext',
+                    id: 'userinfo',
+                    text: ''
                 }, {
                     xtype: 'box',
                     autoEl: {
                         tag: 'img',
-                        src:'gfx/network-workgroup.png'
+                        src: 'gfx/network-workgroup.png'
                     }
                 }, {
-                    xtype: "tbtext",
-                    id:"groupinfo",
-                    text:""
+                    xtype: 'tbtext',
+                    id: 'groupinfo',
+                    text: ''
                 }]
             }],
             items: [{

@@ -3,27 +3,28 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /**
  * Combobox for Messmethode
  */
-Ext.define('Lada.view.widgets.Messmethode' ,{
+Ext.define('Lada.view.widgets.Messmethode', {
     extend: 'Ext.form.ComboBox',
     require: ['Lada.store.StaMessmethoden'],
     alias: 'widget.messmethode',
     store: 'StaMessmethoden',
-    displayField:'messmethode',
+    displayField: 'messmethode',
     valueField: 'id',
-    emptyText:'Wählen Sie eine Messmethode',
+    emptyText: 'Wählen Sie eine Messmethode',
     // Enable filtering of comboboxes
     autoSelect: false,
     queryMode: 'local',
-    triggerAction : 'all',
+    triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
-    tpl: '<tpl for="."><div class="x-combo-list-item x-boundlist-item" >{id} - {messmethode}</div></tpl>',
+    tpl: '<tpl for="."><div class="x-combo-list-item x-boundlist-item" >' +
+        '{id} - {messmethode}</div></tpl>',
 
     initComponent: function() {
         this.store = Ext.data.StoreManager.get('staMessmethoden');

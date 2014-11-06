@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /**
@@ -54,29 +54,29 @@ Ext.define('Lada.controller.Kommentare', {
         console.log('Adding new Kommentar for Probe ' + button.probeId);
         var kommentar = Ext.create('Lada.model.KommentarP');
         kommentar.set('probeId', button.probeId);
-        var view = Ext.widget('kommentarecreate', {
+        Ext.widget('kommentarecreate', {
             model: kommentar
         });
     },
 
     editItem: function(grid, record) {
         console.log('Editing Kommentar');
-        record.getAuthInfo(this.initEditWindow)
-        console.log("Loaded Kommentar with ID " + record.getId()); //outputs ID
+        record.getAuthInfo(this.initEditWindow);
+        console.log('Loaded Kommentar with ID ' + record.getId());
     },
 
-    initEditWindow: function(record, readonly, owner) {
+    initEditWindow: function(record, readonly) {
         var view = Ext.widget('kommentarecreate', {
             model: record
         });
-        var ignore = Array();
+        var ignore = [];
         if (readonly) {
             var form = view.down('form');
             form.setReadOnly(true, ignore);
         }
     },
 
-    createSuccess: function(form, record, operation) {
+    createSuccess: function(form) {
         var store = this.getKommentarePStore();
         store.reload();
         var win = form.up('window');

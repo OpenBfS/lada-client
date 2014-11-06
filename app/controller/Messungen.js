@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /**
@@ -68,7 +68,9 @@ Ext.define('Lada.controller.Messungen', {
         console.log('Adding new Messung for Probe ' + button.probeId);
         var messung = Ext.create('Lada.model.Messung');
         messung.set('probeId', button.probeId);
-        var view = Ext.widget('messungencreate', {model: messung});
+        Ext.widget('messungencreate', {
+            model: messung
+        });
     },
 
     editItem: function(grid, record) {
@@ -95,16 +97,16 @@ Ext.define('Lada.controller.Messungen', {
             }
         });
         record.getAuthInfo(this.initEditWindow);
-        console.log("Loaded Messung with ID " + record.getId()); //outputs ID
+        console.log('Loaded Messung with ID ' + record.getId());
     },
 
     initEditWindow: function(record, readonly, owner) {
         var view = Ext.widget('messungenedit', {
             model: record
         });
-        var ignore = Array();
+        var ignore = [];
         if (owner) {
-                ignore.push('fertig');
+            ignore.push('fertig');
         }
         if (readonly) {
             var form = view.down('form');
@@ -123,25 +125,26 @@ Ext.define('Lada.controller.Messungen', {
                 Ext.Ajax.request({
                     url: deleteUrl,
                     method: 'DELETE',
-                    success: function(response, opts) {
+                    success: function() {
                         store.reload();
                     }
                 });
                 console.log('Deleting Messung');
-            } else {
+            }
+            else {
                 console.log('Cancel Deleting Messung');
             }
         });
     },
 
-    createSuccess: function(form, record, operation) {
+    createSuccess: function(form) {
         var store = this.getMessungenStore();
         store.reload();
         var win = form.up('window');
         win.close();
     },
 
-    createFailure: function(form, record, operation) {
+    createFailure: function(form) {
         Ext.MessageBox.show({
             title: 'Fehler beim Speichern',
             msg: form.message,
@@ -150,14 +153,14 @@ Ext.define('Lada.controller.Messungen', {
         });
     },
 
-    editSuccess: function(form, record, operation) {
+    editSuccess: function(form) {
         var store = this.getMessungenStore();
         store.reload();
         var win = form.up('window');
         win.close();
     },
 
-    editFailure: function(form, record, operation) {
+    editFailure: function(form) {
         Ext.MessageBox.show({
             title: 'Fehler beim Speichern',
             msg: form.message,

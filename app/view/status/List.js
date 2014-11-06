@@ -3,13 +3,13 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /*
  * Grid to list Status
  */
-Ext.define('Lada.view.status.List' ,{
+Ext.define('Lada.view.status.List', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.statuslist',
 
@@ -59,4 +59,3 @@ Ext.define('Lada.view.status.List' ,{
         this.callParent(arguments);
     }
 });
-

@@ -1,11 +1,11 @@
-/* Copyright (C) 2013 by Bundesamt fuer Strahlenschutz
+/**
+ * Copyright (C) 2013 by Bundesamt fuer Strahlenschutz
  * Software engineering by Intevation GmbH
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
-
 Ext.Loader.setConfig({
     enabled: true,
     paths: {
@@ -113,25 +113,23 @@ Ext.application({
 });
 
 Ext.data.writer.Json.override({
-    getRecordData: function(record, getEverything) {
-        if(this.writeEverything || record.writeEverything){
-            console.log('getRecordData', this,arguments);
+    getRecordData: function(record) {
+        if (this.writeEverything || record.writeEverything) {
+            console.log('getRecordData', arguments);
             return record.getAllData();
         }
-        else {
-            return this.callOverridden(arguments);
-        }
+        return this.callOverridden(arguments);
     }
 });
 
 Ext.data.Model.addMembers({
     getAllData: function() {
         var data1 = this.getData();
-        var data2 = this.getAssociatedData( );
+        var data2 = this.getAssociatedData();
         var dataMerged = Ext.Object.merge(data1, data2);
         return dataMerged;
     },
     getEidi: function() {
-        return "/" + this.getId();
+        return '/' + this.getId();
     }
 });

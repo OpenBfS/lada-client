@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /**
@@ -21,60 +21,73 @@ function numOfErrors(proben) {
 }
 
 function buildImportReport(filename, msg, errors, warnings) {
-    var out = Array();
+    var out = [];
     // There is a entry for each imported proben in the errors dict (might be
     // empty)
-    var num_proben = (Object.keys(errors).length > 0);
-    var num_errors = (numOfErrors(errors));
-    var has_warnings = (Object.keys(warnings).length > 0);
-    if (msg != 200) {
-            out.push("Der Import der Datei " + filename + " war nicht erfolgreich. Der Importvorgang konnte aufgrund eines Fehlers im Server nicht beendet werden.");
-    } else {
-        if (num_errors == num_proben) {
-            out.push("Der Import der Datei " + filename + " war nicht erfolgreich.");
+    var numProben = (Object.keys(errors).length > 0);
+    var numErrors = (numOfErrors(errors));
+    var hasWarnings = (Object.keys(warnings).length > 0);
+    if (msg !== 200) {
+            out.push('Der Import der Datei ' +
+                filename +
+                ' war nicht erfolgreich. Der Importvorgang konnte aufgrund' +
+                'eines Fehlers im Server nicht beendet werden.');
+    }
+    else {
+        if (numErrors === numProben) {
+            out.push('Der Import der Datei '
+                + filename + ' war nicht erfolgreich.');
         }
-        else if (num_errors == 0) {
-            out.push("Der Import der Datei " + filename + " war erfolgreich.");
-        } else {
-            out.push("Der Import der Datei " + filename + " war nicht oder nur teilweise erfolgreich.");
+        else if (numErrors === 0) {
+            out.push('Der Import der Datei ' + filename + ' war erfolgreich.');
         }
-        out.push(" Bei dem Import sind folgende Fehler und Warnungen aufgetreten:");
-        out.push("<br/>");
-        if (num_errors) {
-            out.push("<strong>Fehler:</strong>");
-            out.push("<br/>");
-            out.push("<ol>");
-            for (var key in errors) {
-                out.push("<li>Probe: "+key)
-                var msgs = errors[key];
-                out.push("<ol>");
-                for (var i = msgs.length - 1; i >= 0; i--){
-                    out.push("<li>"+msgs[i].key+" ("+Lada.getApplication().bundle.getMsg(msgs[i].code.toString())+"): "+msgs[i].value+"</li>")
-                };
-                out.push("</ol>");
-                out.push("</li>");
+        else {
+            out.push('Der Import der Datei '
+                + filename + ' war nicht oder nur teilweise erfolgreich.');
+        }
+        out.push(' Bei dem Import sind folgende Fehler und Warnungen ' +
+                'aufgetreten:');
+        out.push('<br/>');
+        var key;
+        var msgs;
+        if (numErrors) {
+            out.push('<strong>Fehler:</strong>');
+            out.push('<br/>');
+            out.push('<ol>');
+            for (key in errors) {
+                out.push('<li>Probe: ' + key);
+                msgs = errors[key];
+                out.push('<ol>');
+                for (var i = msgs.length - 1; i >= 0; i--) {
+                    out.push('<li>' + msgs[i].key +
+                        ' (' + Lada.getApplication().bundle.getMsg(
+                            msgs[i].code.toString()) +
+                        '): ' + msgs[i].value + '</li>');
+                }
+                out.push('</ol>');
+                out.push('</li>');
             }
-            out.push("</ol>");
-            out.push("<br/>");
+            out.push('</ol>');
+            out.push('<br/>');
         }
-        if (has_warnings) {
-            out.push("<strong>Warnungen:</strong>");
-            out.push("<br/>");
-            out.push("<ol>");
-            for (var key in warnings) {
-                out.push("<li>"+key)
-                var msgs = warnings[key];
-                out.push("<ol>");
-                for (var i = msgs.length - 1; i >= 0; i--){
-                    out.push("<li>"+msgs[i].key+" ("+Lada.getApplication().bundle.getMsg(msgs[i].code.toString())+"): "+msgs[i].value+"</li>")
-                };
-                out.push("</ol>");
-                out.push("</li>");
+        if (hasWarnings) {
+            out.push('<strong>Warnungen:</strong>');
+            out.push('<br/>');
+            out.push('<ol>');
+            for (key in warnings) {
+                out.push('<li>' + key);
+                msgs = warnings[key];
+                out.push('<ol>');
+                for (var i = msgs.length - 1; i >= 0; i--) {
+                    out.push('<li>' + msgs[i].key + ' (' + Lada.getApplication().bundle.getMsg(msgs[i].code.toString())+'): '+msgs[i].value+'</li>')
+                }
+                out.push('</ol>');
+                out.push('</li>');
             }
-            out.push("</ol>");
+            out.push('</ol>');
         }
     }
-    return out.join("");
+    return out.join('');
 }
 
 Ext.define('Lada.controller.Proben', {
@@ -133,18 +146,18 @@ Ext.define('Lada.controller.Proben', {
         });
     },
 
-    addItem: function(button) {
+    addItem: function() {
         console.log('Adding new Probe');
-        var view = Ext.widget('probencreate');
+        Ext.widget('probencreate');
     },
 
     /**
      * Opens a window with a file chooser to select the file to upload
      * @private
      */
-    selectUploadFile: function(button) {
+    selectUploadFile: function() {
         console.log('Importing');
-        var view = Ext.widget('probenimport');
+        Ext.widget('probenimport');
     },
 
     /** Uploads the selected file the the server
@@ -164,8 +177,8 @@ Ext.define('Lada.controller.Proben', {
                     var warnings = resp.result.data.warnings;
                     var filename = resp.result.data.filename;
                     var message = resp.result.message;
-                    var dialogbody = buildImportReport(filename, message, errors, warnings)
-                    var filename = resp.result.data.filename;
+                    var dialogbody =
+                        buildImportReport(filename, message, errors, warnings);
                     Ext.Msg.alert('Erfolg', dialogbody);
                     win.close();
                 },
@@ -174,7 +187,8 @@ Ext.define('Lada.controller.Proben', {
                     var warnings = resp.result.data.warnings;
                     var filename = resp.result.data.filename;
                     var message = resp.result.message;
-                    var dialogbody = buildImportReport(filename, message, errors, warnings)
+                    var dialogbody =
+                        buildImportReport(filename, message, errors, warnings);
                     Ext.Msg.alert('Fehler', dialogbody);
                     win.close();
                 }
@@ -248,7 +262,7 @@ Ext.define('Lada.controller.Proben', {
             modelId: id
         });
         view.show();
-        console.log("Loaded Probe with ID " + record.getId()); //outputs ID
+        console.log('Loaded Probe with ID ' + record.getId());
     },
 
     createSuccess: function(form, record, response) {
@@ -256,17 +270,17 @@ Ext.define('Lada.controller.Proben', {
         var win = form.up('window');
         win.close();
         var store = this.getProbenStore();
-        //Load or reload the probenstore.
+        // Load or reload the probenstore.
         if (store.getCount() === 0) {
             store.load({
                 scope: this,
-                callback: function(records, operation, success) {
+                callback: function() {
                     console.log('Loaded store');
                     // Open Editdialog
                     var json = Ext.decode(response.responseText);
                     if (json) {
                         var probeId = json.data.probeId;
-                        var probe = store.findRecord("probeId", probeId);
+                        var probe = store.findRecord('probeId', probeId);
                         this.editItem(null, probe);
                     }
                 }
@@ -275,13 +289,13 @@ Ext.define('Lada.controller.Proben', {
         else {
             store.reload({
                 scope: this,
-                callback: function(records, operation, success) {
+                callback: function() {
                     console.log('Reloaded store');
                     // Open Editdialog
                     var json = Ext.decode(response.responseText);
                     if (json) {
                         var probeId = json.data.probeId;
-                        var probe = store.findRecord("probeId", probeId);
+                        var probe = store.findRecord('probeId', probeId);
                         this.editItem(null, probe);
                     }
                 }
@@ -289,7 +303,7 @@ Ext.define('Lada.controller.Proben', {
         }
     },
 
-    editSuccess: function(form, record, response) {
+    editSuccess: function(form) {
         // Reload store
         var store = this.getProbenStore();
         store.reload();

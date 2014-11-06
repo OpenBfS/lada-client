@@ -3,24 +3,24 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /**
  * Combobox for Zusatzwert
  */
-Ext.define('Lada.view.widgets.Probenzusatzwert' ,{
+Ext.define('Lada.view.widgets.Probenzusatzwert', {
     extend: 'Ext.form.ComboBox',
     require: ['Lada.store.StaProbenzusaetze'],
     alias: 'widget.probenzusatzwert',
     store: 'StaProbenzusaetze',
     displayField: 'beschreibung',
     valueField: 'id',
-    emptyText:'Wählen Sie einen Zusatzwert',
+    emptyText: 'Wählen Sie einen Zusatzwert',
     // Enable filtering of comboboxes
     autoSelect: false,
     queryMode: 'local',
-    triggerAction : 'all',
+    triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
 

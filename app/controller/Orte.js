@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /**
@@ -62,9 +62,9 @@ Ext.define('Lada.controller.Orte', {
         });
     },
 
-    createOrt: function(button) {
+    createOrt: function() {
         console.log('button clicked');
-        var win = Ext.create('Lada.view.orte.CreateOrt',{});
+        var win = Ext.create('Lada.view.orte.CreateOrt', {});
         win.show();
     },
 
@@ -76,17 +76,18 @@ Ext.define('Lada.controller.Orte', {
         var ortdetail = Ext.create('Lada.model.Ortdetail');
         var fields = ['beschreibung', 'hoeheLand',
                       'latitude', 'longitude', 'staatId', 'gemId'];
-        for (var i = fields.length - 1; i >= 0; i--) {
-            var ffield = form.findField("ort_"+fields[i]);
+        var i = 0;
+        var ffield;
+        for (i = fields.length - 1; i >= 0; i++) {
+            ffield = form.findField('ort_' + fields[i]);
             ortdetail.set(fields[i], ffield.getValue());
         }
         ortdetailstore.add(ortdetail);
         ortdetailstore.sync({
-            success: function(batch, options) {
+            success: function(batch) {
                 console.log(batch);
                 var od = Ext.ComponentQuery.query('ortdetail');
                 console.log(od);
-                batch.operations[0].resultSet.records[0].data;
                 var response = batch.operations[0].resultSet.records[0].data;
                 od[0].setValue(response.ortId);
                 console.log('id:' + response.ortId);
@@ -115,15 +116,18 @@ Ext.define('Lada.controller.Orte', {
             ortdetail = Ext.create('Lada.model.Ortdetail');
             ortdetailstore.add(ortdetail);
             newortdetail = true;
-        } else {
+        }
+        else {
             console.log('Editing Ortdetail');
             ortdetail = ortdetailstore.getById(ortid);
         }
 
         var fields = ['beschreibung', 'bezeichnung', 'hoeheLand',
                       'latitude', 'longitude', 'staatId', 'gemId'];
-        for (var i = fields.length - 1; i >= 0; i--){
-            ffield = fform.findField("ort_"+fields[i]);
+        var i = 0;
+        var ffield;
+        for (i = fields.length - 1; i >= 0; i--) {
+            ffield = fform.findField('ort_' + fields[i]);
             ortdetail.set(fields[i], ffield.getValue());
         }
         // Create a new Ortedetail if nessecary
@@ -132,7 +136,8 @@ Ext.define('Lada.controller.Orte', {
                 if (newortdetail) {
                     // Get ID from new created ortdetail and set it to the ort
                     var response =
-                        options.operations.create[0].store.proxy.reader.jsonData;
+                        options.operations.create[0]
+                            .store.proxy.reader.jsonData;
                     form.model.set('ortId', response.ortId);
                 }
                 ortidfield.setValue(ortid);
@@ -148,30 +153,30 @@ Ext.define('Lada.controller.Orte', {
         console.log('Adding new Ort for Probe ' + button.probeId);
         var ort = Ext.create('Lada.model.Ort');
         ort.set('probeId', button.probeId);
-        var view = Ext.widget('ortecreate', {
+        Ext.widget('ortecreate', {
             model: ort
         });
     },
 
     editItem: function(grid, record) {
         console.log('Editing Ort');
-        record.getAuthInfo(this.initEditWindow)
-        console.log("Loaded Ort with ID " + record.getId()); //outputs ID
+        record.getAuthInfo(this.initEditWindow);
+        console.log('Loaded Ort with ID ' + record.getId());
     },
 
-    initEditWindow: function(record, readonly, owner) {
+    initEditWindow: function(record, readonly) {
         var view = Ext.widget('ortecreate', {
             model: record,
             edit: true
         });
-        var ignore = Array();
+        var ignore = [];
         if (readonly) {
             var form = view.down('form');
             form.setReadOnly(true, ignore);
         }
     },
 
-    createSuccess: function(form, record, operation) {
+    createSuccess: function(form) {
         // Reload store
         var store = this.getOrteStore();
         store.reload();
@@ -179,7 +184,7 @@ Ext.define('Lada.controller.Orte', {
         win.close();
     },
 
-    editSuccess: function(form, record, operation) {
+    editSuccess: function(form) {
         // Reload store
         var store = this.getOrteStore();
         store.reload();

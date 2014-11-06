@@ -3,27 +3,27 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /*
  * Grid to list available search queryies
  */
-Ext.define('Lada.view.search.List' ,{
+Ext.define('Lada.view.search.List', {
     extend: 'Ext.form.FieldSet',
-    title: 'SQL-Auswahl',
     alias: 'widget.queryselector',
     require: ['Ext.layout.container.Column'],
+    title: 'SQL-Auswahl',
     initComponent: function() {
-        this.layout = 'column',
+        this.layout = 'column';
         this.items = [{
             id: 'search',
             xtype: 'combobox',
             editable: false,
             store: 'Queries',
-            displayField:'name',
-            valueField:'id',
-            emptyText:'Wählen Sie eine Abfrage'
+            displayField: 'name',
+            valueField: 'id',
+            emptyText: 'Wählen Sie eine Abfrage'
         }, {
             xtype: 'panel',
             maxWidth: '500',

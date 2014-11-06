@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /*
@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.view.zusatzwerte.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
-    requires : [
+    requires: [
         'Lada.view.widgets.Probenzusatzwert',
         'Ext.layout.container.Column'
     ],
@@ -25,18 +25,18 @@ Ext.define('Lada.view.zusatzwerte.CreateForm', {
             fieldLabel: 'PZW-Größe',
             listeners: {
                 scope: this,
-                'change': function (field, newv, oldv, opts) {
+                'change': function(field, newv, oldv, opts) {
                     console.log(field, oldv, newv, opts);
-                    var ffield = this.getForm().findField("messeinheit");
-                    pzsId = newv;
-                    if (pzsId == undefined) {
+                    var ffield = this.getForm().findField('messeinheit');
+                    var pzsId = newv;
+                    if (!pzsId) {
                         pzsId = oldv;
                     }
                     ffield.setValue(this.model.getMesseinheit(pzsId));
                 }
             }
         }, {
-            layout: "column",
+            layout: 'column',
             border: 0,
             items: [{
                 xtype: 'numberfield',
@@ -58,4 +58,3 @@ Ext.define('Lada.view.zusatzwerte.CreateForm', {
         this.callParent(arguments);
     }
 });
-

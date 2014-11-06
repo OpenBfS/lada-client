@@ -3,13 +3,13 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /*
  * Grid to list Kommentare for Messunge
  */
-Ext.define('Lada.view.mkommentare.List' ,{
+Ext.define('Lada.view.mkommentare.List', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.mkommentarelist',
 
@@ -56,4 +56,3 @@ Ext.define('Lada.view.mkommentare.List' ,{
         this.callParent(arguments);
     }
 });
-

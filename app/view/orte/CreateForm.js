@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /*
@@ -11,14 +11,16 @@
  */
 Ext.define('Lada.view.orte.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
-    model: 'Lada.model.Ort',
     requires: [
         'Lada.view.widgets.Ortdetail',
         'Lada.view.widgets.Staat',
         'Lada.view.widgets.Verwaltungseinheit',
         'Lada.view.orte.CreateOrt'
     ],
+
+    model: 'Lada.model.Ort',
     edit: false,
+
     initComponent: function() {
         this.items = [{
             xtype: 'ortdetail',
@@ -26,7 +28,7 @@ Ext.define('Lada.view.orte.CreateForm', {
             fieldLabel: 'Ort',
             listeners: {
                 scope: this,
-                'change': function (field, newv, oldv, opts) {
+                'change': function(field, newv) {
                     if (field.up('window')) {
                         field.up('window').down('fieldset').show();
                     }
@@ -54,10 +56,12 @@ Ext.define('Lada.view.orte.CreateForm', {
                         });
                     }
 
+                    console.log('found verw');
                     var form = this.getForm();
-                    if ( ort != undefined ) {
-                        for (var i = fields.length - 1; i >= 0; i--){
-                            ffield = form.findField("ort_"+fields[i]);
+                    var ffield = null;
+                    if (ort) {
+                        for (var i = fields.length - 1; i >= 0; i--) {
+                            ffield = form.findField('ort_' + fields[i]);
                             ffield.setValue(ort.get(fields[i]));
                         }
                     }

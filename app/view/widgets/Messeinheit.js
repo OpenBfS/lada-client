@@ -3,24 +3,24 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /**
  * Combobox for Messeinheit
  */
-Ext.define('Lada.view.widgets.Messeinheit' ,{
+Ext.define('Lada.view.widgets.Messeinheit', {
     extend: 'Ext.form.ComboBox',
     require: ['Lada.store.StaMesseinheiten'],
     alias: 'widget.messeinheit',
     store: 'StaMesseinheiten',
     displayField: 'einheit',
     valueField: 'id',
-    emptyText:'Wählen Sie eine Messeinheit',
+    emptyText: 'Wählen Sie eine Messeinheit',
     // Enable filtering of comboboxes
     autoSelect: false,
     queryMode: 'local',
-    triggerAction : 'all',
+    triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
 

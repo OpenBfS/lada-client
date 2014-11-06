@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /*
@@ -11,8 +11,9 @@
  */
 Ext.define('Lada.view.proben.ImportForm', {
     extend: 'Ext.form.Panel',
+
     initComponent: function() {
-       this.items = [{
+        this.items = [{
             xtype: 'fileuploadfield',
             title: 'Importdate'
         }];
