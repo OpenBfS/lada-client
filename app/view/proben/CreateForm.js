@@ -12,6 +12,7 @@
 Ext.define('Lada.view.proben.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
     requires: [
+        'Lada.view.widgets.Mst',
         'Lada.view.widgets.Datenbasis',
         'Lada.view.widgets.Netzbetreiber',
         'Lada.view.widgets.Betriebsart',

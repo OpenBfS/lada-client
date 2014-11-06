@@ -13,6 +13,10 @@ Ext.define('Lada.view.messwerte.Create', {
     extend: 'Ext.window.Window',
     alias: 'widget.messwertecreate',
 
+    requires: [
+        'Lada.view.messwerte.CreateForm'
+    ],
+
     title: 'Maske für Messwerte',
     autoShow: true,
     autoScroll: true,

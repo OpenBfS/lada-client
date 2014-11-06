@@ -11,7 +11,6 @@
  */
 Ext.define('Lada.view.widgets.Mst', {
     extend: 'Ext.form.ComboBox',
-    require: ['Lada.store.StaMessstellen'],
     alias: 'widget.mst',
     store: 'StaMessstellen',
     displayField: 'messStelle',

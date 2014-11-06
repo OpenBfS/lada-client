@@ -11,7 +11,6 @@
  */
 Ext.define('Lada.view.widgets.Probenzusatzwert', {
     extend: 'Ext.form.ComboBox',
-    require: ['Lada.store.StaProbenzusaetze'],
     alias: 'widget.probenzusatzwert',
     store: 'StaProbenzusaetze',
     displayField: 'beschreibung',

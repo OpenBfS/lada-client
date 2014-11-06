@@ -13,6 +13,11 @@ Ext.define('Lada.view.orte.CreateOrt', {
     extend: 'Ext.window.Window',
     alias: 'widget.createortdetail',
 
+    requires: [
+        'Lada.view.widgets.Staat',
+        'Lada.view.widgets.Verwaltungseinheit'
+    ],
+
     title: 'Neuer Ort',
 
     /**

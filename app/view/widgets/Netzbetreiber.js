@@ -11,7 +11,6 @@
  */
 Ext.define('Lada.view.widgets.Netzbetreiber', {
     extend: 'Ext.form.ComboBox',
-    require: ['Lada.store.StaNetzbetreiber'],
     alias: 'widget.netzbetreiber',
     store: 'StaNetzbetreiber',
     displayField: 'netzbetreiber',

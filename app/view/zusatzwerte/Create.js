@@ -13,6 +13,10 @@ Ext.define('Lada.view.zusatzwerte.Create', {
     extend: 'Ext.window.Window',
     alias: 'widget.zusatzwertecreate',
 
+    requires: [
+        'Lada.view.zusatzwerte.CreateForm'
+    ],
+
     title: 'Maske für Zusatzwerte',
     autoShow: true,
     autoScroll: true,

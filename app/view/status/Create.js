@@ -13,6 +13,10 @@ Ext.define('Lada.view.status.Create', {
     extend: 'Ext.window.Window',
     alias: 'widget.statuscreate',
 
+    requires: [
+        'Lada.view.status.CreateForm'
+    ],
+
     title: 'Maske für den Messstatus',
     autoShow: true,
     autoScroll: true,

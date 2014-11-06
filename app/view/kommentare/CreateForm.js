@@ -11,6 +11,12 @@
  */
 Ext.define('Lada.view.kommentare.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
+    requires: [
+        'Lada.view.widgets.Mst',
+        'Lada.view.widgets.Datetime',
+        'Ext.form.field.TextArea'
+    ],
+
     model: 'Lada.model.Kommentar',
 
     initComponent: function() {

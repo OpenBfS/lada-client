@@ -11,7 +11,6 @@
  */
 Ext.define('Lada.view.widgets.Verwaltungseinheit', {
     extend: 'Ext.form.field.ComboBox',
-    require: ['Lada.store.StaVerwaltungseinheiten'],
     alias: 'widget.verwaltungseinheiten',
     store: 'StaVerwaltungseinheiten',
     displayField: 'bezeichnung',

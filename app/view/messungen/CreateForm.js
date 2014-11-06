@@ -12,6 +12,7 @@
 Ext.define('Lada.view.messungen.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
     requires: [
+        'Lada.view.widgets.Datetime',
         'Lada.view.widgets.Messmethode',
         'Lada.view.widgets.Testdatensatz'
     ],

@@ -11,7 +11,6 @@
  */
 Ext.define('Lada.view.widgets.Messmethode', {
     extend: 'Ext.form.ComboBox',
-    require: ['Lada.store.StaMessmethoden'],
     alias: 'widget.messmethode',
     store: 'StaMessmethoden',
     displayField: 'messmethode',

@@ -13,6 +13,10 @@ Ext.define('Lada.view.mkommentare.Create', {
     extend: 'Ext.window.Window',
     alias: 'widget.mkommentarecreate',
 
+    requires: [
+        'Lada.view.mkommentare.CreateForm'
+    ],
+
     title: 'Maske für Messungskommentare',
     // Make size of the dialog dependend of the available space.
     // TODO: Handle resizing the browser window.
@@ -20,9 +24,6 @@ Ext.define('Lada.view.mkommentare.Create', {
     autoScroll: true,
     modal: true,
 
-    requires: [
-        'Lada.view.mkommentare.CreateForm'
-    ],
     initComponent: function() {
         var form = Ext.create('Lada.view.mkommentare.CreateForm',
             this.initialConfig);

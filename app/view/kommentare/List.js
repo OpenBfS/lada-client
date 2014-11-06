@@ -13,6 +13,10 @@ Ext.define('Lada.view.kommentare.List', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.kommentarelist',
 
+    requires: [
+        'Ext.toolbar.Toolbar'
+    ],
+
     store: 'KommentareP',
     viewConfig: {
         maxHeight: 350,

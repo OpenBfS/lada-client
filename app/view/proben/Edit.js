@@ -11,8 +11,11 @@
  */
 Ext.define('Lada.view.proben.Edit', {
     extend: 'Ext.window.Window',
-    require: ['Lada.view.proben.EditForm'],
     alias: 'widget.probenedit',
+
+    requires: [
+        'Lada.view.proben.EditForm'
+    ],
 
     title: 'Maske für §3-Proben',
     // Make size of the dialog dependend of the available space.

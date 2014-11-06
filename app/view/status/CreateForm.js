@@ -13,7 +13,8 @@ Ext.define('Lada.view.status.CreateForm', {
     extend: 'Lada.view.widgets.LadaForm',
     requires: [
         'Lada.view.widgets.Mst',
-        'Lada.view.widgets.Statuswert'
+        'Lada.view.widgets.Statuswert',
+        'Lada.view.widgets.Datetime'
     ],
 
     model: 'Lada.model.Status',

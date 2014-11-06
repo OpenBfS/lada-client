@@ -13,6 +13,10 @@ Ext.define('Lada.view.proben.Import', {
     extend: 'Ext.window.Window',
     alias: 'widget.probenimport',
 
+    requires: [
+        'Lada.view.proben.ImportForm'
+    ],
+
     title: 'Maske für §3-Proben Import',
     autoShow: true,
     autoScroll: true,

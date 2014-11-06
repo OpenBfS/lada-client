@@ -11,7 +11,6 @@
  */
 Ext.define('Lada.view.widgets.Uwb' ,{
     extend: 'Ext.form.ComboBox',
-    require: ['Lada.store.StaUmwelt'],
     alias: 'widget.uwb',
     store: 'StaUmwelt',
     displayField: 'id',

@@ -11,7 +11,6 @@
  */
 Ext.define('Lada.view.widgets.Messeinheit', {
     extend: 'Ext.form.ComboBox',
-    require: ['Lada.store.StaMesseinheiten'],
     alias: 'widget.messeinheit',
     store: 'StaMesseinheiten',
     displayField: 'einheit',

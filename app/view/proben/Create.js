@@ -13,6 +13,10 @@ Ext.define('Lada.view.proben.Create', {
     extend: 'Ext.window.Window',
     alias: 'widget.probencreate',
 
+    requires: [
+        'Lada.view.proben.CreateForm'
+    ],
+
     title: 'Maske für §3-Proben',
     // Make size of the dialog dependend of the available space.
     // TODO: Handle resizing the browser window.

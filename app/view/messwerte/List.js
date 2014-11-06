@@ -11,7 +11,6 @@
  */
 Ext.define('Lada.view.messwerte.List', {
     extend: 'Ext.grid.Panel',
-    require: ['Lada.store.StaMesseinheit'],
     alias: 'widget.messwertelist',
 
     store: 'Messwerte',
