@@ -27,7 +27,6 @@ Ext.define('Lada.controller.Orte', {
     ],
 
     init: function() {
-        console.log('Initialising the Orte controller');
         this.callParent(arguments);
     },
 
@@ -63,14 +62,11 @@ Ext.define('Lada.controller.Orte', {
     },
 
     createOrt: function() {
-        console.log('button clicked');
         var win = Ext.create('Lada.view.orte.CreateOrt', {});
         win.show();
     },
 
     saveNewOrt: function(button) {
-        console.log('button clicked');
-
         var form = button.up('window').down('form').getForm();
         var ortdetailstore = Ext.getStore('Ortedetails');
         var ortdetail = Ext.create('Lada.model.Ortdetail');
@@ -85,23 +81,18 @@ Ext.define('Lada.controller.Orte', {
         ortdetailstore.add(ortdetail);
         ortdetailstore.sync({
             success: function(batch) {
-                console.log(batch);
                 var od = Ext.ComponentQuery.query('ortdetail');
-                console.log(od);
                 var response = batch.operations[0].resultSet.records[0].data;
                 od[0].setValue(response.ortId);
-                console.log('id:' + response.ortId);
                 button.up('window').close();
             },
             failure: function() {
-                console.log('Error on saving Ortdetails');
                 ortdetailstore.remove(ortdetail);
             }
         });
     },
 
     saveItem: function(button) {
-        console.log('Saving Ort');
         var form = button.up('window').down('form');
         var fform = form.getForm();
 
@@ -112,13 +103,11 @@ Ext.define('Lada.controller.Orte', {
         var ortidfield = fform.findField('ortId');
         var ortid = ortidfield.getValue();
         if (ortid === null) {
-            console.log('New Ortdetail');
             ortdetail = Ext.create('Lada.model.Ortdetail');
             ortdetailstore.add(ortdetail);
             newortdetail = true;
         }
         else {
-            console.log('Editing Ortdetail');
             ortdetail = ortdetailstore.getById(ortid);
         }
 
@@ -143,14 +132,12 @@ Ext.define('Lada.controller.Orte', {
                 ortidfield.setValue(ortid);
             },
             failure: function() {
-                console.log('Error on saving Ortdetails');
             }
         });
         form.commit();
     },
 
     addItem: function(button) {
-        console.log('Adding new Ort for Probe ' + button.probeId);
         var ort = Ext.create('Lada.model.Ort');
         ort.set('probeId', button.probeId);
         Ext.widget('ortecreate', {
@@ -159,9 +146,7 @@ Ext.define('Lada.controller.Orte', {
     },
 
     editItem: function(grid, record) {
-        console.log('Editing Ort');
         record.getAuthInfo(this.initEditWindow);
-        console.log('Loaded Ort with ID ' + record.getId());
     },
 
     initEditWindow: function(record, readonly) {

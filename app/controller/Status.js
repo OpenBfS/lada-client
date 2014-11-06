@@ -18,7 +18,6 @@ Ext.define('Lada.controller.Status', {
     ],
 
     init: function() {
-        console.log('Initialising the Status controller');
         this.callParent(arguments);
     },
 
@@ -57,11 +56,9 @@ Ext.define('Lada.controller.Status', {
     },
 
     editItem: function(grid, record) {
-        console.log('Editing Status');
         var mstore = Ext.data.StoreManager.get('Messungen');
         var messung = mstore.getById(record.get('messungsId'));
         record.getAuthInfo(this.initEditWindow, messung.get('probeId'));
-        console.log("Loaded Status with ID " + record.getId()); //outputs ID
     },
 
     initEditWindow: function(record, readonly, owner) {

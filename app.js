@@ -55,7 +55,6 @@ Ext.application({
 
     // Start the application.
     launch: function() {
-        console.log('Launching the application');
         Ext.create('Lada.store.StaDatenbasen', {
             storeId: 'staDatenbasen'
         });
@@ -115,7 +114,6 @@ Ext.application({
 Ext.data.writer.Json.override({
     getRecordData: function(record) {
         if (this.writeEverything || record.writeEverything) {
-            console.log('getRecordData', arguments);
             return record.getAllData();
         }
         return this.callOverridden(arguments);

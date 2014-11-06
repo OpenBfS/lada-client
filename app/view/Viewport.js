@@ -22,7 +22,6 @@ Ext.define('Lada.view.Viewport', {
     ],
     layout: 'fit',
     initComponent: function() {
-        console.log('Setting up Viewport');
         this.initSearch();
 
         // Development related:
@@ -52,7 +51,6 @@ Ext.define('Lada.view.Viewport', {
                 var userinfo = Ext.getCmp('userinfo');
                 userinfo.update(user);
                 groupinfo.update(groups);
-                console.log(info);
             }
         });
     },
@@ -124,9 +122,7 @@ Ext.define('Lada.view.Viewport', {
                 probeId: probeId
             },
             callback: function() {
-                console.log(store);
                 var messung = store.data.items[0];
-                console.log(store.data.items[0]);
                 kstore.load({
                     params: {
                         probeId: probeId,
@@ -145,7 +141,6 @@ Ext.define('Lada.view.Viewport', {
                         messungsId: messung.get('id').messungsId
                     }
                 });
-                console.log('Creating Messung window');
                 // var messung = Ext.create('Lada.model.Messung');
                 Ext.create('Lada.view.messungen.Create', {
                     model: messung

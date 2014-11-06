@@ -25,7 +25,6 @@ Ext.define('Lada.controller.Kommentare', {
     ],
 
     init: function() {
-        console.log('Initialising the Kommentare controller');
         this.callParent();
     },
 
@@ -51,7 +50,6 @@ Ext.define('Lada.controller.Kommentare', {
     },
 
     addItem: function(button) {
-        console.log('Adding new Kommentar for Probe ' + button.probeId);
         var kommentar = Ext.create('Lada.model.KommentarP');
         kommentar.set('probeId', button.probeId);
         Ext.widget('kommentarecreate', {
@@ -60,9 +58,7 @@ Ext.define('Lada.controller.Kommentare', {
     },
 
     editItem: function(grid, record) {
-        console.log('Editing Kommentar');
         record.getAuthInfo(this.initEditWindow);
-        console.log('Loaded Kommentar with ID ' + record.getId());
     },
 
     initEditWindow: function(record, readonly) {

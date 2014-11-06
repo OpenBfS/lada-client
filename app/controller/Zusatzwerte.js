@@ -17,7 +17,6 @@ Ext.define('Lada.controller.Zusatzwerte', {
     ],
 
     init: function() {
-        console.log('Initialising the Zusatzwerte controller');
         this.callParent(arguments);
     },
 
@@ -47,13 +46,11 @@ Ext.define('Lada.controller.Zusatzwerte', {
     },
 
     saveItem: function(button) {
-        console.log('Saving new Zusatzwert for Probe ' + button.probeId);
         var form = button.up('window').down('form');
         form.commit();
     },
 
     addItem: function(button) {
-        console.log('Adding new Zusatzwert for Probe' + button.probeId);
         var zusatzwert = Ext.create('Lada.model.Zusatzwert');
         zusatzwert.set('probeId', button.probeId);
         Ext.widget('zusatzwertecreate', {
@@ -62,7 +59,6 @@ Ext.define('Lada.controller.Zusatzwerte', {
     },
 
     editItem: function(grid, record) {
-        console.log('Editing Zusatzwert');
         record.getAuthInfo(this.initEditWindow);
     },
 

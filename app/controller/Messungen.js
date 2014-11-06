@@ -26,7 +26,6 @@ Ext.define('Lada.controller.Messungen', {
     ],
 
     init: function() {
-        console.log('Initialising the Messungen controller');
         this.callParent();
     },
 
@@ -59,13 +58,11 @@ Ext.define('Lada.controller.Messungen', {
     },
 
     saveItem: function(button) {
-        console.log('Saving new Messung for Probe ' + button.probeId);
         var form = button.up('window').down('form');
         form.commit();
     },
 
     addItem: function(button) {
-        console.log('Adding new Messung for Probe ' + button.probeId);
         var messung = Ext.create('Lada.model.Messung');
         messung.set('probeId', button.probeId);
         Ext.widget('messungencreate', {
@@ -74,7 +71,6 @@ Ext.define('Lada.controller.Messungen', {
     },
 
     editItem: function(grid, record) {
-        console.log('Editing Messung');
         var kstore = this.getKommentareMStore();
         kstore.load({
             params: {
@@ -97,7 +93,6 @@ Ext.define('Lada.controller.Messungen', {
             }
         });
         record.getAuthInfo(this.initEditWindow);
-        console.log('Loaded Messung with ID ' + record.getId());
     },
 
     initEditWindow: function(record, readonly, owner) {
@@ -129,10 +124,6 @@ Ext.define('Lada.controller.Messungen', {
                         store.reload();
                     }
                 });
-                console.log('Deleting Messung');
-            }
-            else {
-                console.log('Cancel Deleting Messung');
             }
         });
     },

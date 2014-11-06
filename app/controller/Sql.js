@@ -30,7 +30,6 @@ Ext.define('Lada.controller.Sql', {
     ],
 
     init: function() {
-        console.log('Initialising the Sql controller');
         this.control({
             // CSS like selector to select element in the viewport. See
             // ComponentQuery documentation for more details.
@@ -103,28 +102,24 @@ Ext.define('Lada.controller.Sql', {
             var multi = filterFields[j].multiSelect;
             var field = null;
             if (type == "text") {
-                console.log("Found text filter");
                 field = Ext.create('Ext.form.field.Text', {
                     name: name,
                     fieldLabel: label
                 });
             }
             else if (type == "number") {
-                console.log("Found number filter");
                 field = Ext.create('Ext.form.field.Number', {
                     name: name,
                     fieldLabel: label
                 });
             }
             else if (type == "datetime") {
-                console.log("Found datetime filter");
                 field = Ext.create('Lada.view.widgets.Datetime', {
                     name: name,
                     fieldLabel: label
                 });
             }
             else if (type == "bool") {
-                console.log("Found bool filter");
                 field = Ext.create('Lada.view.widgets.Testdatensatz', {
                     name: name,
                     fieldLabel: label,
@@ -132,7 +127,6 @@ Ext.define('Lada.controller.Sql', {
                 });
             }
             else if (type == "listmst") {
-                console.log("Found listmst filter");
                 field = Ext.create('Lada.view.widgets.Mst', {
                     name: name,
                     fieldLabel: label,
@@ -140,7 +134,6 @@ Ext.define('Lada.controller.Sql', {
                 });
             }
             else if (type == "listumw") {
-                console.log("Found listumw filter");
                 field = Ext.create('Lada.view.widgets.Uwb', {
                     name: name,
                     fieldLabel: label,
@@ -148,7 +141,6 @@ Ext.define('Lada.controller.Sql', {
                 });
             }
             else if (type == "listdbasis") {
-                console.log("Found listdbasis filter");
                 field = Ext.create('Lada.view.widgets.Datenbasis', {
                     name: name,
                     fieldLabel: label,
@@ -156,7 +148,6 @@ Ext.define('Lada.controller.Sql', {
                 });
             }
             else if (type == "listver") {
-                console.log("Found listver filter");
                 field = Ext.create('Lada.view.widgets.Verwaltungseinheit', {
                     name: name,
                     fieldLabel: label,
@@ -164,7 +155,6 @@ Ext.define('Lada.controller.Sql', {
                 });
             }
             else if (type == "listnetz") {
-                console.log("Found listnetz filter");
                 field = Ext.create('Lada.view.widgets.Netzbetreiber', {
                     name: name,
                     fieldLabel: label,
@@ -172,7 +162,6 @@ Ext.define('Lada.controller.Sql', {
                 });
             }
             if (field) {
-                console.log("Pushing field to filters");
                 filters.add(field);
                 filters.show();
                 hide = false;
@@ -207,7 +196,6 @@ Ext.define('Lada.controller.Sql', {
         result.getStore().load({
             params: searchParams
         });
-        console.log('Store loaded');
         result.show();
     },
 

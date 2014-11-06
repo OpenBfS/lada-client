@@ -23,7 +23,6 @@ Ext.define('Lada.controller.Messwert', {
     ],
 
     init: function() {
-        console.log('Initialising the Messwert controller');
         this.callParent(arguments);
     },
 
@@ -49,7 +48,6 @@ Ext.define('Lada.controller.Messwert', {
     },
 
     saveItem: function(button) {
-        console.log('Saving MesswerMesswert');
         var form = button.up('window').down('form');
         form.commit();
     },
@@ -64,11 +62,9 @@ Ext.define('Lada.controller.Messwert', {
     },
 
     editItem: function(grid, record) {
-        console.log('Editing Messwert');
         var mstore = Ext.data.StoreManager.get('Messungen');
         var messung = mstore.getById(record.get('messungsId'));
         record.getAuthInfo(this.initEditWindow, messung.get('probeId'));
-        console.log('Loaded Messwert with ID ' + record.getId());
     },
 
     initEditWindow: function(record, readonly) {
@@ -96,10 +92,6 @@ Ext.define('Lada.controller.Messwert', {
                         store.reload();
                     }
                 });
-                console.log('Deleting Messwert');
-            }
-            else {
-                console.log('Cancel Deleting Messwert');
             }
         });
     },

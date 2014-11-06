@@ -25,7 +25,6 @@ Ext.define('Lada.view.proben.Edit', {
     modal: true,
 
     initComponent: function() {
-        console.log('open edit...');
         this.buttons = [{
             text: 'Speichern',
             action: 'save'

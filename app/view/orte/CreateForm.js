@@ -56,7 +56,6 @@ Ext.define('Lada.view.orte.CreateForm', {
                         });
                     }
 
-                    console.log('found verw');
                     var form = this.getForm();
                     var ffield = null;
                     if (ort) {

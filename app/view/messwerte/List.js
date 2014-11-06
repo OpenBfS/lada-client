@@ -62,7 +62,6 @@ Ext.define('Lada.view.messwerte.List', {
             header: 'Messeinheit',
             dataIndex: 'mehId',
             renderer: function(value) {
-                console.log('einheit: ' + value);
                 var store = Ext.data.StoreManager.get('staMesseinheiten');
                 return store.findRecord('id', value).get('einheit');
             }

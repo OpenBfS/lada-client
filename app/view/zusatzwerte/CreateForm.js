@@ -25,8 +25,7 @@ Ext.define('Lada.view.zusatzwerte.CreateForm', {
             fieldLabel: 'PZW-Größe',
             listeners: {
                 scope: this,
-                'change': function(field, newv, oldv, opts) {
-                    console.log(field, oldv, newv, opts);
+                'change': function(field, newv, oldv) {
                     var ffield = this.getForm().findField('messeinheit');
                     var pzsId = newv;
                     if (!pzsId) {

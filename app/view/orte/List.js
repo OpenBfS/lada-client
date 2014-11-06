@@ -61,7 +61,6 @@ Ext.define('Lada.view.orte.List', {
             dataIndex: 'ortId',
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('staOrte');
-                console.log('value ' + value);
                 var record = store.getById(value);
                 return record.get('gemId');
             }

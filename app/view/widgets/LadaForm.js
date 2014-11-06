@@ -114,7 +114,6 @@ Ext.define('Lada.view.widgets.LadaForm', {
                 callback: function(option, success, response) {
                     this.parseResponse(response);
                     if (this.success) {
-                        console.log('Save was successfull');
                         this.fireEvent(
                             'savesuccess',
                             this,
@@ -122,7 +121,6 @@ Ext.define('Lada.view.widgets.LadaForm', {
                             response);
                     }
                     else {
-                        console.log('Save was not successfull');
                         this.form.markInvalid(this.errors);
                         this.fireEvent(
                             'savefailure',
@@ -171,7 +169,6 @@ Ext.define('Lada.view.widgets.LadaForm', {
                 var ignore = false;
                 var k;
                 for (k = ignoreFields.length - 1; k >= 0; k--) {
-                    console.log(ignoreFields[k] + '===' + field.getName());
                     if (ignoreFields[k] === field.getName(true)) {
                         ignore = true;
                     }

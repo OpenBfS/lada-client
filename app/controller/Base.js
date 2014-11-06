@@ -46,7 +46,6 @@ Ext.define('Lada.controller.Base', {
      * the user clicks on the "Save" button
      */
     saveItem: function(button) {
-        console.log('Saving ...');
         var form = button.up('window').down('form');
         form.commit();
     },
@@ -87,10 +86,6 @@ Ext.define('Lada.controller.Base', {
                         store.reload();
                     }
                 });
-                console.log('Deleting ' + selection);
-            }
-            else {
-                console.log('Cancel Deleting ' + selection);
             }
         });
     },

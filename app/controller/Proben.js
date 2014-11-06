@@ -108,7 +108,6 @@ Ext.define('Lada.controller.Proben', {
     ],
 
     init: function() {
-        console.log('Initialising the Proben controller');
         this.callParent(arguments);
     },
 
@@ -147,7 +146,6 @@ Ext.define('Lada.controller.Proben', {
     },
 
     addItem: function() {
-        console.log('Adding new Probe');
         Ext.widget('probencreate');
     },
 
@@ -156,7 +154,6 @@ Ext.define('Lada.controller.Proben', {
      * @private
      */
     selectUploadFile: function() {
-        console.log('Importing');
         Ext.widget('probenimport');
     },
 
@@ -210,7 +207,6 @@ Ext.define('Lada.controller.Proben', {
                 value: selection[i].get('probeId')
             });
         }
-        console.log('create download form.');
         var hiddenForm = Ext.create('Ext.form.Panel', {
             title: 'hiddenForm',
             standardSubmit: true,
@@ -225,9 +221,7 @@ Ext.define('Lada.controller.Proben', {
     },
 
     editItem: function(grid, record) {
-        console.log('Editing Probe');
         var id = record.get('id');
-        console.log('id is: ' + id);
         // Load Zusatzwerte
         var pstore = Ext.data.StoreManager.get('staProbenzusaetze');
         pstore.load();
@@ -262,7 +256,6 @@ Ext.define('Lada.controller.Proben', {
             modelId: id
         });
         view.show();
-        console.log('Loaded Probe with ID ' + record.getId());
     },
 
     createSuccess: function(form, record, response) {
@@ -275,7 +268,6 @@ Ext.define('Lada.controller.Proben', {
             store.load({
                 scope: this,
                 callback: function() {
-                    console.log('Loaded store');
                     // Open Editdialog
                     var json = Ext.decode(response.responseText);
                     if (json) {
@@ -290,7 +282,6 @@ Ext.define('Lada.controller.Proben', {
             store.reload({
                 scope: this,
                 callback: function() {
-                    console.log('Reloaded store');
                     // Open Editdialog
                     var json = Ext.decode(response.responseText);
                     if (json) {

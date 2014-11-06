@@ -25,7 +25,6 @@ Ext.define('Lada.controller.MKommentare', {
     ],
 
     init: function() {
-        console.log('Initialising the MKommentare controller');
         this.callParent(arguments);
     },
 
@@ -60,11 +59,9 @@ Ext.define('Lada.controller.MKommentare', {
     },
 
     editItem: function(grid, record) {
-        console.log('Editing Kommentar');
         var mstore = Ext.data.StoreManager.get('Messungen');
         var messung = mstore.getById(record.get('messungsId'));
         record.getAuthInfo(this.initEditWindow, messung.get('probeId'));
-        console.log('Loaded MKommentar with ID ' + record.getId());
     },
 
     initEditWindow: function(record, readonly) {

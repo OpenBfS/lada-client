@@ -74,7 +74,6 @@ Ext.define('Lada.view.zusatzwerte.List', {
             renderer: function(value) {
                 var zstore = Ext.data.StoreManager.get('staProbenzusaetze');
                 var mstore = Ext.data.StoreManager.get('staMesseinheiten');
-                console.log('store: ' + mstore);
                 var mehId = zstore.getById(value).get('mehId');
                 var record = mstore.findRecord('id', mehId);
                 return record.get('einheit');

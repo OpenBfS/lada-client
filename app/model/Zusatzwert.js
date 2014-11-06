@@ -55,7 +55,6 @@ Ext.define('Lada.model.Zusatzwert', {
         var zstore = Ext.data.StoreManager.get('staProbenzusaetze');
         var mstore = Ext.data.StoreManager.get('staMesseinheiten');
         var mehId = zstore.getById(pzsId).get('mehId');
-        console.log('mehid: ' + mehId);
         var record = mstore.getById(mehId);
         return record.get('einheit');
     }
