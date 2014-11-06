@@ -22,8 +22,7 @@ Ext.define('Lada.controller.Messungen', {
         'Messungen',
         'Messwerte',
         'KommentareM',
-        'Status',
-        'StaMessgroessen'
+        'Status'
     ],
 
     init: function() {

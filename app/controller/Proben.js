@@ -89,7 +89,6 @@ Ext.define('Lada.controller.Proben', {
     stores: [
         'Proben',
         'Zusatzwerte',
-        'Probenzusatzwerte',
         'KommentareP',
         'Orte',
         'Messungen'
@@ -216,7 +215,7 @@ Ext.define('Lada.controller.Proben', {
         var id = record.get('id');
         console.log('id is: ' + id);
         // Load Zusatzwerte
-        var pstore = this.getProbenzusatzwerteStore();
+        var pstore = Ext.data.StoreManager.get('staProbenzusaetze');
         pstore.load();
         var zstore = this.getZusatzwerteStore();
         zstore.load({

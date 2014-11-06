@@ -3,7 +3,7 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 Ext.Loader.setConfig({
@@ -27,7 +27,20 @@ Ext.application({
     requires: [
         'Ext.i18n.Bundle',
         'Lada.lib.Helpers',
-        'Ext.layout.container.Column'
+        'Ext.layout.container.Column',
+        'Lada.store.StaDatenbasen',
+        'Lada.store.StaMesseinheiten',
+        'Lada.store.StaMessgroessen',
+        'Lada.store.StaMessmethoden',
+        'Lada.store.StaMessstellen',
+        'Lada.store.StaNetzbetreiber',
+        'Lada.store.StaOrte',
+        'Lada.store.StaPflichtmessgroessen',
+        'Lada.store.StaProbenarten',
+        'Lada.store.StaProbenzusaetze',
+        'Lada.store.StaStaaten',
+        'Lada.store.StaUmwelt',
+        'Lada.store.StaVerwaltungseinheiten'
     ],
     bundle: {
         bundle: 'Lada',
@@ -43,6 +56,45 @@ Ext.application({
     // Start the application.
     launch: function() {
         console.log('Launching the application');
+        Ext.create('Lada.store.StaDatenbasen', {
+            storeId: 'staDatenbasen'
+        });
+        Ext.create('Lada.store.StaMesseinheiten', {
+            storeId: 'staMesseinheiten'
+        });
+        Ext.create('Lada.store.StaMessgroessen', {
+            storeId: 'staMessgroessen'
+        });
+        Ext.create('Lada.store.StaMessmethoden', {
+            storeId: 'staMessmethoden'
+        });
+        Ext.create('Lada.store.StaMessstellen', {
+            storeId: 'staMessstellen'
+        });
+        Ext.create('Lada.store.StaNetzbetreiber', {
+            storeId: 'staNetzbetreiber'
+        });
+        Ext.create('Lada.store.StaOrte', {
+            storeId: 'staOrte'
+        });
+        Ext.create('Lada.store.StaPflichtmessgroessen', {
+            storeId: 'staPflichtmessgroessen'
+        });
+        Ext.create('Lada.store.StaProbenarten', {
+            storeId: 'staProbenarten'
+        });
+        Ext.create('Lada.store.StaProbenzusaetze', {
+            storeId: 'staProbenzusaetze'
+        });
+        Ext.create('Lada.store.StaStaaten', {
+            storeId: 'staStaaten'
+        });
+        Ext.create('Lada.store.StaUmwelt', {
+            storeId: 'staUmwelt'
+        });
+        Ext.create('Lada.store.StaVerwaltungseinheiten', {
+            storeId: 'staVerwaltungseinheiten'
+        });
     },
 
     // Define the controllers of the application. They will be initialized

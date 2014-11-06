@@ -19,10 +19,7 @@ Ext.define('Lada.controller.Orte', {
     ],
 
     stores: [
-        'Orte',
-        'StaOrte',
-        'StaStaaten',
-        'StaVerwaltungseinheiten'
+        'Orte'
     ],
 
     models: [

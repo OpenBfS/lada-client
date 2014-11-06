@@ -25,7 +25,7 @@ Ext.define('Lada.view.widgets.Datenbasis' ,{
     minChars: 0,
 
     initComponent: function() {
-        this.store = Ext.data.StoreManager.get('StaDatenbasen');
+        this.store = Ext.data.StoreManager.get('staDatenbasen');
         if (!this.store) {
             this.store = Ext.create('Lada.store.StaDatenbasen');
         }

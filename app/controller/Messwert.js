@@ -19,9 +19,7 @@ Ext.define('Lada.controller.Messwert', {
     stores: [
         'Proben',
         'Messungen',
-        'Messwerte',
-        'StaMesseinheiten',
-        'StaMessgroessen'
+        'Messwerte'
     ],
 
     init: function() {

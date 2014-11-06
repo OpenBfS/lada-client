@@ -39,7 +39,7 @@ Ext.define('Lada.view.widgets.Uwb' ,{
     //},
 
     initComponent: function() {
-        this.store = Ext.data.StoreManager.get('StaUmwelt');
+        this.store = Ext.data.StoreManager.get('staUmwelt');
         if (!this.store) {
             this.store = Ext.create('Lada.store.StaUmwelt');
         }

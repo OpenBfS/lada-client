@@ -25,7 +25,7 @@ Ext.define('Lada.view.widgets.Probenzusatzwert' ,{
     minChars: 0,
 
     initComponent: function() {
-        this.store = Ext.data.StoreManager.get('StaProbenzusaetze');
+        this.store = Ext.data.StoreManager.get('staProbenzusaetze');
         if (!this.store) {
             this.store = Ext.create('Lada.store.StaProbenzusaetze');
         }

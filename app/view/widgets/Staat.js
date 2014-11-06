@@ -25,7 +25,7 @@ Ext.define('Lada.view.widgets.Staat' ,{
     minChars: 0,
 
     initComponent: function() {
-        this.store = Ext.data.StoreManager.get('StaStaaten');
+        this.store = Ext.data.StoreManager.get('staStaaten');
         if (!this.store) {
             this.store = Ext.create('Lada.store.StaStaaten');
         }

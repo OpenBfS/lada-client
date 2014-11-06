@@ -26,7 +26,7 @@ Ext.define('Lada.view.widgets.Mst' ,{
     minChars: 0,
 
     initComponent: function() {
-        this.store = Ext.data.StoreManager.get('StaMessstellen');
+        this.store = Ext.data.StoreManager.get('staMessstellen');
         if (!this.store) {
             this.store = Ext.create('Lada.store.StaMessstellen');
         }

@@ -13,7 +13,6 @@ Ext.define('Lada.view.orte.List' ,{
     extend: 'Ext.grid.Panel',
     alias: 'widget.ortelist',
 
-    store: 'Orte',
     viewConfig: {
         maxHeight: 350,
         emptyText: 'Keine Orte gefunden.',
@@ -51,18 +50,17 @@ Ext.define('Lada.view.orte.List' ,{
             header: 'Staat',
             dataIndex: 'ortId',
             renderer: function(value) {
-                var store = Ext.getStore('StaOrte');
-                var staaten = Ext.getStore('StaStaaten');
-                console.log('staatenstore: ' + staaten);
-                console.log('the staat: ' + store.getById(value).get("staatId"));
-                var record = staaten.getById(store.getById(value).get('staatId'));
+                var store = Ext.data.StoreManager.get('staOrte');
+                var staaten = Ext.data.StoreManager.get('staStaaten');
+                var record =
+                    staaten.getById(store.getById(value).get('staatId'));
                 return record.get('staatIso');
             }
         }, {
             header: 'Gemeineschlüssel',
             dataIndex: 'ortId',
             renderer: function(value) {
-                var store = Ext.getStore('StaOrte');
+                var store = Ext.data.StoreManager.get('staOrte');
                 console.log('value ' + value);
                 var record = store.getById(value);
                 return record.get('gemId');
@@ -72,8 +70,9 @@ Ext.define('Lada.view.orte.List' ,{
             dataIndex: 'ortId',
             flex: 1,
             renderer: function(value) {
-                var store = Ext.getStore('StaOrte');
-                var gemeinden = Ext.getStore('StaVerwaltungseinheiten');
+                var store = Ext.data.StoreManager.get('staOrte');
+                var gemeinden =
+                    Ext.data.StoreManager.get('staVerwaltungseinheiten');
                 var record = store.getById(value);
                 var gemid = record.get('gemId');
                 var record2 = gemeinden.getById(gemid);
@@ -83,7 +82,7 @@ Ext.define('Lada.view.orte.List' ,{
             header: 'Messpunkt',
             dataIndex: 'ortId',
             renderer: function(value) {
-                var store = Ext.getStore('StaOrte');
+                var store = Ext.getStore('staOrte');
                 var record = store.getById(value);
                 return record.get('bezeichnung');
             }

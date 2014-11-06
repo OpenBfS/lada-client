@@ -13,9 +13,7 @@ Ext.define('Lada.controller.Zusatzwerte', {
     ],
 
     stores: [
-        'Zusatzwerte',
-        'StaProbenzusaetze',
-        'StaMesseinheiten'
+        'Zusatzwerte'
     ],
 
     init: function() {

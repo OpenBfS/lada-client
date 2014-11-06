@@ -25,7 +25,7 @@ Ext.define('Lada.view.widgets.Ortdetail' ,{
     minChars: 0,
 
     initComponent: function() {
-        this.store = Ext.data.StoreManager.get('StaOrte');
+        this.store = Ext.data.StoreManager.get('staOrte');
         if (!this.store) {
             this.store = Ext.create('Lada.store.StaOrte');
         }

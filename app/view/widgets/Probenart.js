@@ -25,7 +25,7 @@ Ext.define('Lada.view.widgets.Probenart' ,{
     minChars: 0,
 
     initComponent: function() {
-        this.store = Ext.data.StoreManager.get('StaProbenarten');
+        this.store = Ext.data.StoreManager.get('staProbenarten');
         if (!this.store) {
             this.store = Ext.create('Lada.store.StaProbenarten');
         }

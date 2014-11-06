@@ -25,7 +25,7 @@ Ext.define('Lada.view.widgets.Messgroesse' ,{
     minChars: 0,
 
     initComponent: function() {
-        this.store = Ext.data.StoreManager.get('StaMessgroessen');
+        this.store = Ext.data.StoreManager.get('staMessgroessen');
         if (!this.store) {
             this.store = Ext.create('Lada.store.StaMessgroessen');
         }
