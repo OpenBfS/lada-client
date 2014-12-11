@@ -3,13 +3,13 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /*
  * Grid to list Messungen
  */
-Ext.define('Lada.view.messungen.List' ,{
+Ext.define('Lada.view.messungen.List', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.messungenlist',
 
@@ -42,22 +42,23 @@ Ext.define('Lada.view.messungen.List' ,{
         }];
         this.columns = [{
             header: 'Mess.ID',
-            dataIndex: "id",
+            dataIndex: 'id',
             width: 50
         }, {
             header: 'NPR-Nr.',
-            dataIndex: "nebenprobenNr",
+            dataIndex: 'nebenprobenNr',
             width: 50
         }, {
             header: 'MMT',
-            dataIndex: "mmtId",
+            dataIndex: 'mmtId',
             width: 50
         }, {
             header: 'Messzeit',
-            dataIndex: "messzeitpunkt"
+            dataIndex: 'messzeitpunkt'
         }, {
             header: 'Status',
             dataIndex: 'id',
+            width: 50,
             renderer: function(value) {
                 var sstore = Ext.getStore('Status');
                 sstore.load({
@@ -67,20 +68,19 @@ Ext.define('Lada.view.messungen.List' ,{
                     }
                 });
                 if (sstore.getTotalCount() === 0) {
-                    return "unbekannt";
-                } else {
-                    return sstore.last().get('status');
+                    return 'unbekannt';
                 }
+                return sstore.last().get('status');
             }
         }, {
             header: 'OK-Flag',
-            dataIndex: "fertig",
+            dataIndex: 'fertig',
+            width: 50,
             renderer: function(value) {
                 if (value) {
-                    return "Ja";
-                } else {
-                    return "Nein";
+                    return 'Ja';
                 }
+                return 'Nein';
             }
          }, {
             header: 'Anzahl Nuklide',
@@ -113,4 +113,3 @@ Ext.define('Lada.view.messungen.List' ,{
         this.callParent(arguments);
     }
 });
-
