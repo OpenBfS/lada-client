@@ -18,11 +18,10 @@ Ext.define('Lada.view.proben.Create', {
     ],
 
     title: 'Maske für §3-Proben',
-    // Make size of the dialog dependend of the available space.
-    // TODO: Handle resizing the browser window.
     autoShow: true,
     autoScroll: true,
     modal: true,
+    layout: 'fit',
 
     initComponent: function() {
         this.buttons = [{
@@ -33,10 +32,13 @@ Ext.define('Lada.view.proben.Create', {
             scope: this,
             handler: this.close
         }];
-        this.width = Ext.getBody().getViewSize().width - 30;
-        this.height = Ext.getBody().getViewSize().height - 30;
+        this.width = 700;
         var form = Ext.create('Lada.view.proben.CreateForm');
-        this.items = [form];
+        this.items = [{
+            border: 0,
+            autoScroll: true,
+            items: [form]
+        }];
         this.callParent(arguments);
     }
 });

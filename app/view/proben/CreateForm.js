@@ -31,53 +31,67 @@ Ext.define('Lada.view.proben.CreateForm', {
                     labelWidth: 150
             },
             items: [{
-                xtype: 'mst',
-                name: 'mstId',
-                fieldLabel: 'Messstelle',
-                allowBlank: false
-            }, {
-                xtype: 'textfield',
-                name: 'hauptprobenNr',
-                maxLength: 20,
-                fieldLabel: 'Hauptprobennr.'
-            }, {
-                xtype: 'fieldset',
-                title: 'Erweiterte Probenangaben',
-                collapsible: true,
-                collapsed: false,
+                layout: 'hbox',
+                border: 0,
                 items: [{
-                    xtype: 'datenbasis',
-                    id: 'datenbasis',
-                    editable: false,
-                    name: 'datenbasisId',
-                    fieldLabel: 'Datenbasis'
+                    border: 0,
+                    width: '43%',
+                    minWidth: 290,
+                    items: [{
+                        xtype: 'mst',
+                        name: 'mstId',
+                        fieldLabel: 'Messstelle',
+                        allowBlank: false
+                    }, {
+                        xtype: 'textfield',
+                        name: 'hauptprobenNr',
+                        maxLength: 20,
+                        fieldLabel: 'Hauptprobennr.'
+                    }]
                 }, {
-                    xtype: 'betriebsart',
-                    name: 'baId',
-                    fieldLabel: 'Betriebsart'
-                }, {
-                    xtype: 'testdatensatz',
-                    name: 'test',
-                    fieldLabel: 'Testdatensatz',
-                    allowBlank: false
-                }, {
-                    xtype: 'probenart',
-                    id: 'probenart',
-                    editable: false,
-                    name: 'probenartId',
-                    fieldLabel: 'Probenart',
-                    allowBlank: false
-                }, {
-                    xtype: 'numberfield',
-                    allowDecimals: false,
-                    name: 'probeNehmerId',
-                    fieldLabel: 'Probennehmer'
-                }, {
-                    xtype: 'netzbetreiber',
-                    name: 'netzbetreiberId',
-                    fieldLabel: 'Netzbetreiber',
-                    editable: false,
-                    allowBlank: false
+                    border: 0,
+                    width: '52%',
+                    minWidth: 300,
+                    items: [{
+                        xtype: 'fieldset',
+                        title: 'Erweiterte Probenangaben',
+                        collapsible: true,
+                        collapsed: true,
+                        items: [{
+                            xtype: 'datenbasis',
+                            id: 'datenbasis',
+                            editable: false,
+                            name: 'datenbasisId',
+                            fieldLabel: 'Datenbasis'
+                        }, {
+                            xtype: 'betriebsart',
+                            name: 'baId',
+                            fieldLabel: 'Betriebsart'
+                        }, {
+                            xtype: 'testdatensatz',
+                            name: 'test',
+                            fieldLabel: 'Testdatensatz',
+                            allowBlank: false
+                        }, {
+                            xtype: 'probenart',
+                            id: 'probenart',
+                            editable: false,
+                            name: 'probenartId',
+                            fieldLabel: 'Probenart',
+                            allowBlank: false
+                        }, {
+                            xtype: 'numberfield',
+                            allowDecimals: false,
+                            name: 'probeNehmerId',
+                            fieldLabel: 'Probennehmer'
+                        }, {
+                            xtype: 'netzbetreiber',
+                            name: 'netzbetreiberId',
+                            fieldLabel: 'Netzbetreiber',
+                            editable: false,
+                            allowBlank: false
+                        }]
+                    }]
                 }]
             }]
         }, {
@@ -88,27 +102,38 @@ Ext.define('Lada.view.proben.CreateForm', {
                     labelWidth: 150
             },
             items: [{
-                xtype: 'uwb',
-                name: 'umwId',
-                fieldLabel: 'Umweltbereich',
-                allowBlank: false
-            }, {
-                xtype: 'textfield',
-                maxLength: 100,
-                name: 'media',
-                fieldLabel: 'Medienbezeichnung'
-            }, {
-                xtype: 'textfield',
-                maxLength: 100,
-                name: 'mediaDesk',
-                fieldLabel: 'Deskriptoren'
-            }, {
-                xtype: 'fieldset',
-                title: 'Details Deskriptoren',
-                collapsible: true,
-                collapsed: true,
-                defaultType: 'textfield',
-                items: this.buildDescriptors()
+                border: 0,
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'
+                },
+                items: [{
+                    xtype: 'uwb',
+                    name: 'umwId',
+                    fieldLabel: 'Umweltbereich',
+                    allowBlank: false
+                }, {
+                    xtype: 'textfield',
+                    maxLength: 100,
+                    name: 'media',
+                    fieldLabel: 'Medienbezeichnung'
+                }, {
+                    xtype: 'textfield',
+                    maxLength: 100,
+                    name: 'mediaDesk',
+                    fieldLabel: 'Deskriptoren'
+                }, {
+                    xtype: 'fieldset',
+                    title: 'Details Deskriptoren',
+                    collapsible: true,
+                    collapsed: true,
+                    defaultType: 'textfield',
+                    layout: {
+                        type: 'table',
+                        columns: 3
+                    },
+                    items: this.buildDescriptors()
+                }]
             }]
         }, {
             // Zeit
@@ -118,15 +143,19 @@ Ext.define('Lada.view.proben.CreateForm', {
             defaults: {
                     labelWidth: 150
             },
+            layout: {
+                type: 'table',
+                columns: 2
+            },
             items: [{
                 fieldLabel: 'Probennahme Beginn',
                 name: 'probeentnahmeBeginn'
             }, {
-                fieldLabel: 'Probennahme Ende',
-                name: 'probeentnahmeEnde'
-            }, {
                 fieldLabel: 'Sollzeit Von',
                 name: 'solldatumBeginn'
+            }, {
+                fieldLabel: 'Probennahme Ende',
+                name: 'probeentnahmeEnde'
             }, {
                 fieldLabel: 'Sollzeit Bis',
                 name: 'solldatumEnde'
