@@ -33,9 +33,11 @@ Ext.define('Lada.view.messungen.Create', {
             scope: this,
             handler: this.close
         }];
-        this.width = Ext.getBody().getViewSize().width - 30;
-        this.height = Ext.getBody().getViewSize().height - 30;
-        this.items = [form];
+        this.items = [{
+            border: 0,
+            autoScroll: true,
+            items: [form]
+        }];
         this.callParent(arguments);
     }
 });
