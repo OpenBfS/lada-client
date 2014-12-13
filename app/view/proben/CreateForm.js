@@ -22,6 +22,7 @@ Ext.define('Lada.view.proben.CreateForm', {
     ],
 
     model: 'Lada.model.Probe',
+    minWidth: 650,
 
     initComponent: function() {
         this.items = [{

@@ -18,7 +18,6 @@ Ext.define('Lada.view.widgets.LadaForm', {
     alias: 'widget.ladaform',
     bodyPadding: '10 10',
     border: 0,
-    minWidth: 650,
 
     /**
      * Can be a reference to a model instance or a model class name.
