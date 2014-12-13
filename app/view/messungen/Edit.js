@@ -18,8 +18,7 @@ Ext.define('Lada.view.messungen.Edit', {
 
     title: 'Maske für Messungen',
     autoShow: true,
-    autoScroll: true,
-    modal: true,
+    layout: 'fit',
 
     initComponent: function() {
         var form = Ext.create('Lada.view.messungen.EditForm',
@@ -33,9 +32,13 @@ Ext.define('Lada.view.messungen.Edit', {
             scope: this,
             handler: this.close
         }];
-        this.width = Ext.getBody().getViewSize().width - 30;
-        this.height = Ext.getBody().getViewSize().height - 30;
-        this.items = [form];
+        this.width = 700;
+        this.maxHeight = Ext.getBody().getViewSize().height - 57;
+        this.items = [{
+            border: 0,
+            autoScroll: true,
+            items: [form]
+        }];
         this.callParent();
     }
 });

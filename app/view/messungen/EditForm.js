@@ -21,35 +21,53 @@ Ext.define('Lada.view.messungen.EditForm', {
     ],
 
     model: 'Lada.model.Messung',
+    minWidth: 650,
 
     initComponent: function() {
         this.items = [{
-            xtype: 'textfield',
-            name: 'nebenprobenNr',
-            maxLength: 10,
-            fieldLabel: 'NPR'
-        }, {
-            xtype: 'messmethode',
-            name: 'mmtId',
-            fieldLabel: 'MMT'
-        }, {
-            xtype: 'datetime',
-            name: 'messzeitpunkt',
-            fieldLabel: 'Messzeitpunkt'
-        }, {
-            xtype: 'numberfield',
-            allowDecimals: false,
-            minValue: 0,
-            name: 'messdauer',
-            fieldLabel: 'Messdauer'
-        }, {
-            xtype: 'testdatensatz',
-            name: 'fertig',
-            fieldLabel: 'Fertig'
-        }, {
-            xtype: 'testdatensatz',
-            name: 'geplant',
-            fieldLabel: 'Geplant'
+            xtype: 'fieldset',
+            title: 'Allgemein',
+            items: [{
+                layout: {
+                    type: 'table',
+                    columns: 2
+                },
+                border: 0,
+                items: [{
+                    xtype: 'textfield',
+                    name: 'nebenprobenNr',
+                    maxLength: 10,
+                    margin: '0, 10, 5, 0',
+                    fieldLabel: 'Nebenprobennr.'
+                }, {
+                    xtype: 'messmethode',
+                    name: 'mmtId',
+                    margin: '0, 10, 5, 0',
+                    fieldLabel: 'Messmethode'
+                }, {
+                    xtype: 'datetime',
+                    name: 'messzeitpunkt',
+                    margin: '0, 10, 5, 0',
+                    fieldLabel: 'Messzeitpunkt'
+                }, {
+                    xtype: 'numberfield',
+                    allowDecimals: false,
+                    minValue: 0,
+                    name: 'messdauer',
+                    margin: '0, 10, 5, 0',
+                    fieldLabel: 'Messdauer'
+                }, {
+                    xtype: 'testdatensatz',
+                    name: 'fertig',
+                    margin: '0, 10, 5, 0',
+                    fieldLabel: 'Fertig'
+                }, {
+                    xtype: 'testdatensatz',
+                    name: 'geplant',
+                    margin: '0, 10, 5, 0',
+                    fieldLabel: 'Geplant'
+                }]
+            }]
         }, {
             // Messwerte
             xtype: 'fieldset',
