@@ -20,7 +20,6 @@ Ext.define('Lada.view.proben.Edit', {
     title: 'Maske für §3-Proben',
     autoShow: true,
     autoScroll: true,
-    modal: true,
     layout: 'fit',
 
     initComponent: function() {
