@@ -25,6 +25,13 @@ Ext.define('Lada.view.orte.List', {
     probeId: null,
 
     initComponent: function() {
+        var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToMoveEditor: 1,
+            autoCancel: false
+        });
+        
+        this.plugins = [rowEditing];
+        
         this.store = Ext.data.StoreManager.get('Orte');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Orte');
@@ -45,7 +52,10 @@ Ext.define('Lada.view.orte.List', {
         }];
         this.columns = [{
             header: 'Typ',
-            dataIndex: 'ortsTyp'
+            dataIndex: 'ortsTyp',
+            editor: {
+                allowBlank: false
+            }
         }, {
             header: 'Staat',
             dataIndex: 'ortId',
@@ -76,7 +86,10 @@ Ext.define('Lada.view.orte.List', {
                 var gemid = record.get('gemId');
                 var record2 = gemeinden.getById(gemid);
                 return record2.get('bezeichnung');
-            }
+            },
+            //editor: {
+            //    allowBlank: false
+            //}
         }, {
             header: 'Messpunkt',
             dataIndex: 'ortId',
@@ -84,7 +97,10 @@ Ext.define('Lada.view.orte.List', {
                 var store = Ext.getStore('staOrte');
                 var record = store.getById(value);
                 return record.get('bezeichnung');
-            }
+            },
+            //editor: {
+            //    allowBlank: false
+            //}
         }];
         this.callParent(arguments);
     }

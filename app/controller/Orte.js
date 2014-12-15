@@ -32,9 +32,9 @@ Ext.define('Lada.controller.Orte', {
 
     addListeners: function() {
         this.control({
-            'ortelist': {
-                itemdblclick: this.editItem
-            },
+            //'ortelist': {
+            //    itemdblclick: this.editItem
+            //},
             'ortelist toolbar button[action=add]': {
                 click: this.addItem
             },
