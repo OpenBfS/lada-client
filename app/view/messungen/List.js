@@ -24,8 +24,17 @@ Ext.define('Lada.view.messungen.List', {
     },
 
     probeId: null,
+    
+    
 
     initComponent: function() {
+        var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToMoveEditor: 1,
+            autoCancel: false
+        });
+        
+        this.plugins = [rowEditing];
+        
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'top',
@@ -38,22 +47,43 @@ Ext.define('Lada.view.messungen.List', {
                 text: 'Löschen',
                 icon: 'gfx/list-remove.png',
                 action: 'delete'
+            }, {
+                text: 'Öffnen',
+                icon: 'gfx/document-open.png',
+                action: 'open'
             }]
         }];
         this.columns = [{
             header: 'Mess.ID',
+            editor: {
+                allowBlank: false
+            },
             dataIndex: 'id',
             width: 50
         }, {
             header: 'NPR-Nr.',
+            editor: {
+                allowBlank: false
+            },
             dataIndex: 'nebenprobenNr',
             width: 50
         }, {
             header: 'MMT',
+            editor: {
+                allowBlank: false
+            },
             dataIndex: 'mmtId',
             width: 50
         }, {
             header: 'Messzeit',
+            editor: {
+                xtype: 'datefield',
+                allowBlank: false,
+                format: 'd.m.Y',
+                minValue: '01.01.2001', // TODO: gibt es ein minValue?
+                //minText: 'Fehlertext', // TODO: Fehlertext falls minValue
+                maxValue: Ext.Date.format(new Date(), 'd.m.Y')
+            },
             dataIndex: 'messzeitpunkt'
         }, {
             header: 'Status',
@@ -71,6 +101,10 @@ Ext.define('Lada.view.messungen.List', {
                     return 'unbekannt';
                 }
                 return sstore.last().get('status');
+            },
+            editor: {
+                xtype: 'numberfield',
+                allowBlank: false,
             }
         }, {
             header: 'OK-Flag',
@@ -81,6 +115,10 @@ Ext.define('Lada.view.messungen.List', {
                     return 'Ja';
                 }
                 return 'Nein';
+            },
+            editor: {
+                xtype: 'checkboxfield',
+                allowBlank: false,
             }
          }, {
             header: 'Anzahl Nuklide',

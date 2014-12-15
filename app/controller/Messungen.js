@@ -31,8 +31,8 @@ Ext.define('Lada.controller.Messungen', {
 
     addListeners: function() {
         this.control({
-            'messungenlist': {
-                itemdblclick: this.editItem
+            'messungenlist toolbar button[action=open]': {
+                click: this.editItem
             },
             'messungenlist toolbar button[action=add]': {
                 click: this.addItem
@@ -70,7 +70,12 @@ Ext.define('Lada.controller.Messungen', {
         });
     },
 
-    editItem: function(grid, record) {
+    editItem: function(button) {
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection()[0];
+        var messungsId = selection.getId();
+        var record = selection.store.getById(messungsId);
+
         var kstore = this.getKommentareMStore();
         kstore.load({
             params: {
