@@ -27,10 +27,7 @@ Ext.define('Lada.view.proben.Edit', {
         var probe = Ext.StoreManager.get('ProbenList').getById(this.modelId);
         this.title = '§3-Probe ' + probe.get('probeIdAlt');
         this.buttons = [{
-            text: 'Speichern',
-            action: 'save'
-        }, {
-            text: 'Abbrechen',
+            text: 'Schließen',
             scope: this,
             handler: this.close
         }];
