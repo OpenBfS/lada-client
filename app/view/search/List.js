@@ -60,9 +60,9 @@ Ext.define('Lada.view.search.List', {
                 shrinkWrap: 3,
                 value: '-/-'
             }, {
-                id: 'sqlquery',
+                id: 'results',
                 xtype: 'displayfield',
-                fieldLabel: 'Abfrage',
+                fieldLabel: 'Spalten',
                 value: '-/-'
             }]
         }];
