@@ -26,11 +26,7 @@ Ext.define('Lada.view.messungen.Edit', {
         var form = Ext.create('Lada.view.messungen.EditForm',
             this.initialConfig);
         this.buttons = [{
-            text: 'Speichern',
-            scope: form,
-            action: 'save'
-        }, {
-            text: 'Abbrechen',
+            text: 'Schließen',
             scope: this,
             handler: this.close
         }];
