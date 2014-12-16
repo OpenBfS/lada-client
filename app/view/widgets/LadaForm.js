@@ -94,9 +94,13 @@ Ext.define('Lada.view.widgets.LadaForm', {
         }
     },
 
+    reset: function() {
+        this.loadRecord(this.model);
+        this.updateOnChange();
+    },
+
     commit: function() {
         if (this.form.isDirty() && this.form.isValid()) {
-            this.form.updateRecord(this.model);
 
             var data = this.model.getAllData();
             var baseUrl = this.model.getProxy().url;
@@ -114,11 +118,13 @@ Ext.define('Lada.view.widgets.LadaForm', {
                 callback: function(option, success, response) {
                     this.parseResponse(response);
                     if (this.success) {
+                        this.form.updateRecord(this.model);
                         this.fireEvent(
                             'savesuccess',
                             this,
                             this.model,
                             response);
+                        this.updateOnChange();
                     }
                     else {
                         this.form.markInvalid(this.errors);
@@ -257,5 +263,31 @@ Ext.define('Lada.view.widgets.LadaForm', {
             messages.insert(0, label);
         }
         this.insert(0, messages);
+    },
+
+    updateOnChange: function() {
+        console.log(this.isDirty());
+        var childs = this.query('toolbar');
+        for (var i = childs.length - 1; i >= 0; i--) {
+            if (childs[i].ownerCt.xtype === 'panel') {
+                if (this.isDirty()) {
+                    childs[i].down('button[action=discard]').enable();
+                    childs[i].down('button[action=save]').enable();
+                }
+                else {
+                    childs[i].down('button[action=discard]').disable();
+                    childs[i].down('button[action=save]').disable();
+                }
+            }
+            else {
+                var btn = childs[i].down('button[action=add]');
+                if (this.isDirty()) {
+                    btn.disable();
+                }
+                else {
+                    btn.enable();
+                }
+            }
+        }
     }
 });
