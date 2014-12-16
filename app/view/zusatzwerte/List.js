@@ -28,8 +28,8 @@ Ext.define('Lada.view.zusatzwerte.List', {
     initComponent: function() {
         this.dockedItems = [{
             xtype: 'toolbar',
-            dock: 'top',
-            items: [{
+            dock: 'bottom',
+            items: ['->', {
                 text: 'Hinzufügen',
                 icon: 'gfx/list-add.png',
                 action: 'add',

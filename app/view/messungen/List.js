@@ -24,21 +24,17 @@ Ext.define('Lada.view.messungen.List', {
     },
 
     probeId: null,
-    
-    
 
     initComponent: function() {
         var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false
         });
-        
         this.plugins = [rowEditing];
-        
         this.dockedItems = [{
             xtype: 'toolbar',
-            dock: 'top',
-            items: [{
+            dock: 'bottom',
+            items: ['->', {
                 text: 'Hinzufügen',
                 icon: 'gfx/list-add.png',
                 action: 'add',
@@ -104,7 +100,7 @@ Ext.define('Lada.view.messungen.List', {
             },
             editor: {
                 xtype: 'numberfield',
-                allowBlank: false,
+                allowBlank: false
             }
         }, {
             header: 'OK-Flag',
@@ -118,7 +114,7 @@ Ext.define('Lada.view.messungen.List', {
             },
             editor: {
                 xtype: 'checkboxfield',
-                allowBlank: false,
+                allowBlank: false
             }
          }, {
             header: 'Anzahl Nuklide',

@@ -29,17 +29,15 @@ Ext.define('Lada.view.orte.List', {
             clicksToMoveEditor: 1,
             autoCancel: false
         });
-        
         this.plugins = [rowEditing];
-        
         this.store = Ext.data.StoreManager.get('Orte');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Orte');
         }
         this.dockedItems = [{
             xtype: 'toolbar',
-            dock: 'top',
-            items: [{
+            dock: 'bottom',
+            items: ['->', {
                 text: 'Hinzufügen',
                 icon: 'gfx/list-add.png',
                 action: 'add',
@@ -86,7 +84,7 @@ Ext.define('Lada.view.orte.List', {
                 var gemid = record.get('gemId');
                 var record2 = gemeinden.getById(gemid);
                 return record2.get('bezeichnung');
-            },
+            }
             //editor: {
             //    allowBlank: false
             //}
@@ -97,7 +95,7 @@ Ext.define('Lada.view.orte.List', {
                 var store = Ext.getStore('staOrte');
                 var record = store.getById(value);
                 return record.get('bezeichnung');
-            },
+            }
             //editor: {
             //    allowBlank: false
             //}
