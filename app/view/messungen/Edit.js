@@ -16,7 +16,9 @@ Ext.define('Lada.view.messungen.Edit', {
         'Lada.view.messungen.EditForm'
     ],
 
-    title: 'Maske für Messungen',
+    collapsible: true,
+    maximizable: true,
+    title: 'Messung',
     autoShow: true,
     layout: 'fit',
 

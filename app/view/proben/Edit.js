@@ -17,12 +17,15 @@ Ext.define('Lada.view.proben.Edit', {
         'Lada.view.proben.EditForm'
     ],
 
-    title: 'Maske für §3-Proben',
+    collapsible: true,
+    maximizable: true,
     autoShow: true,
     autoScroll: true,
     layout: 'fit',
 
     initComponent: function() {
+        var probe = Ext.StoreManager.get('ProbenList').getById(this.modelId);
+        this.title = '§3-Probe ' + probe.get('probeIdAlt');
         this.buttons = [{
             text: 'Speichern',
             action: 'save'
