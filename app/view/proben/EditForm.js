@@ -58,7 +58,7 @@ Ext.define('Lada.view.proben.EditForm', {
                         icon: 'gfx/dialog-cancel.png',
                         action: 'discard',
                         disabled: true,
-                        scope: this,
+                        scope: me,
                         handler: this.reset
                     }]
                 }],
