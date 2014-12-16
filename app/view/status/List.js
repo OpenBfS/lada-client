@@ -27,6 +27,11 @@ Ext.define('Lada.view.status.List', {
     probeId: null,
 
     initComponent: function() {
+        var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToMoveEditor: 1,
+            autoCancel: false
+        });
+        this.plugins = [rowEditing];
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -44,17 +49,32 @@ Ext.define('Lada.view.status.List', {
         }];
         this.columns = [{
             header: 'Erzeuger',
-            dataIndex: 'erzeuger'
+            dataIndex: 'erzeuger',
+            editor: {
+                allowBlank: false
+            }
         }, {
             header: 'Status',
-            dataIndex: 'status'
+            dataIndex: 'status',
+            editor: {
+                allowBlank: false
+            }
         }, {
             header: 'Datum',
-            dataIndex: 'datum'
+            dataIndex: 'datum',
+            editor: {
+                xtype: 'datefield',
+                allowBlank: false,
+                format: 'd.m.Y',
+                maxValue: Ext.Date.format(new Date(), 'd.m.Y')
+            }
         }, {
             header: 'Text',
             dataIndex: 'kommentar',
-            flex: 1
+            flex: 1,
+            editor: {
+                allowBlank: true
+            }
         }];
         this.callParent(arguments);
     }

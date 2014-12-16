@@ -32,9 +32,9 @@ Ext.define('Lada.controller.Orte', {
 
     addListeners: function() {
         this.control({
-            //'ortelist': {
-            //    itemdblclick: this.editItem
-            //},
+            'ortelist toolbar button[action=open]': {
+                click: this.editItem
+            },
             'ortelist toolbar button[action=add]': {
                 click: this.addItem
             },
@@ -145,7 +145,12 @@ Ext.define('Lada.controller.Orte', {
         });
     },
 
-    editItem: function(grid, record) {
+    editItem: function(button) {
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection()[0];
+        var ortId = selection.getId();
+        var record = selection.store.getById(ortId);
+        
         record.getAuthInfo(this.initEditWindow);
     },
 
