@@ -24,6 +24,7 @@ Ext.define('Lada.view.messungen.EditForm', {
     minWidth: 650,
 
     initComponent: function() {
+        var me = this;
         this.items = [{
             xtype: 'fieldset',
             title: 'Allgemein',
@@ -33,39 +34,102 @@ Ext.define('Lada.view.messungen.EditForm', {
                     columns: 2
                 },
                 border: 0,
+                margin: '0, 0, 10, 0',
+                dockedItems: [{
+                    xtype: 'toolbar',
+                    dock: 'bottom',
+                    border: '0, 1, 1, 1',
+                    style: {
+                        borderBottom: '1px solid #b5b8c8 !important',
+                        borderLeft: '1px solid #b5b8c8 !important',
+                        borderRight: '1px solid #b5b8c8 !important'
+                    },
+                    items: ['->', {
+                        text: 'Speichern',
+                        qtip: 'Daten speichern',
+                        icon: 'gfx/dialog-ok-apply.png',
+                        action: 'save',
+                        scope: me,
+                        handler: this.commit
+                    }, {
+                        text: 'Verwerfen',
+                        qtip: 'Änderungen verwerfen',
+                        icon: 'gfx/dialog-cancel.png',
+                        action: 'discard',
+                        disabled: true,
+                        scope: me,
+                        handler: this.reset
+                    }]
+                }],
                 items: [{
                     xtype: 'textfield',
                     name: 'nebenprobenNr',
                     maxLength: 10,
                     margin: '0, 10, 5, 0',
-                    fieldLabel: 'Nebenprobennr.'
+                    fieldLabel: 'Nebenprobennr.',
+                    listeners: {
+                        dirtychange: {
+                            fn: this.updateOnChange,
+                            scope: me
+                        }
+                    }
                 }, {
                     xtype: 'messmethode',
                     name: 'mmtId',
                     margin: '0, 10, 5, 0',
-                    fieldLabel: 'Messmethode'
+                    fieldLabel: 'Messmethode',
+                    listeners: {
+                        dirtychange: {
+                            fn: this.updateOnChange,
+                            scope: me
+                        }
+                    }
                 }, {
                     xtype: 'datetime',
                     name: 'messzeitpunkt',
                     margin: '0, 10, 5, 0',
-                    fieldLabel: 'Messzeitpunkt'
+                    fieldLabel: 'Messzeitpunkt',
+                    listeners: {
+                        dirtychange: {
+                            fn: this.updateOnChange,
+                            scope: me
+                        }
+                    }
                 }, {
                     xtype: 'numberfield',
                     allowDecimals: false,
                     minValue: 0,
                     name: 'messdauer',
                     margin: '0, 10, 5, 0',
-                    fieldLabel: 'Messdauer'
+                    fieldLabel: 'Messdauer',
+                    listeners: {
+                        dirtychange: {
+                            fn: this.updateOnChange,
+                            scope: me
+                        }
+                    }
                 }, {
                     xtype: 'testdatensatz',
                     name: 'fertig',
                     margin: '0, 10, 5, 0',
-                    fieldLabel: 'Fertig'
+                    fieldLabel: 'Fertig',
+                    listeners: {
+                        dirtychange: {
+                            fn: this.updateOnChange,
+                            scope: me
+                        }
+                    }
                 }, {
                     xtype: 'testdatensatz',
                     name: 'geplant',
                     margin: '0, 10, 5, 0',
-                    fieldLabel: 'Geplant'
+                    fieldLabel: 'Geplant',
+                    listeners: {
+                        dirtychange: {
+                            fn: this.updateOnChange,
+                            scope: me
+                        }
+                    }
                 }]
             }]
         }, {
