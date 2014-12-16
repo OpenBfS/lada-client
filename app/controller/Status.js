@@ -23,9 +23,9 @@ Ext.define('Lada.controller.Status', {
 
     addListeners: function() {
         this.control({
-            'statuslist': {
-                itemdblclick: this.editItem
-            },
+            //'statuslist': {
+            //    itemdblclick: this.editItem
+            //},
             'statuslist toolbar button[action=add]': {
                 click: this.addItem
             },
