@@ -19,7 +19,10 @@ Ext.define('Lada.view.search.List', {
 
     title: 'SQL-Auswahl',
     initComponent: function() {
-        this.layout = 'column';
+        this.layout = {
+            type: 'vbox',
+            align: 'stretch'
+        };
         this.items = [{
             id: 'search',
             xtype: 'combobox',
@@ -29,6 +32,23 @@ Ext.define('Lada.view.search.List', {
             valueField: 'id',
             emptyText: 'Wählen Sie eine Abfrage'
         }, {
+        // Buttons to trigger the search.
+            id: 'SearchBtnPanel',
+            xtype: 'panel',
+            border: false,
+            margin: '0 0 10 0',
+            items: [{
+                id: 'SearchBtn',
+                text: 'Suchen',
+                xtype: 'button',
+                margin: '0 10 0 0'
+            }, {
+                id: 'ResetBtn',
+                text: 'Zurücksetzen',
+                xtype: 'button'
+            }],
+            hidden: false
+        }, {
             xtype: 'panel',
             maxWidth: '500',
             border: false,
@@ -37,6 +57,7 @@ Ext.define('Lada.view.search.List', {
                 id: 'sqldesc',
                 xtype: 'displayfield',
                 fieldLabel: 'Beschreibung',
+                shrinkWrap: 3,
                 value: '-/-'
             }, {
                 id: 'sqlquery',
