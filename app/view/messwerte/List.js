@@ -27,6 +27,13 @@ Ext.define('Lada.view.messwerte.List', {
     parentId: null,
 
     initComponent: function() {
+        var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToMoveEditor: 1,
+            autoCancel: false
+        });
+
+        this.plugins = [rowEditing];
+
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -44,19 +51,34 @@ Ext.define('Lada.view.messwerte.List', {
         }];
         this.columns = [{
             header: '&lt;NWG',
-            dataIndex: 'messwertNwg'
+            dataIndex: 'messwertNwg',
+            editor: {
+                allowBlank: false
+            }
         }, {
             header: 'Messwert',
-            dataIndex: 'messwert'
+            dataIndex: 'messwert',
+            editor: {
+                xtype: 'numberfield',
+                allowBlank: false
+            }
         }, {
             header: 'Messfehler',
-            dataIndex: 'messfehler'
+            dataIndex: 'messfehler',
+            editor: {
+                xtype: 'numberfield',
+                allowBlank: false
+            }
         }, {
             header: 'Messgröße',
             dataIndex: 'messgroesseId',
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('staMessgroessen');
                 return store.findRecord('id', value).get('messgroesse');
+            },
+            editor: {
+                xtype: 'messgroesse',
+                allowBlank: false
             }
         }, {
             header: 'Messeinheit',
@@ -64,6 +86,10 @@ Ext.define('Lada.view.messwerte.List', {
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('staMesseinheiten');
                 return store.findRecord('id', value).get('einheit');
+            },
+            editor: {
+                xtype: 'messeinheit',
+                allowBlank: false
             }
         }, {
             header: 'Grenzwertüberschreitung',
@@ -74,6 +100,9 @@ Ext.define('Lada.view.messwerte.List', {
                     return 'Ja';
                 }
                 return 'Nein';
+            },
+            editor: {
+                xtype: 'checkboxfield'
             }
         }];
         this.callParent(arguments);

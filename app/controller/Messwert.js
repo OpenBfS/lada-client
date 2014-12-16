@@ -28,9 +28,9 @@ Ext.define('Lada.controller.Messwert', {
 
     addListeners: function() {
         this.control({
-            'messwertelist': {
-                itemdblclick: this.editItem
-            },
+            //'messwertelist': {
+            //    itemdblclick: this.editItem
+            //},
             'messwertelist toolbar button[action=add]': {
                 click: this.addItem
             },
