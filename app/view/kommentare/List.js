@@ -23,7 +23,7 @@ Ext.define('Lada.view.kommentare.List', {
         emptyText: 'Keine Kommentaregefunden.',
         // minHeight and deferEmptyText are needed to be able to show the
         // emptyText message.
-        minHeight: 35,
+        minHeight: 65,
         deferEmptyText: false
     },
     probeId: null,
