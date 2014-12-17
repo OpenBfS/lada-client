@@ -30,9 +30,9 @@ Ext.define('Lada.controller.Kommentare', {
 
     addListeners: function() {
         this.control({
-            'kommentarelist': {
-                itemdblclick: this.editItem
-            },
+            //'kommentarelist': {
+            //    itemdblclick: this.editItem
+            //},
             'kommentarelist toolbar button[action=add]': {
                 click: this.addItem
             },
