@@ -29,7 +29,7 @@ Ext.define('Lada.view.proben.CreateForm', {
             xtype: 'fieldset',
             title: 'Probenangaben',
             defaults: {
-                    labelWidth: 150
+                    labelWidth: 160
             },
             items: [{
                 layout: 'hbox',
@@ -41,11 +41,13 @@ Ext.define('Lada.view.proben.CreateForm', {
                     items: [{
                         xtype: 'mst',
                         name: 'mstId',
+                        labelWidth: 125,
                         fieldLabel: 'Messstelle',
                         allowBlank: false
                     }, {
                         xtype: 'textfield',
                         name: 'hauptprobenNr',
+                        labelWidth: 125,
                         maxLength: 20,
                         fieldLabel: 'Hauptprobennr.'
                     }]
@@ -99,9 +101,6 @@ Ext.define('Lada.view.proben.CreateForm', {
             // Medium
             xtype: 'fieldset',
             title: 'Medium',
-            defaults: {
-                    labelWidth: 150
-            },
             items: [{
                 border: 0,
                 layout: {
@@ -112,16 +111,19 @@ Ext.define('Lada.view.proben.CreateForm', {
                     xtype: 'uwb',
                     name: 'umwId',
                     fieldLabel: 'Umweltbereich',
+                    labelWidth: 125,
                     allowBlank: false
                 }, {
                     xtype: 'textfield',
                     maxLength: 100,
                     name: 'media',
+                    labelWidth: 125,
                     fieldLabel: 'Medienbezeichnung'
                 }, {
                     xtype: 'textfield',
                     maxLength: 100,
                     name: 'mediaDesk',
+                    labelWidth: 125,
                     fieldLabel: 'Deskriptoren'
                 }, {
                     xtype: 'fieldset',
@@ -141,25 +143,30 @@ Ext.define('Lada.view.proben.CreateForm', {
             xtype: 'fieldset',
             title: 'Zeit',
             defaultType: 'datetime',
-            defaults: {
-                    labelWidth: 150
-            },
             layout: {
                 type: 'table',
                 columns: 2
             },
             items: [{
                 fieldLabel: 'Probennahme Beginn',
-                name: 'probeentnahmeBeginn'
+                name: 'probeentnahmeBeginn',
+                margin: '0, 10, 5, 0',
+                labelWidth: 125
             }, {
                 fieldLabel: 'Sollzeit Von',
-                name: 'solldatumBeginn'
+                name: 'solldatumBeginn',
+                margin: '0, 10, 5, 0',
+                labelWidth: 100
             }, {
                 fieldLabel: 'Probennahme Ende',
-                name: 'probeentnahmeEnde'
+                name: 'probeentnahmeEnde',
+                margin: '0, 10, 5, 0',
+                labelWidth: 125
             }, {
                 fieldLabel: 'Sollzeit Bis',
-                name: 'solldatumEnde'
+                name: 'solldatumEnde',
+                margin: '0, 10, 5, 0',
+                labelWidth: 100
             }]
         }];
         this.callParent(arguments);

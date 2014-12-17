@@ -17,9 +17,8 @@ Ext.define('Lada.view.proben.Create', {
         'Lada.view.proben.CreateForm'
     ],
 
-    title: 'Maske für §3-Proben',
+    title: 'Neue §3-Probe',
     autoShow: true,
-    autoScroll: true,
     modal: true,
     layout: 'fit',
 

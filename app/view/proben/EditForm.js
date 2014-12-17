@@ -67,12 +67,13 @@ Ext.define('Lada.view.proben.EditForm', {
                     border: 0,
                     items: [{
                         border: 0,
-                        width: '43%',
+                        width: '47%',
                         minWidth: 290,
                         items: [{
                             xtype: 'mst',
                             name: 'mstId',
                             fieldLabel: 'Messstelle',
+                            labelWidth: 135,
                             allowBlank: false,
                             listeners: {
                                 dirtychange: {
@@ -85,6 +86,7 @@ Ext.define('Lada.view.proben.EditForm', {
                             name: 'hauptprobenNr',
                             maxLength: 20,
                             fieldLabel: 'Hauptprobennr.',
+                            labelWidth: 135,
                             listeners: {
                                 dirtychange: {
                                     fn: this.updateOnChange,
@@ -94,7 +96,7 @@ Ext.define('Lada.view.proben.EditForm', {
                         }]
                     }, {
                         border: 0,
-                        width: '52%',
+                        width: '50%',
                         minWidth: 300,
                         items: [{
                             xtype: 'fieldset',
@@ -197,7 +199,7 @@ Ext.define('Lada.view.proben.EditForm', {
                     items: [{
                         xtype: 'textfield',
                         name: 'media',
-                        labelWidth: 110,
+                        labelWidth: 125,
                         fieldLabel: 'Medienbezeichnung',
                         listeners: {
                             dirtychange: {
@@ -209,7 +211,7 @@ Ext.define('Lada.view.proben.EditForm', {
                         xtype: 'textfield',
                         maxLength: 100,
                         name: 'mediaDesk',
-                        labelWidth: 110,
+                        labelWidth: 125,
                         fieldLabel: 'Deskriptoren',
                         listeners: {
                             dirtychange: {
@@ -221,7 +223,7 @@ Ext.define('Lada.view.proben.EditForm', {
                         xtype: 'uwb',
                         name: 'umwId',
                         fieldLabel: 'Umweltbereich',
-                        labelWidth: 110,
+                        labelWidth: 125,
                         allowBlank: false,
                         listeners: {
                             dirtychange: {
@@ -253,9 +255,6 @@ Ext.define('Lada.view.proben.EditForm', {
                 xtype: 'fieldset',
                 title: 'Zeit',
                 defaultType: 'datetime',
-                defaults: {
-                        labelWidth: 150
-                },
                 layout: {
                     type: 'table',
                     columns: 2
@@ -263,7 +262,7 @@ Ext.define('Lada.view.proben.EditForm', {
                 items: [{
                     fieldLabel: 'Probennahme Beginn',
                     margin: '0, 10, 5, 0',
-                    labelWidth: 130,
+                    labelWidth: 125,
                     name: 'probeentnahmeBeginn',
                     listeners: {
                         dirtychange: {
@@ -285,7 +284,7 @@ Ext.define('Lada.view.proben.EditForm', {
                 }, {
                     fieldLabel: 'Probennahme Ende',
                     margin: '0, 10, 5, 0',
-                    labelWidth: 130,
+                    labelWidth: 125,
                     name: 'probeentnahmeEnde',
                     listeners: {
                         dirtychange: {
