@@ -97,10 +97,6 @@ Ext.define('Lada.view.messungen.List', {
                     return 'unbekannt';
                 }
                 return sstore.last().get('status');
-            },
-            editor: {
-                xtype: 'numberfield',
-                allowBlank: false
             }
         }, {
             header: 'OK-Flag',
