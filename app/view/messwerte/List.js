@@ -53,6 +53,7 @@ Ext.define('Lada.view.messwerte.List', {
             header: '&lt;NWG',
             dataIndex: 'messwertNwg',
             editor: {
+                xtype: 'nwg',
                 allowBlank: false
             }
         }, {
