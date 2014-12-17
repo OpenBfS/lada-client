@@ -18,7 +18,7 @@ Ext.define('Lada.view.orte.List', {
         emptyText: 'Keine Orte gefunden.',
         // minHeight and deferEmptyText are needed to be able to show the
         // emptyText message.
-        minHeight: 35,
+        minHeight: 65,
         deferEmptyText: false
     },
 

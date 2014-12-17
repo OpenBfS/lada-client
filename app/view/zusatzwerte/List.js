@@ -19,7 +19,7 @@ Ext.define('Lada.view.zusatzwerte.List', {
         emptyText: 'Keine Zusatzwerte gefunden.',
         // minHeight and deferEmptyText are needed to be able to show the
         // emptyText message.
-        minHeight: 35,
+        minHeight: 65,
         deferEmptyText: false
     },
 
