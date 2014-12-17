@@ -22,9 +22,9 @@ Ext.define('Lada.controller.Zusatzwerte', {
 
     addListeners: function() {
         this.control({
-            'zusatzwertelist': {
-                itemdblclick: this.editItem
-            },
+            //'zusatzwertelist': {
+            //    itemdblclick: this.editItem
+            //},
             'zusatzwertelist toolbar button[action=add]': {
                 click: this.addItem
             },
