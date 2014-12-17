@@ -22,9 +22,9 @@ Ext.define('Lada.controller.Zusatzwerte', {
 
     addListeners: function() {
         this.control({
-            //'zusatzwertelist': {
-            //    itemdblclick: this.editItem
-            //},
+            'zusatzwertelist toolbar button[action=open]': {
+                click: this.editItem
+            },
             'zusatzwertelist toolbar button[action=add]': {
                 click: this.addItem
             },
@@ -58,7 +58,12 @@ Ext.define('Lada.controller.Zusatzwerte', {
         });
     },
 
-    editItem: function(grid, record) {
+    editItem: function(button) {
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection()[0];
+        var id = selection.getId();
+        var record = selection.store.getById(id);
+        
         record.getAuthInfo(this.initEditWindow);
     },
 

@@ -28,9 +28,9 @@ Ext.define('Lada.controller.Messwert', {
 
     addListeners: function() {
         this.control({
-            //'messwertelist': {
-            //    itemdblclick: this.editItem
-            //},
+            'messwertelist toolbar button[action=open]': {
+                click: this.editItem
+            },
             'messwertelist toolbar button[action=add]': {
                 click: this.addItem
             },
@@ -61,7 +61,12 @@ Ext.define('Lada.controller.Messwert', {
         });
     },
 
-    editItem: function(grid, record) {
+    editItem: function(button) {
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection()[0];
+        var messwertId = selection.getId();
+        var record = selection.store.getById(messwertId);
+        
         var mstore = Ext.data.StoreManager.get('Messungen');
         var messung = mstore.getById(record.get('messungsId'));
         record.getAuthInfo(this.initEditWindow, messung.get('probeId'));

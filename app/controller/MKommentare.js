@@ -30,9 +30,9 @@ Ext.define('Lada.controller.MKommentare', {
 
     addListeners: function() {
         this.control({
-            //'mkommentarelist': {
-            //    itemdblclick: this.editItem
-            //},
+            'mkommentarelist toolbar button[action=open]': {
+                click: this.editItem
+            },
             'mkommentarelist toolbar button[action=add]': {
                 click: this.addItem
             },
@@ -58,7 +58,12 @@ Ext.define('Lada.controller.MKommentare', {
         });
     },
 
-    editItem: function(grid, record) {
+    editItem: function(button) {
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection()[0];
+        var commentarId = selection.getId();
+        var record = selection.store.getById(commentarId);
+        
         var mstore = Ext.data.StoreManager.get('Messungen');
         var messung = mstore.getById(record.get('messungsId'));
         record.getAuthInfo(this.initEditWindow, messung.get('probeId'));

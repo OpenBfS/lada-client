@@ -38,6 +38,10 @@ Ext.define('Lada.view.messwerte.List', {
             xtype: 'toolbar',
             dock: 'bottom',
             items: ['->', {
+                text: 'Details',
+                icon: 'gfx/document-open.png',
+                action: 'open'
+            }, {
                 text: 'Hinzufügen',
                 icon: 'gfx/list-add.png',
                 action: 'add',

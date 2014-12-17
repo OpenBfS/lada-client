@@ -23,9 +23,9 @@ Ext.define('Lada.controller.Status', {
 
     addListeners: function() {
         this.control({
-            //'statuslist': {
-            //    itemdblclick: this.editItem
-            //},
+            'statuslist toolbar button[action=open]': {
+                click: this.editItem
+            },
             'statuslist toolbar button[action=add]': {
                 click: this.addItem
             },
@@ -55,7 +55,12 @@ Ext.define('Lada.controller.Status', {
         });
     },
 
-    editItem: function(grid, record) {
+    editItem: function(button) {
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection()[0];
+        var statusId = selection.getId();
+        var record = selection.store.getById(statusId);
+        
         var mstore = Ext.data.StoreManager.get('Messungen');
         var messung = mstore.getById(record.get('messungsId'));
         record.getAuthInfo(this.initEditWindow, messung.get('probeId'));

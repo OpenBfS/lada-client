@@ -30,9 +30,9 @@ Ext.define('Lada.controller.Kommentare', {
 
     addListeners: function() {
         this.control({
-            //'kommentarelist': {
-            //    itemdblclick: this.editItem
-            //},
+            'kommentarelist toolbar button[action=open]': {
+                click: this.editItem
+            },
             'kommentarelist toolbar button[action=add]': {
                 click: this.addItem
             },
@@ -57,7 +57,12 @@ Ext.define('Lada.controller.Kommentare', {
         });
     },
 
-    editItem: function(grid, record) {
+    editItem: function(button) {
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection()[0];
+        var id = selection.getId();
+        var record = selection.store.getById(id);
+
         record.getAuthInfo(this.initEditWindow);
     },
 
