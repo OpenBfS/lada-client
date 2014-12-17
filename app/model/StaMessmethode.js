@@ -24,6 +24,13 @@ Ext.define('Lada.model.StaMessmethode', {
         name: 'beschreibung'
     }, {
         name: 'messmethode'
+    }, {
+        name: 'display',
+        persist: false,
+        convert: function(value, record) {
+            return record.get('id') + ' - ' + record.get('messmethode');
+        }
+
     }],
 
     idProperty: 'id',

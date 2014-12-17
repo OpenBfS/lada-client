@@ -13,17 +13,15 @@ Ext.define('Lada.view.widgets.Messmethode', {
     extend: 'Ext.form.ComboBox',
     alias: 'widget.messmethode',
     store: 'StaMessmethoden',
-    displayField: 'messmethode',
+    displayField: 'display',
     valueField: 'id',
     emptyText: 'Wählen Sie eine Messmethode',
     // Enable filtering of comboboxes
     autoSelect: false,
     queryMode: 'local',
     triggerAction: 'all',
-    typeAhead: false,
+    typeAhead: true,
     minChars: 0,
-    tpl: '<tpl for="."><div class="x-combo-list-item x-boundlist-item" >' +
-        '{id} - {messmethode}</div></tpl>',
 
     initComponent: function() {
         this.store = Ext.data.StoreManager.get('staMessmethoden');
