@@ -40,7 +40,8 @@ Ext.define('Lada.view.mkommentare.List', {
             items: ['->', {
                 text: 'Details',
                 icon: 'gfx/document-open.png',
-                action: 'open'
+                action: 'open',
+                disabled: true
             }, {
                 text: 'Hinzufügen',
                 icon: 'gfx/list-add.png',
@@ -77,5 +78,15 @@ Ext.define('Lada.view.mkommentare.List', {
             }
         }];
         this.callParent(arguments);
+    },
+     listeners: {
+        selectionchange: function(model, selected, eOpts) {
+            /*
+            * Enable the 'details' button only when an item is selected
+            */
+            if (selected.length > 0) {
+                this.down('button[action=open]').enable();
+            }
+        }
     }
 });

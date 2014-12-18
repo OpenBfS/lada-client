@@ -37,7 +37,8 @@ Ext.define('Lada.view.zusatzwerte.List', {
             items: ['->', {
                 text: 'Details',
                 icon: 'gfx/document-open.png',
-                action: 'open'
+                action: 'open',
+                disabled: true
             }, {
                 text: 'Hinzufügen',
                 icon: 'gfx/list-add.png',
@@ -103,5 +104,15 @@ Ext.define('Lada.view.zusatzwerte.List', {
             }*/
         }];
         this.callParent(arguments);
+    },
+    listeners: {
+        selectionchange: function(model, selected, eOpts) {
+            /*
+            * Enable the 'details' button only when an item is selected
+            */
+            if (selected.length > 0) {
+                this.down('button[action=open]').enable();
+            }
+        }
     }
 });
