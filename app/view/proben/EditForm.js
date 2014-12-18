@@ -19,6 +19,7 @@ Ext.define('Lada.view.proben.EditForm', {
         'Lada.view.widgets.Testdatensatz',
         'Lada.view.widgets.Probenart',
         'Lada.view.widgets.Uwb',
+        'Lada.view.widgets.TextField',
         'Lada.view.zusatzwerte.List',
         'Lada.view.kommentare.List',
         'Lada.view.orte.List',
@@ -67,8 +68,13 @@ Ext.define('Lada.view.proben.EditForm', {
                     border: 0,
                     items: [{
                         border: 0,
-                        width: '47%',
+                        width: '50%',
                         minWidth: 290,
+                        layout: {
+                            type: 'vbox',
+                            align: 'stretch'
+                        },
+                        margin: '0, 10, 0, 0',
                         items: [{
                             xtype: 'mst',
                             name: 'mstId',
@@ -82,7 +88,7 @@ Ext.define('Lada.view.proben.EditForm', {
                                 }
                             }
                         }, {
-                            xtype: 'textfield',
+                            xtype: 'tfield',
                             name: 'hauptprobenNr',
                             maxLength: 20,
                             fieldLabel: 'Hauptprobennr.',
@@ -254,55 +260,68 @@ Ext.define('Lada.view.proben.EditForm', {
                 // Zeit
                 xtype: 'fieldset',
                 title: 'Zeit',
-                defaultType: 'datetime',
                 layout: {
-                    type: 'table',
-                    columns: 2
+                    type: 'hbox'
                 },
                 items: [{
-                    fieldLabel: 'Probennahme Beginn',
-                    margin: '0, 10, 5, 0',
-                    labelWidth: 125,
-                    name: 'probeentnahmeBeginn',
-                    listeners: {
-                        dirtychange: {
-                            fn: this.updateOnChange,
-                            scope: me
+                    layout: {
+                        type: 'vbox',
+                        align: 'stretch'
+                    },
+                    border: 0,
+                    items: [{
+                        xtype: 'datetime',
+                        fieldLabel: 'Probennahme Beginn',
+                        fieldMargin: '0, 10, 5, 0',
+                        labelWidth: 125,
+                        name: 'probeentnahmeBeginn',
+                        listeners: {
+                            dirtychange: {
+                                fn: this.updateOnChange,
+                                scope: me
+                            }
                         }
-                    }
+                    }, {
+                        xtype: 'datetime',
+                        fieldLabel: 'Probennahme Ende',
+                        fieldMargin: '0, 10, 5, 0',
+                        labelWidth: 125,
+                        name: 'probeentnahmeEnde',
+                        listeners: {
+                            dirtychange: {
+                                fn: this.updateOnChange,
+                                scope: me
+                            }
+                        }
+                    }]
                 }, {
-                    fieldLabel: 'Sollzeit Von',
-                    margin: '0, 10, 5, 0',
-                    labelWidth: 100,
-                    name: 'solldatumBeginn',
-                    listeners: {
-                        dirtychange: {
-                            fn: this.updateOnChange,
-                            scope: me
+                    layout: 'vbox',
+                    border: 0,
+                    items: [{
+                        xtype: 'datetime',
+                        fieldLabel: 'Sollzeit Von',
+                        fieldMargin: '0, 10, 5, 0',
+                        labelWidth: 90,
+                        name: 'solldatumBeginn',
+                        listeners: {
+                            dirtychange: {
+                                fn: this.updateOnChange,
+                                scope: me
+                            }
                         }
-                    }
-                }, {
-                    fieldLabel: 'Probennahme Ende',
-                    margin: '0, 10, 5, 0',
-                    labelWidth: 125,
-                    name: 'probeentnahmeEnde',
-                    listeners: {
-                        dirtychange: {
-                            fn: this.updateOnChange,
-                            scope: me
+                    }, {
+                        xtype: 'datetime',
+                        fieldLabel: 'Sollzeit Bis',
+                        fieldMargin: '0, 10, 5, 0',
+                        labelWidth: 90,
+                        name: 'solldatumEnde',
+                        listeners: {
+                            dirtychange: {
+                                fn: this.updateOnChange,
+                                scope: me
+                            }
                         }
-                    }
-                }, {
-                    fieldLabel: 'Sollzeit Bis',
-                    margin: '0, 10, 5, 0',
-                    labelWidth: 100,
-                    name: 'solldatumEnde',
-                    listeners: {
-                        dirtychange: {
-                            fn: this.updateOnChange,
-                            scope: me
-                        }
-                    }
+                    }]
                 }]
             }]
                 }]
