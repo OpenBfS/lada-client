@@ -100,8 +100,8 @@ Ext.define('Lada.view.widgets.LadaForm', {
     },
 
     commit: function() {
-        if (this.form.isDirty() && this.form.isValid()) {
-
+        if (this.form.isDirty() &&
+            this.form.isValid()) {
             var data = this.model.getAllData();
             var baseUrl = this.model.getProxy().url;
             var url = baseUrl;
@@ -223,46 +223,15 @@ Ext.define('Lada.view.widgets.LadaForm', {
     },
 
     createMessages: function() {
-        var messages = Ext.create('Ext.form.Panel', {
-            bodyPadding: '5 5 5 5'
-        });
         var key;
-        var label;
         for (key in this.warnings) {
-            label = Ext.create('Ext.container.Container', {
-                layout: 'hbox',
-                bodyPadding: '5 5 5 5',
-                items: [{
-                    xtype: 'image',
-                    src: 'gfx/icon-warning.gif',
-                    width: 18,
-                    height: 18
-                }, {
-                    xtype: 'label',
-                    text: key + ': ' + this.warnings[key],
-                    margin: '4 0 0 5'
-                }]
-            });
-            messages.insert(0, label);
+            var element = this.down('component[name=' + key + ']');
+            element.showWarnings(this.warnings[key]);
         }
         for (key in this.errors) {
-            label = Ext.create('Ext.container.Container', {
-                layout: 'hbox',
-                bodyPadding: '5 5 5 5',
-                items: [{
-                    xtype: 'image',
-                    src: 'gfx/icon-error.gif',
-                    width: 18,
-                    height: 18
-                }, {
-                    xtype: 'label',
-                    text: key + ': ' + this.errors[key],
-                    margin: '4 0 0 5'
-                }]
-            });
-            messages.insert(0, label);
+            var element = this.down('component[name=' + key + ']');
+            element.showErrors(this.errors[key]);
         }
-        this.insert(0, messages);
     },
 
     updateOnChange: function() {
