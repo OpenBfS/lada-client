@@ -14,8 +14,8 @@
         "mediaDesk":"D: 59 04 01 00 05 05 01 02 00 00 00 00",
         "media":"Trinkwasser Zentralversorgung Oberflächenwasser aufbereitet",
         "umwId":"N72",
-        "probeentnahmeBeginn":1328517000000,
-        "probeentnahmeEnde":null,
+        "probeentnahmeBeginn":null,
+        "probeentnahmeEnde":1328517000000,
         "mittelungsdauer":null,
         "letzteAenderung":1331279424000,
         "erzeugerId":null,
@@ -26,5 +26,11 @@
         "solldatumBeginn":1328482800000,
         "solldatumEnde":1329080399000,
         "readonly":false
-    }]
+    }],
+    "warnings": {
+        "probeentnahmeBeginn": "631"
+    },
+    "errors": {
+        "hauptprobenNr": "611"
+    }
 }
