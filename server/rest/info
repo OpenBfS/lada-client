@@ -1,9 +1,0 @@
-{
-    "success":true,
-    "message":"200",
-    "data":[{
-        "user":"testeins",
-        "groups":"06010",
-        "version":"1.0.1"
-    }]
-}
