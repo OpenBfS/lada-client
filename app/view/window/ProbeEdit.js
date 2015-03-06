@@ -123,7 +123,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             if (key && key.contains('Ort')) {
                 errorOrt = true;
                 content = errors[key];
-                keyText = key[0].toUpperCase();
+                keyText = i18n.getMsg(key);
                 for (i = 0; i < content.length; i++) {
                     errorOrtText += keyText + ': ' +
                         i18n.getMsg(content[i].toString()) + '\n';
@@ -134,7 +134,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             if (key && key.contains('Ort')) {
                 warningOrt = true;
                 content = warnings[key];
-                keyText = key[0].toUpperCase();
+                keyText = i18n.getMsg(key);
                 for (i = 0; i < content.length; i++) {
                     warningOrtText += keyText + ': ' +
                         i18n.getMsg(content[i].toString()) + '\n';
