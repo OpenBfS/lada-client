@@ -35,12 +35,19 @@ Ext.define('Lada.controller.ProbeForm', {
                 if (response.action !== 'create' &&
                     json &&
                     json.success) {
+                    button.setDisabled(true);
+                    button.up('toolbar').down('button[action=discard]')
+                        .setDisabled(true);
+                    formPanel.clearMessages();
                     formPanel.setRecord(record);
                     formPanel.setMessages(json.errors, json.warnings);
                 }
             },
             failure: function(record, response) {
-                console.log('failed...');
+                button.setDisabled(true);
+                button.up('toolbar').down('button[action=discard]')
+                    .setDisabled(true);
+                formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
                 var json = response.request.scope.reader.jsonData;
                 if (json) {
                     formPanel.setMessages(json.errors, json.warnings);
