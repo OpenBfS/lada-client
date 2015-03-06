@@ -36,11 +36,6 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             xtype: 'toolbar',
             dock: 'bottom',
             items: ['->', {
-                text: 'Details',
-                icon: 'resources/img/document-open.png',
-                action: 'open',
-                disabled: true
-            }, {
                 text: 'Hinzufügen',
                 icon: 'resources/img/list-add.png',
                 action: 'add',
@@ -54,49 +49,60 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
         this.columns = [{
             header: 'PZW-ID',
             dataIndex: 'id',
-            editor: {
-                xtype: 'numberfield',
-                allowBlank: false
-            }
+            width: 70
         }, {
             header: 'PZW-Größe',
             dataIndex: 'pzsId',
+            flex: 1,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('probenzusaetze');
                 var record = store.getById(value);
                 return record.get('beschreibung');
             },
-            flex: 1,
             editor: {
-                xtype: 'probenzusatzwert'
+                xtype: 'combobox',
+                store: Ext.data.StoreManager.get('probenzusaetze'),
+                displayField: 'beschreibung',
+                valueField: 'id',
+                allowBlank: false
             }
         }, {
             header: 'Messwert',
-            dataIndex: 'id',
-            renderer: function(value) {
-                var record = this.store.getById(value);
-                var messwert = record.get('messwertPzs');
+            dataIndex: 'messwertPzs',
+            width: 80,
+            renderer: function(value, meta, record) {
                 var nwg = record.get('nwgZuMesswert');
-                if (messwert < nwg) {
-                    return '<' + messwert;
+                if (value < nwg) {
+                    return '<' + value;
                 }
-                return messwert;
-            }
-        }, {
-            header: 'rel. Unsich.[%]',
-            dataIndex: 'messfehler',
+                return value;
+            },
             editor: {
                 allowBlank: false
             }
         }, {
             header: 'Maßeinheit',
             dataIndex: 'pzsId',
+            width: 80,
             renderer: function(value) {
                 var zstore = Ext.data.StoreManager.get('probenzusaetze');
                 var mstore = Ext.data.StoreManager.get('messeinheiten');
                 var mehId = zstore.getById(value).get('mehId');
                 var record = mstore.findRecord('id', mehId);
                 return record.get('einheit');
+            }
+        }, {
+            header: 'Nachweisgrenze',
+            dataIndex: 'nwgZuMesswert',
+            width: 110,
+            editor: {
+                allowBlank: false
+            }
+        }, {
+            header: 'rel. Unsich.[%]',
+            dataIndex: 'messfehler',
+            editor: {
+                allowBlank: false
             }
         }];
         this.initData();
