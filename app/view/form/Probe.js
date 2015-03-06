@@ -14,6 +14,7 @@ Ext.define('Lada.view.form.Probe', {
     alias: 'widget.probeform',
     requires: [
         'Lada.view.widget.Datenbasis',
+        'Lada.view.widget.Messstelle',
         'Lada.view.widget.Netzbetreiber',
         'Lada.view.widget.Betriebsart',
         'Lada.view.widget.Testdatensatz',
@@ -78,7 +79,7 @@ Ext.define('Lada.view.form.Probe', {
                         },
                         margin: '0, 10, 0, 0',
                         items: [{
-                            xtype: 'messtelle',
+                            xtype: 'messstelle',
                             name: 'mstId',
                             fieldLabel: 'Messstelle',
                             labelWidth: 135,

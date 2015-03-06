@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.view.widget.Messstelle', {
     extend: 'Lada.view.widget.base.ComboBox',
-    alias: 'widget.messtelle',
+    alias: 'widget.messstelle',
     store: 'Messstellen',
     displayField: 'messStelle',
     valueField: 'id',
