@@ -34,9 +34,15 @@ Ext.define('Lada.controller.OrtGrid', {
     },
 
     gridSave: function(editor, context) {
-        context.record.save();
-        context.grid.store.reload();
-        context.grid.up('window').initData();
+        context.record.save({
+            success: function() {
+                context.grid.store.reload();
+                context.grid.up('window').initData();
+            },
+            failure: function() {
+                // TODO
+            }
+        });
     },
 
     open: function() {
