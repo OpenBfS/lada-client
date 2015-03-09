@@ -17,7 +17,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
         'Lada.view.form.Probe',
         'Lada.view.grid.Ort',
         'Lada.view.grid.Probenzusatzwert',
-        'Lada.view.grid.PKommentar'
+        'Lada.view.grid.PKommentar',
+        'Lada.view.grid.Messungen'
     ],
 
     collapsible: true,
@@ -84,6 +85,18 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 collapsed: true,
                 items: [{
                     xtype: 'pkommentargrid',
+                    recordId: this.record.get('id')
+                }]
+             }, {
+                xtype: 'fset',
+                name: 'messungen',
+                title: 'Messungen',
+                padding: '5, 5',
+                margin: 5,
+                collapsible: false,
+                collapsed: false,
+                items: [{
+                    xtype: 'messungengrid',
                     recordId: this.record.get('id')
                 }]
             }]
