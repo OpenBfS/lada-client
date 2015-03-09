@@ -39,9 +39,9 @@ Ext.define('Lada.model.Messwert', {
         type: 'date',
         convert: function(v) {
             if (!v) {
-                return v;
+                return new Date();
             }
-            return new Date();
+            return new Date(v);
         },
         defaultValue: new Date()
     }],
