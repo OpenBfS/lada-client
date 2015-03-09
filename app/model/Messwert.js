@@ -50,7 +50,7 @@ Ext.define('Lada.model.Messwert', {
 
     proxy: {
         type: 'rest',
-        url: 'server/rest/messwert',
+        url: 'lada-server/messwert',
         reader: {
             type: 'json',
             root: 'data'
