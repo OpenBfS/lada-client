@@ -126,20 +126,24 @@ Ext.define('Lada.view.grid.Messungen', {
         }*/
         , {
             header: 'Status',
-            dataIndex: 'id',
             flex: 1,
+            dataIndex: 'id',
             renderer: function(value) {
-                var sstore = Ext.getStore('Status'); // Es existiert derzeit kein StatusModel. Der Status Store referenziert jedoch darauf.
-                sstore.load({
+//fixme: dezeit existiert nur 1 status daher immer unbekannt
+                this.statusStore.load(
+                {
                     params: {
-                        probeId: value.recordId,
-                        messungsId: value.id
+                        messungsId: value,
                     }
                 });
-                if (sstore.getTotalCount() === 0) {
+
+                if (!this.statusStore){
                     return 'unbekannt';
                 }
-                return sstore.last().get('status');
+                if (this.statusStore.getTotalCount() === 0) {
+                    return 'unbekannt';
+                }
+                return this.statusStore.last().get('status');
             }
         }, {
             header: 'OK-Flag',
@@ -157,29 +161,41 @@ Ext.define('Lada.view.grid.Messungen', {
             }
         }, {
             header: 'Anzahl Nuklide',
+            // Gibt die Anzahl der Messwerte wieder,
+            // NICHT die Anzahl der verschiedenen Nukleide
+            // Eventuell ist die Bezeichnug daher irreführend
             flex: 1,
+            dataIndex: 'id',
             renderer: function(value) {
-                var mstore = Ext.getStore('Messwerte');
-                mstore.load({
+//fixme: gibt immer 0 aus
+                this.messwerteStore.load({
                     params: {
-                        probeId: value.recordId,
-                        messungsId: value.id
+                        messungId: value,
                     }
                 });
-                return mstore.getTotalCount();
+
+                if (!this.messwerteStore){
+                    return 'unbekannt';
+                }
+                return this.messwerteStore.getCount();
             }
         }, {
             header: 'Anzahl Kommentare',
             flex: 1,
+            dataIndex: 'id',
             renderer: function(value) {
-                var kstore = Ext.getStore('MKommentare');
-                kstore.load({
+//fixme: gibt immer 0 aus
+               this.mKommentareStore.load({
                     params: {
-                        probeId: value.probeId,
-                        messungsId: value.id
+                        messungsId: value,
                     }
                 });
-                return kstore.getTotalCount();
+
+                if (!this.mKommentareStore){
+                    return 'unbekannt';
+                }
+
+                return this.mKommentareStore.getTotalCount();
             }
         }];
         this.initData();
@@ -188,11 +204,34 @@ Ext.define('Lada.view.grid.Messungen', {
 
     initData: function(){
         this.store = Ext.create('Lada.store.Messungen');
+        this.statusStore = Ext.create('Lada.store.Status');
+        this.messwerteStore = Ext.create('Lada.store.Messwerte');
+        this.mKommentareStore = Ext.create('Lada.store.MKommentare');
+
         this.store.load({
             params: {
                 probeId: this.recordId
             }
         });
+
+/*
+        this.statusStore.load({
+            params: {
+                messungId: this.recordId
+            }
+        });
+        this.messwerteStore.load({
+            params: {
+                messungId: this.recordId
+            }
+        });
+        this.mKommentareStore.load({
+            params: {
+                messungsId: this.recordId
+            }
+        });
+*/
+
     },
     listeners: {
         selectionchange: function(model, selected, eOpts) {
