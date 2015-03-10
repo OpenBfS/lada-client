@@ -12,14 +12,14 @@
 Ext.define('Lada.controller.MessungenGrid', {
     extend: 'Ext.app.Controller',
 
+    requires: [
+        'Lada.view.window.MessungEdit'
+    ],
+
     init: function() {
         this.control({
             'messungengrid': {
-                selectionchange: this.selectionChanged,
-                edit: this.gridSave
-            },
-            'messungengrid button[action=open]': {
-                click: this.open
+                itemdblclick: this.open
             },
             'messungengrid button[action=add]': {
                 click: this.add
@@ -48,9 +48,15 @@ Ext.define('Lada.controller.MessungenGrid', {
         });
     },
 
-    open: function() {
+    open: function(grid, record) {
+        //Opens a detailed view of the Messung
+        var win = Ext.create('Lada.view.window.MessungEdit', {
+            record: this.record
+        });
+        win.show();
+        win.initData();
         // todo
-        console.log('open');
+        console.log('opened window');
     },
 
     add: function() {

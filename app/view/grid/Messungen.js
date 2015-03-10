@@ -32,16 +32,10 @@ Ext.define('Lada.view.grid.Messungen', {
             autoCancel: false,
             itemId: 'rowedit'
         });
-        this.plugins = [rowEditing];
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
             items: ['->', {
-                text: 'Details',
-                icon: 'resources/img/document-open.png',
-                action: 'open',
-                disabled: true
-            }, {
                 text: 'Hinzufügen',
                 icon: 'resources/img/list-add.png',
                 action: 'add',
@@ -56,16 +50,10 @@ Ext.define('Lada.view.grid.Messungen', {
             header: 'Mess-ID',
             dataIndex: 'id',
             flex: 1,
-            editor: {
-                allowBlank: false
-            }
         }, {
             header: 'Nebenproben-Nr.',
             dataIndex: 'nebenprobenNr',
             flex: 1,
-            editor: {
-                allowBlank: false
-            }
         }, {
             header: 'MMT',
             dataIndex: 'mmtId',
@@ -77,14 +65,6 @@ Ext.define('Lada.view.grid.Messungen', {
             header: 'Messzeit',
             dataIndex: 'messzeitpunkt',
             flex: 2,
-            editor: {
-                xtype: 'datefield',
-                allowBlank: false,
-                format: 'd.m.Y',
-                //minValue: '01.01.2001', //todo: gibt es das?
-                //minText: 'Das Datum der Messung darf nicht vor dem 01.01.2001 liegen.',
-                maxValue: Ext.Date.format(new Date(), 'd.m.Y')
-            }
         }, {
             header: 'Status',
             flex: 1,
@@ -172,6 +152,9 @@ Ext.define('Lada.view.grid.Messungen', {
         this.store.load({
             params: {
                 probeId: this.recordId
+            },
+            success: function(record, response){
+               console.log(Ext.getClassName(response));
             }
         });
     }
