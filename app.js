@@ -95,6 +95,8 @@ Ext.application({
         Ext.create('Lada.store.Verwaltungseinheiten', {
             storeId: 'verwaltungseinheiten'
         });
+
+
     },
 
     // Define the controllers of the application. They will be initialized
@@ -104,6 +106,7 @@ Ext.application({
         'Lada.controller.FilterResult',
         'Lada.controller.ProbeForm',
         'Lada.controller.OrtGrid',
-        'Lada.controller.ProbenzusatzwertGrid'
+        'Lada.controller.ProbenzusatzwertGrid',
+        'Lada.controller.MessungenGrid'
     ]
 });

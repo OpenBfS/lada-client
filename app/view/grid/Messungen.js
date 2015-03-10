@@ -45,7 +45,7 @@ Ext.define('Lada.view.grid.Messungen', {
                 text: 'Hinzufügen',
                 icon: 'resources/img/list-add.png',
                 action: 'add',
-                probeId: this.recordId
+                probeId: this.probeId
             }, {
                 text: 'Löschen',
                 icon: 'resources/img/list-remove.png',
@@ -60,15 +60,6 @@ Ext.define('Lada.view.grid.Messungen', {
                 allowBlank: false
             }
         }, {
-        /*
-            header: 'Probe-ID',
-            dataIndex: 'probeId',
-            flex: 1,
-            editor: {
-                allowBlank: false
-            }
-        }, {
-        */
             header: 'Nebenproben-Nr.',
             dataIndex: 'nebenprobenNr',
             flex: 1,
@@ -94,37 +85,7 @@ Ext.define('Lada.view.grid.Messungen', {
                 //minText: 'Das Datum der Messung darf nicht vor dem 01.01.2001 liegen.',
                 maxValue: Ext.Date.format(new Date(), 'd.m.Y')
             }
-        }
-        /*
-         , {
-            header: 'Messdauer',
-            dataIndex: 'messdauer',
-            width: 50,
-            editor: {
-                allowBlank: false
-            }
         }, {
-            header: 'Geplant',
-            dataIndex: 'geplant',
-            width: 10,
-            editor: {
-                xtype: 'checkboxfield',
-                allowBlank: false
-            }
-        }, {
-            header: 'Letzte Änderung',
-            dataIndex: 'letzteAenderung',
-            width: 50,
-            editor: {
-                xtype: 'datefield',
-                allowBlank: false,
-                format: 'd.m.Y',
-                //minValue: '01.01.2001', //todo: gibt es das?
-                //minText: 'Das Datum der letzten Änderung darf nicht vor dem 01.01.2001 liegen.',
-                maxValue: Ext.Date.format(new Date(), 'd.m.Y')
-            }
-        }*/
-        , {
             header: 'Status',
             flex: 1,
             dataIndex: 'id',
@@ -213,34 +174,5 @@ Ext.define('Lada.view.grid.Messungen', {
                 probeId: this.recordId
             }
         });
-
-/*
-        this.statusStore.load({
-            params: {
-                messungId: this.recordId
-            }
-        });
-        this.messwerteStore.load({
-            params: {
-                messungId: this.recordId
-            }
-        });
-        this.mKommentareStore.load({
-            params: {
-                messungsId: this.recordId
-            }
-        });
-*/
-
-    },
-    listeners: {
-        selectionchange: function(model, selected, eOpts) {
-            /*
-            * Enable the 'details' button only when an item is selected
-            */
-            if (selected.length > 0) {
-                this.down('button[action=open]').enable();
-            }
-        }
     }
 });
