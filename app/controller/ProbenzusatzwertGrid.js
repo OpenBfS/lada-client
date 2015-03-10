@@ -42,7 +42,7 @@ Ext.define('Lada.controller.ProbenzusatzwertGrid', {
     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
-        Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn) {
+        Ext.MessageBox.confirm('Zusatzwert löschen', 'Sind Sie sicher?', function(btn) {
             if (btn === 'yes') {
                 selection.destroy({
                     success: function() {
