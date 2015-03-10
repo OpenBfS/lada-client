@@ -45,7 +45,7 @@ Ext.define('Lada.view.grid.Messungen', {
                 text: 'Hinzufügen',
                 icon: 'resources/img/list-add.png',
                 action: 'add',
-                probeId: this.recordId
+                probeId: this.probeId
             }, {
                 text: 'Löschen',
                 icon: 'resources/img/list-remove.png',
@@ -60,15 +60,6 @@ Ext.define('Lada.view.grid.Messungen', {
                 allowBlank: false
             }
         }, {
-        /*
-            header: 'Probe-ID',
-            dataIndex: 'probeId',
-            flex: 1,
-            editor: {
-                allowBlank: false
-            }
-        }, {
-        */
             header: 'Nebenproben-Nr.',
             dataIndex: 'nebenprobenNr',
             flex: 1,
@@ -94,52 +85,26 @@ Ext.define('Lada.view.grid.Messungen', {
                 //minText: 'Das Datum der Messung darf nicht vor dem 01.01.2001 liegen.',
                 maxValue: Ext.Date.format(new Date(), 'd.m.Y')
             }
-        }
-        /*
-         , {
-            header: 'Messdauer',
-            dataIndex: 'messdauer',
-            width: 50,
-            editor: {
-                allowBlank: false
-            }
         }, {
-            header: 'Geplant',
-            dataIndex: 'geplant',
-            width: 10,
-            editor: {
-                xtype: 'checkboxfield',
-                allowBlank: false
-            }
-        }, {
-            header: 'Letzte Änderung',
-            dataIndex: 'letzteAenderung',
-            width: 50,
-            editor: {
-                xtype: 'datefield',
-                allowBlank: false,
-                format: 'd.m.Y',
-                //minValue: '01.01.2001', //todo: gibt es das?
-                //minText: 'Das Datum der letzten Änderung darf nicht vor dem 01.01.2001 liegen.',
-                maxValue: Ext.Date.format(new Date(), 'd.m.Y')
-            }
-        }*/
-        , {
             header: 'Status',
-            dataIndex: 'id',
             flex: 1,
+            dataIndex: 'id',
             renderer: function(value) {
-                var sstore = Ext.getStore('Status'); // Es existiert derzeit kein StatusModel. Der Status Store referenziert jedoch darauf.
-                sstore.load({
+//fixme: dezeit existiert nur 1 status daher immer unbekannt
+                this.statusStore.load(
+                {
                     params: {
-                        probeId: value.recordId,
-                        messungsId: value.id
+                        messungsId: value,
                     }
                 });
-                if (sstore.getTotalCount() === 0) {
+
+                if (!this.statusStore){
                     return 'unbekannt';
                 }
-                return sstore.last().get('status');
+                if (this.statusStore.getTotalCount() === 0) {
+                    return 'unbekannt';
+                }
+                return this.statusStore.last().get('status');
             }
         }, {
             header: 'OK-Flag',
@@ -157,29 +122,41 @@ Ext.define('Lada.view.grid.Messungen', {
             }
         }, {
             header: 'Anzahl Nuklide',
+            // Gibt die Anzahl der Messwerte wieder,
+            // NICHT die Anzahl der verschiedenen Nukleide
+            // Eventuell ist die Bezeichnug daher irreführend
             flex: 1,
+            dataIndex: 'id',
             renderer: function(value) {
-                var mstore = Ext.getStore('Messwerte');
-                mstore.load({
+//fixme: gibt immer 0 aus
+                this.messwerteStore.load({
                     params: {
-                        probeId: value.recordId,
-                        messungsId: value.id
+                        messungId: value,
                     }
                 });
-                return mstore.getTotalCount();
+
+                if (!this.messwerteStore){
+                    return 'unbekannt';
+                }
+                return this.messwerteStore.getCount();
             }
         }, {
             header: 'Anzahl Kommentare',
             flex: 1,
+            dataIndex: 'id',
             renderer: function(value) {
-                var kstore = Ext.getStore('MKommentare');
-                kstore.load({
+//fixme: gibt immer 0 aus
+               this.mKommentareStore.load({
                     params: {
-                        probeId: value.probeId,
-                        messungsId: value.id
+                        messungsId: value,
                     }
                 });
-                return kstore.getTotalCount();
+
+                if (!this.mKommentareStore){
+                    return 'unbekannt';
+                }
+
+                return this.mKommentareStore.getTotalCount();
             }
         }];
         this.initData();
@@ -188,20 +165,14 @@ Ext.define('Lada.view.grid.Messungen', {
 
     initData: function(){
         this.store = Ext.create('Lada.store.Messungen');
+        this.statusStore = Ext.create('Lada.store.Status');
+        this.messwerteStore = Ext.create('Lada.store.Messwerte');
+        this.mKommentareStore = Ext.create('Lada.store.MKommentare');
+
         this.store.load({
             params: {
                 probeId: this.recordId
             }
         });
-    },
-    listeners: {
-        selectionchange: function(model, selected, eOpts) {
-            /*
-            * Enable the 'details' button only when an item is selected
-            */
-            if (selected.length > 0) {
-                this.down('button[action=open]').enable();
-            }
-        }
     }
 });

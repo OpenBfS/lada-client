@@ -26,9 +26,9 @@ Ext.define('Lada.model.Messung', {
         name: 'messzeitpunkt',
         convert: function(v) {
             if (!v) {
-                return v;
+               return new Date();
             }
-            return new Date();
+            return new Date(v);
         },
         defaultValue: new Date()
     }, {
@@ -39,9 +39,9 @@ Ext.define('Lada.model.Messung', {
         type: 'date',
         convert: function(v) {
             if (!v) {
-                return v;
+                return new Date;
             }
-            return new Date();
+            return new Date(v);
         },
         defaultValue: new Date()
     }, {

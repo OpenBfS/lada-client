@@ -6,22 +6,25 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-Ext.define('Lada.controller.OrtGrid', {
+/*
+ * Controller for a Messungengrid
+ */
+Ext.define('Lada.controller.MessungenGrid', {
     extend: 'Ext.app.Controller',
 
     init: function() {
         this.control({
-            'ortgrid': {
+            'messungengrid': {
                 selectionchange: this.selectionChanged,
                 edit: this.gridSave
             },
-            'ortgrid button[action=open]': {
+            'messungengrid button[action=open]': {
                 click: this.open
             },
-            'ortgrid button[action=add]': {
+            'messungengrid button[action=add]': {
                 click: this.add
             },
-            'ortgrid button[action=delete]': {
+            'messungengrid button[action=delete]': {
                 click: this.remove
             }
         });
@@ -58,7 +61,7 @@ Ext.define('Lada.controller.OrtGrid', {
     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
-        Ext.MessageBox.confirm('Ortsangabe löschen', 'Sind Sie sicher?', function(btn) {
+        Ext.MessageBox.confirm('Messung löschen', 'Sind Sie sicher?', function(btn) {
             if (btn === 'yes') {
                 selection.destroy({
                     success: function() {
