@@ -27,6 +27,7 @@ Ext.application({
     // found on https://github.com/elmasse/Ext.i18n.Bundle
     requires: [
         'Lada.override.Table',
+        'Lada.override.RowEditor',
         'Ext.i18n.Bundle',
         'Ext.layout.container.Column',
         'Lada.store.Datenbasis',
