@@ -27,11 +27,11 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
     recordId: null,
 
     initComponent: function() {
-        var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+        this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false
         });
-        this.plugins = [rowEditing];
+        this.plugins = [this.rowEditing];
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -55,6 +55,9 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             dataIndex: 'pzsId',
             flex: 1,
             renderer: function(value) {
+                if (!value || value === '') {
+                    return '';
+                }
                 var store = Ext.data.StoreManager.get('probenzusaetze');
                 var record = store.getById(value);
                 return record.get('beschreibung');
@@ -85,6 +88,9 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             dataIndex: 'pzsId',
             width: 80,
             renderer: function(value) {
+                if (!value || value === '') {
+                    return '';
+                }
                 var zstore = Ext.data.StoreManager.get('probenzusaetze');
                 var mstore = Ext.data.StoreManager.get('messeinheiten');
                 var mehId = zstore.getById(value).get('mehId');

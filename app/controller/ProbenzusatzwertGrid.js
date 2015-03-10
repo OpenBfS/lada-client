@@ -35,8 +35,12 @@ Ext.define('Lada.controller.ProbenzusatzwertGrid', {
         });
     },
 
-    add: function() {
-        console.log('add');
+    add: function(button) {
+        var record = Ext.create('Lada.model.Zusatzwert', {
+            probeId: button.up('probenzusatzwertgrid').recordId
+        });
+        button.up('probenzusatzwertgrid').store.insert(0, record);
+        button.up('probenzusatzwertgrid').rowEditing.startEdit(0, 1);
     },
 
     remove: function(button) {
@@ -47,8 +51,10 @@ Ext.define('Lada.controller.ProbenzusatzwertGrid', {
                 selection.destroy({
                     success: function() {
                         button.up('window').initData();
+                        grid.initData();
                     },
                     failure: function() {
+                        // TODO
                     }
                 });
             }
