@@ -13,12 +13,12 @@ Ext.define('Lada.view.window.MessungEdit', {
     extend: 'Ext.window.Window',
     alias: 'widget.messungedit',
 
-   // requires: [
-   //   'Lada.view.form.Messung',
+    requires: [
+      'Lada.view.form.Messung'
    //   'Lada.view.grid.Messwert',
    //   'Lada.view.grid.Messstatus',
    //   'Lada.view.grid.MKommentar'
-   // ],
+    ],
 
     collapsible: true,
     maximizable: true,
@@ -47,7 +47,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             border: 0,
             autoScroll: true,
             items: [{
-         //       xtype: 'messungform',
+                xtype: 'messungform',
 //                recordId: record.get('id')
             }, {
                 xtype: 'fset',
