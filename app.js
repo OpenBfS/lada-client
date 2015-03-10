@@ -105,6 +105,7 @@ Ext.application({
         'Lada.controller.FilterResult',
         'Lada.controller.ProbeForm',
         'Lada.controller.OrtGrid',
-        'Lada.controller.ProbenzusatzwertGrid'
+        'Lada.controller.ProbenzusatzwertGrid',
+        'Lada.controller.PKommentarGrid'
     ]
 });
