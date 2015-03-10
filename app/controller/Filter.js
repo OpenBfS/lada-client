@@ -113,14 +113,14 @@ Ext.define('Lada.controller.Filter', {
                 });
             }
             else if (type === 'datetime') {
-                field = Ext.create('Lada.view.widgets.Datetime', {
+                field = Ext.create('Lada.view.widget.Datetime', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label
                 });
             }
             else if (type === 'bool') {
-                field = Ext.create('Lada.view.widgets.Testdatensatz', {
+                field = Ext.create('Lada.view.widget.Testdatensatz', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
@@ -128,7 +128,7 @@ Ext.define('Lada.controller.Filter', {
                 });
             }
             else if (type === 'listmst') {
-                field = Ext.create('Lada.view.widgets.Messstelle', {
+                field = Ext.create('Lada.view.widget.Messstelle', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
@@ -136,7 +136,7 @@ Ext.define('Lada.controller.Filter', {
                 });
             }
             else if (type === 'listumw') {
-                field = Ext.create('Lada.view.widgets.Umwelt', {
+                field = Ext.create('Lada.view.widget.Umwelt', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
@@ -144,7 +144,7 @@ Ext.define('Lada.controller.Filter', {
                 });
             }
             else if (type === 'listdbasis') {
-                field = Ext.create('Lada.view.widgets.Datenbasis', {
+                field = Ext.create('Lada.view.widget.Datenbasis', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
@@ -152,7 +152,7 @@ Ext.define('Lada.controller.Filter', {
                 });
             }
             else if (type === 'listver') {
-                field = Ext.create('Lada.view.widgets.Verwaltungseinheit', {
+                field = Ext.create('Lada.view.widget.Verwaltungseinheit', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
@@ -160,7 +160,7 @@ Ext.define('Lada.controller.Filter', {
                 });
             }
             else if (type === 'listnetz') {
-                field = Ext.create('Lada.view.widgets.Netzbetreiber', {
+                field = Ext.create('Lada.view.widget.Netzbetreiber', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
