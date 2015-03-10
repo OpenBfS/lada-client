@@ -46,17 +46,19 @@ Ext.define('Lada.controller.OrtGrid', {
     },
 
     open: function() {
+        // todo
         console.log('open');
     },
 
     add: function() {
+        // todo
         console.log('add');
     },
 
     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
-        Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn) {
+        Ext.MessageBox.confirm('Ortsangabe löschen', 'Sind Sie sicher?', function(btn) {
             if (btn === 'yes') {
                 selection.destroy({
                     success: function() {
