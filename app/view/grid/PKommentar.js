@@ -14,12 +14,13 @@ Ext.define('Lada.view.grid.PKommentar', {
     alias: 'widget.pkommentargrid',
 
     requires: [
-        'Ext.toolbar.Toolbar'
+        'Ext.toolbar.Toolbar',
+        'Lada.store.PKommentare'
     ],
 
     maxHeight: 350,
     emptyText: 'Keine Kommentaregefunden.',
-    minHeight: 65,
+    minHeight: 110,
     viewConfig: {
         deferEmptyText: false
     },
@@ -27,11 +28,11 @@ Ext.define('Lada.view.grid.PKommentar', {
     recordId: null,
 
     initComponent: function() {
-        var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+        this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false
         });
-        this.plugins = [rowEditing];
+        this.plugins = [this.rowEditing];
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -49,7 +50,20 @@ Ext.define('Lada.view.grid.PKommentar', {
         this.columns = [{
             header: 'Erzeuger',
             dataIndex: 'erzeuger',
+            width: 140,
+            renderer: function(value) {
+                if (!value || value === '') {
+                    return '';
+                }
+                var store = Ext.data.StoreManager.get('messstellen');
+                var record = store.getById(value);
+                return record.get('messStelle');
+            },
             editor: {
+                xtype: 'combobox',
+                store: Ext.data.StoreManager.get('messstellen'),
+                displayField: 'messStelle',
+                valueField: 'id',
                 allowBlank: false
             }
         }, {
@@ -65,10 +79,25 @@ Ext.define('Lada.view.grid.PKommentar', {
             header: 'Text',
             dataIndex: 'text',
             flex: 1,
+            renderer: function(value) {
+                return '<div style="white-space: normal !important;">' +
+                    value + '</div>';
+            },
             editor: {
+                xtype: 'textarea',
                 allowBlank: false
             }
         }];
+        this.initData();
         this.callParent(arguments);
+    },
+
+    initData: function() {
+        this.store = Ext.create('Lada.store.PKommentare');
+        this.store.load({
+            params: {
+                probeId: this.recordId
+            }
+        });
     }
 });
