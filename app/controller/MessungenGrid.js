@@ -30,53 +30,36 @@ Ext.define('Lada.controller.MessungenGrid', {
         });
     },
 
-    selectionChanged: function(grid, record) {
-        if (record) {
-            grid.view.panel.down('button[action=open]').enable();
-        }
-    },
-
-    gridSave: function(editor, context) {
-        context.record.save({
-            success: function() {
-                context.grid.store.reload();
-                context.grid.up('window').initData();
-            },
-            failure: function() {
-                // TODO
-            }
-        });
-    },
-
     open: function(grid, record) {
         //Opens a detailed view of the Messung
         var win = Ext.create('Lada.view.window.MessungEdit', {
-            record: this.record
+            record: record
         });
         win.show();
         win.initData();
-        // todo
-        console.log('opened window');
     },
 
     add: function() {
-        // todo
+        // TODO
         console.log('add');
     },
 
     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
-        Ext.MessageBox.confirm('Messung löschen', 'Sind Sie sicher?', function(btn) {
-            if (btn === 'yes') {
-                selection.destroy({
-                    success: function() {
-                        button.up('window').initData();
-                    },
-                    failure: function() {
-                    }
-                });
-            }
+        Ext.MessageBox.confirm(
+            'Messung löschen',
+            'Sind Sie sicher?',
+            function(btn) {
+                if (btn === 'yes') {
+                    selection.destroy({
+                        success: function() {
+                            button.up('window').initData();
+                        },
+                        failure: function() {
+                        }
+                    });
+                }
         });
     }
 });

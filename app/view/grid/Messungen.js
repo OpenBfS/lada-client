@@ -70,28 +70,16 @@ Ext.define('Lada.view.grid.Messungen', {
             flex: 1,
             dataIndex: 'id',
             renderer: function(value) {
-//fixme: dezeit existiert nur 1 status daher immer unbekannt
-                this.statusStore.load(
-                {
-                    params: {
-                        messungsId: value,
-                    }
-                });
-
-                if (!this.statusStore){
-                    return 'unbekannt';
-                }
-                if (this.statusStore.getTotalCount() === 0) {
-                    return 'unbekannt';
-                }
-                return this.statusStore.last().get('status');
+                var id = 'messung-status-item' + value;
+                this.updateStatus(value, id);
+                return '<div id="' + id + '">Lade...</div>';
             }
         }, {
             header: 'OK-Flag',
             dataIndex: 'fertig',
             flex: 1,
-            renderer: function(value){
-                if(value){
+            renderer: function(value) {
+                if (value) {
                     return 'Ja';
                 }
                 return 'Nein';
@@ -105,57 +93,96 @@ Ext.define('Lada.view.grid.Messungen', {
             // Gibt die Anzahl der Messwerte wieder,
             // NICHT die Anzahl der verschiedenen Nukleide
             // Eventuell ist die Bezeichnug daher irreführend
-            flex: 1,
             dataIndex: 'id',
+            flex: 1,
             renderer: function(value) {
-//fixme: gibt immer 0 aus
-                this.messwerteStore.load({
-                    params: {
-                        messungId: value,
-                    }
-                });
-
-                if (!this.messwerteStore){
-                    return 'unbekannt';
-                }
-                return this.messwerteStore.getCount();
+                var id = 'messung-nuklid-item' + value;
+                this.updateNuklide(value, id);
+                return '<div id="' + id + '">Lade...</div>';
             }
         }, {
             header: 'Anzahl Kommentare',
             flex: 1,
             dataIndex: 'id',
             renderer: function(value) {
-//fixme: gibt immer 0 aus
-               this.mKommentareStore.load({
-                    params: {
-                        messungsId: value,
-                    }
-                });
-
-                if (!this.mKommentareStore){
-                    return 'unbekannt';
-                }
-
-                return this.mKommentareStore.getTotalCount();
+                var id = 'messung-kommentar-item' + value;
+                this.updateKommentare(value, id);
+                return '<div id="' + id + '">Lade...</div>';
             }
         }];
         this.initData();
         this.callParent(arguments);
     },
 
-    initData: function(){
+    initData: function() {
         this.store = Ext.create('Lada.store.Messungen');
-        this.statusStore = Ext.create('Lada.store.Status');
-        this.messwerteStore = Ext.create('Lada.store.Messwerte');
-        this.mKommentareStore = Ext.create('Lada.store.MKommentare');
-
         this.store.load({
             params: {
                 probeId: this.recordId
-            },
-            success: function(record, response){
-               console.log(Ext.getClassName(response));
             }
         });
+    },
+
+    updateStatus: function(value, divId) {
+        var statusStore = Ext.create('Lada.store.Status');
+        statusStore.on('load',
+            this.updateStatusColumn,
+            this,
+            {divId: divId});
+        statusStore.load({
+            params: {
+                messungsId: value
+            }
+        });
+    },
+
+    updateNuklide: function(value, divId) {
+        var messwerte = Ext.create('Lada.store.Messwerte');
+        messwerte.on('load',
+            this.updateColumn,
+            this,
+            {divId: divId});
+        messwerte.load({
+            params: {
+                messungsId: value
+            }
+        });
+    },
+
+    updateKommentare: function(value, divId) {
+        var kommentare = Ext.create('Lada.store.MKommentare');
+        kommentare.on('load',
+            this.updateColumn,
+            this,
+            {divId: divId});
+        kommentare.load({
+            params: {
+                messungsId: value
+            }
+        });
+    },
+
+    updateColumn: function(store, record, success, opts) {
+        var value;
+        if (store.getTotalCount() === 0) {
+            value = 'Keine';
+        }
+        else {
+            value = store.getTotalCount();
+        }
+        Ext.fly(opts.divId).update(value);
+    },
+
+    updateStatusColumn: function(sstore, record, success, opts) {
+        var value;
+        if (sstore.getTotalCount() === 0) {
+            value = 'unbekannt';
+        }
+        else {
+            value = sstore.last().get('status');
+        }
+        if (Ext.fly(opts.divId)) {
+            Ext.fly(opts.divId).update(value);
+        }
     }
 });
