@@ -29,7 +29,7 @@ Ext.define('Lada.view.form.Messung', {
 
     trackResetOnLoad: true,
 
-    initComponent: function(){
+    initComponent: function() {
         this.items = [{
             xtype: 'fieldset',
             title: 'Allgemein'
@@ -37,20 +37,19 @@ Ext.define('Lada.view.form.Messung', {
         this.callParent(arguments);
     },
 
-    setRecord: function(record){
+    setRecord: function(record) {
         this.getForm().loadRecord(record);
     },
 
     setMessages: function() {
-        //todo this is a stub
+        // TODO this is a stub
     },
 
     clearMessages: function() {
-        //todo this is a stub
+        // TODO this is a stub
     },
 
-    setReadonlye: function(){
-        //todo this is a stub
+    setReadonly: function() {
+        // TODO this is a stub
     }
 });
-
