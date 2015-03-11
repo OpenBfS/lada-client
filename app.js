@@ -103,10 +103,10 @@ Ext.application({
     controllers: [
         'Lada.controller.Filter',
         'Lada.controller.FilterResult',
-        'Lada.controller.ProbeForm',
-        'Lada.controller.OrtGrid',
-        'Lada.controller.ProbenzusatzwertGrid',
-        'Lada.controller.PKommentarGrid',
-        'Lada.controller.MessungenGrid'
+        'Lada.controller.form.Probe',
+        'Lada.controller.grid.Ort',
+        'Lada.controller.grid.Probenzusatzwert',
+        'Lada.controller.grid.PKommentar',
+        'Lada.controller.grid.Messungen'
     ]
 });

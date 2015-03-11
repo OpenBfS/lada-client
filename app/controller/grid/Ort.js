@@ -6,21 +6,31 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-Ext.define('Lada.controller.ProbenzusatzwertGrid', {
+Ext.define('Lada.controller.grid.Ort', {
     extend: 'Ext.app.Controller',
 
     init: function() {
         this.control({
-            'probenzusatzwertgrid': {
+            'ortgrid': {
+                selectionchange: this.selectionChanged,
                 edit: this.gridSave
             },
-            'probenzusatzwertgrid button[action=add]': {
+            'ortgrid button[action=open]': {
+                click: this.open
+            },
+            'ortgrid button[action=add]': {
                 click: this.add
             },
-            'probenzusatzwertgrid button[action=delete]': {
+            'ortgrid button[action=delete]': {
                 click: this.remove
             }
         });
+    },
+
+    selectionChanged: function(grid, record) {
+        if (record) {
+            grid.view.panel.down('button[action=open]').enable();
+        }
     },
 
     gridSave: function(editor, context) {
@@ -35,26 +45,26 @@ Ext.define('Lada.controller.ProbenzusatzwertGrid', {
         });
     },
 
-    add: function(button) {
-        var record = Ext.create('Lada.model.Zusatzwert', {
-            probeId: button.up('probenzusatzwertgrid').recordId
-        });
-        button.up('probenzusatzwertgrid').store.insert(0, record);
-        button.up('probenzusatzwertgrid').rowEditing.startEdit(0, 1);
+    open: function() {
+        // todo
+        console.log('open');
+    },
+
+    add: function() {
+        // todo
+        console.log('add');
     },
 
     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
-        Ext.MessageBox.confirm('Zusatzwert löschen', 'Sind Sie sicher?', function(btn) {
+        Ext.MessageBox.confirm('Ortsangabe löschen', 'Sind Sie sicher?', function(btn) {
             if (btn === 'yes') {
                 selection.destroy({
                     success: function() {
                         button.up('window').initData();
-                        grid.initData();
                     },
                     failure: function() {
-                        // TODO
                     }
                 });
             }

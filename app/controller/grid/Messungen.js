@@ -9,7 +9,7 @@
 /*
  * Controller for a Messungengrid
  */
-Ext.define('Lada.controller.MessungenGrid', {
+Ext.define('Lada.controller.grid.Messungen', {
     extend: 'Ext.app.Controller',
 
     requires: [

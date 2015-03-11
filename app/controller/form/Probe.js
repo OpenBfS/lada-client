@@ -6,7 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-Ext.define('Lada.controller.ProbeForm', {
+Ext.define('Lada.controller.form.Probe', {
     extend: 'Ext.app.Controller',
 
     init: function() {

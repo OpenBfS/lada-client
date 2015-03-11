@@ -6,34 +6,24 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-Ext.define('Lada.controller.OrtGrid', {
+Ext.define('Lada.controller.grid.PKommentar', {
     extend: 'Ext.app.Controller',
 
     init: function() {
         this.control({
-            'ortgrid': {
-                selectionchange: this.selectionChanged,
-                edit: this.gridSave
+            'pkommentargrid': {
+                edit: this.edit
             },
-            'ortgrid button[action=open]': {
-                click: this.open
-            },
-            'ortgrid button[action=add]': {
+            'pkommentargrid button[action=add]': {
                 click: this.add
             },
-            'ortgrid button[action=delete]': {
+            'pkommentargrid button[action=delete]': {
                 click: this.remove
             }
         });
     },
 
-    selectionChanged: function(grid, record) {
-        if (record) {
-            grid.view.panel.down('button[action=open]').enable();
-        }
-    },
-
-    gridSave: function(editor, context) {
+    edit: function(editor, context) {
         context.record.save({
             success: function() {
                 context.grid.store.reload();
@@ -45,26 +35,24 @@ Ext.define('Lada.controller.OrtGrid', {
         });
     },
 
-    open: function() {
-        // todo
-        console.log('open');
-    },
-
-    add: function() {
-        // todo
-        console.log('add');
+    add: function(button) {
+        var record = Ext.create('Lada.model.PKommentar');
+        record.set('probeId', button.up('pkommentargrid').recordId);
+        button.up('pkommentargrid').store.insert(0, record);
+        button.up('pkommentargrid').rowEditing.startEdit(0, 1);
     },
 
     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
-        Ext.MessageBox.confirm('Ortsangabe löschen', 'Sind Sie sicher?', function(btn) {
+        Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn) {
             if (btn === 'yes') {
                 selection.destroy({
                     success: function() {
                         button.up('window').initData();
                     },
                     failure: function() {
+                        // TODO
                     }
                 });
             }

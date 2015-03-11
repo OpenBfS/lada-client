@@ -6,24 +6,24 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-Ext.define('Lada.controller.PKommentarGrid', {
+Ext.define('Lada.controller.grid.Probenzusatzwert', {
     extend: 'Ext.app.Controller',
 
     init: function() {
         this.control({
-            'pkommentargrid': {
-                edit: this.edit
+            'probenzusatzwertgrid': {
+                edit: this.gridSave
             },
-            'pkommentargrid button[action=add]': {
+            'probenzusatzwertgrid button[action=add]': {
                 click: this.add
             },
-            'pkommentargrid button[action=delete]': {
+            'probenzusatzwertgrid button[action=delete]': {
                 click: this.remove
             }
         });
     },
 
-    edit: function(editor, context) {
+    gridSave: function(editor, context) {
         context.record.save({
             success: function() {
                 context.grid.store.reload();
@@ -36,20 +36,22 @@ Ext.define('Lada.controller.PKommentarGrid', {
     },
 
     add: function(button) {
-        var record = Ext.create('Lada.model.PKommentar');
-        record.set('probeId', button.up('pkommentargrid').recordId);
-        button.up('pkommentargrid').store.insert(0, record);
-        button.up('pkommentargrid').rowEditing.startEdit(0, 1);
+        var record = Ext.create('Lada.model.Zusatzwert', {
+            probeId: button.up('probenzusatzwertgrid').recordId
+        });
+        button.up('probenzusatzwertgrid').store.insert(0, record);
+        button.up('probenzusatzwertgrid').rowEditing.startEdit(0, 1);
     },
 
     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
-        Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn) {
+        Ext.MessageBox.confirm('Zusatzwert löschen', 'Sind Sie sicher?', function(btn) {
             if (btn === 'yes') {
                 selection.destroy({
                     success: function() {
                         button.up('window').initData();
+                        grid.initData();
                     },
                     failure: function() {
                         // TODO
