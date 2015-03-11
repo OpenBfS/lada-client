@@ -7,15 +7,15 @@
  */
 
 /*
- * Window to edit a Messung 
+ * Window to edit a Messung
  */
 Ext.define('Lada.view.window.MessungEdit', {
     extend: 'Ext.window.Window',
     alias: 'widget.messungedit',
 
     requires: [
-      'Lada.view.form.Messung'
-   //   'Lada.view.grid.Messwert',
+      'Lada.view.form.Messung',
+      'Lada.view.grid.Messwert'
    //   'Lada.view.grid.Messstatus',
    //   'Lada.view.grid.MKommentar'
     ],
@@ -28,13 +28,13 @@ Ext.define('Lada.view.window.MessungEdit', {
 
     record: null,
 
-    initComponent: function(){
+    initComponent: function() {
         if (this.record === null) {
             Ext.Msg.alert('Keine valide Messung ausgewählt!');
             this.callParent(arguments);
             return;
         }
-        this.title = 'Messung ';// + this.record.get('messungId');
+        this.title = 'Messung ' + this.record.get('nebenprobenNr');
         this.buttons = [{
             text: 'Schließen',
             scope: this,
@@ -48,22 +48,28 @@ Ext.define('Lada.view.window.MessungEdit', {
             autoScroll: true,
             items: [{
                 xtype: 'messungform',
-//                recordId: record.get('id')
+                recordId: this.record.get('id')
             }, {
                 xtype: 'fset',
                 name: 'messwerte',
-                title: 'Messwerte - Stub'
-                //todo
+                title: 'Messwerte',
+                padding: '5, 5',
+                margin: 5,
+                items: [{
+                    xtype: 'messwertgrid',
+                    recordId: this.record.get('id')
+                }]
+                // TODO
             }, {
                 xtype: 'fset',
                 name: 'messungstatus',
                 title: 'Messungstatus - Stub'
-                //todo 
+                // TODO
            }, {
                 xtype: 'fset',
                 name: 'messungskommentare',
                 title: 'Messungskommentare - Stub'
-                //todo
+                // TODO
            }]
         }];
         this.callParent(arguments);
@@ -72,12 +78,16 @@ Ext.define('Lada.view.window.MessungEdit', {
     initData: function() {
         this.clearMessages();
         Ext.ClassManager.get('Lada.model.Messung').load(this.record.get('id'), {
-            failure: function(record, action){
-                // todo
-                console.log("failure");
+            failure: function(record) {
+                // TODO
+                console.log(record);
             },
-            success: function(record, action){
-                console.log("success");
+            success: function(record, response) {
+                this.down('messungform').setRecord(record);
+                var json = Ext.decode(response.response.responseText);
+                if (json) {
+                    this.setMessages(json.errors, json.warnings);
+                }
             },
             scope: this
         }
