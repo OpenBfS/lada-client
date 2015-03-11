@@ -130,7 +130,6 @@ Ext.define('Lada.view.grid.Messwert', {
     },
 
     initData: function() {
-        console.log('init messwert data');
         if (this.store) {
             this.store.removeAll();
         }
