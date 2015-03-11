@@ -133,7 +133,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         var keyText;
         var i18n = Lada.getApplication().bundle;
         for (key in errors) {
-            if (key && key.contains('Ort')) {
+            if (key && key.indexOf('Ort') > -1) {
                 errorOrt = true;
                 content = errors[key];
                 keyText = i18n.getMsg(key);
@@ -144,7 +144,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }
         }
         for (key in warnings) {
-            if (key && key.contains('Ort')) {
+            if (key && key.indexOf('Ort') > -1) {
                 warningOrt = true;
                 content = warnings[key];
                 keyText = i18n.getMsg(key);
