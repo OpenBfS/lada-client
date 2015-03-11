@@ -9,7 +9,7 @@
 /*
  * Controller for a Messungengrid
  */
-Ext.define('Lada.controller.grid.Messungen', {
+Ext.define('Lada.controller.grid.Messung', {
     extend: 'Ext.app.Controller',
 
     requires: [
@@ -19,7 +19,7 @@ Ext.define('Lada.controller.grid.Messungen', {
     init: function() {
         this.control({
             'messungengrid': {
-                itemdblclick: this.open
+                itemdblclick: this.editItem
             },
             'messungengrid button[action=add]': {
                 click: this.add
@@ -30,8 +30,8 @@ Ext.define('Lada.controller.grid.Messungen', {
         });
     },
 
-    open: function(grid, record) {
-        //Opens a detailed view of the Messung
+    editItem: function(grid, record) {
+        console.log(record);
         var win = Ext.create('Lada.view.window.MessungEdit', {
             record: record
         });

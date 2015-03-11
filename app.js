@@ -107,6 +107,6 @@ Ext.application({
         'Lada.controller.grid.Ort',
         'Lada.controller.grid.Probenzusatzwert',
         'Lada.controller.grid.PKommentar',
-        'Lada.controller.grid.Messungen'
+        'Lada.controller.grid.Messung',
     ]
 });

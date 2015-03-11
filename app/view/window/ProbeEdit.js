@@ -96,7 +96,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 collapsible: false,
                 collapsed: false,
                 items: [{
-                    xtype: 'messungengrid',
+                    xtype: 'messunggrid',
                     recordId: this.record.get('id')
                 }]
             }]

@@ -9,9 +9,9 @@
 /*
  * Grid to list Messungen
  */
-Ext.define('Lada.view.grid.Messungen', {
+Ext.define('Lada.view.grid.Messung', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.messungengrid',
+    alias: 'widget.messunggrid',
 
     maxHeight: 350,
     emptyText: 'Keine Messungen gefunden',
