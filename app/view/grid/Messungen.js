@@ -27,11 +27,6 @@ Ext.define('Lada.view.grid.Messungen', {
     errors: null,
 
     initComponent: function() {
-        var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
-            clicksToMoveEditor: 1,
-            autoCancel: false,
-            itemId: 'rowedit'
-        });
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -50,10 +45,16 @@ Ext.define('Lada.view.grid.Messungen', {
             header: 'Mess-ID',
             dataIndex: 'id',
             flex: 1,
+            editor: {
+                allowBlank: false
+            }
         }, {
             header: 'Nebenproben-Nr.',
             dataIndex: 'nebenprobenNr',
             flex: 1,
+            editor: {
+                allowBlank: false
+            }
         }, {
             header: 'MMT',
             dataIndex: 'mmtId',
@@ -65,6 +66,14 @@ Ext.define('Lada.view.grid.Messungen', {
             header: 'Messzeit',
             dataIndex: 'messzeitpunkt',
             flex: 2,
+            editor: {
+                xtype: 'datefield',
+                allowBlank: false,
+                format: 'd.m.Y',
+                // minValue: '01.01.2001', //todo: gibt es das?
+                // minText: 'Das Datum der Messung darf nicht vor dem 01.01.2001 liegen.',
+                maxValue: Ext.Date.format(new Date(), 'd.m.Y')
+            }
         }, {
             header: 'Status',
             flex: 1,
