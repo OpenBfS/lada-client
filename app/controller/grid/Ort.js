@@ -9,14 +9,14 @@
 Ext.define('Lada.controller.grid.Ort', {
     extend: 'Ext.app.Controller',
 
+    requires: [
+        'Lada.view.window.OrtEdit'
+    ],
+
     init: function() {
         this.control({
             'ortgrid': {
-                selectionchange: this.selectionChanged,
-                edit: this.gridSave
-            },
-            'ortgrid button[action=open]': {
-                click: this.open
+                itemdblclick: this.open
             },
             'ortgrid button[action=add]': {
                 click: this.add
@@ -27,27 +27,12 @@ Ext.define('Lada.controller.grid.Ort', {
         });
     },
 
-    selectionChanged: function(grid, record) {
-        if (record) {
-            grid.view.panel.down('button[action=open]').enable();
-        }
-    },
-
-    gridSave: function(editor, context) {
-        context.record.save({
-            success: function() {
-                context.grid.store.reload();
-                context.grid.up('window').initData();
-            },
-            failure: function() {
-                // TODO
-            }
+    open: function(grid, record) {
+        var win = Ext.create('Lada.view.window.OrtEdit', {
+            record: record
         });
-    },
-
-    open: function() {
-        // todo
-        console.log('open');
+        win.show();
+        win.initData();
     },
 
     add: function() {
