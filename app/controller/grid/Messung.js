@@ -18,13 +18,13 @@ Ext.define('Lada.controller.grid.Messung', {
 
     init: function() {
         this.control({
-            'messungengrid': {
+            'messunggrid': {
                 itemdblclick: this.editItem
             },
-            'messungengrid button[action=add]': {
+            'messunggrid button[action=add]': {
                 click: this.add
             },
-            'messungengrid button[action=delete]': {
+            'messunggrid button[action=delete]': {
                 click: this.remove
             }
         });

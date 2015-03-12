@@ -18,7 +18,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         'Lada.view.grid.Ort',
         'Lada.view.grid.Probenzusatzwert',
         'Lada.view.grid.PKommentar',
-        'Lada.view.grid.Messungen'
+        'Lada.view.grid.Messung'
     ],
 
     collapsible: true,
