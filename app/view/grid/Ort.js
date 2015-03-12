@@ -29,22 +29,10 @@ Ext.define('Lada.view.grid.Ort', {
     errors: null,
 
     initComponent: function() {
-        var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
-            clicksToMoveEditor: 1,
-            autoCancel: false,
-            itemId: 'rowedit'
-        });
-        this.plugins = [rowEditing];
-
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
             items: ['->', {
-                text: 'Details',
-                icon: 'resources/img/document-open.png',
-                action: 'open',
-                disabled: true
-            }, {
                 text: 'Hinzufügen',
                 icon: 'resources/img/list-add.png',
                 action: 'add',
