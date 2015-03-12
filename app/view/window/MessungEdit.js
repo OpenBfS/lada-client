@@ -15,9 +15,9 @@ Ext.define('Lada.view.window.MessungEdit', {
 
     requires: [
       'Lada.view.form.Messung',
-      'Lada.view.grid.Messwert'
-   //   'Lada.view.grid.Messstatus',
    //   'Lada.view.grid.MKommentar'
+      'Lada.view.grid.Messwert',
+      'Lada.view.grid.Status',
     ],
 
     collapsible: true,
@@ -59,12 +59,16 @@ Ext.define('Lada.view.window.MessungEdit', {
                     xtype: 'messwertgrid',
                     recordId: this.record.get('id')
                 }]
-                // TODO
             }, {
                 xtype: 'fset',
                 name: 'messungstatus',
-                title: 'Messungstatus - Stub'
-                // TODO
+                title: 'Status',
+                padding: '5, 5',
+                margin: 5,
+                items: [{
+                    xtype: 'statusgrid',
+                    recordId: this.record.get('id')
+                }]
            }, {
                 xtype: 'fset',
                 name: 'messungskommentare',
