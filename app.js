@@ -27,6 +27,7 @@ Ext.application({
     // found on https://github.com/elmasse/Ext.i18n.Bundle
     requires: [
         'Lada.override.Table',
+        'Lada.override.RestProxy',
         'Lada.override.RowEditor',
         'Ext.i18n.Bundle',
         'Ext.layout.container.Column',
@@ -57,6 +58,53 @@ Ext.application({
 
     // Start the application.
     launch: function() {
+        var queryString = document.location.href.split('?')[1];
+        if (queryString) {
+            Lada.openIDParams = queryString;
+        }
+        Ext.Ajax.request({
+            url: 'lada-server/login?return_to=' + window.location.href,
+            method: 'GET',
+            headers: {
+                'X-OPENID-PARAMS': Lada.openIDParams
+            },
+            scope: this,
+            success: this.onLoginSuccess,
+            failure: this.onLoginFailure
+        });
+    },
+
+    onLoginFailure : function(response, opts) {
+        try {
+            var json = Ext.decode(response.responseText);
+            if (json) {
+                if (json.message == "699") {
+                    /* This is the unauthorized message with the authentication
+                     * redirect in the data */
+                    var authUrl = json.data;
+                    location.href = authUrl;
+                    return;
+                }
+                if (json.message == "698") {
+                    /* This is general authentication error */
+                    Ext.MessageBox.alert('Kommunikation mit dem Login Server fehlgeschlagen',
+                            json.data);
+                    return;
+                }
+            }
+        } catch (e) {
+            // This is likely a 404 or some unknown error. Show general error then.
+        }
+        Ext.MessageBox.alert('Kommunikation mit dem Lada Server fehlgeschlagen',
+                'Es konnte keine erfolgreiche Verbindung zum lada server aufgebaut werden.');
+
+    },
+
+    onLoginSuccess: function(response, opts) {
+        /* Strip out the openid query params to look nicers. */
+        window.history.pushState(this.name, this.name, window.location.pathname);
+
+        /* Todo maybe parse username and such from login service response */
         Ext.create('Lada.store.Datenbasis', {
             storeId: 'datenbasis'
         });
