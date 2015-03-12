@@ -13,6 +13,7 @@ Ext.define('Lada.view.widget.base.TextField', {
     layout: 'hbox',
 
     border: 0,
+    margin: '0, 0, 5, 0',
 
     initComponent: function() {
         this.items = [{
