@@ -17,9 +17,19 @@ Ext.define('Lada.model.Status', {
     }, {
         name: 'messungsId'
     }, {
+        name: 'erzeuger'
+    }, {
         name: 'status'
     }, {
-        name: 'sdatum'
+        name: 'sdatum',
+        type: 'date',
+        convert: function(v) {
+            if (!v) {
+                return v;
+            }
+            return new Date(v);
+        },
+        defaultValue: new Date()
     }, {
         name: 'skommentar'
     }],
