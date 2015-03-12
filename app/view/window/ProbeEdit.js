@@ -53,6 +53,18 @@ Ext.define('Lada.view.window.ProbeEdit', {
             items: [{
                 xtype: 'probeform',
                 recordId: this.record.get('id')
+             }, {
+                xtype: 'fset',
+                name: 'messungen',
+                title: 'Messungen',
+                padding: '5, 5',
+                margin: 5,
+                collapsible: false,
+                collapsed: false,
+                items: [{
+                    xtype: 'messunggrid',
+                    recordId: this.record.get('id')
+                }]
             }, {
                 xtype: 'fset',
                 name: 'orte',
@@ -85,18 +97,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 collapsed: true,
                 items: [{
                     xtype: 'pkommentargrid',
-                    recordId: this.record.get('id')
-                }]
-             }, {
-                xtype: 'fset',
-                name: 'messungen',
-                title: 'Messungen',
-                padding: '5, 5',
-                margin: 5,
-                collapsible: false,
-                collapsed: false,
-                items: [{
-                    xtype: 'messunggrid',
                     recordId: this.record.get('id')
                 }]
             }]
