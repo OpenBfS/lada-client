@@ -70,6 +70,7 @@ Ext.define('Lada.view.window.OrtEdit', {
                 xtype: 'map',
                 region: 'center',
                 layout: 'border',
+                record: this.record,
                 bodyStyle: {
                     background: '#fff'
                 },

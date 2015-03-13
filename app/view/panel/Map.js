@@ -9,13 +9,15 @@ Ext.define('Lada.view.panel.Map', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.map',
 
+    record: null,
+
     /**
      * @cfg
      * OpenLayers map options.
      */
     mapOptions: {
         maxExtent: new OpenLayers.Bounds(2.9, 42.95, 18.1, 60.6),
-        //scales: [1600000, 600000, 300000, 100000, 30000, 15000, 7000, 3500, 1200, 500],
+        scales: [5000000, 3000000, 2000000, 1000000, 500000, 250000, 100000, 25000],
         units: 'dd',
         projection: new OpenLayers.Projection('EPSG:4326')
     },
@@ -23,27 +25,27 @@ Ext.define('Lada.view.panel.Map', {
     /**
      * Array of OpenLayers.Layer objects.
      */
-    layers: [
-        new OpenLayers.Layer.WMS(
-            'Standard',
-            'http://osm.intevation.de/cgi-bin/standard.fcgi?',
-            {
-                layers: 'OSM-WMS-Dienst',
-                format: 'image/png',
-                BGCOLOR: '0xFFFFFF'
-            }, {
-                isBaseLayer: true,
-                buffer: 0,
-                visibility: true
-            })
-    ],
 
     /**
      * @private
      * Initialize the map panel.
      */
     initComponent: function() {
-        this.map = new OpenLayers.Map('map', {
+        this.layers = [
+            new OpenLayers.Layer.WMS(
+                'Standard' + this.record.get('id'),
+                'http://osm.intevation.de/cgi-bin/standard.fcgi?',
+                {
+                    layers: 'OSM-WMS-Dienst',
+                    format: 'image/png',
+                    BGCOLOR: '0xFFFFFF'
+                }, {
+                    isBaseLayer: true,
+                    buffer: 0,
+                    visibility: true
+                })
+        ];
+        this.map = new OpenLayers.Map('map_' + this.record.get('id'), {
             controls: [],
             tileManager: null,
             zoomMethod: null
@@ -54,7 +56,64 @@ Ext.define('Lada.view.panel.Map', {
         this.map.addControl(keyControl);
         keyControl.activate();
         this.bodyStyle = {background: '#fff'};
-        this.callParent();
+        this.initData();
+        this.callParent(arguments);
+    },
+
+    initData: function() {
+        var me = this;
+        this.locationFeatures = [];
+        this.locationStore = Ext.data.StoreManager.get('locations');
+        for (var i = 0; i < this.locationStore.count(); i++) {
+            this.locationFeatures.push(new OpenLayers.Feature.Vector(
+                new OpenLayers.Geometry.Point(
+                    this.locationStore.getAt(i).get('longitude'),
+                    this.locationStore.getAt(i).get('latitude')
+                ),
+                {
+                    id: this.locationStore.getAt(i).get('id')
+                }
+            ));
+        }
+        this.featureLayer = new OpenLayers.Layer.Vector('vector' + this.record.get('id'), {
+            styleMap: new OpenLayers.StyleMap({
+                'default': new OpenLayers.Style(OpenLayers.Util.applyDefaults({
+                    externalGraphic: 'resources/lib/OpenLayers/img/marker-green.png',
+                    graphicOpacity: 1,
+                    pointRadius: 10
+                }, OpenLayers.Feature.Vector.style['default'])),
+                'select': new OpenLayers.Style({
+                    externalGraphic: 'resources/lib/OpenLayers/img/marker-blue.png'
+                })
+            })
+        });
+        this.featureLayer.addFeatures(this.locationFeatures);
+        this.map.addLayer(this.featureLayer);
+        this.selectControl = new OpenLayers.Control.SelectFeature(this.featureLayer, {
+            clickout: false,
+            toggle: false,
+            multiple: false,
+            hover: false,
+            onSelect: me.selectedFeature,
+            scope: me
+        });
+        this.map.addControl(this.selectControl);
+        this.selectControl.activate();
+    },
+
+    selectedFeature: function(feature) {
+        var record = Ext.data.StoreManager.get('locations').getById(feature.attributes.id);
+        this.up('window').down('locationform').setRecord(record);
+        this.up('window').down('ortform').down('combobox').setValue(record.id);
+    },
+
+    selectFeature: function(id) {
+        var feature = this.featureLayer.getFeaturesByAttribute('id', id);
+        this.map.setCenter(
+            new OpenLayers.LonLat(feature[0].geometry.x, feature[0].geometry.y));
+        this.map.zoomToScale(this.mapOptions.scales[5]);
+        this.selectControl.unselectAll();
+        this.selectControl.select(feature[0]);
     },
 
     /**
@@ -64,10 +123,23 @@ Ext.define('Lada.view.panel.Map', {
     afterRender: function() {
         this.superclass.afterRender.apply(this, arguments);
         this.map.render(this.body.dom);
-        this.map.zoomToExtent(this.mapOptions.Extent);
         this.map.addControl(new OpenLayers.Control.Navigation());
         this.map.addControl(new OpenLayers.Control.PanZoomBar());
         this.map.addControl(new OpenLayers.Control.ScaleLine());
+        if (this.record) {
+            this.selectFeature(this.record.get('ort'));
+        }
+        else {
+            this.map.zoomToScale(this.mapOptions.scales[0]);
+        }
+    },
+
+    beforeDestroy: function() {
+        if (this.map) {
+            this.map.destroy();
+        }
+        delete this.map;
+        this.callParent(arguments);
     },
 
     /**
