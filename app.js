@@ -104,6 +104,7 @@ Ext.application({
         'Lada.controller.Filter',
         'Lada.controller.FilterResult',
         'Lada.controller.form.Probe',
+        'Lada.controller.form.Messung',
         'Lada.controller.form.Ort',
         'Lada.controller.grid.Ort',
         'Lada.controller.grid.Probenzusatzwert',

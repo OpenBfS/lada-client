@@ -48,8 +48,9 @@ Ext.define('Lada.view.window.MessungEdit', {
             autoScroll: true,
             items: [{
                 xtype: 'messungform',
+                margin: 5,
                 recordId: this.record.get('id')
-            }, {
+           }, {
                 xtype: 'fset',
                 name: 'messwerte',
                 title: 'Messwerte',
@@ -86,6 +87,7 @@ Ext.define('Lada.view.window.MessungEdit', {
 
     initData: function() {
         this.clearMessages();
+        this.down('messungform').setRecord(this.record);
         Ext.ClassManager.get('Lada.model.Messung').load(this.record.get('id'), {
             failure: function(record) {
                 // TODO
@@ -99,8 +101,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 }
             },
             scope: this
-        }
-        );
+        });
     },
 
     setMessages: function(errors, warnings) {
