@@ -57,12 +57,16 @@ Ext.define('Lada.controller.form.Ort', {
                 }
             }
         });
-        console.log('save');
     },
 
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
+        var win = button.up('window');
+        var id = formPanel.getForm().getRecord().get('ort');
+        var toLoad = Ext.data.StoreManager.get('locations').getById(id);
+        win.down('locationform').setRecord(toLoad);
+        win.down('map').selectFeature(id);
     },
 
     dirtyForm: function(form, dirty) {
@@ -77,20 +81,13 @@ Ext.define('Lada.controller.form.Ort', {
     },
 
     updateDetails: function(combobox, record) {
-        console.log(record);
         var win = combobox.up('window');
         var details = win.down('locationform');
         var id = record[0].get('id');
         if (details) {
-            Ext.ClassManager.get('Lada.model.Location').load(id, {
-                failure: function(record, action) {
-                    // TODO
-                },
-                success: function(record, response) {
-                    win.down('locationform').setRecord(record);
-                },
-                scope: this
-            });
+            var toLoad = Ext.data.StoreManager.get('locations').getById(id);
+            win.down('locationform').setRecord(toLoad);
+            win.down('map').selectFeature(id);
         }
     }
 });
