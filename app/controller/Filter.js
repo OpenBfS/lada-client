@@ -19,8 +19,7 @@ Ext.define('Lada.controller.Filter', {
     ],
 
     stores: [
-        'ProbenList',    // List of found Proben
-        'Queries'
+        'ProbenList'    // List of found Proben
     ],
 
     init: function() {
