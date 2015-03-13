@@ -106,35 +106,17 @@ Ext.define('Lada.view.form.Probe', {
                                 name: 'datenbasisId',
                                 fieldLabel: 'Datenbasis',
                                 labelWidth: 100,
-                                listeners: {
-                                    dirtychange: {
-                                        fn: this.updateOnChange,
-                                        scope: me
-                                    }
-                                }
                             }, {
                                 xtype: 'betriebsart',
                                 name: 'baId',
                                 fieldLabel: 'Betriebsart',
                                 labelWidth: 100,
-                                listeners: {
-                                    dirtychange: {
-                                        fn: this.updateOnChange,
-                                        scope: me
-                                    }
-                                }
                             }, {
                                 xtype: 'testdatensatz',
                                 name: 'test',
                                 fieldLabel: 'Testdatensatz',
                                 labelWidth: 100,
                                 allowBlank: false,
-                                listeners: {
-                                    dirtychange: {
-                                        fn: this.updateOnChange,
-                                        scope: me
-                                    }
-                                }
                             }, {
                                 xtype: 'probenart',
                                 editable: false,
@@ -142,24 +124,12 @@ Ext.define('Lada.view.form.Probe', {
                                 fieldLabel: 'Probenart',
                                 labelWidth: 100,
                                 allowBlank: false,
-                                listeners: {
-                                    dirtychange: {
-                                        fn: this.updateOnChange,
-                                        scope: me
-                                    }
-                                }
                             }, {
                                 xtype: 'numberfield',
                                 allowDecimals: false,
                                 name: 'probeNehmerId',
                                 fieldLabel: 'Probennehmer',
                                 labelWidth: 100,
-                                listeners: {
-                                    dirtychange: {
-                                        fn: this.updateOnChange,
-                                        scope: me
-                                    }
-                                }
                             }, {
                                 xtype: 'netzbetreiber',
                                 name: 'netzbetreiberId',
@@ -167,23 +137,11 @@ Ext.define('Lada.view.form.Probe', {
                                 fieldLabel: 'Netzbetreiber',
                                 labelWidth: 100,
                                 allowBlank: false,
-                                listeners: {
-                                    dirtychange: {
-                                        fn: this.updateOnChange,
-                                        scope: me
-                                    }
-                                }
                             }, {
                                 xtype: 'tfield',
                                 name: 'x11',
                                 fieldLabel: 'Datensatzerzeuger',
                                 labelWidth: 100,
-                                listeners: {
-                                    dirtychange: {
-                                        fn: this.updateOnChange,
-                                        scope: me
-                                    }
-                                }
                             }]
                         }]
                     }]

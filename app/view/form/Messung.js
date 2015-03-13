@@ -14,10 +14,10 @@ Ext.define('Lada.view.form.Messung', {
     alias: 'widget.messungform',
     requires: [
         'Lada.view.widget.Datenbasis',
+        'Lada.view.widget.base.CheckBox',
+        'Lada.view.widget.Messmethode',
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.base.Datetime',
-        'Lada.view.widget.base.FieldSet',
-        'Lada.model.Messung'
     ],
 
     model: 'Lada.model.Messung',
@@ -30,9 +30,87 @@ Ext.define('Lada.view.form.Messung', {
     trackResetOnLoad: true,
 
     initComponent: function() {
+        var me = this;
         this.items = [{
             xtype: 'fieldset',
-            title: 'Allgemein'
+            title: 'Allgemein',
+            items: [{
+                border: 0,
+                margin: '0, 0, 10, 0',
+                layout: {
+                    type: 'table',
+                    columns: 2
+                },
+                dockedItems: [{
+                    xtype: 'toolbar',
+                    dock: 'bottom',
+                    border: '0, 1, 1, 1',
+                    style: {
+                        borderBottom: '1px solid #b5b8c8 !important',
+                        borderLeft: '1px solid #b5b8c8 !important',
+                        borderRight: '1px solid #b5b8c8 !important'
+                    },
+                    items: ['->', {
+                        text: 'Speichern',
+                        qtip: 'Daten speichern',
+                        icon: 'resources/img/dialog-ok-apply.png',
+                        action: 'save',
+                        disabled: true
+                    }, {
+                        text: 'Verwerfen',
+                        qtip: 'Änderungen verwerfen',
+                        icon: 'resources/img/dialog-cancel.png',
+                        action: 'discard',
+                        disabled: true
+                    }]
+                }],
+                items: [{
+                    xtype: 'textfield',
+                    name: 'nebenprobenNr',
+                    maxLength: 10,
+                    margin: '0, 10, 5, 0',
+                    fieldLabel: 'Nebenprobennr.',
+                    width: 300,
+                    labelWidth: 100,
+                }, {
+                    xtype: 'messmethode',
+                    name: 'mmtId',
+                    margin: '0, 10, 5, 0',
+                    fieldLabel: 'Messmethode',
+                    width: 300,
+                    labelWidth: 100,
+                }, {
+                    xtype: 'datetime',
+                    name: 'messzeitpunkt',
+                    margin: '0, 10, 5, 0',
+                    fieldLabel: 'Messzeitpunkt',
+                    width: 300,
+                    labelWidth: 100,
+                }, {
+                    xtype: 'numberfield',
+                    allowDecimals: false,
+                    minValue: 0,
+                    name: 'messdauer',
+                    margin: '0, 10, 5, 0',
+                    fieldLabel: 'Messdauer',
+                    width: 300,
+                    labelWidth: 100,
+                }, {
+                    xtype: 'chkbox',
+                    name: 'fertig',
+                    margin: '0, 10, 5, 0',
+                    fieldLabel: 'Fertig',
+                    width: 300,
+                    labelWidth: 100,
+                }, {
+                    xtype: 'chkbox',
+                    name: 'geplant',
+                    margin: '0, 10, 5, 0',
+                    fieldLabel: 'Geplant',
+                    width: 300,
+                    labelWidth: 100,
+                }]
+            }]
         }];
         this.callParent(arguments);
     },
