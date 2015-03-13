@@ -27,7 +27,7 @@ Ext.define('Lada.view.FilterPanel', {
             xtype: 'combobox',
             name: 'filter',
             editable: false,
-            store: 'Queries',
+            store: Ext.create('Lada.store.Queries'),
             displayField: 'name',
             valueField: 'id',
             emptyText: 'Wählen Sie eine Abfrage'
