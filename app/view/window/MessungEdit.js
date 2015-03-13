@@ -50,7 +50,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 xtype: 'messungform',
                 margin: 5,
                 recordId: this.record.get('id')
-           /*}, {
+           }, {
                 xtype: 'fset',
                 name: 'messwerte',
                 title: 'Messwerte',
@@ -59,7 +59,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 items: [{
                     xtype: 'messwertgrid',
                     recordId: this.record.get('id')
-                }]*/
+                }]
             }, {
                 xtype: 'fset',
                 name: 'messungstatus',
