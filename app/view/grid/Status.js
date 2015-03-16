@@ -94,10 +94,12 @@ Ext.define('Lada.view.grid.Status', {
         }, {
             header: 'Datum',
             dataIndex: 'sdatum',
+            xtype: 'datecolumn',
+            format: 'd.m.Y H:i',
             editor: {
                 xtype: 'datefield',
                 allowBlank: false,
-                format: 'd.m.Y',
+                format: 'd.m.Y H:i',
                 maxValue: Ext.Date.format(new Date(), 'd.m.Y')
             }
         }, {
