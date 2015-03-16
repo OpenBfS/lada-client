@@ -57,6 +57,7 @@ Ext.define('Lada.view.panel.Map', {
         keyControl.activate();
         this.bodyStyle = {background: '#fff'};
         this.initData();
+        this.tbar = Ext.create('Lada.view.widget.MapToolbar');
         this.callParent(arguments);
     },
 
