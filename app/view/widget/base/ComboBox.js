@@ -66,7 +66,9 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
         if (fieldset) {
-            fieldset.showWarnings(warnings);
+            var i18n = Lada.getApplication().bundle;
+            var warningText = i18n.getMsg(this.name) + ': ' + warnings;
+            fieldset.showWarningOrError(true, warningText);
         }
     },
 
@@ -83,7 +85,9 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
         if (fieldset) {
-            fieldset.showErrors();
+            var i18n = Lada.getApplication().bundle;
+            var errorText = i18n.getMsg(this.name) + ': ' + errors;
+            fieldset.showWarningOrError(false, '', true, errorText);
         }
     },
 
