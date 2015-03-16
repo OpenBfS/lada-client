@@ -49,11 +49,11 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
         this.columns = [{
             header: 'PZW-ID',
             dataIndex: 'id',
-            width: 70
+            flex: 1,
         }, {
             header: 'PZW-Größe',
             dataIndex: 'pzsId',
-            flex: 1,
+            flex: 3,
             renderer: function(value) {
                 if (!value || value === '') {
                     return '';
@@ -72,21 +72,16 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
         }, {
             header: 'Messwert',
             dataIndex: 'messwertPzs',
-            width: 80,
-            renderer: function(value, meta, record) {
-                var nwg = record.get('nwgZuMesswert');
-                if (value < nwg) {
-                    return '<' + value;
-                }
-                return value;
-            },
+            xtype: 'numbercolumn',
+            flex: 1,
             editor: {
+                xtype: 'numberfield',
                 allowBlank: false
             }
         }, {
             header: 'Maßeinheit',
             dataIndex: 'pzsId',
-            width: 80,
+            flex: 1,
             renderer: function(value) {
                 if (!value || value === '') {
                     return '';
@@ -100,15 +95,33 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
         }, {
             header: 'Nachweisgrenze',
             dataIndex: 'nwgZuMesswert',
-            width: 110,
+            xtype: 'numbercolumn',
+            format: '0',
+            flex: 1,
             editor: {
+                xtype: 'numberfield',
                 allowBlank: false
             }
         }, {
             header: 'rel. Unsich.[%]',
             dataIndex: 'messfehler',
+            xtype: 'numbercolumn',
+            format: '0',
+            flex: 1,
             editor: {
+                xtype: 'numberfield',
                 allowBlank: false
+            }
+        }, {
+            header: '< NWG',
+            flex: 1,
+            renderer: function(value, meta, record) {
+                var nwg = record.get('nwgZuMesswert');
+                var mw = record.get('messwertPzs');
+                if ( mw < nwg) {
+                    return 'MW < NWG';
+                }
+                return '';
             }
         }];
         this.initData();
