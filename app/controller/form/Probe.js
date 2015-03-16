@@ -32,9 +32,7 @@ Ext.define('Lada.controller.form.Probe', {
         formPanel.getForm().getRecord().save({
             success: function(record, response) {
                 var json = Ext.decode(response.response.responseText);
-                if (response.action !== 'create' &&
-                    json &&
-                    json.success) {
+                if (json) {
                     button.setDisabled(true);
                     button.up('toolbar').down('button[action=discard]')
                         .setDisabled(true);

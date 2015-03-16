@@ -38,9 +38,13 @@ Ext.define('Lada.controller.grid.Messung', {
         win.initData();
     },
 
-    add: function() {
-        // TODO
-        console.log('add');
+    add: function(button) {
+        var probe = button.up('window').record;
+        var win = Ext.create('Lada.view.window.MessungCreate', {
+            record: probe
+        });
+        win.show();
+        win.initData();
     },
 
     remove: function(button) {
@@ -59,6 +63,7 @@ Ext.define('Lada.controller.grid.Messung', {
                         }
                     });
                 }
-        });
+            }
+        );
     }
 });
