@@ -42,6 +42,9 @@ Ext.define('Lada.controller.FilterResult', {
     },
 
     addItem: function(button) {
+        var win = Ext.create('Lada.view.window.ProbeCreate');
+        win.show();
+        win.initData();
 
     },
 
