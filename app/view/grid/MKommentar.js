@@ -61,11 +61,13 @@ Ext.define('Lada.view.grid.MKommentar', {
         }, {
             header: 'Datum',
             dataIndex: 'datum',
+            xtype: 'datecolumn',
+            format: 'd.m.Y H:i',
             editor: {
                 xtype: 'datefield',
                 allowBlank: false,
-                format: 'd.m.Y',
-                maxValue: Ext.Date.format(new Date(), 'd.m.Y')
+                format: 'd.m.Y H:i',
+                maxValue: Ext.Date.format(new Date(), 'd.m.Y H:i')
             }
         }, {
             header: 'Text',
