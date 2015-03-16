@@ -12,12 +12,22 @@ Ext.define('Lada.view.widget.base.FieldSet', {
 
     plainTitle: '',
     origColor: '',
+    errorText: '',
+    warningText: '',
 
     showWarningOrError: function(warning, warningText, error, errorText) {
         var ndx = 0;
         if (this.collapsible === true) {
             ndx = 1;
         }
+        if (this.errorText && this.errorText !== '') {
+            this.errorText += '\n';
+        }
+        this.errorText += errorText;
+        if (this.warningText && this.warningText !== '') {
+            this.warningText += '\n';
+        }
+        this.warningText += warningText;
         this.plainTitle = this.getEl().dom.firstChild
             .firstChild.firstChild
             .children[ndx].innerHTML;
