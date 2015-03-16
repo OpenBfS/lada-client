@@ -35,16 +35,16 @@ Ext.define('Lada.view.widget.base.Datetime', {
         this.items = [dateField, {
             xtype: 'image',
             name: 'warnImg',
-            src: 'resources/img/icon-warning.gif',
-            width: 12,
-            height: 12,
+            src: 'resources/img/dialog-warning.png',
+            width: 14,
+            height: 14,
             hidden: true
         }, {
             xtype: 'image',
             name: 'errorImg',
-            src: 'resources/img/icon-error.gif',
-            width: 12,
-            height: 12,
+            src: 'resources/img/emblem-important.png',
+            width: 14,
+            height: 14,
             hidden: true
         }];
         this.callParent(arguments);

@@ -26,7 +26,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
             this.getEl().dom.style['border-color'] = '#FF0000';
             this.getEl().dom.firstChild.firstChild.firstChild
                 .children[ndx].innerHTML =
-                    '<img src="resources/img/icon-error.gif" width="12" height="12" />  ' +
+                    '<img src="resources/img/emblem-important.png" width="13" height="13" />  ' +
                     this.plainTitle;
             if (errorText) {
                 Ext.create('Ext.tip.ToolTip', {
@@ -40,7 +40,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
             this.getEl().dom.style['border-color'] = '#FFE25D';
             this.getEl().dom.firstChild.firstChild.firstChild
                 .children[ndx].innerHTML =
-                    '<img src="resources/img/icon-warning.gif" width="12" height="12" />  ' +
+                    '<img src="resources/img/dialog-warning.png" width="13" height="13" />  ' +
                     this.plainTitle;
             if (warningText) {
                 Ext.create('Ext.tip.ToolTip', {
