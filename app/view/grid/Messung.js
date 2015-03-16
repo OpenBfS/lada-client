@@ -65,14 +65,16 @@ Ext.define('Lada.view.grid.Messung', {
         }, {
             header: 'Messzeit',
             dataIndex: 'messzeitpunkt',
+            xtype: 'datecolumn',
+            format: 'd.m.Y H:i',
             flex: 2,
             editor: {
                 xtype: 'datefield',
                 allowBlank: false,
-                format: 'd.m.Y',
+                format: 'd.m.Y H:i',
                 // minValue: '01.01.2001', //todo: gibt es das?
                 // minText: 'Das Datum der Messung darf nicht vor dem 01.01.2001 liegen.',
-                maxValue: Ext.Date.format(new Date(), 'd.m.Y')
+                maxValue: Ext.Date.format(new Date(), 'd.m.Y H:i')
             }
         }, {
             header: 'Status',

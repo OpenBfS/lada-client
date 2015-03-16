@@ -72,6 +72,7 @@ Ext.define('Lada.view.grid.Messwert', {
         }, {
             header: 'Messwert',
             dataIndex: 'messwert',
+            xtype: 'numbercolumn',
             width: 80,
             editor: {
                 xtype: 'numberfield',
@@ -97,15 +98,18 @@ Ext.define('Lada.view.grid.Messwert', {
             }
         }, {
             header: '&lt;NWG',
+            xtype: 'numbercolumn',
             width: 60,
             dataIndex: 'messwertNwg'
         }, {
             header: 'Nachweisgrenze',
+            xtype: 'numbercolumn',
             width: 110,
             dataIndex: 'nwgZuMesswert'
         }, {
             header: 'Messfehler',
             dataIndex: 'messfehler',
+            xtype: 'numbercolumn',
             width: 80,
             editor: {
                 xtype: 'numberfield',
