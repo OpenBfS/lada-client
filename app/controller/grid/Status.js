@@ -12,7 +12,8 @@ Ext.define('Lada.controller.grid.Status', {
     init: function() {
         this.control({
             'statusgrid': {
-                edit: this.gridSave
+                edit: this.gridSave,
+                canceledit: this.cancelEdit
             },
             'statusgrid button[action=add]': {
                 click: this.add
@@ -33,6 +34,13 @@ Ext.define('Lada.controller.grid.Status', {
                 // TODO
             }
         });
+    },
+
+    cancelEdit: function(editor, context) {
+        if (!context.record.get('id') ||
+            context.record.get('id') === '') {
+            editor.getCmp().store.remove(context.record);
+        }
     },
 
     add: function(button) {

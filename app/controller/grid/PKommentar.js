@@ -12,7 +12,8 @@ Ext.define('Lada.controller.grid.PKommentar', {
     init: function() {
         this.control({
             'pkommentargrid': {
-                edit: this.edit
+                edit: this.edit,
+                canceledit: this.cancelEdit
             },
             'pkommentargrid button[action=add]': {
                 click: this.add
@@ -33,6 +34,13 @@ Ext.define('Lada.controller.grid.PKommentar', {
                 // TODO
             }
         });
+    },
+
+    cancelEdit: function(editor, context) {
+        if (!context.record.get('id') ||
+            context.record.get('id') === '') {
+            editor.getCmp().store.remove(context.record);
+        }
     },
 
     add: function(button) {
