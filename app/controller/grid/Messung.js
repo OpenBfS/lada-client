@@ -32,7 +32,8 @@ Ext.define('Lada.controller.grid.Messung', {
 
     editItem: function(grid, record) {
         var win = Ext.create('Lada.view.window.MessungEdit', {
-            record: record
+            record: record,
+            grid: grid
         });
         win.show();
         win.initData();
@@ -41,7 +42,8 @@ Ext.define('Lada.controller.grid.Messung', {
     add: function(button) {
         var probe = button.up('window').record;
         var win = Ext.create('Lada.view.window.MessungCreate', {
-            record: probe
+            record: probe,
+            grid: button.up('messunggrid')
         });
         win.show();
         win.initData();

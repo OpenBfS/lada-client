@@ -42,6 +42,7 @@ Ext.define('Lada.controller.form.Ort', {
                     formPanel.clearMessages();
                     formPanel.setRecord(record);
                     formPanel.setMessages(json.errors, json.warnings);
+                    formPanel.up('window').grid.store.reload();
                 }
             },
             failure: function(record, response) {

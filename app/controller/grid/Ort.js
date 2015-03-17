@@ -10,7 +10,8 @@ Ext.define('Lada.controller.grid.Ort', {
     extend: 'Ext.app.Controller',
 
     requires: [
-        'Lada.view.window.OrtEdit'
+        'Lada.view.window.OrtEdit',
+        'Lada.view.window.OrtCreate'
     ],
 
     init: function() {
@@ -29,7 +30,8 @@ Ext.define('Lada.controller.grid.Ort', {
 
     open: function(grid, record) {
         var win = Ext.create('Lada.view.window.OrtEdit', {
-            record: record
+            record: record,
+            grid: grid
         });
         win.show();
         win.initData();

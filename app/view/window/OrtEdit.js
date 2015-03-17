@@ -25,6 +25,7 @@ Ext.define('Lada.view.window.OrtEdit', {
     layout: 'border',
 
     record: null,
+    grid: null,
 
     initComponent: function() {
         if (this.record === null) {

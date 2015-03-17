@@ -27,6 +27,7 @@ Ext.define('Lada.view.window.MessungEdit', {
     layout: 'fit',
 
     record: null,
+    grid: null,
 
     initComponent: function() {
         if (this.record === null) {

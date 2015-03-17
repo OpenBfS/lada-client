@@ -24,6 +24,7 @@ Ext.define('Lada.view.window.MessungCreate', {
     layout: 'fit',
 
     record: null,
+    grid: null,
 
     initComponent: function() {
         this.title = 'Messung';
