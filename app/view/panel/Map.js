@@ -32,9 +32,10 @@ Ext.define('Lada.view.panel.Map', {
      * Initialize the map panel.
      */
     initComponent: function() {
+        var id = this.record ? this.record.get('id') : Math.floor(Math.random() * 100);
         this.layers = [
             new OpenLayers.Layer.WMS(
-                'Standard' + this.record.get('id'),
+                'Standard' + id,
                 'http://osm.intevation.de/cgi-bin/standard.fcgi?',
                 {
                     layers: 'OSM-WMS-Dienst',
@@ -46,7 +47,7 @@ Ext.define('Lada.view.panel.Map', {
                     visibility: true
                 })
         ];
-        this.map = new OpenLayers.Map('map_' + this.record.get('id'), {
+        this.map = new OpenLayers.Map('map_' + id, {
             controls: [],
             tileManager: null,
             zoomMethod: null
@@ -77,7 +78,7 @@ Ext.define('Lada.view.panel.Map', {
                 }
             ));
         }
-        this.featureLayer = new OpenLayers.Layer.Vector('vector' + this.record.get('id'), {
+        this.featureLayer = new OpenLayers.Layer.Vector('vector_' + this.map.name, {
             styleMap: new OpenLayers.StyleMap({
                 'default': new OpenLayers.Style(OpenLayers.Util.applyDefaults({
                     externalGraphic: 'resources/lib/OpenLayers/img/marker-green.png',
@@ -160,7 +161,7 @@ Ext.define('Lada.view.panel.Map', {
             this.selectFeature(this.record.get('ort'));
         }
         else {
-            this.map.zoomToScale(this.mapOptions.scales[0]);
+            this.map.zoomToMaxExtent();
         }
     },
 

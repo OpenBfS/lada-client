@@ -35,9 +35,14 @@ Ext.define('Lada.controller.grid.Ort', {
         win.initData();
     },
 
-    add: function() {
-        // todo
-        console.log('add');
+    add: function(button) {
+        var probe = button.up('window').record;
+        var win = Ext.create('Lada.view.window.OrtCreate', {
+            record: probe,
+            grid: button.up('ortgrid')
+        });
+        win.show();
+        win.initData();
     },
 
     remove: function(button) {
