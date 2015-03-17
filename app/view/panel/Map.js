@@ -10,6 +10,7 @@ Ext.define('Lada.view.panel.Map', {
     alias: 'widget.map',
 
     record: null,
+    locationRecord: null,
 
     /**
      * @cfg
@@ -103,9 +104,17 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     selectedFeature: function(feature) {
-        var record = Ext.data.StoreManager.get('locations').getById(feature.attributes.id);
-        this.up('window').down('locationform').setRecord(record);
-        this.up('window').down('ortform').down('combobox').setValue(record.id);
+        if (feature.attributes.id &&
+            feature.attributes.id !== '') {
+            var record = Ext.data.StoreManager.get('locations').getById(feature.attributes.id);
+            this.up('window').down('locationform').setRecord(record);
+            this.up('window').down('locationform').setReadOnly(true);
+            this.up('window').down('ortform').down('combobox').setValue(record.id);
+        }
+        else {
+            this.up('window').down('locationform').setRecord(this.locationRecord);
+            this.up('window').down('locationform').setReadOnly(false);
+        }
     },
 
     selectFeature: function(id) {
@@ -115,6 +124,26 @@ Ext.define('Lada.view.panel.Map', {
         this.map.zoomToScale(this.mapOptions.scales[5]);
         this.selectControl.unselectAll();
         this.selectControl.select(feature[0]);
+    },
+
+    activateDraw: function(record) {
+        this.locationRecord = record;
+        if (!this.drawPoint) {
+            this.drawPoint = new OpenLayers.Control.DrawFeature(this.featureLayer,
+                OpenLayers.Handler.Point);
+            this.map.addControl(this.drawPoint);
+        }
+        this.drawPoint.activate();
+        this.drawPoint.events.register('featureadded', this, this.featureAdded);
+    },
+
+    featureAdded: function(features) {
+        this.locationRecord.set('latitude', features.feature.geometry.y);
+        this.locationRecord.set('longitude', features.feature.geometry.x);
+        this.drawPoint.deactivate();
+        this.selectControl.unselectAll();
+        this.selectControl.select(features.feature);
+        console.log(arguments);
     },
 
     /**

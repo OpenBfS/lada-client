@@ -112,6 +112,8 @@ Ext.application({
         'Lada.controller.grid.MKommentar',
         'Lada.controller.grid.Messung',
         'Lada.controller.grid.Messwert',
-        'Lada.controller.grid.Status'
+        'Lada.controller.grid.Status',
+        'Lada.controller.Map',
+        'Lada.controller.form.Location'
     ]
 });
