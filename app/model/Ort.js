@@ -13,11 +13,9 @@ Ext.define('Lada.model.Ort', {
     extend: 'Ext.data.Model',
 
     fields: [{
-        name: 'id',
-        type: 'int'
+        name: 'id'
     }, {
-        name: 'ort',
-        type: 'int'
+        name: 'ort'
     }, {
         name: 'probeId'
     }, {
