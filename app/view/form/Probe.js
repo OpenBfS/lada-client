@@ -23,7 +23,8 @@ Ext.define('Lada.view.form.Probe', {
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.base.Datetime',
         'Lada.view.widget.base.FieldSet',
-        'Lada.model.Probe'
+        'Lada.view.widget.base.DateField',
+        'Lada.model.Probe',
     ],
 
     model: 'Lada.model.Probe',
@@ -36,6 +37,7 @@ Ext.define('Lada.view.form.Probe', {
     trackResetOnLoad: true,
 
     initComponent: function() {
+
         var me = this;
         this.items = [{
             xtype: 'fieldset',
@@ -223,71 +225,65 @@ Ext.define('Lada.view.form.Probe', {
                     xtype: 'fieldset',
                     title: 'Zeit',
                     layout: {
-                        type: 'hbox'
+                        type: 'hbox',
+                        pack: 'center',
+                        align: 'stretch'
                     },
                     items: [{
+                        xtype: 'fieldset',
+                        title: 'Probenentnahme',
+                        anchor: '100%',
+                        width: '50%',
+                        margin: '0, 5, 5, 5',
                         layout: {
                             type: 'vbox',
                             align: 'stretch'
                         },
-                        border: 0,
                         items: [{
-                            xtype: 'datetime',
-                            fieldLabel: 'Probennahme Beginn',
-                            fieldMargin: '0, 10, 5, 0',
-                            labelWidth: 125,
+                            xtype: 'datef',
+                            fieldLabel: 'Beginn',
+                            labelWidth: 90,
+                            anchor: '100%',
                             name: 'probeentnahmeBeginn',
-                            listeners: {
-                                dirtychange: {
-                                    fn: this.updateOnChange,
-                                    scope: me
-                                }
-                            }
+                            format: 'd.m.Y H:i',
                         }, {
-                            xtype: 'datetime',
-                            fieldLabel: 'Probennahme Ende',
-                            fieldMargin: '0, 10, 5, 0',
-                            labelWidth: 125,
+                            xtype: 'datef',
+                            fieldLabel: 'Ende',
+                            labelWidth: 90,
+                            anchor: '100%',
                             name: 'probeentnahmeEnde',
-                            listeners: {
-                                dirtychange: {
-                                    fn: this.updateOnChange,
-                                    scope: me
-                                }
-                            }
+                            format: 'd.m.Y H:i',
                         }]
                     }, {
-                        layout: 'vbox',
-                        border: 0,
+                        xtype: 'fieldset',
+                        title: 'Sollzeitraum',
+                        anchor: '100%',
+                        width: '50%',
+                        margin: '0, 5, 5, 5',
+                        layout: {
+                            type: 'vbox',
+                            align: 'stretch',
+                        },
                         items: [{
-                            xtype: 'datetime',
-                            fieldLabel: 'Sollzeit Von',
-                            fieldMargin: '0, 10, 5, 0',
+                            xtype: 'datef',
+                            fieldLabel: 'Von',
                             labelWidth: 90,
+                            anchor: '100%',
                             name: 'solldatumBeginn',
-                            listeners: {
-                                dirtychange: {
-                                    fn: this.updateOnChange,
-                                    scope: me
-                                }
-                            }
-                        }, {
-                            xtype: 'datetime',
-                            fieldLabel: 'Sollzeit Bis',
-                            fieldMargin: '0, 10, 5, 0',
+                            format: 'd.m.Y H:i',
+                         }, {
+                            xtype: 'datef',
+                            fieldLabel: 'Bis',
                             labelWidth: 90,
+                            anchor: '100%',
                             name: 'solldatumEnde',
-                            listeners: {
-                                dirtychange: {
-                                    fn: this.updateOnChange,
-                                    scope: me
-                                }
-                            }
+                            format: 'd.m.Y H:i',
                         }]
                     }]
                 }]
             }]
         }];
+
         this.callParent(arguments);
     },
 
@@ -340,10 +336,10 @@ Ext.define('Lada.view.form.Probe', {
         this.down('cbox[name=netzbetreiberId]').clearWarningOrError();
         this.down('tfield[name=x11]').clearWarningOrError();
         this.down('cbox[name=umwId]').clearWarningOrError();
-        this.down('datetime[name=probeentnahmeBeginn]').clearWarningOrError();
-        this.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
-        this.down('datetime[name=solldatumBeginn]').clearWarningOrError();
-        this.down('datetime[name=solldatumEnde]').clearWarningOrError();
+        this.down('datef[name=probeentnahmeBeginn]').clearWarningOrError();
+        this.down('datef[name=probeentnahmeEnde]').clearWarningOrError();
+        this.down('datef[name=solldatumBeginn]').clearWarningOrError();
+        this.down('datef[name=solldatumEnde]').clearWarningOrError();
         //this.down('cbox[name=probeNehmerId]').setReadOnly(value);
     },
 
@@ -359,10 +355,10 @@ Ext.define('Lada.view.form.Probe', {
         this.down('textfield[name=media]').setReadOnly(value);
         this.down('textfield[name=mediaDesk]').setReadOnly(value);
         this.down('cbox[name=umwId]').setReadOnly(value);
-        this.down('datetime[name=probeentnahmeBeginn]').setReadOnly(value);
-        this.down('datetime[name=probeentnahmeEnde]').setReadOnly(value);
-        this.down('datetime[name=solldatumBeginn]').setReadOnly(value);
-        this.down('datetime[name=solldatumEnde]').setReadOnly(value);
+        this.down('datef[name=probeentnahmeBeginn]').setReadOnly(value);
+        this.down('datef[name=probeentnahmeEnde]').setReadOnly(value);
+        this.down('datef[name=solldatumBeginn]').setReadOnly(value);
+        this.down('datef[name=solldatumEnde]').setReadOnly(value);
         //this.down('cbox[name=probeNehmerId]').setReadOnly(value);
     },
 
