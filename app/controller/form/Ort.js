@@ -27,7 +27,7 @@ Ext.define('Lada.controller.form.Ort', {
     },
 
     save: function(button) {
-        var formPanel = button.up('form');
+        var formPanel = button.up('ortform');
         var data = formPanel.getForm().getFieldValues(true);
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
@@ -35,9 +35,7 @@ Ext.define('Lada.controller.form.Ort', {
         formPanel.getForm().getRecord().save({
             success: function(record, response) {
                 var json = Ext.decode(response.response.responseText);
-                if (response.action !== 'create' &&
-                    json &&
-                    json.success) {
+                if (json) {
                     button.setDisabled(true);
                     button.up('toolbar').down('button[action=discard]')
                         .setDisabled(true);
