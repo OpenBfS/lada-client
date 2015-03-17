@@ -35,7 +35,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
             this.callParent(arguments);
             return;
         }
-        this.title = '§3-Probe ' + this.record.get('probeId');
+        var extendedTitle = this.record.get('probeId') ? this.record.get('probeId') : '';
+        this.title = '§3-Probe ' + extendedTitle;
         this.buttons = [{
             text: 'Schließen',
             scope: this,
