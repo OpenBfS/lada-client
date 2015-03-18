@@ -18,11 +18,34 @@ Ext.onReady(function() {
         Ext.grid.RowEditor.prototype.cancelBtnText = "Abbrechen";
     }
 
-    //this will not work... :-(
-    /*
-    Ext.override(Ext.ux.DateTimePicker ,{
-        todayText: "Heute",
-        timeLabel: "Uhrzeit"
-    });
-    */
 });
+
+//Übersetzungsfehler
+Ext.define("Ext.locale.de.toolbar.Paging", {
+    override: "Ext.PagingToolbar",
+    beforePageText: "Seite",
+    afterPageText: "von {0}",
+    firstText: "Erste Seite",
+    prevText: "vorherige Seite",
+    nextText: "nächste Seite",
+    lastText: "letzte Seite",
+    refreshText: "Aktualisieren",
+    displayMsg: "Zeige Eintrag {0} - {1} von {2}", // Anzeige -> Zeige
+    emptyMsg: "Keine Daten vorhanden"
+});
+
+Ext.define("Ext.locale.de.picker.Date", {
+    override: "Ext.picker.Date",
+    todayText: "Heute",
+    minText: "Dieses Datum liegt vor dem erstmöglichen Datum", // von -> vor
+    maxText: "Dieses Datum liegt nach dem letztmöglichen Datum",
+    disabledDaysText: "",
+    disabledDatesText: "",
+    nextText: "Nächster Monat (Strg/Control + Rechts)",
+    prevText: "Vorheriger Monat (Strg/Control + Links)",
+    monthYearText: "Monat auswählen (Strg/Control + Hoch/Runter, um ein Jahr auszuwählen)",
+    todayTip: "Heute ({0}) (Leertaste)",
+    format: "d.m.Y",
+    startDay: 1
+});
+
