@@ -94,26 +94,72 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
 
     beforeRender: function () {
         var me = this;
-        me.hourField = new Ext.form.field.Number({
+        me.hourField = new Ext.form.field.Spinner({
             ownerCt: me,
             ownerLayout: me.getComponentLayout(),
             value: 0,
-            increment: 1,
-            minValue: 0,
-            maxValue: 23,
+            onSpinUp: function() {
+                var value = parseInt(this.getValue());
+                if (value === 23) {
+                    return;
+                }
+                var newValue = value + 1;
+                if (newValue < 10) {
+                    this.setValue('0' + newValue);
+                }
+                else {
+                    this.setValue(newValue);
+                }
+            },
+            onSpinDown: function() {
+                var value = parseInt(this.getValue());
+                if (value === 0) {
+                    return;
+                }
+                var newValue = value - 1;
+                if (newValue < 10) {
+                    this.setValue('0' + newValue);
+                }
+                else {
+                    this.setValue(newValue);
+                }
+            },
             listeners: {
                 change: me.changeTimeValue,
                 scope: me
             }
         });
 
-        me.minuteField = new Ext.form.field.Number({
+        me.minuteField = new Ext.form.field.Spinner({
             ownerCt: me,
             ownerLayout: me.getComponentLayout(),
             value: 0,
-            increment: 1,
-            minValue: 0,
-            maxValue: 59,
+            onSpinUp: function() {
+                var value = parseInt(this.getValue());
+                if (value === 59) {
+                    return;
+                }
+                var newValue = value + 1;
+                if (newValue < 10) {
+                    this.setValue('0' + newValue);
+                }
+                else {
+                    this.setValue(newValue);
+                }
+            },
+            onSpinDown: function() {
+                var value = parseInt(this.getValue());
+                if (value === 0) {
+                    return;
+                }
+                var newValue = value - 1;
+                if (newValue < 10) {
+                    this.setValue('0' + newValue);
+                }
+                else {
+                    this.setValue(newValue);
+                }
+            },
             listeners: {
                 change: me.changeTimeValue,
                 scope: me
