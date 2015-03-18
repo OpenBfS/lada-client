@@ -43,6 +43,7 @@ Ext.define('Lada.view.grid.FilterResult', {
             xtype: 'pagingtoolbar',
             dock: 'bottom',
             store: 'ProbenList',
+            disabled: true,
             displayInfo: true
         }];
         this.columns = [];
