@@ -240,19 +240,19 @@ Ext.define('Lada.view.form.Probe', {
                             align: 'stretch'
                         },
                         items: [{
-                            xtype: 'datef',
+                            xtype: 'datetime',
                             fieldLabel: 'Beginn',
                             labelWidth: 90,
                             anchor: '100%',
                             name: 'probeentnahmeBeginn',
-                            format: 'd.m.Y H:i',
+                            format: 'd.m.Y H:i'
                         }, {
-                            xtype: 'datef',
+                            xtype: 'datetime',
                             fieldLabel: 'Ende',
                             labelWidth: 90,
                             anchor: '100%',
                             name: 'probeentnahmeEnde',
-                            format: 'd.m.Y H:i',
+                            format: 'd.m.Y H:i'
                         }]
                     }, {
                         xtype: 'fieldset',
@@ -262,22 +262,22 @@ Ext.define('Lada.view.form.Probe', {
                         margin: '0, 5, 5, 5',
                         layout: {
                             type: 'vbox',
-                            align: 'stretch',
+                            align: 'stretch'
                         },
                         items: [{
-                            xtype: 'datef',
+                            xtype: 'datetime',
                             fieldLabel: 'Von',
                             labelWidth: 90,
                             anchor: '100%',
                             name: 'solldatumBeginn',
-                            format: 'd.m.Y H:i',
-                         }, {
-                            xtype: 'datef',
+                            format: 'd.m.Y H:i'
+                        }, {
+                            xtype: 'datetime',
                             fieldLabel: 'Bis',
                             labelWidth: 90,
                             anchor: '100%',
                             name: 'solldatumEnde',
-                            format: 'd.m.Y H:i',
+                            format: 'd.m.Y H:i'
                         }]
                     }]
                 }]

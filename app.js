@@ -9,10 +9,6 @@
 Ext.Loader.setConfig({
     enabled: true,
     paths: {
-        'Ext.ux.form.DateTimeField': 'resources/lib/datetime/UX_DateTimeField.js',
-        'Ext.ux.DateTimeMenu': 'resources/lib/datetime/UX_DateTimeMenu.js',
-        'Ext.ux.DateTimePicker': 'resources/lib/datetime/UX_DateTimePicker.js',
-        'Ext.ux.form.TimePickerField': 'resources/lib/datetime/UX_TimePickerField.js',
         'Ext.i18n': 'resources/lib/i18n/'
     }
 });

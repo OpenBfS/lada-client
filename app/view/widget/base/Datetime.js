@@ -13,17 +13,18 @@ Ext.define('Lada.view.widget.base.Datetime', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.datetime',
     requires: [
-        'Ext.ux.form.DateTimeField'
+        'Lada.view.widget.base.DateTimeField'
     ],
 
     layout: 'hbox',
 
     border: 0,
 
+    margin: '0, 0, 5, 0',
+
     initComponent: function() {
-        this.margin = this.fieldMargin;
-        var dateField = Ext.create('Ext.ux.form.DateTimeField', {
-            format: 'd.m.Y',
+        var dateField = Ext.create('Lada.view.widget.base.DateTimeField', {
+            format: this.format || 'd.m.Y H:i',
             emptyText: 'Wählen Sie einen Zeitpunkt',
             fieldLabel: this.fieldLabel,
             labelWidth: this.labelWidth,
