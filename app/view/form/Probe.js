@@ -336,10 +336,10 @@ Ext.define('Lada.view.form.Probe', {
         this.down('cbox[name=netzbetreiberId]').clearWarningOrError();
         this.down('tfield[name=x11]').clearWarningOrError();
         this.down('cbox[name=umwId]').clearWarningOrError();
-        this.down('datef[name=probeentnahmeBeginn]').clearWarningOrError();
-        this.down('datef[name=probeentnahmeEnde]').clearWarningOrError();
-        this.down('datef[name=solldatumBeginn]').clearWarningOrError();
-        this.down('datef[name=solldatumEnde]').clearWarningOrError();
+        this.down('datetime[name=probeentnahmeBeginn]').clearWarningOrError();
+        this.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
+        this.down('datetime[name=solldatumBeginn]').clearWarningOrError();
+        this.down('datetime[name=solldatumEnde]').clearWarningOrError();
         //this.down('cbox[name=probeNehmerId]').setReadOnly(value);
     },
 
@@ -355,10 +355,10 @@ Ext.define('Lada.view.form.Probe', {
         this.down('textfield[name=media]').setReadOnly(value);
         this.down('textfield[name=mediaDesk]').setReadOnly(value);
         this.down('cbox[name=umwId]').setReadOnly(value);
-        this.down('datef[name=probeentnahmeBeginn]').setReadOnly(value);
-        this.down('datef[name=probeentnahmeEnde]').setReadOnly(value);
-        this.down('datef[name=solldatumBeginn]').setReadOnly(value);
-        this.down('datef[name=solldatumEnde]').setReadOnly(value);
+        this.down('datetime[name=probeentnahmeBeginn]').setReadOnly(value);
+        this.down('datetime[name=probeentnahmeEnde]').setReadOnly(value);
+        this.down('datetime[name=solldatumBeginn]').setReadOnly(value);
+        this.down('datetime[name=solldatumEnde]').setReadOnly(value);
         //this.down('cbox[name=probeNehmerId]').setReadOnly(value);
     },
 
