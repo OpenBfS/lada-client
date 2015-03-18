@@ -98,6 +98,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
             ownerCt: me,
             ownerLayout: me.getComponentLayout(),
             value: 0,
+            maxValue: 23,
             onSpinUp: function() {
                 var value = parseInt(this.getValue());
                 if (value === 23) {
@@ -134,6 +135,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
             ownerCt: me,
             ownerLayout: me.getComponentLayout(),
             value: 0,
+            maxValue: 59,
             onSpinUp: function() {
                 var value = parseInt(this.getValue());
                 if (value === 59) {
@@ -214,7 +216,14 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         me.callParent();
     },
 
-    changeTimeValue: function (field, nValue, oValue) {
+    changeTimeValue: function (field, nValue) {
+        var value = parseInt(nValue);
+        if (value > field.maxValue) {
+            field.setValue(field.maxValue);
+        }
+        else if (value < 10 && (nValue.indexOf('0') !== 0 || nValue.length < 2)) {
+            field.setValue('0' + nValue);
+        }
     },
 
     setValue: function(value) {
