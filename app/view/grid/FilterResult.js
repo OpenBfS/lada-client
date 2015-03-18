@@ -39,6 +39,11 @@ Ext.define('Lada.view.grid.FilterResult', {
                 icon: 'resources/img/svn-update.png',
                 action: 'export'
             }]
+        }, {
+            xtype: 'pagingtoolbar',
+            dock: 'bottom',
+            store: 'ProbenList',
+            displayInfo: true
         }];
         this.columns = [];
         this.callParent(arguments);
