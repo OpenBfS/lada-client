@@ -89,6 +89,9 @@ Ext.define('Lada.view.form.Messung', {
                 }, {
                     xtype: 'numberfield',
                     allowDecimals: false,
+                    allowExponential: false,
+                    enforceMaxLength: true,
+                    maxLength: 10,
                     minValue: 0,
                     name: 'messdauer',
                     margin: '0, 10, 5, 0',

@@ -94,23 +94,23 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
 
     beforeRender: function () {
         var me = this;
-        me.hourField = new Ext.form.field.Spinner({
+        me.hourField = new Ext.form.field.Number({
             ownerCt: me,
             ownerLayout: me.getComponentLayout(),
             value: 0,
+            valueToRaw: function (value) {
+                return (value < 10 ? '0' : '') + value; // add leading Zero
+            },
             maxValue: 23,
+            maxLength: 2,
+            enforceMaxLength: true,
             onSpinUp: function() {
                 var value = parseInt(this.getValue());
                 if (value === 23) {
                     return;
                 }
                 var newValue = value + 1;
-                if (newValue < 10) {
-                    this.setValue('0' + newValue);
-                }
-                else {
-                    this.setValue(newValue);
-                }
+                this.setValue(newValue);
             },
             onSpinDown: function() {
                 var value = parseInt(this.getValue());
@@ -118,36 +118,32 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
                     return;
                 }
                 var newValue = value - 1;
-                if (newValue < 10) {
-                    this.setValue('0' + newValue);
-                }
-                else {
-                    this.setValue(newValue);
-                }
+                this.setValue(newValue);
             },
             listeners: {
                 change: me.changeTimeValue,
                 scope: me
-            }
+            },
+            checkChangeEvents: ['change']
         });
 
-        me.minuteField = new Ext.form.field.Spinner({
+        me.minuteField = new Ext.form.field.Number({
             ownerCt: me,
             ownerLayout: me.getComponentLayout(),
             value: 0,
             maxValue: 59,
+            valueToRaw: function (value) {
+                return (value < 10 ? '0' : '') + value; // add leading Zero
+            },
+            maxLength: 2,
+            enforceMaxLength: true,
             onSpinUp: function() {
                 var value = parseInt(this.getValue());
                 if (value === 59) {
                     return;
                 }
                 var newValue = value + 1;
-                if (newValue < 10) {
-                    this.setValue('0' + newValue);
-                }
-                else {
-                    this.setValue(newValue);
-                }
+                this.setValue(newValue);
             },
             onSpinDown: function() {
                 var value = parseInt(this.getValue());
@@ -155,17 +151,13 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
                     return;
                 }
                 var newValue = value - 1;
-                if (newValue < 10) {
-                    this.setValue('0' + newValue);
-                }
-                else {
-                    this.setValue(newValue);
-                }
+                this.setValue(newValue);
             },
             listeners: {
                 change: me.changeTimeValue,
                 scope: me
-            }
+            },
+            checkChangeEvents: ['change']
         });
 
         me.timeLabel = new Ext.form.Label({
@@ -221,8 +213,8 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         if (value > field.maxValue) {
             field.setValue(field.maxValue);
         }
-        else if (value < 10 && (nValue.indexOf('0') !== 0 || nValue.length < 2)) {
-            field.setValue('0' + nValue);
+        if (value == null || value == "" || isNaN(value)) {
+            field.setValue('0');
         }
     },
 

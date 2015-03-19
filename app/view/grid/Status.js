@@ -73,7 +73,8 @@ Ext.define('Lada.view.grid.Status', {
                 store: Ext.data.StoreManager.get('messstellen'),
                 displayField: 'messStelle',
                 valueField: 'id',
-                allowBlank: false
+                allowBlank: false,
+                editable: false
             }
         }, {
             header: 'Status',
@@ -89,17 +90,18 @@ Ext.define('Lada.view.grid.Status', {
                 store: statusStore,
                 displayField: 'display',
                 valueField: 'id',
-                allowBlank: false
+                allowBlank: false,
+                editable: false
             }
         }, {
             header: 'Datum',
             dataIndex: 'sdatum',
             xtype: 'datecolumn',
-            format: 'd.m.Y H:i',
+            format: 'd.m.Y',
             editor: {
                 xtype: 'datefield',
                 allowBlank: false,
-                format: 'd.m.Y H:i',
+                format: 'd.m.Y',
                 maxValue: Ext.Date.format(new Date(), 'd.m.Y')
             }
         }, {
@@ -107,7 +109,9 @@ Ext.define('Lada.view.grid.Status', {
             dataIndex: 'skommentar',
             flex: 1,
             editor: {
-                allowBlank: true
+                allowBlank: true,
+                maxLength: 1000,
+                enforceMaxLength: true
             }
         }];
         this.initData();

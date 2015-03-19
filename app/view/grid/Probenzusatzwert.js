@@ -67,7 +67,8 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 store: Ext.data.StoreManager.get('probenzusaetze'),
                 displayField: 'beschreibung',
                 valueField: 'id',
-                allowBlank: false
+                allowBlank: false,
+                editable: false
             }
         }, {
             header: 'Messwert',
@@ -76,7 +77,34 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             flex: 1,
             editor: {
                 xtype: 'numberfield',
-                allowBlank: false
+                allowBlank: false,
+                maxLength: 10,
+                enforceMaxLength: true,
+                allowExponential: false
+            }
+        }, {
+            header: '< NWG',
+            flex: 1,
+            renderer: function(value, meta, record) {
+                var nwg = record.get('nwgZuMesswert');
+                var mw = record.get('messwertPzs');
+                if ( mw < nwg) {
+                    return '<';
+                }
+                return '';
+            }
+        }, {
+            header: 'Nachweisgrenze',
+            dataIndex: 'nwgZuMesswert',
+            xtype: 'numbercolumn',
+            format: '0',
+            flex: 1,
+            editor: {
+                xtype: 'numberfield',
+                allowBlank: false,
+                maxLength: 10,
+                enforceMaxLength: true,
+                allowExponential: false
             }
         }, {
             header: 'Maßeinheit',
@@ -93,16 +121,6 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 return record.get('einheit');
             }
         }, {
-            header: 'Nachweisgrenze',
-            dataIndex: 'nwgZuMesswert',
-            xtype: 'numbercolumn',
-            format: '0',
-            flex: 1,
-            editor: {
-                xtype: 'numberfield',
-                allowBlank: false
-            }
-        }, {
             header: 'rel. Unsich.[%]',
             dataIndex: 'messfehler',
             xtype: 'numbercolumn',
@@ -110,18 +128,11 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             flex: 1,
             editor: {
                 xtype: 'numberfield',
-                allowBlank: false
-            }
-        }, {
-            header: '< NWG',
-            flex: 1,
-            renderer: function(value, meta, record) {
-                var nwg = record.get('nwgZuMesswert');
-                var mw = record.get('messwertPzs');
-                if ( mw < nwg) {
-                    return 'MW < NWG';
-                }
-                return '';
+                allowBlank: false,
+                maxLength: 3,
+                enforceMaxLength: true,
+                allowExponential: false,
+                allowDecimal: false
             }
         }];
         this.initData();

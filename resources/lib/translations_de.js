@@ -16,6 +16,8 @@ Ext.onReady(function() {
     if (Ext.grid.RowEditor) {
         Ext.grid.RowEditor.prototype.saveBtnText = "Speichern";
         Ext.grid.RowEditor.prototype.cancelBtnText = "Abbrechen";
+        Ext.grid.RowEditor.prototype.errorsText = "Fehler";
+        Ext.grid.RowEditor.prototype.dirtyText = "Sie müssen Ihre Änderungen Speichern oder durch Abbrechen verwerfen";
     }
 
 });
