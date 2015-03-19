@@ -197,9 +197,8 @@ Ext.define('Lada.controller.Filter', {
             }
             searchParams[filter.getName()] = value;
         }
-        resultGrid.getStore().load({
-            params: searchParams
-        });
+        resultGrid.getStore().proxy.extraParams = searchParams;
+        resultGrid.getStore().load();
         resultGrid.show();
     },
 
