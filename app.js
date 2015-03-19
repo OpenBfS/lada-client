@@ -54,7 +54,7 @@ Ext.application({
 
     // Setting this variable to true triggers loading the Viewport.js
     // file which sets ob the viewport.
-    autoCreateViewport: true,
+    //autoCreateViewport: true,
 
     // Start the application.
     launch: function() {
@@ -103,6 +103,8 @@ Ext.application({
     onLoginSuccess: function(response, opts) {
         /* Strip out the openid query params to look nicers. */
         window.history.pushState(this.name, this.name, window.location.pathname);
+
+        Ext.create('Lada.view.Viewport');
 
         /* Todo maybe parse username and such from login service response */
         Ext.create('Lada.store.Datenbasis', {
