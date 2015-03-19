@@ -74,33 +74,33 @@ Ext.application({
         });
     },
 
-    onLoginFailure : function(response, opts) {
+    onLoginFailure: function(response) {
         try {
             var json = Ext.decode(response.responseText);
             if (json) {
-                if (json.message == "699") {
+                if (json.message === '699') {
                     /* This is the unauthorized message with the authentication
                      * redirect in the data */
                     var authUrl = json.data;
                     location.href = authUrl;
                     return;
                 }
-                if (json.message == "698") {
+                if (json.message === '698') {
                     /* This is general authentication error */
                     Ext.MessageBox.alert('Kommunikation mit dem Login Server fehlgeschlagen',
                             json.data);
                     return;
                 }
             }
-        } catch (e) {
+        }
+        catch (e) {
             // This is likely a 404 or some unknown error. Show general error then.
         }
         Ext.MessageBox.alert('Kommunikation mit dem Lada Server fehlgeschlagen',
                 'Es konnte keine erfolgreiche Verbindung zum lada server aufgebaut werden.');
-
     },
 
-    onLoginSuccess: function(response, opts) {
+    onLoginSuccess: function() {
         /* Strip out the openid query params to look nicers. */
         window.history.pushState(this.name, this.name, window.location.pathname);
 
