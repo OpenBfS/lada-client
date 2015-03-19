@@ -18,6 +18,7 @@ Ext.define('Lada.model.ProbeList', {
     }],
 
     idProperty: 'id',
+    totalProperty: 'totalCount',
 
     proxy: {
         type: 'rest',
