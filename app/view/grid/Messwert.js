@@ -67,7 +67,8 @@ Ext.define('Lada.view.grid.Messwert', {
                 store: Ext.data.StoreManager.get('messgroessen'),
                 displayField: 'messgroesse',
                 valueField: 'id',
-                allowBlank: false
+                allowBlank: false,
+                editable: false
             }
         }, {
             header: 'Messwert',
@@ -76,7 +77,10 @@ Ext.define('Lada.view.grid.Messwert', {
             width: 80,
             editor: {
                 xtype: 'numberfield',
-                allowBlank: false
+                allowBlank: false,
+                maxLength: 10,
+                allowExponential: false,
+                enforceMaxLength: true,
             }
         }, {
             header: 'Messeinheit',
@@ -94,7 +98,8 @@ Ext.define('Lada.view.grid.Messwert', {
                 store: Ext.data.StoreManager.get('messeinheiten'),
                 displayField: 'einheit',
                 valueField: 'id',
-                allowBlank: false
+                allowBlank: false,
+                editable: false
             }
         }, {
             header: '&lt;NWG',
@@ -113,7 +118,10 @@ Ext.define('Lada.view.grid.Messwert', {
             width: 80,
             editor: {
                 xtype: 'numberfield',
-                allowBlank: false
+                allowBlank: false,
+                maxLength: 10,
+                allowExponential: false,
+                enforceMaxLength: true,
             }
         }, {
             header: 'Grenzwertüberschreitung',
