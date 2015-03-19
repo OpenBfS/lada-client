@@ -21,7 +21,8 @@ Ext.define('Lada.view.widget.base.TextField', {
             flex: 1,
             name: this.name,
             msgTarget: 'none',
-            maxLength: this.maxLength,
+            maxLength: this.maxLength || 1000,
+            enforceMaxLength: this.enforceMaxLength || true,
             fieldLabel: this.fieldLabel,
             labelWidth: this.labelWidth,
             listeners: this.listeners
