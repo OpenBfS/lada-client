@@ -56,25 +56,28 @@ Ext.define('Lada.view.grid.MKommentar', {
                 store: Ext.data.StoreManager.get('messstellen'),
                 displayField: 'messStelle',
                 valueField: 'id',
-                allowBlank: false
+                allowBlank: false,
+                editable: false,
             }
         }, {
             header: 'Datum',
             dataIndex: 'datum',
             xtype: 'datecolumn',
-            format: 'd.m.Y H:i',
+            format: 'd.m.Y',
             editor: {
                 xtype: 'datefield',
                 allowBlank: false,
-                format: 'd.m.Y H:i',
-                maxValue: Ext.Date.format(new Date(), 'd.m.Y H:i')
+                format: 'd.m.Y',
+                maxValue: Ext.Date.format(new Date(), 'd.m.Y')
             }
         }, {
             header: 'Text',
             dataIndex: 'text',
             flex: 1,
             editor: {
-                allowBlank: false
+                allowBlank: false,
+                maxLength: 1000,
+                enforceMaxLength: true
             }
         }];
         this.initData();
