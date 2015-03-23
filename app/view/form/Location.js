@@ -81,6 +81,7 @@ Ext.define('Lada.view.form.Location', {
                     xtype: 'verwaltungseinheit',
                     name: 'verwaltungseinheitId',
                     fieldLabel: 'Gemeinde',
+                    editable: true,
                     width: 280,
                     labelWidth: 80
                 }, {

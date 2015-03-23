@@ -179,10 +179,14 @@ Ext.define('Lada.view.form.Probe', {
                             }
                         }, {
                             xtype: 'textfield',
-                            maxLength: 100,
+                            maxLength: 38,
+                            enforceMaxLength: true,
                             name: 'mediaDesk',
                             labelWidth: 125,
                             fieldLabel: 'Deskriptoren',
+                            regex: new RegExp('(?:D: ){1}(?:[0-9]{2} ){11}[0-9]{2}'),
+                            regexText: 'Die Deskriptoren haben das falsche Format.<br />'+
+                            'Richtig wäre: D: 99 99 99 99 99 99 99 99 99 99 99 99',
                             listeners: {
                                 dirtychange: {
                                     fn: this.updateOnChange,

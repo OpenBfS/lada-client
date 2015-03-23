@@ -18,14 +18,14 @@ Ext.define('Lada.model.ProbeList', {
     }],
 
     idProperty: 'id',
-    totalProperty: 'totalCount',
 
     proxy: {
         type: 'rest',
         url: 'lada-server/probe',
         reader: {
             type: 'json',
-            root: 'data'
+            root: 'data',
+            totalProperty: 'totalCount'
         }
     }
 });
