@@ -20,7 +20,18 @@ Ext.onReady(function() {
         Ext.grid.RowEditor.prototype.dirtyText = "Sie müssen Ihre Änderungen Speichern oder durch Abbrechen verwerfen";
     }
 
+// Ext has to send timezone-information when saving date-objects
+// If not: Datetime-information will be falsified when a date-object is saved
+// i.e
+// originaltime 8:00 (save) -> time+offset 9:00 (save) -> 10:00 -> etc...
+Ext.JSON.encodeDate = function(o)
+{
+    return '"' + Ext.Date.format(o, 'c') + '"';
+}
+
+
 });
+
 
 //Übersetzungsfehler
 Ext.define("Ext.locale.de.toolbar.Paging", {
