@@ -25,6 +25,8 @@ Ext.application({
         'Lada.override.Table',
         'Lada.override.RestProxy',
         'Lada.override.RowEditor',
+        'Lada.override.i18n.DE',
+        'Lada.override.JSON',
         'Ext.i18n.Bundle',
         'Ext.layout.container.Column',
         'Lada.store.Datenbasis',
