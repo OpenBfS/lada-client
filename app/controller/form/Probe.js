@@ -53,7 +53,9 @@ Ext.define('Lada.controller.form.Probe', {
                 button.setDisabled(true);
                 button.up('toolbar').down('button[action=discard]')
                     .setDisabled(true);
-                formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
+                var rec = formPanel.getForm().getRecord();
+                rec.dirty = false;
+                formPanel.getForm().loadRecord(rec);
                 var json = response.request.scope.reader.jsonData;
                 if (json) {
                     formPanel.setMessages(json.errors, json.warnings);
