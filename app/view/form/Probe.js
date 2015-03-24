@@ -35,9 +35,9 @@ Ext.define('Lada.view.form.Probe', {
     recordId: null,
 
     trackResetOnLoad: true,
+    readonly: false,
 
     initComponent: function() {
-
         var me = this;
         this.items = [{
             xtype: 'fieldset',
@@ -287,8 +287,11 @@ Ext.define('Lada.view.form.Probe', {
                 }]
             }]
         }];
-
         this.callParent(arguments);
+
+        if (this.readonly){
+            this.setReadOnly(true);
+        }
     },
 
     setRecord: function(record) {
@@ -344,7 +347,7 @@ Ext.define('Lada.view.form.Probe', {
         this.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
         this.down('datetime[name=solldatumBeginn]').clearWarningOrError();
         this.down('datetime[name=solldatumEnde]').clearWarningOrError();
-        //this.down('cbox[name=probeNehmerId]').setReadOnly(value);
+        //this.down('numberfield[name=probeNehmerId]').clearWarningOrError();
     },
 
     setReadOnly: function(value) {
@@ -363,17 +366,22 @@ Ext.define('Lada.view.form.Probe', {
         this.down('datetime[name=probeentnahmeEnde]').setReadOnly(value);
         this.down('datetime[name=solldatumBeginn]').setReadOnly(value);
         this.down('datetime[name=solldatumEnde]').setReadOnly(value);
-        //this.down('cbox[name=probeNehmerId]').setReadOnly(value);
+        this.down('numberfield[name=probeNehmerId]').setReadOnly(value);
     },
 
     buildDescriptors: function() {
         var fields = [];
+        var ro = false;
+        if (this.readonly) {
+            ro = true;
+        }
         for (var i = 0; i < 12; i++) {
             fields[i] = {
                 fieldLabel: 'S' + i,
                 name: 's' + i,
                 labelWidth: 25,
-                margin: '0, 10, 5, 0'
+                margin: '0, 10, 5, 0',
+                readOnly: ro
             };
         }
         return fields;

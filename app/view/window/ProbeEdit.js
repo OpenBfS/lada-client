@@ -53,7 +53,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
             autoScroll: true,
             items: [{
                 xtype: 'probeform',
-                recordId: this.record.get('id')
+                recordId: this.record.get('id'),
+                readonly: this.record.get('readonly')
              }, {
                 xtype: 'fset',
                 name: 'messungen',
