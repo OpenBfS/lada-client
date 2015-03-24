@@ -22,7 +22,13 @@ Ext.define('Lada.model.Probe', {
     }, {
         name: 'test'
     }, {
-        name: 'netzbetreiberId'
+        name: 'netzbetreiberId',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
     }, {
         name: 'mstId'
     }, {
@@ -36,7 +42,13 @@ Ext.define('Lada.model.Probe', {
     }, {
         name: 'media'
     }, {
-        name: 'umwId'
+        name: 'umwId',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
     }, {
         name: 'probeentnahmeBeginn',
         type: 'date',
