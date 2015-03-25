@@ -29,7 +29,17 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
     initComponent: function() {
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
-            autoCancel: false
+            autoCancel: false,
+            listeners:{
+                // Make row ineditable when readonly is set to true
+                // Normally this would belong into a controller an not the view.
+                beforeedit: function(e, o) {
+                    if (o.record.get('readonly') == true) {
+                        return false;
+                    }
+                    return true;
+                }
+            }
         });
         this.plugins = [this.rowEditing];
         this.dockedItems = [{
