@@ -362,21 +362,21 @@ Ext.define('Lada.view.form.Probe', {
         this.down('datetime[name=solldatumBeginn]').setReadOnly(value);
         this.down('datetime[name=solldatumEnde]').setReadOnly(value);
         this.down('numberfield[name=probeNehmerId]').setReadOnly(value);
+
+        //Deskriptoren
+        for (var i = 0; i < 12; i++) {
+            this.down('field[name=s'+i+']').setReadOnly(value);
+        }
     },
 
     buildDescriptors: function() {
         var fields = [];
-        var ro = false;
-        if (this.readonly) {
-            ro = true;
-        }
         for (var i = 0; i < 12; i++) {
             fields[i] = {
                 fieldLabel: 'S' + i,
                 name: 's' + i,
                 labelWidth: 25,
                 margin: '0, 10, 5, 0',
-                readOnly: ro
             };
         }
         return fields;
