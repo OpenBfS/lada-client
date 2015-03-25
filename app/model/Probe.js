@@ -16,6 +16,9 @@ Ext.define('Lada.model.Probe', {
     fields: [{
         name: 'id'
     }, {
+        name: 'owner',
+        type: 'boolean'
+    }, {
         name: 'probeIdAlt'
     }, {
         name: 'hauptprobenNr'
