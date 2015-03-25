@@ -115,6 +115,8 @@ Ext.define('Lada.model.Probe', {
         name: 'readonly',
         type: 'bool',
         persist: false
+    }, {
+        name: 'treeModified'
     }],
 
     idProperty: 'id',

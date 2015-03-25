@@ -49,6 +49,8 @@ Ext.define('Lada.model.Messung', {
         type: 'boolean'
     }, {
         name: 'messungsIdAlt'
+    }, {
+        name: 'treeModified'
     }],
 
     idProperty: 'id',

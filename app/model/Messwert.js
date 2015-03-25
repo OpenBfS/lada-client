@@ -44,6 +44,8 @@ Ext.define('Lada.model.Messwert', {
             return new Date(v);
         },
         defaultValue: new Date()
+    }, {
+        name: 'treeModified'
     }],
 
     idProperty: 'id',

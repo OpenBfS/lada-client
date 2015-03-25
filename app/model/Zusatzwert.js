@@ -37,6 +37,8 @@ Ext.define('Lada.model.Zusatzwert', {
             return new Date(v);
         },
         defaultValue: new Date()
+    }, {
+        name: 'treeModified'
     }],
 
     idProperty: 'id',

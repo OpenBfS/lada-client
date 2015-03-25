@@ -32,6 +32,8 @@ Ext.define('Lada.model.Ort', {
             return new Date(v);
         },
         defaultValue: new Date()
+    }, {
+        name: 'treeModified'
     }],
 
     idProperty: 'id',

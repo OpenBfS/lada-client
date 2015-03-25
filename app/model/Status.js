@@ -32,6 +32,8 @@ Ext.define('Lada.model.Status', {
         defaultValue: new Date()
     }, {
         name: 'skommentar'
+    }, {
+        name: 'treeModified'
     }],
 
     idProperty: 'id',
