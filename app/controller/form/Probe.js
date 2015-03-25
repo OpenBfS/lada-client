@@ -74,10 +74,12 @@ Ext.define('Lada.controller.form.Probe', {
         if (dirty) {
             form.owner.down('button[action=save]').setDisabled(false);
             form.owner.down('button[action=discard]').setDisabled(false);
+            form.owner.up('window').disableChildren();
         }
         else {
             form.owner.down('button[action=save]').setDisabled(true);
             form.owner.down('button[action=discard]').setDisabled(true);
+            form.owner.up('window').enableChildren(); // todo this might not be true in all cases
         }
     }
 });
