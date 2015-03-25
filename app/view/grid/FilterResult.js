@@ -61,6 +61,7 @@ Ext.define('Lada.view.grid.FilterResult', {
         resultColumns.push({
             header: 'RW',
             dataIndex: 'readonly',
+            sortable: false,
             width: 30,
             renderer: function(value) {
                 if (value) {
