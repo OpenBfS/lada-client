@@ -22,6 +22,7 @@ Ext.define('Lada.view.window.MessungCreate', {
     autoshow: true,
     autoscroll: true,
     layout: 'fit',
+    constrain: true,
 
     record: null,
     grid: null,

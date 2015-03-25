@@ -22,6 +22,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
     autoShow: true,
     autoScroll: true,
     layout: 'fit',
+    constrain: true,
 
     record: null,
 

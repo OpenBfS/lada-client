@@ -23,6 +23,7 @@ Ext.define('Lada.view.window.OrtCreate', {
     maximizable: true,
     autoshow: true,
     layout: 'border',
+    constrain: true,
 
     record: null,
     grid: null,

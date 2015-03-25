@@ -25,7 +25,7 @@ Ext.define('Lada.view.window.MessungEdit', {
     autoshow: true,
     autoscroll: true,
     layout: 'fit',
-
+    constrain: true,
     record: null,
     grid: null,
 
