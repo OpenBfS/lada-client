@@ -29,7 +29,10 @@ Ext.define('Lada.controller.grid.Ort', {
     },
 
     open: function(grid, record) {
+        var probe = grid.up('window').record;
         var win = Ext.create('Lada.view.window.OrtEdit', {
+            parentWindow: grid.up('window'),
+            probe: probe,
             record: record,
             grid: grid
         });

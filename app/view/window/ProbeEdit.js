@@ -114,6 +114,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             },
             success: function(record, response) {
                 this.down('probeform').setRecord(record);
+                this.record = record;
                 var json = Ext.decode(response.response.responseText);
                 if (json) {
                     this.setMessages(json.errors, json.warnings);

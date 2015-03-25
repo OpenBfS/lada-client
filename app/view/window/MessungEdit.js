@@ -26,12 +26,20 @@ Ext.define('Lada.view.window.MessungEdit', {
     autoscroll: true,
     layout: 'fit',
     constrain: true,
+
+    probe: null,
+    parentWindow: null,
     record: null,
     grid: null,
 
     initComponent: function() {
         if (this.record === null) {
             Ext.Msg.alert('Keine valide Messung ausgewählt!');
+            this.callParent(arguments);
+            return;
+        }
+        if (this.probe === null) {
+            Ext.Msg.alert('Zu der Messung existiert keine Probe!');
             this.callParent(arguments);
             return;
         }
@@ -88,14 +96,33 @@ Ext.define('Lada.view.window.MessungEdit', {
 
     initData: function() {
         this.clearMessages();
-        this.down('messungform').setRecord(this.record);
         Ext.ClassManager.get('Lada.model.Messung').load(this.record.get('id'), {
             failure: function(record) {
                 // TODO
                 console.log(record);
             },
             success: function(record, response) {
+                var me = this;
+                if (this.probe.get('treeModified') < record.get('treeModified')) {
+                    Ext.Msg.show({
+                        title: 'Probe nicht aktuell!',
+                        msg: 'Die zugehörige Probe wurde verändert.\nMöchten Sie zu der Probe zurückkehren und neu laden?\nOhne das erneute Laden der Probe wird das Speichern der Messung nicht möglich sein.',
+                        buttons: Ext.Msg.OKCANCEL,
+                        icon: Ext.Msg.WARNING,
+                        closable: false,
+                        fn: function(button) {
+                            if (button === 'ok') {
+                                me.close();
+                                me.parentWindow.initData();
+                            }
+                            else {
+                                me.record.set('treeModified', me.probe.get('treeModified'));
+                            }
+                        }
+                    });
+                }
                 this.down('messungform').setRecord(record);
+                this.record = record;
                 var json = Ext.decode(response.response.responseText);
                 if (json) {
                     this.setMessages(json.errors, json.warnings);
@@ -103,23 +130,6 @@ Ext.define('Lada.view.window.MessungEdit', {
             },
             scope: this
         });
-
-        if (this.record.get('readonly') == true){
-            this.down('messungform').setReadOnly(true);
-            this.disableChildren();
-        }
-     },
-
-    disableChildren: function(){
-            this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(true);
-            this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(true);
-            this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(true);
-    },
-
-    enableChildren: function(){
-            this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(false);
-            this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(false);
-            this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(false);
     },
 
     setMessages: function(errors, warnings) {

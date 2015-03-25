@@ -25,12 +25,19 @@ Ext.define('Lada.view.window.OrtEdit', {
     layout: 'border',
     constrain: true,
 
+    parentWindow: null,
+    probe: null,
     record: null,
     grid: null,
 
     initComponent: function() {
         if (this.record === null) {
             Ext.Msg.alert('Kein valider Ort ausgewählt!');
+            this.callParent(arguments);
+            return;
+        }
+        if (this.probe === null) {
+            Ext.Msg.alert('Zu dem Ort existiert keine Probe!');
             this.callParent(arguments);
             return;
         }
@@ -83,7 +90,35 @@ Ext.define('Lada.view.window.OrtEdit', {
     },
 
     initData: function() {
-        this.down('ortform').setRecord(this.record);
+        Ext.ClassManager.get('Lada.model.Ort').load(this.record.get('id'), {
+            failure: function(record, action) {
+                // TODO
+            },
+            success: function(record, response) {
+                var me = this;
+                if (this.probe.get('treeModified') < record.get('treeModified')) {
+                    Ext.Msg.show({
+                        title: 'Probe nicht aktuell!',
+                        msg: 'Die zugehörige Probe wurde verändert.\nMöchten Sie zu der Probe zurückkehren und neu laden?\nOhne das erneute Laden der Probe wird das Speichern des Ortes nicht möglich sein.',
+                        buttons: Ext.Msg.OKCANCEL,
+                        icon: Ext.Msg.WARNING,
+                        closable: false,
+                        fn: function(button) {
+                            if (button === 'ok') {
+                                me.close();
+                                me.parentWindow.initData();
+                            }
+                            else {
+                                me.record.set('treeModified', me.probe.get('treeModified'));
+                            }
+                        }
+                    });
+                }
+                this.down('ortform').setRecord(record);
+                this.record = record;
+            },
+            scope: this
+        });
         Ext.ClassManager.get('Lada.model.Location').load(this.record.get('ort'), {
             failure: function(record, action) {
                 // TODO
