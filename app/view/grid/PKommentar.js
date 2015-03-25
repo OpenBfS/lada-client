@@ -31,6 +31,7 @@ Ext.define('Lada.view.grid.PKommentar', {
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false,
+            pluginId: 'rowedit',
             listeners:{
                 // Make row ineditable when readonly is set to true
                 // Normally this would belong into a controller an not the view.
@@ -109,5 +110,23 @@ Ext.define('Lada.view.grid.PKommentar', {
                 probeId: this.recordId
             }
         });
+    },
+
+    setReadOnly: function(b) {
+        if (b == true){
+            //Readonly
+            if (this.getPlugin('rowedit')){
+                this.getPlugin('rowedit').disable();
+            }
+            this.down('button[action=delete]').disable();
+            this.down('button[action=add]').disable();
+        }else{
+            //Writable
+            if (this.getPlugin('rowedit')){
+                this.getPlugin('rowedit').enable();
+            }
+            this.down('button[action=delete]').enable();
+            this.down('button[action=add]').enable();
+        }
     }
 });

@@ -53,8 +53,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             autoScroll: true,
             items: [{
                 xtype: 'probeform',
-                recordId: this.record.get('id'),
-                readonly: this.record.get('readonly')
+                recordId: this.record.get('id')
              }, {
                 xtype: 'fset',
                 name: 'messungen',
@@ -79,7 +78,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 }]
             }, {
                 xtype: 'fset',
-                name: 'probenzusaetzwerte',
+                name: 'probenzusatzwerte',
                 title: 'Zusatzwerte',
                 padding: '5, 5',
                 margin: 5,
@@ -121,6 +120,24 @@ Ext.define('Lada.view.window.ProbeEdit', {
             },
             scope: this
         });
+        if (this.record.get('readonly') == true){
+            this.down('probeform').setReadOnly(true);
+            this.disableChildren();
+        }
+    },
+
+    disableChildren: function(){
+            this.down('fset[name=messungen]').down('messunggrid').setReadOnly(true);
+            this.down('fset[name=orte]').down('ortgrid').setReadOnly(true);
+            this.down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').setReadOnly(true);
+            this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(true);
+    },
+
+    enableChildren: function(){
+            this.down('fset[name=messungen]').down('messunggrid').setReadOnly(false);
+            this.down('fset[name=orte]').down('ortgrid').setReadOnly(false);
+            this.down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').setReadOnly(false);
+            this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(false);
     },
 
     setMessages: function(errors, warnings) {

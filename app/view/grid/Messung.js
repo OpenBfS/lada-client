@@ -195,5 +195,23 @@ Ext.define('Lada.view.grid.Messung', {
         if (Ext.fly(opts.divId)) {
             Ext.fly(opts.divId).update(value);
         }
+    },
+
+    setReadOnly: function(b) {
+        if (b == true){
+            //Readonly
+            if (this.getPlugin('rowedit')){
+                this.getPlugin('rowedit').disable();
+            }
+            this.down('button[action=delete]').disable();
+            this.down('button[action=add]').disable();
+        }else{
+            //Writable
+            if (this.getPlugin('rowedit')){
+                this.getPlugin('rowedit').enable();
+            }
+            this.down('button[action=delete]').enable();
+            this.down('button[action=add]').enable();
+        }
     }
 });

@@ -35,7 +35,6 @@ Ext.define('Lada.view.form.Probe', {
     recordId: null,
 
     trackResetOnLoad: true,
-    readonly: false,
 
     initComponent: function() {
         var me = this;
@@ -288,10 +287,6 @@ Ext.define('Lada.view.form.Probe', {
             }]
         }];
         this.callParent(arguments);
-
-        if (this.readonly){
-            this.setReadOnly(true);
-        }
     },
 
     setRecord: function(record) {

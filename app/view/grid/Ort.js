@@ -118,10 +118,21 @@ Ext.define('Lada.view.grid.Ort', {
         });
     },
 
-
-    setReadOnly: function() {
-        this.getPlugin('rowedit').disable();
-        this.down('button[action=add]').disable();
-        this.down('button[action=delete]').disable();
+    setReadOnly: function(b) {
+        if (b == true){
+            //Readonly
+            if (this.getPlugin('rowedit')){
+                this.getPlugin('rowedit').disable();
+            }
+            this.down('button[action=delete]').disable();
+            this.down('button[action=add]').disable();
+        }else{
+            //Writable
+            if (this.getPlugin('rowedit')){
+                this.getPlugin('rowedit').enable();
+            }
+            this.down('button[action=delete]').enable();
+            this.down('button[action=add]').enable();
+        }
     }
 });
