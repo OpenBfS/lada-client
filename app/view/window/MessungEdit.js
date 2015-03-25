@@ -103,6 +103,23 @@ Ext.define('Lada.view.window.MessungEdit', {
             },
             scope: this
         });
+
+        if (this.record.get('readonly') == true){
+            this.down('messungform').setReadOnly(true);
+            this.disableChildren();
+        }
+     },
+
+    disableChildren: function(){
+            this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(true);
+            this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(true);
+            this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(true);
+    },
+
+    enableChildren: function(){
+            this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(false);
+            this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(false);
+            this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(false);
     },
 
     setMessages: function(errors, warnings) {
