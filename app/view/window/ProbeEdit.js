@@ -112,7 +112,10 @@ Ext.define('Lada.view.window.ProbeEdit', {
         Ext.ClassManager.get('Lada.model.Probe').load(this.record.get('id'), {
             failure: function(record, action) {
                 // TODO
-            },
+                console.log("An unhandled Failure occured. See following Response and Record");
+                console.log(response);
+                console.log(record);
+             },
             success: function(record, response) {
                 this.down('probeform').setRecord(record);
                 this.record = record;
@@ -131,6 +134,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
             //The Owner of a Probe is always allowed to add a Messung.
             // ToDo ist it required to check if a Status exists?
+            // ToDo this doesn't work here because the owner is unknown when this code
+            //   is executed.
             if (this.record.get('owner') == true){
                 //allow to add Messungen
                 this.down('fset[name=messungen]').down('messunggrid').down('button[name=add]').enable();

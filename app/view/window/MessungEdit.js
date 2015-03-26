@@ -98,8 +98,10 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.clearMessages();
         var that = this;
         Ext.ClassManager.get('Lada.model.Messung').load(this.record.get('id'), {
-            failure: function(record) {
+            failure: function(record, response) {
                 // TODO
+                console.log("An unhandled Failure occured. See following Response and Record");
+                console.log(response);
                 console.log(record);
             },
             success: function(record, response) {
@@ -107,7 +109,10 @@ Ext.define('Lada.view.window.MessungEdit', {
                 if (this.probe.get('treeModified') < record.get('treeModified')) {
                     Ext.Msg.show({
                         title: 'Probe nicht aktuell!',
-                        msg: 'Die zugehörige Probe wurde verändert.\nMöchten Sie zu der Probe zurückkehren und neu laden?\nOhne das erneute Laden der Probe wird das Speichern der Messung nicht möglich sein.',
+                        msg: 'Die zugehörige Probe wurde verändert.\n'+
+                            'Möchten Sie zu der Probe zurückkehren und neu laden?\n'+
+                            'Ohne das erneute Laden der Probe wird das Speichern'+
+                            ' der Messung nicht möglich sein.',
                         buttons: Ext.Msg.OKCANCEL,
                         icon: Ext.Msg.WARNING,
                         closable: false,
@@ -132,7 +137,6 @@ Ext.define('Lada.view.window.MessungEdit', {
             },
             scope: this
         });
-        console.log(this.record);
         if (this.record.get('readonly') == true){
             this.disableForm();
         }
