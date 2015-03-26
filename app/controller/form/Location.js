@@ -61,7 +61,15 @@ Ext.define('Lada.controller.form.Location', {
                 formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
                 var json = response.request.scope.reader.jsonData;
                 if (json) {
-                    formPanel.setMessages(json.errors, json.warnings);
+                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
+                        formPanel.setMessages(json.errors, json.warnings);
+                    }
+
+                    if(json.message){
+                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('errmsgtitle')
+                            +' '+json.message,
+                            Lada.getApplication().bundle.getMsg(json.message));
+                    }
                 }
             }
         });

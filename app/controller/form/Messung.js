@@ -62,7 +62,9 @@ Ext.define('Lada.controller.form.Messung', {
                     }
 
                     if(json.message){
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('errmsgtitle'), Lada.getApplication().bundle.getMsg(json.message));
+                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('errmsgtitle')
+                            +' '+json.message,
+                            Lada.getApplication().bundle.getMsg(json.message));
                     }
                 }
             }
