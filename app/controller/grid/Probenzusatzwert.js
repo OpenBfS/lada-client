@@ -30,8 +30,17 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
                 context.grid.store.reload();
                 context.grid.up('window').initData();
             },
-            failure: function() {
-                // TODO
+            failure: function(record, response) {
+                console.log(response);
+                console.log(record);
+                var json = response.request.scope.reader.jsonData;
+                if (json) {
+                    if (json.message){
+                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('errmsgtitle')
+                            +' '+json.message,
+                            Lada.getApplication().bundle.getMsg(json.message));
+                    }
+                }
             }
         });
     },

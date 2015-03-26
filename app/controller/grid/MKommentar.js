@@ -26,12 +26,19 @@ Ext.define('Lada.controller.grid.MKommentar', {
 
     edit: function(editor, context) {
         context.record.save({
-            success: function() {
+            success: function(record, response) {
                 context.grid.initData();
                 context.grid.up('window').initData();
             },
-            failure: function() {
-                // TODO
+            failure: function(record, response) {
+              var json = response.request.scope.reader.jsonData;
+              if (json) {
+                if (json.message){
+                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('errmsgtitle')
+                        +' '+json.message,
+                        Lada.getApplication().bundle.getMsg(json.message));
+                    }
+                }
             }
         });
     },
