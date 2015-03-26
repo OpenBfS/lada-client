@@ -31,8 +31,6 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
                 context.grid.up('window').initData();
             },
             failure: function(record, response) {
-                console.log(response);
-                console.log(record);
                 var json = response.request.scope.reader.jsonData;
                 if (json) {
                     if (json.message){
