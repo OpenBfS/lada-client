@@ -96,6 +96,7 @@ Ext.define('Lada.view.window.MessungEdit', {
 
     initData: function() {
         this.clearMessages();
+        var that = this;
         Ext.ClassManager.get('Lada.model.Messung').load(this.record.get('id'), {
             failure: function(record) {
                 // TODO
@@ -117,6 +118,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                             }
                             else {
                                 me.record.set('treeModified', me.probe.get('treeModified'));
+                                that.disableForm();
                             }
                         }
                     });
@@ -130,6 +132,32 @@ Ext.define('Lada.view.window.MessungEdit', {
             },
             scope: this
         });
+        console.log(this.record);
+        if (this.record.get('readonly') == true){
+            this.disableForm();
+        }
+    },
+
+    disableForm: function(){
+        this.down('messungform').setReadOnly(true);
+        this.disableChildren();
+    },
+
+    enableForm: function(){
+        this.down('messungform').setReadOnly(false);
+        this.enableChildren();
+    },
+
+    disableChildren: function(){
+            this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(true);
+            this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(true);
+            this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(true);
+    },
+
+    enableChildren: function(){
+            this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(false);
+            this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(false);
+            this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(false);
     },
 
     setMessages: function(errors, warnings) {

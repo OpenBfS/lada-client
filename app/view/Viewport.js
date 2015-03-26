@@ -44,7 +44,20 @@ Ext.define('Lada.view.Viewport', {
                             items: [{
                                 text: 'About',
                                 action: 'about'
-                            }]
+                            }, {
+                                text: 'Zeit',
+                                handler: function(){
+                                    thetime = new Date();
+                                    Ext.Msg.alert("Zeit", "Laut Ihrer lokalen Systemuhr ist es\n"+
+                                            thetime.toString() + "\n\n" +
+                                          "Das entspricht der Serverzeit:\n" +
+                                            thetime.toUTCString() + "\n\n" +
+                                          "Alle Messwerte werden in GMT/UTC auf dem Server gespeichert. " + 
+                                          "Ihr Webbrowser rechnet diese automatisch um."
+                                         );
+                                }
+                            }
+                            ]
                         }
                     }, '->', {
                         xtype: 'box',

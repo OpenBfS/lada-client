@@ -30,6 +30,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
     record: null,
 
+
     initComponent: function() {
         if (this.record === null) {
             Ext.Msg.alert('Keine valide Probe ausgewählt!');
@@ -122,9 +123,18 @@ Ext.define('Lada.view.window.ProbeEdit', {
             },
             scope: this
         });
+
+        // If the Probe is ReadOnly, disable Inputfields and grids
         if (this.record.get('readonly') == true){
             this.down('probeform').setReadOnly(true);
             this.disableChildren();
+
+            //The Owner of a Probe is always allowed to add a Messung.
+            // ToDo ist it required to check if a Status exists?
+            if (this.record.get('owner') == true){
+                //allow to add Messungen
+                this.down('fset[name=messungen]').down('messunggrid').down('button[name=add]').enable();
+            }
         }
     },
 
