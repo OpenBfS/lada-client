@@ -15,6 +15,9 @@ Ext.define('Lada.model.MKommentar', {
     fields: [{
         name: 'id'
     }, {
+        name: 'owner',
+        type: 'boolean'
+    }, {
         name: 'messungsId'
     }, {
         name: 'erzeuger'

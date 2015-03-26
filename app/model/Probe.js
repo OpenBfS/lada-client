@@ -16,6 +16,10 @@ Ext.define('Lada.model.Probe', {
     fields: [{
         name: 'id'
     }, {
+        name: 'owner',
+        type: 'boolean',
+        persist: false
+    }, {
         name: 'probeIdAlt'
     }, {
         name: 'hauptprobenNr'
@@ -113,7 +117,7 @@ Ext.define('Lada.model.Probe', {
         defaultValue: new Date()
     }, {
         name: 'readonly',
-        type: 'bool',
+        type: 'boolean',
         persist: false
     }, {
         name: 'treeModified'

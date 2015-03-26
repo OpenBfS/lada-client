@@ -15,6 +15,9 @@ Ext.define('Lada.model.Ort', {
     fields: [{
         name: 'id'
     }, {
+        name: 'owner',
+        type: 'boolean'
+    }, {
         name: 'ort'
     }, {
         name: 'probeId'

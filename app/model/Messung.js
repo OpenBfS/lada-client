@@ -15,6 +15,9 @@ Ext.define('Lada.model.Messung', {
     fields: [{
         name: 'id'
     }, {
+        name: 'owner',
+        type: 'boolean'
+    }, {
         name: 'probeId'
     }, {
         name: 'mmtId'
