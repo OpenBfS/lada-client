@@ -65,6 +65,20 @@ Ext.define('Lada.controller.grid.Messung', {
                             button.up('window').initData();
                         },
                         failure: function() {
+                            var json = response.request.scope.reader.jsonData;
+                            if (json) {
+                                if (json.message){
+                                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title')
+                                        +' #'+json.message,
+                                        Lada.getApplication().bundle.getMsg(json.message));
+                                } else {
+                                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
+                                        Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                                }
+                            } else {
+                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
+                                    Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                            }
                         }
                     });
                 }

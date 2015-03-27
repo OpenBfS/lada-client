@@ -57,7 +57,7 @@ Ext.define('Lada.controller.form.Ort', {
                     }
 
                     if(json.message){
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('errmsgtitle')
+                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
                             +' #'+json.message,
                             Lada.getApplication().bundle.getMsg(json.message));
                     } else {
