@@ -18,6 +18,10 @@ Ext.define('Lada.model.PKommentar', {
         name: 'owner',
         type: 'boolean'
     }, {
+        name: 'readonly',
+        type: 'boolean',
+        persist: false
+    }, {
         name: 'probeId'
     }, {
         name: 'erzeuger'

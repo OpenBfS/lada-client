@@ -26,6 +26,10 @@ Ext.define('Lada.model.Probenzusatz', {
         name: 'owner',
         type: 'boolean'
     }, {
+        name: 'readonly',
+        type: 'boolean',
+        persist: false
+    }, {
         name: 'beschreibung'
     }, {
         name: 'mehId',

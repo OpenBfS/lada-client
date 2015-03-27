@@ -18,6 +18,10 @@ Ext.define('Lada.model.Messwert', {
         name: 'owner',
         type: 'boolean'
     }, {
+        name: 'readonly',
+        type: 'boolean',
+        persist: false
+    }, {
         name: 'messungsId'
     }, {
         name: 'messgroesseId'

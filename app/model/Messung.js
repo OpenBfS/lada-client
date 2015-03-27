@@ -19,7 +19,8 @@ Ext.define('Lada.model.Messung', {
         type: 'boolean'
     }, {
         name: 'readonly',
-        type: 'boolean'
+        type: 'boolean',
+        persist: false
     }, {
         name: 'probeId'
     }, {

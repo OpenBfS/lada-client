@@ -18,6 +18,10 @@ Ext.define('Lada.model.Status', {
         name: 'owner',
         type: 'boolean'
     }, {
+        name: 'readonly',
+        type: 'boolean',
+        persist: false
+    }, {
         name: 'messungsId'
     }, {
         name: 'erzeuger'

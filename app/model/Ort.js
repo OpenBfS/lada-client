@@ -18,6 +18,10 @@ Ext.define('Lada.model.Ort', {
         name: 'owner',
         type: 'boolean'
     }, {
+        name: 'readonly',
+        type: 'boolean',
+        persist: false
+    }, {
         name: 'ort'
     }, {
         name: 'probeId'
