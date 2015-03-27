@@ -12,7 +12,7 @@ Ext.define('Lada.controller.grid.MKommentar', {
     init: function() {
         this.control({
             'mkommentargrid': {
-                edit: this.edit,
+                edit: this.gridSave,
                 canceledit: this.cancelEdit
             },
             'mkommentargrid button[action=add]': {
@@ -24,7 +24,7 @@ Ext.define('Lada.controller.grid.MKommentar', {
         });
     },
 
-    edit: function(editor, context) {
+    gridSave: function(editor, context) {
         context.record.save({
             success: function(record, response) {
                 context.grid.initData();
