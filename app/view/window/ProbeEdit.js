@@ -49,7 +49,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
         // InitialConfig is the config object passed to the constructor on
         // creation of this window. We need to pass it throuh to the form as
         // we need the "modelId" param to load the correct item.
-
         this.items = [{
             border: 0,
             autoScroll: true,
@@ -109,6 +108,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
     initData: function() {
         this.clearMessages();
+        me = this;
         Ext.ClassManager.get('Lada.model.Probe').load(this.record.get('id'), {
             failure: function(record, action) {
                 // TODO
@@ -119,6 +119,13 @@ Ext.define('Lada.view.window.ProbeEdit', {
             success: function(record, response) {
                 this.down('probeform').setRecord(record);
                 this.record = record;
+                owner = this.record.get('owner');
+
+                if (owner) {
+                    //Always allow to Add Messungen.
+                    me.enableAddMessungen();
+                }
+
                 var json = Ext.decode(response.response.responseText);
                 if (json) {
                     this.setMessages(json.errors, json.warnings);
@@ -131,30 +138,25 @@ Ext.define('Lada.view.window.ProbeEdit', {
         if (this.record.get('readonly') == true){
             this.down('probeform').setReadOnly(true);
             this.disableChildren();
-
-            //The Owner of a Probe is always allowed to add a Messung.
-            // ToDo ist it required to check if a Status exists?
-            // ToDo this doesn't work here because the owner is unknown when this code
-            //   is executed.
-            if (this.record.get('owner') == true){
-                //allow to add Messungen
-                this.down('fset[name=messungen]').down('messunggrid').down('button[name=add]').enable();
-            }
         }
     },
 
+    enableAddMessungen: function(){
+        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(false);
+    },
+
     disableChildren: function(){
-            this.down('fset[name=messungen]').down('messunggrid').setReadOnly(true);
-            this.down('fset[name=orte]').down('ortgrid').setReadOnly(true);
-            this.down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').setReadOnly(true);
-            this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(true);
+        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(true);
+        this.down('fset[name=orte]').down('ortgrid').setReadOnly(true);
+        this.down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').setReadOnly(true);
+        this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(true);
     },
 
     enableChildren: function(){
-            this.down('fset[name=messungen]').down('messunggrid').setReadOnly(false);
-            this.down('fset[name=orte]').down('ortgrid').setReadOnly(false);
-            this.down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').setReadOnly(false);
-            this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(false);
+        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(false);
+        this.down('fset[name=orte]').down('ortgrid').setReadOnly(false);
+        this.down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').setReadOnly(false);
+        this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(false);
     },
 
     setMessages: function(errors, warnings) {
