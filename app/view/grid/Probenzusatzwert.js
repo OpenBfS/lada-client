@@ -30,6 +30,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false,
+            disabled: false,
             pluginId: 'rowedit',
             listeners:{
                 // Make row ineditable when readonly is set to true
@@ -38,7 +39,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 beforeedit: function(e, o) {
                     var readonlywin = o.grid.up('window').record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
-                    if (readonlywin == true || readonlygrid == true)  {
+                    if (readonlywin == true || readonlygrid == true || this.disabled)  {
                         return false;
                     }
                     return true;

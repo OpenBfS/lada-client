@@ -26,18 +26,22 @@ Ext.define('Lada.view.grid.MKommentar', {
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false,
+            disabled: false,
             pluginId: 'rowedit',
             listeners:{
                 // Make row ineditable when readonly is set to true
                 // Normally this would belong into a controller an not the view.
+                // But the RowEditPlugin is not handled there.
                 beforeedit: function(e, o) {
-                    if (o.record.get('readonly') == true) {
+                    var readonlywin = o.grid.up('window').record.get('readonly');
+                    var readonlygrid = o.record.get('readonly');
+                    if (readonlywin == true || readonlygrid == true || this.disabled)  {
                         return false;
                     }
                     return true;
                 }
             }
-         });
+        });
         this.plugins = [this.rowEditing];
         this.dockedItems = [{
             xtype: 'toolbar',
