@@ -86,11 +86,49 @@ Ext.define('Lada.view.form.Ort', {
     },
 
     setMessages: function(errors, warnings) {
+        var key;
+        var element;
+        var content;
+        var i18n = Lada.getApplication().bundle;
+        if (warnings) {
+            for (key in warnings) {
+                element = this.down('component[name=' + key + ']');
+                if (!element) {
+                    continue;
+                }
+                content = warnings[key];
+                var warnText = '';
+                for (var i = 0; i < content.length; i++) {
+                    warnText += i18n.getMsg(content[i].toString()) + '\n';
+                }
+                element.showWarnings(warnText);
+            }
+        }
+        if (errors) {
+            for (key in errors) {
+                element = this.down('component[name=' + key + ']');
+                if (!element) {
+                    continue;
+                }
+                content = errors[key];
+                var errorText = '';
+                for (var i = 0; i < content.length; i++) {
+                    errorText += i18n.getMsg(content[i].toString()) + '\n';
+                }
+                element.showErrors(errorText);
+            }
+        }
     },
 
     clearMessages: function() {
+        //this.down('location[name=ort]').clearWarningOrError();
+        this.down('tfield[name=ortsTyp]').clearWarningOrError();
+        //this.down('textarea[name=ortszusatztext]').clearWarningOrError();
     },
 
     setReadOnly: function(value) {
+        //this.down('location[name=ort]').setReadOnly(value);
+        this.down('tfield[name=ortsTyp]').setReadOnly(value);
+        this.down('textarea[name=ortszusatztext]').setReadOnly(value);
     }
 });

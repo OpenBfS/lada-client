@@ -23,7 +23,7 @@ Ext.define('Lada.view.widget.Messmethode', {
     typeAhead: true,
     minChars: 0,
     layout: 'hbox',
-    
+
     initComponent: function() {
         this.store = Ext.data.StoreManager.get('messmethoden');
         if (!this.store) {

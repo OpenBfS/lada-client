@@ -65,7 +65,7 @@ Ext.define('Lada.view.form.Messung', {
                     }]
                 }],
                 items: [{
-                    xtype: 'textfield',
+                    xtype: 'tfield',
                     name: 'nebenprobenNr',
                     maxLength: 10,
                     margin: '0, 10, 5, 0',
@@ -122,17 +122,53 @@ Ext.define('Lada.view.form.Messung', {
         this.getForm().loadRecord(record);
     },
 
-    setMessages: function() {
-        // TODO this is a stub
+    setMessages: function(errors, warnings) {
+        var key;
+        var element;
+        var content;
+        var i18n = Lada.getApplication().bundle;
+        if (warnings) {
+            for (key in warnings) {
+                element = this.down('component[name=' + key + ']');
+                if (!element) {
+                    continue;
+                }
+                content = warnings[key];
+                var warnText = '';
+                for (var i = 0; i < content.length; i++) {
+                    warnText += i18n.getMsg(content[i].toString()) + '\n';
+                }
+                element.showWarnings(warnText);
+            }
+        }
+        if (errors) {
+            for (key in errors) {
+                element = this.down('component[name=' + key + ']');
+                if (!element) {
+                    continue;
+                }
+                content = errors[key];
+                var errorText = '';
+                for (var i = 0; i < content.length; i++) {
+                    errorText += i18n.getMsg(content[i].toString()) + '\n';
+                }
+                element.showErrors(errorText);
+            }
+        }
     },
 
     clearMessages: function() {
-        // TODO this is a stub
+        this.down('tfield[name=nebenprobenNr]').clearWarningOrError();
+        //this.down('messmethode[name=mmtId]').clearWarningOrError();
+        this.down('datetime[name=messzeitpunkt]').clearWarningOrError();
+        //this.down('numberfield[name=messdauer]').clearWarningOrError();
+        this.down('chkbox[name=fertig]').clearWarningOrError();
+        this.down('chkbox[name=geplant]').clearWarningOrError();
     },
 
     setReadOnly: function(value) {
-        this.down('textfield[name=nebenprobenNr]').setReadOnly(value);
-        this.down('messmethode[name=mmtId]').setReadOnly(value);
+        this.down('tfield[name=nebenprobenNr]').setReadOnly(value);
+        //this.down('messmethode[name=mmtId]').setReadOnly(value);
         this.down('datetime[name=messzeitpunkt]').setReadOnly(value);
         this.down('numberfield[name=messdauer]').setReadOnly(value);
         this.down('chkbox[name=fertig]').setReadOnly(value);

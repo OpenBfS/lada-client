@@ -113,10 +113,49 @@ Ext.define('Lada.view.form.Location', {
     },
 
     setMessages: function(errors, warnings) {
-    },
+        var key;
+        var element;
+        var content;
+        var i18n = Lada.getApplication().bundle;
+        if (warnings) {
+            for (key in warnings) {
+                element = this.down('component[name=' + key + ']');
+                if (!element) {
+                    continue;
+                }
+                content = warnings[key];
+                var warnText = '';
+                for (var i = 0; i < content.length; i++) {
+                    warnText += i18n.getMsg(content[i].toString()) + '\n';
+                }
+                element.showWarnings(warnText);
+            }
+        }
+        if (errors) {
+            for (key in errors) {
+                element = this.down('component[name=' + key + ']');
+                if (!element) {
+                    continue;
+                }
+                content = errors[key];
+                var errorText = '';
+                for (var i = 0; i < content.length; i++) {
+                    errorText += i18n.getMsg(content[i].toString()) + '\n';
+                }
+                element.showErrors(errorText);
+            }
+        }
+     },
 
     clearMessages: function() {
-    },
+        this.down('tfield[name=beschreibung]').clearWarningOrError();
+        this.down('tfield[name=bezeichnung]').clearWarningOrError();
+        this.down('staat[name=staatId]').clearWarningOrError();
+        this.down('verwaltungseinheit[name=verwaltungseinheitId]').clearWarningOrError();
+        //this.down('numberfield[name=longitude]').clearWarningOrError();
+        //this.down('numberfield[name=latitude]').clearWarningOrError();
+        //this.down('numberfield[name=hoeheLand]').clearWarningOrError();
+     },
 
     setReadOnly: function(value) {
         this.down('tfield[name=beschreibung]').setReadOnly(value);
