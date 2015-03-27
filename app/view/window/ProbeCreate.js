@@ -59,5 +59,15 @@ Ext.define('Lada.view.window.ProbeCreate', {
 
     clearMessages: function() {
         this.down('probeform').clearMessages();
+    },
+
+    disableChildren: function(){
+        //intentionally!
+        return true;
+    },
+
+    enableChildren: function(){
+        //intentionally!
+        return true;
     }
 });

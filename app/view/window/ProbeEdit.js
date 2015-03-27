@@ -146,7 +146,11 @@ Ext.define('Lada.view.window.ProbeEdit', {
     },
 
     disableChildren: function(){
-        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(true);
+        if (!this.record.get('owner')) {
+            // Disable only when the User is not the owner of the Probe
+            // Works in symbiosis with success callback some lines above.
+            this.down('fset[name=messungen]').down('messunggrid').setReadOnly(true);
+        }
         this.down('fset[name=orte]').down('ortgrid').setReadOnly(true);
         this.down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').setReadOnly(true);
         this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(true);

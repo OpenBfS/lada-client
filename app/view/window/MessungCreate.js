@@ -59,6 +59,15 @@ Ext.define('Lada.view.window.MessungCreate', {
     },
     clearMessages: function() {
         //todo this is a stub
-    }
+    },
 
+    disableChildren: function(){
+        //intentionally!
+        return true;
+    },
+
+    enableChildren: function(){
+        //intentionally!
+        return true;
+    }
 });

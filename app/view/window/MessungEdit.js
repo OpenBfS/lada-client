@@ -165,10 +165,10 @@ Ext.define('Lada.view.window.MessungEdit', {
     },
 
     setMessages: function(errors, warnings) {
-        //todo this is a stub
+        this.down('messungform').setMessages(errors, warnings);
     },
     clearMessages: function() {
-        //todo this is a stub
+        this.down('messungform').clearMessages();
     }
 
 });
