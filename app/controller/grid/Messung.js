@@ -64,7 +64,7 @@ Ext.define('Lada.controller.grid.Messung', {
                         success: function() {
                             button.up('window').initData();
                         },
-                        failure: function() {
+                        failure: function(request, response) {
                             var json = response.request.scope.reader.jsonData;
                             if (json) {
                                 if (json.message){
