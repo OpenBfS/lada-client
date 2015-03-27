@@ -26,12 +26,25 @@ Ext.define('Lada.controller.grid.Messwert', {
 
     gridSave: function(editor, context) {
         context.record.save({
-            success: function() {
+            success: function(request, response) {
                 context.grid.store.reload();
                 context.grid.up('window').initData();
             },
-            failure: function() {
-                // TODO
+            failure: function(request, response) {
+                var json = response.request.scope.reader.jsonData;
+                if (json) {
+                    if (json.message){
+                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
+                            +' #'+json.message,
+                            Lada.getApplication().bundle.getMsg(json.message));
+                    } else {
+                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
+                            Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                    }
+                } else {
+                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
+                        Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                }
             }
         });
     },
@@ -61,8 +74,21 @@ Ext.define('Lada.controller.grid.Messwert', {
                         button.up('window').initData();
                         grid.initData();
                     },
-                    failure: function() {
-                        // TODO
+                    failure: function(request, response) {
+                        var json = response.request.scope.reader.jsonData;
+                        if (json) {
+                            if (json.message){
+                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title')
+                                    +' #'+json.message,
+                                    Lada.getApplication().bundle.getMsg(json.message));
+                            } else {
+                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
+                                    Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                            }
+                        } else {
+                            Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
+                                Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                        }
                     }
                 });
             }

@@ -63,10 +63,16 @@ Ext.define('Lada.controller.form.Probe', {
                     }
 
                     if(json.message){
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('errmsgtitle')
-                            +' '+json.message,
+                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
+                            +' #'+json.message,
                             Lada.getApplication().bundle.getMsg(json.message));
+                    } else {
+                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
+                            Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
                     }
+                } else {
+                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
+                        Lada.getApplication().bundle.getMsg('err.msg.response.body'));
                 }
             }
         });

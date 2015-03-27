@@ -59,7 +59,21 @@ Ext.define('Lada.controller.grid.Ort', {
                     success: function() {
                         button.up('window').initData();
                     },
-                    failure: function() {
+                    failure: function(request, response) {
+                        var json = response.request.scope.reader.jsonData;
+                        if (json) {
+                            if (json.message){
+                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title')
+                                    +' #'+json.message,
+                                    Lada.getApplication().bundle.getMsg(json.message));
+                            } else {
+                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
+                                    Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                            }
+                        } else {
+                            Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
+                                Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                        }
                     }
                 });
             }

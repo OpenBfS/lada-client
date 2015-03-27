@@ -12,7 +12,7 @@ Ext.define('Lada.controller.grid.PKommentar', {
     init: function() {
         this.control({
             'pkommentargrid': {
-                edit: this.edit,
+                edit: this.gridSave,
                 canceledit: this.cancelEdit
             },
             'pkommentargrid button[action=add]': {
@@ -24,14 +24,27 @@ Ext.define('Lada.controller.grid.PKommentar', {
         });
     },
 
-    edit: function(editor, context) {
+    gridSave: function(editor, context) {
         context.record.save({
             success: function() {
                 context.grid.store.reload();
                 context.grid.up('window').initData();
             },
-            failure: function() {
-                // TODO
+            failure: function(request, response) {
+                var json = response.request.scope.reader.jsonData;
+                if (json) {
+                    if (json.message){
+                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
+                            +' #'+json.message,
+                            Lada.getApplication().bundle.getMsg(json.message));
+                    } else {
+                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
+                            Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                    }
+                } else {
+                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
+                        Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                }
             }
         });
     },
@@ -59,8 +72,21 @@ Ext.define('Lada.controller.grid.PKommentar', {
                     success: function() {
                         button.up('window').initData();
                     },
-                    failure: function() {
-                        // TODO
+                    failure: function(request, response) {
+                        var json = response.request.scope.reader.jsonData;
+                        if (json) {
+                            if (json.message){
+                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title')
+                                    +' #'+json.message,
+                                    Lada.getApplication().bundle.getMsg(json.message));
+                            } else {
+                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
+                                    Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                            }
+                        } else {
+                            Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
+                                Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                        }
                     }
                 });
             }
