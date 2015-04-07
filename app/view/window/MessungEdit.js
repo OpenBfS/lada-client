@@ -49,6 +49,17 @@ Ext.define('Lada.view.window.MessungEdit', {
             scope: this,
             handler: this.close
         }];
+
+        // add listeners to change the window appearence when it becomes inactive
+        this.on({
+            activate: function(){
+                this.getEl().removeCls('window-inactive');
+            },
+            deactivate: function(){
+                this.getEl().addCls('window-inactive');
+            }
+        });
+
         this.width = 700;
         this.height = Ext.getBody().getViewSize().height - 30;
 

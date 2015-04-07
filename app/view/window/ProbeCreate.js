@@ -33,6 +33,17 @@ Ext.define('Lada.view.window.ProbeCreate', {
             scope: this,
             handler: this.close
         }];
+
+        // add listeners to change the window appearence when it becomes inactive
+        this.on({
+            activate: function(){
+                this.getEl().removeCls('window-inactive');
+            },
+            deactivate: function(){
+                this.getEl().addCls('window-inactive');
+            }
+        });
+
         this.width = 700;
         // InitialConfig is the config object passed to the constructor on
         // creation of this window. We need to pass it throuh to the form as

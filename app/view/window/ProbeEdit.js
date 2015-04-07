@@ -30,7 +30,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
     record: null,
 
-
     initComponent: function() {
         if (this.record === null) {
             Ext.Msg.alert('Keine valide Probe ausgewählt!');
@@ -45,6 +44,17 @@ Ext.define('Lada.view.window.ProbeEdit', {
             handler: this.close
         }];
         this.width = 700;
+
+        // add listeners to change the window appearence when it becomes inactive
+        this.on({
+            activate: function(){
+                this.getEl().removeCls('window-inactive');
+            },
+            deactivate: function(){
+                this.getEl().addCls('window-inactive');
+            }
+        });
+
         this.height = Ext.getBody().getViewSize().height - 30;
         // InitialConfig is the config object passed to the constructor on
         // creation of this window. We need to pass it throuh to the form as

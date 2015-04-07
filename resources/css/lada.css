@@ -13,3 +13,5 @@
   background-position: bottom;
   border-color: #FF0000;
 }
+
+.window-inactive .x-window-header-text {color: #a9a9a9;}
