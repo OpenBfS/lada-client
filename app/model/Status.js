@@ -40,7 +40,21 @@ Ext.define('Lada.model.Status', {
     }, {
         name: 'skommentar'
     }, {
-        name: 'treeModified'
+        name: 'treeModified',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
+    }, {
+        name: 'parentModified',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
     }],
 
     idProperty: 'id',

@@ -57,7 +57,21 @@ Ext.define('Lada.model.Messung', {
     }, {
         name: 'messungsIdAlt'
     }, {
-        name: 'treeModified'
+        name: 'treeModified',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
+    }, {
+        name: 'parentModified',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
     }],
 
     idProperty: 'id',

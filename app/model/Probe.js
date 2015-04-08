@@ -120,7 +120,13 @@ Ext.define('Lada.model.Probe', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'treeModified'
+        name: 'treeModified',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
     }],
 
     idProperty: 'id',

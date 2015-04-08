@@ -45,7 +45,21 @@ Ext.define('Lada.model.Zusatzwert', {
         },
         defaultValue: new Date()
     }, {
-        name: 'treeModified'
+        name: 'treeModified',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
+    }, {
+        name: 'parentModified',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
     }],
 
     idProperty: 'id',
