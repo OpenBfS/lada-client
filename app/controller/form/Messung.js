@@ -104,7 +104,10 @@ Ext.define('Lada.controller.form.Messung', {
         else {
             form.owner.down('button[action=save]').setDisabled(true);
             form.owner.down('button[action=discard]').setDisabled(true);
-            form.owner.up('window').enableChildren();
+            //Only enable children if the form was not readOnly
+            if (!form.getRecord().get('readonly')) {
+                form.owner.up('window').enableChildren();
+            }
         }
     }
 });

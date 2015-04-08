@@ -172,5 +172,9 @@ Ext.define('Lada.view.form.Messung', {
         this.down('datetime[name=messzeitpunkt]').setReadOnly(value);
         this.down('numberfield[name=messdauer]').setReadOnly(value);
         this.down('chkbox[name=geplant]').setReadOnly(value);
+        if (!this.getForm().getRecord().get('owner')) {
+        //Only set this Field to Readonly when the User is NOT the Owner of the Record.
+            this.down('chkbox[name=fertig]').setReadOnly(value);
+        }
     }
 });

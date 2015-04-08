@@ -19,6 +19,10 @@ Ext.application({
     // references!
     name: 'Lada',
 
+    username: '',
+    userroles: '',
+    logintime: '',
+
     // Setting up translations. This is done using a ext-plgin which can be
     // found on https://github.com/elmasse/Ext.i18n.Bundle
     requires: [
@@ -98,13 +102,18 @@ Ext.application({
                 'Es konnte keine erfolgreiche Verbindung zum lada server aufgebaut werden.');
     },
 
-    onLoginSuccess: function() {
+    onLoginSuccess: function(response) {
         /* Strip out the openid query params to look nicers. */
         window.history.pushState(this.name, this.name, window.location.pathname);
 
         Ext.create('Lada.view.Viewport');
 
-        /* Todo maybe parse username and such from login service response */
+        /* Parse Username and Timestamp */
+        var json = Ext.decode(response.responseText);
+        this.username = json.data.username;
+        this.userroles = json.data.roles;
+        this.logintime = json.data.servertime;
+
         Ext.create('Lada.store.Datenbasis', {
             storeId: 'datenbasis'
         });
