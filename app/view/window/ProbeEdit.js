@@ -122,8 +122,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
         Ext.ClassManager.get('Lada.model.Probe').load(this.record.get('id'), {
             failure: function(record, action) {
                 // TODO
-                console.log("An unhandled Failure occured. See following Response and Record");
-                console.log(response);
+                console.log('An unhandled Failure occured. See following Response and Record');
+                console.log(action);
                 console.log(record);
              },
             success: function(record, response) {
@@ -154,11 +154,11 @@ Ext.define('Lada.view.window.ProbeEdit', {
         });
     },
 
-    enableAddMessungen: function(){
+    enableAddMessungen: function() {
         this.down('fset[name=messungen]').down('messunggrid').setReadOnly(false);
     },
 
-    disableChildren: function(){
+    disableChildren: function() {
         if (!this.record.get('owner')) {
             // Disable only when the User is not the owner of the Probe
             // Works in symbiosis with success callback some lines above.
@@ -169,7 +169,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(true);
     },
 
-    enableChildren: function(){
+    enableChildren: function() {
         this.down('fset[name=messungen]').down('messunggrid').setReadOnly(false);
         this.down('fset[name=orte]').down('ortgrid').setReadOnly(false);
         this.down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').setReadOnly(false);

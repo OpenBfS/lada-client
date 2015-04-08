@@ -65,19 +65,21 @@ Ext.define('Lada.controller.form.Messung', {
                 formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
                 var json = response.request.scope.reader.jsonData;
                 if (json) {
-                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0) {
+                    if (json.errors.totalCount > 0 || json.warnings.totalCount > 0) {
                         formPanel.setMessages(json.errors, json.warnings);
                     }
 
-                    if(json.message){
+                    if (json.message) {
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
-                            +' #'+json.message,
+                            + ' #' + json.message,
                             Lada.getApplication().bundle.getMsg(json.message));
-                    } else {
+                    }
+                    else {
                          Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
                             Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
                     }
-                } else {
+                }
+                else {
                     Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
                         Lada.getApplication().bundle.getMsg('err.msg.response.body'));
                 }

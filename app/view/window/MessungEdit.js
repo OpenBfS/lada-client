@@ -111,18 +111,18 @@ Ext.define('Lada.view.window.MessungEdit', {
         Ext.ClassManager.get('Lada.model.Messung').load(this.record.get('id'), {
             failure: function(record, response) {
                 // TODO
-                console.log("An unhandled Failure occured. See following Response and Record");
+                console.log('An unhandled Failure occured. See following Response and Record');
                 console.log(response);
                 console.log(record);
             },
             success: function(record, response) {
                 var me = this;
-                if (this.probe.get('treeModified') < record.get('treeModified')) {
+                if (this.probe.get('treeModified') < record.get('parentModified')) {
                     Ext.Msg.show({
                         title: 'Probe nicht aktuell!',
-                        msg: 'Die zugehörige Probe wurde verändert.\n'+
-                            'Möchten Sie zu der Probe zurückkehren und neu laden?\n'+
-                            'Ohne das erneute Laden der Probe wird das Speichern'+
+                        msg: 'Die zugehörige Probe wurde verändert.\n' +
+                            'Möchten Sie zu der Probe zurückkehren und neu laden?\n' +
+                            'Ohne das erneute Laden der Probe wird das Speichern' +
                             ' der Messung nicht möglich sein.',
                         buttons: Ext.Msg.OKCANCEL,
                         icon: Ext.Msg.WARNING,
@@ -156,23 +156,23 @@ Ext.define('Lada.view.window.MessungEdit', {
         });
     },
 
-    disableForm: function(){
+    disableForm: function() {
         this.down('messungform').setReadOnly(true);
         this.disableChildren();
     },
 
-    enableForm: function(){
+    enableForm: function() {
         this.down('messungform').setReadOnly(false);
         this.enableChildren();
     },
 
-    disableChildren: function(){
+    disableChildren: function() {
             this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(true);
             this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(true);
             this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(true);
     },
 
-    enableChildren: function(){
+    enableChildren: function() {
             this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(false);
             this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(false);
             this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(false);
