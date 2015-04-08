@@ -6,15 +6,10 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
+// This file adds or corrects translations.
 
-// Require all Libraries from de/
-
-Ext.define("Lada.override.i18n.DE", {
-    requires:[
-       'Lada.override.i18n.de.toolbar.Paging',
-       'Lada.override.i18n.de.picker.Date',
-       'Lada.override.i18n.de.RowEditor',
-       'Lada.override.i18n.de.LoadMask'
-    ]
+Ext.define("Lada.override.i18n.de.LoadMask", {
+    override: "Ext.LoadMask",
+    loadingText: "Lade Daten...",
+    msg: "Lade Daten..."
 });
-
