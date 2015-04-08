@@ -25,6 +25,7 @@ Ext.define('Lada.controller.form.Messung', {
 
     save: function(button) {
         var formPanel = button.up('form');
+        formPanel.setLoading(true);
         var data = formPanel.getForm().getFieldValues(true);
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
@@ -57,6 +58,7 @@ Ext.define('Lada.controller.form.Messung', {
                         win.initData();
                     }
                 }
+                formPanel.setLoading(false);
             },
             failure: function(record, response) {
                 button.setDisabled(true);
@@ -83,6 +85,7 @@ Ext.define('Lada.controller.form.Messung', {
                     Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
                         Lada.getApplication().bundle.getMsg('err.msg.response.body'));
                 }
+                formPanel.setLoading(false);
             }
         });
     },

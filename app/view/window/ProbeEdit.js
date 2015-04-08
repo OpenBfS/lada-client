@@ -117,10 +117,12 @@ Ext.define('Lada.view.window.ProbeEdit', {
     },
 
     initData: function() {
+        this.setLoading(true);
         this.clearMessages();
         me = this;
         Ext.ClassManager.get('Lada.model.Probe').load(this.record.get('id'), {
             failure: function(record, action) {
+                me.setLoading(false);
                 // TODO
                 console.log('An unhandled Failure occured. See following Response and Record');
                 console.log(action);
@@ -149,6 +151,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                     this.down('probeform').setReadOnly(false);
                     this.enableChildren();
                 }
+                me.setLoading(false);
             },
             scope: this
         });
