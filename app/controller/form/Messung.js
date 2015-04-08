@@ -39,10 +39,18 @@ Ext.define('Lada.controller.form.Messung', {
                     formPanel.clearMessages();
                     formPanel.setRecord(record);
                     formPanel.setMessages(json.errors, json.warnings);
+                    formPanel.up('window').initData();
                     formPanel.up('window').grid.store.reload();
+                    var parentWin = button.up('window').grid.up('window');
+                    parentWin.initData();
                     if (response.action === 'create' && json.success) {
-                        button.up('window').close();
+                        var oldWin = button.up('window');
+                        var probe = oldWin.record;
+                        oldWin.close();
                         var win = Ext.create('Lada.view.window.MessungEdit', {
+                            probe: probe,
+                            parentWindow: parentWin,
+                            grid: oldWin.grid,
                             record: record
                         });
                         win.show();

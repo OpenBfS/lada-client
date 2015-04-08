@@ -168,10 +168,9 @@ Ext.define('Lada.view.form.Messung', {
 
     setReadOnly: function(value) {
         this.down('tfield[name=nebenprobenNr]').setReadOnly(value);
-        //this.down('messmethode[name=mmtId]').setReadOnly(value);
+        this.down('messmethode[name=mmtId]').setReadOnly(value);
         this.down('datetime[name=messzeitpunkt]').setReadOnly(value);
         this.down('numberfield[name=messdauer]').setReadOnly(value);
-        this.down('chkbox[name=fertig]').setReadOnly(value);
         this.down('chkbox[name=geplant]').setReadOnly(value);
     }
 });

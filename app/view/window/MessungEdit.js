@@ -145,12 +145,15 @@ Ext.define('Lada.view.window.MessungEdit', {
                 if (json) {
                     this.setMessages(json.errors, json.warnings);
                 }
+                if (this.record.get('readonly') === true) {
+                    this.disableForm();
+                }
+                else {
+                    this.enableForm();
+                }
             },
             scope: this
         });
-        if (this.record.get('readonly') == true){
-            this.disableForm();
-        }
     },
 
     disableForm: function(){

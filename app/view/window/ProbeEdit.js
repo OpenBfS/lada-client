@@ -140,15 +140,18 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 if (json) {
                     this.setMessages(json.errors, json.warnings);
                 }
+                // If the Probe is ReadOnly, disable Inputfields and grids
+                if (this.record.get('readonly') === true) {
+                    this.down('probeform').setReadOnly(true);
+                    this.disableChildren();
+                }
+                else {
+                    this.down('probeform').setReadOnly(false);
+                    this.enableChildren();
+                }
             },
             scope: this
         });
-
-        // If the Probe is ReadOnly, disable Inputfields and grids
-        if (this.record.get('readonly') == true){
-            this.down('probeform').setReadOnly(true);
-            this.disableChildren();
-        }
     },
 
     enableAddMessungen: function(){
