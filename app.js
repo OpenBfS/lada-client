@@ -19,10 +19,6 @@ Ext.application({
     // references!
     name: 'Lada',
 
-    username: '',
-    userroles: '',
-    logintime: '',
-
     // Setting up translations. This is done using a ext-plgin which can be
     // found on https://github.com/elmasse/Ext.i18n.Bundle
     requires: [
@@ -60,6 +56,10 @@ Ext.application({
 
     // Start the application.
     launch: function() {
+        Lada.username = '';
+        Lada.userroles = '';
+        Lada.logintime = '';
+
         var queryString = document.location.href.split('?')[1];
         if (queryString) {
             Lada.openIDParams = queryString;
@@ -110,9 +110,9 @@ Ext.application({
 
         /* Parse Username and Timestamp */
         var json = Ext.decode(response.responseText);
-        this.username = json.data.username;
-        this.userroles = json.data.roles;
-        this.logintime = json.data.servertime;
+        Lada.username = json.data.username;
+        Lada.userroles = json.data.roles;
+        Lada.logintime = json.data.servertime;
 
         Ext.create('Lada.store.Datenbasis', {
             storeId: 'datenbasis'

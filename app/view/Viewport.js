@@ -45,16 +45,28 @@ Ext.define('Lada.view.Viewport', {
                                 text: 'About',
                                 action: 'about'
                             }, {
-                                text: 'Zeit',
+                                text: 'Anmeldeinformationen',
                                 handler: function(){
-                                    thetime = new Date();
-                                    Ext.Msg.alert("Zeit", "Laut Ihrer lokalen Systemuhr ist es\n"+
-                                            thetime.toString() + "\n\n" +
-                                          "Das entspricht der Serverzeit:\n" +
-                                            thetime.toUTCString() + "\n\n" +
-                                          "Alle Messwerte werden in GMT/UTC auf dem Server gespeichert. " + 
-                                          "Ihr Webbrowser rechnet diese automatisch um."
-                                         );
+                                    logintime = new Date(Lada.logintime);
+                                    Ext.Msg.alert("Anmeldeinformationen",
+                                        "<p>"
+                                        + "Sie sind angemeldet mit der Kennung:"
+                                        + "<br />"
+                                        + Lada.username
+                                        + "</p>"
+                                        + "<p>"
+                                        + "Sie sind Mitglied der folgenden "
+                                        + "Gruppen:"
+                                        + "<br />"
+                                        + Lada.userroles
+                                        + "</p>"
+                                        + "<p>"
+                                        + "<br/>"
+                                        + "Die Anmeldung wurde durchgeführt um:"
+                                        + "<br />"
+                                        +  Ext.Date.format(logintime, 'd.m.Y H:i:s P')
+                                        + "</p>"
+                                       );
                                 }
                             }
                             ]
