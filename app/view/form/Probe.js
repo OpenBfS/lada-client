@@ -233,8 +233,9 @@ Ext.define('Lada.view.form.Probe', {
                         align: 'stretch'
                     },
                     items: [{
-                        xtype: 'fieldset',
+                        xtype: 'fset',
                         title: 'Probenentnahme',
+                        name: 'entnahmePeriod',
                         anchor: '100%',
                         width: '50%',
                         margin: '0, 5, 5, 5',
@@ -248,18 +249,21 @@ Ext.define('Lada.view.form.Probe', {
                             labelWidth: 90,
                             anchor: '100%',
                             name: 'probeentnahmeBeginn',
-                            format: 'd.m.Y H:i'
+                            format: 'd.m.Y H:i',
+                            period: 'start'
                         }, {
                             xtype: 'datetime',
                             fieldLabel: 'Ende',
                             labelWidth: 90,
                             anchor: '100%',
                             name: 'probeentnahmeEnde',
-                            format: 'd.m.Y H:i'
+                            format: 'd.m.Y H:i',
+                            period: 'end'
                         }]
                     }, {
-                        xtype: 'fieldset',
+                        xtype: 'fset',
                         title: 'Sollzeitraum',
+                        name: 'sollzeitPeriod',
                         anchor: '100%',
                         width: '50%',
                         margin: '0, 5, 5, 5',
@@ -273,14 +277,16 @@ Ext.define('Lada.view.form.Probe', {
                             labelWidth: 90,
                             anchor: '100%',
                             name: 'solldatumBeginn',
-                            format: 'd.m.Y H:i'
+                            format: 'd.m.Y H:i',
+                            period: 'start'
                         }, {
                             xtype: 'datetime',
                             fieldLabel: 'Bis',
                             labelWidth: 90,
                             anchor: '100%',
                             name: 'solldatumEnde',
-                            format: 'd.m.Y H:i'
+                            format: 'd.m.Y H:i',
+                            period: 'end'
                         }]
                     }]
                 }]
@@ -290,6 +296,7 @@ Ext.define('Lada.view.form.Probe', {
     },
 
     setRecord: function(record) {
+        this.clearMessages();
         this.getForm().loadRecord(record);
     },
 
@@ -343,6 +350,8 @@ Ext.define('Lada.view.form.Probe', {
         this.down('datetime[name=solldatumBeginn]').clearWarningOrError();
         this.down('datetime[name=solldatumEnde]').clearWarningOrError();
         //this.down('numberfield[name=probeNehmerId]').clearWarningOrError();
+        this.down('fset[name=entnahmePeriod]').clearMessages();
+        this.down('fset[name=sollzeitPeriod]').clearMessages();
     },
 
     setReadOnly: function(value) {

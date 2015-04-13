@@ -14,8 +14,10 @@ Ext.define('Lada.view.widget.base.FieldSet', {
     origColor: '',
     errorText: '',
     warningText: '',
+    tooltip: null,
 
     showWarningOrError: function(warning, warningText, error, errorText) {
+        this.clearMessages(); //Clear Errors and Warning first
         var ndx = 0;
         if (this.collapsible === true) {
             ndx = 1;
@@ -39,10 +41,15 @@ Ext.define('Lada.view.widget.base.FieldSet', {
                     '<img src="resources/img/emblem-important.png" width="13" height="13" />  ' +
                     this.plainTitle;
             if (errorText) {
-                Ext.create('Ext.tip.ToolTip', {
-                    target: this.getEl().dom.firstChild.firstChild.firstChild.children[ndx],
-                    html: errorText
-                });
+                if (!this.tooltip) {
+                    Ext.create('Ext.tip.ToolTip', {
+                        target: this.getEl().dom.firstChild.firstChild.firstChild.children[ndx],
+                        html: errorText
+                    });
+                }
+                else {
+                    tooltip.html = errorText;
+                }
             }
             return;
         }
@@ -53,10 +60,15 @@ Ext.define('Lada.view.widget.base.FieldSet', {
                     '<img src="resources/img/dialog-warning.png" width="13" height="13" />  ' +
                     this.plainTitle;
             if (warningText) {
-                Ext.create('Ext.tip.ToolTip', {
-                    target: this.getEl().dom.firstChild.firstChild.firstChild.children[ndx],
-                    html: warningText
-                });
+                if (!this.tooltip) {
+                    Ext.create('Ext.tip.ToolTip', {
+                        target: this.getEl().dom.firstChild.firstChild.firstChild.children[ndx],
+                        html: warningText
+                    });
+                }
+                else {
+                    tooltip.html = warningText;
+                }
             }
             return;
         }

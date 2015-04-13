@@ -17,7 +17,7 @@ Ext.define('Lada.view.widget.base.Datetime', {
     ],
 
     layout: 'hbox',
-
+    tooltip: null,
     border: 0,
 
     margin: '0, 0, 5, 0',
@@ -31,7 +31,8 @@ Ext.define('Lada.view.widget.base.Datetime', {
             flex: 1,
             name: this.name,
             msgTarget: 'none',
-            listeners: this.listeners
+            listeners: this.listeners,
+            period: this.period
         });
         this.items = [dateField, {
             xtype: 'image',
@@ -52,11 +53,12 @@ Ext.define('Lada.view.widget.base.Datetime', {
     },
 
     showWarnings: function(warnings) {
+        this.clearWarningOrError();
         var img = this.down('image[name=warnImg]');
-        Ext.create('Ext.tip.ToolTip', {
+        this.tooltip = (!this.tooltip) ? Ext.create('Ext.tip.ToolTip', {
             target: img.getEl(),
             html: warnings
-        });
+        }) : this.tooltip.html = warnings;
         this.down('datetimefield').invalidCls = 'x-lada-warning';
         this.down('datetimefield').markInvalid('');
         img.show();
@@ -69,13 +71,14 @@ Ext.define('Lada.view.widget.base.Datetime', {
     },
 
     showErrors: function(errors) {
+        this.clearWarningOrError();
         var img = this.down('image[name=errorImg]');
         var warnImg = this.down('image[name=warnImg]');
         warnImg.hide();
-        Ext.create('Ext.tip.ToolTip', {
+        this.tooltip = (!this.tooltip) ? Ext.create('Ext.tip.ToolTip', {
             target: img.getEl(),
             html: errors
-        });
+        }) : this.tooltip.html = errors;
         this.down('datetimefield').invalidCls = 'x-lada-error';
         this.down('datetimefield').markInvalid('');
         img.show();
@@ -88,6 +91,7 @@ Ext.define('Lada.view.widget.base.Datetime', {
     },
 
     clearWarningOrError: function() {
+        this.down('datetimefield').clearInvalid();
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
     },

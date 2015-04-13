@@ -19,6 +19,9 @@ Ext.define('Lada.controller.form.Probe', {
             },
             'probeform': {
                 dirtychange: this.dirtyForm
+            },
+            'probeform [xtype="datetime"] field': {
+                blur: this.checkDate
             }
         });
     },
@@ -93,6 +96,45 @@ Ext.define('Lada.controller.form.Probe', {
             form.owner.down('button[action=save]').setDisabled(true);
             form.owner.down('button[action=discard]').setDisabled(true);
             form.owner.up('window').enableChildren(); // todo this might not be true in all cases
+        }
+    },
+
+    checkDate: function(field) {
+        var now = Date.now();
+        var w = 0 //amount of warnings
+        var e = 0 //errors
+        var emsg = '';
+        var wmsg = '';
+
+        if (field.getValue() > now){
+            wmsg += Lada.getApplication().bundle.getMsg('661');
+            w++;
+        }
+        // This field might be a field within a DateTime-Period.
+        // Search for Partner field (period: end/start) and validate
+        // End Before Start validation
+        if (field.period) {
+            var partners = new Array();
+                partners[0] = field.up('fieldset').down('datetime[period=start]').down().getValue()
+                partners[1] = field.up('fieldset').down('datetime[period=end]').down().getValue()
+            if (partners[0] && partners[1] && partners[0] > partners [1]) {
+                var msg = Lada.getApplication().bundle.getMsg('662');
+                field.up('fieldset').showWarningOrError(true, msg, false, '');
+            } else {
+                field.up('fieldset').clearMessages();
+            }
+        }
+
+        if (w) {
+            field.up().showWarnings(wmsg);
+        }
+        if (e) {
+            field.up().showErrors(emsg);
+        }
+
+        // Clear Warnings or Errors if none Are Present
+        if (w == 0 && e == 0) {
+            field.up().clearWarningOrError();
         }
     }
 });
