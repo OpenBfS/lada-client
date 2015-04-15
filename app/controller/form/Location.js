@@ -24,7 +24,7 @@ Ext.define('Lada.controller.form.Location', {
                 change: this.updateFeatureLatitude
             },
             'locationform numberfield[name=longitude]': {
-                change: this.updateFeatureLongitude,
+                change: this.updateFeatureLongitude
             }
         });
     },

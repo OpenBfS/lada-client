@@ -72,7 +72,7 @@ Ext.define('Lada.view.grid.MKommentar', {
                 displayField: 'messStelle',
                 valueField: 'id',
                 allowBlank: false,
-                editable: false,
+                editable: false
             }
         }, {
             header: 'Datum',

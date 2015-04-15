@@ -71,21 +71,21 @@ Ext.define('Lada.view.form.Messung', {
                     margin: '0, 10, 5, 0',
                     fieldLabel: 'Nebenprobennr.',
                     width: 300,
-                    labelWidth: 100,
+                    labelWidth: 100
                 }, {
                     xtype: 'messmethode',
                     name: 'mmtId',
                     margin: '0, 10, 5, 0',
                     fieldLabel: 'Messmethode',
                     width: 300,
-                    labelWidth: 100,
+                    labelWidth: 100
                 }, {
                     xtype: 'datetime',
                     name: 'messzeitpunkt',
                     margin: '0, 10, 5, 0',
                     fieldLabel: 'Messzeitpunkt',
                     width: 300,
-                    labelWidth: 100,
+                    labelWidth: 100
                 }, {
                     xtype: 'numberfield',
                     allowDecimals: false,
@@ -97,21 +97,21 @@ Ext.define('Lada.view.form.Messung', {
                     margin: '0, 10, 5, 0',
                     fieldLabel: 'Messdauer',
                     width: 300,
-                    labelWidth: 100,
+                    labelWidth: 100
                 }, {
                     xtype: 'chkbox',
                     name: 'fertig',
                     margin: '0, 10, 5, 0',
                     fieldLabel: 'Fertig',
                     width: 300,
-                    labelWidth: 100,
+                    labelWidth: 100
                 }, {
                     xtype: 'chkbox',
                     name: 'geplant',
                     margin: '0, 10, 5, 0',
                     fieldLabel: 'Geplant',
                     width: 300,
-                    labelWidth: 100,
+                    labelWidth: 100
                 }]
             }]
         }];

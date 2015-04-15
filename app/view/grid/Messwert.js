@@ -95,7 +95,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 allowBlank: false,
                 maxLength: 10,
                 allowExponential: false,
-                enforceMaxLength: true,
+                enforceMaxLength: true
             }
         }, {
             header: 'Messeinheit',
@@ -136,7 +136,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 allowBlank: false,
                 maxLength: 10,
                 allowExponential: false,
-                enforceMaxLength: true,
+                enforceMaxLength: true
             }
         }, {
             header: 'Grenzwertüberschreitung',

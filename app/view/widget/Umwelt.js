@@ -15,6 +15,7 @@ Ext.define('Lada.view.widget.Umwelt' ,{
     store: 'Umwelt',
     displayField: 'id',
     valueField: 'id',
+    editable: this.editable || false,
     emptyText: 'Wählen Sie einen Umweltbereich',
     // Enable filtering of comboboxes
     autoSelect: false,

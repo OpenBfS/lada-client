@@ -108,20 +108,20 @@ Ext.define('Lada.view.form.Probe', {
                                 name: 'datenbasisId',
                                 fieldLabel: 'Datenbasis',
                                 anchor: '100%',
-                                labelWidth: 105,
+                                labelWidth: 105
                             }, {
                                 xtype: 'betriebsart',
                                 name: 'baId',
                                 fieldLabel: 'Betriebsart',
                                 anchor: '100%',
-                                labelWidth: 105,
+                                labelWidth: 105
                             }, {
                                 xtype: 'testdatensatz',
                                 name: 'test',
                                 fieldLabel: 'Testdatensatz',
                                 anchor: '100%',
                                 labelWidth: 105,
-                                allowBlank: false,
+                                allowBlank: false
                             }, {
                                 xtype: 'probenart',
                                 editable: false,
@@ -129,14 +129,14 @@ Ext.define('Lada.view.form.Probe', {
                                 fieldLabel: 'Probenart',
                                 anchor: '100%',
                                 labelWidth: 105,
-                                allowBlank: false,
+                                allowBlank: false
                             }, {
                                 xtype: 'numberfield',
                                 allowDecimals: false,
                                 name: 'probeNehmerId',
                                 fieldLabel: 'Probennehmer',
                                 anchor: '100%',
-                                labelWidth: 105,
+                                labelWidth: 105
                             }, {
                                 xtype: 'netzbetreiber',
                                 name: 'netzbetreiberId',
@@ -144,13 +144,13 @@ Ext.define('Lada.view.form.Probe', {
                                 fieldLabel: 'Netzbetreiber',
                                 anchor: '100%',
                                 labelWidth: 105,
-                                allowBlank: false,
+                                allowBlank: false
                             }, {
                                 xtype: 'tfield',
                                 name: 'x11',
                                 fieldLabel: 'Datensatzerzeuger',
                                 anchor: '100%',
-                                labelWidth: 105,
+                                labelWidth: 105
                             }]
                         }]
                     }]
@@ -385,7 +385,7 @@ Ext.define('Lada.view.form.Probe', {
                 fieldLabel: 'S' + i,
                 name: 's' + i,
                 labelWidth: 25,
-                margin: '0, 10, 5, 0',
+                margin: '0, 10, 5, 0'
             };
         }
         return fields;
