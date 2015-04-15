@@ -80,7 +80,12 @@ Ext.define('Lada.controller.form.Messung', {
                          Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
                             Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
                     }
-                }
+                    formPanel.clearMessages();
+                    formPanel.setRecord(record);
+                    formPanel.setMessages(json.errors, json.warnings);
+                    formPanel.up('window').initData();
+                    formPanel.up('window').grid.store.reload();
+                  }
                 else {
                     Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
                         Lada.getApplication().bundle.getMsg('err.msg.response.body'));

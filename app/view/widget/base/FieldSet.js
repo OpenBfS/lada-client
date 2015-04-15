@@ -18,10 +18,6 @@ Ext.define('Lada.view.widget.base.FieldSet', {
 
     showWarningOrError: function(warning, warningText, error, errorText) {
         this.clearMessages(); //Clear Errors and Warning first
-        var ndx = 0;
-        if (this.collapsible === true) {
-            ndx = 1;
-        }
         if (this.errorText && this.errorText !== '') {
             this.errorText += '\n';
         }
@@ -30,20 +26,17 @@ Ext.define('Lada.view.widget.base.FieldSet', {
             this.warningText += '\n';
         }
         this.warningText += warningText;
-        this.plainTitle = this.getEl().dom.firstChild
-            .firstChild.firstChild
-            .children[ndx].innerHTML;
+        this.plainTitle = this.title;
         this.origColor = this.getEl().dom.style['border-color'];
+        var imgId = Ext.id();
         if (error) {
             this.getEl().dom.style['border-color'] = '#FF0000';
-            this.getEl().dom.firstChild.firstChild.firstChild
-                .children[ndx].innerHTML =
-                    '<img src="resources/img/emblem-important.png" width="13" height="13" />  ' +
-                    this.plainTitle;
+            this.setTitle('<img src="resources/img/emblem-important.png" width="13" height="13" id="'+ imgId +'"/>  '+
+                    this.plainTitle);
             if (errorText) {
                 if (!this.tooltip) {
                     Ext.create('Ext.tip.ToolTip', {
-                        target: this.getEl().dom.firstChild.firstChild.firstChild.children[ndx],
+                        target: imgId,
                         html: errorText
                     });
                 }
@@ -55,16 +48,15 @@ Ext.define('Lada.view.widget.base.FieldSet', {
         }
         if (warning) {
             this.getEl().dom.style['border-color'] = '#FFE25D';
-            this.getEl().dom.firstChild.firstChild.firstChild
-                .children[ndx].innerHTML =
-                    '<img src="resources/img/dialog-warning.png" width="13" height="13" />  ' +
-                    this.plainTitle;
+            this.setTitle('<img src="resources/img/dialog-warning.png" width="13" height="13"  id="'+ imgId +'"/>  '+
+                    this.plainTitle);
             if (warningText) {
                 if (!this.tooltip) {
                     Ext.create('Ext.tip.ToolTip', {
-                        target: this.getEl().dom.firstChild.firstChild.firstChild.children[ndx],
+                        target: Ext.get(imgId),
                         html: warningText
                     });
+                debugger;
                 }
                 else {
                     tooltip.html = warningText;
@@ -75,14 +67,8 @@ Ext.define('Lada.view.widget.base.FieldSet', {
     },
 
     clearMessages: function() {
-        var ndx = 0;
-        if (this.collapsible === true) {
-            ndx = 1;
-        }
         if (this.plainTitle !== '') {
-            this.getEl().dom.firstChild
-                .firstChild.firstChild
-                .children[ndx].innerHTML = this.plainTitle;
+            this.setTitle(this.plainTitle);
             this.getEl().dom.style['border-color'] = this.origColor;
         }
     }

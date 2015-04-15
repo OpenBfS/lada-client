@@ -100,6 +100,7 @@ Ext.define('Lada.view.form.Probe', {
                         items: [{
                             xtype: 'fset',
                             title: 'Erweiterte Angaben',
+                            name: 'erwAngaben',
                             collapsible: true,
                             collapsed: true,
                             items: [{
@@ -350,6 +351,7 @@ Ext.define('Lada.view.form.Probe', {
         this.down('datetime[name=solldatumBeginn]').clearWarningOrError();
         this.down('datetime[name=solldatumEnde]').clearWarningOrError();
         //this.down('numberfield[name=probeNehmerId]').clearWarningOrError();
+        this.down('fset[name=erwAngaben]').clearMessages();
         this.down('fset[name=entnahmePeriod]').clearMessages();
         this.down('fset[name=sollzeitPeriod]').clearMessages();
     },
