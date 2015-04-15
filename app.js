@@ -103,8 +103,12 @@ Ext.application({
     },
 
     onLoginSuccess: function(response) {
-        /* Strip out the openid query params to look nicers. */
-        window.history.pushState(this.name, this.name, window.location.pathname);
+
+        if (!Ext.isIE9m) {
+          /* Strip out the openid query params to look nicers. */
+          // Not supported in old IE's
+          window.history.pushState(this.name, this.name, window.location.pathname);
+        }
 
         Ext.create('Lada.view.Viewport');
 
