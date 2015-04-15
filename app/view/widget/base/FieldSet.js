@@ -56,7 +56,6 @@ Ext.define('Lada.view.widget.base.FieldSet', {
                         target: Ext.get(imgId),
                         html: warningText
                     });
-                debugger;
                 }
                 else {
                     tooltip.html = warningText;
