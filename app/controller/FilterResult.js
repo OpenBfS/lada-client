@@ -41,18 +41,42 @@ Ext.define('Lada.controller.FilterResult', {
         win.initData();
     },
 
-    addItem: function(button) {
+    addItem: function() {
         var win = Ext.create('Lada.view.window.ProbeCreate');
         win.show();
         win.initData();
-
     },
 
-    uploadFile: function(button) {
+    uploadFile: function() {
+        var win = Ext.create('Lada.view.window.FileUpload', {
+            title: 'Datenimport',
+            modal: true
+        });
 
+        win.show();
     },
 
     downloadFile: function(button) {
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection();
+        var proben = [];
+        for (var i = 0; i < selection.length; i++) {
+            proben.push(selection[i].get('id'));
+        }
 
+        Ext.Ajax.request({
+            method: 'POST',
+            url: '/lada-server/export/laf',
+            jsonData: {'proben': proben},
+            headers: {'X-OPENID-PARAMS': Lada.openIDParams},
+            success: function(response) {
+                var content = response.responseText;
+                var blob = new Blob([content],{type: 'text/plain'});
+                saveAs(blob, 'export.laf');
+            },
+            failure: function() {
+                Ext.Msg.alert('Fehler', 'Failed to create LAF-File!');
+            }
+        });
     }
 });
