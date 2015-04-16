@@ -9,7 +9,8 @@
 Ext.Loader.setConfig({
     enabled: true,
     paths: {
-        'Ext.i18n': 'resources/lib/i18n/'
+        'Ext.i18n': 'resources/lib/i18n/',
+        'Ext.ux.upload': 'resources/lib/upload'
     }
 });
 
