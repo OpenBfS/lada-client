@@ -106,7 +106,7 @@ Ext.define('Lada.view.window.OrtEdit', {
             },
             success: function(record, response) {
                 var me = this;
-                if (this.probe.get('treeModified') < record.get('treeModified')) {
+                if (record.get('treeModified') < record.get('parentModified')) {
                     Ext.Msg.show({
                         title: 'Probe nicht aktuell!',
                         msg: 'Die zugehörige Probe wurde verändert.\nMöchten Sie zu der Probe zurückkehren und neu laden?\nOhne das erneute Laden der Probe wird das Speichern des Ortes nicht möglich sein.',
