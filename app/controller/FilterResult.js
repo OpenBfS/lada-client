@@ -66,7 +66,7 @@ Ext.define('Lada.controller.FilterResult', {
 
         Ext.Ajax.request({
             method: 'POST',
-            url: '/lada-server/export/laf',
+            url: 'lada-server/export/laf',
             jsonData: {'proben': proben},
             headers: {'X-OPENID-PARAMS': Lada.openIDParams},
             success: function(response) {
