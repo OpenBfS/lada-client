@@ -22,6 +22,8 @@ Ext.define('Lada.controller.Filter', {
         'ProbenList'    // List of found Proben
     ],
 
+    displayFields: null,
+
     init: function() {
         this.control({
             // CSS like selector to select element in the viewport. See
@@ -52,25 +54,23 @@ Ext.define('Lada.controller.Filter', {
      * selected search query
      */
     selectSql: function(element, record) {
-        var resultGrid = element.up('panel[name=main]').down('filterresultgrid');
         var filters = element.up('panel[name=main]').down('fieldset[name=filtervariables]');
         var columns = element.up('fieldset').down('displayfield[name=columns]');
         var desc = element.up('fieldset').down('displayfield[name=description]');
-        var displayFields = record[0].data.results;
+        this.displayFields = record[0].data.results;
         var filterFields = record[0].data.filters;
 
-        this.reset();
+        this.reset(element);
 
         var columnString = [];
-        for (var i = 0; i < displayFields.length; i++) {
-            columnString.push(displayFields[i].header);
+        for (var i = 0; i < this.displayFields.length; i++) {
+            columnString.push(this.displayFields[i].header);
         }
         columns.setValue(columnString.join(', '));
         desc.setValue(record[0].data.description);
 
         // Setup Columns of the probenlist
-        displayFields.reverse();
-        resultGrid.setupColumns(displayFields);
+        this.displayFields.reverse();
 
         // Setup Filters of the probenlist
         //
@@ -183,6 +183,7 @@ Ext.define('Lada.controller.Filter', {
      */
     search: function(element) {
         var resultGrid = element.up('panel[name=main]').down('filterresultgrid');
+        resultGrid.setupColumns(this.displayFields);
         var filters = element.up('panel[name=main]').down('fieldset[name=filtervariables]');
         var search = element.up('fieldset').down('combobox[name=filter]');
 
@@ -202,15 +203,12 @@ Ext.define('Lada.controller.Filter', {
         resultGrid.show();
     },
 
-    reset: function() {
-        // var buttons = Ext.getCmp('SearchBtnPanel');
-        // var result = Ext.getCmp('result');
-        // for (var i = 0; i < queries.length; ++i) {
-        //     var toHide = Ext.getCmp(queries[i]);
-        //     toHide.hide();
-        // }
-        // result.hide();
-        // buttons.hide();
+    reset: function(element) {
+        var filters = element.up('panel[name=main]').down('fieldset[name=filtervariables]');
+        for (var i = filters.items.length - 1; i >= 0; i--) {
+            var filter = filters.items.items[i];
+            filter.clearValue();
+        }
     },
 
     about: function() {
