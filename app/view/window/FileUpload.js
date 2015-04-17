@@ -69,17 +69,30 @@ Ext.define('Lada.view.window.FileUpload', {
         });
         this.mon(uploader, 'uploadsuccess', win.uploadSuccess, win);
         this.mon(uploader, 'uploadfailure', win.uploadFailure, win);
-        console.log(button.up('window'));
         if (button.up('window').file !== null) {
             uploader.uploadItem(button.up('window').file);
         }
     },
 
-    uploadSuccess: function() {
+    uploadSuccess: function(file, response) {
         this.close();
+        var win = Ext.create('Lada.view.window.ImportResponse', {
+            data: response.response.responseText,
+            message: response.message,
+            fileName: file.config.fileApiObject.name,
+            title: 'Importergebnis'
+        });
+        win.show();
     },
 
-    uploadFailure: function() {
+    uploadFailure: function(file, response) {
         this.close();
+        var win = Ext.create('Lada.view.window.ImportResponse', {
+            data: response.response.responseText,
+            message: response.message,
+            fileName: file.config.fileApiObject.name,
+            title: 'Importergebnis'
+        });
+        win.show();
     }
 });
