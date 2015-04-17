@@ -101,6 +101,10 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         return this.down('combobox').getValue();
     },
 
+    clearValue: function() {
+        this.down('combobox').clearValue();
+    },
+
     getName: function() {
         return this.name;
     },
