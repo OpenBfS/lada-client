@@ -84,7 +84,8 @@ Ext.define('Lada.view.form.Probe', {
                             name: 'mstId',
                             fieldLabel: 'Messstelle',
                             labelWidth: 135,
-                            allowBlank: false
+                            allowBlank: false,
+                            editable: true
                         }, {
                             xtype: 'tfield',
                             name: 'hauptprobenNr',

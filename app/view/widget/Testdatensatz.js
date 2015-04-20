@@ -7,6 +7,17 @@
  */
 
 
+var testdatensatzStore = Ext.create('Ext.data.Store', {
+    fields: ['testdatensatzId', 'testdatensatz'],
+    storeId: 'testdatensatzStore',
+    data: [{
+        'testdatensatzId': true,
+        'testdatensatz': 'Ja'
+    }, {
+        'testdatensatzId': false,
+        'testdatensatz': 'Nein'
+    }]
+});
 
 /**
  * Combobox for Testdatensatz.
@@ -15,22 +26,19 @@
 Ext.define('Lada.view.widget.Testdatensatz', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.testdatensatz',
+    store: 'testdatensatzStore',
     queryMode: 'local',
+    triggerAction: 'all',
+    typeAhead: false,
+    minChars: 0,
+
     displayField: 'testdatensatz',
     valueField: 'testdatensatzId',
     emptyText: 'Testdatensatz?',
 
     initComponent: function() {
-        this.store = Ext.create('Ext.data.Store', {
-            fields: ['testdatensatzId', 'testdatensatz'],
-            data: [{
-                'testdatensatzId': true,
-                'testdatensatz': 'Ja'
-            }, {
-                'testdatensatzId': false,
-                'testdatensatz': 'Nein'
-            }]
-        });
+        this.store = Ext.data.StoreManager.get('testdatensatzStore')
+        this.store.clearFilter();
         this.callParent(arguments);
     }
 });

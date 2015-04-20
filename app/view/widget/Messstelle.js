@@ -16,9 +16,10 @@ Ext.define('Lada.view.widget.Messstelle', {
     displayField: 'messStelle',
     valueField: 'id',
     editable: this.editable || false,
+    forceSelection: true,
     emptyText: 'Wählen Sie eine Messstelle',
     // Enable filtering of comboboxes
-    autoSelect: false,
+    autoSelect: true,
     queryMode: 'local',
     triggerAction: 'all',
     typeAhead: false,

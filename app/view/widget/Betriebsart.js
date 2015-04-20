@@ -8,13 +8,14 @@
 
 var betriebsartStore = Ext.create('Ext.data.Store', {
     fields: ['betriebsartId', 'betriebsart'],
+    storeId: 'betriebsartStore',
     data: [{
         'betriebsartId': '1',
-        'betriebsart': 'Normal-/Routinebtrieb'
+        'betriebsart': 'Normal-/Routinebetrieb'
     }, {
         'betriebsartId': '2',
         'betriebsart': 'Störfall/Intensivbetrieb'
-    }]
+    }],
 });
 
 /**
@@ -23,13 +24,18 @@ var betriebsartStore = Ext.create('Ext.data.Store', {
 Ext.define('Lada.view.widget.Betriebsart', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.betriebsart',
-    store: betriebsartStore,
+    store: 'betriebsartStore',
     queryMode: 'local',
+    triggerAction: 'all',
+    typeAhead: false,
+
     displayField: 'betriebsart',
     valueField: 'betriebsartId',
     emptyText: 'Wählen Sie eine Betriebsart',
 
     initComponent: function() {
+        this.store = Ext.data.StoreManager.get('betriebsartStore')
+        this.store.clearFilter();
         this.callParent(arguments);
     }
 });

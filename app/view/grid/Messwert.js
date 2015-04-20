@@ -120,7 +120,13 @@ Ext.define('Lada.view.grid.Messwert', {
                 displayField: 'einheit',
                 valueField: 'id',
                 allowBlank: false,
-                editable: false
+                editable: true,
+                forceSelection: true,
+                autoSelect: true,
+                queryMode: 'local',
+                minChars: 0,
+                typeAhead: false,
+                triggerAction: 'all'
             }
         }, {
             header: '&lt;NWG',

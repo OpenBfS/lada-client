@@ -17,7 +17,6 @@ Ext.define('Lada.view.widget.Messeinheit', {
     valueField: 'id',
     emptyText: 'Wählen Sie eine Messeinheit',
     // Enable filtering of comboboxes
-    autoSelect: false,
     queryMode: 'local',
     triggerAction: 'all',
     typeAhead: false,
@@ -27,6 +26,9 @@ Ext.define('Lada.view.widget.Messeinheit', {
         this.store = Ext.data.StoreManager.get('messeinheiten');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Messeinheiten');
+        }
+        else {
+            this.store.clearFilter();
         }
         this.callParent(arguments);
     }

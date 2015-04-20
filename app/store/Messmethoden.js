@@ -13,7 +13,12 @@ Ext.define('Lada.store.Messmethoden', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Messmethode',
     sorters: [{
+        property: 'id',
+        direction: 'ASC'
+    },
+    {
         property: 'messmethode',
+        direction: 'ASC',
         transform: function(val) {
             if (val) {
                 return val.toLowerCase();
@@ -21,5 +26,6 @@ Ext.define('Lada.store.Messmethoden', {
             return '';
         }
     }],
-    autoLoad: true
+    autoLoad: true,
+    sortOnLoad: true
 });

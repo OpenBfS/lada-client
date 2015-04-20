@@ -17,7 +17,6 @@ Ext.define('Lada.view.widget.Messmethode', {
     valueField: 'id',
     emptyText: 'Wählen Sie eine Messmethode',
     // Enable filtering of comboboxes
-    autoSelect: false,
     queryMode: 'local',
     triggerAction: 'all',
     typeAhead: true,
@@ -28,6 +27,9 @@ Ext.define('Lada.view.widget.Messmethode', {
         this.store = Ext.data.StoreManager.get('messmethoden');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Messmethoden');
+        }
+        else {
+            this.store.clearFilter();
         }
         this.callParent(arguments);
     }
