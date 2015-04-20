@@ -199,6 +199,7 @@ Ext.define('Lada.view.form.Probe', {
                             fieldLabel: 'Umweltbereich',
                             labelWidth: 125,
                             allowBlank: false,
+                            editable: true,
                             listeners: {
                                 dirtychange: {
                                     fn: this.updateOnChange,

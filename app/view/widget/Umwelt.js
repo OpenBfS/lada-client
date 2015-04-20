@@ -16,6 +16,7 @@ Ext.define('Lada.view.widget.Umwelt' ,{
     displayField: 'id',
     valueField: 'id',
     editable: this.editable || false,
+    forceSelection: true,
     emptyText: 'Wählen Sie einen Umweltbereich',
     // Enable filtering of comboboxes
     autoSelect: false,
@@ -23,28 +24,18 @@ Ext.define('Lada.view.widget.Umwelt' ,{
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
-    tpl: '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-        '{id} - {umweltBereich}</div></tpl>',
-    // TODO: Set value in disply after selection. Can not figure out why
-    // accessing the recored.data attribute fails here (ti) <2013-08-06 16:52>
-    // listeners: {
-    //     select: function(combo, record, index) {
-    //         console.log("1");
-    //         console.log(record);
-    //         console.log("2");
-    //         var text = record.data['umwId'] +
-    //             " - " + record.data['umweltBereich'];
-    //         console.log("3");
-    //         Ext.form.ComboBox.superclass.setValue.call(this, text);
-    //         combo.value = record.id;
-    //     }
-    // },
+    tpl: Ext.create("Ext.XTemplate",
+        '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
+            '{id} - {umweltBereich}</div></tpl>'),
+    displayTpl: Ext.create('Ext.XTemplate',
+         '<tpl for=".">{id} - {umweltBereich}</tpl>'),
 
     initComponent: function() {
         this.store = Ext.data.StoreManager.get('umwelt');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Umwelt');
         }
+        this.store.sort();
         this.callParent(arguments);
     }
 });

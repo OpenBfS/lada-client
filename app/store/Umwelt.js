@@ -13,7 +13,11 @@ Ext.define('Lada.store.Umwelt', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Umwelt',
     sorters: [{
+        property: 'id',
+        direction: 'ASC'
+    }, {
         property: 'umweltBereich',
+        direction: 'ASC',
         transform: function(val) {
             if (val) {
                 return val.toLowerCase();
@@ -21,5 +25,7 @@ Ext.define('Lada.store.Umwelt', {
             return '';
         }
     }],
-    autoLoad: true
+    sortOnLoad: true,
+    remoteSort: false,
+    autoLoad: true,
 });

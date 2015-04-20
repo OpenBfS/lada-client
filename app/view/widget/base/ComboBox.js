@@ -36,8 +36,10 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             minChars: this.minChars,
             multiSelect: this.multiSelect,
             editable: this.editable || false,
+            forceSelection: this.forceSelection,
             msgTarget: 'none',
-            tpl: this.tpl
+            tpl: this.tpl,
+            displayTpl: this.displayTpl
         }, {
             xtype: 'image',
             name: 'warnImg',
