@@ -75,7 +75,7 @@ Ext.define('Lada.view.grid.Messwert', {
                     return '';
                 }
                 var store = Ext.data.StoreManager.get('messgroessen');
-                return store.findRecord('id', value).get('messgroesse');
+                return store.findRecord('id', value, 0, false, false, true).get('messgroesse');
             },
             editor: {
                 xtype: 'combobox',
@@ -106,7 +106,7 @@ Ext.define('Lada.view.grid.Messwert', {
                     return '';
                 }
                 var store = Ext.data.StoreManager.get('messeinheiten');
-                return store.findRecord('id', value).get('einheit');
+                return store.findRecord('id', value, 0, false, false, true).get('einheit');
             },
             editor: {
                 xtype: 'combobox',
