@@ -87,6 +87,7 @@ Ext.define('Lada.controller.form.Probe', {
 
     discard: function(button) {
         var formPanel = button.up('form');
+        formPanel.down('umwelt').store.clearFilter();
         formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
     },
 
