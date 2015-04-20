@@ -27,6 +27,10 @@ Ext.define('Lada.controller.grid.Messwert', {
     gridSave: function(editor, context) {
         context.record.save({
             success: function(request, response) {
+                Ext.data.StoreManager.get('messgroessen').clearFilters();
+                Ext.data.StoreManager.get('messgroessen').reload();
+                // If you don't do the reset above, the grid will only contain
+                // one row in cases in when autocompletion was used!
                 context.grid.store.reload();
                 context.grid.up('window').initData();
             },

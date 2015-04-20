@@ -14,6 +14,7 @@ Ext.define('Lada.store.Messgroessen', {
     model: 'Lada.model.Messgroesse',
     sorters: [{
         property: 'messgroesse',
+        direction: 'ASC',
         transform: function(val) {
             if (val) {
                 return val.toLowerCase();
