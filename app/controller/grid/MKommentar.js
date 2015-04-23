@@ -6,9 +6,18 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
+/**
+ * This is a controller for a grid of MKommentar
+ * MKommentar are comments which are associated to a
+ * Measurement
+ */
 Ext.define('Lada.controller.grid.MKommentar', {
     extend: 'Ext.app.Controller',
 
+    /**
+     * Inhitialize the controller
+     * It has 3 listeners
+     */
     init: function() {
         this.control({
             'mkommentargrid': {
@@ -24,6 +33,12 @@ Ext.define('Lada.controller.grid.MKommentar', {
         });
     },
 
+    /**
+     * This function is called when the grids roweditor saves
+     * the record.
+     * On success it refreshes the windows which contains the grid
+     * On failure it displays a message
+     */
     gridSave: function(editor, context) {
         context.record.save({
             success: function(record, response) {
@@ -46,6 +61,10 @@ Ext.define('Lada.controller.grid.MKommentar', {
         });
     },
 
+    /**
+     * When the edit was canceled,
+     * the empty row might have been created by the roweditor is removed
+     */
     cancelEdit: function(editor, context) {
         if (!context.record.get('id') ||
             context.record.get('id') === '') {
@@ -53,6 +72,9 @@ Ext.define('Lada.controller.grid.MKommentar', {
         }
     },
 
+    /**
+     * This function adds a new row to add a MKommentar
+     */
     add: function(button) {
         var record = Ext.create('Lada.model.MKommentar');
         record.set('messungsId', button.up('mkommentargrid').recordId);
@@ -60,6 +82,12 @@ Ext.define('Lada.controller.grid.MKommentar', {
         button.up('mkommentargrid').rowEditing.startEdit(0, 1);
     },
 
+    /**
+     * A Mkommentar-row can be removed from the grid with the remove
+     * function. It asks the user for confirmation
+     * If the removal was confirmed, it reloads the parent window on success,
+     * on failure, an error message is shown.
+     */
     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];

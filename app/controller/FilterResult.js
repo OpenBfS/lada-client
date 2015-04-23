@@ -15,6 +15,9 @@ Ext.define('Lada.controller.FilterResult', {
         'Lada.view.window.ProbeEdit'
     ],
 
+    /**
+     * Initialize the Controller with 4 listeners
+     */
     init: function() {
         this.control({
             'filterresultgrid': {
@@ -33,6 +36,12 @@ Ext.define('Lada.controller.FilterResult', {
         this.callParent(arguments);
     },
 
+    /**
+     * This function is called after a Row in the
+     * {@link Lada.view.grid.FilterResult}
+     * was double-clicked.
+     * The function opens a {@link Lada.view.window.ProbeEdit}
+     */
     editItem: function(grid, record) {
         var win = Ext.create('Lada.view.window.ProbeEdit', {
             record: record
@@ -41,12 +50,20 @@ Ext.define('Lada.controller.FilterResult', {
         win.initData();
     },
 
+    /**
+     * This function opens a new window to create a Probe
+     * {@link Lada.view.window.ProbeEdit}
+     */
     addItem: function() {
         var win = Ext.create('Lada.view.window.ProbeCreate');
         win.show();
         win.initData();
     },
 
+    /**
+     * This function opens a {@link Lada.view.window.FileUpload}
+     * window to upload a LAF-File
+     */
     uploadFile: function() {
         var win = Ext.create('Lada.view.window.FileUpload', {
             title: 'Datenimport',
@@ -56,6 +73,11 @@ Ext.define('Lada.controller.FilterResult', {
         win.show();
     },
 
+    /**
+     * This function can be used to Download the items which
+     * were selected in the {@link Lada.view.grid.FilterResult}
+     * The Download does not work with Internet Explorers older than v.10
+     */
     downloadFile: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection();

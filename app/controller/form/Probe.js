@@ -6,9 +6,16 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
+/**
+ * A Controller for a Probe form
+ */
 Ext.define('Lada.controller.form.Probe', {
     extend: 'Ext.app.Controller',
 
+    /**
+     * Initialize the Controller
+     * It has 4 listeners
+     */
     init: function() {
         this.control({
             'probeform button[action=save]': {
@@ -26,6 +33,11 @@ Ext.define('Lada.controller.form.Probe', {
         });
     },
 
+    /**
+     * The save function saves the content of the Location form.
+     * On success it will reload the Store,
+     * on failure, it will display an Errormessage
+     */
     save: function(button) {
         var formPanel = button.up('form');
         var data = formPanel.getForm().getFieldValues(true);
@@ -85,11 +97,24 @@ Ext.define('Lada.controller.form.Probe', {
         });
     },
 
+     /**
+      * The discard function resets the Location form
+      * to its original state.
+      */
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
     },
 
+     /**
+      * The dirtyForm function enables or disables the save and discard
+      * button which are present in the toolbar of the form.
+      * The Buttons are only active if the content of the form was altered
+      * (the form is dirty).
+      * In Additon it calls the disableChildren() function of the window
+      * embedding the form. Likewise it calls the embedding windows
+      * enableChilren() function
+      */
     dirtyForm: function(form, dirty) {
         if (dirty) {
             form.owner.down('button[action=save]').setDisabled(false);
@@ -103,6 +128,13 @@ Ext.define('Lada.controller.form.Probe', {
         }
     },
 
+    /**
+     * checkDate() is called when a xtype=datetime field was modified
+     * It checks for two things:
+     *  - Is the date in the future
+     *  - Does the date belong to a time period and the end is before start
+     * In both cases it adds a warning to the field which was checked.
+     */
     checkDate: function(field) {
         var now = Date.now();
         var w = 0 //amount of warnings

@@ -6,6 +6,9 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
+/**
+ * This is a controller for a grid of Orte
+ */
 Ext.define('Lada.controller.grid.Ort', {
     extend: 'Ext.app.Controller',
 
@@ -14,6 +17,10 @@ Ext.define('Lada.controller.grid.Ort', {
         'Lada.view.window.OrtCreate'
     ],
 
+    /**
+     * Inhitialize the controller
+     * It has 3 listeners
+     */
     init: function() {
         this.control({
             'ortgrid': {
@@ -28,6 +35,10 @@ Ext.define('Lada.controller.grid.Ort', {
         });
     },
 
+    /**
+     * When open is called, a {@link Lada.view.window.OrtEdit}
+     * is created which allows to edit the Orte
+     */
     open: function(grid, record) {
         var probe = grid.up('window').record;
         var win = Ext.create('Lada.view.window.OrtEdit', {
@@ -40,6 +51,9 @@ Ext.define('Lada.controller.grid.Ort', {
         win.initData();
     },
 
+    /**
+     * This function adds a new row to add an Ort
+     */
     add: function(button) {
         var probe = button.up('window').record;
         var win = Ext.create('Lada.view.window.OrtCreate', {
@@ -50,6 +64,12 @@ Ext.define('Lada.controller.grid.Ort', {
         win.initData();
     },
 
+    /**
+     * A Ort-row can be removed from the grid with the remove
+     * function. It asks the user for confirmation
+     * If the removal was confirmed, it reloads the parent window on success,
+     * on failure, an error message is shown.
+     */
     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];

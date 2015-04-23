@@ -6,9 +6,15 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
+/**
+ * This is a Controller for a Location Form
+ */
 Ext.define('Lada.controller.form.Location', {
     extend: 'Ext.app.Controller',
-
+    /**
+     * Initialize the Controller with
+     * 5 listeners
+     */
     init: function() {
         this.control({
             'locationform button[action=save]': {
@@ -29,6 +35,11 @@ Ext.define('Lada.controller.form.Location', {
         });
     },
 
+    /**
+     * The save function saves the content of the Location form.
+     * On success it will reload the Store,
+     * on failure, it will display an Errormessage
+     */
     save: function(button) {
         var formPanel = button.up('form');
         var data = formPanel.getForm().getFieldValues(true);
@@ -81,12 +92,22 @@ Ext.define('Lada.controller.form.Location', {
         });
     },
 
+    /**
+     * The discard function resets the Location form
+     * to its original state.
+     */
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
         button.up('window').down('map').locationRecord = null;
     },
 
+    /**
+     * The dirtyForm function enables or disables the save and discard
+     * button which are present in the toolbar of the form.
+     * The Buttons are only active if the content of the form was altered
+     * (the form is dirty).
+     */
     dirtyForm: function(form, dirty) {
         if (dirty) {
             form.owner.down('button[action=save]').setDisabled(false);
@@ -98,6 +119,12 @@ Ext.define('Lada.controller.form.Location', {
         }
     },
 
+    /**
+     * This function updates the Latitude (heigth-value / y-value) of a feature
+     * (geospatial object). The feature can be a marker in the map
+     * @param {Ext.form.field.Field} field the Ext.field which was altered
+     * @param {} nValue the new Latitude as WGS84 in decimaldegrees
+     */
     updateFeatureLatitude: function(field, nValue) {
         var layer = field.up('window').down('map').selectControl.layer;
         var newLocation = field.up('window').down('map').locationRecord;
@@ -108,6 +135,12 @@ Ext.define('Lada.controller.form.Location', {
         }
     },
 
+    /**
+     * This function updates the Longitude (right-value / x-value) of a feature
+     * (geospatial object). The feature can be a marker in the map
+     * @param {Ext.form.field.Field} field the Ext.field which was altered
+     * @param {} nValue the new Longitude as WGS84 in decimaldegrees
+     */
     updateFeatureLongitude: function(field, nValue) {
         var layer = field.up('window').down('map').selectControl.layer;
         var newLocation = field.up('window').down('map').locationRecord;

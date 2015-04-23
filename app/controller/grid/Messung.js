@@ -16,6 +16,10 @@ Ext.define('Lada.controller.grid.Messung', {
         'Lada.view.window.MessungEdit'
     ],
 
+    /**
+     * Inhitialize the controller
+     * It has 3 listeners
+     */
     init: function() {
         this.control({
             'messunggrid': {
@@ -30,6 +34,10 @@ Ext.define('Lada.controller.grid.Messung', {
         });
     },
 
+    /**
+     * This function opens a new {@link Lada.view.window.MessungEdit}
+     * Window.
+     */
     editItem: function(grid, record) {
         var probe = grid.up('window').record;
         var win = Ext.create('Lada.view.window.MessungEdit', {
@@ -42,6 +50,9 @@ Ext.define('Lada.controller.grid.Messung', {
         win.initData();
     },
 
+    /**
+     * This function opens a window add a Messung
+     */
     add: function(button) {
         var probe = button.up('window').record;
         var win = Ext.create('Lada.view.window.MessungCreate', {
@@ -52,6 +63,13 @@ Ext.define('Lada.controller.grid.Messung', {
         win.initData();
     },
 
+    /**
+     * This function removes a Messung
+     * It displays a Confirmation-Popup.
+     * When the Removal was confirmed and the operation was successful,
+     * the Messung-row is removed from the grid.
+     * On failure an Errormessage is shown
+     */
     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];

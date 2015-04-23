@@ -6,10 +6,17 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
+/**
+ * This is a Controller for a Messwert Grid
+ */
 Ext.define('Lada.controller.grid.Messwert', {
     extend: 'Ext.app.Controller',
 
-    init: function() {
+    /**
+     * Inhitialize the controller
+     * It has 3 listeners
+     */
+     init: function() {
         this.control({
             'messwertgrid': {
                 edit: this.gridSave,
@@ -24,6 +31,12 @@ Ext.define('Lada.controller.grid.Messwert', {
         });
     },
 
+    /**
+     * This function is called when the grids roweditor saves
+     * the record.
+     * On success it refreshes the windows which contains the grid
+     * On failure it displays a message
+     */
     gridSave: function(editor, context) {
         context.record.save({
             success: function(request, response) {
@@ -59,6 +72,10 @@ Ext.define('Lada.controller.grid.Messwert', {
         });
     },
 
+    /**
+     * When the edit was canceled,
+     * the empty row might have been created by the roweditor is removed
+     */
     cancelEdit: function(editor, context) {
         if (!context.record.get('id') ||
             context.record.get('id') === '') {
@@ -66,6 +83,9 @@ Ext.define('Lada.controller.grid.Messwert', {
         }
     },
 
+    /**
+     * This function adds a new row to add a Messwert
+     */
     add: function(button) {
         var record = Ext.create('Lada.model.Messwert', {
             messungsId: button.up('messwertgrid').recordId
@@ -74,7 +94,13 @@ Ext.define('Lada.controller.grid.Messwert', {
         button.up('messwertgrid').rowEditing.startEdit(0, 1);
     },
 
-    remove: function(button) {
+    /**
+     * A Messwert-row can be removed from the grid with the remove
+     * function. It asks the user for confirmation
+     * If the removal was confirmed, it reloads the parent window on success,
+     * on failure, an error message is shown.
+     */
+     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         Ext.MessageBox.confirm('Messwert löschen', 'Sind Sie sicher?', function(btn) {

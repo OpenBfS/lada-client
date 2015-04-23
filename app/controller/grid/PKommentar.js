@@ -6,9 +6,16 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-Ext.define('Lada.controller.grid.PKommentar', {
+/**
+ * This is a controller for a grid of Orte
+ */
+EExt.define('Lada.controller.grid.PKommentar', {
     extend: 'Ext.app.Controller',
 
+    /**
+     * Initialize the Controller with
+     * 3 Listeners
+     */
     init: function() {
         this.control({
             'pkommentargrid': {
@@ -24,7 +31,13 @@ Ext.define('Lada.controller.grid.PKommentar', {
         });
     },
 
-    gridSave: function(editor, context) {
+    /**
+     * This function is called when the grids roweditor saves
+     * the record.
+     * On success it refreshes the windows which contains the grid
+     * On failure it displays a message
+     */
+     gridSave: function(editor, context) {
         context.record.save({
             success: function() {
                 context.grid.store.reload();
@@ -49,21 +62,34 @@ Ext.define('Lada.controller.grid.PKommentar', {
         });
     },
 
-    cancelEdit: function(editor, context) {
+    /**
+     * When the edit was canceled,
+     * the empty row might have been created by the roweditor is removed
+     */
+     cancelEdit: function(editor, context) {
         if (!context.record.get('id') ||
             context.record.get('id') === '') {
             editor.getCmp().store.remove(context.record);
         }
     },
 
-    add: function(button) {
+    /**
+     * This function adds a new row to add a PKommentar
+     */
+     add: function(button) {
         var record = Ext.create('Lada.model.PKommentar');
         record.set('probeId', button.up('pkommentargrid').recordId);
         button.up('pkommentargrid').store.insert(0, record);
         button.up('pkommentargrid').rowEditing.startEdit(0, 1);
     },
 
-    remove: function(button) {
+    /**
+     * A PKommentar-row can be removed from the grid with the remove
+     * function. It asks the user for confirmation
+     * If the removal was confirmed, it reloads the parent window on success,
+     * on failure, an error message is shown.
+     */
+     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn) {

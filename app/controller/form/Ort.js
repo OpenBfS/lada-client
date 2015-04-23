@@ -6,9 +6,15 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
+/*
+ * This is a controller for an Ort Form
+ */
 Ext.define('Lada.controller.form.Ort', {
     extend: 'Ext.app.Controller',
 
+    /**
+     * Initialize the Controller with 4 listeners
+     */
     init: function() {
         this.control({
             'ortform button[action=save]': {
@@ -26,7 +32,12 @@ Ext.define('Lada.controller.form.Ort', {
         });
     },
 
-    save: function(button) {
+     /**
+      * The save function saves the content of the Location form.
+      * On success it will reload the Store,
+      * on failure, it will display an Errormessage
+      */
+     save: function(button) {
         var formPanel = button.up('ortform');
         var data = formPanel.getForm().getFieldValues(true);
         for (var key in data) {
@@ -72,7 +83,11 @@ Ext.define('Lada.controller.form.Ort', {
         });
     },
 
-    discard: function(button) {
+   /**
+    * The discard function resets the Location form
+    * to its original state.
+    */
+   discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
         var win = button.up('window');
@@ -82,6 +97,12 @@ Ext.define('Lada.controller.form.Ort', {
         win.down('map').selectFeature(id);
     },
 
+     /**
+      * The dirtyForm function enables or disables the save and discard
+      * button which are present in the toolbar of the form.
+      * The Buttons are only active if the content of the form was altered
+      * (the form is dirty).
+      */
     dirtyForm: function(form, dirty) {
         if (dirty) {
             form.owner.down('button[action=save]').setDisabled(false);
@@ -93,6 +114,11 @@ Ext.define('Lada.controller.form.Ort', {
         }
     },
 
+    /**
+     *  updateDetails is used when a value is selected within the ort combobox
+     *  When this function is called, the map element within the window
+     *  which is embedding this form is updated.
+     */
     updateDetails: function(combobox, record) {
         var win = combobox.up('window');
         var details = win.down('locationform');

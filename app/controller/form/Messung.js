@@ -6,9 +6,16 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
+/**
+ * This is a controller for a Messung form
+ */
 Ext.define('Lada.controller.form.Messung', {
     extend: 'Ext.app.Controller',
 
+    /**
+     * Initialize the Controller
+     * It has 3 listeners
+     */
     init: function() {
         this.control({
             'messungform button[action=save]': {
@@ -23,6 +30,11 @@ Ext.define('Lada.controller.form.Messung', {
         });
     },
 
+    /**
+     * The save function saves the content of the Location form.
+     * On success it will reload the Store,
+     * on failure, it will display an Errormessage
+     */
     save: function(button) {
         var formPanel = button.up('form');
         formPanel.setLoading(true);
@@ -95,12 +107,25 @@ Ext.define('Lada.controller.form.Messung', {
         });
     },
 
-    discard: function(button) {
+     /**
+      * The discard function resets the Location form
+      * to its original state.
+      */
+     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
     },
 
-    dirtyForm: function(form, dirty) {
+     /**
+      * The dirtyForm function enables or disables the save and discard
+      * button which are present in the toolbar of the form.
+      * The Buttons are only active if the content of the form was altered
+      * (the form is dirty).
+      * In Additon it calls the disableChildren() function of the window
+      * embedding the form. Only when the record does not carry the readonly
+      * flag, the function calls the embedding windows enableChilren() function
+      */
+     dirtyForm: function(form, dirty) {
         if (dirty) {
             form.owner.down('button[action=save]').setDisabled(false);
             form.owner.down('button[action=discard]').setDisabled(false);

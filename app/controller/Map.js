@@ -7,6 +7,8 @@
  */
 
 /**
+ * This is a controller for a Map.
+ * Maps are used in the Ortsangaben of a Probe.
  */
 Ext.define('Lada.controller.Map', {
     extend: 'Ext.app.Controller',
@@ -14,6 +16,10 @@ Ext.define('Lada.controller.Map', {
     requires: [
     ],
 
+    /**
+     * Initialize the Controller
+     * It has only one listener.
+     */
     init: function() {
         this.control({
             'maptoolbar button[action=add]': {
@@ -23,6 +29,12 @@ Ext.define('Lada.controller.Map', {
         this.callParent(arguments);
     },
 
+    /**
+     * addLocation is a function which can be
+     * used to add an location to create a new Location
+     * with the help of the map.
+     * The function uses {@link Lada.view.panel.Map#activateDraw}
+     */
     addLocation: function(button) {
         var mapPanel = button.up('map');
         var details = button.up('window').down('locationform');

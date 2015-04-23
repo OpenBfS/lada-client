@@ -6,10 +6,17 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
+/**
+ * This is a controller for a grid of Probenzusatzwert
+ */
 Ext.define('Lada.controller.grid.Probenzusatzwert', {
     extend: 'Ext.app.Controller',
 
-    init: function() {
+    /**
+     * Initialize the Controller with
+     * 3 Listeners
+     */
+     init: function() {
         this.control({
             'probenzusatzwertgrid': {
                 edit: this.gridSave,
@@ -24,7 +31,13 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
         });
     },
 
-    gridSave: function(editor, context) {
+    /**
+     * This function is called when the grids roweditor saves
+     * the record.
+     * On success it refreshes the windows which contains the grid
+     * On failure it displays a message
+     */
+     gridSave: function(editor, context) {
         context.record.save({
             success: function() {
                 context.grid.store.reload();
@@ -49,14 +62,21 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
         });
     },
 
-    cancelEdit: function(editor, context) {
+    /**
+     * When the edit was canceled,
+     * the empty row might have been created by the roweditor is removed
+     */
+     cancelEdit: function(editor, context) {
         if (!context.record.get('id') ||
             context.record.get('id') === '') {
             editor.getCmp().store.remove(context.record);
         }
     },
 
-    add: function(button) {
+    /**
+     * This function adds a new row to add a Probenzusatzwert
+     */
+     add: function(button) {
         var record = Ext.create('Lada.model.Zusatzwert', {
             probeId: button.up('probenzusatzwertgrid').recordId
         });
@@ -64,7 +84,13 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
         button.up('probenzusatzwertgrid').rowEditing.startEdit(0, 1);
     },
 
-    remove: function(button) {
+    /**
+     * A row can be removed from the grid with the remove
+     * function. It asks the user for confirmation
+     * If the removal was confirmed, it reloads the parent window on success,
+     * on failure, an error message is shown.
+     */
+     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         Ext.MessageBox.confirm('Zusatzwert löschen', 'Sind Sie sicher?', function(btn) {
