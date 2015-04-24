@@ -7,9 +7,9 @@
  */
 
 /**
- * This is a controller for a grid of Orte
+ * This is a controller for a grid of Pkommentare
  */
-EExt.define('Lada.controller.grid.PKommentar', {
+Ext.define('Lada.controller.grid.PKommentar', {
     extend: 'Ext.app.Controller',
 
     /**
