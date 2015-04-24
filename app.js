@@ -176,6 +176,7 @@ Ext.application({
         'Lada.controller.grid.Messwert',
         'Lada.controller.grid.Status',
         'Lada.controller.Map',
-        'Lada.controller.form.Location'
+        'Lada.controller.form.Location',
+        'Lada.controller.ProbenPlanungSwitcher'
     ]
 });

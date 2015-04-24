@@ -10,12 +10,13 @@
  * Viewport for the Lada-Client
  *
  * The viewport initialises the graphical elements of the application. For
- * debugging it is possible to initialize other components directly see the
+ * debugging it is possible to initialise other components directly see the
  * initComponent function.
  */
 Ext.define('Lada.view.Viewport', {
     extend: 'Ext.container.Viewport',
     requires: [
+        'Lada.view.ProbenPlanungSwitcher',
         'Lada.view.FilterPanel',
         'Lada.view.grid.FilterResult'
     ],
@@ -94,6 +95,9 @@ Ext.define('Lada.view.Viewport', {
                     }]
                 }],
                 items: [{
+                    xtype: 'probenplanungswitcher',
+                    margin: '0, 10, 0, 10'
+                }, {
                     // Auswahl einer Abfrage.
                     xtype: 'filterpanel',
                     margin: '0, 10, 0, 10'

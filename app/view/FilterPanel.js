@@ -7,7 +7,7 @@
  */
 
 /*
- * Panel to show available search queryies
+ * Panel to show available search queries
  */
 Ext.define('Lada.view.FilterPanel', {
     extend: 'Ext.form.FieldSet',
