@@ -44,7 +44,7 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
 
         var sname = 'Lada.store.ProbeQueries';
         if (field.inputValue === 'probenplanung' && cbox) {
-            sname = 'Lada.store.MessprogrammQueries'; // TODO change store!
+            sname = 'Lada.store.MessprogrammQueries';
         }
         else if (field.inputValue === 'probenliste' && cbox) {
             sname = 'Lada.store.ProbeQueries';
@@ -56,6 +56,7 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
         }
         if (store) {
             store.load();
+            cbox.reset();
             cbox.bindStore(store);
         }
     }
