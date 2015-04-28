@@ -203,7 +203,7 @@ Ext.define('Lada.controller.Filter', {
             searchParams[filter.getName()] = value;
         }
         // Retrieve the mode
-        var modes = element.up('panel[name=main]').down('probenplanungswitcher').getChecked();
+        var modes = element.up('panel[name=main]').down('radiogroup').getChecked();
         var sname = modes[0].inputValue;
 
         if (sname === 'ProbenList') {
