@@ -28,7 +28,7 @@ Ext.define('Lada.model.Query', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/query',
+        url: 'lada-server/query/probe',
         reader: {
             type: 'json',
             root: 'data'

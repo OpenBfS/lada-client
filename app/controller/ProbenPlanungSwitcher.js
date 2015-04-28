@@ -14,6 +14,10 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
     extend: 'Ext.app.Controller',
     displayFields: null,
 
+    requires: [
+        'Lada.store.MessprogrammQueries'
+    ],
+
     /**
      * Initialize this Controller
      * It has 1 Listeners
@@ -36,12 +40,14 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
      */
     switchStores: function(field) {
         var cbox = field.up('probenplanungswitcher').up().down('combobox');
+        var resultGrid = field.up('panel[name=main]').down('filterresultgrid');
 
-        if (field.inputValue == "probenplanung" && cbox) {
-            var sname = 'Lada.store.Queries'; // TODO change store!
+        var sname = 'Lada.store.ProbeQueries';
+        if (field.inputValue === 'probenplanung' && cbox) {
+            sname = 'Lada.store.MessprogrammQueries'; // TODO change store!
         }
-        else if (field.inputValue == "probenliste" && cbox) {
-            var sname = 'Lada.store.Queries';
+        else if (field.inputValue === 'probenliste' && cbox) {
+            sname = 'Lada.store.ProbeQueries';
         }
 
         var store = Ext.StoreManager.lookup(sname);
