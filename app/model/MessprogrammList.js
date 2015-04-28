@@ -7,18 +7,25 @@
  */
 
 /**
- * Store for Queries
- */
-Ext.define('Lada.store.MessprogrammQueries', {
-    extend: 'Ext.data.Store',
-    model: 'Lada.model.Query',
-    autolad: true,
+ * A MessprogrammList.
+ * This class represents the result list of 'Messprogramme' in the search query
+ * */
+Ext.define('Lada.model.MessprogrammList', {
+    extend: 'Ext.data.Model',
+
+    fields: [{
+        name: 'readonly'
+    }],
+
+    idProperty: 'id',
+
     proxy: {
         type: 'rest',
-        url: 'lada-server/query/messprogramm',
+        url: 'lada-server/messprogramm',
         reader: {
             type: 'json',
-            root: 'data'
+            root: 'data',
+            totalProperty: 'totalCount'
         }
     }
 });

@@ -188,7 +188,6 @@ Ext.define('Lada.controller.Filter', {
      */
     search: function(element) {
         var resultGrid = element.up('panel[name=main]').down('filterresultgrid');
-        resultGrid.setupColumns(this.displayFields);
         var filters = element.up('panel[name=main]').down('fieldset[name=filtervariables]');
         var search = element.up('fieldset').down('combobox[name=filter]');
 
@@ -203,9 +202,29 @@ Ext.define('Lada.controller.Filter', {
             }
             searchParams[filter.getName()] = value;
         }
-        resultGrid.getStore().proxy.extraParams = searchParams;
-        resultGrid.getStore().load();
-        resultGrid.show();
+        // Retrieve the mode
+        var modes = element.up('panel[name=main]').down('probenplanungswitcher').getChecked();
+        var sname = modes[0].inputValue;
+
+        if (sname === 'ProbenList') {
+            sname = 'Lada.store.ProbenList';
+        }
+        else if (sname === 'MessprogrammeList') {
+            sname = 'Lada.store.MessprogrammeList';
+        }
+
+        // Find the store or create a new one.
+        var store = Ext.StoreManager.lookup(sname);
+        if (!store) {
+            store = Ext.create(sname);
+        }
+        if (store) {
+            resultGrid.setStore(store);
+            resultGrid.setupColumns(this.displayFields);
+            resultGrid.getStore().proxy.extraParams = searchParams;
+            resultGrid.getStore().load();
+            resultGrid.show();
+        }
     },
     /**
      * This function resets the filters

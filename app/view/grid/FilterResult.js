@@ -13,7 +13,7 @@ Ext.define('Lada.view.grid.FilterResult', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.filterresultgrid',
 
-    store: 'ProbenList',
+    store: null, //'ProbenList',
 
     multiSelect: true,
 
@@ -39,16 +39,25 @@ Ext.define('Lada.view.grid.FilterResult', {
                 icon: 'resources/img/svn-update.png',
                 action: 'export'
             }]
-        }, {
-            xtype: 'pagingtoolbar',
-            dock: 'bottom',
-            store: this.store,
-            displayInfo: true
         }];
         this.columns = [];
         this.callParent(arguments);
     },
 
+    /**
+     * This sets the Store of the FilterResultGrid
+     */
+    setStore: function(store){
+        this.removeDocked(Ext.getCmp('ptbar'), true);
+        this.reconfigure(store);
+        this.addDocked([{
+            xtype: 'pagingtoolbar',
+            id: 'ptbar',
+            dock: 'bottom',
+            store: store,
+            displayInfo: true
+        }]);
+    },
     /**
      * Setup columns of the Grid dynamically based on a list of given cols.
      * The function is called from the {@link Lada.controller.Sql#selectSql

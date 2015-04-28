@@ -24,14 +24,5 @@ Ext.define('Lada.model.Query', {
         name: 'results'
     }, {
         name: 'filters'
-    }],
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/query/probe',
-        reader: {
-            type: 'json',
-            root: 'data'
-        }
-    }
-});
+    }]
+ });

@@ -43,10 +43,10 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
         var resultGrid = field.up('panel[name=main]').down('filterresultgrid');
 
         var sname = 'Lada.store.ProbeQueries';
-        if (field.inputValue === 'probenplanung' && cbox) {
+        if (field.inputValue === 'MessprogrammeList' && cbox) {
             sname = 'Lada.store.MessprogrammQueries';
         }
-        else if (field.inputValue === 'probenliste' && cbox) {
+        else if (field.inputValue === 'ProbenList' && cbox) {
             sname = 'Lada.store.ProbeQueries';
         }
 

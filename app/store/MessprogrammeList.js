@@ -7,18 +7,11 @@
  */
 
 /**
- * Store for Queries
+ * Store for Messprogramme, it is used in the {@link Lada.view.grid.FilterResult}
  */
-Ext.define('Lada.store.MessprogrammQueries', {
+Ext.define('Lada.store.MessprogrammeList', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Query',
-    autolad: true,
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/query/messprogramm',
-        reader: {
-            type: 'json',
-            root: 'data'
-        }
-    }
+    model: 'Lada.model.MessprogrammList',
+    pageSize: 50,
+    remoteSort: true
 });

@@ -3,11 +3,11 @@
  *
  * This file is Free Software under the GNU GPL (v>=3)
  * and comes with ABSOLUTELY NO WARRANTY! Check out
- * the documentation coming with IMIS-Labordaten-Application for details. 
+ * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
 /**
- * Store for Proben
+ * Store for Proben, it is used in the {@link Lada.view.grid.FilterResult}
  */
 Ext.define('Lada.store.ProbenList', {
     extend: 'Ext.data.Store',

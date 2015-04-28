@@ -43,6 +43,7 @@ Ext.define('Lada.controller.FilterResult', {
      * The function opens a {@link Lada.view.window.ProbeEdit}
      */
     editItem: function(grid, record) {
+        console.log(record);
         var win = Ext.create('Lada.view.window.ProbeEdit', {
             record: record
         });
