@@ -18,7 +18,7 @@ Ext.define('Lada.view.grid.FilterResult', {
     multiSelect: true,
 
     viewConfig: {
-        emptyText: 'Keine Proben gefunden.',
+        emptyText: 'Keine Ergebnisse gefunden.',
         deferEmptyText: false
     },
 
@@ -27,18 +27,31 @@ Ext.define('Lada.view.grid.FilterResult', {
             xtype: 'toolbar',
             dock: 'top',
             items: [{
-                text: 'Hinzufügen',
+                xtype: 'tbtext',
+                id: 'tbtitle',
+                text: '',
+            },
+            '->',
+            {
+                text: 'Probe erstellen',
                 icon: 'resources/img/list-add.png',
-                action: 'add'
+                action: 'addProbe'
             }, {
-                text: 'Import',
+                text: 'Messprogramm erstellen',
+                icon: 'resources/img/list-add.png',
+                action: 'addProbe'
+            },
+            '-',
+            {
+                text: 'Proben Importieren',
                 icon: 'resources/img/svn-commit.png',
                 action: 'import'
             }, {
-                text: 'Export',
+                text: 'Proben Exportieren',
                 icon: 'resources/img/svn-update.png',
                 action: 'export'
-            }]
+            }
+            ]
         }];
         this.columns = [];
         this.callParent(arguments);
@@ -48,6 +61,8 @@ Ext.define('Lada.view.grid.FilterResult', {
      * This sets the Store of the FilterResultGrid
      */
     setStore: function(store){
+        var i18n = Lada.getApplication().bundle;
+
         this.removeDocked(Ext.getCmp('ptbar'), true);
         this.reconfigure(store);
         this.addDocked([{
@@ -57,6 +72,21 @@ Ext.define('Lada.view.grid.FilterResult', {
             store: store,
             displayInfo: true
         }]);
+
+        //Reset the Text int the Toolbar.
+        var t = Ext.getCmp('tbtitle');
+        if (store.model.modelName == 'Lada.model.MessprogrammList') {
+            t.setText(i18n.getMsg('probeplanning'));
+        }
+        else if (store.model.modelName == 'Lada.model.ProbeList') {
+            t.setText(i18n.getMsg('probelist'));
+        }
+        else {
+            t.setText('');
+            console.log('The model '+store.model.modelName+
+                'was not defined in the FilterResultGrid.' +
+                ' Hence the title could not be set.');
+        }
     },
     /**
      * Setup columns of the Grid dynamically based on a list of given cols.
