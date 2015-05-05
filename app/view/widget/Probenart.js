@@ -15,7 +15,6 @@ Ext.define('Lada.view.widget.Probenart', {
     store: 'Probenarten',
     displayField: 'probenart',
     valueField: 'id',
-    emptyText: 'Wählen Sie eine Probenart',
     // Enable filtering of comboboxes
     queryMode: 'local',
     triggerAction: 'all',
@@ -23,6 +22,9 @@ Ext.define('Lada.view.widget.Probenart', {
     minChars: 0,
 
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.probenart');
+
         this.store = Ext.data.StoreManager.get('probenarten');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Probenarten');

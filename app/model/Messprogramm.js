@@ -16,7 +16,7 @@ Ext.define('Lada.model.Messprogramm', {
     fields: [{
         name: 'id'
     }, {
-        name: 'test'
+        name: 'test',
         type: 'boolean'
     }, {
         name: 'netzbetreiberId',
@@ -28,6 +28,8 @@ Ext.define('Lada.model.Messprogramm', {
         }
     }, {
         name: 'mstId'
+    }, {
+        name: 'name'
     }, {
         name: 'datenbasisId'
     }, {
@@ -86,4 +88,4 @@ Ext.define('Lada.model.Messprogramm', {
             root: 'data'
         }
     }
-}
+});

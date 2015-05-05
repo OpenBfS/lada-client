@@ -15,13 +15,15 @@ Ext.define('Lada.view.widget.Datenbasis', {
     store: 'Datenbasis',
     displayField: 'datenbasis',
     valueField: 'id',
-    emptyText: 'Wählen Sie eine Datenbasis',
     // Enable filtering of comboboxes
     queryMode: 'local',
     triggerAction: 'all',
     typeAhead: false,
 
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.datenbasis');
+
         this.store = Ext.data.StoreManager.get('datenbasis');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Datenbasis');

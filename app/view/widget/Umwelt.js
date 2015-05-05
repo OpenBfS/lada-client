@@ -17,7 +17,6 @@ Ext.define('Lada.view.widget.Umwelt' ,{
     valueField: 'id',
     editable: this.editable || false,
     forceSelection: true,
-    emptyText: 'Wählen Sie einen Umweltbereich',
     // Enable filtering of comboboxes
     autoSelect: false,
     queryMode: 'local',
@@ -31,6 +30,9 @@ Ext.define('Lada.view.widget.Umwelt' ,{
          '<tpl for=".">{id} - {umweltBereich}</tpl>'),
 
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.umweltbereich');
+
         this.store = Ext.data.StoreManager.get('umwelt');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Umwelt');
