@@ -31,9 +31,11 @@ Ext.define('Lada.view.widget.Betriebsart', {
 
     displayField: 'betriebsart',
     valueField: 'betriebsartId',
-    emptyText: 'Wählen Sie eine Betriebsart',
 
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.probenart');
+
         this.store = Ext.data.StoreManager.get('betriebsartStore')
         this.store.clearFilter();
         this.callParent(arguments);

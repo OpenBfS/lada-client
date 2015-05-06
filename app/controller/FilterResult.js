@@ -27,6 +27,9 @@ Ext.define('Lada.controller.FilterResult', {
             'filterresultgrid toolbar button[action=addProbe]': {
                 click: this.addProbeItem
             },
+            'filterresultgrid toolbar button[action=addMessprogramm]': {
+                click: this.addMessprogrammItem
+            },
             'filterresultgrid toolbar button[action=import]': {
                 click: this.uploadFile
             },
@@ -87,8 +90,9 @@ Ext.define('Lada.controller.FilterResult', {
      * {@link Lada.view.window.MessprogrammCreate}
      */
     addMessprogrammItem: function() {
-        // TODO
-        console.log('implement me.')
+        var win = Ext.create('Lada.view.window.MessprogrammCreate');
+        win.show();
+        win.initData();
     },
 
     /**

@@ -39,7 +39,7 @@ Ext.define('Lada.view.grid.FilterResult', {
             }, {
                 text: 'Messprogramm erstellen',
                 icon: 'resources/img/list-add.png',
-                action: 'addProbe'
+                action: 'addMessprogramm'
             },
             '-',
             {

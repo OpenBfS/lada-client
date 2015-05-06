@@ -15,7 +15,6 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
     store: 'StaNetzbetreiber',
     displayField: 'netzbetreiber',
     valueField: 'id',
-    emptyText: 'Wählen Sie einen Netzbetreiber',
     // Enable filtering of comboboxes
     queryMode: 'local',
     triggerAction: 'all',
@@ -23,6 +22,9 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
     minChars: 0,
 
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.probenart');
+
         this.store = Ext.data.StoreManager.get('netzbetreiber');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Netzbetreiber');
