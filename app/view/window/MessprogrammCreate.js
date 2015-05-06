@@ -68,9 +68,11 @@ Ext.define('Lada.view.window.MessprogrammCreate', {
                 },
                 items: [{
                     xtype: 'messmethodengrid',
+                    recordId: null,
                     flex: 1
                 }, {
                     xtype: 'messmethodengrid',
+                    recordId: null,
                     flex: 1
                 }]
             }]
@@ -79,7 +81,7 @@ Ext.define('Lada.view.window.MessprogrammCreate', {
     },
 
     initData: function() {
-        var record = Ext.create('Lada.model.Messprogramm');
+        record = Ext.create('Lada.model.Messprogramm');
         this.down('messprogrammform').setRecord(record);
     },
 

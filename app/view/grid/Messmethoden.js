@@ -52,6 +52,8 @@ Ext.define('Lada.view.grid.Messmethoden', {
 
         this.plugins = [this.rowEditing];
 
+
+
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -59,8 +61,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 text: i18n.getMsg('add'),
                 icon: 'resources/img/list-add.png',
                 action: 'add',
-                probeId: this.probeId,
-                parentId: this.parentId
+                recordId: this.recordId,
             }, {
                 text: i18n.getMsg('delete'),
                 icon: 'resources/img/list-remove.png',
@@ -69,19 +70,22 @@ Ext.define('Lada.view.grid.Messmethoden', {
         }];
         this.columns = [{
             header: 'Messmethode',
-            dataIndex: 'id',
+            dataIndex: 'mmtId',
             flex: 1,
             renderer: function(value) {
                 if (!value || value === '') {
                     return '';
                 }
-                var store = Ext.data.StoreManager.get('messmethode');
-                return store.findRecord('mprId', value, 0, false, false, true).get('messmethode');
+                var store = Ext.data.StoreManager.get('messmethoden');
+                if (!store) {
+                    store = Ext.create('Lada.store.Messmethoden');
+                }
+               return value + " - " + store.findRecord('id', value, 0, false, false, true).get('messmethode');
             },
             editor: {
                 xtype: 'combobox',
-                store: Ext.data.StoreManager.get('messmethode'),
-                displayField: 'messmethode',
+                store: Ext.data.StoreManager.get('messmethoden'),
+                //displayField: 'mmtId',
                 valueField: 'id',
                 allowBlank: false,
                 editable: true,
@@ -90,13 +94,17 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 queryMode: 'local',
                 minChars: 0,
                 typeAhead: false,
-                triggerAction: 'all'
+                triggerAction: 'all',
+                tpl: Ext.create("Ext.XTemplate",
+                    '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
+                    '{id} - {messmethode}</div></tpl>'),
+                displayTpl: Ext.create('Ext.XTemplate',
+                    '<tpl for=".">{id} - {messmethode}</tpl>'),
             }
         }];
         this.initData();
         this.callParent(arguments);
     },
-
     initData: function() {
         if (this.store) {
             this.store.removeAll();
@@ -106,11 +114,10 @@ Ext.define('Lada.view.grid.Messmethoden', {
         }
         this.store.load({
             params: {
-                mprId: this.recordId
+                messprogrammId: this.recordId
             }
         });
     },
-
     setReadOnly: function(b) {
         if (b == true){
             //Readonly

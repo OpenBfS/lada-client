@@ -75,9 +75,8 @@ Ext.define('Lada.view.window.MessprogrammEdit', {
                 },
                 items: [{
                     xtype: 'messmethodengrid',
-                    flex: 1
-                }, {
-                    xtype: 'messmethodengrid',
+                    //recordId: null,
+                    recordId: this.record.get('id'),
                     flex: 1
                 }]
             }]
@@ -100,16 +99,8 @@ Ext.define('Lada.view.window.MessprogrammEdit', {
             success: function(record, response) {
                 this.down('messprogrammform').setRecord(record);
                 this.record = record;
-                owner = this.record.get('owner');
 
-                // If this would be A probe, it would be always
-                // allowed to add Messungen:
-                /*
-                if (owner) {
-                    me.enableAddMessungen();
-                }
-                */
-
+                //this.down('messmethodengrid').recordId = record.get('id');
                 var json = Ext.decode(response.response.responseText);
                 if (json) {
                     this.setMessages(json.errors, json.warnings);
@@ -137,7 +128,7 @@ Ext.define('Lada.view.window.MessprogrammEdit', {
     */
 
     disableChildren: function() {
-        // thera are no children....
+        // there are no children....
     },
 
     enableChildren: function() {

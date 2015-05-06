@@ -16,11 +16,12 @@ Ext.define('Lada.model.MmtMessprogramm', {
     fields: [{
         name: 'id'
     }, {
-        name: 'mprId'
+        name: 'messprogrammId'
     }, {
         name: 'mmtId'
     }, {
-        name: 'messgroessen'
+        name: 'messgroessen',
+        defaultValue: []
     }, {
         name: 'letzteAenderung',
         type: 'date',
