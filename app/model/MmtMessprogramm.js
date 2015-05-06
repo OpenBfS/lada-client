@@ -37,10 +37,10 @@ Ext.define('Lada.model.MmtMessprogramm', {
 
     proxy: {
         type: 'rest',
-        //url: 'lada-server/mmtmessprogramm', //not yet implemented
+        url: 'lada-server/mmtmessprogramm',
         reader: {
             type: 'json',
             root: 'data'
         }
     }
-}
+});
