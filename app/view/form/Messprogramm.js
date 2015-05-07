@@ -316,6 +316,8 @@ Ext.define('Lada.view.form.Messprogramm', {
 
         var svalUpper = null
         var svalLower = null
+        var min = null
+        var max = null
 
         if (!intervallstore) {
             intervallstore = Ext.create('Lada.store.Probenintervall');
@@ -325,7 +327,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         // called from the controller,
         //and the probenintervall was not changed.
         // Load the records in this case
-        if (!intervall) {
+        if (!intervall && record) {
             intervall = record.get('probenintervall',
                     0, false, false, true);
 
@@ -338,8 +340,12 @@ Ext.define('Lada.view.form.Messprogramm', {
             .findRecord('probenintervall',
                 intervall, 0, false, false, true);
 
-        var min = intrec.get('periodstart');
-        var max = intrec.get('periodend');
+        if (intrec) { // in cases when a new messprogramm is
+        // created and the discard function is used, intrec will be null
+        // consequently the assertion below will fail.
+            min = intrec.get('periodstart');
+            max = intrec.get('periodend');
+        }
 
         if (!svalUpper) {
             svalUpper = max;

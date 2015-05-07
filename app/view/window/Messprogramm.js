@@ -9,9 +9,9 @@
 /*
  * Window to edit a Messprogramm
  */
-Ext.define('Lada.view.window.MessprogrammEdit', {
+Ext.define('Lada.view.window.Messprogramm', {
     extend: 'Ext.window.Window',
-    alias: 'widget.messprogrammedit',
+    alias: 'widget.messprogramm',
 
     requires: [
         'Lada.view.form.Messprogramm',
@@ -30,13 +30,13 @@ Ext.define('Lada.view.window.MessprogrammEdit', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
 
-        if (this.record === null) {
-            Ext.Msg.create(i18n.getMsg('err.msg.generic.title'),
-                i18n.getMsg('err.msg.novalidmessprogram'));
-            this.callParent(arguments);
-            return;
+        if (this.record == null) {
+            this.title = i18n.getMsg('messprogramm.window.create.title');
         }
-        this.title = i18n.getMsg('messprogramm.window.edit.title');
+        else {
+            this.title = i18n.getMsg('messprogramm.window.edit.title');
+        }
+
         this.buttons = [{
             text: i18n.getMsg('close'),
             scope: this,
@@ -63,7 +63,7 @@ Ext.define('Lada.view.window.MessprogrammEdit', {
             autoScroll: true,
             items: [{
                 xtype: 'messprogrammform',
-                recordId: this.record.get('id')
+                recordId: this.record? this.record.get('id') : null
             }, {
                 //Messmethoden
                 xtype: 'fieldset',
@@ -75,8 +75,8 @@ Ext.define('Lada.view.window.MessprogrammEdit', {
                 },
                 items: [{
                     xtype: 'messmethodengrid',
-                    //recordId: null,
-                    recordId: this.record.get('id'),
+                    recordId: this.record? this.record.get('id') : null,
+                    disabled: this.record? false : true,
                     flex: 1
                 }]
             }]
@@ -84,40 +84,60 @@ Ext.define('Lada.view.window.MessprogrammEdit', {
         this.callParent(arguments);
     },
 
+    /**
+     * Init Data is longer than in other windows.
+     * If the Window was used to CREATE a Messprogramm,
+     * it will load an empty record
+     * if it was used to EDIT an existing Messprogramm,
+     * it will load this record AND create a grid to
+     * enable the editing of Messmethoden
+     * which are associated to the Messprogramm
+     */
     initData: function() {
-        this.setLoading(true);
+        var i18n = Lada.getApplication().bundle;
         this.clearMessages();
         me = this;
-        Ext.ClassManager.get('Lada.model.Messprogramm').load(this.record.get('id'), {
-            failure: function(record, action) {
-                me.setLoading(false);
-                // TODO
-                console.log('An unhandled Failure occured. See following Response and Record');
-                console.log(action);
-                console.log(record);
-             },
-            success: function(record, response) {
-                this.down('messprogrammform').setRecord(record);
-                this.record = record;
 
-                //this.down('messmethodengrid').recordId = record.get('id');
-                var json = Ext.decode(response.response.responseText);
-                if (json) {
-                    this.setMessages(json.errors, json.warnings);
-                }
-                // If the Messprogramm is ReadOnly, disable Inputfields and grids
-                if (this.record.get('readonly') === true) {
-                    this.down('messprogrammform').setReadOnly(true);
-                    this.disableChildren();
-                }
-                else {
-                    this.down('messprogrammform').setReadOnly(false);
-                    this.enableChildren();
-                }
-                me.setLoading(false);
-            },
-            scope: this
-        });
+        // If a record was passed to this window,
+        // create a Edit window
+        if (this.record) {
+            this.setLoading(true);
+            Ext.ClassManager.get('Lada.model.Messprogramm').load(this.record.get('id'), {
+                failure: function(record, action) {
+                    me.setLoading(false);
+                    // TODO
+                    console.log('An unhandled Failure occured. See following Response and Record');
+                    console.log(action);
+                    console.log(record);
+                    },
+                success: function(record, response) {
+                    this.down('messprogrammform').setRecord(record);
+                    this.record = record;
+
+                    var json = Ext.decode(response.response.responseText);
+                    if (json) {
+                        this.setMessages(json.errors, json.warnings);
+                    }
+                    // If the Messprogramm is ReadOnly, disable Inputfields and grids
+                    if (this.record.get('readonly') === true) {
+                        this.down('messprogrammform').setReadOnly(true);
+                        this.disableChildren();
+                    }
+                    else {
+                        this.down('messprogrammform').setReadOnly(false);
+                        this.enableChildren();
+                    }
+                    me.setLoading(false);
+                },
+                scope: this
+            });
+
+        }
+        // Create a Create Window
+        else {
+            var record = Ext.create('Lada.model.Messprogramm');
+            this.down('messprogrammform').setRecord(record);
+        }
     },
 
     //This was used in a Probewindow, I left it here for reference...

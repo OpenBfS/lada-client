@@ -13,7 +13,7 @@ Ext.define('Lada.controller.FilterResult', {
     extend: 'Ext.app.Controller',
     requires: [
         'Lada.view.window.ProbeEdit',
-        'Lada.view.window.MessprogrammEdit'
+        'Lada.view.window.Messprogramm'
     ],
 
     /**
@@ -58,7 +58,7 @@ Ext.define('Lada.controller.FilterResult', {
             winname = 'Lada.view.window.ProbeEdit';
         }
         else if (mname == 'Lada.model.MessprogrammList'){
-            winname = 'Lada.view.window.MessprogrammEdit';
+            winname = 'Lada.view.window.Messprogramm';
         }
         if (winname){
             var win = Ext.create(winname, {
@@ -90,7 +90,7 @@ Ext.define('Lada.controller.FilterResult', {
      * {@link Lada.view.window.MessprogrammCreate}
      */
     addMessprogrammItem: function() {
-        var win = Ext.create('Lada.view.window.MessprogrammCreate');
+        var win = Ext.create('Lada.view.window.Messprogramm');
         win.show();
         win.initData();
     },

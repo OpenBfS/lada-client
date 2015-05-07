@@ -80,7 +80,9 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 if (!store) {
                     store = Ext.create('Lada.store.Messmethoden');
                 }
-               return value + " - " + store.findRecord('id', value, 0, false, false, true).get('messmethode');
+                store.load();
+                console.log(store);
+                return value + " - " + store.findRecord('id', value, 0, false, false, true).get('messmethode');
             },
             editor: {
                 xtype: 'combobox',
@@ -112,11 +114,14 @@ Ext.define('Lada.view.grid.Messmethoden', {
         else {
             this.store = Ext.create('Lada.store.MmtMessprogramm');
         }
-        this.store.load({
-            params: {
-                messprogrammId: this.recordId
-            }
-        });
+        // Only load the Store when a Record ID is Present
+        if (this.recordId) {
+            this.store.load({
+                params: {
+                    messprogrammId: this.recordId
+                }
+            });
+        }
     },
     setReadOnly: function(b) {
         if (b == true){

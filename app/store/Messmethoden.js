@@ -26,6 +26,5 @@ Ext.define('Lada.store.Messmethoden', {
             return '';
         }
     }],
-    autoLoad: true,
     sortOnLoad: true
 });

@@ -106,7 +106,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     formPanel.setMessages(json.errors, json.warnings);
                     if (response.action === 'create' && json.success) {
                         button.up('window').close();
-                        var win = Ext.create('Lada.view.window.MessprogrammEdit', {
+                        var win = Ext.create('Lada.view.window.Messprogramm', {
                             record: record
                         });
                         win.show();
