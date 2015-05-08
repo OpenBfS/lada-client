@@ -36,8 +36,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             handler: function() {
                 var jsondata = {
                     id: me.record.id,
-                    start: me.down('datetime [name=start]').getValue(),
-                    end: me.down('datetime [name=end]').getValue()
+                    start: new Date(me.down('datetime [name=start]').getValue()).valueOf(),
+                    end: new Date(me.down('datetime [name=end]').getValue()).valueOf()
                 };
 
 
