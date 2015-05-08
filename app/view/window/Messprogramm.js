@@ -90,7 +90,6 @@ Ext.define('Lada.view.window.Messprogramm', {
                 items: [{
                     xtype: 'messmethodengrid',
                     recordId: this.record? this.record.get('id') : null,
-                    disabled: this.record? false : true,
                     flex: 1
                 }]
             }]
@@ -116,6 +115,7 @@ Ext.define('Lada.view.window.Messprogramm', {
         // create a Edit window
         if (this.record) {
             this.setLoading(true);
+            this.down('messmethodengrid').setReadOnly(false);
             Ext.ClassManager.get('Lada.model.Messprogramm').load(this.record.get('id'), {
                 failure: function(record, action) {
                     me.setLoading(false);
@@ -150,6 +150,7 @@ Ext.define('Lada.view.window.Messprogramm', {
         // Create a Create Window
         else {
             var record = Ext.create('Lada.model.Messprogramm');
+            this.down('messmethodengrid').setReadOnly(true);
             this.down('messprogrammform').setRecord(record);
         }
     },
