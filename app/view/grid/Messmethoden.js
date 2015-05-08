@@ -77,6 +77,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
                     return '';
                 }
                 var store = Ext.data.StoreManager.get('messmethoden');
+                console.log(store);
                 if (!store) {
                     store = Ext.create('Lada.store.Messmethoden');
                 }
