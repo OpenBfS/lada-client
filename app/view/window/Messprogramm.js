@@ -38,6 +38,20 @@ Ext.define('Lada.view.window.Messprogramm', {
         }
 
         this.buttons = [{
+            text: i18n.getMsg('generateproben'),
+            scope: this,
+            disabled: this.record? false : true, //disable button if no record is set.
+            handler: function() {
+                var winname = 'Lada.view.window.GenProbenFromMessprogramm';
+                var win = Ext.create(winname, {
+                    record: this.record
+                });
+                win.show();
+                win.initData();
+            }
+        },
+        '->',
+        {
             text: i18n.getMsg('close'),
             scope: this,
             handler: this.close
