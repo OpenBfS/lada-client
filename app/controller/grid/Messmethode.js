@@ -88,7 +88,19 @@ Ext.define('Lada.controller.grid.Messmethode', {
         if (!store) {
             store = Ext.create('Lada.store.Messgroessen');
         }
+        //get selection model
+        var selectedRecords = [];
+        //iterate store and slecet all records which are in nuklide array
+        store.each(function(record){
+            //TODO if(record.get('id') in nuklide){
+                selectedRecords.push(record);
+            //TODO}
+        });
         ngrid.setData(store);
+
+        var selModel = ngrid.getSelectionModel();
+        console.log(selModel);
+        selModel.select(selectedRecords, false, false);
     },
 
     /**
