@@ -16,6 +16,7 @@ Ext.define('Lada.view.window.Messprogramm', {
     requires: [
         'Lada.view.form.Messprogramm',
         'Lada.view.grid.Messmethoden',
+        'Lada.view.grid.Nuklide'
     ],
 
     collapsible: true,
@@ -89,6 +90,10 @@ Ext.define('Lada.view.window.Messprogramm', {
                 },
                 items: [{
                     xtype: 'messmethodengrid',
+                    recordId: this.record? this.record.get('id') : null,
+                    flex: 1
+                }, {
+                    xtype: 'nuklidegrid',
                     recordId: this.record? this.record.get('id') : null,
                     flex: 1
                 }]

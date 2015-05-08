@@ -20,7 +20,8 @@ Ext.define('Lada.controller.grid.Messmethode', {
         this.control({
             'messmethodengrid': {
                 edit: this.gridSave,
-                canceledit: this.cancelEdit
+                canceledit: this.cancelEdit,
+                select: this.selectRow
             },
             'messmethodengrid button[action=add]': {
                 click: this.add
@@ -72,6 +73,22 @@ Ext.define('Lada.controller.grid.Messmethode', {
             context.record.get('id') === '') {
             editor.getCmp().store.remove(context.record);
         }
+    },
+
+    /**
+     * When a row is selected,
+     * the nuklid-grid will be updated
+     * to display the nuklide which are possible for this
+     * Messmethod
+     */
+    selectRow: function(row, record, index) {
+        var ngrid = row.view.up('window').down('nuklidegrid');
+        var nuklide = record.get('messgroessen');
+        var store = Ext.data.StoreManager.get('messgroessen');
+        if (!store) {
+            store = Ext.create('Lada.store.Messgroessen');
+        }
+        ngrid.setData(store);
     },
 
     /**

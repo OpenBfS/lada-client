@@ -69,7 +69,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
             }]
         }];
         this.columns = [{
-            header: 'Messmethode',
+            header: i18n.getMsg('messmethode'),
             dataIndex: 'mmtId',
             flex: 1,
             renderer: function(value) {
@@ -77,12 +77,9 @@ Ext.define('Lada.view.grid.Messmethoden', {
                     return '';
                 }
                 var store = Ext.data.StoreManager.get('messmethoden');
-                console.log(store);
                 if (!store) {
                     store = Ext.create('Lada.store.Messmethoden');
                 }
-                store.load();
-                console.log(store);
                 return value + " - " + store.findRecord('id', value, 0, false, false, true).get('messmethode');
             },
             editor: {
