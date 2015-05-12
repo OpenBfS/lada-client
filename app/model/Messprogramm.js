@@ -67,6 +67,11 @@ Ext.define('Lada.model.Messprogramm', {
             }
             return new Date(v);
         },
+        serialize: function(value) {
+            if (value instanceof Date && !isNaN(value.valueOf())) {
+                return value.getDOY();
+            }
+        }
     }, {
         name: 'gueltigBis',
         type: 'date',
@@ -76,6 +81,11 @@ Ext.define('Lada.model.Messprogramm', {
             }
             return new Date(v);
         },
+        serialize: function(value) {
+            if (value instanceof Date && !isNaN(value.valueOf())) {
+                return value.getDOY();
+            }
+        }
     }, {
         name: 'probeNehmerId'
     }, {
