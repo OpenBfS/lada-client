@@ -17,12 +17,13 @@ Ext.define('Lada.view.grid.Nuklide', {
         'Lada.view.widget.Messgroesse'
     ],
 
-    maxHeight: 350,
-    minHeight: 110,
+    maxHeight: 150,
+    minHeight: 150,
     viewConfig: {
-        deferEmptyText: false
+        deferEmptyText: false,
+        markDirty: false //Remove Dirty-Flags
     },
-    margin: '0, 5, 5, 5',
+    //margin: '0, 0, 5, 5',
 
     recordId: null,
 

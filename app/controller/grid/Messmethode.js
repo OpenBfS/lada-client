@@ -85,7 +85,32 @@ Ext.define('Lada.controller.grid.Messmethode', {
      */
     gridSaveNuklid: function(editor, context) {
         console.log(context);
-        this.syncArray(context.store);
+        var modified = false;
+        var id = context.newValues.id;
+        var mg = this.record.get('messgroessen');
+
+        //Test if this Nuklid already exists.
+        if (Array.isArray(id)){
+            for (i in id) {
+                //Only insert if value does not exist
+                if (! Ext.Array.contains(mg, id[i])) {
+                    modified = true;
+                }
+            }
+        }
+        else {
+            if (! Ext.Array.contains(mg, id)) {
+                mg.push(id);
+                modified = true;
+            }
+        }
+
+        if (modified) {
+            this.syncArray(context.store);
+        }
+        else {
+            editor.getCmp().store.remove(context.record);
+        }
     },
 
     /**

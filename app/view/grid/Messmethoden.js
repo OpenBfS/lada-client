@@ -17,12 +17,12 @@ Ext.define('Lada.view.grid.Messmethoden', {
         'Lada.view.widget.Messmethode'
     ],
 
-    maxHeight: 350,
-    minHeight: 110,
+    maxHeight: 150,
+    minHeight: 150,
     viewConfig: {
         deferEmptyText: false
     },
-    margin: '0, 5, 5, 5',
+    //margin: '0, 0, 5, 5',
 
     recordId: null,
 
