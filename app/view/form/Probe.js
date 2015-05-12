@@ -20,11 +20,12 @@ Ext.define('Lada.view.form.Probe', {
         'Lada.view.widget.Testdatensatz',
         'Lada.view.widget.Probenart',
         'Lada.view.widget.Umwelt',
+        'Lada.view.widget.Deskriptor',
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.base.Datetime',
         'Lada.view.widget.base.FieldSet',
         'Lada.view.widget.base.DateField',
-        'Lada.model.Probe',
+        'Lada.model.Probe'
     ],
 
     model: 'Lada.model.Probe',
@@ -303,6 +304,42 @@ Ext.define('Lada.view.form.Probe', {
         this.getForm().loadRecord(record);
     },
 
+    setMediaDesk: function(record) {
+        var media = record.get('mediaDesk').split(' ');
+        this.setMediaSN(0, media);
+    },
+
+    setMediaSN: function(ndx, media) {
+        if (ndx >= 12) {
+            return;
+        }
+        var me = this;
+        var current = this.down('deskriptor[layer=' + ndx + ']');
+        var cbox = current.down('combobox');
+        if (ndx === 0) {
+            cbox.store.proxy.extraParams = {
+                'layer': ndx
+            };
+        }
+        else {
+            var parents = current.getParents(current.down('combobox'));
+            if (parents.length === 0) {
+                return;
+            }
+            cbox.store.proxy.extraParams = {
+                'layer': ndx,
+                'parents': parents
+            };
+        }
+        cbox.store.load(function(records, op, success) {
+            if (!success) {
+                return;
+            }
+            cbox.select(cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
+            me.setMediaSN(++ndx, media);
+        });
+    },
+
     setMessages: function(errors, warnings) {
         var key;
         var element;
@@ -386,9 +423,12 @@ Ext.define('Lada.view.form.Probe', {
         var fields = [];
         for (var i = 0; i < 12; i++) {
             fields[i] = {
+                xtype: 'deskriptor',
                 fieldLabel: 'S' + i,
                 name: 's' + i,
                 labelWidth: 25,
+                width: 190,
+                layer: i,
                 margin: '0, 10, 5, 0'
             };
         }
