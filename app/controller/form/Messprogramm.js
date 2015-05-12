@@ -26,7 +26,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform': {
                 dirtychange: this.dirtyForm
             },
-            'messprogrammform [xtype="numberfield"]': {
+            'messprogrammform numberfield[name=teilintervallBis]': {
+                change: this.synchronizeSlider,
+                blur: this.checkPeriod
+            },
+            'messprogrammform numberfield[name=teilintervallVon]': {
                 change: this.synchronizeSlider,
                 blur: this.checkPeriod
             },

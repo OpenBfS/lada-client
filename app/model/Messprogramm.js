@@ -59,9 +59,23 @@ Ext.define('Lada.model.Messprogramm', {
     }, {
         name: 'intervallOffset'
     }, {
-        name: 'gueltigVon'
+        name: 'gueltigVon',
+        type: 'date',
+        convert: function(v) {
+            if (!v) {
+                return v;
+            }
+            return new Date(v);
+        },
     }, {
-        name: 'gueltigBis'
+        name: 'gueltigBis',
+        type: 'date',
+        convert: function(v) {
+            if (!v) {
+                return v;
+            }
+            return new Date(v);
+        },
     }, {
         name: 'probeNehmerId'
     }, {

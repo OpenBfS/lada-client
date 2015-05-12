@@ -256,6 +256,12 @@ Ext.define('Lada.view.form.Messprogramm', {
                             name: 'gueltigBis',
                             format: 'd.m.Y H:i',
                             period: 'end'
+                        }, {
+                            xtype: 'numberfield',
+                            fieldLabel: i18n.getMsg('offset'),
+                            labelWidth: 90,
+                            anchor: '100%',
+                            name: 'intervallOffset',
                         }]
                     }, {
                         xtype: 'fset',
@@ -310,6 +316,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         // for instance H, M, J, ...
         // Initialize the probenintervallslider
         var s = this.down('probenintervallslider');
+        var i = this.getForm().findField('intervallOffset');
         var v = this.getForm().findField('teilintervallVon');
         var b = this.getForm().findField('teilintervallBis');
         var intervallstore = Ext.data.StoreManager.get('Probenintervall');
@@ -366,6 +373,10 @@ Ext.define('Lada.view.form.Messprogramm', {
 
         v.setValue(svalLower);
         b.setValue(svalUpper);
+
+        //Set IntervallOffset
+        i.setMinValue(0);
+        i.setMaxValue(max-1);
 
         console.log('Populate End');
     },
