@@ -40,14 +40,7 @@ Ext.define('Lada.model.Messgroesse', {
         name: 'kennungBvl'
     }],
 
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/messgroesse',
-        reader: {
-            type: 'json',
-            root: 'data'
-        }
-    }
+    idProperty: 'id'
+    // other models contain the proxy-configuration at this point.
+    // we don't. You can find the Proxy in in the Store: Lada.store.Messgroessen
 });

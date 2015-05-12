@@ -34,7 +34,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
             clicksToMoveEditor: 1,
             autoCancel: false,
             disabled: false,
-            pluginId: 'rowedit',
+            pluginId: 'mmtrowedit',
             listeners:{
                 // Make row ineditable when readonly is set to true
                 // Normally this would belong into a controller an not the view.

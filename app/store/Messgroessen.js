@@ -22,5 +22,15 @@ Ext.define('Lada.store.Messgroessen', {
             return '';
         }
     }],
-    autoLoad: true
+    autoLoad: true,
+
+    proxy: {
+        type: 'rest',
+        url: 'lada-server/messgroesse',
+        reader: {
+            type: 'json',
+            root: 'data'
+        }
+    }
+
 });

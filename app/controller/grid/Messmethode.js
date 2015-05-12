@@ -11,6 +11,7 @@
  */
 Ext.define('Lada.controller.grid.Messmethode', {
     extend: 'Ext.app.Controller',
+    record: null,
 
     /**
      * Inhitialize the controller
@@ -28,6 +29,17 @@ Ext.define('Lada.controller.grid.Messmethode', {
             },
             'messmethodengrid button[action=delete]': {
                 click: this.remove
+            },
+            //Nuklidegrid
+            'nuklidegrid': {
+                edit: this.gridSaveNuklid,
+                canceledit: this.cancelEdit
+            },
+            'nuklidegrid button[action=add]': {
+                click: this.addNuklid
+            },
+            'nuklidegrid button[action=remove]': {
+                click: this.removeNuklid
             }
         });
     },
@@ -39,7 +51,6 @@ Ext.define('Lada.controller.grid.Messmethode', {
      * On failure it displays a message
      */
      gridSave: function(editor, context) {
-        console.log(context);
         context.record.save({
             success: function() {
                 context.grid.initData();
@@ -65,10 +76,23 @@ Ext.define('Lada.controller.grid.Messmethode', {
     },
 
     /**
+     * This function is called when the Nuklide-grids roweditor saves
+     * the record.
+     * It adds the nuklid to the messgroessen-array of the messmethode
+     * record.
+     * On success it refreshes the windows which contains the grid
+     * On failure it displays a message
+     */
+    gridSaveNuklid: function(editor, context) {
+        console.log(context);
+        this.syncArray(context.store);
+    },
+
+    /**
      * When the edit was canceled,
      * the empty row might have been created by the roweditor is removed
      */
-     cancelEdit: function(editor, context) {
+    cancelEdit: function(editor, context) {
         if (!context.record.get('id') ||
             context.record.get('id') === '') {
             editor.getCmp().store.remove(context.record);
@@ -82,25 +106,109 @@ Ext.define('Lada.controller.grid.Messmethode', {
      * Messmethod
      */
     selectRow: function(row, record, index) {
-        var ngrid = row.view.up('window').down('nuklidegrid');
+        //save the record to this object. which makes it accessible
+        //for nuklideGrid releated functions.
+        this.record = record;
         var nuklide = record.get('messgroessen');
+
+        var ngrid = row.view.up('window').down('nuklidegrid');
+
+        var mmtmessgroessenstore = this.buildNuklideStore(nuklide);
+        //Set Store
+        ngrid.setData(mmtmessgroessenstore);
+
+        //Enable Editing
+        ngrid.setReadOnly(false);
+    },
+
+    /**
+     * This function syncs the Messmethoden-Messgroessen Array
+     * With the Nuklide Store.
+     * It simply overwrites the Array
+     */
+    syncArray: function(store) {
+        var mg = new Array();
+        console.log('syncarray');
+        console.log(store);
+        var item;
+        for (item in store.data.items){
+            mg.push(store.data.items[item].get('id'));
+        }
+
+        // Ext.Array.contains(mg, id[i])
+        this.record.set('messgroessen', mg);
+        var me = this;
+        this.record.save({
+            success: function() {
+                console.log('Success');
+                console.log(me.record.get('messgroessen'));
+                console.log(mg);
+            },
+            failure: function(request, response) {
+                var json = response.request.scope.reader.jsonData;
+                if (json) {
+                    if (json.message){
+                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
+                            +' #'+json.message,
+                            Lada.getApplication().bundle.getMsg(json.message));
+                    } else {
+                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
+                            Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                    }
+                } else {
+                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
+                        Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                }
+            }
+        });
+
+    },
+
+    /**
+     * Return a MessgroessenStore created from nuklide array
+     */
+    buildNuklideStore: function(nuklide) {
+        // Create a fully populated Messgroessen Store
         var store = Ext.data.StoreManager.get('messgroessen');
         if (!store) {
             store = Ext.create('Lada.store.Messgroessen');
         }
-        //get selection model
-        var selectedRecords = [];
-        //iterate store and slecet all records which are in nuklide array
-        store.each(function(record){
-            //TODO if(record.get('id') in nuklide){
-                selectedRecords.push(record);
-            //TODO}
-        });
-        ngrid.setData(store);
 
-        var selModel = ngrid.getSelectionModel();
-        console.log(selModel);
-        selModel.select(selectedRecords, false, false);
+        //Create an empty Messgroessen Store which will be populated with the
+        //Messgroessen defined in the Messmethoden record.
+        var mmtmessgroessenstore = Ext.create('Ext.data.Store', {
+            model: 'Lada.model.Messgroesse',
+        });
+
+        // Copy every Record from Messgroessenstore to the empty Store
+        // which was defined in the messmethode record
+        for (n in nuklide) {
+            mmtmessgroessenstore.add(store.getById(nuklide[n]));
+        }
+        return mmtmessgroessenstore;
+    },
+
+    /**
+     * This function adds a new row in the NuklidGrid
+     */
+    addNuklid: function(button) {
+        var record = Ext.create('Lada.model.Messgroesse');
+        button.up('nuklidegrid').store.insert(0, record);
+        button.up('nuklidegrid').rowEditing.startEdit(0, 0);
+    },
+
+    /**
+     * A row can be removed from the Nuklidgrid with the remove
+     * function. It asks the user for confirmation
+     * If the removal was confirmed, it reloads the parent window on success,
+     * on failure, an error message is shown.
+     */
+    removeNuklid: function(button) {
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection()[0];
+        grid.getStore().remove(selection);
+        var store = grid.getStore();
+        this.syncArray(store);
     },
 
     /**

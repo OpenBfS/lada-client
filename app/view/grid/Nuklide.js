@@ -13,11 +13,6 @@ Ext.define('Lada.view.grid.Nuklide', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.nuklidegrid',
 
-    selType: 'checkboxmodel',
-    selModel: {
-        checkOnly: false,
-        injectCheckbox: 0
-    },
     requires: [
         'Lada.view.widget.Messgroesse'
     ],
@@ -39,16 +34,16 @@ Ext.define('Lada.view.grid.Nuklide', {
             xtype: 'toolbar',
             dock: 'bottom',
             items: ['->', {
-                text: i18n.getMsg('save'),
-                qtip: i18n.getMsg('save.qtip'),
-                icon: 'resources/img/dialog-ok-apply.png',
-                action: 'save',
+                text: i18n.getMsg('add'),
+                qtip: i18n.getMsg('add.qtip'),
+                icon: 'resources/img/list-add.png',
+                action: 'add',
                 disabled: true
             }, {
-                text: i18n.getMsg('discard'),
-                qtip: i18n.getMsg('discard.qtip'),
-                icon: 'resources/img/dialog-cancel.png',
-                action: 'discard',
+                text: i18n.getMsg('delete'),
+                qtip: i18n.getMsg('delete.qtip'),
+                icon: 'resources/img/list-remove.png',
+                action: 'remove',
                 disabled: true
             }]
         }];
@@ -65,14 +60,56 @@ Ext.define('Lada.view.grid.Nuklide', {
                     store = Ext.create('Lada.store.Messgroessen');
                 }
                 return store.findRecord('id', value, 0, false, false, true).get('messgroesse');
+            },
+            editor: {
+                xtype: 'combobox',
+                store: Ext.data.StoreManager.get('messgroessen'),
+                valueField: 'id',
+                allowBlank: false,
+                editable: true,
+                forceSelection: true,
+                autoSelect: true,
+                //multiSelect: true, // TODO
+                queryMode: 'local',
+                minChars: 0,
+                typeAhead: false,
+                triggerAction: 'all',
+                tpl: Ext.create("Ext.XTemplate",
+                    '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
+                    '{messgroesse}</div></tpl>'),
+                displayTpl: Ext.create('Ext.XTemplate',
+                    '<tpl for=".">{messgroesse}</tpl>'),
             }
         }];
+
+        this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToMoveEditor: 1,
+            autoCancel: false,
+            disabled: false,
+            pluginId: 'nuklidrowedit',
+            listeners:{
+                // Make row ineditable when readonly is set to true
+                // Normally this would belong into a controller an not the view.
+                // But the RowEditPlugin is not handled there.
+                beforeedit: function(e, o) {
+                    var readonlywin = o.grid.up('window').record.get('readonly');
+                    var readonlygrid = o.record.get('readonly');
+                    if (readonlywin == true || readonlygrid == true || this.disabled)  {
+                        return false;
+                    }
+                    return true;
+                }
+            }
+        });
+
+        this.plugins = [this.rowEditing];
+
         this.initData();
         this.callParent(arguments);
     },
     initData: function() {
         if (this.store) {
-            this.store.removeAll();
+            this.store.reload();
         }
     },
     setData: function(store) {
@@ -86,15 +123,15 @@ Ext.define('Lada.view.grid.Nuklide', {
             if (this.getPlugin('rowedit')){
                 this.getPlugin('rowedit').disable();
             }
-            this.down('button[action=discard]').disable();
-            this.down('button[action=save]').disable();
+            this.down('button[action=add]').disable();
+            this.down('button[action=remove]').disable();
         }else{
             //Writable
             if (this.getPlugin('rowedit')){
                 this.getPlugin('rowedit').enable();
             }
-            this.down('button[action=discard]').enable();
-            this.down('button[action=save]').enable();
+            this.down('button[action=add]').enable();
+            this.down('button[action=remove]').enable();
          }
     }
 });
