@@ -26,11 +26,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform': {
                 dirtychange: this.dirtyForm
             },
-            'messprogrammform numberfield[name=teilintervallBis]': {
-                change: this.synchronizeSlider,
+            'messprogrammform gueltigPeriod datetime': {
                 blur: this.checkPeriod
             },
-            'messprogrammform numberfield[name=teilintervallVon]': {
+            'messprogrammform probenintervall numberfield': {
                 change: this.synchronizeSlider,
                 blur: this.checkPeriod
             },
@@ -185,7 +184,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
      * The function validates if the start is smaller than end.
      */
     checkPeriod: function(field) {
-
+        alert();
         // This field might be a field within a Period.
         // Search for Partner field (period: end/start) and validate
         // End Before Start validation
