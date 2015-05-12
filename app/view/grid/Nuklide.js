@@ -23,9 +23,10 @@ Ext.define('Lada.view.grid.Nuklide', {
         deferEmptyText: false,
         markDirty: false //Remove Dirty-Flags
     },
-    //margin: '0, 0, 5, 5',
+    margin: '0, 0, 5, 5',
 
     recordId: null,
+    allowDeselect: true,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -110,7 +111,7 @@ Ext.define('Lada.view.grid.Nuklide', {
     },
     initData: function() {
         if (this.store) {
-            this.store.reload();
+            this.store.removeAll();
         }
     },
     setData: function(store) {

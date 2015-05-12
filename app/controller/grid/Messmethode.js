@@ -22,7 +22,8 @@ Ext.define('Lada.controller.grid.Messmethode', {
             'messmethodengrid': {
                 edit: this.gridSave,
                 canceledit: this.cancelEdit,
-                select: this.selectRow
+                select: this.selectRow,
+                deselect: this.deselectRow
             },
             'messmethodengrid button[action=add]': {
                 click: this.add
@@ -144,6 +145,14 @@ Ext.define('Lada.controller.grid.Messmethode', {
 
         //Enable Editing
         ngrid.setReadOnly(false);
+    },
+
+    /**
+     * Clear the nuklideGrid when a MMT Row is deselected
+     */
+    deselectRow: function(row, record, index){
+        var ngrid = row.view.up('window').down('nuklidegrid');
+        ngrid.initData();
     },
 
     /**

@@ -22,9 +22,10 @@ Ext.define('Lada.view.grid.Messmethoden', {
     viewConfig: {
         deferEmptyText: false
     },
-    //margin: '0, 0, 5, 5',
+    margin: '0, 5, 5, 0',
 
     recordId: null,
+    allowDeselect: true,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
