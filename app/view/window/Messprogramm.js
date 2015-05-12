@@ -142,11 +142,11 @@ Ext.define('Lada.view.window.Messprogramm', {
                     // If the Messprogramm is ReadOnly, disable Inputfields and grids
                     if (this.record.get('readonly') === true) {
                         this.down('messprogrammform').setReadOnly(true);
-                        this.disableChildren();
+                        //this.disableChildren();
                     }
                     else {
                         this.down('messprogrammform').setReadOnly(false);
-                        this.enableChildren();
+                        //this.enableChildren();
                     }
                     me.setLoading(false);
                 },

@@ -98,7 +98,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             allowBlank: false,
                             editable: true
                         }, {
-                             xtype: 'textarea', //todo: we need a widget which is capable of handling errormsg.
+                            xtype: 'textarea', //TODO: we need a widget which is capable of handling errormsg.
                             name: 'probeKommentar',
                             labelAlign: 'top',
                             fieldLabel: i18n.getMsg('probeKommentar'),
@@ -383,6 +383,7 @@ Ext.define('Lada.view.form.Messprogramm', {
 
     setRecord: function(record) {
         this.clearMessages();
+
         this.getForm().loadRecord(record);
         //Set the intervall numberfields and the slider.
         this.down('probenintervallslider').setValue([
@@ -391,6 +392,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         ]);
 
         //TODO Set Sliders MinMaxValue
+        this.populateIntervall(record);
 
         this.down('probenintervallslider').on(
             'change',
