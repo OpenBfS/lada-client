@@ -91,7 +91,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             allowBlank: false,
                             editable: true
                         }, {
-                            xtype: 'textfield',
+                            xtype: 'tfield',
                             name: 'name',
                             fieldLabel: i18n.getMsg('name'),
                             labelWidth: 135,
@@ -232,7 +232,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     items: [{
                         xtype: 'fset',
                         title: i18n.getMsg('validity'),
-                        name: 'gueltigPeriod',
+                        name: 'gueltigPeriodFieldset',
                         anchor: '100%',
                         width: '50%',
                         margin: '0, 5, 5, 5',
@@ -266,7 +266,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     }, {
                         xtype: 'fset',
                         title: i18n.getMsg('probenintervall'),
-                        name: 'probenintervall',
+                        name: 'probenIntervallFieldset',
                         anchor: '100%',
                         width: '50%',
                         margin: '0, 5, 5, 5',
@@ -437,6 +437,20 @@ Ext.define('Lada.view.form.Messprogramm', {
 
     clearMessages: function() {
         // TODO
+        this.down('cbox[name=mstId]').clearWarningOrError();
+        this.down('tfield[name=name]').clearWarningOrError();
+        //no clearmsg for probeKommentar
+        this.down('fset[name=erwAngaben]').clearMessages();
+        this.down('cbox[name=datenbasisId]').clearWarningOrError();
+        this.down('cbox[name=baId]').clearWarningOrError();
+        this.down('cbox[name=test]').clearWarningOrError();
+        this.down('cbox[name=probenartId]').clearWarningOrError();
+        this.down('cbox[name=netzbetreiberId]').clearWarningOrError();
+        //no clear for probeNehmerId
+        // Deskriptoren are missing
+        this.down('cbox[name=umwId]').clearWarningOrError();
+        this.down('fset[name=gueltigPeriodFieldset]').clearMessages();
+        this.down('fset[name=probenIntervallFieldset]').clearMessages();
     },
 
     setReadOnly: function(value) {

@@ -26,14 +26,18 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform': {
                 dirtychange: this.dirtyForm
             },
-            'messprogrammform gueltigPeriod datetime': {
-                blur: this.checkPeriod
+            'messprogrammform datetime textfield': {
+                blur: this.checkDatePeriod
             },
-            'messprogrammform probenintervall numberfield': {
+            'messprogrammform [name="teilintervallVon"]': {
                 change: this.synchronizeSlider,
                 blur: this.checkPeriod
             },
-            'messprogrammform probenintervall combobox': {
+            'messprogrammform [name="teilintervallBis"]': {
+                change: this.synchronizeSlider,
+                blur: this.checkPeriod
+            },
+             'messprogrammform probenintervall combobox': {
                 select: this.updateIntervalls
             }
         });
@@ -184,7 +188,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
      * The function validates if the start is smaller than end.
      */
     checkPeriod: function(field) {
-        alert();
         // This field might be a field within a Period.
         // Search for Partner field (period: end/start) and validate
         // End Before Start validation
@@ -199,5 +202,33 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 field.up('fieldset').clearMessages();
             }
         }
-    }
-});
+    },
+
+    /**
+     * checkDatePeriod() is called when a fields defining an intervall
+     * were modified
+     * The function validates if the start is smaller than end.
+     * Same as checkPeriod but requires DATETIME fields
+     */
+    checkDatePeriod: function(field) {
+        // This field might be a field within a Period.
+        // Search for Partner field (period: end/start) and validate
+        // End Before Start validation
+        if (field.period) {
+            var partners = new Array();
+                partners[0] = field.up('fieldset')
+                    .down('datetime[period=start]')
+                    .down('textfield')
+                    .getValue()
+                partners[1] = field.up('fieldset')
+                    .down('datetime[period=end]')
+                    .down('textfield')
+                    .getValue()
+            if (partners[0] && partners[1] && partners[0] > partners [1]) {
+                var msg = Lada.getApplication().bundle.getMsg('662');
+                field.up('fieldset').showWarningOrError(true, msg, false, '');
+            } else {
+                field.up('fieldset').clearMessages();
+            }
+        }
+    }});
