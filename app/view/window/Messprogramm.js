@@ -78,7 +78,7 @@ Ext.define('Lada.view.window.Messprogramm', {
             autoScroll: true,
             items: [{
                 xtype: 'messprogrammform',
-                recordId: this.record? this.record.get('id') : null
+                recordId: this.record ? this.record.get('id') : null
             }, {
                 //Messmethoden
                 xtype: 'fieldset',
@@ -90,13 +90,13 @@ Ext.define('Lada.view.window.Messprogramm', {
                 },
                 items: [{
                     xtype: 'messmethodengrid',
-                    recordId: this.record? this.record.get('id') : null,
                     columnWidth: 0.5,
+                    recordId: this.record ? this.record.get('id') : null,
                     flex: 1
                 }, {
                     xtype: 'nuklidegrid',
-                    recordId: this.record? this.record.get('id') : null,
                     columnWidth: 0.5,
+                    recordId: this.record ? this.record.get('id') : null,
                     flex: 1
                 }]
             }]
@@ -152,7 +152,6 @@ Ext.define('Lada.view.window.Messprogramm', {
                 },
                 scope: this
             });
-
         }
         // Create a Create Window
         else {
