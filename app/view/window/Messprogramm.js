@@ -82,19 +82,21 @@ Ext.define('Lada.view.window.Messprogramm', {
             }, {
                 //Messmethoden
                 xtype: 'fieldset',
+                padding: '5, 5',
                 title: i18n.getMsg('mmtmessprogramm.form.fieldset.title'),
-                autoScroll: true,
                 margin: 5,
                 layout: {
-                    type: 'hbox',
+                    type: 'column'
                 },
                 items: [{
                     xtype: 'messmethodengrid',
                     recordId: this.record? this.record.get('id') : null,
+                    columnWidth: 0.5,
                     flex: 1
                 }, {
                     xtype: 'nuklidegrid',
                     recordId: this.record? this.record.get('id') : null,
+                    columnWidth: 0.5,
                     flex: 1
                 }]
             }]
