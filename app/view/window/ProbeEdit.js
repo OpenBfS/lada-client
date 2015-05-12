@@ -141,6 +141,9 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 var json = Ext.decode(response.response.responseText);
                 if (json) {
                     this.setMessages(json.errors, json.warnings);
+                    if (!json.warnings.mediaDesk) {
+                        this.down('probeform').setMediaDesk(record);
+                    }
                 }
                 // If the Probe is ReadOnly, disable Inputfields and grids
                 if (this.record.get('readonly') === true) {

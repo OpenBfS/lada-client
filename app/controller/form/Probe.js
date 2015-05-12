@@ -29,6 +29,9 @@ Ext.define('Lada.controller.form.Probe', {
             },
             'probeform [xtype="datetime"] field': {
                 blur: this.checkDate
+            },
+            'probeform panel[xtype="deskriptor] combobox': {
+                select: this.deskriptorSelect
             }
         });
     },
@@ -173,5 +176,52 @@ Ext.define('Lada.controller.form.Probe', {
         if (w == 0 && e == 0) {
             field.up().clearWarningOrError();
         }
+    },
+
+    deskriptorSelect: function(field, records) {
+        var desk = field.up('deskriptor');
+        var media = field.up('probeform').down('textfield[name="mediaDesk"]');
+        var current = media.getValue().split(' ');
+        this.clearChildDesk(field.up('deskriptor'), current);
+        if (current.length < 13) {
+            for (var i = 0; i <= 12; i++) {
+                if (i === 0) {
+                    current.push('D:');
+                }
+                else if (i === desk.layer + 1) {
+                    var value;
+                    if (records[0].get('sn') < 10) {
+                        value = '0' + records[0].get('sn');
+                    }
+                    else {
+                        value = records[0].get('sn');
+                    }
+                    current.push(value);
+                }
+                else {
+                    current.push('00');
+                }
+            }
+        }
+        else {
+            var value;
+            if (records[0].get('sn') < 10) {
+                value = '0' + records[0].get('sn');
+            }
+            else {
+                value = records[0].get('sn');
+            }
+            current[desk.layer + 1] = value;
+        }
+        media.setValue(current.join(' ').trim());
+    },
+
+    clearChildDesk: function(field, media) {
+        var allS = field.up('fieldset').items.items;
+        for (var i = field.layer + 1; i < 12; i++) {
+            allS[i].clearValue();
+            media[i + 1] = '00';
+        }
     }
+
 });
