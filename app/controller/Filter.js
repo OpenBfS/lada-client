@@ -206,10 +206,10 @@ Ext.define('Lada.controller.Filter', {
         var modes = element.up('panel[name=main]').down('radiogroup').getChecked();
         var sname = modes[0].inputValue;
 
-        if (sname === 'ProbenList') {
+        if (sname === 'ProbeList') {
             sname = 'Lada.store.ProbenList';
         }
-        else if (sname === 'MessprogrammeList') {
+        else if (sname === 'MessprogrammList') {
             sname = 'Lada.store.MessprogrammeList';
         }
 

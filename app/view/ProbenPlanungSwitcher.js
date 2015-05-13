@@ -31,9 +31,9 @@ Ext.define('Lada.view.ProbenPlanungSwitcher', {
                 xtype: 'radiofield',
                 name: 'ppswitch',
                 boxLabel: i18n.getMsg('probelist'),
-                inputValue: 'ProbenList', //this determines the store
+                inputValue: 'ProbeList', //this determines the store
                     // which will be loaded,
-                checked: true,
+                //checked: true,
                 handler: function(field, state){
                     if (state === true) {
                         this.fireEvent('check', field);
@@ -43,7 +43,7 @@ Ext.define('Lada.view.ProbenPlanungSwitcher', {
                 xtype: 'radiofield',
                 name: 'ppswitch',
                 boxLabel: i18n.getMsg('probeplanning'),
-                inputValue: 'MessprogrammeList', //name of a store
+                inputValue: 'MessprogrammList', //name of a store
                 handler: function(field, state){
                     if (state === true) {
                         this.fireEvent('check', field);

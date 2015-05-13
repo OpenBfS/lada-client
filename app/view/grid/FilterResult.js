@@ -35,21 +35,25 @@ Ext.define('Lada.view.grid.FilterResult', {
             {
                 text: 'Probe erstellen',
                 icon: 'resources/img/list-add.png',
-                action: 'addProbe'
+                action: 'addProbe',
+                disabled: false
             }, {
                 text: 'Messprogramm erstellen',
                 icon: 'resources/img/list-add.png',
-                action: 'addMessprogramm'
+                action: 'addMessprogramm',
+                disabled: false
             },
             '-',
             {
                 text: 'Proben Importieren',
                 icon: 'resources/img/svn-commit.png',
-                action: 'import'
+                action: 'import',
+                disabled: false
             }, {
                 text: 'Proben Exportieren',
                 icon: 'resources/img/svn-update.png',
-                action: 'export'
+                action: 'export',
+                disabled: true
             }
             ]
         }];
@@ -73,13 +77,29 @@ Ext.define('Lada.view.grid.FilterResult', {
             displayInfo: true
         }]);
 
-        //Reset the Text int the Toolbar.
+        //Configure the Toolbar.
+        this.setMode(store);
+    },
+
+    /**
+     * Enables or disables Toolbar-Buttons according to the selected mode
+     */
+    setMode: function(store) {
         var t = Ext.getCmp('tbtitle');
-        if (store.model.modelName == 'Lada.model.MessprogrammList') {
-            t.setText(i18n.getMsg('probeplanning'));
-        }
-        else if (store.model.modelName == 'Lada.model.ProbeList') {
+        var i18n = Lada.getApplication().bundle;
+        if (store.model.modelName == 'Lada.model.ProbeList'){
             t.setText(i18n.getMsg('probelist'));
+            this.down('button[action=addMessprogramm]').disable();
+            this.down('button[action=addProbe]').enable();
+            this.down('button[action=import]').enable();
+            this.down('button[action=export]').enable();
+        }
+        else if (store.model.modelName == 'Lada.model.MessprogrammList') {
+            t.setText(i18n.getMsg('probeplanning'));
+            this.down('button[action=addMessprogramm]').enable();
+            this.down('button[action=addProbe]').disable();
+            this.down('button[action=import]').disable();
+            this.down('button[action=export]').disable();
         }
         else {
             t.setText('');
@@ -88,6 +108,7 @@ Ext.define('Lada.view.grid.FilterResult', {
                 ' Hence the title could not be set.');
         }
     },
+
     /**
      * Setup columns of the Grid dynamically based on a list of given cols.
      * The function is called from the {@link Lada.controller.Sql#selectSql

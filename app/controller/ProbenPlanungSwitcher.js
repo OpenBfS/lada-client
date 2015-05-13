@@ -26,7 +26,7 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
     init: function() {
         this.control({
             'radiofield[name=ppswitch]': {
-                check: this.switchStores
+                check: this.switchModes
             }
         });
         this.callParent(arguments);
@@ -36,21 +36,27 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
      * Function is called when the user selects a checkbox.
      * according to the checkboxes inputValue,
      * the function alters the store which was loaded by the
-     * filterpanels combobox
+     * filterpanels combobox,
+     * If enabled the function also disables / enables the UI-Buttons
+     * in the Filterresult grid.
      */
-    switchStores: function(field) {
+    switchModes: function(field) {
+
+        var disableButtons = true;
+
         var cbox = field.up('probenplanungswitcher').up().down('combobox');
         var resultGrid = field.up('panel[name=main]').down('filterresultgrid');
         filters = field.up('panel[name=main]').down('fieldset[name=filtervariables]');
         filters.removeAll();
         filters.hide();
         var sname = 'Lada.store.ProbeQueries';
-        if (field.inputValue === 'MessprogrammeList' && cbox) {
+        if (field.inputValue === 'MessprogrammList' && cbox) {
             sname = 'Lada.store.MessprogrammQueries';
         }
-        else if (field.inputValue === 'ProbenList' && cbox) {
+        else if (field.inputValue === 'ProbeList' && cbox) {
             sname = 'Lada.store.ProbeQueries';
         }
+
 
         var store = Ext.StoreManager.lookup(sname);
         if (!store) {
