@@ -15,7 +15,7 @@ var betriebsartStore = Ext.create('Ext.data.Store', {
     }, {
         'betriebsartId': '2',
         'betriebsart': 'Störfall/Intensivbetrieb'
-    }],
+    }]
 });
 
 /**

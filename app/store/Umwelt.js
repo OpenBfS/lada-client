@@ -27,5 +27,5 @@ Ext.define('Lada.store.Umwelt', {
     }],
     sortOnLoad: true,
     remoteSort: false,
-    autoLoad: true,
+    autoLoad: true
 });

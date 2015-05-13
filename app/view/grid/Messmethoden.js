@@ -62,7 +62,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 text: i18n.getMsg('add'),
                 icon: 'resources/img/list-add.png',
                 action: 'add',
-                recordId: this.recordId,
+                recordId: this.recordId
             }, {
                 text: i18n.getMsg('delete'),
                 icon: 'resources/img/list-remove.png',
@@ -100,7 +100,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
                     '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
                     '{id} - {messmethode}</div></tpl>'),
                 displayTpl: Ext.create('Ext.XTemplate',
-                    '<tpl for=".">{id} - {messmethode}</tpl>'),
+                    '<tpl for=".">{id} - {messmethode}</tpl>')
             }
         }];
         this.initData();

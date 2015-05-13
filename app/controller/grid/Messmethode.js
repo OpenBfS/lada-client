@@ -211,7 +211,7 @@ Ext.define('Lada.controller.grid.Messmethode', {
         //Create an empty Messgroessen Store which will be populated with the
         //Messgroessen defined in the Messmethoden record.
         var mmtmessgroessenstore = Ext.create('Ext.data.Store', {
-            model: 'Lada.model.Messgroesse',
+            model: 'Lada.model.Messgroesse'
         });
 
         // Copy every Record from Messgroessenstore to the empty Store

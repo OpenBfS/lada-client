@@ -261,7 +261,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             fieldLabel: i18n.getMsg('offset'),
                             labelWidth: 90,
                             anchor: '100%',
-                            name: 'intervallOffset',
+                            name: 'intervallOffset'
                         }]
                     }, {
                         xtype: 'fset',
@@ -299,7 +299,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             fieldLabel: i18n.getMsg('intervall'),
                             labelWidth: 90,
                             anchor: '100%',
-                            values: [0, 0],
+                            values: [0, 0]
                                 //this will be overridden
                                 // by setRecord
                         }]

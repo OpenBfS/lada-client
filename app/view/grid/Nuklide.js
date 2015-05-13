@@ -80,7 +80,7 @@ Ext.define('Lada.view.grid.Nuklide', {
                     '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
                     '{messgroesse}</div></tpl>'),
                 displayTpl: Ext.create('Ext.XTemplate',
-                    '<tpl for=".">{messgroesse}</tpl>'),
+                    '<tpl for=".">{messgroesse}</tpl>')
             }
         }];
 

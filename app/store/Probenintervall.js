@@ -64,10 +64,10 @@ Ext.define('Lada.store.Probenintervall', {
     }],
     sorters: [{
         property: 'periodend',
-        direction: 'DESC',
+        direction: 'DESC'
     }],
     sortOnLoad: true,
-    remoteSort: false,
+    remoteSort: false
 });
 
 function translateStore(v, record){
