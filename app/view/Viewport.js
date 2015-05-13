@@ -73,21 +73,9 @@ Ext.define('Lada.view.Viewport', {
                             ]
                         }
                     }, '->', {
-                        xtype: 'box',
-                        autoEl: {
-                            tag: 'img',
-                            src: 'resources/img/user-identity.png'
-                        }
-                    }, {
                         xtype: 'tbtext',
                         id: 'userinfo',
                         text: ''
-                    }, {
-                        xtype: 'box',
-                        autoEl: {
-                            tag: 'img',
-                            src: 'resources/img/network-workgroup.png'
-                        }
                     }, {
                         xtype: 'tbtext',
                         id: 'groupinfo',
