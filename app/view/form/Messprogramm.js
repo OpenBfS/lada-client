@@ -246,7 +246,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             labelWidth: 90,
                             anchor: '100%',
                             name: 'gueltigVon',
-                            format: 'd.m.Y H:i',
+                            format: 'd.m.Y',
                             period: 'start'
                         }, {
                             xtype: 'datetime',
@@ -254,7 +254,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             labelWidth: 90,
                             anchor: '100%',
                             name: 'gueltigBis',
-                            format: 'd.m.Y H:i',
+                            format: 'd.m.Y',
                             period: 'end'
                         }, {
                             xtype: 'numberfield',

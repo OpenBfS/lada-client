@@ -62,28 +62,55 @@ Ext.define('Lada.model.Messprogramm', {
         name: 'gueltigVon',
         type: 'date',
         convert: function(v) {
+            var firstofyeartimestamp = new Date(
+                Date.UTC(
+                    new Date().getFullYear(),0,1))
+                .valueOf();
+            var dayToMilli = 86400000;
+
             if (!v) {
                 return v;
             }
-            return new Date(v);
+            //check if v might be a date
+            // unless we go back in time this will work
+            if (v < 1000) {
+                v = v * dayToMilli;
+                v = v + firstofyeartimestamp;
+                v = new Date(v);
+            }
+            return v;
         },
         serialize: function(value) {
             if (value instanceof Date && !isNaN(value.valueOf())) {
-                return value.getDOY();
+                return Ext.Date.getDayOfYear(value);
             }
         }
     }, {
         name: 'gueltigBis',
         type: 'date',
         convert: function(v) {
+            var firstofyeartimestamp = new Date(
+                Date.UTC(
+                    new Date().getFullYear(),0,1))
+                .valueOf();
+            var dayToMilli = 86400000;
+
             if (!v) {
                 return v;
             }
-            return new Date(v);
+
+            //check if v might be a date
+            // unless we go back in time this will work
+            if (v < 1000) {
+                v = v * dayToMilli;
+                v = v + firstofyeartimestamp;
+                v = new Date(v);
+            }
+            return v;
         },
         serialize: function(value) {
             if (value instanceof Date && !isNaN(value.valueOf())) {
-                return value.getDOY();
+                return Ext.Date.getDayOfYear(value);
             }
         }
     }, {
