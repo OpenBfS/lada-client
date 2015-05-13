@@ -44,6 +44,7 @@ Ext.define('Lada.view.widget.Deskriptor', {
         this.store = Ext.create('Lada.store.Deskriptoren');
 
         this.callParent(arguments);
+        this.down('combobox').isFormField = false;
     },
 
     getParents: function(field) {

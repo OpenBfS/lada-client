@@ -180,7 +180,7 @@ Ext.define('Lada.view.form.Probe', {
                                 }
                             }
                         }, {
-                            xtype: 'textfield',
+                            xtype: 'tfield',
                             maxLength: 38,
                             enforceMaxLength: true,
                             name: 'mediaDesk',
@@ -213,18 +213,11 @@ Ext.define('Lada.view.form.Probe', {
                             title: 'Details Deskriptoren',
                             collapsible: true,
                             collapsed: true,
-                            defaultType: 'textfield',
                             layout: {
                                 type: 'table',
                                 columns: 3
                             },
-                            items: this.buildDescriptors(),
-                            listeners: {
-                                dirtychange: {
-                                    fn: this.updateOnChange,
-                                    scope: me
-                                }
-                            }
+                            items: this.buildDescriptors()
                         }]
                     }]
                 }, {
@@ -405,7 +398,7 @@ Ext.define('Lada.view.form.Probe', {
         this.down('cbox[name=netzbetreiberId]').setReadOnly(value);
         this.down('tfield[name=x11]').setReadOnly(value);
         this.down('textfield[name=media]').setReadOnly(value);
-        this.down('textfield[name=mediaDesk]').setReadOnly(value);
+        this.down('tfield[name=mediaDesk]').setReadOnly(value);
         this.down('cbox[name=umwId]').setReadOnly(value);
         this.down('datetime[name=probeentnahmeBeginn]').setReadOnly(value);
         this.down('datetime[name=probeentnahmeEnde]').setReadOnly(value);
@@ -415,7 +408,7 @@ Ext.define('Lada.view.form.Probe', {
 
         //Deskriptoren
         for (var i = 0; i < 12; i++) {
-            this.down('field[name=s'+i+']').setReadOnly(value);
+            this.down('deskriptor[layer='+i+']').setReadOnly(value);
         }
     },
 
@@ -425,7 +418,7 @@ Ext.define('Lada.view.form.Probe', {
             fields[i] = {
                 xtype: 'deskriptor',
                 fieldLabel: 'S' + i,
-                name: 's' + i,
+                //name: 's' + i,
                 labelWidth: 25,
                 width: 190,
                 layer: i,
