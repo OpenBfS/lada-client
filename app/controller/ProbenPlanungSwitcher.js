@@ -60,7 +60,14 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
 
         var store = Ext.StoreManager.lookup(sname);
         if (!store) {
-            store = Ext.create(sname);
+            store = Ext.create(sname, {
+                //Select first Item on Load
+                listeners: {
+                    load: function(s){
+                        cbox.select(s.getAt(0).get('id'));
+                    }
+                }
+            });
         }
         if (store) {
             store.load();

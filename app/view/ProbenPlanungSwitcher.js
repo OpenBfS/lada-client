@@ -33,7 +33,7 @@ Ext.define('Lada.view.ProbenPlanungSwitcher', {
                 boxLabel: i18n.getMsg('probelist'),
                 inputValue: 'ProbeList', //this determines the store
                     // which will be loaded,
-                //checked: true,
+                checked: true,
                 handler: function(field, state){
                     if (state === true) {
                         this.fireEvent('check', field);

@@ -26,11 +26,20 @@ Ext.define('Lada.view.FilterPanel', {
         this.items = [{
             xtype: 'combobox',
             name: 'filter',
+            id: 'filter-combobox',
             editable: false,
-            store: Ext.create('Lada.store.ProbeQueries'),
+            store: Ext.create('Lada.store.ProbeQueries',{
+                listeners: {
+                    load: function(s){
+                        Ext.getCmp('filter-combobox')
+                            .select(s.getAt(0).get('id'));
+                    }
+                }
+            }),
             displayField: 'name',
             valueField: 'id',
-            emptyText: 'Wählen Sie eine Abfrage'
+            emptyText: 'Wählen Sie eine Abfrage',
+            queryMode: 'local'
         }, {
             xtype: 'panel',
             border: false,
