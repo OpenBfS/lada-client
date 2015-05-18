@@ -23,23 +23,26 @@ Ext.define('Lada.view.FilterPanel', {
             type: 'vbox',
             align: 'stretch'
         };
+        var me = this;
         this.items = [{
             xtype: 'combobox',
             name: 'filter',
-            id: 'filter-combobox',
             editable: false,
             store: Ext.create('Lada.store.ProbeQueries',{
                 listeners: {
                     load: function(s){
-                        Ext.getCmp('filter-combobox')
-                            .select(s.getAt(0).get('id'));
+                        var records = new Array();
+                        records.push(s.getAt(0));
+
+                        var combo = me.down('combobox[name=filter]');
+                        combo.select(records[0]);
+                        combo.fireEvent('select', combo, records);
                     }
                 }
             }),
             displayField: 'name',
             valueField: 'id',
-            emptyText: 'Wählen Sie eine Abfrage',
-            queryMode: 'local'
+            emptyText: 'Wählen Sie eine Abfrage'
         }, {
             xtype: 'panel',
             border: false,

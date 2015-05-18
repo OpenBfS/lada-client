@@ -111,8 +111,8 @@ Ext.define('Lada.view.grid.FilterResult', {
 
     /**
      * Setup columns of the Grid dynamically based on a list of given cols.
-     * The function is called from the {@link Lada.controller.Sql#selectSql
-     * select sql event}
+     * The function is called from the {@link Lada.controller.Filter#search
+     * search event}
      */
     setupColumns: function(cols) {
         var resultColumns = [];

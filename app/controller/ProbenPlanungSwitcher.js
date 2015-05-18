@@ -64,7 +64,11 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
                 //Select first Item on Load
                 listeners: {
                     load: function(s){
-                        cbox.select(s.getAt(0).get('id'));
+                        var records = new Array();
+                        records.push(store.getAt(0));
+
+                        cbox.select(records[0]);
+                        cbox.fireEvent('select', cbox, records);
                     }
                 }
             });
