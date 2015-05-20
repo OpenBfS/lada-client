@@ -25,6 +25,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         'Lada.model.Messprogramm',
         'Lada.model.MmtMessprogramm',
         'Lada.view.widget.Probenintervall',
+        'Lada.view.widget.Location',
         'Lada.view.widget.ProbenintervallSlider',
         'Lada.view.widget.base.Datetime',
         'Lada.view.widget.base.DateField'
@@ -36,6 +37,7 @@ Ext.define('Lada.view.form.Messprogramm', {
     border: 0,
 
     recordId: null,
+    ortWindow: null,
 
     trackResetOnLoad: true,
 
@@ -98,12 +100,31 @@ Ext.define('Lada.view.form.Messprogramm', {
                             allowBlank: false,
                             editable: true
                         }, {
-                            xtype: 'textarea', //TODO: we need a widget which is capable of handling errormsg.
+                            xtype: 'textarea', //TODO: we might need a widget which is capable of handling errormsg.
                             name: 'probeKommentar',
                             labelAlign: 'top',
                             fieldLabel: i18n.getMsg('probeKommentar'),
                             labelwidth: 135,
                             anchor: '100%'
+                        }, {
+                            layout: 'hbox',
+                            border: 0,
+                            align: 'stretch',
+                            items: [{
+                                xtype: 'location',
+                                name: 'ortId',
+                                fieldLabel: i18n.getMsg('ortId'),
+                                labelWidth: 80,
+                                allowBlank: true,
+                                forceSelection: true,
+                                editable: false
+                            }, {
+                                xtype: 'button',
+                                name: 'ortIdButton',
+                                margin: '0 0 0 5',
+                                text: i18n.getMsg('messprogrammort.button.title'),
+                                action: 'ort'
+                            }]
                         }]
                     }, {
                         border: 0,

@@ -12,6 +12,10 @@
 Ext.define('Lada.controller.form.Messprogramm', {
     extend: 'Ext.app.Controller',
 
+    requires: [
+        'Lada.view.window.MessprogrammOrt'
+    ],
+
     /**
      * Initialize the Controller
      */
@@ -23,8 +27,14 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform button[action=discard]': {
                 click: this.discard
             },
+            'messprogrammform button[action=ort]': {
+                click: this.editOrtWindow
+            },
             'messprogrammform': {
                 dirtychange: this.dirtyForm
+            },
+            'messprogrammform location combobox': {
+                select: this.syncOrtWindow
             },
             'messprogrammform datetime textfield': {
                 blur: this.checkDatePeriod
@@ -54,6 +64,43 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var form = field.up('messprogrammform');
         var record = form.getRecord();
         form.populateIntervall(record, field.getValue());
+    },
+    /**
+     * The function will open a new Window to edit the Ort of a Messprogramm
+     */
+    editOrtWindow: function(button) {
+        var formPanel = button.up('form');
+        //Only Open if the WIndow does not exist, else focus
+        if (!formPanel.ortWindow) {
+            var data = formPanel.getForm().getFieldValues(true);
+            formPanel.ortWindow = Ext.create('Lada.view.window.MessprogrammOrt', {
+                record: formPanel.getRecord(),
+                parentWindow: formPanel.up('window')
+            });
+            formPanel.ortWindow.show();
+            formPanel.ortWindow.initData();
+       }
+       else {
+            formPanel.ortWindow.focus();
+            formPanel.ortWindow.setActive(true);
+       }
+    },
+
+    /**
+     * When a OrtWindow exist, and the value of the location combobox is changed, update the window.
+     */
+    syncOrtWindow: function(combo, record){
+        var formPanel = combo.up('messprogrammform');
+        if (formPanel.ortWindow) {
+            var ortwindowlocation = formPanel
+                .ortWindow.down('location')
+            var ortwindowcombo = ortwindowlocation
+                .down('combobox');
+
+            ortwindowcombo.select(combo.getValue());
+            ortwindowlocation.fireEvent('select',
+                ortwindowcombo, ortwindowcombo.record);
+       }
     },
 
     /**
