@@ -6,8 +6,8 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/*
- * Window to edit a Messung
+/**
+ * Window to create a Ort
  */
 Ext.define('Lada.view.window.OrtCreate', {
     extend: 'Ext.window.Window',
@@ -78,7 +78,10 @@ Ext.define('Lada.view.window.OrtCreate', {
                 bodyStyle: {
                     background: '#fff'
                 },
-                name: 'map'
+                name: 'map',
+                listeners: { //A listener which listens to the mappanels featureselected event
+                    featureselected: this.selectedFeature
+                }
             }]
         }];
         this.callParent(arguments);
@@ -89,6 +92,34 @@ Ext.define('Lada.view.window.OrtCreate', {
             probeId: this.record.get('id')
         });
         this.down('ortform').setRecord(ort);
+    },
+
+    /**
+     * @private
+     * Override to display and update the map view in the panel.
+     */
+    afterRender: function(){
+        this.superclass.afterRender.apply(this, arguments);
+        var map = this.down('map');
+        map.map.zoomToMaxExtent();
+    },
+
+    /**
+     * This function is used by the MapPanel, when a Feature was selected
+     */
+    selectedFeature: function(context, args) {
+    var feature = args[0];
+        if (feature.attributes.id &&
+            feature.attributes.id !== '') {
+            var record = Ext.data.StoreManager.get('locations').getById(feature.attributes.id);
+            context.up('window').down('locationform').setRecord(record);
+            context.up('window').down('locationform').setReadOnly(true);
+            context.up('window').down('ortform').down('combobox').setValue(record.id);
+        }
+        else {
+            context.up('window').down('locationform').setRecord(this.locationRecord);
+            context.up('window').down('locationform').setReadOnly(false);
+        }
     },
 
     setMessages: function(errors, warnings) {

@@ -32,7 +32,7 @@ Ext.define('Lada.view.panel.Map', {
      * Initialize the map panel.
      */
     initComponent: function() {
-        var id = this.record ? this.record.get('id') : Math.floor(Math.random() * 100);
+        var id = Ext.id();
         this.layers = [
             new OpenLayers.Layer.WMS(
                 'Standard' + id,
@@ -60,6 +60,7 @@ Ext.define('Lada.view.panel.Map', {
         this.bodyStyle = {background: '#fff'};
         this.initData();
         this.tbar = Ext.create('Lada.view.widget.MapToolbar');
+        this.addEvents('featureselected');
         this.callParent(arguments);
     },
 
@@ -92,6 +93,7 @@ Ext.define('Lada.view.panel.Map', {
         });
         this.featureLayer.addFeatures(this.locationFeatures);
         this.map.addLayer(this.featureLayer);
+
         this.selectControl = new OpenLayers.Control.SelectFeature(this.featureLayer, {
             clickout: false,
             toggle: false,
@@ -102,20 +104,6 @@ Ext.define('Lada.view.panel.Map', {
         });
         this.map.addControl(this.selectControl);
         this.selectControl.activate();
-    },
-
-    selectedFeature: function(feature) {
-        if (feature.attributes.id &&
-            feature.attributes.id !== '') {
-            var record = Ext.data.StoreManager.get('locations').getById(feature.attributes.id);
-            this.up('window').down('locationform').setRecord(record);
-            this.up('window').down('locationform').setReadOnly(true);
-            this.up('window').down('ortform').down('combobox').setValue(record.id);
-        }
-        else {
-            this.up('window').down('locationform').setRecord(this.locationRecord);
-            this.up('window').down('locationform').setReadOnly(false);
-        }
     },
 
     selectFeature: function(id) {
@@ -153,16 +141,18 @@ Ext.define('Lada.view.panel.Map', {
      */
     afterRender: function() {
         this.superclass.afterRender.apply(this, arguments);
+
         this.map.render(this.body.dom);
         this.map.addControl(new OpenLayers.Control.Navigation());
         this.map.addControl(new OpenLayers.Control.PanZoomBar());
         this.map.addControl(new OpenLayers.Control.ScaleLine());
-        if (this.record) {
-            this.selectFeature(this.record.get('ort'));
-        }
-        else {
-            this.map.zoomToMaxExtent();
-        }
+    },
+
+    /**
+     * Forward OpenlayersEvent to EXT
+     */
+    selectedFeature: function() {
+        this.fireEvent('featureselected', this, arguments);
     },
 
     beforeDestroy: function() {
