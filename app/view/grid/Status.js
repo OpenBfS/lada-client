@@ -44,20 +44,7 @@ Ext.define('Lada.view.grid.Status', {
          });
         this.plugins = [this.rowEditing];
 
-        var statusStore = Ext.create('Ext.data.Store', {
-            fields: ['display', 'id'],
-            data: [{
-                display: 'unbekannt', id: 0
-            }, {
-                display: 'nicht vergeben', id: 1
-            }, {
-                display: 'plausibel', id: 2
-            }, {
-                display: 'nicht repräsentativ', id: 3
-            }, {
-                display: 'nicht plausibel', id: 4
-            }]
-        });
+        var statusStore = Ext.create('Lada.store.StatusWerte');
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',

@@ -193,7 +193,9 @@ Ext.define('Lada.view.grid.Messung', {
             value = sstore.last().get('status');
         }
         if (Ext.fly(opts.divId)) {
-            Ext.fly(opts.divId).update(value);
+            var sta = Ext.create('Lada.store.StatusWerte');
+            var val = sta.getById(value).get('display');
+            Ext.fly(opts.divId).update(val);
         }
     },
 
