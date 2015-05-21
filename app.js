@@ -60,6 +60,7 @@ Ext.application({
         Lada.username = '';
         Lada.userroles = '';
         Lada.logintime = '';
+        Lada.mst = [];
 
         var queryString = document.location.href.split('?')[1];
         if (queryString) {
@@ -118,6 +119,7 @@ Ext.application({
         Lada.username = json.data.username;
         Lada.userroles = json.data.roles;
         Lada.logintime = json.data.servertime;
+        Lada.mst = json.data.mst; //Store Messstellen this user may select
 
         Ext.create('Lada.store.Datenbasis', {
             storeId: 'datenbasis'

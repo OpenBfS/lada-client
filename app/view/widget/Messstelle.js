@@ -30,6 +30,7 @@ Ext.define('Lada.view.widget.Messstelle', {
         if (!this.store) {
             this.store = Ext.create('Lada.store.Messstellen');
         }
+        this.store.clearFilter(true);
         this.callParent(arguments);
     }
 });

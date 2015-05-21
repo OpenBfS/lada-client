@@ -33,6 +33,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform': {
                 dirtychange: this.dirtyForm
             },
+            'messprogrammform messstelle combobox':{
+                expand: this.filter,
+                keydown: this.filter
+            },
             'messprogrammform location combobox': {
                 select: this.syncOrtWindow
             },
@@ -55,6 +59,24 @@ Ext.define('Lada.controller.form.Messprogramm', {
             }
         });
     },
+
+    /**
+     * The Messtellen Store contains ALL Messtellen.
+     * Filter the store in this combobox to reduce the choices
+     * to the subset which the user is allowed to use.
+     */
+    filter: function(field) {
+        var fil =  Ext.create('Ext.util.Filter', {
+            filterFn: function(item) {
+                if (Ext.Array.contains(Lada.mst, item.get('id'))) {
+                    return true;
+                }
+                return false;
+            }
+        });
+        field.getStore().filter(fil);
+    },
+
     /**
      * When the Probenintervall was changed, update the Sliders
      * and the the numberfield.
