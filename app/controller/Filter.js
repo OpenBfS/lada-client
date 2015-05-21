@@ -241,9 +241,7 @@ Ext.define('Lada.controller.Filter', {
      * It has no function yet.
      */
     about: function() {
-        var info = this.getInfoStore();
-        Ext.widget('about', {
-            info: info
-        });
+        var win = Ext.create('Lada.view.window.About');
+        win.show();
     }
 });

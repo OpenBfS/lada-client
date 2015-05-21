@@ -22,6 +22,7 @@ Ext.define('Lada.view.Viewport', {
     ],
     layout: 'fit',
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
         this.items = [{
             title: '<center>Labordatenerfassung</center>',
             layout: 'border',
@@ -43,32 +44,8 @@ Ext.define('Lada.view.Viewport', {
                         text: 'Info',
                         menu: {
                             items: [{
-                                text: 'About',
+                                text: i18n.getMsg('about.button.title'),
                                 action: 'about'
-                            }, {
-                                text: 'Anmeldeinformationen',
-                                handler: function(){
-                                    logintime = new Date(Lada.logintime);
-                                    Ext.Msg.alert("Anmeldeinformationen",
-                                        "<p>"
-                                        + "Sie sind angemeldet mit der Kennung:"
-                                        + "<br />"
-                                        + Lada.username
-                                        + "</p>"
-                                        + "<p>"
-                                        + "Sie sind Mitglied der folgenden "
-                                        + "Gruppen:"
-                                        + "<br />"
-                                        + Lada.userroles
-                                        + "</p>"
-                                        + "<p>"
-                                        + "<br/>"
-                                        + "Die Anmeldung wurde durchgeführt um:"
-                                        + "<br />"
-                                        +  Ext.Date.format(logintime, 'd.m.Y H:i:s P')
-                                        + "</p>"
-                                       );
-                                }
                             }
                             ]
                         }
