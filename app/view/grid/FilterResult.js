@@ -125,9 +125,9 @@ Ext.define('Lada.view.grid.FilterResult', {
             width: 30,
             renderer: function(value) {
                 if (value) {
-                    return '<img src="resources/img/lock_16x16.png"/>';
+                    return '<img src="resources/img/view-time-schedule-baselined.png"/>';
                 }
-                return '<img src="resources/img/unlock_16x16.png"/>';
+                return '<img src="resources/img/view-time-schedule-edit.png"/>';
             }
         });
         fields.push(new Ext.data.Field({
