@@ -88,12 +88,14 @@ Ext.define('Lada.view.form.Location', {
                     xtype: 'numberfield',
                     name: 'latitude',
                     fieldLabel: 'Lat',
+                    decimalPrecision: 5,
                     width: 280,
                     labelWidth: 80
                 }, {
                     xtype: 'numberfield',
                     name: 'longitude',
                     fieldLabel: 'Lon',
+                    decimalPrecision: 5,
                     width: 280,
                     labelWidth: 80
                 }, {
