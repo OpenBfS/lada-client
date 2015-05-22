@@ -132,7 +132,6 @@ Ext.define('Lada.view.panel.Map', {
         this.drawPoint.deactivate();
         this.selectControl.unselectAll();
         this.selectControl.select(features.feature);
-        console.log(arguments);
     },
 
     /**
