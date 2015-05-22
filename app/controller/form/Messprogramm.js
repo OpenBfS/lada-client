@@ -82,7 +82,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
      * and the the numberfield.
      */
     updateIntervalls: function(field, records) {
-        console.log('update Intervalls');
         var form = field.up('messprogrammform');
         var record = form.getRecord();
         form.populateIntervall(record, field.getValue());
@@ -130,7 +129,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
      * update the Value of the Teilintervallfields
      */
     synchronizeFields: function(slider, newValue, thumb) {
-        console.log('Synchronize Fields');
         var formPanel = slider.up('form');
         if (thumb.index == 0) {
             formPanel.getForm()
@@ -150,7 +148,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
      * update the Slider
      */
     synchronizeSlider: function(field, newValue, oldValue) {
-        console.log('Synchronize Slider');
         var formPanel = field.up('form');
         if (field.name == 'teilintervallVon') {
             formPanel.down('probenintervallslider')

@@ -332,7 +332,6 @@ Ext.define('Lada.view.form.Messprogramm', {
     },
 
     populateIntervall: function(record, intervall) {
-        console.log('Populate Start');
         //intervall is an identifier of a intervall
         // for instance H, M, J, ...
         // Initialize the probenintervallslider
@@ -398,8 +397,6 @@ Ext.define('Lada.view.form.Messprogramm', {
         //Set IntervallOffset
         i.setMinValue(0);
         i.setMaxValue(max-1);
-
-        console.log('Populate End');
     },
 
     setRecord: function(record) {
