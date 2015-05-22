@@ -77,18 +77,26 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             border: 0,
             autoScroll: true,
             items: [{
-                xtype: 'text',
-                text: i18n.getMsg('nameofmessprogramm')+ ' '
+                xtype: 'panel',
+                border: 0,
+                margin: 5,
+                layout: 'fit',
+                html: '<p>'
+                    + i18n.getMsg('nameofmessprogramm')
+                    + '<br/>'
+                    + this.record.get('name')
+                    + '</p>'
             }, {
-                xtype: 'text',
-                text: this.record.get('name')
-            }, {
-                xtype: 'text',
-                text: ' ' + i18n.getMsg('messprogtimeperiod')
+                xtype: 'panel',
+                border: 0,
+                margin: 5,
+                layout: 'fit',
+                html: '<p>' + i18n.getMsg('messprogtimeperiod') + '</p>'
             }, {
                 xtype: 'datetime',
                 fieldLabel: i18n.getMsg('from'),
                 labelWidth: 90,
+                margin: 5,
                 name: 'start',
                 format: 'd.m.Y H:i',
                 period: 'start'
@@ -96,6 +104,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 xtype: 'datetime',
                 fieldLabel: i18n.getMsg('to'),
                 labelWidth: 90,
+                margin: 5,
                 name: 'end',
                 format: 'd.m.Y H:i',
                 period: 'end'
