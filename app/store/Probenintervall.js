@@ -16,7 +16,10 @@ Ext.define('Lada.store.Probenintervall', {
     fields: ['probenintervall',
             {
                 name: 'piTexti18nId',
-                convert: translateStore
+                convert: function(v, record) {
+                    var i18n = Lada.getApplication().bundle;
+                    return i18n.getMsg(v);
+                }
             },
             'periodstart',
             'periodend'],
@@ -70,10 +73,4 @@ Ext.define('Lada.store.Probenintervall', {
     remoteSort: false
 });
 
-function translateStore(v, record){
-// TODO currently Lada.get... can not be found when this code is run.
-//    var i18n = Lada.getApplication().bundle;
-//    return i18n.getMsg(v);
-      return v;
-}
 
