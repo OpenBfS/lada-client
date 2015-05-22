@@ -133,6 +133,7 @@ Ext.define('Lada.controller.FilterResult', {
                 saveAs(blob, 'export.laf');
             },
             failure: function() {
+                // TODO handle Errors correctly, especially AuthenticationTimeouts
                 Ext.Msg.create(i18n.getMsg('err.msg.generic.title'),
                     i18n.getMsg('err.msg.laf.filecreatefailed'));
             }

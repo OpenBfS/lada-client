@@ -107,7 +107,6 @@ Ext.application({
     },
 
     onLoginSuccess: function(response) {
-        Lada.serverversion = this.getServerVersion();
 
         if (!Ext.isIE9m) {
           /* Strip out the openid query params to look nicers. */
@@ -123,6 +122,8 @@ Ext.application({
         Lada.userroles = json.data.roles;
         Lada.logintime = json.data.servertime;
         Lada.mst = json.data.mst; //Store Messstellen this user may select
+        //Lada.serverVersion
+        this.getServerVersion();
 
         Ext.create('Lada.store.Datenbasis', {
             storeId: 'datenbasis'

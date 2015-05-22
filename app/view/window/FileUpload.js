@@ -59,6 +59,7 @@ Ext.define('Lada.view.window.FileUpload', {
     },
 
     uploadFile: function(button) {
+        // TODO Error handling ?
         var win = button.up('window');
         var uploader = Ext.create('Ext.ux.upload.uploader.ExtJsUploader', {
             extraHeaders: {
@@ -86,6 +87,7 @@ Ext.define('Lada.view.window.FileUpload', {
     },
 
     uploadFailure: function(file, response) {
+        // TODO handle Errors correctly, especially AuthenticationTimeouts
         this.close();
         var win = Ext.create('Lada.view.window.ImportResponse', {
             data: response.response.responseText,

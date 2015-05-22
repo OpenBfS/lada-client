@@ -48,11 +48,36 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         'X-OPENID-PARAMS': Lada.openIDParams
                     },
                     jsonData: jsondata,
-                    success: function(form, action) {
-                        Ext.Msg.alert('Success', action.result.msg);
+                    success: function(response) {
+                        var json = Ext.JSON.decode(response.responseText);
+                        console.log(json);
+                        Ext.Msg.show({
+                            title: i18n.getMsg('success'),
+                            autoScroll: true,
+                            msg: me.evalResponse(json),
+                            buttons: Ext.Msg.OK,
+                        });
                     },
-                    failure: function(form, action) {
-                        Ext.Msg.alert('Failed', action.result.msg);
+                    failure: function(response) {
+                    // TODO handle Errors correctly, especially AuthenticationTimeouts
+                        var json = Ext.JSON.decode(response.responseText);
+                        if (json) {
+                            if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
+                                formPanel.setMessages(json.errors, json.warnings);
+                            }
+
+                            if(json.message){
+                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
+                                    +' #'+json.message,
+                                    Lada.getApplication().bundle.getMsg(json.message));
+                            } else {
+                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
+                                    Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                            }
+                        } else {
+                            Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
+                                Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                        }
                     }
                 });
             }
@@ -120,4 +145,22 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         var i18n = Lada.getApplication().bundle;
         me = this;
     },
+
+    /**
+     * Parse ServerResponse when Proben have been generated
+     */
+    evalResponse: function(response) {
+        var i18n = Lada.getApplication().bundle;
+        var r = '';
+            r += response.totalCount;
+            r += ' ' + i18n.getMsg('probecreated');
+            r += '<br/>';
+            r += i18n.getMsg('probeids');
+        var i;
+            for (i in response.data){
+                r += '<br/>';
+                r += response.data[i].probeIdAlt
+            }
+        return r;
+    }
 });
