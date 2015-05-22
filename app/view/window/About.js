@@ -37,80 +37,46 @@ Ext.define('Lada.view.window.About', {
         this.items = [{
             border: 0,
             autoscroll: 'true',
-            layout: 'vbox',
             items: [{
-                xtype: 'text',
-                style: {
-                    width: '95%',
-                    marginBottom: '5px'
-                },
-                text: i18n.getMsg('about.window.text.login')
-            }, {
-                xtype: 'text',
-                style: {
-                    width: '95%',
-                    marginBottom: '5px'
-                },
-                text: Lada.username
-            }, {
-                xtype: 'text',
-                style: {
-                    width: '95%',
-                    marginBottom: '5px'
-                },
-                text: i18n.getMsg('about.window.text.roles')
-            }, {
-                xtype: 'text',
-                style: {
-                    width: '95%',
-                    marginBottom: '5px'
-                },
-                text: Lada.userroles
-            }, {
-                xtype: 'text',
-                style: {
-                    width: '95%',
-                    marginBottom: '5px'
-                },
-                text: i18n.getMsg('about.window.text.logintime')
-            }, {
-                xtype: 'text',
-                style: {
-                    width: '95%',
-                    marginBottom: '5px'
-                },
-                text: Ext.Date.format(new Date(Lada.logintime), 'd.m.Y H:i:s P')
-            }, {
-                xtype: 'text',
-                style: {
-                    width: '95%',
-                    marginBottom: '5px'
-                },
-                text: i18n.getMsg('about.window.text.serverversion')
-            }, {
-                xtype: 'text',
-                style: {
-                    width: '95%',
-                    marginBottom: '5px'
-                },
-                text: Lada.serverversion
-            }, {
-                xtype: 'text',
-                style: {
-                    width: '95%',
-                    marginBottom: '5px'
-                },
-                text: i18n.getMsg('about.window.text.clientversion')
-            }, {
-                xtype: 'text',
-                style: {
-                    width: '95%',
-                    marginBottom: '5px'
-                },
-                text: Lada.clientversion
+                xtype: 'panel',
+                border: 0,
+                layout: 'fit',
+                bodyPadding: 20,
+                html: '<p>'
+                    + i18n.getMsg('about.window.text.login')
+                    + '<br />'
+                    + Lada.username
+                    + '</p>'
+                    + '<p>'
+                    + i18n.getMsg('about.window.text.roles')
+                    + this.rolesToHtml()
+                    + '</p>'
+                    + '<p>'
+                    + i18n.getMsg('about.window.text.logintime')
+                    + '<br />'
+                    + Ext.Date.format(new Date(Lada.logintime), 'd.m.y h:i:s P')
+                    + '</p>'
+                    + '<p>'
+                    + i18n.getMsg('about.window.text.serverversion')+ ' '
+                    + Lada.serverVersion
+                    + '</p>'
+                    + '<p>'
+                    + i18n.getMsg('about.window.text.clientversion')+' '
+                    + Lada.clientVersion
+                    + '</p>'
             }]
         }];
 
         this.callParent(arguments);
+    },
+
+    rolesToHtml: function() {
+        var roles = '';
+        var r = Lada.userroles.split(',');
+        var i;
+        for (i in r){
+            roles += '<br />' + r[i];
+        }
+        return roles;
     }
 });

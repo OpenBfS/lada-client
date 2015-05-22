@@ -61,7 +61,8 @@ Ext.application({
         Lada.userroles = '';
         Lada.logintime = '';
         Lada.mst = [];
-        Lada.clientversion = '2.0beta2';
+        Lada.clientVersion = '2.0-beta2';
+        Lada.serverVersion = '';
 
         var queryString = document.location.href.split('?')[1];
         if (queryString) {
@@ -174,13 +175,13 @@ Ext.application({
             },
             success: function(response) {
                 var json = Ext.decode(response.responseText);
-                return json.data;
+                Lada.serverVersion = json.data;
             },
             failure: function(response) {
                 console.log('Error in retrieving the server version.'
                     + ' It might be lower than 2.0-beta2'
                     + ' Or something is broken...');
-                return i18n.getMsg('err.msg.generic.title');
+                Lada.serverVersion = i18n.getMsg('err.msg.generic.title');
             }
         });
     },
