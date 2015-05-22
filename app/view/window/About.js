@@ -93,33 +93,24 @@ Ext.define('Lada.view.window.About', {
                     width: '95%',
                     marginBottom: '5px'
                 },
-                text: this.requestServerVersion()
+                text: Lada.serverversion
+            }, {
+                xtype: 'text',
+                style: {
+                    width: '95%',
+                    marginBottom: '5px'
+                },
+                text: i18n.getMsg('about.window.text.clientversion')
+            }, {
+                xtype: 'text',
+                style: {
+                    width: '95%',
+                    marginBottom: '5px'
+                },
+                text: Lada.clientversion
             }]
         }];
 
         this.callParent(arguments);
-    },
-
-    requestServerVersion: function() {
-        var i18n = Lada.getApplication().bundle;
-        Ext.Ajax.request({
-            url: '/lada-server/version',
-            method: 'GET',
-            headers: {
-                'X-OPENID-PARAMS': Lada.openIDParams
-            },
-            success: function(response) {
-                var json = Ext.decode(response.responseText);
-                // TODO
-                console.log(json);
-                return json.data;
-            },
-            failure: function(response) {
-                console.log('Error in Retrieving the Server Version.'
-                    + ' It might be lower than 2.0-beta2'
-                    + ' Or something is broken...');
-                return i18n.getMsg('err.msg.generic.body');
-            }
-        });
     }
 });

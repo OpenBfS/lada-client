@@ -61,6 +61,7 @@ Ext.application({
         Lada.userroles = '';
         Lada.logintime = '';
         Lada.mst = [];
+        Lada.clientversion = '2.0beta2';
 
         var queryString = document.location.href.split('?')[1];
         if (queryString) {
@@ -105,6 +106,7 @@ Ext.application({
     },
 
     onLoginSuccess: function(response) {
+        Lada.serverversion = this.getServerVersion();
 
         if (!Ext.isIE9m) {
           /* Strip out the openid query params to look nicers. */
@@ -159,6 +161,27 @@ Ext.application({
         });
         Ext.create('Lada.store.Verwaltungseinheiten', {
             storeId: 'verwaltungseinheiten'
+        });
+    },
+
+    getServerVersion: function() {
+        var i18n = Lada.getApplication().bundle;
+        Ext.Ajax.request({
+            url: '/lada-server/version',
+            method: 'GET',
+            headers: {
+                'X-OPENID-PARAMS': Lada.openIDParams
+            },
+            success: function(response) {
+                var json = Ext.decode(response.responseText);
+                return json.data;
+            },
+            failure: function(response) {
+                console.log('Error in retrieving the server version.'
+                    + ' It might be lower than 2.0-beta2'
+                    + ' Or something is broken...');
+                return i18n.getMsg('err.msg.generic.title');
+            }
         });
     },
 
