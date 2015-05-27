@@ -43,19 +43,6 @@ Ext.define('Lada.controller.FilterResult', {
         });
         this.callParent(arguments);
     },
-    /**
-     * Enable the Loading Animation of the Grid.
-     */
-     loadingAnimationOn: function(store, operation) {
-        store.up('grid').setLoading(true);
-     },
-
-    /**
-     * Disable the Loading Animation of the Grid.
-     */
-     loadingAnimationOff: function(store, operation) {
-        store.up('grid').setLoading(false);
-     },
 
     /**
      * This function is called after a Row in the
