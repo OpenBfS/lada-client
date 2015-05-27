@@ -17,12 +17,16 @@ Ext.define('Lada.controller.FilterResult', {
     ],
 
     /**
-     * Initialize the Controller with 4 listeners
+     * Initialize the Controller with listeners
      */
     init: function() {
         this.control({
             'filterresultgrid': {
                 itemdblclick: this.editItem
+            },
+            'store': {
+                beforeload: this.loadingAnimationOn,
+                load:   this.loadingAnimationOff
             },
             'filterresultgrid toolbar button[action=addProbe]': {
                 click: this.addProbeItem
@@ -39,6 +43,19 @@ Ext.define('Lada.controller.FilterResult', {
         });
         this.callParent(arguments);
     },
+    /**
+     * Enable the Loading Animation of the Grid.
+     */
+     loadingAnimationOn: function(store, operation) {
+        store.up('grid').setLoading(true);
+     },
+
+    /**
+     * Disable the Loading Animation of the Grid.
+     */
+     loadingAnimationOff: function(store, operation) {
+        store.up('grid').setLoading(false);
+     },
 
     /**
      * This function is called after a Row in the

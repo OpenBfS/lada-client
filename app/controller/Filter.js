@@ -219,6 +219,8 @@ Ext.define('Lada.controller.Filter', {
             store = Ext.create(sname);
         }
         if (store) {
+            store.addListener('beforeload', this.loadingAnimationOn, resultGrid);
+            store.addListener('load', this.loadingAnimationOff, resultGrid);
             resultGrid.setStore(store);
             resultGrid.setupColumns(this.displayFields);
             resultGrid.getStore().proxy.extraParams = searchParams;
@@ -226,6 +228,23 @@ Ext.define('Lada.controller.Filter', {
             resultGrid.show();
         }
     },
+
+    /**
+     * Enable the Loading Animation of the Grid.
+     */
+    loadingAnimationOn: function(store, operation) {
+        // this = resultgrid because of the scope which was set in addListener
+        this.setLoading(true);
+    },
+
+    /**
+     * Disable the Loading Animation of the Grid.
+     */
+    loadingAnimationOff: function(store, operation) {
+        // this = resultgrid because of the scope which was set in addListener
+        this.setLoading(false);
+    },
+
     /**
      * This function resets the filters
      */
