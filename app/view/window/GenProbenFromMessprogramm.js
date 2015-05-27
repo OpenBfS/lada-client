@@ -50,7 +50,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     jsonData: jsondata,
                     success: function(response) {
                         var json = Ext.JSON.decode(response.responseText);
-                        console.log(json);
                         Ext.Msg.show({
                             title: i18n.getMsg('success'),
                             autoScroll: true,
@@ -59,23 +58,36 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         });
                     },
                     failure: function(response) {
-                    // TODO handle Errors correctly, especially AuthenticationTimeouts
                         var json = Ext.JSON.decode(response.responseText);
                         if (json) {
                             if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
                                 formPanel.setMessages(json.errors, json.warnings);
                             }
+                            // TODO Move this handling of 699 and 698 to a more central place!
+                            // TODO i18n
+                            if (json.message === "699" || json.message === "698") {
+                                /* This is the unauthorized message with the authentication
+                                    * redirect in the data */
 
-                            if(json.message){
-                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
+                                /* We decided to handle this with a redirect to the identity
+                                    * provider. In which case we have no other option then to
+                                    * handle it here with relaunch. */
+                                Ext.MessageBox.confirm('Erneutes Login erforderlich',
+                                    'Der Server konnte die Anfrage nicht authentifizieren.<br/>'+
+                                    'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
+                                    'Alle ungesicherten Daten gehen dabei verloren.<br/>' +
+                                    'Soll die Anwendung jetzt neu geladen werden?', this.reload);
+                            }
+                            else if(json.message){
+                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
                                     +' #'+json.message,
                                     Lada.getApplication().bundle.getMsg(json.message));
                             } else {
-                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
+                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title'),
                                     Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
                             }
                         } else {
-                            Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
+                            Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title'),
                                 Lada.getApplication().bundle.getMsg('err.msg.response.body'));
                         }
                     }
@@ -152,7 +164,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     evalResponse: function(response) {
         var i18n = Lada.getApplication().bundle;
         var r = '';
-            r += response.totalCount;
+            r += response.data.length;
             r += ' ' + i18n.getMsg('probecreated');
             r += '<br/>';
             r += i18n.getMsg('probeids');
@@ -162,5 +174,11 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 r += response.data[i].probeIdAlt
             }
         return r;
+    },
+
+    reload: function(btn) {
+        if (btn === 'yes') {
+            location.reload();
+        }
     }
 });

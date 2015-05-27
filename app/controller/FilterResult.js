@@ -136,11 +136,46 @@ Ext.define('Lada.controller.FilterResult', {
                 var blob = new Blob([content],{type: 'text/plain'});
                 saveAs(blob, 'export.laf');
             },
-            failure: function() {
-                // TODO handle Errors correctly, especially AuthenticationTimeouts
-                Ext.Msg.create(i18n.getMsg('err.msg.generic.title'),
+            failure: function(response) {
+                var json = Ext.JSON.decode(response.responseText);
+                if (json) {
+                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
+                        formPanel.setMessages(json.errors, json.warnings);
+                    }
+                    // TODO Move this handling of 699 and 698 to a more central place!
+                    // TODO i18n
+                    if (json.message === "699" || json.message === "698") {
+                        /* This is the unauthorized message with the authentication
+                            * redirect in the data */
+
+                        /* We decided to handle this with a redirect to the identity
+                            * provider. In which case we have no other option then to
+                            * handle it here with relaunch. */
+                        Ext.MessageBox.confirm('Erneutes Login erforderlich',
+                            'Der Server konnte die Anfrage nicht authentifizieren.<br/>'+
+                            'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
+                            'Alle ungesicherten Daten gehen dabei verloren.<br/>' +
+                            'Soll die Anwendung jetzt neu geladen werden?', this.reload); //TODO Scope?
+                    }
+                    else if(json.message){
+                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
+                            +' #'+json.message,
+                            Lada.getApplication().bundle.getMsg(json.message));
+                    } else {
+                        Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                            i18n.getMsg('err.msg.laf.filecreatefailed'));
+                    }
+                } else {
+                    Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                     i18n.getMsg('err.msg.laf.filecreatefailed'));
+                }
             }
         });
+    },
+
+    reload: function(btn) {
+        if (btn === 'yes') {
+            location.reload();
+        }
     }
 });
