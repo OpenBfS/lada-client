@@ -98,7 +98,6 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
                 selection.destroy({
                     success: function() {
                         button.up('window').initData();
-                        grid.initData();
                     },
                     failure: function(request, response) {
                         var json = response.request.scope.reader.jsonData;
