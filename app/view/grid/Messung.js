@@ -187,7 +187,7 @@ Ext.define('Lada.view.grid.Messung', {
     updateStatusColumn: function(sstore, record, success, opts) {
         var value;
         if (sstore.getTotalCount() === 0) {
-            value = 'unbekannt';
+            value = 0;
         }
         else {
             value = sstore.last().get('status');
