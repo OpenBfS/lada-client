@@ -66,7 +66,8 @@ Ext.define('Lada.controller.FilterResult', {
         }
         if (winname){
             var win = Ext.create(winname, {
-                record: record
+                record: record,
+                style: 'z-index: -1;' //Fixes an Issue where windows could not be created in IE8
              });
             win.show();
             win.initData();
