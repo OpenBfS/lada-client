@@ -290,6 +290,7 @@ Ext.define('Lada.view.form.Probe', {
             }]
         }];
         this.callParent(arguments);
+        this.clearMessages();
     },
 
     setRecord: function(record) {

@@ -122,11 +122,19 @@ Ext.define('Lada.controller.form.Probe', {
     },
 
      /**
-      * The discard function resets the Location form
+      * The discard function resets the Probe form
       * to its original state.
       */
     discard: function(button) {
         var formPanel = button.up('form');
+
+        formPanel.down('fset[name=entnahmePeriod]').clearMessages();
+        formPanel.down('fset[name=sollzeitPeriod]').clearMessages();
+        formPanel.down('datetime[name=probeentnahmeBeginn]').clearWarningOrError();
+        formPanel.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
+        formPanel.down('datetime[name=solldatumBeginn]').clearWarningOrError();
+        formPanel.down('datetime[name=solldatumEnde]').clearWarningOrError();
+
         formPanel.down('umwelt').store.clearFilter();
         formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
     },
