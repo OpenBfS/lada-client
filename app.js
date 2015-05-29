@@ -61,7 +61,7 @@ Ext.application({
         Lada.userroles = '';
         Lada.logintime = '';
         Lada.mst = [];
-        Lada.clientVersion = '2.0-beta2';
+        Lada.clientVersion = '2.0';
         Lada.serverVersion = '';
 
         var queryString = document.location.href.split('?')[1];
