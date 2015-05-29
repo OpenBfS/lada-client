@@ -87,7 +87,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                                     'Der Server konnte die Anfrage nicht authentifizieren.<br/>'+
                                     'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
                                     'Alle ungesicherten Daten gehen dabei verloren.<br/>' +
-                                    'Soll die Anwendung jetzt neu geladen werden?', me.reload); //TODO Scope?
+                                    'Soll die Anwendung jetzt neu geladen werden?', me.reload);
                             }
                             else if(json.message){
                                 Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
