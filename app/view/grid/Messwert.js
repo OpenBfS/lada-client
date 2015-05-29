@@ -27,6 +27,8 @@ Ext.define('Lada.view.grid.Messwert', {
     margin: '0, 5, 5, 5',
 
     recordId: null,
+    readOnly: true,
+    allowDeselect: true,
 
     initComponent: function() {
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -164,8 +166,19 @@ Ext.define('Lada.view.grid.Messwert', {
                 xtype: 'checkbox'
             }
         }];
+        this.listeners = {
+           select: {
+               fn: this.activateRemoveButton,
+               scope: this
+            },
+            deselect: {
+                fn: this.deactivateRemoveButton,
+                scope: this
+            }
+        };
         this.initData();
         this.callParent(arguments);
+        this.setReadOnly(true); //Grid is always initialised as RO
     },
 
     initData: function() {
@@ -195,8 +208,28 @@ Ext.define('Lada.view.grid.Messwert', {
             if (this.getPlugin('rowedit')){
                 this.getPlugin('rowedit').enable();
             }
-            this.down('button[action=delete]').enable();
+            //this.down('button[action=delete]').enable();
             this.down('button[action=add]').enable();
          }
+    },
+    /**
+     * Activate the Remove Button
+     */
+    activateRemoveButton: function(selection, record) {
+        var grid = this;
+        //only enable the remove buttone, when the grid is editable.
+        if (! grid.readOnly) {
+            grid.down('button[action=delete]').enable();
+        }
+    },
+    /**
+     * Activate the Remove Button
+     */
+    deactivateRemoveButton: function(selection, record) {
+        var grid = this;
+        //only enable the remove buttone, when the grid is editable.
+        if (! grid.readOnly) {
+            grid.down('button[action=delete]').disable();
+        }
     }
 });

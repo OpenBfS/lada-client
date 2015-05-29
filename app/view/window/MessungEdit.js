@@ -168,14 +168,20 @@ Ext.define('Lada.view.window.MessungEdit', {
 
     disableChildren: function() {
             this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(true);
+            this.down('fset[name=messwerte]').down('messwertgrid').readOnly = true;
             this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(true);
+            this.down('fset[name=messungstatus]').down('statusgrid').readOnly = true;
             this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(true);
+            this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = true;
     },
 
     enableChildren: function() {
             this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(false);
+            this.down('fset[name=messwerte]').down('messwertgrid').readOnly = false;
             this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(false);
+            this.down('fset[name=messungstatus]').down('statusgrid').readOnly = false;
             this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(false);
+            this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = false;
     },
 
     setMessages: function(errors, warnings) {

@@ -189,7 +189,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             if (this.getPlugin('rowedit')){
                 this.getPlugin('rowedit').enable();
             }
-            this.down('button[action=delete]').enable();
+            //this.down('button[action=delete]').enable();
             this.down('button[action=add]').enable();
         }
     },
