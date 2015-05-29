@@ -27,6 +27,8 @@ Ext.define('Lada.view.grid.Ort', {
 
     warnings: null,
     errors: null,
+    readOnly: true,
+    allowDeselect: true,
 
     initComponent: function() {
         this.dockedItems = [{
@@ -92,8 +94,19 @@ Ext.define('Lada.view.grid.Ort', {
                 return record.get('bezeichnung');
             }
         }];
+        this.listeners = {
+           select: {
+               fn: this.activateRemoveButton,
+               scope: this
+            },
+            deselect: {
+                fn: this.deactivateRemoveButton,
+                scope: this
+            }
+        };
         this.initData();
         this.callParent(arguments);
+        this.setReadOnly(true); //Grid is always initialised as RO
     },
 
     initData: function() {
@@ -133,6 +146,26 @@ Ext.define('Lada.view.grid.Ort', {
             }
             this.down('button[action=delete]').enable();
             this.down('button[action=add]').enable();
+        }
+    },
+    /**
+     * Activate the Remove Button
+     */
+    activateRemoveButton: function(selection, record) {
+        var grid = this;
+        //only enable the remove buttone, when the grid is editable.
+        if (! grid.readOnly) {
+            grid.down('button[action=delete]').enable();
+        }
+    },
+    /**
+     * Activate the Remove Button
+     */
+    deactivateRemoveButton: function(selection, record) {
+        var grid = this;
+        //only enable the remove buttone, when the grid is editable.
+        if (! grid.readOnly) {
+            grid.down('button[action=delete]').disable();
         }
     }
 });
