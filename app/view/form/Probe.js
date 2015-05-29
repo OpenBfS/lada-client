@@ -138,6 +138,7 @@ Ext.define('Lada.view.form.Probe', {
                                 allowDecimals: false,
                                 name: 'probeNehmerId',
                                 fieldLabel: 'Probennehmer',
+                                minValue: 0,
                                 anchor: '100%',
                                 labelWidth: 105
                             }, {

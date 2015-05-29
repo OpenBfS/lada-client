@@ -20,6 +20,7 @@ Ext.define('Lada.view.widget.Probenart', {
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
+    maxChars: 1,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
