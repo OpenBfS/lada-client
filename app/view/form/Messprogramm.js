@@ -100,16 +100,15 @@ Ext.define('Lada.view.form.Messprogramm', {
                             allowBlank: false,
                             editable: true
                         }, {
-                            xtype: 'textarea', //TODO: we might need a widget which is capable of handling errormsg.
+                            xtype: 'textarea',
                             name: 'probeKommentar',
                             labelAlign: 'top',
                             fieldLabel: i18n.getMsg('probeKommentar'),
                             labelwidth: 135,
                             anchor: '100%'
                         }, {
-                            layout: 'hbox',
+                            layout: 'column',
                             border: 0,
-                            align: 'stretch',
                             items: [{
                                 xtype: 'location',
                                 name: 'ortId',
@@ -117,13 +116,15 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 labelWidth: 80,
                                 allowBlank: true,
                                 forceSelection: true,
-                                editable: false
+                                editable: false,
+                                columnWidth: '0.75'
                             }, {
                                 xtype: 'button',
                                 name: 'ortIdButton',
                                 margin: '0 0 0 5',
                                 text: i18n.getMsg('messprogrammort.button.title'),
-                                action: 'ort'
+                                action: 'ort',
+                                columnWidth: '0.25'
                             }]
                         }]
                     }, {
