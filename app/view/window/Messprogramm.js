@@ -25,6 +25,7 @@ Ext.define('Lada.view.window.Messprogramm', {
     autoScroll: true,
     layout: 'fit',
     constrain: true,
+    probenWindow: null,
 
     record: null,
 
@@ -37,18 +38,26 @@ Ext.define('Lada.view.window.Messprogramm', {
         else {
             this.title = i18n.getMsg('messprogramm.window.edit.title');
         }
-
         this.buttons = [{
             text: i18n.getMsg('generateproben'),
             scope: this,
             disabled: this.record? false : true, //disable button if no record is set.
             handler: function() {
-                var winname = 'Lada.view.window.GenProbenFromMessprogramm';
-                var win = Ext.create(winname, {
-                    record: this.record
-                });
-                win.show();
-                win.initData();
+                //Make the Window a "singleton"
+                if (! this.probenWindow) {
+                    var winname = 'Lada.view.window.GenProbenFromMessprogramm';
+                    var win = Ext.create(winname, {
+                        record: this.record,
+                        parentWindow: this
+                    });
+                    win.show();
+                    win.initData();
+                    this.probenWindow = win;
+               }
+               else {
+                    this.probenWindow.focus();
+                    this.probenWindow.setActive(true);
+               }
             }
         },
         '->',

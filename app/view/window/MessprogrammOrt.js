@@ -41,7 +41,7 @@ Ext.define('Lada.view.window.MessprogrammOrt', {
             text: i18n.getMsg('cancel'),
             scope: this,
             handler: function() {
-                this.close()
+                this.close();
                 this.parentWindow.down('messprogrammform')
                     .ortWindow = null;
            }
@@ -57,6 +57,10 @@ Ext.define('Lada.view.window.MessprogrammOrt', {
             },
             deactivate: function(){
                 this.getEl().addCls('window-inactive');
+            },
+            close: function () {
+                this.parentWindow.down('messprogrammform')
+                    .ortWindow = null;
             }
         });
 
