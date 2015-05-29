@@ -119,5 +119,6 @@ Ext.define('Lada.controller.grid.Status', {
                 });
             }
         });
+        grid.down('button[action=delete]').disable();
     }
 });

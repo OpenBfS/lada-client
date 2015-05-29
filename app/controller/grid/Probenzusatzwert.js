@@ -118,5 +118,6 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
                 });
             }
         });
+        grid.down('button[action=delete]').disable();
     }
 });

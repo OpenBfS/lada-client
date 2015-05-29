@@ -117,5 +117,6 @@ Ext.define('Lada.controller.grid.PKommentar', {
                 });
             }
         });
+        grid.down('button[action=delete]').disable();
     }
 });

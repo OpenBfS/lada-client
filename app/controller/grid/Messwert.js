@@ -129,5 +129,6 @@ Ext.define('Lada.controller.grid.Messwert', {
                 });
             }
         });
+        grid.down('button[action=delete]').disable();
     }
 });

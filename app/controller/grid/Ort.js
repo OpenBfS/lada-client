@@ -98,5 +98,6 @@ Ext.define('Lada.controller.grid.Ort', {
                 });
             }
         });
+        grid.down('button[action=delete]').disable();
     }
 });

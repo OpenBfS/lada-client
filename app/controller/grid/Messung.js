@@ -102,5 +102,6 @@ Ext.define('Lada.controller.grid.Messung', {
                 }
             }
         );
+        grid.down('button[action=delete]').disable();
     }
 });
