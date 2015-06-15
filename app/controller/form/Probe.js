@@ -211,7 +211,7 @@ Ext.define('Lada.controller.form.Probe', {
         var desk = field.up('deskriptor');
         var media = field.up('probeform').down('textfield[name="mediaDesk"]');
         var current = media.getValue().split(' ');
-        this.clearChildDesk(field.up('deskriptor'), current);
+
         if (current.length < 13) {
             for (var i = 0; i <= 12; i++) {
                 if (i === 0) {
