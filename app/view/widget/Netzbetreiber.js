@@ -23,7 +23,7 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        this.emptyText = i18n.getMsg('emptytext.probenart');
+        this.emptyText = i18n.getMsg('emptytext.netzbetreiber');
 
         this.store = Ext.data.StoreManager.get('netzbetreiber');
         if (!this.store) {
