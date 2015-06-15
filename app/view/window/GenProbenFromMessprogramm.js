@@ -53,7 +53,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
 
 
                 Ext.Ajax.request({
-                    url: '/lada-server/probe/messprogramm',
+                    url: 'lada-server/probe/messprogramm',
                     method: 'POST',
                     headers: {
                         'X-OPENID-PARAMS': Lada.openIDParams
