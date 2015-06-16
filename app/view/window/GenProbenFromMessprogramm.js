@@ -105,8 +105,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 });
             }
         }];
-        this.width = 350;
-        this.height = 250;
+        this.width = 400;
+        this.height = 300;
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
@@ -148,7 +148,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 fieldLabel: i18n.getMsg('from'),
                 labelWidth: 90,
                 margin: 5,
-                width: 300,
                 name: 'start',
                 format: 'd.m.Y H:i',
                 period: 'start'
@@ -157,7 +156,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 fieldLabel: i18n.getMsg('to'),
                 labelWidth: 90,
                 margin: 5,
-                width: 300,
                 name: 'end',
                 format: 'd.m.Y H:i',
                 period: 'end'

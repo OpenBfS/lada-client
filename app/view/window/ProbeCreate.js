@@ -52,7 +52,6 @@ Ext.define('Lada.view.window.ProbeCreate', {
         this.items = [{
             border: 0,
             autoScroll: true,
-            layout: 'fit',
             items: [{
                 xtype: 'probeform'
             }]
