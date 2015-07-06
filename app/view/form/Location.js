@@ -59,13 +59,6 @@ Ext.define('Lada.view.form.Location', {
                 }],
                 items: [{
                     xtype: 'tfield',
-                    maxLength: 100,
-                    name: 'beschreibung',
-                    fieldLabel: 'Beschreibung',
-                    width: 280,
-                    labelWidth: 80
-                }, {
-                    xtype: 'tfield',
                     maxLength: 10,
                     name: 'bezeichnung',
                     fieldLabel: 'Bezeichnung',
