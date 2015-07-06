@@ -43,22 +43,25 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
     switchModes: function(field) {
 
         var disableButtons = true;
-
         var cbox = field.up('probenplanungswitcher').up().down('combobox');
         var resultGrid = field.up('panel[name=main]').down('filterresultgrid');
         filters = field.up('panel[name=main]').down('fieldset[name=filtervariables]');
         filters.removeAll();
         filters.hide();
         var sname = 'Lada.store.ProbeQueries';
+        var gridsname = 'Lada.store.ProbenList';
         if (field.inputValue === 'MessprogrammList' && cbox) {
             sname = 'Lada.store.MessprogrammQueries';
+            gridsname = 'Lada.store.MessprogrammeList';
         }
         else if (field.inputValue === 'ProbeList' && cbox) {
             sname = 'Lada.store.ProbeQueries';
+            gridsname = 'Lada.store.ProbenList';
         }
 
 
         var store = Ext.StoreManager.lookup(sname);
+
         if (!store) {
             store = Ext.create(sname, {
                 //Select first Item on Load
@@ -78,5 +81,17 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
             cbox.reset();
             cbox.bindStore(store);
         }
+
+        var gridstore = Ext.StoreManager.lookup(gridsname);
+        if (!gridstore) {
+            gridstore = Ext.create(gridsname);
+        }
+        if (gridstore) {
+            gridstore.addListener('beforeload', this.loadingAnimationOn, resultGrid);
+            gridstore.addListener('load', this.loadingAnimationOff, resultGrid);
+            resultGrid.setStore(gridstore);
+            resultGrid.show();
+        }
+
     }
 });

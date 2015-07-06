@@ -23,13 +23,15 @@ Ext.define('Lada.view.grid.FilterResult', {
     },
 
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
+
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'top',
             items: [{
                 xtype: 'tbtext',
                 id: 'tbtitle',
-                text: '',
+                text: i18n.getMsg('probelist')
             },
             '->',
             {
@@ -41,7 +43,7 @@ Ext.define('Lada.view.grid.FilterResult', {
                 text: 'Messprogramm erstellen',
                 icon: 'resources/img/list-add.png',
                 action: 'addMessprogramm',
-                disabled: false
+                disabled: true
             },
             '-',
             {
