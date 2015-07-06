@@ -159,69 +159,6 @@ Ext.define('Lada.view.form.Probe', {
                         }]
                     }]
                 }, {
-                    // Medium
-                    xtype: 'fieldset',
-                    title: 'Medium',
-                    items: [{
-                        border: 0,
-                        layout: {
-                            type: 'vbox',
-                            align: 'stretch'
-                        },
-                        width: '100%',
-                        items: [{
-                            xtype: 'textfield',
-                            name: 'media',
-                            labelWidth: 125,
-                            fieldLabel: 'Medienbezeichnung',
-                            listeners: {
-                                dirtychange: {
-                                    fn: this.updateOnChange,
-                                    scope: me
-                                }
-                            }
-                        }, {
-                            xtype: 'tfield',
-                            maxLength: 38,
-                            enforceMaxLength: true,
-                            name: 'mediaDesk',
-                            labelWidth: 125,
-                            fieldLabel: 'Deskriptoren',
-                            regex: new RegExp('(?:D: ){1}(?:[0-9]{2} ){11}[0-9]{2}'),
-                            regexText: 'Die Deskriptoren haben das falsche Format.<br />'+
-                            'Richtig wäre: D: 99 99 99 99 99 99 99 99 99 99 99 99',
-                            listeners: {
-                                dirtychange: {
-                                    fn: this.updateOnChange,
-                                    scope: me
-                                }
-                            }
-                        }, {
-                            xtype: 'umwelt',
-                            name: 'umwId',
-                            fieldLabel: 'Umweltbereich',
-                            labelWidth: 125,
-                            allowBlank: false,
-                            editable: true,
-                            listeners: {
-                                dirtychange: {
-                                    fn: this.updateOnChange,
-                                    scope: me
-                                }
-                            }
-                        }, {
-                            xtype: 'fieldset',
-                            title: 'Details Deskriptoren',
-                            collapsible: true,
-                            collapsed: true,
-                            layout: {
-                                type: 'table',
-                                columns: 3
-                            },
-                            items: this.buildDescriptors()
-                        }]
-                    }]
-                }, {
                     // Zeit
                     xtype: 'fieldset',
                     title: 'Zeit',
@@ -285,6 +222,69 @@ Ext.define('Lada.view.form.Probe', {
                             name: 'solldatumEnde',
                             format: 'd.m.Y H:i',
                             period: 'end'
+                        }]
+                    }]
+                }, {
+                    // Medium
+                    xtype: 'fieldset',
+                    title: 'Medium',
+                    items: [{
+                        border: 0,
+                        layout: {
+                            type: 'vbox',
+                            align: 'stretch'
+                        },
+                        width: '100%',
+                        items: [{
+                            xtype: 'textfield',
+                            name: 'media',
+                            labelWidth: 125,
+                            fieldLabel: 'Medienbezeichnung',
+                            listeners: {
+                                dirtychange: {
+                                    fn: this.updateOnChange,
+                                    scope: me
+                                }
+                            }
+                        }, {
+                            xtype: 'tfield',
+                            maxLength: 38,
+                            enforceMaxLength: true,
+                            name: 'mediaDesk',
+                            labelWidth: 125,
+                            fieldLabel: 'Deskriptoren',
+                            regex: new RegExp('(?:D: ){1}(?:[0-9]{2} ){11}[0-9]{2}'),
+                            regexText: 'Die Deskriptoren haben das falsche Format.<br />'+
+                            'Richtig wäre: D: 99 99 99 99 99 99 99 99 99 99 99 99',
+                            listeners: {
+                                dirtychange: {
+                                    fn: this.updateOnChange,
+                                    scope: me
+                                }
+                            }
+                        }, {
+                            xtype: 'umwelt',
+                            name: 'umwId',
+                            fieldLabel: 'Umweltbereich',
+                            labelWidth: 125,
+                            allowBlank: false,
+                            editable: true,
+                            listeners: {
+                                dirtychange: {
+                                    fn: this.updateOnChange,
+                                    scope: me
+                                }
+                            }
+                        }, {
+                            xtype: 'fieldset',
+                            title: 'Details Deskriptoren',
+                            collapsible: true,
+                            collapsed: true,
+                            layout: {
+                                type: 'table',
+                                columns: 3
+                            },
+                            items: this.buildDescriptors()
                         }]
                     }]
                 }]
