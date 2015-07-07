@@ -252,7 +252,12 @@ Ext.define('Lada.controller.Filter', {
         var filters = element.up('panel[name=main]').down('fieldset[name=filtervariables]');
         for (var i = filters.items.length - 1; i >= 0; i--) {
             var filter = filters.items.items[i];
-            filter.clearValue();
+            if (filter.clearValue) {
+                filter.clearValue();
+            }
+            else {
+                filter.setValue('');
+            }
         }
     },
     /**
