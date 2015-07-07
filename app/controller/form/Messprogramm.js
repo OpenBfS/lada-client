@@ -89,7 +89,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 .down('netzbetreiber').down('combobox');
         var nbId = records[0].get('netzbetreiberId');
 
-        debugger;
         if (nbId != null &&
                (netzbetreiber.value === '' || netzbetreiber.value === null)) {
             //select the NB in the NB-Combobox
