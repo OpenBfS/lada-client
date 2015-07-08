@@ -29,6 +29,7 @@ Ext.define('Lada.view.grid.Messwert', {
     recordId: null,
     readOnly: true,
     allowDeselect: true,
+    messgroesseStore: null,
 
     initComponent: function() {
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -49,8 +50,8 @@ Ext.define('Lada.view.grid.Messwert', {
                     return true;
                 }
             }
-         });
-
+        });
+        var me = this;
         this.plugins = [this.rowEditing];
 
         this.dockedItems = [{
@@ -81,7 +82,7 @@ Ext.define('Lada.view.grid.Messwert', {
             },
             editor: {
                 xtype: 'combobox',
-                store: Ext.data.StoreManager.get('messgroessen'),
+                store: me.messgroesseStore,
                 displayField: 'messgroesse',
                 valueField: 'id',
                 allowBlank: false,
