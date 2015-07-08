@@ -18,13 +18,14 @@ Ext.define('Lada.view.widget.Deskriptor', {
     triggerAction: 'all',
     typeAhead: false,
     layer: null,
-    queryMode: 'local',
+    queryMode: 'remote',
+    remoteFilter: true,
+
     listeners: {
-        expand: {
+        focus: {
             fn: function(field) {
                 if (field.up('deskriptor').layer === 0) {
                     field.store.proxy.extraParams = {'layer': field.up('deskriptor').layer};
-                    field.store.load();
                 }
                 else {
                     var parents = field.up('deskriptor').getParents(this);
