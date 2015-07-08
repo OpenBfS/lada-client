@@ -12,7 +12,7 @@
 Ext.define('Lada.view.widget.Deskriptor', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.deskriptor',
-    displayField: 'beschreibung',
+    displayField: 'id',
     valueField: 'id',
     // Enable filtering of comboboxes
     triggerAction: 'all',
@@ -20,6 +20,11 @@ Ext.define('Lada.view.widget.Deskriptor', {
     layer: null,
     queryMode: 'remote',
     remoteFilter: true,
+    tpl: Ext.create('Ext.XTemplate',
+        '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
+            '{sn} - {beschreibung}</div></tpl>'),
+    displayTpl: Ext.create('Ext.XTemplate',
+         '<tpl for=".">{sn} - {beschreibung}</tpl>'),
 
     listeners: {
         focus: {
