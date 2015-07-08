@@ -63,6 +63,10 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.width = 700;
         this.height = Ext.getBody().getViewSize().height - 30;
 
+        var mStore = Ext.data.StoreManager.get('messgroessen');
+        mStore.proxy.extraParams = {mmtId: this.record.get('mmtId')};
+        mStore.load();
+
         this.items = [{
             border: 0,
             autoScroll: true,
@@ -78,7 +82,8 @@ Ext.define('Lada.view.window.MessungEdit', {
                 margin: 5,
                 items: [{
                     xtype: 'messwertgrid',
-                    recordId: this.record.get('id')
+                    recordId: this.record.get('id'),
+                    messgroesseStore: mStore
                 }]
             }, {
                 xtype: 'fset',
