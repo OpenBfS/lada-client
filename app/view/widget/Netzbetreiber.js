@@ -15,6 +15,7 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
     store: 'StaNetzbetreiber',
     displayField: 'netzbetreiber',
     valueField: 'id',
+    readOnly: this.readOnly,
     // Enable filtering of comboboxes
     queryMode: 'local',
     triggerAction: 'all',

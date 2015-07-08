@@ -61,16 +61,13 @@ Ext.define('Lada.controller.form.Probe', {
     /**
      * When a Messtelle is selected, modify the Netzbetreiber
      * according to the Messstelle
-     * TODO: The conditions when to apply this automatism are still
-     *   unclear. Right now it is only applied when the NB is not set.
      */
     setNetzbetreiber: function(combo, records){
         var netzbetreiber = combo.up().up('form')
                 .down('netzbetreiber').down('combobox');
         var nbId = records[0].get('netzbetreiberId');
 
-        if (nbId != null &&
-               (netzbetreiber.value === '' || netzbetreiber.value === null)) {
+        if (nbId != null) {
             //select the NB in the NB-Combobox
             netzbetreiber.select(nbId);
         }

@@ -145,6 +145,7 @@ Ext.define('Lada.view.form.Probe', {
                                 xtype: 'netzbetreiber',
                                 name: 'netzbetreiberId',
                                 editable: false,
+                                readOnly: true,
                                 fieldLabel: 'Netzbetreiber',
                                 anchor: '100%',
                                 labelWidth: 105,
@@ -397,7 +398,7 @@ Ext.define('Lada.view.form.Probe', {
         this.down('cbox[name=baId]').setReadOnly(value);
         this.down('cbox[name=test]').setReadOnly(value);
         this.down('cbox[name=probenartId]').setReadOnly(value);
-        this.down('cbox[name=netzbetreiberId]').setReadOnly(value);
+        //this.down('cbox[name=netzbetreiberId]').setReadOnly(value);
         this.down('tfield[name=x11]').setReadOnly(value);
         this.down('textfield[name=media]').setReadOnly(value);
         this.down('tfield[name=mediaDesk]').setReadOnly(value);
