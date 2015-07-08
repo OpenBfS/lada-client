@@ -37,6 +37,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             maxChars: this.maxChars,
             multiSelect: this.multiSelect,
             editable: this.editable || true,
+            readOnly: this.readOnly,
             forceSelection: this.forceSelection || false,
             msgTarget: 'none',
             tpl: this.tpl,

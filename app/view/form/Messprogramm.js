@@ -177,6 +177,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 xtype: 'netzbetreiber',
                                 name: 'netzbetreiberId',
                                 editable: false,
+                                readOnly: true,
                                 fieldLabel: i18n.getMsg('netzbetreiberId'),
                                 anchor: '100%',
                                 labelWidth: 105,
