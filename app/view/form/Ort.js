@@ -127,7 +127,7 @@ Ext.define('Lada.view.form.Ort', {
     },
 
     setReadOnly: function(value) {
-        //this.down('location[name=ort]').setReadOnly(value);
+        this.down('location[name=ort]').setReadOnly(value);
         this.down('tfield[name=ortsTyp]').setReadOnly(value);
         this.down('textarea[name=ortszusatztext]').setReadOnly(value);
     }

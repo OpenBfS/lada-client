@@ -128,6 +128,9 @@ Ext.define('Lada.view.window.OrtEdit', {
                     });
                 }
                 this.down('ortform').setRecord(record);
+                if (this.probe.get('readonly')) {
+                    this.down('ortform').setReadOnly(true);
+                }
                 this.record = record;
             },
             scope: this
