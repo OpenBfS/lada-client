@@ -69,7 +69,14 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         });
                     },
                     failure: function(response) {
-                        var json = Ext.JSON.decode(response.responseText);
+                        var json = null;
+                        try {
+                            json = Ext.JSON.decode(response.responseText);
+                        }
+                        catch(err){
+                            Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title'),
+                                Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                        }
                         if (json) {
                             if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
                                 formPanel.setMessages(json.errors, json.warnings);
