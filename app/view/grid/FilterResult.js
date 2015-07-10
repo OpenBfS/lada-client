@@ -42,13 +42,6 @@ Ext.define('Lada.view.grid.FilterResult', {
                 action: 'addProbe',
                 disabled: false
             }, {
-                text: 'Messprogramm erstellen',
-                icon: 'resources/img/list-add.png',
-                action: 'addMessprogramm',
-                disabled: true
-            },
-            '-',
-            {
                 text: 'Proben Importieren',
                 icon: 'resources/img/svn-commit.png',
                 action: 'import',
@@ -58,8 +51,19 @@ Ext.define('Lada.view.grid.FilterResult', {
                 icon: 'resources/img/svn-update.png',
                 action: 'export',
                 disabled: true
-            }
-            ]
+            },
+            '-',
+            {
+                text: 'Messprogramm erstellen',
+                icon: 'resources/img/list-add.png',
+                action: 'addMessprogramm',
+                disabled: true
+            }, {
+                text: 'Proben generieren',
+                icon: 'resources/img/view-time-schedule-insert.png',
+                action: 'genProbenFromMessprogramm',
+                disabled: true
+            }]
         }];
         this.columns = [];
         this.callParent(arguments);
@@ -94,6 +98,7 @@ Ext.define('Lada.view.grid.FilterResult', {
         if (store.model.modelName == 'Lada.model.ProbeList'){
             t.setText(i18n.getMsg('probelist'));
             this.down('button[action=addMessprogramm]').disable();
+            this.down('button[action=genProbenFromMessprogramm]').disable();
             this.down('button[action=addProbe]').enable();
             this.down('button[action=import]').enable();
             this.down('button[action=export]').enable();
@@ -101,6 +106,7 @@ Ext.define('Lada.view.grid.FilterResult', {
         else if (store.model.modelName == 'Lada.model.MessprogrammList') {
             t.setText(i18n.getMsg('probeplanning'));
             this.down('button[action=addMessprogramm]').enable();
+            this.down('button[action=genProbenFromMessprogramm]').enable();
             this.down('button[action=addProbe]').disable();
             this.down('button[action=import]').disable();
             this.down('button[action=export]').disable();
