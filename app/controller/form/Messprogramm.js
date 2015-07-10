@@ -322,7 +322,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var desk = field.up('deskriptor');
         var media = field.up('messprogrammform').down('textfield[name="mediaDesk"]');
         var current = media.getValue().split(' ');
-        this.clearChildDesk(field.up('deskriptor'), current);
         if (current.length < 13) {
             for (var i = 0; i <= 12; i++) {
                 if (i === 0) {

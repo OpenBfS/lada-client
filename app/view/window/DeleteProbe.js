@@ -55,12 +55,22 @@ Ext.define('Lada.view.window.DeleteProbe', {
                     },
                     success: function(response) {
                         var json = Ext.JSON.decode(response.responseText);
-                        Ext.Msg.show({
-                            title: i18n.getMsg('success'),
-                            autoScroll: true,
-                            msg: me.evalResponse(json),
-                            buttons: Ext.Msg.OK,
-                        });
+                        if (json.success && json.message === '200') {
+                            Ext.Msg.show({
+                                title: i18n.getMsg('success'),
+                                autoScroll: true,
+                                msg: 'Probe gelöscht!',
+                                buttons: Ext.Msg.OK
+                            });
+                        }
+                        else {
+                            Ext.Msg.show({
+                                title: 'Fehler!',
+                                msg: 'Ein Fehler ist aufgetreten, ist die Probe nicht leer?',
+                                buttons: Ext.Msg.OK
+                            });
+                        }
+                        me.close();
                     },
                     failure: function(response) {
                         var json = null;
