@@ -31,6 +31,7 @@ Ext.define('Lada.view.window.Messprogramm', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        var me = this;
 
         if (this.record == null) {
             this.title = i18n.getMsg('messprogramm.window.create.title');
@@ -58,6 +59,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                     this.probenWindow.focus();
                     this.probenWindow.setActive(true);
                }
+                me.close();
             }
         },
         '->',

@@ -67,6 +67,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             msg: me.evalResponse(json),
                             buttons: Ext.Msg.OK,
                         });
+                        me.close();
                     },
                     failure: function(response) {
                         var json = null;
