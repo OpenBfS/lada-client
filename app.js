@@ -169,7 +169,7 @@ Ext.application({
     getServerVersion: function() {
         var i18n = Lada.getApplication().bundle;
         Ext.Ajax.request({
-            url: '/lada-server/version',
+            url: 'lada-server/version',
             method: 'GET',
             headers: {
                 'X-OPENID-PARAMS': Lada.openIDParams
