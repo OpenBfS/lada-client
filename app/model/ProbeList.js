@@ -15,6 +15,8 @@ Ext.define('Lada.model.ProbeList', {
 
     fields: [{
         name: 'readonly'
+    }, {
+        name: 'owner'
     }],
 
     idProperty: 'id',

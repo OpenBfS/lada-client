@@ -13,6 +13,8 @@ Ext.define('Lada.view.grid.FilterResult', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.filterresultgrid',
 
+    requires: 'Lada.view.window.DeleteProbe',
+
     store: null, //'ProbenList',
 
     multiSelect: true,
@@ -120,21 +122,26 @@ Ext.define('Lada.view.grid.FilterResult', {
         var resultColumns = [];
         var fields = [];
 
+        fields.push(new Ext.data.Field({
+            name: 'owner'
+        }));
+        fields.push(new Ext.data.Field({
+            name: 'readonly'
+        }));
+
         resultColumns.push({
             header: 'RW',
             dataIndex: 'readonly',
             sortable: false,
             width: 30,
-            renderer: function(value) {
-                if (value) {
-                    return '<img src="resources/img/view-time-schedule-baselined.png"/>';
+            renderer: function(value, meta, record) {
+                if ( !value && record.get('owner')) {
+                    return '<img src="resources/img/view-time-schedule-edit.png"/>';
                 }
-                return '<img src="resources/img/view-time-schedule-edit.png"/>';
+                return '<img src="resources/img/view-time-schedule-baselined.png"/>';
             }
         });
-        fields.push(new Ext.data.Field({
-            name: 'readonly'
-        }));
+
         for (var i = cols.length - 1; i >= 0; i--) {
             if (cols[i] === 'id') {
                 continue;
@@ -143,6 +150,38 @@ Ext.define('Lada.view.grid.FilterResult', {
             fields.push(new Ext.data.Field({
                 name: cols[i].dataIndex
             }));
+        }
+        if (this.store.$className == 'Lada.store.ProbenList') {
+            // Add a Delete-Button
+            // TODO: Might need to be extended to Messprogramme
+            resultColumns.push({
+                xtype: 'actioncolumn',
+                header: 'Aktionen',
+                sortable: false,
+                width: 30,
+                items: [{
+                    icon: '/resources/img/edit-delete.png',
+                    tooltip: 'Löschen',
+                    isDisabled: function(grid, rowIndex, colIndex) {
+                        var rec = grid.getStore().getAt(rowIndex);
+                        if ( rec.get('readonly') || !rec.get('owner')) {
+                            return true;
+                        }
+                        return false;
+                    },
+                    handler: function(grid, rowIndex, colIndex){
+                        var rec = grid.getStore().getAt(rowIndex);
+
+                        var winname = 'Lada.view.window.DeleteProbe';
+                        var win = Ext.create(winname, {
+                            record: rec,
+                            parentWindow: this
+                        });
+                        win.show();
+                        win.initData();
+                    }
+                }]
+            });
         }
         this.store.model.setFields(fields);
         this.reconfigure(this.store, resultColumns);
