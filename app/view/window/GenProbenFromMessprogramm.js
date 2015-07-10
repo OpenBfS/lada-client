@@ -124,7 +124,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 this.getEl().addCls('window-inactive');
             },
             close: function () {
-                this.parentWindow.probenWindow = null;
+                if (this.parentWindow) {
+                    this.parentWindow.probenWindow = null;
+                }
             }
         });
 
