@@ -25,6 +25,7 @@ Ext.define('Lada.view.widget.base.CheckBox', {
             labelWidth: this.labelWidth,
             listeners: this.listeners,
             triggerAction: this.triggerAction,
+            readOnly: this.readOnly,
             msgTarget: 'none',
             tpl: this.tpl
         }, {
