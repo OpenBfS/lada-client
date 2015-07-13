@@ -6,7 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/*
+/**
  * Panel to show available search queries
  */
 Ext.define('Lada.view.FilterPanel', {
