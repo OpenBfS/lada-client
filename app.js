@@ -61,7 +61,7 @@ Ext.application({
         Lada.userroles = '';
         Lada.logintime = '';
         Lada.mst = [];
-        Lada.clientVersion = '2.0';
+        Lada.clientVersion = '2.0.2';
         Lada.serverVersion = '';
 
         var queryString = document.location.href.split('?')[1];
@@ -169,7 +169,7 @@ Ext.application({
     getServerVersion: function() {
         var i18n = Lada.getApplication().bundle;
         Ext.Ajax.request({
-            url: '/lada-server/version',
+            url: 'lada-server/version',
             method: 'GET',
             headers: {
                 'X-OPENID-PARAMS': Lada.openIDParams

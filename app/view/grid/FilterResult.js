@@ -166,7 +166,7 @@ Ext.define('Lada.view.grid.FilterResult', {
                 sortable: false,
                 width: 30,
                 items: [{
-                    icon: '/resources/img/edit-delete.png',
+                    icon: 'resources/img/edit-delete.png',
                     tooltip: 'Löschen',
                     isDisabled: function(grid, rowIndex, colIndex) {
                         var rec = grid.getStore().getAt(rowIndex);
