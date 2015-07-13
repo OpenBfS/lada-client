@@ -15,3 +15,13 @@
 }
 
 .window-inactive .x-window-header-text {color: #a9a9a9;}
+
+/* do not display clear-button (x) in IE10+ Input fields */
+::-ms-clear {
+   display: none;
+}
+
+/* do not display reveal-button in IE10+ PW-Input fields */
+::-ms-reveal {
+   display: none;
+}
