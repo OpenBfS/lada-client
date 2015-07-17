@@ -43,7 +43,16 @@ Ext.define('Lada.view.window.MessungEdit', {
             this.callParent(arguments);
             return;
         }
-        this.title = 'Messung ' + this.record.get('nebenprobenNr');
+
+        var messstelle = Ext.data.StoreManager.get('messstellen')
+            .getById(this.probe.get('mstId'));
+
+        this.title = 'Messung: ' + this.record.get('nebenprobenNr')
+            + '   zu Probe: ' + this.probe.get('probeIdAlt')
+            + ' Mst: ' + messstelle.get('messStelle')
+            + ' editieren.';
+
+
         this.buttons = [{
             text: 'Schließen',
             scope: this,
