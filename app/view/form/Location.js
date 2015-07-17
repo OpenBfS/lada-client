@@ -59,6 +59,13 @@ Ext.define('Lada.view.form.Location', {
                 }],
                 items: [{
                     xtype: 'tfield',
+                    maxLength: 100,
+                    name: 'beschreibung',
+                    fieldLabel: 'Beschreibung',
+                    width: 280,
+                    labelWidth: 80
+                }, {
+                    xtype: 'tfield',
                     maxLength: 10,
                     name: 'bezeichnung',
                     fieldLabel: 'Bezeichnung',
@@ -143,6 +150,7 @@ Ext.define('Lada.view.form.Location', {
      },
 
     clearMessages: function() {
+        this.down('tfield[name=beschreibung]').clearWarningOrError();
         this.down('tfield[name=bezeichnung]').clearWarningOrError();
         this.down('staat[name=staatId]').clearWarningOrError();
         this.down('verwaltungseinheit[name=verwaltungseinheitId]').clearWarningOrError();
@@ -152,6 +160,7 @@ Ext.define('Lada.view.form.Location', {
      },
 
     setReadOnly: function(value) {
+        this.down('tfield[name=beschreibung]').setReadOnly(value);
         this.down('tfield[name=bezeichnung]').setReadOnly(value);
         this.down('staat[name=staatId]').setReadOnly(value);
         this.down('verwaltungseinheit[name=verwaltungseinheitId]').setReadOnly(value);
