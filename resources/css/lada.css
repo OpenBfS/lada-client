@@ -16,6 +16,25 @@
 
 .window-inactive .x-window-header-text {color: #a9a9a9;}
 
+
+.x-action-col-cell img
+{
+  cursor: pointer;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.x-action-col-cell img.noedit
+{
+  background-image: url(/resources/img/view-time-schedule-baselined.png);
+}
+
+.x-action-col-cell img.edit
+{
+  background-image: url(/resources/img/view-time-schedule-edit.png);
+}
+
+
 /* do not display clear-button (x) in IE10+ Input fields */
 ::-ms-clear {
    display: none;

@@ -123,6 +123,7 @@ Ext.define('Lada.view.grid.FilterResult', {
      * Setup columns of the Grid dynamically based on a list of given cols.
      * The function is called from the {@link Lada.controller.Filter#search
      * search event}
+     * The Images for the Read-Write Icon are defined in CSS
      */
     setupColumns: function(cols) {
         var resultColumns = [];
@@ -136,16 +137,19 @@ Ext.define('Lada.view.grid.FilterResult', {
         }));
 
         resultColumns.push({
-            header: 'RW',
+            xtype: 'actioncolumn',
+            text: 'RW',
             dataIndex: 'readonly',
             sortable: false,
+            tooltip: 'Probe öffnen',
             width: 30,
-            renderer: function(value, meta, record) {
-                if ( !value && record.get('owner')) {
-                    return '<img src="resources/img/view-time-schedule-edit.png"/>';
-                }
-                return '<img src="resources/img/view-time-schedule-baselined.png"/>';
-            }
+            getClass: function (val, meta, rec) {
+                return rec.get('readonly') === false ? "edit" : "noedit";
+            },
+            handler: function(grid, rowIndex, colIndex) {
+                var rec = grid.getStore().getAt(rowIndex);
+                grid.fireEvent('itemdblclick', grid, rec);
+             }
         });
 
         for (var i = cols.length - 1; i >= 0; i--) {
@@ -162,7 +166,7 @@ Ext.define('Lada.view.grid.FilterResult', {
             // TODO: Might need to be extended to Messprogramme
             resultColumns.push({
                 xtype: 'actioncolumn',
-                header: 'Aktionen',
+                text: 'Aktion',
                 sortable: false,
                 width: 30,
                 items: [{
