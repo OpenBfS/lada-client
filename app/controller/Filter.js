@@ -144,7 +144,9 @@ Ext.define('Lada.controller.Filter', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
-                    multiSelect: multi
+                    multiSelect: multi,
+                    displayTpl: Ext.create('Ext.XTemplate',
+                     '<tpl for=".">{id} </tpl>')
                 });
             }
             else if (type === 'listdbasis') {
