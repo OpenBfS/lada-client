@@ -12,14 +12,11 @@
 Ext.define('Lada.store.Datenbasis', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Datenbasis',
-    sorters: [{
-        property: 'datenbasis',
-        transform: function(val) {
-            if (val) {
-                return val.toLowerCase();
-            }
-            return '';
-        }
+    sorters: [
+        {
+            property: 'id',
+            direction: 'ASC'
     }],
-    autoLoad: true
+    autoLoad: true,
+    sortOnLoad: true
 });
