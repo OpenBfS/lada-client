@@ -75,7 +75,8 @@ Ext.define('Lada.view.panel.Map', {
                     this.locationStore.getAt(i).get('latitude')
                 ),
                 {
-                    id: this.locationStore.getAt(i).get('id')
+                    id: this.locationStore.getAt(i).get('id'),
+                    bez: this.locationStore.getAt(i).get('bezeichnung')
                 }
             ));
         }
@@ -84,10 +85,19 @@ Ext.define('Lada.view.panel.Map', {
                 'default': new OpenLayers.Style(OpenLayers.Util.applyDefaults({
                     externalGraphic: 'resources/lib/OpenLayers/img/marker-green.png',
                     graphicOpacity: 1,
-                    pointRadius: 10
+                    pointRadius: 10,
+                    label: '${bez}',
+                    labelAlign: 'rt',
+                    fontColor: 'green',
+                    fontWeight: 'bold'
                 }, OpenLayers.Feature.Vector.style['default'])),
                 'select': new OpenLayers.Style({
-                    externalGraphic: 'resources/lib/OpenLayers/img/marker-blue.png'
+                    externalGraphic: 'resources/lib/OpenLayers/img/marker-blue.png',
+                    pointRadius: 15,
+                    label: '${bez}',
+                    labelAlign: 'rt',
+                    fontColor: 'blue',
+                    fontWeight: 'bold'
                 })
             })
         });
