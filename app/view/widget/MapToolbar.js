@@ -6,6 +6,9 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
+/**
+ * This is a Toolbar for the Map.
+ */
 Ext.define('Lada.view.widget.MapToolbar', {
     extend: 'Ext.toolbar.Toolbar',
     alias: 'widget.maptoolbar',

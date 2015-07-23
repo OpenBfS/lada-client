@@ -6,6 +6,9 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
+/**
+ * This Widget extends a Panel to creat a custom Combobox
+ */
 Ext.define('Lada.view.widget.base.ComboBox', {
     extend: 'Ext.form.Panel',
     alias: 'widget.cbox',

@@ -6,6 +6,9 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
+/**
+ * This Widget extends a Panel to create a custom Checkbox
+ */
 Ext.define('Lada.view.widget.base.CheckBox', {
     extend: 'Ext.form.Panel',
     alias: 'widget.chkbox',

@@ -6,6 +6,9 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
+/**
+ * This Widget extends a Panel to create a Textfield
+ */
 Ext.define('Lada.view.widget.base.TextField', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.tfield',

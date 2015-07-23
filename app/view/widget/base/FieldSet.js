@@ -6,6 +6,9 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
+/**
+ * This Widget extends a Fieldset
+ */
 Ext.define('Lada.view.widget.base.FieldSet', {
     extend: 'Ext.form.FieldSet',
     alias: 'widget.fset',

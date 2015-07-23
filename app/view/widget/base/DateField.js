@@ -6,6 +6,9 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
+/**
+ * This Widget extends a Panel in order to create a custom Datefield
+ */
 Ext.define('Lada.view.widget.base.DateField', {
     extend: 'Ext.form.Panel',
     alias: 'widget.datef',
