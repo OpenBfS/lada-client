@@ -24,10 +24,6 @@ Ext.define('Lada.controller.FilterResult', {
             'filterresultgrid': {
                 itemdblclick: this.editItem
             },
-            'store': {
-                beforeload: this.loadingAnimationOn,
-                load:   this.loadingAnimationOff
-            },
             'filterresultgrid toolbar button[action=addProbe]': {
                 click: this.addProbeItem
             },
