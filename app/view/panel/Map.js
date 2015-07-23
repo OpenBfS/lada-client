@@ -5,6 +5,12 @@
  * and comes with ABSOLUTELY NO WARRANTY! Check out
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
+
+
+/**
+ * This is the MapPanel.
+ * It uses OpenLayers to display the map
+ */
 Ext.define('Lada.view.panel.Map', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.map',

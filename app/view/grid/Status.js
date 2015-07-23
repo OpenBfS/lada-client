@@ -6,7 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/*
+/**
  * Grid to list Status
  */
 Ext.define('Lada.view.grid.Status', {

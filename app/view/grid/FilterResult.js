@@ -6,8 +6,8 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/*
- * Grid to list Proben
+/**
+ * Grid to list the result of the Filter
  */
 Ext.define('Lada.view.grid.FilterResult', {
     extend: 'Ext.grid.Panel',

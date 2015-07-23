@@ -6,7 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/*
+/**
  * Grid to list Orte
  */
 Ext.define('Lada.view.grid.Ort', {
