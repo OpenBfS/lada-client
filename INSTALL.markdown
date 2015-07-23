@@ -33,15 +33,12 @@ Die Fa. Sencha beschreibt die Installation von Sencha Cmd in der
 Zur Installation werden Ruby und Java benötigt.
 
 
-
-
-
 Der Befehl hierzu lautet:
 
 ```
-    sencha --sdk $PATHTOEXT compile \
-      --classpath=app,resources/datetime,resources/i18n page -str -cla lada.js \
-      -yui -i index.html -o build/index.html
+   $PATHTOSENCHACMD --sdk-path $PATHTOEXTJS compile \
+   --classpath=app,resources/lib/datetime,resources/lib/i18n page -str -cla lada.js \
+   -yui -i index.html -o build/index.html
 ```
 
 Das Verzeichnis `build` enthält dann eine Datei `index.html` und eine Datei
@@ -54,9 +51,9 @@ Verzeichnis `build` kopiert werden:
 |--------------------------------------------------------|-------------------------------------------------------------|
 | extjs/resources/css/ext-all-gray.css                   | build/extjs/resources/css/ext-all-gray.css                  |
 | extjs/resources/ext-theme-gray/ext-theme-gray-all.css  | build/extjs/resources/ext-theme-gray/ext-theme-gray-all.css |
-| resources/Lada.properties                              | build/resources/Lada.properties                             |
-| resources/Lada_de-DE.properties                        | build/resources/Lada_de-DE.properties                       |
-| gfx/*                                                  | build/gfx/                                                  |
+| resources/i18n/Lada.properties                         | build/resources/i18n/Lada.properties                             |
+| resources/i18n/Lada_de-DE.properties                   | build/resources/i18n/Lada_de-DE.properties                       |
+| resources/img/*                                        | build/ressources/img*                                                  |
 
 
 ### Installation Apache
@@ -97,6 +94,10 @@ restorecon -Rv /var/www/html/
 Die Anwendung sollte nun bereits unter der Adresse `http://localhost/lada`
 erreichbar sein.
 
+Damit die Anwendung vollständig funktiniert, müssen ggfs noch weitere
+Bibliotheken hinzugefügt werden.
+Dies wird im Abschnitt *Lizenzen und Bibliotheken* näher beschrieben
+
 ### Konfiguration Proxy Server
 
 Damit der Client eine Verbindung zu dem Server aufbauen kann, um von dort
@@ -131,3 +132,71 @@ Alle Anfragen an die Adresse `/lada/service`, werden nun an den Server weitergel
 Die Authentifizierung geschieht gegen einen OpenID-Server.
 
 Der Lada-Client leitet in Zusammenarbeit mit dem Server automatisch an diesen weiter.
+
+# Lizenzen und Bibliotheken
+
+Die Anwendung verwendet mehrere Unterkomponenten, diese sind typischerweise im
+Ordner `resources` zu finden.
+
+Folgende Bibliotheken werden neben ExtJs verwendet:
+
+ * Filesaver.js
+   https://github.com/eligrey/FileSaver.js
+   MIT - License
+ * Blob.js
+   https://github.com/eligrey/Blob.js
+   MIT - License
+ * Openlayers 2.13.1
+   http://www.openlayers.org
+   https://github.com/openlayers/openlayers
+   2-Clause BSD-License
+ * Ext.i18n.Bundle 0.3.3 (referenced as Ext.i18n in app.js)
+   https://github.com/elmasse/Ext.i18n.Bundle/tree/v0.3.3
+   MIT - License
+ * Ext.ux.upload 1.1.1
+   https://github.com/ivan-novakov/extjs-upload-widget/tree/1.1.1
+   3-Clause BSD-License
+
+
+## Installation der Bibliotheken
+
+Die aufgeführten Bibliotheken können über den Link zu Github als zip-Datei
+heruntergeladen werden.
+
+Dabei ist auf die korrekte Versionnummer zu achten, falls dies in der Liste
+oben angegeben wurde.
+
+```
+cd /var/www/html/lada/resources/
+mkdir lib/
+cd lib
+wget https://github.com/eligrey/FileSaver.js/archive/master.zip -O FileSaver-js.zip
+wget https://github.com/eligrey/Blob.js/archive/master.zip -O Blob-js.zip
+wget https://github.com/openlayers/openlayers/archive/release-2.13.1.zip -O OpenLayers-2-13-1.zip
+wget https://github.com/elmasse/Ext.i18n.Bundle/archive/v0.3.3.zip -O Ext-i18n-Bundle-v0-3-3.zip
+wget https://github.com/ivan-novakov/extjs-upload-widget/archive/1.1.1.zip -O Ext-ux-Upload-1-1-1.zip
+```
+
+Die Dateien sind im Ordner `resources/lib/` zu entpacken
+
+```
+unzip FileSaver-js.zip
+unzip Blob-js.zip
+unzip OpenLayers-2-13-1.zip
+unzip Ext-i18n-Bundle-v0-3-3.zip
+unzip Ext-ux-Upload-1-1-1.zip
+```
+
+Zum einfacheren Zugriff auf die Bibliothek, symbolische Links erstellen.
+Dies is praktisch wenn die Bibliothek ausgetauscht wird,
+dann müssen die Quelltexte nicht angepasst werden
+
+```
+ln -s Blob.js-master Blob
+ln -s FileSaver.js-master FileSaver
+ln -s openlayers-release-2.13.1 OpenLayers
+ln -s Ext.i18n.Bundle-0.3.3/i18n i18n
+ln -s extjs-upload-widget-1.1.1/lib/upload upload
+```
+
+Somit ist die Installation der Bibliotheken abgeschlossen.
