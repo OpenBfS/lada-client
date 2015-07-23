@@ -18,9 +18,23 @@ finde sich in dem Installationbeispiel.
 Die folgenden Hinweise beziehen sich auf die Installation und Einrichtung auf
 Basis eines Oracle-RedHat Linux Systems.
 
+Der Lada-Client ist eine Anwendung die auf dem Framework extJs 4.2.1 basiert,
+Damit der Client funktiniert müssen Sie dieses Framework herunterladen und
+entpacken. Dies kann direkt in das root-Verzeichnis des Lada-Clients geschehen.
+
+Für Applikationen die ebenfalls unter der GPL lizenziert wird - so wie der Lada
+Client - kann extJs als [GPL Version heruntergeladen](http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip)
+werden.
+
+Legen Sie nach dem Entpacken einen Symlink auf dieses Verzeichnis an:
+
+```
+ln -s ext-4.2.1.883 extjs
+```
+
 ### Kompilieren und Minifizieren der Anwendung
 
-Zum Compilieren der Anwendung kommt das Tool Sencha Cmd 4.0.x zum Einsatz.
+Zum Kompilieren der Anwendung kommt das Tool Sencha Cmd 4.0.x zum Einsatz.
 Mit Hilfe dieses Tools kann der Quellcode in eine einzelne Datei zusammengefasst
 und minifiziert werden. Dies beschleunigt das Laden der Anwendung im Browser erheblich
 
@@ -44,6 +58,11 @@ Zum Kompilieren nutzen Sie die folgende Anweisung:
    -yui -i index.html -o build/index.html
 ```
 
+Ersetzen Sie heirbei `$PATHTOSENCHACMD` mit dem Pfad zu Ihrer Installation von
+Sencha Cmd. $PATHTOEXTJS gibt den Pfad an, an dem sich Ihre Kopie von extJs
+befindet.
+
+
 Das Verzeichnis `build` enthält dann eine Datei `index.html` und eine Datei
 `lada.js`. Die Datei `lada.js` ist eine komprimierte Version der Anwendung und
 enthält alle benötigten Klassen.
@@ -54,10 +73,10 @@ Verzeichnis `build` kopiert werden:
 |--------------------------------------------------------|-------------------------------------------------------------|
 | extjs/resources/css/ext-all-gray.css                   | build/extjs/resources/css/ext-all-gray.css                  |
 | extjs/resources/ext-theme-gray/ext-theme-gray-all.css  | build/extjs/resources/ext-theme-gray/ext-theme-gray-all.css |
-| resources/i18n/Lada.properties                         | build/resources/i18n/Lada.properties                             |
-| resources/i18n/Lada_de-DE.properties                   | build/resources/i18n/Lada_de-DE.properties                       |
-| resources/img/*                                        | build/ressources/img*                                                  |
-| resources/lib/* (alles ausser ext Ordner)              | build/resources/lib |
+| resources/i18n/Lada.properties                         | build/resources/i18n/Lada.properties                        |
+| resources/i18n/Lada_de-DE.properties                   | build/resources/i18n/Lada_de-DE.properties                  |
+| resources/img/*                                        | build/ressources/img*                                       |
+| resources/lib/* (alles ausser ext Ordner)              | build/resources/lib                                         |
 
 
 Um OpenLayers als "Single File" Version bereit zu haben, gehen Sie in das Verzeichnis
@@ -84,7 +103,6 @@ Die Konfiguration, welche Module beim Start des Apache geladen werden, erfolgt
 in der Datei `/etc/httpd/conf`. Die zu ladende Module sind in dieser Datei mit
 der Option `LoadModule` angegeben. Folgende Module werden benötigt:
 
-    * ldap_module: Authentifizierung gegen den LDAP
     * headers_module: Setzten der Header nach der Authentifizierung
     * proxy_module: Reverse Proxy des Apache zum Jboss-Server
 
