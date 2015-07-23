@@ -23,6 +23,9 @@ Ext.define('Lada.view.window.DeleteProbe', {
     record: null,
     parentWindow: null,
 
+    /**
+     * This function initialises the Window
+     */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
 
@@ -158,7 +161,7 @@ Ext.define('Lada.view.window.DeleteProbe', {
     },
 
     /**
-     * Init
+     * Inititalise Data
      */
     initData: function() {
         var i18n = Lada.getApplication().bundle;
@@ -176,6 +179,9 @@ Ext.define('Lada.view.window.DeleteProbe', {
         return r;
     },
 
+    /**
+     * Reload the Application
+     */
     reload: function(btn) {
         if (btn === 'yes') {
             location.reload();

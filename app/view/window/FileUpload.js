@@ -7,6 +7,7 @@
  */
 
 /**
+ * This is a simple Fileupload Window, used to upload LAF-Files
  */
 Ext.define('Lada.view.window.FileUpload', {
     extend: 'Ext.window.Window',
@@ -15,6 +16,9 @@ Ext.define('Lada.view.window.FileUpload', {
 
     file: null,
 
+    /**
+     * This function initialises the Window
+     */
     initComponent: function() {
         var me = this;
         this.browseButton = Ext.create('Ext.ux.upload.BrowseButton', {
@@ -45,11 +49,19 @@ Ext.define('Lada.view.window.FileUpload', {
         this.callParent(arguments);
     },
 
+    /**
+     * @private
+     * A handler for a Abort-Button
+     */
     abort: function(button) {
         var win = button.up('window');
         win.close();
     },
 
+    /**
+     * @private
+     * A handler for the Input field
+     */
     fileSelected: function(input, file) {
         var item = Ext.create('Ext.ux.upload.Item', {
             fileApiObject: file[0]
@@ -58,6 +70,10 @@ Ext.define('Lada.view.window.FileUpload', {
         this.file = item;
     },
 
+    /**
+     * @private
+     * A handler for the Upload-Button
+     */
     uploadFile: function(button) {
         // TODO Error handling ?
         var win = button.up('window');
@@ -75,6 +91,9 @@ Ext.define('Lada.view.window.FileUpload', {
         }
     },
 
+    /**
+     * @private
+     */
     uploadSuccess: function(file, response) {
         this.close();
         var win = Ext.create('Lada.view.window.ImportResponse', {
@@ -86,6 +105,9 @@ Ext.define('Lada.view.window.FileUpload', {
         win.show();
     },
 
+    /**
+     * @private
+     */
     uploadFailure: function(file, response) {
         // TODO handle Errors correctly, especially AuthenticationTimeouts
         this.close();

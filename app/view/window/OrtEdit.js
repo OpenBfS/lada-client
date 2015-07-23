@@ -30,6 +30,9 @@ Ext.define('Lada.view.window.OrtEdit', {
     record: null,
     grid: null,
 
+    /**
+     * This function initialises the Window
+     */
     initComponent: function() {
         if (this.record === null) {
             Ext.Msg.alert('Kein valider Ort ausgewählt!');
@@ -102,6 +105,9 @@ Ext.define('Lada.view.window.OrtEdit', {
         this.callParent(arguments);
     },
 
+    /**
+     * Initialise the Data of this Window
+     */
     initData: function() {
         Ext.ClassManager.get('Lada.model.Ort').load(this.record.get('id'), {
             failure: function(record, action) {
@@ -180,10 +186,18 @@ Ext.define('Lada.view.window.OrtEdit', {
         }
     },
 
+    /**
+     * Instructs the fields / forms listed in this method to set a message.
+     * @param errors These Errors shall be shown
+     * @param warnings These Warning shall be shown
+     */
     setMessages: function(errors, warnings) {
         //todo this is a stub
     },
 
+    /**
+     * Instructs the fields / forms listed in this method to clear their messages.
+     */
     clearMessages: function() {
         //todo this is a stub
     }

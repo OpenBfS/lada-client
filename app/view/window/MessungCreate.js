@@ -28,6 +28,9 @@ Ext.define('Lada.view.window.MessungCreate', {
     record: null,
     grid: null,
 
+    /**
+     * This function initialises the Window
+     */
     initComponent: function() {
         this.probe = this.record;
         if (this.probe === null) {
@@ -71,6 +74,9 @@ Ext.define('Lada.view.window.MessungCreate', {
         this.callParent(arguments);
     },
 
+    /**
+     * Initialise the Data of this Window
+     */
     initData: function() {
         this.clearMessages();
         var messung = Ext.create('Lada.model.Messung', {
@@ -79,18 +85,33 @@ Ext.define('Lada.view.window.MessungCreate', {
         this.down('messungform').setRecord(messung);
     },
 
+    /**
+     * Instructs the fields / forms listed in this method to set a message.
+     * @param errors These Errors shall be shown
+     * @param warnings These Warning shall be shown
+     */
     setMessages: function(errors, warnings) {
         //todo this is a stub
     },
+
+    /**
+     * Instructs the fields / forms listed in this method to clear their messages.
+     */
     clearMessages: function() {
         //todo this is a stub
     },
 
+    /**
+     * Disable the Childelements of this Window
+     */
     disableChildren: function(){
         //intentionally!
         return true;
     },
 
+    /**
+     * Enable the Childelements of this Window
+     */
     enableChildren: function(){
         //intentionally!
         return true;

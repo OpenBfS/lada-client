@@ -29,6 +29,9 @@ Ext.define('Lada.view.window.Messprogramm', {
 
     record: null,
 
+    /**
+     * This function initialises the Window
+     */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
@@ -190,10 +193,18 @@ Ext.define('Lada.view.window.Messprogramm', {
         // there are no children....
     },
 
+    /**
+     * Instructs the fields / forms listed in this method to set a message.
+     * @param errors These Errors shall be shown
+     * @param warnings These Warning shall be shown
+     */
     setMessages: function(errors, warnings) {
         this.down('messprogrammform').setMessages(errors, warnings);
     },
 
+    /**
+     * Instructs the fields / forms listed in this method to clear their messages.
+     */
     clearMessages: function() {
         this.down('messprogrammform').clearMessages();
     }

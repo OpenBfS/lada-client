@@ -1,5 +1,5 @@
 /**
- *
+ * This Window is shown, when Proben could be imported from a LAF file
  */
 Ext.define('Lada.view.window.ImportResponse', {
     extend: 'Ext.window.Window',
@@ -31,6 +31,11 @@ Ext.define('Lada.view.window.ImportResponse', {
         this.callParent(arguments);
     },
 
+    /**
+     * Parse the Response
+     * @param msg the Lada-Erro-Code
+     * @param data the payload of the response
+     */
     parseResponse: function(msg, data) {
         console.log(Ext.JSON.decode(data));
         data = Ext.JSON.decode(data);

@@ -32,6 +32,9 @@ Ext.define('Lada.view.window.MessungEdit', {
     record: null,
     grid: null,
 
+    /**
+     * This function initialises the Window
+     */
     initComponent: function() {
         if (this.record === null) {
             Ext.Msg.alert('Keine valide Messung ausgewählt!');
@@ -119,6 +122,9 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.callParent(arguments);
     },
 
+    /**
+     * Initialise the Data of this Window
+     */
     initData: function() {
         this.clearMessages();
         var that = this;
@@ -170,16 +176,27 @@ Ext.define('Lada.view.window.MessungEdit', {
         });
     },
 
+    /**
+     * Disable the Forms in this Window.
+     * Also disable this Windows Children
+     */
     disableForm: function() {
         this.down('messungform').setReadOnly(true);
         this.disableChildren();
     },
 
+    /**
+     * Enable the Forms in this Window.
+     * Also enble this Windows Children
+     */
     enableForm: function() {
         this.down('messungform').setReadOnly(false);
         this.enableChildren();
     },
 
+    /**
+     * Disable the Chilelements of this window
+     */
     disableChildren: function() {
             this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(true);
             this.down('fset[name=messwerte]').down('messwertgrid').readOnly = true;
@@ -189,6 +206,9 @@ Ext.define('Lada.view.window.MessungEdit', {
             this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = true;
     },
 
+    /**
+     * Enable the Childelements of this window
+     */
     enableChildren: function() {
             this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(false);
             this.down('fset[name=messwerte]').down('messwertgrid').readOnly = false;
@@ -198,9 +218,18 @@ Ext.define('Lada.view.window.MessungEdit', {
             this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = false;
     },
 
+    /**
+     * Instructs the fields / forms listed in this method to set a message.
+     * @param errors These Errors shall be shown
+     * @param warnings These Warning shall be shown
+     */
     setMessages: function(errors, warnings) {
         this.down('messungform').setMessages(errors, warnings);
     },
+
+    /**
+     * Instructs the fields / forms listed in this method to clear their messages.
+     */
     clearMessages: function() {
         this.down('messungform').clearMessages();
     }

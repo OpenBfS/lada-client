@@ -29,6 +29,9 @@ Ext.define('Lada.view.window.MessprogrammOrt', {
     parentWindow: null,
     record: null,
 
+    /**
+     * This function initialises the Window
+     */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
 
@@ -120,6 +123,9 @@ Ext.define('Lada.view.window.MessprogrammOrt', {
         this.callParent(arguments);
     },
 
+    /**
+     * Initialise the Data of this Window.
+     */
     initData: function() {
         //Only do this if an OrtId exists...
         var ortId = this.record.get('ortId');
@@ -226,10 +232,19 @@ Ext.define('Lada.view.window.MessprogrammOrt', {
                 .ortWindow = null;
         this.close();
     },
+
+    /**
+     * Instructs the fields / forms listed in this method to set a message.
+     * @param errors These Errors shall be shown
+     * @param warnings These Warning shall be shown
+     */
     setMessages: function(errors, warnings) {
         //todo this is a stub
     },
 
+    /**
+     * Instructs the fields / forms listed in this method to clear their messages.
+     */
     clearMessages: function() {
         //todo this is a stub
     }

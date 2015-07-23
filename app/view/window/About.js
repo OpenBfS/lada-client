@@ -14,6 +14,9 @@ Ext.define('Lada.view.window.About', {
 
     layout: 'fit',
 
+    /**
+     * This function initialises the Window
+     */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
 
@@ -70,6 +73,9 @@ Ext.define('Lada.view.window.About', {
         this.callParent(arguments);
     },
 
+    /**
+     * This function converts an Array into HTML-paragraphs
+     */
     rolesToHtml: function() {
         var roles = '';
         var r = Lada.userroles.split(',');

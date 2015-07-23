@@ -30,6 +30,9 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
     record: null,
 
+    /**
+     * This function initialises the Window
+     */
     initComponent: function() {
         if (this.record === null) {
             Ext.Msg.alert('Keine valide Probe ausgewählt!');
@@ -116,6 +119,9 @@ Ext.define('Lada.view.window.ProbeEdit', {
         this.callParent(arguments);
     },
 
+     /**
+      * Initialise the Data of this Window
+      */
     initData: function() {
         this.setLoading(true);
         this.clearMessages();
@@ -160,10 +166,16 @@ Ext.define('Lada.view.window.ProbeEdit', {
         });
     },
 
+    /**
+     * Enable the Messungengrid
+     */
     enableAddMessungen: function() {
         this.down('fset[name=messungen]').down('messunggrid').setReadOnly(false);
     },
 
+    /**
+     * Disable the Childelements of this window
+     */
     disableChildren: function() {
         if (!this.record.get('owner')) {
             // Disable only when the User is not the owner of the Probe
@@ -179,6 +191,9 @@ Ext.define('Lada.view.window.ProbeEdit', {
         this.down('fset[name=pkommentare]').down('pkommentargrid').readOnly = true;
     },
 
+    /**
+     * Enable the Childelements of this window
+     */
     enableChildren: function() {
         this.down('fset[name=messungen]').down('messunggrid').setReadOnly(false);
         this.down('fset[name=messungen]').down('messunggrid').readOnly = false;
@@ -190,6 +205,11 @@ Ext.define('Lada.view.window.ProbeEdit', {
         this.down('fset[name=pkommentare]').down('pkommentargrid').readOnly = false;
     },
 
+    /**
+     * Instructs the fields / forms listed in this method to set a message.
+     * @param errors These Errors shall be shown
+     * @param warnings These Warning shall be shown
+     */
     setMessages: function(errors, warnings) {
         this.down('probeform').setMessages(errors, warnings);
         var errorOrtText = '';
@@ -230,6 +250,9 @@ Ext.define('Lada.view.window.ProbeEdit', {
             errorOrtText === '' ? null : errorOrtText);
     },
 
+    /**
+     * Instructs the fields / forms listed in this method to clear their messages.
+     */
     clearMessages: function() {
         this.down('probeform').clearMessages();
         this.down('fset[name=orte]').clearMessages();

@@ -28,6 +28,9 @@ Ext.define('Lada.view.window.OrtCreate', {
     record: null,
     grid: null,
 
+    /**
+     * This function initialises the Window
+     */
     initComponent: function() {
         this.title = 'Ort';
         this.buttons = [{
@@ -87,6 +90,9 @@ Ext.define('Lada.view.window.OrtCreate', {
         this.callParent(arguments);
     },
 
+    /**
+     * Initialise the Data of this Window
+     */
     initData: function() {
         var ort = Ext.create('Lada.model.Ort', {
             probeId: this.record.get('id')
@@ -122,10 +128,18 @@ Ext.define('Lada.view.window.OrtCreate', {
         }
     },
 
+    /**
+     * Instructs the fields / forms listed in this method to set a message.
+     * @param errors These Errors shall be shown
+     * @param warnings These Warning shall be shown
+     */
     setMessages: function(errors, warnings) {
         //todo this is a stub
     },
 
+    /**
+     * Instructs the fields / forms listed in this method to clear their messages.
+     */
     clearMessages: function() {
         //todo this is a stub
     }

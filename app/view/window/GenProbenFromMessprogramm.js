@@ -23,6 +23,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     record: null,
     parentWindow: null,
 
+    /**
+     * This function initialises the Window
+     */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
 
@@ -177,7 +180,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     },
 
     /**
-     * Init
+     * Initiatlise the Data
      */
     initData: function() {
         var i18n = Lada.getApplication().bundle;
@@ -202,6 +205,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         return r;
     },
 
+    /**
+     * Reload the Application
+     */
     reload: function(btn) {
         if (btn === 'yes') {
             location.reload();

@@ -26,6 +26,9 @@ Ext.define('Lada.view.window.ProbeCreate', {
 
     record: null,
 
+    /**
+     * This function initialises the Window
+     */
     initComponent: function() {
         this.title = '§3-Probe';
         this.buttons = [{
@@ -59,24 +62,41 @@ Ext.define('Lada.view.window.ProbeCreate', {
         this.callParent(arguments);
     },
 
+     /**
+      * Initialise the Data of this Window
+      */
     initData: function() {
         var record = Ext.create('Lada.model.Probe');
         this.down('probeform').setRecord(record);
     },
 
+    /**
+     * Instructs the fields / forms listed in this method to set a message.
+     * @param errors These Errors shall be shown
+     * @param warnings These Warning shall be shown
+     */
     setMessages: function(errors, warnings) {
         this.down('probeform').setMessages(errors, warnings);
     },
 
+    /**
+     * Instructs the fields / forms listed in this method to clear their messages.
+     */
     clearMessages: function() {
         this.down('probeform').clearMessages();
     },
 
+    /**
+     * Disable the Childelements of this window
+     */
     disableChildren: function(){
         //intentionally!
         return true;
     },
 
+    /**
+     * Enable the Childelements of this window
+     */
     enableChildren: function(){
         //intentionally!
         return true;
