@@ -108,7 +108,7 @@ restorecon -Rv /var/www/html/
 Die Anwendung sollte nun bereits unter der Adresse `http://localhost/lada`
 erreichbar sein.
 
-Damit die Anwendung vollständig funktiniert, müssen ggfs noch weitere
+Damit die Anwendung vollständig funktioniert, müssen ggfs. noch weitere
 Bibliotheken hinzugefügt werden.
 Dies wird im Abschnitt *Lizenzen und Bibliotheken* näher beschrieben
 
