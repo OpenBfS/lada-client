@@ -29,9 +29,6 @@ Ext.define('Lada.view.panel.Map', {
         projection: new OpenLayers.Projection('EPSG:4326')
     },
 
-    /**
-     * Array of OpenLayers.Layer objects.
-     */
 
     /**
      * @private
@@ -70,6 +67,10 @@ Ext.define('Lada.view.panel.Map', {
         this.callParent(arguments);
     },
 
+    /**
+     * Initialise the Data and Create an
+     * Array of OpenLayers.Layer objects.
+     */
     initData: function() {
         var me = this;
         this.locationFeatures = [];

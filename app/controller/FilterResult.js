@@ -48,7 +48,7 @@ Ext.define('Lada.controller.FilterResult', {
      * {@link Lada.view.grid.FilterResult}
      * was double-clicked.
      * The function opens a {@link Lada.view.window.ProbeEdit}
-     * or a {@link Lada.view.window.MessprogrammEdit}.
+     * or a {@link Lada.view.window.Messprogramm}.
      * To determine which window has to be opened, the function
      * analyse the records modelname.
      */
@@ -91,7 +91,7 @@ Ext.define('Lada.controller.FilterResult', {
 
     /**
      * This function opens a new window to create a Probe
-     * {@link Lada.view.window.MessprogrammCreate}
+     * {@link Lada.view.window.Messprogramm}
      */
     addMessprogrammItem: function() {
         var win = Ext.create('Lada.view.window.Messprogramm');

@@ -1,3 +1,6 @@
+/**
+ * This is a slider widget to display Probenintervalle
+ */
 Ext.define('Lada.view.widget.ProbenintervallSlider', {
     extend: 'Ext.slider.Multi',
     alias: 'widget.probenintervallslider',
