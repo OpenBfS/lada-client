@@ -6,7 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/*
+/**
  * Window to create a Messung
  */
 Ext.define('Lada.view.window.MessungCreate', {

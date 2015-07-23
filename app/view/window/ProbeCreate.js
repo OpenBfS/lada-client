@@ -6,7 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/*
+/**
  * Window to edit a Probe
  */
 Ext.define('Lada.view.window.ProbeCreate', {

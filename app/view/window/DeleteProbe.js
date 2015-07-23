@@ -6,7 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/*
+/**
  * Window to show a confirmation dialog to delete a Probe
  */
 Ext.define('Lada.view.window.DeleteProbe', {

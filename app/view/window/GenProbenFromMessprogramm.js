@@ -6,7 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/*
+/**
  * Window to generate Proben from a Messprogramm
  */
 Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
