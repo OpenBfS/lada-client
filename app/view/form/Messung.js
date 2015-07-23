@@ -6,8 +6,8 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/*
- * Formular to edit a Messung
+/**
+ * Form to edit a Messung
  */
 Ext.define('Lada.view.form.Messung', {
     extend: 'Ext.form.Panel',

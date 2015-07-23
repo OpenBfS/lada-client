@@ -6,8 +6,9 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/*
- * Formular to edit a Probe
+/**
+ * Form to edit a Ort of a Probe.
+ * This differs from a Location
  */
 Ext.define('Lada.view.form.Ort', {
     extend: 'Ext.form.Panel',
