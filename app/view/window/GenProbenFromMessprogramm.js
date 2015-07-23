@@ -65,7 +65,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             title: i18n.getMsg('success'),
                             autoScroll: true,
                             msg: me.evalResponse(json),
-                            buttons: Ext.Msg.OK,
+                            buttons: Ext.Msg.OK
                         });
                         me.close();
                     },

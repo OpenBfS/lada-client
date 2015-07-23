@@ -34,7 +34,7 @@ Ext.define('Lada.controller.Filter', {
             // ComponentQuery documentation for more details.
             'combobox[name=filter]': {
                 // Map Select event
-                select: this.selectSql,
+                select: this.selectSql
             },
             'button[action=search]': {
                 // Map click event on Button.

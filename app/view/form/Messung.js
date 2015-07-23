@@ -17,7 +17,7 @@ Ext.define('Lada.view.form.Messung', {
         'Lada.view.widget.base.CheckBox',
         'Lada.view.widget.Messmethode',
         'Lada.view.widget.base.TextField',
-        'Lada.view.widget.base.Datetime',
+        'Lada.view.widget.base.Datetime'
     ],
 
     model: 'Lada.model.Messung',
