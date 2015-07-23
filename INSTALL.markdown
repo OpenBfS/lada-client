@@ -18,7 +18,7 @@ finde sich in dem Installationbeispiel.
 Die folgenden Hinweise beziehen sich auf die Installation und Einrichtung auf
 Basis eines Oracle-RedHat Linux Systems.
 
-### Compilieren und Minifizieren der Anwendung
+### Kompilieren und Minifizieren der Anwendung
 
 Zum Compilieren der Anwendung kommt das Tool Sencha Cmd 4.0.x zum Einsatz.
 Mit Hilfe dieses Tools kann der Quellcode in eine einzelne Datei zusammengefasst
@@ -30,14 +30,17 @@ an. Beachten Sie: Sencha Cmd ist keine freie Software.
 Die Fa. Sencha beschreibt die Installation von Sencha Cmd in der
 [Dokumentation von ExtJs](http://docs.sencha.com/extjs/4.2.1/#!/guide/command)
 
-Zur Installation werden Ruby und Java benötigt.
+Zur Installation von Sencha Cmd werden Ruby und Java benötigt.
+
+Bevor Sie die Anwendung kompilieren können, müssen Sie die im Abschnitt
+*Lizenzen und Bibliotheken* genannten Bibliotheken zum Projekt hinzufügen.
 
 
-Der Befehl hierzu lautet:
+Zum Kompilieren nutzen Sie die folgende Anweisung:
 
 ```
    $PATHTOSENCHACMD --sdk-path $PATHTOEXTJS compile \
-   --classpath=app,resources/lib/datetime,resources/lib/i18n page -str -cla lada.js \
+   --classpath=app,resources/lib/ext/upload,resources/lib/ext/i18n page \
    -yui -i index.html -o build/index.html
 ```
 
@@ -54,7 +57,18 @@ Verzeichnis `build` kopiert werden:
 | resources/i18n/Lada.properties                         | build/resources/i18n/Lada.properties                             |
 | resources/i18n/Lada_de-DE.properties                   | build/resources/i18n/Lada_de-DE.properties                       |
 | resources/img/*                                        | build/ressources/img*                                                  |
+| resources/lib/* (alles ausser ext Ordner)              | build/resources/lib |
 
+
+Um OpenLayers als "Single File" Version bereit zu haben, gehen Sie in das Verzeichnis
+`build/resources/lib/OpenLayers` und führen Sie den folgenden Befehl aus:
+
+```
+python build.py
+```
+
+Dies erstellt eine Datei `OpenLayers.js` innerhalb des Verzeichnisses.
+Diese wird in der Webanwendung referenziert.
 
 ### Installation Apache
 Zunächst wird der Apache Webserver aus dem Repository installiert:
@@ -136,7 +150,7 @@ Der Lada-Client leitet in Zusammenarbeit mit dem Server automatisch an diesen we
 # Lizenzen und Bibliotheken
 
 Die Anwendung verwendet mehrere Unterkomponenten, diese sind typischerweise im
-Ordner `resources` zu finden.
+Ordner `resources/lib` zu finden.
 
 Folgende Bibliotheken werden neben ExtJs verwendet:
 
@@ -150,6 +164,13 @@ Folgende Bibliotheken werden neben ExtJs verwendet:
    http://www.openlayers.org
    https://github.com/openlayers/openlayers
    2-Clause BSD-License
+
+Diese sind im Ordner `resources/lib` zu finden, und werden in der `Index.html`
+referenziert.
+
+Im Ordner resources/lib/ext befinden sich Bibliotheken die ExtJs ergänzen und in
+der Datei `app.js` aufgeführt werden.
+
  * Ext.i18n.Bundle 0.3.3 (referenced as Ext.i18n in app.js)
    https://github.com/elmasse/Ext.i18n.Bundle/tree/v0.3.3
    MIT - License
@@ -173,6 +194,9 @@ cd lib
 wget https://github.com/eligrey/FileSaver.js/archive/master.zip -O FileSaver-js.zip
 wget https://github.com/eligrey/Blob.js/archive/master.zip -O Blob-js.zip
 wget https://github.com/openlayers/openlayers/archive/release-2.13.1.zip -O OpenLayers-2-13-1.zip
+
+mkdir ext
+cd ext
 wget https://github.com/elmasse/Ext.i18n.Bundle/archive/v0.3.3.zip -O Ext-i18n-Bundle-v0-3-3.zip
 wget https://github.com/ivan-novakov/extjs-upload-widget/archive/1.1.1.zip -O Ext-ux-Upload-1-1-1.zip
 ```
@@ -180,9 +204,12 @@ wget https://github.com/ivan-novakov/extjs-upload-widget/archive/1.1.1.zip -O Ex
 Die Dateien sind im Ordner `resources/lib/` zu entpacken
 
 ```
+cd ..
 unzip FileSaver-js.zip
 unzip Blob-js.zip
 unzip OpenLayers-2-13-1.zip
+
+cd ext
 unzip Ext-i18n-Bundle-v0-3-3.zip
 unzip Ext-ux-Upload-1-1-1.zip
 ```
@@ -192,9 +219,12 @@ Dies is praktisch wenn die Bibliothek ausgetauscht wird,
 dann müssen die Quelltexte nicht angepasst werden
 
 ```
+cd ..
 ln -s Blob.js-master Blob
 ln -s FileSaver.js-master FileSaver
-ln -s openlayers-release-2.13.1 OpenLayers
+ln -s openlayers-release-2.13.1/build OpenLayers
+
+cd ext
 ln -s Ext.i18n.Bundle-0.3.3/i18n i18n
 ln -s extjs-upload-widget-1.1.1/lib/upload upload
 ```
