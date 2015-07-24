@@ -3,7 +3,8 @@
     "--": [
         "extjs/src",
         "app.js",
-        "app"
+        "app",
+        "resources/lib/ext"
     ],
     "--warnings": [
         "-no_doc:extjs/src",
