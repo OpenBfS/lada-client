@@ -11,19 +11,19 @@ Installation eines Apache-Webserver.
 Hinweis: Für den Betrieb einer vollständigen Installation ist neben dem
 Klienten auch die Installation eines Servers und entsprechender Datenbank
 notwendig. Für die Installation des Servers folgen Sie bitte den Hinweisen in
-der README Datei des Server-Pakets. Siehe Projektwebseite. Optional: Die
-Authentifizierung kann gegen einen LDAP-Server durchgeführt werden. Beispiele
-finde sich in dem Installationbeispiel.
+der README Datei des Server-Pakets.
+Weitere Information finden Sie auf der Projektwebseite:
+http://wald.intevation.org/projects/lada
 
 Die folgenden Hinweise beziehen sich auf die Installation und Einrichtung auf
 Basis eines Oracle-RedHat Linux Systems.
 
-Der Lada-Client ist eine Anwendung die auf dem Framework extJs 4.2.1 basiert,
-Damit der Client funktiniert müssen Sie dieses Framework herunterladen und
+Der Lada-Client ist eine Anwendung die auf dem Framework ExtJs 4.2.1 basiert,
+Damit der Client funktioniert müssen Sie dieses Framework herunterladen und
 entpacken. Dies kann direkt in das root-Verzeichnis des Lada-Clients geschehen.
 
 Für Applikationen die ebenfalls unter der GPL lizenziert wird - so wie der Lada
-Client - kann extJs als [GPL Version heruntergeladen](http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip)
+Client - kann ExtJs als [GPL Version heruntergeladen](http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip)
 werden.
 
 Legen Sie nach dem Entpacken einen Symlink auf dieses Verzeichnis an:
@@ -36,7 +36,8 @@ ln -s ext-4.2.1.883 extjs
 
 Zum Kompilieren der Anwendung kommt das Tool Sencha Cmd 4.0.x zum Einsatz.
 Mit Hilfe dieses Tools kann der Quellcode in eine einzelne Datei zusammengefasst
-und minifiziert werden. Dies beschleunigt das Laden der Anwendung im Browser erheblich
+und minifiziert werden. Dies beschleunigt das Laden der Anwendung im Browser
+erheblich
 
 Sencha bietet Sencha Cmd zum [Download](https://www.sencha.com/products/extjs/cmd-download/) 
 an. Beachten Sie: Sencha Cmd ist keine freie Software.
@@ -59,7 +60,7 @@ Zum Kompilieren nutzen Sie die folgende Anweisung:
 ```
 
 Ersetzen Sie heirbei `$PATHTOSENCHACMD` mit dem Pfad zu Ihrer Installation von
-Sencha Cmd. $PATHTOEXTJS gibt den Pfad an, an dem sich Ihre Kopie von extJs
+Sencha Cmd. $PATHTOEXTJS gibt den Pfad an, an dem sich Ihre Kopie von ExtJs
 befindet.
 
 
@@ -79,8 +80,9 @@ Verzeichnis `build` kopiert werden:
 | resources/lib/* (alles ausser ext Ordner)              | build/resources/lib                                         |
 
 
-Um OpenLayers als "Single File" Version bereit zu haben, gehen Sie in das Verzeichnis
-`build/resources/lib/OpenLayers` und führen Sie den folgenden Befehl aus:
+Um OpenLayers als "Single File" Version bereit zu haben, gehen Sie in das
+Verzeichnis `build/resources/lib/OpenLayers` und führen Sie den folgenden Befehl
+aus:
 
 ```
 python build.py
@@ -104,7 +106,7 @@ in der Datei `/etc/httpd/conf`. Die zu ladende Module sind in dieser Datei mit
 der Option `LoadModule` angegeben. Folgende Module werden benötigt:
 
     * headers_module: Setzten der Header nach der Authentifizierung
-    * proxy_module: Reverse Proxy des Apache zum Jboss-Server
+    * proxy_module: Reverse Proxy des Apache zum Lada-Server
 
 ### Einrichtung der Anwendung
 
@@ -153,15 +155,18 @@ Folgende Datei sollte unter `/etc/httpd/conf.d/lada.conf` angelegt werden:
         CustomLog logs/lada-access_log common
 
         # Set multiple Proxys
-        ProxyPass /lada/server http://localhost:8080/lada
-        ProxyPassReverse /lada/server http://localhost:8080/lada
+        ProxyPass /lada/server http://LADASERVER/lada
+        ProxyPassReverse /lada/server http://LADASERVER/lada
     </VirtualHost>
 ```
-Alle Anfragen an die Adresse `/lada/service`, werden nun an den Server weitergeleitet.
+Alle Anfragen an die Adresse `/lada/service`, werden nun an den Server
+weitergeleitet.
 
 ### Authentifizierung
 
-Die Authentifizierung geschieht gegen einen OpenID-Server.
+Die Authentifizierung geschieht derzeit gegen einen OpenID-Server.
+Früher Ansätze nutzten LDAP, in Zukunft soll auch Authentifizierung via SAML2
+möglich sein.
 
 Der Lada-Client leitet in Zusammenarbeit mit dem Server automatisch an diesen weiter.
 
@@ -202,7 +207,7 @@ der Datei `app.js` aufgeführt werden.
 Die aufgeführten Bibliotheken können über den Link zu Github als zip-Datei
 heruntergeladen werden.
 
-Dabei ist auf die korrekte Versionnummer zu achten, falls dies in der Liste
+Dabei ist auf die korrekte Versionsnummer zu achten, falls dies in der Liste
 oben angegeben wurde.
 
 ```
@@ -233,7 +238,7 @@ unzip Ext-ux-Upload-1-1-1.zip
 ```
 
 Zum einfacheren Zugriff auf die Bibliothek, symbolische Links erstellen.
-Dies is praktisch wenn die Bibliothek ausgetauscht wird,
+Dies ist praktisch wenn die Bibliothek ausgetauscht wird,
 dann müssen die Quelltexte nicht angepasst werden
 
 ```
