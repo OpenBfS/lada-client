@@ -15,7 +15,8 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
     displayFields: null,
 
     requires: [
-        'Lada.store.MessprogrammQueries'
+        'Lada.store.MessprogrammQueries',
+        'Lada.store.ProbeQueries'
     ],
 
     /**
@@ -87,8 +88,6 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
             gridstore = Ext.create(gridsname);
         }
         if (gridstore) {
-            gridstore.addListener('beforeload', this.loadingAnimationOn, resultGrid);
-            gridstore.addListener('load', this.loadingAnimationOff, resultGrid);
             resultGrid.setStore(gridstore);
             resultGrid.show();
         }

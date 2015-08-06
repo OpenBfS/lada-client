@@ -19,7 +19,8 @@ Ext.define('Lada.controller.Filter', {
     ],
 
     stores: [
-        'ProbenList'    // List of found Proben
+        'ProbenList',    // List of found Proben
+        'MessprogrammeList' //List of found Messprogramme
     ],
 
     displayFields: null,
