@@ -26,12 +26,12 @@
 
 .x-action-col-cell img.noedit
 {
-  background-image: url(../resources/img/view-time-schedule-baselined.png);
+  background-image: url(../img/view-time-schedule-baselined.png);
 }
 
 .x-action-col-cell img.edit
 {
-  background-image: url(../resources/img/view-time-schedule-edit.png);
+  background-image: url(../img/view-time-schedule-edit.png);
 }
 
 
