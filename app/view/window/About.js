@@ -81,7 +81,7 @@ Ext.define('Lada.view.window.About', {
 //        var r = Lada.userroles.split(',');
         var i;
         for (i in Lada.userroles){
-            roles += '<br />' + r[i];
+            roles += '<br />' + Lada.userroles[i];
         }
         return roles;
     }
