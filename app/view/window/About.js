@@ -77,7 +77,7 @@ Ext.define('Lada.view.window.About', {
      * This function converts an Array into HTML-paragraphs
      */
     rolesToHtml: function() {
-//        var roles = '';
+        var roles = '';
 //        var r = Lada.userroles.split(',');
         var i;
         for (i in Lada.userroles){
