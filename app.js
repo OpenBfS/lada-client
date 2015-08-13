@@ -69,11 +69,8 @@ Ext.application({
             Lada.openIDParams = queryString;
         }
         Ext.Ajax.request({
-            url: 'lada-server/login?return_to=' + window.location.href,
+            url: 'lada-server/user',
             method: 'GET',
-            headers: {
-                'X-OPENID-PARAMS': Lada.openIDParams
-            },
             scope: this,
             success: this.onLoginSuccess,
             failure: this.onLoginFailure
@@ -87,8 +84,8 @@ Ext.application({
                 if (json.message === '699') {
                     /* This is the unauthorized message with the authentication
                      * redirect in the data */
-                    var authUrl = json.data;
-                    location.href = authUrl;
+                    Ext.MessageBox.alert('Es konnte kein Benutzername gefunden werden!',
+                            json.data);
                     return;
                 }
                 if (json.message === '698') {
@@ -107,13 +104,6 @@ Ext.application({
     },
 
     onLoginSuccess: function(response) {
-
-        if (!Ext.isIE9m) {
-          /* Strip out the openid query params to look nicers. */
-          // Not supported in old IE's
-          window.history.pushState(this.name, this.name, window.location.pathname);
-        }
-
         Ext.create('Lada.view.Viewport');
 
         /* Parse Username and Timestamp */
