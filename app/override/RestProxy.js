@@ -1,4 +1,4 @@
-/* Copyright (C) 2015 by Bundesamt fuer Strahlenschutz
+/* Copyrighte(C) 2015 by Bundesamt fuer Strahlenschutz
  * Software engineering by Intevation GmbH
  *
  * This file is Free Software under the GNU GPL (v>=3)
@@ -15,26 +15,25 @@ Ext.define('Lada.override.RestProxy', {
     },
 */
     processResponse: function (success, operation, request, response, callback, scope) {
-        /* Check if we were authenticated at one point (Lada.openIDParams) and
-         * if the response means that we lost that authentcation */
-        if (!success && response.status == 401) {
-            var json = Ext.decode(response.responseText);
-            if (json) {
-                if (json.message === "699" || json.message === "698") {
-                    /* This is the unauthorized message with the authentication
-                     * redirect in the data */
-
-                    /* We decided to handle this with a redirect to the identity
-                     * provider. In which case we have no other option then to
-                     * handle it here with relaunch. */
-                    Ext.MessageBox.confirm('Erneutes Login erforderlich',
-                        'Ihre Session ist abgelaufen.<br/>'+
-                        'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
-                        'Alle ungesicherten Daten gehen dabei verloren.<br/>' +
-                        'Soll die Anwendung jetzt neu geladen werden?', this.reload);
-                }
-            }
+        /*
+           SSO will send a 302 if the Client is not authenticated
+           unfortunately this seems to be filtered by the browser.
+           We assume that a 302 was send when the follwing statement
+           is true.
+        */
+        if (!success && response.status == 0 && response.responseText === "") {
+            Ext.MessageBox.confirm('Erneutes Login erforderlich',
+                'Ihre Session ist abgelaufen.<br/>'+
+                'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
+                'Alle ungesicherten Daten gehen dabei verloren.<br/>' +
+                'Soll die Anwendung jetzt neu geladen werden?', this.reload);
         }
+        this.callParent(arguments);
+    },
+
+
+    parseStatus: function(status) {
+        console.log(status);
         this.callParent(arguments);
     },
 

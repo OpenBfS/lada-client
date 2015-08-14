@@ -170,34 +170,32 @@ Ext.define('Lada.controller.FilterResult', {
             method: 'POST',
             url: 'lada-server/export/laf',
             jsonData: {'proben': proben},
-            headers: {'X-OPENID-PARAMS': Lada.openIDParams},
             success: function(response) {
                 var content = response.responseText;
                 var blob = new Blob([content],{type: 'text/plain'});
                 saveAs(blob, 'export.laf');
             },
             failure: function(response) {
+                /*
+                SSO will send a 302 if the Client is not authenticated
+                unfortunately this seems to be filtered by the browser.
+                We assume that a 302 was send when the follwing statement
+                is true.
+                */
+                if (response.status == 0 && response.responseText === "") {
+                    Ext.MessageBox.confirm('Erneutes Login erforderlich',
+                        'Ihre Session ist abgelaufen.<br/>'+
+                        'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
+                        'Alle ungesicherten Daten gehen dabei verloren.<br/>' +
+                        'Soll die Anwendung jetzt neu geladen werden?', this.reload);
+                }
+                // further error handling
                 var json = Ext.JSON.decode(response.responseText);
                 if (json) {
                     if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
                         formPanel.setMessages(json.errors, json.warnings);
                     }
-                    // TODO Move this handling of 699 and 698 to a more central place!
-                    // TODO i18n
-                    if (json.message === "699" || json.message === "698") {
-                        /* This is the unauthorized message with the authentication
-                            * redirect in the data */
-
-                        /* We decided to handle this with a redirect to the identity
-                            * provider. In which case we have no other option then to
-                            * handle it here with relaunch. */
-                        Ext.MessageBox.confirm('Erneutes Login erforderlich',
-                            'Der Server konnte die Anfrage nicht authentifizieren.<br/>'+
-                            'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
-                            'Alle ungesicherten Daten gehen dabei verloren.<br/>' +
-                            'Soll die Anwendung jetzt neu geladen werden?', me.reload);
-                    }
-                    else if(json.message){
+                    if(json.message){
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
                             +' #'+json.message,
                             Lada.getApplication().bundle.getMsg(json.message));
