@@ -38,6 +38,9 @@ Ext.define('Lada.controller.FilterResult', {
             },
             'filterresultgrid toolbar button[action=export]': {
                 click: this.downloadFile
+            },
+            'filterresultgrid toolbar button[action=print]': {
+                click: this.printSelection
             }
         });
         this.callParent(arguments);
@@ -206,6 +209,60 @@ Ext.define('Lada.controller.FilterResult', {
                 } else {
                     Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                     i18n.getMsg('err.msg.laf.filecreatefailed'));
+                }
+            }
+        });
+    },
+
+    /**
+     * Send the selection to a Printservice
+     */
+    printSelection: function(button) {
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection();
+        var i18n = Lada.getApplication().bundle;
+        var proben = [];
+        for (var i = 0; i < selection.length; i++) {
+            proben.push(selection[i].get('id'));
+        }
+        var me = this;
+        Ext.Ajax.request({
+            method: 'POST',
+            url: '127.0.0.1', // TODO
+            jsonData: {'proben': proben},  // TODO
+            success: function(response) {
+                console.log('success');
+                var content = response.responseText;
+                var blob = new Blob([content],{type: 'application/pdf'});
+                saveAs(blob, 'lada-print.pdf');
+            },
+            failure: function(response) {
+                console.log('failure');
+                // Error handling
+                // TODO
+                if (response.responseText) {
+                    try {
+                        var json = Ext.JSON.decode(response.responseText);
+                    }
+                    catch(e){
+                        console.log(e);
+                    }
+                }
+                if (json) {
+                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
+                        formPanel.setMessages(json.errors, json.warnings);
+                    }
+                    if(json.message){
+                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
+                            +' #'+json.message,
+                            Lada.getApplication().bundle.getMsg(json.message));
+                    } else {
+                        Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                            i18n.getMsg('err.msg.print.noContact'));
+                    }
+                } else {
+                    Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                    i18n.getMsg('err.msg.print.noContact'));
                 }
             }
         });

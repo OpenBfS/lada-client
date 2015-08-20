@@ -51,6 +51,11 @@ Ext.define('Lada.view.grid.FilterResult', {
                 icon: 'resources/img/svn-update.png',
                 action: 'export',
                 disabled: true
+            }, {
+                text: 'Auswahl Drucken',
+                icon: 'resources/img/printer.png',
+                action: 'print',
+                disabled: true
             },
             '-',
             {
@@ -102,6 +107,7 @@ Ext.define('Lada.view.grid.FilterResult', {
             this.down('button[action=addProbe]').enable();
             this.down('button[action=import]').enable();
             this.down('button[action=export]').enable();
+            this.down('button[action=print]').enable();
         }
         else if (store.model.modelName == 'Lada.model.MessprogrammList') {
             t.setText(i18n.getMsg('probeplanning'));
@@ -110,6 +116,7 @@ Ext.define('Lada.view.grid.FilterResult', {
             this.down('button[action=addProbe]').disable();
             this.down('button[action=import]').disable();
             this.down('button[action=export]').disable();
+            this.down('button[action=print]').disable();
         }
         else {
             t.setText('');
