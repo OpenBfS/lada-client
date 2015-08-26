@@ -6,18 +6,18 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Form to edit a Probe
+/*
+ * Formular to edit a Probe
  */
 Ext.define('Lada.view.form.Probe', {
     extend: 'Ext.form.Panel',
     alias: 'widget.probeform',
     requires: [
         'Lada.view.widget.Datenbasis',
+        'Lada.view.widget.base.CheckBox',
         'Lada.view.widget.Messstelle',
         'Lada.view.widget.Netzbetreiber',
         'Lada.view.widget.Betriebsart',
-        'Lada.view.widget.Testdatensatz',
         'Lada.view.widget.Probenart',
         'Lada.view.widget.Umwelt',
         'Lada.view.widget.Deskriptor',
@@ -69,158 +69,168 @@ Ext.define('Lada.view.form.Probe', {
                     }]
                 }],
                 items: [{
-                    layout: 'hbox',
+                    layout: 'vbox',
                     border: 0,
                     items: [{
-                        border: 0,
-                        width: '50%',
-                        minWidth: 290,
-                        layout: {
-                            type: 'vbox',
-                            align: 'stretch'
-                        },
-                        margin: '0, 10, 0, 0',
-                        items: [{
-                            xtype: 'messstelle',
-                            name: 'mstId',
-                            fieldLabel: 'Messstelle',
-                            labelWidth: 135,
-                            allowBlank: false,
-                            editable: true
-                        }, {
-                            xtype: 'tfield',
-                            name: 'hauptprobenNr',
-                            maxLength: 20,
-                            fieldLabel: 'Hauptprobennr.',
-                            labelWidth: 135
-                        }]
-                    }, {
-                        border: 0,
-                        width: '50%',
-                        minWidth: 300,
-                        margin: '0, 1, 0, 0',
-                        items: [{
-                            xtype: 'fset',
-                            title: 'Erweiterte Angaben',
-                            name: 'erwAngaben',
-                            collapsible: true,
-                            collapsed: true,
+                            layout: {
+                                type: 'hbox',
+                                align: 'stretch'
+                            },
+                            border: 0,
+                            width: '100%',
                             items: [{
-                                xtype: 'datenbasis',
-                                editable: false,
-                                name: 'datenbasisId',
-                                fieldLabel: 'Datenbasis',
-                                anchor: '100%',
-                                labelWidth: 105
-                            }, {
-                                xtype: 'betriebsart',
-                                name: 'baId',
-                                fieldLabel: 'Betriebsart',
-                                anchor: '100%',
-                                labelWidth: 105
-                            }, {
-                                xtype: 'testdatensatz',
-                                name: 'test',
-                                fieldLabel: 'Testdatensatz',
-                                anchor: '100%',
-                                labelWidth: 105,
-                                allowBlank: false
-                            }, {
-                                xtype: 'probenart',
-                                editable: false,
-                                name: 'probenartId',
-                                fieldLabel: 'Probenart',
-                                anchor: '100%',
-                                labelWidth: 105,
-                                allowBlank: false
-                            }, {
-                                xtype: 'numberfield',
-                                allowDecimals: false,
-                                name: 'probeNehmerId',
-                                fieldLabel: 'Probennehmer',
-                                minValue: 0,
-                                anchor: '100%',
-                                labelWidth: 105
+                                xtype: 'messstelle',
+                                name: 'mstId',
+                                fieldLabel: 'Messstelle',
+                                margin: '0, 5, 5, 5',
+                                width: '35%',
+                                labelWidth: 90,
+                                allowBlank: false,
+                                editable: true
                             }, {
                                 xtype: 'netzbetreiber',
                                 name: 'netzbetreiberId',
                                 editable: false,
                                 readOnly: true,
                                 fieldLabel: 'Netzbetreiber',
-                                anchor: '100%',
-                                labelWidth: 105,
+                                margin: '0, 5, 5, 5',
+                                width: '35%',
+                                labelWidth: 80,
                                 allowBlank: false
+                            }, {
+                                xtype: 'datenbasis',
+                                editable: false,
+                                name: 'datenbasisId',
+                                fieldLabel: 'Datenbasis',
+                                margin: '0, 5, 5, 5',
+                                width: '20%',
+                                labelWidth: 65
+                            }, {
+                                xtype: 'chkbox',
+                                name: 'test',
+                                fieldLabel: 'Test',
+                                margin: '0, 5, 5, 5',
+                                width: '10%',
+                                anchor: '100%',
+                                labelWidth: 30
+                            }]
+                        }, {
+                            layout: {
+                                type: 'hbox',
+                                align: 'stretch'
+                            },
+                            border: 0,
+                            width: '100%',
+                            items: [{
+                                xtype: 'tfield',
+                                name: 'hauptprobenNr',
+                                fieldLabel: 'Hauptprobennr.',
+                                margin: '0, 5, 5, 5',
+                                width: '35%',
+                                labelWidth: 90,
+                                maxLength: 20,
+                                allowBlank: true
+                            }, {
+                                xtype: 'betriebsart',
+                                name: 'baId',
+                                fieldLabel: 'Messregime',
+                                margin: '0, 5, 5, 5',
+                                width: '35%',
+                                labelWidth: 80
+                            }, {
+                                xtype: 'probenart',
+                                editable: false,
+                                name: 'probenartId',
+                                fieldLabel: 'Probenart',
+                                margin: '0, 15, 5, 5',
+                                width: '20%',
+                                labelWidth: 65,
+                                allowBlank: false
+                            }]
+                        }, {
+                            layout: {
+                                type: 'hbox',
+                                align: 'stretch'
+                            },
+                            border: 0,
+                            width: '100%',
+                            items: [{
+                                xtype: 'numberfield',
+                                allowDecimals: false,
+                                name: 'probeNehmerId',
+                                fieldLabel: 'Probennehmer',
+                                margin: '0, 5, 5, 5',
+                                width: '50%',
+                                minValue: 0,
+                                anchor: '100%',
+                                labelWidth: 90
                             }, {
                                 xtype: 'tfield',
                                 name: 'x11',
                                 fieldLabel: 'Datensatzerzeuger',
+                                margin: '0, 5, 5, 5',
+                                width: '50%',
                                 anchor: '100%',
-                                labelWidth: 105
+                                labelWidth: 90
                             }]
                         }]
-                    }]
                 }, {
                     // Zeit
                     xtype: 'fieldset',
                     title: 'Zeit',
                     layout: {
-                        type: 'hbox',
-                        pack: 'center',
+                        type: 'vbox',
                         align: 'stretch'
                     },
                     items: [{
                         xtype: 'fset',
-                        title: 'Probenentnahme',
-                        name: 'entnahmePeriod',
-                        anchor: '100%',
-                        width: '50%',
-                        margin: '0, 5, 5, 5',
-                        layout: {
-                            type: 'vbox',
-                            align: 'stretch'
-                        },
-                        items: [{
-                            xtype: 'datetime',
-                            fieldLabel: 'Beginn',
-                            labelWidth: 90,
-                            anchor: '100%',
-                            name: 'probeentnahmeBeginn',
-                            format: 'd.m.Y H:i',
-                            period: 'start'
-                        }, {
-                            xtype: 'datetime',
-                            fieldLabel: 'Ende',
-                            labelWidth: 90,
-                            anchor: '100%',
-                            name: 'probeentnahmeEnde',
-                            format: 'd.m.Y H:i',
-                            period: 'end'
-                        }]
-                    }, {
-                        xtype: 'fset',
-                        title: 'Sollzeitraum',
                         name: 'sollzeitPeriod',
-                        anchor: '100%',
-                        width: '50%',
-                        margin: '0, 5, 5, 5',
+                        width: '100%',
+                        border: 0,
+                        margin: 0,
                         layout: {
-                            type: 'vbox',
-                            align: 'stretch'
+                            type: 'hbox',
                         },
                         items: [{
                             xtype: 'datetime',
-                            fieldLabel: 'Von',
-                            labelWidth: 90,
-                            anchor: '100%',
+                            fieldLabel: 'Sollzeitraum von',
+                            labelWidth: 120,
+                            margin: '0, 5, 5, 5',
                             name: 'solldatumBeginn',
                             format: 'd.m.Y H:i',
                             period: 'start'
                         }, {
                             xtype: 'datetime',
-                            fieldLabel: 'Bis',
-                            labelWidth: 90,
-                            anchor: '100%',
+                            fieldLabel: 'bis',
+                            labelWidth: 10,
+                            margin: '0, 5, 5, 5',
                             name: 'solldatumEnde',
+                            format: 'd.m.Y H:i',
+                            period: 'end'
+                        }]
+                    }, {
+                        xtype: 'fset',
+                        name: 'entnahmePeriod',
+                        width: '100%',
+                        border: 0,
+                        margin: 0,
+                        layout: {
+                            type: 'hbox',
+                        },
+                        items: [{
+                            xtype: 'datetime',
+                            fieldLabel: 'Probenentnahme von',
+                            labelWidth: 120,
+                            margin: '0, 5, 5, 5',
+                            name: 'probeentnahmeBeginn',
+                            format: 'd.m.Y H:i',
+                            period: 'start'
+                        }, {
+                            xtype: 'datetime',
+                            fieldLabel: 'bis',
+                            labelWidth: 10,
+                            margin: '0, 5, 5, 5',
+                            name: 'probeentnahmeEnde',
                             format: 'd.m.Y H:i',
                             period: 'end'
                         }]
@@ -229,6 +239,7 @@ Ext.define('Lada.view.form.Probe', {
                     // Medium
                     xtype: 'fieldset',
                     title: 'Medium',
+                    width: '100%',
                     items: [{
                         border: 0,
                         layout: {
@@ -237,33 +248,6 @@ Ext.define('Lada.view.form.Probe', {
                         },
                         width: '100%',
                         items: [{
-                            xtype: 'textfield',
-                            name: 'media',
-                            labelWidth: 125,
-                            fieldLabel: 'Medienbezeichnung',
-                            listeners: {
-                                dirtychange: {
-                                    fn: this.updateOnChange,
-                                    scope: me
-                                }
-                            }
-                        }, {
-                            xtype: 'tfield',
-                            maxLength: 38,
-                            enforceMaxLength: true,
-                            name: 'mediaDesk',
-                            labelWidth: 125,
-                            fieldLabel: 'Deskriptoren',
-                            regex: new RegExp('(?:D: ){1}(?:[0-9]{2} ){11}[0-9]{2}'),
-                            regexText: 'Die Deskriptoren haben das falsche Format.<br />'+
-                            'Richtig wäre: D: 99 99 99 99 99 99 99 99 99 99 99 99',
-                            listeners: {
-                                dirtychange: {
-                                    fn: this.updateOnChange,
-                                    scope: me
-                                }
-                            }
-                        }, {
                             xtype: 'umwelt',
                             name: 'umwId',
                             fieldLabel: 'Umweltbereich',
@@ -276,6 +260,45 @@ Ext.define('Lada.view.form.Probe', {
                                     scope: me
                                 }
                             }
+                        }, {
+                            border: 0,
+                            layout: {
+                                type: 'hbox',
+                                align: 'stretch'
+                            },
+                            width: '100%',
+                            items: [{
+                                    xtype: 'tfield',
+                                    maxLength: 38,
+                                    enforceMaxLength: true,
+                                    name: 'mediaDesk',
+                                    width: '60%',
+                                    minWidth: 290,
+                                    labelWidth: 125,
+                                    fieldLabel: 'Deskriptoren',
+                                    regex: new RegExp('(?:D: ){1}(?:[0-9]{2} ){11}[0-9]{2}'),
+                                    regexText: 'Die Deskriptoren haben das falsche Format.<br />'+
+                                    'Richtig wäre: D: 99 99 99 99 99 99 99 99 99 99 99 99',
+                                    listeners: {
+                                        dirtychange: {
+                                            fn: this.updateOnChange,
+                                            scope: me
+                                        }
+                                    }
+                                }, {
+                                    xtype: 'textfield',
+                                    name: 'media',
+                                    margin: '0, 10, 5, 10',
+                                    enforceMaxLength: true,
+                                    editable: false,
+                                    readOnly: true,
+                                    listeners: {
+                                        dirtychange: {
+                                            fn: this.updateOnChange,
+                                            scope: me
+                                        }
+                                    }
+                                }]
                         }, {
                             xtype: 'fieldset',
                             title: 'Details Deskriptoren',
@@ -376,7 +399,7 @@ Ext.define('Lada.view.form.Probe', {
         this.down('tfield[name=hauptprobenNr]').clearWarningOrError();
         this.down('cbox[name=datenbasisId]').clearWarningOrError();
         this.down('cbox[name=baId]').clearWarningOrError();
-        this.down('cbox[name=test]').clearWarningOrError();
+        this.down('chkbox[name=test]').clearWarningOrError();
         this.down('cbox[name=probenartId]').clearWarningOrError();
         this.down('cbox[name=netzbetreiberId]').clearWarningOrError();
         this.down('tfield[name=x11]').clearWarningOrError();
@@ -386,7 +409,6 @@ Ext.define('Lada.view.form.Probe', {
         this.down('datetime[name=solldatumBeginn]').clearWarningOrError();
         this.down('datetime[name=solldatumEnde]').clearWarningOrError();
         //this.down('numberfield[name=probeNehmerId]').clearWarningOrError();
-        this.down('fset[name=erwAngaben]').clearMessages();
         this.down('fset[name=entnahmePeriod]').clearMessages();
         this.down('fset[name=sollzeitPeriod]').clearMessages();
     },
@@ -396,7 +418,7 @@ Ext.define('Lada.view.form.Probe', {
         this.down('tfield[name=hauptprobenNr]').setReadOnly(value);
         this.down('cbox[name=datenbasisId]').setReadOnly(value);
         this.down('cbox[name=baId]').setReadOnly(value);
-        this.down('cbox[name=test]').setReadOnly(value);
+        this.down('chkbox[name=test]').setReadOnly(value);
         this.down('cbox[name=probenartId]').setReadOnly(value);
         //this.down('cbox[name=netzbetreiberId]').setReadOnly(value);
         this.down('tfield[name=x11]').setReadOnly(value);

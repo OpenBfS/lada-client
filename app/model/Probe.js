@@ -24,7 +24,8 @@ Ext.define('Lada.model.Probe', {
     }, {
         name: 'hauptprobenNr'
     }, {
-        name: 'test'
+        name: 'test',
+        type: 'boolean'
     }, {
         name: 'netzbetreiberId',
         serialize: function(value) {
