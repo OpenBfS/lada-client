@@ -171,7 +171,7 @@ Ext.define('Lada.view.form.Probe', {
                                 margin: '0, 5, 5, 5',
                                 width: '50%',
                                 anchor: '100%',
-                                labelWidth: 90
+                                labelWidth: 110
                             }]
                         }]
                 }, {
@@ -189,13 +189,13 @@ Ext.define('Lada.view.form.Probe', {
                         border: 0,
                         margin: 0,
                         layout: {
-                            type: 'hbox',
+                            type: 'hbox'
                         },
                         items: [{
                             xtype: 'datetime',
                             emptyText: ' ',
                             fieldLabel: 'Sollzeitraum von',
-                            labelWidth: 120,
+                            labelWidth: 130,
                             margin: '0, 5, 5, 5',
                             name: 'solldatumBeginn',
                             format: 'd.m.Y H:i',
@@ -205,7 +205,7 @@ Ext.define('Lada.view.form.Probe', {
                             xtype: 'datetime',
                             emptyText: ' ',
                             fieldLabel: 'bis',
-                            labelWidth: 10,
+                            labelWidth: 17,
                             margin: '0, 5, 5, 5',
                             name: 'solldatumEnde',
                             format: 'd.m.Y H:i',
@@ -219,12 +219,12 @@ Ext.define('Lada.view.form.Probe', {
                         border: 0,
                         margin: 0,
                         layout: {
-                            type: 'hbox',
+                            type: 'hbox'
                         },
                         items: [{
                             xtype: 'datetime',
                             fieldLabel: 'Probenentnahme von',
-                            labelWidth: 120,
+                            labelWidth: 130,
                             margin: '0, 5, 5, 5',
                             name: 'probeentnahmeBeginn',
                             format: 'd.m.Y H:i',
@@ -232,7 +232,7 @@ Ext.define('Lada.view.form.Probe', {
                         }, {
                             xtype: 'datetime',
                             fieldLabel: 'bis',
-                            labelWidth: 10,
+                            labelWidth: 17,
                             margin: '0, 5, 5, 5',
                             name: 'probeentnahmeEnde',
                             format: 'd.m.Y H:i',
