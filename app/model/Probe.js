@@ -104,6 +104,12 @@ Ext.define('Lada.model.Probe', {
                 return v;
             }
             return new Date(v);
+        },
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
         }
     }, {
         name: 'solldatumEnde',
@@ -113,6 +119,12 @@ Ext.define('Lada.model.Probe', {
                 return v;
             }
             return new Date(v);
+        },
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
         }
     }, {
         name: 'readonly',
