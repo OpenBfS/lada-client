@@ -24,7 +24,7 @@ Ext.define('Lada.view.widget.Deskriptor', {
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
             '{sn} - {beschreibung}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-         '<tpl for=".">{sn} - {beschreibung}</tpl>'),
+         '<tpl for="."><tpl if="sn &gt; 0">{sn} - {beschreibung}</tpl></tpl>'),
 
     listeners: {
         focus: {
@@ -41,6 +41,12 @@ Ext.define('Lada.view.widget.Deskriptor', {
                         };
                         field.store.load();
                     }
+                    else {
+                        field.store.proxy.extraParams = {
+                            'layer': field.up('deskriptor').layer
+                        };
+                        field.store.load();
+                    }
                 }
             }
         }
@@ -48,6 +54,13 @@ Ext.define('Lada.view.widget.Deskriptor', {
 
     initComponent: function() {
         this.store = Ext.create('Lada.store.Deskriptoren');
+        this.store.on('load', function() {
+            this.insert(0, {sn: 0, beschreibung: 'leer'});
+            if (this.proxy.extraParams.layer > 0 &&
+                !this.proxy.extraParams.parents) {
+                this.removeAll();
+            }
+        }, this.store);
 
         this.callParent(arguments);
         this.down('combobox').isFormField = false;

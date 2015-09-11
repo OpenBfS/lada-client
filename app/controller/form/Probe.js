@@ -27,7 +27,7 @@ Ext.define('Lada.controller.form.Probe', {
             'probeform': {
                 dirtychange: this.dirtyForm
             },
-            'probeform messstelle combobox':{
+            'probeform messstelle combobox': {
                 expand: this.filter,
                 keydown: this.filter,
                 select: this.setNetzbetreiber
@@ -257,15 +257,18 @@ Ext.define('Lada.controller.form.Probe', {
                 value = records[0].get('sn');
             }
             current[desk.layer + 1] = value;
+            for (var i = desk.layer + 2; i < 13; i++) {
+                current[i] = '00';
+            }
+            this.clearChildDesk(desk);
         }
         media.setValue(current.join(' ').trim());
     },
 
-    clearChildDesk: function(field, media) {
+    clearChildDesk: function(field) {
         var allS = field.up('fieldset').items.items;
         for (var i = field.layer + 1; i < 12; i++) {
             allS[i].clearValue();
-            media[i + 1] = '00';
         }
     }
 
