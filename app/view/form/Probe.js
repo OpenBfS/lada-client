@@ -193,20 +193,24 @@ Ext.define('Lada.view.form.Probe', {
                         },
                         items: [{
                             xtype: 'datetime',
+                            emptyText: ' ',
                             fieldLabel: 'Sollzeitraum von',
                             labelWidth: 120,
                             margin: '0, 5, 5, 5',
                             name: 'solldatumBeginn',
                             format: 'd.m.Y H:i',
-                            period: 'start'
+                            period: 'start',
+                            readOnly: true
                         }, {
                             xtype: 'datetime',
+                            emptyText: ' ',
                             fieldLabel: 'bis',
                             labelWidth: 10,
                             margin: '0, 5, 5, 5',
                             name: 'solldatumEnde',
                             format: 'd.m.Y H:i',
-                            period: 'end'
+                            period: 'end',
+                            readOnly: true
                         }]
                     }, {
                         xtype: 'fset',
@@ -427,8 +431,6 @@ Ext.define('Lada.view.form.Probe', {
         this.down('cbox[name=umwId]').setReadOnly(value);
         this.down('datetime[name=probeentnahmeBeginn]').setReadOnly(value);
         this.down('datetime[name=probeentnahmeEnde]').setReadOnly(value);
-        this.down('datetime[name=solldatumBeginn]').setReadOnly(value);
-        this.down('datetime[name=solldatumEnde]').setReadOnly(value);
         this.down('numberfield[name=probeNehmerId]').setReadOnly(value);
 
         //Deskriptoren

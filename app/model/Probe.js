@@ -104,8 +104,7 @@ Ext.define('Lada.model.Probe', {
                 return v;
             }
             return new Date(v);
-        },
-        defaultValue: new Date()
+        }
     }, {
         name: 'solldatumEnde',
         type: 'date',
@@ -114,8 +113,7 @@ Ext.define('Lada.model.Probe', {
                 return v;
             }
             return new Date(v);
-        },
-        defaultValue: new Date()
+        }
     }, {
         name: 'readonly',
         type: 'boolean',

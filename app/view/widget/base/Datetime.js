@@ -25,14 +25,16 @@ Ext.define('Lada.view.widget.base.Datetime', {
     initComponent: function() {
         var dateField = Ext.create('Lada.view.widget.base.DateTimeField', {
             format: this.format || 'd.m.Y H:i',
-            emptyText: 'Wählen Sie einen Zeitpunkt',
+            emptyText: this.emptyText || 'Wählen Sie einen Zeitpunkt',
             fieldLabel: this.fieldLabel,
             labelWidth: this.labelWidth,
             flex: 1,
             name: this.name,
             msgTarget: 'none',
             listeners: this.listeners,
-            period: this.period
+            readOnly: this.readOnly || false,
+            period: this.period,
+            value: this.value
         });
         this.items = [dateField, {
             xtype: 'image',
