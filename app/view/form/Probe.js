@@ -192,23 +192,23 @@ Ext.define('Lada.view.form.Probe', {
                             type: 'hbox'
                         },
                         items: [{
-                            xtype: 'datetime',
+                            xtype: 'datefield',
                             emptyText: ' ',
                             fieldLabel: 'Sollzeitraum von',
                             labelWidth: 130,
                             margin: '0, 5, 5, 5',
                             name: 'solldatumBeginn',
-                            format: 'd.m.Y H:i',
+                            format: 'd.m.Y',
                             period: 'start',
                             readOnly: true
                         }, {
-                            xtype: 'datetime',
+                            xtype: 'datefield',
                             emptyText: ' ',
                             fieldLabel: 'bis',
                             labelWidth: 17,
                             margin: '0, 5, 5, 5',
                             name: 'solldatumEnde',
-                            format: 'd.m.Y H:i',
+                            format: 'd.m.Y',
                             period: 'end',
                             readOnly: true
                         }]
@@ -280,9 +280,6 @@ Ext.define('Lada.view.form.Probe', {
                                     minWidth: 290,
                                     labelWidth: 125,
                                     fieldLabel: 'Deskriptoren',
-                                    regex: new RegExp('(?:D: ){1}(?:[0-9]{2} ){11}[0-9]{2}'),
-                                    regexText: 'Die Deskriptoren haben das falsche Format.<br />'+
-                                    'Richtig wäre: D: 99 99 99 99 99 99 99 99 99 99 99 99',
                                     editable: false,
                                     readOnly: true,
                                     listeners: {
@@ -298,13 +295,7 @@ Ext.define('Lada.view.form.Probe', {
                                     width: '40%',
                                     enforceMaxLength: true,
                                     editable: false,
-                                    readOnly: true,
-                                    listeners: {
-                                        dirtychange: {
-                                            fn: this.updateOnChange,
-                                            scope: me
-                                        }
-                                    }
+                                    readOnly: true
                                 }]
                         }, {
                             xtype: 'fieldset',
@@ -413,9 +404,6 @@ Ext.define('Lada.view.form.Probe', {
         this.down('cbox[name=umwId]').clearWarningOrError();
         this.down('datetime[name=probeentnahmeBeginn]').clearWarningOrError();
         this.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
-//        this.down('datetime[name=solldatumBeginn]').clearWarningOrError();
-//        this.down('datetime[name=solldatumEnde]').clearWarningOrError();
-        //this.down('numberfield[name=probeNehmerId]').clearWarningOrError();
         this.down('fset[name=entnahmePeriod]').clearMessages();
         this.down('fset[name=sollzeitPeriod]').clearMessages();
     },
