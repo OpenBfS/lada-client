@@ -283,6 +283,8 @@ Ext.define('Lada.view.form.Probe', {
                                     regex: new RegExp('(?:D: ){1}(?:[0-9]{2} ){11}[0-9]{2}'),
                                     regexText: 'Die Deskriptoren haben das falsche Format.<br />'+
                                     'Richtig wäre: D: 99 99 99 99 99 99 99 99 99 99 99 99',
+                                    editable: false,
+                                    readOnly: true,
                                     listeners: {
                                         dirtychange: {
                                             fn: this.updateOnChange,
@@ -293,6 +295,7 @@ Ext.define('Lada.view.form.Probe', {
                                     xtype: 'textfield',
                                     name: 'media',
                                     margin: '0, 10, 5, 10',
+                                    width: '40%',
                                     enforceMaxLength: true,
                                     editable: false,
                                     readOnly: true,
@@ -309,8 +312,8 @@ Ext.define('Lada.view.form.Probe', {
                             collapsible: true,
                             collapsed: true,
                             layout: {
-                                type: 'table',
-                                columns: 3
+                                type: 'vbox',
+                                align: 'stretch'
                             },
                             items: this.buildDescriptors()
                         }]
@@ -410,8 +413,8 @@ Ext.define('Lada.view.form.Probe', {
         this.down('cbox[name=umwId]').clearWarningOrError();
         this.down('datetime[name=probeentnahmeBeginn]').clearWarningOrError();
         this.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
-        this.down('datetime[name=solldatumBeginn]').clearWarningOrError();
-        this.down('datetime[name=solldatumEnde]').clearWarningOrError();
+//        this.down('datetime[name=solldatumBeginn]').clearWarningOrError();
+//        this.down('datetime[name=solldatumEnde]').clearWarningOrError();
         //this.down('numberfield[name=probeNehmerId]').clearWarningOrError();
         this.down('fset[name=entnahmePeriod]').clearMessages();
         this.down('fset[name=sollzeitPeriod]').clearMessages();
@@ -424,10 +427,7 @@ Ext.define('Lada.view.form.Probe', {
         this.down('cbox[name=baId]').setReadOnly(value);
         this.down('chkbox[name=test]').setReadOnly(value);
         this.down('cbox[name=probenartId]').setReadOnly(value);
-        //this.down('cbox[name=netzbetreiberId]').setReadOnly(value);
         this.down('tfield[name=x11]').setReadOnly(value);
-        this.down('textfield[name=media]').setReadOnly(value);
-        this.down('tfield[name=mediaDesk]').setReadOnly(value);
         this.down('cbox[name=umwId]').setReadOnly(value);
         this.down('datetime[name=probeentnahmeBeginn]').setReadOnly(value);
         this.down('datetime[name=probeentnahmeEnde]').setReadOnly(value);

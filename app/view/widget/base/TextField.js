@@ -28,6 +28,7 @@ Ext.define('Lada.view.widget.base.TextField', {
             enforceMaxLength: this.enforceMaxLength || true,
             fieldLabel: this.fieldLabel,
             labelWidth: this.labelWidth,
+            readOnly: this.readOnly || false, 
             listeners: this.listeners
         }, {
             xtype: 'image',
