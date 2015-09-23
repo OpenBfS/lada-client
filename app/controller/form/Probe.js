@@ -257,10 +257,16 @@ Ext.define('Lada.controller.form.Probe', {
                 value = records[0].get('sn');
             }
             current[desk.layer + 1] = value;
-            for (var i = desk.layer + 2; i < 13; i++) {
-                current[i] = '00';
+            if (desk.layer < 2) {
+                for (var i = desk.layer + 2; i < 13; i++) {
+                    current[i] = '00';
+                }
+                this.clearChildDesk(desk);
             }
-            this.clearChildDesk(desk);
+            else if (desk.layer === 2 && current[1] === '01') {
+                current[4] = '00';
+//  hier muss noch S3 in der Maske geleert werden
+            }
         }
         media.setValue(current.join(' ').trim());
     },
