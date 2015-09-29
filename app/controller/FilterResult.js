@@ -170,7 +170,6 @@ Ext.define('Lada.controller.FilterResult', {
         }
         var me = this;
         Ext.Ajax.request({
-            method: 'POST',
             url: 'lada-server/export/laf',
             jsonData: {'proben': proben},
             success: function(response) {
@@ -221,25 +220,87 @@ Ext.define('Lada.controller.FilterResult', {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection();
         var i18n = Lada.getApplication().bundle;
-        var proben = [];
-        for (var i = 0; i < selection.length; i++) {
-            proben.push(selection[i].get('id'));
-        }
         var me = this;
+        /*Example: {
+                    "layout": "A4 landscape",
+                    "outputFormat": "pdf",
+                    "attributes": {
+                        "title": "Auszug aus Lada",
+                        "datasource": [
+                        {
+                        "displayName": "Proben",
+                        "table" : {
+                            "columns": ["ProbeId", "MST", "Proben-Nr"],
+                            "data": [
+                            [1, "LiLiblah", "icon_pan"],
+                            [2, "LiLiblip", "icon_zoomin"]
+                            ]
+                        }
+                        }
+                    ]
+                    }
+                }; */
+
+        var columns = [];
+        var data = [];
+        // Write the columns to an array
+        try {
+            for (key in selection[0].data) {
+                // Do not write owner or readonly
+                if (["owner", "readonly"].indexOf(key) == -1){
+                    columns.push(key);
+                }
+            }
+        } catch (e) {
+        }
+
+        // Retrieve Data from selection
+        try {
+            for (item in selection) {
+                var row = selection[item].data;
+                var out = [];
+                //Lookup every column and write to data array.
+                for (key in columns){
+                    var attr = columns[key];
+                    out.push(row[attr].toString());
+                }
+                data.push(out);
+            }
+        } catch (e){
+        }
+
+        var printData = {
+            'layout': 'A4 landscape',
+            'outputFormat': 'pdf',
+            'attributes': {
+                'title': 'Auszug aus LADA',
+                'datasource': [{
+                    'displayName': 'Proben',
+                    'table': {
+                        'columns': columns,
+                        'data': data
+                    }
+
+                }]
+            }
+        }
+
         Ext.Ajax.request({
-            method: 'POST',
-            url: '127.0.0.1', // TODO
-            jsonData: {'proben': proben},  // TODO
+            url: 'lada-printer/buildreport.pdf',
+            //configure a proxy in apache conf!
+            jsonData: printData,
+            binary: true,
             success: function(response) {
-                console.log('success');
-                var content = response.responseText;
-                var blob = new Blob([content],{type: 'application/pdf'});
+                var content = response.responseBytes;
+                var filetype = response.getResponseHeader('Content-Type');
+                var blob = new Blob([content],{type: filetype});
                 saveAs(blob, 'lada-print.pdf');
             },
             failure: function(response) {
                 console.log('failure');
                 // Error handling
                 // TODO
+                //console.log(response.responseText)
                 if (response.responseText) {
                     try {
                         var json = Ext.JSON.decode(response.responseText);
