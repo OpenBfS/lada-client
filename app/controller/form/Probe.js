@@ -265,7 +265,7 @@ Ext.define('Lada.controller.form.Probe', {
             }
             else if (desk.layer === 2 && current[1] === '01') {
                 current[4] = '00';
-//  hier muss noch S3 in der Maske geleert werden
+                desk.up('fieldset').down('deskriptor[layer=3]').clearValue();
             }
         }
         media.setValue(current.join(' ').trim());
