@@ -223,16 +223,35 @@ Ext.define('Lada.controller.FilterResult', {
         var i18n = Lada.getApplication().bundle;
         var me = this;
         var columns = [];
+        var columnNames = [];
+        var visibleColumns = {}
         var data = [];
+
         // Write the columns to an array
         try {
             for (key in selection[0].data) {
-                // Do not write owner or readonly
-                if (["owner", "readonly"].indexOf(key) == -1){
+                // Do not write owner or readonly or id
+                if (["owner", "readonly", "id"].indexOf(key) == -1){
                     columns.push(key);
                 }
             }
-        } catch (e) {
+        }
+        catch (e) {
+            console.log(e);
+        }
+
+        //Retrieve visible columns' id's and names.
+        try {
+            var grid = button.up('filterresultgrid');
+            var cman = grid.columnManager;
+            var cols = cman.getColumns();
+            for (key in cols) {
+                if (cols[key].dataIndex) {
+                    visibleColumns[cols[key].dataIndex] = cols[key].text;
+                }
+            }
+        }
+        catch (e) {
             console.log(e);
         }
 
@@ -245,34 +264,52 @@ Ext.define('Lada.controller.FilterResult', {
                 //Lookup every column and write to data array.
                 for (key in columns){
                     var attr = columns[key];
-                    if (row[attr] != null) {
+                    //Only write data to output when the column is not hidden.
+                    if (row[attr] != null &&
+                        visibleColumns[attr] != null) {
                         out.push(row[attr].toString());
                     }
-                    else {
+                    else if (visibleColumns[attr] != null) {
                         out.push('');
                     }
                 }
                 data.push(out);
             }
-        } catch (e){
+        }
+        catch (e){
             console.log(e);
         }
-        console.log(columns);
-        console.log(data);
+
+        //Retrieve the names of the columns.
+        try {
+            var grid = button.up('filterresultgrid');
+            var cman = grid.columnManager;
+            var cols = cman.getColumns();
+            //Iterate columns and find column names for the key...
+            // This WILL run into bad behaviour when column-keys exist twice.
+            for (key in columns){
+                for (k in cols){
+                    if (cols[k].dataIndex == columns[key]){
+                        columnNames.push(cols[k].text);
+                        break;
+                    }
+                }
+            }
+        }
+        catch (e) {
+            console.log(e);
+        }
 
         var printData = {
             'layout': 'A4 landscape',
             'outputFormat': 'pdf',
             'attributes': {
                 'title': 'Auszug aus LADA',
-                'datasource': [{
-                    'displayName': 'Proben',
-                    'table': {
-                        'columns': columns,
-                        'data': data
-                    }
-
-                }]
+                'displayName': 'Proben',
+                'table': {
+                    'columns': columnNames,
+                    'data': data
+                }
             }
         }
 
