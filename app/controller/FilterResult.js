@@ -219,12 +219,12 @@ Ext.define('Lada.controller.FilterResult', {
     printSelection: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection();
-        console.log(selection);
         var i18n = Lada.getApplication().bundle;
         var me = this;
         var columns = [];
         var columnNames = [];
-        var visibleColumns = {}
+        var visibleColumns = [];
+        var displayName = '';
         var data = [];
 
         // Write the columns to an array
@@ -241,10 +241,14 @@ Ext.define('Lada.controller.FilterResult', {
         }
 
         //Retrieve visible columns' id's and names.
+        // and set displayName
         try {
             var grid = button.up('filterresultgrid');
             var cman = grid.columnManager;
             var cols = cman.getColumns();
+
+            displayName = grid.down('tbtext').text;
+
             for (key in cols) {
                 if (cols[key].dataIndex) {
                     visibleColumns[cols[key].dataIndex] = cols[key].text;
@@ -305,7 +309,7 @@ Ext.define('Lada.controller.FilterResult', {
             'outputFormat': 'pdf',
             'attributes': {
                 'title': 'Auszug aus LADA',
-                'displayName': 'Proben',
+                'displayName': displayName,
                 'table': {
                     'columns': columnNames,
                     'data': data
