@@ -219,28 +219,9 @@ Ext.define('Lada.controller.FilterResult', {
     printSelection: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection();
+        console.log(selection);
         var i18n = Lada.getApplication().bundle;
         var me = this;
-        /*Example: {
-                    "layout": "A4 landscape",
-                    "outputFormat": "pdf",
-                    "attributes": {
-                        "title": "Auszug aus Lada",
-                        "datasource": [
-                        {
-                        "displayName": "Proben",
-                        "table" : {
-                            "columns": ["ProbeId", "MST", "Proben-Nr"],
-                            "data": [
-                            [1, "LiLiblah", "icon_pan"],
-                            [2, "LiLiblip", "icon_zoomin"]
-                            ]
-                        }
-                        }
-                    ]
-                    }
-                }; */
-
         var columns = [];
         var data = [];
         // Write the columns to an array
@@ -252,7 +233,9 @@ Ext.define('Lada.controller.FilterResult', {
                 }
             }
         } catch (e) {
+            console.log(e);
         }
+
 
         // Retrieve Data from selection
         try {
@@ -262,12 +245,20 @@ Ext.define('Lada.controller.FilterResult', {
                 //Lookup every column and write to data array.
                 for (key in columns){
                     var attr = columns[key];
-                    out.push(row[attr].toString());
+                    if (row[attr] != null) {
+                        out.push(row[attr].toString());
+                    }
+                    else {
+                        out.push('');
+                    }
                 }
                 data.push(out);
             }
         } catch (e){
+            console.log(e);
         }
+        console.log(columns);
+        console.log(data);
 
         var printData = {
             'layout': 'A4 landscape',
