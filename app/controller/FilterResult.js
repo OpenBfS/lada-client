@@ -217,6 +217,11 @@ Ext.define('Lada.controller.FilterResult', {
      * Send the selection to a Printservice
      */
     printSelection: function(button) {
+
+        //disable Button and setLoading...
+        button.disable();
+        button.setLoading(true);
+
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection();
         var i18n = Lada.getApplication().bundle;
@@ -327,12 +332,16 @@ Ext.define('Lada.controller.FilterResult', {
                 var filetype = response.getResponseHeader('Content-Type');
                 var blob = new Blob([content],{type: filetype});
                 saveAs(blob, 'lada-print.pdf');
+                button.enable();
+                button.setLoading(false);
             },
             failure: function(response) {
                 console.log('failure');
                 // Error handling
                 // TODO
                 //console.log(response.responseText)
+                button.enable();
+                button.setLoading(false);
                 if (response.responseText) {
                     try {
                         var json = Ext.JSON.decode(response.responseText);
