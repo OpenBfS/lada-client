@@ -146,6 +146,9 @@ Dies erlaubt dem Apache grundsätzlich sich mit einem anderen Dienst zu verbinde
 Nun muss noch ein Reverse-Proxy eingerichtet werden. Dieser ist nur für
 bestimmte Adressen aktiv.
 
+Sollte aus dem Lada-Client heraus mittels PrintApp in mapfish-print gedruckt werden,
+so ist auch der zweite Proxy notwendig.
+
 Folgende Datei sollte unter `/etc/httpd/conf.d/lada.conf` angelegt werden:
 ```
     <VirtualHost *:80>
@@ -157,6 +160,9 @@ Folgende Datei sollte unter `/etc/httpd/conf.d/lada.conf` angelegt werden:
         # Set multiple Proxys
         ProxyPass /lada/server http://LADASERVER/lada
         ProxyPassReverse /lada/server http://LADASERVER/lada
+        # Add Printing
+        ProxyPass /lada-client/lada-printer http://MAPFISH-PRINT-URL/lada_print
+        ProxyPassReverse /lada-client/lada-printer http://MAPFISH-PRINT-URL/lada_print
     </VirtualHost>
 ```
 Alle Anfragen an die Adresse `/lada/service`, werden nun an den Server
