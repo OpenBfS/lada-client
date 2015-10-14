@@ -40,7 +40,8 @@ Ext.define('Lada.controller.grid.MKommentar', {
      * On failure it displays a message
      */
     gridSave: function(editor, context) {
-        context.record.save({
+    context.record.set('datum', new Date());
+    context.record.save({
             success: function(record, response) {
                 context.grid.initData();
                 context.grid.up('window').initData();

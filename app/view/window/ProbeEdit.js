@@ -97,7 +97,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 padding: '5, 5',
                 margin: 5,
                 collapsible: true,
-                collapsed: true,
+                collapsed: false,
                 items: [{
                     xtype: 'probenzusatzwertgrid',
                     recordId: this.record.get('id')
@@ -109,7 +109,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 padding: '5, 5',
                 margin: 5,
                 collapsible: true,
-                collapsed: true,
+                collapsed: false,
                 items: [{
                     xtype: 'pkommentargrid',
                     recordId: this.record.get('id')

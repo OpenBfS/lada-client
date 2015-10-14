@@ -59,6 +59,12 @@ Ext.define('Lada.view.grid.MKommentar', {
             }]
         }];
         this.columns = [{
+            header: 'erstellt',
+            dataIndex: 'datum',
+            xtype: 'datecolumn',
+            format: 'd.m.Y H:i',
+            width: 110,
+        }, {
             header: 'Erzeuger',
             dataIndex: 'erzeuger',
             renderer: function(value) {
@@ -75,17 +81,6 @@ Ext.define('Lada.view.grid.MKommentar', {
                 valueField: 'id',
                 allowBlank: false,
                 editable: false
-            }
-        }, {
-            header: 'Datum',
-            dataIndex: 'datum',
-            xtype: 'datecolumn',
-            format: 'd.m.Y',
-            editor: {
-                xtype: 'datefield',
-                allowBlank: false,
-                format: 'd.m.Y',
-                maxValue: Ext.Date.format(new Date(), 'd.m.Y')
             }
         }, {
             header: 'Text',
