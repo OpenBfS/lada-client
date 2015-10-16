@@ -38,6 +38,7 @@ Ext.define('Lada.controller.grid.Status', {
      * On failure it displays a message
      */
      gridSave: function(editor, context) {
+        context.record.set('sdatum', new Date());
         context.record.save({
             success: function() {
                 context.grid.initData();

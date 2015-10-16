@@ -63,6 +63,12 @@ Ext.define('Lada.view.grid.Status', {
             }]
         }];
         this.columns = [{
+            header: 'erstellt',
+            dataIndex: 'sdatum',
+            xtype: 'datecolumn',
+            format: 'd.m.Y H:i',
+            width: 110,
+        }, {
             header: 'Erzeuger',
             dataIndex: 'erzeuger',
             renderer: function(value) {
@@ -96,17 +102,6 @@ Ext.define('Lada.view.grid.Status', {
                 valueField: 'id',
                 allowBlank: false,
                 editable: false
-            }
-        }, {
-            header: 'Datum',
-            dataIndex: 'sdatum',
-            xtype: 'datecolumn',
-            format: 'd.m.Y',
-            editor: {
-                xtype: 'datefield',
-                allowBlank: false,
-                format: 'd.m.Y',
-                maxValue: Ext.Date.format(new Date(), 'd.m.Y')
             }
         }, {
             header: 'Text',
