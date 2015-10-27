@@ -39,6 +39,8 @@ Ext.define('Lada.model.Messung', {
         },
         defaultValue: new Date()
     }, {
+        name: 'status',
+    }, {
         name: 'fertig',
         type: 'boolean'
     }, {

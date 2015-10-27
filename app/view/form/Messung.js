@@ -113,6 +113,22 @@ Ext.define('Lada.view.form.Messung', {
                     fieldLabel: 'Geplant',
                     width: 300,
                     labelWidth: 100
+                }, {
+                    xtype: 'textfield',
+                    name: 'status',
+                    readOnly: true,
+                    isFormField: false,
+                    maxLength: 10,
+                    margin: '0, 10, 5, 0',
+                    fieldLabel: 'Status',
+                    width: 300,
+                    labelWidth: 100,
+                    submitValue: false,
+                    isFormField: false,
+                    preventMark: true, //Do not display error msg.
+                    validateValue: function() {
+                        return true; //this field is always valid
+                    },
                 }]
             }]
         }];
@@ -121,6 +137,57 @@ Ext.define('Lada.view.form.Messung', {
 
     setRecord: function(record) {
         this.getForm().loadRecord(record);
+        this.retrieveStatus(record.id, record.get('status'));
+    },
+
+    retrieveStatus: function(messungsId, statusId) {
+        var i18n = Lada.getApplication().bundle;
+        var msg = i18n.getMsg('load.statuswert');
+        var textfield = this.down('[name=status]');
+
+        textfield.setRawValue(msg);
+
+        var sStore = Ext.StoreManager.lookup('Status');
+        if (!sStore) {
+            sStore = Ext.create('Lada.store.Status');
+        }
+        sStore.on('load',
+            function(records, operation, success) {
+                var ret;
+                var i18n = Lada.getApplication().bundle;
+                if (sStore.getTotalCount() === 0) {
+                    ret = 0;
+                }
+                else {
+                    ret = sStore.getById(statusId).get('statusWert');
+                }
+                this.setStatusWert(ret);
+            },
+            this);
+        sStore.load({
+            params: {
+                messungsId: messungsId
+            }
+        });
+    },
+
+    setStatusWert: function(value){
+        var swStore = Ext.StoreManager.lookup('StatusWerte');
+        if (!swStore) {
+            var swStore = Ext.create('Lada.store.StatusWerte');
+        }
+        swStore.on('load',
+            function(records, operation, success) {
+                var i18n = Lada.getApplication().bundle;
+                var msg = i18n.getMsg('load.statuswert.error');
+                var textfield = this.down('[name=status]');
+                if (success) {
+                    msg = swStore.getById(value).get('wert');
+                }
+                textfield.setRawValue(msg);
+            },
+            this);
+        swStore.load();
     },
 
     setMessages: function(errors, warnings) {

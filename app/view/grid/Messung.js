@@ -83,9 +83,10 @@ Ext.define('Lada.view.grid.Messung', {
             flex: 1,
             dataIndex: 'id',
             renderer: function(value) {
-                var id = 'messung-status-item' + value;
-                this.updateStatus(value, id);
-                return '<div id="' + id + '">Lade...</div>';
+                var statusId = this.store.getById(value).get('status');
+                var divId = 'messung-status-item' + value;
+                this.updateStatus(value, divId, statusId);
+                return '<div id="' + divId + '">Lade...</div>';
             }
         }, {
             header: 'OK-Flag',
@@ -147,12 +148,16 @@ Ext.define('Lada.view.grid.Messung', {
         });
     },
 
-    updateStatus: function(value, divId) {
+    /**
+     * Load the statusstore,
+     * afterwards: retrieve the statusid
+     */
+    updateStatus: function(value, divId, statusId) {
         var statusStore = Ext.create('Lada.store.Status');
         statusStore.on('load',
             this.updateStatusColumn,
             this,
-            {divId: divId});
+            {divId: divId, statusId: statusId});
         statusStore.load({
             params: {
                 messungsId: value
@@ -197,18 +202,36 @@ Ext.define('Lada.view.grid.Messung', {
         Ext.fly(opts.divId).update(value);
     },
 
+    /**
+     * Retrieve Statuswert and update the column
+     */
     updateStatusColumn: function(sstore, record, success, opts) {
-        var value;
+        var value = 0;
         if (sstore.getTotalCount() === 0) {
             value = 0;
         }
         else {
-            value = sstore.last().get('status');
+            value = sstore.getById(opts.statusId).get('statusWert');
         }
         if (Ext.fly(opts.divId)) {
-            var sta = Ext.create('Lada.store.StatusWerte');
-            var val = sta.getById(value).get('display');
-            Ext.fly(opts.divId).update(val);
+            var sta = Ext.StoreManager.lookup('StatusWerte');
+            if (!sta) {
+                var sta = Ext.create('Lada.store.StatusWerte');
+            }
+            var val = 'error';
+            sta.load({
+                scope: this,
+                callback: function(records, operation, success) {
+                    if (success) {
+                        try {
+                            val = sta.getById(value).get('wert');
+                        }
+                        catch (e) {
+                        }
+                    }
+                    Ext.fly(opts.divId).update(val);
+                }
+            });
         }
     },
 

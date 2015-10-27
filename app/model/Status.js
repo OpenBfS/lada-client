@@ -15,20 +15,40 @@ Ext.define('Lada.model.Status', {
     fields: [{
         name: 'id'
     }, {
-        name: 'owner',
-        type: 'boolean'
-    }, {
         name: 'readonly',
         type: 'boolean',
         persist: false
+    }, {
+        name: 'owner',
+        type: 'boolean',
     }, {
         name: 'messungsId'
     }, {
         name: 'erzeuger'
     }, {
-        name: 'status'
+        name: 'statusStufe',
+        type: 'int'
     }, {
-        name: 'sdatum',
+        name: 'statusWert',
+        type: 'int'
+    }, {
+        name: 'treeModified',
+        serialize: function(value) {
+            if (value === '') {
+               return null;
+           }
+           return value;
+        }
+    }, {
+       name: 'parentModified',
+       serialize: function(value) {
+           if (value === '') {
+               return null;
+           }
+           return value;
+       }
+    }, {
+        name: 'datum',
         type: 'date',
         convert: function(v) {
             if (!v) {
@@ -38,23 +58,7 @@ Ext.define('Lada.model.Status', {
         },
         defaultValue: new Date()
     }, {
-        name: 'skommentar'
-    }, {
-        name: 'treeModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
-    }, {
-        name: 'parentModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        name: 'text'
     }],
 
     idProperty: 'id',

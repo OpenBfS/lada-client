@@ -20,7 +20,8 @@ Ext.define('Lada.controller.grid.Status', {
         this.control({
             'statusgrid': {
                 edit: this.gridSave,
-                canceledit: this.cancelEdit
+                canceledit: this.cancelEdit,
+                select: this.toggleAllowedPermissions
             },
             'statusgrid button[action=add]': {
                 click: this.add
@@ -81,8 +82,9 @@ Ext.define('Lada.controller.grid.Status', {
         var record = Ext.create('Lada.model.Status', {
             messungsId: button.up('statusgrid').recordId
         });
-        button.up('statusgrid').store.insert(0, record);
-        button.up('statusgrid').rowEditing.startEdit(0, 1);
+        var lastrow = button.up('statusgrid').store.count()
+        button.up('statusgrid').store.insert(lastrow, record);
+        button.up('statusgrid').rowEditing.startEdit(lastrow, 1);
     },
 
     /**
@@ -121,5 +123,43 @@ Ext.define('Lada.controller.grid.Status', {
             }
         });
         grid.down('button[action=delete]').disable();
+    },
+
+    /**
+     * When a row in a grid is selected,
+     * this function checks if the row may be edited,
+     * or if the row can be removed
+     */
+    toggleAllowedPermissions: function(context, record, index){
+
+        //retrieve the readOnly parameters
+        var readonlyWin = context.view.up('window').record.get('readonly');
+
+        var readonlyRec = record.get('readonly');
+        var grid = context.view.up('grid');
+
+        //retrieve the last record of the store
+        var lastRecord = context.getStore().last()
+        //Check if remove is allowed
+        if (lastRecord == record &&
+            readonlyWin == false  &&
+            readonlyRec == false) {
+            grid.down('button[action=delete]').enable();
+        }
+        else {
+            grid.down('button[action=delete]').disable();
+        }
+
+
+        //Check if edit is allowed
+        if (lastRecord == record &&
+            readonlyWin == false  &&
+            readonlyRec == false) {
+            grid.getPlugin('rowedit').enable()
+        }
+        else {
+            grid.getPlugin('rowedit').disable()
+        }
     }
+
 });

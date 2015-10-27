@@ -8,20 +8,10 @@
 
 /**
  * Store for Status-Werte
- * TODO i18n
  */
 Ext.define('Lada.store.StatusWerte', {
     extend: 'Ext.data.Store',
-    fields: ['display', 'id'],
-    data: [{
-            display: 'unbekannt', id: 0
-        }, {
-            display: 'nicht vergeben', id: 1
-        }, {
-            display: 'plausibel', id: 2
-        }, {
-            display: 'nicht repräsentativ', id: 3
-        }, {
-            display: 'nicht plausibel', id: 4
-        }]
+    model: 'Lada.model.StatusWerte',
+    autoLoad: true,
+    storeId: 'StatusWerte'
 });

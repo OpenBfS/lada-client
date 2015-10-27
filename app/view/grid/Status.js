@@ -28,14 +28,14 @@ Ext.define('Lada.view.grid.Status', {
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false,
-            disabled: false,
+            disabled: true,
             pluginId: 'rowedit',
             listeners:{
                 // Make row ineditable when readonly is set to true
                 // Normally this would belong into a controller an not the view.
                 // But the RowEditPlugin is not handled there.
                 beforeedit: function(e, o) {
-                    var readonlywin = o.grid.up('window').record.get('readonly');
+                var readonlywin = o.grid.up('window').record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
                     if (readonlywin == true || readonlygrid == true || this.disabled)  {
                         return false;
@@ -43,10 +43,11 @@ Ext.define('Lada.view.grid.Status', {
                     return true;
                 }
             }
-         });
+        });
         this.plugins = [this.rowEditing];
 
         var statusStore = Ext.create('Lada.store.StatusWerte');
+        statusStore.load();
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -64,10 +65,11 @@ Ext.define('Lada.view.grid.Status', {
         }];
         this.columns = [{
             header: 'erstellt',
-            dataIndex: 'sdatum',
+            dataIndex: 'datum',
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
             width: 110,
+            sortable: false,
         }, {
             header: 'Erzeuger',
             dataIndex: 'erzeuger',
@@ -85,33 +87,36 @@ Ext.define('Lada.view.grid.Status', {
                 valueField: 'id',
                 allowBlank: false,
                 editable: false
-            }
+            },
+            sortable: false,
         }, {
             header: 'Status',
-            dataIndex: 'status',
+            dataIndex: 'statusWert',
             renderer: function(value) {
                 if (!value || value === '') {
                     return '';
                 }
-                return statusStore.getById(value).get('display');
+                return statusStore.getById(value).get('wert');
             },
             editor: {
                 xtype: 'combobox',
                 store: statusStore,
-                displayField: 'display',
+                displayField: 'wert',
                 valueField: 'id',
                 allowBlank: false,
                 editable: false
-            }
+            },
+            sortable: false,
         }, {
             header: 'Text',
-            dataIndex: 'skommentar',
+            dataIndex: 'text',
             flex: 1,
             editor: {
                 allowBlank: true,
                 maxLength: 1000,
                 enforceMaxLength: true
-            }
+            },
+            sortable: false,
         }];
         this.listeners = {
            select: {
@@ -160,7 +165,7 @@ Ext.define('Lada.view.grid.Status', {
         }
     },
     /**
-     * Activate the Remove Button
+     * Activate the "Remove Button"
      */
     activateRemoveButton: function(selection, record) {
         var grid = this;
@@ -170,7 +175,7 @@ Ext.define('Lada.view.grid.Status', {
         }
     },
     /**
-     * Activate the Remove Button
+     * Deactivate the "Remove Button"
      */
     deactivateRemoveButton: function(selection, record) {
         var grid = this;
