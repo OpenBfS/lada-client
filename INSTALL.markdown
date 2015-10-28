@@ -50,46 +50,15 @@ Zur Installation von Sencha Cmd werden Ruby und Java benötigt.
 Bevor Sie die Anwendung kompilieren können, müssen Sie die im Abschnitt
 *Lizenzen und Bibliotheken* genannten Bibliotheken zum Projekt hinzufügen.
 
-
-Zum Kompilieren nutzen Sie die folgende Anweisung:
-
-```
-   $PATHTOSENCHACMD --sdk-path $PATHTOEXTJS compile \
-   --classpath=app,resources/lib/ext/upload,resources/lib/ext/i18n page \
-   -yui -i index.html -o build/index.html
-```
-
-Ersetzen Sie heirbei `$PATHTOSENCHACMD` mit dem Pfad zu Ihrer Installation von
-Sencha Cmd. $PATHTOEXTJS gibt den Pfad an, an dem sich Ihre Kopie von ExtJs
-befindet.
+Um die Anwendung zu erzeugen und alle notwendigen Bibliotheken an den richtigen
+Platz zu legen, passen Sie den Pfad zu SenchaCMD in der Datei `build.sh` an und
+führen Sie das Shell-Skript aus.
 
 
-Das Verzeichnis `build` enthält dann eine Datei `index.html` und eine Datei
-`lada.js`. Die Datei `lada.js` ist eine komprimierte Version der Anwendung und
-enthält alle benötigten Klassen.
-Für die Produktivversion müssen die folgenden Dateien zusätzlich in das
-Verzeichnis `build` kopiert werden:
+Das Verzeichnis `lada-client-VERSIONSNUMMER` enthält dann eine Datei `index.html`
+und eine Datei `lada.js`. Die Datei `lada.js` ist eine komprimierte Version der
+Anwendung und enthält alle benötigten Klassen.
 
-|  Quelldatei                                            |   Zieldatei                                                 |
-|--------------------------------------------------------|-------------------------------------------------------------|
-| extjs/resources/css/ext-all-gray.css                   | build/extjs/resources/css/ext-all-gray.css                  |
-| extjs/resources/ext-theme-gray/ext-theme-gray-all.css  | build/extjs/resources/ext-theme-gray/ext-theme-gray-all.css |
-| resources/i18n/Lada.properties                         | build/resources/i18n/Lada.properties                        |
-| resources/i18n/Lada_de-DE.properties                   | build/resources/i18n/Lada_de-DE.properties                  |
-| resources/img/*                                        | build/ressources/img*                                       |
-| resources/lib/* (alles ausser ext Ordner)              | build/resources/lib                                         |
-
-
-Um OpenLayers als "Single File" Version bereit zu haben, gehen Sie in das
-Verzeichnis `build/resources/lib/OpenLayers` und führen Sie den folgenden Befehl
-aus:
-
-```
-python build.py
-```
-
-Dies erstellt eine Datei `OpenLayers.js` innerhalb des Verzeichnisses.
-Diese wird in der Webanwendung referenziert.
 
 ### Installation Apache
 Zunächst wird der Apache Webserver aus dem Repository installiert:
@@ -116,7 +85,7 @@ gebaute Version, welche sich im `build` Ordner befindet.
 ```
 cd /var/www/html
 mkdir lada
-cp -r build/* lada
+cp -r lada-client-VERSIONSNUMMER/* lada
 ```
 
 *Wichtig um SELinux dazu zu überreden das neue Verzeichnis auch zu servieren:*
@@ -231,6 +200,17 @@ wget https://github.com/ivan-novakov/extjs-upload-widget/archive/1.1.1.zip -O Ex
 ```
 
 Die Dateien sind im Ordner `resources/lib/` zu entpacken
+
+Um OpenLayers als "Single File" Version bereit zu haben, gehen Sie in das
+Verzeichnis `build/resources/lib/OpenLayers` und führen Sie den folgenden Befehl
+aus:
+
+```
+python build.py
+```
+
+Dies erstellt eine Datei `OpenLayers.js` innerhalb des Verzeichnisses.
+
 
 ```
 cd ..
