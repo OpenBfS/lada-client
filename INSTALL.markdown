@@ -18,19 +18,10 @@ http://wald.intevation.org/projects/lada
 Die folgenden Hinweise beziehen sich auf die Installation und Einrichtung auf
 Basis eines Oracle-RedHat Linux Systems.
 
-Der Lada-Client ist eine Anwendung die auf dem Framework ExtJs 4.2.1 basiert,
-Damit der Client funktioniert müssen Sie dieses Framework herunterladen und
-entpacken. Dies kann direkt in das root-Verzeichnis des Lada-Clients geschehen.
+Der Lada-Client ist eine Anwendung die auf dem Framework ExtJs 4.2.1
+(GPL-Version) basiert, welches mit `install-dependencies.sh` heruntergeladen
+und installiert wird.
 
-Für Applikationen die ebenfalls unter der GPL lizenziert wird - so wie der Lada
-Client - kann ExtJs als [GPL Version heruntergeladen](http://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip)
-werden.
-
-Legen Sie nach dem Entpacken einen Symlink auf dieses Verzeichnis an:
-
-```
-ln -s ext-4.2.1.883 extjs
-```
 
 ### Kompilieren und Minifizieren der Anwendung
 
@@ -48,13 +39,12 @@ Die Fa. Sencha beschreibt die Installation von Sencha Cmd in der
 Zur Installation von Sencha Cmd werden Ruby und Java benötigt.
 
 Bevor Sie die Anwendung kompilieren können, müssen Sie die im Abschnitt
-*Lizenzen und Bibliotheken* genannten Bibliotheken zum Projekt hinzufügen.
+*Lizenzen und Bibliotheken* genannten Bibliotheken mit
+`install-dependencies.sh` zum Projekt hinzufügen.
 
 Um die Anwendung zu erzeugen und alle notwendigen Bibliotheken an den richtigen
 Platz zu legen, passen Sie den Pfad zu SenchaCMD in der Datei `build.sh` an und
 führen Sie das Shell-Skript aus.
-
-
 Das Verzeichnis `lada-client-VERSIONSNUMMER` enthält dann eine Datei `index.html`
 und eine Datei `lada.js`. Die Datei `lada.js` ist eine komprimierte Version der
 Anwendung und enthält alle benötigten Klassen.
@@ -147,8 +137,8 @@ Der Lada-Client leitet in Zusammenarbeit mit dem Server automatisch an diesen we
 
 # Lizenzen und Bibliotheken
 
-Die Anwendung verwendet mehrere Unterkomponenten, diese sind typischerweise im
-Ordner `resources/lib` zu finden.
+Die Anwendung verwendet mehrere Unterkomponenten, die mit
+`install-dependencies.sh` in `resources/lib` installiert werden.
 
 Folgende Bibliotheken werden neben ExtJs verwendet:
 
@@ -163,11 +153,10 @@ Folgende Bibliotheken werden neben ExtJs verwendet:
    https://github.com/openlayers/openlayers
    2-Clause BSD-License
 
-Diese sind im Ordner `resources/lib` zu finden, und werden in der `Index.html`
-referenziert.
+Diese werden in der `Index.html` referenziert.
 
-Im Ordner resources/lib/ext befinden sich Bibliotheken die ExtJs ergänzen und in
-der Datei `app.js` aufgeführt werden.
+In `resources/lib/ext` werden Bibliotheken installiert, die ExtJs
+ergänzen und in der Datei `app.js` aufgeführt werden:
 
  * Ext.i18n.Bundle 0.3.3 (referenced as Ext.i18n in app.js)
    https://github.com/elmasse/Ext.i18n.Bundle/tree/v0.3.3
@@ -175,67 +164,3 @@ der Datei `app.js` aufgeführt werden.
  * Ext.ux.upload 1.1.1
    https://github.com/ivan-novakov/extjs-upload-widget/tree/1.1.1
    3-Clause BSD-License
-
-
-## Installation der Bibliotheken
-
-Die aufgeführten Bibliotheken können über den Link zu Github als zip-Datei
-heruntergeladen werden.
-
-Dabei ist auf die korrekte Versionsnummer zu achten, falls dies in der Liste
-oben angegeben wurde.
-
-```
-cd /var/www/html/lada/resources/
-mkdir lib/
-cd lib
-wget https://github.com/eligrey/FileSaver.js/archive/master.zip -O FileSaver-js.zip
-wget https://github.com/eligrey/Blob.js/archive/master.zip -O Blob-js.zip
-wget https://github.com/openlayers/openlayers/archive/release-2.13.1.zip -O OpenLayers-2-13-1.zip
-
-mkdir ext
-cd ext
-wget https://github.com/elmasse/Ext.i18n.Bundle/archive/v0.3.3.zip -O Ext-i18n-Bundle-v0-3-3.zip
-wget https://github.com/ivan-novakov/extjs-upload-widget/archive/1.1.1.zip -O Ext-ux-Upload-1-1-1.zip
-```
-
-Die Dateien sind im Ordner `resources/lib/` zu entpacken
-
-Um OpenLayers als "Single File" Version bereit zu haben, gehen Sie in das
-Verzeichnis `build/resources/lib/OpenLayers` und führen Sie den folgenden Befehl
-aus:
-
-```
-python build.py
-```
-
-Dies erstellt eine Datei `OpenLayers.js` innerhalb des Verzeichnisses.
-
-
-```
-cd ..
-unzip FileSaver-js.zip
-unzip Blob-js.zip
-unzip OpenLayers-2-13-1.zip
-
-cd ext
-unzip Ext-i18n-Bundle-v0-3-3.zip
-unzip Ext-ux-Upload-1-1-1.zip
-```
-
-Zum einfacheren Zugriff auf die Bibliothek, symbolische Links erstellen.
-Dies ist praktisch wenn die Bibliothek ausgetauscht wird,
-dann müssen die Quelltexte nicht angepasst werden
-
-```
-cd ..
-ln -s Blob.js-master Blob
-ln -s FileSaver.js-master FileSaver
-ln -s openlayers-release-2.13.1/build OpenLayers
-
-cd ext
-ln -s Ext.i18n.Bundle-0.3.3/i18n i18n
-ln -s extjs-upload-widget-1.1.1/lib/upload upload
-```
-
-Somit ist die Installation der Bibliotheken abgeschlossen.
