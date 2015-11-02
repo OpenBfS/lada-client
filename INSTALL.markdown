@@ -129,11 +129,11 @@ weitergeleitet.
 
 ### Authentifizierung
 
-Die Authentifizierung geschieht derzeit gegen einen OpenID-Server.
-Früher Ansätze nutzten LDAP, in Zukunft soll auch Authentifizierung via SAML2
-möglich sein.
-
-Der Lada-Client leitet in Zusammenarbeit mit dem Server automatisch an diesen weiter.
+Derzeit wird Authentifizierung durch Shibboleth gewährleistet. Dies wird
+komplett durch den Webserver erledigt. Dieses muss daher entsprechen
+konfiguriert werden. Die Anwendung selbst führt keine Authentifizierung mehr
+durch.
+Frühere Ansätze zur Authentifizierung nutzten OpenId oder LDAP
 
 # Lizenzen und Bibliotheken
 
