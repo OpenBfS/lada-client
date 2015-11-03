@@ -93,7 +93,7 @@ Ext.define('Lada.view.grid.Status', {
             header: 'Status',
             dataIndex: 'statusWert',
             renderer: function(value) {
-                if (!value || value === '') {
+                if (value===null || value === '') {
                     return '';
                 }
                 return statusStore.getById(value).get('wert');

@@ -155,7 +155,7 @@ Ext.define('Lada.view.form.Messung', {
             function(records, operation, success) {
                 var ret;
                 var i18n = Lada.getApplication().bundle;
-                if (sStore.getTotalCount() === 0) {
+                if (sStore.getTotalCount() === 0 || !statusId) {
                     ret = 0;
                 }
                 else {
