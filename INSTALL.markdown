@@ -64,7 +64,7 @@ Die Konfiguration, welche Module beim Start des Apache geladen werden, erfolgt
 in der Datei `/etc/httpd/conf`. Die zu ladende Module sind in dieser Datei mit
 der Option `LoadModule` angegeben. Folgende Module werden benötigt:
 
-    * headers_module: Setzten der Header nach der Authentifizierung
+    * headers_module: Setzen der Header nach der Authentifizierung
     * proxy_module: Reverse Proxy des Apache zum Lada-Server
 
 ### Einrichtung der Anwendung
@@ -102,30 +102,15 @@ Daten laden zu können, ist es notwendig den Server weiter zu konfigurieren.
 ```
 
 Dies erlaubt dem Apache grundsätzlich sich mit einem anderen Dienst zu verbinden.
-Nun muss noch ein Reverse-Proxy eingerichtet werden. Dieser ist nur für
-bestimmte Adressen aktiv.
 
+Nun muss noch ein Reverse-Proxy eingerichtet werden. Hierzu kann die Datei
+`custom-vhosts.conf` unter `/etc/httpd/conf.d/lada.conf` abgelegt werden.
+Die URL für den Lada-Server muss darin ggf. angepasst werden.
 Sollte aus dem Lada-Client heraus mittels PrintApp in mapfish-print gedruckt werden,
-so ist auch der zweite Proxy notwendig.
-
-Folgende Datei sollte unter `/etc/httpd/conf.d/lada.conf` angelegt werden:
-```
-    <VirtualHost *:80>
-        ServerAdmin webmaster@localhost
-        #ServerName dummy-host.example.com
-        ErrorLog logs/lada-error_log
-        CustomLog logs/lada-access_log common
-
-        # Set multiple Proxys
-        ProxyPass /lada/server http://LADASERVER/lada
-        ProxyPassReverse /lada/server http://LADASERVER/lada
-        # Add Printing
-        ProxyPass /lada-client/lada-printer http://MAPFISH-PRINT-URL/lada_print
-        ProxyPassReverse /lada-client/lada-printer http://MAPFISH-PRINT-URL/lada_print
-    </VirtualHost>
-```
-Alle Anfragen an die Adresse `/lada/service`, werden nun an den Server
-weitergeleitet.
+so ist auch der zweite (in `custom-vhosts.conf` auskommentierte) Proxy
+notwendig.
+Die RequestHeader-Zeilen sind nur für ein Test-Setup ohne
+Shibboleth-Authentifizierung gedacht und müssen ansonsten entfernt werden.
 
 ### Authentifizierung
 
