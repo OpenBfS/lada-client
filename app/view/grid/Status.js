@@ -95,10 +95,14 @@ Ext.define('Lada.view.grid.Status', {
             header: 'Stufe',
             dataIndex: 'statusStufe',
             renderer: function(value) {
-                if (value===null || value === '' || value === 0) {
+                if (value===null || value === '') {
                     return 'Fehlerhafte Daten';
                 }
-                var r = statusStufeStore.getById(value).get('stufe')
+                var item = statusStufeStore.getById(value);
+                var r;
+                if (item) {
+                    r = item.get('stufe');
+                }
                 if (r === null) {
                     r = 'Error';
                 }
@@ -120,7 +124,11 @@ Ext.define('Lada.view.grid.Status', {
                 if (value===null || value === '') {
                     return '';
                 }
-                var r = statusWerteStore.getById(value).get('wert')
+                var item = statusWerteStore.getById(value);
+                var r;
+                if (item) {
+                    r = item.get('wert');
+                }
                 if (r === null) {
                     r = 'Error';
                 }
