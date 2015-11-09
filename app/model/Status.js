@@ -27,10 +27,12 @@ Ext.define('Lada.model.Status', {
         name: 'erzeuger'
     }, {
         name: 'statusStufe',
-        type: 'int'
+        type: 'int',
+        defaultValue: 1
     }, {
         name: 'statusWert',
-        type: 'int'
+        type: 'int',
+        defaultValue: 0
     }, {
         name: 'treeModified',
         serialize: function(value) {

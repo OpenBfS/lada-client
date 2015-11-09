@@ -46,8 +46,10 @@ Ext.define('Lada.view.grid.Status', {
         });
         this.plugins = [this.rowEditing];
 
-        var statusStore = Ext.create('Lada.store.StatusWerte');
-        statusStore.load();
+        var statusWerteStore = Ext.create('Lada.store.StatusWerte');
+        statusWerteStore.load();
+        var statusStufeStore = Ext.create('Lada.store.StatusStufe');
+        statusStufeStore.load();
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -90,17 +92,43 @@ Ext.define('Lada.view.grid.Status', {
             },
             sortable: false,
         }, {
+            header: 'Stufe',
+            dataIndex: 'statusStufe',
+            renderer: function(value) {
+                if (value===null || value === '' || value === 0) {
+                    return 'Fehlerhafte Daten';
+                }
+                var r = statusStufeStore.getById(value).get('stufe')
+                if (r === null) {
+                    r = 'Error';
+                }
+                return r;
+            },
+            editor: {
+                xtype: 'combobox',
+                store: statusStufeStore,
+                displayField: 'stufe',
+                valueField: 'id',
+                allowBlank: false,
+                editable: false
+            },
+            sortable: false,
+        }, {
             header: 'Status',
             dataIndex: 'statusWert',
             renderer: function(value) {
                 if (value===null || value === '') {
                     return '';
                 }
-                return statusStore.getById(value).get('wert');
+                var r = statusWerteStore.getById(value).get('wert')
+                if (r === null) {
+                    r = 'Error';
+                }
+                return r;
             },
             editor: {
                 xtype: 'combobox',
-                store: statusStore,
+                store: statusWerteStore,
                 displayField: 'wert',
                 valueField: 'id',
                 allowBlank: false,

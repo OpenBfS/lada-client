@@ -9,13 +9,13 @@
 /**
  * Model class for StatusWerte
  */
-Ext.define('Lada.model.StatusWerte', {
+Ext.define('Lada.model.StatusStufe', {
     extend: 'Ext.data.Model',
 
     fields: [{
         name: 'id'
     }, {
-        name: 'wert',
+        name: 'stufe',
         type: 'string'
     }],
 
@@ -23,7 +23,7 @@ Ext.define('Lada.model.StatusWerte', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/statuswert',
+        url: 'lada-server/statusstufe',
         reader: {
             type: 'json',
             root: 'data'
@@ -31,3 +31,4 @@ Ext.define('Lada.model.StatusWerte', {
     }
 
 });
+
