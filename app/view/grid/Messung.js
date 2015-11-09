@@ -223,11 +223,7 @@ Ext.define('Lada.view.grid.Messung', {
                 scope: this,
                 callback: function(records, operation, success) {
                     if (success) {
-                        try {
-                            val = sta.getById(value).get('wert');
-                        }
-                        catch (e) {
-                        }
+                        val = sta.getById(value).get('wert');
                     }
                     Ext.fly(opts.divId).update(val);
                 }

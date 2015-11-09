@@ -176,8 +176,9 @@ Ext.define('Lada.view.form.Messung', {
         if (!swStore) {
             var swStore = Ext.create('Lada.store.StatusWerte');
         }
-        swStore.on('load',
-            function(records, operation, success) {
+        swStore.load({
+            scope: this,
+            callback: function(records, operation, success) {
                 var i18n = Lada.getApplication().bundle;
                 var msg = i18n.getMsg('load.statuswert.error');
                 var textfield = this.down('[name=status]');
@@ -186,8 +187,7 @@ Ext.define('Lada.view.form.Messung', {
                 }
                 textfield.setRawValue(msg);
             },
-            this);
-        swStore.load();
+        });
     },
 
     setMessages: function(errors, warnings) {
