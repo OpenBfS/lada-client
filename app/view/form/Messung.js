@@ -152,8 +152,18 @@ Ext.define('Lada.view.form.Messung', {
     },
 
     setRecord: function(record) {
-        this.getForm().loadRecord(record);
-        this.retrieveStatus(record.id, record.get('status'));
+        var form = this.getForm();
+        form.loadRecord(record);
+        if (record.getId()){
+            this.retrieveStatus(record.id, record.get('status'));
+        }
+        else {
+            //remove the StatusWert and StatusStufe field from the form
+            var sw = this.down('[name=status]');
+            var ss = this.down('[name=stufe]');
+            ss.hide();
+            sw.hide();
+        }
     },
 
     retrieveStatus: function(messungsId, statusId) {
