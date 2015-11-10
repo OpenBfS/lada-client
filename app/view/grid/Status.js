@@ -47,9 +47,17 @@ Ext.define('Lada.view.grid.Status', {
         this.plugins = [this.rowEditing];
 
         var statusWerteStore = Ext.create('Lada.store.StatusWerte');
-        statusWerteStore.load(); //add params messungid
+        statusWerteStore.load({
+            //params: {
+            //    messungsId: this.recordId
+            //}
+        });
         var statusStufeStore = Ext.create('Lada.store.StatusStufe');
-        statusStufeStore.load(); //add params messungid
+        statusStufeStore.load({
+            //params: {
+            //    messungsId: this.recordId
+            //}
+        });
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -76,11 +84,16 @@ Ext.define('Lada.view.grid.Status', {
             header: 'Erzeuger',
             dataIndex: 'erzeuger',
             renderer: function(value) {
+                var r = '';
                 if (!value || value === '') {
-                    return '';
+                    r = 'Error';
                 }
                 var mstore = Ext.data.StoreManager.get('messstellen');
-                return mstore.getById(value).get('messStelle');
+                var item = mstore.getById(value);
+                if (item) {
+                    r = item.get('messStelle');
+                }
+                return r;
             },
             editor: {
                 xtype: 'combobox',
@@ -104,14 +117,6 @@ Ext.define('Lada.view.grid.Status', {
                     r = item.get('stufe');
                 }
                 return r;
-            },
-            editor: {
-                xtype: 'combobox',
-                store: statusStufeStore,
-                displayField: 'stufe',
-                valueField: 'id',
-                allowBlank: false,
-                editable: false
             },
             sortable: false,
         }, {

@@ -155,7 +155,7 @@ Ext.define('Lada.view.form.Messung', {
         var form = this.getForm();
         form.loadRecord(record);
         if (record.getId()){
-            this.retrieveStatus(record.id, record.get('status'));
+            this.retrieveStatus(record.getId(), record.get('status'));
         }
         else {
             //remove the StatusWert and StatusStufe field from the form
@@ -171,14 +171,16 @@ Ext.define('Lada.view.form.Messung', {
         var msg = i18n.getMsg('load.statuswert');
         var textfield = this.down('[name=status]');
 
-        textfield.setRawValue(msg);
-
-        var sStore = Ext.StoreManager.lookup('Status');
-        if (!sStore) {
-            sStore = Ext.create('Lada.store.Status');
+        if(textfield) {
+            textfield.setRawValue(msg);
         }
-        sStore.on('load',
-            function(records, operation, success) {
+
+        var sStore = Ext.create('Lada.store.Status');
+        sStore.load({
+            params: {
+                messungsId: messungsId
+            },
+            callback: function(records, operation, success) {
                 var sw, ss;
                 var i18n = Lada.getApplication().bundle;
                 if (sStore.getTotalCount() === 0 || !statusId) {
@@ -191,11 +193,7 @@ Ext.define('Lada.view.form.Messung', {
                 this.setStatusWert(sw);
                 this.setStatusStufe(ss);
             },
-            this);
-        sStore.load({
-            params: {
-                messungsId: messungsId
-            }
+            scope: this
         });
     },
 
@@ -216,7 +214,9 @@ Ext.define('Lada.view.form.Messung', {
                         msg = item.get('wert');
                     }
                 }
-                textfield.setRawValue(msg);
+                if (textfield) {
+                    textfield.setRawValue(msg);
+                }
             },
         });
     },
@@ -238,7 +238,9 @@ Ext.define('Lada.view.form.Messung', {
                         msg = item.get('stufe');
                     }
                 }
-                textfield.setRawValue(msg);
+                if (textfield) {
+                    textfield.setRawValue(msg);
+                }
             },
         });
     },
