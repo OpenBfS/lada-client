@@ -75,12 +75,16 @@ Ext.define('Lada.view.grid.PKommentar', {
             dataIndex: 'erzeuger',
             width: 140,
             renderer: function(value) {
+                var r = '';
                 if (!value || value === '') {
-                    return '';
+                    r = 'Error';
                 }
                 var store = Ext.data.StoreManager.get('messstellen');
                 var record = store.getById(value);
-                return record.get('messStelle');
+                if (record) {
+                  r = record.get('messStelle');
+                }
+                return r;
             },
             editor: {
                 xtype: 'combobox',

@@ -68,11 +68,16 @@ Ext.define('Lada.view.grid.MKommentar', {
             header: 'Erzeuger',
             dataIndex: 'erzeuger',
             renderer: function(value) {
+                var r = '';
                 if (!value || value === '') {
-                    return '';
+                    r = 'Error';
                 }
-                var mstore = Ext.data.StoreManager.get('messstellen');
-                return mstore.getById(value).get('messStelle');
+                var store = Ext.data.StoreManager.get('messstellen');
+                var record = store.getById(value);
+                if (record) {
+                  r = record.get('messStelle');
+                }
+                return r;
             },
             editor: {
                 xtype: 'combobox',
