@@ -193,10 +193,7 @@ Ext.define('Lada.view.form.Messung', {
      * Updates the Messungform and fills the Statuswert
      */
     setStatusWert: function(value){
-        var swStore = Ext.StoreManager.lookup('StatusWerte');
-        if (!swStore) {
-            var swStore = Ext.create('Lada.store.StatusWerte');
-        }
+        var swStore = Ext.create('Lada.store.StatusWerte');
         swStore.load({
             scope: this,
             callback: function(records, operation, success) {
@@ -218,10 +215,7 @@ Ext.define('Lada.view.form.Messung', {
      * Updates the Messungform and fills the StatusStufe
      */
     setStatusStufe: function(value){
-        var ssStore = Ext.StoreManager.lookup('StatusStufe');
-        if (!ssStore) {
-            var ssStore = Ext.create('Lada.store.StatusStufe');
-        }
+        var ssStore = Ext.create('Lada.store.StatusStufe');
         ssStore.load({
             scope: this,
             callback: function(records, operation, success) {

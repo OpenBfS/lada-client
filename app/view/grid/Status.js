@@ -47,9 +47,9 @@ Ext.define('Lada.view.grid.Status', {
         this.plugins = [this.rowEditing];
 
         var statusWerteStore = Ext.create('Lada.store.StatusWerte');
-        statusWerteStore.load();
+        statusWerteStore.load(); //add params messungid
         var statusStufeStore = Ext.create('Lada.store.StatusStufe');
-        statusStufeStore.load();
+        statusStufeStore.load(); //add params messungid
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -95,16 +95,13 @@ Ext.define('Lada.view.grid.Status', {
             header: 'Stufe',
             dataIndex: 'statusStufe',
             renderer: function(value) {
+                var r;
                 if (value===null || value === '') {
-                    return 'Fehlerhafte Daten';
+                    r = 'Error';
                 }
                 var item = statusStufeStore.getById(value);
-                var r;
                 if (item) {
                     r = item.get('stufe');
-                }
-                if (r === null) {
-                    r = 'Error';
                 }
                 return r;
             },
@@ -121,16 +118,13 @@ Ext.define('Lada.view.grid.Status', {
             header: 'Status',
             dataIndex: 'statusWert',
             renderer: function(value) {
+                var r;
                 if (value===null || value === '') {
-                    return '';
+                    r = 'Error';
                 }
                 var item = statusWerteStore.getById(value);
-                var r;
                 if (item) {
                     r = item.get('wert');
-                }
-                if (r === null) {
-                    r = 'Error';
                 }
                 return r;
             },
