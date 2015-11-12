@@ -164,6 +164,16 @@ Ext.application({
             storeId: 'statusstufe',
             autoLoad: 'true'
         });
+        //A Store containing all MST a User is allowed to set.
+        Ext.create('Lada.store.Messstellen', {
+            storeId: 'messstellenFiltered',
+            filters: function(item) {
+                if (Ext.Array.contains(Lada.mst, item.get('id'))) {
+                    return true;
+                }
+                return false;
+            }
+        });
     },
 
     getServerVersion: function() {

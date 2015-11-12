@@ -90,7 +90,7 @@ Ext.define('Lada.view.grid.Status', {
             },
             editor: {
                 xtype: 'combobox',
-                store: Ext.data.StoreManager.get('messstellen'),
+                store: Ext.data.StoreManager.get('messstellenFiltered'),
                 displayField: 'messStelle',
                 valueField: 'id',
                 allowBlank: false,

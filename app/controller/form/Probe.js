@@ -45,6 +45,10 @@ Ext.define('Lada.controller.form.Probe', {
      * The Messtellen Store contains ALL Messtellen.
      * Filter the store in this combobox to reduce the choices
      * to the subset which the user is allowed to use.
+     *
+     * The app.js also creates a messstellenFiltered store,
+     * which contains this selection. Maybe this can be used here in future
+     * TODO
      */
     filter: function(field) {
         var fil =  Ext.create('Ext.util.Filter', {
