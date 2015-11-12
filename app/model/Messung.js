@@ -22,6 +22,10 @@ Ext.define('Lada.model.Messung', {
         type: 'boolean',
         persist: false
     }, {
+        name: 'statusEdit',
+        type: 'boolean',
+        persist: false
+    }, {
         name: 'probeId'
     }, {
         name: 'mmtId'
@@ -39,7 +43,7 @@ Ext.define('Lada.model.Messung', {
         },
         defaultValue: new Date()
     }, {
-        name: 'status',
+        name: 'status'
     }, {
         name: 'fertig',
         type: 'boolean'

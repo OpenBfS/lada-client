@@ -94,6 +94,7 @@ Ext.define('Lada.controller.grid.Status', {
 
         //retrieve the readOnly parameters
         var readonlyWin = context.view.up('window').record.get('readonly');
+        //var statusEdit = context.view.up('window').record.get('statusEdit');
 
         var readonlyRec = record.get('readonly');
         var grid = context.view.up('grid');

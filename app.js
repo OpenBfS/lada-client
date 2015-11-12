@@ -157,10 +157,12 @@ Ext.application({
             storeId: 'verwaltungseinheiten'
         });
         Ext.create('Lada.store.StatusWerte', {
-            storeId: 'statuswerte'
+            storeId: 'statuswerte',
+            autoLoad: true
         });
         Ext.create('Lada.store.StatusStufe', {
-            storeId: 'statusstufe'
+            storeId: 'statusstufe',
+            autoLoad: 'true'
         });
     },
 

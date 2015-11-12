@@ -72,7 +72,7 @@ Ext.define('Lada.view.grid.Status', {
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
             width: 110,
-            sortable: false,
+            sortable: false
         }, {
             header: 'Erzeuger',
             dataIndex: 'erzeuger',
@@ -96,7 +96,7 @@ Ext.define('Lada.view.grid.Status', {
                 allowBlank: false,
                 editable: false
             },
-            sortable: false,
+            sortable: false
         }, {
             header: 'Stufe',
             dataIndex: 'statusStufe',
@@ -112,7 +112,7 @@ Ext.define('Lada.view.grid.Status', {
                 }
                 return r;
             },
-            sortable: false,
+            sortable: false
         }, {
             header: 'Status',
             dataIndex: 'statusWert',
@@ -137,7 +137,7 @@ Ext.define('Lada.view.grid.Status', {
                 allowBlank: false,
                 editable: false
             },
-            sortable: false,
+            sortable: false
         }, {
             header: 'Text',
             dataIndex: 'text',
@@ -147,7 +147,7 @@ Ext.define('Lada.view.grid.Status', {
                 maxLength: 1000,
                 enforceMaxLength: true
             },
-            sortable: false,
+            sortable: false
         }];
         this.initData();
         this.callParent(arguments);

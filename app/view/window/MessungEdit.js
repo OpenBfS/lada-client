@@ -171,6 +171,13 @@ Ext.define('Lada.view.window.MessungEdit', {
                 else {
                     this.enableForm();
                 }
+                //Check if it is allowed to edit Status
+                if (this.record.get('statusEdit') === true) {
+                    this.enableStatusEdit();
+                }
+                else {
+                    this.disableStatusEdit();
+                }
             },
             scope: this
         });
@@ -200,10 +207,9 @@ Ext.define('Lada.view.window.MessungEdit', {
     disableChildren: function() {
             this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(true);
             this.down('fset[name=messwerte]').down('messwertgrid').readOnly = true;
-            this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(true);
-            this.down('fset[name=messungstatus]').down('statusgrid').readOnly = true;
             this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(true);
             this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = true;
+            this.disableStatusEdit();
     },
 
     /**
@@ -212,11 +218,26 @@ Ext.define('Lada.view.window.MessungEdit', {
     enableChildren: function() {
             this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(false);
             this.down('fset[name=messwerte]').down('messwertgrid').readOnly = false;
-            this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(false);
-            this.down('fset[name=messungstatus]').down('statusgrid').readOnly = false;
             this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(false);
             this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = false;
+            this.enableStatusEdit();
     },
+
+    /**
+     * Enable to edit the statusgrid
+     */
+     enableStatusEdit: function () {
+            this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(false);
+            this.down('fset[name=messungstatus]').down('statusgrid').readOnly = false;
+     },
+
+    /**
+     * Disable to edit the statusgrid
+     */
+     disableStatusEdit: function () {
+            this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(true);
+            this.down('fset[name=messungstatus]').down('statusgrid').readOnly = true;
+     },
 
     /**
      * Instructs the fields / forms listed in this method to set a message.

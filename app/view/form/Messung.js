@@ -128,7 +128,7 @@ Ext.define('Lada.view.form.Messung', {
                     preventMark: true, //Do not display error msg.
                     validateValue: function() {
                         return true; //this field is always valid
-                    },
+                    }
                 }, {
                     xtype: 'textfield',
                     name: 'stufe',
@@ -144,7 +144,7 @@ Ext.define('Lada.view.form.Messung', {
                     preventMark: true, //Do not display error msg.
                     validateValue: function() {
                         return true; //this field is always valid
-                    },
+                    }
                 }]
             }]
         }];
@@ -209,6 +209,7 @@ Ext.define('Lada.view.form.Messung', {
         if (!swStore) {
             //Set the textfield asynchronously
             swStore = Ext.create('Lada.store.StatusWerte');
+            console.log('loading sw store messungform');
             swStore.load({
                 scope: this,
                 callback: function(records, operation, success) {
@@ -221,7 +222,7 @@ Ext.define('Lada.view.form.Messung', {
                     if (textfield) {
                         textfield.setRawValue(msg);
                     }
-                },
+                }
             });
         }
         else {
@@ -260,7 +261,7 @@ Ext.define('Lada.view.form.Messung', {
                     if (textfield) {
                         textfield.setRawValue(msg);
                     }
-                },
+                }
             });
         }
         else {
