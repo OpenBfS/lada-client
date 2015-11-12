@@ -132,6 +132,7 @@ Ext.define('Lada.view.grid.Status', {
             editor: {
                 xtype: 'combobox',
                 store: statusWerteStore,
+                queryMode: 'local',
                 displayField: 'wert',
                 valueField: 'id',
                 allowBlank: false,
