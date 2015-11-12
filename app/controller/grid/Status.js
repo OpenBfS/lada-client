@@ -93,23 +93,17 @@ Ext.define('Lada.controller.grid.Status', {
     toggleAllowedPermissions: function(context, record, index){
 
         //retrieve the readOnly parameters
-        var readonlyWin = context.view.up('window').record.get('readonly');
-        //var statusEdit = context.view.up('window').record.get('statusEdit');
+        var statusEdit = context.view.up('window').record.get('statusEdit');
 
-        var readonlyRec = record.get('readonly');
         var grid = context.view.up('grid');
 
         //retrieve the last record of the store
-        var lastRecord = context.getStore().last()
+        var lastRecord = context.getStore().last();
 
         //Check if edit is allowed
-        if (lastRecord == record &&
-            readonlyWin == false  &&
-            readonlyRec == false) {
-            grid.getPlugin('rowedit').enable()
-        }
-        else {
-            grid.getPlugin('rowedit').disable()
+        if (lastRecord != record ||
+            statusEdit === false) {
+            grid.getPlugin('rowedit').cancelEdit();
         }
     }
 

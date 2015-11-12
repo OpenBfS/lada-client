@@ -38,20 +38,7 @@ Ext.define('Lada.view.grid.Status', {
             clicksToMoveEditor: 1,
             autoCancel: false,
             disabled: true,
-            pluginId: 'rowedit',
-            listeners:{
-                // Make row ineditable when readonly is set to true
-                // Normally this would belong into a controller an not the view.
-                // But the RowEditPlugin is not handled there.
-                beforeedit: function(e, o) {
-                var readonlywin = o.grid.up('window').record.get('readonly');
-                    var readonlygrid = o.record.get('readonly');
-                    if (readonlywin == true || readonlygrid == true || this.disabled)  {
-                        return false;
-                    }
-                    return true;
-                }
-            }
+            pluginId: 'rowedit'
         });
         this.plugins = [this.rowEditing];
 
@@ -172,16 +159,9 @@ Ext.define('Lada.view.grid.Status', {
     setReadOnly: function(b) {
         if (b == true){
             //Readonly
-            if (this.getPlugin('rowedit')){
-                this.getPlugin('rowedit').disable();
-            }
             this.down('button[action=add]').disable();
         }else{
             //Writable
-            if (this.getPlugin('rowedit')){
-                this.getPlugin('rowedit').enable();
-            }
-            //this.down('button[action=delete]').enable();
             this.down('button[action=add]').enable();
         }
     }
