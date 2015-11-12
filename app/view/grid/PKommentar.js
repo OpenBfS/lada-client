@@ -69,7 +69,7 @@ Ext.define('Lada.view.grid.PKommentar', {
             dataIndex: 'datum',
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
-            width: 110,
+            width: 110
         }, {
             header: 'Erzeuger',
             dataIndex: 'erzeuger',
