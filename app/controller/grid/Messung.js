@@ -40,14 +40,24 @@ Ext.define('Lada.controller.grid.Messung', {
      */
     editItem: function(grid, record) {
         var probe = grid.up('window').record;
-        var win = Ext.create('Lada.view.window.MessungEdit', {
-            parentWindow: grid.up('window'),
-            probe: probe,
-            record: record,
-            grid: grid
-        });
-        win.show();
-        win.initData();
+        /* Only open a new Window when:
+           statusEdit = True
+           -or-
+            the value of status is not 0
+            the statusWert attribute is not present in the original data.
+            it is appended, when the value and name of the status were
+            determined.
+        */
+        if (record.get('statusEdit') || record.get('statusWert') > 0) {
+            var win = Ext.create('Lada.view.window.MessungEdit', {
+                parentWindow: grid.up('window'),
+                probe: probe,
+                record: record,
+                grid: grid
+            });
+            win.show();
+            win.initData();
+        }
     },
 
     /**
