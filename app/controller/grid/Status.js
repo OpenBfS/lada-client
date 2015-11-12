@@ -25,9 +25,6 @@ Ext.define('Lada.controller.grid.Status', {
             },
             'statusgrid button[action=add]': {
                 click: this.add
-            },
-            'statusgrid button[action=delete]': {
-                click: this.remove
             }
         });
     },
@@ -87,43 +84,6 @@ Ext.define('Lada.controller.grid.Status', {
         button.up('statusgrid').rowEditing.startEdit(lastrow, 1);
     },
 
-    /**
-     * A row can be removed from the grid with the remove
-     * function. It asks the user for confirmation
-     * If the removal was confirmed, it reloads the parent window on success,
-     * on failure, an error message is shown.
-     */
-     remove: function(button) {
-        var grid = button.up('grid');
-        var selection = grid.getView().getSelectionModel().getSelection()[0];
-        Ext.MessageBox.confirm('Messwert löschen', 'Sind Sie sicher?', function(btn) {
-            if (btn === 'yes') {
-                selection.destroy({
-                    success: function() {
-                        button.up('window').initData();
-                        grid.initData();
-                    },
-                    failure: function(request, response) {
-                        var json = response.request.scope.reader.jsonData;
-                        if (json) {
-                            if (json.message){
-                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title')
-                                    +' #'+json.message,
-                                    Lada.getApplication().bundle.getMsg(json.message));
-                            } else {
-                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
-                                    Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
-                            }
-                        } else {
-                            Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
-                                Lada.getApplication().bundle.getMsg('err.msg.response.body'));
-                        }
-                    }
-                });
-            }
-        });
-        grid.down('button[action=delete]').disable();
-    },
 
     /**
      * When a row in a grid is selected,
@@ -140,16 +100,6 @@ Ext.define('Lada.controller.grid.Status', {
 
         //retrieve the last record of the store
         var lastRecord = context.getStore().last()
-        //Check if remove is allowed
-        if (lastRecord == record &&
-            readonlyWin == false  &&
-            readonlyRec == false) {
-            grid.down('button[action=delete]').enable();
-        }
-        else {
-            grid.down('button[action=delete]').disable();
-        }
-
 
         //Check if edit is allowed
         if (lastRecord == record &&
