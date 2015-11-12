@@ -43,12 +43,17 @@ Ext.define('Lada.controller.grid.Messung', {
         /* Only open a new Window when:
            statusEdit = True
            -or-
-            the value of status is not 0
-            the statusWert attribute is not present in the original data.
-            it is appended, when the value and name of the status were
-            determined.
+           the value of status is not 0
+           -or-
+           the owner = True
+
+           the statusWert attribute is not present in the original data.
+           it is appended, when the value and name of the status were
+           determined.
         */
-        if (record.get('statusEdit') || record.get('statusWert') > 0) {
+        if (record.get('statusEdit')
+            || record.get('statusWert') > 0
+            || record.get('owner')) {
             var win = Ext.create('Lada.view.window.MessungEdit', {
                 parentWindow: grid.up('window'),
                 probe: probe,

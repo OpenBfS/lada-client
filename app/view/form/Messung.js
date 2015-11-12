@@ -201,48 +201,78 @@ Ext.define('Lada.view.form.Messung', {
      * Updates the Messungform and fills the Statuswert
      */
     setStatusWert: function(value){
-        var swStore = Ext.create('Lada.store.StatusWerte');
-        swStore.load({
-            scope: this,
-            callback: function(records, operation, success) {
-                var i18n = Lada.getApplication().bundle;
-                var msg = i18n.getMsg('load.statuswert.error');
-                var textfield = this.down('[name=status]');
-                if (success) {
-                    var item = swStore.getById(value);
-                    if (item) {
-                        msg = item.get('wert');
+        var swStore = Ext.data.StoreManager.get('statuswerte');
+        var i18n = Lada.getApplication().bundle;
+        var msg = i18n.getMsg('load.statuswert.error');
+        var textfield = this.down('[name=status]');
+
+        if (!swStore) {
+            //Set the textfield asynchronously
+            swStore = Ext.create('Lada.store.StatusWerte');
+            swStore.load({
+                scope: this,
+                callback: function(records, operation, success) {
+                    if (success) {
+                        var item = swStore.getById(value);
+                        if (item) {
+                            msg = item.get('wert');
+                        }
                     }
-                }
-                if (textfield) {
-                    textfield.setRawValue(msg);
-                }
-            },
-        });
+                    if (textfield) {
+                        textfield.setRawValue(msg);
+                    }
+                },
+            });
+        }
+        else {
+            //Set the textfield
+            var item = swStore.getById(value);
+            if (item) {
+                msg = item.get('wert');
+            }
+            if (textfield) {
+                textfield.setRawValue(msg);
+            }
+        }
+
     },
 
     /**
      * Updates the Messungform and fills the StatusStufe
      */
     setStatusStufe: function(value){
-        var ssStore = Ext.create('Lada.store.StatusStufe');
-        ssStore.load({
-            scope: this,
-            callback: function(records, operation, success) {
-                var i18n = Lada.getApplication().bundle;
-                var msg = i18n.getMsg('load.statusstufe.error');
-                var textfield = this.down('[name=stufe]');
-                if (success) {
-                    var item = ssStore.getById(value);
-                    if (item) {
-                        msg = item.get('stufe');
+        var ssStore = Ext.data.StoreManager.get('statusstufe')
+        var i18n = Lada.getApplication().bundle;
+        var msg = i18n.getMsg('load.statusstufe.error');
+        var textfield = this.down('[name=stufe]');
+        if (!ssStore) {
+            //set the value asynchronously
+            Ext.create('Lada.store.StatusStufe');
+            ssStore.load({
+                scope: this,
+                callback: function(records, operation, success) {
+                    if (success) {
+                        var item = ssStore.getById(value);
+                        if (item) {
+                            msg = item.get('stufe');
+                        }
                     }
-                }
-                if (textfield) {
-                    textfield.setRawValue(msg);
-                }
-            },
-        });
+                    if (textfield) {
+                        textfield.setRawValue(msg);
+                    }
+                },
+            });
+        }
+        else {
+            //Set the value.
+            var item = ssStore.getById(value);
+            if (item) {
+                msg = item.get('stufe');
+            }
+            if (textfield) {
+                textfield.setRawValue(msg);
+            }
+        }
     },
 
     setMessages: function(errors, warnings) {

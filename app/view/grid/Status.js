@@ -25,6 +25,15 @@ Ext.define('Lada.view.grid.Status', {
     allowDeselect: true,
 
     initComponent: function() {
+        var statusWerteStore = Ext.create('Lada.store.StatusWerte');
+        statusWerteStore.load({
+            params: {
+                messungsId: this.recordId
+            }
+        });
+        var statusStufeStore = Ext.create('Lada.store.StatusStufe');
+        statusStufeStore.load();
+
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false,
@@ -46,18 +55,6 @@ Ext.define('Lada.view.grid.Status', {
         });
         this.plugins = [this.rowEditing];
 
-        var statusWerteStore = Ext.create('Lada.store.StatusWerte');
-        statusWerteStore.load({
-            //params: {
-            //    messungsId: this.recordId
-            //}
-        });
-        var statusStufeStore = Ext.create('Lada.store.StatusStufe');
-        statusStufeStore.load({
-            //params: {
-            //    messungsId: this.recordId
-            //}
-        });
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -108,11 +105,12 @@ Ext.define('Lada.view.grid.Status', {
             header: 'Stufe',
             dataIndex: 'statusStufe',
             renderer: function(value) {
+                var sta = Ext.data.StoreManager.get('statusstufe');
                 var r;
                 if (value===null || value === '') {
                     r = 'Error';
                 }
-                var item = statusStufeStore.getById(value);
+                var item = sta.getById(value);
                 if (item) {
                     r = item.get('stufe');
                 }
@@ -123,11 +121,13 @@ Ext.define('Lada.view.grid.Status', {
             header: 'Status',
             dataIndex: 'statusWert',
             renderer: function(value) {
+                var sta = Ext.data.StoreManager.get('statuswerte');
+                //This store is NOT used in the editor...
                 var r;
                 if (value===null || value === '') {
                     r = 'Error';
                 }
-                var item = statusWerteStore.getById(value);
+                var item = sta.getById(value);
                 if (item) {
                     r = item.get('wert');
                 }

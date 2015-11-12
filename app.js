@@ -42,7 +42,9 @@ Ext.application({
         'Lada.store.Probenzusaetze',
         'Lada.store.Staaten',
         'Lada.store.Umwelt',
-        'Lada.store.Verwaltungseinheiten'
+        'Lada.store.Verwaltungseinheiten',
+        'Lada.store.StatusWerte',
+        'Lada.store.StatusStufe'
     ],
     bundle: {
         bundle: 'Lada',
@@ -153,6 +155,12 @@ Ext.application({
         });
         Ext.create('Lada.store.Verwaltungseinheiten', {
             storeId: 'verwaltungseinheiten'
+        });
+        Ext.create('Lada.store.StatusWerte', {
+            storeId: 'statuswerte'
+        });
+        Ext.create('Lada.store.StatusStufe', {
+            storeId: 'statusstufe'
         });
     },
 

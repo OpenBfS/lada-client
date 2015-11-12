@@ -85,7 +85,10 @@ Ext.define('Lada.view.grid.Messung', {
             renderer: function(value) {
                 var statusId = this.store.getById(value).get('status');
                 var divId = 'messung-status-item' + value;
-                this.updateStatus(value, divId, statusId);
+                //also fwd the record to the asynchronous loading of statuswerte
+                // in order to add the statuswert to the record,
+                // after the grid was rendered...
+                this.updateStatus(value, divId, statusId, this.store.getById(value));
                 return '<div id="' + divId + '">Lade...</div>';
             }
         }, {
@@ -140,11 +143,16 @@ Ext.define('Lada.view.grid.Messung', {
     },
 
     initData: function() {
+        this.setLoading(true);
         this.store = Ext.create('Lada.store.Messungen');
         this.store.load({
             params: {
                 probeId: this.recordId
-            }
+            },
+            callback: function (records, operation, success) {
+                this.setLoading(false);
+            },
+            scope: this
         });
     },
 
@@ -152,12 +160,12 @@ Ext.define('Lada.view.grid.Messung', {
      * Load the statusstore,
      * afterwards: retrieve the statusid
      */
-    updateStatus: function(value, divId, statusId) {
+    updateStatus: function(value, divId, statusId, record) {
         var statusStore = Ext.create('Lada.store.Status');
         statusStore.on('load',
             this.updateStatusColumn,
             this,
-            {divId: divId, statusId: statusId});
+            {divId: divId, statusId: statusId, record: record});
         statusStore.load({
             params: {
                 messungsId: value
@@ -211,23 +219,44 @@ Ext.define('Lada.view.grid.Messung', {
             value = 0;
         }
         else {
-            value = sstore.getById(opts.statusId).get('statusWert');
+            var rec = sstore.getById(opts.statusId);
+            if (rec) {
+                value = rec.get('statusWert');
+                //add the determined statuswert to the record.
+                // this is necessary to let the controller determine
+                // which actions are allowed.
+                opts.record.data.statusWert = value;
+            }
         }
         if (Ext.fly(opts.divId)) {
-            var sta = Ext.StoreManager.lookup('StatusWerte');
-            if (!sta) {
-                var sta = Ext.create('Lada.store.StatusWerte');
-            }
+            //Try to get the statuswerte store,
+            // If it does not  exist, create a new one.
+            var sta = Ext.data.StoreManager.getByKey('statuswerte');
             var val = 'error';
-            sta.load({
-                scope: this,
-                callback: function(records, operation, success) {
-                    if (success) {
-                        val = sta.getById(value).get('wert');
+            if (!sta) {
+                // Set the Data asynchronously
+                sta = Ext.create('Lada.store.StatusWerte');
+                sta.load({
+                    scope: this,
+                    callback: function(records, operation, success) {
+                        if (success) {
+                            var item = sta.getById(value);
+                            if (item) {
+                                val = item.get('wert');
+                            }
+                        }
+                        Ext.fly(opts.divId).update(val);
                     }
-                    Ext.fly(opts.divId).update(val);
+                });
+            }
+            else {
+                // set the data
+                var item = sta.getById(value);
+                if (item) {
+                    val = item.get('wert');
                 }
-            });
+                Ext.fly(opts.divId).update(val);
+            }
         }
     },
 
