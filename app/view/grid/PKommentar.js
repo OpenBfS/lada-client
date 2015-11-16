@@ -88,7 +88,7 @@ Ext.define('Lada.view.grid.PKommentar', {
             },
             editor: {
                 xtype: 'combobox',
-                store: Ext.data.StoreManager.get('messstellen'),
+                store: Ext.data.StoreManager.get('messstellenFiltered'),
                 displayField: 'messStelle',
                 valueField: 'id',
                 allowBlank: false
