@@ -36,8 +36,7 @@ Ext.define('Lada.model.Location', {
                 return v;
             }
             return new Date(v);
-        },
-        defaultValue: new Date()
+        }
     }, {
         name: 'longitude',
         type: 'float'

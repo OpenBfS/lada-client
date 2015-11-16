@@ -79,6 +79,8 @@ Ext.define('Lada.controller.grid.Status', {
         var record = Ext.create('Lada.model.Status', {
             messungsId: button.up('statusgrid').recordId
         });
+        //Set the Date
+        record.data.datum = new Date();
         var lastrow = button.up('statusgrid').store.count()
         button.up('statusgrid').store.insert(lastrow, record);
         button.up('statusgrid').rowEditing.startEdit(lastrow, 1);

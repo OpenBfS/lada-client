@@ -37,8 +37,7 @@ Ext.define('Lada.model.Ort', {
                 return v;
             }
             return new Date(v);
-        },
-        defaultValue: new Date()
+        }
     }, {
         name: 'treeModified',
         serialize: function(value) {

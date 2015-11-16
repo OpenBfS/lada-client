@@ -57,8 +57,7 @@ Ext.define('Lada.model.Status', {
                 return v;
             }
             return new Date(v);
-        },
-        defaultValue: new Date()
+        }
     }, {
         name: 'text'
     }],

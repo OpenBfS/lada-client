@@ -33,8 +33,7 @@ Ext.define('Lada.model.MKommentar', {
                 return v;
             }
             return new Date(v);
-        },
-        defaultValue: new Date()
+        }
     }, {
         name: 'text'
     }],

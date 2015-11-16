@@ -62,8 +62,7 @@ Ext.define('Lada.model.Probe', {
                 return v;
             }
             return new Date(v);
-        },
-        defaultValue: new Date()
+        }
     }, {
         name: 'probeentnahmeEnde',
         type: 'date',
@@ -72,8 +71,7 @@ Ext.define('Lada.model.Probe', {
                 return v;
             }
             return new Date(v);
-        },
-        defaultValue: new Date()
+        }
     }, {
         name: 'mittelungsdauer'
     }, {
@@ -84,8 +82,7 @@ Ext.define('Lada.model.Probe', {
                 return v;
             }
             return new Date(v);
-        },
-        defaultValue: new Date()
+        }
     }, {
         name: 'erzeugerId'
     }, {

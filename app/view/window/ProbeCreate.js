@@ -67,6 +67,8 @@ Ext.define('Lada.view.window.ProbeCreate', {
       */
     initData: function() {
         var record = Ext.create('Lada.model.Probe');
+        record.data.probeentnahmeBeginn = new Date();
+        record.data.probeentnahmeEnde = new Date();
         this.down('probeform').setRecord(record);
     },
 

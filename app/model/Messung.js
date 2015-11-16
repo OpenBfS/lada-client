@@ -40,8 +40,7 @@ Ext.define('Lada.model.Messung', {
                 return new Date();
             }
             return new Date(v);
-        },
-        defaultValue: new Date()
+        }
     }, {
         name: 'status'
     }, {
@@ -55,8 +54,7 @@ Ext.define('Lada.model.Messung', {
                 return new Date();
             }
             return new Date(v);
-        },
-        defaultValue: new Date()
+        }
     }, {
         name: 'geplant',
         type: 'boolean'
