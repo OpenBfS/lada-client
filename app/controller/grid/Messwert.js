@@ -90,6 +90,9 @@ Ext.define('Lada.controller.grid.Messwert', {
         var record = Ext.create('Lada.model.Messwert', {
             messungsId: button.up('messwertgrid').recordId
         });
+        if (!record.get('letzteAenderung')) {
+            record.data.letzteAenderung = new Date();
+        }
         button.up('messwertgrid').store.insert(0, record);
         button.up('messwertgrid').rowEditing.startEdit(0, 1);
     },

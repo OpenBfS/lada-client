@@ -78,7 +78,7 @@ Ext.define('Lada.controller.form.Probe', {
     },
 
     /**
-     * The save function saves the content of the Location form.
+     * The save function saves the content of the Messung form.
      * On success it will reload the Store,
      * on failure, it will display an Errormessage
      */
@@ -87,6 +87,9 @@ Ext.define('Lada.controller.form.Probe', {
         var data = formPanel.getForm().getFieldValues(true);
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
+        }
+        if (!formPanel.getForm().getRecord().get('letzteAenderung')) {
+            formPanel.getForm().getRecord().data.letzteAenderung = new Date();
         }
         formPanel.getForm().getRecord().save({
             success: function(record, response) {

@@ -46,6 +46,9 @@ Ext.define('Lada.controller.form.Location', {
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
         }
+        if (!formPanel.getForm().getRecord().get('letzteAenderung')) {
+            formPanel.getForm().getRecord().data.letzteAenderung = new Date();
+        }
         formPanel.getForm().getRecord().save({
             success: function(record, response) {
                 var json = Ext.decode(response.response.responseText);
