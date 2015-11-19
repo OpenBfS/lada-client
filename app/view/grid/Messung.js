@@ -201,11 +201,16 @@ Ext.define('Lada.view.grid.Messung', {
 
     updateColumn: function(store, record, success, opts) {
         var value;
-        if (store.getTotalCount() === 0) {
-            value = 'Keine';
+        if (success) {
+            if (store.getTotalCount() === 0) {
+                value = 'Keine';
+            }
+            else {
+                value = store.getTotalCount();
+            }
         }
         else {
-            value = store.getTotalCount();
+            value = 'k.A.';
         }
         Ext.fly(opts.divId).update(value);
     },
