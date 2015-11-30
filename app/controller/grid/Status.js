@@ -33,6 +33,7 @@ Ext.define('Lada.controller.grid.Status', {
      * This function is called when the grids roweditor saves
      * the record.
      * On success it refreshes the windows which contains the grid
+     *   it also tries to refresh the ProbeWindow and the messunggrid
      * On failure it displays a message
      */
      gridSave: function(editor, context) {
@@ -40,7 +41,14 @@ Ext.define('Lada.controller.grid.Status', {
         context.record.save({
             success: function() {
                 context.grid.initData();
-                context.grid.up('window').initData();
+                var win = context.grid.up('window');
+                win.initData();
+                try {
+                    win.parentWindow.initData();
+                    win.parentWindow.down('messunggrid').store.reload();
+                }
+                catch(e) {
+                }
             },
             failure: function(request, response) {
                 var json = response.request.scope.reader.jsonData;
