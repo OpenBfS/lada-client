@@ -15,6 +15,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     store: null,
 
     multiSelect: true,
+    allowDeselect: true,
+
+    isDynamic: true,
 
     viewConfig: {
         deferEmptyText: false

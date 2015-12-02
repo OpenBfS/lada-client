@@ -292,12 +292,19 @@ Ext.define('Lada.controller.Filter', {
         if (!store) {
             store = Ext.create(sname);
         }
-        console.log(store);
         if (store) {
             store.addListener('beforeload', this.loadingAnimationOn, resultGrid);
             store.addListener('load', this.loadingAnimationOff, resultGrid);
+
             resultGrid.setStore(store);
-            resultGrid.setupColumns(this.displayFields);
+            //TODO: Check if this is still necessary, as a Grid exists
+            // for each Type.
+
+            if (resultGrid.isDynamic) {
+               //only the dynamic resultgrid can and needs to do the following:
+               resultGrid.setupColumns(this.displayFields);
+            }
+
             resultGrid.getStore().proxy.extraParams = searchParams;
             resultGrid.getStore().load();
             resultGrid.show();
