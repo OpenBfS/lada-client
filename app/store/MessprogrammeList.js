@@ -7,7 +7,7 @@
  */
 
 /**
- * Store for Messprogramme, it is used in the {@link Lada.view.grid.FilterResult}
+ * Store for Messprogramme, it is used in the {@link Lada.view.grid.MessprogrammeList}
  */
 Ext.define('Lada.store.MessprogrammeList', {
     extend: 'Ext.data.Store',

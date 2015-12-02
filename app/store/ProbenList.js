@@ -7,7 +7,7 @@
  */
 
 /**
- * Store for Proben, it is used in the {@link Lada.view.grid.FilterResult}
+ * Store for Proben, it is used in the {@link Lada.view.grid.ProbeList}
  */
 Ext.define('Lada.store.ProbenList', {
     extend: 'Ext.data.Store',

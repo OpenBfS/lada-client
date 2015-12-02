@@ -16,7 +16,8 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
 
     requires: [
         'Lada.store.MessprogrammQueries',
-        'Lada.store.ProbeQueries'
+        'Lada.store.ProbeQueries',
+        'Lada.store.StammdatenQueries'
     ],
 
     /**
@@ -38,59 +39,55 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
      * according to the checkboxes inputValue,
      * the function alters the store which was loaded by the
      * filterpanels combobox,
-     * If enabled the function also disables / enables the UI-Buttons
-     * in the Filterresult grid.
      */
     switchModes: function(field) {
-
-        var disableButtons = true;
         var cbox = field.up('probenplanungswitcher').up().down('combobox');
-        var resultGrid = field.up('panel[name=main]').down('filterresultgrid');
         filters = field.up('panel[name=main]').down('fieldset[name=filtervariables]');
         filters.removeAll();
         filters.hide();
-        var sname = 'Lada.store.ProbeQueries';
-        var gridsname = 'Lada.store.ProbenList';
-        if (field.inputValue === 'MessprogrammList' && cbox) {
-            sname = 'Lada.store.MessprogrammQueries';
-            gridsname = 'Lada.store.MessprogrammeList';
+
+        //Initialise variables which will define the querystore
+        // and the store which has to be loaded into the grid.
+        var querystorename = '';
+
+        // In dependence of the checkboxes input value,
+        // define the store of the filter.
+        //    app/controller/Filter.js contains similar code.
+        if (field.inputValue === 'messprogramme' && cbox) {
+            querystorename = 'Lada.store.MessprogrammQueries';
         }
-        else if (field.inputValue === 'ProbeList' && cbox) {
-            sname = 'Lada.store.ProbeQueries';
-            gridsname = 'Lada.store.ProbenList';
+        else if (field.inputValue === 'proben' && cbox) {
+            querystorename = 'Lada.store.ProbeQueries';
+        }
+        else if (field.inputValue === 'stammdaten' && cbox) {
+            querystorename = 'Lada.store.StammdatenQueries';
         }
 
+        if (querystorename) {
+            var store = Ext.StoreManager.lookup(querystorename);
 
-        var store = Ext.StoreManager.lookup(sname);
+            if (!store) {
+                store = Ext.create(querystorename, {
+                    //Select first Item on Load
+                    listeners: {
+                        load: function(store){
+                            var records = new Array();
+                            records.push(store.getAt(0));
 
-        if (!store) {
-            store = Ext.create(sname, {
-                //Select first Item on Load
-                listeners: {
-                    load: function(s){
-                        var records = new Array();
-                        records.push(store.getAt(0));
-
-                        cbox.select(records[0]);
-                        cbox.fireEvent('select', cbox, records);
+                            cbox.select(records[0]);
+                            cbox.fireEvent('select', cbox, records);
+                        }
                     }
+                });
+            }
+
+            if (store) {
+                if (!store.autoLoad) {
+                    store.load();
                 }
-            });
+                //cbox.reset();
+                cbox.bindStore(store);
+            }
         }
-        if (store) {
-            store.load();
-            cbox.reset();
-            cbox.bindStore(store);
-        }
-
-        var gridstore = Ext.StoreManager.lookup(gridsname);
-        if (!gridstore) {
-            gridstore = Ext.create(gridsname);
-        }
-        if (gridstore) {
-            resultGrid.setStore(gridstore);
-            resultGrid.show();
-        }
-
     }
 });

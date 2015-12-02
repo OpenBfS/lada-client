@@ -24,5 +24,7 @@ Ext.define('Lada.model.Query', {
         name: 'results'
     }, {
         name: 'filters'
+    }, {
+        name: 'type'
     }]
  });

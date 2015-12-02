@@ -56,7 +56,11 @@ Ext.define('Lada.controller.Filter', {
     /**
      * Function called when the user selects a SQL query in the dropdownlist.
      * The function will hide/display additional element related to the
-     * selected search query
+     * selected search query.
+     * It also replaces the Store of the Filteresultgrid.
+     * Two possibilities exist to do so: Proben/Messprogramme where dynamic columns exist, but the
+     * content remains of the same type and Stammdaten, were columns are fixed but the type might
+     * vary between orte, kategorien, ...
      */
     selectSql: function(element, record) {
         var filters = element.up('panel[name=main]').down('fieldset[name=filtervariables]');
@@ -64,20 +68,70 @@ Ext.define('Lada.controller.Filter', {
         var desc = element.up('fieldset').down('displayfield[name=description]');
         this.displayFields = record[0].data.results;
         var filterFields = record[0].data.filters;
+        var contentPanel = element.up('panel[name=main]').down('panel[name=contentpanel]');
+        var queryType = record[0].get('type'); //The type of the query, might be proben, messprogramme,
+            // or a stammdatendtype
 
         this.reset(element);
 
-        var columnString = [];
-        for (var i = 0; i < this.displayFields.length; i++) {
-            columnString.push(this.displayFields[i].header);
+        contentPanel.removeAll();
+
+/// THIS IS INTERMEDIARY CODE AND CAN BE REMOVED WHEN TYPES ARE SENT FOR PROBEN AND MESSPROGRAMME
+        console.log('remove this intermediary code...');
+        var modes = element.up('panel[name=main]').down('radiogroup').getChecked();
+        queryType = (queryType) ? queryType : modes[0].inputValue;
+/// END OF INTERMEDIARY CODE
+
+
+        if (queryType == 'proben' || queryType == 'messprogramme') {
+            var frgrid; // The Resultgrid
+            var gridstore; // The Store which will be used in the resultgrid.
+
+            switch (queryType) {
+                case 'proben':
+                    gridstore = Ext.create('Lada.store.ProbenList');
+                    frgrid = Ext.create('Lada.view.grid.ProbeList');
+                    break;
+                case 'messprogramme':
+                    gridstore = Ext.create('Lada.store.MessprogrammeList');
+                    frgrid = Ext.create('Lada.view.grid.MessprogrammeList');
+                    break;
+            }
+
+            var columnString = [];
+            for (var i = 0; i < this.displayFields.length; i++) {
+                columnString.push(this.displayFields[i].header);
+            }
+            columns.setValue(columnString.join(', '));
+            desc.setValue(record[0].data.description);
+
+            // Setup Columns
+            if (this.displayFields) {
+                this.displayFields.reverse();
+            }
+
+            if (gridstore) {
+                frgrid.setStore(gridstore);
+            }
+
+            contentPanel.add(frgrid);
         }
-        columns.setValue(columnString.join(', '));
-        desc.setValue(record[0].data.description);
-
-        // Setup Columns of the probenlist
-        this.displayFields.reverse();
-
-        /* Setup Filters of the probenlist
+        else {
+            // Grids which are not build with dynamic columns
+            var resultGrid;
+            switch (queryType) {
+                case 'MessprogrammKategorie':
+                    resultGrid = Ext.create('Lada.view.grid.MessprogrammKategorie');
+                    break;
+                case 'DatensatzErzeuger':
+                    resultGrid = Ext.create('Lada.view.grid.DatensatzErzeuger');
+                    break;
+            }
+            if (resultGrid) {
+                contentPanel.add(resultGrid);
+            }
+        }
+        /* Setup Filters
          *
          * Allowed types are
          * * text
@@ -188,11 +242,15 @@ Ext.define('Lada.controller.Filter', {
     /**
      * Function is called when the user clicks the search button. The function
      * will perform a search to the server on refreshes the result list.
+     * To do so it replaces the store of the Resultgrids.
      */
     search: function(element) {
-        var resultGrid = element.up('panel[name=main]').down('filterresultgrid');
+        var resultGrid = element.up('panel[name=main]').down('panel[name=contentpanel]').down('grid');
         var filters = element.up('panel[name=main]').down('fieldset[name=filtervariables]');
         var search = element.up('fieldset').down('combobox[name=filter]');
+
+        //Type of the search Proben/Messprogramme/Stammdaten
+        var type = search.store.getById(search.getValue()).get('type')
 
         // Get search parameters:
         var searchParams = {};
@@ -209,11 +267,24 @@ Ext.define('Lada.controller.Filter', {
         var modes = element.up('panel[name=main]').down('radiogroup').getChecked();
         var sname = modes[0].inputValue;
 
-        if (sname === 'ProbeList') {
+        // Todo: Migragte away from sname, use type instead
+        if (sname === 'proben') {
             sname = 'Lada.store.ProbenList';
         }
-        else if (sname === 'MessprogrammList') {
+        else if (sname === 'messprogramme') {
             sname = 'Lada.store.MessprogrammeList';
+        }
+        else if (sname === 'stammdaten') {
+            //Store depends of the Type...
+            // TODO the switchcasese should be unified
+            switch (type) {
+                case 'MessprogrammKategorie':
+                    sname = 'Lada.store.MessprogrammKategorie';
+                    break;
+                case 'DatensatzErzeuger':
+                    sname = 'Lada.store.DatensatzErzeuger';
+                    break;
+            }
         }
 
         // Find the store or create a new one.
@@ -221,6 +292,7 @@ Ext.define('Lada.controller.Filter', {
         if (!store) {
             store = Ext.create(sname);
         }
+        console.log(store);
         if (store) {
             store.addListener('beforeload', this.loadingAnimationOn, resultGrid);
             store.addListener('load', this.loadingAnimationOff, resultGrid);

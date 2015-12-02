@@ -201,7 +201,8 @@ Ext.application({
     // first before the application "launch" function is called.
     controllers: [
         'Lada.controller.Filter',
-        'Lada.controller.FilterResult',
+        'Lada.controller.grid.ProbeList',
+        'Lada.controller.grid.MessprogrammeList',
         'Lada.controller.form.Probe',
         'Lada.controller.form.Messung',
         'Lada.controller.form.Ort',

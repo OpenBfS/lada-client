@@ -17,8 +17,7 @@ Ext.define('Lada.view.Viewport', {
     extend: 'Ext.container.Viewport',
     requires: [
         'Lada.view.ProbenPlanungSwitcher',
-        'Lada.view.FilterPanel',
-        'Lada.view.grid.FilterResult'
+        'Lada.view.FilterPanel'
     ],
     layout: 'fit',
     initComponent: function() {
@@ -76,9 +75,11 @@ Ext.define('Lada.view.Viewport', {
                     items: []
                 }]
             }, {
-            // Resultlist for the query.
+                xtype: 'panel',
+                border: 1,
+                layout: 'fit',
+                name: 'contentpanel',
                 flex: 3,
-                xtype: 'filterresultgrid',
                 hidden: false,
                 region: 'center'
             }]
