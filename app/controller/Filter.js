@@ -64,8 +64,11 @@ Ext.define('Lada.controller.Filter', {
      */
     selectSql: function(element, record) {
         var filters = element.up('panel[name=main]').down('fieldset[name=filtervariables]');
-        var columns = element.up('fieldset').down('displayfield[name=columns]');
+
+        // Set "Filter Auswahl" Description
         var desc = element.up('fieldset').down('displayfield[name=description]');
+        desc.setValue(record[0].data.description);
+
         this.displayFields = record[0].data.results;
         var filterFields = record[0].data.filters;
         var contentPanel = element.up('panel[name=main]').down('panel[name=contentpanel]');
@@ -74,7 +77,20 @@ Ext.define('Lada.controller.Filter', {
 
         this.reset(element);
 
-        contentPanel.removeAll();
+        contentPanel.removeAll(); //clear the panel: make space for new grids
+
+        // Set "Filter Auswahl" Columns
+        var columns = element.up('fieldset').down('displayfield[name=columns]');
+        var columnString = [];
+        for (var i = 0; i < this.displayFields.length; i++) {
+            columnString.push(this.displayFields[i].header);
+        }
+        columns.setValue(columnString.join(', '));
+
+        // Setup Columns
+        if (this.displayFields) {
+            this.displayFields.reverse();
+        }
 
 /// THIS IS INTERMEDIARY CODE AND CAN BE REMOVED WHEN TYPES ARE SENT FOR PROBEN AND MESSPROGRAMME
         console.log('remove this intermediary code...');
@@ -84,6 +100,8 @@ Ext.define('Lada.controller.Filter', {
 
 
         if (queryType == 'proben' || queryType == 'messprogramme') {
+            // Dynamic Grids
+            // We need to set both grid and Store.
             var frgrid; // The Resultgrid
             var gridstore; // The Store which will be used in the resultgrid.
 
@@ -98,18 +116,6 @@ Ext.define('Lada.controller.Filter', {
                     break;
             }
 
-            var columnString = [];
-            for (var i = 0; i < this.displayFields.length; i++) {
-                columnString.push(this.displayFields[i].header);
-            }
-            columns.setValue(columnString.join(', '));
-            desc.setValue(record[0].data.description);
-
-            // Setup Columns
-            if (this.displayFields) {
-                this.displayFields.reverse();
-            }
-
             if (gridstore) {
                 frgrid.setStore(gridstore);
             }
@@ -118,6 +124,8 @@ Ext.define('Lada.controller.Filter', {
         }
         else {
             // Grids which are not build with dynamic columns
+            // The store is configured in each grid, hence we only need to set the
+            // grid
             var resultGrid;
             switch (queryType) {
                 case 'MessprogrammKategorie':
