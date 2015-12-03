@@ -35,7 +35,8 @@ Ext.define('Lada.view.grid.MessprogrammeList', {
             }, {
                 text: i18n.getMsg('messprogramme.button.generate'),
                 icon: 'resources/img/view-time-schedule-insert.png',
-                action: 'genProbenFromMessprogramm'
+                action: 'genProbenFromMessprogramm',
+                disabled: true // disabled on startup, will be enabled by controller if necessary
             }]
         }];
         this.columns = [];

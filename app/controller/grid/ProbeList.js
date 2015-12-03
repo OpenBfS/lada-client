@@ -22,7 +22,9 @@ Ext.define('Lada.controller.grid.ProbeList', {
     init: function() {
         this.control({
             'probelistgrid': {
-                itemdblclick: this.editItem
+                itemdblclick: this.editItem,
+                select: this.activateButtons,
+                deselect: this.deactivateButtons
             },
             'probelistgrid toolbar button[action=addProbe]': {
                 click: this.addProbeItem
@@ -297,6 +299,39 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 }
             }
         });
+    },
+
+    /**
+     * Toggles the buttons in the toolbar
+     **/
+    activateButtons: function(rowModel, record) {
+        var grid = rowModel.view.up('grid');
+        this.buttonToggle(true, grid);
+    },
+
+    /**
+     * Toggles the buttons in the toolbar
+     **/
+    deactivateButtons: function(rowModel, record) {
+        var grid = rowModel.view.up('grid');
+        // Only disable buttons when nothing is selected
+        if (rowModel.selected.items == 0) {
+            this.buttonToggle(false, grid);
+        }
+    },
+
+    /**
+     * Enables/Disables a set of buttons
+     **/
+    buttonToggle: function(enabled, grid) {
+        if (!enabled) {
+            grid.down('button[action=export]').disable();
+            grid.down('button[action=print]').disable();
+        }
+        else {
+            grid.down('button[action=export]').enable();
+            grid.down('button[action=print]').enable();
+        }
     },
 
     reload: function(btn) {

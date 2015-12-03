@@ -41,11 +41,13 @@ Ext.define('Lada.view.grid.ProbeList', {
             }, {
                 text: i18n.getMsg('probe.button.export'),
                 icon: 'resources/img/svn-update.png',
-                action: 'export'
+                action: 'export',
+                disabled: true //disabled on start, enabled by the controller
             }, {
                 text: i18n.getMsg('probe.button.print'),
                 icon: 'resources/img/printer.png',
-                action: 'print'
+                action: 'print',
+                disabled: true //disabled on start, enabled by the controller
             }]
         }];
         this.columns = [];
