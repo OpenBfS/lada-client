@@ -7,11 +7,11 @@
  */
 
 /**
- * This is a Widget for a ProbenPlanungSwitcher
+ * This is a Widget for a ModeSwitcher
  */
-Ext.define('Lada.view.ProbenPlanungSwitcher', {
+Ext.define('Lada.view.ModeSwitcher', {
     extend: 'Ext.form.FieldSet',
-    alias: 'widget.probenplanungswitcher',
+    alias: 'widget.modeswitcher',
 
     mixins: {
         observable: 'Ext.util.Observable'
@@ -29,7 +29,7 @@ Ext.define('Lada.view.ProbenPlanungSwitcher', {
             width: '100%',
             items: [{
                 xtype: 'radiofield',
-                name: 'ppswitch',
+                name: 'modeswitch',
                 boxLabel: i18n.getMsg('proben'),
                 inputValue: 'proben', //this determines the store
                     // which will be loaded by the controller,
@@ -41,7 +41,7 @@ Ext.define('Lada.view.ProbenPlanungSwitcher', {
                 }
             },{
                 xtype: 'radiofield',
-                name: 'ppswitch',
+                name: 'modeswitch',
                 boxLabel: i18n.getMsg('messprogramme'),
                 inputValue: 'messprogramme',
                 handler: function(field, state){
@@ -51,7 +51,7 @@ Ext.define('Lada.view.ProbenPlanungSwitcher', {
                 }
             },{
                 xtype: 'radiofield',
-                name: 'ppswitch',
+                name: 'modeswitch',
                 boxLabel: i18n.getMsg('stammdaten'),
                 inputValue: 'stammdaten',
                 handler: function(field, state){

@@ -16,7 +16,7 @@
 Ext.define('Lada.view.Viewport', {
     extend: 'Ext.container.Viewport',
     requires: [
-        'Lada.view.ProbenPlanungSwitcher',
+        'Lada.view.ModeSwitcher',
         'Lada.view.FilterPanel'
     ],
     layout: 'fit',
@@ -59,7 +59,7 @@ Ext.define('Lada.view.Viewport', {
                     }]
                 }],
                 items: [{
-                    xtype: 'probenplanungswitcher',
+                    xtype: 'modeswitcher',
                     margin: '0, 10, 0, 10'
                 }, {
                     // Auswahl einer Abfrage.

@@ -7,10 +7,10 @@
  */
 
 /**
- * Controller for the ProbenPlanungSwitcher
- * This controller handles all logic related to the PPS
+ * Controller for the ModeSwitcher
+ * This controller handles all logic related to the ModeSwitch
  */
-Ext.define('Lada.controller.ProbenPlanungSwitcher', {
+Ext.define('Lada.controller.ModeSwitcher', {
     extend: 'Ext.app.Controller',
     displayFields: null,
 
@@ -23,11 +23,11 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
     /**
      * Initialize this Controller
      * It has 1 Listeners
-     * A checked PPS-Radiofield fired a 'check'-event
+     * A checked ModeSwithch-Radiofield fired a 'check'-event
      */
     init: function() {
         this.control({
-            'radiofield[name=ppswitch]': {
+            'radiofield[name=modeswitch]': {
                 check: this.switchModes
             }
         });
@@ -41,7 +41,7 @@ Ext.define('Lada.controller.ProbenPlanungSwitcher', {
      * filterpanels combobox,
      */
     switchModes: function(field) {
-        var cbox = field.up('probenplanungswitcher').up().down('combobox');
+        var cbox = field.up('modeswitcher').up().down('combobox');
         filters = field.up('panel[name=main]').down('fieldset[name=filtervariables]');
         filters.removeAll();
         filters.hide();

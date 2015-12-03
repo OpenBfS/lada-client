@@ -201,6 +201,7 @@ Ext.application({
     // first before the application "launch" function is called.
     controllers: [
         'Lada.controller.Filter',
+        'Lada.controller.ModeSwitcher',
         'Lada.controller.grid.ProbeList',
         'Lada.controller.grid.MessprogrammeList',
         'Lada.controller.form.Probe',
@@ -215,7 +216,6 @@ Ext.application({
         'Lada.controller.grid.Status',
         'Lada.controller.Map',
         'Lada.controller.form.Location',
-        'Lada.controller.ProbenPlanungSwitcher',
         'Lada.controller.form.Messprogramm',
         'Lada.controller.grid.Messmethode'
         ]
