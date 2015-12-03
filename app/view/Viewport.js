@@ -33,7 +33,6 @@ Ext.define('Lada.view.Viewport', {
                 },
                 region: 'west',
                 split: true,
-                border: 1,
                 flex: 1,
                 dockedItems: [{
                     xtype: 'toolbar',
@@ -76,7 +75,6 @@ Ext.define('Lada.view.Viewport', {
                 }]
             }, {
                 xtype: 'panel',
-                border: 1,
                 layout: 'fit',
                 name: 'contentpanel',
                 flex: 3,
