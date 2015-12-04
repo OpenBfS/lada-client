@@ -92,25 +92,18 @@ Ext.define('Lada.controller.Filter', {
             this.displayFields.reverse();
         }
 
-/// THIS IS INTERMEDIARY CODE AND CAN BE REMOVED WHEN TYPES ARE SENT FOR PROBEN AND MESSPROGRAMME
-        console.log('remove this intermediary code...');
-        var modes = element.up('panel[name=main]').down('radiogroup').getChecked();
-        queryType = (queryType) ? queryType : modes[0].inputValue;
-/// END OF INTERMEDIARY CODE
-
-
-        if (queryType == 'proben' || queryType == 'messprogramme') {
+        if (queryType == 'probe' || queryType == 'messprogramm') {
             // Dynamic Grids
             // We need to set both grid and Store.
             var frgrid; // The Resultgrid
             var gridstore; // The Store which will be used in the resultgrid.
 
             switch (queryType) {
-                case 'proben':
+                case 'probe':
                     gridstore = Ext.create('Lada.store.ProbenList');
                     frgrid = Ext.create('Lada.view.grid.ProbeList');
                     break;
-                case 'messprogramme':
+                case 'messprogramm':
                     gridstore = Ext.create('Lada.store.MessprogrammeList');
                     frgrid = Ext.create('Lada.view.grid.MessprogrammeList');
                     break;
@@ -128,11 +121,17 @@ Ext.define('Lada.controller.Filter', {
             // grid
             var resultGrid;
             switch (queryType) {
-                case 'MessprogrammKategorie':
+                case 'messprogrammkategorie':
                     resultGrid = Ext.create('Lada.view.grid.MessprogrammKategorie');
                     break;
-                case 'DatensatzErzeuger':
+                case 'datensatzerzeuger':
                     resultGrid = Ext.create('Lada.view.grid.DatensatzErzeuger');
+                    break;
+                case 'ort':
+                    resultGrid = Ext.create('Lada.view.grid.Ort');
+                    break;
+                case 'probenehmer':
+                    resultGrid = Ext.create('Lada.view.grid.Probenehmer');
                     break;
             }
             if (resultGrid) {
@@ -271,28 +270,28 @@ Ext.define('Lada.controller.Filter', {
             }
             searchParams[filter.getName()] = value;
         }
-        // Retrieve the mode
-        var modes = element.up('panel[name=main]').down('radiogroup').getChecked();
-        var sname = modes[0].inputValue;
 
-        // Todo: Migragte away from sname, use type instead
-        if (sname === 'proben') {
-            sname = 'Lada.store.ProbenList';
-        }
-        else if (sname === 'messprogramme') {
-            sname = 'Lada.store.MessprogrammeList';
-        }
-        else if (sname === 'stammdaten') {
-            //Store depends of the Type...
-            // TODO the switchcasese should be unified
-            switch (type) {
-                case 'MessprogrammKategorie':
-                    sname = 'Lada.store.MessprogrammKategorie';
-                    break;
-                case 'DatensatzErzeuger':
-                    sname = 'Lada.store.DatensatzErzeuger';
-                    break;
-            }
+        //Store depends of the Type...
+        // TODO the switchcasese should be unified withj those in SelectSql
+        switch (type) {
+            case 'proben':
+                sname = 'Lada.store.ProbenList';
+                break;
+            case 'messprogramm':
+                sname = 'Lada.store.MessprogrammeList';
+                break;
+            case 'messprogrammkategorie':
+                sname = 'Lada.store.MessprogrammKategorie';
+                break;
+            case 'datensatzerzeuger':
+                sname = 'Lada.store.DatensatzErzeuger';
+                break;
+            case 'ort':
+                sname = 'Lada.store.Ort';
+                break;
+            case 'probenehmer':
+                sname = 'Lada.store.Probenehmer';
+                break;
         }
 
         // Find the store or create a new one.

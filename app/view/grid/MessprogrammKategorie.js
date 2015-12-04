@@ -24,6 +24,7 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
     errors: null,
     readOnly: true,
     allowDeselect: true,
+    border: false,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

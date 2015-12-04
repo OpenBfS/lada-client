@@ -13,13 +13,13 @@ Ext.define('Lada.store.StammdatenQueries', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Query',
     autoLoad: true,
-    data: { data: [
+/*    data: { data: [
          {id: '0', name: 'MessprogrammKategorie', type: 'MessprogrammKategorie', sql: 'bogus', description: 'bogusBeschr', filters:  []},
          {id: '1', name: 'DatensatzErzeuger', type: 'DatensatzErzeuger', sql: 'bogus', description: 'bogusBeschr', filters:  []}
-        ]},
+        ]},*/
     proxy: {
-        type: 'memory',
-        //url: 'lada-server/query/stammdaten',
+        type: 'rest',
+        url: 'lada-server/query/stammdaten',
         reader: {
             type: 'json',
             root: 'data'

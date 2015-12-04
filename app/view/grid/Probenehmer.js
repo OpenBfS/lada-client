@@ -24,6 +24,7 @@ Ext.define('Lada.view.grid.Probenehmer', {
     errors: null,
     readOnly: true,
     allowDeselect: true,
+    border: false,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -38,46 +39,7 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 id: 'tbtitle',
                 text: i18n.getMsg('pn.gridTitle')
             }]
-        /*
-            //bottom toolbar?
-            }, {
-            xtype: 'toolbar',
-            dock: 'bottom',
-            items: ['->', {
-                text: 'Hinzufügen',
-                icon: 'resources/img/list-add.png',
-                action: 'add',
-                probeId: this.probeId
-            }, {
-                text: 'Löschen',
-                icon: 'resources/img/list-remove.png',
-                action: 'delete'
-            }]
-        */
         }];
-     /*
-     // Do we have row-editing
-        this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
-            clicksToMoveEditor: 1,
-            autoCancel: false,
-            disabled: false,
-            pluginId: 'rowedit',
-            listeners:{
-                // Make row ineditable when readonly is set to true
-                // Normally this would belong into a controller an not the view.
-                // But the RowEditPlugin is not handled there.
-                beforeedit: function(e, o) {
-                    var readonlywin = o.grid.up('window').record.get('readonly');
-                    var readonlygrid = o.record.get('readonly');
-                    if (readonlywin == true || readonlygrid == true || this.disabled)  {
-                        return false;
-                    }
-                    return true;
-                }
-            }
-        });
-        this.plugins = [this.rowEditing];
-    */
         this.columns = [{
             header: i18n.getMsg('netzbetreiberId'),
             dataIndex: 'netzbetreiberId',
@@ -174,72 +136,24 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 scope: this
             }
         };
-        // this.initData(); //This will be called by the Query Component.
         this.callParent(arguments);
-        //TODO this.setReadOnly(true); //Grid is always initialised as RO
     },
 
-    initData: function() {
-        this.store = Ext.create('Lada.store.DatensatzErzeuger');
-        this.store.load(); //TODO: Params?
-    },
+    /**
+     * This sets the Store of this Grid
+     */
+    setStore: function(store){
+        var i18n = Lada.getApplication().bundle;
 
-    setReadOnly: function(b) {
-        if (b == true){
-            //Readonly
-            if (this.getPlugin('rowedit')){
-                this.getPlugin('rowedit').disable();
-            }
-            try {
-                this.down('button[action=delete]').disable();
-                this.down('button[action=add]').disable();
-            }
-            catch(e) {
-                //TODO: Do Nothing...
-            }
-        }else{
-            //Writable
-            if (this.getPlugin('rowedit')){
-                this.getPlugin('rowedit').enable();
-            }
-            try {
-                this.down('button[action=delete]').enable();
-                this.down('button[action=add]').enable();
-            }
-            catch(e) {
-                //TODO: Do Nothing...
-            }
-        }
-    },
-    /**
-     * Activate the Remove Button
-     */
-    activateRemoveButton: function(selection, record) {
-        var grid = this;
-        //only enable the remove buttone, when the grid is editable.
-        if (! grid.readOnly) {
-            try {
-                grid.down('button[action=delete]').enable();
-            }
-            catch(e) {
-                //TODO: Do Nothing
-            }
-        }
-    },
-    /**
-     * deactivate the Remove Button
-     */
-    deactivateRemoveButton: function(selection, record) {
-        var grid = this;
-        //only enable the remove buttone, when the grid is editable.
-        if (! grid.readOnly) {
-            try {
-                grid.down('button[action=delete]').disable();
-            }
-            catch(e) {
-                //TODO: Do Nothing
-            }
-        }
+        this.removeDocked(Ext.getCmp('ptbar'), true);
+        this.reconfigure(store);
+        this.addDocked([{
+            xtype: 'pagingtoolbar',
+            id: 'ptbar',
+            dock: 'bottom',
+            store: store,
+            displayInfo: true
+        }]);
     }
 });
 
