@@ -274,7 +274,7 @@ Ext.define('Lada.controller.Filter', {
         //Store depends of the Type...
         // TODO the switchcasese should be unified withj those in SelectSql
         switch (type) {
-            case 'proben':
+            case 'probe':
                 sname = 'Lada.store.ProbenList';
                 break;
             case 'messprogramm':
