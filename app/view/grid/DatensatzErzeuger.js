@@ -30,6 +30,14 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('de.emptyGrid');
 
+        this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToMoveEditor: 1,
+            autoCancel: false,
+            disabled: false,
+            pluginId: 'rowedit'
+        });
+        this.plugins = [this.rowEditing];
+
         // TODO: Which docked Items are required?
         this.dockedItems = [{
             xtype: 'toolbar',
@@ -68,6 +76,12 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             dataIndex: 'daErzeugerId',
             editor: {
                 allowBlank: false
+            }
+        }, {
+            header: i18n.getMsg('bezeichnung'),
+            dataIndex: 'bezeichnung',
+            editor: {
+                xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('mstId'),

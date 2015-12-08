@@ -30,6 +30,14 @@ Ext.define('Lada.view.grid.Probenehmer', {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('pn.emptyGrid');
 
+        this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToMoveEditor: 1,
+            autoCancel: false,
+            disabled: false,
+            pluginId: 'rowedit'
+        });
+        this.plugins = [this.rowEditing];
+
         // TODO: Which docked Items are required?
         this.dockedItems = [{
             xtype: 'toolbar',
