@@ -46,6 +46,18 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 xtype: 'tbtext',
                 id: 'tbtitle',
                 text: i18n.getMsg('de.gridTitle')
+            },
+            '->',
+            {
+                text: i18n.getMsg('de.button.add'),
+                icon: 'resources/img/list-add.png',
+                action: 'add',
+                disabled: true // disabled on startup, will be enabled by setStore
+            }, {
+                text: i18n.getMsg('de.button.delete'),
+                icon: 'resources/img/list-remove.png',
+                action: 'delete',
+                disabled: true // disabled on startup, will be enabled by controller if necessary
             }]
         }];
 
@@ -81,6 +93,7 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             header: i18n.getMsg('bezeichnung'),
             dataIndex: 'bezeichnung',
             editor: {
+                allowBlank: false,
                 xtype: 'textfield'
             }
         }, {
@@ -100,7 +113,7 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             },
             editor: {
                 xtype: 'combobox',
-                store: Ext.data.StoreManager.get('messstellenFiltered'),
+                store: Ext.data.StoreManager.get('messstellen'),
                 displayField: 'messStelle',
                 valueField: 'id',
                 allowBlank: false
@@ -128,14 +141,17 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
     setStore: function(store){
         var i18n = Lada.getApplication().bundle;
 
-        this.removeDocked(Ext.getCmp('ptbar'), true);
-        this.reconfigure(store);
-        this.addDocked([{
-            xtype: 'pagingtoolbar',
-            id: 'ptbar',
-            dock: 'bottom',
-            store: store,
-            displayInfo: true
-        }]);
+        if (store) {
+            this.removeDocked(Ext.getCmp('ptbar'), true);
+            this.reconfigure(store);
+            this.down('button[action=add]').enable();
+            this.addDocked([{
+                xtype: 'pagingtoolbar',
+                id: 'ptbar',
+                dock: 'bottom',
+                store: store,
+                displayInfo: true
+            }]);
+        }
     }
 });

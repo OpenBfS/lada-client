@@ -204,6 +204,8 @@ Ext.application({
         'Lada.controller.ModeSwitcher',
         'Lada.controller.grid.ProbeList',
         'Lada.controller.grid.MessprogrammeList',
+        'Lada.controller.grid.Datensatzerzeuger',
+        'Lada.controller.grid.Probenehmer',
         'Lada.controller.form.Probe',
         'Lada.controller.form.Messung',
         'Lada.controller.form.Ort',

@@ -46,6 +46,18 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 xtype: 'tbtext',
                 id: 'tbtitle',
                 text: i18n.getMsg('pn.gridTitle')
+            },
+            '->',
+            {
+                text: i18n.getMsg('pn.button.add'),
+                icon: 'resources/img/list-add.png',
+                action: 'add',
+                disabled: true // disabled on startup, will be enabled by setStore
+            }, {
+                text: i18n.getMsg('pn.button.delete'),
+                icon: 'resources/img/list-remove.png',
+                action: 'delete',
+                disabled: true // disabled on startup, will be enabled by controller if necessary
             }]
         }];
         this.columns = [{
@@ -86,31 +98,36 @@ Ext.define('Lada.view.grid.Probenehmer', {
             header: i18n.getMsg('bemerkung'),
             dataIndex: 'bemerkung',
             editor: {
-                allowBlank: false
+                allowBlank: false,
+                xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('kurzBezeichnung'),
             dataIndex: 'kurzBezeichnung',
             editor: {
-                allowBlank: false
+                allowBlank: false,
+                xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('ort'),
             dataIndex: 'ort',
             editor: {
-                allowBlank: false
+                allowBlank: false,
+                xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('plz'),
             dataIndex: 'plz',
             editor: {
-                allowBlank: false
+                allowBlank: false,
+                xtype: 'numberfield'
             }
         }, {
             header: i18n.getMsg('strasse'),
             dataIndex: 'strasse',
             editor: {
-                allowBlank: false
+                allowBlank: false,
+                xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('telefon'),
@@ -153,15 +170,18 @@ Ext.define('Lada.view.grid.Probenehmer', {
     setStore: function(store){
         var i18n = Lada.getApplication().bundle;
 
-        this.removeDocked(Ext.getCmp('ptbar'), true);
-        this.reconfigure(store);
-        this.addDocked([{
-            xtype: 'pagingtoolbar',
-            id: 'ptbar',
-            dock: 'bottom',
-            store: store,
-            displayInfo: true
-        }]);
+        if (store) {
+            this.removeDocked(Ext.getCmp('ptbar'), true);
+            this.reconfigure(store);
+            this.down('button[action=add]').enable();
+            this.addDocked([{
+                xtype: 'pagingtoolbar',
+                id: 'ptbar',
+                dock: 'bottom',
+                store: store,
+                displayInfo: true
+            }]);
+        }
     }
 });
 
