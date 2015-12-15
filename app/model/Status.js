@@ -27,8 +27,7 @@ Ext.define('Lada.model.Status', {
         name: 'erzeuger'
     }, {
         name: 'statusStufe',
-        type: 'int',
-        defaultValue: 1
+        type: 'int'
     }, {
         name: 'statusWert',
         type: 'int',
