@@ -3,13 +3,16 @@
 #
 # Build with e.g. `docker build --force-rm=true -t koala/lada_client .'
 # Run from the repository root-dir with e.g.
-# `docker run --name lada_client -v $PWD:/usr/local/apache2/htdocs/
+# `docker run --name lada_client
 #             --link lada_wildfly:lada-server -p 8182:80 -d koala/lada_client'
 #
 # The linked container may be created from the Dockerfile in the lada-server
 # repository.
 #
 # The LADA-application will be available under http://yourdockerhost:8182
+#
+# Add `-v $PWD:/usr/local/apache2/htdocs/' to the run-command if you want to
+# test your local changes (you'll have to run ./install-dependencies.sh again).
 #
 
 FROM httpd:2.4
