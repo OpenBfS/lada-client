@@ -21,7 +21,6 @@ Ext.define('Lada.controller.grid.Status', {
             'statusgrid': {
                 edit: this.gridSave,
                 canceledit: this.cancelEdit,
-                select: this.toggleAllowedPermissions
             },
             'statusgrid button[action=add]': {
                 click: this.add
@@ -82,39 +81,31 @@ Ext.define('Lada.controller.grid.Status', {
 
     /**
      * This function adds a new row to add a Status
+     *  and copies the data of the previous status into the new one
+     *  if possible.
      */
      add: function(button) {
-        var record = Ext.create('Lada.model.Status', {
-            messungsId: button.up('statusgrid').recordId
-        });
-        //Set the Date
-        record.data.datum = new Date();
         var lastrow = button.up('statusgrid').store.count()
-        button.up('statusgrid').store.insert(lastrow, record);
-        button.up('statusgrid').rowEditing.startEdit(lastrow, 1);
-    },
 
 
-    /**
-     * When a row in a grid is selected,
-     * this function checks if the row may be edited,
-     * or if the row can be removed
-     */
-    toggleAllowedPermissions: function(context, record, index){
-
-        //retrieve the readOnly parameters
-        var statusEdit = context.view.up('window').record.get('statusEdit');
-
-        var grid = context.view.up('grid');
-
-        //retrieve the last record of the store
-        var lastRecord = context.getStore().last();
-
-        //Check if edit is allowed
-        if (lastRecord != record ||
-            statusEdit === false) {
-            grid.getPlugin('rowedit').cancelEdit();
+        //If possible copy the previous record into the new one.
+        //this assumes the store is ordered correctly, most recent status last.
+        if (lastrow > 0) {
+            //clone the old one
+            var recentStatus = button.up('statusgrid').store.getAt(lastrow-1);
+            var record = recentStatus.copy()
+            record.set('id', null);
+        } else {
+            //create a new one
+            var record = Ext.create('Lada.model.Status', {
+                messungsId: button.up('statusgrid').recordId
+            });
         }
-    }
 
+        //Set the Date
+        record.set('datum', new Date());
+
+        button.up('statusgrid').store.insert(lastrow, record);
+        button.up('statusgrid').getPlugin('rowedit').startEdit(lastrow, 1);
+    }
 });

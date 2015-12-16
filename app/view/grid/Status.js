@@ -37,8 +37,22 @@ Ext.define('Lada.view.grid.Status', {
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false,
-            disabled: true,
-            pluginId: 'rowedit'
+            disabled: true, //has no effect... but why?
+            pluginId: 'rowedit',
+            listeners: {
+                beforeedit: function(editor, context, eOpts) {
+                    if (context.record.get('id') ||
+                        ! context.grid.up('window').record.get('statusEdit')) {
+                    //Check if edit is allowed, this is true, when the selected
+                    // Record has an id (=is not new)
+                    // or is not allowed to add records.
+
+                        return false;
+                    }
+
+
+                }
+            }
         });
         this.plugins = [this.rowEditing];
 
@@ -147,11 +161,16 @@ Ext.define('Lada.view.grid.Status', {
             this.store.removeAll();
         }
         else {
-            this.store = Ext.create('Lada.store.Status');
+            this.store = Ext.create('Lada.store.Status',{
+                sorters: [{
+                    property: 'datum',
+                    direction: 'ASC'
+                }]
+            });
         }
         this.store.load({
             params: {
-                messungsId: this.recordId
+                messungsId: this.recordId,
             }
         });
     },
