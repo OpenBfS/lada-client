@@ -95,16 +95,29 @@ Ext.define('Lada.view.grid.Messwert', {
                 triggerAction: 'all'
             }
         }, {
+            header: '&lt;NWG',
+            width: 60,
+            dataIndex: 'messwertNwg',
+            editor: {
+                xtype: 'checkbox'
+            }
+        }, {
             header: 'Messwert',
             dataIndex: 'messwert',
             xtype: 'numbercolumn',
             width: 80,
+            renderer: function(value) {
+              return value.toExponential(3);
+            },
             editor: {
                 xtype: 'numberfield',
                 allowBlank: false,
                 maxLength: 10,
-                allowExponential: false,
-                enforceMaxLength: true
+                allowExponential: true,
+                enforceMaxLength: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
             }
         }, {
             header: 'Messeinheit',
@@ -132,16 +145,6 @@ Ext.define('Lada.view.grid.Messwert', {
                 triggerAction: 'all'
             }
         }, {
-            header: '&lt;NWG',
-            xtype: 'numbercolumn',
-            width: 60,
-            dataIndex: 'messwertNwg'
-        }, {
-            header: 'Nachweisgrenze',
-            xtype: 'numbercolumn',
-            width: 110,
-            dataIndex: 'nwgZuMesswert'
-        }, {
             header: 'Messfehler',
             dataIndex: 'messfehler',
             xtype: 'numbercolumn',
@@ -152,6 +155,28 @@ Ext.define('Lada.view.grid.Messwert', {
                 maxLength: 10,
                 allowExponential: false,
                 enforceMaxLength: true
+            }
+        }, {
+            header: 'Nachweisgrenze',
+            xtype: 'numbercolumn',
+            dataIndex: 'nwgZuMesswert',
+            width: 80,
+            renderer: function(value) {
+              if (!value) {
+                return null;
+              } else {
+                return value.toExponential(3);
+              }
+            },
+            editor: {
+                xtype: 'numberfield',
+                allowBlank: true,
+                maxLength: 10,
+                allowExponential: true,
+                enforceMaxLength: true,
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
             }
         }, {
             header: 'Grenzwertüberschreitung',
