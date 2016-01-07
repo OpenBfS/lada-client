@@ -60,6 +60,12 @@ Ext.define('Lada.view.grid.Status', {
             xtype: 'toolbar',
             dock: 'bottom',
             items: ['->', {
+                text: 'Zurücksetzen',
+                icon: 'resources/img/edit-redo.png',
+                action: 'reset',
+                probeId: this.probeId,
+                parentId: this.parentId
+            }, {
                 text: 'Hinzufügen',
                 icon: 'resources/img/list-add.png',
                 action: 'add',
@@ -179,9 +185,11 @@ Ext.define('Lada.view.grid.Status', {
         if (b == true){
             //Readonly
             this.down('button[action=add]').disable();
+            this.down('button[action=reset]').disable();
         }else{
             //Writable
             this.down('button[action=add]').enable();
+            this.down('button[action=reset]').enable();
         }
     }
 });

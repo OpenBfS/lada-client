@@ -24,6 +24,9 @@ Ext.define('Lada.controller.grid.Status', {
             },
             'statusgrid button[action=add]': {
                 click: this.add
+            },
+            'statusgrid button[action=reset]': {
+                click: this.reset
             }
         });
     },
@@ -115,5 +118,54 @@ Ext.define('Lada.controller.grid.Status', {
 
         button.up('statusgrid').store.insert(lastrow, record);
         button.up('statusgrid').getPlugin('rowedit').startEdit(lastrow, 1);
-    }
+    },
+
+    /**
+     * Reset
+     * This Function instructs the server to reset the current status
+     * WIP / TODO
+     *
+     **/
+    reset: function(button) {
+        var s = button.up('window').down('messungform').getRecord().get('status');
+        var messId = button.up('window').down('messungform').getRecord().get('id');
+        var recentStatus = button.up('statusgrid').store.getById(s);
+
+        //Set Status to 'Resetted' (8)
+        var record = recentStatus.copy();
+        record.set('datum', new Date());
+        record.set('statusWert', 8);
+        record.set('id', null);
+        record.set('text', null);
+
+        Ext.Ajax.request({
+            url: 'lada-server/status',
+            jsonData: record.getData(),
+            method: 'POST',
+            success: function(response) {
+                button.up('window').initData();
+            },
+            failure: function(response) {
+                // TODO sophisticated error handling, with understandable Texts
+                var json = Ext.JSON.decode(response.responseText);
+                if (json) {
+                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
+                        formPanel.setMessages(json.errors, json.warnings);
+                    }
+                    if(json.message){
+                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
+                            +' #'+json.message,
+                            Lada.getApplication().bundle.getMsg(json.message));
+                    } else {
+                        Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                            i18n.getMsg('err.msg.generic.body'));
+                    }
+                } else {
+                    Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                    i18n.getMsg('err.msg.generic.body'));
+                }
+            }
+        });
+
+     }
 });

@@ -33,15 +33,15 @@ Ext.define('Lada.controller.Filter', {
         this.control({
             // CSS like selector to select element in the viewport. See
             // ComponentQuery documentation for more details.
-            'combobox[name=filter]': {
+            'filterpanel combobox[name=filter]': {
                 // Map Select event
                 select: this.selectSql
             },
-            'button[action=search]': {
+            'filterpanel button[action=search]': {
                 // Map click event on Button.
                 click: this.search
             },
-            'button[action=reset]': {
+            'filterpanel button[action=reset]': {
                 // Map click event on Button.
                 click: this.reset
             },
