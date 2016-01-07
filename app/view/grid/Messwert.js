@@ -99,7 +99,8 @@ Ext.define('Lada.view.grid.Messwert', {
             width: 60,
             dataIndex: 'messwertNwg',
             editor: {
-                xtype: 'checkbox'
+                xtype: 'checkbox',
+     	        inputValue: '<'
             }
         }, {
             header: 'Messwert',
@@ -107,7 +108,7 @@ Ext.define('Lada.view.grid.Messwert', {
             xtype: 'numbercolumn',
             width: 80,
             renderer: function(value) {
-              return value.toExponential(3);
+              return value.toExponential(2);
             },
             editor: {
                 xtype: 'numberfield',
@@ -165,7 +166,7 @@ Ext.define('Lada.view.grid.Messwert', {
               if (!value) {
                 return null;
               } else {
-                return value.toExponential(3);
+                return value.toExponential(2);
               }
             },
             editor: {
