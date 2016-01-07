@@ -87,13 +87,21 @@ Ext.define('Lada.controller.grid.Status', {
      add: function(button) {
         var lastrow = button.up('statusgrid').store.count()
 
+        // retrive current status from the messung.
+        var s = button.up('window').down('messungform').getRecord().get('status');
+        var recentStatus = button.up('statusgrid').store.getById(s);
 
         //If possible copy the previous record into the new one.
         //this assumes the store is ordered correctly, most recent status last.
-        if (lastrow > 0) {
-            //clone the old one
-            var recentStatus = button.up('statusgrid').store.getAt(lastrow-1);
-            var record = recentStatus.copy()
+        // Do not copy, if current userid differs from the id of the current status
+        if (lastrow > 0 &&
+                Ext.Array.contains(Lada.mst, recentStatus.get('erzeuger'))) {
+
+            if (recentStatus) {
+                // clone the status
+                var record = recentStatus.copy()
+            }
+
             record.set('id', null);
         } else {
             //create a new one
