@@ -132,11 +132,13 @@ Ext.define('Lada.controller.grid.Status', {
         var recentStatus = button.up('statusgrid').store.getById(s);
 
         //Set Status to 'Resetted' (8)
-        var record = recentStatus.copy();
-        record.set('datum', new Date());
-        record.set('statusWert', 8);
-        record.set('id', null);
-        record.set('text', null);
+        if (recentStatus) {
+            var record = recentStatus.copy();
+            record.set('datum', new Date());
+            record.set('statusWert', 8);
+            record.set('id', null);
+            record.set('text', null);
+        }
 
         Ext.Ajax.request({
             url: 'lada-server/status',
@@ -144,6 +146,7 @@ Ext.define('Lada.controller.grid.Status', {
             method: 'POST',
             success: function(response) {
                 button.up('window').initData();
+                button.up('grid').initData();
             },
             failure: function(response) {
                 // TODO sophisticated error handling, with understandable Texts

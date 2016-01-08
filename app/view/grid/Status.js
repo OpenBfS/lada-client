@@ -185,11 +185,17 @@ Ext.define('Lada.view.grid.Status', {
         if (b == true){
             //Readonly
             this.down('button[action=add]').disable();
-            this.down('button[action=reset]').disable();
         }else{
             //Writable
             this.down('button[action=add]').enable();
+        }
+    },
+
+    setResetable: function(b) {
+        if (b == true){
             this.down('button[action=reset]').enable();
+        }else{
+            this.down('button[action=reset]').disable();
         }
     }
 });

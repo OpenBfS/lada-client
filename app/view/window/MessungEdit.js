@@ -178,6 +178,14 @@ Ext.define('Lada.view.window.MessungEdit', {
                 else {
                     this.disableStatusEdit();
                 }
+                //Check if it is allowed to reset Status
+                // TODO additional requirements?
+                if (this.record.get('statusEdit') === true) {
+                    this.enableStatusReset();
+                }
+                else {
+                    this.disableStatusReset();
+                }
             },
             scope: this
         });
@@ -210,6 +218,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(true);
             this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = true;
             this.disableStatusEdit();
+            this.disableStatusReset();
     },
 
     /**
@@ -221,12 +230,26 @@ Ext.define('Lada.view.window.MessungEdit', {
             this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(false);
             this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = false;
             this.enableStatusEdit();
+            this.enableStatusReset();
     },
 
     /**
+     * Enable to reset the statusgrid
+     */
+     enableStatusReset: function() {
+            this.down('fset[name=messungstatus]').down('statusgrid').setResetable(true);
+     },
+
+    /**
+     * Disable to reset the statusgrid
+     */
+     disableStatusReset: function() {
+            this.down('fset[name=messungstatus]').down('statusgrid').setResetable(false);
+     },
+    /**
      * Enable to edit the statusgrid
      */
-     enableStatusEdit: function () {
+     enableStatusEdit: function() {
             this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(false);
             this.down('fset[name=messungstatus]').down('statusgrid').readOnly = false;
      },
@@ -234,7 +257,7 @@ Ext.define('Lada.view.window.MessungEdit', {
     /**
      * Disable to edit the statusgrid
      */
-     disableStatusEdit: function () {
+     disableStatusEdit: function() {
             this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(true);
             this.down('fset[name=messungstatus]').down('statusgrid').readOnly = true;
      },
