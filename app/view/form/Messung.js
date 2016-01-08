@@ -170,6 +170,7 @@ Ext.define('Lada.view.form.Messung', {
         var i18n = Lada.getApplication().bundle;
         var msg = i18n.getMsg('load.statuswert');
         var textfield = this.down('[name=status]');
+        var messwin = this.up('window');
 
         if(textfield) {
             textfield.setRawValue(msg);
@@ -192,6 +193,17 @@ Ext.define('Lada.view.form.Messung', {
                 }
                 this.setStatusWert(sw);
                 this.setStatusStufe(ss);
+
+                // Enable / Disable the statusreset button of the statusgrid of the messungform
+                if (messwin.record.get('statusEdit') === true &&
+                        sw != 0 &&
+                        sw != 4) {
+                    messwin.enableStatusReset();
+                }
+                else {
+                    messwin.disableStatusReset();
+                }
+
             },
             scope: this
         });

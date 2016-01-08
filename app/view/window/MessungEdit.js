@@ -178,14 +178,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 else {
                     this.disableStatusEdit();
                 }
-                //Check if it is allowed to reset Status
-                // TODO additional requirements?
-                if (this.record.get('statusEdit') === true) {
-                    this.enableStatusReset();
-                }
-                else {
-                    this.disableStatusReset();
-                }
+                //Check if it is allowed to reset Status: done in Messungform
             },
             scope: this
         });
