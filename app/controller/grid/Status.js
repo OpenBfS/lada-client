@@ -53,19 +53,20 @@ Ext.define('Lada.controller.grid.Status', {
                 }
             },
             failure: function(request, response) {
+                var i18n = Lada.getApplication().bundle;
                 var json = response.request.scope.reader.jsonData;
                 if (json) {
                     if (json.message){
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
                             +' #'+json.message,
-                            Lada.getApplication().bundle.getMsg(json.message));
+                            i18n.getMsg(json.message));
                     } else {
-                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                            Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.generic.body'));
                     }
                 } else {
-                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                        Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                        i18n.getMsg('err.msg.response.body'));
                 }
             }
         });
@@ -127,6 +128,24 @@ Ext.define('Lada.controller.grid.Status', {
      *
      **/
     reset: function(button) {
+        var me = this;
+        var rstbutton = button;
+        var i18n = Lada.getApplication().bundle;
+        Ext.MessageBox.confirm(
+            i18n.getMsg('statusgrid.reset.mbox.title'),
+            i18n.getMsg('statusgrid.reset.mbox.text'),
+            function(btn) {
+                if (btn === 'yes') {
+                    me.doReset(rstbutton);
+                }
+            });
+     },
+
+     doReset: function(button) {
+        var i18n = Lada.getApplication().bundle;
+
+        var resetStatusValue = 0; //TODO 8
+
         var s = button.up('window').down('messungform').getRecord().get('status');
         var messId = button.up('window').down('messungform').getRecord().get('id');
         var recentStatus = button.up('statusgrid').store.getById(s);
@@ -135,9 +154,9 @@ Ext.define('Lada.controller.grid.Status', {
         if (recentStatus) {
             var record = recentStatus.copy();
             record.set('datum', new Date());
-            record.set('statusWert', 8);
+            record.set('statusWert', resetStatusValue);
             record.set('id', null);
-            record.set('text', null);
+            record.set('text', i18n.getMsg('statusgrid.resetText'));
         }
 
         Ext.Ajax.request({
@@ -150,15 +169,16 @@ Ext.define('Lada.controller.grid.Status', {
             },
             failure: function(response) {
                 // TODO sophisticated error handling, with understandable Texts
+                var i18n = Lada.getApplication().bundle;
                 var json = Ext.JSON.decode(response.responseText);
                 if (json) {
                     if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
                         formPanel.setMessages(json.errors, json.warnings);
                     }
                     if(json.message){
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
+                        Ext.Msg.alert(i18n.getMsg('err.msg.generic.title')
                             +' #'+json.message,
-                            Lada.getApplication().bundle.getMsg(json.message));
+                            i18n.getMsg(json.message));
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                             i18n.getMsg('err.msg.generic.body'));
@@ -169,6 +189,6 @@ Ext.define('Lada.controller.grid.Status', {
                 }
             }
         });
-
      }
+
 });

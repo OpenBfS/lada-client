@@ -14,7 +14,6 @@ Ext.define('Lada.view.grid.Status', {
     alias: 'widget.statusgrid',
 
     maxHeight: 350,
-    emptyText: 'Keine Statusangaben gefunden.',
     minHeight: 110,
     viewConfig: {
         deferEmptyText: false
@@ -25,6 +24,9 @@ Ext.define('Lada.view.grid.Status', {
     allowDeselect: true,
 
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('statusgrid.emptyText');
+
         var statusWerteStore = Ext.create('Lada.store.StatusWerte');
         statusWerteStore.load({
             params: {
@@ -60,13 +62,13 @@ Ext.define('Lada.view.grid.Status', {
             xtype: 'toolbar',
             dock: 'bottom',
             items: ['->', {
-                text: 'Zurücksetzen',
+                text: i18n.getMsg('reset'),
                 icon: 'resources/img/edit-redo.png',
                 action: 'reset',
                 probeId: this.probeId,
                 parentId: this.parentId
             }, {
-                text: 'Hinzufügen',
+                text: i18n.getMsg('add'),
                 icon: 'resources/img/list-add.png',
                 action: 'add',
                 probeId: this.probeId,
@@ -74,19 +76,19 @@ Ext.define('Lada.view.grid.Status', {
             }]
         }];
         this.columns = [{
-            header: 'erstellt',
+            header: i18n.getMsg('statusgrid.header.datum'),
             dataIndex: 'datum',
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
             width: 110,
             sortable: false
         }, {
-            header: 'Erzeuger',
+            header: i18n.getMsg('statusgrid.header.erzeuger'),
             dataIndex: 'erzeuger',
             renderer: function(value) {
                 var r = '';
                 if (!value || value === '') {
-                    r = 'Error';
+                    r = i18n.getMsg('error');
                 }
                 var mstore = Ext.data.StoreManager.get('messstellen');
                 var item = mstore.getById(value);
@@ -105,13 +107,13 @@ Ext.define('Lada.view.grid.Status', {
             },
             sortable: false
         }, {
-            header: 'Stufe',
+            header: i18n.getMsg('statusgrid.header.statusStufe'),
             dataIndex: 'statusStufe',
             renderer: function(value) {
                 var sta = Ext.data.StoreManager.get('statusstufe');
                 var r;
                 if (value===null || value === '') {
-                    r = 'Error';
+                    r = i18n.getMsg('error');
                 }
                 var item = sta.getById(value);
                 if (item) {
@@ -121,14 +123,14 @@ Ext.define('Lada.view.grid.Status', {
             },
             sortable: false
         }, {
-            header: 'Status',
+            header: i18n.getMsg('statusgrid.header.statusWert'),
             dataIndex: 'statusWert',
             renderer: function(value) {
                 var sta = Ext.data.StoreManager.get('statuswerte');
                 //This store is NOT used in the editor...
                 var r;
                 if (value===null || value === '') {
-                    r = 'Error';
+                    r = i18n.getMsg('error');
                 }
                 var item = sta.getById(value);
                 if (item) {
@@ -147,7 +149,7 @@ Ext.define('Lada.view.grid.Status', {
             },
             sortable: false
         }, {
-            header: 'Text',
+            header: i18n.getMsg('statusgrid.header.text'),
             dataIndex: 'text',
             flex: 1,
             editor: {
