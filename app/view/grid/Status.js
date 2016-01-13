@@ -29,7 +29,7 @@ Ext.define('Lada.view.grid.Status', {
         this.emptyText = i18n.getMsg('statusgrid.emptyText');
 
         this.statusWerteStore = Ext.create('Lada.store.StatusWerte');
-        statusWerteStore.load({
+        this.statusWerteStore.load({
             params: {
                 messungsId: this.recordId
             }
@@ -141,7 +141,7 @@ Ext.define('Lada.view.grid.Status', {
             },
             editor: {
                 xtype: 'combobox',
-                store: statusWerteStore,
+                store: this.statusWerteStore,
                 queryMode: 'local',
                 displayField: 'wert',
                 valueField: 'id',
