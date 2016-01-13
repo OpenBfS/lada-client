@@ -146,7 +146,7 @@ Ext.define('Lada.controller.grid.Status', {
      doReset: function(button) {
         var i18n = Lada.getApplication().bundle;
 
-        var resetStatusValue = 0; //TODO 8
+        var resetStatusValue = 8;
 
         var s = button.up('window').down('messungform').getRecord().get('status');
         var messId = button.up('window').down('messungform').getRecord().get('id');
