@@ -171,7 +171,7 @@ Ext.define('Lada.controller.FilterResult', {
         }
         var me = this;
         Ext.Ajax.request({
-            url: 'lada-server/export/laf',
+            url: 'lada-server/data/export/laf',
             jsonData: {'proben': proben},
             success: function(response) {
                 var content = response.responseText;

@@ -42,7 +42,7 @@ Ext.define('Lada.model.MKommentar', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/mkommentar',
+        url: 'lada-server/rest/mkommentar',
         reader: {
             type: 'json',
             root: 'data'

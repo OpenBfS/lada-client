@@ -33,7 +33,7 @@ Ext.define('Lada.model.Probenart', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/probenart',
+        url: 'lada-server/rest/probenart',
         reader: {
             type: 'json',
             root: 'data'

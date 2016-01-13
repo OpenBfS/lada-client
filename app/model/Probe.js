@@ -141,7 +141,7 @@ Ext.define('Lada.model.Probe', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/probe',
+        url: 'lada-server/rest/probe',
         reader: {
             type: 'json',
             root: 'data'

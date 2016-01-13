@@ -82,7 +82,7 @@ Ext.define('Lada.view.window.FileUpload', {
                 'X-OPENID-PARAMS': Lada.openIDParams
             },
             method: 'POST',
-            url: 'lada-server/import/laf'
+            url: 'lada-server/data/import/laf'
         });
         this.mon(uploader, 'uploadsuccess', win.uploadSuccess, win);
         this.mon(uploader, 'uploadfailure', win.uploadFailure, win);

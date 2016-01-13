@@ -26,7 +26,7 @@ Ext.define('Lada.store.Messgroessen', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/messgroesse',
+        url: 'lada-server/rest/messgroesse',
         reader: {
             type: 'json',
             root: 'data'

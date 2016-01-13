@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 by Bundesamt fuer Strahlenschutz
+* Copyright (C) 2013 by Bundesamt fuer Strahlenschutz
  * Software engineering by Intevation GmbH
  *
  * This file is Free Software under the GNU GPL (v>=3)
@@ -82,7 +82,7 @@ Ext.define('Lada.model.Messung', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/messung',
+        url: 'lada-server/rest/messung',
         reader: {
             type: 'json',
             root: 'data'

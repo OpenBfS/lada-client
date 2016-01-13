@@ -19,7 +19,7 @@ Ext.define('Lada.store.StammdatenQueries', {
         ]},*/
     proxy: {
         type: 'rest',
-        url: 'lada-server/query/stammdaten',
+        url: 'lada-server/rest/query/stammdaten',
         reader: {
             type: 'json',
             root: 'data'

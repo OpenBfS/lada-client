@@ -15,7 +15,7 @@ Ext.define('Lada.store.ProbeQueries', {
     autoLoad: true,
     proxy: {
         type: 'rest',
-        url: 'lada-server/query/probe',
+        url: 'lada-server/rest/query/probe',
         reader: {
             type: 'json',
             root: 'data'

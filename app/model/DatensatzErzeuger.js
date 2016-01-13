@@ -53,7 +53,7 @@ Ext.define('Lada.model.DatensatzErzeuger', {
 
     proxy: {
         type: 'memory',
-        //url: 'lada-server/datensatzerzeuger',
+        //url: 'lada-server/rest/datensatzerzeuger',
         reader: {
             type: 'json',
             root: 'data'

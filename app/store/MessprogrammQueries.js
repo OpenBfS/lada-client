@@ -15,7 +15,7 @@ Ext.define('Lada.store.MessprogrammQueries', {
     autoLoad: true,
     proxy: {
         type: 'rest',
-        url: 'lada-server/query/messprogramm',
+        url: 'lada-server/rest/query/messprogramm',
         reader: {
             type: 'json',
             root: 'data'

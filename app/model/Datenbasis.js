@@ -30,7 +30,7 @@ Ext.define('Lada.model.Datenbasis', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/datenbasis',
+        url: 'lada-server/rest/datenbasis',
         reader: {
             type: 'json',
             root: 'data'

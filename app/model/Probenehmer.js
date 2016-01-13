@@ -69,7 +69,7 @@ Ext.define('Lada.model.Probenehmer', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/messprogrammkategorie',
+        url: 'lada-server/rest/probenehmer',
         reader: {
             type: 'json',
             root: 'data'

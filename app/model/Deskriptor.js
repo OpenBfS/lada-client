@@ -26,7 +26,7 @@ Ext.define('Lada.model.Deskriptor', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/deskriptor',
+        url: 'lada-server/rest/deskriptor',
         reader: {
             type: 'json',
             root: 'data',

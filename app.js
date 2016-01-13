@@ -71,7 +71,7 @@ Ext.application({
             Lada.openIDParams = queryString;
         }
         Ext.Ajax.request({
-            url: 'lada-server/user',
+            url: 'lada-server/rest/user',
             method: 'GET',
             scope: this,
             success: this.onLoginSuccess,
@@ -179,7 +179,7 @@ Ext.application({
     getServerVersion: function() {
         var i18n = Lada.getApplication().bundle;
         Ext.Ajax.request({
-            url: 'lada-server/version',
+            url: 'lada-server/rest/version',
             method: 'GET',
             headers: {
                 'X-OPENID-PARAMS': Lada.openIDParams

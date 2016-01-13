@@ -55,7 +55,7 @@ Ext.define('Lada.model.Location', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/location',
+        url: 'lada-server/rest/location',
         reader: {
             type: 'json',
             root: 'data'

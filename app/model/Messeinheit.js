@@ -36,7 +36,7 @@ Ext.define('Lada.model.Messeinheit', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/messeinheit',
+        url: 'lada-server/rest/messeinheit',
         reader: {
             type: 'json',
             root: 'data'
