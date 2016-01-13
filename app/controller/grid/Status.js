@@ -95,6 +95,8 @@ Ext.define('Lada.controller.grid.Status', {
         var s = button.up('window').down('messungform').getRecord().get('status');
         var recentStatus = button.up('statusgrid').store.getById(s);
 
+        button.up('statusgrid').reload();
+
         //If possible copy the previous record into the new one.
         //this assumes the store is ordered correctly, most recent status last.
         // Do not copy, if current userid differs from the id of the current status

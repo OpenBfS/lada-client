@@ -22,12 +22,13 @@ Ext.define('Lada.view.grid.Status', {
     recordId: null,
     readOnly: true,
     allowDeselect: true,
+    statusWerteStore: null,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('statusgrid.emptyText');
 
-        var statusWerteStore = Ext.create('Lada.store.StatusWerte');
+        this.statusWerteStore = Ext.create('Lada.store.StatusWerte');
         statusWerteStore.load({
             params: {
                 messungsId: this.recordId
