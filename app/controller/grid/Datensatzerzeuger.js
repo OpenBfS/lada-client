@@ -40,7 +40,7 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
      * On failure it displays a message
      */
     gridSave: function(editor, context) {
-        context.record.set('datum', new Date());
+        var i18n = Lada.getApplication().bundle;
         context.record.save({
             success: function(record, response) {
                 //Do Nothing
@@ -49,12 +49,12 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
               var json = response.request.scope.reader.jsonData;
               if (json) {
                 if (json.message){
-                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
+                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
                         +' #'+json.message,
-                        Lada.getApplication().bundle.getMsg(json.message));
+                        i18n.getMsg(json.message));
                    } else {
-                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                            Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.generic.body'));
                    }
               }
             }
@@ -91,8 +91,11 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
+        var i18n = Lada.getApplication().bundle;
         //TODO: i18n
-        Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn) {
+        Ext.MessageBox.confirm(i18n.getMsg('delete'),
+                                i18n.getMsg('confirmation.question'),
+                                function(btn) {
             if (btn === 'yes') {
                 selection.destroy({
                     success: function() {
@@ -102,16 +105,16 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
                         var json = response.request.scope.reader.jsonData;
                         if (json) {
                             if (json.message){
-                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title')
+                                Ext.Msg.alert(i18n.getMsg('err.msg.delete.title')
                                     +' #'+json.message,
-                                    Lada.getApplication().bundle.getMsg(json.message));
+                                    i18n.getMsg(json.message));
                             } else {
-                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
-                                    Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                                Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
+                                    i18n.getMsg('err.msg.generic.body'));
                             }
                         } else {
-                            Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
-                                Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                            Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
+                                i18n.getMsg('err.msg.response.body'));
                         }
                     }
                 });

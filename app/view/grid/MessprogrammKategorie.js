@@ -46,6 +46,18 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
                 xtype: 'tbtext',
                 id: 'tbtitle',
                 text: i18n.getMsg('mk.gridTitle')
+            },
+            '->',
+            {
+                text: i18n.getMsg('mk.button.add'),
+                icon: 'resources/img/list-add.png',
+                action: 'add',
+                disabled: true // disabled on startup, will be enabled by setStore
+            }, {
+                text: i18n.getMsg('mk.button.delete'),
+                icon: 'resources/img/list-remove.png',
+                action: 'delete',
+                disabled: true // disabled on startup, will be enabled by controller if necessary
             }]
         }];
 

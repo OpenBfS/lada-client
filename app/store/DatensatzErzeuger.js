@@ -12,14 +12,4 @@
 Ext.define('Lada.store.DatensatzErzeuger', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.DatensatzErzeuger',
-    data: {
-        data: {
-            id: 1,
-            netzbetreiberId: 'F',
-            daErzeugerId: 5,
-            mstId: '12020',
-            bezeichnung: 'ABCDÄ',
-            letzteAenderung: new Date()
-        }
-    }
 });

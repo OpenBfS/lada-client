@@ -47,6 +47,7 @@ Ext.define('Lada.model.Probenehmer', {
             }
             return new Date(v);
         }
+/*
     }, {
         name: 'treeModified',
         serialize: function(value) {
@@ -63,6 +64,7 @@ Ext.define('Lada.model.Probenehmer', {
             }
             return value;
         }
+*/
     }],
 
     idProperty: 'id',

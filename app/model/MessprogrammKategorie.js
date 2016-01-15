@@ -29,6 +29,7 @@ Ext.define('Lada.model.MessprogrammKategorie', {
             }
             return new Date(v);
         }
+/*
     }, {
         name: 'treeModified',
         serialize: function(value) {
@@ -45,6 +46,7 @@ Ext.define('Lada.model.MessprogrammKategorie', {
             }
             return value;
         }
+*/
     }],
 
     idProperty: 'id',

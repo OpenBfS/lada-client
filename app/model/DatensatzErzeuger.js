@@ -31,6 +31,7 @@ Ext.define('Lada.model.DatensatzErzeuger', {
             }
             return new Date(v);
         }
+/*
     }, {
         name: 'treeModified',
         serialize: function(value) {
@@ -47,13 +48,14 @@ Ext.define('Lada.model.DatensatzErzeuger', {
             }
             return value;
         }
+*/
     }],
 
     idProperty: 'id',
 
     proxy: {
-        type: 'memory',
-        //url: 'lada-server/rest/datensatzerzeuger',
+        type: 'rest',
+        url: 'lada-server/rest/datensatzerzeuger',
         reader: {
             type: 'json',
             root: 'data'
