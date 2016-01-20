@@ -7,27 +7,21 @@
  */
 
 /**
- * Model class for Ort Stammdaten
+ * Model class for DatensatzErzeuger Stammdaten
  */
-Ext.define('Lada.model.Location', {
+Ext.define('Lada.model.DatensatzErzeuger', {
     extend: 'Ext.data.Model',
 
     fields: [{
         name: 'id'
     }, {
+        name: 'netzbetreiberId'
+    }, {
+        name: 'daErzeugerId'
+    }, {
+        name: 'mstId'
+    }, {
         name: 'bezeichnung'
-    }, {
-        name: 'beschreibung'
-    }, {
-        name: 'unscharf'
-    }, {
-        name: 'nutsCode'
-    }, {
-        name: 'koordXExtern'
-    }, {
-        name: 'koordYExtern'
-    }, {
-        name: 'hoeheLand'
     }, {
         name: 'letzteAenderung',
         type: 'date',
@@ -37,25 +31,31 @@ Ext.define('Lada.model.Location', {
             }
             return new Date(v);
         }
+/*
     }, {
-        name: 'longitude',
-        type: 'float'
+        name: 'treeModified',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
     }, {
-        name: 'latitude',
-        type: 'float'
-    }, {
-        name: 'staatId'
-    }, {
-        name: 'verwaltungseinheitId'
-    }, {
-        name: 'otyp'
+        name: 'parentModified',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
+*/
     }],
 
     idProperty: 'id',
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/location',
+        url: 'lada-server/rest/datensatzerzeuger',
         reader: {
             type: 'json',
             root: 'data'

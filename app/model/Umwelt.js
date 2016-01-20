@@ -33,7 +33,7 @@ Ext.define('Lada.model.Umwelt', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/umwelt',
+        url: 'lada-server/rest/umwelt',
         reader: {
             type: 'json',
             root: 'data'

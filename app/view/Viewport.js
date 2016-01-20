@@ -16,9 +16,8 @@
 Ext.define('Lada.view.Viewport', {
     extend: 'Ext.container.Viewport',
     requires: [
-        'Lada.view.ProbenPlanungSwitcher',
-        'Lada.view.FilterPanel',
-        'Lada.view.grid.FilterResult'
+        'Lada.view.ModeSwitcher',
+        'Lada.view.FilterPanel'
     ],
     layout: 'fit',
     initComponent: function() {
@@ -34,7 +33,6 @@ Ext.define('Lada.view.Viewport', {
                 },
                 region: 'west',
                 split: true,
-                border: 1,
                 flex: 1,
                 dockedItems: [{
                     xtype: 'toolbar',
@@ -60,7 +58,7 @@ Ext.define('Lada.view.Viewport', {
                     }]
                 }],
                 items: [{
-                    xtype: 'probenplanungswitcher',
+                    xtype: 'modeswitcher',
                     margin: '0, 10, 0, 10'
                 }, {
                     // Auswahl einer Abfrage.
@@ -76,9 +74,10 @@ Ext.define('Lada.view.Viewport', {
                     items: []
                 }]
             }, {
-            // Resultlist for the query.
+                xtype: 'panel',
+                layout: 'fit',
+                name: 'contentpanel',
                 flex: 3,
-                xtype: 'filterresultgrid',
                 hidden: false,
                 region: 'center'
             }]

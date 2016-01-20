@@ -56,28 +56,89 @@ Ext.define('Lada.controller.Filter', {
     /**
      * Function called when the user selects a SQL query in the dropdownlist.
      * The function will hide/display additional element related to the
-     * selected search query
+     * selected search query.
+     * It also replaces the Store of the Filteresultgrid.
+     * Two possibilities exist to do so: Proben/Messprogramme where dynamic columns exist, but the
+     * content remains of the same type and Stammdaten, were columns are fixed but the type might
+     * vary between orte, kategorien, ...
      */
     selectSql: function(element, record) {
         var filters = element.up('panel[name=main]').down('fieldset[name=filtervariables]');
-        var columns = element.up('fieldset').down('displayfield[name=columns]');
+
+        // Set "Filter Auswahl" Description
         var desc = element.up('fieldset').down('displayfield[name=description]');
+        desc.setValue(record[0].data.description);
+
         this.displayFields = record[0].data.results;
         var filterFields = record[0].data.filters;
+        var contentPanel = element.up('panel[name=main]').down('panel[name=contentpanel]');
+        var queryType = record[0].get('type'); //The type of the query, might be proben, messprogramme,
+            // or a stammdatendtype
 
         this.reset(element);
 
+        contentPanel.removeAll(); //clear the panel: make space for new grids
+
+        // Set "Filter Auswahl" Columns
+        var columns = element.up('fieldset').down('displayfield[name=columns]');
         var columnString = [];
         for (var i = 0; i < this.displayFields.length; i++) {
             columnString.push(this.displayFields[i].header);
         }
         columns.setValue(columnString.join(', '));
-        desc.setValue(record[0].data.description);
 
-        // Setup Columns of the probenlist
-        this.displayFields.reverse();
+        // Setup Columns
+        if (this.displayFields) {
+            this.displayFields.reverse();
+        }
 
-        /* Setup Filters of the probenlist
+        if (queryType == 'probe' || queryType == 'messprogramm') {
+            // Dynamic Grids
+            // We need to set both grid and Store.
+            var frgrid; // The Resultgrid
+            var gridstore; // The Store which will be used in the resultgrid.
+
+            switch (queryType) {
+                case 'probe':
+                    gridstore = Ext.create('Lada.store.ProbenList');
+                    frgrid = Ext.create('Lada.view.grid.ProbeList');
+                    break;
+                case 'messprogramm':
+                    gridstore = Ext.create('Lada.store.MessprogrammeList');
+                    frgrid = Ext.create('Lada.view.grid.MessprogrammeList');
+                    break;
+            }
+
+            if (gridstore) {
+                frgrid.setStore(gridstore);
+            }
+
+            contentPanel.add(frgrid);
+        }
+        else {
+            // Grids which are not build with dynamic columns
+            // The store is configured in each grid, hence we only need to set the
+            // grid
+            var resultGrid;
+            switch (queryType) {
+                case 'messprogrammkategorie':
+                    resultGrid = Ext.create('Lada.view.grid.MessprogrammKategorie');
+                    break;
+                case 'datensatzerzeuger':
+                    resultGrid = Ext.create('Lada.view.grid.DatensatzErzeuger');
+                    break;
+                case 'ort':
+                    resultGrid = Ext.create('Lada.view.grid.Ort');
+                    break;
+                case 'probenehmer':
+                    resultGrid = Ext.create('Lada.view.grid.Probenehmer');
+                    break;
+            }
+            if (resultGrid) {
+                contentPanel.add(resultGrid);
+            }
+        }
+        /* Setup Filters
          *
          * Allowed types are
          * * text
@@ -188,11 +249,15 @@ Ext.define('Lada.controller.Filter', {
     /**
      * Function is called when the user clicks the search button. The function
      * will perform a search to the server on refreshes the result list.
+     * To do so it replaces the store of the Resultgrids.
      */
     search: function(element) {
-        var resultGrid = element.up('panel[name=main]').down('filterresultgrid');
+        var resultGrid = element.up('panel[name=main]').down('panel[name=contentpanel]').down('grid');
         var filters = element.up('panel[name=main]').down('fieldset[name=filtervariables]');
         var search = element.up('fieldset').down('combobox[name=filter]');
+
+        //Type of the search Proben/Messprogramme/Stammdaten
+        var type = search.store.getById(search.getValue()).get('type')
 
         // Get search parameters:
         var searchParams = {};
@@ -205,15 +270,28 @@ Ext.define('Lada.controller.Filter', {
             }
             searchParams[filter.getName()] = value;
         }
-        // Retrieve the mode
-        var modes = element.up('panel[name=main]').down('radiogroup').getChecked();
-        var sname = modes[0].inputValue;
 
-        if (sname === 'ProbeList') {
-            sname = 'Lada.store.ProbenList';
-        }
-        else if (sname === 'MessprogrammList') {
-            sname = 'Lada.store.MessprogrammeList';
+        //Store depends of the Type...
+        // TODO the switchcasese should be unified withj those in SelectSql
+        switch (type) {
+            case 'probe':
+                sname = 'Lada.store.ProbenList';
+                break;
+            case 'messprogramm':
+                sname = 'Lada.store.MessprogrammeList';
+                break;
+            case 'messprogrammkategorie':
+                sname = 'Lada.store.MessprogrammKategorie';
+                break;
+            case 'datensatzerzeuger':
+                sname = 'Lada.store.DatensatzErzeuger';
+                break;
+            case 'ort':
+                sname = 'Lada.store.Ort';
+                break;
+            case 'probenehmer':
+                sname = 'Lada.store.Probenehmer';
+                break;
         }
 
         // Find the store or create a new one.
@@ -224,8 +302,16 @@ Ext.define('Lada.controller.Filter', {
         if (store) {
             store.addListener('beforeload', this.loadingAnimationOn, resultGrid);
             store.addListener('load', this.loadingAnimationOff, resultGrid);
+
             resultGrid.setStore(store);
-            resultGrid.setupColumns(this.displayFields);
+            //TODO: Check if this is still necessary, as a Grid exists
+            // for each Type.
+
+            if (resultGrid.isDynamic) {
+               //only the dynamic resultgrid can and needs to do the following:
+               resultGrid.setupColumns(this.displayFields);
+            }
+
             resultGrid.getStore().proxy.extraParams = searchParams;
             resultGrid.getStore().load();
             resultGrid.show();

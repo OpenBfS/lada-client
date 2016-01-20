@@ -63,7 +63,7 @@ Ext.application({
         Lada.userroles = '';
         Lada.logintime = '';
         Lada.mst = [];
-        Lada.clientVersion = '2.1.2';
+        Lada.clientVersion = '2.2-STAMMDATEN';
         Lada.serverVersion = '';
 
         var queryString = document.location.href.split('?')[1];
@@ -71,7 +71,7 @@ Ext.application({
             Lada.openIDParams = queryString;
         }
         Ext.Ajax.request({
-            url: 'lada-server/user',
+            url: 'lada-server/rest/user',
             method: 'GET',
             scope: this,
             success: this.onLoginSuccess,
@@ -179,7 +179,7 @@ Ext.application({
     getServerVersion: function() {
         var i18n = Lada.getApplication().bundle;
         Ext.Ajax.request({
-            url: 'lada-server/version',
+            url: 'lada-server/rest/version',
             method: 'GET',
             headers: {
                 'X-OPENID-PARAMS': Lada.openIDParams
@@ -201,7 +201,11 @@ Ext.application({
     // first before the application "launch" function is called.
     controllers: [
         'Lada.controller.Filter',
-        'Lada.controller.FilterResult',
+        'Lada.controller.ModeSwitcher',
+        'Lada.controller.grid.ProbeList',
+        'Lada.controller.grid.MessprogrammeList',
+        'Lada.controller.grid.Datensatzerzeuger',
+        'Lada.controller.grid.Probenehmer',
         'Lada.controller.form.Probe',
         'Lada.controller.form.Messung',
         'Lada.controller.form.Ort',
@@ -214,7 +218,6 @@ Ext.application({
         'Lada.controller.grid.Status',
         'Lada.controller.Map',
         'Lada.controller.form.Location',
-        'Lada.controller.ProbenPlanungSwitcher',
         'Lada.controller.form.Messprogramm',
         'Lada.controller.grid.Messmethode'
         ]

@@ -66,7 +66,7 @@ Ext.define('Lada.model.Zusatzwert', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/zusatzwert',
+        url: 'lada-server/rest/zusatzwert',
         reader: {
             type: 'json',
             root: 'data'

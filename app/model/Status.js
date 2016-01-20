@@ -65,7 +65,7 @@ Ext.define('Lada.model.Status', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/status',
+        url: 'lada-server/rest/status',
         reader: {
             type: 'json',
             root: 'data'

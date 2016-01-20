@@ -7,18 +7,23 @@
  */
 
 /**
- * Store for Queries
+ * Store for Queries for Stammdaten
  */
-Ext.define('Lada.store.MessprogrammQueries', {
+Ext.define('Lada.store.StammdatenQueries', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Query',
     autoLoad: true,
+/*    data: { data: [
+         {id: '0', name: 'MessprogrammKategorie', type: 'MessprogrammKategorie', sql: 'bogus', description: 'bogusBeschr', filters:  []},
+         {id: '1', name: 'DatensatzErzeuger', type: 'DatensatzErzeuger', sql: 'bogus', description: 'bogusBeschr', filters:  []}
+        ]},*/
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/query/messprogramm',
+        url: 'lada-server/rest/query/stammdaten',
         reader: {
             type: 'json',
             root: 'data'
         }
     }
 });
+

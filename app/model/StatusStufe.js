@@ -23,7 +23,7 @@ Ext.define('Lada.model.StatusStufe', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/statusstufe',
+        url: 'lada-server/rest/statusstufe',
         reader: {
             type: 'json',
             root: 'data'

@@ -56,7 +56,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
 
 
                 Ext.Ajax.request({
-                    url: 'lada-server/probe/messprogramm',
+                    url: 'lada-server/rest/probe/messprogramm',
                     method: 'POST',
                     jsonData: jsondata,
                     success: function(response) {

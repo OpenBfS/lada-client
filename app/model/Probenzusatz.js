@@ -44,7 +44,7 @@ Ext.define('Lada.model.Probenzusatz', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/probenzusatz',
+        url: 'lada-server/rest/probenzusatz',
         reader: {
             type: 'json',
             root: 'data'

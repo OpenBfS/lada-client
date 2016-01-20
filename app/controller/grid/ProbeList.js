@@ -7,13 +7,12 @@
  */
 
 /**
- * Controller for filter result grid.
+ * Controller for the ProbeList result grid.
  */
-Ext.define('Lada.controller.FilterResult', {
+Ext.define('Lada.controller.grid.ProbeList', {
     extend: 'Ext.app.Controller',
     requires: [
         'Lada.view.window.ProbeEdit',
-        'Lada.view.window.Messprogramm',
         'Lada.view.window.GenProbenFromMessprogramm'
     ],
 
@@ -22,25 +21,21 @@ Ext.define('Lada.controller.FilterResult', {
      */
     init: function() {
         this.control({
-            'filterresultgrid': {
-                itemdblclick: this.editItem
+            'probelistgrid': {
+                itemdblclick: this.editItem,
+                select: this.activateButtons,
+                deselect: this.deactivateButtons
             },
-            'filterresultgrid toolbar button[action=addProbe]': {
+            'probelistgrid toolbar button[action=addProbe]': {
                 click: this.addProbeItem
             },
-            'filterresultgrid toolbar button[action=addMessprogramm]': {
-                click: this.addMessprogrammItem
-            },
-            'filterresultgrid toolbar button[action=genProbenFromMessprogramm]': {
-                click: this.genProbenFromMessprogramm
-            },
-            'filterresultgrid toolbar button[action=import]': {
+            'probelistgrid toolbar button[action=import]': {
                 click: this.uploadFile
             },
-            'filterresultgrid toolbar button[action=export]': {
+            'probelistgrid toolbar button[action=export]': {
                 click: this.downloadFile
             },
-            'filterresultgrid toolbar button[action=print]': {
+            'probelistgrid toolbar button[action=print]': {
                 click: this.printSelection
             }
         });
@@ -49,7 +44,7 @@ Ext.define('Lada.controller.FilterResult', {
 
     /**
      * This function is called after a Row in the
-     * {@link Lada.view.grid.FilterResult}
+     * {@link Lada.view.grid.ProbeList}
      * was double-clicked.
      * The function opens a {@link Lada.view.window.ProbeEdit}
      * or a {@link Lada.view.window.Messprogramm}.
@@ -57,30 +52,15 @@ Ext.define('Lada.controller.FilterResult', {
      * analyse the records modelname.
      */
     editItem: function(grid, record) {
-        var mname = record.store.model.modelName || '';
-        var winname = '';
+        var winname = 'Lada.view.window.ProbeEdit';
 
-        //Based upon the Model that was loaded, act differently
-        if (mname == 'Lada.model.ProbeList'){
-            winname = 'Lada.view.window.ProbeEdit';
-        }
-        else if (mname == 'Lada.model.MessprogrammList'){
-            winname = 'Lada.view.window.Messprogramm';
-        }
-        if (winname){
-            var win = Ext.create(winname, {
-                record: record,
-                style: 'z-index: -1;' //Fixes an Issue where windows could not be created in IE8
-             });
-            win.show();
-            win.initData();
-        }
-        else {
-            console.log('The model is unknown.'
-                +'No window was configured to display the data.'
-                +'I retrieved a model named:' + mname
-            );
-        }
+        var win = Ext.create(winname, {
+            record: record,
+            style: 'z-index: -1;' //Fixes an Issue where windows could not be created in IE8
+        });
+
+        win.show();
+        win.initData();
     },
 
     /**
@@ -91,56 +71,6 @@ Ext.define('Lada.controller.FilterResult', {
         var win = Ext.create('Lada.view.window.ProbeCreate');
         win.show();
         win.initData();
-    },
-
-    /**
-     * This function opens a new window to create a Probe
-     * {@link Lada.view.window.Messprogramm}
-     */
-    addMessprogrammItem: function() {
-        var win = Ext.create('Lada.view.window.Messprogramm');
-        win.show();
-        win.initData();
-    },
-
-    /**
-     * This button creates a window to generate Proben
-     * from a selected messprogramm.
-     */
-    genProbenFromMessprogramm: function(button) {
-        var grid = button.up('grid');
-        var selection = grid.getView().getSelectionModel().getSelection();
-        var i18n = Lada.getApplication().bundle;
-        var proben = [];
-        for (var i = 0; i < selection.length; i++) {
-            proben.push(selection[i].get('id'));
-        }
-        var me = this;
-
-        var winname = 'Lada.view.window.GenProbenFromMessprogramm';
-        for (p in proben) {
-            grid.setLoading(true);
-            Ext.ClassManager.get('Lada.model.Messprogramm').load(proben[p], {
-                failure: function(record, action) {
-                    me.setLoading(false);
-                    // TODO
-                    console.log('An unhandled Failure occured. See following Response and Record');
-                    console.log(action);
-                    console.log(record);
-                    },
-                success: function(record, response) {
-                    grid.setLoading(false);
-
-                    var win = Ext.create(winname, {
-                        record: record,
-                        parentWindow: null
-                    });
-                    win.show();
-                    win.initData();
-                },
-                scope: this
-            });
-        }
     },
 
     /**
@@ -158,7 +88,7 @@ Ext.define('Lada.controller.FilterResult', {
 
     /**
      * This function can be used to Download the items which
-     * were selected in the {@link Lada.view.grid.FilterResult}
+     * were selected in the {@link Lada.view.grid.ProbeList}
      * The Download does not work with Internet Explorers older than v.10
      */
     downloadFile: function(button) {
@@ -249,7 +179,7 @@ Ext.define('Lada.controller.FilterResult', {
         //Retrieve visible columns' id's and names.
         // and set displayName
         try {
-            var grid = button.up('filterresultgrid');
+            var grid = button.up('grid');
             var cman = grid.columnManager;
             var cols = cman.getColumns();
 
@@ -292,7 +222,7 @@ Ext.define('Lada.controller.FilterResult', {
 
         //Retrieve the names of the columns.
         try {
-            var grid = button.up('filterresultgrid');
+            var grid = button.up('grid');
             var cman = grid.columnManager;
             var cols = cman.getColumns();
             //Iterate columns and find column names for the key...
@@ -369,6 +299,39 @@ Ext.define('Lada.controller.FilterResult', {
                 }
             }
         });
+    },
+
+    /**
+     * Toggles the buttons in the toolbar
+     **/
+    activateButtons: function(rowModel, record) {
+        var grid = rowModel.view.up('grid');
+        this.buttonToggle(true, grid);
+    },
+
+    /**
+     * Toggles the buttons in the toolbar
+     **/
+    deactivateButtons: function(rowModel, record) {
+        var grid = rowModel.view.up('grid');
+        // Only disable buttons when nothing is selected
+        if (rowModel.selected.items == 0) {
+            this.buttonToggle(false, grid);
+        }
+    },
+
+    /**
+     * Enables/Disables a set of buttons
+     **/
+    buttonToggle: function(enabled, grid) {
+        if (!enabled) {
+            grid.down('button[action=export]').disable();
+            grid.down('button[action=print]').disable();
+        }
+        else {
+            grid.down('button[action=export]').enable();
+            grid.down('button[action=print]').enable();
+        }
     },
 
     reload: function(btn) {

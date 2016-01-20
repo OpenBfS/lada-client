@@ -162,7 +162,7 @@ Ext.define('Lada.controller.grid.Status', {
         }
 
         Ext.Ajax.request({
-            url: 'lada-server/status',
+            url: 'lada-server/rest/status',
             jsonData: record.getData(),
             method: 'POST',
             success: function(response) {

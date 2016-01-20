@@ -7,11 +7,11 @@
  */
 
 /**
- * This is a Widget for a ProbenPlanungSwitcher
+ * This is a Widget for a ModeSwitcher
  */
-Ext.define('Lada.view.ProbenPlanungSwitcher', {
+Ext.define('Lada.view.ModeSwitcher', {
     extend: 'Ext.form.FieldSet',
-    alias: 'widget.probenplanungswitcher',
+    alias: 'widget.modeswitcher',
 
     mixins: {
         observable: 'Ext.util.Observable'
@@ -29,10 +29,10 @@ Ext.define('Lada.view.ProbenPlanungSwitcher', {
             width: '100%',
             items: [{
                 xtype: 'radiofield',
-                name: 'ppswitch',
-                boxLabel: i18n.getMsg('probelist'),
-                inputValue: 'ProbeList', //this determines the store
-                    // which will be loaded,
+                name: 'modeswitch',
+                boxLabel: i18n.getMsg('proben'),
+                inputValue: 'proben', //this determines the store
+                    // which will be loaded by the controller,
                 checked: true,
                 handler: function(field, state){
                     if (state === true) {
@@ -41,9 +41,19 @@ Ext.define('Lada.view.ProbenPlanungSwitcher', {
                 }
             },{
                 xtype: 'radiofield',
-                name: 'ppswitch',
-                boxLabel: i18n.getMsg('probeplanning'),
-                inputValue: 'MessprogrammList', //name of a store
+                name: 'modeswitch',
+                boxLabel: i18n.getMsg('messprogramme'),
+                inputValue: 'messprogramme',
+                handler: function(field, state){
+                    if (state === true) {
+                        this.fireEvent('check', field);
+                    }
+                }
+            },{
+                xtype: 'radiofield',
+                name: 'modeswitch',
+                boxLabel: i18n.getMsg('stammdaten'),
+                inputValue: 'stammdaten',
                 handler: function(field, state){
                     if (state === true) {
                         this.fireEvent('check', field);

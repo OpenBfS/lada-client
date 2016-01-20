@@ -27,7 +27,7 @@ Ext.define('Lada.model.Staat', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/staat',
+        url: 'lada-server/rest/staat',
         reader: {
             type: 'json',
             root: 'data'

@@ -42,7 +42,7 @@ Ext.define('Lada.model.Netzbetreiber', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/netzbetreiber',
+        url: 'lada-server/rest/netzbetreiber',
         reader: {
             type: 'json',
             root: 'data'

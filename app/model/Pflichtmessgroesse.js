@@ -36,7 +36,7 @@ Ext.define('Lada.model.Pflichtmessgroesse', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/pflichtmessgroesse',
+        url: 'lada-server/rest/pflichtmessgroesse',
         reader: {
             type: 'json',
             root: 'data'

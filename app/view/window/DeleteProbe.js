@@ -50,8 +50,7 @@ Ext.define('Lada.view.window.DeleteProbe', {
             handler: function() {
 
                 Ext.Ajax.request({
-                    //TODO Use correct URLs
-                    url: 'lada-server/probe/'+me.record.get('id'),
+                    url: 'lada-server/rest/probe/'+me.record.get('id'),
                     method: 'DELETE',
                     success: function(response) {
                         var json = Ext.JSON.decode(response.responseText);
