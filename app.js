@@ -36,7 +36,7 @@ Ext.application({
         'Lada.store.Messmethoden',
         'Lada.store.Messstellen',
         'Lada.store.Netzbetreiber',
-        'Lada.store.Locations',
+        'Lada.store.Orte',
         'Lada.store.Pflichtmessgroessen',
         'Lada.store.Probenarten',
         'Lada.store.Probenzusaetze',
@@ -135,8 +135,8 @@ Ext.application({
         Ext.create('Lada.store.Netzbetreiber', {
             storeId: 'netzbetreiber'
         });
-        Ext.create('Lada.store.Locations', {
-            storeId: 'locations'
+        Ext.create('Lada.store.Orte', {
+            storeId: 'orte'
         });
         Ext.create('Lada.store.Pflichtmessgroessen', {
             storeId: 'pflichtmessgroessen'

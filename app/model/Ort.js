@@ -7,7 +7,7 @@
  */
 
 /**
- * Model class for Ort
+ * Model class for Ort Stammdaten
  */
 Ext.define('Lada.model.Ort', {
     extend: 'Ext.data.Model',
@@ -15,20 +15,55 @@ Ext.define('Lada.model.Ort', {
     fields: [{
         name: 'id'
     }, {
-        name: 'owner',
-        type: 'boolean'
+        name: 'aktiv'
     }, {
-        name: 'readonly',
-        type: 'boolean',
-        persist: false
+        name: 'ortId'
     }, {
-        name: 'ort'
+        name: 'nutsCode'
     }, {
-        name: 'probeId'
+        name: 'anlageId'
     }, {
-        name: 'ortsTyp'
+        name: 'netzbetreiberId'
     }, {
-        name: 'ortszusatztext'
+        name: 'gemId'
+    }, {
+        name: 'staatId'
+    }, {
+        name: 'kdaId'
+    }, {
+        name: 'ozId'
+    }, {
+        name: 'ortTyp'
+    }, {
+        name: 'mpArt'
+    }, {
+        name: 'zone'
+    }, {
+        name: 'sektor'
+    }, {
+        name: 'zustaendigkeit'
+    }, {
+        name: 'berichtstext'
+    }, {
+        name: 'kurztext'
+    }, {
+        name: 'langtext'
+    }, {
+        name: 'beschreibung'
+    }, {
+        name: 'unscharf'
+    }, {
+        name: 'hoeheLand'
+    }, {
+        name: 'koordXExtern'
+    }, {
+        name: 'koordYExtern'
+    }, {
+        name: 'longitude',
+        type: 'float'
+    }, {
+        name: 'latitude',
+        type: 'float'
     }, {
         name: 'letzteAenderung',
         type: 'date',
@@ -37,22 +72,6 @@ Ext.define('Lada.model.Ort', {
                 return v;
             }
             return new Date(v);
-        }
-    }, {
-        name: 'treeModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
-    }, {
-        name: 'parentModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
         }
     }],
 
