@@ -7,27 +7,28 @@
  */
 
 /**
- * Model class for Ort Stammdaten
+ * Model class for Ortszuorndung
  */
-Ext.define('Lada.model.Location', {
+Ext.define('Lada.model.Ortszuordnung', {
     extend: 'Ext.data.Model',
 
     fields: [{
         name: 'id'
     }, {
-        name: 'bezeichnung'
+        name: 'owner',
+        type: 'boolean'
     }, {
-        name: 'beschreibung'
+        name: 'readonly',
+        type: 'boolean',
+        persist: false
     }, {
-        name: 'unscharf'
+        name: 'ortId'
     }, {
-        name: 'nutsCode'
+        name: 'probeId'
     }, {
-        name: 'koordXExtern'
+        name: 'ortszuordnungTyp'
     }, {
-        name: 'koordYExtern'
-    }, {
-        name: 'hoeheLand'
+        name: 'ortszusatztext'
     }, {
         name: 'letzteAenderung',
         type: 'date',
@@ -38,24 +39,28 @@ Ext.define('Lada.model.Location', {
             return new Date(v);
         }
     }, {
-        name: 'longitude',
-        type: 'float'
+        name: 'treeModified',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
     }, {
-        name: 'latitude',
-        type: 'float'
-    }, {
-        name: 'staatId'
-    }, {
-        name: 'verwaltungseinheitId'
-    }, {
-        name: 'otyp'
+        name: 'parentModified',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
     }],
 
     idProperty: 'id',
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/location',
+        url: 'lada-server/rest/ortszuordnung',
         reader: {
             type: 'json',
             root: 'data'

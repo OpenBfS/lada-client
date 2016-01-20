@@ -15,7 +15,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
     requires: [
         'Lada.view.form.Probe',
-        'Lada.view.grid.Ort',
+        'Lada.view.grid.Ortszuordnung',
         'Lada.view.grid.Probenzusatzwert',
         'Lada.view.grid.PKommentar',
         'Lada.view.grid.Messung'

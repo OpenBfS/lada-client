@@ -15,14 +15,12 @@ Ext.define('Lada.model.Verwaltungseinheit', {
     /**
      * Fields are:
      *  - id: The unique identifer (Primary key)
-     *  - beschreibung: The long description.
-     *  - umweltBereich:
-     *  - mehId:
+     *  - bezeichnung: The long description.
      */
     fields: [{
         name: 'id'
     }, {
-        name: 'bundeland'
+        name: 'bundesland'
     }, {
         name: 'kdaId'
     }, {

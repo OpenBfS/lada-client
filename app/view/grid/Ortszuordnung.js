@@ -7,9 +7,9 @@
  */
 
 /**
- * Grid to list Orte
+ * Grid to list Ortszuordnungen
  */
-Ext.define('Lada.view.grid.Ort', {
+Ext.define('Lada.view.grid.Ortszuordnung', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.ortgrid',
 
@@ -57,7 +57,7 @@ Ext.define('Lada.view.grid.Ort', {
             dataIndex: 'ort',
             width: 70,
             renderer: function(value) {
-                var store = Ext.data.StoreManager.get('locations');
+                var store = Ext.data.StoreManager.get('orte');
                 var staaten = Ext.data.StoreManager.get('staaten');
                 var record =
                     staaten.getById(store.getById(value).get('staatId'));
@@ -68,20 +68,20 @@ Ext.define('Lada.view.grid.Ort', {
             dataIndex: 'ort',
             width: 120,
             renderer: function(value) {
-                var store = Ext.data.StoreManager.get('locations');
+                var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
-                return record.get('verwaltungseinheitId');
+                return record.get('gemId');
             }
         }, {
             header: 'Gemeindename',
             dataIndex: 'ort',
             flex: 1,
             renderer: function(value) {
-                var store = Ext.data.StoreManager.get('locations');
+                var store = Ext.data.StoreManager.get('orte');
                 var gemeinden =
                     Ext.data.StoreManager.get('verwaltungseinheiten');
                 var record = store.getById(value);
-                var gemid = record.get('verwaltungseinheitId');
+                var gemid = record.get('gemId');
                 var record2 = gemeinden.getById(gemid);
                 return record2.get('bezeichnung');
             }
@@ -89,7 +89,7 @@ Ext.define('Lada.view.grid.Ort', {
             header: 'Messpunkt',
             dataIndex: 'ort',
             renderer: function(value) {
-                var store = Ext.getStore('locations');
+                var store = Ext.getStore('orte');
                 var record = store.getById(value);
                 return record.get('bezeichnung');
             }
@@ -110,7 +110,7 @@ Ext.define('Lada.view.grid.Ort', {
     },
 
     initData: function() {
-        this.store = Ext.create('Lada.store.Orte');
+        this.store = Ext.create('Lada.store.Ortszuordnung');
         this.store.load({
             params: {
                 probeId: this.recordId
