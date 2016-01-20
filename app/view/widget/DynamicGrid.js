@@ -86,7 +86,12 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             tooltip: 'Probe öffnen',
             width: 30,
             getClass: function (val, meta, rec) {
-                return rec.get('readonly') === false ? "edit" : "noedit";
+                if ( rec.get('readonly') === false || rec.get('owner') ) {
+                        return 'edit';
+                }
+                else {
+                        return 'noedit';
+                }
             },
             handler: function(grid, rowIndex, colIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
