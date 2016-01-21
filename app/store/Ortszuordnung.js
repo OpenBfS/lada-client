@@ -11,5 +11,5 @@
  */
 Ext.define('Lada.store.Ortszuordnung', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Ortszuordnung
+    model: 'Lada.model.Ortszuordnung'
 });
