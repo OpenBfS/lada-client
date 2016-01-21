@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.view.grid.MessprogrammKategorie', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.mkgrid',
+    alias: 'widget.messprogrammkategoriegrid',
 
     // minHeight and deferEmptyText are needed to be able to show the
     // emptyText message.
@@ -99,16 +99,6 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
             header: i18n.getMsg('letzteAenderung'),
             dataIndex: 'letzteAenderung'
         }];
-        this.listeners = {
-           select: {
-               fn: this.activateRemoveButton,
-               scope: this
-            },
-            deselect: {
-                fn: this.deactivateRemoveButton,
-                scope: this
-            }
-        };
         this.callParent(arguments);
     },
 
@@ -120,6 +110,7 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
 
         this.removeDocked(Ext.getCmp('ptbar'), true);
         this.reconfigure(store);
+        this.down('button[action=add]').enable();
         this.addDocked([{
             xtype: 'pagingtoolbar',
             id: 'ptbar',

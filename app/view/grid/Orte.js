@@ -134,26 +134,6 @@ Ext.define('Lada.view.grid.Orte', {
             header: i18n.getMsg('orte.letzteAenderung'),
             dataIndex: 'letzteAenderung'
         }];
-        this.listeners = {
-           select: {
-               fn: this.activateRemoveButton,
-               scope: this
-            },
-            deselect: {
-                fn: this.deactivateRemoveButton,
-                scope: this
-            }
-        };
-        this.listeners = {
-           select: {
-               fn: this.activateRemoveButton,
-               scope: this
-            },
-            deselect: {
-                fn: this.deactivateRemoveButton,
-                scope: this
-            }
-        };
         this.callParent(arguments);
     },
 

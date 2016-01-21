@@ -151,16 +151,6 @@ Ext.define('Lada.view.grid.Probenehmer', {
             header: i18n.getMsg('letzteAenderung'),
             dataIndex: 'letzteAenderung'
         }];
-        this.listeners = {
-           select: {
-               fn: this.activateRemoveButton,
-               scope: this
-            },
-            deselect: {
-                fn: this.deactivateRemoveButton,
-                scope: this
-            }
-        };
         this.callParent(arguments);
     },
 

@@ -202,23 +202,26 @@ Ext.application({
     controllers: [
         'Lada.controller.Filter',
         'Lada.controller.ModeSwitcher',
-        'Lada.controller.grid.ProbeList',
-        'Lada.controller.grid.MessprogrammeList',
-        'Lada.controller.grid.Datensatzerzeuger',
-        'Lada.controller.grid.Probenehmer',
+        'Lada.controller.Map',
         'Lada.controller.form.Probe',
         'Lada.controller.form.Messung',
         'Lada.controller.form.Ort',
-        'Lada.controller.grid.Ort',
+        'Lada.controller.form.Location',
+        'Lada.controller.form.Messprogramm',
+        'Lada.controller.grid.Ortszuordnung',
         'Lada.controller.grid.Probenzusatzwert',
         'Lada.controller.grid.PKommentar',
+        'Lada.controller.grid.Messmethode',
         'Lada.controller.grid.MKommentar',
         'Lada.controller.grid.Messung',
         'Lada.controller.grid.Messwert',
         'Lada.controller.grid.Status',
-        'Lada.controller.Map',
-        'Lada.controller.form.Location',
-        'Lada.controller.form.Messprogramm',
-        'Lada.controller.grid.Messmethode'
+        //FilterResult
+        'Lada.controller.grid.MessprogrammeList',
+        'Lada.controller.grid.ProbeList',
+        //Stammdaten
+        'Lada.controller.grid.Datensatzerzeuger',
+        'Lada.controller.grid.Probenehmer',
+        'Lada.controller.grid.MessprogrammKategorie'
         ]
 });
