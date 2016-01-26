@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.view.grid.Ortszuordnung', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.ortgrid',
+    alias: 'widget.ortszuordnunggrid',
 
     maxHeight: 350,
     emptyText: 'Keine Orte gefunden.',
@@ -47,14 +47,14 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }];
         this.columns = [{
             header: 'Typ',
-            dataIndex: 'ortsTyp',
+            dataIndex: 'ortszuordnungTyp',
             width: 50,
             editor: {
                 allowBlank: false
             }
         }, {
             header: 'Staat',
-            dataIndex: 'ort',
+            dataIndex: 'ortId',
             width: 70,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
@@ -64,8 +64,8 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 return record.get('staatIso');
             }
         }, {
-            header: 'Gemeineschlüssel',
-            dataIndex: 'ort',
+            header: 'Gemeindeschlüssel',
+            dataIndex: 'ortId',
             width: 120,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
@@ -74,7 +74,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             }
         }, {
             header: 'Gemeindename',
-            dataIndex: 'ort',
+            dataIndex: 'ortId',
             flex: 1,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
@@ -86,13 +86,8 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 return record2.get('bezeichnung');
             }
         }, {
-            header: 'Messpunkt',
-            dataIndex: 'ort',
-            renderer: function(value) {
-                var store = Ext.getStore('orte');
-                var record = store.getById(value);
-                return record.get('bezeichnung');
-            }
+            header: 'Ortszusatztext',
+            dataIndex: 'ortszusatztext'
         }];
         this.listeners = {
            select: {

@@ -75,7 +75,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 padding: '5, 5',
                 margin: 5,
                 items: [{
-                    xtype: 'ortgrid',
+                    xtype: 'ortszuordnunggrid',
                     recordId: this.record.get('id')
                 }]
              }, {
@@ -183,8 +183,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
             this.down('fset[name=messungen]').down('messunggrid').setReadOnly(true);
             this.down('fset[name=messungen]').down('messunggrid').readOnly = true;
         }
-        this.down('fset[name=orte]').down('ortgrid').setReadOnly(true);
-        this.down('fset[name=orte]').down('ortgrid').readOnly = true;
+        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(true);
+        this.down('fset[name=orte]').down('ortszuordnunggrid').readOnly = true;
         this.down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').setReadOnly(true);
         this.down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').readOnly = true;
         this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(true);
@@ -197,8 +197,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
     enableChildren: function() {
         this.down('fset[name=messungen]').down('messunggrid').setReadOnly(false);
         this.down('fset[name=messungen]').down('messunggrid').readOnly = false;
-        this.down('fset[name=orte]').down('ortgrid').setReadOnly(false);
-        this.down('fset[name=orte]').down('ortgrid').readOnly = false;
+        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(false);
+        this.down('fset[name=orte]').down('ortszuordnunggrid').readOnly = false;
         this.down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').setReadOnly(false);
         this.down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').readOnly = false;
         this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(false);
