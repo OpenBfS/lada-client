@@ -205,7 +205,7 @@ Ext.application({
         'Lada.controller.Map',
         'Lada.controller.form.Probe',
         'Lada.controller.form.Messung',
-        'Lada.controller.form.Ort',
+        'Lada.controller.form.Ortszuordnung',
         'Lada.controller.form.Location',
         'Lada.controller.form.Messprogramm',
         'Lada.controller.grid.Ortszuordnung',

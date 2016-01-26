@@ -13,8 +13,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     extend: 'Ext.app.Controller',
 
     requires: [
-        'Lada.view.window.OrtEdit',
-        'Lada.view.window.OrtCreate'
+        'Lada.view.window.Ortszuordnung',
     ],
 
     /**
@@ -36,14 +35,14 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     },
 
     /**
-     * When open is called, a {@link Lada.view.window.OrtEdit}
+     * When open is called, a {@link Lada.view.window.Ortszuordnung}
      * is created which allows to edit the Orte
      */
     open: function(grid, record) {
         var probe = grid.up('window').record;
-        var win = Ext.create('Lada.view.window.OrtEdit', {
+        var win = Ext.create('Lada.view.window.Ortszuordnung', {
             parentWindow: grid.up('window'),
-            probe: probe,
+            probe: grid.up('window').down('probeform').record,
             record: record,
             grid: grid
         });
@@ -56,8 +55,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      */
     add: function(button) {
         var probe = button.up('window').record;
-        var win = Ext.create('Lada.view.window.OrtCreate', {
-            record: probe,
+        var win = Ext.create('Lada.view.window.Ortszuordnung', {
+            parentWindow: button.up('window'),
+            probe: probe,
+            record: null,
             grid: button.up('ortszuordnung')
         });
         win.show();
