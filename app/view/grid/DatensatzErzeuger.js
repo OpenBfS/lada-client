@@ -44,7 +44,6 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             dock: 'top',
             items: [{
                 xtype: 'tbtext',
-                id: 'tbtitle',
                 text: i18n.getMsg('de.gridTitle')
             },
             '->',
@@ -87,14 +86,15 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             header: i18n.getMsg('daErzeugerId'),
             dataIndex: 'daErzeugerId',
             editor: {
+                xtype: 'textfield',
                 allowBlank: false
             }
         }, {
             header: i18n.getMsg('bezeichnung'),
             dataIndex: 'bezeichnung',
             editor: {
-                allowBlank: false,
-                xtype: 'textfield'
+                xtype: 'textfield',
+                allowBlank: false
             }
         }, {
             header: i18n.getMsg('mstId'),
@@ -132,12 +132,16 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
         var i18n = Lada.getApplication().bundle;
 
         if (store) {
-            this.removeDocked(Ext.getCmp('ptbar'), true);
             this.reconfigure(store);
+
+            var ptbar = this.down('pagingtoolbar');
+            if (ptbar) {
+                this.removeDocked(ptbar);
+            }
+
             this.down('button[action=add]').enable();
             this.addDocked([{
                 xtype: 'pagingtoolbar',
-                id: 'ptbar',
                 dock: 'bottom',
                 store: store,
                 displayInfo: true

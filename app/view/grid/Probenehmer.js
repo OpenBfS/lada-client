@@ -44,7 +44,6 @@ Ext.define('Lada.view.grid.Probenehmer', {
             dock: 'top',
             items: [{
                 xtype: 'tbtext',
-                id: 'tbtitle',
                 text: i18n.getMsg('pn.gridTitle')
             },
             '->',
@@ -86,66 +85,64 @@ Ext.define('Lada.view.grid.Probenehmer', {
             header: i18n.getMsg('bearbeiter'),
             dataIndex: 'bearbeiter',
             editor: {
-                allowBlank: false
+                xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('prnId'),
             dataIndex: 'prnId',
             editor: {
+                xtype: 'textfield',
                 allowBlank: false
             }
         }, {
             header: i18n.getMsg('bemerkung'),
             dataIndex: 'bemerkung',
             editor: {
-                allowBlank: false,
-                xtype: 'textfield'
+                xtype: 'textfield',
+                allowBlank: false
             }
         }, {
             header: i18n.getMsg('kurzBezeichnung'),
             dataIndex: 'kurzBezeichnung',
             editor: {
-                allowBlank: false,
-                xtype: 'textfield'
+                xtype: 'textfield',
+                allowBlank: false
             }
         }, {
             header: i18n.getMsg('ort'),
             dataIndex: 'ort',
             editor: {
-                allowBlank: false,
                 xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('plz'),
             dataIndex: 'plz',
             editor: {
-                allowBlank: false,
                 xtype: 'numberfield'
             }
         }, {
             header: i18n.getMsg('strasse'),
             dataIndex: 'strasse',
             editor: {
-                allowBlank: false,
                 xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('telefon'),
             dataIndex: 'telefon',
             editor: {
-                allowBlank: false
+                xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('tp'),
             dataIndex: 'tp',
             editor: {
-                allowBlank: false
+                xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('typ'),
             dataIndex: 'typ',
             editor: {
-                allowBlank: false
+                xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('letzteAenderung'),
@@ -161,12 +158,16 @@ Ext.define('Lada.view.grid.Probenehmer', {
         var i18n = Lada.getApplication().bundle;
 
         if (store) {
-            this.removeDocked(Ext.getCmp('ptbar'), true);
             this.reconfigure(store);
+
+            var ptbar = this.down('pagingtoolbar');
+            if (ptbar) {
+                this.removeDocked(ptbar);
+            }
+
             this.down('button[action=add]').enable();
             this.addDocked([{
                 xtype: 'pagingtoolbar',
-                id: 'ptbar',
                 dock: 'bottom',
                 store: store,
                 displayInfo: true

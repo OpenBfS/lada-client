@@ -44,7 +44,6 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
             dock: 'top',
             items: [{
                 xtype: 'tbtext',
-                id: 'tbtitle',
                 text: i18n.getMsg('mk.gridTitle')
             },
             '->',
@@ -87,12 +86,14 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
             header: i18n.getMsg('mplId'),
             dataIndex: 'mplId',
             editor: {
+                xtype: 'textfield',
                 allowBlank: false
             }
         }, {
             header: i18n.getMsg('bezeichnung'),
             dataIndex: 'bezeichnung',
             editor: {
+                xtype: 'textfield',
                 allowBlank: false
             }
         }, {
@@ -108,15 +109,21 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
     setStore: function(store){
         var i18n = Lada.getApplication().bundle;
 
-        this.removeDocked(Ext.getCmp('ptbar'), true);
-        this.reconfigure(store);
-        this.down('button[action=add]').enable();
-        this.addDocked([{
-            xtype: 'pagingtoolbar',
-            id: 'ptbar',
-            dock: 'bottom',
-            store: store,
-            displayInfo: true
-        }]);
+        if (store) {
+            this.reconfigure(store);
+
+            var ptbar = this.down('pagingtoolbar');
+            if (ptbar) {
+                this.removeDocked(ptbar);
+            }
+
+            this.down('button[action=add]').enable();
+            this.addDocked([{
+                xtype: 'pagingtoolbar',
+                dock: 'bottom',
+                store: store,
+                displayInfo: true
+            }]);
+        }
     }
 });
