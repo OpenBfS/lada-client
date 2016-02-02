@@ -15,6 +15,7 @@ Ext.define('Lada.controller.Filter', {
 
     requires: [
         'Lada.view.widget.Messstelle',
+        'Lada.view.window.FilterManagement',
         'Lada.view.widget.Umwelt'
     ],
 
@@ -24,6 +25,10 @@ Ext.define('Lada.controller.Filter', {
     ],
 
     displayFields: null,
+
+    managementWindow: null,
+
+    mode: 'proben',
 
     /**
      * Initialize this Controller
@@ -65,6 +70,9 @@ Ext.define('Lada.controller.Filter', {
     selectSql: function(element, record) {
         var filters = element.up('panel[name=main]').down('fieldset[name=filtervariables]');
 
+        if (!record[0]) {
+            return;
+        }
         // Set "Filter Auswahl" Description
         var desc = element.up('fieldset').down('displayfield[name=description]');
         desc.setValue(record[0].data.description);
@@ -74,18 +82,12 @@ Ext.define('Lada.controller.Filter', {
         var contentPanel = element.up('panel[name=main]').down('panel[name=contentpanel]');
         var queryType = record[0].get('type'); //The type of the query, might be proben, messprogramme,
             // or a stammdatendtype
+        var details = element.up('panel[name=main]').down('filterdetails');
+        details.setRecord(record[0]);
 
         this.reset(element);
 
         contentPanel.removeAll(); //clear the panel: make space for new grids
-
-        // Set "Filter Auswahl" Columns
-        var columns = element.up('fieldset').down('displayfield[name=columns]');
-        var columnString = [];
-        for (var i = 0; i < this.displayFields.length; i++) {
-            columnString.push(this.displayFields[i].header);
-        }
-        columns.setValue(columnString.join(', '));
 
         // Setup Columns
         if (this.displayFields) {

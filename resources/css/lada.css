@@ -14,6 +14,10 @@
   border-color: #FF0000;
 }
 
+.x-lada-multiline-grid .x-grid-cell-inner{
+    white-space: normal !important;
+}
+
 .window-inactive .x-window-header-text {color: #a9a9a9;}
 
 
@@ -34,6 +38,21 @@
   background-image: url(../img/view-time-schedule-edit.png);
 }
 
+.x-grid-checkheader {
+  height: 16px;
+  background-image: url('images/unchecked.gif');
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-color: transparent;
+}
+
+.x-grid-favcolumn-checked {
+  background-image: url(../img/favorites.png);
+}
+
+.x-grid-favcolumn-unchecked {
+  background-image: url(../img/favorites_off.png);
+}
 
 /* do not display clear-button (x) in IE10+ Input fields */
 ::-ms-clear {

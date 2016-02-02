@@ -46,48 +46,8 @@ Ext.define('Lada.controller.ModeSwitcher', {
         filters.removeAll();
         filters.hide();
 
-        //Initialise variables which will define the querystore
-        // and the store which has to be loaded into the grid.
-        var querystorename = '';
-
-        // In dependence of the checkboxes input value,
-        // define the store of the filter.
-        //    app/controller/Filter.js contains similar code.
-        if (field.inputValue === 'messprogramme' && cbox) {
-            querystorename = 'Lada.store.MessprogrammQueries';
-        }
-        else if (field.inputValue === 'proben' && cbox) {
-            querystorename = 'Lada.store.ProbeQueries';
-        }
-        else if (field.inputValue === 'stammdaten' && cbox) {
-            querystorename = 'Lada.store.StammdatenQueries';
-        }
-
-        if (querystorename) {
-            var store = Ext.StoreManager.lookup(querystorename);
-
-            if (!store) {
-                store = Ext.create(querystorename, {
-                    //Select first Item on Load
-                    listeners: {
-                        load: function(store){
-                            var records = new Array();
-                            records.push(store.getAt(0));
-
-                            cbox.select(records[0]);
-                            cbox.fireEvent('select', cbox, records);
-                        }
-                    }
-                });
-            }
-
-            if (store) {
-                if (!store.autoLoad) {
-                    store.load();
-                }
-                //cbox.reset();
-                cbox.bindStore(store);
-            }
-        }
+        var filterController = this.getController('Lada.controller.Filter');
+        filterController.mode = field.inputValue;
+        filterController.updateFilter(cbox);
     }
 });

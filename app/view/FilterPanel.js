@@ -17,7 +17,7 @@ Ext.define('Lada.view.FilterPanel', {
         'Ext.layout.container.Column'
     ],
 
-    title: 'Filter-Auswahl',
+    title: 'Filter',
     initComponent: function() {
         this.layout = {
             type: 'vbox',
@@ -25,24 +25,36 @@ Ext.define('Lada.view.FilterPanel', {
         };
         var me = this;
         this.items = [{
-            xtype: 'combobox',
-            name: 'filter',
-            editable: false,
-            store: Ext.create('Lada.store.ProbeQueries',{
-                listeners: {
-                    load: function(s){
-                        var records = new Array();
-                        records.push(s.getAt(0));
-
-                        var combo = me.down('combobox[name=filter]');
-                        combo.select(records[0]);
-                        combo.fireEvent('select', combo, records);
-                    }
-                }
-            }),
-            displayField: 'name',
-            valueField: 'id',
-            emptyText: 'Wählen Sie eine Abfrage'
+            layout: 'hbox',
+            border: false,
+            items: [{
+                xtype: 'combobox',
+                name: 'filter',
+                editable: false,
+                flex: 1,
+                displayField: 'name',
+                valueField: 'id',
+                queryMode: 'local',
+                emptyText: 'Wählen Sie eine Abfrage'
+            }, {
+                xtype: 'button',
+                action: 'details',
+                enableToggle: true,
+                text: 'Details',
+                margin: '0 0 0 10'
+            }]
+        }, {
+            xtype: 'checkbox',
+            name: 'favorites',
+            boxLabel: 'nur Favoriten',
+            margin: '0, 0, 0, 5',
+            checked: true
+        }, {
+            xtype: 'displayfield',
+            name: 'description',
+            shrinkWrap: 3,
+            margin: '0, 0, 0 ,5',
+            value: '-/-'
         }, {
             xtype: 'panel',
             border: false,
@@ -55,27 +67,31 @@ Ext.define('Lada.view.FilterPanel', {
             }, {
                 xtype: 'button',
                 action: 'reset',
-                text: 'Zurücksetzen'
+                text: 'Zurücksetzen',
+                margin: '0 10 0 0'
+            }, {
+                xtype: 'button',
+                action: 'manage',
+                text: 'Filterauswahl bearbeiten'
             }],
             hidden: false
-        }, {
-            xtype: 'panel',
-            maxWidth: '500',
-            border: false,
-            margin: '0 10',
-            items: [{
-                xtype: 'displayfield',
-                name: 'description',
-                fieldLabel: 'Beschreibung',
-                shrinkWrap: 3,
-                value: '-/-'
-            }, {
-                xtype: 'displayfield',
-                name: 'columns',
-                fieldLabel: 'Spalten',
-                value: '-/-'
-            }]
         }];
         this.callParent(arguments);
+        var combo = me.down('combobox[name=filter]');
+        combo.store = Ext.create('Ext.data.Store', {
+            model: 'Lada.model.Query'
+        });
+        var store = Ext.StoreManager.get('probequeries');
+        store.on('load', function storeLoad () {
+            var entries = store.queryBy(function(record) {
+                if (record.get('favorite')) {
+                    return true;
+                }
+            });
+            combo.store.add(entries.items);
+            combo.select(combo.store.getAt(0));
+            combo.fireEvent('select', combo, [combo.store.getAt(0)]);
+            store.un('load', storeLoad);
+        });
     }
 });

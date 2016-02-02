@@ -17,7 +17,8 @@ Ext.define('Lada.view.Viewport', {
     extend: 'Ext.container.Viewport',
     requires: [
         'Lada.view.ModeSwitcher',
-        'Lada.view.FilterPanel'
+        'Lada.view.FilterPanel',
+        'Lada.view.panel.FilterDetails'
     ],
     layout: 'fit',
     initComponent: function() {
@@ -66,12 +67,11 @@ Ext.define('Lada.view.Viewport', {
                     margin: '0, 10, 0, 10'
                 }, {
                 // Variables settings for the current selected sql statement.
-                    xtype: 'fieldset',
-                    name: 'filtervariables',
-                    title: 'Variablenbelegung',
+                    xtype: 'filterdetails',
+                    name: 'filterdetails',
+                    title: i18n.getMsg('filterdetails.title'),
                     hidden: true,
-                    margin: '0, 10, 0, 10',
-                    items: []
+                    margin: '0, 10, 0, 10'
                 }]
             }, {
                 xtype: 'panel',

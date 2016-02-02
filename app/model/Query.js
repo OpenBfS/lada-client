@@ -19,6 +19,8 @@ Ext.define('Lada.model.Query', {
     }, {
         name: 'description'
     }, {
+        name: 'favorite'
+    }, {
         name: 'sql'
     }, {
         name: 'results'

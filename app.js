@@ -106,7 +106,6 @@ Ext.application({
     },
 
     onLoginSuccess: function(response) {
-        Ext.create('Lada.view.Viewport');
 
         /* Parse Username and Timestamp */
         var json = Ext.decode(response.responseText);
@@ -164,6 +163,19 @@ Ext.application({
             storeId: 'statusstufe',
             autoLoad: 'true'
         });
+        Ext.create('Lada.store.ProbeQueries', {
+            storeId: 'probequeries',
+            autoLoad: 'true'
+        });
+        Ext.create('Lada.store.MessprogrammQueries', {
+            storeId: 'messprogrammqueries',
+            autoLoad: 'true'
+        });
+        Ext.create('Lada.store.StammdatenQueries', {
+            storeId: 'stammdatenqueries',
+            autoLoad: 'true'
+        });
+
         //A Store containing all MST a User is allowed to set.
         Ext.create('Lada.store.Messstellen', {
             storeId: 'messstellenFiltered',
@@ -174,6 +186,7 @@ Ext.application({
                 return false;
             }
         });
+        Ext.create('Lada.view.Viewport');
     },
 
     getServerVersion: function() {
@@ -219,6 +232,7 @@ Ext.application({
         'Lada.controller.Map',
         'Lada.controller.form.Location',
         'Lada.controller.form.Messprogramm',
-        'Lada.controller.grid.Messmethode'
+        'Lada.controller.grid.Messmethode',
+        'Lada.controller.FilterManagement'
         ]
 });
