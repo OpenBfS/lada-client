@@ -58,7 +58,36 @@ Ext.define('Lada.view.FilterPanel', {
         }, {
             xtype: 'panel',
             border: false,
-            margin: '0 0 10 0',
+            name: 'filtervariables',
+            hidden: true,
+            margin: '10, 0, 10, 0',
+            items: [{
+                xtype: 'panel',
+                border: false,
+                name: 'filtervalues',
+                items: []
+            }, {
+
+                layout: {
+                    type: 'hbox',
+                    pack: 'end'
+                },
+                border: false,
+                items: [{
+                    xtype: 'button',
+                    action: 'savedefault',
+                    text: 'Vorbelegung speichern',
+                    margin: '0, 10, 0, 0'
+                }, {
+                    xtype: 'button',
+                    action: 'resetdefault',
+                    text: 'Vorbelegung löschen'
+                }]
+            }]
+        }, {
+            xtype: 'panel',
+            border: false,
+            margin: '10 0 10 0',
             items: [{
                 xtype: 'button',
                 action: 'search',

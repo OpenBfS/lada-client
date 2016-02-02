@@ -84,6 +84,14 @@ Ext.define('Lada.view.widget.base.TextField', {
         }
     },
 
+    getValue: function() {
+        return this.down('textfield').getValue();
+    },
+
+    setValue: function(value) {
+        this.down('textfield').setValue(value);
+    },
+
     clearWarningOrError: function() {
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();

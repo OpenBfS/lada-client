@@ -42,8 +42,9 @@ Ext.define('Lada.controller.ModeSwitcher', {
      */
     switchModes: function(field) {
         var cbox = field.up('modeswitcher').up().down('combobox');
-        filters = field.up('panel[name=main]').down('fieldset[name=filtervariables]');
-        filters.removeAll();
+        var filterValues = field.up('panel[name=main]').down('panel[name=filtervalues]');
+        var filters = field.up('panel[name=main]').down('panel[name=filtervariables]');
+        filterValues.removeAll();
         filters.hide();
 
         var filterController = this.getController('Lada.controller.Filter');

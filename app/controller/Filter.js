@@ -50,6 +50,21 @@ Ext.define('Lada.controller.Filter', {
                 // Map click event on Button.
                 click: this.reset
             },
+            'filterpanel button[action=details]': {
+                click: this.showDetails
+            },
+            'filterpanel button[action=manage]': {
+                click: this.showManagement
+            },
+            'filterpanel checkbox[name=favorites]': {
+                change: this.triggerFilterUpdate
+            },
+            'filterpanel button[action=savedefault]': {
+                click: this.saveFilterDefaults
+            },
+            'filterpanel button[action=resetdefault]': {
+                click: this.resetFilterDefaults
+            },
             'menuitem[action=about]': {
                 // Map click event on Button.
                 click: this.about
@@ -68,7 +83,8 @@ Ext.define('Lada.controller.Filter', {
      * vary between orte, kategorien, ...
      */
     selectSql: function(element, record) {
-        var filters = element.up('panel[name=main]').down('fieldset[name=filtervariables]');
+        var filters = element.up('panel[name=main]').down('panel[name=filtervariables]');
+        var filterValues = element.up('panel[name=main]').down('panel[name=filtervalues]');
 
         if (!record[0]) {
             return;
@@ -157,7 +173,7 @@ Ext.define('Lada.controller.Filter', {
          *
          *  1. Empty filters
          */
-        filters.removeAll();
+        filterValues.removeAll();
         var hide = true;
         /* 2. Iterate over all configured filters */
         var j;
@@ -166,25 +182,33 @@ Ext.define('Lada.controller.Filter', {
             var name = filterFields[j].dataIndex;
             var label = filterFields[j].label;
             var multi = filterFields[j].multiSelect;
+            var filterId = filterFields[j].id;
             var field = null;
+            var value = filterFields[j].value;
             if (type === 'text') {
                 field = Ext.create('Ext.form.field.Text', {
                     name: name,
-                    fieldLabel: label
+                    fieldLabel: label,
+                    filterId: filterId,
+                    value: value
                 });
             }
             else if (type === 'number') {
                 field = Ext.create('Ext.form.field.Number', {
                     name: name,
                     labelWidth: 135,
-                    fieldLabel: label
+                    fieldLabel: label,
+                    filterId: filterId,
+                    value: value
                 });
             }
             else if (type === 'datetime') {
                 field = Ext.create('Lada.view.widget.Datetime', {
                     name: name,
                     labelWidth: 135,
-                    fieldLabel: label
+                    fieldLabel: label,
+                    filterId: filterId,
+                    value: value
                 });
             }
             else if (type === 'bool') {
@@ -192,6 +216,8 @@ Ext.define('Lada.controller.Filter', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
+                    value: value,
+                    filterId: filterId,
                     emptyText: ''
                 });
             }
@@ -200,7 +226,9 @@ Ext.define('Lada.controller.Filter', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
-                    multiSelect: multi
+                    multiSelect: multi,
+                    filterId: filterId,
+                    value: value
                 });
             }
             else if (type === 'listumw') {
@@ -208,6 +236,8 @@ Ext.define('Lada.controller.Filter', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
+                    value: value,
+                    filterId: filterId,
                     multiSelect: multi,
                     displayTpl: Ext.create('Ext.XTemplate',
                      '<tpl for=".">{id} </tpl>')
@@ -218,6 +248,8 @@ Ext.define('Lada.controller.Filter', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
+                    value: value,
+                    filterId: filterId,
                     multiSelect: multi
                 });
             }
@@ -226,6 +258,8 @@ Ext.define('Lada.controller.Filter', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
+                    value: value,
+                    filterId: filterId,
                     multiSelect: multi
                 });
             }
@@ -234,11 +268,13 @@ Ext.define('Lada.controller.Filter', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
+                    value: value,
+                    filterId: filterId,
                     multiSelect: multi
                 });
             }
             if (field) {
-                filters.add(field);
+                filterValues.add(field);
                 filters.show();
                 hide = false;
             }
@@ -255,11 +291,11 @@ Ext.define('Lada.controller.Filter', {
      */
     search: function(element) {
         var resultGrid = element.up('panel[name=main]').down('panel[name=contentpanel]').down('grid');
-        var filters = element.up('panel[name=main]').down('fieldset[name=filtervariables]');
+        var filters = element.up('panel[name=main]').down('panel[name=filtervalues]');
         var search = element.up('fieldset').down('combobox[name=filter]');
 
         //Type of the search Proben/Messprogramme/Stammdaten
-        var type = search.store.getById(search.getValue()).get('type')
+        var type = search.store.getById(search.getValue()).get('type');
 
         // Get search parameters:
         var searchParams = {};
@@ -340,14 +376,18 @@ Ext.define('Lada.controller.Filter', {
      * This function resets the filters
      */
     reset: function(element) {
-        var filters = element.up('panel[name=main]').down('fieldset[name=filtervariables]');
+        var filters = element.up('panel[name=main]').down('panel[name=filtervalues]');
+        var search = element.up('fieldset').down('combobox[name=filter]');
+
+        //Type of the search Proben/Messprogramme/Stammdaten
+        var qId = search.getValue();
+        var query = search.store.getById(qId);
         for (var i = filters.items.length - 1; i >= 0; i--) {
             var filter = filters.items.items[i];
-            if (filter.clearValue) {
-                filter.clearValue();
-            }
-            else {
-                filter.setValue('');
+            for (var j = 0; j < query.data.filters.length; j++) {
+                if (filter.filterId === query.data.filters[j].id) {
+                    filter.setValue(query.data.filters[j].value);
+                }
             }
         }
     },
@@ -358,5 +398,157 @@ Ext.define('Lada.controller.Filter', {
     about: function() {
         var win = Ext.create('Lada.view.window.About');
         win.show();
+    },
+
+    showDetails: function(element) {
+        var search = element.up('fieldset').down('combobox[name=filter]');
+        var details = element.up('panel[name=main]').down('filterdetails');
+
+        //Type of the search Proben/Messprogramme/Stammdaten
+        var record = search.store.getById(search.getValue());
+        details.setRecord(record);
+        if (element.pressed) {
+            details.show();
+        }
+        else {
+            details.hide();
+        }
+    },
+
+    showManagement: function() {
+        if (!this.managementWindow) {
+            this.managementWindow = Ext.create('Lada.view.window.FilterManagement');
+        }
+        this.managementWindow.show();
+    },
+
+    triggerFilterUpdate: function(checkbox) {
+        var cbox = checkbox.up('fieldset').down('combobox[name=filter]');
+        this.updateFilter(cbox);
+    },
+
+    updateFilter: function(combobox) {
+        var store;
+        var entries;
+        var fav = combobox.up('fieldset').down('checkbox[name=favorites]');
+        if (this.mode === 'proben') {
+            store = Ext.StoreManager.get('probequeries');
+        }
+        else if (this.mode === 'messprogramme') {
+            store = Ext.StoreManager.get('messprogrammqueries');
+        }
+        else if (this.mode === 'stammdaten') {
+            store = Ext.StoreManager.get('stammdatenqueries');
+        }
+        else {
+            return;
+        }
+        if (fav.checked) {
+            entries = store.queryBy(function(record) {
+                if (record.get('favorite')) {
+                    return true;
+                }
+            });
+        }
+        else {
+            entries = store.queryBy(function() {
+                return true;
+            });
+        }
+        combobox.store.removeAll();
+        combobox.store.add(entries.items);
+        combobox.select(combobox.store.getAt(0));
+        combobox.fireEvent('select', combobox, [combobox.store.getAt(0)]);
+    },
+
+    saveFilterDefaults: function(button) {
+        var filters = button.up('fieldset').down('panel[name=filtervalues]');
+
+        var search = button.up('fieldset').down('combobox[name=filter]');
+
+        //Type of the search Proben/Messprogramme/Stammdaten
+        var qId = search.getValue();
+        var query = search.store.getById(qId);
+        var ndx = 0;
+        for (var i = filters.items.length - 1; i >= 0; i--) {
+            var filter = filters.items.items[i];
+            var filterId = filter.filterId;
+            var value = filter.getValue();
+            if (value instanceof Array) {
+                value = value.join(',');
+            }
+            Ext.Ajax.request({
+                url: 'lada-server/rest/filter',
+                method: 'PUT',
+                jsonData: {
+                    id: filterId,
+                    value: value
+                },
+                success: function() {
+                    ndx++;
+                    for (var j = 0; j < query.data.filters.length; i++) {
+                        if (query.data.filters[j].id === filterId) {
+                            query.data.filters[j].value = value;
+                            break;
+                        }
+                    }
+                    if (ndx < filter.items.length - 1) {
+                        return;
+                    }
+                    if (query.get('type') === 'probe') {
+                        Ext.StoreManager.get('probequeries').load();
+                    }
+                    else if (query.get('type') === 'messprogramm') {
+                        Ext.StoreManager.get('messprogrammqueries').load();
+                    }
+                    else {
+                        Ext.StoreManager.get('stammdatenqueries').load();
+                    }
+                }
+            });
+        }
+    },
+
+    resetFilterDefaults: function(button) {
+        var filters = button.up('fieldset').down('panel[name=filtervalues]');
+
+        var search = button.up('fieldset').down('combobox[name=filter]');
+
+        var qId = search.getValue();
+        var query = search.store.getById(qId);
+        for (var i = filters.items.length - 1; i >= 0; i--) {
+            var filter = filters.items.items[i];
+            var filterId = filter.filterId;
+            var value = filter.getValue();
+            if (value instanceof Array) {
+                value = value.join(',');
+            }
+            Ext.Ajax.request({
+                url: 'lada-server/rest/filter/' + filterId,
+                method: 'DELETE',
+                success: function(response) {
+                    var json = Ext.decode(response.responseText);
+                    if (!json.success) {
+                        return;
+                    }
+                    filter.setValue(json.data.value);
+                    for (var j = 0; j < query.data.filters.length; j++) {
+                        if (query.data.filters[j].id === json.data.id) {
+                            query.data.filters[j].value = json.data.value;
+                            break;
+                        }
+                    }
+                    if (query.get('type') === 'probe') {
+                        Ext.StoreManager.get('probequeries').reload();
+                    }
+                    else if (query.get('type') === 'messprogramm') {
+                        Ext.StoreManager.get('messprogrammqueries').reload();
+                    }
+                    else {
+                        Ext.StoreManager.get('stammdatenqueries').reload();
+                    }
+                }
+            });
+        }
     }
 });

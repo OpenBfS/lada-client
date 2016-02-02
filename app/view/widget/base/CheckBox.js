@@ -94,6 +94,10 @@ Ext.define('Lada.view.widget.base.CheckBox', {
         return this.down('checkbox').getValue();
     },
 
+    setValue: function(value) {
+        this.down('checkbox').setValue(value);
+    },
+
     getName: function() {
         return this.name;
     },

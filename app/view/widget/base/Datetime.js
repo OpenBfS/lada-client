@@ -92,6 +92,14 @@ Ext.define('Lada.view.widget.base.Datetime', {
         }
     },
 
+    getValue: function() {
+        return this.down('datetimefield').getValue();
+    },
+
+    setValue: function(value) {
+        this.down('datetimefield').setValue(value);
+    },
+
     clearWarningOrError: function() {
         this.down('datetimefield').clearInvalid();
         this.down('image[name=errorImg]').hide();

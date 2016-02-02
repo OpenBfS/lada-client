@@ -43,6 +43,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             readOnly: this.readOnly,
             forceSelection: this.forceSelection || false,
             msgTarget: 'none',
+            value: this.value,
             tpl: this.tpl,
             displayTpl: this.displayTpl
         }, {
@@ -106,6 +107,10 @@ Ext.define('Lada.view.widget.base.ComboBox', {
 
     getValue: function() {
         return this.down('combobox').getValue();
+    },
+
+    setValue: function(value) {
+        this.down('combobox').setValue(value);
     },
 
     clearValue: function() {
