@@ -182,7 +182,7 @@ Ext.define('Lada.view.form.Messung', {
                 messungsId: messungsId
             },
             callback: function(records, operation, success) {
-                var sw, ss;
+                var sw, ss, se;
                 var i18n = Lada.getApplication().bundle;
                 if (sStore.getTotalCount() === 0 || !statusId) {
                     sw = 0;
@@ -190,14 +190,17 @@ Ext.define('Lada.view.form.Messung', {
                 else {
                     sw = sStore.getById(statusId).get('statusWert');
                     ss = sStore.getById(statusId).get('statusStufe');
+                    se = sStore.getById(statusId).get('erzeuger');
                 }
                 this.setStatusWert(sw);
                 this.setStatusStufe(ss);
 
-                // Enable / Disable the statusreset button of the statusgrid of the messungform
+                // Enable / Disable the statusreset button of the statusgrid of the messungwindow
                 if (messwin.record.get('statusEdit') === true &&
                         sw != 0 &&
-                        sw != 4) {
+                        sw != 4 &&
+                        Ext.Array.contains(Lada.mst, se)) {
+
                     messwin.enableStatusReset();
                 }
                 else {
