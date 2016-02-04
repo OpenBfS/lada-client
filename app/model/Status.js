@@ -29,8 +29,7 @@ Ext.define('Lada.model.Status', {
         name: 'statusStufe',
         type: 'int'
     }, {
-        name: 'statusWert',
-        type: 'int'
+        name: 'statusWert'
     }, {
         name: 'treeModified',
         serialize: function(value) {
