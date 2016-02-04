@@ -17,6 +17,9 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
      */
     init: function() {
         this.control({
+            'ortszuordnungform button[action=setOrt]': {
+                toggle: this.pickOrt
+            },
             'ortszuordnungform button[action=save]': {
                 click: this.save
             },
@@ -25,9 +28,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             },
             'ortszuordnungform': {
                 dirtychange: this.dirtyForm
-            },
-            'ortszuordnungform combobox[name=ort]': {
-                select: this.updateDetails
             }
         });
     },
@@ -38,6 +38,17 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
       * on failure, it will display an Errormessage
       */
      save: function(button) {
+
+        //try to disable ortPickerButton:
+        try {
+           var ob = this.up('form').down('ortszuordnungform button[action=setOrt]');
+           if (ob.pressed) {
+                ob.toggle(false);
+            }
+        }
+        catch (e) {
+        }
+
         var formPanel = button.up('ortszuordnungform');
         var data = formPanel.getForm().getFieldValues(true);
         var i18n = Lada.getApplication().bundle;
@@ -58,7 +69,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                     formPanel.setRecord(record);
                     formPanel.setMessages(json.errors, json.warnings);
                     formPanel.up('window').grid.store.reload();
-                    debugger;
                 }
             },
             failure: function(record, response) {
@@ -96,6 +106,28 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         var formPanel = button.up('form');
         formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
     },
+
+    /**
+     * When the button is Active, a Record can be selected.
+     * If the Record was selected from a grid this function
+     *  sets the ortzuordnung.
+     * TODO: Check if the selected Record is a ORT
+     * TODO: Enable picking from Maps
+     */
+     pickOrt: function(button, pressed, opts) {
+        var i18n = Lada.getApplication().bundle;
+        var oForm = button.up('form');
+        var osg = button.up('window').down('ortstammdatengrid');
+        if (button.pressed) {
+            button.setText(i18n.getMsg('ortszuordnung.form.setOrt.pressed'));
+            osg.addListener('select',oForm.setOrt, oForm);
+        }
+        else {
+            button.setText(i18n.getMsg('ortszuordnung.form.setOrt'));
+            osg.removeListener('select',oForm.setOrt, oForm);
+        }
+     },
+
 
     /**
      * The dirtyForm function enables or disables the save and discard

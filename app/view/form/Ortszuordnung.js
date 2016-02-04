@@ -14,20 +14,28 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     alias: 'widget.ortszuordnungform',
 
     model: 'Lada.model.Ortszuordnung',
-    width: '100%',
+
+    requires: [
+        'Lada.view.widget.Verwaltungseinheit',
+        'Lada.view.widget.Staat'
+    ],
+
+    layout: 'fit',
     margin: 5,
     border: 0,
 
     record: null,
 
-    trackResetOnLoad: true,
+    //trackResetOnLoad: true,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.items = [{
             xtype: 'fieldset',
             title: i18n.getMsg('ortszuordnung.form.fset.title'),
+            layout: 'fit',
             items: [{
+                layout: 'hbox',
                 border: 0,
                 margin: '0, 0, 10, 0',
                 dockedItems: [{
@@ -39,7 +47,14 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                         borderLeft: '1px solid #b5b8c8 !important',
                         borderRight: '1px solid #b5b8c8 !important'
                     },
-                    items: ['->', {
+                    items: [{
+                        text: i18n.getMsg('ortszuordnung.form.setOrt'),
+                        qtip: i18n.getMsg('ortszuordnung.form.setOrt.qtip'),
+                        icon: 'resources/img/dialog-ok-apply.png',
+                        action: 'setOrt',
+                        enableToggle: true,
+                        disabled: true
+                    }, '->', {
                         text: i18n.getMsg('save'),
                         qtip: i18n.getMsg('save.qtip'),
                         icon: 'resources/img/dialog-ok-apply.png',
@@ -54,25 +69,39 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                     }]
                 }],
                 items: [{
-                    xtype: 'container',
-                    layout: {
-                        type: 'hbox'
-                    },
-                    flex: 1,
+                    layout: 'vbox',
+                    border: 0,
                     items: [{
                         xtype: 'tfield',
                         maxLength: 100,
                         name: 'ortszusatztext',
                         fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszusatztext'),
-                        width: 280,
-                        labelWidth: 80
                     }, {
                         xtype: 'tfield',
                         maxLength: 100,
                         name: 'ortszuordnungTyp',
                         fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp'),
-                        width: 280,
-                        labelWidth: 80
+                    }, {
+                        xtype: 'textfield',
+                        readOnly: true,
+                        hidden: true,
+                        name: 'ortId'
+                    }]
+                }, {
+                    layout: 'vbox',
+                    border: 0,
+                    items: [{
+                        xtype: 'displayfield',
+                        fieldLabel: i18n.getMsg('orte.gemId'),
+                        name: 'gemId'
+                    }, {
+                        xtype: 'displayfield',
+                        fieldLabel: i18n.getMsg('Gemeinde'),
+                        name: 'gemeinde'
+                    }, {
+                        xtype: 'displayfield',
+                        fieldLabel: i18n.getMsg('staat'),
+                        name: 'staat'
                     }]
                 }]
             }]
@@ -82,6 +111,52 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
     setRecord: function(record) {
         this.getForm().loadRecord(record);
+
+        if (! record.get('readonly')) {
+            this.down('[action=setOrt]').enable();
+            this.setReadOnly(false);
+        }
+        else {
+            this.setReadOnly(true);
+        }
+        this.refreshOrt();
+    },
+
+    refreshOrt: function() {
+        var ortId = this.getRecord().get('ortId');
+
+        var orteStore = Ext.StoreManager.get('orte');
+        var ort = orteStore.getById(ortId);
+        var verwStore =  Ext.StoreManager.get('verwaltungseinheiten');
+        var verw = verwStore.getById(ort.get('gemId'));
+        var staatStore =  Ext.StoreManager.get('staaten');
+        var staat = staatStore.getById(ort.get('staatId'));
+
+        this.getForm().setValues({
+            gemId: ort.get('gemId'),
+            gemeinde: verw.get('bezeichnung'),
+            staat: staat.get('staatIso')
+        });
+    },
+
+    /**
+     * setOrt can be called from a CallbackFunction, ie select from a grid.
+     *  it will set the ortId of this record
+     */
+    setOrt: function(row, selRecord, index, opts) {
+
+    console.log('setOrt' + Date.now());
+        var newOrtId = selRecord.get('id');
+        var r = this.getRecord();
+        if (newOrtId) {
+            if (newOrtId != r.get('ortId')) {
+                this.getForm().setValues({ ortId: newOrtId});
+                this.refreshOrt();
+                //set dirty...
+                //this.fireEvent('dirtychange', this.getForm(), true);
+            }
+        }
+    console.log('setOrtEnd' + Date.now());
     },
 
     setMessages: function(errors, warnings) {

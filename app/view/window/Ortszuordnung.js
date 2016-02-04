@@ -14,13 +14,14 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     alias: 'widget.ortszuordnungwindow',
 
     requires: [
-        'Lada.view.form.Ortszuordnung'
+        'Lada.view.form.Ortszuordnung',
+        'Lada.view.panel.Ort'
     ],
 
     collapsible: true,
     maximizable: true,
     autoshow: true,
-    layout: 'border',
+    layout: 'vbox',
     constrain: true,
 
     probe: null,
@@ -37,14 +38,14 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         this.title = i18n.getMsg('ortszuordnung.window.title');
 
         if (this.record && this.probe) {
-            // A new record will be created
+            // A record be edited
             this.title = i18n.getMsg('ortszuordnung.window.title')
                             + ' '
                             + i18n.getMsg('ortszuordnung.window.title2')
                             + ' '
                             + i18n.getMsg('probe')
                             + ' '
-                            + probe.get('hauptprobennr')
+                            + this.probe.get('hauptprobennr')
                             + ' '
                             + i18n.getMsg('edit');
         }
@@ -56,7 +57,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             + ' '
                             + i18n.getMsg('probe')
                             + ' '
-                            + probe.get('hauptprobennr')
+                            + this.probe.get('hauptprobennr')
                             + ' '
                             + i18n.getMsg('create');
         }
@@ -81,16 +82,14 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         });
 
         this.items = [{
-            region: 'west',
-            border: 0,
-            layout: 'hbox',
-            items: [{
-                xtype: 'ortszuordnungform',
-                margin: 5
-            //}, {
-            //    xtype: 'ortpanel',
-            //    margin: 5
-            }]
+            xtype: 'ortszuordnungform',
+            layout: 'fit',
+            margin: 5
+        }, {
+            xtype: 'ortpanel',
+            flex: 1,
+            toolbarPos: 'bottom',
+            margin: 5
         }];
         this.callParent(arguments);
     },
@@ -100,6 +99,17 @@ Ext.define('Lada.view.window.Ortszuordnung', {
      */
     initData: function() {
         this.down('ortszuordnungform').setRecord(this.record);
+        this.down('ortpanel').setStore();
+    },
+
+    /**
+     * @private
+     * Override to display and update the map view in the panel.
+     */
+    afterRender: function(){
+        this.superclass.afterRender.apply(this, arguments);
+        var map = this.down('ortpanel').down('map');
+        map.map.zoomToMaxExtent();
     },
 
     /**

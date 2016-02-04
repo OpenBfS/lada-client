@@ -56,6 +56,7 @@ Ext.define('Lada.model.MessprogrammKategorie', {
         url: 'lada-server/rest/messprogrammkategorie',
         reader: {
             type: 'json',
+            totalProperty: 'totalCount',
             root: 'data'
         }
     }

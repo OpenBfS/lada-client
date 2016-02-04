@@ -128,7 +128,7 @@ Ext.define('Lada.controller.Filter', {
                     resultGrid = Ext.create('Lada.view.grid.DatensatzErzeuger');
                     break;
                 case 'ort':
-                    resultGrid = Ext.create('Lada.view.grid.Orte');
+                    resultGrid = Ext.create('Lada.view.panel.Ort');
                     break;
                 case 'probenehmer':
                     resultGrid = Ext.create('Lada.view.grid.Probenehmer');

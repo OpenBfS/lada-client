@@ -136,7 +136,8 @@ Ext.application({
             storeId: 'netzbetreiber'
         });
         Ext.create('Lada.store.Orte', {
-            storeId: 'orte'
+            storeId: 'orte',
+            defaultPageSize: 0
         });
         Ext.create('Lada.store.Pflichtmessgroessen', {
             storeId: 'pflichtmessgroessen'

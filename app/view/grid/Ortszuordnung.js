@@ -48,14 +48,14 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         this.columns = [{
             header: 'Typ',
             dataIndex: 'ortszuordnungTyp',
-            width: 50,
+            flex: 1,
             editor: {
                 allowBlank: false
             }
         }, {
             header: 'Staat',
             dataIndex: 'ortId',
-            width: 70,
+            flex: 1,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var staaten = Ext.data.StoreManager.get('staaten');
@@ -66,7 +66,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: 'Gemeindeschlüssel',
             dataIndex: 'ortId',
-            width: 120,
+            flex: 3,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
@@ -75,7 +75,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: 'Gemeindename',
             dataIndex: 'ortId',
-            flex: 1,
+            flex: 4,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var gemeinden =
@@ -87,6 +87,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             }
         }, {
             header: 'Ortszusatztext',
+            flex: 6,
             dataIndex: 'ortszusatztext'
         }];
         this.listeners = {

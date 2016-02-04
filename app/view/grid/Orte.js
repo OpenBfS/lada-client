@@ -31,27 +31,6 @@ Ext.define('Lada.view.grid.Orte', {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('orte.emptyGrid');
 
-        this.dockedItems = [{
-            xtype: 'toolbar',
-            dock: 'top',
-            items: [{
-                xtype: 'tbtext',
-                id: 'tbtitle',
-                text: i18n.getMsg('orte.gridTitle')
-            },
-            '->',
-            {
-                text: i18n.getMsg('orte.button.add'),
-                icon: 'resources/img/list-add.png',
-                action: 'add',
-                disabled: true // disabled on startup, will be enabled by setStore
-            }, {
-                text: i18n.getMsg('orte.button.delete'),
-                icon: 'resources/img/list-remove.png',
-                action: 'delete',
-                disabled: true // disabled on startup, will be enabled by controller if necessary
-            }]
-        }];
         this.columns = [{
             header: i18n.getMsg('orte.ortId'),
             dataIndex: 'ortId'
@@ -144,16 +123,21 @@ Ext.define('Lada.view.grid.Orte', {
         var i18n = Lada.getApplication().bundle;
 
         if (store) {
-            this.removeDocked(Ext.getCmp('ptbar'), true);
             this.reconfigure(store);
-            this.down('button[action=add]').enable();
-            this.addDocked([{
-                xtype: 'pagingtoolbar',
-                id: 'ptbar',
-                dock: 'bottom',
-                store: store,
-                displayInfo: true
-            }]);
+
+            var ptbar = this.down('pagingtoolbar');
+            if (ptbar) {
+                this.removeDocked(ptbar);
+            }
+
+            if (store.pageSize > 0) {
+                this.addDocked([{
+                    xtype: 'pagingtoolbar',
+                    dock: 'bottom',
+                    store: store,
+                    displayInfo: true
+                }]);
+            }
         }
     }
 });

@@ -74,6 +74,7 @@ Ext.define('Lada.model.Probenehmer', {
         url: 'lada-server/rest/probenehmer',
         reader: {
             type: 'json',
+            totalProperty: 'totalCount',
             root: 'data'
         }
     }

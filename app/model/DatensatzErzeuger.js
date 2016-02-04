@@ -58,6 +58,7 @@ Ext.define('Lada.model.DatensatzErzeuger', {
         url: 'lada-server/rest/datensatzerzeuger',
         reader: {
             type: 'json',
+            totalProperty: 'totalCount',
             root: 'data'
         }
     }
