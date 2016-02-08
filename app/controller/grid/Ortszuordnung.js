@@ -43,7 +43,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var win = Ext.create('Lada.view.window.Ortszuordnung', {
             parentWindow: grid.up('window'),
             probe: grid.up('window').down('probeform').record,
-            record: record,
+            record: record.copy(),
             grid: grid
         });
         win.show();

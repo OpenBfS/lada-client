@@ -39,18 +39,18 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
       */
      save: function(button) {
 
+        var formPanel = button.up('ortszuordnungform');
+
         //try to disable ortPickerButton:
         try {
-           var ob = this.up('form').down('ortszuordnungform button[action=setOrt]');
-           if (ob.pressed) {
-                ob.toggle(false);
-            }
+           formPanel.down('button[action=setOrt]').toggle(false);
         }
         catch (e) {
         }
 
-        var formPanel = button.up('ortszuordnungform');
         var data = formPanel.getForm().getFieldValues(true);
+        debugger;
+        console.log(data);
         var i18n = Lada.getApplication().bundle;
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
@@ -69,6 +69,14 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                     formPanel.setRecord(record);
                     formPanel.setMessages(json.errors, json.warnings);
                     formPanel.up('window').grid.store.reload();
+                }
+                //try to refresh the Grid of the Probe
+                try {
+                    formPanel.up('window').parentWindow
+                        .down('ortszuordnunggrid').store.reload();
+                }
+                catch (e) {
+
                 }
             },
             failure: function(record, response) {
@@ -104,7 +112,16 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
      */
     discard: function(button) {
         var formPanel = button.up('form');
-        formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
+        var record = formPanel.getForm().getRecord();
+        formPanel.getForm().loadRecord(record);
+        try {
+            formPanel.refreshOrt(record.get('ortId'));
+            formPanel.down('button[action=setOrt]').toggle(false);
+        }
+        catch (e) {
+        }
+        //set undirty.
+        formPanel.fireEvent('dirtychange', formPanel.getForm(), false);
     },
 
     /**

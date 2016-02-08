@@ -26,7 +26,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
     record: null,
 
-    //trackResetOnLoad: true,
+    trackResetOnLoad: true,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -83,6 +83,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                         fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp'),
                     }, {
                         xtype: 'textfield',
+                        submitValue: true,
                         readOnly: true,
                         hidden: true,
                         name: 'ortId'
@@ -119,12 +120,11 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         else {
             this.setReadOnly(true);
         }
-        this.refreshOrt();
+        var ortId = this.getRecord().get('ortId');
+        this.refreshOrt(ortId);
     },
 
-    refreshOrt: function() {
-        var ortId = this.getRecord().get('ortId');
-
+    refreshOrt: function(ortId) {
         var orteStore = Ext.StoreManager.get('orte');
         var ort = orteStore.getById(ortId);
         var verwStore =  Ext.StoreManager.get('verwaltungseinheiten');
@@ -145,18 +145,16 @@ Ext.define('Lada.view.form.Ortszuordnung', {
      */
     setOrt: function(row, selRecord, index, opts) {
 
-    console.log('setOrt' + Date.now());
         var newOrtId = selRecord.get('id');
         var r = this.getRecord();
         if (newOrtId) {
             if (newOrtId != r.get('ortId')) {
                 this.getForm().setValues({ ortId: newOrtId});
-                this.refreshOrt();
+                this.refreshOrt(newOrtId);
                 //set dirty...
-                //this.fireEvent('dirtychange', this.getForm(), true);
+                this.fireEvent('dirtychange', this.getForm(), true);
             }
         }
-    console.log('setOrtEnd' + Date.now());
     },
 
     setMessages: function(errors, warnings) {
