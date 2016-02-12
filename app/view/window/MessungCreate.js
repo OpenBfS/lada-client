@@ -115,5 +115,36 @@ Ext.define('Lada.view.window.MessungCreate', {
     enableChildren: function(){
         //intentionally!
         return true;
-    }
+    },
+
+    /**
+     * Enable to reset the statusgrid
+     */
+     enableStatusReset: function() {
+        //intentionally!
+        return true;
+     },
+
+    /**
+     * Disable to reset the statusgrid
+     */
+     disableStatusReset: function() {
+        //intentionally!
+        return true;
+     },
+    /**
+     * Enable to edit the statusgrid
+     */
+     enableStatusEdit: function() {
+        //intentionally!
+        return true;
+     },
+
+    /**
+     * Disable to edit the statusgrid
+     */
+     disableStatusEdit: function() {
+        //intentionally!
+        return true;
+     }
 });

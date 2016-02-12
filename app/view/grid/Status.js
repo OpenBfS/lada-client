@@ -146,7 +146,8 @@ Ext.define('Lada.view.grid.Status', {
                 displayField: 'wert',
                 valueField: 'id',
                 allowBlank: false,
-                editable: false
+                editable: false,
+                forceSelection: true
             },
             sortable: false
         }, {

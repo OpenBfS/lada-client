@@ -129,9 +129,8 @@ Ext.define('Lada.controller.grid.Status', {
 
             record.set('id', null);
             if (record.get('statusWert') === 0) {
-                record.set('statusWert', null);
+                record.set('statusWert', '');
             }
-
         } else {
             //create a new one
             var record = Ext.create('Lada.model.Status', {
