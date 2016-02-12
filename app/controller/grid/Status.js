@@ -41,7 +41,26 @@ Ext.define('Lada.controller.grid.Status', {
      gridSave: function(editor, context) {
         context.record.set('sdatum', new Date());
         context.record.save({
-            success: function() {
+            success: function(response) {
+                var i18n = Lada.getApplication().bundle;
+                var json = Ext.JSON.decode(response.responseText);
+
+                if(json) {
+                    if (!json.success) {
+                        if(json.message){
+                            Ext.Msg.alert(i18n.getMsg('err.msg.generic.title')
+                                +' #'+json.message,
+                                i18n.getMsg(json.message));
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                                i18n.getMsg('err.msg.generic.body'));
+                        }
+                    } else {
+                        Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                        i18n.getMsg('err.msg.generic.body'));
+                    }
+                }
+
                 context.grid.initData();
                 var win = context.grid.up('window');
                 win.initData();
@@ -170,6 +189,22 @@ Ext.define('Lada.controller.grid.Status', {
             jsonData: record.getData(),
             method: 'POST',
             success: function(response) {
+                var i18n = Lada.getApplication().bundle;
+                var json = Ext.JSON.decode(response.responseText);
+
+                if(json) {
+                    if (!json.success) {
+                        if(json.message){
+                            Ext.Msg.alert(i18n.getMsg('err.msg.generic.title')
+                                +' #'+json.message,
+                                i18n.getMsg(json.message));
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                                i18n.getMsg('err.msg.generic.body'));
+                        }
+                    }
+                }
+
                 button.up('window').initData();
                 button.up('grid').initData();
             },
@@ -178,9 +213,6 @@ Ext.define('Lada.controller.grid.Status', {
                 var i18n = Lada.getApplication().bundle;
                 var json = Ext.JSON.decode(response.responseText);
                 if (json) {
-                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
-                        formPanel.setMessages(json.errors, json.warnings);
-                    }
                     if(json.message){
                         Ext.Msg.alert(i18n.getMsg('err.msg.generic.title')
                             +' #'+json.message,
