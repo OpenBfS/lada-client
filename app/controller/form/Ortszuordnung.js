@@ -49,8 +49,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         }
 
         var data = formPanel.getForm().getFieldValues(true);
-        debugger;
-        console.log(data);
         var i18n = Lada.getApplication().bundle;
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
