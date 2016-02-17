@@ -117,6 +117,10 @@ Ext.define('Lada.view.FilterPanel', {
                     return true;
                 }
             });
+            if (entries.getCount() === 0) {
+                var cb = me.down('checkbox[name=favorites]');
+                cb.setValue(false);
+            }
             combo.store.add(entries.items);
             combo.select(combo.store.getAt(0));
             combo.fireEvent('select', combo, [combo.store.getAt(0)]);
