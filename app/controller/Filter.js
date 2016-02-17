@@ -294,6 +294,9 @@ Ext.define('Lada.controller.Filter', {
         var filters = element.up('panel[name=main]').down('panel[name=filtervalues]');
         var search = element.up('fieldset').down('combobox[name=filter]');
 
+        if (!search.getValue()) {
+            return;
+        }
         //Type of the search Proben/Messprogramme/Stammdaten
         var type = search.store.getById(search.getValue()).get('type');
 
