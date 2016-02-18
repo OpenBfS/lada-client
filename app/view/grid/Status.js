@@ -104,7 +104,13 @@ Ext.define('Lada.view.grid.Status', {
                 displayField: 'messStelle',
                 valueField: 'id',
                 allowBlank: false,
-                editable: false
+                editable: false,
+                afterRender: function() {
+                    this.superclass.afterRender.apply(this, arguments);
+                    if (this.store.count() === 1) {
+                        this.setValue(this.store.getAt(0));
+                    }
+                }
             },
             sortable: false
         }, {
