@@ -165,7 +165,8 @@ Ext.define('Lada.view.window.MessungEdit', {
                 if (json) {
                     this.setMessages(json.errors, json.warnings);
                 }
-                if (this.record.get('readonly') === true) {
+                if (this.record.get('readonly') === true ||
+                    this.record.get('owner') === false) {
                     this.disableForm();
                 }
                 else {
