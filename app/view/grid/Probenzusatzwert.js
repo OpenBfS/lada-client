@@ -180,14 +180,15 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
         this.readOnly = b;
         if (b) {
             //Readonly
-            if (this.getPlugin('rowedit')){
+            if (this.getPlugin('rowedit')) {
                 this.getPlugin('rowedit').disable();
             }
             this.down('button[action=delete]').disable();
             this.down('button[action=add]').disable();
-        }else{
+        }
+        else {
             //Writable
-            if (this.getPlugin('rowedit')){
+            if (this.getPlugin('rowedit')) {
                 this.getPlugin('rowedit').enable();
             }
             //this.down('button[action=delete]').enable();
