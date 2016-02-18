@@ -76,6 +76,15 @@ Ext.define('Lada.model.Messung', {
             }
             return value;
         }
+    }, {
+        name: 'statusWert',
+        persist: false
+    }, {
+        name: 'messwerteCount',
+        persist: false
+    }, {
+        name: 'kommentarCount',
+        persist: false
     }],
 
     idProperty: 'id',
