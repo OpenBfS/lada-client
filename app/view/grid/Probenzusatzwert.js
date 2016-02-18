@@ -177,7 +177,8 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
     },
 
     setReadOnly: function(b) {
-        if (b == true){
+        this.readOnly = b;
+        if (b) {
             //Readonly
             if (this.getPlugin('rowedit')){
                 this.getPlugin('rowedit').disable();

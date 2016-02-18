@@ -131,7 +131,8 @@ Ext.define('Lada.view.grid.PKommentar', {
     },
 
     setReadOnly: function(b) {
-        if (b == true){
+        this.readOnly = b;
+        if (b) {
             //Readonly
             if (this.getPlugin('rowedit')){
                 this.getPlugin('rowedit').disable();
