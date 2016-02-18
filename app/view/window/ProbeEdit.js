@@ -137,7 +137,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
             success: function(record, response) {
                 this.down('probeform').setRecord(record);
                 this.record = record;
-                owner = this.record.get('owner');
+                var owner = this.record.get('owner');
+                var readonly = this.record.get('readonly');
 
                 if (owner) {
                     //Always allow to Add Messungen.
@@ -152,7 +153,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                     }
                 }
                 // If the Probe is ReadOnly, disable Inputfields and grids
-                if (this.record.get('readonly') === true) {
+                if (readonly === true || !owner) {
                     this.down('probeform').setReadOnly(true);
                     this.disableChildren();
                 }
