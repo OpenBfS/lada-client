@@ -30,13 +30,15 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('mk.emptyGrid');
 
-        this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
-            clicksToMoveEditor: 1,
-            autoCancel: false,
-            disabled: false,
-            pluginId: 'rowedit'
-        });
-        this.plugins = [this.rowEditing];
+        if (Ext.Array.contains(Lada.funktionen, 4)) {
+            this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+                clicksToMoveEditor: 1,
+                autoCancel: false,
+                disabled: false,
+                pluginId: 'rowedit'
+            });
+            this.plugins = [this.rowEditing];
+        }
 
         // TODO: Which docked Items are required?
         this.dockedItems = [{
@@ -115,8 +117,11 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
     /**
      * This sets the Store of this Grid
      */
-    setStore: function(store){
+    setStore: function(store) {
         var i18n = Lada.getApplication().bundle;
+        if (Ext.Array.contains(Lada.funktionen, 4)) {
+            this.down('button[action=add]').enable();
+        }
 
         this.removeDocked(Ext.getCmp('ptbar'), true);
         this.reconfigure(store);

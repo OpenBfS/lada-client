@@ -113,6 +113,7 @@ Ext.application({
         Lada.userroles = json.data.roles;
         Lada.logintime = json.data.servertime;
         Lada.mst = json.data.mst; //Store Messstellen this user may select
+        Lada.funktionen = json.data.funktionen;
         //Lada.serverVersion
         this.getServerVersion();
 

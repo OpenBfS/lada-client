@@ -21,8 +21,9 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
             'messprogrammkategoriegrid': {
                 edit: this.gridSave,
                 canceledit: this.cancelEdit,
-                select: this.activateButtons,
-                deselect: this.deactivateButtons
+                select: this.buttonToggle,
+                deselect: this.buttonToggle,
+                itemdblclick: this.edit
             },
             'messprogrammkategoriegrid button[action=add]': {
                 click: this.add
@@ -31,6 +32,11 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
                 click: this.remove
             }
         });
+    },
+
+    edit: function() {
+        var grid = Ext.ComponentQuery.query('messprogrammkategoriegrid')[0];
+        grid.down('button[action=delete]').disable();
     },
 
     /**
@@ -121,43 +127,32 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
         });
         grid.down('button[action=delete]').disable();
     },
-    /**
-     * Toggles the buttons in the toolbar
-     **/
-    activateButtons: function(rowModel, record) {
-        var grid = rowModel.view.up('grid');
-        this.buttonToggle(true, grid);
-    },
-
-    /**
-     * Toggles the buttons in the toolbar
-     **/
-    deactivateButtons: function(rowModel, record) {
-        var grid = rowModel.view.up('grid');
-        // Only disable buttons when nothing is selected
-        if (rowModel.selected.items == 0) {
-            this.buttonToggle(false, grid);
-        }
-    },
 
     /**
      * Enables/Disables a set of buttons
      **/
-    buttonToggle: function(enabled, grid) {
-        if (!enabled) {
+    buttonToggle: function(rowModel, record) {
+        if (!Ext.Array.contains(Lada.funktionen, 4)) {
+            return;
+        }
+        var grid = Ext.ComponentQuery.query('messprogrammkategoriegrid')[0];
+        if (!record) {
+            grid.down('button[action=delete]').disable();
+        }
+        if (record.get('readonly') ||
+            rowModel.selected.items.length === 0) {
             grid.down('button[action=delete]').disable();
         }
         else {
-            if (!grid.getPlugin('rowedit').editing) {
+            if (grid.getPlugin('rowedit').editing) {
             //only enable buttons, when grid is not beeing edited
+                grid.down('button[action=delete]').disable();
+            }
+            else {
                 grid.down('button[action=delete]').enable();
             }
-            //else turn them off again!
-            else {
-                this.buttonToggle(false, grid);
-            }
         }
-    },
+    }
 });
 
 

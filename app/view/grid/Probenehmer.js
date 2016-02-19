@@ -30,13 +30,15 @@ Ext.define('Lada.view.grid.Probenehmer', {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('pn.emptyGrid');
 
-        this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
-            clicksToMoveEditor: 1,
-            autoCancel: false,
-            disabled: false,
-            pluginId: 'rowedit'
-        });
-        this.plugins = [this.rowEditing];
+        if (Ext.Array.contains(Lada.funktionen, 4)) {
+            this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+                clicksToMoveEditor: 1,
+                autoCancel: false,
+                disabled: false,
+                pluginId: 'rowedit'
+            });
+            this.plugins = [this.rowEditing];
+        }
 
         // TODO: Which docked Items are required?
         this.dockedItems = [{
@@ -167,13 +169,15 @@ Ext.define('Lada.view.grid.Probenehmer', {
     /**
      * This sets the Store of this Grid
      */
-    setStore: function(store){
+    setStore: function(store) {
         var i18n = Lada.getApplication().bundle;
+        if (Ext.Array.contains(Lada.funktionen, 4)) {
+            this.down('button[action=add]').enable();
+        }
 
         if (store) {
             this.removeDocked(Ext.getCmp('ptbar'), true);
             this.reconfigure(store);
-            this.down('button[action=add]').enable();
             this.addDocked([{
                 xtype: 'pagingtoolbar',
                 id: 'ptbar',
