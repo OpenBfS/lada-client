@@ -29,24 +29,9 @@ Ext.define('Lada.model.MessprogrammKategorie', {
             }
             return new Date(v);
         }
-/*
     }, {
-        name: 'treeModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
-    }, {
-        name: 'parentModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
-*/
+        name: 'readonly',
+        type: 'boolean'
     }],
 
     idProperty: 'id',
