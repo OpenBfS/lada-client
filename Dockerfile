@@ -5,7 +5,7 @@
 # Run from the repository root-dir with e.g.
 # `docker run --name lada_client
 #             --link lada_wildfly:lada-server
-#             -p 8180-8182:80-82 -d koala/lada_client'
+#             -p 8180-8184:80-84 -d koala/lada_client'
 #
 # The linked container may be created from the Dockerfile in the lada-server
 # repository.
@@ -35,6 +35,6 @@ RUN ./install-dependencies.sh
 RUN ln -sf $PWD/custom-httpd.conf $HTTPD_PREFIX/conf/httpd.conf
 RUN ln -sf $PWD/custom-vhosts.conf $HTTPD_PREFIX/conf/extra/httpd-vhosts.conf
 
-EXPOSE 80 81 82 83
+EXPOSE 80 81 82 83 84
 
 CMD ["httpd-foreground"]
