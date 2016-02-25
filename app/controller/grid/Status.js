@@ -136,6 +136,9 @@ Ext.define('Lada.controller.grid.Status', {
             var record = Ext.create('Lada.model.Status', {
                 messungsId: button.up('statusgrid').recordId
             });
+            if (Ext.data.StoreManager.get('messstellenFiltered').count() === 1) {
+                record.set('erzeuger', Ext.data.StoreManager.get('messstellenFiltered').getAt(0).get('id'));
+            }
         }
 
         //Set the Date
