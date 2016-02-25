@@ -473,7 +473,7 @@ Ext.define('Lada.controller.Filter', {
         var qId = search.getValue();
         var query = search.store.getById(qId);
         var ndx = 0;
-        for (var i = filters.items.length - 1; i >= 0; i--) {
+        for (var i = filters.items.items.length - 1; i >= 0; i--) {
             var filter = filters.items.items[i];
             var filterId = filter.filterId;
             var value = filter.getValue();
@@ -495,7 +495,7 @@ Ext.define('Lada.controller.Filter', {
                             break;
                         }
                     }
-                    if (ndx < filter.items.length - 1) {
+                    if (ndx < filters.items.items.length - 1) {
                         return;
                     }
                     if (query.get('type') === 'probe') {
