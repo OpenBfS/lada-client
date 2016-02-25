@@ -86,11 +86,12 @@ Ext.define('Lada.controller.Filter', {
         var filters = element.up('panel[name=main]').down('panel[name=filtervariables]');
         var filterValues = element.up('panel[name=main]').down('panel[name=filtervalues]');
 
+        var desc = element.up('fieldset').down('displayfield[name=description]');
         if (!record[0]) {
+            desc.setValue('');
             return;
         }
         // Set "Filter Auswahl" Description
-        var desc = element.up('fieldset').down('displayfield[name=description]');
         desc.setValue(record[0].data.description);
 
         this.displayFields = record[0].data.results;
@@ -452,6 +453,12 @@ Ext.define('Lada.controller.Filter', {
                     return true;
                 }
             });
+            if (entries.getCount() === 0) {
+                fav.setValue(false);
+                entries = store.queryBy(function() {
+                    return true;
+                });
+            }
         }
         else {
             entries = store.queryBy(function() {
