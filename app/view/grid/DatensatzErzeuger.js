@@ -120,6 +120,8 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             }
         }, {
             header: i18n.getMsg('letzteAenderung'),
+            xtype: 'datecolumn',
+            format: 'd.m.Y H:i',
             dataIndex: 'letzteAenderung'
         }];
         this.listeners = {
