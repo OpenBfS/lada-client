@@ -447,26 +447,28 @@ Ext.define('Lada.controller.Filter', {
         else {
             return;
         }
-        if (fav.checked) {
-            entries = store.queryBy(function(record) {
-                if (record.get('favorite')) {
-                    return true;
-                }
-            });
-            if (entries.getCount() === 0) {
-                fav.setValue(false);
-                entries = store.queryBy(function() {
-                    return true;
-                });
+        var allEntries = store.queryBy(function() {
+            return true;
+        });
+        var favorites = store.queryBy(function(record) {
+            if (record.get('favorite')) {
+                return true;
             }
+        });
+        combobox.store.removeAll();
+        if (fav.checked && favorites.getCount() > 0) {
+            combobox.store.add(favorites.items);
         }
         else {
-            entries = store.queryBy(function() {
-                return true;
-            });
+            combobox.store.add(allEntries.items);
+            if (favorites.getCount() === 0) {
+                fav.setValue(false);
+                fav.disable();
+            }
+            else {
+                fav.enable();
+            }
         }
-        combobox.store.removeAll();
-        combobox.store.add(entries.items);
         combobox.select(combobox.store.getAt(0));
         combobox.fireEvent('select', combobox, [combobox.store.getAt(0)]);
     },
