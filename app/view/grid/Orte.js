@@ -26,18 +26,21 @@ Ext.define('Lada.view.grid.Orte', {
     errors: null,
     readOnly: true,
     allowDeselect: true,
+    editableGrid: true,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('orte.emptyGrid');
 
-        this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
-            clicksToMoveEditor: 1,
-            autoCancel: false,
-            disabled: false,
-            pluginId: 'rowedit'
-        });
-        this.plugins = [this.rowEditing];
+        if (this.editableGrid) {
+            this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+                clicksToMoveEditor: 1,
+                autoCancel: false,
+                disabled: false,
+                pluginId: 'rowedit'
+            });
+            this.plugins = [this.rowEditing];
+        }
 
         this.columns = [{
             header: i18n.getMsg('orte.ortId'),

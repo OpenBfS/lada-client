@@ -103,17 +103,20 @@ Ext.define('Lada.controller.Ort', {
      * Enables/Disables a set of buttons
      **/
     buttonToggle: function(enabled, panel) {
-        if (!enabled) {
+        if (!enabled &&
+            panel.down('button[action=delete]')) {
             panel.down('button[action=delete]').disable();
         }
         else {
-            if (!panel.down('ortstammdatengrid').getPlugin('rowedit').editing) {
+            if (panel.down('ortstammdatengrid').getPlugin('rowedit') &&
+                !panel.down('ortstammdatengrid').getPlugin('rowedit').editing &&
+                panel.down('button[action=delete]')) {
             //only enable buttons, when grid is not beeing edited
                 panel.down('button[action=delete]').enable();
             }
             //else turn them off again!
             else {
-                this.buttonToggle(false, panel);
+                panel.down('button[action=delete]').disable();
             }
         }
     }

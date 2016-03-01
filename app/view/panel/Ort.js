@@ -15,6 +15,8 @@ Ext.define('Lada.view.panel.Ort', {
     },
     toolbarPos: 'top',
 
+    editableGrid: true,
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
 
@@ -68,6 +70,7 @@ Ext.define('Lada.view.panel.Ort', {
         this.items = [{
             xtype: 'ortstammdatengrid',
             width: '60%',
+            editableGrid: this.editableGrid,
             collapsible: true,
             region: 'east'
         }, {
