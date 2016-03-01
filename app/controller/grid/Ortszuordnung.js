@@ -9,12 +9,11 @@
 /**
  * This is a controller for a grid of Orte
  */
-Ext.define('Lada.controller.grid.Ort', {
+Ext.define('Lada.controller.grid.Ortszuordnung', {
     extend: 'Ext.app.Controller',
 
     requires: [
-        'Lada.view.window.OrtEdit',
-        'Lada.view.window.OrtCreate'
+        'Lada.view.window.Ortszuordnung'
     ],
 
     /**
@@ -23,27 +22,27 @@ Ext.define('Lada.controller.grid.Ort', {
      */
     init: function() {
         this.control({
-            'ortgrid': {
+            'ortszuordnunggrid': {
                 itemdblclick: this.open
             },
-            'ortgrid button[action=add]': {
+            'ortszuordnunggrid button[action=add]': {
                 click: this.add
             },
-            'ortgrid button[action=delete]': {
+            'ortszuordnunggrid button[action=delete]': {
                 click: this.remove
             }
         });
     },
 
     /**
-     * When open is called, a {@link Lada.view.window.OrtEdit}
+     * When open is called, a {@link Lada.view.window.Ortszuordnung}
      * is created which allows to edit the Orte
      */
     open: function(grid, record) {
         var probe = grid.up('window').record;
-        var win = Ext.create('Lada.view.window.OrtEdit', {
+        var win = Ext.create('Lada.view.window.Ortszuordnung', {
             parentWindow: grid.up('window'),
-            probe: probe,
+            probe: grid.up('window').down('probeform').record,
             record: record,
             grid: grid
         });
@@ -56,9 +55,11 @@ Ext.define('Lada.controller.grid.Ort', {
      */
     add: function(button) {
         var probe = button.up('window').record;
-        var win = Ext.create('Lada.view.window.OrtCreate', {
-            record: probe,
-            grid: button.up('ortgrid')
+        var win = Ext.create('Lada.view.window.Ortszuordnung', {
+            parentWindow: button.up('window'),
+            probe: probe,
+            record: null,
+            grid: button.up('ortszuordnung')
         });
         win.show();
         win.initData();
@@ -73,26 +74,29 @@ Ext.define('Lada.controller.grid.Ort', {
     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
-        Ext.MessageBox.confirm('Ortsangabe löschen', 'Sind Sie sicher?', function(btn) {
-            if (btn === 'yes') {
+        var i18n = Lada.getApplication().bundle;
+        Ext.MessageBox.confirm(i18n.getMsg('delete'), i18n.getMsg('confirmation.question'),
+                                function(btn) {
+                if (btn === 'yes') {
                 selection.destroy({
                     success: function() {
                         button.up('window').initData();
                     },
                     failure: function(request, response) {
+                        var i18n = Lada.getApplication().bundle;
                         var json = response.request.scope.reader.jsonData;
                         if (json) {
                             if (json.message){
-                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title')
+                                Ext.Msg.alert(i18n.getMsg('err.msg.delete.title')
                                     +' #'+json.message,
-                                    Lada.getApplication().bundle.getMsg(json.message));
+                                    i18n.getMsg(json.message));
                             } else {
-                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
-                                    Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                                Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
+                                    i18n.getMsg('err.msg.generic.body'));
                             }
                         } else {
-                            Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
-                                Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                            Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
+                                i18n.getMsg('err.msg.response.body'));
                         }
                     }
                 });

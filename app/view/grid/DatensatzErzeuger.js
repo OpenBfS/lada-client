@@ -149,6 +149,7 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
         if (store) {
             this.removeDocked(Ext.getCmp('ptbar'), true);
             this.reconfigure(store);
+            this.down('button[action=add]').enable();
             this.addDocked([{
                 xtype: 'pagingtoolbar',
                 id: 'ptbar',

@@ -23,6 +23,7 @@ Ext.application({
     // Setting up translations. This is done using a ext-plgin which can be
     // found on https://github.com/elmasse/Ext.i18n.Bundle
     requires: [
+        'Lada.view.Viewport',
         'Lada.override.Table',
         'Lada.override.RestProxy',
         'Lada.override.RowEditor',
@@ -30,6 +31,13 @@ Ext.application({
         'Lada.override.JSON',
         'Ext.i18n.Bundle',
         'Ext.layout.container.Column',
+        'Lada.store.Deskriptoren',
+        'Lada.store.Ortszuordnung',
+        'Lada.store.Messungen',
+        'Lada.store.Zusatzwerte',
+        'Lada.store.Status',
+        'Lada.store.Messwerte',
+        'Lada.store.MKommentare',
         'Lada.store.Datenbasis',
         'Lada.store.Messeinheiten',
         'Lada.store.Messgroessen',
@@ -136,7 +144,8 @@ Ext.application({
             storeId: 'netzbetreiber'
         });
         Ext.create('Lada.store.Orte', {
-            storeId: 'orte'
+            storeId: 'orte',
+            defaultPageSize: 0
         });
         Ext.create('Lada.store.Pflichtmessgroessen', {
             storeId: 'pflichtmessgroessen'
@@ -216,21 +225,22 @@ Ext.application({
     controllers: [
         'Lada.controller.Filter',
         'Lada.controller.ModeSwitcher',
+        'Lada.controller.Map',
+        'Lada.controller.Ort',
         'Lada.controller.grid.ProbeList',
         'Lada.controller.grid.MessprogrammeList',
         'Lada.controller.grid.Datensatzerzeuger',
         'Lada.controller.grid.Probenehmer',
         'Lada.controller.form.Probe',
         'Lada.controller.form.Messung',
-        'Lada.controller.form.Ort',
-        'Lada.controller.grid.Ort',
         'Lada.controller.grid.Probenzusatzwert',
         'Lada.controller.grid.PKommentar',
         'Lada.controller.grid.MKommentar',
         'Lada.controller.grid.Messung',
         'Lada.controller.grid.Messwert',
         'Lada.controller.grid.Status',
-        'Lada.controller.Map',
+        'Lada.controller.grid.Ortszuordnung',
+        'Lada.controller.form.Ortszuordnung',
         'Lada.controller.form.Location',
         'Lada.controller.form.Messprogramm',
         'Lada.controller.grid.Messmethode',

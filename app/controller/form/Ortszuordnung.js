@@ -7,9 +7,9 @@
  */
 
 /*
- * This is a controller for an Ort Form
+ * This is a controller for an Ortszuordnung Form
  */
-Ext.define('Lada.controller.form.Ort', {
+Ext.define('Lada.controller.form.Ortszuordnung', {
     extend: 'Ext.app.Controller',
 
     /**
@@ -17,17 +17,17 @@ Ext.define('Lada.controller.form.Ort', {
      */
     init: function() {
         this.control({
-            'ortform button[action=save]': {
+            'ortszuordnungform button[action=setOrt]': {
+                toggle: this.pickOrt
+            },
+            'ortszuordnungform button[action=save]': {
                 click: this.save
             },
-            'ortform button[action=discard]': {
+            'ortszuordnungform button[action=discard]': {
                 click: this.discard
             },
-            'ortform': {
+            'ortszuordnungform': {
                 dirtychange: this.dirtyForm
-            },
-            'ortform combobox[name=ort]': {
-                select: this.updateDetails
             }
         });
     },
@@ -38,8 +38,18 @@ Ext.define('Lada.controller.form.Ort', {
       * on failure, it will display an Errormessage
       */
      save: function(button) {
-        var formPanel = button.up('ortform');
+
+        var formPanel = button.up('ortszuordnungform');
+
+        //try to disable ortPickerButton:
+        try {
+           formPanel.down('button[action=setOrt]').toggle(false);
+        }
+        catch (e) {
+        }
+
         var data = formPanel.getForm().getFieldValues(true);
+        var i18n = Lada.getApplication().bundle;
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
         }
@@ -58,6 +68,14 @@ Ext.define('Lada.controller.form.Ort', {
                     formPanel.setMessages(json.errors, json.warnings);
                     formPanel.up('window').grid.store.reload();
                 }
+                //try to refresh the Grid of the Probe
+                try {
+                    formPanel.up('window').parentWindow
+                        .down('ortszuordnunggrid').store.reload();
+                }
+                catch (e) {
+
+                }
             },
             failure: function(record, response) {
                 button.setDisabled(true);
@@ -71,41 +89,67 @@ Ext.define('Lada.controller.form.Ort', {
                     }
 
                     if(json.message){
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
                             +' #'+json.message,
-                            Lada.getApplication().bundle.getMsg(json.message));
+                            i18n.getMsg(json.message));
                     } else {
-                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                            Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.generic.body'));
                     }
                 } else {
-                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                        Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                        i18n.getMsg('err.msg.response.body'));
                 }
             }
         });
     },
 
-   /**
-    * The discard function resets the Location form
-    * to its original state.
-    */
-   discard: function(button) {
+    /**
+     * The discard function resets the Location form
+     * to its original state.
+     */
+    discard: function(button) {
         var formPanel = button.up('form');
-        formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
-        var win = button.up('window');
-        var id = formPanel.getForm().getRecord().get('ort');
-        var toLoad = Ext.data.StoreManager.get('locations').getById(id);
-        win.down('locationform').setRecord(toLoad);
-        win.down('map').selectFeature(id);
+        var record = formPanel.getForm().getRecord();
+        formPanel.getForm().loadRecord(record);
+        try {
+            formPanel.refreshOrt(record.get('ortId'));
+            formPanel.down('button[action=setOrt]').toggle(false);
+        }
+        catch (e) {
+        }
+        //set undirty.
+        formPanel.fireEvent('dirtychange', formPanel.getForm(), false);
     },
 
-     /**
-      * The dirtyForm function enables or disables the save and discard
-      * button which are present in the toolbar of the form.
-      * The Buttons are only active if the content of the form was altered
-      * (the form is dirty).
-      */
+    /**
+     * When the button is Active, a Record can be selected.
+     * If the Record was selected from a grid this function
+     *  sets the ortzuordnung.
+     * TODO: Check if the selected Record is a ORT
+     * TODO: Enable picking from Maps
+     */
+     pickOrt: function(button, pressed, opts) {
+        var i18n = Lada.getApplication().bundle;
+        var oForm = button.up('form');
+        var osg = button.up('window').down('ortstammdatengrid');
+        if (button.pressed) {
+            button.setText(i18n.getMsg('ortszuordnung.form.setOrt.pressed'));
+            osg.addListener('select',oForm.setOrt, oForm);
+        }
+        else {
+            button.setText(i18n.getMsg('ortszuordnung.form.setOrt'));
+            osg.removeListener('select',oForm.setOrt, oForm);
+        }
+     },
+
+
+    /**
+     * The dirtyForm function enables or disables the save and discard
+     * button which are present in the toolbar of the form.
+     * The Buttons are only active if the content of the form was altered
+     * (the form is dirty).
+     */
     dirtyForm: function(form, dirty) {
         if (dirty) {
             form.owner.down('button[action=save]').setDisabled(false);
@@ -114,22 +158,6 @@ Ext.define('Lada.controller.form.Ort', {
         else {
             form.owner.down('button[action=save]').setDisabled(true);
             form.owner.down('button[action=discard]').setDisabled(true);
-        }
-    },
-
-    /**
-     *  updateDetails is used when a value is selected within the ort combobox
-     *  When this function is called, the map element within the window
-     *  which is embedding this form is updated.
-     */
-    updateDetails: function(combobox, record) {
-        var win = combobox.up('window');
-        var details = win.down('locationform');
-        var id = record[0].get('id');
-        if (details) {
-            var toLoad = Ext.data.StoreManager.get('locations').getById(id);
-            win.down('locationform').setRecord(toLoad);
-            win.down('map').selectFeature(id);
         }
     }
 });

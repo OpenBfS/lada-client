@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.view.grid.Ortszuordnung', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.ortgrid',
+    alias: 'widget.ortszuordnunggrid',
 
     maxHeight: 350,
     emptyText: 'Keine Orte gefunden.',
@@ -47,15 +47,15 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }];
         this.columns = [{
             header: 'Typ',
-            dataIndex: 'ortsTyp',
-            width: 50,
+            dataIndex: 'ortszuordnungTyp',
+            flex: 1,
             editor: {
                 allowBlank: false
             }
         }, {
             header: 'Staat',
-            dataIndex: 'ort',
-            width: 70,
+            dataIndex: 'ortId',
+            flex: 1,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var staaten = Ext.data.StoreManager.get('staaten');
@@ -64,9 +64,9 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 return record.get('staatIso');
             }
         }, {
-            header: 'Gemeineschlüssel',
-            dataIndex: 'ort',
-            width: 120,
+            header: 'Gemeindeschlüssel',
+            dataIndex: 'ortId',
+            flex: 3,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
@@ -74,8 +74,8 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             }
         }, {
             header: 'Gemeindename',
-            dataIndex: 'ort',
-            flex: 1,
+            dataIndex: 'ortId',
+            flex: 4,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var gemeinden =
@@ -86,13 +86,9 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 return record2.get('bezeichnung');
             }
         }, {
-            header: 'Messpunkt',
-            dataIndex: 'ort',
-            renderer: function(value) {
-                var store = Ext.getStore('orte');
-                var record = store.getById(value);
-                return record.get('bezeichnung');
-            }
+            header: 'Ortszusatztext',
+            flex: 6,
+            dataIndex: 'ortszusatztext'
         }];
         this.listeners = {
            select: {

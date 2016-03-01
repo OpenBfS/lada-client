@@ -15,6 +15,8 @@ Ext.define('Lada.controller.Filter', {
 
     requires: [
         'Lada.view.widget.Messstelle',
+        'Lada.view.grid.MessprogrammeList',
+        'Lada.view.grid.ProbeList',
         'Lada.view.window.FilterManagement',
         'Lada.view.widget.Umwelt'
     ],
@@ -147,7 +149,7 @@ Ext.define('Lada.controller.Filter', {
                     resultGrid = Ext.create('Lada.view.grid.DatensatzErzeuger');
                     break;
                 case 'ort':
-                    resultGrid = Ext.create('Lada.view.grid.Orte');
+                    resultGrid = Ext.create('Lada.view.panel.Ort');
                     break;
                 case 'probenehmer':
                     resultGrid = Ext.create('Lada.view.grid.Probenehmer');
@@ -344,6 +346,11 @@ Ext.define('Lada.controller.Filter', {
         if (store) {
             store.addListener('beforeload', this.loadingAnimationOn, resultGrid);
             store.addListener('load', this.loadingAnimationOff, resultGrid);
+            if (type === 'ort') {
+                var panel = resultGrid.up('ortpanel');
+                store.addListener('load', panel.down('map').addLocations, panel.down('map'));
+                panel.connectListeners();
+            }
 
             resultGrid.setStore(store);
             //TODO: Check if this is still necessary, as a Grid exists

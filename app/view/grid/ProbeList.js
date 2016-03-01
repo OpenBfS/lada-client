@@ -24,7 +24,6 @@ Ext.define('Lada.view.grid.ProbeList', {
             dock: 'top',
             items: [{
                 xtype: 'tbtext',
-                id: 'tbtitle',
                 text: i18n.getMsg('probe.gridTitle')
             },
             '->',

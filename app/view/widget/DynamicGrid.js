@@ -35,11 +35,14 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     setStore: function(store){
         var i18n = Lada.getApplication().bundle;
 
-        this.removeDocked(Ext.getCmp('ptbar'), true);
         this.reconfigure(store);
+        var ptbar = this.down('pagingtoolbar');
+        if (ptbar) {
+            this.removeDocked(ptbar);
+        }
+
         this.addDocked([{
             xtype: 'pagingtoolbar',
-            id: 'ptbar',
             dock: 'bottom',
             store: store,
             displayInfo: true

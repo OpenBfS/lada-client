@@ -24,7 +24,6 @@ Ext.define('Lada.view.grid.MessprogrammeList', {
             dock: 'top',
             items: [{
                 xtype: 'tbtext',
-                id: 'tbtitle',
                 text: i18n.getMsg('messprogramme.gridTitle')
             },
             '->',

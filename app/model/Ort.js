@@ -82,6 +82,7 @@ Ext.define('Lada.model.Ort', {
         url: 'lada-server/rest/ort',
         reader: {
             type: 'json',
+            totalProperty: 'totalCount',
             root: 'data'
         }
     }
