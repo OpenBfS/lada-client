@@ -11,7 +11,7 @@ Ext.define('Lada.view.panel.Ort', {
     //height: 200,
 
     layout: {
-        type: 'border',
+        type: 'border'
     },
     toolbarPos: 'top',
 
@@ -69,7 +69,7 @@ Ext.define('Lada.view.panel.Ort', {
             xtype: 'ortstammdatengrid',
             width: '60%',
             collapsible: true,
-            region: 'east',
+            region: 'east'
         }, {
             xtype: 'map',
             region: 'center',
@@ -85,15 +85,21 @@ Ext.define('Lada.view.panel.Ort', {
                     this.map.addControl(new OpenLayers.Control.ScaleLine());
                 }
             }
-        }],
+        }];
 
         this.callParent(arguments);
+    },
+
+    afterRender: function() {
+        this.superclass.afterRender.apply(this, arguments);
+        this.down('map').map.zoomToMaxExtent();
     },
 
     setStore: function(store) {
         var me = this;
         var osg = this.down('ortstammdatengrid');
         var map = this.down('map');
+        console.log(map);
 
         if (!store) {
             var ortstore = Ext.create('Lada.store.Orte', {
@@ -111,7 +117,6 @@ Ext.define('Lada.view.panel.Ort', {
                             map.setLoading(false);
                             osg.setStore(ortstore);
                             map.addLocations(ortstore);
-
                         }
                     }
                 }
@@ -121,8 +126,20 @@ Ext.define('Lada.view.panel.Ort', {
             osg.setStore(store);
             map.addLocations(store);
         }
+        this.connectListeners();
         //enable buttons
         me.down('toolbar button[action=add]').enable();
         me.down('toolbar button[action=addMap]').enable();
+    },
+
+    getStore: function() {
+        return this.down('grid').getStore();
+    },
+
+    connectListeners: function() {
+        var osg = this.down('ortstammdatengrid');
+        var map = this.down('map');
+        map.addListener('featureselected', osg.selectOrt, osg);
+        osg.addListener('select', map.selectFeature, map);
     }
 });

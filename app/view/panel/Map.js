@@ -85,8 +85,8 @@ Ext.define('Lada.view.panel.Map', {
         }
     },
 
-    selectFeature: function(id) {
-        var feature = this.featureLayer.getFeaturesByAttribute('id', id);
+    selectFeature: function(model, record) {
+        var feature = this.featureLayer.getFeaturesByAttribute('id', record.get('id'));
         this.map.setCenter(
             new OpenLayers.LonLat(feature[0].geometry.x, feature[0].geometry.y));
         this.map.zoomToScale(this.mapOptions.scales[5]);
@@ -114,6 +114,9 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     addLocations: function(locationStore) {
+        console.log('add locations');
+        console.log(locationStore);
+        var me = this;
         locationFeatures = [];
 
         // Iterate the Store and create features from it
@@ -125,46 +128,52 @@ Ext.define('Lada.view.panel.Map', {
                 ),
                 {
                     id: locationStore.getAt(i).get('id'),
-                    bez:locationStore.getAt(i).get('kurztext')
+                    bez: locationStore.getAt(i).get('ortId')
                 }
             ));
+            console.log('add feature');
+            console.log(locationStore.getAt(i));
         }
+        console.log(locationStore.count());
 
         // Create a new Feature Layer and add it to the map
-        this.featureLayer = new OpenLayers.Layer.Vector('vector_' + this.map.name, {
-            styleMap: new OpenLayers.StyleMap({
-                'default': new OpenLayers.Style(OpenLayers.Util.applyDefaults({
-                    externalGraphic: 'resources/lib/OpenLayers/img/marker-green.png',
-                    graphicOpacity: 1,
-                    pointRadius: 10,
-                    label: '${bez}',
-                    labelAlign: 'rt',
-                    fontColor: 'green',
-                    fontWeight: 'bold'
-                }, OpenLayers.Feature.Vector.style['default'])),
-                'select': new OpenLayers.Style({
-                    externalGraphic: 'resources/lib/OpenLayers/img/marker-blue.png',
-                    pointRadius: 15,
-                    label: '${bez}',
-                    labelAlign: 'rt',
-                    fontColor: 'blue',
-                    fontWeight: 'bold'
+        if (!this.featureLayer) {
+            this.featureLayer = new OpenLayers.Layer.Vector('vector_' + this.map.name, {
+                styleMap: new OpenLayers.StyleMap({
+                    'default': new OpenLayers.Style(OpenLayers.Util.applyDefaults({
+                        externalGraphic: 'resources/lib/OpenLayers/img/marker-green.png',
+                        graphicOpacity: 1,
+                        pointRadius: 10,
+                        label: '${bez}',
+                        labelAlign: 'rt',
+                        fontColor: 'green',
+                        fontWeight: 'bold'
+                    }, OpenLayers.Feature.Vector.style['default'])),
+                    'select': new OpenLayers.Style({
+                        externalGraphic: 'resources/lib/OpenLayers/img/marker-blue.png',
+                        pointRadius: 15,
+                        label: '${bez}',
+                        labelAlign: 'rt',
+                        fontColor: 'blue',
+                        fontWeight: 'bold'
+                    })
                 })
-            })
-        });
+            });
+            this.selectControl = new OpenLayers.Control.SelectFeature(this.featureLayer, {
+                clickout: false,
+                toggle: false,
+                multiple: false,
+                hover: false,
+                onSelect: me.selectedFeature,
+                scope: me
+            });
+            this.map.addControl(this.selectControl);
+            this.selectControl.activate();
+        }
+        this.featureLayer.removeAllFeatures();
         this.featureLayer.addFeatures(locationFeatures);
         this.map.addLayer(this.featureLayer);
 
-        this.selectControl = new OpenLayers.Control.SelectFeature(this.featureLayer, {
-            clickout: false,
-            toggle: false,
-            multiple: false,
-            hover: false,
-            onSelect: me.selectedFeature,
-            scope: me
-        });
-        this.map.addControl(this.selectControl);
-        this.selectControl.activate();
     },
 
 

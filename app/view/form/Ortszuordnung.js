@@ -71,16 +71,19 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                 items: [{
                     layout: 'vbox',
                     border: 0,
+                    margin: '0, 10, 0, 0',
                     items: [{
                         xtype: 'tfield',
+                        labelWidth: 125,
                         maxLength: 100,
                         name: 'ortszusatztext',
-                        fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszusatztext'),
+                        fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszusatztext')
                     }, {
                         xtype: 'tfield',
+                        labelWidth: 125,
                         maxLength: 100,
                         name: 'ortszuordnungTyp',
-                        fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp'),
+                        fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp')
                     }, {
                         xtype: 'textfield',
                         submitValue: true,
@@ -90,19 +93,35 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                     }]
                 }, {
                     layout: 'vbox',
+                    flex: 1,
+                    margin: '0, 10, 0, 0',
                     border: 0,
                     items: [{
                         xtype: 'displayfield',
-                        fieldLabel: i18n.getMsg('orte.gemId'),
-                        name: 'gemId'
-                    }, {
-                        xtype: 'displayfield',
-                        fieldLabel: i18n.getMsg('Gemeinde'),
+                        labelWidth: 125,
+                        fieldLabel: i18n.getMsg('orte.gemeinde'),
                         name: 'gemeinde'
                     }, {
                         xtype: 'displayfield',
+                        labelWidth: 125,
                         fieldLabel: i18n.getMsg('staat'),
                         name: 'staat'
+                    }]
+                }, {
+                    layout: 'vbox',
+                    flex: 1,
+                    margin: '0, 10, 0, 0',
+                    border: 0,
+                    items: [{
+                        xtype: 'displayfield',
+                        labelWidth: 125,
+                        fieldLabel: i18n.getMsg('orte.lon'),
+                        name: 'lon'
+                    }, {
+                        xtype: 'displayfield',
+                        labelWidth: 125,
+                        fieldLabel: i18n.getMsg('orte.lat'),
+                        name: 'lat'
                     }]
                 }]
             }]
@@ -127,15 +146,17 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     refreshOrt: function(ortId) {
         var orteStore = Ext.StoreManager.get('orte');
         var ort = orteStore.getById(ortId);
-        var verwStore =  Ext.StoreManager.get('verwaltungseinheiten');
+        var verwStore = Ext.StoreManager.get('verwaltungseinheiten');
         var verw = verwStore.getById(ort.get('gemId'));
-        var staatStore =  Ext.StoreManager.get('staaten');
+        var staatStore = Ext.StoreManager.get('staaten');
         var staat = staatStore.getById(ort.get('staatId'));
+        console.log(ort);
 
         this.getForm().setValues({
-            gemId: ort.get('gemId'),
             gemeinde: verw.get('bezeichnung'),
-            staat: staat.get('staatIso')
+            staat: staat.get('staatIso'),
+            lon: ort.get('longitude'),
+            lat: ort.get('latitude')
         });
     },
 

@@ -204,6 +204,7 @@ Ext.application({
         'Lada.controller.Filter',
         'Lada.controller.ModeSwitcher',
         'Lada.controller.Map',
+        'Lada.controller.Ort',
         'Lada.controller.form.Probe',
         'Lada.controller.form.Messung',
         'Lada.controller.form.Ortszuordnung',

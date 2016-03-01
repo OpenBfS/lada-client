@@ -302,6 +302,11 @@ Ext.define('Lada.controller.Filter', {
         if (store) {
             store.addListener('beforeload', this.loadingAnimationOn, resultGrid);
             store.addListener('load', this.loadingAnimationOff, resultGrid);
+            if (type === 'ort') {
+                var panel = resultGrid.up('ortpanel');
+                store.addListener('load', panel.down('map').addLocations, panel.down('map'));
+                panel.connectListeners();
+            }
 
             resultGrid.setStore(store);
             //TODO: Check if this is still necessary, as a Grid exists

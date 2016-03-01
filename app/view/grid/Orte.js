@@ -31,6 +31,14 @@ Ext.define('Lada.view.grid.Orte', {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('orte.emptyGrid');
 
+        this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+            clicksToMoveEditor: 1,
+            autoCancel: false,
+            disabled: false,
+            pluginId: 'rowedit'
+        });
+        this.plugins = [this.rowEditing];
+
         this.columns = [{
             header: i18n.getMsg('orte.ortId'),
             dataIndex: 'ortId'
@@ -139,5 +147,11 @@ Ext.define('Lada.view.grid.Orte', {
                 }]);
             }
         }
+    },
+
+    selectOrt: function(map, feature) {
+        var id = feature[0].data.id;
+        var record = this.store.getById(id);
+        this.getSelectionModel().select(record);
     }
 });

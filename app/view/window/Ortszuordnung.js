@@ -84,6 +84,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         this.items = [{
             xtype: 'ortszuordnungform',
             layout: 'fit',
+            width: '100%',
             margin: 5
         }, {
             xtype: 'ortpanel',
