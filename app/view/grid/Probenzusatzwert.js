@@ -90,14 +90,12 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
         }, {
             header: 'Messwert',
             dataIndex: 'messwertPzs',
-            xtype: 'numbercolumn',
             flex: 1,
             editor: {
-                xtype: 'numberfield',
+                xtype: 'textfield',
                 allowBlank: false,
-                maxLength: 10,
-                enforceMaxLength: true,
-                allowExponential: false
+                regex: /^[+\-]?(?:(?:0|[1-9]\d*)(?:[\.\,][0-9]\d*)?(?:[eE][+\-]?\d+)|(\d+[\.\,]?\d*)?)$/,
+                regexText: 'Keine Zahl'
             }
         }, {
             header: '< NWG',
@@ -114,14 +112,12 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             header: 'Nachweisgrenze',
             dataIndex: 'nwgZuMesswert',
             xtype: 'numbercolumn',
-            format: '0',
             flex: 1,
             editor: {
-                xtype: 'numberfield',
+                xtype: 'textfield',
                 allowBlank: false,
-                maxLength: 10,
-                enforceMaxLength: true,
-                allowExponential: false
+                regex: /^[+\-]?(?:(?:0|[1-9]\d*)(?:[\.\,][0-9]\d*)?(?:[eE][+\-]?\d+)|(\d+[\.\,]?\d*)?)$/,
+                regexText: 'Keine Zahl'
             }
         }, {
             header: 'Maßeinheit',

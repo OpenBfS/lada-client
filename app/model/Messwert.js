@@ -27,7 +27,42 @@ Ext.define('Lada.model.Messwert', {
         name: 'messgroesseId'
     }, {
         name: 'messwert',
-        type: 'float'
+        serialize: function(v) {
+            if (!v || v === '') {
+                return v;
+            }
+            if (v.indexOf(',') > 0) {
+                v = v.replace(',', '.');
+                return v;
+            }
+            return v;
+        },
+        convert: function(value) {
+            if (!value || value === '') {
+                return value;
+            }
+            var valueString = value.toString();
+            if (valueString.indexOf('E') > 0) {
+                valueString = valueString.replace('E', 'e');
+            }
+            var tmp;
+            if (valueString.indexOf('e') > 0) {
+                tmp = valueString;
+            }
+            else {
+                // Currently not locale friendly...
+                if (valueString.indexOf(',') > 0) {
+                    valueString = valueString.replace(',', '.');
+                }
+                tmp = parseFloat(valueString).toExponential();
+            }
+            var parts = tmp.split('e');
+            if (parts[0].indexOf('.') > 0) {
+                var floatPart = parseFloat(parts[0]);
+                parts[0] = floatPart.toLocaleString();
+            }
+            return parts[0] + 'e' + parts[1];
+        }
     }, {
         name: 'messwertNwg',
         convert: function(v) {
@@ -42,7 +77,42 @@ Ext.define('Lada.model.Messwert', {
         type: 'float'
     }, {
         name: 'nwgZuMesswert',
-        type: 'float'
+        serialize: function(v) {
+            if (!v || v === '') {
+                return v;
+            }
+            if (v.indexOf(',') > 0) {
+                v = v.replace(',', '.');
+                return v;
+            }
+            return v;
+        },
+        convert: function(value) {
+            if (!value || value === '') {
+                return value;
+            }
+            var valueString = value.toString();
+            if (valueString.indexOf('E') > 0) {
+                valueString = valueString.replace('E', 'e');
+            }
+            var tmp;
+            if (valueString.indexOf('e') > 0) {
+                tmp = valueString;
+            }
+            else {
+                // Currently not locale friendly...
+                if (valueString.indexOf(',') > 0) {
+                    valueString = valueString.replace(',', '.');
+                }
+                tmp = parseFloat(valueString).toExponential();
+            }
+            var parts = tmp.split('e');
+            if (parts[0].indexOf('.') > 0) {
+                var floatPart = parseFloat(parts[0]);
+                parts[0] = floatPart.toLocaleString();
+            }
+            return parts[0] + 'e' + parts[1];
+        }
     }, {
         name: 'mehId'
     }, {

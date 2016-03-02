@@ -100,25 +100,17 @@ Ext.define('Lada.view.grid.Messwert', {
             dataIndex: 'messwertNwg',
             editor: {
                 xtype: 'checkbox',
-     	        inputValue: '<'
+                inputValue: '<'
             }
         }, {
             header: 'Messwert',
             dataIndex: 'messwert',
-            xtype: 'numbercolumn',
             width: 80,
-            renderer: function(value) {
-              return value.toExponential(2);
-            },
             editor: {
-                xtype: 'numberfield',
+                xtype: 'textfield',
                 allowBlank: false,
-                maxLength: 10,
-                allowExponential: true,
-                enforceMaxLength: true,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
+                regex: /^[+\-]?(?:(?:0|[1-9]\d*)(?:[\.\,][0-9]\d*)?(?:[eE][+\-]?\d+)|(\d+[\.\,]?\d*)?)$/,
+                regexText: 'Keine Zahl'
             }
         }, {
             header: 'Messeinheit',
@@ -159,25 +151,13 @@ Ext.define('Lada.view.grid.Messwert', {
             }
         }, {
             header: 'Nachweisgrenze',
-            xtype: 'numbercolumn',
             dataIndex: 'nwgZuMesswert',
             width: 80,
-            renderer: function(value) {
-              if (!value) {
-                return null;
-              } else {
-                return value.toExponential(2);
-              }
-            },
             editor: {
-                xtype: 'numberfield',
+                xtype: 'textfield',
                 allowBlank: true,
-                maxLength: 10,
-                allowExponential: true,
-                enforceMaxLength: true,
-                hideTrigger: true,
-                keyNavEnabled: false,
-                mouseWheelEnabled: false
+                regex: /^[+\-]?(?:(?:0|[1-9]\d*)(?:[\.\,][0-9]\d*)?(?:[eE][+\-]?\d+)|(\d+[\.\,]?\d*)?)$/,
+                regexText: 'Keine Zahl'
             }
         }, {
             header: 'Grenzwertüberschreitung',
