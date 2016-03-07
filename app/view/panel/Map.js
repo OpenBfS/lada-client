@@ -81,7 +81,7 @@ Ext.define('Lada.view.panel.Map', {
 
         if (!this.externalOrteStore) {
             this.locationStore = Ext.data.StoreManager.get('orte');
-            this.addLocations(locationStore);
+            this.addLocations(this.locationStore);
         }
     },
 

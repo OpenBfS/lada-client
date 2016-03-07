@@ -12,7 +12,7 @@
 Ext.define('Lada.view.widget.Location', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.location',
-    displayField: 'bezeichnung',
+    displayField: 'ortId',
     valueField: 'id',
     emptyText: 'Wählen Sie einen Ort',
     // Enable filtering of comboboxes
@@ -23,9 +23,9 @@ Ext.define('Lada.view.widget.Location', {
     minChars: 0,
 
     initComponent: function() {
-        this.store = Ext.data.StoreManager.get('locations');
+        this.store = Ext.data.StoreManager.get('orte');
         if (!this.store) {
-            this.store = Ext.create('Lada.store.Locations');
+            this.store = Ext.create('Lada.store.Orte');
         }
         this.callParent(arguments);
     }
