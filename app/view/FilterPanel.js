@@ -81,7 +81,7 @@ Ext.define('Lada.view.FilterPanel', {
                 }, {
                     xtype: 'button',
                     action: 'resetdefault',
-                    text: 'Vorbelegung löschen'
+                    text: 'Vorbelegung zurücksetzen'
                 }]
             }]
         }, {
