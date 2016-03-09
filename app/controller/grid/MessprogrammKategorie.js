@@ -138,6 +138,7 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
         var grid = Ext.ComponentQuery.query('messprogrammkategoriegrid')[0];
         if (!record) {
             grid.down('button[action=delete]').disable();
+            return;
         }
         if (record.get('readonly') ||
             rowModel.selected.items.length === 0) {

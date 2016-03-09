@@ -141,6 +141,7 @@ Ext.define('Lada.controller.grid.Probenehmer', {
         var grid = Ext.ComponentQuery.query('probenehmergrid')[0];
         if (!record) {
             grid.down('button[action=delete]').disable();
+            return;
         }
         if (record.get('readonly') ||
             rowModel.selected.items.length === 0) {

@@ -142,6 +142,7 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
         var grid = Ext.ComponentQuery.query('datensatzerzeugergrid')[0];
         if (!record) {
             grid.down('button[action=delete]').disable();
+            return;
         }
         if (record.get('readonly') ||
             rowModel.selected.items.length === 0) {
