@@ -34,6 +34,7 @@ Ext.define('Lada.view.grid.Probenehmer', {
             this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
                 clicksToMoveEditor: 1,
                 autoCancel: false,
+                errorSummary: false,
                 disabled: false,
                 pluginId: 'rowedit'
             });
