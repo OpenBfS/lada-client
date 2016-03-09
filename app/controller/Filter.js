@@ -230,6 +230,7 @@ Ext.define('Lada.controller.Filter', {
                     labelWidth: 135,
                     fieldLabel: label,
                     multiSelect: multi,
+                    forceSelection: false,
                     filterId: filterId,
                     value: value
                 });
@@ -241,6 +242,7 @@ Ext.define('Lada.controller.Filter', {
                     fieldLabel: label,
                     value: value,
                     filterId: filterId,
+                    forceSelection: false,
                     multiSelect: multi,
                     displayTpl: Ext.create('Ext.XTemplate',
                      '<tpl for=".">{id} </tpl>')
@@ -251,6 +253,7 @@ Ext.define('Lada.controller.Filter', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
+                    forceSelection: false,
                     value: value,
                     filterId: filterId,
                     multiSelect: multi
@@ -261,6 +264,7 @@ Ext.define('Lada.controller.Filter', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
+                    forceSelection: false,
                     value: value,
                     filterId: filterId,
                     multiSelect: multi
@@ -271,6 +275,7 @@ Ext.define('Lada.controller.Filter', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
+                    forceSelection: false,
                     value: value,
                     filterId: filterId,
                     multiSelect: multi
