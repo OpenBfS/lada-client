@@ -88,13 +88,14 @@ Ext.define('Lada.view.grid.Probenehmer', {
             header: i18n.getMsg('bearbeiter'),
             dataIndex: 'bearbeiter',
             editor: {
-                allowBlank: false
+                xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('prnId'),
             dataIndex: 'prnId',
             editor: {
                 allowBlank: false
+                xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('bemerkung'),
@@ -114,40 +115,37 @@ Ext.define('Lada.view.grid.Probenehmer', {
             header: i18n.getMsg('ort'),
             dataIndex: 'ort',
             editor: {
-                allowBlank: false,
                 xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('plz'),
             dataIndex: 'plz',
             editor: {
-                allowBlank: false,
                 xtype: 'numberfield'
             }
         }, {
             header: i18n.getMsg('strasse'),
             dataIndex: 'strasse',
             editor: {
-                allowBlank: false,
                 xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('telefon'),
             dataIndex: 'telefon',
             editor: {
-                allowBlank: false
+                xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('tp'),
             dataIndex: 'tp',
             editor: {
-                allowBlank: false
+                xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('typ'),
             dataIndex: 'typ',
             editor: {
-                allowBlank: false
+                xtype: 'textfield'
             }
         }, {
             header: i18n.getMsg('letzteAenderung'),
