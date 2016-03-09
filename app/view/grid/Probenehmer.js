@@ -95,7 +95,7 @@ Ext.define('Lada.view.grid.Probenehmer', {
             header: i18n.getMsg('prnId'),
             dataIndex: 'prnId',
             editor: {
-                allowBlank: false
+                allowBlank: false,
                 xtype: 'textfield'
             }
         }, {
