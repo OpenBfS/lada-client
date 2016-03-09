@@ -184,7 +184,7 @@ Ext.define('Lada.controller.Filter', {
             var type = filterFields[j].type;
             var name = filterFields[j].dataIndex;
             var label = filterFields[j].label;
-            var multi = filterFields[j].multiSelect;
+            var multi = filterFields[j].multiselect;
             var filterId = filterFields[j].id;
             var field = null;
             var value = filterFields[j].value;
