@@ -44,13 +44,6 @@ Ext.define('Lada.view.grid.Messung', {
             }]
         }];
         this.columns = [{
-            header: 'Mess-ID',
-            dataIndex: 'id',
-            flex: 1,
-            editor: {
-                allowBlank: false
-            }
-        }, {
             header: 'Nebenproben-Nr.',
             dataIndex: 'nebenprobenNr',
             flex: 1,
