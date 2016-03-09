@@ -89,6 +89,23 @@ Ext.define('Lada.view.grid.Messung', {
                 return sta.getById(value).get('wert');
             }
         }, {
+            header: 'Stufe',
+            flex: 1,
+            dataIndex: 'statusStufe',
+            renderer: function(value, meta, record, rNdx, cNdx) {
+                var statusId = record.get('status');
+                var mId = record.get('id');
+                //also fwd the record to the asynchronous loading of statuswerte
+                // in order to add the statuswert to the record,
+                // after the grid was rendered...
+                if (value === '') {
+                    this.updateStatus(mId, statusId, record);
+                    return 'Lade...';
+                }
+                var sta = Ext.data.StoreManager.getByKey('statusstufe');
+                return sta.getById(value).get('stufe');
+            }
+        }, {
             header: 'OK-Flag',
             dataIndex: 'fertig',
             flex: 1,
@@ -232,11 +249,13 @@ Ext.define('Lada.view.grid.Messung', {
             var rec = sstore.getById(opts.statusId);
             if (rec) {
                 value = rec.get('statusWert');
+                var stufe = rec.get('statusStufe');
                 //add the determined statuswert to the record.
                 // this is necessary to let the controller determine
                 // which actions are allowed.
                 opts.record.beginEdit();
                 opts.record.set('statusWert', value);
+                opts.record.set('statusStufe', stufe);
                 opts.record.endEdit();
             }
         }

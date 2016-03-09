@@ -121,7 +121,6 @@ Ext.define('Lada.controller.grid.Status', {
         // Do not copy, if current userid differs from the id of the current status
         if (lastrow > 0 &&
                 Ext.Array.contains(Lada.mst, recentStatus.get('erzeuger'))) {
-
             if (recentStatus) {
                 // clone the status
                 var record = recentStatus.copy()
@@ -207,12 +206,18 @@ Ext.define('Lada.controller.grid.Status', {
                     }
                 }
 
-                button.up('window').initData();
+                var win = button.up('window');
+                win.initData();
                 button.up('grid').initData();
+                try {
+                    win.parentWindow.initData();
+                    win.parentWindow.down('messunggrid').store.reload();
+                }
+                catch(e) {
+                }
             },
             failure: function(response) {
                 // TODO sophisticated error handling, with understandable Texts
-                var i18n = Lada.getApplication().bundle;
                 var json = Ext.JSON.decode(response.responseText);
                 if (json) {
                     if(json.message){
