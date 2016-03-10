@@ -59,7 +59,8 @@ Ext.define('Lada.model.Messwert', {
             var parts = tmp.split('e');
             if (parts[0].indexOf('.') > 0) {
                 var floatPart = parseFloat(parts[0]);
-                parts[0] = floatPart.toLocaleString();
+                var separator = floatPart.toLocaleString().replace(/[-\d]/g, '');
+                parts[0] = floatPart.toFixed(3).replace('.', separator);
             }
             return parts[0] + 'e' + parts[1];
         }
