@@ -15,7 +15,7 @@ Ext.define('Lada.view.form.Probe', {
     requires: [
         'Lada.view.widget.Datenbasis',
         'Lada.view.widget.base.CheckBox',
-        'Lada.view.widget.Messstelle',
+        'Lada.view.widget.MessstelleLabor',
         'Lada.view.widget.Netzbetreiber',
         'Lada.view.widget.Betriebsart',
         'Lada.view.widget.Probenart',
@@ -79,14 +79,44 @@ Ext.define('Lada.view.form.Probe', {
                             border: 0,
                             width: '100%',
                             items: [{
-                                xtype: 'messstelle',
-                                name: 'mstId',
-                                fieldLabel: 'Messstelle',
+                                xtype: 'messstellelabor',
+                                name: 'mstlabor',
+                                fieldLabel: 'Messstelle/Labor',
                                 margin: '0, 5, 5, 5',
                                 width: '35%',
-                                labelWidth: 90,
+                                labelWidth: 95,
                                 allowBlank: false,
-                                editable: true
+                                editable: true,
+                                listeners: {
+                                    select: {
+                                        fn: function(combo, newValue) {
+                                            var mst = newValue[0].get('messStelle');
+                                            var labor = newValue[0].get('laborMst');
+                                            combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
+                                            combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
+                                        }
+                                    }
+                                }
+                            }, {
+                                xtype: 'messstelle',
+                                name: 'mstId',
+                                fieldLabel: 'Messstelle/Labor',
+                                margin: '0, 5, 5, 5',
+                                width: '35%',
+                                labelWidth: 95,
+                                allowBlank: false,
+                                editable: true,
+                                hidden: true
+                            }, {
+                                xtype: 'messstelle',
+                                name: 'laborMstId',
+                                fieldLabel: 'Messstelle/Labor',
+                                margin: '0, 5, 5, 5',
+                                width: '35%',
+                                labelWidth: 95,
+                                allowBlank: false,
+                                editable: true,
+                                hidden: true
                             }, {
                                 xtype: 'netzbetreiber',
                                 name: 'netzbetreiberId',
@@ -127,7 +157,7 @@ Ext.define('Lada.view.form.Probe', {
                                 fieldLabel: 'Hauptprobennr.',
                                 margin: '0, 5, 5, 5',
                                 width: '35%',
-                                labelWidth: 90,
+                                labelWidth: 95,
                                 maxLength: 20,
                                 allowBlank: true
                             }, {
@@ -163,7 +193,7 @@ Ext.define('Lada.view.form.Probe', {
                                 width: '50%',
                                 minValue: 0,
                                 anchor: '100%',
-                                labelWidth: 90
+                                labelWidth: 95
                             }, {
                                 xtype: 'tfield',
                                 name: 'x11',
@@ -316,9 +346,46 @@ Ext.define('Lada.view.form.Probe', {
         this.clearMessages();
     },
 
-    setRecord: function(record) {
+    setRecord: function(probeRecord) {
         this.clearMessages();
-        this.getForm().loadRecord(record);
+        this.getForm().loadRecord(probeRecord);
+        if (!probeRecord.raw) {
+            return;
+        }
+        var mstStore = Ext.data.StoreManager.get('messstellen');
+        if (!probeRecord.get('owner')) {
+            var mstId = mstStore.getById(probeRecord.get('mstId'));
+            var laborMstId = mstStore.getById(probeRecord.get('laborMstId'));
+            if (laborMstId) {
+                laborMstId = laborMstId.get('messStelle');
+            }
+            else {
+                laborMstId = '';
+            }
+            var id = this.down('messstellelabor').store.count() + 1;
+            var newStore = Ext.create('Ext.data.Store', {
+                model: 'Lada.model.MessstelleLabor',
+                data: [{
+                    id: id,
+                    laborMst: probeRecord.get('laborMstId'),
+                    messStelle: probeRecord.get('mstId'),
+                    displayCombi: mstId.get('messStelle') +
+                        '/' + laborMstId
+                }]
+            });
+            this.down('messstellelabor').down('combobox').store = newStore;
+            this.down('messstellelabor').setValue(id);
+        }
+        else {
+            var mstLaborStore = Ext.data.StoreManager.get('messstellelabor');
+            var items = mstLaborStore.queryBy(function(record) {
+                if (record.get('messStelle') === probeRecord.get('mstId') &&
+                    record.get('laborMst') === probeRecord.get('laborMstId')) {
+                    return true;
+                }
+            });
+            this.down('messstellelabor').setValue(items.getAt(0));
+        }
     },
 
     setMediaDesk: function(record) {

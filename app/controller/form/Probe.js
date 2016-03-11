@@ -27,9 +27,7 @@ Ext.define('Lada.controller.form.Probe', {
             'probeform': {
                 dirtychange: this.dirtyForm
             },
-            'probeform messstelle combobox': {
-                expand: this.filter,
-                keydown: this.filter,
+            'probeform messstellelabor combobox': {
                 select: this.setNetzbetreiber
             },
             'probeform [xtype="datetime"] field': {
@@ -155,11 +153,9 @@ Ext.define('Lada.controller.form.Probe', {
         formPanel.down('fset[name=sollzeitPeriod]').clearMessages();
         formPanel.down('datetime[name=probeentnahmeBeginn]').clearWarningOrError();
         formPanel.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
-        formPanel.down('datetime[name=solldatumBeginn]').clearWarningOrError();
-        formPanel.down('datetime[name=solldatumEnde]').clearWarningOrError();
 
         formPanel.down('umwelt').store.clearFilter();
-        formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
+        formPanel.setRecord(formPanel.getForm().getRecord());
     },
 
      /**

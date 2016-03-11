@@ -52,7 +52,8 @@ Ext.application({
         'Lada.store.Umwelt',
         'Lada.store.Verwaltungseinheiten',
         'Lada.store.StatusWerte',
-        'Lada.store.StatusStufe'
+        'Lada.store.StatusStufe',
+        'Lada.model.MessstelleLabor'
     ],
     bundle: {
         bundle: 'Lada',
@@ -114,16 +115,25 @@ Ext.application({
     },
 
     onLoginSuccess: function(response) {
-
         /* Parse Username and Timestamp */
         var json = Ext.decode(response.responseText);
         Lada.username = json.data.username;
         Lada.userroles = json.data.roles;
         Lada.logintime = json.data.servertime;
-        Lada.mst = json.data.mst; //Store Messstellen this user may select
+        Lada.mst = []; //Store Messstellen this user may select
         Lada.funktionen = json.data.funktionen;
         //Lada.serverVersion
         this.getServerVersion();
+        var mstLabor = json.data.messstelleLabor;
+        for (var i = 0; i < mstLabor.length; i++) {
+            Lada.mst.push(mstLabor[i].messstelle);
+            Lada.mst.push(mstLabor[i].labor);
+        }
+
+        var mstLaborStore = Ext.create('Ext.data.Store', {
+            storeId: 'messstellelabor',
+            model: 'Lada.model.MessstelleLabor'
+        });
 
         Ext.create('Lada.store.Datenbasis', {
             storeId: 'datenbasis'
@@ -138,7 +148,25 @@ Ext.application({
             storeId: 'messmethoden'
         });
         Ext.create('Lada.store.Messstellen', {
-            storeId: 'messstellen'
+            storeId: 'messstellen',
+            listeners: {
+                load: {
+                    fn: function(store, records) {
+                        for (var i = 0; i < mstLabor.length; i++) {
+                            var item = store.getById(mstLabor[i].messstelle);
+                            var itemLabor = store.getById(mstLabor[i].labor);
+                            mstLaborStore.add({
+                                id: i,
+                                messStelle: mstLabor[i].messstelle,
+                                netzbetreiberId: item.get('netzbetreiberId'),
+                                laborMst: mstLabor[i].labor,
+                                displayCombi: item.get('messStelle') +
+                                    '/' + itemLabor.get('messStelle')
+                            });
+                        }
+                    }
+                }
+            }
         });
         Ext.create('Lada.store.Netzbetreiber', {
             storeId: 'netzbetreiber'
