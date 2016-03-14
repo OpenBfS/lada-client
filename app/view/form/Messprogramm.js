@@ -86,12 +86,44 @@ Ext.define('Lada.view.form.Messprogramm', {
                         },
                         margin: '0, 10, 0, 0',
                         items: [{
+                            xtype: 'messstellelabor',
+                            name: 'mstlabor',
+                            fieldLabel: 'Messstelle/Labor',
+                            margin: '0, 5, 5, 5',
+                            width: '35%',
+                            labelWidth: 95,
+                            allowBlank: false,
+                            editable: true,
+                            listeners: {
+                                select: {
+                                    fn: function(combo, newValue) {
+                                        var mst = newValue[0].get('messStelle');
+                                        var labor = newValue[0].get('laborMst');
+                                        combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
+                                        combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
+                                    }
+                                }
+                            }
+                        }, {
                             xtype: 'messstelle',
                             name: 'mstId',
-                            fieldLabel: i18n.getMsg('mstId'),
-                            labelWidth: 135,
+                            fieldLabel: 'Messstelle/Labor',
+                            margin: '0, 5, 5, 5',
+                            width: '35%',
+                            labelWidth: 95,
                             allowBlank: false,
-                            editable: true
+                            editable: true,
+                            hidden: true
+                        }, {
+                            xtype: 'messstelle',
+                            name: 'laborMstId',
+                            fieldLabel: 'Messstelle/Labor',
+                            margin: '0, 5, 5, 5',
+                            width: '35%',
+                            labelWidth: 95,
+                            allowBlank: false,
+                            editable: true,
+                            hidden: true
                         }, {
                             xtype: 'tfield',
                             name: 'name',
@@ -401,24 +433,58 @@ Ext.define('Lada.view.form.Messprogramm', {
         i.setMaxValue(max-1);
     },
 
-    setRecord: function(record) {
+    setRecord: function(messRecord) {
         this.clearMessages();
 
-        this.getForm().loadRecord(record);
+        this.getForm().loadRecord(messRecord);
         //Set the intervall numberfields and the slider.
         this.down('probenintervallslider').setValue([
-            record.get('teilintervallVon'),
-            record.get('teilintervallBis')
+            messRecord.get('teilintervallVon'),
+            messRecord.get('teilintervallBis')
         ]);
 
         //TODO Set Sliders MinMaxValue
-        this.populateIntervall(record);
+        this.populateIntervall(messRecord);
 
         this.down('probenintervallslider').on(
             'change',
             Lada.app.getController('Lada.controller.form.Messprogramm')
                 .synchronizeFields
         );
+        var mstStore = Ext.data.StoreManager.get('messstellen');
+        if (!messRecord.get('owner')) {
+            var mstId = mstStore.getById(messRecord.get('mstId'));
+            var laborMstId = mstStore.getById(messRecord.get('laborMstId'));
+            if (laborMstId) {
+                laborMstId = laborMstId.get('messStelle');
+            }
+            else {
+                laborMstId = '';
+            }
+            var id = this.down('messstellelabor').store.count() + 1;
+            var newStore = Ext.create('Ext.data.Store', {
+                model: 'Lada.model.MessstelleLabor',
+                data: [{
+                    id: id,
+                    laborMst: messRecord.get('laborMstId'),
+                    messStelle: messRecord.get('mstId'),
+                    displayCombi: mstId.get('messStelle') +
+                        '/' + laborMstId
+                }]
+            });
+            this.down('messstellelabor').down('combobox').store = newStore;
+            this.down('messstellelabor').setValue(id);
+        }
+        else {
+            var mstLaborStore = Ext.data.StoreManager.get('messstellelabor');
+            var items = mstLaborStore.queryBy(function(record) {
+                if (record.get('messStelle') === messRecord.get('mstId') &&
+                    record.get('laborMst') === messRecord.get('laborMstId')) {
+                    return true;
+                }
+            });
+            this.down('messstellelabor').setValue(items.getAt(0));
+        }
     },
 
     setMediaDesk: function(record) {

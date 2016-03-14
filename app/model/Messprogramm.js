@@ -29,6 +29,8 @@ Ext.define('Lada.model.Messprogramm', {
     }, {
         name: 'mstId'
     }, {
+        name: 'laborMstId'
+    }, {
         name: 'name'
     }, {
         name: 'datenbasisId'
