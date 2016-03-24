@@ -560,7 +560,7 @@ Ext.define('Lada.view.form.Messprogramm', {
 
     clearMessages: function() {
         // TODO
-        this.down('cbox[name=mstId]').clearWarningOrError();
+        this.down('cbox[name=mstlabor]').clearWarningOrError();
         this.down('tfield[name=name]').clearWarningOrError();
         //no clearmsg for probeKommentar
         this.down('fset[name=erwAngaben]').clearMessages();

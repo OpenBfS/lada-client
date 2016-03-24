@@ -460,7 +460,7 @@ Ext.define('Lada.view.form.Probe', {
     },
 
     clearMessages: function() {
-        this.down('cbox[name=mstId]').clearWarningOrError();
+        this.down('cbox[name=mstlabor]').clearWarningOrError();
         this.down('tfield[name=hauptprobenNr]').clearWarningOrError();
         this.down('cbox[name=datenbasisId]').clearWarningOrError();
         this.down('cbox[name=baId]').clearWarningOrError();
@@ -476,7 +476,7 @@ Ext.define('Lada.view.form.Probe', {
     },
 
     setReadOnly: function(value) {
-        this.down('cbox[name=mstId]').setReadOnly(value);
+        this.down('cbox[name=mstlabor]').setReadOnly(value);
         this.down('tfield[name=hauptprobenNr]').setReadOnly(value);
         this.down('cbox[name=datenbasisId]').setReadOnly(value);
         this.down('cbox[name=baId]').setReadOnly(value);
