@@ -56,8 +56,18 @@ Ext.define('Lada.model.Zusatzwert', {
             var parts = tmp.split('e');
             if (parts[0].indexOf('.') > 0) {
                 var floatPart = parseFloat(parts[0]);
-                var separator = floatPart.toLocaleString().replace(/[-\d]/g, '');
-                parts[0] = floatPart.toFixed(3).replace('.', separator);
+                var separator = floatPart.toFixed(2).toLocaleString().replace(/[-\d]/g, '');
+                parts[0] = floatPart.toFixed(2).replace('.', separator);
+            }
+            else if (parts[0].indexOf(',') < 0) {
+                parts[0] = parts[0] + ',00';
+            }
+            var intPart = parseInt(parts[1]);
+            if (intPart < 10 && intPart >= 0) {
+                parts[1] = '+0' + parseInt(parts[1]);
+            }
+            else if (intPart < 0 && intPart > -10) {
+                parts[1] = parts[1].replace('-', '-0');
             }
             return parts[0] + 'e' + parts[1];
         }
@@ -92,8 +102,18 @@ Ext.define('Lada.model.Zusatzwert', {
             var parts = tmp.split('e');
             if (parts[0].indexOf('.') > 0) {
                 var floatPart = parseFloat(parts[0]);
-                var separator = floatPart.toLocaleString().replace(/[-\d]/g, '');
-                parts[0] = floatPart.toFixed(3).replace('.', separator);
+                var separator = floatPart.toFixed(2).toLocaleString().replace(/[-\d]/g, '');
+                parts[0] = floatPart.toFixed(2).replace('.', separator);
+            }
+            else if (parts[0].indexOf(',') < 0) {
+                parts[0] = parts[0] + ',00';
+            }
+            var intPart = parseInt(parts[1]);
+            if (intPart < 10 && intPart >= 0) {
+                parts[1] = '+0' + parseInt(parts[1]);
+            }
+            else if (intPart < 0 && intPart > -10) {
+                parts[1] = parts[1].replace('-', '-0');
             }
             return parts[0] + 'e' + parts[1];
         }
