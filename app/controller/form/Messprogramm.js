@@ -33,9 +33,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform': {
                 dirtychange: this.dirtyForm
             },
-            'messprogrammform messstelle combobox':{
-                expand: this.filter,
-                keydown: this.filter,
+            'messprogrammform messstellelabor combobox': {
                 select: this.setNetzbetreiber
             },
             'messprogrammform location combobox': {
