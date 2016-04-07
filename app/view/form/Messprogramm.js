@@ -454,6 +454,9 @@ Ext.define('Lada.view.form.Messprogramm', {
         var mstStore = Ext.data.StoreManager.get('messstellen');
         if (!messRecord.get('owner')) {
             var mstId = mstStore.getById(messRecord.get('mstId'));
+            if (!mstId) {
+                return;
+            }
             var laborMstId = mstStore.getById(messRecord.get('laborMstId'));
             if (laborMstId) {
                 laborMstId = laborMstId.get('messStelle');
