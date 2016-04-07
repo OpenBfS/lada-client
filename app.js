@@ -271,6 +271,7 @@ Ext.application({
         'Lada.controller.form.Ortszuordnung',
         'Lada.controller.form.Location',
         'Lada.controller.form.Messprogramm',
+        'Lada.controller.grid.MessprogrammKategorie',
         'Lada.controller.grid.Messmethode',
         'Lada.controller.FilterManagement'
         ]

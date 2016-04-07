@@ -25,7 +25,7 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
                 deselect: this.buttonToggle,
                 itemdblclick: this.edit
             },
-            'messprogrammkategoriegrid button[action=add]': {
+            'messprogrammkategoriegrid toolbar button[action=add]': {
                 click: this.add
             },
             'messprogrammkategoriegrid button[action=delete]': {
@@ -49,7 +49,8 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
         var i18n = Lada.getApplication().bundle;
         context.record.save({
             success: function(record, response) {
-                //Do Nothing
+                var grid = Ext.ComponentQuery.query('messprogrammkategoriegrid')[0];
+                grid.store.reload();
             },
             failure: function(record, response) {
               var json = response.request.scope.reader.jsonData;
@@ -84,6 +85,9 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
      */
     add: function(button) {
         var record = Ext.create('Lada.model.MessprogrammKategorie');
+        if (!record.get('letzteAenderung')) {
+            record.data.letzteAenderung = new Date();
+        }
         button.up('messprogrammkategoriegrid').store.insert(0, record);
         button.up('messprogrammkategoriegrid').rowEditing.startEdit(0, 1);
     },
@@ -104,7 +108,8 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
             if (btn === 'yes') {
                 selection.destroy({
                     success: function() {
-                        //DO NOTHING
+                        var grid = Ext.ComponentQuery.query('messprogrammkategoriegrid')[0];
+                        grid.store.reload();
                     },
                     failure: function(request, response) {
                         var json = response.request.scope.reader.jsonData;
