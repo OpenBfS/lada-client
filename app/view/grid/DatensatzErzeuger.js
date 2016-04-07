@@ -79,7 +79,7 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             },
             editor: {
                 xtype: 'combobox',
-                store: Ext.data.StoreManager.get('netzbetreiber'),
+                store: Ext.data.StoreManager.get('netzbetreiberFiltered'),
                 displayField: 'netzbetreiber',
                 valueField: 'id',
                 allowBlank: false

@@ -72,6 +72,7 @@ Ext.application({
         Lada.userroles = '';
         Lada.logintime = '';
         Lada.mst = [];
+        Lada.netzbetreiber = [];
         Lada.clientVersion = '2.2-STAMMDATEN';
         Lada.serverVersion = '';
 
@@ -122,6 +123,7 @@ Ext.application({
         Lada.logintime = json.data.servertime;
         Lada.mst = []; //Store Messstellen this user may select
         Lada.funktionen = json.data.funktionen;
+        Lada.netzbetreiber= json.data.netzbetreiber;
         //Lada.serverVersion
         this.getServerVersion();
         var mstLabor = json.data.messstelleLabor;
@@ -219,6 +221,15 @@ Ext.application({
             storeId: 'messstellenFiltered',
             filters: function(item) {
                 if (Ext.Array.contains(Lada.mst, item.get('id'))) {
+                    return true;
+                }
+                return false;
+            }
+        });
+        Ext.create('Lada.store.Netzbetreiber', {
+            storeId: 'netzbetreiberFiltered',
+            filters: function(item) {
+                if (Ext.Array.contains(Lada.netzbetreiber, item.get('id'))) {
                     return true;
                 }
                 return false;
