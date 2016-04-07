@@ -76,8 +76,10 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
         if (!context.record.get('id') ||
             context.record.get('id') === '') {
             editor.getCmp().store.remove(context.record);
+            this.buttonToggle();
         }
         context.grid.getSelectionModel().deselect(context.record);
+        this.buttonToggle(context.grid.getSelectionModel(), context.record);
     },
 
     /**

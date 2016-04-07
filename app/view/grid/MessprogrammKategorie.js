@@ -125,7 +125,6 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
                 this.removeDocked(ptbar);
             }
 
-            this.down('button[action=add]').enable();
             this.addDocked([{
                 xtype: 'pagingtoolbar',
                 dock: 'bottom',
