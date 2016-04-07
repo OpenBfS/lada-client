@@ -49,7 +49,8 @@ Ext.define('Lada.controller.grid.Probenehmer', {
         var i18n = Lada.getApplication().bundle;
         context.record.save({
             success: function(record, response) {
-                //Do Nothing
+                var grid = Ext.ComponentQuery.query('probenehmergrid')[0];
+                grid.store.reload();
             },
             failure: function(record, response) {
               var json = response.request.scope.reader.jsonData;
@@ -87,6 +88,9 @@ Ext.define('Lada.controller.grid.Probenehmer', {
      */
     add: function(button) {
         var record = Ext.create('Lada.model.Probenehmer');
+        if (!record.get('letzteAenderung')) {
+            record.data.letzteAenderung = new Date();
+        }
         button.up('probenehmergrid').store.insert(0, record);
         button.up('probenehmergrid').rowEditing.startEdit(0, 1);
     },
