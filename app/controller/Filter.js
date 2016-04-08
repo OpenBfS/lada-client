@@ -17,6 +17,8 @@ Ext.define('Lada.controller.Filter', {
         'Lada.view.widget.Messstelle',
         'Lada.view.grid.MessprogrammeList',
         'Lada.view.grid.ProbeList',
+        'Lada.view.grid.MessungList',
+        'Lada.store.MessungenList',
         'Lada.view.window.FilterManagement',
         'Lada.view.widget.Umwelt'
     ],
@@ -113,7 +115,9 @@ Ext.define('Lada.controller.Filter', {
             this.displayFields.reverse();
         }
 
-        if (queryType == 'probe' || queryType == 'messprogramm') {
+        if (queryType == 'probe' ||
+            queryType == 'messung' ||
+            queryType == 'messprogramm') {
             // Dynamic Grids
             // We need to set both grid and Store.
             var frgrid; // The Resultgrid
@@ -123,6 +127,10 @@ Ext.define('Lada.controller.Filter', {
                 case 'probe':
                     gridstore = Ext.create('Lada.store.ProbenList');
                     frgrid = Ext.create('Lada.view.grid.ProbeList');
+                    break;
+                case 'messung':
+                    gridstore = Ext.create('Lada.store.MessungenList');
+                    frgrid = Ext.create('Lada.view.grid.MessungList');
                     break;
                 case 'messprogramm':
                     gridstore = Ext.create('Lada.store.MessprogrammeList');
@@ -326,6 +334,9 @@ Ext.define('Lada.controller.Filter', {
             case 'probe':
                 sname = 'Lada.store.ProbenList';
                 break;
+            case 'messung':
+                sname = 'Lada.store.MessungenList';
+                break;
             case 'messprogramm':
                 sname = 'Lada.store.MessprogrammeList';
                 break;
@@ -456,6 +467,9 @@ Ext.define('Lada.controller.Filter', {
         else if (this.mode === 'stammdaten') {
             store = Ext.StoreManager.get('stammdatenqueries');
         }
+        else if (this.mode === 'messungen') {
+            store = Ext.StoreManager.get('messungqueries');
+        }
         else {
             return;
         }
@@ -525,6 +539,9 @@ Ext.define('Lada.controller.Filter', {
                     else if (query.get('type') === 'messprogramm') {
                         Ext.StoreManager.get('messprogrammqueries').load();
                     }
+                    else if (query.get('type') === 'messung') {
+                        Ext.StoreManager.get('messungqueries').load();
+                    }
                     else {
                         Ext.StoreManager.get('stammdatenqueries').load();
                     }
@@ -567,6 +584,9 @@ Ext.define('Lada.controller.Filter', {
                     }
                     else if (query.get('type') === 'messprogramm') {
                         Ext.StoreManager.get('messprogrammqueries').reload();
+                    }
+                    else if (query.get('type') === 'messung') {
+                        Ext.StoreManager.get('messungqueries').reload();
                     }
                     else {
                         Ext.StoreManager.get('stammdatenqueries').reload();

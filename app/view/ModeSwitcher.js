@@ -23,7 +23,7 @@ Ext.define('Lada.view.ModeSwitcher', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('modus');
-        this.items= [{
+        this.items = [{
             xtype: 'radiogroup',
             columns: 1,
             width: '100%',
@@ -34,27 +34,38 @@ Ext.define('Lada.view.ModeSwitcher', {
                 inputValue: 'proben', //this determines the store
                     // which will be loaded by the controller,
                 checked: true,
-                handler: function(field, state){
+                handler: function(field, state) {
                     if (state === true) {
                         this.fireEvent('check', field);
                     }
                 }
-            },{
+            }, {
+                xtype: 'radiofield',
+                name: 'modeswitch',
+                boxLabel: i18n.getMsg('messungen'),
+                inputValue: 'messungen', //this determines the store
+                    // which will be loaded by the controller,
+                handler: function(field, state) {
+                    if (state === true) {
+                        this.fireEvent('check', field);
+                    }
+                }
+            }, {
                 xtype: 'radiofield',
                 name: 'modeswitch',
                 boxLabel: i18n.getMsg('messprogramme'),
                 inputValue: 'messprogramme',
-                handler: function(field, state){
+                handler: function(field, state) {
                     if (state === true) {
                         this.fireEvent('check', field);
                     }
                 }
-            },{
+            }, {
                 xtype: 'radiofield',
                 name: 'modeswitch',
                 boxLabel: i18n.getMsg('stammdaten'),
                 inputValue: 'stammdaten',
-                handler: function(field, state){
+                handler: function(field, state) {
                     if (state === true) {
                         this.fireEvent('check', field);
                     }

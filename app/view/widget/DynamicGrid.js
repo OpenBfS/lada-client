@@ -70,7 +70,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      * @return an array of two arrays: [0] is an array of colums [1] an array
      *   of fields
      **/
-     generateColumnsAndFields: function(cols) {
+    generateColumnsAndFields: function(cols) {
         var resultColumns = [];
         var fields = [];
 
@@ -103,13 +103,13 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         });
 
         for (var i = cols.length - 1; i >= 0; i--) {
-            if (cols[i] === 'id') {
-                continue;
-            }
-            resultColumns.push(cols[i]);
             fields.push(new Ext.data.Field({
                 name: cols[i].dataIndex
             }));
+            if (cols[i] === 'id' || cols[i].dataIndex === 'probeId') {
+                continue;
+            }
+            resultColumns.push(cols[i]);
         }
         var caf = new Array();
         caf[0] = resultColumns;

@@ -207,6 +207,10 @@ Ext.application({
             storeId: 'probequeries',
             autoLoad: 'true'
         });
+        Ext.create('Lada.store.MessungQueries', {
+            storeId: 'messungqueries',
+            autoLoad: 'true'
+        });
         Ext.create('Lada.store.MessprogrammQueries', {
             storeId: 'messprogrammqueries',
             autoLoad: 'true'
@@ -267,6 +271,7 @@ Ext.application({
         'Lada.controller.Map',
         'Lada.controller.Ort',
         'Lada.controller.grid.ProbeList',
+        'Lada.controller.grid.MessungList',
         'Lada.controller.grid.MessprogrammeList',
         'Lada.controller.grid.Datensatzerzeuger',
         'Lada.controller.grid.Probenehmer',
