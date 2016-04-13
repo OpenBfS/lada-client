@@ -13,6 +13,7 @@ Ext.define('Lada.controller.FilterResult', {
     extend: 'Ext.app.Controller',
     requires: [
         'Lada.view.window.ProbeEdit',
+        'Lada.view.window.ProbeCreate',
         'Lada.view.window.Messprogramm',
         'Lada.view.window.GenProbenFromMessprogramm'
     ],

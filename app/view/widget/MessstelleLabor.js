@@ -7,7 +7,7 @@
  */
 
 /**
- * Combobox for Messstelle
+ * Combobox for Messstelle/Labor
  */
 Ext.define('Lada.view.widget.MessstelleLabor', {
     extend: 'Lada.view.widget.base.ComboBox',
