@@ -43,6 +43,19 @@ Ext.define('Lada.view.grid.Orte', {
         }
 
         this.columns = [{
+            xtype: 'actioncolumn',
+            text: 'RW',
+            dataIndex: 'readonly',
+            sortable: false,
+            width: 30,
+            getClass: function (val, meta, rec) {
+                console.log(rec.get('statusEdit'));
+                if (rec.get('readonly') === false) {
+                        return 'edit';
+                }
+                return 'noedit';
+            }
+        }, {
             header: i18n.getMsg('orte.ortId'),
             dataIndex: 'ortId'
         }, {

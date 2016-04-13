@@ -55,6 +55,7 @@ Ext.define('Lada.controller.grid.Probenehmer', {
             grid.rowEditing.cancelEdit();
             return;
         }
+        grid.rowEditing.startEdit(record, 0);
         grid.down('button[action=delete]').disable();
     },
 

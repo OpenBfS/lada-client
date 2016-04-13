@@ -64,6 +64,23 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
         }];
 
         this.columns = [{
+            xtype: 'actioncolumn',
+            text: 'RW',
+            dataIndex: 'readonly',
+            sortable: false,
+            width: 30,
+            getClass: function (val, meta, rec) {
+                console.log(rec.get('statusEdit'));
+                if (rec.get('readonly') === false) {
+                        return 'edit';
+                }
+                return 'noedit';
+            },
+            handler: function(grid, rowIndex, colIndex) {
+                var rec = grid.getStore().getAt(rowIndex);
+                grid.fireEvent('itemdblclick', grid, rec);
+            }
+        }, {
             header: i18n.getMsg('netzbetreiberId'),
             dataIndex: 'netzbetreiberId',
             renderer: function(value) {

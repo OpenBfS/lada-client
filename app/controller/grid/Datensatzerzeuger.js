@@ -48,13 +48,14 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
         }
     },
 
-    edit: function() {
+    edit: function(gridView, record) {
         var grid = Ext.ComponentQuery.query('datensatzerzeugergrid')[0];
         if (!Ext.Array.contains(Lada.netzbetreiber,
             record.get('netzbetreiberId'))) {
             grid.rowEditing.cancelEdit();
             return;
         }
+        grid.rowEditing.startEdit(record, 0);
         grid.down('button[action=delete]').disable();
     },
 
