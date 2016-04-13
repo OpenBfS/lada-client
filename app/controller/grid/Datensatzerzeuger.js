@@ -68,7 +68,8 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
         var i18n = Lada.getApplication().bundle;
         context.record.save({
             success: function(record, response) {
-                //Do Nothing
+                var grid = Ext.ComponentQuery.query('datensatzerzeugergrid')[0];
+                grid.store.reload();
             },
             failure: function(record, response) {
               var json = response.request.scope.reader.jsonData;
@@ -106,6 +107,9 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
      */
     add: function(button) {
         var record = Ext.create('Lada.model.DatensatzErzeuger');
+        if (!record.get('letzteAenderung')) {
+            record.data.letzteAenderung = new Date();
+        }
         button.up('datensatzerzeugergrid').store.insert(0, record);
         button.up('datensatzerzeugergrid').rowEditing.startEdit(0, 1);
     },
