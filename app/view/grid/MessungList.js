@@ -36,7 +36,7 @@ Ext.define('Lada.view.grid.MessungList', {
             }, {
                 text: i18n.getMsg('statusSetzen'),
                 icon: 'resources/img/emblem-important.png',
-                action: 'setStatus',
+                action: 'setstatus',
                 disabled: true //disabled on start, enabled by the controller
             }]
         }];

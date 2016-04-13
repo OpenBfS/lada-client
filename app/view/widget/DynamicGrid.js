@@ -80,6 +80,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         fields.push(new Ext.data.Field({
             name: 'readonly'
         }));
+        fields.push(new Ext.data.Field({
+            name: 'statusEdit'
+        }));
 
         resultColumns.push({
             xtype: 'actioncolumn',
@@ -89,12 +92,22 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             tooltip: 'Probe öffnen',
             width: 30,
             getClass: function (val, meta, rec) {
-                if ( rec.get('readonly') === false && rec.get('owner') === true) {
+                if (rec.get('readonly') === false &&
+                    rec.get('owner') === true &&
+                    !rec.get('statusEdit')) {
+                    console.log('edit' + rec.get('statusEdit'));
                         return 'edit';
                 }
-                else {
-                        return 'noedit';
+                else if (rec.get('readonly') === false &&
+                    rec.get('owner') === true &&
+                    rec.get('statusEdit')) {
+                        return 'editstatus';
                 }
+                else if (rec.get('readonly') === true &&
+                    rec.get('statusEdit')) {
+                        return 'noeditstatus';
+                }
+                return 'noedit';
             },
             handler: function(grid, rowIndex, colIndex) {
                 var rec = grid.getStore().getAt(rowIndex);

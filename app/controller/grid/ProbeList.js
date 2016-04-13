@@ -167,7 +167,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
         try {
             for (key in selection[0].data) {
                 // Do not write owner or readonly or id
-                if (["owner", "readonly", "id"].indexOf(key) == -1){
+                if (["owner", "readonly", "id", "probeId"].indexOf(key) == -1){
                     columns.push(key);
                 }
             }

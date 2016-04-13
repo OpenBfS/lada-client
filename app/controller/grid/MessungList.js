@@ -24,10 +24,35 @@ Ext.define('Lada.controller.grid.MessungList', {
                 itemdblclick: this.editItem,
                 select: this.activateButtons,
                 deselect: this.deactivateButtons
+            },
+            'messunglistgrid toolbar button[action=setstatus]': {
+                click: this.setStatus
             }
         });
         this.callParent(arguments);
     },
+
+    /**
+     * Sets the Status on Bulk
+     **/
+    setStatus: function(button) {
+        //disable Button and setLoading...
+
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection();
+        var i18n = Lada.getApplication().bundle;
+
+        var win = Ext.create('Lada.view.window.SetStatus', {
+            title: i18n.getMsg('statusSetzen.win.title'),
+            grid: grid,
+            modal: true,
+            selection: selection
+        });
+
+        win.show();
+
+    },
+
 
     /**
      * This function is called after a Row in the
@@ -257,13 +282,13 @@ Ext.define('Lada.controller.grid.MessungList', {
     buttonToggle: function(enabled, grid) {
         if (!enabled) {
             grid.down('button[action=print]').disable();
-            grid.down('button[action=setStatus]').disable();
+            grid.down('button[action=setstatus]').disable();
         }
         else {
             grid.down('button[action=print]').enable();
             // TODO: enable button only on messungen with owner == true and
             // readonly == false
-            grid.down('button[action=setStatus]').enable();
+            grid.down('button[action=setstatus]').enable();
         }
     },
 
