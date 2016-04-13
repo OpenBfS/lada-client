@@ -10,16 +10,19 @@ var statuswerteStore = Ext.create('Ext.data.Store', {
     fields: ['id', 'status'],
     data: [{
         'id': 1,
-        'status': 'nicht vergeben'
-    }, {
-        'id': 2,
         'status': 'plausibel'
     }, {
-        'id': 3,
+        'id': 2,
         'status': 'nicht repräsentativ'
     }, {
-        'id': 4,
+        'id': 3,
         'status': 'nicht plausibel'
+    }, {
+        'id': 7,
+        'status': 'nicht lieferbar'
+    }, {
+        'id': 8,
+        'status': 'zurücksetzen'
     }]
 });
 

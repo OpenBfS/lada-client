@@ -33,9 +33,19 @@
   background-image: url(../img/view-time-schedule-baselined.png);
 }
 
+.x-action-col-cell img.noeditstatus
+{
+  background-image: url(../img/view-time-schedule-baselined-status.png);
+}
+
 .x-action-col-cell img.edit
 {
   background-image: url(../img/view-time-schedule-edit.png);
+}
+
+.x-action-col-cell img.editstatus
+{
+  background-image: url(../img/view-time-schedule-edit-status.png);
 }
 
 .x-grid-checkheader {

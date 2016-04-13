@@ -34,5 +34,28 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
             this.store.clearFilter();
         }
         this.callParent(arguments);
+    },
+
+    getValue: function() {
+        var value = this.down('combobox').getValue();
+        if (value instanceof Array) {
+            return value;
+        }
+        value = value.trim().split(' ');
+        var retValues = [];
+        for (var i = 0; i < value.length; i++) {
+            var item = value[i];
+            var found = this.store.queryBy(function(rec) {
+                if (rec.get('id') == item ||
+                    rec.get('netzbetreiber') == item) {
+                    return true;
+                }
+            });
+            if (found.getCount() >= 0) {
+                retValues.push(found.getAt(0).get('id'));
+                continue;
+            }
+        }
+        return retValues;
     }
 });
