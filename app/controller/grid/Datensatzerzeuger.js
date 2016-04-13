@@ -21,7 +21,7 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
             'datensatzerzeugergrid': {
                 edit: this.gridSave,
                 canceledit: this.cancelEdit,
-                select: this.buttonToggle,
+                select: this.select,
                 deselect: this.buttonToggle,
                 itemdblclick: this.edit
             },
@@ -34,8 +34,27 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
         });
     },
 
+    select: function(rowModel, record) {
+        this.checkEdit(rowModel, record);
+        this.buttonToggle(rowModel, record);
+    },
+
+    checkEdit: function(rowModel, record) {
+        if (!Ext.Array.contains(Lada.netzbetreiber,
+            record.get('netzbetreiberId'))) {
+            var grid = Ext.ComponentQuery.query('datensatzerzeugergrid')[0];
+            grid.rowEditing.cancelEdit();
+            return;
+        }
+    },
+
     edit: function() {
         var grid = Ext.ComponentQuery.query('datensatzerzeugergrid')[0];
+        if (!Ext.Array.contains(Lada.netzbetreiber,
+            record.get('netzbetreiberId'))) {
+            grid.rowEditing.cancelEdit();
+            return;
+        }
         grid.down('button[action=delete]').disable();
     },
 
@@ -140,7 +159,9 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
             return;
         }
         var grid = Ext.ComponentQuery.query('datensatzerzeugergrid')[0];
-        if (!record) {
+        if (!record ||
+            !Ext.Array.contains(Lada.netzbetreiber,
+            record.get('netzbetreiberId'))) {
             grid.down('button[action=delete]').disable();
             return;
         }
