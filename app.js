@@ -157,6 +157,9 @@ Ext.application({
                         for (var i = 0; i < mstLabor.length; i++) {
                             var item = store.getById(mstLabor[i].messstelle);
                             var itemLabor = store.getById(mstLabor[i].labor);
+                            if (!itemLabor) {
+                                continue;
+                            }
                             mstLaborStore.add({
                                 id: i,
                                 messStelle: mstLabor[i].messstelle,
