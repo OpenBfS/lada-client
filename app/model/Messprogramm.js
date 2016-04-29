@@ -128,6 +128,9 @@ Ext.define('Lada.model.Messprogramm', {
             }
             return new Date(v);
         }
+    }, {
+        name: 'media',
+        persist: false
     }],
 
     idProperty: 'id',
