@@ -7,7 +7,7 @@
  */
 
 /**
- * A Controller for a Probe form
+ * A Controller for a Messprogramm form
  */
 Ext.define('Lada.controller.form.Messprogramm', {
     extend: 'Ext.app.Controller',
@@ -323,7 +323,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var desk = field.up('deskriptor');
         var media = field.up('messprogrammform').down('textfield[name="mediaDesk"]');
         var current = media.getValue().split(' ');
-        if (current.length < 13) {
+
+        if (current.length < 12) {
             for (var i = 0; i <= 12; i++) {
                 if (i === 0) {
                     current.push('D:');
@@ -352,15 +353,26 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 value = records[0].get('sn');
             }
             current[desk.layer + 1] = value;
+            if (desk.layer < 2) {
+                for (var i = desk.layer + 2; i < 12; i++) {
+                    current[i] = '00';
+                }
+                this.clearChildDesk(desk);
+            }
+            else if (desk.layer === 2 && current[1] === '01') {
+                current[4] = '00';
+                desk.up('fieldset').down('deskriptor[layer=3]').clearValue();
+            }
         }
         media.setValue(current.join(' ').trim());
     },
 
-    clearChildDesk: function(field, media) {
+    clearChildDesk: function(field) {
         var allS = field.up('fieldset').items.items;
         for (var i = field.layer + 1; i < 12; i++) {
             allS[i].clearValue();
-            media[i + 1] = '00';
         }
     }
+
+    
 });

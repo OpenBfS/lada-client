@@ -14,10 +14,10 @@ Ext.define('Lada.view.form.Messprogramm', {
     alias: 'widget.messprogrammform',
     requires: [
         'Lada.view.widget.Datenbasis',
+        'Lada.view.widget.base.CheckBox',
         'Lada.view.widget.Messstelle',
         'Lada.view.widget.Netzbetreiber',
         'Lada.view.widget.Betriebsart',
-        'Lada.view.widget.Testdatensatz',
         'Lada.view.widget.Probenart',
         'Lada.view.widget.Umwelt',
         'Lada.view.widget.base.TextField',
@@ -74,11 +74,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     }]
                 }],
                 items: [{
-                    layout: 'hbox',
-                    border: 0,
-                    items: [{
                         border: 0,
-                        width: '50%',
                         minWidth: 290,
                         layout: {
                             type: 'vbox',
@@ -86,97 +82,92 @@ Ext.define('Lada.view.form.Messprogramm', {
                         },
                         margin: '0, 10, 0, 0',
                         items: [{
-                            xtype: 'messstellelabor',
-                            name: 'mstlabor',
-                            fieldLabel: 'Messstelle/Labor',
-                            margin: '0, 5, 5, 5',
-                            width: '35%',
-                            labelWidth: 95,
-                            allowBlank: false,
-                            editable: true,
-                            listeners: {
-                                select: {
-                                    fn: function(combo, newValue) {
-                                        var mst = newValue[0].get('messStelle');
-                                        var labor = newValue[0].get('laborMst');
-                                        combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
-                                        combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
-                                    }
-                                }
-                            }
-                        }, {
-                            xtype: 'messstelle',
-                            name: 'mstId',
-                            fieldLabel: 'Messstelle/Labor',
-                            margin: '0, 5, 5, 5',
-                            width: '35%',
-                            labelWidth: 95,
-                            allowBlank: false,
-                            editable: true,
-                            hidden: true
-                        }, {
-                            xtype: 'messstelle',
-                            name: 'laborMstId',
-                            fieldLabel: 'Messstelle/Labor',
-                            margin: '0, 5, 5, 5',
-                            width: '35%',
-                            labelWidth: 95,
-                            allowBlank: false,
-                            editable: true,
-                            hidden: true
-                        }, {
-                            xtype: 'tfield',
-                            name: 'name',
-                            fieldLabel: i18n.getMsg('name'),
-                            labelWidth: 135,
-                            allowBlank: false,
-                            editable: true
-                        }, {
-                            xtype: 'textarea',
-                            name: 'probeKommentar',
-                            labelAlign: 'top',
-                            fieldLabel: i18n.getMsg('probeKommentar'),
-                            labelwidth: 135,
-                            anchor: '100%'
-                        }, {
-                            layout: 'column',
+                            layout: {
+                                type: 'hbox',
+                                align: 'stretch'
+                            },
                             border: 0,
                             items: [{
-                                xtype: 'location',
-                                name: 'ortId',
-                                fieldLabel: i18n.getMsg('ortId'),
-                                labelWidth: 80,
-                                allowBlank: true,
-                                forceSelection: true,
-                                editable: false,
-                                columnWidth: '0.75'
+                                xtype: 'messstellelabor',
+                                name: 'mstlabor',
+                                fieldLabel: 'Messstelle/Labor',
+                                margin: '0, 5, 5, 5',
+                                width: '35%',
+                                labelWidth: 95,
+                                allowBlank: false,
+                                editable: true,
+                                listeners: {
+                                    select: {
+                                        fn: function(combo, newValue) {
+                                            var mst = newValue[0].get('messStelle');
+                                            var labor = newValue[0].get('laborMst');
+                                            combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
+                                            combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
+                                        }
+                                    }
+                                }
                             }, {
-                                xtype: 'button',
-                                name: 'ortIdButton',
-                                margin: '0 0 0 5',
-                                text: i18n.getMsg('messprogrammort.button.title'),
-                                action: 'ort',
-                                columnWidth: '0.25'
-                            }]
-                        }]
-                    }, {
-                        border: 0,
-                        width: '50%',
-                        minWidth: 300,
-                        margin: '0, 1, 0, 0',
-                        items: [{
-                            xtype: 'fset',
-                            title: i18n.getMsg('erwAngaben'),
-                            name: 'erwAngaben',
-                            collapsible: false,
-                            collapsed: false,
-                            items: [{
+                                xtype: 'messstelle',
+                                name: 'mstId',
+                                fieldLabel: 'Messstelle/Labor',
+                                margin: '0, 5, 5, 5',
+                                width: '35%',
+                                labelWidth: 95,
+                                allowBlank: false,
+                                editable: true,
+                                hidden: true
+                            }, {
+                                xtype: 'messstelle',
+                                name: 'laborMstId',
+                                fieldLabel: 'Messstelle/Labor',
+                                margin: '0, 5, 5, 5',
+                                width: '35%',
+                                labelWidth: 95,
+                                allowBlank: false,
+                                editable: true,
+                                hidden: true
+                            }, {
+                                xtype: 'netzbetreiber',
+                                name: 'netzbetreiberId',
+                                editable: false,
+                                readOnly: true,
+                                fieldLabel: i18n.getMsg('netzbetreiberId'),
+                                margin : '0, 5, 5, 5',
+                                width : '35%',
+                                labelWidth: 80,
+                            }, {
                                 xtype: 'datenbasis',
                                 editable: false,
                                 name: 'datenbasisId',
                                 fieldLabel: i18n.getMsg('datenbasisId'),
+                                margin : '0, 5, 5, 5',
+                                width : '20%',
+                                labelWidth: 65
+                            }, {
+                                xtype: 'chkbox',
+                                name: 'test',
+                                fieldLabel: i18n.getMsg('test'),
                                 anchor: '100%',
-                                labelWidth: 105
+                                margin : '0, 5, 5, 5',
+                                width : '10%',
+                                labelWidth: 30,
+                                allowBlank: false
+                            }]
+                        }, {
+                            layout: {
+                                type: 'hbox',
+                                align: 'stretch'
+                            },
+                            border: 0,
+                            items: [{
+                                xtype: 'tfield',
+                                name: 'name',
+                                fieldLabel: i18n.getMsg('mprId'),
+                                margin: '0, 5, 5, 5',
+                                width: '35%',
+                                labelWidth: 95,
+                                maxLength: 20,
+                                editable: true
                             }, {
                                 xtype: 'betriebsart',
                                 name: 'baId',
@@ -184,43 +175,112 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 anchor: '100%',
                                 labelWidth: 105
                             }, {
-                                xtype: 'testdatensatz',
-                                name: 'test',
-                                fieldLabel: i18n.getMsg('test'),
-                                anchor: '100%',
-                                labelWidth: 105,
-                                allowBlank: false
-                            }, {
                                 xtype: 'probenart',
                                 editable: false,
                                 name: 'probenartId',
                                 fieldLabel: i18n.getMsg('probenartId'),
-                                anchor: '100%',
-                                labelWidth: 105,
+                                margin: '0, 15, 5, 5',
+                                width: '20%',
+                                labelWidth: 65,
                                 allowBlank: false
-                            }, {
-                                xtype: 'numberfield',
-                                allowDecimals: false,
-                                name: 'probeNehmerId',
-                                fieldLabel: i18n.getMsg('probeNehmerId'),
-                                anchor: '100%',
-                                labelWidth: 105
-                            }, {
-                                xtype: 'netzbetreiber',
-                                name: 'netzbetreiberId',
-                                editable: false,
-                                readOnly: true,
-                                fieldLabel: i18n.getMsg('netzbetreiberId'),
-                                anchor: '100%',
-                                labelWidth: 105,
-                                allowBlank: false
-                           }]
+                            }]
+                        }]
+                }, {
+                    // Zeit
+                    xtype: 'fieldset',
+                    title: i18n.getMsg('probenintervall'),
+                    layout: {
+                        type: 'vbox',
+                        align: 'stretch'
+                    },
+                    items: [{
+                        xtype: 'fset',
+                        name: 'probenIntervallFieldset',
+                        layout: {
+                            type: 'hbox',
+                            align: 'stretch'
+                        },
+                        border: 0,
+                        margin: '0, 0, 0, 0',
+                        items: [{
+                            xtype: 'probenintervall',
+                            fieldLabel: i18n.getMsg('probenintervall'),
+                            margin: '0, 10, 5, 5',
+                            labelWidth: 50,
+//                            anchor: '100%',
+                            width: '40%',
+                            name: 'probenintervall'
+                        }, {
+                            xtype: 'numberfield',
+                            fieldLabel: i18n.getMsg('teilintervallVon'),
+                            margin: '0, 10, 5, 10',
+                            labelWidth: 90,
+ //                           anchor: '100%',
+                            width: '28%',
+                            name: 'teilintervallVon',
+                            period: 'start'
+                        }, {
+                            xtype: 'numberfield',
+                            fieldLabel: i18n.getMsg('teilintervallBis'),
+                            margin: '0, 15, 5, 5',
+                            labelWidth: 18,
+//                            anchor: '100%',
+                            width: '12%',
+                            name: 'teilintervallBis',
+                            period: 'end'
+                        }, {
+                            xtype: 'numberfield',
+                            margin: '0, 10, 5, 5',
+                            fieldLabel: i18n.getMsg('offset'),
+                            labelWidth: 45,
+//                            anchor: '100%',
+                            width: '18%',
+                            name: 'intervallOffset'
+                        }]
+                    }, {
+                        xtype: 'probenintervallslider',
+//                        fieldLabel: i18n.getMsg('intervall'),
+//                        labelWidth: 70,
+                        pack: 'center',
+                        width: '70%',
+                        margin: '0, 40, 10, 40',
+//                        anchor: '950%',
+                        values: [0, 0]
+                        //this will be overridden
+                        // by setRecord
+                    }, {
+                        xtype: 'fset',
+                        name: 'gueltigPeriodFieldset',
+                        layout: {
+                            type: 'hbox',
+                            align: 'stretch'
+                        },
+                        border: 0,
+                        items: [{
+                            xtype: 'datetime',
+                            fieldLabel: i18n.getMsg('gueltigVon'),
+                            margin: '0, 30, 5, 5',
+                            labelWidth: 90,
+//                            anchor: '100%',
+                            name: 'gueltigVon',
+                            format: 'd.m.Y',
+                            period: 'start'
+                        }, {
+                            xtype: 'datetime',
+                            fieldLabel: i18n.getMsg('gueltigBis'),
+                            margin: '0, 5, 5, 5',
+                            labelWidth: 40,
+//                            anchor: '100%',
+                            name: 'gueltigBis',
+                            format: 'd.m.Y',
+                            period: 'end'
                         }]
                     }]
                 }, {
                     // Medium
                     xtype: 'fieldset',
                     title: i18n.getMsg('medium'),
+                    width: '100%',
                     items: [{
                         border: 0,
                         layout: {
@@ -229,21 +289,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                         },
                         width: '100%',
                         items: [{
-                           xtype: 'textfield',
-                            maxLength: 38,
-                            enforceMaxLength: true,
-                            name: 'mediaDesk',
-                            labelWidth: 125,
-                            fieldLabel: i18n.getMsg('mediaDesk'),
-                            regex: new RegExp('(?:D: ){1}(?:[0-9]{2} ){11}[0-9]{2}'),
-                            regexText: i18n.getMsg('err.msg.deskriptorvalidation'),
-                            listeners: {
-                                dirtychange: {
-                                    fn: this.updateOnChange,
-                                    scope: me
-                                }
-                            }
-                        }, {
                             xtype: 'umwelt',
                             name: 'umwId',
                             fieldLabel: i18n.getMsg('umwId'),
@@ -257,14 +302,46 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 }
                             }
                         }, {
+                            border: 0,
+                            layout: {
+                                type: 'hbox',
+                                align: 'stretch'
+                            },
+                            width: '100%',
+                            items: [{
+                                xtype: 'textfield',
+                                maxLength: 38,
+                                enforceMaxLength: true,
+                                name: 'mediaDesk',
+                                width: '60%',
+                                labelWidth: 125,
+                                fieldLabel: i18n.getMsg('mediaDesk'),
+                                editable: false,
+                                readOnly: true,
+                                listeners: {
+                                    dirtychange: {
+                                        fn: this.updateOnChange,
+                                        scope: me
+                                    }
+                                }
+                            }, {
+                                xtype: 'textfield',
+                                name: 'media',
+                                margin: '0, 10, 5, 10',
+                                width: '40%',
+                                enforceMaxLength: true,
+                                editable: false,
+                                readOnly: true
+                            }]
+                        }, {
                             xtype: 'fieldset',
                             title: i18n.getMsg('deskDetails'),
                             collapsible: true,
                             collapsed: true,
                             defaultType: 'textfield',
                             layout: {
-                                type: 'table',
-                                columns: 3
+                                type: 'vbox',
+                                align: 'stretch'
                             },
                             items: this.buildDescriptors(),
                             listeners: {
@@ -276,89 +353,48 @@ Ext.define('Lada.view.form.Messprogramm', {
                         }]
                     }]
                 }, {
-                    // Zeit
+                    // Ort
                     xtype: 'fieldset',
-                    title: i18n.getMsg('time'),
+                    title: 'Ort',
                     layout: {
                         type: 'hbox',
-                        pack: 'center',
+//                        pack: 'center',
                         align: 'stretch'
                     },
+                    width: '100%',
                     items: [{
-                        xtype: 'fset',
-                        title: i18n.getMsg('validity'),
-                        name: 'gueltigPeriodFieldset',
-                        anchor: '100%',
-                        width: '50%',
-                        margin: '0, 5, 5, 5',
-                        layout: {
-                            type: 'vbox',
-                            align: 'stretch'
-                        },
-                        items: [{
-                            xtype: 'datetime',
-                            fieldLabel: i18n.getMsg('gueltigVon'),
-                            labelWidth: 90,
-                            anchor: '100%',
-                            name: 'gueltigVon',
-                            format: 'd.m.Y',
-                            period: 'start'
-                        }, {
-                            xtype: 'datetime',
-                            fieldLabel: i18n.getMsg('gueltigBis'),
-                            labelWidth: 90,
-                            anchor: '100%',
-                            name: 'gueltigBis',
-                            format: 'd.m.Y',
-                            period: 'end'
-                        }, {
-                            xtype: 'numberfield',
-                            fieldLabel: i18n.getMsg('offset'),
-                            labelWidth: 90,
-                            anchor: '100%',
-                            name: 'intervallOffset'
-                        }]
+                        xtype: 'location',
+                        name: 'ortId',
+                        fieldLabel: i18n.getMsg('ortId'),
+                        labelWidth: 80,
+                        allowBlank: true,
+                        forceSelection: true,
+                        editable: false,
+                        columnWidth: '0.75'
                     }, {
-                        xtype: 'fset',
-                        title: i18n.getMsg('probenintervall'),
-                        name: 'probenIntervallFieldset',
-                        anchor: '100%',
-                        width: '50%',
-                        margin: '0, 5, 5, 5',
-                        layout: {
-                            type: 'vbox',
-                            align: 'stretch'
-                        },
-                        items: [{
-                            xtype: 'probenintervall',
-                            fieldLabel: i18n.getMsg('probenintervall'),
-                            labelWidth: 90,
-                            anchor: '100%',
-                            name: 'probenintervall'
-                        }, {
-                            xtype: 'numberfield',
-                            fieldLabel: i18n.getMsg('teilintervallVon'),
-                            labelWidth: 90,
-                            anchor: '100%',
-                            name: 'teilintervallVon',
-                            period: 'start'
-                        }, {
-                            xtype: 'numberfield',
-                            fieldLabel: i18n.getMsg('teilintervallBis'),
-                            labelWidth: 90,
-                            anchor: '100%',
-                            name: 'teilintervallBis',
-                            period: 'end'
-                        }, {
-                            xtype: 'probenintervallslider',
-                            fieldLabel: i18n.getMsg('intervall'),
-                            labelWidth: 90,
-                            anchor: '100%',
-                            values: [0, 0]
-                                //this will be overridden
-                                // by setRecord
-                        }]
+                        xtype: 'button',
+                        name: 'ortIdButton',
+                        margin: '0 0 0 5',
+                        text: i18n.getMsg('messprogrammort.button.title'),
+                        action: 'ort',
+                        columnWidth: '0.25'
                     }]
+                }, {
+                    xtype: 'numberfield',
+                    allowDecimals: false,
+                    name: 'probeNehmerId',
+                    fieldLabel: i18n.getMsg('probeNehmerId'),
+                    width: '100%',
+                    anchor: '100%',
+                    labelWidth: 105
+                }, {
+                    xtype: 'textarea',
+                    name: 'probeKommentar',
+                    labelAlign: 'top',
+                    fieldLabel: i18n.getMsg('probeKommentar'),
+                    width: '100%',
+                    labelwidth: 135,
+                    anchor: '100%'
                 }]
             }]
         }];
@@ -488,6 +524,8 @@ Ext.define('Lada.view.form.Messprogramm', {
             });
             this.down('messstellelabor').setValue(items.getAt(0));
         }
+        // set media field
+//        this.down('media').setValue('XXXX');
     },
 
     setMediaDesk: function(record) {
@@ -566,10 +604,9 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('cbox[name=mstlabor]').clearWarningOrError();
         this.down('tfield[name=name]').clearWarningOrError();
         //no clearmsg for probeKommentar
-        this.down('fset[name=erwAngaben]').clearMessages();
         this.down('cbox[name=datenbasisId]').clearWarningOrError();
         this.down('cbox[name=baId]').clearWarningOrError();
-        this.down('cbox[name=test]').clearWarningOrError();
+        this.down('chkbox[name=test]').clearWarningOrError();
         this.down('cbox[name=probenartId]').clearWarningOrError();
         this.down('cbox[name=netzbetreiberId]').clearWarningOrError();
         //no clear for probeNehmerId
