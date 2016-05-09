@@ -41,7 +41,8 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
 
     checkEdit: function(rowModel, record) {
         if (!Ext.Array.contains(Lada.netzbetreiber,
-            record.get('netzbetreiberId'))) {
+                record.get('netzbetreiberId')) &&
+            record.get('netzbetreiberId') !== '') {
             var grid = Ext.ComponentQuery.query('datensatzerzeugergrid')[0];
             grid.rowEditing.cancelEdit();
             return;
@@ -51,7 +52,8 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
     edit: function(gridView, record) {
         var grid = Ext.ComponentQuery.query('datensatzerzeugergrid')[0];
         if (!Ext.Array.contains(Lada.netzbetreiber,
-            record.get('netzbetreiberId'))) {
+                record.get('netzbetreiberId')) &&
+            record.get('netzbetreiberId') !== '') {
             grid.rowEditing.cancelEdit();
             return;
         }
