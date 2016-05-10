@@ -142,7 +142,7 @@ Ext.define('Lada.view.window.SetStatus', {
                     me.resultMessage += '<strong>' + i18n.getMsg('messung') + ': ';
                     var sel = me.selection[count];
                     me.resultMessage += sel.get('hauptprobenNr') + ' - ' + sel.get('nebenprobenNr') + '</strong><br><dd>';
-                    me.resultMessage += i18n.getMsg(json.message) + '</dd><br>';
+                    me.resultMessage += i18n.getMsg('status-' + json.message) + '</dd><br>';
                     count++;
                     progress.updateProgress(count / me.selection.length, progressText + ' (' + count + ')');
                     if (count === me.selection.length) {
