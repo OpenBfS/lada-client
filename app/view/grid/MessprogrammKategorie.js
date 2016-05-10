@@ -116,6 +116,8 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
             dataIndex: 'bezeichnung',
             editor: {
                 xtype: 'textfield',
+                maxLength: 120,
+                enforceMaxLength: true,
                 allowBlank: false
             }
         }, {

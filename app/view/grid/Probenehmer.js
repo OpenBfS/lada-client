@@ -106,7 +106,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
             header: i18n.getMsg('bearbeiter'),
             dataIndex: 'bearbeiter',
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 25,
+                enforceMaxLength: true
             }
         }, {
             header: i18n.getMsg('prnId'),
@@ -122,20 +124,26 @@ Ext.define('Lada.view.grid.Probenehmer', {
             dataIndex: 'bemerkung',
             editor: {
                 allowBlank: false,
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 60,
+                enforceMaxLength: true
             }
         }, {
             header: i18n.getMsg('kurzBezeichnung'),
             dataIndex: 'kurzBezeichnung',
             editor: {
                 allowBlank: false,
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 10,
+                enforceMaxLength: true
             }
         }, {
             header: i18n.getMsg('ort'),
             dataIndex: 'ort',
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 20,
+                enforceMaxLength: true
             }
         }, {
             header: i18n.getMsg('plz'),
@@ -147,25 +155,33 @@ Ext.define('Lada.view.grid.Probenehmer', {
             header: i18n.getMsg('strasse'),
             dataIndex: 'strasse',
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 30,
+                enforceMaxLength: true
             }
         }, {
             header: i18n.getMsg('telefon'),
             dataIndex: 'telefon',
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 20,
+                enforceMaxLength: true
             }
         }, {
             header: i18n.getMsg('tp'),
             dataIndex: 'tp',
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 3,
+                enforceMaxLength: true
             }
         }, {
             header: i18n.getMsg('typ'),
             dataIndex: 'typ',
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 1,
+                enforceMaxLength: true
             }
         }, {
             header: i18n.getMsg('letzteAenderung'),

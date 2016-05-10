@@ -115,7 +115,9 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             dataIndex: 'bezeichnung',
             editor: {
                 allowBlank: false,
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 120,
+                enforceMaxLength: true
             }
         }, {
             header: i18n.getMsg('mstId'),
