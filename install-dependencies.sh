@@ -32,7 +32,7 @@ cd ../ext
 curl -L https://github.com/elmasse/Ext.i18n.Bundle/archive/v0.3.3.zip \
      -o Ext-i18n-Bundle-v0-3-3.zip
 unzip -n Ext-i18n-Bundle-v0-3-3.zip
-ln -sf Ext.i18n.Bundle-0.3.3/i18n i18n
+ln -sf elmasse-bundle-0.3.3/i18n i18n
 
 curl -L https://github.com/ivan-novakov/extjs-upload-widget/archive/1.1.1.zip \
      -o Ext-ux-Upload-1-1-1.zip
