@@ -149,7 +149,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
             header: i18n.getMsg('plz'),
             dataIndex: 'plz',
             editor: {
-                xtype: 'numberfield'
+                xtype: 'textfield',
+                maxLength: 5,
+                enforceMaxLength: true
             }
         }, {
             header: i18n.getMsg('strasse'),
