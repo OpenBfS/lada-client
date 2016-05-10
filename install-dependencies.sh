@@ -24,9 +24,9 @@ ln -sf Blob.js-master Blob
 curl -L https://github.com/openlayers/openlayers/archive/release-2.13.1.zip \
      -o OpenLayers-2-13-1.zip
 unzip -n OpenLayers-2-13-1.zip
-ln -sf ol2-release-2.13.1/build OpenLayers
-cd OpenLayers
-python build.py
+ln -sf ol2-release-2.13.1 OpenLayers
+cd OpenLayers/build
+python build.py full.cfg ../OpenLayers.js
 
 cd ../ext
 curl -L https://github.com/elmasse/Ext.i18n.Bundle/archive/v0.3.3.zip \
