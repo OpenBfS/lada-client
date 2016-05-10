@@ -106,6 +106,8 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             dataIndex: 'daErzeugerId',
             editor: {
                 xtype: 'textfield',
+                maxLength: 2,
+                enforceMaxLength: true,
                 allowBlank: false
             }
         }, {

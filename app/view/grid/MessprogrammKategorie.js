@@ -107,6 +107,8 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
             dataIndex: 'mplId',
             editor: {
                 xtype: 'textfield',
+                maxLength: 3,
+                enforceMaxLength: true,
                 allowBlank: false
             }
         }, {

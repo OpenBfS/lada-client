@@ -113,6 +113,8 @@ Ext.define('Lada.view.grid.Probenehmer', {
             dataIndex: 'prnId',
             editor: {
                 allowBlank: false,
+                maxLength: 9,
+                enforceMaxLength: true,
                 xtype: 'textfield'
             }
         }, {
