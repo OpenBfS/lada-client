@@ -28,7 +28,7 @@ ln -sf ol2-release-2.13.1 OpenLayers
 cd OpenLayers/build
 python build.py full.cfg ../OpenLayers.js
 
-cd ../ext
+cd ../../ext
 curl -L https://github.com/elmasse/Ext.i18n.Bundle/archive/v0.3.3.zip \
      -o Ext-i18n-Bundle-v0-3-3.zip
 unzip -n Ext-i18n-Bundle-v0-3-3.zip
