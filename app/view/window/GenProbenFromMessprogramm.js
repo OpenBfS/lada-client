@@ -50,8 +50,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             handler: function() {
                 var jsondata = {
                     id: me.record.id,
-                    start: new Date(me.down('datetime [name=start]').getValue()).valueOf(),
-                    end: new Date(me.down('datetime [name=end]').getValue()).valueOf()
+                    start: new Date(me.down('datefield [name=start]').getValue()).valueOf(),
+                    end: new Date(me.down('datefield [name=end]').getValue()).valueOf()
                 };
 
 
@@ -153,22 +153,22 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 layout: 'fit',
                 html: '<p>' + i18n.getMsg('messprogtimeperiod') + '</p>'
             }, {
-                xtype: 'datetime',
+                xtype: 'datefield',
                 fieldLabel: i18n.getMsg('from'),
                 labelWidth: 90,
                 margin: 5,
-                width: 300,
+                width: 200,
                 name: 'start',
-                format: 'd.m.Y H:i',
+                format: 'd.m.Y',
                 period: 'start'
             }, {
-                xtype: 'datetime',
+                xtype: 'datefield',
                 fieldLabel: i18n.getMsg('to'),
                 labelWidth: 90,
                 margin: 5,
-                width: 300,
+                width: 200,
                 name: 'end',
-                format: 'd.m.Y H:i',
+                format: 'd.m.Y',
                 period: 'end'
             }]
         }];
