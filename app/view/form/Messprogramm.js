@@ -207,7 +207,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                             fieldLabel: i18n.getMsg('probenintervall'),
                             margin: '0, 10, 5, 5',
                             labelWidth: 50,
-//                            anchor: '100%',
                             width: '40%',
                             name: 'probenintervall'
                         }, {
@@ -215,7 +214,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                             fieldLabel: i18n.getMsg('teilintervallVon'),
                             margin: '0, 10, 5, 10',
                             labelWidth: 90,
- //                           anchor: '100%',
                             width: '28%',
                             name: 'teilintervallVon',
                             period: 'start'
@@ -224,7 +222,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                             fieldLabel: i18n.getMsg('teilintervallBis'),
                             margin: '0, 15, 5, 5',
                             labelWidth: 18,
-//                            anchor: '100%',
                             width: '12%',
                             name: 'teilintervallBis',
                             period: 'end'
@@ -233,7 +230,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                             margin: '0, 10, 5, 5',
                             fieldLabel: i18n.getMsg('offset'),
                             labelWidth: 45,
-//                            anchor: '100%',
                             width: '18%',
                             name: 'intervallOffset'
                         }]
@@ -244,7 +240,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                         pack: 'center',
                         width: '70%',
                         margin: '0, 40, 10, 40',
-//                        anchor: '950%',
                         values: [0, 0]
                         //this will be overridden
                         // by setRecord
@@ -261,7 +256,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                             fieldLabel: i18n.getMsg('gueltigVon'),
                             margin: '0, 30, 5, 5',
                             labelWidth: 90,
-//                            anchor: '100%',
                             name: 'gueltigVon',
                             format: 'd.m.Y',
                             period: 'start'
@@ -270,7 +264,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                             fieldLabel: i18n.getMsg('gueltigBis'),
                             margin: '0, 5, 5, 5',
                             labelWidth: 40,
-//                            anchor: '100%',
                             name: 'gueltigBis',
                             format: 'd.m.Y',
                             period: 'end'
@@ -358,7 +351,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                     title: 'Ort',
                     layout: {
                         type: 'hbox',
-//                        pack: 'center',
                         align: 'stretch'
                     },
                     width: '100%',
@@ -524,8 +516,6 @@ Ext.define('Lada.view.form.Messprogramm', {
             });
             this.down('messstellelabor').setValue(items.getAt(0));
         }
-        // set media field
-//        this.down('media').setValue('XXXX');
     },
 
     setMediaDesk: function(record) {

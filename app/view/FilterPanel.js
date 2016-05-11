@@ -44,17 +44,43 @@ Ext.define('Lada.view.FilterPanel', {
                 margin: '0 0 0 10'
             }]
         }, {
-            xtype: 'checkbox',
-            name: 'favorites',
-            boxLabel: 'nur Favoriten',
-            margin: '0, 0, 0, 5',
-            checked: true
+            layout: {
+                type: 'hbox',
+            },
+            border: false,
+            items: [{
+                xtype: 'checkbox',
+                name: 'favorites',
+                boxLabel: 'nur Favoriten',
+                checked: true
+            }, {
+                xtype: 'button',
+                action: 'manage',
+                text: 'Filterauswahl bearbeiten',
+                margin: '0 0 0 20'
+            }]
         }, {
             xtype: 'displayfield',
             name: 'description',
             shrinkWrap: 3,
             margin: '0, 0, 0 ,5',
             value: '-/-'
+        }, {
+            xtype: 'panel',
+            border: false,
+            margin: '10 0 10 0',
+            items: [{
+                xtype: 'button',
+                action: 'search',
+                text: 'Suchen',
+                margin: '0 10 0 0'
+            }, {
+                xtype: 'button',
+                action: 'reset',
+                text: 'Zurücksetzen',
+                margin: '0 10 0 0'
+            }],
+            hidden: false
         }, {
             xtype: 'panel',
             border: false,
@@ -67,7 +93,6 @@ Ext.define('Lada.view.FilterPanel', {
                 name: 'filtervalues',
                 items: []
             }, {
-
                 layout: {
                     type: 'hbox',
                     pack: 'end'
@@ -84,26 +109,6 @@ Ext.define('Lada.view.FilterPanel', {
                     text: 'Vorbelegung zurücksetzen'
                 }]
             }]
-        }, {
-            xtype: 'panel',
-            border: false,
-            margin: '10 0 10 0',
-            items: [{
-                xtype: 'button',
-                action: 'search',
-                text: 'Suchen',
-                margin: '0 10 0 0'
-            }, {
-                xtype: 'button',
-                action: 'reset',
-                text: 'Zurücksetzen',
-                margin: '0 10 0 0'
-            }, {
-                xtype: 'button',
-                action: 'manage',
-                text: 'Filterauswahl bearbeiten'
-            }],
-            hidden: false
         }];
         this.callParent(arguments);
         var combo = me.down('combobox[name=filter]');
