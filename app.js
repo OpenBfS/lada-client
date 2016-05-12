@@ -53,6 +53,9 @@ Ext.application({
         'Lada.store.Verwaltungseinheiten',
         'Lada.store.StatusWerte',
         'Lada.store.StatusStufe',
+        'Lada.store.Probenehmer',
+        'Lada.store.DatensatzErzeuger',
+        'Lada.store.MessprogrammKategorie',
         'Lada.model.MessstelleLabor'
     ],
     bundle: {
@@ -197,6 +200,15 @@ Ext.application({
         });
         Ext.create('Lada.store.Verwaltungseinheiten', {
             storeId: 'verwaltungseinheiten'
+        });
+        Ext.create('Lada.store.Probenehmer', {
+            storeId: 'probenehmer'
+        });
+        Ext.create('Lada.store.DatensatzErzeuger', {
+            storeId: 'datensatzerzeuger'
+        });
+        Ext.create('Lada.store.MessprogrammKategorie', {
+            storeId: 'messprogrammkategorie'
         });
         Ext.create('Lada.store.StatusWerte', {
             storeId: 'statuswerte',
