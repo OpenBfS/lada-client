@@ -289,6 +289,17 @@ Ext.define('Lada.controller.Filter', {
                     multiSelect: multi
                 });
             }
+            else if (type === 'liststatus') {
+                field = Ext.create('Lada.view.widget.Status', {
+                    name: name,
+                    labelWidth: 135,
+                    fieldLabel: label,
+                    forceSelection: false,
+                    value: value,
+                    filterId: filterId,
+                    multiSelect: multi
+                });
+            }
             if (field) {
                 filterValues.add(field);
                 filters.show();
