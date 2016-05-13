@@ -171,17 +171,19 @@ Ext.define('Lada.view.form.Messprogramm', {
                             }, {
                                 xtype: 'betriebsart',
                                 name: 'baId',
+                                margin: '0, 5, 5, 5',
                                 fieldLabel: i18n.getMsg('baId'),
-                                anchor: '100%',
-                                labelWidth: 105
+                                //anchor: '100%',
+                                width: '35%',
+                                labelWidth: 80
                             }, {
                                 xtype: 'probenart',
                                 editable: false,
                                 name: 'probenartId',
                                 fieldLabel: i18n.getMsg('probenartId'),
-                                margin: '0, 15, 5, 5',
+                                margin: '0, 5, 5, 5',
                                 width: '20%',
-                                labelWidth: 65,
+                                labelWidth: 70,
                                 allowBlank: false
                             }]
                         }]
@@ -222,7 +224,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             fieldLabel: i18n.getMsg('teilintervallBis'),
                             margin: '0, 15, 5, 5',
                             labelWidth: 18,
-                            width: '12%',
+                            width: '15%',
                             name: 'teilintervallBis',
                             period: 'end'
                         }, {
@@ -230,7 +232,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             margin: '0, 10, 5, 5',
                             fieldLabel: i18n.getMsg('offset'),
                             labelWidth: 45,
-                            width: '18%',
+                            width: '17%',
                             name: 'intervallOffset'
                         }]
                     }, {
@@ -463,7 +465,6 @@ Ext.define('Lada.view.form.Messprogramm', {
 
     setRecord: function(messRecord) {
         this.clearMessages();
-
         this.getForm().loadRecord(messRecord);
         //Set the intervall numberfields and the slider.
         this.down('probenintervallslider').setValue([
@@ -493,16 +494,20 @@ Ext.define('Lada.view.form.Messprogramm', {
                 laborMstId = '';
             }
             var id = this.down('messstellelabor').store.count() + 1;
-            var newStore = Ext.create('Ext.data.Store', {
-                model: 'Lada.model.MessstelleLabor',
-                data: [{
-                    id: id,
-                    laborMst: messRecord.get('laborMstId'),
-                    messStelle: messRecord.get('mstId'),
-                    displayCombi: mstId.get('messStelle') +
-                        '/' + laborMstId
-                }]
-            });
+			if ( messRecord.get('mstId') === messRecord.get('laborMstId') ) {
+				displayCombi = mstId.get('messStelle');
+			} else {
+				displayCombi = mstId.get('messStelle') + '/' + laborMstId
+			}
+			var newStore = Ext.create('Ext.data.Store', {
+				model: 'Lada.model.MessstelleLabor',
+				data: [{
+					id: id,
+					laborMst: messRecord.get('laborMstId'),
+					messStelle: messRecord.get('mstId'),
+					displayCombi: displayCombi
+				}]
+			});
             this.down('messstellelabor').down('combobox').store = newStore;
             this.down('messstellelabor').setValue(id);
         }
@@ -523,8 +528,11 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.setMediaSN(0, media);
     },
 
-    setMediaSN: function(ndx, media) {
+    setMediaSN: function(ndx, media, beschreibung) {
+        var mediabeschreibung = this.getForm().findField('media');
+		
         if (ndx >= 12) {
+			mediabeschreibung.setValue(beschreibung);
             return;
         }
         var me = this;
@@ -550,7 +558,15 @@ Ext.define('Lada.view.form.Messprogramm', {
                 return;
             }
             cbox.select(cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
-            me.setMediaSN(++ndx, media);
+			var mediatext = cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10));
+			if (mediatext !== null) {
+				if ( (ndx <= 3) && (media[1] === '01') && (mediatext.data.beschreibung !== "leer") ) {
+					beschreibung = mediatext.data.beschreibung;
+				} else if ( (media[1] !== '01') && (mediatext.data.beschreibung !== "leer") && (ndx <= 1) ) {
+					beschreibung = mediatext.data.beschreibung;
+				}
+			}
+            me.setMediaSN(++ndx, media, beschreibung);
         });
     },
 

@@ -163,13 +163,19 @@ Ext.application({
                             if (!itemLabor) {
                                 continue;
                             }
+							if ( item.get('messStelle') === itemLabor.get('messStelle') ) {
+								displayCombi = item.get('messStelle');
+							} else {
+								displayCombi = item.get('messStelle') + '/' + itemLabor.get('messStelle')
+							}
                             mstLaborStore.add({
                                 id: i,
                                 messStelle: mstLabor[i].messstelle,
                                 netzbetreiberId: item.get('netzbetreiberId'),
                                 laborMst: mstLabor[i].labor,
-                                displayCombi: item.get('messStelle') +
-                                    '/' + itemLabor.get('messStelle')
+								displayCombi: displayCombi
+                                /*displayCombi: item.get('messStelle') +
+                                    '/' + itemLabor.get('messStelle')*/
                             });
                         }
                     }
@@ -202,7 +208,8 @@ Ext.application({
             storeId: 'verwaltungseinheiten'
         });
         Ext.create('Lada.store.Probenehmer', {
-            storeId: 'probenehmer'
+            storeId: 'probenehmer',
+			autoLoad: true
         });
         Ext.create('Lada.store.DatensatzErzeuger', {
             storeId: 'datensatzerzeuger'
