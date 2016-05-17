@@ -26,6 +26,7 @@ Ext.define('Lada.view.grid.Messung', {
     warnings: null,
     errors: null,
     readOnly: true,
+    bottomBar: true,
     allowDeselect: true,
 
     initComponent: function() {
@@ -159,6 +160,9 @@ Ext.define('Lada.view.grid.Messung', {
         };
         this.initData();
         this.callParent(arguments);
+        if (!this.bottomBar) {
+            this.down('toolbar[dock=bottom]').hide();
+        }
         this.setReadOnly(true); //Grid is always initialised as RO
     },
 

@@ -37,6 +37,10 @@ Ext.define('Lada.controller.grid.ProbeList', {
             },
             'probelistgrid toolbar button[action=print]': {
                 click: this.printSelection
+            },
+            'probelistgrid gridview': {
+                expandbody: this.expandBody,
+                collapsebody: this.collapseBody
             }
         });
         this.callParent(arguments);
@@ -338,5 +342,21 @@ Ext.define('Lada.controller.grid.ProbeList', {
         if (btn === 'yes') {
             location.reload();
         }
+    },
+
+    expandBody: function(rowNode, record, expandRow) {
+//        var row = Ext.get('probe-row-' + record.get('id'));
+//        var messungGrid = Ext.create('Lada.view.grid.Messung', {
+//            recordId: record.get('id'),
+//            bottomBar: false,
+//            rowLines: true
+//        });
+//        row.swallowEvent(['click', 'mousedown', 'mouseup', 'dblclick'], true);
+//        messungGrid.render(row);
+    },
+
+    collapseBody: function(rowNode, record, expandRow) {
+//        var element = Ext.get('probe-row-' + record.get('id')).down('div');
+//        element.destroy();
     }
 });

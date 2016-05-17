@@ -83,6 +83,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         fields.push(new Ext.data.Field({
             name: 'statusEdit'
         }));
+        fields.push(new Ext.data.Field({
+            name: 'id'
+        }));
 
         resultColumns.push({
             xtype: 'actioncolumn',

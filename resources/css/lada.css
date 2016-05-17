@@ -73,3 +73,15 @@
 ::-ms-reveal {
    display: none;
 }
+
+.row-expander-grid .x-grid-row-selected .x-grid-td {
+    background-color : #c6c6c6;
+}
+
+.row-expander-grid .x-grid-row-over .x-grid-td {
+    background-color : #e0e0e0;
+}
+
+.row-expander-grid .x-grid-with-row-lines .x-grid-td {
+    border-bottom: 1px solid #e0e0e0;
+}

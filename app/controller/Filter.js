@@ -126,7 +126,15 @@ Ext.define('Lada.controller.Filter', {
             switch (queryType) {
                 case 'probe':
                     gridstore = Ext.create('Lada.store.ProbenList');
-                    frgrid = Ext.create('Lada.view.grid.ProbeList');
+                    frgrid = Ext.create('Lada.view.grid.ProbeList', {
+                        plugins: [{
+                            ptype: 'gridrowexpander',
+                            gridType: 'Lada.view.grid.Messung',
+                            gridConfig: {
+                                bottomBar: false
+                            }
+                        }]
+                    });
                     break;
                 case 'messung':
                     gridstore = Ext.create('Lada.store.MessungenList');

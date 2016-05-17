@@ -14,6 +14,9 @@ Ext.define('Lada.model.ProbeList', {
     extend: 'Ext.data.Model',
 
     fields: [{
+        name: 'pid',
+        mapping: 'id'
+    }, {
         name: 'readonly'
     }, {
         name: 'owner'
