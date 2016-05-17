@@ -30,6 +30,7 @@ Ext.define('Lada.view.grid.Messwert', {
     readOnly: true,
     allowDeselect: true,
     messgroesseStore: null,
+    bottomBar: true,
 
     initComponent: function() {
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -42,6 +43,12 @@ Ext.define('Lada.view.grid.Messwert', {
                 // Normally this would belong into a controller an not the view.
                 // But the RowEditPlugin is not handled there.
                 beforeedit: function(e, o) {
+                    // We are not in a messung window!
+                    if (!o.grid.up('window')) {
+                        return false;
+                    }
+                    // We are in a messung window and should check if we can
+                    // edit.
                     var readonlywin = o.grid.up('window').record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
                     if (readonlywin == true || readonlygrid == true || this.disabled)  {
@@ -186,6 +193,9 @@ Ext.define('Lada.view.grid.Messwert', {
         this.initData();
         this.callParent(arguments);
         this.setReadOnly(true); //Grid is always initialised as RO
+        if (!me.bottomBar) {
+            this.down('toolbar[dock=bottom]').hide();
+        }
     },
 
     initData: function() {
