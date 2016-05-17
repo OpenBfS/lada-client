@@ -14,6 +14,9 @@ Ext.define('Lada.view.form.Probe', {
     alias: 'widget.probeform',
     requires: [
         'Lada.view.widget.Datenbasis',
+        'Lada.view.widget.DatensatzErzeuger',
+        'Lada.view.widget.Probenehmer',
+        'Lada.view.widget.MessprogrammLand',
         'Lada.view.widget.base.CheckBox',
         'Lada.view.widget.MessstelleLabor',
         'Lada.view.widget.Netzbetreiber',
@@ -185,7 +188,7 @@ Ext.define('Lada.view.form.Probe', {
                             border: 0,
                             width: '100%',
                             items: [{
-                                xtype: 'numberfield',
+                                xtype: 'probenehmer',
                                 allowDecimals: false,
                                 name: 'probeNehmerId',
                                 fieldLabel: 'Probennehmer',
@@ -195,14 +198,22 @@ Ext.define('Lada.view.form.Probe', {
                                 anchor: '100%',
                                 labelWidth: 95
                             }, {
-                                xtype: 'tfield',
-                                name: 'x11',
+                                xtype: 'datensatzerzeuger',
+                                name: 'erzeugerId',
                                 fieldLabel: 'Datensatzerzeuger',
                                 margin: '0, 5, 5, 5',
                                 width: '50%',
                                 anchor: '100%',
                                 labelWidth: 110
                             }]
+                        },{
+                            xtype: 'messprogrammland',
+                            name: 'mplId',
+                            fieldLabel: 'Messprogramm-Land',
+                            margin: '0, 5, 5, 5',
+                            width: '50%',
+                            anchor: '100%',
+                            labelWidth: 110
                         }]
                 }, {
                     // Zeit
@@ -467,7 +478,7 @@ Ext.define('Lada.view.form.Probe', {
         this.down('chkbox[name=test]').clearWarningOrError();
         this.down('cbox[name=probenartId]').clearWarningOrError();
         this.down('cbox[name=netzbetreiberId]').clearWarningOrError();
-        this.down('tfield[name=x11]').clearWarningOrError();
+        this.down('cbox[name=erzeugerId]').clearWarningOrError();
         this.down('cbox[name=umwId]').clearWarningOrError();
         this.down('datetime[name=probeentnahmeBeginn]').clearWarningOrError();
         this.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
@@ -482,11 +493,11 @@ Ext.define('Lada.view.form.Probe', {
         this.down('cbox[name=baId]').setReadOnly(value);
         this.down('chkbox[name=test]').setReadOnly(value);
         this.down('cbox[name=probenartId]').setReadOnly(value);
-        this.down('tfield[name=x11]').setReadOnly(value);
+        this.down('cbox[name=erzeugerId]').setReadOnly(value);
         this.down('cbox[name=umwId]').setReadOnly(value);
         this.down('datetime[name=probeentnahmeBeginn]').setReadOnly(value);
         this.down('datetime[name=probeentnahmeEnde]').setReadOnly(value);
-        this.down('numberfield[name=probeNehmerId]').setReadOnly(value);
+        this.down('cbox[name=probeNehmerId]').setReadOnly(value);
 
         //Deskriptoren
         for (var i = 0; i < 12; i++) {
