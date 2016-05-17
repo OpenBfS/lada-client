@@ -35,7 +35,7 @@ Ext.define('Lada.view.grid.MessungList', {
                 disabled: true //disabled on start, enabled by the controller
             }, {
                 text: i18n.getMsg('statusSetzen'),
-                icon: 'resources/img/emblem-important.png',
+                icon: 'resources/img/mail-mark-notjunk.png',
                 action: 'setstatus',
                 disabled: true //disabled on start, enabled by the controller
             }]
