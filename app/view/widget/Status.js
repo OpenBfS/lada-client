@@ -18,6 +18,9 @@ var statuswerteStore = Ext.create('Ext.data.Store', {
         'id': 3,
         'status': 'nicht plausibel'
     }, {
+        'id': 4,
+        'status': 'Rückfrage'
+    }, {
         'id': 7,
         'status': 'nicht lieferbar'
     }, {
@@ -35,7 +38,7 @@ Ext.define('Lada.view.widget.Status', {
     store: statuswerteStore,
     displayField: 'status',
     valueField: 'id',
-    emptyText: 'Wählen Sie eine Status',
+    emptyText: 'Wählen Sie einen Status',
     // Enable filtering of comboboxes
     autoSelect: false,
     queryMode: 'local',
