@@ -80,7 +80,7 @@ Ext.define('Lada.view.window.SetStatus', {
         this.buttons = [{
             text: i18n.getMsg('statusSetzen'),
             name: 'start',
-            icon: 'resources/img/emblem-important.png',
+            icon: 'resources/img/mail-mark-notjunk.png',
             handler: this.setStatus
         }, {
             text: i18n.getMsg('cancel'),
