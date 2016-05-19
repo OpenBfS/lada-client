@@ -165,19 +165,17 @@ Ext.application({
                             if (!itemLabor) {
                                 continue;
                             }
-							if ( item.get('messStelle') === itemLabor.get('messStelle') ) {
-								displayCombi = item.get('messStelle');
-							} else {
-								displayCombi = item.get('messStelle') + '/' + itemLabor.get('messStelle')
-							}
+                            if ( item.get('messStelle') === itemLabor.get('messStelle') ) {
+                                displayCombi = item.get('messStelle');
+                            } else {
+                                displayCombi = item.get('messStelle') + '/' + itemLabor.get('messStelle')
+                            }
                             mstLaborStore.add({
                                 id: i,
                                 messStelle: mstLabor[i].messstelle,
                                 netzbetreiberId: item.get('netzbetreiberId'),
                                 laborMst: mstLabor[i].labor,
-								displayCombi: displayCombi
-                                /*displayCombi: item.get('messStelle') +
-                                    '/' + itemLabor.get('messStelle')*/
+                                displayCombi: displayCombi
                             });
                         }
                     }
@@ -211,13 +209,15 @@ Ext.application({
         });
         Ext.create('Lada.store.Probenehmer', {
             storeId: 'probenehmer',
-			autoLoad: true
+            autoLoad: true
         });
         Ext.create('Lada.store.DatensatzErzeuger', {
-            storeId: 'datensatzerzeuger'
+            storeId: 'datensatzerzeuger',
+            autoLoad: true
         });
         Ext.create('Lada.store.MessprogrammKategorie', {
-            storeId: 'messprogrammkategorie'
+            storeId: 'messprogrammkategorie',
+            autoLoad: true
         });
         Ext.create('Lada.store.StatusWerte', {
             storeId: 'statuswerte',

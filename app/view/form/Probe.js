@@ -189,7 +189,6 @@ Ext.define('Lada.view.form.Probe', {
                             width: '100%',
                             items: [{
                                 xtype: 'probenehmer',
-                                allowDecimals: false,
                                 name: 'probeNehmerId',
                                 fieldLabel: 'Probennehmer',
                                 margin: '0, 5, 5, 5',
@@ -211,7 +210,7 @@ Ext.define('Lada.view.form.Probe', {
                             name: 'mplId',
                             fieldLabel: 'Messprogramm-Land',
                             margin: '0, 5, 5, 5',
-                            width: '50%',
+                            width: '100%',
                             anchor: '100%',
                             labelWidth: 110
                         }]
@@ -498,6 +497,7 @@ Ext.define('Lada.view.form.Probe', {
         this.down('datetime[name=probeentnahmeBeginn]').setReadOnly(value);
         this.down('datetime[name=probeentnahmeEnde]').setReadOnly(value);
         this.down('cbox[name=probeNehmerId]').setReadOnly(value);
+        this.down('cbox[name=mplId]').setReadOnly(value);
 
         //Deskriptoren
         for (var i = 0; i < 12; i++) {

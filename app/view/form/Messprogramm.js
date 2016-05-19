@@ -374,13 +374,14 @@ Ext.define('Lada.view.form.Messprogramm', {
                         columnWidth: '0.25'
                     }]
                 }, {
-                    xtype: 'numberfield',
-                    allowDecimals: false,
+                    xtype: 'probenehmer',
                     name: 'probeNehmerId',
                     fieldLabel: i18n.getMsg('probeNehmerId'),
+                    margin: '0, 5, 5, 5',
                     width: '100%',
+                    minValue: 0,
                     anchor: '100%',
-                    labelWidth: 105
+                    labelWidth: 95
                 }, {
                     xtype: 'textarea',
                     name: 'probeKommentar',

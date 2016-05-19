@@ -15,6 +15,7 @@ Ext.define('Lada.view.widget.DatensatzErzeuger' ,{
     store: 'datensatzerzeuger',
     displayField: 'id',
     valueField: 'id',
+    emptyText: 'Wählen Sie einen Datensatzerzeuger',
     editable: this.editable || false,
     forceSelection: true,
     // Enable filtering of comboboxes
@@ -25,15 +26,15 @@ Ext.define('Lada.view.widget.DatensatzErzeuger' ,{
     minChars: 0,
     tpl: Ext.create("Ext.XTemplate",
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{id} - {datensatzErzeuger}</div></tpl>'),
+            '{daErzeugerId} - {bezeichnung}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-         '<tpl for=".">{id} - {datensatzErzeuger}</tpl>'),
+         '<tpl for=".">{daErzeugerId} - {bezeichnung}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.datensatzerzeuger');
 
-        this.store = Ext.data.StoreManager.get('datensatz_erzeuger');
+        this.store = Ext.data.StoreManager.get('datensatzerzeuger');
         if (!this.store) {
             this.store = Ext.create('Lada.store.DatensatzErzeuger');
         }

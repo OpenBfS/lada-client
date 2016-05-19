@@ -15,6 +15,7 @@ Ext.define('Lada.view.widget.Probenehmer' ,{
     store: 'Probenehmer',
     displayField: 'id',
     valueField: 'id',
+    emptyText: 'Wählen Sie einen Probenehmer',
     editable: this.editable || false,
     forceSelection: true,
     // Enable filtering of comboboxes
@@ -25,9 +26,9 @@ Ext.define('Lada.view.widget.Probenehmer' ,{
     minChars: 0,
     tpl: Ext.create("Ext.XTemplate",
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{id} - {probeNehmer}</div></tpl>'),
+            '{prnId} - {kurzBezeichnung}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-         '<tpl for=".">{id} - {probeNehmer}</tpl>'),
+         '<tpl for=".">{kurzBezeichnung}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

@@ -13,15 +13,22 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.messprogrammland',
     store: 'messprogrammkategorie',
-    displayField: 'display',
+    displayField: 'id',
     valueField: 'id',
-    emptyText: 'Wählen Sie eine Landesmessprogramm',
+    emptyText: 'Wählen Sie ein Landesmessprogramm',
+    editable: this.editable || false,
+    forceSelection: true,
     // Enable filtering of comboboxes
+    autoSelect: false,
     queryMode: 'local',
     triggerAction: 'all',
-    typeAhead: true,
+    typeAhead: false,
     minChars: 0,
-    layout: 'hbox',
+    tpl: Ext.create("Ext.XTemplate",
+        '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
+            '{mplId} - {bezeichnung}</div></tpl>'),
+    displayTpl: Ext.create('Ext.XTemplate',
+         '<tpl for=".">{mplId} - {bezeichnung}</tpl>'),
 
     initComponent: function() {
         this.store = Ext.data.StoreManager.get('messprogrammkategorie');
