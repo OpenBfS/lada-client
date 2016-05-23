@@ -88,7 +88,7 @@ Ext.define('Lada.controller.grid.MessungList', {
             },
             success: function(precord, response) {
                 var messungWin = Ext.create('Lada.view.window.MessungEdit', {
-                    parentWindow: grid.up('window'),
+                    parentWindow: probeWin,
                     probe: precord,
                     record: record,
                     grid: grid

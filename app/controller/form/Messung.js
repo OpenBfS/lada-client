@@ -54,7 +54,7 @@ Ext.define('Lada.controller.form.Messung', {
                     formPanel.setMessages(json.errors, json.warnings);
                     formPanel.up('window').initData();
                     formPanel.up('window').grid.store.reload();
-                    var parentWin = button.up('window').grid.up('window');
+                    var parentWin = button.up('window').parentWindow;
                     parentWin.initData();
                     if (response.action === 'create' && json.success) {
                         var oldWin = button.up('window');
