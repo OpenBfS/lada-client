@@ -111,7 +111,7 @@ Ext.define('Lada.controller.Filter', {
         contentPanel.removeAll(); //clear the panel: make space for new grids
 
         // Setup Columns
-        if (this.displayFields) {
+        if (this.displayFields && this.displayFields[0].index === 0) {
             this.displayFields.reverse();
         }
 
