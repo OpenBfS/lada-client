@@ -117,9 +117,21 @@ Ext.define('Lada.view.grid.Messwert', {
             editor: {
                 xtype: 'expnumberfield',
                 allowBlank: false,
+                maxValue: 9.99e+99,
+                minValue: 1e-99
             },
             renderer: function(value) {
-                return value.toExponential(2).toString().replace('.', ',');
+                if (!value || value === '') {
+                    return value;
+                }
+                var strValue = value.toExponential(2).toString()
+                    .replace('.', Ext.util.Format.decimalSeparator);
+                var splitted = strValue.split('e');
+                var exponent = parseInt(splitted[1]);
+                return splitted[0] + 'e'
+                    + ((exponent < 0) ? '-' : '+')
+                    + ((Math.abs(exponent) < 10) ? '0' : '')
+                    + Math.abs(exponent).toString();
             }
         }, {
             header: 'Messeinheit',
@@ -163,13 +175,22 @@ Ext.define('Lada.view.grid.Messwert', {
             dataIndex: 'nwgZuMesswert',
             width: 80,
             editor: {
-                xtype: 'expnumberfield'
+                xtype: 'expnumberfield',
+                maxValue: 9.99e+99,
+                minValue: 1e-99
             },
             renderer: function(value) {
                 if (!value || value === '') {
                     return value;
                 }
-                return value.toExponential(2).toString().replace('.', ',');
+                var strValue = value.toExponential(2).toString()
+                    .replace('.', Ext.util.Format.decimalSeparator);
+                var splitted = strValue.split('e');
+                var exponent = parseInt(splitted[1]);
+                return splitted[0] + 'e'
+                    + ((exponent < 0) ? '-' : '+')
+                    + ((Math.abs(exponent) < 10) ? '0' : '')
+                    + Math.abs(exponent).toString();
             }
         }, {
             header: 'Grenzwertüberschreitung',
