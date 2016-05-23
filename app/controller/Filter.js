@@ -130,6 +130,7 @@ Ext.define('Lada.controller.Filter', {
                         plugins: [{
                             ptype: 'gridrowexpander',
                             gridType: 'Lada.view.grid.Messung',
+                            expandOnDblClick: false,
                             gridConfig: {
                                 bottomBar: false
                             }
@@ -142,6 +143,7 @@ Ext.define('Lada.controller.Filter', {
                         plugins: [{
                             ptype: 'gridrowexpander',
                             gridType: 'Lada.view.grid.Messwert',
+                            expandOnDblClick: false,
                             gridConfig: {
                                 bottomBar: false
                             }
