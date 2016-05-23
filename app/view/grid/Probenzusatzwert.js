@@ -13,6 +13,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.probenzusatzwertgrid',
     requires: [
+        'Lada.view.form.ExpNumberField',
         'Lada.view.widget.Probenzusatzwert'
     ],
 
@@ -92,10 +93,13 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             dataIndex: 'messwertPzs',
             flex: 1,
             editor: {
-                xtype: 'textfield',
-                allowBlank: false,
-                regex: /^[+\-]?(?:(?:0|[1-9]\d*)(?:[\.\,][0-9]\d*)?(?:[eE][+\-]?\d+)|(\d+[\.\,]?\d*)?)$/,
-                regexText: 'Keine Zahl'
+                xtype: 'expnumberfield',
+            },
+            renderer: function(value) {
+                if (!value || value === '') {
+                    return value;
+                }
+                return value.toExponential(2).toString().replace('.', ',');
             }
         }, {
             header: '< NWG',
@@ -114,10 +118,13 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             xtype: 'numbercolumn',
             flex: 1,
             editor: {
-                xtype: 'textfield',
-                allowBlank: false,
-                regex: /^[+\-]?(?:(?:0|[1-9]\d*)(?:[\.\,][0-9]\d*)?(?:[eE][+\-]?\d+)|(\d+[\.\,]?\d*)?)$/,
-                regexText: 'Keine Zahl'
+                xtype: 'expnumberfield',
+            },
+            renderer: function(value) {
+                if (!value || value === '') {
+                    return value;
+                }
+                return value.toExponential(2).toString().replace('.', ',');
             }
         }, {
             header: 'Maßeinheit',

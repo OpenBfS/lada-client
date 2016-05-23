@@ -26,97 +26,9 @@ Ext.define('Lada.model.Zusatzwert', {
     }, {
         name: 'pzsId'
     }, {
-        name: 'nwgZuMesswert',
-        serialize: function(v) {
-            if (v.indexOf(',') > 0) {
-                v = v.replace(',', '.');
-                return v;
-            }
-            return v;
-        },
-        convert: function(value) {
-            if (!value || value === '') {
-                return value;
-            }
-            var valueString = value.toString();
-            if (valueString.indexOf('E') > 0) {
-                valueString = valueString.replace('E', 'e');
-            }
-            var tmp;
-            if (valueString.indexOf('e') > 0) {
-                tmp = valueString;
-            }
-            else {
-                // Currently not locale friendly...
-                if (valueString.indexOf(',') > 0) {
-                    valueString = valueString.replace(',', '.');
-                }
-                tmp = parseFloat(valueString).toExponential();
-            }
-            var parts = tmp.split('e');
-            if (parts[0].indexOf('.') > 0) {
-                var floatPart = parseFloat(parts[0]);
-                var separator = floatPart.toFixed(2).toLocaleString().replace(/[-\d]/g, '');
-                parts[0] = floatPart.toFixed(2).replace('.', separator);
-            }
-            else if (parts[0].indexOf(',') < 0) {
-                parts[0] = parts[0] + ',00';
-            }
-            var intPart = parseInt(parts[1]);
-            if (intPart < 10 && intPart >= 0) {
-                parts[1] = '+0' + parseInt(parts[1]);
-            }
-            else if (intPart < 0 && intPart > -10) {
-                parts[1] = parts[1].replace('-', '-0');
-            }
-            return parts[0] + 'e' + parts[1];
-        }
+        name: 'nwgZuMesswert'
     }, {
-        name: 'messwertPzs',
-        serialize: function(v) {
-            if (v.indexOf(',') > 0) {
-                v = v.replace(',', '.');
-                return v;
-            }
-            return v;
-        },
-        convert: function(value) {
-            if (!value || value === '') {
-                return value;
-            }
-            var valueString = value.toString();
-            if (valueString.indexOf('E') > 0) {
-                valueString = valueString.replace('E', 'e');
-            }
-            var tmp;
-            if (valueString.indexOf('e') > 0) {
-                tmp = valueString;
-            }
-            else {
-                // Currently not locale friendly...
-                if (valueString.indexOf(',') > 0) {
-                    valueString = valueString.replace(',', '.');
-                }
-                tmp = parseFloat(valueString).toExponential();
-            }
-            var parts = tmp.split('e');
-            if (parts[0].indexOf('.') > 0) {
-                var floatPart = parseFloat(parts[0]);
-                var separator = floatPart.toFixed(2).toLocaleString().replace(/[-\d]/g, '');
-                parts[0] = floatPart.toFixed(2).replace('.', separator);
-            }
-            else if (parts[0].indexOf(',') < 0) {
-                parts[0] = parts[0] + ',00';
-            }
-            var intPart = parseInt(parts[1]);
-            if (intPart < 10 && intPart >= 0) {
-                parts[1] = '+0' + parseInt(parts[1]);
-            }
-            else if (intPart < 0 && intPart > -10) {
-                parts[1] = parts[1].replace('-', '-0');
-            }
-            return parts[0] + 'e' + parts[1];
-        }
+        name: 'messwertPzs'
     }, {
         name: 'messfehler',
         type: 'float'
