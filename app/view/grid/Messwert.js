@@ -14,6 +14,7 @@ Ext.define('Lada.view.grid.Messwert', {
     alias: 'widget.messwertgrid',
 
     requires: [
+        'Lada.view.form.ExpNumberField',
         'Lada.view.widget.Messgroesse',
         'Lada.view.widget.Messeinheit'
     ],
@@ -114,10 +115,11 @@ Ext.define('Lada.view.grid.Messwert', {
             dataIndex: 'messwert',
             width: 80,
             editor: {
-                xtype: 'textfield',
+                xtype: 'expnumberfield',
                 allowBlank: false,
-                regex: /^[+\-]?(?:(?:0|[1-9]\d*)(?:[\.\,][0-9]\d*)?(?:[eE][+\-]?\d+)|(\d+[\.\,]?\d*)?)$/,
-                regexText: 'Keine Zahl'
+            },
+            renderer: function(value) {
+                return value.toExponential(2).toString().replace('.', ',');
             }
         }, {
             header: 'Messeinheit',
@@ -161,10 +163,13 @@ Ext.define('Lada.view.grid.Messwert', {
             dataIndex: 'nwgZuMesswert',
             width: 80,
             editor: {
-                xtype: 'textfield',
-                allowBlank: true,
-                regex: /^[+\-]?(?:(?:0|[1-9]\d*)(?:[\.\,][0-9]\d*)?(?:[eE][+\-]?\d+)|(\d+[\.\,]?\d*)?)$/,
-                regexText: 'Keine Zahl'
+                xtype: 'expnumberfield'
+            },
+            renderer: function(value) {
+                if (!value || value === '') {
+                    return value;
+                }
+                return value.toExponential(2).toString().replace('.', ',');
             }
         }, {
             header: 'Grenzwertüberschreitung',
