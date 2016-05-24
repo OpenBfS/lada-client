@@ -117,8 +117,6 @@ Ext.define('Lada.view.grid.Messwert', {
             editor: {
                 xtype: 'expnumberfield',
                 allowBlank: false,
-                maxValue: 9.99e+99,
-                minValue: 1e-99
             },
             renderer: function(value) {
                 if (!value || value === '') {
@@ -176,8 +174,6 @@ Ext.define('Lada.view.grid.Messwert', {
             width: 80,
             editor: {
                 xtype: 'expnumberfield',
-                maxValue: 9.99e+99,
-                minValue: 1e-99
             },
             renderer: function(value) {
                 if (!value || value === '') {
