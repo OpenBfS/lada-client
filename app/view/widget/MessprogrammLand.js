@@ -14,8 +14,7 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
     alias: 'widget.messprogrammland',
     store: 'messprogrammkategorie',
     displayField: 'id',
-    valueField: 'id',
-    emptyText: 'Wählen Sie ein Landesmessprogramm',
+    valueField: 'mplId',
     editable: this.editable || false,
     forceSelection: true,
     // Enable filtering of comboboxes
@@ -31,13 +30,14 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
          '<tpl for=".">{mplId} - {bezeichnung}</tpl>'),
 
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.messprogrammland');
+
         this.store = Ext.data.StoreManager.get('messprogrammkategorie');
         if (!this.store) {
             this.store = Ext.create('Lada.store.MessprogrammKategorie');
         }
-        else {
-            this.store.clearFilter();
-        }
+        this.store.sort();
         this.callParent(arguments);
     }
 });

@@ -15,7 +15,6 @@ Ext.define('Lada.view.widget.DatensatzErzeuger' ,{
     store: 'datensatzerzeuger',
     displayField: 'id',
     valueField: 'id',
-    emptyText: 'Wählen Sie einen Datensatzerzeuger',
     editable: this.editable || false,
     forceSelection: true,
     // Enable filtering of comboboxes
