@@ -33,6 +33,9 @@ Ext.define('Lada.controller.Ort', {
 
     featureadded: function(record) {
         var grid = Ext.ComponentQuery.query('ortpanel ortstammdatengrid')[0];
+        if (grid.getCollapsed()) {
+            grid.expand();
+        }
         if (!record.get('letzteAenderung')) {
             record.data.letzteAenderung = new Date();
         }
@@ -47,9 +50,11 @@ Ext.define('Lada.controller.Ort', {
     },
 
     addRecord: function(button) {
-        console.log('add record');
         var record = Ext.create('Lada.model.Ort');
         var grid = button.up('ortpanel').down('ortstammdatengrid');
+        if (grid.getCollapsed()) {
+            grid.expand();
+        }
         if (!record.get('letzteAenderung')) {
             record.data.letzteAenderung = new Date();
         }
