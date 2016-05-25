@@ -88,7 +88,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             margin: 5
         }, {
             xtype: 'ortpanel',
-            editableGrid: false,
             flex: 1,
             toolbarPos: 'bottom',
             margin: 5
