@@ -94,8 +94,6 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             flex: 1,
             editor: {
                 xtype: 'expnumberfield',
-                maxValue: 9.99e+99,
-                minValue: 1e-99
             },
             renderer: function(value) {
                 if (!value || value === '') {
@@ -128,8 +126,6 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             flex: 1,
             editor: {
                 xtype: 'expnumberfield',
-                maxValue: 9.99e+99,
-                minValue: 1e-99
             },
             renderer: function(value) {
                 if (!value || value === '') {
