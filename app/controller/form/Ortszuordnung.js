@@ -66,7 +66,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                     formPanel.clearMessages();
                     formPanel.setRecord(record);
                     formPanel.setMessages(json.errors, json.warnings);
-                    formPanel.up('window').grid.store.reload();
+                    formPanel.up('window').parentWindow.initData();
                 }
                 //try to refresh the Grid of the Probe
                 try {

@@ -99,6 +99,13 @@ Ext.define('Lada.view.window.Ortszuordnung', {
      * Initialise the Data of this Window
      */
     initData: function() {
+        if (!this.record) {
+            this.record = Ext.create('Lada.model.Ortszuordnung');
+            if (!this.record.get('letzteAenderung')) {
+                this.record.data.letzteAenderung = new Date();
+            }
+            this.record.set('probeId', this.probe.get('id'));
+        }
         this.down('ortszuordnungform').setRecord(this.record);
         this.down('ortpanel').setStore();
     },

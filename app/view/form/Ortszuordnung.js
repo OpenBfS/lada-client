@@ -146,6 +146,9 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     refreshOrt: function(ortId) {
         var orteStore = Ext.StoreManager.get('orte');
         var ort = orteStore.getById(ortId);
+        if (!ort) {
+            return;
+        }
         var verwStore = Ext.StoreManager.get('verwaltungseinheiten');
         var verw = verwStore.getById(ort.get('gemId'));
         var staatStore = Ext.StoreManager.get('staaten');
