@@ -56,34 +56,89 @@ Ext.define('Lada.view.grid.Orte', {
                 return 'noedit';
             }
         }, {
+            header: i18n.getMsg('netzbetreiber'),
+            renderer: function(value) {
+                var r = '';
+                if (!value || value === '') {
+                    r = 'Error';
+                }
+                var store = Ext.data.StoreManager.get('netzbetreiber');
+                var record = store.getById(value);
+                if (record) {
+                  r = record.get('netzbetreiber');
+                }
+                return r;
+            },
+            editor: {
+                xtype: 'combobox',
+                store: Ext.data.StoreManager.get('netzbetreiberFiltered'),
+                displayField: 'netzbetreiber',
+                valueField: 'id',
+                allowBlank: false
+            },
+            dataIndex: 'netzbetreiberId'
+        }, {
             header: i18n.getMsg('orte.ortId'),
+            editor: {
+                xtype: 'textfield'
+            },
             dataIndex: 'ortId'
         }, {
             header: i18n.getMsg('orte.nutsCode'),
+            editor: {
+                xtype: 'textfield'
+            },
             dataIndex: 'nutsCode'
         }, {
             header: i18n.getMsg('orte.anlageId'),
+            editor: {
+                xtype: 'numberfield'
+            },
             dataIndex: 'anlageId'
         }, {
             header: i18n.getMsg('orte.gemId'),
             dataIndex: 'gemId',
             width: 120,
             renderer: function(value) {
+                if (!value) {
+                    return '';
+                }
                 var store = Ext.data.StoreManager.get('verwaltungseinheiten');
                 var record = store.getById(value);
                 return record.get('bezeichnung');
+            },
+            editor: {
+                xtype: 'combobox',
+                store: Ext.data.StoreManager.get('verwaltungseinheiten'),
+                displayField: 'bezeichnung',
+                valueField: 'id',
+                allowBlank: false
             }
         }, {
             header: i18n.getMsg('orte.staatId'),
             dataIndex: 'staatId',
             width: 70,
             renderer: function(value) {
+                if (!value) {
+                    return '';
+                }
                 var staaten = Ext.data.StoreManager.get('staaten');
                 var record = staaten.getById(value);
                 return record.get('staatIso');
+            },
+            editor: {
+                xtype: 'combobox',
+                store: Ext.data.StoreManager.get('staaten'),
+                displayField: 'staatIso',
+                valueField: 'id',
+                allowBlank: false
             }
         }, {
             header: i18n.getMsg('orte.kdaId'),
+            editor: {
+                xtype: 'numberfield',
+                allowBlank: false
+            },
             dataIndex: 'kdaId'
         }, {
             header: i18n.getMsg('orte.ozId'),
@@ -93,45 +148,81 @@ Ext.define('Lada.view.grid.Orte', {
             dataIndex: 'ortTyp'
         }, {
             header: i18n.getMsg('orte.mpArt'),
+            editor: {
+                xtype: 'textfield'
+            },
             dataIndex: 'mpArt'
         }, {
             header: i18n.getMsg('orte.zone'),
+            editor: {
+                xtype: 'textfield'
+            },
             dataIndex: 'zone'
         }, {
             header: i18n.getMsg('orte.sektor'),
+            editor: {
+                xtype: 'textfield'
+            },
             dataIndex: 'sektor'
         }, {
             header: i18n.getMsg('orte.zustaendigkeit'),
+            editor: {
+                xtype: 'textfield'
+            },
             dataIndex: 'zustaendigkeit'
         }, {
             header: i18n.getMsg('orte.berichtstext'),
+            editor: {
+                xtype: 'textfield'
+            },
             dataIndex: 'berichtstext'
         }, {
             header: i18n.getMsg('orte.kurztext'),
+            editor: {
+                xtype: 'textfield'
+            },
             dataIndex: 'kurztext'
         }, {
             header: i18n.getMsg('orte.langtext'),
+            editor: {
+                xtype: 'textfield'
+            },
             dataIndex: 'langtext'
         }, {
-            header: i18n.getMsg('orte.beschreibung'),
-            dataIndex: 'beschreibung'
-        }, {
             header: i18n.getMsg('orte.unscharf'),
+            editor: {
+                xtype: 'textfield'
+            },
             dataIndex: 'unscharf'
         }, {
             header: i18n.getMsg('orte.hoeheLand'),
+            editor: {
+                xtype: 'numberfield'
+            },
             dataIndex: 'hoeheLand'
         }, {
             header: i18n.getMsg('orte.koordXExtern'),
+            editor: {
+                xtype: 'textfield'
+            },
             dataIndex: 'koordXExtern'
         }, {
             header: i18n.getMsg('orte.koordYExtern'),
+            editor: {
+                xtype: 'textfield'
+            },
             dataIndex: 'koordYExtern'
         }, {
             header: i18n.getMsg('orte.longitude'),
+            editor: {
+                xtype: 'numberfield'
+            },
             dataIndex: 'longitude'
         }, {
             header: i18n.getMsg('orte.latitude'),
+            editor: {
+                xtype: 'numberfield'
+            },
             dataIndex: 'latitude'
         }, {
             header: i18n.getMsg('orte.letzteAenderung'),
@@ -162,6 +253,12 @@ Ext.define('Lada.view.grid.Orte', {
                     displayInfo: true
                 }]);
             }
+        }
+
+        if (Ext.Array.contains(Lada.funktionen, 4)) {
+            var panel = this.up('ortpanel');
+            panel.down('button[action=add]').enable();
+            panel.down('button[action=addMap]').enable();
         }
     },
 

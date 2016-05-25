@@ -49,8 +49,6 @@ Ext.define('Lada.model.Ort', {
     }, {
         name: 'langtext'
     }, {
-        name: 'beschreibung'
-    }, {
         name: 'unscharf'
     }, {
         name: 'hoeheLand'

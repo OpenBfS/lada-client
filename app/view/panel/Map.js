@@ -86,6 +86,9 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     selectFeature: function(model, record) {
+        if (!record.get('id') || record.get('id') === '') {
+            return;
+        }
         var feature = this.featureLayer.getFeaturesByAttribute('id', record.get('id'));
         this.map.setCenter(
             new OpenLayers.LonLat(feature[0].geometry.x, feature[0].geometry.y));
@@ -109,8 +112,9 @@ Ext.define('Lada.view.panel.Map', {
         this.locationRecord.set('latitude', features.feature.geometry.y);
         this.locationRecord.set('longitude', features.feature.geometry.x);
         this.drawPoint.deactivate();
-        this.selectControl.unselectAll();
-        this.selectControl.select(features.feature);
+        this.fireEvent('featureadded', this.locationRecord);
+    //    this.selectControl.unselectAll();
+    //    this.selectControl.select(features.feature);
     },
 
     addLocations: function(locationStore) {

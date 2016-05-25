@@ -12,7 +12,7 @@ Ext.define('Lada.controller.Ort', {
         var me = this;
         this.control({
             'ortpanel button[action=addMap]': {
-                click: me.addFeature
+                click: me.activateDraw
             },
             'ortpanel button[action=add]': {
                 click: me.addRecord
@@ -23,22 +23,87 @@ Ext.define('Lada.controller.Ort', {
             'ortpanel ortstammdatengrid': {
                 edit: me.gridSave,
                 canceledit: me.cancelEdit,
-                select: me.activateButtons,
-                deselect: me.deactivateButtons
+                select: me.select
+            },
+            'ortpanel map': {
+                featureadded: me.featureadded
             }
         });
     },
 
-    addFeature: function(button) {
-        console.log('add feature');
+    featureadded: function(record) {
+        var grid = Ext.ComponentQuery.query('ortpanel ortstammdatengrid')[0];
+        if (!record.get('letzteAenderung')) {
+            record.data.letzteAenderung = new Date();
+        }
+        grid.store.insert(0, record);
+        grid.rowEditing.startEdit(0, 1);
+    },
+
+    activateDraw: function(button) {
+        var map = button.up('ortpanel').down('map');
+        var record = Ext.create('Lada.model.Ort');
+        map.activateDraw(record);
     },
 
     addRecord: function(button) {
         console.log('add record');
+        var record = Ext.create('Lada.model.Ort');
+        var grid = button.up('ortpanel').down('ortstammdatengrid');
+        if (!record.get('letzteAenderung')) {
+            record.data.letzteAenderung = new Date();
+        }
+        grid.store.insert(0, record);
+        grid.rowEditing.startEdit(0, 1);
     },
 
     deleteItem: function(button) {
-        console.log('delete item');
+        var grid = button.up('ortpanel').down('ortstammdatengrid');
+        var selection = grid.getView().getSelectionModel().getSelection()[0];
+        var i18n = Lada.getApplication().bundle;
+        Ext.MessageBox.confirm(i18n.getMsg('delete'),
+                                i18n.getMsg('confirmation.question'),
+                                function(btn) {
+            if (btn === 'yes') {
+                selection.destroy({
+                    success: function() {
+                        //DO NOTHING
+                    },
+                    failure: function(request, response) {
+                        var json = response.request.scope.reader.jsonData;
+                        if (json) {
+                            if (json.message){
+                                Ext.Msg.alert(i18n.getMsg('err.msg.delete.title')
+                                    +' #'+json.message,
+                                    i18n.getMsg(json.message));
+                            } else {
+                                Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
+                                    i18n.getMsg('err.msg.generic.body'));
+                            }
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
+                                i18n.getMsg('err.msg.response.body'));
+                        }
+                    }
+                });
+            }
+        });
+        grid.up('ortpanel').down('button[action=delete]').disable();
+    },
+
+    select: function(rowModel, record) {
+        this.checkEdit(rowModel, record);
+        this.buttonToggle(rowModel, record);
+    },
+
+    checkEdit: function(rowModel, record) {
+        if (!Ext.Array.contains(Lada.netzbetreiber,
+            record.get('netzbetreiberId')) &&
+            record.get('netzbetreiberId') !== '') {
+            var grid = Ext.ComponentQuery.query('ortpanel ortstammdatengrid')[0];
+            grid.rowEditing.cancelEdit();
+            return;
+        }
     },
 
     /**
@@ -51,7 +116,8 @@ Ext.define('Lada.controller.Ort', {
         var i18n = Lada.getApplication().bundle;
         context.record.save({
             success: function(record, response) {
-                //Do Nothing
+                var grid = Ext.ComponentQuery.query('ortstammdatengrid')[0];
+                grid.store.reload();
             },
             failure: function(record, response) {
               var json = response.request.scope.reader.jsonData;
@@ -80,29 +146,35 @@ Ext.define('Lada.controller.Ort', {
         }
         context.grid.getSelectionModel().deselect(context.record);
     },
-    /**
-     * Toggles the buttons in the toolbar
-     **/
-    activateButtons: function(rowModel, record) {
-        var panel = rowModel.view.up('ortpanel');
-        this.buttonToggle(true, panel);
-    },
-
-    /**
-     * Toggles the buttons in the toolbar
-     **/
-    deactivateButtons: function(rowModel, record) {
-        var panel = rowModel.view.up('ortpanel');
-        // Only disable buttons when nothing is selected
-        if (rowModel.selected.items == 0) {
-            this.buttonToggle(false, panel);
-        }
-    },
 
     /**
      * Enables/Disables a set of buttons
      **/
-    buttonToggle: function(enabled, panel) {
+    buttonToggle: function(rowModel, record) {
+        if (!Ext.Array.contains(Lada.funktionen, 4)) {
+            return;
+        }
+        var grid = Ext.ComponentQuery.query('ortstammdatengrid')[0];
+        if (!record ||
+            !Ext.Array.contains(Lada.netzbetreiber,
+            record.get('netzbetreiberId'))) {
+            grid.up('ortpanel').down('button[action=delete]').disable();
+            return;
+        }
+        if (record.get('readonly') ||
+            rowModel.selected.items.length === 0) {
+            grid.up('ortpanel').down('button[action=delete]').disable();
+        }
+        else {
+            if (grid.getPlugin('rowedit').editing) {
+            //only enable buttons, when grid is not beeing edited
+                grid.up('ortpanel').down('button[action=delete]').disable();
+            }
+            else {
+                grid.up('ortpanel').down('button[action=delete]').enable();
+            }
+        }
+        /*
         if (!enabled &&
             panel.down('button[action=delete]')) {
             panel.down('button[action=delete]').disable();
@@ -119,5 +191,6 @@ Ext.define('Lada.controller.Ort', {
                 panel.down('button[action=delete]').disable();
             }
         }
+        */
     }
 });
