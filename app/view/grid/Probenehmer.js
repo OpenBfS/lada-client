@@ -70,7 +70,6 @@ Ext.define('Lada.view.grid.Probenehmer', {
             sortable: false,
             width: 30,
             getClass: function (val, meta, rec) {
-                console.log(rec.get('statusEdit'));
                 if (rec.get('readonly') === false) {
                         return 'edit';
                 }
