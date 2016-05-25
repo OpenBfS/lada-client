@@ -56,7 +56,7 @@ Ext.define('Lada.view.grid.Orte', {
                 return 'noedit';
             }
         }, {
-            header: i18n.getMsg('netzbetreiber'),
+            header: i18n.getMsg('netzbetreiberId'),
             renderer: function(value) {
                 var r = '';
                 if (!value || value === '') {
