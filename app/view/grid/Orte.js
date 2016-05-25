@@ -224,7 +224,9 @@ Ext.define('Lada.view.grid.Orte', {
             },
             dataIndex: 'latitude'
         }, {
-            header: i18n.getMsg('orte.letzteAenderung'),
+            header: i18n.getMsg('letzteAenderung'),
+            xtype: 'datecolumn',
+            format: 'd.m.Y H:i',
             dataIndex: 'letzteAenderung'
         }];
         this.callParent(arguments);
