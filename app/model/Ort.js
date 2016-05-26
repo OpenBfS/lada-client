@@ -71,6 +71,9 @@ Ext.define('Lada.model.Ort', {
             }
             return new Date(v);
         }
+    }, {
+        name: 'readonly',
+        type: 'boolean'
     }],
 
     idProperty: 'id',
