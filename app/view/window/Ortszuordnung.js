@@ -45,7 +45,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             + ' '
                             + i18n.getMsg('probe')
                             + ' '
-                            + this.probe.get('hauptprobennr')
+                            + this.probe.get('hauptprobenNr')
                             + ' '
                             + i18n.getMsg('edit');
         }
@@ -57,7 +57,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             + ' '
                             + i18n.getMsg('probe')
                             + ' '
-                            + this.probe.get('hauptprobennr')
+                            + this.probe.get('hauptprobenNr')
                             + ' '
                             + i18n.getMsg('create');
         }
