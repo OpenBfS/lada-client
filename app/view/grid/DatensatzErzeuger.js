@@ -69,7 +69,6 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             sortable: false,
             width: 30,
             getClass: function (val, meta, rec) {
-                console.log(rec.get('statusEdit'));
                 if (rec.get('readonly') === false) {
                         return 'edit';
                 }

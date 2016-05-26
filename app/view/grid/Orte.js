@@ -49,14 +49,13 @@ Ext.define('Lada.view.grid.Orte', {
             sortable: false,
             width: 30,
             getClass: function (val, meta, rec) {
-                console.log(rec.get('statusEdit'));
                 if (rec.get('readonly') === false) {
                         return 'edit';
                 }
                 return 'noedit';
             }
         }, {
-            header: i18n.getMsg('netzbetreiber'),
+            header: i18n.getMsg('netzbetreiberId'),
             renderer: function(value) {
                 var r = '';
                 if (!value || value === '') {
@@ -230,7 +229,9 @@ Ext.define('Lada.view.grid.Orte', {
             },
             dataIndex: 'latitude'
         }, {
-            header: i18n.getMsg('orte.letzteAenderung'),
+            header: i18n.getMsg('letzteAenderung'),
+            xtype: 'datecolumn',
+            format: 'd.m.Y H:i',
             dataIndex: 'letzteAenderung'
         }];
         this.callParent(arguments);
