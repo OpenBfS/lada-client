@@ -80,7 +80,8 @@ Ext.define('Lada.view.grid.Orte', {
         }, {
             header: i18n.getMsg('orte.ortId'),
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                allowBlank: false
             },
             dataIndex: 'ortId'
         }, {
@@ -179,13 +180,15 @@ Ext.define('Lada.view.grid.Orte', {
         }, {
             header: i18n.getMsg('orte.kurztext'),
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                allowBlank: false
             },
             dataIndex: 'kurztext'
         }, {
             header: i18n.getMsg('orte.langtext'),
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                allowBlank: false
             },
             dataIndex: 'langtext'
         }, {
@@ -203,13 +206,15 @@ Ext.define('Lada.view.grid.Orte', {
         }, {
             header: i18n.getMsg('orte.koordXExtern'),
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                allowBlank: false
             },
             dataIndex: 'koordXExtern'
         }, {
             header: i18n.getMsg('orte.koordYExtern'),
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                allowBlank: false
             },
             dataIndex: 'koordYExtern'
         }, {
