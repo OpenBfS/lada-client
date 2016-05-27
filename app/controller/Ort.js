@@ -123,6 +123,7 @@ Ext.define('Lada.controller.Ort', {
             success: function(record, response) {
                 var grid = Ext.ComponentQuery.query('ortstammdatengrid')[0];
                 grid.store.reload();
+                Ext.StoreManager.get('orte').load();
             },
             failure: function(record, response) {
               var json = response.request.scope.reader.jsonData;
