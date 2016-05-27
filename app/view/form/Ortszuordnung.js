@@ -81,7 +81,9 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                     }, {
                         xtype: 'tfield',
                         labelWidth: 125,
-                        maxLength: 100,
+                        maxLength: 1,
+                        allowBlank: false,
+                        regex: /[U,E,Z,A]/,
                         name: 'ortszuordnungTyp',
                         fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp')
                     }, {

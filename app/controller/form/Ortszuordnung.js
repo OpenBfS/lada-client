@@ -152,7 +152,9 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
      */
     dirtyForm: function(form, dirty) {
         if (dirty) {
-            form.owner.down('button[action=save]').setDisabled(false);
+            if (form.getValues().ortId !== '') {
+                form.owner.down('button[action=save]').setDisabled(false);
+            }
             form.owner.down('button[action=discard]').setDisabled(false);
         }
         else {

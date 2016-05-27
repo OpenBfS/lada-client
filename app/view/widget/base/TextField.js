@@ -28,7 +28,7 @@ Ext.define('Lada.view.widget.base.TextField', {
             enforceMaxLength: this.enforceMaxLength || true,
             fieldLabel: this.fieldLabel,
             labelWidth: this.labelWidth,
-            readOnly: this.readOnly || false, 
+            readOnly: this.readOnly || false,
             listeners: this.listeners
         }, {
             xtype: 'image',
@@ -46,6 +46,12 @@ Ext.define('Lada.view.widget.base.TextField', {
             hidden: true
         }];
         this.callParent(arguments);
+        if (this.regex) {
+            Ext.apply(this.down('textfield'), {regex: this.regex});
+        }
+        if (this.allowBlank === false) {
+            Ext.apply(this.down('textfield'), {allowBlank: this.allowBlank});
+        }
     },
 
     showWarnings: function(warnings) {
