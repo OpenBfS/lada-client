@@ -35,6 +35,8 @@ Ext.define('Lada.view.Viewport', {
                 region: 'west',
                 split: true,
                 flex: 1,
+                collapsible: true,
+                collapsed: false,
                 dockedItems: [{
                     xtype: 'toolbar',
                     dock: 'top',
@@ -45,17 +47,12 @@ Ext.define('Lada.view.Viewport', {
                             items: [{
                                 text: i18n.getMsg('about.button.title'),
                                 action: 'about'
-                            }
-                            ]
+                            }]
                         }
                     }, '->', {
                         xtype: 'tbtext',
                         id: 'userinfo',
-                        text: ''
-                    }, {
-                        xtype: 'tbtext',
-                        id: 'groupinfo',
-                        text: ''
+                        text: 'User: ' + Lada.username
                     }]
                 }],
                 items: [{
