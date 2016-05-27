@@ -79,11 +79,12 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                         name: 'ortszusatztext',
                         fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszusatztext')
                     }, {
-                        xtype: 'tfield',
+                        xtype: 'textfield',
                         labelWidth: 125,
                         maxLength: 1,
                         allowBlank: false,
-                        regex: /[U,E,Z,A]/,
+                        regex: /[UEZA]/,
+                        activeError: 'U, E, Z oder A eingeben',
                         name: 'ortszuordnungTyp',
                         fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp')
                     }, {
@@ -219,12 +220,11 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
     clearMessages: function() {
         this.down('tfield[name=ortszusatztext]').clearWarningOrError();
-        this.down('tfield[name=ortszuordnungTyp]').clearWarningOrError();
      },
 
     setReadOnly: function(value) {
         this.down('tfield[name=ortszusatztext]').setReadOnly(value);
-        this.down('tfield[name=ortszuordnungTyp]').setReadOnly(value);
+        this.down('textfield[name=ortszuordnungTyp]').setReadOnly(value);
     }
 });
 
