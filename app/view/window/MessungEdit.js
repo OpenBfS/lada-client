@@ -47,15 +47,6 @@ Ext.define('Lada.view.window.MessungEdit', {
             return;
         }
 
-        var messstelle = Ext.data.StoreManager.get('messstellen')
-            .getById(this.probe.get('mstId'));
-
-        this.title = 'Messung: ' + this.record.get('nebenprobenNr')
-            + '   zu Probe: ' + this.probe.get('probeIdAlt')
-            + ' Mst: ' + messstelle.get('messStelle')
-            + ' editieren.';
-
-
         this.buttons = [{
             text: 'Schließen',
             scope: this,
@@ -161,6 +152,14 @@ Ext.define('Lada.view.window.MessungEdit', {
                 }
                 this.down('messungform').setRecord(record);
                 this.record = record;
+
+                var messstelle = Ext.data.StoreManager.get('messstellen')
+                    .getById(this.probe.get('mstId'));
+                this.setTitle('Messung: ' + this.record.get('nebenprobenNr')
+                              + '   zu Probe: ' + this.probe.get('probeIdAlt')
+                              + ' Mst: ' + messstelle.get('messStelle')
+                              + ' editieren.');
+
                 var json = Ext.decode(response.response.responseText);
                 if (json) {
                     this.setMessages(json.errors, json.warnings);
