@@ -39,6 +39,9 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
 
     getValue: function() {
         var value = this.down('combobox').getValue();
+        if (value === undefined || value === null || value === '') {
+            return [];
+        }
         if (value instanceof Array) {
             return value;
         }
