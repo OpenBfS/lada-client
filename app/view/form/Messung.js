@@ -31,6 +31,7 @@ Ext.define('Lada.view.form.Messung', {
 
     initComponent: function() {
         var me = this;
+        var i18n = Lada.getApplication().bundle;
         this.items = [{
             xtype: 'fieldset',
             title: 'Allgemein',
@@ -69,7 +70,7 @@ Ext.define('Lada.view.form.Messung', {
                     name: 'nebenprobenNr',
                     maxLength: 10,
                     margin: '0, 10, 5, 0',
-                    fieldLabel: 'Nebenprobennr.',
+                    fieldLabel: i18n.getMsg('nebenprobenNr'),
                     width: 300,
                     labelWidth: 100
                 }, {

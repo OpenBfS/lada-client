@@ -42,6 +42,7 @@ Ext.define('Lada.view.form.Probe', {
 
     initComponent: function() {
         var me = this;
+        var i18n = Lada.getApplication().bundle;
         this.items = [{
             xtype: 'fieldset',
             title: 'Allgemein',
@@ -157,7 +158,7 @@ Ext.define('Lada.view.form.Probe', {
                             items: [{
                                 xtype: 'tfield',
                                 name: 'hauptprobenNr',
-                                fieldLabel: 'Hauptprobennr.',
+                                fieldLabel: i18n.getMsg('hauptprobenNr'),
                                 margin: '0, 5, 5, 5',
                                 width: '35%',
                                 labelWidth: 95,
