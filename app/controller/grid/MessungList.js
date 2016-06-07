@@ -12,6 +12,7 @@
 Ext.define('Lada.controller.grid.MessungList', {
     extend: 'Ext.app.Controller',
     requires: [
+        'Lada.view.window.SetStatus',
         'Lada.view.window.ProbeEdit'
     ],
 

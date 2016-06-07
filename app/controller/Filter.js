@@ -15,6 +15,7 @@ Ext.define('Lada.controller.Filter', {
 
     requires: [
         'Lada.view.widget.Messstelle',
+        'Lada.view.widget.Status',
         'Lada.view.grid.MessprogrammeList',
         'Lada.view.grid.ProbeList',
         'Lada.view.grid.MessungList',

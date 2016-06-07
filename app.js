@@ -58,6 +58,7 @@ Ext.application({
         'Lada.store.Probenehmer',
         'Lada.store.DatensatzErzeuger',
         'Lada.store.MessprogrammKategorie',
+        'Lada.store.MessungQueries',
         'Lada.model.MessstelleLabor'
     ],
     bundle: {
