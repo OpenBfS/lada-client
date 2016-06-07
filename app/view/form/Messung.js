@@ -13,6 +13,7 @@ Ext.define('Lada.view.form.Messung', {
     extend: 'Ext.form.Panel',
     alias: 'widget.messungform',
     requires: [
+        'Ext.layout.container.Table',
         'Lada.view.widget.Datenbasis',
         'Lada.view.widget.base.CheckBox',
         'Lada.view.widget.Messmethode',
