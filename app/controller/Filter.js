@@ -318,6 +318,7 @@ Ext.define('Lada.controller.Filter', {
                     forceSelection: false,
                     value: value,
                     filterId: filterId,
+                    editable: false,
                     multiSelect: multi
                 });
             }
