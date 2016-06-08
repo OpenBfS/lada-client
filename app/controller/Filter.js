@@ -313,6 +313,7 @@ Ext.define('Lada.controller.Filter', {
             else if (type === 'liststatus') {
                 field = Ext.create('Lada.view.widget.Status', {
                     name: name,
+                    store: Ext.StoreManager.get('statuswerte'),
                     labelWidth: 135,
                     fieldLabel: label,
                     forceSelection: false,
