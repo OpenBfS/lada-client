@@ -7,25 +7,25 @@
  */
 
 var statuswerteStore = Ext.create('Ext.data.Store', {
-    fields: ['id', 'status'],
+    fields: ['id', 'wert'],
     data: [{
         'id': 1,
-        'status': 'plausibel'
+        'wert': 'plausibel'
     }, {
         'id': 2,
-        'status': 'nicht repräsentativ'
+        'wert': 'nicht repräsentativ'
     }, {
         'id': 3,
-        'status': 'nicht plausibel'
+        'wert': 'nicht plausibel'
     }, {
         'id': 4,
-        'status': 'Rückfrage'
+        'wert': 'Rückfrage'
     }, {
         'id': 7,
-        'status': 'nicht lieferbar'
+        'wert': 'nicht lieferbar'
     }, {
         'id': 8,
-        'status': 'zurücksetzen'
+        'wert': 'zurücksetzen'
     }]
 });
 
@@ -36,7 +36,7 @@ Ext.define('Lada.view.widget.Status', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.statuswert',
     store: statuswerteStore,
-    displayField: 'status',
+    displayField: 'wert',
     valueField: 'id',
     emptyText: 'Wählen Sie einen Status',
     // Enable filtering of comboboxes
