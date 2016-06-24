@@ -61,6 +61,134 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     jsonData: jsondata,
                     success: function(response) {
                         var json = Ext.JSON.decode(response.responseText);
+                        var radio = Ext.ComponentQuery.query('modeswitcher')[0].down('radiofield[inputValue=proben]');
+                        radio.setValue(true);
+
+                        var contentPanel = Ext.ComponentQuery.query('panel[name=main]')[0].down('panel[name=contentpanel]');
+                        contentPanel.removeAll(); //clear the panel: make space for new grids
+                        var gridstore = Ext.create('Lada.store.Proben');
+                        var frgrid = Ext.create('Lada.view.grid.ProbeList', {
+                            plugins: [{
+                                ptype: 'gridrowexpander',
+                                gridType: 'Lada.view.grid.Messung',
+                                expandOnDblClick: false,
+                                gridConfig: {
+                                    bottomBar: false
+                                }
+                            }]
+                        });
+
+                        var columns = [{
+                                header: i18n.getMsg('prnId'),
+                                dataIndex: 'probeIdAlt'
+                            }, {
+                                header: i18n.getMsg('netzbetreiberId'),
+                                dataIndex: 'netzbetreiberId',
+                                renderer: function(value) {
+                                    var r = '';
+                                    if (!value || value === '') {
+                                        r = 'Error';
+                                    }
+                                    var store = Ext.data.StoreManager.get('netzbetreiber');
+                                    var record = store.getById(value);
+                                    if (record) {
+                                      r = record.get('netzbetreiber');
+                                    }
+                                    return r;
+                                }
+                            }, {
+                                header: i18n.getMsg('mstId'),
+                                dataIndex: 'mstId',
+                                renderer: function(value) {
+                                    var r = '';
+                                    if (!value || value === '') {
+                                        r = 'Error';
+                                    }
+                                    var store = Ext.data.StoreManager.get('messstellen');
+                                    var record = store.getById(value);
+                                    if (record) {
+                                      r = record.get('messStelle');
+                                    }
+                                    return r;
+                                }
+                            }, {
+                                header: i18n.getMsg('datenbasisId'),
+                                dataIndex: 'datenbasisId',
+                                renderer: function(value) {
+                                    var r = '';
+                                    if (!value || value === '') {
+                                        r = value;
+                                    }
+                                    var store = Ext.data.StoreManager.get('datenbasis');
+                                    var record = store.getById(value);
+                                    if (record) {
+                                      r = record.get('datenbasis');
+                                    }
+                                    return r;
+                                }
+                            }, {
+                                header: i18n.getMsg('baId'),
+                                dataIndex: 'baId',
+                                renderer: function(value) {
+                                    var r = '';
+                                    if (!value || value === '') {
+                                        r = '';
+                                    }
+                                    var store = Ext.create('Ext.data.Store', {
+                                        fields: ['betriebsartId', 'betriebsart'],
+                                        data: [{
+                                            'betriebsartId': '1',
+                                            'betriebsart': 'Normal-/Routinebetrieb'
+                                        }, {
+                                            'betriebsartId': '2',
+                                            'betriebsart': 'Störfall/Intensivbetrieb'
+                                        }]
+                                    });
+                                    var record = store.getById(value);
+                                    if (record) {
+                                      r = record.get('betriebsart');
+                                    }
+                                    return r;
+                                }
+                            }, {
+                                header: i18n.getMsg('probenartId'),
+                                dataIndex: 'probenartId',
+                                renderer: function(value) {
+                                    var r = '';
+                                    if (!value || value === '') {
+                                        r = value;
+                                    }
+                                    var store = Ext.data.StoreManager.get('probenarten');
+                                    var record = store.getById(value);
+                                    if (record) {
+                                      r = record.get('probenart');
+                                    }
+                                    return r;
+                                }
+                            }, {
+                                header: i18n.getMsg('sollVon'),
+                                dataIndex: 'solldatumBeginn',
+                                renderer: function(value) {
+                                    console.log(value);
+                                    if (!value) {
+                                        return '';
+                                    }
+                                    return Ext.Date.format(value, 'd.m.Y');
+                                }
+                            }, {
+                                header: i18n.getMsg('sollBis'),
+                                dataIndex: 'solldatumEnde',
+                                renderer: function(value) {
+                                    if (!value) {
+                                        return '';
+                                    }
+                                    return Ext.Date.format(value, 'd.m.Y');
+                                }
+                            }];
+                        frgrid.reconfigure(gridstore, columns);
+
+                        gridstore.loadData(json.data);
+                        contentPanel.add(frgrid);
                         Ext.Msg.show({
                             title: i18n.getMsg('success'),
                             autoScroll: true,
@@ -192,12 +320,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             r += response.data.length;
             r += ' ' + i18n.getMsg('probecreated');
             r += '<br/>';
-            r += i18n.getMsg('probeids');
-        var i;
-            for (i in response.data){
-                r += '<br/>';
-                r += response.data[i].probeIdAlt
-            }
         return r;
     },
 
