@@ -15,11 +15,11 @@ Ext.define('Lada.view.grid.Messung', {
 
     maxHeight: 350,
     emptyText: 'Keine Messungen gefunden',
-    minHeight: 110,
+    minHeight: 44,
     viewConfig: {
         deferEmptyText: false
     },
-    margin: '0, 5, 5, 5',
+    margin: '0, 5, 15, 5',
 
     recordId: null,
 

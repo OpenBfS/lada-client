@@ -85,6 +85,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 margin: 5,
                 items: [{
                     xtype: 'messwertgrid',
+                    minHeight:'110',
                     recordId: this.record.get('id'),
                     messgroesseStore: mStore
                 }]
