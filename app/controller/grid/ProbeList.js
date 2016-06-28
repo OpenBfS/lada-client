@@ -62,7 +62,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
             record: record,
             style: 'z-index: -1;' //Fixes an Issue where windows could not be created in IE8
         });
-
+        win.setPosition(30);
         win.show();
         win.initData();
     },
