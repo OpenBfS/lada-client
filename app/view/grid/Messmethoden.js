@@ -14,6 +14,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
     alias: 'widget.messmethodengrid',
 
     requires: [
+        'Lada.store.MmtMessprogramm',
         'Lada.view.widget.Messmethode'
     ],
 
