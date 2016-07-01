@@ -24,6 +24,7 @@ Ext.define('Lada.view.widget.base.NumberField', {
             flex: 1,
             name: this.name,
             msgTarget: 'none',
+            allowDecimals: this.allowDecimals,
             maxLength: this.maxLength || 1000,
             enforceMaxLength: this.enforceMaxLength || true,
             fieldLabel: this.fieldLabel,
