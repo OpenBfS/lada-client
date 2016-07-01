@@ -616,11 +616,16 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('chkbox[name=test]').clearWarningOrError();
         this.down('cbox[name=probenartId]').clearWarningOrError();
         this.down('cbox[name=netzbetreiberId]').clearWarningOrError();
+        // clear messages in intervall definition
+        this.down('fset[name=probenIntervallFieldset]').clearMessages();
+        this.down('cbox[name=probenintervall]').clearWarningOrError();
+        this.down('fset[name=gueltigPeriodFieldset]').clearMessages();
+        this.down('datetime[name=gueltigVon]').clearWarningOrError();
+        this.down('datetime[name=gueltigBis]').clearWarningOrError();
         //no clear for probeNehmerId
         // Deskriptoren are missing
         this.down('cbox[name=umwId]').clearWarningOrError();
-        this.down('fset[name=gueltigPeriodFieldset]').clearMessages();
-        this.down('fset[name=probenIntervallFieldset]').clearMessages();
+        this.down('cbox[name=ortId]').clearWarningOrError();
     },
 
     setReadOnly: function(value) {
