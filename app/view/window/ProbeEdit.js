@@ -24,7 +24,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
     collapsible: true,
     maximizable: true,
     autoShow: true,
-    autoScroll: true,
     layout: 'fit',
     constrain: true,
 
