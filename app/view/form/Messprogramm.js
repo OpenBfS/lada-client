@@ -21,6 +21,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         'Lada.view.widget.Probenart',
         'Lada.view.widget.Umwelt',
         'Lada.view.widget.base.TextField',
+        'Lada.view.widget.base.NumberField',
         'Lada.view.widget.base.FieldSet',
         'Lada.model.Messprogramm',
         'Lada.model.MmtMessprogramm',
@@ -212,7 +213,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                             width: '40%',
                             name: 'probenintervall'
                         }, {
-                            xtype: 'numberfield',
+                            xtype: 'numfield',
+                            allowDecimals: false,
                             fieldLabel: i18n.getMsg('teilintervallVon'),
                             margin: '0, 10, 5, 10',
                             labelWidth: 90,
@@ -220,7 +222,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                             name: 'teilintervallVon',
                             period: 'start'
                         }, {
-                            xtype: 'numberfield',
+                            xtype: 'numfield',
+                            allowDecimals: false,
                             fieldLabel: i18n.getMsg('teilintervallBis'),
                             margin: '0, 15, 5, 5',
                             labelWidth: 18,
@@ -228,7 +231,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                             name: 'teilintervallBis',
                             period: 'end'
                         }, {
-                            xtype: 'numberfield',
+                            xtype: 'numfield',
+                            allowDecimals: false,
                             margin: '0, 10, 5, 5',
                             fieldLabel: i18n.getMsg('offset'),
                             labelWidth: 45,
@@ -616,11 +620,18 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('chkbox[name=test]').clearWarningOrError();
         this.down('cbox[name=probenartId]').clearWarningOrError();
         this.down('cbox[name=netzbetreiberId]').clearWarningOrError();
+        // clear messages in intervall definition
+        this.down('fset[name=probenIntervallFieldset]').clearMessages();
+        this.down('cbox[name=probenintervall]').clearWarningOrError();
+        this.down('fset[name=gueltigPeriodFieldset]').clearMessages();
+        this.down('numfield[name=teilintervallVon]').clearWarningOrError();
+        this.down('numfield[name=teilintervallBis]').clearWarningOrError();
+        this.down('datetime[name=gueltigVon]').clearWarningOrError();
+        this.down('datetime[name=gueltigBis]').clearWarningOrError();
         //no clear for probeNehmerId
         // Deskriptoren are missing
         this.down('cbox[name=umwId]').clearWarningOrError();
-        this.down('fset[name=gueltigPeriodFieldset]').clearMessages();
-        this.down('fset[name=probenIntervallFieldset]').clearMessages();
+        this.down('cbox[name=ortId]').clearWarningOrError();
     },
 
     setReadOnly: function(value) {
