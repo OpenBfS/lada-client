@@ -91,7 +91,12 @@ Ext.define('Lada.view.grid.MKommentar', {
             header: 'Text',
             dataIndex: 'text',
             flex: 1,
+            renderer: function(value) {
+                return '<div style="white-space: normal !important;">' +
+                value + '</div>';
+            },
             editor: {
+                xtype: 'textarea',
                 allowBlank: false,
                 maxLength: 1000,
                 enforceMaxLength: true
