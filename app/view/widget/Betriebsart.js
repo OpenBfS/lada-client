@@ -10,10 +10,10 @@ var betriebsartStore = Ext.create('Ext.data.Store', {
     fields: ['betriebsartId', 'betriebsart'],
     storeId: 'betriebsartStore',
     data: [{
-        'betriebsartId': '1',
+        'betriebsartId': 1,
         'betriebsart': 'Normal-/Routinebetrieb'
     }, {
-        'betriebsartId': '2',
+        'betriebsartId': 2,
         'betriebsart': 'Störfall/Intensivbetrieb'
     }]
 });
