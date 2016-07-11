@@ -38,8 +38,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
             this.callParent(arguments);
             return;
         }
-        var extendedTitle = this.record.get('probeId') ? this.record.get('probeId') : '';
-        this.title = '§3-Probe ' + extendedTitle;
         this.buttons = [{
             text: 'Schließen',
             scope: this,
@@ -138,6 +136,11 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 this.record = record;
                 var owner = this.record.get('owner');
                 var readonly = this.record.get('readonly');
+
+                var messstelle = Ext.data.StoreManager.get('messstellen')
+                                    .getById(this.record.get('mstId'));
+                this.setTitle('§3 Probe - Hauptprobennr.: ' + this.record.get('hauptprobenNr')
+                                     + ' Mst: ' + messstelle.get('messStelle'));
 
                 if (owner) {
                     //Always allow to Add Messungen.

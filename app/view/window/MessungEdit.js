@@ -157,7 +157,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 var messstelle = Ext.data.StoreManager.get('messstellen')
                     .getById(this.probe.get('mstId'));
                 this.setTitle('Messung: ' + this.record.get('nebenprobenNr')
-                              + '   zu Probe: ' + this.probe.get('probeIdAlt')
+                              + '   zu Probe - Hauptprobennr.: ' + this.probe.get('hauptprobenNr')
                               + ' Mst: ' + messstelle.get('messStelle')
                               + ' editieren.');
 

@@ -42,8 +42,8 @@ Ext.define('Lada.view.window.MessungCreate', {
         var messstelle = Ext.data.StoreManager.get('messstellen')
             .getById(this.probe.get('mstId'));
 
-        this.title = 'Neue Messung zu Probe: '
-            + this.probe.get('probeIdAlt')
+        this.title = 'Neue Messung zu Probe - Hauptprobennr.: '
+            + this.probe.get('hauptprobenNr')
             + ' Mst: ' + messstelle.get('messStelle')
             + ' hinzufügen.';
 

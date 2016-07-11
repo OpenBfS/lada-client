@@ -75,7 +75,14 @@ Ext.define('Lada.view.form.Probe', {
                 items: [{
                     layout: 'vbox',
                     border: 0,
-                    items: [{
+                        items: [{
+                             xtype: 'displayfield',
+                             name: 'probeIdAlt',
+                             fieldLabel: i18n.getMsg('probeId'),
+                             margin: '0, 5, 5, 5',
+                             labelWidth: 95,
+                             maxLength: 20
+                        },{
                             layout: {
                                 type: 'hbox',
                                 align: 'stretch'
