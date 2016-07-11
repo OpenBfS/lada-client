@@ -227,14 +227,14 @@ Ext.define('Lada.view.grid.Messung', {
         var value;
         if (success) {
             if (store.getTotalCount() === 0) {
-                value = 'Keine';
+                value = '0';
             }
             else {
                 value = store.getTotalCount();
             }
         }
         else {
-            value = 'k.A.';
+            value = '-';
         }
         opts.record.beginEdit();
         opts.record.set(opts.type, value);
