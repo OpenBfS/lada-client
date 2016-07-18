@@ -49,20 +49,20 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                     },
                     items: [{
                         text: i18n.getMsg('ortszuordnung.form.setOrt'),
-                        qtip: i18n.getMsg('ortszuordnung.form.setOrt.qtip'),
+                        tooltip: i18n.getMsg('ortszuordnung.form.setOrt.qtip'),
                         icon: 'resources/img/dialog-ok-apply.png',
                         action: 'setOrt',
                         enableToggle: true,
                         disabled: true
                     }, '->', {
                         text: i18n.getMsg('save'),
-                        qtip: i18n.getMsg('save.qtip'),
+                        tooltip: i18n.getMsg('save.qtip'),
                         icon: 'resources/img/dialog-ok-apply.png',
                         action: 'save',
                         disabled: true
                     }, {
                         text: i18n.getMsg('discard'),
-                        qtip: i18n.getMsg('discard.qtip'),
+                        tooltip: i18n.getMsg('discard.qtip'),
                         icon: 'resources/img/dialog-cancel.png',
                         action: 'discard',
                         disabled: true
