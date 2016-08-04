@@ -139,6 +139,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             }, {
                                 xtype: 'datenbasis',
                                 editable: false,
+                                allowBlank: false,
                                 name: 'datenbasisId',
                                 fieldLabel: i18n.getMsg('datenbasisId'),
                                 margin : '0, 5, 5, 5',
@@ -207,6 +208,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         margin: '0, 0, 0, 0',
                         items: [{
                             xtype: 'probenintervall',
+                            allowBlank: false,
                             fieldLabel: i18n.getMsg('probenintervall'),
                             margin: '0, 10, 5, 5',
                             labelWidth: 50,
@@ -215,6 +217,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         }, {
                             xtype: 'numfield',
                             allowDecimals: false,
+                            allowBlank: false,
                             fieldLabel: i18n.getMsg('teilintervallVon'),
                             margin: '0, 10, 5, 10',
                             labelWidth: 90,
@@ -224,6 +227,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         }, {
                             xtype: 'numfield',
                             allowDecimals: false,
+                            allowBlank: false,
                             fieldLabel: i18n.getMsg('teilintervallBis'),
                             margin: '0, 15, 5, 5',
                             labelWidth: 18,
@@ -259,6 +263,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         border: 0,
                         items: [{
                             xtype: 'datetime',
+                            allowBlank: false,
                             fieldLabel: i18n.getMsg('gueltigVon'),
                             margin: '0, 30, 5, 5',
                             labelWidth: 90,
@@ -267,6 +272,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             period: 'start'
                         }, {
                             xtype: 'datetime',
+                            allowBlank: false,
                             fieldLabel: i18n.getMsg('gueltigBis'),
                             margin: '0, 5, 5, 5',
                             labelWidth: 40,
@@ -292,7 +298,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                             name: 'umwId',
                             fieldLabel: i18n.getMsg('umwId'),
                             labelWidth: 125,
-                            allowBlank: false,
                             editable: true,
                             listeners: {
                                 dirtychange: {
@@ -365,7 +370,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         name: 'ortId',
                         fieldLabel: i18n.getMsg('ortId'),
                         labelWidth: 80,
-                        allowBlank: true,
+                        allowBlank: false,
                         forceSelection: true,
                         editable: false,
                         columnWidth: '0.75'
