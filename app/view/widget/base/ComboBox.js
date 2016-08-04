@@ -23,6 +23,9 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         if (this.editable === undefined) {
             this.editable = true;
         }
+        if (this.allowBlank === undefined) {
+            this.allowBlank = true;
+        }
         this.items = [{
             xtype: 'combobox',
             flex: 1,
@@ -44,6 +47,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             multiSelect: this.multiSelect,
             editable: this.editable,
             readOnly: this.readOnly,
+            allowBlank: this.allowBlank,
             forceSelection: this.forceSelection || false,
             msgTarget: 'none',
             value: this.value,
