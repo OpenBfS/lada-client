@@ -111,7 +111,8 @@ Ext.define('Lada.controller.grid.Messung', {
         var probe = button.up('window').record;
         var win = Ext.create('Lada.view.window.MessungCreate', {
             record: probe,
-            grid: button.up('messunggrid')
+            grid: button.up('messunggrid'),
+            parentWindow: button.up('window')
         });
         win.show();
         win.initData();
