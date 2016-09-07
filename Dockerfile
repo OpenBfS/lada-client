@@ -12,17 +12,17 @@
 #
 # The LADA-application will be available under http://yourdockerhost:8182
 #
-# Add `-v $PWD:/usr/local/apache2/htdocs/' to the run-command if you want to
+# Add `-v $PWD:/var/www/html/' to the run-command if you want to
 # test your local changes (you'll have to run ./install-dependencies.sh again).
 #
 
-FROM httpd:2.4
+FROM debian:jessie
 MAINTAINER tom.gottfried@intevation.de
 
-RUN apt-get update -y && apt-get install -y curl unzip python
+RUN apt-get update -y && apt-get install -y curl unzip python apache2
 
-ADD . /usr/local/apache2/htdocs/
-WORKDIR /usr/local/apache2/htdocs/
+ADD . /var/www/html
+WORKDIR /var/www/html
 
 #
 # Install dependencies
@@ -32,9 +32,12 @@ RUN ./install-dependencies.sh
 #
 # httpd setup
 #
-RUN ln -sf $PWD/custom-httpd.conf $HTTPD_PREFIX/conf/httpd.conf
-RUN ln -sf $PWD/custom-vhosts.conf $HTTPD_PREFIX/conf/extra/httpd-vhosts.conf
+RUN a2enmod proxy
+RUN a2enmod proxy_http
+RUN a2enmod headers
+RUN ln -sf $PWD/custom-vhosts.conf /etc/apache2/conf-available/lada.conf
+RUN a2enconf lada
 
 EXPOSE 80 81 82 83 84
 
-CMD ["httpd-foreground"]
+CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
