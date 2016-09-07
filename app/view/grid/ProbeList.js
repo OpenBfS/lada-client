@@ -13,7 +13,10 @@ Ext.define('Lada.view.grid.ProbeList', {
     extend: 'Lada.view.widget.DynamicGrid',
     alias: 'widget.probelistgrid',
 
-    requires: 'Lada.view.window.DeleteProbe',
+    requires: [
+        'Lada.view.window.DeleteProbe',
+        'Lada.view.window.ProbeCreate'
+    ],
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

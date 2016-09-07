@@ -28,6 +28,7 @@ Ext.define('Lada.view.form.Probe', {
         'Lada.view.widget.base.Datetime',
         'Lada.view.widget.base.FieldSet',
         'Lada.view.widget.base.DateField',
+        'Lada.view.window.MessungCreate',
         'Lada.model.Probe'
     ],
 
