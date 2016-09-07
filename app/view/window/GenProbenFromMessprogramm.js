@@ -48,12 +48,17 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         }, {
             text: i18n.getMsg('generateproben'),
             handler: function() {
+                var startDate = new Date(me.down('datefield[name=start]').getValue());
+                var startUTC = Date.UTC(
+                    startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+                var endDate = new Date(me.down('datefield[name=end]').getValue());
+                var endUTC = Date.UTC(
+                    endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
                 var jsondata = {
                     id: me.record.id,
-                    start: new Date(me.down('datefield[name=start]').getValue()).valueOf(),
-                    end: new Date(me.down('datefield[name=end]').getValue()).valueOf()
+                    start: startUTC,
+                    end: endUTC
                 };
-
 
                 Ext.Ajax.request({
                     url: 'lada-server/rest/probe/messprogramm',

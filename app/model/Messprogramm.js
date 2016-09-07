@@ -84,7 +84,12 @@ Ext.define('Lada.model.Messprogramm', {
         },
         serialize: function(value) {
             if (value instanceof Date && !isNaN(value.valueOf())) {
-                return Ext.Date.getDayOfYear(value);
+                var dayOfYear = Ext.Date.getDayOfYear(value);
+                var offset = value.getTimezoneOffset();
+                if (offset == 0) {
+                    return dayOfYear;
+                }
+                return offset > 0 ? dayOfYear - 1 : dayOfYear + 1;
             }
         }
     }, {
@@ -112,7 +117,12 @@ Ext.define('Lada.model.Messprogramm', {
         },
         serialize: function(value) {
             if (value instanceof Date && !isNaN(value.valueOf())) {
-                return Ext.Date.getDayOfYear(value);
+                var dayOfYear = Ext.Date.getDayOfYear(value);
+                var offset = value.getTimezoneOffset();
+                if (offset == 0) {
+                    return dayOfYear;
+                }
+                return offset > 0 ? dayOfYear - 1 : dayOfYear + 1;
             }
         }
     }, {
