@@ -278,8 +278,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
         // End Before Start validation
         if (field.period) {
             var partners = new Array();
-                partners[0] = field.up('fieldset').down('numberfield[period=start]').getValue()
-                partners[1] = field.up('fieldset').down('numberfield[period=end]').getValue()
+            partners[0] = field.up('fieldset')
+                .down('numberfield[period=start]').getValue();
+            partners[1] = field.up('fieldset')
+                .down('numberfield[period=end]').getValue();
             if (partners[0] && partners[1] && partners[0] > partners [1]) {
                 var msg = Lada.getApplication().bundle.getMsg('662');
                 field.up('fieldset').showWarningOrError(true, msg, false, '');

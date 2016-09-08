@@ -30,6 +30,7 @@ Ext.define('Lada.view.widget.base.NumberField', {
             fieldLabel: this.fieldLabel,
             labelWidth: this.labelWidth,
             readOnly: this.readOnly || false,
+            period: this.period,
             listeners: this.listeners
         }, {
             xtype: 'image',
