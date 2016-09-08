@@ -29,7 +29,10 @@ Ext.define('Lada.view.widget.base.FieldSet', {
             this.warningText += '\n';
         }
         this.warningText += warningText;
-        this.plainTitle = this.title;
+
+        if (this.title) {
+            this.plainTitle = this.title;
+        }
         this.origColor = this.getEl().dom.style['border-color'];
         var imgId = Ext.id();
         if (error) {
