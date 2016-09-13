@@ -13,6 +13,10 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     extend: 'Ext.window.Window',
     alias: 'widget.genpfm',
 
+    requires: [
+        'Lada.store.Proben'
+    ],
+
     collapsible: true,
     maximizable: true,
     autoShow: true,
