@@ -40,15 +40,16 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 select: this.syncOrtWindow
             },
             'messprogrammform datetime textfield': {
-                blur: this.checkDatePeriod
+                change: this.checkDatePeriod
+            },
+            'messprogrammform numfield numberfield': {
+                change: this.checkPeriod
             },
             'messprogrammform [name="teilintervallVon"]': {
                 change: this.synchronizeSlider,
-                blur: this.checkPeriod
             },
             'messprogrammform [name="teilintervallBis"]': {
                 change: this.synchronizeSlider,
-                blur: this.checkPeriod
             },
             'messprogrammform probenintervall combobox': {
                 select: this.updateIntervalls
@@ -284,7 +285,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 .down('numberfield[period=end]').getValue();
             if (partners[0] && partners[1] && partners[0] > partners [1]) {
                 var msg = Lada.getApplication().bundle.getMsg('662');
-                field.up('fieldset').showWarningOrError(true, msg, false, '');
+                field.up('fieldset').showWarningOrError(false, '', true, msg);
             } else {
                 field.up('fieldset').clearMessages();
             }
@@ -313,7 +314,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     .getValue()
             if (partners[0] && partners[1] && partners[0] > partners [1]) {
                 var msg = Lada.getApplication().bundle.getMsg('662');
-                field.up('fieldset').showWarningOrError(true, msg, false, '');
+                field.up('fieldset').showWarningOrError(false, '', true, msg);
             } else {
                 field.up('fieldset').clearMessages();
             }
