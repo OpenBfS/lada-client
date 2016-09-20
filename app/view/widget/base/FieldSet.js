@@ -72,9 +72,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
     },
 
     clearMessages: function() {
-        if (this.plainTitle !== '') {
-            this.setTitle(this.plainTitle);
-            this.getEl().dom.style['border-color'] = this.origColor;
-        }
+        this.setTitle(this.plainTitle);
+        this.getEl().dom.style['border-color'] = this.origColor;
     }
 });
