@@ -28,8 +28,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         'Lada.view.widget.Probenintervall',
         'Lada.view.widget.Location',
         'Lada.view.widget.ProbenintervallSlider',
-        'Lada.view.widget.base.Datetime',
-        'Lada.view.widget.base.DateField'
+        'Lada.view.widget.DayOfYear'
     ],
 
     model: 'Lada.model.Messprogramm',
@@ -262,23 +261,21 @@ Ext.define('Lada.view.form.Messprogramm', {
                         },
                         border: 0,
                         items: [{
-                            xtype: 'datetime',
+                            xtype: 'dayofyear',
                             allowBlank: false,
                             fieldLabel: i18n.getMsg('gueltigVon'),
-                            margin: '0, 30, 5, 5',
+                            width: '50%',
                             labelWidth: 90,
                             name: 'gueltigVon',
-                            format: 'd.m.Y',
-                            period: 'start'
+                            border: false
                         }, {
-                            xtype: 'datetime',
+                            xtype: 'dayofyear',
                             allowBlank: false,
                             fieldLabel: i18n.getMsg('gueltigBis'),
-                            margin: '0, 5, 5, 5',
+                            width: '50%',
                             labelWidth: 40,
                             name: 'gueltigBis',
-                            format: 'd.m.Y',
-                            period: 'end'
+                            border: false
                         }]
                     }]
                 }, {
@@ -628,11 +625,10 @@ Ext.define('Lada.view.form.Messprogramm', {
         // clear messages in intervall definition
         this.down('fset[name=probenIntervallFieldset]').clearMessages();
         this.down('cbox[name=probenintervall]').clearWarningOrError();
-        this.down('fset[name=gueltigPeriodFieldset]').clearMessages();
         this.down('numfield[name=teilintervallVon]').clearWarningOrError();
         this.down('numfield[name=teilintervallBis]').clearWarningOrError();
-        this.down('datetime[name=gueltigVon]').clearWarningOrError();
-        this.down('datetime[name=gueltigBis]').clearWarningOrError();
+        this.down('dayofyear[name=gueltigVon]').clearWarningOrError();
+        this.down('dayofyear[name=gueltigBis]').clearWarningOrError();
         //no clear for probeNehmerId
         // Deskriptoren are missing
         this.down('cbox[name=umwId]').clearWarningOrError();
