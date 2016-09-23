@@ -39,9 +39,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform location combobox': {
                 select: this.syncOrtWindow
             },
-            'messprogrammform datetime textfield': {
-                change: this.checkDatePeriod
-            },
             'messprogrammform numfield numberfield': {
                 change: this.checkPeriod
             },
@@ -100,6 +97,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var record = form.getRecord();
         form.populateIntervall(record, field.getValue());
     },
+
     /**
      * The function will open a new Window to edit the Ort of a Messprogramm
      */
@@ -292,34 +290,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
     },
 
-    /**
-     * checkDatePeriod() is called when a fields defining an intervall
-     * were modified
-     * The function validates if the start is smaller than end.
-     * Same as checkPeriod but requires DATETIME fields
-     */
-    checkDatePeriod: function(field) {
-        // This field might be a field within a Period.
-        // Search for Partner field (period: end/start) and validate
-        // End Before Start validation
-        if (field.period) {
-            var partners = new Array();
-                partners[0] = field.up('fieldset')
-                    .down('datetime[period=start]')
-                    .down('textfield')
-                    .getValue()
-                partners[1] = field.up('fieldset')
-                    .down('datetime[period=end]')
-                    .down('textfield')
-                    .getValue()
-            if (partners[0] && partners[1] && partners[0] > partners [1]) {
-                var msg = Lada.getApplication().bundle.getMsg('662');
-                field.up('fieldset').showWarningOrError(false, '', true, msg);
-            } else {
-                field.up('fieldset').clearMessages();
-            }
-        }
-    },
 
     deskriptorSelect: function(field, records) {
         var desk = field.up('deskriptor');
