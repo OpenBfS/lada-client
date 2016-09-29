@@ -33,17 +33,17 @@ Ext.define('Lada.store.Probenintervall', {
         'probenintervall': 'H',
         'piTexti18nId': 'pi.halfyearly',
         'periodstart': 1,
-        'periodend': 183
+        'periodend': 184
     }, {
         'probenintervall': 'Q',
         'piTexti18nId': 'pi.quarteryearly',
         'periodstart': 1,
-        'periodend': 91
+        'periodend': 92
     }, {
         'probenintervall': 'M',
         'piTexti18nId': 'pi.monthly',
         'periodstart': 1,
-        'periodend': 30
+        'periodend': 31
     }, {
         'probenintervall': 'W4',
         'piTexti18nId': 'pi.fourweekly',
