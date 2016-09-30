@@ -61,6 +61,8 @@ Ext.define('Lada.model.Messprogramm', {
     }, {
         name: 'intervallOffset'
     }, {
+        /* day of year is 0-base in ExtJS, but 1-based in Java.
+         * Thus, we expect 1-based values here. */
         name: 'gueltigVon'
     }, {
         name: 'gueltigBis'

@@ -146,6 +146,8 @@ Ext.define('Lada.view.widget.DayOfYear', {
         var doy = panel.down('numberfield[hidden]').getValue();
 
         if (doy != null) {
+            // day of year is 0-based in ExtJS, but 1-based in the model
+            doy -= 1;
             var date = Ext.Date.subtract(
                 new Date(1970, 0, 1), Ext.Date.DAY, -doy);
             var month = date.getMonth();
@@ -168,7 +170,9 @@ Ext.define('Lada.view.widget.DayOfYear', {
         if (month != null && day != null && day <= maxDay) {
             // create a date object with arbitrary non-leap year
             var date = new Date(1970, month, day);
-            var doy = Ext.Date.getDayOfYear(date);
+
+            // day of year is 0-based in ExtJS, but 1-based in the model
+            var doy = Ext.Date.getDayOfYear(date) + 1;
             panel.down('numberfield[hidden]').setValue(doy);
         }
     },
