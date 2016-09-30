@@ -68,184 +68,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     url: 'lada-server/rest/probe/messprogramm',
                     method: 'POST',
                     jsonData: jsondata,
-                    success: function(response) {
-                        var json = Ext.JSON.decode(response.responseText);
-                        var radio = Ext.ComponentQuery.query('modeswitcher')[0].down('radiofield[inputValue=proben]');
-                        radio.setValue(true);
-
-                        var contentPanel = Ext.ComponentQuery.query('panel[name=main]')[0].down('panel[name=contentpanel]');
-                        contentPanel.removeAll(); //clear the panel: make space for new grids
-                        var gridstore = Ext.create('Lada.store.Proben');
-                        var frgrid = Ext.create('Lada.view.grid.ProbeList', {
-                            plugins: [{
-                                ptype: 'gridrowexpander',
-                                gridType: 'Lada.view.grid.Messung',
-                                expandOnDblClick: false,
-                                gridConfig: {
-                                    bottomBar: false
-                                }
-                            }]
-                        });
-
-                        var columns = [{
-                                header: i18n.getMsg('prnId'),
-                                dataIndex: 'probeIdAlt'
-                            }, {
-                                header: i18n.getMsg('netzbetreiberId'),
-                                dataIndex: 'netzbetreiberId',
-                                renderer: function(value) {
-                                    var r = '';
-                                    if (!value || value === '') {
-                                        r = 'Error';
-                                    }
-                                    var store = Ext.data.StoreManager.get('netzbetreiber');
-                                    var record = store.getById(value);
-                                    if (record) {
-                                      r = record.get('netzbetreiber');
-                                    }
-                                    return r;
-                                }
-                            }, {
-                                header: i18n.getMsg('mstId'),
-                                dataIndex: 'mstId',
-                                renderer: function(value) {
-                                    var r = '';
-                                    if (!value || value === '') {
-                                        r = 'Error';
-                                    }
-                                    var store = Ext.data.StoreManager.get('messstellen');
-                                    var record = store.getById(value);
-                                    if (record) {
-                                      r = record.get('messStelle');
-                                    }
-                                    return r;
-                                }
-                            }, {
-                                header: i18n.getMsg('datenbasisId'),
-                                dataIndex: 'datenbasisId',
-                                renderer: function(value) {
-                                    var r = '';
-                                    if (!value || value === '') {
-                                        r = value;
-                                    }
-                                    var store = Ext.data.StoreManager.get('datenbasis');
-                                    var record = store.getById(value);
-                                    if (record) {
-                                      r = record.get('datenbasis');
-                                    }
-                                    return r;
-                                }
-                            }, {
-                                header: i18n.getMsg('baId'),
-                                dataIndex: 'baId',
-                                renderer: function(value) {
-                                    var r = '';
-                                    if (!value || value === '') {
-                                        r = '';
-                                    }
-                                    var store = Ext.create('Ext.data.Store', {
-                                        fields: ['betriebsartId', 'betriebsart'],
-                                        data: [{
-                                            'betriebsartId': '1',
-                                            'betriebsart': 'Normal-/Routinebetrieb'
-                                        }, {
-                                            'betriebsartId': '2',
-                                            'betriebsart': 'Störfall/Intensivbetrieb'
-                                        }]
-                                    });
-                                    var record = store.getById(value);
-                                    if (record) {
-                                      r = record.get('betriebsart');
-                                    }
-                                    return r;
-                                }
-                            }, {
-                                header: i18n.getMsg('probenartId'),
-                                dataIndex: 'probenartId',
-                                renderer: function(value) {
-                                    var r = '';
-                                    if (!value || value === '') {
-                                        r = value;
-                                    }
-                                    var store = Ext.data.StoreManager.get('probenarten');
-                                    var record = store.getById(value);
-                                    if (record) {
-                                      r = record.get('probenart');
-                                    }
-                                    return r;
-                                }
-                            }, {
-                                header: i18n.getMsg('sollVon'),
-                                dataIndex: 'solldatumBeginn',
-                                renderer: function(value) {
-                                    console.log(value);
-                                    if (!value) {
-                                        return '';
-                                    }
-                                    return Ext.Date.format(value, 'd.m.Y');
-                                }
-                            }, {
-                                header: i18n.getMsg('sollBis'),
-                                dataIndex: 'solldatumEnde',
-                                renderer: function(value) {
-                                    if (!value) {
-                                        return '';
-                                    }
-                                    return Ext.Date.format(value, 'd.m.Y');
-                                }
-                            }];
-                        frgrid.reconfigure(gridstore, columns);
-
-                        gridstore.loadData(json.data);
-                        contentPanel.add(frgrid);
-                        Ext.Msg.show({
-                            title: i18n.getMsg('success'),
-                            autoScroll: true,
-                            msg: me.evalResponse(json),
-                            buttons: Ext.Msg.OK
-                        });
-                        me.close();
-                    },
-                    failure: function(response) {
-                        var json = null;
-                        try {
-                            json = Ext.JSON.decode(response.responseText);
-                        }
-                        catch(err){
-                            Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title'),
-                                Lada.getApplication().bundle.getMsg('err.msg.response.body'));
-                        }
-                        if (json) {
-                            if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
-                                formPanel.setMessages(json.errors, json.warnings);
-                            }
-                            /*
-                            SSO will send a 302 if the Client is not authenticated
-                            unfortunately this seems to be filtered by the browser.
-                            We assume that a 302 was send when the follwing statement
-                            is true.
-                            */
-                            if (response.status == 0 && response.responseText === "") {
-                                Ext.MessageBox.confirm('Erneutes Login erforderlich',
-                                    'Ihre Session ist abgelaufen.<br/>'+
-                                    'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
-                                    'Alle ungesicherten Daten gehen dabei verloren.<br/>' +
-                                    'Soll die Anwendung jetzt neu geladen werden?', this.reload);
-                            }
-                            // further error handling
-                            if(json.message){
-                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
-                                    +' #'+json.message,
-                                    Lada.getApplication().bundle.getMsg(json.message));
-                            } else {
-                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title'),
-                                    Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
-                            }
-                        } else {
-                            Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title'),
-                                Lada.getApplication().bundle.getMsg('err.msg.response.body'));
-                        }
-                    }
+                    success: me.onSuccess,
+                    failure: me.onFailure,
                 });
             }
         }];
@@ -311,6 +135,201 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         }];
         this.callParent(arguments);
     },
+
+    /**
+     * Callback on success of request (HTTP status 200)
+     */
+    onSuccess: function(response) {
+        var i18n = Lada.getApplication().bundle;
+
+        var json = Ext.JSON.decode(response.responseText);
+        var radio = Ext.ComponentQuery.query('modeswitcher')[0]
+            .down('radiofield[inputValue=proben]');
+        radio.setValue(true);
+
+        var contentPanel = Ext.ComponentQuery.query('panel[name=main]')[0]
+            .down('panel[name=contentpanel]');
+        contentPanel.removeAll(); //clear the panel: make space for new grids
+        var gridstore = Ext.create('Lada.store.Proben');
+        var frgrid = Ext.create('Lada.view.grid.ProbeList', {
+            plugins: [{
+                ptype: 'gridrowexpander',
+                gridType: 'Lada.view.grid.Messung',
+                expandOnDblClick: false,
+                gridConfig: {
+                    bottomBar: false
+                }
+            }]
+        });
+
+        var columns = [{
+            header: i18n.getMsg('prnId'),
+            dataIndex: 'probeIdAlt'
+        }, {
+            header: i18n.getMsg('netzbetreiberId'),
+            dataIndex: 'netzbetreiberId',
+            renderer: function(value) {
+                var r = '';
+                if (!value || value === '') {
+                    r = 'Error';
+                }
+                var store = Ext.data.StoreManager.get('netzbetreiber');
+                var record = store.getById(value);
+                if (record) {
+                    r = record.get('netzbetreiber');
+                }
+                return r;
+            }
+        }, {
+            header: i18n.getMsg('mstId'),
+            dataIndex: 'mstId',
+            renderer: function(value) {
+                var r = '';
+                if (!value || value === '') {
+                    r = 'Error';
+                }
+                var store = Ext.data.StoreManager.get('messstellen');
+                var record = store.getById(value);
+                if (record) {
+                    r = record.get('messStelle');
+                }
+                return r;
+            }
+        }, {
+            header: i18n.getMsg('datenbasisId'),
+            dataIndex: 'datenbasisId',
+            renderer: function(value) {
+                var r = '';
+                if (!value || value === '') {
+                    r = value;
+                }
+                var store = Ext.data.StoreManager.get('datenbasis');
+                var record = store.getById(value);
+                if (record) {
+                    r = record.get('datenbasis');
+                }
+                return r;
+            }
+        }, {
+            header: i18n.getMsg('baId'),
+            dataIndex: 'baId',
+            renderer: function(value) {
+                var r = '';
+                if (!value || value === '') {
+                    r = '';
+                }
+                var store = Ext.create('Ext.data.Store', {
+                    fields: ['betriebsartId', 'betriebsart'],
+                    data: [{
+                        'betriebsartId': '1',
+                        'betriebsart': 'Normal-/Routinebetrieb'
+                    }, {
+                        'betriebsartId': '2',
+                        'betriebsart': 'Störfall/Intensivbetrieb'
+                    }]
+                });
+                var record = store.getById(value);
+                if (record) {
+                    r = record.get('betriebsart');
+                }
+                return r;
+            }
+        }, {
+            header: i18n.getMsg('probenartId'),
+            dataIndex: 'probenartId',
+            renderer: function(value) {
+                var r = '';
+                if (!value || value === '') {
+                    r = value;
+                }
+                var store = Ext.data.StoreManager.get('probenarten');
+                var record = store.getById(value);
+                if (record) {
+                    r = record.get('probenart');
+                }
+                return r;
+            }
+        }, {
+            header: i18n.getMsg('sollVon'),
+            dataIndex: 'solldatumBeginn',
+            renderer: function(value) {
+                if (!value) {
+                    return '';
+                }
+                return Ext.Date.format(value, 'd.m.Y');
+            }
+        }, {
+            header: i18n.getMsg('sollBis'),
+            dataIndex: 'solldatumEnde',
+            renderer: function(value) {
+                if (!value) {
+                    return '';
+                }
+                return Ext.Date.format(value, 'd.m.Y');
+            }
+        }];
+        frgrid.reconfigure(gridstore, columns);
+
+        gridstore.loadData(json.data);
+        contentPanel.add(frgrid);
+        Ext.Msg.show({
+            title: i18n.getMsg('success'),
+            autoScroll: true,
+            msg: me.evalResponse(json),
+            buttons: Ext.Msg.OK
+        });
+        me.close();
+    },
+
+    /**
+     * Callback on failure of request (HTTP status != 200)
+     */
+    onFailure:  function(response) {
+        var i18n = Lada.getApplication().bundle;
+
+        var json = null;
+        try {
+            json = Ext.JSON.decode(response.responseText);
+        }
+        catch(err){
+            Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                          i18n.getMsg('err.msg.response.body'));
+        }
+        if (json) {
+            if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
+                formPanel.setMessages(json.errors, json.warnings);
+            }
+            /*
+              SSO will send a 302 if the Client is not authenticated
+              unfortunately this seems to be filtered by the browser.
+              We assume that a 302 was send when the follwing statement
+              is true.
+            */
+            if (response.status == 0 && response.responseText === "") {
+                Ext.MessageBox.confirm(
+                    'Erneutes Login erforderlich',
+                    'Ihre Session ist abgelaufen.<br/>'
+                    + 'Für ein erneutes Login muss die Anwendung '
+                    + 'neu geladen werden.<br/>'
+                    + 'Alle ungesicherten Daten gehen dabei verloren.<br/>'
+                    + 'Soll die Anwendung jetzt neu geladen werden?',
+                    this.reload);
+            }
+            // further error handling
+            if(json.message){
+                Ext.Msg.alert(i18n.getMsg('err.msg.generic.title')
+                              +' #'+json.message,
+                              i18n.getMsg(json.message));
+            } else {
+                Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                              i18n.getMsg('err.msg.generic.body'));
+            }
+        } else {
+            Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                          i18n.getMsg('err.msg.response.body'));
+        }
+    },
+
 
     /**
      * Initiatlise the Data
