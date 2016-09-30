@@ -52,6 +52,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         }, {
             text: i18n.getMsg('generateproben'),
             handler: function() {
+                me.setLoading(true);
                 var startDate = new Date(me.down('datefield[name=start]').getValue());
                 var startUTC = Date.UTC(
                     startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
@@ -292,6 +293,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
      * Callback on failure of request (HTTP status != 200)
      */
     onFailure:  function(response) {
+        me.setLoading(false);
+
         var i18n = Lada.getApplication().bundle;
 
         var json = null;
