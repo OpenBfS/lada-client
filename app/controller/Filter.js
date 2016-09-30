@@ -21,6 +21,7 @@ Ext.define('Lada.controller.Filter', {
         'Lada.view.grid.MessungList',
         'Lada.store.MessungenList',
         'Lada.view.window.FilterManagement',
+        'Lada.view.window.About',
         'Lada.view.widget.Umwelt'
     ],
 
