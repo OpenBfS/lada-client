@@ -149,6 +149,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             // handle LADA server errors
             Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                           i18n.getMsg(json.message));
+            me.setLoading(false);
         } else {
             var radio = Ext.ComponentQuery.query('modeswitcher')[0]
                 .down('radiofield[inputValue=proben]');
