@@ -433,6 +433,18 @@ Ext.define('Lada.view.form.Messprogramm', {
             svalLower = record.get('teilintervallVon');
         }
 
+        // subintervall is redundant to validity for yearly samples
+        if (intervall == 'J') {
+            svalUpper = this.getForm().findField('gueltigBis').getValue();
+            svalLower = this.getForm().findField('gueltigVon').getValue();
+            b.setReadOnly(true);
+            v.setReadOnly(true);
+            s.setDisabled(true);
+        } else {
+            b.setReadOnly(false);
+            v.setReadOnly(false);
+            s.setDisabled(false);
+        }
 
         var intrec = intervallstore
             .findRecord('probenintervall',

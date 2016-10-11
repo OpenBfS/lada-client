@@ -51,6 +51,9 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform probenintervall combobox': {
                 select: this.updateIntervalls
             },
+            'messprogrammform dayofyear [hidden]': {
+                change: this.alignSubIntervall
+            },
             'messprogrammform panel[xtype="deskriptor] combobox': {
                 select: this.deskriptorSelect
             }
@@ -90,12 +93,31 @@ Ext.define('Lada.controller.form.Messprogramm', {
 
     /**
      * When the Probenintervall was changed, update the Sliders
-     * and the the numberfield.
+     * and the numberfield.
      */
-    updateIntervalls: function(field, records) {
+    updateIntervalls: function(field) {
         var form = field.up('messprogrammform');
         var record = form.getRecord();
         form.populateIntervall(record, field.getValue());
+    },
+
+    /**
+     * When the validity period was changed, align the subintervall
+     * in case of yearly intervall.
+     */
+    alignSubIntervall: function(field) {
+        var form = field.up('messprogrammform');
+        var intervall = form.down('probenintervall').down('combobox')
+            .getValue();
+        if (intervall == 'J') {
+            if (field.getName() == 'gueltigVon') {
+                form.down('[name=teilintervallVon]')
+                    .setValue(field.getValue());
+            } else {
+                form.down('[name=teilintervallBis]')
+                    .setValue(field.getValue());
+            }
+        }
     },
 
     /**
@@ -239,7 +261,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
     },
 
      /**
-      * The discard function resets the Location form
+      * The discard function resets the form
       * to its original state.
       */
     discard: function(button) {
