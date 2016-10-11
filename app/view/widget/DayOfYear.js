@@ -6,47 +6,6 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-var monthsStore = Ext.create('Ext.data.Store', {
-    fields: ['id', 'name'],
-    data: [{
-        'id': 0,
-        'name': 'Januar'
-    }, {
-        'id': 1,
-        'name': 'Februar'
-    }, {
-        'id': 2,
-        'name': 'März'
-    }, {
-        'id': 3,
-        'name': 'April'
-    }, {
-        'id': 4,
-        'name': 'Mai'
-    }, {
-        'id': 5,
-        'name': 'Juni'
-    }, {
-        'id': 6,
-        'name': 'Juli'
-    }, {
-        'id': 7,
-        'name': 'August'
-    }, {
-        'id': 8,
-        'name': 'September'
-    }, {
-        'id': 9,
-        'name': 'Oktober'
-    }, {
-        'id': 10,
-        'name': 'November'
-    }, {
-        'id': 11,
-        'name': 'Dezember'
-    }]
-});
-
 /**
  * Panel to select month and day of month,
  * that can be serialized to day of year
@@ -63,6 +22,47 @@ Ext.define('Lada.view.widget.DayOfYear', {
 
     initComponent: function() {
         var me = this;
+
+        var monthsStore = Ext.create('Ext.data.Store', {
+            fields: ['id', 'name'],
+            data: [{
+                'id': 0,
+                'name': 'Januar'
+            }, {
+                'id': 1,
+                'name': 'Februar'
+            }, {
+                'id': 2,
+                'name': 'März'
+            }, {
+                'id': 3,
+                'name': 'April'
+            }, {
+                'id': 4,
+                'name': 'Mai'
+            }, {
+                'id': 5,
+                'name': 'Juni'
+            }, {
+                'id': 6,
+                'name': 'Juli'
+            }, {
+                'id': 7,
+                'name': 'August'
+            }, {
+                'id': 8,
+                'name': 'September'
+            }, {
+                'id': 9,
+                'name': 'Oktober'
+            }, {
+                'id': 10,
+                'name': 'November'
+            }, {
+                'id': 11,
+                'name': 'Dezember'
+            }]
+        });
 
         /*
          * Create hidden field to hold the day of year value
