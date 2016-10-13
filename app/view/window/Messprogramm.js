@@ -176,6 +176,7 @@ Ext.define('Lada.view.window.Messprogramm', {
             this.down('messmethodengrid').setReadOnly(true);
             this.down('messprogrammform').setRecord(record);
         }
+        this.down('messprogrammform').isValid();
     },
 
     //This was used in a Probewindow, I left it here for reference...

@@ -115,7 +115,10 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 labelWidth: 95,
                                 allowBlank: false,
                                 editable: true,
-                                hidden: true
+                                hidden: true,
+                                listeners: {
+                                    validitychange: me.mstLaborValidity
+                                }
                             }, {
                                 xtype: 'messstelle',
                                 name: 'laborMstId',
@@ -125,7 +128,10 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 labelWidth: 95,
                                 allowBlank: false,
                                 editable: true,
-                                hidden: true
+                                hidden: true,
+                                listeners: {
+                                    validitychange: me.mstLaborValidity
+                                }
                             }, {
                                 xtype: 'netzbetreiber',
                                 name: 'netzbetreiberId',
@@ -480,6 +486,17 @@ Ext.define('Lada.view.form.Messprogramm', {
         //Set IntervallOffset
         i.setMinValue(0);
         i.setMaxValue(max-1);
+    },
+
+    /*
+     * Set validity of messstellelabor field (not part of the form) based
+     * on validitychange event of hidden mstId and laborMstId
+     */
+    mstLaborValidity: function(field, isValid) {
+        if (!isValid) {
+            field.up('fieldset').down('messstellelabor')
+                .down('combobox').markInvalid('');
+        }
     },
 
     setRecord: function(messRecord) {

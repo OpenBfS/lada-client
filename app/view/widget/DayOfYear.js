@@ -71,11 +71,13 @@ Ext.define('Lada.view.widget.DayOfYear', {
         var DOYField = Ext.create('Ext.form.field.Number', {
             name: this.name,
             hidden: true,
+            allowBlank: this.allowBlank,
             listeners: this.listeners
         });
         /* Use dirtychange to avoid endless loop with change listeners on
          * visible items. This one is for initialisation by the form. */
         DOYField.addListener('dirtychange', me.setFields);
+        DOYField.addListener('validitychange', me.validityChange);
 
         /*
          * Add hidden field and visible fields to let the user choose
@@ -166,15 +168,16 @@ Ext.define('Lada.view.widget.DayOfYear', {
         var month = panel.down('combobox').getValue();
         var day = panel.down('numberfield[hidden=false]').getValue();
         var maxDay = panel.down('numberfield[hidden=false]').maxValue;
+        var doy = null;
 
         if (month != null && day != null && day <= maxDay) {
             // create a date object with arbitrary non-leap year
             var date = new Date(1970, month, day);
 
             // day of year is 0-based in ExtJS, but 1-based in the model
-            var doy = Ext.Date.getDayOfYear(date) + 1;
-            panel.down('numberfield[hidden]').setValue(doy);
+            doy = Ext.Date.getDayOfYear(date) + 1;
         }
+        panel.down('numberfield[hidden]').setValue(doy);
     },
 
     /*
@@ -182,9 +185,6 @@ Ext.define('Lada.view.widget.DayOfYear', {
      * validate associated day value.
      */
     checkMaxDay: function() {
-        this.up('panel').down('numberfield[hidden=false]')
-            .clearInvalid();
-
         // create a date object with arbitrary non-leap year
         var maxDay = Ext.Date.getDaysInMonth(
             new Date(1970, this.getValue()));
@@ -193,9 +193,13 @@ Ext.define('Lada.view.widget.DayOfYear', {
 
         var curDay = this.up('panel')
             .down('numberfield[hidden=false]').getValue();
-        if (curDay > maxDay) {
+        if (curDay) {
+            if (curDay > maxDay) {
+                this.up('panel').down('numberfield[hidden=false]')
+                    .setValue(maxDay);
+            }
             this.up('panel').down('numberfield[hidden=false]')
-                .setValue(maxDay);
+                .clearInvalid();
         }
     },
 
@@ -235,6 +239,22 @@ Ext.define('Lada.view.widget.DayOfYear', {
             var i18n = Lada.getApplication().bundle;
             var errorText = i18n.getMsg(this.name) + ': ' + errors;
             fieldset.showWarningOrError(false, '', true, errorText);
+        }
+    },
+
+    /*
+     * When the hidden field is validated as part of a form, make the result
+     * user visible.
+     */
+    validityChange: function(field, isValid) {
+        if (!isValid) {
+            var errors = field.getActiveErrors()
+            field.up('panel').down('combobox').markInvalid(errors);
+            field.up('panel').down('numberfield[hidden=false]')
+                .markInvalid(errors);
+        } else {
+            field.up('panel').down('combobox').clearInvalid();
+            field.up('panel').down('numberfield[hidden=false]').clearInvalid();
         }
     },
 
