@@ -24,7 +24,7 @@ Ext.define('Lada.model.MKommentar', {
     }, {
         name: 'messungsId'
     }, {
-        name: 'erzeuger'
+        name: 'mstId'
     }, {
         name: 'datum',
         type: 'date',

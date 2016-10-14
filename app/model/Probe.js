@@ -20,20 +20,12 @@ Ext.define('Lada.model.Probe', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'probeIdAlt'
+        name: 'idAlt'
     }, {
         name: 'hauptprobenNr'
     }, {
         name: 'test',
         type: 'boolean'
-    }, {
-        name: 'netzbetreiberId',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
     }, {
         name: 'mstId'
     }, {
@@ -41,7 +33,8 @@ Ext.define('Lada.model.Probe', {
     }, {
         name: 'datenbasisId'
     }, {
-        name: 'baId'
+        name: 'baId',
+        type: 'number'
     }, {
         name: 'probenartId'
     }, {
@@ -89,8 +82,6 @@ Ext.define('Lada.model.Probe', {
         name: 'erzeugerId'
     }, {
         name: 'probeNehmerId'
-    }, {
-        name: 'mpKat'
     }, {
         name: 'mplId'
     }, {

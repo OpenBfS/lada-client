@@ -17,6 +17,8 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
     valueField: 'id',
     editable: this.editable || false,
     readOnly: this.readOnly,
+    isFormField: this.isFormField,
+    submitValue: this.submitValue,
     // Enable filtering of comboboxes
     queryMode: 'local',
     triggerAction: 'all',
@@ -35,6 +37,8 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
             this.store.clearFilter();
         }
         this.callParent(arguments);
+        this.down('combobox').isFormField = false;
+        this.down('combobox').submitValue = false;
     },
 
     getValue: function() {

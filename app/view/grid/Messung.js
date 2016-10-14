@@ -75,36 +75,40 @@ Ext.define('Lada.view.grid.Messung', {
         }, {
             header: 'Status',
             flex: 1,
-            dataIndex: 'statusWert',
+            dataIndex: 'statusKombi',
             renderer: function(value, meta, record, rNdx, cNdx) {
                 var statusId = record.get('status');
                 var mId = record.get('id');
                 //also fwd the record to the asynchronous loading of statuswerte
                 // in order to add the statuswert to the record,
                 // after the grid was rendered...
-                if (value === '') {
+                if (!value || value === '') {
                     this.updateStatus(mId, statusId, record);
                     return 'Lade...';
                 }
-                var sta = Ext.data.StoreManager.getByKey('statuswerte');
-                return sta.getById(value).get('wert');
+                var kombis = Ext.data.StoreManager.get('statuskombi');
+                var kombi = kombis.getById(value);
+                var st = kombi.raw.statusWert.wert
+                return st;
             }
         }, {
             header: 'Stufe',
             flex: 1,
-            dataIndex: 'statusStufe',
+            dataIndex: 'statusKombi',
             renderer: function(value, meta, record, rNdx, cNdx) {
                 var statusId = record.get('status');
                 var mId = record.get('id');
                 //also fwd the record to the asynchronous loading of statuswerte
                 // in order to add the statuswert to the record,
                 // after the grid was rendered...
-                if (value === '') {
+                if (!value || value === '') {
                     this.updateStatus(mId, statusId, record);
                     return 'Lade...';
                 }
-                var sta = Ext.data.StoreManager.getByKey('statusstufe');
-                return sta.getById(value).get('stufe');
+                var kombis = Ext.data.StoreManager.get('statuskombi');
+                var kombi = kombis.getById(value);
+                var st = kombi.raw.statusStufe.stufe
+                return st;
             }
         }, {
             header: 'OK-Flag',
@@ -252,14 +256,12 @@ Ext.define('Lada.view.grid.Messung', {
         else {
             var rec = sstore.getById(opts.statusId);
             if (rec) {
-                value = rec.get('statusWert');
-                var stufe = rec.get('statusStufe');
+                value = rec.get('statusKombi');
                 //add the determined statuswert to the record.
                 // this is necessary to let the controller determine
                 // which actions are allowed.
                 opts.record.beginEdit();
-                opts.record.set('statusWert', value);
-                opts.record.set('statusStufe', stufe);
+                opts.record.set('statusKombi', value);
                 opts.record.endEdit();
             }
         }

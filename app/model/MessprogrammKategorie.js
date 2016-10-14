@@ -17,7 +17,7 @@ Ext.define('Lada.model.MessprogrammKategorie', {
     }, {
         name: 'netzbetreiberId'
     }, {
-        name: 'mplId'
+        name: 'code'
     }, {
         name: 'bezeichnung'
     }, {

@@ -72,7 +72,7 @@ Ext.define('Lada.view.grid.PKommentar', {
             width: 110
         }, {
             header: 'Erzeuger',
-            dataIndex: 'erzeuger',
+            dataIndex: 'mstId',
             width: 140,
             renderer: function(value) {
                 var r = '';

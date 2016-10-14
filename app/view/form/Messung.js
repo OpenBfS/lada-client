@@ -30,6 +30,8 @@ Ext.define('Lada.view.form.Messung', {
 
     trackResetOnLoad: true,
 
+    currentStatus: null,
+
     initComponent: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
@@ -79,6 +81,7 @@ Ext.define('Lada.view.form.Messung', {
                     name: 'mmtId',
                     margin: '0, 10, 5, 0',
                     fieldLabel: 'Messmethode',
+                    allowBlank: false,
                     width: 300,
                     labelWidth: 100
                 }, {
@@ -126,7 +129,6 @@ Ext.define('Lada.view.form.Messung', {
                     width: 300,
                     labelWidth: 100,
                     submitValue: false,
-                    isFormField: false,
                     preventMark: true, //Do not display error msg.
                     validateValue: function() {
                         return true; //this field is always valid
@@ -168,6 +170,10 @@ Ext.define('Lada.view.form.Messung', {
         }
     },
 
+    getCurrentStatus: function() {
+        return this.currentStatus;
+    },
+
     retrieveStatus: function(messungsId, statusId) {
         var i18n = Lada.getApplication().bundle;
         var msg = i18n.getMsg('load.statuswert');
@@ -178,6 +184,7 @@ Ext.define('Lada.view.form.Messung', {
             textfield.setRawValue(msg);
         }
 
+        var me = this;
         var sStore = Ext.create('Lada.store.Status');
         sStore.load({
             params: {
@@ -190,9 +197,13 @@ Ext.define('Lada.view.form.Messung', {
                     sw = 0;
                 }
                 else {
-                    sw = sStore.getById(statusId).get('statusWert');
-                    ss = sStore.getById(statusId).get('statusStufe');
-                    se = sStore.getById(statusId).get('erzeuger');
+                    me.currentStatus = sStore.getById(statusId);
+                    sk = sStore.getById(statusId).get('statusKombi');
+                    se = sStore.getById(statusId).get('mstId');
+                    var kombis = Ext.data.StoreManager.get('statuskombi');
+                    var rec = kombis.getById(sk);
+                    sw = rec.raw.statusWert.id;
+                    ss = rec.raw.statusStufe.id;
                 }
                 this.setStatusWert(sw);
                 this.setStatusStufe(ss);
@@ -226,7 +237,6 @@ Ext.define('Lada.view.form.Messung', {
         if (!swStore) {
             //Set the textfield asynchronously
             swStore = Ext.create('Lada.store.StatusWerte');
-            console.log('loading sw store messungform');
             swStore.load({
                 scope: this,
                 callback: function(records, operation, success) {

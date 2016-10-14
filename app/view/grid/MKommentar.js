@@ -66,7 +66,7 @@ Ext.define('Lada.view.grid.MKommentar', {
             width: 110
         }, {
             header: 'Erzeuger',
-            dataIndex: 'erzeuger',
+            dataIndex: 'mstId',
             renderer: function(value) {
                 var r = '';
                 if (!value || value === '') {

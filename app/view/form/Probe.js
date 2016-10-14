@@ -131,9 +131,10 @@ Ext.define('Lada.view.form.Probe', {
                                 hidden: true
                             }, {
                                 xtype: 'netzbetreiber',
-                                name: 'netzbetreiberId',
                                 editable: false,
                                 readOnly: true,
+                                isFormField: false,
+                                submitValue: false,
                                 fieldLabel: 'Netzbetreiber',
                                 margin: '0, 5, 5, 5',
                                 width: '35%',
@@ -372,8 +373,8 @@ Ext.define('Lada.view.form.Probe', {
             return;
         }
         var mstStore = Ext.data.StoreManager.get('messstellen');
+        var mstId = mstStore.getById(probeRecord.get('mstId'));
         if (!probeRecord.get('owner')) {
-            var mstId = mstStore.getById(probeRecord.get('mstId'));
             var laborMstId = mstStore.getById(probeRecord.get('laborMstId'));
             if (laborMstId) {
                 laborMstId = laborMstId.get('messStelle');
@@ -405,6 +406,7 @@ Ext.define('Lada.view.form.Probe', {
             });
             this.down('messstellelabor').setValue(items.getAt(0));
         }
+        this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
     },
 
     setMediaDesk: function(record) {
@@ -485,7 +487,7 @@ Ext.define('Lada.view.form.Probe', {
         this.down('cbox[name=baId]').clearWarningOrError();
         this.down('chkbox[name=test]').clearWarningOrError();
         this.down('cbox[name=probenartId]').clearWarningOrError();
-        this.down('cbox[name=netzbetreiberId]').clearWarningOrError();
+        this.down('netzbetreiber').clearWarningOrError();
         this.down('cbox[name=erzeugerId]').clearWarningOrError();
         this.down('cbox[name=umwId]').clearWarningOrError();
         this.down('datetime[name=probeentnahmeBeginn]').clearWarningOrError();

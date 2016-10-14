@@ -122,7 +122,6 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
         }, {
             header: 'Nachweisgrenze',
             dataIndex: 'nwgZuMesswert',
-            xtype: 'numbercolumn',
             flex: 1,
             editor: {
                 xtype: 'expnumberfield',
@@ -150,8 +149,11 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 }
                 var zstore = Ext.data.StoreManager.get('probenzusaetze');
                 var mstore = Ext.data.StoreManager.get('messeinheiten');
-                var mehId = zstore.getById(value).get('mehId');
+                var mehId = zstore.getById(value).get('messEinheitId');
                 var record = mstore.findRecord('id', mehId, 0, false, false, true);
+                if (!record) {
+                    return '';
+                }
                 return record.get('einheit');
             }
         }, {

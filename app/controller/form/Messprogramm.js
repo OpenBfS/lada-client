@@ -201,9 +201,12 @@ Ext.define('Lada.controller.form.Messprogramm', {
     save: function(button) {
         var formPanel = button.up('form');
         var data = formPanel.getForm().getFieldValues(true);
+        var orte = Ext.data.StoreManager.get('orte');
+        var gemId = orte.getById(data['ortId']).get('gemId');
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
         }
+        formPanel.getForm().getRecord().set('gemId', gemId);
         if (!formPanel.getForm().getRecord().get('letzteAenderung')) {
             formPanel.getForm().getRecord().data.letzteAenderung = new Date();
         }

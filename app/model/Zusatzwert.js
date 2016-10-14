@@ -16,7 +16,8 @@ Ext.define('Lada.model.Zusatzwert', {
         name: 'id'
     }, {
         name: 'owner',
-        type: 'boolean'
+        type: 'boolean',
+        persist: false
     }, {
         name: 'readonly',
         type: 'boolean',

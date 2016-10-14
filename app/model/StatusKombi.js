@@ -7,45 +7,30 @@
  */
 
 /**
- * Model class for Kommentare
+ * Model class for StatusKombi
  */
-Ext.define('Lada.model.PKommentar', {
+Ext.define('Lada.model.StatusKombi', {
     extend: 'Ext.data.Model',
 
     fields: [{
         name: 'id'
     }, {
-        name: 'owner',
-        type: 'boolean'
+        name: 'stufeId',
+        type: 'int'
     }, {
-        name: 'readonly',
-        type: 'boolean',
-        persist: false
-    }, {
-        name: 'probeId'
-    }, {
-        name: 'mstId'
-    }, {
-        name: 'datum',
-        type: 'date',
-        convert: function(v) {
-            if (!v) {
-                return v;
-            }
-            return new Date(v);
-        }
-    }, {
-        name: 'text'
+        name: 'stufeId',
+        type: 'int'
     }],
 
     idProperty: 'id',
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/pkommentar',
+        url: 'lada-server/rest/statuskombi',
         reader: {
             type: 'json',
             root: 'data'
         }
     }
 });
+

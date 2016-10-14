@@ -55,6 +55,7 @@ Ext.application({
         'Lada.store.Verwaltungseinheiten',
         'Lada.store.StatusWerte',
         'Lada.store.StatusStufe',
+        'Lada.store.StatusKombi',
         'Lada.store.Probenehmer',
         'Lada.store.DatensatzErzeuger',
         'Lada.store.MessprogrammKategorie',
@@ -226,6 +227,10 @@ Ext.application({
         });
         Ext.create('Lada.store.StatusStufe', {
             storeId: 'statusstufe',
+            autoLoad: 'true'
+        });
+        Ext.create('Lada.store.StatusKombi', {
+            storeId: 'statuskombi',
             autoLoad: 'true'
         });
         Ext.create('Lada.store.ProbeQueries', {

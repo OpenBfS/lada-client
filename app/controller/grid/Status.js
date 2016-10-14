@@ -39,7 +39,18 @@ Ext.define('Lada.controller.grid.Status', {
      * On failure it displays a message
      */
      gridSave: function(editor, context) {
-        context.record.set('sdatum', new Date());
+        context.record.set('datum', new Date());
+        var wert = editor.getEditor().down('combobox[displayField=wert]').value;
+        var stufe = editor.getEditor().down('combobox[displayField=stufe]').value;
+        var kombis = Ext.data.StoreManager.get('statuskombi');
+        var kombiNdx = kombis.findBy(function(record, id) {
+            if (record.raw.statusStufe.id === stufe &&
+                record.raw.statusWert.id === wert
+            ) {
+                return true;
+            }
+        });
+        context.record.set('statusKombi', kombis.getAt(kombiNdx).get('id'));
         context.record.save({
             success: function(response) {
                 var i18n = Lada.getApplication().bundle;
@@ -172,18 +183,27 @@ Ext.define('Lada.controller.grid.Status', {
 
         var resetStatusValue = 8;
 
-        var s = button.up('window').down('messungform').getRecord().get('status');
+        var s = button.up('window').down('messungform').getCurrentStatus();
         var messId = button.up('window').down('messungform').getRecord().get('id');
-        var recentStatus = button.up('statusgrid').store.getById(s);
 
-        //Set Status to 'Resetted' (8)
-        if (recentStatus) {
-            var record = recentStatus.copy();
-            record.set('datum', new Date());
-            record.set('statusWert', resetStatusValue);
-            record.set('id', null);
-            record.set('text', i18n.getMsg('statusgrid.resetText'));
+        if(!s) {
+            Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                i18n.getMsg('err.msg.generic.body'));
+            return;
         }
+        //Set Status to 'Resetted' (8)
+        var kombis = Ext.data.StoreManager.get('statuskombi');
+        var stufe = kombis.getById(s.get('statusKombi')).raw.statusStufe.id;
+        var kombiNdx = kombis.findBy(function(record, id) {
+            if(record.raw.statusStufe.id === stufe && record.raw.statusWert.id === 8) {
+                return true;
+            }
+        });
+        var record = s.copy();
+        record.set('datum', new Date());
+        record.set('statusKombi', kombis.getAt(kombiNdx).get('id'));
+        record.set('id', null);
+        record.set('text', i18n.getMsg('statusgrid.resetText'));
 
         Ext.Ajax.request({
             url: 'lada-server/rest/status',

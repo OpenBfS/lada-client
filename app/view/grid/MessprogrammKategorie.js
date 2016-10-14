@@ -103,7 +103,7 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
             }
         }, {
             header: i18n.getMsg('mplId'),
-            dataIndex: 'mplId',
+            dataIndex: 'code',
             editor: {
                 xtype: 'textfield',
                 maxLength: 3,

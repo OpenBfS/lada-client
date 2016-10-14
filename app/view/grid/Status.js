@@ -23,6 +23,7 @@ Ext.define('Lada.view.grid.Status', {
     readOnly: true,
     allowDeselect: true,
     statusWerteStore: null,
+    statusStufeStore: null,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -34,8 +35,8 @@ Ext.define('Lada.view.grid.Status', {
                 messungsId: this.recordId
             }
         });
-        var statusStufeStore = Ext.create('Lada.store.StatusStufe');
-        statusStufeStore.load();
+        this.statusStufeStore = Ext.create('Lada.store.StatusStufe');
+        this.statusStufeStore.load();
 
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
@@ -85,7 +86,7 @@ Ext.define('Lada.view.grid.Status', {
             sortable: false
         }, {
             header: i18n.getMsg('statusgrid.header.erzeuger'),
-            dataIndex: 'erzeuger',
+            dataIndex: 'mstId',
             renderer: function(value) {
                 var r = '';
                 if (!value || value === '') {
@@ -110,33 +111,37 @@ Ext.define('Lada.view.grid.Status', {
             sortable: false
         }, {
             header: i18n.getMsg('statusgrid.header.statusStufe'),
-            dataIndex: 'statusStufe',
+            dataIndex: 'statusKombi',
             renderer: function(value) {
-                var sta = Ext.data.StoreManager.get('statusstufe');
-                var r;
-                if (value===null || value === '') {
-                    r = i18n.getMsg('error');
-                }
-                var item = sta.getById(value);
+                var kombi = Ext.data.StoreManager.get('statuskombi');
+                var r = '';
+                var item = kombi.getById(value);
                 if (item) {
-                    r = item.get('stufe');
+                    r = item.raw.statusStufe.stufe;
                 }
                 return r;
+            },
+            editor: {
+                xtype: 'combobox',
+                store: this.statusStufeStore,
+                queryMode: 'local',
+                displayField: 'stufe',
+                valueField: 'id',
+                allowBlank: false,
+                editable: false,
+                forceSelection: true
             },
             sortable: false
         }, {
             header: i18n.getMsg('statusgrid.header.statusWert'),
-            dataIndex: 'statusWert',
+            dataIndex: 'statusKombi',
             renderer: function(value) {
-                var sta = Ext.data.StoreManager.get('statuswerte');
+                var kombi = Ext.data.StoreManager.get('statuskombi');
                 //This store is NOT used in the editor...
-                var r;
-                if (value===null || value === '') {
-                    r = i18n.getMsg('error');
-                }
-                var item = sta.getById(value);
+                var r = '';
+                var item = kombi.getById(value);
                 if (item) {
-                    r = item.get('wert');
+                    r = item.raw.statusWert.wert;
                 }
                 return r;
             },

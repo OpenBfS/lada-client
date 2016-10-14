@@ -24,12 +24,16 @@ Ext.define('Lada.model.Status', {
     }, {
         name: 'messungsId'
     }, {
-        name: 'erzeuger'
+        name: 'mstId'
     }, {
-        name: 'statusStufe',
+        name: 'statusKombi',
         type: 'int'
     }, {
-        name: 'statusWert'
+        name: 'statusWert',
+        persist: false
+    }, {
+        name: 'statusStufe',
+        persist: false
     }, {
         name: 'treeModified',
         serialize: function(value) {

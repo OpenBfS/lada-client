@@ -59,7 +59,7 @@ Ext.define('Lada.model.Messung', {
         name: 'geplant',
         type: 'boolean'
     }, {
-        name: 'messungsIdAlt'
+        name: 'idAlt'
     }, {
         name: 'treeModified',
         serialize: function(value) {

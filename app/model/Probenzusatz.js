@@ -32,8 +32,7 @@ Ext.define('Lada.model.Probenzusatz', {
     }, {
         name: 'beschreibung'
     }, {
-        name: 'mehId',
-        type: 'int'
+        name: 'messEinheitId',
     }, {
         name: 'zusatzwert'
     }, {
