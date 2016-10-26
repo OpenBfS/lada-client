@@ -17,8 +17,10 @@ Ext.define('Lada.view.window.ImportResponse', {
     initComponent: function() {
         var me = this;
         var html;
+        var download;
+        var i18n = Lada.getApplication().bundle;
         if (me.data && me.message) {
-            html = me.parseResponse(me.message, me.data);
+            html = me.parseShortResponse(me.message, me.data);
         }
         this.bodyStyle = {background: '#fff'};
         me.items = [{
@@ -28,7 +30,78 @@ Ext.define('Lada.view.window.ImportResponse', {
             border: false
         }];
 
+        me.buttons = [{
+            text: i18n.getMsg('close'),
+            scope: this,
+            name: 'close',
+            handler: this.close
+        }, {
+            text: i18n.getMsg('download'),
+            name: 'download',
+            disabled: true,
+            handler: function() {
+                var blob = new Blob([download],{type: 'text/html'});
+                saveAs(blob, 'report.html');
+            }
+        }];
         this.callParent(arguments);
+        download = me.parseResponse(me.message, me.data);
+    },
+
+    /**
+     * Parse the response and create a summary of the result
+     * @param msg
+     * @param data
+     */
+    parseShortResponse: function(msg, data) {
+        data = Ext.JSON.decode(data);
+        var errors = data.data.errors;
+        var warnings = data.data.warnings;
+        var out = [];
+        // There is a entry for each imported proben in the errors dict (might be
+        // empty)
+
+        var numErrors;
+        var numWarnings;
+        if (!Ext.isObject(errors)) {
+            numErrors = 0;
+        }
+        else {
+            numErrors = Object.keys(errors).length;
+        }
+        if (!Ext.isObject(warnings)) {
+            numWarnings = 0;
+        }
+        else {
+            numWarnings = Object.keys(warnings).length;
+        }
+        if (msg !== '200') {
+                out.push('Der Import der Datei ' + this.fileName +
+                    ' war nicht erfolgreich. Der Importvorgang konnte ' +
+                    'aufgrund eines Fehlers im Server nicht beendet werden.');
+        }
+        else {
+            if (numErrors > 0) {
+                out.push(numErrors + ' Probe(n) konnten nicht erfolgreich ' +
+                        'importiert werden.');
+                out.push('<br/>');
+                out.push('<br/>');
+            }
+            if (numWarnings > 0) {
+                out.push('Bei ' + numWarnings + ' Probe(n) traten Warnungen auf. ');
+                out.push('<br/>');
+                out.push('<br/>');
+            }
+            if (numErrors > 0 || numWarnings > 0) {
+                out.push('Der ausführliche Bericht steht als Download bereit.');
+                out.push('<br/>');
+            }
+            else {
+                out.push('Die Proben wurden importiert.');
+                out.push('<br/>');
+            }
+        }
+        return out.join('');
     },
 
     /**
@@ -47,13 +120,13 @@ Ext.define('Lada.view.window.ImportResponse', {
 
         var numErrors;
         var numWarnings;
-        if (Ext.isEmpty(Object.keys(errors))) {
+        if (!Ext.isObject(errors)) {
             numErrors = 0;
         }
         else {
             numErrors = Object.keys(errors).length;
         }
-        if (Ext.isEmpty(Object.keys(warnings))) {
+        if (!Ext.isObject(warnings)) {
             numWarnings = 0;
         }
         else {
@@ -75,25 +148,22 @@ Ext.define('Lada.view.window.ImportResponse', {
                     out.push('<li>Probe: ' + key);
                     msgs = errors[key];
                     out.push('<ol>');
+                    validation = []
+                    validation.push('Validierungsfehler: ');
                     for (var i = msgs.length - 1; i >= 0; i--) {
                         if (msgs[i].key === 'validation') {
-                            out.push('Validierungsfehler: ');
-                            out.push('<ol>');
-                            for (var vKey in msgs[i].value) {
-                                out.push(Lada.getApplication().bundle.getMsg(vKey) + ': ');
-                                for (var j = 0; j < msgs[i].value[vKey].length; j++) {
-                                    console.log(msgs[i].value[vKey][j]);
-                                    out.push(Lada.getApplication().bundle.getMsg(msgs[i].value[vKey][j].toString()));
-                                }
-                            }
-                            out.push('</ol>');
+                            validation.push('<ol>');
+                            validation.push(Lada.getApplication().bundle.getMsg(msgs[i].value) + ' (' + Lada.getApplication().bundle.getMsg(msgs[i].code.toString()) + ')');
+                            validation.push('</ol>');
                         }
                         else {
-                            out.push(msgs[i].key +
-                                ' (' + Lada.getApplication().bundle.getMsg(
-                                    msgs[i].code.toString()) +
-                                '): ' + msgs[i].value);
+                            out.push('<li>' + msgs[i].key + ' (' + Lada.getApplication().bundle.getMsg(msgs[i].code.toString())+'): '+msgs[i].value+'</li>')
                         }
+                    }
+                    if (validation.length > 1) {
+                        out.push('<li>')
+                        out.push(validation.join(''));
+                        out.push('</li>')
                     }
                     out.push('</ol>');
                     out.push('</li>');
@@ -110,22 +180,22 @@ Ext.define('Lada.view.window.ImportResponse', {
                     out.push('<li>' + key);
                     msgs = warnings[key];
                     out.push('<ol>');
+                    validation = []
+                    validation.push('Validierungswarnungen: ');
                     for (var i = msgs.length - 1; i >= 0; i--) {
                         if (msgs[i].key === 'validation') {
-                            out.push('Validierungswarnungen: ');
-                            out.push('<ol>');
-                            for (var vKey in msgs[i].value) {
-                                out.push(Lada.getApplication().bundle.getMsg(vKey) + ': ');
-                                for (var j = 0; j < msgs[i].value[vKey].length; j++) {
-                                    console.log(msgs[i].value[vKey][j]);
-                                    out.push(Lada.getApplication().bundle.getMsg(msgs[i].value[vKey][j].toString()));
-                                }
-                            }
-                            out.push('</ol>');
+                            validation.push('<ol>');
+                            validation.push(Lada.getApplication().bundle.getMsg(msgs[i].value) + ' (' + Lada.getApplication().bundle.getMsg(msgs[i].code.toString()) + ')');
+                            validation.push('</ol>');
                         }
                         else {
                             out.push('<li>' + msgs[i].key + ' (' + Lada.getApplication().bundle.getMsg(msgs[i].code.toString())+'): '+msgs[i].value+'</li>')
                         }
+                    }
+                    if (validation.length > 1) {
+                        out.push('<li>')
+                        out.push(validation.join(''));
+                        out.push('</li>')
                     }
                     out.push('</ol>');
                     out.push('</li>');
@@ -133,6 +203,9 @@ Ext.define('Lada.view.window.ImportResponse', {
                 out.push('</ol>');
             }
             out.push('<br/>');
+            if (numWarnings > 0 || numErrors > 0) {
+                this.down('button[name=download]').enable();
+            }
         }
         console.log(out.join(''));
         return out.join('');
