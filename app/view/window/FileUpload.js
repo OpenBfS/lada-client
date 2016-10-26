@@ -82,12 +82,14 @@ Ext.define('Lada.view.window.FileUpload', {
                 'X-OPENID-PARAMS': Lada.openIDParams
             },
             method: 'POST',
+            timeout: 600 * 1000,
             url: 'lada-server/data/import/laf'
         });
         this.mon(uploader, 'uploadsuccess', win.uploadSuccess, win);
         this.mon(uploader, 'uploadfailure', win.uploadFailure, win);
         if (button.up('window').file !== null) {
             uploader.uploadItem(button.up('window').file);
+            win.setLoading(Lada.getApplication().bundle.getMsg('processingData'));
         }
     },
 
