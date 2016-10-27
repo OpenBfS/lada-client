@@ -11,7 +11,12 @@
  */
 Ext.define('Lada.view.window.FileUpload', {
     extend: 'Ext.window.Window',
-    requires: ['Lada.view.window.ImportResponse'],
+    requires: [
+        'Ext.ux.upload.BrowseButton',
+        'Ext.ux.upload.Item',
+        'Ext.ux.upload.uploader.ExtJsUploader',
+        'Lada.view.window.ImportResponse'
+    ],
 
     layout: 'hbox',
 
