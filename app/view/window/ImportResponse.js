@@ -88,8 +88,8 @@ Ext.define('Lada.view.window.ImportResponse', {
         }
         else {
             if (numErrors > 0) {
-                out.push(numErrors + ' Probe(n) konnten nicht erfolgreich ' +
-                        'importiert werden.');
+                out.push(numErrors + ' Probe(n) konnten nicht vollständig '
+                         + 'erfolgreich importiert werden.');
                 out.push('<br/>');
                 out.push('<br/>');
             }
