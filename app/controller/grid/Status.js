@@ -181,8 +181,6 @@ Ext.define('Lada.controller.grid.Status', {
      doReset: function(button) {
         var i18n = Lada.getApplication().bundle;
 
-        var resetStatusValue = 8;
-
         var s = button.up('window').down('messungform').getCurrentStatus();
         var messId = button.up('window').down('messungform').getRecord().get('id');
 
@@ -191,13 +189,13 @@ Ext.define('Lada.controller.grid.Status', {
                 i18n.getMsg('err.msg.generic.body'));
             return;
         }
+
         //Set Status to 'Resetted' (8)
         var kombis = Ext.data.StoreManager.get('statuskombi');
-        var stufe = kombis.getById(s.get('statusKombi')).raw.statusStufe.id;
+        var stufe = kombis.getById(s.get('statusKombi')).get('statusStufe').id;
         var kombiNdx = kombis.findBy(function(record, id) {
-            if(record.raw.statusStufe.id === stufe && record.raw.statusWert.id === 8) {
-                return true;
-            }
+            return record.get('statusStufe').id === stufe
+                && record.get('statusWert').id === 8
         });
         var record = s.copy();
         record.set('datum', new Date());
