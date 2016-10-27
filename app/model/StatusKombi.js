@@ -15,11 +15,11 @@ Ext.define('Lada.model.StatusKombi', {
     fields: [{
         name: 'id'
     }, {
-        name: 'stufeId',
-        type: 'int'
+        name: 'statusStufe',
+        type: 'object'
     }, {
-        name: 'stufeId',
-        type: 'int'
+        name: 'statusWert',
+        type: 'object'
     }],
 
     idProperty: 'id',
