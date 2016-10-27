@@ -143,6 +143,8 @@ Ext.define('Lada.view.window.ImportResponse', {
                     'aufgrund eines Fehlers im Server nicht beendet werden.');
         }
         else {
+            out.push('<!DOCTYPE html>' +
+                '<head><meta charset="utf-8"></head><body>');
             if (numErrors > 0) {
                 out.push('Folgende Proben konnten nicht erfolgreich ' +
                         'importiert werden:');
@@ -208,6 +210,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                 out.push('</ol>');
             }
             out.push('<br/>');
+            out.push('</body></html>')
             if (numWarnings > 0 || numErrors > 0) {
                 this.down('button[name=download]').enable();
             }
