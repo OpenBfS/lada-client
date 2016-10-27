@@ -22,6 +22,10 @@ Ext.define('Lada.view.window.ImportResponse', {
         if (me.data && me.message) {
             html = me.parseShortResponse(me.message, me.data);
         }
+        else {
+            html = 'Der Import der Datei ' + this.fileName +
+                    ' war nicht erfolgreich.';
+        }
         this.bodyStyle = {background: '#fff'};
         me.items = [{
             xtype: 'panel',
@@ -45,7 +49,9 @@ Ext.define('Lada.view.window.ImportResponse', {
             }
         }];
         this.callParent(arguments);
-        download = me.parseResponse(me.message, me.data);
+        if (me.data && me.message) {
+            download = me.parseResponse(me.message, me.data);
+        }
     },
 
     /**
@@ -54,7 +60,7 @@ Ext.define('Lada.view.window.ImportResponse', {
      * @param data
      */
     parseShortResponse: function(msg, data) {
-        data = Ext.JSON.decode(data);
+        data = Ext.JSON.decode(data, true);
         var errors = data.data.errors;
         var warnings = data.data.warnings;
         var out = [];
@@ -110,8 +116,7 @@ Ext.define('Lada.view.window.ImportResponse', {
      * @param data the payload of the response
      */
     parseResponse: function(msg, data) {
-        console.log(Ext.JSON.decode(data));
-        data = Ext.JSON.decode(data);
+        data = Ext.JSON.decode(data, true);
         var errors = data.data.errors;
         var warnings = data.data.warnings;
         var out = [];
@@ -207,7 +212,6 @@ Ext.define('Lada.view.window.ImportResponse', {
                 this.down('button[name=download]').enable();
             }
         }
-        console.log(out.join(''));
         return out.join('');
     }
 });
