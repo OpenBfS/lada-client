@@ -560,8 +560,11 @@ Ext.define('Lada.view.form.Messprogramm', {
     },
 
     setMediaDesk: function(record) {
-        var media = record.get('mediaDesk').split(' ');
-        this.setMediaSN(0, media);
+        var media = record.get('mediaDesk');
+        if (media) {
+            var mediaParts = media.split(' ');
+            this.setMediaSN(0, mediaParts);
+        }
     },
 
     setMediaSN: function(ndx, media, beschreibung) {
