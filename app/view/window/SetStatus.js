@@ -31,7 +31,7 @@ Ext.define('Lada.view.window.SetStatus', {
         var i18n = Lada.getApplication().bundle;
         var me = this;
         this.items = [{
-            xtype: 'panel',
+            xtype: 'form',
             name: 'valueselection',
             border: 0,
             items: [{
@@ -64,6 +64,18 @@ Ext.define('Lada.view.window.SetStatus', {
                     fieldLabel: i18n.getMsg('statusgrid.header.text'),
                     emptyText: 'Geben Sie einen Kommentar ein.'
                 }]
+            }],
+            buttons: [{
+                text: i18n.getMsg('statusSetzen'),
+                name: 'start',
+                icon: 'resources/img/mail-mark-notjunk.png',
+                formBind: true,
+                disabled: true,
+                handler: this.setStatus
+            }, {
+                text: i18n.getMsg('cancel'),
+                name: 'abort',
+                handler: this.closeWindow
             }]
         }, {
             xtype: 'panel',
@@ -78,15 +90,6 @@ Ext.define('Lada.view.window.SetStatus', {
             text: 'Verarbeite Statusänderungen'
         }];
         this.buttons = [{
-            text: i18n.getMsg('statusSetzen'),
-            name: 'start',
-            icon: 'resources/img/mail-mark-notjunk.png',
-            handler: this.setStatus
-        }, {
-            text: i18n.getMsg('cancel'),
-            name: 'abort',
-            handler: this.closeWindow
-        }, {
             text: i18n.getMsg('close'),
             name: 'close',
             hidden: true,
@@ -94,6 +97,9 @@ Ext.define('Lada.view.window.SetStatus', {
         }];
 
         this.callParent(arguments);
+
+        // Initially validate to indicate mandatory fields clearly.
+        this.down('form').isValid();
     },
 
     /**
