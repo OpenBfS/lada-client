@@ -223,16 +223,13 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 dataIndex: 'baId',
                 renderer: function(value) {
                     var r = '';
-                    if (!value || value === '') {
-                        r = '';
-                    }
                     var store = Ext.create('Ext.data.Store', {
-                        fields: ['betriebsartId', 'betriebsart'],
+                        fields: ['id', 'betriebsart'],
                         data: [{
-                            'betriebsartId': '1',
+                            'id': 1,
                             'betriebsart': 'Normal-/Routinebetrieb'
                         }, {
-                            'betriebsartId': '2',
+                            'id': 2,
                             'betriebsart': 'Störfall/Intensivbetrieb'
                         }]
                     });
