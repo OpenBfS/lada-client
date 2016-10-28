@@ -30,6 +30,13 @@ Ext.define('Lada.view.window.SetStatus', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
+        var statusWerteStore = Ext.create('Lada.store.StatusWerte');
+        statusWerteStore.load({
+            params: {
+                messungsId: Ext.Array.pluck(this.selection, 'id').toString()
+            }
+        });
+
         this.items = [{
             xtype: 'form',
             name: 'valueselection',
@@ -52,10 +59,23 @@ Ext.define('Lada.view.window.SetStatus', {
                     fieldLabel: i18n.getMsg('statusgrid.header.erzeuger')
                 }, {
                     xtype: 'statuswert',
+                    store: statusWerteStore,
                     allowBlank: false,
                     width: 300,
                     labelWidth: 100,
                     fieldLabel: i18n.getMsg('statusgrid.header.statusWert')
+                }, {
+                    xtype: 'combobox',
+                    name: 'statusstufe',
+                    store: Ext.data.StoreManager.get('statusstufe'),
+                    displayField: 'stufe',
+                    valueField: 'id',
+                    allowBlank: false,
+                    editable: false,
+                    forceSelection: true,
+                    width: 300,
+                    labelWidth: 100,
+                    fieldLabel: i18n.getMsg('statusgrid.header.statusStufe')
                 }, {
                     xtype: 'textarea',
                     width: 300,
@@ -131,12 +151,27 @@ Ext.define('Lada.view.window.SetStatus', {
         var progress = me.down('progressbar');
         var progressText = progress.getText();
         var count = 0;
+
+        var wert = me.down('statuswert').getValue();
+        var stufe = me.down('[name=statusstufe]').getValue();
+        var kombis = Ext.data.StoreManager.get('statuskombi');
+        var kombiIdx = kombis.findBy(function(record) {
+            return record.get('statusStufe').id === stufe
+                && record.get('statusWert').id === wert;
+        });
+        if (kombiIdx < 0) {
+            Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                'Unerlaubte Kombination aus Status und Stufe');
+            me.down('button[name=close]').show();
+            return;
+        }
+
         for (var i = 0; i < this.selection.length; i++) {
             var data = Ext.create('Lada.model.Status', {
                 messungsId: this.selection[i].get('id'),
-                erzeuger: this.down('combobox').getValue(),
+                mstId: this.down('combobox').getValue(),
                 datum: new Date(),
-                statusWert: this.down('statuswert').getValue(),
+                statusKombi: kombis.getAt(kombiIdx).get('id'),
                 text: this.down('textarea').getValue()
             });
             Ext.Ajax.request({

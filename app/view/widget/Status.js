@@ -6,36 +6,13 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-var statuswerteStore = Ext.create('Ext.data.Store', {
-    fields: ['id', 'wert'],
-    data: [{
-        'id': 1,
-        'wert': 'plausibel'
-    }, {
-        'id': 2,
-        'wert': 'nicht repräsentativ'
-    }, {
-        'id': 3,
-        'wert': 'nicht plausibel'
-    }, {
-        'id': 4,
-        'wert': 'Rückfrage'
-    }, {
-        'id': 7,
-        'wert': 'nicht lieferbar'
-    }, {
-        'id': 8,
-        'wert': 'zurücksetzen'
-    }]
-});
-
 /**
  * Combobox for Statuswert
  */
 Ext.define('Lada.view.widget.Status', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.statuswert',
-    store: statuswerteStore,
+    store: Ext.data.StoreManager.get('statuswerte'),
     displayField: 'wert',
     valueField: 'id',
     emptyText: 'Wählen Sie einen Status',
