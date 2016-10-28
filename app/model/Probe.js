@@ -34,7 +34,6 @@ Ext.define('Lada.model.Probe', {
         name: 'datenbasisId'
     }, {
         name: 'baId',
-        type: 'number'
     }, {
         name: 'probenartId'
     }, {
