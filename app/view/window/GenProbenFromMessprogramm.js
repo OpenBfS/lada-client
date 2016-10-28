@@ -172,22 +172,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
 
             var columns = [{
                 header: i18n.getMsg('prnId'),
-                dataIndex: 'probeIdAlt'
-            }, {
-                header: i18n.getMsg('netzbetreiberId'),
-                dataIndex: 'netzbetreiberId',
-                renderer: function(value) {
-                    var r = '';
-                    if (!value || value === '') {
-                        r = 'Error';
-                    }
-                    var store = Ext.data.StoreManager.get('netzbetreiber');
-                    var record = store.getById(value);
-                    if (record) {
-                        r = record.get('netzbetreiber');
-                    }
-                    return r;
-                }
+                dataIndex: 'idAlt'
             }, {
                 header: i18n.getMsg('mstId'),
                 dataIndex: 'mstId',
