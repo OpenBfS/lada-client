@@ -19,8 +19,9 @@ Ext.define('Lada.view.window.ImportResponse', {
         var html;
         var download;
         var i18n = Lada.getApplication().bundle;
-        if (me.data && me.message) {
-            html = me.parseShortResponse(me.message, me.data);
+        var data = Ext.JSON.decode(me.data, true);
+        if (data) {
+            html = me.parseShortResponse(data);
         }
         else {
             html = 'Der Import der Datei ' + this.fileName +
@@ -49,18 +50,16 @@ Ext.define('Lada.view.window.ImportResponse', {
             }
         }];
         this.callParent(arguments);
-        if (me.data && me.message) {
-            download = me.parseResponse(me.message, me.data);
+        if (data) {
+            download = me.parseResponse(data);
         }
     },
 
     /**
      * Parse the response and create a summary of the result
-     * @param msg
      * @param data
      */
-    parseShortResponse: function(msg, data) {
-        data = Ext.JSON.decode(data, true);
+    parseShortResponse: function(data) {
         var errors = data.data.errors;
         var warnings = data.data.warnings;
         var out = [];
@@ -81,7 +80,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         else {
             numWarnings = Object.keys(warnings).length;
         }
-        if (msg !== '200') {
+        if (!data.success) {
                 out.push('Der Import der Datei ' + this.fileName +
                     ' war nicht erfolgreich. Der Importvorgang konnte ' +
                     'aufgrund eines Fehlers im Server nicht beendet werden.');
@@ -112,11 +111,9 @@ Ext.define('Lada.view.window.ImportResponse', {
 
     /**
      * Parse the Response
-     * @param msg the Lada-Erro-Code
      * @param data the payload of the response
      */
-    parseResponse: function(msg, data) {
-        data = Ext.JSON.decode(data, true);
+    parseResponse: function(data) {
         var errors = data.data.errors;
         var warnings = data.data.warnings;
         var out = [];
@@ -137,7 +134,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         else {
             numWarnings = Object.keys(warnings).length;
         }
-        if (msg !== '200') {
+        if (!data.success) {
                 out.push('Der Import der Datei ' + this.fileName +
                     ' war nicht erfolgreich. Der Importvorgang konnte ' +
                     'aufgrund eines Fehlers im Server nicht beendet werden.');
