@@ -65,7 +65,7 @@ Ext.define('Lada.view.window.DeleteProbe', {
                         else {
                             Ext.Msg.show({
                                 title: 'Fehler!',
-                                msg: 'Ein Fehler ist aufgetreten, ist die Probe nicht leer?',
+                                msg: i18n.getMsg(json.message),
                                 buttons: Ext.Msg.OK
                             });
                         }
