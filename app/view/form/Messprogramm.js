@@ -134,13 +134,14 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 }
                             }, {
                                 xtype: 'netzbetreiber',
-                                name: 'netzbetreiberId',
                                 editable: false,
                                 readOnly: true,
+                                isFormField: false,
+                                submitValue: false,
                                 fieldLabel: i18n.getMsg('netzbetreiberId'),
                                 margin : '0, 5, 5, 5',
                                 width : '35%',
-                                labelWidth: 80,
+                                labelWidth: 80
                             }, {
                                 xtype: 'datenbasis',
                                 editable: false,
@@ -517,8 +518,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                 .synchronizeFields
         );
         var mstStore = Ext.data.StoreManager.get('messstellen');
+        var mstId = mstStore.getById(messRecord.get('mstId'));
         if (!messRecord.get('owner')) {
-            var mstId = mstStore.getById(messRecord.get('mstId'));
             if (!mstId) {
                 return;
             }
@@ -557,6 +558,7 @@ Ext.define('Lada.view.form.Messprogramm', {
             });
             this.down('messstellelabor').setValue(items.getAt(0));
         }
+        this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
     },
 
     setMediaDesk: function(record) {
@@ -653,7 +655,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('cbox[name=baId]').clearWarningOrError();
         this.down('chkbox[name=test]').clearWarningOrError();
         this.down('cbox[name=probenartId]').clearWarningOrError();
-        this.down('cbox[name=netzbetreiberId]').clearWarningOrError();
+        this.down('netzbetreiber').clearWarningOrError();
         // clear messages in intervall definition
         this.down('fset[name=probenIntervallFieldset]').clearMessages();
         this.down('cbox[name=probenintervall]').clearWarningOrError();

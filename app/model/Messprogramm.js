@@ -19,15 +19,6 @@ Ext.define('Lada.model.Messprogramm', {
         name: 'test',
         type: 'boolean'
     }, {
-        name: 'netzbetreiberId',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        },
-        persist: false
-    }, {
         name: 'mstId'
     }, {
         name: 'laborMstId'

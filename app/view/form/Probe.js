@@ -135,11 +135,10 @@ Ext.define('Lada.view.form.Probe', {
                                 readOnly: true,
                                 isFormField: false,
                                 submitValue: false,
-                                fieldLabel: 'Netzbetreiber',
+                                fieldLabel: i18n.getMsg('netzbetreiberId'),
                                 margin: '0, 5, 5, 5',
                                 width: '35%',
-                                labelWidth: 80,
-                                allowBlank: false
+                                labelWidth: 80
                             }, {
                                 xtype: 'datenbasis',
                                 editable: false,
