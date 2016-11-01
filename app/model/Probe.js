@@ -20,7 +20,13 @@ Ext.define('Lada.model.Probe', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'idAlt'
+        name: 'idAlt',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
     }, {
         name: 'hauptprobenNr'
     }, {
