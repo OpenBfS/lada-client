@@ -87,8 +87,14 @@ Ext.define('Lada.view.window.ImportResponse', {
         }
         else {
             if (numErrors > 0) {
-                out.push(numErrors + ' Probe(n) konnten nicht vollständig '
-                         + 'erfolgreich importiert werden.');
+                if (errors.parser) {
+                    out.push('Die Probe(n) konnten nicht erfolgreich ' +
+                             'importiert werden.');
+                }
+                else {
+                    out.push(numErrors + ' Probe(n) konnten nicht ' +
+                             'erfolgreich importiert werden.');
+                }
                 out.push('<br/>');
                 out.push('<br/>');
             }
@@ -143,14 +149,15 @@ Ext.define('Lada.view.window.ImportResponse', {
             out.push('<!DOCTYPE html>' +
                 '<head><meta charset="utf-8"></head><body>');
             if (numErrors > 0) {
-                out.push('Folgende Proben konnten nicht erfolgreich ' +
-                        'importiert werden:');
+                out.push('Folgende Fehler traten beim Import auf:');
                 out.push('<br/>');
                 out.push('<ol>');
                 var msgs;
                 for (var key in errors) {
-                    out.push('<li>Probe: ' + key);
                     msgs = errors[key];
+                    if (key !== 'parser') {
+                        out.push('<li>Probe: ' + key);
+                    }
                     out.push('<ol>');
                     validation = []
                     validation.push('Validierungsfehler: ');
@@ -170,7 +177,9 @@ Ext.define('Lada.view.window.ImportResponse', {
                         out.push('</li>')
                     }
                     out.push('</ol>');
-                    out.push('</li>');
+                    if (key !== 'parser') {
+                        out.push('</li>');
+                    }
                 }
                 out.push('</ol>');
                 out.push('<br/>');
