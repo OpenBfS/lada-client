@@ -49,9 +49,14 @@ Ext.define('Lada.view.grid.ProbeList', {
                 action: 'export',
                 disabled: true //disabled on start, enabled by the controller
             }, {
+                text: i18n.getMsg('probe.button.printSheet'),
+                icon: 'resources/img/printer.png',
+                action: 'printSheet',
+                disabled: true //disabled on start, enabled by the controller
+            }, {
                 text: i18n.getMsg('probe.button.print'),
                 icon: 'resources/img/printer.png',
-                action: 'print',
+                action: 'printExtract',
                 disabled: true //disabled on start, enabled by the controller
             }]
         }];

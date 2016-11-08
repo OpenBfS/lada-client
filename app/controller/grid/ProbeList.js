@@ -36,8 +36,17 @@ Ext.define('Lada.controller.grid.ProbeList', {
             'probelistgrid toolbar button[action=export]': {
                 click: this.downloadFile
             },
-            'probelistgrid toolbar button[action=print]': {
-                click: this.printSelection
+            'probelistgrid toolbar button[action=printSheet]': {
+                click: {
+                    fn: this.printSelection,
+                    mode: 'printsheet'
+                }
+            },
+            'probelistgrid toolbar button[action=printExtract]': {
+                click: {
+                    fn: this.printSelection,
+                    mode: 'printextract'
+                }
             },
             'probelistgrid gridview': {
                 expandbody: this.expandBody,
@@ -152,8 +161,169 @@ Ext.define('Lada.controller.grid.ProbeList', {
     /**
      * Send the selection to a Printservice
      */
-    printSelection: function(button) {
+    printSelection: function(button, e, eOpts) {
+        switch (eOpts.mode) {
+            case "printextract" :
+                var printData = this.createExtractData(button);
+                this.printpdf(printData, 'lada_print', 'lada-print.pdf', button);
+                break;
+            case "printsheet" :
+                // The Data is loaded from the server again, so we need
+                // to be a little bit asynchronous here...
+                callback = function(response) {
+                    var data = response.responseText;
+                    var printData = '{"layout": "A4 portrait", "outputFormat": "pdf",'
+                            +   '"attributes": { "proben": ' +  data
+                            +   '}}';
+                    this.printpdf(printData, 'lada_erfassungsbogen',
+                                  'lada-erfassungsbogen.pdf', button);
+                }
 
+                this.createSheetData(button, callback, this);
+                break;
+        }
+    },
+
+    /**
+     * Toggles the buttons in the toolbar
+     **/
+    activateButtons: function(rowModel, record) {
+        var grid = rowModel.view.up('grid');
+        this.buttonToggle(true, grid);
+    },
+
+    /**
+     * Toggles the buttons in the toolbar
+     **/
+    deactivateButtons: function(rowModel, record) {
+        var grid = rowModel.view.up('grid');
+        // Only disable buttons when nothing is selected
+        if (rowModel.selected.items == 0) {
+            this.buttonToggle(false, grid);
+        }
+    },
+
+    /**
+     * Enables/Disables a set of buttons
+     **/
+    buttonToggle: function(enabled, grid) {
+        if (!enabled) {
+            grid.down('button[action=export]').disable();
+            grid.down('button[action=printExtract]').disable();
+            grid.down('button[action=printSheet]').disable();
+        }
+        else {
+            grid.down('button[action=export]').enable();
+            grid.down('button[action=printExtract]').enable();
+            grid.down('button[action=printSheet]').enable();
+        }
+    },
+
+    reload: function(btn) {
+        if (btn === 'yes') {
+            location.reload();
+        }
+    },
+
+    expandBody: function(rowNode, record, expandRow) {
+//        var row = Ext.get('probe-row-' + record.get('id'));
+//        var messungGrid = Ext.create('Lada.view.grid.Messung', {
+//            recordId: record.get('id'),
+//            bottomBar: false,
+//            rowLines: true
+//        });
+//        row.swallowEvent(['click', 'mousedown', 'mouseup', 'dblclick'], true);
+//        messungGrid.render(row);
+    },
+
+    collapseBody: function(rowNode, record, expandRow) {
+//        var element = Ext.get('probe-row-' + record.get('id')).down('div');
+//        element.destroy();
+    },
+
+    /**
+     * Returns a Json-Object whcih contains the data which has
+     * to be printed.
+     * The parameter printFunctionCallback will be called once the ajax-request
+     * starting the json-export was evaluated
+     **/
+    createSheetData: function(button, printFunctionCallback, cbscope){
+        //disable Button and setLoading...
+        // TODO ACTIVATE!
+        //button.disable();
+        //button.setLoading(true);
+
+
+        // get Selected Items.
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection();
+        var i18n = Lada.getApplication().bundle;
+        var me = this;
+        var ids = [];
+
+        for (item in selection) {
+            ids.push(selection[item].data['id']);
+        }
+
+        //basically, thats the same as the downloadFile
+        // code does.
+        var data = '{ "proben": ['+ids.toString()+'] }';
+
+        Ext.Ajax.request({
+            url: 'lada-server/data/export/json',
+            jsonData: data,
+            binary: false,
+            scope: cbscope,
+            success: printFunctionCallback,
+            failure: function(response) {
+                console.log('failure');
+                // Error handling
+                // TODO
+                console.log(response.responseText)
+                button.enable();
+                button.setLoading(false);
+                // This is "copy & waste-code" from downloadFile
+                // FIXME
+                /*
+                SSO will send a 302 if the Client is not authenticated
+                unfortunately this seems to be filtered by the browser.
+                We assume that a 302 was send when the follwing statement
+                is true.
+                */
+                if (response.status == 0 && response.responseText === "") {
+                    Ext.MessageBox.confirm(Lada.getApplication().bundle.getMsg('err.msg.sso.expired.title'),
+                        Lada.getApplication().bundle.getMsg('err.msg.sso.expired.body'),
+                        this.reload);
+                }
+                // further error handling
+                var json = Ext.JSON.decode(response.responseText);
+                if (json) {
+                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
+                        formPanel.setMessages(json.errors, json.warnings);
+                    }
+                    if(json.message){
+                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
+                            +' #'+json.message,
+                            Lada.getApplication().bundle.getMsg(json.message));
+                    } else {
+                        Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                            i18n.getMsg('err.msg.print.failed'));
+                    }
+                } else {
+                    Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                    i18n.getMsg('err.msg.print.failed'));
+                }
+
+                return null;
+            }
+        });
+    },
+
+    /**
+     * Returns a Json-Object whcih contains the data which has
+     * to be printed.
+     **/
+    createExtractData: function(button){
         //disable Button and setLoading...
         button.disable();
         button.setLoading(true);
@@ -257,21 +427,29 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 }
             }
         }
+        return printData;
+    },
 
+    /**
+     * this function uses an AJAX request in order to
+     * send the data to the endpoint of the mapfish-print
+     */
+    printpdf: function(data, endpoint, filename, button){
         Ext.Ajax.request({
-            url: 'lada-printer/buildreport.pdf',
+            url: 'lada-printer/'+endpoint+'/buildreport.pdf',
             //configure a proxy in apache conf!
-            jsonData: printData,
+            jsonData: data,
             binary: true,
             success: function(response) {
                 var content = response.responseBytes;
                 var filetype = response.getResponseHeader('Content-Type');
                 var blob = new Blob([content],{type: filetype});
-                saveAs(blob, 'lada-print.pdf');
+                saveAs(blob, filename);
                 button.enable();
                 button.setLoading(false);
             },
             failure: function(response) {
+                var i18n = Lada.getApplication().bundle;
                 console.log('failure');
                 // Error handling
                 // TODO
@@ -304,60 +482,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 }
             }
         });
-    },
-
-    /**
-     * Toggles the buttons in the toolbar
-     **/
-    activateButtons: function(rowModel, record) {
-        var grid = rowModel.view.up('grid');
-        this.buttonToggle(true, grid);
-    },
-
-    /**
-     * Toggles the buttons in the toolbar
-     **/
-    deactivateButtons: function(rowModel, record) {
-        var grid = rowModel.view.up('grid');
-        // Only disable buttons when nothing is selected
-        if (rowModel.selected.items == 0) {
-            this.buttonToggle(false, grid);
-        }
-    },
-
-    /**
-     * Enables/Disables a set of buttons
-     **/
-    buttonToggle: function(enabled, grid) {
-        if (!enabled) {
-            grid.down('button[action=export]').disable();
-            grid.down('button[action=print]').disable();
-        }
-        else {
-            grid.down('button[action=export]').enable();
-            grid.down('button[action=print]').enable();
-        }
-    },
-
-    reload: function(btn) {
-        if (btn === 'yes') {
-            location.reload();
-        }
-    },
-
-    expandBody: function(rowNode, record, expandRow) {
-//        var row = Ext.get('probe-row-' + record.get('id'));
-//        var messungGrid = Ext.create('Lada.view.grid.Messung', {
-//            recordId: record.get('id'),
-//            bottomBar: false,
-//            rowLines: true
-//        });
-//        row.swallowEvent(['click', 'mousedown', 'mouseup', 'dblclick'], true);
-//        messungGrid.render(row);
-    },
-
-    collapseBody: function(rowNode, record, expandRow) {
-//        var element = Ext.get('probe-row-' + record.get('id')).down('div');
-//        element.destroy();
     }
+
 });
