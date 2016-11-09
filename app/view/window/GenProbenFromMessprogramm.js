@@ -68,6 +68,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 Ext.Ajax.request({
                     url: 'lada-server/rest/probe/messprogramm',
                     method: 'POST',
+                    timeout: 2 * 60 * 1000,
                     jsonData: jsondata,
                     success: me.onSuccess,
                     failure: me.onFailure,
