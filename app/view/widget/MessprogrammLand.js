@@ -14,7 +14,7 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
     alias: 'widget.messprogrammland',
     store: 'messprogrammkategorie',
     displayField: 'id',
-    valueField: 'mplId',
+    valueField: 'id',
     editable: this.editable || false,
     forceSelection: true,
     // Enable filtering of comboboxes
