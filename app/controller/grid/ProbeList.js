@@ -117,6 +117,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
         Ext.Ajax.request({
             url: 'lada-server/data/export/laf',
             jsonData: {'proben': proben},
+            timeout: 2 * 60 * 1000,
             success: function(response) {
                 var content = response.responseText;
                 var blob = new Blob([content],{type: 'text/plain'});
