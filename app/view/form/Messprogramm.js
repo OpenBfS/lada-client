@@ -140,7 +140,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 submitValue: false,
                                 fieldLabel: i18n.getMsg('netzbetreiberId'),
                                 margin : '0, 5, 5, 5',
-                                width : '35%',
+                                width : '45%',
                                 labelWidth: 80
                             }, {
                                 xtype: 'datenbasis',
@@ -151,15 +151,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 margin : '0, 5, 5, 5',
                                 width : '20%',
                                 labelWidth: 65
-                            }, {
-                                xtype: 'chkbox',
-                                name: 'test',
-                                fieldLabel: i18n.getMsg('test'),
-                                anchor: '100%',
-                                margin : '0, 5, 5, 5',
-                                width : '10%',
-                                labelWidth: 30,
-                                allowBlank: false
                             }]
                         }, {
                             layout: {
@@ -168,30 +159,30 @@ Ext.define('Lada.view.form.Messprogramm', {
                             },
                             border: 0,
                             items: [{
-                                xtype: 'tfield',
-                                name: 'name',
-                                fieldLabel: i18n.getMsg('mprId'),
+                                xtype: 'probenart',
+                                editable: false,
+                                name: 'probenartId',
+                                fieldLabel: i18n.getMsg('probenartId'),
                                 margin: '0, 5, 5, 5',
                                 width: '35%',
                                 labelWidth: 95,
-                                maxLength: 20,
-                                editable: true
+                                allowBlank: false
                             }, {
                                 xtype: 'betriebsart',
                                 name: 'baId',
                                 margin: '0, 5, 5, 5',
                                 fieldLabel: i18n.getMsg('baId'),
                                 //anchor: '100%',
-                                width: '35%',
+                                width: '45%',
                                 labelWidth: 80
                             }, {
-                                xtype: 'probenart',
-                                editable: false,
-                                name: 'probenartId',
-                                fieldLabel: i18n.getMsg('probenartId'),
-                                margin: '0, 5, 5, 5',
-                                width: '20%',
-                                labelWidth: 70,
+                                xtype: 'chkbox',
+                                name: 'test',
+                                fieldLabel: i18n.getMsg('test'),
+                                anchor: '100%',
+                                margin : '0, 5, 5, 5',
+                                width : '20%',
+                                labelWidth: 30,
                                 allowBlank: false
                             }]
                         }]
