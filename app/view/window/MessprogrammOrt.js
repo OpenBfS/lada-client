@@ -186,7 +186,7 @@ Ext.define('Lada.view.window.MessprogrammOrt', {
     var feature = args[0];
         if (feature.attributes.id &&
             feature.attributes.id !== '') {
-            var record = Ext.data.StoreManager.get('locations').getById(feature.attributes.id);
+            var record = Ext.data.StoreManager.get('orte').getById(feature.attributes.id);
             context.up('window').down('locationform').setRecord(record);
             context.up('window').down('locationform').setReadOnly(true);
             context.up('window').down('location').down('combobox').setValue(record.id);
@@ -211,9 +211,9 @@ Ext.define('Lada.view.window.MessprogrammOrt', {
         var id = combobox.getValue();
 
         if (details) {
-            var toLoad = Ext.data.StoreManager.get('locations').getById(id);
+            var toLoad = Ext.data.StoreManager.get('orte').getById(id);
             win.down('locationform').setRecord(toLoad);
-            win.down('map').selectFeature(id);
+            win.down('map').selectFeature(id, toLoad);
         }
     },
 
