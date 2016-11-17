@@ -185,6 +185,13 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 labelWidth: 30,
                                 allowBlank: false
                             }]
+                        }, {
+                            xtype: 'tfield',
+                            name: 'kommentar',
+                            fieldLabel: i18n.getMsg('kommentar'),
+                            width: '100%',
+                            margin: '0, 5, 5, 5',
+                            labelWidth: 95
                         }]
                 }, {
                     // Zeit
