@@ -80,13 +80,15 @@ Ext.define('Lada.view.grid.Orte', {
             header: i18n.getMsg('orte.ortId'),
             editor: {
                 xtype: 'textfield',
+                maxLength: 10,
                 allowBlank: false
             },
             dataIndex: 'ortId'
         }, {
             header: i18n.getMsg('orte.nutsCode'),
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 10
             },
             dataIndex: 'nutsCode'
         }, {
@@ -149,37 +151,43 @@ Ext.define('Lada.view.grid.Orte', {
         }, {
             header: i18n.getMsg('orte.mpArt'),
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 10
             },
             dataIndex: 'mpArt'
         }, {
             header: i18n.getMsg('orte.zone'),
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 1
             },
             dataIndex: 'zone'
         }, {
             header: i18n.getMsg('orte.sektor'),
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 2
             },
             dataIndex: 'sektor'
         }, {
             header: i18n.getMsg('orte.zustaendigkeit'),
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 10
             },
             dataIndex: 'zustaendigkeit'
         }, {
             header: i18n.getMsg('orte.berichtstext'),
             editor: {
-                xtype: 'textfield'
+                xtype: 'textfield',
+                maxLength: 70
             },
             dataIndex: 'berichtstext'
         }, {
             header: i18n.getMsg('orte.kurztext'),
             editor: {
                 xtype: 'textfield',
+                maxLength: 15,
                 allowBlank: false
             },
             dataIndex: 'kurztext'
@@ -187,6 +195,7 @@ Ext.define('Lada.view.grid.Orte', {
             header: i18n.getMsg('orte.langtext'),
             editor: {
                 xtype: 'textfield',
+                maxLength: 100,
                 allowBlank: false
             },
             dataIndex: 'langtext'
@@ -206,6 +215,7 @@ Ext.define('Lada.view.grid.Orte', {
             header: i18n.getMsg('orte.koordXExtern'),
             editor: {
                 xtype: 'textfield',
+                maxLength: 22,
                 allowBlank: false
             },
             dataIndex: 'koordXExtern'
@@ -213,6 +223,7 @@ Ext.define('Lada.view.grid.Orte', {
             header: i18n.getMsg('orte.koordYExtern'),
             editor: {
                 xtype: 'textfield',
+                maxLength: 22,
                 allowBlank: false
             },
             dataIndex: 'koordYExtern'
