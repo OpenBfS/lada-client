@@ -136,22 +136,8 @@ Ext.define('Lada.controller.grid.ProbeList', {
                         'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
                         'Alle ungesicherten Daten gehen dabei verloren.<br/>' +
                         'Soll die Anwendung jetzt neu geladen werden?', this.reload);
-                }
-                // further error handling
-                var json = Ext.JSON.decode(response.responseText);
-                if (json) {
-                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
-                        formPanel.setMessages(json.errors, json.warnings);
-                    }
-                    if(json.message){
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
-                            +' #'+json.message,
-                            Lada.getApplication().bundle.getMsg(json.message));
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                            i18n.getMsg('err.msg.laf.filecreatefailed'));
-                    }
                 } else {
+                    // further error handling
                     Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                     i18n.getMsg('err.msg.laf.filecreatefailed'));
                 }
