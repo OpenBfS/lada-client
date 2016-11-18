@@ -31,7 +31,13 @@ Ext.define('Lada.model.Ort', {
     }, {
         name: 'kdaId'
     }, {
-        name: 'ozId'
+        name: 'ozId',
+        serialize: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
         name: 'ortTyp'
     }, {
