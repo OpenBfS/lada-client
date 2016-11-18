@@ -175,6 +175,8 @@ Ext.define('Lada.view.window.Messprogramm', {
             var record = Ext.create('Lada.model.Messprogramm');
             this.down('messmethodengrid').setReadOnly(true);
             this.down('messprogrammform').setRecord(record);
+            this.down('dayofyear[name=gueltigBis]').setValue(365);
+            this.down('dayofyear[name=gueltigVon]').setValue(1);
         }
         this.down('messprogrammform').isValid();
     },
