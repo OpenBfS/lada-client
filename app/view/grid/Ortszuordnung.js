@@ -46,11 +46,36 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             }]
         }];
         this.columns = [{
+            xtype: 'actioncolumn',
+            text: '',
+            dataIndex: 'readonly',
+            sortable: false,
+            width: 30,
+            getClass: function (val, meta, rec) {
+                if (rec.get('readonly') === false) {
+                        return 'edit';
+                }
+                return 'noedit';
+            },
+            handler: function(grid, rowIndex, colIndex) {
+                var rec = grid.getStore().getAt(rowIndex);
+                grid.fireEvent('itemdblclick', grid, rec);
+            }
+        }, {
             header: 'Typ',
             dataIndex: 'ortszuordnungTyp',
             flex: 1,
             editor: {
                 allowBlank: false
+            }
+        }, {
+            header: 'Ort-ID',
+            dataIndex: 'ortId',
+            flex: 2,
+            renderer: function(value) {
+                var store = Ext.data.StoreManager.get('orte');
+                var record = store.getById(value);
+                return record.get('ortId');
             }
         }, {
             header: 'Staat',
@@ -86,9 +111,14 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 return record2.get('bezeichnung');
             }
         }, {
-            header: 'Ortszusatztext',
-            flex: 6,
-            dataIndex: 'ortszusatztext'
+            header: 'Anlage',
+            dataIndex: 'ortId',
+            flex: 3,
+            renderer: function(value) {
+                var store = Ext.data.StoreManager.get('orte');
+                var record = store.getById(value);
+                return record.get('anlageId');
+            }
         }];
         this.listeners = {
            select: {

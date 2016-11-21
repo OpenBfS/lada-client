@@ -45,6 +45,22 @@ Ext.define('Lada.view.grid.Messung', {
             }]
         }];
         this.columns = [{
+            xtype: 'actioncolumn',
+            text: '',
+            dataIndex: 'readonly',
+            sortable: false,
+            width: 30,
+            getClass: function (val, meta, rec) {
+                if (rec.get('readonly') === false) {
+                        return 'edit';
+                }
+                return 'noedit';
+            },
+            handler: function(grid, rowIndex, colIndex) {
+                var rec = grid.getStore().getAt(rowIndex);
+                grid.fireEvent('itemdblclick', grid, rec);
+            }
+        }, {
             header: 'Nebenproben-Nr.',
             dataIndex: 'nebenprobenNr',
             flex: 1,
