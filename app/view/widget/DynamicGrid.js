@@ -34,7 +34,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      */
     setStore: function(store){
         var i18n = Lada.getApplication().bundle;
-
         this.reconfigure(store);
         var ptbar = this.down('pagingtoolbar');
         if (ptbar) {
@@ -73,6 +72,17 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     generateColumnsAndFields: function(cols) {
         var resultColumns = [];
         var fields = [];
+        var i18n = Lada.getApplication().bundle;
+        switch(this.xtype) {
+            case 'probelistgrid':
+                var tooltiptext = i18n.getMsg('probe')+' '+i18n.getMsg('open');
+                break;
+            case 'messunglistgrid':
+                var tooltiptext = i18n.getMsg('messung')+' '+i18n.getMsg('open');
+                break;
+            case 'messprogrammelistgrid':
+                var tooltiptext = i18n.getMsg('messprogramm')+' '+i18n.getMsg('open');
+        }
 
         fields.push(new Ext.data.Field({
             name: 'owner'
@@ -92,7 +102,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             text: 'RW',
             dataIndex: 'readonly',
             sortable: false,
-            tooltip: 'Probe öffnen',
+            tooltip: tooltiptext,
             width: 30,
             getClass: function (val, meta, rec) {
                 if (rec.get('readonly') === false &&
@@ -113,6 +123,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             },
             handler: function(grid, rowIndex, colIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
+                var tooltext = rec.proxy.url;
                 grid.fireEvent('itemdblclick', grid, rec);
              }
         });
