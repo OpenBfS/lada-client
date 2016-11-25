@@ -19,6 +19,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         'Lada.view.widget.Netzbetreiber',
         'Lada.view.widget.Betriebsart',
         'Lada.view.widget.Probenart',
+        'Lada.view.widget.MessprogrammLand',
         'Lada.view.widget.Umwelt',
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.base.NumberField',
@@ -389,10 +390,18 @@ Ext.define('Lada.view.form.Messprogramm', {
                     name: 'probeNehmerId',
                     fieldLabel: i18n.getMsg('probeNehmerId'),
                     margin: '0, 5, 5, 5',
-                    width: '100%',
+                    //width: '100%',
                     minValue: 0,
                     anchor: '100%',
                     labelWidth: 95
+                }, {
+                    xtype: 'messprogrammland',
+                    name: 'mplId',
+                    fieldLabel: 'Messprogramm-Land',
+                    margin: '0, 5, 5, 5',
+                    //width: '100%',
+                    anchor: '100%',
+                    labelWidth: 115
                 }, {
                     xtype: 'textarea',
                     name: 'probeKommentar',
