@@ -123,7 +123,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             },
             handler: function(grid, rowIndex, colIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
-                var tooltext = rec.proxy.url;
                 grid.fireEvent('itemdblclick', grid, rec);
              }
         });

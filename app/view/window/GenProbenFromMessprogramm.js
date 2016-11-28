@@ -123,7 +123,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 width: 200,
                 name: 'start',
                 format: 'd.m.Y',
-                period: 'start'
+                period: 'start',
+                value: new Date()
             }, {
                 xtype: 'datefield',
                 fieldLabel: i18n.getMsg('to'),
@@ -132,7 +133,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 width: 200,
                 name: 'end',
                 format: 'd.m.Y',
-                period: 'end'
+                period: 'end',
+                value: new Date(new Date().getFullYear(), 11, 31)
             }]
         }];
         this.callParent(arguments);
