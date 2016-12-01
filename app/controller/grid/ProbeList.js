@@ -159,6 +159,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 // to be a little bit asynchronous here...
                 callback = function(response) {
                     var data = response.responseText;
+                    data = this.prepareData(data); // Wraps all messstellen and deskriptoren objects into an array
                     var printData = '{"layout": "A4 portrait", "outputFormat": "pdf",'
                             +   '"attributes": { "proben": ' +  data
                             +   '}}';
@@ -169,6 +170,28 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 this.createSheetData(button, callback, this);
                 break;
         }
+    },
+
+    prepareData: function(data) {
+        // Copy data
+        prep = JSON.parse(data);
+        data = JSON.parse(data);
+        // ensure data and prep are equal, not sure
+        // if json.parse changes order of things
+        console.log(data);
+        for (i in data) {
+            probe = data[i];
+            console.log(probe);
+            deskriptoren = probe.deskriptoren;
+            messstelle = probe.messstelle;
+            console.log(deskriptoren);
+            console.log(messstelle);
+            prep[i].messstelle = [];
+            prep[i].messstelle[0] = messstelle;
+            prep[i].deskriptoren = [];
+            prep[i].deskriptoren[0] = deskriptoren;
+        }
+        return JSON.stringify(prep);
     },
 
     /**
