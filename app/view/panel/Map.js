@@ -109,8 +109,9 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     featureAdded: function(features) {
-        this.locationRecord.set('latitude', features.feature.geometry.y);
-        this.locationRecord.set('longitude', features.feature.geometry.x);
+        this.locationRecord.set('kdaId', 4);
+        this.locationRecord.set('koordYExtern', features.feature.geometry.y);
+        this.locationRecord.set('koordXExtern', features.feature.geometry.x);
         this.drawPoint.deactivate();
         this.fireEvent('featureadded', this.locationRecord);
     //    this.selectControl.unselectAll();
