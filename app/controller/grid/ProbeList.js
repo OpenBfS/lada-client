@@ -159,6 +159,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 // to be a little bit asynchronous here...
                 callback = function(response) {
                     var data = response.responseText;
+                    data = this.prepareData(data); // Wraps all messstellen and deskriptoren objects into an array
                     var printData = '{"layout": "A4 portrait", "outputFormat": "pdf",'
                             +   '"attributes": { "proben": ' +  data
                             +   '}}';
@@ -169,6 +170,63 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 this.createSheetData(button, callback, this);
                 break;
         }
+    },
+
+    prepareData: function(data) {
+        // Copy data
+        prep = JSON.parse(data);
+        data = JSON.parse(data);
+        // ensure data and prep are equal, not sure
+        // if json.parse changes order of things
+        console.log(data);
+
+        emptyMessstelle = {
+            "id": null,
+            "amtskennung": null,
+            "beschreibung": null,
+            "messStelle": null,
+            "mstTyp": null,
+            "netzbetreiberId":null
+        };
+
+        emptyDeskriptor = {
+            "s0":  null,
+            "s1":  null,
+            "s2":  null,
+            "s3":  null,
+            "s4":  null,
+            "s5":  null,
+            "s6":  null,
+            "s7":  null,
+            "s8":  null,
+            "s9":  null,
+            "s10": null,
+            "s11": null
+        };
+
+        for (i in data) {
+            probe = data[i];
+            deskriptoren = probe.deskriptoren;
+            messstelle = probe.messstelle;
+            if (messstelle != null) {
+                prep[i].messstelle = [];
+                prep[i].messstelle[0] = messstelle;
+            }
+            else {
+                prep[i].messstelle = [];
+                prep[i].messstelle[0] = emptyMessstelle;
+            }
+
+            if (deskriptoren != null) {
+                prep[i].deskriptoren = [];
+                prep[i].deskriptoren[0] = deskriptoren;
+            }
+            else {
+                prep[i].deskriptoren = [];
+                prep[i].deskriptoren[0] = emptyDeskriptor;
+            }
+        }
+        return JSON.stringify(prep);
     },
 
     /**
@@ -229,16 +287,15 @@ Ext.define('Lada.controller.grid.ProbeList', {
     },
 
     /**
-     * Returns a Json-Object whcih contains the data which has
+     * Returns a Json-Object which contains the data which has
      * to be printed.
      * The parameter printFunctionCallback will be called once the ajax-request
      * starting the json-export was evaluated
      **/
     createSheetData: function(button, printFunctionCallback, cbscope){
         //disable Button and setLoading...
-        // TODO ACTIVATE!
-        //button.disable();
-        //button.setLoading(true);
+        button.disable();
+        button.setLoading(true);
 
 
         // get Selected Items.
@@ -269,21 +326,14 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 console.log(response.responseText)
                 button.enable();
                 button.setLoading(false);
-                // This is "copy & waste-code" from downloadFile
-                // FIXME
-                /*
-                SSO will send a 302 if the Client is not authenticated
-                unfortunately this seems to be filtered by the browser.
-                We assume that a 302 was send when the follwing statement
-                is true.
-                */
-                if (response.status == 0 && response.responseText === "") {
-                    Ext.MessageBox.confirm(Lada.getApplication().bundle.getMsg('err.msg.sso.expired.title'),
-                        Lada.getApplication().bundle.getMsg('err.msg.sso.expired.body'),
-                        this.reload);
+                if (response.responseText) {
+                    try {
+                        var json = Ext.JSON.decode(response.responseText);
+                    }
+                    catch(e){
+                        console.log(e);
+                    }
                 }
-                // further error handling
-                var json = Ext.JSON.decode(response.responseText);
                 if (json) {
                     if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
                         formPanel.setMessages(json.errors, json.warnings);
@@ -294,20 +344,19 @@ Ext.define('Lada.controller.grid.ProbeList', {
                             Lada.getApplication().bundle.getMsg(json.message));
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                            i18n.getMsg('err.msg.print.failed'));
+                            i18n.getMsg('err.msg.response.body'));
                     }
                 } else {
                     Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                    i18n.getMsg('err.msg.print.failed'));
+                    i18n.getMsg('err.msg.response.body'));
                 }
-
                 return null;
             }
         });
     },
 
     /**
-     * Returns a Json-Object whcih contains the data which has
+     * Returns a Json-Object which contains the data which has
      * to be printed.
      **/
     createExtractData: function(button){
