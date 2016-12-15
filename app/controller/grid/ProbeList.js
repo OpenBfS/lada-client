@@ -178,7 +178,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
         data = JSON.parse(data);
         // ensure data and prep are equal, not sure
         // if json.parse changes order of things
-        console.log(data);
 
         emptyMessstelle = {
             "id": null,
@@ -204,10 +203,12 @@ Ext.define('Lada.controller.grid.ProbeList', {
             "s11": null
         };
 
-        for (i in data) {
+        for (var i in data) {
             probe = data[i];
             deskriptoren = probe.deskriptoren;
             messstelle = probe.messstelle;
+            ortszuordnung = probe.ortszuordnung;
+
             if (messstelle != null) {
                 prep[i].messstelle = [];
                 prep[i].messstelle[0] = messstelle;
@@ -225,7 +226,19 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 prep[i].deskriptoren = [];
                 prep[i].deskriptoren[0] = emptyDeskriptor;
             }
+
+            debugger;
+
+            // Flatten the Ortszuodnung Array
+            for (var o in ortszuordnung) {
+                oz = ortszuordnung[o];
+                for (var e in oz.ort) {
+                    prep[i].ortszuordnung[o]['ort']=null;
+                    prep[i].ortszuordnung[o]['ort.'+e]=oz.ort[e];
+                }
+            }
         }
+
         return JSON.stringify(prep);
     },
 
