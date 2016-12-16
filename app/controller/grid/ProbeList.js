@@ -207,15 +207,25 @@ Ext.define('Lada.controller.grid.ProbeList', {
             probe = data[i];
             deskriptoren = probe.deskriptoren;
             messstelle = probe.messstelle;
+            labormessstelle = probe.labormessstelle;
             ortszuordnung = probe.ortszuordnung;
 
             if (messstelle != null) {
                 prep[i].messstelle = [];
                 prep[i].messstelle[0] = messstelle;
+                prep[i]['messstelle.messStelle'] = messstelle.messStelle;
             }
             else {
                 prep[i].messstelle = [];
                 prep[i].messstelle[0] = emptyMessstelle;
+                prep[i]['messstelle.messStelle'] = '';
+            }
+
+            if (labormessstelle != null) {
+                prep[i]['labormessstelle.messStelle'] = labormessstelle.messStelle;
+            }
+            else {
+                prep[i]['labormessstelle.messStelle'] = '';
             }
 
             if (deskriptoren != null) {
