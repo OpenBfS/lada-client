@@ -209,6 +209,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
             messstelle = probe.messstelle;
             labormessstelle = probe.labormessstelle;
             ortszuordnung = probe.ortszuordnung;
+            zusatzwerte = probe.zusatzwerte;
 
             if (messstelle != null) {
                 prep[i].messstelle = [];
@@ -237,7 +238,18 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 prep[i].deskriptoren[0] = emptyDeskriptor;
             }
 
-            debugger;
+            // See: app/view/grid/Probenzusatzwert.js
+            // Calculate NWG < symbol , as this is NOT done by the server
+            for (z in zusatzwerte){
+                var nwg = zusatzwerte[z]['nwgZuMesswert'];
+                var mw = zusatzwerte[z]['messwertPzs'];
+                if ( mw < nwg) {
+                    prep[i].zusatzwerte[z]['messwertNwg'] = '<';
+                }
+                else {
+                    prep[i].zusatzwerte[z]['messwertNwg'] = null;
+                }
+            }
 
             // Flatten the Ortszuodnung Array
             for (var o in ortszuordnung) {
@@ -345,8 +357,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
             failure: function(response) {
                 console.log('failure');
                 // Error handling
-                // TODO
-                console.log(response.responseText)
                 button.enable();
                 button.setLoading(false);
                 if (response.responseText) {
@@ -511,8 +521,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 var i18n = Lada.getApplication().bundle;
                 console.log('failure');
                 // Error handling
-                // TODO
-                //console.log(response.responseText)
                 button.enable();
                 button.setLoading(false);
                 if (response.responseText) {
