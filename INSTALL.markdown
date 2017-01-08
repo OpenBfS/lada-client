@@ -30,7 +30,7 @@ Mit Hilfe dieses Tools kann der Quellcode in eine einzelne Datei zusammengefasst
 und minifiziert werden. Dies beschleunigt das Laden der Anwendung im Browser
 erheblich
 
-Sencha bietet Sencha Cmd zum [Download](https://www.sencha.com/products/extjs/cmd-download/) 
+Sencha bietet Sencha Cmd zum [Download](https://www.sencha.com/products/extjs/cmd-download/)
 an. Beachten Sie: Sencha Cmd ist keine freie Software.
 
 Die Fa. Sencha beschreibt die Installation von Sencha Cmd in der
@@ -135,7 +135,7 @@ Folgende Bibliotheken werden neben ExtJs verwendet:
    MIT - License
  * Openlayers 2.13.1
    http://www.openlayers.org
-   https://github.com/openlayers/openlayers
+   https://github.com/openlayers/ol2
    2-Clause BSD-License
 
 Diese werden in der `Index.html` referenziert.
