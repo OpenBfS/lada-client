@@ -21,7 +21,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     ],
 
     layout: 'fit',
-    margin: 5,
+    margin: '5, 5, 0, 5',
     border: 0,
 
     record: null,
@@ -70,65 +70,92 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                 }],
                 items: [{
                     layout: 'vbox',
-                    border: 0,
-                    margin: '0, 10, 0, 0',
-                    items: [{
-                        xtype: 'tfield',
-                        labelWidth: 125,
-                        maxLength: 100,
-                        name: 'ortszusatztext',
-                        fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszusatztext')
-                    }, {
-                        xtype: 'textfield',
-                        labelWidth: 125,
-                        maxLength: 1,
-                        allowBlank: false,
-                        regex: /[UEZA]/,
-                        activeError: 'U, E, Z oder A eingeben',
-                        name: 'ortszuordnungTyp',
-                        fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp')
-                    }, {
-                        xtype: 'textfield',
-                        submitValue: true,
-                        readOnly: true,
-                        hidden: true,
-                        name: 'ortId'
-                    }]
-                }, {
-                    layout: 'vbox',
-                    flex: 1,
-                    margin: '0, 10, 0, 0',
+                    autoscroll: true,
                     border: 0,
                     items: [{
-                        xtype: 'displayfield',
-                        labelWidth: 125,
-                        fieldLabel: i18n.getMsg('orte.gemeinde'),
-                        name: 'gemeinde'
+                        layout: 'vbox',
+                        border: 0,
+                        margin: '0, 10, 0, 0',
+                        items: [{
+                            xtype: 'tfield',
+                            labelWidth: 125,
+                            maxLength: 100,
+                            name: 'ortszusatztext',
+                            fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszusatztext')
+                        }, {
+                            xtype: 'textfield',
+                            labelWidth: 125,
+                            maxLength: 1,
+                            allowBlank: false,
+                            regex: /[UEZA]/,
+                            activeError: 'U, E, Z oder A eingeben',
+                            name: 'ortszuordnungTyp',
+                            fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp')
+                        }, {
+                            xtype: 'displayfield',
+                            labelWidth: 125,
+                            fieldLabel: i18n.getMsg('orte.ortid'),
+                            submitValue: true,
+                            name: 'ortId'
+                        }]
                     }, {
-                        xtype: 'displayfield',
-                        labelWidth: 125,
-                        fieldLabel: i18n.getMsg('staat'),
-                        name: 'staat'
-                    }]
-                }, {
-                    layout: 'vbox',
-                    flex: 1,
-                    margin: '0, 10, 0, 0',
-                    border: 0,
-                    items: [{
-                        xtype: 'displayfield',
-                        labelWidth: 125,
-                        fieldLabel: i18n.getMsg('orte.lon'),
-                        name: 'lon'
-                    }, {
-                        xtype: 'displayfield',
-                        labelWidth: 125,
-                        fieldLabel: i18n.getMsg('orte.lat'),
-                        name: 'lat'
+                        layout: 'vbox',
+                        flex: 1,
+                        margin: '0, 10, 0, 0',
+                        border: 0,
+                        items: [{
+                            xtype: 'displayfield',
+                            labelWidth: 125,
+                            fieldLabel: i18n.getMsg('orte.kurztext'),
+                            name: 'kurztext'
+                        }, {
+                            xtype: 'displayfield',
+                            labelWidth: 125,
+                            fieldLabel: i18n.getMsg('orte.langtext'),
+                            name: 'langtext'
+                        }, {
+                            xtype: 'displayfield',
+                            labelWidth: 125,
+                            fieldLabel: i18n.getMsg('staat'),
+                            name: 'staatISO'
+                        }, {
+                            xtype: 'displayfield',
+                            labelWidth: 125,
+                            fieldLabel: i18n.getMsg('orte.gemeinde'),
+                            name: 'gemeinde'
+                        }, {
+                            xtype: 'displayfield',
+                            labelWidth: 125,
+                            fieldLabel: i18n.getMsg('orte.gemeindename'),
+                            name: 'gemeinde'
+                        }, {
+                            xtype: 'displayfield',
+                            labelWidth: 125,
+                            fieldLabel: i18n.getMsg('orte.kda'),
+                            name: 'kdaId'
+                        }, {
+                            xtype: 'displayfield',
+                            labelWidth: 125,
+                            fieldLabel: i18n.getMsg('orte.koordx'),
+                            name: 'koordXExtern'
+                        }, {
+                            xtype: 'displayfield',
+                            labelWidth: 125,
+                            fieldLabel: i18n.getMsg('orte.koordy'),
+                            name: 'koordYExtern'
+                        }]
                     }]
                 }]
-            }]
-        }];
+                //}, {
+                //    layout: 'vbox',
+                //    flex: 1,
+                //    margin: '0, 10, 0, 0',
+                //    border: 0,
+                //    items: [{
+                //        xtype: ''
+                //    }]
+                }]
+            }];
         this.callParent(arguments);
     },
 

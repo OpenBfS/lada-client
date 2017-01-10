@@ -73,7 +73,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             header: 'Ort-ID',
             dataIndex: 'ortId',
             flex: 2,
-            renderer: function(value) {
+            renderer: function(value, meta, zuordnung) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
                 if (!record) {
