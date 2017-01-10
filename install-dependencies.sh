@@ -21,7 +21,7 @@ curl -L https://github.com/eligrey/Blob.js/archive/master.zip \
 unzip -n Blob-js.zip
 ln -sf Blob.js-master Blob
 
-curl -L https://github.com/openlayers/openlayers/archive/release-2.13.1.zip \
+curl -L https://github.com/openlayers/ol2/archive/release-2.13.1.zip \
      -o OpenLayers-2-13-1.zip
 unzip -n OpenLayers-2-13-1.zip
 ln -sf ol2-release-2.13.1 OpenLayers

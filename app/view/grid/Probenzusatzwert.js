@@ -66,7 +66,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
         }];
         this.columns = [{
             header: 'PZW-ID',
-            dataIndex: 'id',
+            dataIndex: 'pzsId',
             flex: 1
         }, {
             header: 'PZW-Größe',

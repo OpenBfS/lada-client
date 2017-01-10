@@ -178,7 +178,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
         data = JSON.parse(data);
         // ensure data and prep are equal, not sure
         // if json.parse changes order of things
-        console.log(data);
 
         emptyMessstelle = {
             "id": null,
@@ -204,17 +203,30 @@ Ext.define('Lada.controller.grid.ProbeList', {
             "s11": null
         };
 
-        for (i in data) {
+        for (var i in data) {
             probe = data[i];
             deskriptoren = probe.deskriptoren;
             messstelle = probe.messstelle;
+            labormessstelle = probe.labormessstelle;
+            ortszuordnung = probe.ortszuordnung;
+            zusatzwerte = probe.zusatzwerte;
+
             if (messstelle != null) {
                 prep[i].messstelle = [];
                 prep[i].messstelle[0] = messstelle;
+                prep[i]['messstelle.messStelle'] = messstelle.messStelle;
             }
             else {
                 prep[i].messstelle = [];
                 prep[i].messstelle[0] = emptyMessstelle;
+                prep[i]['messstelle.messStelle'] = '';
+            }
+
+            if (labormessstelle != null) {
+                prep[i]['labormessstelle.messStelle'] = labormessstelle.messStelle;
+            }
+            else {
+                prep[i]['labormessstelle.messStelle'] = '';
             }
 
             if (deskriptoren != null) {
@@ -225,7 +237,30 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 prep[i].deskriptoren = [];
                 prep[i].deskriptoren[0] = emptyDeskriptor;
             }
+
+            // See: app/view/grid/Probenzusatzwert.js
+            // Calculate NWG < symbol , as this is NOT done by the server
+            for (z in zusatzwerte){
+                var nwg = zusatzwerte[z]['nwgZuMesswert'];
+                var mw = zusatzwerte[z]['messwertPzs'];
+                if ( mw < nwg) {
+                    prep[i].zusatzwerte[z]['messwertNwg'] = '<';
+                }
+                else {
+                    prep[i].zusatzwerte[z]['messwertNwg'] = null;
+                }
+            }
+
+            // Flatten the Ortszuodnung Array
+            for (var o in ortszuordnung) {
+                oz = ortszuordnung[o];
+                for (var e in oz.ort) {
+                    prep[i].ortszuordnung[o]['ort']=null;
+                    prep[i].ortszuordnung[o]['ort.'+e]=oz.ort[e];
+                }
+            }
         }
+
         return JSON.stringify(prep);
     },
 
@@ -322,8 +357,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
             failure: function(response) {
                 console.log('failure');
                 // Error handling
-                // TODO
-                console.log(response.responseText)
                 button.enable();
                 button.setLoading(false);
                 if (response.responseText) {
@@ -488,8 +521,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 var i18n = Lada.getApplication().bundle;
                 console.log('failure');
                 // Error handling
-                // TODO
-                //console.log(response.responseText)
                 button.enable();
                 button.setLoading(false);
                 if (response.responseText) {
