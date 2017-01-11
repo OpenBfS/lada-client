@@ -318,7 +318,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
     },
 
-
     deskriptorSelect: function(field, records) {
         var desk = field.up('deskriptor');
         var media = field.up('messprogrammform').down('textfield[name="mediaDesk"]');
@@ -366,36 +365,34 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
         media.setValue(current.join(' ').trim());
 
-		if (current[0].length == 0) {
-			current.splice(0,1);
-		}
-		var mediatext = field.up('messprogrammform').down('textfield[name="media"]');
-		
-		if ( (desk.layer === 0 ) && (records[0].get('sn') === 0) ){
-				mediatext.setValue('');
-		} else {
-				if ( current[1] === '01') { 
-					if ( (current[5] !== '00') && (desk.layer === 4 ) ){
-						//mediatext.setValue(records[0].data.beschreibung);
-					} else if ( (current[4] !== '00') && (desk.layer === 3) ) {
-						mediatext.setValue(records[0].data.beschreibung);
-					} else if ( (current[3] !== '00') && (desk.layer === 2) ) {
-						mediatext.setValue(records[0].data.beschreibung);
-					} else if ( (current[2] !== '00') && (desk.layer === 1) ) {
-						mediatext.setValue(records[0].data.beschreibung);
-					} else if ( (current[1] !== '00') && (desk.layer === 0 )) {
-						mediatext.setValue(records[0].data.beschreibung);
-					} 
-				}
-				
-				if ( current[1] !== '01') { 
-					if ((current[2] !== '00') && (desk.layer === 1 )) {
-						mediatext.setValue(records[0].data.beschreibung);
-					} else if ((current[1] !== '00') && (desk.layer === 0 )) {
-						mediatext.setValue(records[0].data.beschreibung);
-					} 
-				}
+        if (current[0].length == 0) {
+            current.splice(0,1);
+        }
+        var mediatext = field.up('messprogrammform').down('textfield[name="media"]');
+
+        if ( (desk.layer === 0 ) && (records[0].get('sn') === 0) ){
+            mediatext.setValue('');
+        } else {
+            if ( current[1] === '01') { 
+                if ( (current[4] !== '00') && (desk.layer === 3) ) {
+                    mediatext.setValue(records[0].data.beschreibung);
+                } else if ( (current[3] !== '00') && (desk.layer === 2) ) {
+                    mediatext.setValue(records[0].data.beschreibung);
+                } else if ( (current[2] !== '00') && (desk.layer === 1) ) {
+                    mediatext.setValue(records[0].data.beschreibung);
+                } else if ( (current[1] !== '00') && (desk.layer === 0 )) {
+                    mediatext.setValue(records[0].data.beschreibung);
+                } 
             }
+
+            if ( current[1] !== '01') { 
+                if ((current[2] !== '00') && (desk.layer === 1 )) {
+                    mediatext.setValue(records[0].data.beschreibung);
+                } else if ((current[1] !== '00') && (desk.layer === 0 )) {
+                    mediatext.setValue(records[0].data.beschreibung);
+                } 
+            }
+        }
     },
 
     clearChildDesk: function(field) {

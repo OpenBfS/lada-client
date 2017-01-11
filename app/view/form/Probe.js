@@ -416,8 +416,9 @@ Ext.define('Lada.view.form.Probe', {
         }
     },
 
-    setMediaSN: function(ndx, media) {
+    setMediaSN: function(ndx, media, beschreibung) {
         if (ndx >= 12) {
+            mediabeschreibung.setValue(beschreibung);
             return;
         }
         var me = this;
@@ -443,7 +444,15 @@ Ext.define('Lada.view.form.Probe', {
                 return;
             }
             cbox.select(cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
-            me.setMediaSN(++ndx, media);
+            var mediatext = cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10));
+            if (mediatext !== null) {
+                if ( (ndx <= 3) && (media[1] === '01') && (mediatext.data.beschreibung !== "leer") ) {
+                    beschreibung = mediatext.data.beschreibung;
+                } else if ( (media[1] !== '01') && (mediatext.data.beschreibung !== "leer") && (ndx <= 1) ) {
+                    beschreibung = mediatext.data.beschreibung;
+                }
+            }
+            me.setMediaSN(++ndx, media, beschreibung);
         });
     },
 
