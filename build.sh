@@ -31,7 +31,7 @@ cp -r resources/lib/Blob.js-master $VERSION/resources/lib/
 cp -r resources/lib/FileSaver $VERSION/resources/lib/
 cp -r resources/lib/FileSaver.js-master $VERSION/resources/lib/
 cp -r resources/lib/OpenLayers $VERSION/resources/lib/
-cp -r resources/lib/openlayers-release-2.13.1 $VERSION/resources/lib/
+cp -r resources/lib/ol2-release-2.13.1 $VERSION/resources/lib/
 
 echo "Compressing...."
 tar -czf $VERSION.tgz $VERSION
