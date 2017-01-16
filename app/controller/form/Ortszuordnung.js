@@ -18,7 +18,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
     init: function() {
         this.control({
             'ortszuordnungform button[action=setOrt]': {
-                toggle: this.pickOrt
+                toggle: this.chooseLocation
             },
             'ortszuordnungform button[action=save]': {
                 click: this.save
@@ -142,6 +142,22 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             osg.removeListener('select',oForm.setOrt, oForm);
         }
      },
+
+    chooseLocation: function(button, pressed, opts) {
+        var win = button.up('window');
+        var gridPanel = win.down('panel[name=ortgrid]');
+        if (pressed) {
+            win.setHeight(Ext.getBody().getViewSize().height - 50);
+            win.setY(25);
+            gridPanel.show();
+        }
+        else {
+            var y = (Ext.getBody().getViewSize().height - 465) / 2
+            win.setHeight(465);
+            win.setY(y);
+            gridPanel.hide();
+        }
+    },
 
 
     /**

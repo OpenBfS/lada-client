@@ -538,20 +538,21 @@ Ext.define('Lada.view.form.Messprogramm', {
                 laborMstId = '';
             }
             var id = this.down('messstellelabor').store.count() + 1;
-			if ( messRecord.get('mstId') === messRecord.get('laborMstId') ) {
-				displayCombi = mstId.get('messStelle');
-			} else {
-				displayCombi = mstId.get('messStelle') + '/' + laborMstId
-			}
-			var newStore = Ext.create('Ext.data.Store', {
-				model: 'Lada.model.MessstelleLabor',
-				data: [{
-					id: id,
-					laborMst: messRecord.get('laborMstId'),
-					messStelle: messRecord.get('mstId'),
-					displayCombi: displayCombi
-				}]
-			});
+            if ( messRecord.get('mstId') === messRecord.get('laborMstId') ) {
+                displayCombi = mstId.get('messStelle');
+            } else {
+                displayCombi = mstId.get('messStelle') + '/' + laborMstId
+
+            }
+            var newStore = Ext.create('Ext.data.Store', {
+                model: 'Lada.model.MessstelleLabor',
+                data: [{
+                    id: id,
+                    laborMst: messRecord.get('laborMstId'),
+                    messStelle: messRecord.get('mstId'),
+                    displayCombi: displayCombi
+                }]
+            });
             this.down('messstellelabor').down('combobox').store = newStore;
             this.down('messstellelabor').setValue(id);
         }
@@ -578,9 +579,8 @@ Ext.define('Lada.view.form.Messprogramm', {
 
     setMediaSN: function(ndx, media, beschreibung) {
         var mediabeschreibung = this.getForm().findField('media');
-		
         if (ndx >= 12) {
-			mediabeschreibung.setValue(beschreibung);
+            mediabeschreibung.setValue(beschreibung);
             return;
         }
         var me = this;
@@ -606,14 +606,14 @@ Ext.define('Lada.view.form.Messprogramm', {
                 return;
             }
             cbox.select(cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
-			var mediatext = cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10));
-			if (mediatext !== null) {
-				if ( (ndx <= 3) && (media[1] === '01') && (mediatext.data.beschreibung !== "leer") ) {
-					beschreibung = mediatext.data.beschreibung;
-				} else if ( (media[1] !== '01') && (mediatext.data.beschreibung !== "leer") && (ndx <= 1) ) {
-					beschreibung = mediatext.data.beschreibung;
-				}
-			}
+            var mediatext = cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10));
+            if (mediatext !== null) {
+                if ( (ndx <= 3) && (media[1] === '01') && (mediatext.data.beschreibung !== "leer") ) {
+                    beschreibung = mediatext.data.beschreibung;
+                } else if ( (media[1] !== '01') && (mediatext.data.beschreibung !== "leer") && (ndx <= 1) ) {
+                    beschreibung = mediatext.data.beschreibung;
+                }
+            }
             me.setMediaSN(++ndx, media, beschreibung);
         });
     },

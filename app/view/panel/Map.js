@@ -29,10 +29,11 @@ Ext.define('Lada.view.panel.Map', {
      * OpenLayers map options.
      */
     mapOptions: {
-        maxExtent: new OpenLayers.Bounds(2.9, 42.95, 18.1, 60.6),
-        scales: [5000000, 3000000, 2000000, 1000000, 500000, 250000, 100000, 25000],
-        units: 'dd',
-        projection: new OpenLayers.Projection('EPSG:4326')
+        maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+        //scales: [5000000, 3000000, 2000000, 1000000, 500000, 250000, 100000, 25000],
+        //numZoomLevels: 7,
+        projection: 'EPSG:3857',
+        displayProjection: new OpenLayers.Projection('EPSG:4326')
     },
 
 
@@ -43,17 +44,16 @@ Ext.define('Lada.view.panel.Map', {
     initComponent: function() {
         var id = Ext.id();
         this.layers = [
-            new OpenLayers.Layer.WMS(
+            new OpenLayers.Layer.TMS(
                 'Standard' + id,
-                'http://osm.intevation.de/cgi-bin/standard.fcgi?',
+                'http://www.imis.bfs.de/mapcache/tms/',
                 {
-                    layers: 'OSM-WMS-Dienst',
-                    format: 'image/png',
-                    BGCOLOR: '0xFFFFFF'
-                }, {
+                    layername: 'osm_bfs_google@GoogleMapsCompatible',
                     isBaseLayer: true,
-                    buffer: 0,
-                    visibility: true
+                    displayInLayerSwitcher: false,
+                    type: 'png',
+                    visibility: true,
+                    projection: 'EPSG:3857',
                 })
         ];
         this.map = new OpenLayers.Map('map_' + id, {
@@ -138,7 +138,7 @@ Ext.define('Lada.view.panel.Map', {
 
         // Create a new Feature Layer and add it to the map
         if (!this.featureLayer) {
-            this.featureLayer = new OpenLayers.Layer.Vector('vector_' + this.map.name, {
+            this.featureLayer = new OpenLayers.Layer.Vector('alle Messpunkte', {
                 styleMap: new OpenLayers.StyleMap({
                     'default': new OpenLayers.Style(OpenLayers.Util.applyDefaults({
                         externalGraphic: 'resources/lib/OpenLayers/img/marker-green.png',
@@ -157,7 +157,11 @@ Ext.define('Lada.view.panel.Map', {
                         fontColor: 'blue',
                         fontWeight: 'bold'
                     })
-                })
+                }),
+                projection: new OpenLayers.Projection('EPSG:4326'),
+                preFeatureInsert: function(feature) {
+                    feature.geometry.transform(new OpenLayers.Projection('EPSG:4326'), new OpenLayers.Projection('EPSG:3857'));
+                }
             });
             this.selectControl = new OpenLayers.Control.SelectFeature(this.featureLayer, {
                 clickout: false,

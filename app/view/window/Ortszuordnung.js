@@ -21,7 +21,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     collapsible: true,
     maximizable: true,
     autoshow: true,
-    layout: 'vbox',
+    layout: 'fit',
     constrain: true,
 
     probe: null,
@@ -68,7 +68,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             handler: this.close
         }];
         this.width = 900;
-        this.height = 515;
+        this.height = 465;
         this.bodyStyle = {background: '#fff'};
 
         // add listeners to change the window appearence when it becomes inactive
@@ -81,16 +81,61 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             }
         });
 
+
         this.items = [{
-            xtype: 'ortszuordnungform',
-            layout: 'fit',
-            width: '100%',
-            margin: 5
-        }, {
-            xtype: 'ortpanel',
-            flex: 1,
-            toolbarPos: 'bottom',
-            margin: 5
+            layout: 'border',
+            bodyStyle: {background: '#fff'},
+            border: 0,
+            items: [{
+                xtype: 'map',
+                region: 'center',
+                layout: 'border',
+                margin: '13, 5, 10, 5',
+                minHeight: 380,
+                externalOrteStore: true
+            }, {
+                xtype: 'ortszuordnungform',
+                region: 'east',
+                minHeight: 380,
+            }, {
+                region: 'south',
+                border: 0,
+                layout: 'fit',
+                name: 'ortgrid',
+                hidden: true,
+                maxHeight: '45%',
+                items: [{
+                    xtype: 'ortstammdatengrid',
+                    maxHeight: '45%'
+                }],
+                dockedItems: [{
+                    xtype: 'toolbar',
+                    dock: 'bottom',
+                    border: '0, 1, 1, 1',
+                    style: {
+                        borderBottom: '1px solid #b5b8c8 !important',
+                        borderLeft: '1px solid #b5b8c8 !important',
+                        borderRight: '1px solid #b5b8c8 !important'
+                    },
+                    items: [{
+                        xtype: 'textfield',
+                        labelWidth: 50,
+                        fieldLabel: i18n.getMsg('ortszuordnung.ortsuche'),
+                    }, '->', {
+                        text: i18n.getMsg('orte.new'),
+                        action: 'createort',
+                    }, {
+                        text: i18n.getMsg('orte.frommap'),
+                        action: 'frommap',
+                    }, {
+                        text: i18n.getMsg('orte.clone'),
+                        action: 'clone',
+                    }, {
+                        text: i18n.getMsg('orte.select'),
+                        action: 'select',
+                    }]
+                }]
+            }]
         }];
         this.callParent(arguments);
     },
@@ -99,6 +144,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
      * Initialise the Data of this Window
      */
     initData: function() {
+        var me = this;
         if (!this.record) {
             this.record = Ext.create('Lada.model.Ortszuordnung');
             if (!this.record.get('letzteAenderung')) {
@@ -107,7 +153,36 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             this.record.set('probeId', this.probe.get('id'));
         }
         this.down('ortszuordnungform').setRecord(this.record);
-        this.down('ortpanel').setStore();
+        var map = this.down('map');
+        var osg = this.down('ortstammdatengrid');
+        var ortstore = Ext.create('Lada.store.Orte', {
+            defaultPageSize: 0,
+            autoLoad: false,
+            listeners: {
+                beforeload: {
+                    fn: function() {
+                        osg.setLoading(true);
+                        map.setLoading(true);
+                    }
+                },
+                load: {
+                    fn: function() {
+                        osg.setLoading(false);
+                        map.setLoading(false);
+                        osg.setStore(ortstore);
+                        var store = Ext.create('Lada.store.Orte', {
+                            autoLoad: false
+                        });
+                        store.add(ortstore.getRange());
+                        var rec = store.getById(me.record.get('ortId'));
+                        store.remove(rec);
+                        console.log(rec);
+                        map.addLocations(store);
+                    }
+                }
+            }
+        });
+        ortstore.load();
     },
 
     /**
@@ -116,8 +191,9 @@ Ext.define('Lada.view.window.Ortszuordnung', {
      */
     afterRender: function(){
         this.superclass.afterRender.apply(this, arguments);
-        var map = this.down('ortpanel').down('map');
-        map.map.zoomToMaxExtent();
+        var map = this.down('map');
+        map.map.addControl(new OpenLayers.Control.LayerSwitcher());
+        //map.map.zoomToMaxExtent();
     },
 
     /**
