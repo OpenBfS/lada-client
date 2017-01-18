@@ -45,7 +45,7 @@ Ext.define('Lada.view.FilterPanel', {
             }]
         }, {
             layout: {
-                type: 'hbox',
+                type: 'hbox'
             },
             border: false,
             items: [{

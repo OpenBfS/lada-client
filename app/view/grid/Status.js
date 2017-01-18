@@ -187,7 +187,7 @@ Ext.define('Lada.view.grid.Status', {
 
         this.store.load({
             params: {
-                messungsId: this.recordId,
+                messungsId: this.recordId
             }
         });
     },

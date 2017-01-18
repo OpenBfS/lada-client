@@ -20,7 +20,7 @@ Ext.define('Lada.controller.grid.Status', {
         this.control({
             'statusgrid': {
                 edit: this.gridSave,
-                canceledit: this.cancelEdit,
+                canceledit: this.cancelEdit
             },
             'statusgrid button[action=add]': {
                 click: this.add
