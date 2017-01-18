@@ -107,6 +107,7 @@ Ext.define('Lada.view.window.FileUpload', {
         var win = Ext.create('Lada.view.window.ImportResponse', {
             data: response.response.responseText,
             message: response.message,
+            modal: true,
             fileName: file.config.fileApiObject.name,
             title: 'Importergebnis'
         });

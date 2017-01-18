@@ -43,10 +43,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 change: this.checkPeriod
             },
             'messprogrammform [name="teilintervallVon"]': {
-                change: this.synchronizeSlider,
+                change: this.synchronizeSlider
             },
             'messprogrammform [name="teilintervallBis"]': {
-                change: this.synchronizeSlider,
+                change: this.synchronizeSlider
             },
             'messprogrammform probenintervall combobox': {
                 select: this.updateIntervalls

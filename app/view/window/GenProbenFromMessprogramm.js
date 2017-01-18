@@ -71,7 +71,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     timeout: 2 * 60 * 1000,
                     jsonData: jsondata,
                     success: me.onSuccess,
-                    failure: me.onFailure,
+                    failure: me.onFailure
                 });
             }
         }];

@@ -93,7 +93,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             dataIndex: 'messwertPzs',
             flex: 1,
             editor: {
-                xtype: 'expnumberfield',
+                xtype: 'expnumberfield'
             },
             renderer: function(value) {
                 if (!value || value === '') {
@@ -124,7 +124,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             dataIndex: 'nwgZuMesswert',
             flex: 1,
             editor: {
-                xtype: 'expnumberfield',
+                xtype: 'expnumberfield'
             },
             renderer: function(value) {
                 if (!value || value === '') {
