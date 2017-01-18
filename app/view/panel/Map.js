@@ -27,11 +27,12 @@ Ext.define('Lada.view.panel.Map', {
     /**
      * @cfg
      * OpenLayers map options.
+     * Please note that TMS zoom levels are roughly as this:
+     * 7 = 1:4000000 14 = 1:35000
      */
     mapOptions: {
         maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
-        //scales: [5000000, 3000000, 2000000, 1000000, 500000, 250000, 100000, 25000],
-        //numZoomLevels: 7,
+        numZoomLevels: 15,
         projection: 'EPSG:3857',
         displayProjection: new OpenLayers.Projection('EPSG:4326')
     },
@@ -59,7 +60,10 @@ Ext.define('Lada.view.panel.Map', {
         this.map = new OpenLayers.Map('map_' + id, {
             controls: [],
             tileManager: null,
-            zoomMethod: null
+            zoomMethod: null,
+            // initializing with view centered on germany
+            center: new OpenLayers.LonLat(1160000,6694000),
+            zoom: 7
         });
         this.map.setOptions(this.mapOptions);
         this.map.addLayers(this.layers);
@@ -89,12 +93,20 @@ Ext.define('Lada.view.panel.Map', {
         if (!record.get('id') || record.get('id') === '') {
             return;
         }
-        var feature = this.featureLayer.getFeaturesByAttribute('id', record.get('id'));
+        var feature = this.featureLayer.getFeaturesByAttribute('id', record.get('id'))[0];
         this.map.setCenter(
-            new OpenLayers.LonLat(feature[0].geometry.x, feature[0].geometry.y));
-        this.map.zoomToScale(this.mapOptions.scales[5]);
-        this.selectControl.unselectAll();
-        this.selectControl.select(feature[0]);
+            new OpenLayers.LonLat(feature.geometry.x, feature.geometry.y));
+        this.map.zoomTo(12);
+
+        if (this.selectedFeatureLayer) {
+            if (this.selectedFeatureLayer.features.lenght > 0) {
+                this.featureLayer.addFeatures(this.selectedFeatureLayer.features);
+            }
+            this.selectedFeatureLayer.addFeatures([feature]);
+        } else {
+            this.selectControl.select(feature);
+        }
+        //TODO: the text of new features is still drawn on top of the old feature's text
     },
 
     activateDraw: function(record) {
@@ -138,7 +150,7 @@ Ext.define('Lada.view.panel.Map', {
 
         // Create a new Feature Layer and add it to the map
         if (!this.featureLayer) {
-            this.featureLayer = new OpenLayers.Layer.Vector('alle Messpunkte', {
+            this.featureLayer = new OpenLayers.Layer.Vector( 'alle Messpunkte', {
                 styleMap: new OpenLayers.StyleMap({
                     'default': new OpenLayers.Style(OpenLayers.Util.applyDefaults({
                         externalGraphic: 'resources/lib/OpenLayers/img/marker-green.png',
@@ -158,9 +170,10 @@ Ext.define('Lada.view.panel.Map', {
                         fontWeight: 'bold'
                     })
                 }),
-                projection: new OpenLayers.Projection('EPSG:4326'),
+                projection: new OpenLayers.Projection('EPSG:3857'),
                 preFeatureInsert: function(feature) {
-                    feature.geometry.transform(new OpenLayers.Projection('EPSG:4326'), new OpenLayers.Projection('EPSG:3857'));
+                    feature.geometry.transform(new OpenLayers.Projection('EPSG:4326'),
+                                               new OpenLayers.Projection('EPSG:3857'));
                 }
             });
             this.selectControl = new OpenLayers.Control.SelectFeature(this.featureLayer, {
@@ -169,6 +182,7 @@ Ext.define('Lada.view.panel.Map', {
                 multiple: false,
                 hover: false,
                 onSelect: me.selectedFeature,
+                layers: [me.featureLayer],
                 scope: me
             });
             this.map.addControl(this.selectControl);
@@ -177,9 +191,8 @@ Ext.define('Lada.view.panel.Map', {
         this.featureLayer.removeAllFeatures();
         this.featureLayer.addFeatures(locationFeatures);
         this.map.addLayer(this.featureLayer);
-
+        this.featureLayer.setZIndex(500);
     },
-
 
     /**
      * @private
@@ -197,7 +210,8 @@ Ext.define('Lada.view.panel.Map', {
     /**
      * Forward OpenlayersEvent to EXT
      */
-    selectedFeature: function() {
+    selectedFeature: function(feature) {
+        this.selectControl.unselectAll({except:feature});
         this.fireEvent('featureselected', this, arguments);
     },
 

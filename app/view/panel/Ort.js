@@ -95,7 +95,7 @@ Ext.define('Lada.view.panel.Ort', {
 
     afterRender: function() {
         this.superclass.afterRender.apply(this, arguments);
-        this.down('map').map.zoomToMaxExtent();
+        this.down('map').map.zoomTo(6);
     },
 
     setStore: function(store) {

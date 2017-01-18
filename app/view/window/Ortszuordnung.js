@@ -15,6 +15,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
 
     requires: [
         'Lada.view.form.Ortszuordnung',
+        'Lada.view.form.Ortserstellung',
         'Lada.view.panel.Ort'
     ],
 
@@ -103,10 +104,9 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 layout: 'fit',
                 name: 'ortgrid',
                 hidden: true,
-                maxHeight: '45%',
+                maxHeight: 240,
                 items: [{
-                    xtype: 'ortstammdatengrid',
-                    maxHeight: '45%'
+                    xtype: 'ortstammdatengrid'
                 }],
                 dockedItems: [{
                     xtype: 'toolbar',
@@ -123,20 +123,18 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                         fieldLabel: i18n.getMsg('ortszuordnung.ortsuche'),
                     }, '->', {
                         text: i18n.getMsg('orte.new'),
-                        action: 'createort',
+                        action: 'createort'
                     }, {
                         text: i18n.getMsg('orte.frommap'),
-                        action: 'frommap',
+                        action: 'frommap'
                     }, {
                         text: i18n.getMsg('orte.clone'),
-                        action: 'clone',
-                    }, {
-                        text: i18n.getMsg('orte.select'),
-                        action: 'select',
+                        action: 'clone'
                     }]
                 }]
             }]
         }];
+
         this.callParent(arguments);
     },
 
@@ -170,19 +168,35 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                         osg.setLoading(false);
                         map.setLoading(false);
                         osg.setStore(ortstore);
-                        var store = Ext.create('Lada.store.Orte', {
-                            autoLoad: false
-                        });
-                        store.add(ortstore.getRange());
-                        var rec = store.getById(me.record.get('ortId'));
-                        store.remove(rec);
-                        console.log(rec);
-                        map.addLocations(store);
+                        map.addLocations(ortstore);
+                        map.featureLayer.setVisibility(false);
+                        map.selectedFeatureLayer = new OpenLayers.Layer.Vector(
+                            'gewählter Messpunkt', {
+                                styleMap: new OpenLayers.StyleMap({
+                                    externalGraphic: 'resources/lib/OpenLayers/img/marker-blue.png',
+                                    pointRadius: 10,
+                                    label: '${bez}',
+                                    labelAlign: 'rt',
+                                    fontColor: 'blue',
+                                    fontWeight: 'bold',
+                                }),
+                                displayInLayerSwitcher: false,
+                                projection: new OpenLayers.Projection('EPSG:3857')
+                            });
+                        map.map.addLayer(map.selectedFeatureLayer);
+                        map.selectedFeatureLayer.setZIndex(499);
+                        var ortId = me.record.get('ortId');
+                        if (ortId){
+                            var feat = map.featureLayer.getFeaturesByAttribute('id', ortId)[0];
+                            map.selectControl.select(feat);
+                        }
                     }
                 }
             }
         });
         ortstore.load();
+        map.addListener('featureselected', osg.selectOrt, osg);
+        osg.addListener('select', map.selectFeature, map);
     },
 
     /**
@@ -193,7 +207,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         this.superclass.afterRender.apply(this, arguments);
         var map = this.down('map');
         map.map.addControl(new OpenLayers.Control.LayerSwitcher());
-        //map.map.zoomToMaxExtent();
     },
 
     /**

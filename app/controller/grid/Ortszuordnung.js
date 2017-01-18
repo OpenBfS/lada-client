@@ -13,7 +13,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     extend: 'Ext.app.Controller',
 
     requires: [
-        'Lada.view.window.Ortszuordnung'
+        'Lada.view.window.Ortszuordnung',
+        'Lada.view.form.Ortserstellung'
     ],
 
     /**
@@ -30,6 +31,15 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             },
             'ortszuordnunggrid button[action=delete]': {
                 click: this.remove
+            },
+            'ortszuordnungwindow toolbar button[action=createort]':{
+                click: this.createort
+            },
+            'ortszuordnungwindow toolbar button[action=frommap]':{
+                click: this.frommap
+            },
+            'ortszuordnungwindow toolbar button[action=clone]':{
+                click: this.cloneort
             }
         });
     },
@@ -42,7 +52,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var probe = grid.up('window').record;
         var win = Ext.create('Lada.view.window.Ortszuordnung', {
             parentWindow: grid.up('window'),
-            probe: grid.up('window').down('probeform').record,
+            probe: probe,
             record: record,
             grid: grid
         });
@@ -103,5 +113,42 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             }
         });
         grid.down('button[action=delete]').disable();
+    },
+
+    /**
+     * Opens the form for a new Messpunkt
+     */
+    createort: function() {
+        Ext.create('Lada.view.form.Ortserstellung').show();
+    },
+
+    /**
+     *
+     * Opens the form for a new Messpunkt, with prefilled coordinates.
+     * TODO Not functional yet
+     */
+    frommap: function(button) {
+        var map = button.up('ortszuordnungwindow').down('map');
+        // map.getClick();
+        //TODO: wait for click return
+        Ext.create('Lada.view.form.Ortserstellung', {
+            presets: {
+                kda_id: 4,
+                koord_x_extern: 35000000, //TODO dummy values
+                koord_y_extern: 1000000
+            }
+        }).show();
+    },
+
+    /**
+     * Opens the form for a new Messpunkt, with all values prefilled from the currently
+     * selected item
+     */
+    cloneort: function(button) {
+        var grid = button.up('ortszuordnungwindow').down('ortstammdatengrid').getView();
+        var selected = grid.getSelectionModel().getSelection()[0];
+         Ext.create('Lada.view.form.Ortserstellung', {
+             presets: selected.data
+        }).show();
     }
 });
