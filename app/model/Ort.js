@@ -29,7 +29,13 @@ Ext.define('Lada.model.Ort', {
     }, {
         name: 'staatId'
     }, {
-        name: 'kdaId'
+        name: 'kdaId',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
         name: 'ozId',
         serialize: function(v) {
@@ -59,9 +65,21 @@ Ext.define('Lada.model.Ort', {
     }, {
         name: 'hoeheLand'
     }, {
-        name: 'koordXExtern'
+        name: 'koordXExtern',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
-        name: 'koordYExtern'
+        name: 'koordYExtern',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
         name: 'longitude',
         type: 'float'

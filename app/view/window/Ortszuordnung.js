@@ -153,7 +153,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         this.down('ortszuordnungform').setRecord(this.record);
         var map = this.down('map');
         var osg = this.down('ortstammdatengrid');
-        var ortstore = Ext.create('Lada.store.Orte', {
+        this.ortstore = Ext.create('Lada.store.Orte', {
             defaultPageSize: 0,
             autoLoad: false,
             listeners: {
@@ -167,8 +167,8 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                     fn: function() {
                         osg.setLoading(false);
                         map.setLoading(false);
-                        osg.setStore(ortstore);
-                        map.addLocations(ortstore);
+                        osg.setStore(me.ortstore);
+                        map.addLocations(me.ortstore);
                         map.featureLayer.setVisibility(false);
                         map.selectedFeatureLayer = new OpenLayers.Layer.Vector(
                             'gewählter Messpunkt', {
@@ -194,7 +194,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 }
             }
         });
-        ortstore.load();
+        this.ortstore.load();
         map.addListener('featureselected', osg.selectOrt, osg);
         osg.addListener('select', map.selectFeature, map);
     },
