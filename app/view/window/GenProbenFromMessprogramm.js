@@ -106,8 +106,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 layout: 'fit',
                 html: '<p>'
                     + i18n.getMsg('nameofmessprogramm')
-                    + '<br/>'
-                    + this.record.get('name')
                     + '</p>'
             }, {
                 xtype: 'panel',
