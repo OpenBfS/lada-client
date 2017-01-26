@@ -119,7 +119,9 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                     },
                     items: [{
                         xtype: 'textfield',
+                        name: 'search',
                         labelWidth: 50,
+                        enableKeyEvents: true,
                         fieldLabel: i18n.getMsg('ortszuordnung.ortsuche'),
                     }, '->', {
                         text: i18n.getMsg('orte.new'),

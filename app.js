@@ -10,7 +10,8 @@ Ext.Loader.setConfig({
     enabled: true,
     paths: {
         'Ext.i18n': 'resources/lib/ext/i18n/',
-        'Ext.ux.upload': 'resources/lib/ext/upload'
+        'Ext.ux.upload': 'resources/lib/ext/upload',
+        'Ext.ux.util': 'resources/lib/ext/util'
     }
 });
 
@@ -319,6 +320,7 @@ Ext.application({
         'Lada.controller.form.Messprogramm',
         'Lada.controller.grid.MessprogrammKategorie',
         'Lada.controller.grid.Messmethode',
-        'Lada.controller.FilterManagement'
+        'Lada.controller.FilterManagement',
+        'Ext.ux.util.AlwaysOnTop'
         ]
 });

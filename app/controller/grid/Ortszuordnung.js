@@ -14,8 +14,12 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
     requires: [
         'Lada.view.window.Ortszuordnung',
-        'Lada.view.window.Ortserstellung'
+        'Lada.view.form.Ortserstellung',
+        'Lada.view.window.OrtFilter'
     ],
+
+    resultPanel: null,
+    searchField: null,
 
     /**
      * Inhitialize the controller
@@ -40,6 +44,18 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             },
             'ortszuordnungwindow toolbar button[action=clone]':{
                 click: this.cloneort
+            },
+            'ortszuordnungwindow toolbar textfield[name=search]': {
+                keyup: this.search
+            },
+            'ortfilterwindow grid[name=messpunkte]': {
+                itemdblclick: this.selectedMesspunkt
+            },
+            'ortfilterwindow grid[name=verwaltungseinheiten]': {
+                itemdblclick: this.selectedVerwaltungseinheit
+            },
+            'ortfilterwindow grid[name=staaten]': {
+                itemdblclick: this.selectedStaat
             }
         });
     },
@@ -119,21 +135,25 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * Opens the form for a new Messpunkt
      */
     createort: function() {
-        Ext.create('Lada.view.window.Ortserstellung',{
-            parentWindow: button.up('ortszuordnungwindow')
-        }).show();
+        Ext.create('Lada.view.form.Ortserstellung').show();
     },
 
     /**
      *
-     * Creates an event listener for a map click
+     * Opens the form for a new Messpunkt, with prefilled coordinates.
+     * TODO Not functional yet
      */
     frommap: function(button) {
         var map = button.up('ortszuordnungwindow').down('map');
-        var me = this;
-        map.map.events.register('click', button, me.newOrtfromMapClick);
-        // TODO visual feedback that map click is active.
-        // TODO Deactivate event listener if button is destroyed
+        // map.getClick();
+        //TODO: wait for click return
+        Ext.create('Lada.view.form.Ortserstellung', {
+            presets: {
+                kda_id: 4,
+                koord_x_extern: 35000000, //TODO dummy values
+                koord_y_extern: 1000000
+            }
+        }).show();
     },
 
     /**
@@ -143,29 +163,96 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     cloneort: function(button) {
         var grid = button.up('ortszuordnungwindow').down('ortstammdatengrid').getView();
         var selected = grid.getSelectionModel().getSelection()[0];
-         Ext.create('Lada.view.window.Ortserstellung', {
-             record: Ext.create('Lada.model.Ort', selected.data),
-             parentWindow: button.up('ortszuordnungwindow')
+         Ext.create('Lada.view.form.Ortserstellung', {
+             presets: selected.data
         }).show();
     },
 
     /**
-     * Gets the clicked map's coordinates and opens a new Messpunkt window with coordinates prefilled
+     * Search triggered by textfield key event.
      */
-    newOrtfromMapClick: function(evt) {
-        var me = this; //this = button(action:frommap)
-        var map = this.up('ortszuordnungwindow').down('map').map;
-        var lonlat = map.getLonLatFromViewPortPx(evt.xy).transform(new OpenLayers.Projection('EPSG:3857'),
-                                                                   new OpenLayers.Projection('EPSG:4326'));
-        var controller = Lada.app.getController('Lada.controller.grid.Ortszuordnung');
-        map.events.unregister('click', this, controller.newOrtfromMapClick);
-        Ext.create('Lada.view.window.Ortserstellung', {
-            record: Ext.create('Lada.model.Ort',{
-                koordXExtern: lonlat.lon,
-                koordYExtern: lonlat.lat,
-                kdaId : 4
-            }),
-            parentWindow: this.up('ortszuordnungwindow')
-        }).show();
+    search: function(field, evt, opts) {
+        this.searchField = field;
+        if ((evt.getKey() == 13 || evt.getKey() == 8) && field.getValue() && field.getValue().length > 0) {
+            this.execSearch(field, field.getValue());
+        }
+        if (field.getValue().length === 0) {
+            this.resultPanel.hide();
+            return;
+        }
+        if (field.getValue().length < 3) {
+            return;
+        }
+        this.execSearch(field, field.getValue());
+    },
+
+    /*
+     * Execute search in stores (ort, verwaltungseinheit and staat) and
+     * display the resultset.
+     */
+    execSearch: function(field, filter) {
+        // Filter stores
+        var messpunkte = Ext.data.StoreManager.get('orte');
+        var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
+        var staaten = Ext.data.StoreManager.get('staaten');
+        messpunkte.clearFilter(true);
+        verwaltungseinheiten.clearFilter(true);
+        staaten.clearFilter(true);
+        messpunkte.filter({filterFn: function(item) {
+                if (item.get('ortId').indexOf(filter) > -1) {
+                    return true;
+                }
+                if (item.get('kurztext').indexOf(filter) > -1) {
+                    return true;
+                }
+                if (item.get('langtext').indexOf(filter) > -1) {
+                    return true;
+                }
+                if (item.get('berichtstext') &&
+                    item.get('berichtstext').indexOf(filter) > -1) {
+                    return true;
+                }
+                if (item.get('gemId').indexOf(filter) > -1) {
+                    return true;
+                }
+            }});
+        verwaltungseinheiten.filter('bezeichnung', filter);
+        staaten.filter('staat', filter);
+
+        if (!this.resultPanel) {
+            this.resultPanel = Ext.create('Lada.view.window.OrtFilter', {
+                x: 500,
+                y: 500,
+                alwaysOnTop: true
+            });
+        }
+        this.resultPanel.show();
+        this.resultPanel.updateGrids(messpunkte, verwaltungseinheiten, staaten);
+        this.resultPanel.reposition(field.getX() + field.getLabelWidth(), field.getY());
+        field.focus();
+    },
+
+    selectedMesspunkt: function(grid, record) {
+        var win = grid.up('window');
+        win.hide();
+        this.searchField.reset();
+        var grid = this.searchField.up('panel').down('ortstammdatengrid');
+        grid.getSelectionModel().select(record);
+        grid.getView().focusRow(record);
+        console.log(record);
+    },
+
+    selectedVerwaltungseinheit: function(grid, record) {
+        var win = grid.up('window');
+        win.hide();
+        this.searchField.reset();
+        console.log(record);
+    },
+
+    selectedStaat: function(grid, record) {
+        var win = grid.up('window');
+        win.hide();
+        this.searchField.reset();
+        console.log(record);
     }
 });
