@@ -9,25 +9,29 @@
 /**
  * Window to add a Ort to a Messprogramm
  */
+// TODO: This is >80% identical to Lada.view.form.Ortszuordnung.
+// Differences: This has no ortszuordnung record. It only receives and sends
+// an ortId
+
 Ext.define('Lada.view.window.MessprogrammOrt', {
     extend: 'Ext.window.Window',
     alias: 'widget.messprogrammort',
 
     requires: [
-        'Lada.model.Ort',
+        'Lada.view.form.Ortserstellung',
         'Lada.view.panel.Map',
-        'Lada.view.widget.Location',
-        'Lada.view.form.Location'
+        'Lada.view.grid.Orte'
     ],
 
     collapsible: true,
     maximizable: true,
     autoshow: true,
-    layout: 'border',
+    layout: 'fit',
     constrain: true,
 
     parentWindow: null,
-    record: null,
+
+    ortId: null,
 
     /**
      * This function initialises the Window
@@ -49,9 +53,6 @@ Ext.define('Lada.view.window.MessprogrammOrt', {
                     .ortWindow = null;
            }
         }];
-        this.width = 900;
-        this.height = 515;
-        this.bodyStyle = {background: '#fff'};
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
@@ -68,120 +69,94 @@ Ext.define('Lada.view.window.MessprogrammOrt', {
         });
 
         this.items = [{
-            region: 'west',
-            border: 0,
-            layout: 'vbox',
-            items: [{
-                xtype: 'fieldset',
-                title: i18n.getMsg('ortId'),
-                margin: 5,
-                items: [{
-                    border: 0,
-                    margin: '0, 0, 10, 0',
-                    items: [{
-                        xtype: 'location',
-                        fieldLabel: i18n.getMsg('ortId'),
-                        labelWidth: 80,
-                        width: 280,
-                        forceSelection: true,
-                        name: 'ortId',
-                        listeners: {//Update MapPanel etc...
-                            select: this.updateDetails
-                        }
-                    }]
-                }]
-            }, {
-                xtype: 'locationform',
-                margin: 5,
-                recordId: this.record.get('ortId')
-            }]
-        }, {
-            xtype: 'fset',
-            bodyStyle: {
-                background: '#fff'
-            },
             layout: 'border',
-            name: 'mapfield',
-            title: 'Karte',
-            region: 'center',
-            padding: '5, 5',
-            margin: 5,
+            bodyStyle: {background: '#fff'},
+            border: 0,
             items: [{
                 xtype: 'map',
                 region: 'center',
                 layout: 'border',
-                record: this.record.get('ortId') ? this.record : null,
-                bodyStyle: {
-                    background: '#fff'
-                },
-                name: 'map',
-                listeners: { //A listener which listens to the mappanels featureselected event
-                    featureselected: this.selectedFeature
-                }
+                margin: '13, 5, 10, 5',
+                minHeight: 380,
+                externalOrteStore: true
+            }, {
+                xtype: 'panel',
+                layout: 'hbox',
+                border: 0,
+                margin: '0, 0, 10, 0',
+                dockedItems: [{
+                    xtype: 'toolbar',
+                    dock: 'bottom',
+                    border: '0, 1, 1, 1',
+                    style: {
+                        borderBottom: '1px solid #b5b8c8 !important',
+                        borderLeft: '1px solid #b5b8c8 !important',
+                        borderRight: '1px solid #b5b8c8 !important'
+                    },
+                    items: [{
+                        text: i18n.getMsg('ortszuordnung.form.setOrt'),
+                        tooltip: i18n.getMsg('ortszuordnung.form.setOrt.qtip'),
+                        icon: 'resources/img/dialog-ok-apply.png',
+                        action: 'setOrt',
+                        enableToggle: true,
+                        disabled: true
+                    }, '->', {
+                        text: i18n.getMsg('save'),
+                        tooltip: i18n.getMsg('save.qtip'),
+                        icon: 'resources/img/dialog-ok-apply.png',
+                        action: 'save',
+                        disabled: true
+                    }, {
+                        text: i18n.getMsg('discard'),
+                        tooltip: i18n.getMsg('discard.qtip'),
+                        icon: 'resources/img/dialog-cancel.png',
+                        action: 'discard',
+                        disabled: true
+                    }]
+                }],
+                items: [Ext.create('Lada.view.form.OrtInfo')]
+            }, {
+                region: 'south',
+                border: 0,
+                layout: 'fit',
+                name: 'ortgrid',
+                hidden: true,
+                maxHeight: 240,
+                items: [{
+                    xtype: 'ortstammdatengrid'
+                }],
+                dockedItems: [{
+                    xtype: 'toolbar',
+                    dock: 'bottom',
+                    border: '0, 1, 1, 1',
+                    style: {
+                        borderBottom: '1px solid #b5b8c8 !important',
+                        borderLeft: '1px solid #b5b8c8 !important',
+                        borderRight: '1px solid #b5b8c8 !important'
+                    },
+                    items: [{
+                        xtype: 'textfield',
+                        name: 'search',
+                        labelWidth: 50,
+                        enableKeyEvents: true,
+                        fieldLabel: i18n.getMsg('ortszuordnung.ortsuche'),
+                    }, '->', {
+                        text: i18n.getMsg('orte.new'),
+                        action: 'createort'
+                    }, {
+                        text: i18n.getMsg('orte.frommap'),
+                        action: 'frommap'
+                    }, {
+                        text: i18n.getMsg('orte.clone'),
+                        action: 'clone'
+                    }]
+                }]
             }]
         }];
         this.callParent(arguments);
+        //TODO: load the passed OrtId
     },
 
-    /**
-     * Initialise the Data of this Window.
-     */
-    initData: function() {
-        //Only do this if an OrtId exists...
-        var ortId = this.record.get('ortId');
-
-        if (ortId) {
-            Ext.ClassManager.get('Lada.model.Ort').load(ortId, {
-                failure: function(record, action) {
-                    // TODO
-                },
-                success: function(record, response) {
-                    var me = this;
-                    if (record.get('treeModified') < record.get('parentModified')) {
-                        Ext.Msg.show({
-                            title: 'Messprogramm nicht aktuell!',
-                            msg: 'Das zugehörige Messprogramm wurde verändert.\nMöchten Sie zu dem Messprogramm zurückkehren und neu laden?\nOhne das erneute Laden des Messprogrammes wird das Speichern des Ortes nicht möglich sein.',
-                            buttons: Ext.Msg.OKCANCEL,
-                            icon: Ext.Msg.WARNING,
-                            closable: false,
-                            fn: function(button) {
-                                if (button === 'ok') {
-                                    me.close();
-                                    me.parentWindow.initData();
-                                    me.parentWindow.down('messprogrammform')
-                                        .ortWindow = null;
-                                }
-                                else {
-                                    me.record.set('treeModified', me.probe.get('treeModified'));
-                                }
-                            }
-                        });
-                    }
-                    this.record = record;
-                },
-                scope: this
-            });
-        }
-    },
-
-    /**
-     * @private
-     * Override to display and update the map view in the panel.
-     */
-    afterRender: function(){
-        this.superclass.afterRender.apply(this, arguments);
-        var map = this.down('map');
-        if (this.record.get('ortId')) {
-            map.selectFeature(this.record.get('ortId'));
-        }
-        else {
-            map.map.zoomToMaxExtent();
-        }
-    },
-
-    /**
-     * This function is used by the MapPanel, when a Feature was selected
-     */
     selectedFeature: function(context, args) {
     var feature = args[0];
         if (feature.attributes.id &&

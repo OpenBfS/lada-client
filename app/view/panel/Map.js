@@ -63,10 +63,10 @@ Ext.define('Lada.view.panel.Map', {
             zoomMethod: null,
             // initializing with view centered on germany
             center: new OpenLayers.LonLat(1160000,6694000),
-            zoom: 7
         });
         this.map.setOptions(this.mapOptions);
         this.map.addLayers(this.layers);
+        this.map.zoomTo(6);
         var keyControl = new OpenLayers.Control.KeyboardDefaults();
         this.map.addControl(keyControl);
         keyControl.activate();

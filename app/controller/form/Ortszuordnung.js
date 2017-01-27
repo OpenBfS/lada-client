@@ -27,7 +27,8 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 click: this.discard
             },
             'ortszuordnungform': {
-                dirtychange: this.dirtyForm
+                validitychange: this.validityChange,
+                dirtychange: this.validityChange
             }
         });
     },
@@ -84,7 +85,9 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
                 var json = response.request.scope.reader.jsonData;
                 if (json) {
-                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
+                    if(Object.keys(json.errors).length > 0 ||
+                        Object.keys(json.warnings).length > 0) {
+
                         formPanel.setMessages(json.errors, json.warnings);
                     }
 
@@ -118,65 +121,53 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         }
         catch (e) {
         }
-        //set undirty.
-        formPanel.fireEvent('dirtychange', formPanel.getForm(), false);
     },
 
     /**
      * When the button is Active, a Record can be selected.
      * If the Record was selected from a grid this function
-     *  sets the ortzuordnung.
+     * sets the ortzuordnung.
      * TODO: Check if the selected Record is a ORT
-     * TODO: Enable picking from Maps
      */
-     pickOrt: function(button, pressed, opts) {
-        var i18n = Lada.getApplication().bundle;
-        var oForm = button.up('form');
-        var osg = button.up('window').down('ortstammdatengrid');
-        if (button.pressed) {
-            button.setText(i18n.getMsg('ortszuordnung.form.setOrt.pressed'));
-            osg.addListener('select',oForm.setOrt, oForm);
-        }
-        else {
-            button.setText(i18n.getMsg('ortszuordnung.form.setOrt'));
-            osg.removeListener('select',oForm.setOrt, oForm);
-        }
-     },
-
     chooseLocation: function(button, pressed, opts) {
+        var i18n = Lada.getApplication().bundle;
         var win = button.up('window');
         var gridPanel = win.down('panel[name=ortgrid]');
+        var osg = win.down('ortstammdatengrid');
+        var oForm = button.up('form');
         if (pressed) {
             win.setHeight(Ext.getBody().getViewSize().height - 50);
+            button.setText(i18n.getMsg('ortszuordnung.form.setOrt.pressed'));
             win.setY(25);
             gridPanel.show();
+            osg.addListener('select',oForm.setOrt, oForm);
+
         }
         else {
             var y = (Ext.getBody().getViewSize().height - 465) / 2
             win.setHeight(465);
             win.setY(y);
+            button.setText(i18n.getMsg('ortszuordnung.form.setOrt'));
             gridPanel.hide();
+            osg.removeListener('select',oForm.setOrt, oForm);
         }
     },
 
-
     /**
-     * The dirtyForm function enables or disables the save and discard
+     * The validitychange function enables or disables the save and discard
      * button which are present in the toolbar of the form.
-     * The Buttons are only active if the content of the form was altered
-     * (the form is dirty).
      */
-    dirtyForm: function(form, dirty) {
-        if (dirty) {
-            if (form.getValues().ortId !== ''
-                && /[UEZA]/.test(form.getValues().ortszuordnungTyp)
-               ) {
-                form.owner.down('button[action=save]').setDisabled(false);
-            }
+    validityChange: function(form, valid) {
+        if (form.isDirty()) {
             form.owner.down('button[action=discard]').setDisabled(false);
-        }
-        else {
-            form.owner.down('button[action=save]').setDisabled(true);
+            if ( valid && form.getValues().ortId !== ''
+                && /[UEZA]/.test(form.getValues().ortszuordnungTyp)
+            ) {
+                form.owner.down('button[action=save]').setDisabled(false);
+            } else {
+                form.owner.down('button[action=save]').setDisabled(true);
+            }
+        } else {
             form.owner.down('button[action=discard]').setDisabled(true);
         }
     }

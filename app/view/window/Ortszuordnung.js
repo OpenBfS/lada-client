@@ -16,7 +16,8 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     requires: [
         'Lada.view.form.Ortszuordnung',
         'Lada.view.form.Ortserstellung',
-        'Lada.view.panel.Ort'
+        'Lada.view.panel.Map',
+        'Lada.view.grid.Orte'
     ],
 
     collapsible: true,
@@ -26,6 +27,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     constrain: true,
 
     probe: null,
+
     parentWindow: null,
     record: null,
     grid: null,
@@ -35,7 +37,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-
         this.title = i18n.getMsg('ortszuordnung.window.title');
 
         if (this.record && this.probe) {
@@ -62,7 +63,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             + ' '
                             + i18n.getMsg('create');
         }
-
         this.buttons = [{
             text: i18n.getMsg('close'),
             scope: this,
@@ -81,7 +81,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 this.getEl().addCls('window-inactive');
             }
         });
-
 
         this.items = [{
             layout: 'border',

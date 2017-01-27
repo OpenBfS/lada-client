@@ -16,6 +16,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     model: 'Lada.model.Ortszuordnung',
 
     requires: [
+        'Lada.view.form.OrtInfo',
         'Lada.view.widget.Verwaltungseinheit',
         'Lada.view.widget.Staat'
     ],
@@ -30,6 +31,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        var me = this;
         this.items = [{
             xtype: 'fieldset',
             title: i18n.getMsg('ortszuordnung.form.fset.title'),
@@ -75,7 +77,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                     items: [{
                         layout: 'vbox',
                         border: 0,
-                        margin: '0, 10, 0, 0',
+                        margin: '0, 20, 0, 0',
                         items: [{
                             xtype: 'tfield',
                             labelWidth: 125,
@@ -87,82 +89,39 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                             labelWidth: 125,
                             maxLength: 1,
                             allowBlank: false,
-                            regex: /[UEZA]/,
+                            regex: /[UEZA]{1}/,
                             activeError: 'U, E, Z oder A eingeben',
                             name: 'ortszuordnungTyp',
-                            fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp')
+                            fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp'),
+
                         }, {
-                            xtype: 'displayfield',
-                            labelWidth: 125,
-                            fieldLabel: i18n.getMsg('orte.ortid'),
+                            // this field is hidden because the user doesn't
+                            // need to know the internal ortID
+                            xtype: 'textfield',
+                            // fieldLabel: i18n.getMsg('orte.ortid'),
+                            allowBlank: false,
+                            regex: /^[0-9]{1,45}$/,
                             submitValue: true,
-                            name: 'ortId'
+                            hidden: true,
+                            name: 'ortId',
+                            listeners: {
+                                change: me.changedOrt
+                            }
                         }]
-                    }, {
-                        layout: 'vbox',
-                        flex: 1,
-                        margin: '0, 10, 0, 0',
-                        border: 0,
-                        items: [{
-                            xtype: 'displayfield',
-                            labelWidth: 125,
-                            fieldLabel: i18n.getMsg('orte.kurztext'),
-                            name: 'kurztext'
-                        }, {
-                            xtype: 'displayfield',
-                            labelWidth: 125,
-                            fieldLabel: i18n.getMsg('orte.langtext'),
-                            name: 'langtext'
-                        }, {
-                            xtype: 'displayfield',
-                            labelWidth: 125,
-                            fieldLabel: i18n.getMsg('staat'),
-                            name: 'staatISO'
-                        }, {
-                            xtype: 'displayfield',
-                            labelWidth: 125,
-                            fieldLabel: i18n.getMsg('orte.gemeinde'),
-                            name: 'gemeinde'
-                        }, {
-                            xtype: 'displayfield',
-                            labelWidth: 125,
-                            fieldLabel: i18n.getMsg('orte.gemeindename'),
-                            name: 'gemeinde'
-                        }, {
-                            xtype: 'displayfield',
-                            labelWidth: 125,
-                            fieldLabel: i18n.getMsg('orte.kda'),
-                            name: 'kdaId'
-                        }, {
-                            xtype: 'displayfield',
-                            labelWidth: 125,
-                            fieldLabel: i18n.getMsg('orte.koordx'),
-                            name: 'koordXExtern'
-                        }, {
-                            xtype: 'displayfield',
-                            labelWidth: 125,
-                            fieldLabel: i18n.getMsg('orte.koordy'),
-                            name: 'koordYExtern'
-                        }]
-                    }]
+                    },
+                    Ext.create('Lada.view.form.OrtInfo', {
+                            record: me.record
+                    })
+                    ]
                 }]
-                //}, {
-                //    layout: 'vbox',
-                //    flex: 1,
-                //    margin: '0, 10, 0, 0',
-                //    border: 0,
-                //    items: [{
-                //        xtype: ''
-                //    }]
-                }]
-            }];
+            }]
+        }];
         this.callParent(arguments);
     },
 
     setRecord: function(record) {
         this.getForm().loadRecord(record);
-
-        if (! record.get('readonly')) {
+        if (!record.get('readonly')) {
             this.down('[action=setOrt]').enable();
             this.setReadOnly(false);
         }
@@ -183,8 +142,9 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         var verw = verwStore.getById(ort.get('gemId'));
         var staatStore = Ext.StoreManager.get('staaten');
         var staat = staatStore.getById(ort.get('staatId'));
-
-        this.getForm().setValues({
+        var ortinfo = this.down('ortinfo')
+        ortinfo.loadRecord(ort);
+        ortinfo.getForm().setValues({
             gemeinde: verw.get('bezeichnung'),
             staat: staat.get('staatIso'),
             lon: ort.get('longitude'),
@@ -194,7 +154,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
     /**
      * setOrt can be called from a CallbackFunction, ie select from a grid.
-     *  it will set the ortId of this record
+     * it will set the ortId of this record
      */
     setOrt: function(row, selRecord, index, opts) {
         var newOrtId = selRecord.get('id');
@@ -204,8 +164,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                 r.set('ortId', newOrtId);
                 this.getForm().setValues({ortId: newOrtId});
                 this.refreshOrt(newOrtId);
-                //set dirty...
-                this.fireEvent('dirtychange', this.getForm(), true);
             }
         }
     },
@@ -240,7 +198,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                 for (var i = 0; i < content.length; i++) {
                     errorText += i18n.getMsg(content[i].toString()) + '\n';
                 }
-                element.showErrors(errorText);
+                element.markInvalid(errorText);
             }
         }
      },
@@ -252,6 +210,17 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     setReadOnly: function(value) {
         this.down('tfield[name=ortszusatztext]').setReadOnly(value);
         this.down('textfield[name=ortszuordnungTyp]').setReadOnly(value);
+    },
+
+    /**
+     * Helper to trigger the forms' validity check on change of ortID
+     */
+    changedOrt: function() {
+        var controller = Lada.app.getController(
+            'Lada.controller.form.Ortszuordnung');
+        var form = this.up('form').getForm();
+        controller.validityChange(form, form.isValid());
+
     }
 });
 

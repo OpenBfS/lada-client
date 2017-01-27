@@ -8,7 +8,6 @@
 
 /**
  * Form to create a new Messpunkt
- * TODO: layout
  */
 Ext.define('Lada.view.form.Ortserstellung', {
     extend: 'Ext.form.Panel',
@@ -33,7 +32,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
             margin : '0, 5, 5, 5',
             labelWidth: 80,
             width: 150,
-            value: Lada.netzbetreiber
+            value: Lada.netzbetreiber[0]
             }, {
             xtype: 'checkbox',
             name: 'aktiv',
@@ -238,10 +237,8 @@ Ext.define('Lada.view.form.Ortserstellung', {
         this_panel.record.set('id', null);
         this_panel.record.set('ortId', null);
         this_panel.record.set('netzbetreiberId', Lada.netzbetreiber[0]);
-        console.log(this_panel.record);
         this_panel.record.save({
             success: function(record, response) {
-                console.log(response);
                 var newOrtId;
                 Ext.Msg.show({
                     title: Lada.getApplication().bundle.getMsg('success'),
@@ -265,28 +262,24 @@ Ext.define('Lada.view.form.Ortserstellung', {
                 });
             },
             failure: function(record, response) {
-                console.log(response);
-                // TODO
-//                 response.error.status
-//                 response.error.statusText
-//                 var json = Ext.decode(response.response.responseText);
-//                 if (json) {
-//                     if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
-//                         console.log(json.errors);
-//                         console.log(json.warnings);
-//                         formPanel.setMessages(json.errors, json.warnings);
-//                     }
-//                     if(json.message){
-//                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
-//                             +' #'+json.message,
-//                             Lada.getApplication().bundle.getMsg(json.message));
-//                     } else {
-//                          Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-//                             Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
-//                     }
-//                 } else {
-//                     Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-//                         Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                // TODO check
+                var json = Ext.decode(response.response.responseText);
+                if (json) {
+                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
+                        formPanel.setMessages(json.errors, json.warnings);
+                    }
+                    if(json.message){
+                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
+                            +' #'+json.message,
+                             Lada.getApplication().bundle.getMsg(json.message));
+                    } else {
+                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
+                             Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                    }
+                } else {
+                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
+                        Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                }
             }
         });
     }

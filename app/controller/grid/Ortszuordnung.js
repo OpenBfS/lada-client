@@ -14,7 +14,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
     requires: [
         'Lada.view.window.Ortszuordnung',
-        'Lada.view.form.Ortserstellung',
+        'Lada.view.window.Ortserstellung',
         'Lada.view.window.OrtFilter'
     ],
 
@@ -134,26 +134,22 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     /**
      * Opens the form for a new Messpunkt
      */
-    createort: function() {
-        Ext.create('Lada.view.form.Ortserstellung').show();
+    createort: function(button) {
+        Ext.create('Lada.view.window.Ortserstellung',{
+            parentWindow: button.up('ortszuordnungwindow')
+        }).show();
     },
 
     /**
      *
-     * Opens the form for a new Messpunkt, with prefilled coordinates.
-     * TODO Not functional yet
+     * Creates an event listener for a map click
      */
     frommap: function(button) {
         var map = button.up('ortszuordnungwindow').down('map');
-        // map.getClick();
-        //TODO: wait for click return
-        Ext.create('Lada.view.form.Ortserstellung', {
-            presets: {
-                kda_id: 4,
-                koord_x_extern: 35000000, //TODO dummy values
-                koord_y_extern: 1000000
-            }
-        }).show();
+        var me = this;
+        map.map.events.register('click', button, me.newOrtfromMapClick);
+        // TODO visual feedback that map click is active.
+        // TODO Deactivate event listener if button is destroyed
     },
 
     /**
@@ -163,8 +159,29 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     cloneort: function(button) {
         var grid = button.up('ortszuordnungwindow').down('ortstammdatengrid').getView();
         var selected = grid.getSelectionModel().getSelection()[0];
-         Ext.create('Lada.view.form.Ortserstellung', {
-             presets: selected.data
+         Ext.create('Lada.view.window.Ortserstellung', {
+             record: Ext.create('Lada.model.Ort', selected.data),
+             parentWindow: button.up('ortszuordnungwindow')
+        }).show();
+    },
+
+    /**
+     * Gets the clicked map's coordinates and opens a new Messpunkt window with coordinates prefilled
+     */
+    newOrtfromMapClick: function(evt) {
+        var me = this; //this = button(action:frommap)
+        var map = this.up('ortszuordnungwindow').down('map').map;
+        var lonlat = map.getLonLatFromViewPortPx(evt.xy).transform(new OpenLayers.Projection('EPSG:3857'),
+                                                                   new OpenLayers.Projection('EPSG:4326'));
+        var controller = Lada.app.getController('Lada.controller.grid.Ortszuordnung');
+        map.events.unregister('click', this, controller.newOrtfromMapClick);
+        Ext.create('Lada.view.window.Ortserstellung', {
+            record: Ext.create('Lada.model.Ort',{
+                koordXExtern: lonlat.lon,
+                koordYExtern: lonlat.lat,
+                kdaId : 4
+            }),
+            parentWindow: this.up('ortszuordnungwindow')
         }).show();
     },
 
@@ -239,20 +256,26 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var grid = this.searchField.up('panel').down('ortstammdatengrid');
         grid.getSelectionModel().select(record);
         grid.getView().focusRow(record);
-        console.log(record);
     },
 
     selectedVerwaltungseinheit: function(grid, record) {
         var win = grid.up('window');
         win.hide();
         this.searchField.reset();
-        console.log(record);
+        Ext.create('Lada.view.window.Ortserstellung', {
+            record: Ext.create('Lada.model.Ort', record.data),
+            parentWindow: grid.up('ortszuordnungwindow')
+        }).show();
     },
 
     selectedStaat: function(grid, record) {
         var win = grid.up('window');
+        console.log(grid.up('ortszuordnungwindow'));
         win.hide();
+        Ext.create('Lada.view.window.Ortserstellung', {
+            record: Ext.create('Lada.model.Ort', record.data),
+            parentWindow: grid.up('ortszuordnungwindow')
+        }).show();
         this.searchField.reset();
-        console.log(record);
     }
 });
