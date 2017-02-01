@@ -157,7 +157,8 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                         action: 'frommap'
                     }, {
                         text: i18n.getMsg('orte.clone'),
-                        action: 'clone'
+                        action: 'clone',
+                        disabled : true
                     }]
                 }]
             }]
@@ -232,6 +233,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         this.ortstore.load();
         map.addListener('featureselected', osg.selectOrt, osg);
         osg.addListener('select', map.selectFeature, map);
+        osg.addListener('select', me.activateCloneButton, me);
     },
 
     /**
@@ -258,6 +260,11 @@ Ext.define('Lada.view.window.Ortszuordnung', {
      */
     clearMessages: function() {
         //todo this is a stub
+    },
+
+    activateCloneButton: function() {
+        var toolbar = this.down('panel[name=ortgrid]').getDockedItems()[0];
+        toolbar.down('button[action=clone]').enable();
     }
 });
 
