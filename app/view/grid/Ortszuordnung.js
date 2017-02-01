@@ -25,6 +25,8 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
 
     recordId: null,
 
+    isMessprogramm: false,
+
     warnings: null,
     errors: null,
     readOnly: true,
@@ -164,25 +166,29 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     },
 
     initData: function() {
-        this.store = Ext.create('Lada.store.Ortszuordnung');
-        this.store.load({
-            params: {
-                probeId: this.recordId
-            }
-        });
-        Ext.ClassManager.get('Lada.model.Probe').load(this.recordId, {
-            failure: function(record, action) {
-                // TODO
-            },
-            success: function(record, response) {
-                var json = Ext.decode(response.response.responseText);
-                if (json) {
-                    this.warnings = json.warnings;
-                    this.errors = json.errors;
+        if (this.isMessprogramm) {
+            //TODO
+        } else {
+            this.store = Ext.create('Lada.store.Ortszuordnung');
+            this.store.load({
+                params: {
+                    probeId: this.recordId
                 }
-            },
-            scope: this
-        });
+            });
+            Ext.ClassManager.get('Lada.model.Probe').load(this.recordId, {
+                failure: function(record, action) {
+                    // TODO
+                },
+                success: function(record, response) {
+                    var json = Ext.decode(response.response.responseText);
+                    if (json) {
+                        this.warnings = json.warnings;
+                        this.errors = json.errors;
+                    }
+                },
+                scope: this
+            });
+        }
     },
 
     setReadOnly: function(b) {

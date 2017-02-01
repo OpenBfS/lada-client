@@ -31,10 +31,6 @@ Ext.define('Lada.model.Messprogramm', {
     },{
         name: 'baId'
     }, {
-        name: 'gemId'
-    }, {
-        name: 'ortId'
-    }, {
         name: 'mediaDesk',
         serialize: function(value) {
             if (value === '') {

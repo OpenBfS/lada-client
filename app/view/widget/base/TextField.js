@@ -29,7 +29,8 @@ Ext.define('Lada.view.widget.base.TextField', {
             fieldLabel: this.fieldLabel,
             labelWidth: this.labelWidth,
             readOnly: this.readOnly || false,
-            listeners: this.listeners
+            listeners: this.listeners,
+            type: this.type
         }, {
             xtype: 'image',
             name: 'warnImg',

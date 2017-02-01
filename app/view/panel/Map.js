@@ -89,6 +89,9 @@ Ext.define('Lada.view.panel.Map', {
         }
     },
 
+    /**
+     * Select a feature by record (a Lada.model.Ort) and zoom to this Ort
+     */
     selectFeature: function(model, record) {
         if (!record.get('id') || record.get('id') === '') {
             return;
@@ -97,16 +100,14 @@ Ext.define('Lada.view.panel.Map', {
         this.map.setCenter(
             new OpenLayers.LonLat(feature.geometry.x, feature.geometry.y));
         this.map.zoomTo(12);
-
         if (this.selectedFeatureLayer) {
-            if (this.selectedFeatureLayer.features.lenght > 0) {
-                this.featureLayer.addFeatures(this.selectedFeatureLayer.features);
-            }
-            this.selectedFeatureLayer.addFeatures([feature]);
+            this.selectControl.unselectAll();
+            this.selectedFeatureLayer.removeAllFeatures();
+            this.selectedFeatureLayer.addFeatures(feature);
         } else {
+            this.selectControl.unselectAll();
             this.selectControl.select(feature);
         }
-        //TODO: the text of new features is still drawn on top of the old feature's text
     },
 
     activateDraw: function(record) {
@@ -163,7 +164,7 @@ Ext.define('Lada.view.panel.Map', {
                     }, OpenLayers.Feature.Vector.style['default'])),
                     'select': new OpenLayers.Style({
                         externalGraphic: 'resources/lib/OpenLayers/img/marker-blue.png',
-                        pointRadius: 15,
+                        pointRadius: 12,
                         label: '${bez}',
                         labelAlign: 'rt',
                         fontColor: 'blue',
@@ -211,7 +212,6 @@ Ext.define('Lada.view.panel.Map', {
      * Forward OpenlayersEvent to EXT
      */
     selectedFeature: function(feature) {
-        this.selectControl.unselectAll({except:feature});
         this.fireEvent('featureselected', this, arguments);
     },
 

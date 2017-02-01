@@ -25,9 +25,21 @@ Ext.define('Lada.model.Ort', {
     }, {
         name: 'netzbetreiberId'
     }, {
-        name: 'gemId'
+        name: 'gemId',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
-        name: 'staatId'
+        name: 'staatId',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
         name: 'kdaId',
         convert: function(v) {

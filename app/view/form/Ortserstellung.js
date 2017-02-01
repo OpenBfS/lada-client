@@ -18,6 +18,8 @@ Ext.define('Lada.view.form.Ortserstellung', {
     ],
     model: null,
 
+    margin: 5,
+
     record: null,
 
     initComponent: function() {
@@ -28,28 +30,20 @@ Ext.define('Lada.view.form.Ortserstellung', {
             editable: false,
             readOnly: true,
             submitValue: true,
+            border: 0,
             fieldLabel: i18n.getMsg('netzbetreiberId'),
-            margin : '0, 5, 5, 5',
-            labelWidth: 80,
-            width: 150,
+            labelWidth: 125,
             value: Lada.netzbetreiber[0]
             }, {
             xtype: 'checkbox',
             name: 'aktiv',
             fieldLabel: 'aktiv:'
-        }, {
-            xtype: 'displayfield',
-            align: 'right',
-            value: 'D',
-            labelWidth: 125,
-            maxLength: 1,
-            name: 'messpunktart',
-            fieldLabel: 'Art des Messpunktes:'
         },{
             xtype: 'staat',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('staat'),
             name: 'staatId',
+           forceSelection: true,
             listeners: {
                 change: {
                     fn: function() { me.checkCommitEnabled() }
@@ -59,6 +53,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
             xtype: 'verwaltungseinheit',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.gemeinde'),
+            forceSelection: true,
             name: 'gemId',
             listeners: {
                 change: {
@@ -106,7 +101,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
         }, {
             xtype: 'numfield',
             labelWidth: 125,
-            fieldLabel: 'Höhe:',
+            fieldLabel: i18n.getMsg('orte.hoeheLand'),
             name: 'hoeheLand',
             maxLength: 10,
             allowDecimals: true
@@ -115,7 +110,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
             labelWidth: 125,
             maxLength: 100,
             name: 'kurztext',
-            fieldLabel: i18n.getMsg('orte.kurztext'),
+            fieldLabel: i18n.getMsg('orte.kurztext')
         },{
             xtype: 'tfield',
             labelWidth: 125,
@@ -124,9 +119,58 @@ Ext.define('Lada.view.form.Ortserstellung', {
         },{
             xtype: 'tfield',
             labelWidth: 125,
-            fieldLabel: 'Berichtstext:',
+            fieldLabel: i18n.getMsg('orte.berichtstext'),
             name: 'berichtstext'
+        }, {
+            xtype: 'tfield',
+            labelWidth: 125,
+            maxLength: 100,
+            name: 'anlageId',
+            fieldLabel: i18n.getMsg('orte.anlageId')
+        }, {
+            xtype: 'tfield',
+            labelWidth: 125,
+            maxLength: 100,
+            name: 'zone',
+            fieldLabel: i18n.getMsg('orte.zone')
+        },{
+            xtype: 'tfield',
+            labelWidth: 125,
+            maxLength: 100,
+            name: 'sektor',
+            fieldLabel: i18n.getMsg('orte.sektor')
+        },{
+            xtype: 'tfield',
+            labelWidth: 125,
+            maxLength: 100,
+            name: 'ortTyp',
+            fieldLabel: i18n.getMsg('orte.ortTyp')
+        },{
+            xtype: 'tfield',
+            labelWidth: 125,
+            maxLength: 100,
+            name: 'zustaendigkeit',
+            fieldLabel: i18n.getMsg('orte.zustaendigkeit')
+        },{
+            xtype: 'tfield',
+            labelWidth: 125,
+            maxLength: 100,
+            name: 'mpArt',
+            fieldLabel: i18n.getMsg('orte.mpArt')
+        },{
+            xtype: 'tfield',
+            labelWidth: 125,
+            maxLength: 100,
+            name: 'nutsCode',
+            fieldLabel: i18n.getMsg('orte.nutsCode')
+        },{
+            xtype: 'tfield',
+            labelWidth: 125,
+            maxLength: 100,
+            name: 'ozId',
+            fieldLabel: i18n.getMsg('orte.ozId')
         }];
+
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -150,44 +194,29 @@ Ext.define('Lada.view.form.Ortserstellung', {
             }]
         }];
 
-//TODO:
-//               'Anlage:'?
-//               zone
-//               sektor
-//               zustaendigkeit
-//               Messregime (mpArt)
-//               'Prog.-Punkt:', ?
-//               nutsCode
-//               Ortszusatz-ID (ozId)
         this.callParent(arguments);
         this.getForm().loadRecord(this.record);
     },
 
     /**
-     * checks Messpunktart and if the Messpunkt can be committed.
+     * checks if the Messpunkt can be committed.
      * Disables the save button if false
      */
-     // TODO messpunktart is not yet finally defined
     checkCommitEnabled: function() {
         var savebutton =  this.down('toolbar').down('button[action=save]');
         var form = this.getForm();
-        if (this.getForm().findField('kdaId').getValue() ||
-            this.getForm().findField('koordYExtern').getValue() ||
-            this.getForm().findField('koordXExtern').getValue()) {
+        if (form.findField('kdaId').getValue() ||
+            form.findField('koordYExtern').getValue() ||
+            form.findField('koordXExtern').getValue()) {
             if (this.checkCoordinates()) {
-                form.findField('messpunktart').setValue('D');
                 savebutton.setDisabled(false);
             } else {
                 savebutton.setDisabled(true);
             }
-        } else if (form.findField('gemId').getValue()) {
-            form.findField('messpunktart').setValue('V');
-            savebutton.setDisabled(false);
-        } else if (form.findField('staatId').getValue()) {
-            form.findField('messpunktart').setValue('S');
+        } else if (form.findField('gemId').getValue() ||
+            form.findField('staatId').getValue() >= 0 ) {
             savebutton.setDisabled(false);
         } else {
-            form.findField('messpunktart').setValue('D');
             savebutton.setDisabled(true);
         }
     },
@@ -240,29 +269,29 @@ Ext.define('Lada.view.form.Ortserstellung', {
         this_panel.record.save({
             success: function(record, response) {
                 var newOrtId;
-                Ext.Msg.show({
-                    title: Lada.getApplication().bundle.getMsg('success'),
-                    autoScroll: true,
-                    msg: 'Ort erfolgreich angelegt!',
-                    buttons: Ext.Msg.OK
-                });
                 var ozw = this_panel.up().parentWindow;
                 ozw.ortstore.load({
                     callback: function(records, operation, success) {
                         ozw.down('map').addLocations(ozw.ortstore);
-                        ozw.down('ortstammdatengrid').setStore(ozw.ortstore);
+                        var osg = ozw.down('ortstammdatengrid');
+                        osg.setStore(ozw.ortstore);
                         var id = Ext.decode(response.response.responseText).data.id;
-                        var record = ozw.down('ortstammdatengrid').store.getById(id);
-                        var selectionmodel = ozw.down('ortstammdatengrid').getSelectionModel();
-                        console.log(record);
-                        selectionmodel.select(record);
+                        var record = osg.store.getById(id);
+                        var selmod = osg.getView().getSelectionModel();
+                        selmod.select(record);
+                        Ext.Msg.show({
+                            title: Lada.getApplication().bundle.getMsg('success'),
+                            autoScroll: true,
+                            msg: 'Ort erfolgreich angelegt!',
+                            buttons: Ext.Msg.OK
+                        });
                         this_panel.close();
                     },
                     scope: this
                 });
+
             },
             failure: function(record, response) {
-                // TODO check
                 var json = Ext.decode(response.response.responseText);
                 if (json) {
                     if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){

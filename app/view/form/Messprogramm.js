@@ -38,7 +38,6 @@ Ext.define('Lada.view.form.Messprogramm', {
     border: 0,
 
     recordId: null,
-    ortWindow: null,
 
     trackResetOnLoad: true,
 
@@ -360,32 +359,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                         }]
                     }]
                 }, {
-                    // Ort
-                    xtype: 'fieldset',
-                    title: 'Ort',
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretch'
-                    },
-                    width: '100%',
-                    items: [{
-                        xtype: 'location',
-                        name: 'ortId',
-                        fieldLabel: i18n.getMsg('ortId'),
-                        labelWidth: 80,
-                        allowBlank: false,
-                        forceSelection: true,
-                        editable: false,
-                        columnWidth: '0.75'
-                    }, {
-                        xtype: 'button',
-                        name: 'ortIdButton',
-                        margin: '0 0 0 5',
-                        text: i18n.getMsg('messprogrammort.button.title'),
-                        action: 'ort',
-                        columnWidth: '0.25'
-                    }]
-                }, {
                     xtype: 'probenehmer',
                     name: 'probeNehmerId',
                     fieldLabel: i18n.getMsg('probeNehmerId'),
@@ -465,7 +438,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                 intervall, 0, false, false, true);
 
         if (intrec) { // in cases when a new messprogramm is
-        // created and the discard function is used, intrec will be null
+        // created and the discard function is used, intrec will be null && edit is allowed
         // consequently the assertion below will fail.
             min = intrec.get('periodstart');
             max = intrec.get('periodend');
@@ -672,7 +645,6 @@ Ext.define('Lada.view.form.Messprogramm', {
         //no clear for probeNehmerId
         // Deskriptoren are missing
         this.down('cbox[name=umwId]').clearWarningOrError();
-        this.down('cbox[name=ortId]').clearWarningOrError();
     },
 
     setReadOnly: function(value) {

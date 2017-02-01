@@ -48,14 +48,25 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         }
         catch (e) {
         }
-
-        var data = formPanel.getForm().getFieldValues(true);
+        var data = formPanel.getForm().getFieldValues(false);
         var i18n = Lada.getApplication().bundle;
-        for (var key in data) {
-            formPanel.getForm().getRecord().set(key, data[key]);
+        //TODO: the forms seem not to submit anything into record.
+        var recordData = formPanel.getForm().getRecord().data;
+        if (recordData['probeId'] !== undefined) {
+            // TODO: as model.ort.ortId and model.ortszuordnung.ortId coexist,
+            // but mean different things, data.ortId is an array here, of
+            // which we need the first entry
+            recordData.ortId = data.ortId[0];
+            recordData.ortszuordnungTyp = data.ortszuordnungTyp;
+        } else { //messprogramm
+            recordData.ortsTyp = data.ortsTyp;
+            recordData.ort = data.ort;
         }
-        if (!formPanel.getForm().getRecord().get('letzteAenderung')) {
-            formPanel.getForm().getRecord().data.letzteAenderung = new Date();
+        recordData.ortszusatztext = data.ortszusatztext;
+        if (!data.letzteAenderung) {
+            recordData.letzteAenderung = new Date();
+        } else {
+            recordData.letzteAenderung = data.letzteAenderung;
         }
         formPanel.getForm().getRecord().save({
             success: function(record, response) {
@@ -116,7 +127,11 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         var record = formPanel.getForm().getRecord();
         formPanel.getForm().loadRecord(record);
         try {
-            formPanel.refreshOrt(record.get('ortId'));
+            if (record.get('ortId') !== undefined) {
+                formPanel.setOrt(record.get('ortId'));
+            } else {
+                formPanel.setOrt(record.get('ort'));
+            }
             formPanel.down('button[action=setOrt]').toggle(false);
         }
         catch (e) {
@@ -127,7 +142,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
      * When the button is Active, a Record can be selected.
      * If the Record was selected from a grid this function
      * sets the ortzuordnung.
-     * TODO: Check if the selected Record is a ORT
      */
     chooseLocation: function(button, pressed, opts) {
         var i18n = Lada.getApplication().bundle;
@@ -135,6 +149,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         var gridPanel = win.down('panel[name=ortgrid]');
         var osg = win.down('ortstammdatengrid');
         var oForm = button.up('form');
+        osg.addListener('select',oForm.setOrt, oForm);
         if (pressed) {
             win.setHeight(Ext.getBody().getViewSize().height - 50);
             button.setText(i18n.getMsg('ortszuordnung.form.setOrt.pressed'));
@@ -160,14 +175,25 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
     validityChange: function(form, valid) {
         if (form.isDirty()) {
             form.owner.down('button[action=discard]').setDisabled(false);
-            if ( valid && form.getValues().ortId !== ''
-                && /[UEZA]/.test(form.getValues().ortszuordnungTyp)
-            ) {
-                form.owner.down('button[action=save]').setDisabled(false);
+            if (valid) {
+                if (form.getValues().ortId !== ''
+                    && /[UEZA]/.test(form.getValues().ortszuordnungTyp)) {
+                    // valid ortzuordnung(Probe)
+                        form.owner.down('button[action=save]').setDisabled(false);
+                } else if (form.getValues().ort !== ''
+                    && /[UEZA]/.test(form.getValues().ortsTyp)) {
+                    // valid ortzuordnung(messprogramm)
+                    form.owner.down('button[action=save]').setDisabled(false);
+                } else {
+                    form.owner.down('button[action=save]').setDisabled(true);
+                }
             } else {
+                //invalid
                 form.owner.down('button[action=save]').setDisabled(true);
             }
         } else {
+            //not dirty
+            form.owner.down('button[action=save]').setDisabled(true);
             form.owner.down('button[action=discard]').setDisabled(true);
         }
     }

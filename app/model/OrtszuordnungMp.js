@@ -7,9 +7,9 @@
  */
 
 /**
- * Model class for Ortszuordnung of probe
+ * Model class for Ortszuordnung of Messprogramme
  */
-Ext.define('Lada.model.Ortszuordnung', {
+Ext.define('Lada.model.OrtszuordnungMp', {
     extend: 'Ext.data.Model',
 
     fields: [{
@@ -22,11 +22,11 @@ Ext.define('Lada.model.Ortszuordnung', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'ortId'
+        name: 'ort'
     }, {
-        name: 'probeId'
+        name: 'messprogrammId'
     }, {
-        name: 'ortszuordnungTyp'
+        name: 'ortsTyp'
     }, {
         name: 'ortszusatztext'
     }, {
@@ -60,10 +60,11 @@ Ext.define('Lada.model.Ortszuordnung', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/ortszuordnung',
+        url: 'lada-server/rest/ortszuordnungmp',
         reader: {
             type: 'json',
             root: 'data'
         }
     }
 });
+

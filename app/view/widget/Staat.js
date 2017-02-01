@@ -22,6 +22,7 @@ Ext.define('Lada.view.widget.Staat', {
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
+    forceSelection: this.forceSelection || false,
 
     initComponent: function() {
         this.store = Ext.data.StoreManager.get('staaten');

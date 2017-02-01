@@ -94,6 +94,16 @@ Ext.define('Lada.view.window.Messprogramm', {
                 xtype: 'messprogrammform',
                 recordId: this.record ? this.record.get('id') : null
             }, {
+                xtype: 'fset',
+                name: 'orte',
+                title: 'Ortsangaben',
+                padding: '5, 5',
+                margin: 5,
+                items: [{
+                    xtype: 'ortszuordnunggrid',
+                    recordId: me.record ? me.record.get('id') : null
+                }]
+            }, {
                 //Messmethoden
                 xtype: 'fieldset',
                 padding: '5, 5',
@@ -159,11 +169,11 @@ Ext.define('Lada.view.window.Messprogramm', {
                     // If the Messprogramm is ReadOnly, disable Inputfields and grids
                     if (this.record.get('readonly') === true) {
                         this.down('messprogrammform').setReadOnly(true);
-                        //this.disableChildren();
+                        this.disableChildren();
                     }
                     else {
                         this.down('messprogrammform').setReadOnly(false);
-                        //this.enableChildren();
+                        this.enableChildren();
                     }
                     me.setLoading(false);
                 },
@@ -189,11 +199,11 @@ Ext.define('Lada.view.window.Messprogramm', {
     */
 
     disableChildren: function() {
-        // there are no children....
+        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(true);
     },
 
     enableChildren: function() {
-        // there are no children....
+        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(false);
     },
 
     /**

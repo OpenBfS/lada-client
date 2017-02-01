@@ -19,7 +19,9 @@ Ext.define('Lada.view.window.Ortserstellung', {
 
     minWidth: 350,
 
-    margin: 5,
+    margin: 10,
+
+    shadow: false,
 
     border: 0,
 

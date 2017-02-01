@@ -7,13 +7,16 @@
  */
 
 /**
- * Window to create/edit the Ort / Probe Relation
+ * Window to create/edit the Ort/Probe or Ort/Messprogramm Relation
  */
+
 Ext.define('Lada.view.window.Ortszuordnung', {
     extend: 'Ext.window.Window',
     alias: 'widget.ortszuordnungwindow',
 
     requires: [
+        'Lada.model.Ortszuordnung',
+        'Lada.model.OrtszuordnungMp',
         'Lada.view.form.Ortszuordnung',
         'Lada.view.form.Ortserstellung',
         'Lada.view.panel.Map',
@@ -27,6 +30,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     constrain: true,
 
     probe: null,
+    messprogramm: null,
 
     parentWindow: null,
     record: null,
@@ -38,10 +42,11 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('ortszuordnung.window.title');
-
-        if (this.record && this.probe) {
-            // A record be edited
-            this.title = i18n.getMsg('ortszuordnung.window.title')
+        var recordtype;
+        if (this.probe) {
+            if (this.record) {
+                // A probe record will be edited
+                this.title = i18n.getMsg('ortszuordnung.window.title')
                             + ' '
                             + i18n.getMsg('ortszuordnung.window.title2')
                             + ' '
@@ -50,10 +55,9 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             + this.probe.get('hauptprobenNr')
                             + ' '
                             + i18n.getMsg('edit');
-        }
-        else if (this.probe) {
-            // A new record will be created
-            this.title = i18n.getMsg('ortszuordnung.window.title')
+            } else  {
+                // A new probe record will be created
+                this.title = i18n.getMsg('ortszuordnung.window.title')
                             + ' '
                             + i18n.getMsg('ortszuordnung.window.title2')
                             + ' '
@@ -62,7 +66,29 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             + this.probe.get('hauptprobenNr')
                             + ' '
                             + i18n.getMsg('create');
+            }
+        } else if (this.messprogramm) {
+            if (this.record) {
+                // A messprogramm record will be edited
+                this.title = i18n.getMsg('ortszuordnung.window.title')
+                            + ' '
+                            + i18n.getMsg('ortszuordnung.window.title2')
+                            + ' '
+                            + i18n.getMsg('messprogramm')
+                            + ' '
+                            + i18n.getMsg('edit');
+            } else  {
+                // A new messprogramm record will be created
+                this.title = i18n.getMsg('ortszuordnung.window.title')
+                            + ' '
+                            + i18n.getMsg('ortszuordnung.window.title2')
+                            + ' '
+                            + i18n.getMsg('messprogramm')
+                            + ' '
+                            + i18n.getMsg('create');
+            }
         }
+
         this.buttons = [{
             text: i18n.getMsg('close'),
             scope: this,
@@ -97,6 +123,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 xtype: 'ortszuordnungform',
                 region: 'east',
                 minHeight: 380,
+                type: this.probe? 'probe': 'mpr'
             }, {
                 region: 'south',
                 border: 0,
@@ -135,7 +162,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 }]
             }]
         }];
-
         this.callParent(arguments);
     },
 
@@ -145,11 +171,16 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     initData: function() {
         var me = this;
         if (!this.record) {
-            this.record = Ext.create('Lada.model.Ortszuordnung');
+            if (this.probe) {
+                this.record = Ext.create('Lada.model.Ortszuordnung');
+                this.record.set('probeId', this.probe.get('id'));
+            } else {
+                this.record = Ext.create('Lada.model.OrtszuordnungMp');
+                this.record.set('messprogrammId', this.messprogramm.get('id'));
+            }
             if (!this.record.get('letzteAenderung')) {
                 this.record.data.letzteAenderung = new Date();
             }
-            this.record.set('probeId', this.probe.get('id'));
         }
         this.down('ortszuordnungform').setRecord(this.record);
         var map = this.down('map');
@@ -175,7 +206,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             'gewählter Messpunkt', {
                                 styleMap: new OpenLayers.StyleMap({
                                     externalGraphic: 'resources/lib/OpenLayers/img/marker-blue.png',
-                                    pointRadius: 10,
+                                    pointRadius: 12,
                                     label: '${bez}',
                                     labelAlign: 'rt',
                                     fontColor: 'blue',
@@ -186,10 +217,13 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             });
                         map.map.addLayer(map.selectedFeatureLayer);
                         map.selectedFeatureLayer.setZIndex(499);
-                        var ortId = me.record.get('ortId');
+                        var ortId = me.messprogramm? me.record.get('ort') : me.record.get('ortId');
                         if (ortId){
-                            var feat = map.featureLayer.getFeaturesByAttribute('id', ortId)[0];
-                            map.selectControl.select(feat);
+                            var feat = map.featureLayer.getFeaturesByAttribute('id', ortId);
+                            var ortrecord = this.findRecord('id', ortId);
+                            osg.selectOrt(map, feat);
+                            map.selectFeature(this.model, ortrecord);
+                            me.down('ortszuordnungform').setOrt(null,ortrecord);
                         }
                     }
                 }

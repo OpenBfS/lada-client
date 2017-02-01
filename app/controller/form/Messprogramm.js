@@ -12,9 +12,6 @@
 Ext.define('Lada.controller.form.Messprogramm', {
     extend: 'Ext.app.Controller',
 
-    requires: [
-        'Lada.view.window.MessprogrammOrt'
-    ],
 
     /**
      * Initialize the Controller
@@ -27,17 +24,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform button[action=discard]': {
                 click: this.discard
             },
-            'messprogrammform button[action=ort]': {
-                click: this.editOrtWindow
-            },
             'messprogrammform': {
                 dirtychange: this.dirtyForm
             },
             'messprogrammform messstellelabor combobox': {
                 select: this.setNetzbetreiber
-            },
-            'messprogrammform location combobox': {
-                select: this.syncOrtWindow
             },
             'messprogrammform numfield numberfield': {
                 change: this.checkPeriod
@@ -121,44 +112,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
     },
 
     /**
-     * The function will open a new Window to edit the Ort of a Messprogramm
-     */
-    editOrtWindow: function(button) {
-        var formPanel = button.up('form');
-        //Only Open if the WIndow does not exist, else focus
-        if (!formPanel.ortWindow) {
-            var data = formPanel.getForm().getFieldValues(true);
-            formPanel.ortWindow = Ext.create('Lada.view.window.MessprogrammOrt', {
-                record: formPanel.getRecord(),
-                parentWindow: formPanel.up('window')
-            });
-            formPanel.ortWindow.show();
-            formPanel.ortWindow.initData();
-       }
-       else {
-            formPanel.ortWindow.focus();
-            formPanel.ortWindow.setActive(true);
-       }
-    },
-
-    /**
-     * When a OrtWindow exist, and the value of the location combobox is changed, update the window.
-     */
-    syncOrtWindow: function(combo, record){
-        var formPanel = combo.up('messprogrammform');
-        if (formPanel.ortWindow) {
-            var ortwindowlocation = formPanel
-                .ortWindow.down('location')
-            var ortwindowcombo = ortwindowlocation
-                .down('combobox');
-
-            ortwindowcombo.select(combo.getValue());
-            ortwindowlocation.fireEvent('select',
-                ortwindowcombo, ortwindowcombo.record);
-       }
-    },
-
-    /**
      * When the Slider was used,
      * update the Value of the Teilintervallfields
      */
@@ -202,14 +155,9 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var formPanel = button.up('form');
         var data = formPanel.getForm().getFieldValues();
         var orte = Ext.data.StoreManager.get('orte');
-        var gemId;
-        if (data['ortId'] !== null && data['ortId'] !== '') {
-            gemId = orte.getById(data['ortId']).get('gemId');
-        }
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
         }
-        formPanel.getForm().getRecord().set('gemId', gemId);
         if (!formPanel.getForm().getRecord().get('letzteAenderung')) {
             formPanel.getForm().getRecord().data.letzteAenderung = new Date();
         }
@@ -402,5 +350,4 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
     }
 
-    
 });

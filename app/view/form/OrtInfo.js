@@ -23,50 +23,34 @@ Ext.define('Lada.view.form.OrtInfo', {
             layout: 'vbox',
             flex: 1,
             border: 0,
-            items: [{
+            defaults: {
                 xtype: 'displayfield',
                 labelWidth: 125,
+                submitValue: false
+            },
+            items: [{
                 fieldLabel: i18n.getMsg('orte.ortId'),
                 name: 'ortId'
             },
             {
-                xtype: 'displayfield',
-                labelWidth: 125,
                 fieldLabel: i18n.getMsg('orte.kurztext'),
                 name: 'kurztext'
             }, {
-                xtype: 'displayfield',
-                labelWidth: 125,
                 fieldLabel: i18n.getMsg('orte.langtext'),
                 name: 'langtext'
             }, {
-                xtype: 'displayfield',
-                labelWidth: 125,
                 fieldLabel: i18n.getMsg('staat'),
                 name: 'staatISO'
             }, {
-                xtype: 'displayfield',
-                labelWidth: 125,
-                fieldLabel: i18n.getMsg('orte.gemeinde'),
-                name: 'gemeinde'
-            }, {
-                xtype: 'displayfield',
-                labelWidth: 125,
                 fieldLabel: i18n.getMsg('orte.gemeindename'),
                 name: 'gemeinde'
             }, {
-                xtype: 'displayfield',
-                labelWidth: 125,
                 fieldLabel: i18n.getMsg('orte.kda'),
                 name: 'kdaId'
             }, {
-                xtype: 'displayfield',
-                labelWidth: 125,
                 fieldLabel: i18n.getMsg('orte.koordx'),
                 name: 'koordXExtern'
             }, {
-                xtype: 'displayfield',
-                labelWidth: 125,
                 fieldLabel: i18n.getMsg('orte.koordy'),
                 name: 'koordYExtern'
             }]

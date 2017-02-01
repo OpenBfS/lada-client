@@ -19,10 +19,11 @@ Ext.define('Lada.view.widget.Verwaltungseinheit', {
     hideTrigger: true,
     // Enable filtering of comboboxes
     autoSelect: false,
-    queryMode: 'remote',
+    queryMode: 'local',
     triggerAction: 'type',
     typeAhead: false,
     minChars: 2,
+    forceSelection: this.forceSelection || false,
 
     initComponent: function() {
         this.store = Ext.data.StoreManager.get('verwaltungseinheiten');

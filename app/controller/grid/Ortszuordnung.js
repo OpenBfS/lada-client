@@ -62,13 +62,20 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
     /**
      * When open is called, a {@link Lada.view.window.Ortszuordnung}
-     * is created which allows to edit the Orte
+     * is created which allows to edit the Orte. record is an ortszuordnung
+     * or ortzuordnungMp
      */
     open: function(grid, record) {
-        var probe = grid.up('window').record;
+        var parent = grid.up('window').record;
+        // parent is either probe or messprogramm.
+        var parentisMp = false;
+        if (parent.data.hauptprobenNr === undefined) {
+            parentisMp = true;
+        }
         var win = Ext.create('Lada.view.window.Ortszuordnung', {
             parentWindow: grid.up('window'),
-            probe: probe,
+            probe: parentisMp ? null: parent,
+            messprogramm: parentisMp ? parent: null,
             record: record,
             grid: grid
         });
@@ -80,10 +87,15 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * This function adds a new row to add an Ort
      */
     add: function(button) {
-        var probe = button.up('window').record;
+        var parent = button.up('window').record;
+        var parentisMp = false;
+        if (parent.data.hauptprobenNr === undefined) {
+            parentisMp = true;
+        }
         var win = Ext.create('Lada.view.window.Ortszuordnung', {
             parentWindow: button.up('window'),
-            probe: probe,
+            probe: parentisMp ? null: parent,
+            messprogramm: parentisMp ? parent: null,
             record: null,
             grid: button.up('ortszuordnung')
         });
@@ -240,7 +252,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             this.resultPanel = Ext.create('Lada.view.window.OrtFilter', {
                 x: 500,
                 y: 500,
-                alwaysOnTop: true
+                alwaysOnTop: true,
+                parentWindow: this
             });
         }
         this.resultPanel.show();
@@ -260,22 +273,26 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
     selectedVerwaltungseinheit: function(grid, record) {
         var win = grid.up('window');
+        var panel = this.searchField.up('panel').up('window');
         win.hide();
         this.searchField.reset();
         Ext.create('Lada.view.window.Ortserstellung', {
-            record: Ext.create('Lada.model.Ort', record.data),
-            parentWindow: grid.up('ortszuordnungwindow')
+            record: Ext.create('Lada.model.Ort', {
+                gemId: record.get('id')
+            }),
+            parentWindow: panel
         }).show();
     },
 
     selectedStaat: function(grid, record) {
         var win = grid.up('window');
-        console.log(grid.up('ortszuordnungwindow'));
         win.hide();
-        Ext.create('Lada.view.window.Ortserstellung', {
-            record: Ext.create('Lada.model.Ort', record.data),
-            parentWindow: grid.up('ortszuordnungwindow')
-        }).show();
         this.searchField.reset();
+        Ext.create('Lada.view.window.Ortserstellung', {
+            record: Ext.create('Lada.model.Ort', {
+                staatId: record.get('id')
+            }),
+            parentWindow: win
+        }).show();
     }
 });
