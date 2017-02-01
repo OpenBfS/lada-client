@@ -40,11 +40,15 @@ Ext.define('Lada.view.form.OrtInfo', {
                 name: 'langtext'
             }, {
                 fieldLabel: i18n.getMsg('staat'),
-                name: 'staatISO'
+                name: 'staat'
             }, {
                 fieldLabel: i18n.getMsg('orte.gemeindename'),
                 name: 'gemeinde'
             }, {
+                fieldLabel: i18n.getMsg('orte.gemId'),
+                name: 'gemId'
+            },
+           {
                 fieldLabel: i18n.getMsg('orte.kda'),
                 name: 'kdaId'
             }, {

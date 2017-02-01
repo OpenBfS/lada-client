@@ -23,9 +23,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             'ortszuordnungform button[action=save]': {
                 click: this.save
             },
-            'ortszuordnungform button[action=discard]': {
-                click: this.discard
-            },
             'ortszuordnungform': {
                 validitychange: this.validityChange,
                 dirtychange: this.validityChange
@@ -73,8 +70,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 var json = Ext.decode(response.response.responseText);
                 if (json) {
                     button.setDisabled(true);
-                    button.up('toolbar').down('button[action=discard]')
-                        .setDisabled(true);
                     formPanel.clearMessages();
                     formPanel.setRecord(record);
                     formPanel.setMessages(json.errors, json.warnings);
@@ -91,8 +86,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             },
             failure: function(record, response) {
                 button.setDisabled(true);
-                button.up('toolbar').down('button[action=discard]')
-                    .setDisabled(true);
                 formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
                 var json = response.request.scope.reader.jsonData;
                 if (json) {
@@ -116,26 +109,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 }
             }
         });
-    },
-
-    /**
-     * The discard function resets the Location form
-     * to its original state.
-     */
-    discard: function(button) {
-        var formPanel = button.up('form');
-        var record = formPanel.getForm().getRecord();
-        formPanel.getForm().loadRecord(record);
-        try {
-            if (record.get('ortId') !== undefined) {
-                formPanel.setOrt(record.get('ortId'));
-            } else {
-                formPanel.setOrt(record.get('ort'));
-            }
-            formPanel.down('button[action=setOrt]').toggle(false);
-        }
-        catch (e) {
-        }
     },
 
     /**
@@ -169,17 +142,16 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
     },
 
     /**
-     * The validitychange function enables or disables the save and discard
-     * button which are present in the toolbar of the form.
+     * The validitychange function enables or disables the save button which
+     * is present in the toolbar of the form.
      */
     validityChange: function(form, valid) {
         if (form.isDirty()) {
-            form.owner.down('button[action=discard]').setDisabled(false);
             if (valid) {
                 if (form.getValues().ortId !== ''
                     && /[UEZA]/.test(form.getValues().ortszuordnungTyp)) {
                     // valid ortzuordnung(Probe)
-                        form.owner.down('button[action=save]').setDisabled(false);
+                    form.owner.down('button[action=save]').setDisabled(false);
                 } else if (form.getValues().ort !== ''
                     && /[UEZA]/.test(form.getValues().ortsTyp)) {
                     // valid ortzuordnung(messprogramm)
@@ -194,7 +166,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         } else {
             //not dirty
             form.owner.down('button[action=save]').setDisabled(true);
-            form.owner.down('button[action=discard]').setDisabled(true);
         }
     }
 });

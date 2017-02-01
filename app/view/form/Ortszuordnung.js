@@ -74,12 +74,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                         icon: 'resources/img/dialog-ok-apply.png',
                         action: 'save',
                         disabled: true
-                    }, {
-                        text: i18n.getMsg('discard'),
-                        tooltip: i18n.getMsg('discard.qtip'),
-                        icon: 'resources/img/dialog-cancel.png',
-                        action: 'discard',
-                        disabled: true
                     }]
                 }],
                 items: [{

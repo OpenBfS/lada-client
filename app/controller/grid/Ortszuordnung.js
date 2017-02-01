@@ -158,9 +158,9 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      */
     frommap: function(button) {
         var map = button.up('ortszuordnungwindow').down('map');
+        map.getEl().setStyle('cursor', 'crosshair');
         var me = this;
         map.map.events.register('click', button, me.newOrtfromMapClick);
-        // TODO visual feedback that map click is active.
         // TODO Deactivate event listener if button is destroyed
     },
 
@@ -183,6 +183,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     newOrtfromMapClick: function(evt) {
         var me = this; //this = button(action:frommap)
         var map = this.up('ortszuordnungwindow').down('map').map;
+        this.up('ortszuordnungwindow').down('map').getEl().setStyle('cursor', 'auto');
         var lonlat = map.getLonLatFromViewPortPx(evt.xy).transform(new OpenLayers.Projection('EPSG:3857'),
                                                                    new OpenLayers.Projection('EPSG:4326'));
         var controller = Lada.app.getController('Lada.controller.grid.Ortszuordnung');
