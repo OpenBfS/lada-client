@@ -283,5 +283,9 @@ Ext.define('Lada.view.grid.Orte', {
         var id = feature[0].data.id;
         var record = this.store.getById(id);
         this.getSelectionModel().select(record);
+        var win = this.up('ortszuordnungwindow');
+        if (win){
+            win.down('ortszuordnungform').setOrt(null, record);
+        }
     }
 });

@@ -123,21 +123,26 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         var osg = win.down('ortstammdatengrid');
         var oForm = button.up('form');
         osg.addListener('select',oForm.setOrt, oForm);
+        var map = win.down('map');
         if (pressed) {
             win.setHeight(Ext.getBody().getViewSize().height - 50);
             button.setText(i18n.getMsg('ortszuordnung.form.setOrt.pressed'));
+            map.featureLayer.setVisibility(true);
             win.setY(25);
             gridPanel.show();
+            win.doLayout();
             osg.addListener('select',oForm.setOrt, oForm);
 
         }
         else {
-            var y = (Ext.getBody().getViewSize().height - 465) / 2
+            map.featureLayer.setVisibility(false);
+            var y = (Ext.getBody().getViewSize().height - 465) / 2;
             win.setHeight(465);
             win.setY(y);
             button.setText(i18n.getMsg('ortszuordnung.form.setOrt'));
             gridPanel.hide();
             osg.removeListener('select',oForm.setOrt, oForm);
+            oForm.doLayout();
         }
     },
 
