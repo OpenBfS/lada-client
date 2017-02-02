@@ -62,7 +62,7 @@ Ext.define('Lada.view.panel.Map', {
             tileManager: null,
             zoomMethod: null,
             // initializing with view centered on germany
-            center: new OpenLayers.LonLat(1160000,6694000),
+            center: new OpenLayers.LonLat(1160000,6694000)
         });
         this.map.setOptions(this.mapOptions);
         this.map.addLayers(this.layers);
@@ -102,8 +102,15 @@ Ext.define('Lada.view.panel.Map', {
         this.map.zoomTo(12);
         if (this.selectedFeatureLayer) {
             this.selectControl.unselectAll();
+            var prev = this.selectedFeatureLayer.features[0];
+            if (prev){
+                this.featureLayer.addFeatures([prev.clone()]);
+            }
             this.selectedFeatureLayer.removeAllFeatures();
-            this.selectedFeatureLayer.addFeatures(feature);
+            this.selectedFeatureLayer.addFeatures(feature.clone());
+            this.featureLayer.removeFeatures([feature]);
+            this.selectedFeatureLayer.refresh({force: true});
+            this.featureLayer.refresh({force: true});
         } else {
             this.selectControl.unselectAll();
             this.selectControl.select(feature);
@@ -137,7 +144,7 @@ Ext.define('Lada.view.panel.Map', {
 
         // Iterate the Store and create features from it
         for (var i = 0; i < locationStore.count(); i++) {
-            locationFeatures.push(new OpenLayers.Feature.Vector(
+            var feature = new OpenLayers.Feature.Vector(
                 new OpenLayers.Geometry.Point(
                     locationStore.getAt(i).get('longitude'),
                     locationStore.getAt(i).get('latitude')
@@ -146,7 +153,10 @@ Ext.define('Lada.view.panel.Map', {
                     id: locationStore.getAt(i).get('id'),
                     bez: locationStore.getAt(i).get('ortId')
                 }
-            ));
+            );
+            feature.geometry.transform(new OpenLayers.Projection('EPSG:4326'),
+                                       new OpenLayers.Projection('EPSG:3857'));
+            locationFeatures.push(feature);
         }
 
         // Create a new Feature Layer and add it to the map
@@ -171,11 +181,7 @@ Ext.define('Lada.view.panel.Map', {
                         fontWeight: 'bold'
                     })
                 }),
-                projection: new OpenLayers.Projection('EPSG:3857'),
-                preFeatureInsert: function(feature) {
-                    feature.geometry.transform(new OpenLayers.Projection('EPSG:4326'),
-                                               new OpenLayers.Projection('EPSG:3857'));
-                }
+                projection: new OpenLayers.Projection('EPSG:3857')
             });
             this.selectControl = new OpenLayers.Control.SelectFeature(this.featureLayer, {
                 clickout: false,
@@ -192,7 +198,6 @@ Ext.define('Lada.view.panel.Map', {
         this.featureLayer.removeAllFeatures();
         this.featureLayer.addFeatures(locationFeatures);
         this.map.addLayer(this.featureLayer);
-        this.featureLayer.setZIndex(500);
     },
 
     /**
@@ -213,6 +218,11 @@ Ext.define('Lada.view.panel.Map', {
      */
     selectedFeature: function(feature) {
         this.fireEvent('featureselected', this, arguments);
+        this.featureLayer.refresh({force: true});
+        if (this.selectedFeatureLayer) {
+            this.selectedFeatureLayer.refresh({force: true});
+
+        }
     },
 
     beforeDestroy: function() {

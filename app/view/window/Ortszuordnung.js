@@ -269,12 +269,13 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                     labelAlign: 'rt',
                     fontColor: 'blue',
                     fontWeight: 'bold',
+                    labelOutlineColor: 'white',
+                    labelOutlineWidth: 3
                 }),
                 displayInLayerSwitcher: false,
                 projection: new OpenLayers.Projection('EPSG:3857')
             });
         map.map.addLayer(map.selectedFeatureLayer);
-        map.selectedFeatureLayer.setZIndex(499);
         var ortId;
         if (this.messprogramm) {
             ortId = this.record.get('ort');
