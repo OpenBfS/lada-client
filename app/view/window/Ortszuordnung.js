@@ -190,6 +190,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         osg.setLoading(true);
         map.setLoading(true);
         this.ortstore = Ext.data.StoreManager.get('orte');
+	this.ortstore.load();
         var ortId;
         if (this.messprogramm) {
             ortId = this.record.get('ort');
