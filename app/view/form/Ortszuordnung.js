@@ -117,7 +117,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                             // this field is hidden because the user doesn't
                             // need to know the internal ortID
                             xtype: 'textfield',
-                            // fieldLabel: i18n.getMsg('orte.ortid'),
                             allowBlank: false,
                             regex: /^[0-9]{1,45}$/,
                             submitValue: true,
