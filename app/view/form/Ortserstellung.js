@@ -34,7 +34,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
             fieldLabel: i18n.getMsg('netzbetreiberId'),
             labelWidth: 125,
             value: Lada.netzbetreiber[0]
-            }, {
+        }, {
             xtype: 'checkbox',
             name: 'aktiv',
             fieldLabel: 'aktiv:'
@@ -43,7 +43,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
             labelWidth: 125,
             fieldLabel: i18n.getMsg('staat'),
             name: 'staatId',
-           forceSelection: true,
+            forceSelection: true,
             listeners: {
                 change: {
                     fn: function() { me.checkCommitEnabled() }
