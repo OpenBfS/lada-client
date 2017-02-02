@@ -185,53 +185,34 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             }
         }
         this.down('ortszuordnungform').setRecord(this.record);
-        var map = this.down('map');
         var osg = this.down('ortstammdatengrid');
-        this.ortstore = Ext.create('Lada.store.Orte', {
-            defaultPageSize: 0,
-            autoLoad: false,
-            listeners: {
-                beforeload: {
-                    fn: function() {
-                        osg.setLoading(true);
-                        map.setLoading(true);
+        var map = this.down('map');
+        osg.setLoading(true);
+        map.setLoading(true);
+        this.ortstore = Ext.data.StoreManager.get('orte');
+        var ortId;
+        if (this.messprogramm) {
+            ortId = this.record.get('ort');
+        } else {
+            ortId = this.record.get('ortId');
+        }
+        if (ortId !== undefined && !this.ortstore.findRecord('id', ortId)) {
+            var record = Ext.create('Lada.model.Ort');
+            record.set('id', ortId);
+            this.ortstore.add(record);
+            Lada.model.Ort.load(ortId, {
+                success: function(rec) {
+                    record.beginEdit();
+                    for (key in rec.getData()) {
+                        record.set(key, rec.getData()[key]);
                     }
-                },
-                load: {
-                    fn: function() {
-                        osg.setLoading(false);
-                        map.setLoading(false);
-                        osg.setStore(me.ortstore);
-                        map.addLocations(me.ortstore);
-                        map.featureLayer.setVisibility(false);
-                        map.selectedFeatureLayer = new OpenLayers.Layer.Vector(
-                            'gewählter Messpunkt', {
-                                styleMap: new OpenLayers.StyleMap({
-                                    externalGraphic: 'resources/lib/OpenLayers/img/marker-blue.png',
-                                    pointRadius: 12,
-                                    label: '${bez}',
-                                    labelAlign: 'rt',
-                                    fontColor: 'blue',
-                                    fontWeight: 'bold',
-                                }),
-                                displayInLayerSwitcher: false,
-                                projection: new OpenLayers.Projection('EPSG:3857')
-                            });
-                        map.map.addLayer(map.selectedFeatureLayer);
-                        map.selectedFeatureLayer.setZIndex(499);
-                        var ortId = me.messprogramm? me.record.get('ort') : me.record.get('ortId');
-                        if (ortId){
-                            var feat = map.featureLayer.getFeaturesByAttribute('id', ortId);
-                            var ortrecord = this.findRecord('id', ortId);
-                            osg.selectOrt(map, feat);
-                            map.selectFeature(this.model, ortrecord);
-                            me.down('ortszuordnungform').setOrt(null,ortrecord);
-                        }
-                    }
+                    record.endEdit();
+                    me.onStoreLoaded();
                 }
-            }
-        });
-        this.ortstore.load();
+            });
+        } else {
+            me.onStoreLoaded();
+        }
         map.addListener('featureselected', osg.selectOrt, osg);
         osg.addListener('select', map.selectFeature, map);
         osg.addListener('select', me.activateCloneButton, me);
@@ -266,6 +247,48 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     activateCloneButton: function() {
         var toolbar = this.down('panel[name=ortgrid]').getDockedItems()[0];
         toolbar.down('button[action=clone]').enable();
+    },
+
+    /**
+     * childs will be populated with store entries after all entries are loaded
+     * from all sources
+     */
+    onStoreLoaded: function() {
+        var map = this.down('map');
+        var osg = this.down('ortstammdatengrid');
+        osg.setStore(this.ortstore);
+        map.addLocations(this.ortstore);
+        map.featureLayer.setVisibility(false);
+        map.selectedFeatureLayer = new OpenLayers.Layer.Vector(
+            'gewählter Messpunkt', {
+                styleMap: new OpenLayers.StyleMap({
+                    externalGraphic: 'resources/lib/OpenLayers/img/marker-blue.png',
+                    pointRadius: 12,
+                    label: '${bez}',
+                    labelAlign: 'rt',
+                    fontColor: 'blue',
+                    fontWeight: 'bold',
+                }),
+                displayInLayerSwitcher: false,
+                projection: new OpenLayers.Projection('EPSG:3857')
+            });
+        map.map.addLayer(map.selectedFeatureLayer);
+        map.selectedFeatureLayer.setZIndex(499);
+        var ortId;
+        if (this.messprogramm) {
+            ortId = this.record.get('ort');
+                        } else {
+                            ortId = this.record.get('ortId');
+                        }
+        if (ortId){
+            var feat = map.featureLayer.getFeaturesByAttribute('id', ortId);
+            var ortrecord = this.ortstore.findRecord('id', ortId);
+            osg.selectOrt(map, feat);
+            map.selectFeature(this.model, ortrecord);
+            this.down('ortszuordnungform').setOrt(null,ortrecord);
+        }
+        osg.setLoading(false);
+        map.setLoading(false);
     }
 });
 
