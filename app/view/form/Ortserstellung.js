@@ -85,7 +85,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
             name: 'koordXExtern',
             allowDecimals: true,
             decimalPrecision: 5,
-            maxLength: 10,
+            maxLength: 22,
             listeners: {
                 change: {
                     fn: function() { me.checkCommitEnabled() }
@@ -98,7 +98,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
             name: 'koordYExtern',
             allowDecimals: true,
             decimalPrecision: 5,
-            maxLength: 10,
+            maxLength: 22,
             listeners: {
                 change: {
                     fn: function() { me.checkCommitEnabled() }
@@ -114,17 +114,19 @@ Ext.define('Lada.view.form.Ortserstellung', {
         }, {
             xtype: 'tfield',
             labelWidth: 125,
-            maxLength: 100,
+            maxLength: 15,
             name: 'kurztext',
             fieldLabel: i18n.getMsg('orte.kurztext')
         },{
             xtype: 'tfield',
             labelWidth: 125,
+            maxLength: 100,
             fieldLabel: i18n.getMsg('orte.langtext'),
             name: 'langtext'
         },{
             xtype: 'tfield',
             labelWidth: 125,
+            maxLength: 70,
             fieldLabel: i18n.getMsg('orte.berichtstext'),
             name: 'berichtstext'
         }, {
@@ -136,13 +138,13 @@ Ext.define('Lada.view.form.Ortserstellung', {
         }, {
             xtype: 'tfield',
             labelWidth: 125,
-            maxLength: 100,
+            maxLength: 1,
             name: 'zone',
             fieldLabel: i18n.getMsg('orte.zone')
         },{
             xtype: 'tfield',
             labelWidth: 125,
-            maxLength: 100,
+            maxLength: 2,
             name: 'sektor',
             fieldLabel: i18n.getMsg('orte.sektor')
         },{
@@ -154,25 +156,25 @@ Ext.define('Lada.view.form.Ortserstellung', {
         },{
             xtype: 'tfield',
             labelWidth: 125,
-            maxLength: 100,
+            maxLength: 10,
             name: 'zustaendigkeit',
             fieldLabel: i18n.getMsg('orte.zustaendigkeit')
         },{
             xtype: 'tfield',
             labelWidth: 125,
-            maxLength: 100,
+            maxLength: 10,
             name: 'mpArt',
             fieldLabel: i18n.getMsg('orte.mpArt')
         },{
             xtype: 'tfield',
             labelWidth: 125,
-            maxLength: 100,
+            maxLength: 10,
             name: 'nutsCode',
             fieldLabel: i18n.getMsg('orte.nutsCode')
         },{
             xtype: 'tfield',
             labelWidth: 125,
-            maxLength: 100,
+            maxLength: 7,
             name: 'ozId',
             fieldLabel: i18n.getMsg('orte.ozId')
         }];
