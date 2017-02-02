@@ -17,7 +17,13 @@ Ext.define('Lada.model.Ort', {
     }, {
         name: 'aktiv'
     }, {
-        name: 'ortId'
+        name: 'ortId',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
         name: 'nutsCode'
     }, {

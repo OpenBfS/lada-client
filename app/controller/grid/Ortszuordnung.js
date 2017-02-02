@@ -171,8 +171,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     cloneort: function(button) {
         var grid = button.up('ortszuordnungwindow').down('ortstammdatengrid').getView();
         var selected = grid.getSelectionModel().getSelection()[0];
-         Ext.create('Lada.view.window.Ortserstellung', {
-             record: Ext.create('Lada.model.Ort', selected.data),
+        var newRecord = Ext.create('Lada.model.Ort', selected.data);
+        newRecord.set('ortId', '');
+        Ext.create('Lada.view.window.Ortserstellung', {
+             record: newRecord,
              parentWindow: button.up('ortszuordnungwindow')
         }).show();
     },
@@ -252,7 +254,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                     item.get('berichtstext').indexOf(filter) > -1) {
                     return true;
                 }
-                if (item.get('gemId').indexOf(filter) > -1) {
+                if (item.get('gemId') &&
+                    item.get('gemId').indexOf(filter) > -1) {
                     return true;
                 }
             }});
@@ -289,7 +292,11 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         this.searchField.reset();
         Ext.create('Lada.view.window.Ortserstellung', {
             record: Ext.create('Lada.model.Ort', {
-                gemId: record.get('id')
+                gemId: record.get('id'),
+                ortId: record.get('id'),
+                kurztext: record.get('bezeichnung'),
+                langtext: record.get('bezeichnung'),
+                berichtstext: record.get('bezeichnung')
             }),
             parentWindow: panel
         }).show();
@@ -301,7 +308,11 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         this.searchField.reset();
         Ext.create('Lada.view.window.Ortserstellung', {
             record: Ext.create('Lada.model.Ort', {
-                staatId: record.get('id')
+                staatId: record.get('id'),
+                ortId: 'Staat_' + record.get('staatIso'),
+                kurztext: record.get('staat'),
+                langtext: record.get('staat'),
+                berichtstext: record.get('staat')
             }),
             parentWindow: win
         }).show();

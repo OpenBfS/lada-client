@@ -35,6 +35,12 @@ Ext.define('Lada.view.form.Ortserstellung', {
             labelWidth: 125,
             value: Lada.netzbetreiber[0]
         }, {
+            xtype: 'textfield',
+            name: 'ortId',
+            maxLength: 10,
+            labelWidth: 125,
+            fieldLabel: i18n.getMsg('orte.ortId')
+        }, {
             xtype: 'checkbox',
             name: 'aktiv',
             fieldLabel: 'aktiv:'
@@ -265,7 +271,6 @@ Ext.define('Lada.view.form.Ortserstellung', {
         }
         this_panel.record.set('letzteAenderung', 0);
         this_panel.record.set('id', null);
-        this_panel.record.set('ortId', null);
         this_panel.record.set('netzbetreiberId', Lada.netzbetreiber[0]);
         this_panel.record.save({
             success: function(record, response) {
