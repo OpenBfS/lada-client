@@ -11,7 +11,8 @@ Ext.Loader.setConfig({
     paths: {
         'Ext.i18n': 'resources/lib/ext/i18n/',
         'Ext.ux.upload': 'resources/lib/ext/upload',
-        'Ext.ux.util': 'resources/lib/ext/util'
+        'Ext.ux.util': 'resources/lib/ext/util',
+        'Ext.ux.grid': 'resources/lib/ext/grid'
     }
 });
 
@@ -31,6 +32,7 @@ Ext.application({
         'Lada.override.i18n.DE',
         'Lada.override.JSON',
         'Lada.override.RowExpander',
+        'Lada.override.StringFilter',
         'Lada.view.plugin.GridRowExpander',
         'Ext.i18n.Bundle',
         'Ext.layout.container.Column',

@@ -130,7 +130,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 layout: 'fit',
                 name: 'ortgrid',
                 hidden: true,
-                maxHeight: 240,
+                height: 240,
                 items: [{
                     xtype: 'ortstammdatengrid'
                 }],

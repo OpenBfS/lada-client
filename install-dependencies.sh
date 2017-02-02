@@ -39,4 +39,6 @@ curl -L https://github.com/ivan-novakov/extjs-upload-widget/archive/1.1.1.zip \
 unzip -n Ext-ux-Upload-1-1-1.zip
 ln -sf extjs-upload-widget-1.1.1/lib/upload upload
 
+ln -sf ../../../extjs/examples/ux/grid grid
+
 cd $CUR_DIR
