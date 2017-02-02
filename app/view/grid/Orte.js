@@ -98,7 +98,7 @@ Ext.define('Lada.view.grid.Orte', {
             },
             dataIndex: 'anlageId'
         }, {
-            header: i18n.getMsg('orte.gemId'),
+            header: i18n.getMsg('orte.verwaltungseinheit'),
             dataIndex: 'gemId',
             width: 120,
             renderer: function(value) {

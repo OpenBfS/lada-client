@@ -52,7 +52,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
         }, {
             xtype: 'verwaltungseinheit',
             labelWidth: 125,
-            fieldLabel: i18n.getMsg('orte.gemeinde'),
+            fieldLabel: i18n.getMsg('orte.verwaltungseinheit'),
             forceSelection: true,
             name: 'gemId',
             listeners: {
