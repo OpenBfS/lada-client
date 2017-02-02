@@ -121,7 +121,7 @@ Ext.define('Lada.view.grid.Orte', {
             dataIndex: 'staatId',
             width: 70,
             renderer: function(value) {
-                if (!value) {
+                if (value === undefined || value === '') {
                     return '';
                 }
                 var staaten = Ext.data.StoreManager.get('staaten');
