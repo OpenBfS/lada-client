@@ -91,10 +91,8 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 if (json) {
                     if(Object.keys(json.errors).length > 0 ||
                         Object.keys(json.warnings).length > 0) {
-
                         formPanel.setMessages(json.errors, json.warnings);
                     }
-
                     if(json.message){
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
                             +' #'+json.message,

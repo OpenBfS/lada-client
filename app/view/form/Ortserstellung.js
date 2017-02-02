@@ -271,6 +271,11 @@ Ext.define('Lada.view.form.Ortserstellung', {
             success: function(record, response) {
                 var newOrtId;
                 var ozw = this_panel.up().parentWindow;
+                var json = Ext.decode(response.response.responseText);
+                if (json) {
+                    this_panel.clearMessages();
+                    this_panel.setMessages(json.errors, json.warnings);
+                }
                 ozw.ortstore.load({
                     callback: function(records, operation, success) {
                         ozw.down('map').addLocations(ozw.ortstore);
@@ -286,7 +291,6 @@ Ext.define('Lada.view.form.Ortserstellung', {
                             msg: 'Ort erfolgreich angelegt!',
                             buttons: Ext.Msg.OK
                         });
-                        this_panel.close();
                     },
                     scope: this
                 });
@@ -312,5 +316,45 @@ Ext.define('Lada.view.form.Ortserstellung', {
                 }
             }
         });
-    }
+    },
+
+    setMessages: function(errors, warnings) {
+        var key;
+        var element;
+        var content;
+        var i18n = Lada.getApplication().bundle;
+        if (warnings) {
+            for (key in warnings) {
+                element = this.down('component[name=' + key + ']');
+                if (!element) {
+                    continue;
+                }
+                content = warnings[key];
+                var warnText = '';
+                for (var i = 0; i < content.length; i++) {
+                    warnText += i18n.getMsg(content[i].toString()) + '\n';
+                }
+                element.showWarnings(warnText);
+            }
+        }
+        if (errors) {
+            for (key in errors) {
+                element = this.down('component[name=' + key + ']');
+                if (!element) {
+                    continue;
+                }
+                content = errors[key];
+                var errorText = '';
+                for (var i = 0; i < content.length; i++) {
+                    errorText += i18n.getMsg(content[i].toString()) + '\n';
+                }
+                element.showErrors(errorText);
+            }
+        }
+     },
+
+    clearMessages: function() {
+        // TODO: this is a stub
+     }
+
 });

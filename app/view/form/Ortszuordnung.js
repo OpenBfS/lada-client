@@ -208,7 +208,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                 for (var i = 0; i < content.length; i++) {
                     errorText += i18n.getMsg(content[i].toString()) + '\n';
                 }
-                element.markInvalid(errorText);
+                element.showErrors(errorText);
             }
         }
      },
