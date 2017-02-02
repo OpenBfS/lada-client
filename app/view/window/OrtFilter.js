@@ -54,7 +54,7 @@ Ext.define('Lada.view.window.OrtFilter', {
             xtype: 'grid',
             name: 'verwaltungseinheiten',
             hideHeaders: true,
-            title: i18n.getMsg('verwaltungseinheit'),
+            title: i18n.getMsg('orte.verwaltungseinheit'),
             minHeight: 30,
             maxHeight: 100,
             width: '100%',
