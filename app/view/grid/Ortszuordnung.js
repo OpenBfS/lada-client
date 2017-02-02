@@ -34,6 +34,8 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
 
     initComponent: function() {
         var me = this;
+        var i18n = Lada.getApplication().bundle;
+
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -72,7 +74,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 allowBlank: false
             }
         }, {
-            header: 'Ort-ID',
+            header: i18n.getMsg('orte.ortId'),
             dataIndex: 'ortId',
             flex: 2,
             renderer: function(value, meta, zuordnung) {
@@ -96,7 +98,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 return record.get('ortId');
             }
         }, {
-            header: 'Staat',
+            header: i18n.getMsg('staat'),
             dataIndex: 'ortId',
             flex: 1,
             renderer: function(value) {
@@ -110,7 +112,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 return record.get('staatIso');
             }
         }, {
-            header: 'Gemeindeschlüssel',
+            header: i18n.getMsg('orte.gemId'),
             dataIndex: 'ortId',
             flex: 3,
             renderer: function(value) {
@@ -122,7 +124,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 return record.get('gemId');
             }
         }, {
-            header: 'Gemeindename',
+            header: i18n.getMsg('orte.verwaltungseinheit'),
             dataIndex: 'ortId',
             flex: 4,
             renderer: function(value) {
@@ -138,7 +140,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 return record2.get('bezeichnung');
             }
         }, {
-            header: 'Anlage',
+            header: i18n.getMsg('orte.anlageId'),
             dataIndex: 'ortId',
             flex: 3,
             renderer: function(value) {
