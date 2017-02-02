@@ -174,6 +174,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
+            ui: 'footer',
             border: '0, 1, 1, 1',
             style: {
                 borderBottom: '1px solid #b5b8c8 !important',
