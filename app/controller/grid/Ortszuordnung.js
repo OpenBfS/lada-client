@@ -49,13 +49,13 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 keyup: this.search
             },
             'ortfilterwindow grid[name=messpunkte]': {
-                itemdblclick: this.selectedMesspunkt
+                itemclick: this.selectedMesspunkt
             },
             'ortfilterwindow grid[name=verwaltungseinheiten]': {
-                itemdblclick: this.selectedVerwaltungseinheit
+                itemclick: this.selectedVerwaltungseinheit
             },
             'ortfilterwindow grid[name=staaten]': {
-                itemdblclick: this.selectedStaat
+                itemclick: this.selectedStaat
             }
         });
     },
