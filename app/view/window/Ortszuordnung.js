@@ -290,6 +290,15 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         }
         osg.setLoading(false);
         map.setLoading(false);
-    }
+    },
+
+    onEsc: function() {
+        var me = this;
+        var search = me.down('textfield[name=search]');
+        if (search.hasFocus) {
+            return;
+        }
+        me.callParent(arguments);
+     }
 });
 

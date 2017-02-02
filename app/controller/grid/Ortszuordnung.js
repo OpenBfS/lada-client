@@ -202,6 +202,16 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * Search triggered by textfield key event.
      */
     search: function(field, evt, opts) {
+        if (evt.getKey() === 27) {
+            if (this.resultPanel.isVisible()) {
+                this.resultPanel.close();
+                return;
+            }
+            else {
+                field.up('window').close();
+                return;
+            }
+        }
         this.searchField = field;
         if ((evt.getKey() == 13 || evt.getKey() == 8) && field.getValue() && field.getValue().length > 0) {
             this.execSearch(field, field.getValue());

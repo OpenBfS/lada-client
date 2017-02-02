@@ -23,6 +23,7 @@ Ext.define('Lada.view.window.OrtFilter', {
     resizable: false,
     shadow: false,
     alwaysOnTop: true,
+    closeAction: 'hide',
 
     initComponent: function() {
         var me = this;
