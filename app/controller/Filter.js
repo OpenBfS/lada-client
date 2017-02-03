@@ -22,6 +22,7 @@ Ext.define('Lada.controller.Filter', {
         'Lada.view.grid.Probenehmer',
         'Lada.view.grid.DatensatzErzeuger',
         'Lada.view.grid.MessprogrammKategorie',
+        'Lada.view.panel.Ort',
         'Lada.store.MessungenList',
         'Lada.view.window.FilterManagement',
         'Lada.view.window.About',
