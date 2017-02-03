@@ -72,7 +72,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
                 }
             }
         }, {
-            xtype: 'numfield',
+            xtype: 'koordinatenart',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.kda'),
             allowDecimals: false,
