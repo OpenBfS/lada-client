@@ -123,7 +123,10 @@ Ext.define('Lada.view.grid.Orte', {
         }, {
             header: i18n.getMsg('orte.anlageId'),
             editor: {
-                xtype: 'kta'
+                xtype: 'combobox',
+                store: Ext.data.StoreManager.get('ktas'),
+                displayField: 'code',
+                valueField: 'id'
             },
             renderer: function(value) {
                 if (value === undefined ||
@@ -187,8 +190,10 @@ Ext.define('Lada.view.grid.Orte', {
                 type: 'string'
             },
             editor: {
-                xtype: 'koordinatenart',
-                allowBlank: false
+                xtype: 'combobox',
+                store: Ext.data.StoreManager.get('koordinatenart'),
+                displayField: 'koordinatenart',
+                valueField: 'id'
             },
             renderer: function(value) {
                 if (value === undefined || value === '') {
@@ -205,7 +210,10 @@ Ext.define('Lada.view.grid.Orte', {
                 type: 'string'
             },
             editor: {
-                xtype: 'ortszusatz',
+                xtype: 'combobox',
+                store: Ext.data.StoreManager.get('ortszusatz'),
+                displayField: 'ozsId',
+                valueField: 'ozsId'
             },
             renderer: function(value) {
                 if (value === undefined ||
@@ -225,7 +233,10 @@ Ext.define('Lada.view.grid.Orte', {
                 type: 'string'
             },
             editor: {
-                xtype: 'orttyp',
+                xtype: 'combobox',
+                store: Ext.data.StoreManager.get('orttyp'),
+                displayField: 'code',
+                valueField: 'id'
             },
             renderer: function(value) {
                 if (value === undefined ||
