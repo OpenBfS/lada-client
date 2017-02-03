@@ -117,12 +117,10 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 region: 'center',
                 layout: 'border',
                 margin: '13, 5, 10, 5',
-                minHeight: 380,
                 externalOrteStore: true
             }, {
                 xtype: 'ortszuordnungform',
                 region: 'east',
-                minHeight: 380,
                 type: this.probe? 'probe': 'mpr'
             }, {
                 region: 'south',

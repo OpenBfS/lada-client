@@ -49,7 +49,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
             title: i18n.getMsg('ortszuordnung.form.fset.title'),
             layout: 'fit',
             items: [{
-                layout: 'hbox',
+                overflowY: 'auto',
                 border: 0,
                 margin: '0, 0, 10, 0',
                 dockedItems: [{
@@ -82,58 +82,64 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                     }]
                 }],
                 items: [{
-                    layout: 'vbox',
-                    autoscroll: true,
+                    layout: 'hbox',
                     border: 0,
+                    margin: '0, 0, 10, 0',
                     items: [{
                         layout: 'vbox',
                         border: 0,
-                        margin: '0, 20, 0, 0',
                         items: [{
-                            xtype: 'tfield',
-                            labelWidth: 125,
-                            maxLength: 100,
-                            name: 'ortszusatztext',
-                            fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszusatztext')
-                        }, {
-                            xtype: 'cbox',
-                            labelWidth: 125,
-                            maxLength: 1,
-                            allowBlank: false,
-                            editable: true,
-                            name: this.typName,
-                            disableKeyFilter: true,
-                            fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp'),
-                            store: Ext.create('Ext.data.Store', {
-                                fields: ['value', 'label'],
-                                //TODO: Meaning of the letters should be added
-                                data : [
-                                    {'value':'U', 'label':'U'},
-                                    {'value':'E', 'label':'E'},
-                                    {'value':'Z', 'label':'Z'},
-                                    {'value':'A', 'label':'A'}
-                                ]
-                            }),
-                            displayField: 'label',
-                            valueField: 'value',
-                            emptyText: 'Bitte geben Sie einen Ortszuordnungstyp ein',
-                            queryMode: 'local'
-                        }, {
-                            // this field is hidden because the user doesn't
-                            // need to know the internal ortID
-                            xtype: 'textfield',
-                            allowBlank: false,
-                            regex: /^[0-9]{1,45}$/,
-                            submitValue: true,
-                            hidden: true,
-                            name: this.ortIdName,
-                            listeners: {
-                                change: me.changed
-                            }
-                        }]
-                    },
-                    Ext.create('Lada.view.form.OrtInfo')
-                    ]
+                            layout: 'vbox',
+                            border: 0,
+                            margin: '0, 20, 0, 0',
+                            items: [{
+                                xtype: 'tfield',
+                                labelWidth: 125,
+                                maxLength: 100,
+                                name: 'ortszusatztext',
+                                fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszusatztext')
+                            }, {
+                                xtype: 'cbox',
+                                labelWidth: 125,
+                                maxLength: 1,
+                                allowBlank: false,
+                                editable: true,
+                                name: this.typName,
+                                disableKeyFilter: true,
+                                fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp'),
+                                store: Ext.create('Ext.data.Store', {
+                                    fields: ['value', 'label'],
+                                    //TODO: Meaning of the letters should be added
+                                    data : [
+                                        {'value':'U', 'label':'U'},
+                                        {'value':'E', 'label':'E'},
+                                        {'value':'Z', 'label':'Z'},
+                                        {'value':'A', 'label':'A'}
+                                    ]
+                                }),
+                                displayField: 'label',
+                                valueField: 'value',
+                                emptyText: 'Bitte geben Sie einen Ortszuordnungstyp ein',
+                                queryMode: 'local'
+                            }, {
+                                // this field is hidden because the user doesn't
+                                // need to know the internal ortID
+                                xtype: 'textfield',
+                                allowBlank: false,
+                                regex: /^[0-9]{1,45}$/,
+                                submitValue: true,
+                                hidden: true,
+                                name: this.ortIdName,
+                                listeners: {
+                                    change: me.changed
+                                }
+                            }]
+                        },
+                        Ext.create('Lada.view.form.OrtInfo',{
+                            flex: 1
+                        })
+                        ]
+                    }]
                 }]
             }]
         }];
