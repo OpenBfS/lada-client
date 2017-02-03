@@ -23,7 +23,7 @@ Ext.define('Lada.model.OrtsZusatz', {
         name: 'ortszusatz'
     }],
 
-    idProperty: 'id',
+    idProperty: 'ozsId',
 
     proxy: {
         type: 'rest',
