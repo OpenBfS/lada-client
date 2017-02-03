@@ -148,6 +148,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      */
     createort: function(button) {
         Ext.create('Lada.view.window.Ortserstellung',{
+            record: Ext.create('Lada.model.Ort', {ortTyp: 1}),
             parentWindow: button.up('ortszuordnungwindow')
         }).show();
     },
@@ -195,7 +196,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             record: Ext.create('Lada.model.Ort',{
                 koordXExtern: lonlat.lon,
                 koordYExtern: lonlat.lat,
-                kdaId : 4
+                kdaId : 4,
+                ortTyp: 1
             }),
             parentWindow: this.up('ortszuordnungwindow')
         }).show();
@@ -308,7 +310,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 ortId: record.get('id'),
                 kurztext: record.get('bezeichnung'),
                 langtext: record.get('bezeichnung'),
-                berichtstext: record.get('bezeichnung')
+                berichtstext: record.get('bezeichnung'),
+                ortTyp: 4
             }),
             parentWindow: panel
         }).show();
@@ -324,7 +327,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 ortId: 'Staat_' + record.get('staatIso'),
                 kurztext: record.get('staat'),
                 langtext: record.get('staat'),
-                berichtstext: record.get('staat')
+                berichtstext: record.get('staat'),
+                ortTyp: 5
             }),
             parentWindow: win
         }).show();
