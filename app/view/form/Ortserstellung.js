@@ -274,17 +274,25 @@ Ext.define('Lada.view.form.Ortserstellung', {
 
     saveOrt: function() {
         var this_panel = this.up('panel');
+        var me = this;
         var form = this_panel.getForm();
         var record = form.getRecord();
-        var oldId = record.get('ortId');
         var data = form.getFieldValues(true);
         for (var key in data) {
             record.set(key, data[key]);
         }
+        record.set('id', null);
         record.set('netzbetreiberId', Lada.netzbetreiber[0]);
         record.save({
             success: function(newrecord, response) {
                 form.loadRecord(newrecord);
+                this_panel.down('verwaltungseinheit').store.load(
+                        { id:newrecord.get('gemId') });
+                console.log(this_panel.down('verwaltungseinheit'));
+                this_panel.down('staat').store.load(
+                        { id : newrecord.get('staat') });
+                me.setDisabled(true);
+                me.hide();
                 var ozw = this_panel.up().parentWindow;
                 var json = Ext.decode(response.response.responseText);
                 if (json) {
@@ -306,11 +314,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
                                 resulttext = 'Dieser Ort existiert bereits!';
                             }
                             if (json.message == '200') {
-                                if (oldId === undefined) {
-                                    resulttext = 'Ort erfolgreich angelegt!';
-                                } else {
-                                    resulttext = 'Bestehender Ort erfolgreich modifiziert!';
-                                }
+                                resulttext = 'Ort erfolgreich angelegt!';
                             }
                         }
                         Ext.Msg.show({
@@ -342,6 +346,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
                     Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
                         Lada.getApplication().bundle.getMsg('err.msg.response.body'));
                 }
+                me.setDisabled(true);
             }
         });
     },
