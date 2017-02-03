@@ -65,24 +65,12 @@ Ext.define('Lada.view.form.Ortserstellung', {
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.verwaltungseinheit'),
             forceSelection: true,
-            name: 'gemId',
-            listeners: {
-                change: {
-                    fn: function() { me.checkCommitEnabled() }
-                }
-            }
+            name: 'gemId'
         }, {
             xtype: 'koordinatenart',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.kda'),
-            allowDecimals: false,
-            maxLength: 1,
-            name: 'kdaId',
-            listeners: {
-                change: {
-                    fn: function() { me.checkCommitEnabled() }
-                }
-            }
+            name: 'kdaId'
         }, {
             xtype: 'numfield',
             labelWidth: 125,
@@ -90,12 +78,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
             name: 'koordXExtern',
             allowDecimals: true,
             decimalPrecision: 5,
-            maxLength: 22,
-            listeners: {
-                change: {
-                    fn: function() { me.checkCommitEnabled() }
-                }
-            }
+            maxLength: 22
         }, {
             xtype: 'numfield',
             labelWidth: 125,
@@ -103,12 +86,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
             name: 'koordYExtern',
             allowDecimals: true,
             decimalPrecision: 5,
-            maxLength: 22,
-            listeners: {
-                change: {
-                    fn: function() { me.checkCommitEnabled() }
-                }
-            }
+            maxLength: 22
         }, {
             xtype: 'numfield',
             labelWidth: 125,
@@ -204,151 +182,13 @@ Ext.define('Lada.view.form.Ortserstellung', {
                 qtip: 'Änderungen verwerfen',
                 icon: 'resources/img/dialog-cancel.png',
                 action: 'revert',
+                disabled: true
             }]
         }];
-
         this.callParent(arguments);
         this.getForm().loadRecord(this.record);
-    },
-
-    /**
-     * checks if the Messpunkt can be committed.
-     * Disables the save button if false
-     */
-    checkCommitEnabled: function() {
-        var savebutton =  this.down('toolbar').down('button[action=save]');
-        var form = this.getForm();
-        if (form.isDirty()) {
-            if (form.findField('kdaId').getValue() ||
-                form.findField('koordYExtern').getValue() ||
-                form.findField('koordXExtern').getValue()) {
-                if (this.checkCoordinates()) {
-                    savebutton.setDisabled(false);
-                } else {
-                    savebutton.setDisabled(true);
-                }
-            } else if (form.findField('gemId').getValue() ||
-                form.findField('staatId').getValue() >= 0 ) {
-                savebutton.setDisabled(false);
-            } else {
-                savebutton.setDisabled(true);
-            }
-        } else {
-            savebutton.setDisabled(true);
-        }
-    },
-
-    /**
-     * Validates the coordinate fields kdaId, koordXExtern, koordYExtern
-     */
-    checkCoordinates: function() {
-        var x = this.getForm().findField('koordXExtern').getValue();
-        var y = this.getForm().findField('koordYExtern').getValue();
-        var kda = this.getForm().findField('kdaId').getValue();
-        if (x && y && kda) {
-            if (kda === 4){
-                if (x > -180 && x < 180
-                    && y > -90 && y < 90) {
-                    return true;
-                } else {
-                    // TODO: WGS84 (degrees- decimal), coordinates invalid
-                    return false;
-                }
-            } else if (kda === 5){
-                if (x >= 1000000 && x < 61000000 &&
-                    y > -10000000 && y < 10000000) {
-                    return true;
-                } else {
-                    // TODO: UTM, coordinates invalid
-                    return false;
-                }
-            } else {
-                // TODO KDA not supported
-                return false;
-            }
-        } else {
-            // TODO: not all fields filled in
-            return false;
-        }
-    },
-
-    saveOrt: function() {
-        var this_panel = this.up('panel');
-        var me = this;
-        var form = this_panel.getForm();
-        var record = form.getRecord();
-        var data = form.getFieldValues(true);
-        for (var key in data) {
-            record.set(key, data[key]);
-        }
-        record.set('id', null);
-        record.set('netzbetreiberId', Lada.netzbetreiber[0]);
-        record.save({
-            success: function(newrecord, response) {
-                form.loadRecord(newrecord);
-                this_panel.down('verwaltungseinheit').store.load(
-                        { id:newrecord.get('gemId') });
-                console.log(this_panel.down('verwaltungseinheit'));
-                this_panel.down('staat').store.load(
-                        { id : newrecord.get('staat') });
-                me.setDisabled(true);
-                me.hide();
-                var ozw = this_panel.up().parentWindow;
-                var json = Ext.decode(response.response.responseText);
-                if (json) {
-                    this_panel.clearMessages();
-                    this_panel.setMessages(json.errors, json.warnings);
-                }
-                ozw.ortstore.load({
-                    callback: function(records, operation, success) {
-                        ozw.down('map').addLocations(ozw.ortstore);
-                        var osg = ozw.down('ortstammdatengrid');
-                        osg.setStore(ozw.ortstore);
-                        var id = Ext.decode(response.response.responseText).data.id;
-                        var record = osg.store.getById(id);
-                        var selmod = osg.getView().getSelectionModel();
-                        selmod.select(record);
-                        var resulttext;
-                        if (json) {
-                            if (json.message == '201') {
-                                resulttext = 'Dieser Ort existiert bereits!';
-                            }
-                            if (json.message == '200') {
-                                resulttext = 'Ort erfolgreich angelegt!';
-                            }
-                        }
-                        Ext.Msg.show({
-                            title: Lada.getApplication().bundle.getMsg('success'),
-                            autoScroll: true,
-                            msg: resulttext,
-                            buttons: Ext.Msg.OK
-                        });
-                    },
-                    scope: this
-                });
-
-            },
-            failure: function(record, response) {
-                var json = Ext.decode(response.response.responseText);
-                if (json) {
-                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
-                        formPanel.setMessages(json.errors, json.warnings);
-                    }
-                    if(json.message){
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
-                            +' #'+json.message,
-                             Lada.getApplication().bundle.getMsg(json.message));
-                    } else {
-                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                             Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
-                    }
-                } else {
-                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                        Lada.getApplication().bundle.getMsg('err.msg.response.body'));
-                }
-                me.setDisabled(true);
-            }
-        });
+        var controller = Lada.app.getController('Lada.controller.form.Ortserstellung')
+        controller.checkCommitEnabled(this);
     },
 
     setMessages: function(errors, warnings) {
@@ -389,5 +229,4 @@ Ext.define('Lada.view.form.Ortserstellung', {
     clearMessages: function() {
         // TODO: this is a stub
      }
-
 });
