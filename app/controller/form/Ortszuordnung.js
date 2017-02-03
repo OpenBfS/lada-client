@@ -128,6 +128,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             map.featureLayer.setVisibility(true);
             win.setY(25);
             gridPanel.show();
+            osg.store.load({params: {netzbetreiberId: oForm.record.get('netzbetreiberId')}});
             win.doLayout();
             osg.addListener('select',oForm.setOrt, oForm);
 
