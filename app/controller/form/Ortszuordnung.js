@@ -150,7 +150,33 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             map.featureLayer.setVisibility(true);
             win.setY(25);
             gridPanel.show();
-            osg.store.load({params: {netzbetreiberId: oForm.record.get('netzbetreiberId')}});
+            var mstId = oForm.up('window').probe ? oForm.up('window').probe.get('mstId') :
+                oForm.up('window').messprogramm.get('mstId');
+            var mst = Ext.data.StoreManager.get('messstellen');
+            var ndx = mst.findExact('id', mstId);
+            var nId = mst.getAt(ndx).get('netzbetreiberId');
+            var store = Ext.create('Lada.store.Orte', {
+                defaultPageSize: 0,
+                listeners: {
+                    beforeload: {
+                        fn: function() {
+                            osg.setLoading(true);
+                        }
+                    },
+                    load: {
+                        fn: function() {
+                            osg.setLoading(false);
+                            osg.setStore(store);
+                            osg.store.filterBy(function(record) {
+                                if (record.get('netzbetreiberId') ===
+                                    nId) {
+                                        return true;
+                                    }
+                            });
+                        }
+                    }
+                }
+            });
             win.doLayout();
             osg.addListener('select',oForm.setOrt, oForm);
 
