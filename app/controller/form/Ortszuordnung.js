@@ -112,7 +112,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         var recordData = form.getForm().getRecord().data;
         var currentOrt = null;
         if (recordData.ortId !== undefined) {
-            currentOrt = recordData.ortId;
+            currentOrt = recordData.ortId[0];
         } else {
             currentOrt = recordData.ort;
         }
@@ -191,25 +191,16 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
      */
     validityChange: function(form, valid) {
         if (form.isDirty()) {
-            if (valid) {
-                if (form.getValues().ortId !== ''
-                    && /[UEZA]/.test(form.getValues().ortszuordnungTyp)) {
-                    // valid ortzuordnung(Probe)
-                    form.owner.down('button[action=save]').setDisabled(false);
-                } else if (form.getValues().ort !== ''
-                    && /[UEZA]/.test(form.getValues().ortsTyp)) {
-                    // valid ortzuordnung(messprogramm)
-                    form.owner.down('button[action=save]').setDisabled(false);
-                } else {
-                    form.owner.down('button[action=save]').setDisabled(true);
-                }
+            form.owner.down('button[action=revert]').setDisabled(false);
+            if (valid && form.getValues().ortId !== '') {
+                form.owner.down('button[action=save]').setDisabled(false);
             } else {
-                //invalid
                 form.owner.down('button[action=save]').setDisabled(true);
             }
         } else {
             //not dirty
             form.owner.down('button[action=save]').setDisabled(true);
+            form.owner.down('button[action=revert]').setDisabled(true);
         }
     }
 });

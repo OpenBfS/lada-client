@@ -143,11 +143,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     setOrt: function(row, selRecord, index, opts) {
         var newOrtId = selRecord.get('id');
         if (newOrtId) {
-            if (this.type == 'probe') {
-                this.getForm().setValues({ortId: newOrtId});
-            } else {
-                this.getForm().setValues({ort: newOrtId});
-            }
+            this.getForm().setValues({ortId: newOrtId});
             this.setOrtInfo(selRecord);
         }
     },

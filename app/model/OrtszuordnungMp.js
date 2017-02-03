@@ -43,14 +43,6 @@ Ext.define('Lada.model.OrtszuordnungMp', {
             }
             return value;
         }
-    }, {
-        name: 'parentModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
     }],
 
     idProperty: 'id',
