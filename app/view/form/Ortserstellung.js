@@ -22,6 +22,8 @@ Ext.define('Lada.view.form.Ortserstellung', {
 
     record: null,
 
+    trackResetOnLoad: true,
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
@@ -214,17 +216,21 @@ Ext.define('Lada.view.form.Ortserstellung', {
     checkCommitEnabled: function() {
         var savebutton =  this.down('toolbar').down('button[action=save]');
         var form = this.getForm();
-        if (form.findField('kdaId').getValue() ||
-            form.findField('koordYExtern').getValue() ||
-            form.findField('koordXExtern').getValue()) {
-            if (this.checkCoordinates()) {
+        if (form.isDirty()) {
+            if (form.findField('kdaId').getValue() ||
+                form.findField('koordYExtern').getValue() ||
+                form.findField('koordXExtern').getValue()) {
+                if (this.checkCoordinates()) {
+                    savebutton.setDisabled(false);
+                } else {
+                    savebutton.setDisabled(true);
+                }
+            } else if (form.findField('gemId').getValue() ||
+                form.findField('staatId').getValue() >= 0 ) {
                 savebutton.setDisabled(false);
             } else {
                 savebutton.setDisabled(true);
             }
-        } else if (form.findField('gemId').getValue() ||
-            form.findField('staatId').getValue() >= 0 ) {
-            savebutton.setDisabled(false);
         } else {
             savebutton.setDisabled(true);
         }
@@ -268,14 +274,15 @@ Ext.define('Lada.view.form.Ortserstellung', {
         var this_panel = this.up('panel');
         var form = this_panel.getForm();
         var record = form.getRecord();
+        var oldId = record.get('ortId');
         var data = form.getFieldValues(true);
         for (var key in data) {
             record.set(key, data[key]);
         }
         record.set('netzbetreiberId', Lada.netzbetreiber[0]);
         record.save({
-            success: function(record, response) {
-                var newOrtId;
+            success: function(newrecord, response) {
+                form.loadRecord(newrecord);
                 var ozw = this_panel.up().parentWindow;
                 var json = Ext.decode(response.response.responseText);
                 if (json) {
@@ -291,10 +298,23 @@ Ext.define('Lada.view.form.Ortserstellung', {
                         var record = osg.store.getById(id);
                         var selmod = osg.getView().getSelectionModel();
                         selmod.select(record);
+                        var resulttext;
+                        if (json) {
+                            if (json.message == '201') {
+                                resulttext = 'Dieser Ort existiert bereits!';
+                            }
+                            if (json.message == '200') {
+                                if (oldId === undefined) {
+                                    resulttext = 'Ort erfolgreich angelegt!';
+                                } else {
+                                    resulttext = 'Bestehender Ort erfolgreich modifiziert!';
+                                }
+                            }
+                        }
                         Ext.Msg.show({
                             title: Lada.getApplication().bundle.getMsg('success'),
                             autoScroll: true,
-                            msg: 'Ort erfolgreich angelegt!',
+                            msg: resulttext,
                             buttons: Ext.Msg.OK
                         });
                     },

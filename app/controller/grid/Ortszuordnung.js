@@ -172,7 +172,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var grid = button.up('ortszuordnungwindow').down('ortstammdatengrid').getView();
         var selected = grid.getSelectionModel().getSelection()[0];
         var newRecord = Ext.create('Lada.model.Ort', selected.data);
-        newRecord.set('ortId', '');
+        newRecord.set('ortId', null);
+        newRecord.set('id', null);
         Ext.create('Lada.view.window.Ortserstellung', {
              record: newRecord,
              parentWindow: button.up('ortszuordnungwindow')
