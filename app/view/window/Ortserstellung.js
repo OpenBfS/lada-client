@@ -51,6 +51,11 @@ Ext.define('Lada.view.window.Ortserstellung', {
                 }
             })
         ];
+        this.buttons = [{
+            text: 'Schließen',
+            scope: this,
+            handler: this.close
+        }];
         this.callParent(arguments);
     }
 });

@@ -20,6 +20,8 @@ Ext.define('Lada.view.form.Ortserstellung', {
 
     margin: 5,
 
+    border: 0,
+
     record: null,
 
     trackResetOnLoad: true,
@@ -44,6 +46,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
             fieldLabel: i18n.getMsg('orte.ortId')
         }, {
             xtype: 'checkbox',
+            labelWidth: 125,
             name: 'aktiv',
             fieldLabel: 'aktiv:'
         },{
@@ -184,7 +187,6 @@ Ext.define('Lada.view.form.Ortserstellung', {
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
-            ui: 'footer',
             border: '0, 1, 1, 1',
             style: {
                 borderBottom: '1px solid #b5b8c8 !important',
@@ -194,14 +196,14 @@ Ext.define('Lada.view.form.Ortserstellung', {
             items: ['->', {
                 text: i18n.getMsg('save'),
                 action: 'save',
-                handler: me.saveOrt,
+                qtip: 'Daten speichern',
+                icon: 'resources/img/dialog-ok-apply.png',
                 disabled: true
             }, {
-                text: i18n.getMsg('close'),
-                action: 'close',
-                handler: function() {
-                    me.close();
-                }
+                text: i18n.getMsg('discard'),
+                qtip: 'Änderungen verwerfen',
+                icon: 'resources/img/dialog-cancel.png',
+                action: 'revert',
             }]
         }];
 
