@@ -132,7 +132,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
             fieldLabel: i18n.getMsg('orte.berichtstext'),
             name: 'berichtstext'
         }, {
-            xtype: 'tfield',
+            xtype: 'kta',
             labelWidth: 125,
             maxLength: 100,
             name: 'anlageId',
@@ -150,7 +150,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
             name: 'sektor',
             fieldLabel: i18n.getMsg('orte.sektor')
         },{
-            xtype: 'tfield',
+            xtype: 'orttyp',
             labelWidth: 125,
             maxLength: 100,
             name: 'ortTyp',
@@ -174,7 +174,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
             name: 'nutsCode',
             fieldLabel: i18n.getMsg('orte.nutsCode')
         },{
-            xtype: 'tfield',
+            xtype: 'ortszusatz',
             labelWidth: 125,
             maxLength: 7,
             name: 'ozId',

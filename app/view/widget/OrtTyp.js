@@ -15,10 +15,14 @@ Ext.define('Lada.view.widget.OrtTyp', {
     store: 'OrtTyp',
     displayField: 'id',
     valueField: 'id',
+    editable: this.editable || false,
+    forceSelection: true,
     // Enable filtering of comboboxes
+    autoSelect: false,
     queryMode: 'local',
     triggerAction: 'all',
     typeAhead: false,
+    minChars: 0,
     tpl: Ext.create("Ext.XTemplate",
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
             '{code} - {ortTyp}</div></tpl>'),
@@ -32,9 +36,6 @@ Ext.define('Lada.view.widget.OrtTyp', {
         this.store = Ext.data.StoreManager.get('orttyp');
         if (!this.store) {
             this.store = Ext.create('Lada.store.OrtTyp');
-        }
-        else {
-            this.store.clearFilter();
         }
         this.callParent(arguments);
     }
