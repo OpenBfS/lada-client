@@ -25,6 +25,11 @@ Ext.define('Lada.controller.Ort', {
                 canceledit: me.cancelEdit,
                 select: me.select
             },
+            'ortszuordnungwindow ortstammdatengrid': {
+                edit: me.gridSave,
+                canceledit: me.cancelEdit,
+                select: me.select
+            },
             'ortpanel map': {
                 featureadded: me.featureadded
             }
