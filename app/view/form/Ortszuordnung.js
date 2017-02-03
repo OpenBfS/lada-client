@@ -15,6 +15,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
     requires: [
         'Lada.view.form.OrtInfo',
+        'Lada.view.widget.OrtszuordnungTyp',
         'Lada.view.widget.Verwaltungseinheit',
         'Lada.view.widget.Staat'
     ],
@@ -99,28 +100,13 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 name: 'ortszusatztext',
                                 fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszusatztext')
                             }, {
-                                xtype: 'cbox',
+                                xtype: 'ortszuordnungtyp',
                                 labelWidth: 125,
-                                maxLength: 1,
                                 allowBlank: false,
                                 editable: true,
                                 name: this.typName,
                                 disableKeyFilter: true,
                                 fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp'),
-                                store: Ext.create('Ext.data.Store', {
-                                    fields: ['value', 'label'],
-                                    //TODO: Meaning of the letters should be added
-                                    data : [
-                                        {'value':'U', 'label':'U'},
-                                        {'value':'E', 'label':'E'},
-                                        {'value':'Z', 'label':'Z'},
-                                        {'value':'A', 'label':'A'}
-                                    ]
-                                }),
-                                displayField: 'label',
-                                valueField: 'value',
-                                emptyText: 'Bitte geben Sie einen Ortszuordnungstyp ein',
-                                queryMode: 'local'
                             }, {
                                 // this field is hidden because the user doesn't
                                 // need to know the internal ortID

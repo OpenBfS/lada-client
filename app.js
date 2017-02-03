@@ -65,6 +65,7 @@ Ext.application({
         'Lada.store.MessungQueries',
         'Lada.store.Ktas',
         'Lada.store.OrtsZusatz',
+        'Lada.store.OrtszuordnungTyp',
         'Lada.store.OrtTyp',
         'Lada.store.KoordinatenArt',
         'Lada.model.MessstelleLabor'
@@ -262,6 +263,10 @@ Ext.application({
         });
         Ext.create('Lada.store.OrtsZusatz', {
             storeId: 'ortszusatz',
+            autoLoad: 'true'
+        });
+        Ext.create('Lada.store.OrtszuordnungTyp', {
+            storeId: 'ortszuordnungtyp',
             autoLoad: 'true'
         });
         Ext.create('Lada.store.OrtTyp', {
