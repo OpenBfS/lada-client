@@ -363,4 +363,4 @@ Ext.define('Lada.view.form.Ortserstellung', {
         // TODO: this is a stub
      }
 
-);
+});
