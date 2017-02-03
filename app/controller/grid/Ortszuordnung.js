@@ -208,6 +208,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         if (evt.getKey() === 27) {
             if (this.resultPanel.isVisible()) {
                 this.resultPanel.close();
+                verwaltungseinheiten.clearFilter(true);
+                staaten.clearFilter(true);
                 return;
             }
             else {
@@ -221,6 +223,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         }
         if (field.getValue().length === 0) {
             this.resultPanel.hide();
+            verwaltungseinheiten.clearFilter(true);
+            staaten.clearFilter(true);
             return;
         }
         if (field.getValue().length < 3) {
@@ -236,12 +240,19 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     execSearch: function(field, filter) {
         // Filter stores
         var messpunkte = Ext.data.StoreManager.get('orte');
+        var cloneRecords = [];
+        messpunkte.each(function(r) {
+            cloneRecords.push(r.copy());
+        });
+        var filterMesspunkte = Ext.create('Lada.store.Orte',{
+            autoLoad: false
+        });
+        filterMesspunkte.add(cloneRecords);
         var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
-        messpunkte.clearFilter(true);
         verwaltungseinheiten.clearFilter(true);
         staaten.clearFilter(true);
-        messpunkte.filter({filterFn: function(item) {
+        filterMesspunkte.filter({filterFn: function(item) {
                 if (item.get('ortId').indexOf(filter) > -1) {
                     return true;
                 }
@@ -272,7 +283,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             });
         }
         this.resultPanel.show();
-        this.resultPanel.updateGrids(messpunkte, verwaltungseinheiten, staaten);
+        this.resultPanel.updateGrids(filterMesspunkte, verwaltungseinheiten, staaten);
         this.resultPanel.reposition(field.getX() + field.getLabelWidth(), field.getY());
         field.focus();
     },
