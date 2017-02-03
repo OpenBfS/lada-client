@@ -23,12 +23,12 @@ Ext.define('Lada.controller.Ort', {
             'ortpanel ortstammdatengrid': {
                 edit: me.gridSave,
                 canceledit: me.cancelEdit,
-                select: me.select
+                select: me.selectPanel
             },
             'ortszuordnungwindow ortstammdatengrid': {
                 edit: me.gridSave,
                 canceledit: me.cancelEdit,
-                select: me.select
+                select: me.selectWindow
             },
             'ortpanel map': {
                 featureadded: me.featureadded
@@ -101,12 +101,27 @@ Ext.define('Lada.controller.Ort', {
         grid.up('ortpanel').down('button[action=delete]').disable();
     },
 
-    select: function(rowModel, record) {
-        this.checkEdit(rowModel, record);
+    selectPanel: function(rowModel, record) {
+        this.checkEditPanel(rowModel, record);
         this.buttonToggle(rowModel, record);
     },
 
-    checkEdit: function(rowModel, record) {
+    selectWindow: function(rowModel, record) {
+        this.checkEditWindow(rowModel, record);
+        this.buttonToggle(rowModel, record);
+    },
+
+    checkEditWindow: function(rowModel, record) {
+        if (!Ext.Array.contains(Lada.netzbetreiber,
+            record.get('netzbetreiberId')) &&
+            record.get('netzbetreiberId') !== '') {
+            var grid = Ext.ComponentQuery.query('ortszuordnungwindow ortstammdatengrid')[0];
+            grid.rowEditing.cancelEdit();
+            return;
+        }
+    },
+
+    checkEditPanel: function(rowModel, record) {
         if (!Ext.Array.contains(Lada.netzbetreiber,
             record.get('netzbetreiberId')) &&
             record.get('netzbetreiberId') !== '') {
