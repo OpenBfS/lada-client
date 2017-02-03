@@ -23,6 +23,9 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             'ortszuordnungform button[action=save]': {
                 click: this.save
             },
+            'ortszuordnungform button[action=revert]': {
+                click: this.revert
+            },
             'ortszuordnungform': {
                 validitychange: this.validityChange,
                 dirtychange: this.validityChange
@@ -47,7 +50,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         }
         var data = formPanel.getForm().getFieldValues(false);
         var i18n = Lada.getApplication().bundle;
-        //TODO: the forms seem not to submit anything into record.
         var recordData = formPanel.getForm().getRecord().data;
         if (recordData['probeId'] !== undefined) {
             // TODO: as model.ort.ortId and model.ortszuordnung.ortId coexist,
@@ -107,6 +109,26 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 }
             }
         });
+    },
+
+    /**
+     * reverts the form to the currently saved state
+     */
+    revert: function(button) {
+        var form = button.up('form');
+        var osg = button.up('window').down('ortstammdatengrid');
+        var recordData = form.getForm().getRecord().data;
+        var currentOrt = null;
+        if (recordData.ortId !== undefined) {
+            currentOrt = recordData.ortId;
+        } else {
+            currentOrt = recordData.ort;
+        }
+        var record = osg.store.getById(currentOrt);
+        var selmod = osg.getView().getSelectionModel();
+        form.getForm().reset();
+           var selmod = osg.getView().getSelectionModel();
+        selmod.select(record);
     },
 
     /**
