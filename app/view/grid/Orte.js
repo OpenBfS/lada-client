@@ -14,7 +14,11 @@ Ext.define('Lada.view.grid.Orte', {
     alias: 'widget.ortstammdatengrid',
 
     requires: [
-        'Ext.ux.grid.FiltersFeature'
+        'Ext.ux.grid.FiltersFeature',
+        'Lada.view.widget.KoordinatenArt',
+        'Lada.view.widget.Kta',
+        'Lada.view.widget.OrtsZusatz',
+        'Lada.view.widget.OrtTyp'
     ],
     // minHeight and deferEmptyText are needed to be able to show the
     // emptyText message.
@@ -119,7 +123,18 @@ Ext.define('Lada.view.grid.Orte', {
         }, {
             header: i18n.getMsg('orte.anlageId'),
             editor: {
-                xtype: 'numberfield'
+                xtype: 'kta'
+            },
+            renderer: function(value) {
+                if (value === undefined ||
+                    value === null ||
+                    value === ''
+                ) {
+                    return '';
+                }
+                var store = Ext.data.StoreManager.get('ktas');
+                var record = store.getById(value);
+                return record.get('code');
             },
             dataIndex: 'anlageId'
         }, {
@@ -169,11 +184,19 @@ Ext.define('Lada.view.grid.Orte', {
         }, {
             header: i18n.getMsg('orte.kdaId'),
             filter: {
-                type: 'numeric'
+                type: 'string'
             },
             editor: {
-                xtype: 'numberfield',
+                xtype: 'koordinatenart',
                 allowBlank: false
+            },
+            renderer: function(value) {
+                if (value === undefined || value === '') {
+                    return '';
+                }
+                var kda = Ext.data.StoreManager.get('koordinatenart');
+                var record = kda.getById(value);
+                return record.get('koordinatenart');
             },
             dataIndex: 'kdaId'
         }, {
@@ -181,11 +204,39 @@ Ext.define('Lada.view.grid.Orte', {
             filter: {
                 type: 'string'
             },
+            editor: {
+                xtype: 'ortszusatz',
+            },
+            renderer: function(value) {
+                if (value === undefined ||
+                    value === null ||
+                    value === ''
+                ) {
+                    return '';
+                }
+                var oz = Ext.data.StoreManager.get('ortszusatz');
+                var record = oz.getById(value);
+                return record.get('ozsId');
+            },
             dataIndex: 'ozId'
         }, {
             header: i18n.getMsg('orte.ortTyp'),
             filter: {
-                type: 'numeric'
+                type: 'string'
+            },
+            editor: {
+                xtype: 'orttyp',
+            },
+            renderer: function(value) {
+                if (value === undefined ||
+                    value === null ||
+                    value === ''
+                ) {
+                    return '';
+                }
+                var ot = Ext.data.StoreManager.get('orttyp');
+                var record = ot.getById(value);
+                return record.get('code');
             },
             dataIndex: 'ortTyp'
         }, {

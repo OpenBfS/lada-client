@@ -63,6 +63,10 @@ Ext.application({
         'Lada.store.DatensatzErzeuger',
         'Lada.store.MessprogrammKategorie',
         'Lada.store.MessungQueries',
+        'Lada.store.Ktas',
+        'Lada.store.OrtsZusatz',
+        'Lada.store.OrtTyp',
+        'Lada.store.KoordinatenArt',
         'Lada.model.MessstelleLabor'
     ],
     bundle: {
@@ -250,6 +254,22 @@ Ext.application({
         });
         Ext.create('Lada.store.StammdatenQueries', {
             storeId: 'stammdatenqueries',
+            autoLoad: 'true'
+        });
+        Ext.create('Lada.store.Ktas', {
+            storeId: 'ktas',
+            autoLoad: 'true'
+        });
+        Ext.create('Lada.store.OrtsZusatz', {
+            storeId: 'ortszusatz',
+            autoLoad: 'true'
+        });
+        Ext.create('Lada.store.OrtTyp', {
+            storeId: 'orttyp',
+            autoLoad: 'true'
+        });
+        Ext.create('Lada.store.KoordinatenArt', {
+            storeId: 'koordinatenart',
             autoLoad: 'true'
         });
 
