@@ -23,6 +23,7 @@ Ext.define('Lada.view.widget.OrtszuordnungTyp' ,{
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
+    allowBlank: this.allowBlank,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

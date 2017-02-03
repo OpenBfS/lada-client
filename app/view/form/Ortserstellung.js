@@ -54,12 +54,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
             labelWidth: 125,
             fieldLabel: i18n.getMsg('staat'),
             name: 'staatId',
-            forceSelection: true,
-            listeners: {
-                change: {
-                    fn: function() { me.checkCommitEnabled() }
-                }
-            }
+            forceSelection: true
         }, {
             xtype: 'verwaltungseinheit',
             labelWidth: 125,

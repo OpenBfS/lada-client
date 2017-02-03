@@ -38,13 +38,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
-        if (this.type == 'probe') {
-            this.ortIdName = 'ortId';
-            this.typName = 'ortszuordnungTyp';
-        } else if (this.type == 'mpr') {
-            this.ortIdName = 'ort';
-            this.typName = 'ortsTyp';
-        }
         this.items = [{
             xtype: 'fieldset',
             title: i18n.getMsg('ortszuordnung.form.fset.title'),
@@ -104,7 +97,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 labelWidth: 125,
                                 allowBlank: false,
                                 editable: true,
-                                name: this.typName,
+                                name: 'ortszuordnungTyp',
                                 disableKeyFilter: true,
                                 fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp'),
                             }, {
@@ -115,7 +108,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 regex: /^[0-9]{1,45}$/,
                                 submitValue: true,
                                 hidden: true,
-                                name: this.ortIdName,
+                                name: 'ortId',
                                 listeners: {
                                     change: me.changed
                                 }
@@ -216,7 +209,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
     setReadOnly: function(value) {
         this.down('tfield[name=ortszusatztext]').setReadOnly(value);
-        var fieldId = 'textfield[name=' + this.typName +']';
+        var fieldId = 'textfield[name=ortszuordnungTyp]';
         this.down(fieldId).setReadOnly(value);
     },
 

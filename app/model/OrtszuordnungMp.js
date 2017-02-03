@@ -15,18 +15,15 @@ Ext.define('Lada.model.OrtszuordnungMp', {
     fields: [{
         name: 'id'
     }, {
-        name: 'owner',
-        type: 'boolean'
-    }, {
         name: 'readonly',
         type: 'boolean',
         persist: false
     }, {
-        name: 'ort'
+        name: 'ortId'
     }, {
         name: 'messprogrammId'
     }, {
-        name: 'ortsTyp'
+        name: 'ortszuordnungTyp'
     }, {
         name: 'ortszusatztext'
     }, {

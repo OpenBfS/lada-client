@@ -38,6 +38,7 @@ Ext.application({
         'Ext.layout.container.Column',
         'Lada.store.Deskriptoren',
         'Lada.store.Ortszuordnung',
+        'Lada.store.OrtszuordnungMp',
         'Lada.store.Messungen',
         'Lada.store.Zusatzwerte',
         'Lada.store.Status',

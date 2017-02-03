@@ -41,10 +41,9 @@ Ext.define('Lada.controller.form.Ortserstellung', {
         });
     },
 
-    save: function() {
-        var this_panel = this.up('panel');
-        var me = this;
-        var form = this_panel.getForm();
+    save: function(button) {
+        var me = button.up('panel');
+        var form = me.getForm();
         var record = form.getRecord();
         var data = form.getFieldValues(true);
         for (var key in data) {
@@ -55,17 +54,18 @@ Ext.define('Lada.controller.form.Ortserstellung', {
         record.save({
             success: function(newrecord, response) {
                 form.loadRecord(newrecord);
-                this_panel.down('verwaltungseinheit').store.load(
+                me.down('verwaltungseinheit').store.load(
                         { id:newrecord.get('gemId') });
-                this_panel.down('staat').store.load(
+                me.down('staat').store.load(
                         { id : newrecord.get('staat') });
-                me.setDisabled(true);
-                me.hide();
-                var ozw = this_panel.up().parentWindow;
+                button.setDisabled(true);
+                me.down('button[action=revert]').setDisabled(true);
+                button.hide();
+                var ozw = me.up().parentWindow;
                 var json = Ext.decode(response.response.responseText);
                 if (json) {
-                    this_panel.clearMessages();
-                    this_panel.setMessages(json.errors, json.warnings);
+                    me.clearMessages();
+                    me.setMessages(json.errors, json.warnings);
                 }
                 ozw.ortstore.load({
                     callback: function(records, operation, success) {
@@ -120,8 +120,8 @@ Ext.define('Lada.controller.form.Ortserstellung', {
     },
 
     discard: function(button) {
-        this.up('panel').getForm().reset();
-        this.up('toolbar').down('button [action=save]').setDisabled(true);
+        button.up('panel').reset();
+        button.up('panel').down('button [action=save]').setDisabled(true);
     },
 
     /**

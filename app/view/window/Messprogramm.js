@@ -101,7 +101,8 @@ Ext.define('Lada.view.window.Messprogramm', {
                 margin: 5,
                 items: [{
                     xtype: 'ortszuordnunggrid',
-                    recordId: me.record ? me.record.get('id') : null
+                    recordId: me.record ? me.record.get('id') : null,
+                    isMessprogramm: true
                 }]
             }, {
                 //Messmethoden

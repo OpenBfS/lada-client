@@ -51,16 +51,8 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         var data = formPanel.getForm().getFieldValues(false);
         var i18n = Lada.getApplication().bundle;
         var recordData = formPanel.getForm().getRecord().data;
-        if (recordData['probeId'] !== undefined) {
-            // TODO: as model.ort.ortId and model.ortszuordnung.ortId coexist,
-            // but mean different things, data.ortId is an array here, of
-            // which we need the first entry
-            recordData.ortId = data.ortId[0];
-            recordData.ortszuordnungTyp = data.ortszuordnungTyp;
-        } else { //messprogramm
-            recordData.ortsTyp = data.ortsTyp;
-            recordData.ort = data.ort;
-        }
+        recordData.ortId = data.ortId[0];
+        recordData.ortszuordnungTyp = data.ortszuordnungTyp;
         recordData.ortszusatztext = data.ortszusatztext;
         if (!data.letzteAenderung) {
             recordData.letzteAenderung = new Date();

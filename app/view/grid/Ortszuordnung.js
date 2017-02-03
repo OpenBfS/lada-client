@@ -168,29 +168,35 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     },
 
     initData: function() {
+        var modelname;
         if (this.isMessprogramm) {
-            //TODO
+            this.store = Ext.create('Lada.store.OrtszuordnungMp');
+            this.store.load({
+                params: {
+                    messprogrammId: this.recordId
+                }});
+            modelname = 'Lada.model.Messprogramm';
         } else {
+            modelname = 'Lada.model.Probe';
             this.store = Ext.create('Lada.store.Ortszuordnung');
             this.store.load({
                 params: {
                     probeId: this.recordId
-                }
-            });
-            Ext.ClassManager.get('Lada.model.Probe').load(this.recordId, {
-                failure: function(record, action) {
-                    // TODO
-                },
-                success: function(record, response) {
-                    var json = Ext.decode(response.response.responseText);
-                    if (json) {
-                        this.warnings = json.warnings;
-                        this.errors = json.errors;
-                    }
-                },
-                scope: this
-            });
+                }});
         }
+        Ext.ClassManager.get(modelname).load(this.recordId, {
+            failure: function(record, action) {
+                // TODO
+            },
+            success: function(record, response) {
+                var json = Ext.decode(response.response.responseText);
+                if (json) {
+                    this.warnings = json.warnings;
+                    this.errors = json.errors;
+                }
+            },
+            scope: this
+        });
     },
 
     setReadOnly: function(b) {

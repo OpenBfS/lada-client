@@ -130,7 +130,8 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 hidden: true,
                 height: 240,
                 items: [{
-                    xtype: 'ortstammdatengrid'
+                    xtype: 'ortstammdatengrid',
+                    isMessprogramm: this.messprogramm? true: false
                 }],
                 dockedItems: [{
                     xtype: 'toolbar',

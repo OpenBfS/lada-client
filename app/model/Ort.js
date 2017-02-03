@@ -109,7 +109,7 @@ Ext.define('Lada.model.Ort', {
         type: 'date',
         convert: function(v) {
             if (!v) {
-                return v;
+                return null;
             }
             return new Date(v);
         }
