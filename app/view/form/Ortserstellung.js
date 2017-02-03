@@ -267,14 +267,13 @@ Ext.define('Lada.view.form.Ortserstellung', {
     saveOrt: function() {
         var this_panel = this.up('panel');
         var form = this_panel.getForm();
+        var record = form.getRecord();
         var data = form.getFieldValues(true);
         for (var key in data) {
-            form.getRecord().set(key, data[key]);
+            record.set(key, data[key]);
         }
-        this_panel.record.set('letzteAenderung', 0);
-        this_panel.record.set('id', null);
-        this_panel.record.set('netzbetreiberId', Lada.netzbetreiber[0]);
-        this_panel.record.save({
+        record.set('netzbetreiberId', Lada.netzbetreiber[0]);
+        record.save({
             success: function(record, response) {
                 var newOrtId;
                 var ozw = this_panel.up().parentWindow;
@@ -364,4 +363,4 @@ Ext.define('Lada.view.form.Ortserstellung', {
         // TODO: this is a stub
      }
 
-});
+e);
