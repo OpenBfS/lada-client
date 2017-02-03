@@ -82,6 +82,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                     items: [{
                         layout: 'vbox',
                         border: 0,
+                        flex: 1,
                         items: [{
                             layout: 'vbox',
                             border: 0,
@@ -114,9 +115,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 }
                             }]
                         },
-                        Ext.create('Lada.view.form.OrtInfo',{
-                            flex: 1
-                        })
+                        Ext.create('Lada.view.form.OrtInfo')
                         ]
                     }]
                 }]
