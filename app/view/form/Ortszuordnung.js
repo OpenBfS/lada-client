@@ -148,6 +148,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
     setRecord: function(record) {
         this.getForm().loadRecord(record);
+        this.record = record;
         if (!record.get('readonly')) {
             this.down('[action=setOrt]').enable();
             this.setReadOnly(false);

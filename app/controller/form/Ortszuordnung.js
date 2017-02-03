@@ -141,7 +141,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         var win = button.up('window');
         var gridPanel = win.down('panel[name=ortgrid]');
         var osg = win.down('ortstammdatengrid');
-        var oForm = button.up('form');
+        var oForm = button.up('window').down('ortszuordnungform');
         osg.addListener('select',oForm.setOrt, oForm);
         var map = win.down('map');
         if (pressed) {

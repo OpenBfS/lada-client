@@ -97,6 +97,9 @@ Ext.define('Lada.view.panel.Map', {
             return;
         }
         var feature = this.featureLayer.getFeaturesByAttribute('id', record.get('id'))[0];
+        if (!feature) {
+            return;
+        }
         this.map.setCenter(
             new OpenLayers.LonLat(feature.geometry.x, feature.geometry.y));
         this.map.zoomTo(12);
