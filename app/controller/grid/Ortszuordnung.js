@@ -319,6 +319,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
     selectedStaat: function(grid, record) {
         var win = grid.up('window');
+        var panel = this.searchField.up('panel').up('window');
         win.hide();
         this.searchField.reset();
         Ext.create('Lada.view.window.Ortserstellung', {
@@ -330,7 +331,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 berichtstext: record.get('staat'),
                 ortTyp: 5
             }),
-            parentWindow: win
+            parentWindow: panel
         }).show();
     }
 });

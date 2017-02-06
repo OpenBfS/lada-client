@@ -23,13 +23,13 @@ Ext.define('Lada.controller.form.Ortserstellung', {
             'ortserstellungsform button[action=revert]': {
                 click: this.discard
             },
-            'ortserstellungsform staat' : {
+            'ortserstellungsform staat combobox' : {
                 change: this.checkCommitEnabled
             },
-            'ortserstellungsform verwaltungseinheit' : {
+            'ortserstellungsform verwaltungseinheit combobox' : {
                 change: this.checkCommitEnabled
             },
-            'ortserstellungsform koordinatenart': {
+            'ortserstellungsform koordinatenart combobox': {
                 change: this.checkCommitEnabled
             },
             'ortserstellungsform numfield [name=koordXExtern]': {
@@ -61,7 +61,7 @@ Ext.define('Lada.controller.form.Ortserstellung', {
                 button.setDisabled(true);
                 me.down('button[action=revert]').setDisabled(true);
                 button.hide();
-                var ozw = me.up().parentWindow;
+                var ozw = me.up('window').parentWindow;
                 var json = Ext.decode(response.response.responseText);
                 if (json) {
                     me.clearMessages();
@@ -150,8 +150,8 @@ Ext.define('Lada.controller.form.Ortserstellung', {
                     && form.findField('koordYExtern').getValue()
                     && form.findField('koordXExtern').getValue()
                 )
-                || form.findField('gemId').getValue() >= 0
-                || form.findField('staatId').getValue() >= 0
+                || form.findField('gemId').getValue() !== null
+                || form.findField('staatId').getValue() !== null
                 ) {
                 savebutton.setDisabled(false);
             } else {
