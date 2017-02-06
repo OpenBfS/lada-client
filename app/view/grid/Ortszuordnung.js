@@ -149,7 +149,9 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 if (!record || record.get('anlageId') === '') {
                     return '';
                 }
-                return record.get('anlageId');
+                var ktas = Ext.data.StoreManager.get('ktas');
+                var kta = ktas.getById(record.get('anlageId'));
+                return kta.get('code');
             }
         }];
         this.listeners = {
