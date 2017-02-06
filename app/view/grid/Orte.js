@@ -148,7 +148,10 @@ Ext.define('Lada.view.grid.Orte', {
                 type: 'string'
             },
             renderer: function(value) {
-                if (!value) {
+                if (value === undefined ||
+                    value === null ||
+                    value === ''
+                ) {
                     return '';
                 }
                 var store = Ext.data.StoreManager.get('verwaltungseinheiten');
@@ -170,7 +173,10 @@ Ext.define('Lada.view.grid.Orte', {
                 type: 'string'
             },
             renderer: function(value) {
-                if (value === undefined || value === '') {
+                if (value === undefined ||
+                    value === null ||
+                    value === ''
+                ) {
                     return '';
                 }
                 var staaten = Ext.data.StoreManager.get('staaten');
@@ -196,7 +202,10 @@ Ext.define('Lada.view.grid.Orte', {
                 valueField: 'id'
             },
             renderer: function(value) {
-                if (value === undefined || value === '') {
+                if (value === undefined ||
+                    value === null ||
+                    value === ''
+                ) {
                     return '';
                 }
                 var kda = Ext.data.StoreManager.get('koordinatenart');
