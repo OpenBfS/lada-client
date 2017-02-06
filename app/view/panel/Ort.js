@@ -125,6 +125,7 @@ Ext.define('Lada.view.panel.Ort', {
             });
         }
         else {
+            store.clearFilter(true);
             osg.setStore(store);
             map.addLocations(store);
         }

@@ -225,6 +225,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         }
         if (field.getValue().length === 0) {
             this.resultPanel.hide();
+            var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
+            var staaten = Ext.data.StoreManager.get('staaten');
             verwaltungseinheiten.clearFilter(true);
             staaten.clearFilter(true);
             return;
@@ -297,6 +299,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var grid = this.searchField.up('panel').down('ortstammdatengrid');
         grid.getSelectionModel().select(record);
         grid.getView().focusRow(record);
+        var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
+        var staaten = Ext.data.StoreManager.get('staaten');
+        verwaltungseinheiten.clearFilter(true);
+        staaten.clearFilter(true);
     },
 
     selectedVerwaltungseinheit: function(grid, record) {
@@ -315,6 +321,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             }),
             parentWindow: panel
         }).show();
+        var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
+        var staaten = Ext.data.StoreManager.get('staaten');
+        verwaltungseinheiten.clearFilter(true);
+        staaten.clearFilter(true);
     },
 
     selectedStaat: function(grid, record) {
@@ -333,5 +343,9 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             }),
             parentWindow: panel
         }).show();
+        var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
+        var staaten = Ext.data.StoreManager.get('staaten');
+        verwaltungseinheiten.clearFilter(true);
+        staaten.clearFilter(true);
     }
 });
