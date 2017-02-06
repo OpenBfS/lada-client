@@ -133,6 +133,8 @@ Ext.define('Lada.view.panel.Map', {
 
     featureAdded: function(features) {
         this.locationRecord.set('kdaId', 4);
+        features.feature.geometry.transform(new OpenLayers.Projection('EPSG:3857'),
+                                            new OpenLayers.Projection('EPSG:4326'));
         this.locationRecord.set('koordYExtern', features.feature.geometry.y);
         this.locationRecord.set('koordXExtern', features.feature.geometry.x);
         this.drawPoint.deactivate();
