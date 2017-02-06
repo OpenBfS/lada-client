@@ -113,14 +113,17 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         var osg = button.up('window').down('ortstammdatengrid');
         var recordData = form.getForm().getRecord().data;
         var currentOrt = recordData.ortId;
-        var record = osg.store.getById(currentOrt);
         var selmod = osg.getView().getSelectionModel();
         form.getForm().reset();
-        form.setOrt(null, record);
+        if (!currentOrt) {
+            selmod.deselectAll();
+        } else {
+            var record = osg.store.getById(currentOrt);
+            form.setOrt(null, record);
+            selmod.select(record);
+        }
         button.setDisabled(true);
         button.up('toolbar').down('button[action=save]').setDisabled(true);
-        var selmod = osg.getView().getSelectionModel();
-        selmod.select(record);
     },
 
     /**
@@ -190,12 +193,14 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
      * is present in the toolbar of the form.
      */
     validityChange: function(form, valid) {
-        // the form itself seems to be always dirty because of the ortinfo
-        // values put into the form at later moments. Check whether a real
-        // commit field is dirty
+        // the simple form.isDirty() check seems to fail for a lot of cases
+        var ortIdIsDirty = true;
+        if (form.getRecord().data.ortId == form.findField('ortId').getValue()) {
+            ortIdIsDirty = false;
+        }
         if (form.findField('ortszusatztext').isDirty()
             || form.findField('ortszuordnungTyp').isDirty()
-            || form.findField('ortId').isDirty()) {
+            || ortIdIsDirty) {
             form.owner.down('button[action=revert]').setDisabled(false);
             if (valid && form.getValues().ortId !== '') {
                 form.owner.down('button[action=save]').setDisabled(false);

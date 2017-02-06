@@ -73,6 +73,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                         qtip: 'Änderungen verwerfen',
                         icon: 'resources/img/dialog-cancel.png',
                         action: 'revert',
+                        disabled: true
                     }]
                 }],
                 items: [{
@@ -141,7 +142,9 @@ Ext.define('Lada.view.form.Ortszuordnung', {
      * it will set the ortId of this record
      */
     setOrt: function(row, selRecord, index, opts) {
-        var newOrtId = selRecord.get('id');
+        if (selRecord) {
+            var newOrtId = selRecord.get('id');
+        }
         if (newOrtId) {
             this.getForm().setValues({ortId: newOrtId});
             this.setOrtInfo(selRecord);
