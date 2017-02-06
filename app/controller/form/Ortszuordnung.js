@@ -63,11 +63,13 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             success: function(record, response) {
                 var json = Ext.decode(response.response.responseText);
                 if (json) {
-                    button.setDisabled(true);
                     formPanel.clearMessages();
                     formPanel.setRecord(record);
                     formPanel.setMessages(json.errors, json.warnings);
                     formPanel.up('window').parentWindow.initData();
+                    button.setDisabled(true);
+                    button.up('toolbar').down(
+                        'button[action=revert]').setDisabled(true);
                 }
                 //try to refresh the Grid of the Probe
                 try {
@@ -110,16 +112,14 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         var form = button.up('form');
         var osg = button.up('window').down('ortstammdatengrid');
         var recordData = form.getForm().getRecord().data;
-        var currentOrt = null;
-        if (recordData.ortId !== undefined) {
-            currentOrt = recordData.ortId[0];
-        } else {
-            currentOrt = recordData.ort;
-        }
+        var currentOrt = recordData.ortId;
         var record = osg.store.getById(currentOrt);
         var selmod = osg.getView().getSelectionModel();
         form.getForm().reset();
-           var selmod = osg.getView().getSelectionModel();
+        form.setOrt(null, record);
+        button.setDisabled(true);
+        button.up('toolbar').down('button[action=save]').setDisabled(true);
+        var selmod = osg.getView().getSelectionModel();
         selmod.select(record);
     },
 
@@ -190,7 +190,12 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
      * is present in the toolbar of the form.
      */
     validityChange: function(form, valid) {
-        if (form.isDirty()) {
+        // the form itself seems to be always dirty because of the ortinfo
+        // values put into the form at later moments. Check whether a real
+        // commit field is dirty
+        if (form.findField('ortszusatztext').isDirty()
+            || form.findField('ortszuordnungTyp').isDirty()
+            || form.findField('ortId').isDirty()) {
             form.owner.down('button[action=revert]').setDisabled(false);
             if (valid && form.getValues().ortId !== '') {
                 form.owner.down('button[action=save]').setDisabled(false);

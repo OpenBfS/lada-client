@@ -156,11 +156,14 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         var ortinfo = this.down('ortinfo');
         ortinfo.loadRecord(ortrecord);
         ortinfo.getForm().setValues({
-            gemeinde: verw.get('bezeichnung'),
             staat: staat.get('staatIso'),
             lon: ortrecord.get('longitude'),
             lat: ortrecord.get('latitude')
         });
+        // some entries may not have a verwaltungseinheit
+        if (verw !== null) {
+            ortinfo.getForm().setValues({gemeinde: verw.get('bezeichnung')});
+        }
     },
 
     setMessages: function(errors, warnings) {
@@ -215,7 +218,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         var controller = Lada.app.getController(
             'Lada.controller.form.Ortszuordnung');
         var form = this.up('form').getForm();
-        var fields = form.getFields().items;
         controller.validityChange(form, form.isValid());
     }
 });
