@@ -146,7 +146,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
-                if (!record || record.get('anlageId') === '') {
+                if (!record || !record.get('anlageId')) {
                     return '';
                 }
                 var ktas = Ext.data.StoreManager.get('ktas');
