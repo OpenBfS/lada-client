@@ -37,7 +37,11 @@ Ext.define('Lada.controller.form.Ortserstellung', {
             },
             'ortserstellungsform numfield [name=koordYExtern]': {
                 change: this.checkCommitEnabled
-            }
+            },
+            'ortserstellungsform': {
+                validitychange: this.checkCommitEnabled,
+                dirtychange: this.checkCommitEnabled
+            },
         });
     },
 
@@ -128,12 +132,12 @@ Ext.define('Lada.controller.form.Ortserstellung', {
      * checks if the Messpunkt can be committed.
      * Disables the save button if false
      */
-    checkCommitEnabled: function(field) {
+    checkCommitEnabled: function(callingEl) {
         var panel;
-        if (field.up('panel')) {
-            panel = field.up('panel').up('panel');
-        } else {
-            panel = field;
+        if (callingEl.up) { //called by a field in the form
+            panel = callingEl.up('panel').up('panel');
+        } else { //called by the form
+            panel = callingEl.owner;
         }
         var savebutton =  panel.down('button[action=save]');
         var form = panel.getForm();

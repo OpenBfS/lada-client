@@ -182,8 +182,6 @@ Ext.define('Lada.view.form.Ortserstellung', {
         }];
         this.callParent(arguments);
         this.getForm().loadRecord(this.record);
-        var controller = Lada.app.getController('Lada.controller.form.Ortserstellung')
-        controller.checkCommitEnabled(this);
     },
 
     setMessages: function(errors, warnings) {
