@@ -135,7 +135,7 @@ Ext.define('Lada.controller.form.Ortserstellung', {
     checkCommitEnabled: function(callingEl) {
         var panel;
         if (callingEl.up) { //called by a field in the form
-            panel = callingEl.up('panel').up('panel');
+            panel = callingEl.up('ortserstellungsform');
         } else { //called by the form
             panel = callingEl.owner;
         }
