@@ -143,7 +143,7 @@ Ext.define('Lada.controller.form.Ortserstellung', {
             panel.down('button[action=revert]').setDisabled(true);
         }
         if (form.isValid()) {
-            //one of three conditions must apply, the first one depending 
+            //one of three conditions must apply, the first one depending
             // on three fields
             if (
                 (form.findField('kdaId').getValue()

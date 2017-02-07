@@ -316,7 +316,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         if ( (desk.layer === 0 ) && (records[0].get('sn') === 0) ){
             mediatext.setValue('');
         } else {
-            if ( current[1] === '01') { 
+            if ( current[1] === '01') {
                 if ( (current[4] !== '00') && (desk.layer === 3) ) {
                     mediatext.setValue(records[0].data.beschreibung);
                 } else if ( (current[3] !== '00') && (desk.layer === 2) ) {
@@ -325,15 +325,15 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     mediatext.setValue(records[0].data.beschreibung);
                 } else if ( (current[1] !== '00') && (desk.layer === 0 )) {
                     mediatext.setValue(records[0].data.beschreibung);
-                } 
+                }
             }
 
-            if ( current[1] !== '01') { 
+            if ( current[1] !== '01') {
                 if ((current[2] !== '00') && (desk.layer === 1 )) {
                     mediatext.setValue(records[0].data.beschreibung);
                 } else if ((current[1] !== '00') && (desk.layer === 0 )) {
                     mediatext.setValue(records[0].data.beschreibung);
-                } 
+                }
             }
         }
     },
