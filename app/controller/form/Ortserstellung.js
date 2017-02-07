@@ -58,10 +58,8 @@ Ext.define('Lada.controller.form.Ortserstellung', {
         record.save({
             success: function(newrecord, response) {
                 form.loadRecord(newrecord);
-                me.down('verwaltungseinheit').store.load(
-                        { id:newrecord.get('gemId') });
-                me.down('staat').store.load(
-                        { id : newrecord.get('staat') });
+                me.down('verwaltungseinheit').store.clearFilter();
+                me.down('staat').store.clearFilter();
                 button.setDisabled(true);
                 me.down('button[action=revert]').setDisabled(true);
                 button.hide();
