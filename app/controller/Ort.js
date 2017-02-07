@@ -55,16 +55,14 @@ Ext.define('Lada.controller.Ort', {
     },
 
     addRecord: function(button) {
-        var record = Ext.create('Lada.model.Ort');
+        Ext.create('Lada.view.window.Ortserstellung',{
+            record: Ext.create('Lada.model.Ort', {ortTyp: 1}),
+            parentWindow: button.up('ortpanel')
+        }).show();
         var grid = button.up('ortpanel').down('ortstammdatengrid');
-        if (grid.getCollapsed()) {
-            grid.expand();
-        }
-        if (!record.get('letzteAenderung')) {
-            record.data.letzteAenderung = new Date();
-        }
-        grid.store.insert(0, record);
-        grid.rowEditing.startEdit(0, 1);
+        // if (grid.getCollapsed()) {
+        //    grid.expand();
+        // }
     },
 
     deleteItem: function(button) {

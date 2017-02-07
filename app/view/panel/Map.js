@@ -120,27 +120,30 @@ Ext.define('Lada.view.panel.Map', {
         }
     },
 
-    activateDraw: function(record) {
-        this.locationRecord = record;
+    activateDraw: function() {
         if (!this.drawPoint) {
             this.drawPoint = new OpenLayers.Control.DrawFeature(this.featureLayer,
                 OpenLayers.Handler.Point);
             this.map.addControl(this.drawPoint);
+            this.drawPoint.events.register('featureadded', this, this.featureAdded);
         }
         this.drawPoint.activate();
-        this.drawPoint.events.register('featureadded', this, this.featureAdded);
     },
 
     featureAdded: function(features) {
-        this.locationRecord.set('kdaId', 4);
         features.feature.geometry.transform(new OpenLayers.Projection('EPSG:3857'),
                                             new OpenLayers.Projection('EPSG:4326'));
-        this.locationRecord.set('koordYExtern', features.feature.geometry.y);
-        this.locationRecord.set('koordXExtern', features.feature.geometry.x);
+        var parent = this.up('ortszuordnungwindow') || this.up('ortpanel');
+        Ext.create('Lada.view.window.Ortserstellung', {
+            record: Ext.create('Lada.model.Ort',{
+                koordXExtern: features.feature.geometry.x,
+                koordYExtern: features.feature.geometry.y,
+                kdaId : 4,
+                ortTyp: 1
+            }),
+            parentWindow: parent
+        }).show();
         this.drawPoint.deactivate();
-        this.fireEvent('featureadded', this.locationRecord);
-    //    this.selectControl.unselectAll();
-    //    this.selectControl.select(features.feature);
     },
 
     addLocations: function(locationStore) {

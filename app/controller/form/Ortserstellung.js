@@ -46,8 +46,9 @@ Ext.define('Lada.controller.form.Ortserstellung', {
     },
 
     save: function(button) {
-        var me = button.up('panel');
-        var form = me.getForm();
+        var me = this;
+        var formpanel = button.up('ortserstellungsform');
+        var form = formpanel.getForm();
         var record = form.getRecord();
         var data = form.getFieldValues(true);
         for (var key in data) {
@@ -58,45 +59,28 @@ Ext.define('Lada.controller.form.Ortserstellung', {
         record.save({
             success: function(newrecord, response) {
                 form.loadRecord(newrecord);
-                me.down('verwaltungseinheit').store.clearFilter();
-                me.down('staat').store.clearFilter();
+                formpanel.down('verwaltungseinheit').store.clearFilter();
+                formpanel.down('staat').store.clearFilter();
                 button.setDisabled(true);
-                me.down('button[action=revert]').setDisabled(true);
+                formpanel.down('button[action=revert]').setDisabled(true);
                 button.hide();
-                var ozw = me.up('window').parentWindow;
+                var ozw = formpanel.up('panel').parentWindow;
                 var json = Ext.decode(response.response.responseText);
                 if (json) {
-                    me.clearMessages();
-                    me.setMessages(json.errors, json.warnings);
+                    formpanel.clearMessages();
+                    formpanel.setMessages(json.errors, json.warnings);
                 }
-                ozw.ortstore.load({
-                    callback: function(records, operation, success) {
-                        ozw.down('map').addLocations(ozw.ortstore);
-                        var osg = ozw.down('ortstammdatengrid');
-                        osg.setStore(ozw.ortstore);
-                        var id = Ext.decode(response.response.responseText).data.id;
-                        var record = osg.store.getById(id);
-                        var selmod = osg.getView().getSelectionModel();
-                        selmod.select(record);
-                        var resulttext;
-                        if (json) {
-                            if (json.message == '201') {
-                                resulttext = 'Dieser Ort existiert bereits!';
-                            }
-                            if (json.message == '200') {
-                                resulttext = 'Ort erfolgreich angelegt!';
-                            }
-                        }
-                        Ext.Msg.show({
-                            title: Lada.getApplication().bundle.getMsg('success'),
-                            autoScroll: true,
-                            msg: resulttext,
-                            buttons: Ext.Msg.OK
-                        });
-                    },
-                    scope: this
-                });
-
+                if (ozw.ortstore) {
+                    ozw.ortstore.load({
+                        callback: function(records, operation, success) {
+                            me.afterSave(formpanel, ozw.ortstore, json);
+                        },
+                        scope: this
+                    });
+                } else {
+                    ozw.setStore();
+                    me.afterSave(formpanel, ozw.getStore(), json);
+                }
             },
             failure: function(record, response) {
                 var json = response.request.scope.reader.jsonData;
@@ -116,6 +100,35 @@ Ext.define('Lada.controller.form.Ortserstellung', {
                         Lada.getApplication().bundle.getMsg('err.msg.response.body'));
                 }
             }
+        });
+    },
+
+    /**
+     * Callbacks after a Ort has been saved and the store is reloaded
+     */
+    afterSave: function(form, store, json) {
+        var ozw = form.up('panel').parentWindow;
+        ozw.down('map').addLocations(ozw.ortstore);
+        var osg = ozw.down('ortstammdatengrid');
+        osg.setStore(ozw.ortstore);
+        var id = json.data.id;
+        var record = osg.store.getById(id);
+        var selmod = osg.getView().getSelectionModel();
+        selmod.select(record);
+        var resulttext;
+        if (json) {
+            if (json.message == '201') {
+                resulttext = 'Dieser Ort existiert bereits!';
+            }
+            if (json.message == '200') {
+                resulttext = 'Ort erfolgreich angelegt!';
+            }
+        }
+        Ext.Msg.show({
+            title: Lada.getApplication().bundle.getMsg('success'),
+                     autoScroll: true,
+                     msg: resulttext,
+                     buttons: Ext.Msg.OK
         });
     },
 

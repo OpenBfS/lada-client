@@ -154,15 +154,12 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     },
 
     /**
-     *
-     * Creates an event listener for a map click
+     * Creates a new Ortrecord from map coordinates
      */
     frommap: function(button) {
         var map = button.up('ortszuordnungwindow').down('map');
-        map.getEl().setStyle('cursor', 'crosshair');
-        var me = this;
-        map.map.events.register('click', button, me.newOrtfromMapClick);
-        // TODO Deactivate event listener if button is destroyed
+        var record = Ext.create('Lada.model.Ort');
+        map.activateDraw(record);
     },
 
     /**
@@ -178,28 +175,6 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         Ext.create('Lada.view.window.Ortserstellung', {
              record: newRecord,
              parentWindow: button.up('ortszuordnungwindow')
-        }).show();
-    },
-
-    /**
-     * Gets the clicked map's coordinates and opens a new Messpunkt window with coordinates prefilled
-     */
-    newOrtfromMapClick: function(evt) {
-        var me = this; //this = button(action:frommap)
-        var map = this.up('ortszuordnungwindow').down('map').map;
-        this.up('ortszuordnungwindow').down('map').getEl().setStyle('cursor', 'auto');
-        var lonlat = map.getLonLatFromViewPortPx(evt.xy).transform(new OpenLayers.Projection('EPSG:3857'),
-                                                                   new OpenLayers.Projection('EPSG:4326'));
-        var controller = Lada.app.getController('Lada.controller.grid.Ortszuordnung');
-        map.events.unregister('click', this, controller.newOrtfromMapClick);
-        Ext.create('Lada.view.window.Ortserstellung', {
-            record: Ext.create('Lada.model.Ort',{
-                koordXExtern: lonlat.lon,
-                koordYExtern: lonlat.lat,
-                kdaId : 4,
-                ortTyp: 1
-            }),
-            parentWindow: this.up('ortszuordnungwindow')
         }).show();
     },
 

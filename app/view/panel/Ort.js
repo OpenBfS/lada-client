@@ -89,8 +89,12 @@ Ext.define('Lada.view.panel.Ort', {
                 }
             }
         }];
-
         this.callParent(arguments);
+        var map = this.down('map');
+        var osg = this.down('ortstammdatengrid');
+        osg.setLoading(true);
+        map.setLoading(true);
+        this.setStore();
     },
 
     afterRender: function() {
@@ -102,41 +106,32 @@ Ext.define('Lada.view.panel.Ort', {
         var me = this;
         var osg = this.down('ortstammdatengrid');
         var map = this.down('map');
+        osg.setLoading(true);
+        map.setLoading(true);
 
         if (!store) {
-            var ortstore = Ext.create('Lada.store.Orte', {
-                defaultPageSize: 0,
-                listeners: {
-                    beforeload: {
-                        fn: function() {
-                            osg.setLoading(true);
-                            map.setLoading(true);
-                        }
-                    },
-                    load: {
-                        fn: function() {
-                            osg.setLoading(false);
-                            map.setLoading(false);
-                            osg.setStore(ortstore);
-                            map.addLocations(ortstore);
-                        }
-                    }
-                }
-            });
+            this.ortstore = Ext.data.StoreManager.get('orte');
+            //this.ortstore.clearFilter(true);
+        } else {
+            this.ortstore = store;
         }
-        else {
-            store.clearFilter(true);
-            osg.setStore(store);
-            map.addLocations(store);
-        }
-        this.connectListeners();
+        // store.clearFilter(true);
+        this.ortstore.load({
+            callback: function() {
+                osg.setStore(me.ortstore);
+                map.addLocations(me.ortstore);
+                osg.setLoading(false);
+                map.setLoading(false);
+            }
+        });
         //enable buttons
-        me.down('toolbar button[action=add]').enable();
-        me.down('toolbar button[action=addMap]').enable();
+        this.down('toolbar button[action=add]').enable();
+        this.down('toolbar button[action=addMap]').enable();
+        this.connectListeners();
     },
 
     getStore: function() {
-        return this.down('grid').getStore();
+        return this.ortstore;
     },
 
     connectListeners: function() {
