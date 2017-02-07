@@ -158,14 +158,15 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         var staat = staatStore.getById(ortrecord.get('staatId'));
         var ortinfo = this.down('ortinfo');
         ortinfo.loadRecord(ortrecord);
-        ortinfo.getForm().setValues({
-            staat: staat.get('staatIso'),
-            lon: ortrecord.get('longitude'),
-            lat: ortrecord.get('latitude')
-        });
-        // some entries may not have a verwaltungseinheit
         if (verw !== null) {
             ortinfo.getForm().setValues({gemeinde: verw.get('bezeichnung')});
+        } else {
+            ortinfo.getForm().setValues({gemeinde: ''});
+        }
+        if (staat !== null) {
+            ortinfo.getForm().setValues({staat: staat.get('staatIso')});
+        } else {
+            ortinfo.getForm().setValues({staat: ''});
         }
     },
 
