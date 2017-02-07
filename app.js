@@ -345,7 +345,6 @@ Ext.application({
         'Lada.controller.grid.Status',
         'Lada.controller.grid.Ortszuordnung',
         'Lada.controller.form.Ortszuordnung',
-        'Lada.controller.form.Location',
         'Lada.controller.form.Messprogramm',
         'Lada.controller.grid.MessprogrammKategorie',
         'Lada.controller.grid.Messmethode',
