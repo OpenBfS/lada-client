@@ -120,8 +120,7 @@ Ext.define('Lada.controller.form.Ortserstellung', {
     },
 
     discard: function(button) {
-        button.up('panel').reset();
-        button.up('panel').down('button [action=save]').setDisabled(true);
+        button.up('panel').getForm().reset();
     },
 
     /**
