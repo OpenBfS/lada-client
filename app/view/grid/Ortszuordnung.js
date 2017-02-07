@@ -105,10 +105,14 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 var store = Ext.data.StoreManager.get('orte');
                 var staaten = Ext.data.StoreManager.get('staaten');
                 var ortRecord = store.getById(value);
-                if (!ortRecord || ortRecord.get('staatId') === '') {
+                if (!ortRecord) {
                     return '';
                 }
-                var record = staaten.getById(ortRecord.get('staatId'));
+                var stId = ortRecord.get('staatId');
+                if (stId == undefined || stId == null || stId === '') {
+                    return '';
+                }
+                var record = staaten.getById(stId);
                 return record.get('staatIso');
             }
         }, {
@@ -132,10 +136,13 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 var gemeinden =
                     Ext.data.StoreManager.get('verwaltungseinheiten');
                 var record = store.getById(value);
-                if (!record || record.get('gemId') === '') {
+                if (!record) {
                     return '';
                 }
                 var gemid = record.get('gemId');
+                if (gemid == undefined || gemid == null || gemid === '') {
+                    return '';
+                }
                 var record2 = gemeinden.getById(gemid);
                 return record2.get('bezeichnung');
             }
@@ -146,7 +153,11 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
-                if (!record || !record.get('anlageId')) {
+                if (!record) {
+                    return '';
+                }
+                var ktaId = record.get('anlageId');
+                if (ktaId == undefined || ktaId == null || ktaId === '') {
                     return '';
                 }
                 var ktas = Ext.data.StoreManager.get('ktas');
