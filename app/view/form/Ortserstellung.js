@@ -39,7 +39,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
             labelWidth: 125,
             value: Lada.netzbetreiber[0]
         }, {
-            xtype: 'textfield',
+            xtype: 'tfield',
             name: 'ortId',
             maxLength: 10,
             labelWidth: 125,

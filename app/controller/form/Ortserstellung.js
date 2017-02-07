@@ -99,11 +99,8 @@ Ext.define('Lada.controller.form.Ortserstellung', {
 
             },
             failure: function(record, response) {
-                var json = Ext.decode(response.response.responseText);
+                var json = response.request.scope.reader.jsonData;
                 if (json) {
-                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
-                        formPanel.setMessages(json.errors, json.warnings);
-                    }
                     if(json.message){
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
                             +' #'+json.message,
@@ -112,11 +109,12 @@ Ext.define('Lada.controller.form.Ortserstellung', {
                          Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
                              Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
                     }
+                    me.clearMessages();
+                    me.setMessages(json.errors, json.warnings);
                 } else {
                     Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
                         Lada.getApplication().bundle.getMsg('err.msg.response.body'));
                 }
-                me.setDisabled(true);
             }
         });
     },
