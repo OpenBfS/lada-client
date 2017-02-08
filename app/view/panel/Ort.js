@@ -90,11 +90,6 @@ Ext.define('Lada.view.panel.Ort', {
             }
         }];
         this.callParent(arguments);
-        var map = this.down('map');
-        var osg = this.down('ortstammdatengrid');
-        osg.setLoading(true);
-        map.setLoading(true);
-        this.setStore();
     },
 
     afterRender: function() {
@@ -108,30 +103,20 @@ Ext.define('Lada.view.panel.Ort', {
         var map = this.down('map');
         osg.setLoading(true);
         map.setLoading(true);
-
-        if (!store) {
-            this.ortstore = Ext.data.StoreManager.get('orte');
-            //this.ortstore.clearFilter(true);
-        } else {
-            this.ortstore = store;
+        var ortstore = store;
+        if (!ortstore) {
+            ortstore = Ext.data.StoreManager.get('orte');
         }
-        // store.clearFilter(true);
-        this.ortstore.load({
-            callback: function() {
-                osg.setStore(me.ortstore);
-                map.addLocations(me.ortstore);
-                osg.setLoading(false);
-                map.setLoading(false);
-            }
-        });
-        //enable buttons
-        this.down('toolbar button[action=add]').enable();
-        this.down('toolbar button[action=addMap]').enable();
-        this.connectListeners();
+        ortstore.clearFilter(true);
+        osg.setStore(ortstore);
+        map.addLocations(ortstore);
+        me.down('toolbar button[action=add]').enable();
+        me.down('toolbar button[action=addMap]').enable();
+        me.connectListeners();
     },
 
     getStore: function() {
-        return this.ortstore;
+        return this.down('grid').getStore();
     },
 
     connectListeners: function() {

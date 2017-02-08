@@ -154,7 +154,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
     save: function(button) {
         var formPanel = button.up('form');
         var data = formPanel.getForm().getFieldValues();
-        var orte = Ext.data.StoreManager.get('orte');
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
         }

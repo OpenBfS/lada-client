@@ -73,13 +73,18 @@ Ext.define('Lada.controller.form.Ortserstellung', {
                 if (ozw.ortstore) {
                     ozw.ortstore.load({
                         callback: function(records, operation, success) {
-                            me.afterSave(formpanel, ozw.ortstore, json);
+                            ozw.down('map').addLocations(ozw.ortstore);
+                            var osg = ozw.down('ortstammdatengrid');
+                            osg.setStore(ozw.ortstore);
+                            me.afterSave(formpanel, json);
                         },
                         scope: this
                     });
                 } else {
-                    ozw.setStore();
-                    me.afterSave(formpanel, ozw.getStore(), json);
+                    var osgstore = ozw.down('ortstammdatengrid').getStore();
+                    osgstore.load();
+                    ozw.down('map').addLocations(osgstore);
+                    me.afterSave(formpanel, json);
                 }
             },
             failure: function(record, response) {
@@ -93,8 +98,8 @@ Ext.define('Lada.controller.form.Ortserstellung', {
                          Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
                              Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
                     }
-                    me.clearMessages();
-                    me.setMessages(json.errors, json.warnings);
+                    formpanel.clearMessages();
+                    formpanel.setMessages(json.errors, json.warnings);
                 } else {
                     Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
                         Lada.getApplication().bundle.getMsg('err.msg.response.body'));
@@ -106,15 +111,15 @@ Ext.define('Lada.controller.form.Ortserstellung', {
     /**
      * Callbacks after a Ort has been saved and the store is reloaded
      */
-    afterSave: function(form, store, json) {
+    afterSave: function(form, json) {
         var ozw = form.up('panel').parentWindow;
-        ozw.down('map').addLocations(ozw.ortstore);
         var osg = ozw.down('ortstammdatengrid');
-        osg.setStore(ozw.ortstore);
         var id = json.data.id;
         var record = osg.store.getById(id);
-        var selmod = osg.getView().getSelectionModel();
-        selmod.select(record);
+        if (record) {
+            var selmod = osg.getView().getSelectionModel();
+            selmod.select(record);
+        }
         var resulttext;
         if (json) {
             if (json.message == '201') {
