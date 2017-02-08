@@ -64,7 +64,7 @@ Ext.define('Lada.view.grid.Orte', {
             }]
         };
         this.features = [filters];
-
+        var me = this;
         this.columns = [{
             xtype: 'actioncolumn',
             text: 'RW',
@@ -76,6 +76,12 @@ Ext.define('Lada.view.grid.Orte', {
                         return 'edit';
                 }
                 return 'noedit';
+            },
+            handler: function(grid, rowIndex, colIndex) {
+                var rec = grid.getStore().getAt(rowIndex);
+                if (rec.get('readonly') === false) {
+                    me.rowEditing.startEdit(rowIndex, colIndex);
+                }
             }
         }, {
             header: i18n.getMsg('netzbetreiberId'),

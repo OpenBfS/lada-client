@@ -125,7 +125,7 @@ Ext.define('Lada.controller.Ort', {
         context.record.save({
             success: function(record, response) {
                 var grid = Ext.ComponentQuery.query('ortstammdatengrid')[0];
-                grid.store.reload();
+                grid.store.load();
                 Ext.StoreManager.get('orte').load();
             },
             failure: function(record, response) {
