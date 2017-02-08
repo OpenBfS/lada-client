@@ -29,23 +29,8 @@ Ext.define('Lada.controller.Ort', {
                 edit: me.gridSave,
                 canceledit: me.cancelEdit,
                 select: me.selectWindow
-            },
-            'ortpanel map': {
-                featureadded: me.featureadded
             }
         });
-    },
-
-    featureadded: function(record) {
-        var grid = Ext.ComponentQuery.query('ortpanel ortstammdatengrid')[0];
-        if (grid.getCollapsed()) {
-            grid.expand();
-        }
-        if (!record.get('letzteAenderung')) {
-            record.data.letzteAenderung = new Date();
-        }
-        grid.store.insert(0, record);
-        grid.rowEditing.startEdit(0, 1);
     },
 
     activateDraw: function(button) {
