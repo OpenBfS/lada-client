@@ -16,6 +16,7 @@ Ext.define('Lada.view.widget.Kta', {
     displayField: 'id',
     valueField: 'id',
     editable: this.editable || false,
+    disableKeyFilter: true,
     forceSelection: true,
     // Enable filtering of comboboxes
     autoSelect: false,

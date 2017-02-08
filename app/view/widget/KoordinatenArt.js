@@ -19,6 +19,8 @@ Ext.define('Lada.view.widget.KoordinatenArt', {
     queryMode: 'local',
     triggerAction: 'all',
     typeAhead: false,
+    editable: this.editable || false,
+    disableKeyFilter: true,
     forceSelection: true,
     tpl: Ext.create("Ext.XTemplate",
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
