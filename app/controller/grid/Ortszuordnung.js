@@ -22,8 +22,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     searchField: null,
 
     /**
-     * Inhitialize the controller
-     * It has 3 listeners
+     * Initialize the controller
+     * It has 10 listeners
      */
     init: function() {
         this.control({
@@ -272,7 +272,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         win.hide();
         this.searchField.reset();
         var grid = this.searchField.up('panel').down('ortstammdatengrid');
-        grid.getSelectionModel().select(record);
+        var newrecord = grid.store.getById(record.get('id'));
+        grid.getView().getSelectionModel().select(newrecord);
         grid.getView().focusRow(record);
         var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
