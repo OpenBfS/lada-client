@@ -179,6 +179,9 @@ Ext.define('Lada.controller.Ort', {
             return;
         }
         var grid = Ext.ComponentQuery.query('ortstammdatengrid')[0];
+        if (!grid.up('ortpanel')) {
+            return;
+        }
         if (!record ||
             !Ext.Array.contains(Lada.netzbetreiber,
             record.get('netzbetreiberId'))) {
