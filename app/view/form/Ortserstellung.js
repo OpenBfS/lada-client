@@ -152,7 +152,6 @@ Ext.define('Lada.view.form.Ortserstellung', {
         },{
             xtype: 'ortszusatz',
             labelWidth: 125,
-            maxLength: 7,
             name: 'ozId',
             fieldLabel: i18n.getMsg('orte.ozId')
         }];
