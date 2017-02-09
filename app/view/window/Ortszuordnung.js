@@ -268,12 +268,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 projection: new OpenLayers.Projection('EPSG:3857')
             });
         map.map.addLayer(map.selectedFeatureLayer);
-        var ortId;
-        if (this.messprogramm) {
-            ortId = this.record.get('ort');
-                        } else {
-                            ortId = this.record.get('ortId');
-                        }
+        var ortId = this.record.get('ortId');
         if (ortId){
             var feat = map.featureLayer.getFeaturesByAttribute('id', ortId);
             var ortrecord = this.ortstore.findRecord('id', ortId);
