@@ -205,6 +205,16 @@ Ext.define('Lada.view.panel.Map', {
         }
         this.featureLayer.removeAllFeatures();
         this.featureLayer.addFeatures(locationFeatures);
+        if (this.selectedFeatureLayer && this.selectedFeatureLayer.features){
+            var oldSelection = this.selectedFeatureLayer.features[0].data.id;
+            var feature = this.featureLayer.getFeaturesByAttribute('id', oldSelection)[0];
+            this.selectControl.unselectAll();
+            this.selectedFeatureLayer.removeAllFeatures();
+            this.selectedFeatureLayer.addFeatures(feature.clone());
+            this.featureLayer.removeFeatures([feature]);
+            this.selectedFeatureLayer.refresh({force: true});
+            this.featureLayer.refresh({force: true});
+        }
         this.map.addLayer(this.featureLayer);
     },
 

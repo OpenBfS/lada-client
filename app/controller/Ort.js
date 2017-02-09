@@ -124,22 +124,37 @@ Ext.define('Lada.controller.Ort', {
         var i18n = Lada.getApplication().bundle;
         context.record.save({
             success: function(record, response) {
-                var grid = Ext.ComponentQuery.query('ortstammdatengrid')[0];
-                grid.store.load();
                 Ext.StoreManager.get('orte').load();
+                var grid = Ext.ComponentQuery.query('ortstammdatengrid')[0];
+                grid.store.load({
+                    callback: function() {
+                        var map = Ext.ComponentQuery.query('map')[0];
+                        map.addLocations(grid.store);
+                        var parentPanel = grid.up('panel').ownerCt;
+                        if (parentPanel){
+                            if (parentPanel.ortstore) {
+                                parentPanel.ortstore.load();
+                            }
+                            var ozf = parentPanel.down('ortszuordnungform');
+                            if (ozf){
+                                ozf.setOrt(null, record);
+                            }
+                        }
+                    }
+                });
             },
             failure: function(record, response) {
-              var json = response.request.scope.reader.jsonData;
-              if (json) {
-                if (json.message){
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                        +' #'+json.message,
-                        i18n.getMsg(json.message));
-                   } else {
-                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.generic.body'));
-                   }
-              }
+                var json = response.request.scope.reader.jsonData;
+                if (json) {
+                    if (json.message){
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                            +' #'+json.message,
+                            i18n.getMsg(json.message));
+                    } else {
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                      i18n.getMsg('err.msg.generic.body'));
+                    }
+                }
             }
         });
     },
