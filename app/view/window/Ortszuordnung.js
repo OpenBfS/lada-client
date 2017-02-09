@@ -144,12 +144,15 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                         fieldLabel: i18n.getMsg('ortszuordnung.ortsuche'),
                     }, '->', {
                         text: i18n.getMsg('orte.new'),
+                        icon: 'resources/img/list-add.png',
                         action: 'createort'
                     }, {
                         text: i18n.getMsg('orte.frommap'),
+                        icon: 'resources/img/list-add.png',
                         action: 'frommap'
                     }, {
                         text: i18n.getMsg('orte.clone'),
+                        icon: 'resources/img/list-add.png',
                         action: 'clone',
                         disabled : true
                     }]
