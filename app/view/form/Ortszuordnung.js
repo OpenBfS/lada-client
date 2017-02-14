@@ -101,7 +101,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 editable: true,
                                 name: 'ortszuordnungTyp',
                                 disableKeyFilter: true,
-                                fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp'),
+                                fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp')
                             }, {
                                 // this field is hidden because the user doesn't
                                 // need to know the internal ortID

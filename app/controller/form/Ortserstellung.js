@@ -41,7 +41,7 @@ Ext.define('Lada.controller.form.Ortserstellung', {
             'ortserstellungsform': {
                 validitychange: this.checkCommitEnabled,
                 dirtychange: this.checkCommitEnabled
-            },
+            }
         });
     },
 

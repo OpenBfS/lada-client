@@ -54,7 +54,7 @@ Ext.define('Lada.view.panel.Map', {
                     displayInLayerSwitcher: false,
                     type: 'png',
                     visibility: true,
-                    projection: 'EPSG:3857',
+                    projection: 'EPSG:3857'
                 })
         ];
         this.map = new OpenLayers.Map('map_' + id, {
