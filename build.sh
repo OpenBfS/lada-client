@@ -6,7 +6,7 @@ VERSION=lada-client-$VNUMBER
 # Minify
 echo "Minifying...."
 $SENCHAPATH --sdk-path extjs compile \
-    --classpath=app,resources/lib/ext/upload,resources/lib/ext/i18n page \
+    --classpath=app,resources/lib/ext/upload,resources/lib/ext/i18n,resources/lib/ext/grid,resources/lib/ext/util page \
     -yui -i index.html -o $VERSION/index.html
 
 # Copy additional files
