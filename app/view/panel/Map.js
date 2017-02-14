@@ -205,7 +205,9 @@ Ext.define('Lada.view.panel.Map', {
         }
         this.featureLayer.removeAllFeatures();
         this.featureLayer.addFeatures(locationFeatures);
-        if (this.selectedFeatureLayer && this.selectedFeatureLayer.features){
+        if (this.selectedFeatureLayer
+            && this.selectedFeatureLayer.features
+            && this.selectedFeatureLayer.features.length > 0){
             var oldSelection = this.selectedFeatureLayer.features[0].data.id;
             var feature = this.featureLayer.getFeaturesByAttribute('id', oldSelection)[0];
             this.selectControl.unselectAll();

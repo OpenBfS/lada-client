@@ -73,6 +73,7 @@ Ext.define('Lada.controller.form.Ortserstellung', {
                 if (ozw.ortstore) {
                     ozw.ortstore.load({
                         callback: function(records, operation, success) {
+                            ozw.ortstore.filter('netzbetreiberId', Lada.netzbetreiber[0]);
                             ozw.down('map').addLocations(ozw.ortstore);
                             var osg = ozw.down('ortstammdatengrid');
                             osg.setStore(ozw.ortstore);
@@ -82,7 +83,11 @@ Ext.define('Lada.controller.form.Ortserstellung', {
                     });
                 } else {
                     var osgstore = ozw.down('ortstammdatengrid').getStore();
-                    osgstore.load();
+                    osgstore.load({
+                        callback: function() {
+                            osgstore.filter('netzbetreiberId', Lada.netzbetreiber[0]);
+                        }
+                    });
                     ozw.down('map').addLocations(osgstore);
                     me.afterSave(formpanel, json);
                 }
