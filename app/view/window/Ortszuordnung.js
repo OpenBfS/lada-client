@@ -191,7 +191,10 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         } else {
             ortId = this.record.get('ortId');
         }
-        if (ortId !== undefined && !this.ortstore.findRecord('id', ortId)) {
+        if (ortId !== undefined
+            && ortId !== ''
+            && ortId !== null
+            && !this.ortstore.findRecord('id', ortId)) {
             var record = Ext.create('Lada.model.Ort');
             record.set('id', ortId);
             this.ortstore.add(record);
