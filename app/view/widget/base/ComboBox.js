@@ -26,6 +26,12 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         if (this.allowBlank === undefined) {
             this.allowBlank = true;
         }
+        var dkf = false;
+        var ta = 'all';
+        if (this.disableKeyFilter !== undefined) {
+            dkf = this.disableKeyFilter;
+            ta = this.disableKeyFilter ? 'all' : 'query'
+        }
         this.items = [{
             xtype: 'combobox',
             flex: 1,
@@ -54,8 +60,8 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             tpl: this.tpl,
             displayTpl: this.displayTpl,
             // disable filtering of entries if disableKeyFilter is true
-            disableKeyFilter: this.disableKeyFilter || false,
-            triggerAction: this.disableKeyFilter? 'all' : 'query'
+            disableKeyFilter: dkf,
+            triggerAction: ta
         }, {
             xtype: 'image',
             name: 'warnImg',
