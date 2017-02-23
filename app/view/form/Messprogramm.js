@@ -299,7 +299,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             xtype: 'umwelt',
                             name: 'umwId',
                             fieldLabel: i18n.getMsg('umwId'),
-                            labelWidth: 125,
+                            labelWidth: 100,
                             editable: true,
                             listeners: {
                                 dirtychange: {
@@ -315,12 +315,12 @@ Ext.define('Lada.view.form.Messprogramm', {
                             },
                             width: '100%',
                             items: [{
-                                xtype: 'textfield',
+                                xtype: 'tfield',
                                 maxLength: 38,
                                 enforceMaxLength: true,
                                 name: 'mediaDesk',
-                                width: '60%',
-                                labelWidth: 125,
+                                width: '58%',
+                                labelWidth: 100,
                                 fieldLabel: i18n.getMsg('mediaDesk'),
                                 editable: false,
                                 readOnly: true,
@@ -334,7 +334,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 xtype: 'textfield',
                                 name: 'media',
                                 margin: '0, 10, 5, 10',
-                                width: '40%',
+                                width: '42%',
                                 enforceMaxLength: true,
                                 editable: false,
                                 readOnly: true
