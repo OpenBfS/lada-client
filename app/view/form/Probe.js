@@ -417,6 +417,7 @@ Ext.define('Lada.view.form.Probe', {
     },
 
     setMediaSN: function(ndx, media, beschreibung) {
+        var mediabeschreibung = this.getForm().findField('media');
         if (ndx >= 12) {
             mediabeschreibung.setValue(beschreibung);
             return;
