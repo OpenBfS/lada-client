@@ -60,6 +60,12 @@ Ext.define('Lada.view.form.Probe', {
                         borderRight: '1px solid #b5b8c8 !important'
                     },
                     items: ['->', {
+                        text: i18n.getMsg('audittrail'),
+                        qtip: i18n.getMsg('qtip.audit'),
+                        icon: 'resources/img/distribute-vertical-center.png',
+                        action: 'audit',
+                        disabled: this.recordId === null
+                    }, {
                         text: 'Speichern',
                         qtip: 'Daten speichern',
                         icon: 'resources/img/dialog-ok-apply.png',

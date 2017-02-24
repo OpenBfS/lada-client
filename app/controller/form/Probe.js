@@ -12,6 +12,10 @@
 Ext.define('Lada.controller.form.Probe', {
     extend: 'Ext.app.Controller',
 
+    requires: [
+        'Lada.view.window.AuditTrail'
+    ],
+
     /**
      * Initialize the Controller
      * It has 4 listeners
@@ -23,6 +27,9 @@ Ext.define('Lada.controller.form.Probe', {
             },
             'probeform button[action=discard]': {
                 click: this.discard
+            },
+            'probeform button[action=audit]': {
+                click: this.showAuditTrail
             },
             'probeform': {
                 dirtychange: this.dirtyForm
@@ -304,6 +311,14 @@ Ext.define('Lada.controller.form.Probe', {
         for (var i = field.layer + 1; i < 12; i++) {
             allS[i].clearValue();
         }
-    }
+    },
 
+    showAuditTrail: function(button) {
+        Ext.create('Lada.view.window.AuditTrail', {
+            autoShow: true,
+            closeAction: 'destroy',
+            type: 'probe',
+            objectId: button.up('form').recordId
+        });
+    }
 });

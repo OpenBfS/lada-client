@@ -24,6 +24,9 @@ Ext.define('Lada.controller.form.Messung', {
             'messungform button[action=discard]': {
                 click: this.discard
             },
+            'messungform button[action=audit]': {
+                click: this.showAuditTrail
+            },
             'messungform': {
                 dirtychange: this.dirtyForm
             }
@@ -135,5 +138,14 @@ Ext.define('Lada.controller.form.Messung', {
                 form.owner.up('window').enableChildren();
             }
         }
+    },
+
+    showAuditTrail: function(button) {
+        Ext.create('Lada.view.window.AuditTrail', {
+            autoShow: true,
+            closeAction: 'destroy',
+            type: 'messung',
+            objectId: button.up('form').recordId
+        });
     }
 });
