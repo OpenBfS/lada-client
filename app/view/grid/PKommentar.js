@@ -19,7 +19,7 @@ Ext.define('Lada.view.grid.PKommentar', {
     ],
 
     maxHeight: 350,
-    emptyText: 'Keine Kommentaregefunden.',
+    emptyText: 'Keine Kommentare gefunden.',
     minHeight: 110,
     viewConfig: {
         deferEmptyText: false
