@@ -101,10 +101,16 @@ Ext.define('Lada.view.window.AuditTrail', {
                         audit[i].identifier.identifier;
 
                 }
-                html += '<br>geändert<br><div style="margin-left:2em;">'
+                if (audit[i].action === 'I') {
+                    html += '<br>angelegt<br><div style="margin-left:2em;">'
+                }
+                else {
+                    html += '<br>geändert in<br><div style="margin-left:2em;">'
+                }
                 for (var key in audit[i].changedFields) {
-                    html += '' + i18n.getMsg(key) + ': ' +
-                        audit[i].changedFields[key] + '<br>';
+                    var val = audit[i].changedFields[key] === 'null' ? '' :
+                        audit[i].changedFields[key];
+                    html += '' + i18n.getMsg(key) + ': ' + val + '<br>';
                 }
                 html += '</div>';
                 html += '</p>';
@@ -128,7 +134,12 @@ Ext.define('Lada.view.window.AuditTrail', {
                     html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
                     html += audit[i].identifier;
                 }
-                html += '<br>geändert<br><div style="margin-left:2em;">'
+                if (audit[i].action === 'I') {
+                    html += '<br>angelegt<br><div style="margin-left:2em;">'
+                }
+                else {
+                    html += '<br>geändert in<br><div style="margin-left:2em;">'
+                }
                 for (var key in audit[i].changedFields) {
                     html += '' + i18n.getMsg(key) + ': ' +
                         audit[i].changedFields[key] + '<br>';
