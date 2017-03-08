@@ -21,6 +21,15 @@ Ext.define('Lada.view.window.AuditTrail', {
 
     objectId: null,
 
+    dateItems: [
+        "probeentnahme_beginn",
+        "probeentnahme_ende",
+        "solldatum_beginn",
+        "solldatum_ende",
+        "messzeitpunkt",
+        "datum"
+    ],
+
 
     /**
      * This function initialises the Window
@@ -108,9 +117,15 @@ Ext.define('Lada.view.window.AuditTrail', {
                     html += '<br>geändert in<br><div style="margin-left:2em;">'
                 }
                 for (var key in audit[i].changedFields) {
-                    var val = audit[i].changedFields[key] === 'null' ? '' :
-                        audit[i].changedFields[key];
-                    html += '' + i18n.getMsg(key) + ': ' + val + '<br>';
+                    var value = '';
+                    if (Ext.Array.contains(this.dateItems, key)) {
+                        value = Ext.Date.format(new Date(audit[i].changedFields[key]), 'd.m.Y H:i');
+                    }
+                    else {
+                        value = audit[i].changedFields[key];
+                    }
+                    html += '' + i18n.getMsg(key) + ': ' +
+                        value + '<br>';
                 }
                 html += '</div>';
                 html += '</p>';
@@ -141,8 +156,15 @@ Ext.define('Lada.view.window.AuditTrail', {
                     html += '<br>geändert in<br><div style="margin-left:2em;">'
                 }
                 for (var key in audit[i].changedFields) {
+                    var value = '';
+                    if (Ext.Array.contains(this.dateItems, key)) {
+                        value = Ext.Date.format(new Date(audit[i].changedFields[key]), 'd.m.Y H:i');
+                    }
+                    else {
+                        value = audit[i].changedFields[key];
+                    }
                     html += '' + i18n.getMsg(key) + ': ' +
-                        audit[i].changedFields[key] + '<br>';
+                        value + '<br>';
                 }
                 html += '</div>';
                 html += '</p>';
