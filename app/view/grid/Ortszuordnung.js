@@ -184,12 +184,18 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         var modelname;
         if (this.isMessprogramm) {
             this.store = Ext.create('Lada.store.OrtszuordnungMp');
-            this.store.load({
-                params: {
-                    messprogrammId: this.recordId
-                }});
-            modelname = 'Lada.model.Messprogramm';
-        } else {
+            if (this.recordId) {
+                this.store.load({
+                    params: {
+                        messprogrammId: this.recordId
+                    }});
+                modelname = 'Lada.model.Messprogramm';
+            }
+            else {
+                return;
+            }
+        }
+        else {
             modelname = 'Lada.model.Probe';
             this.store = Ext.create('Lada.store.Ortszuordnung');
             this.store.load({
