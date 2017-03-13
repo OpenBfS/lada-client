@@ -1,11 +1,12 @@
 
-SENCHAPATH=~/bin/Sencha/Cmd/4.0.5.87/sencha
+#Fallback: SENCHAPATH=~/bin/Sencha/Cmd/4.0.5.87/sencha
+if [ -z $SENCHAPATH ]; then SENCHAPATH="~/bin/Sencha/Cmd/4.0.5.87/"; fi
 VNUMBER=$(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2)
 VERSION=lada-client-$VNUMBER
 
 # Minify
 echo "Minifying...."
-$SENCHAPATH --sdk-path extjs compile \
+$SENCHAPATH/sencha --sdk-path extjs compile \
     --classpath=app,resources/lib/ext/upload,resources/lib/ext/i18n,resources/lib/ext/grid,resources/lib/ext/util page \
     -yui -i index.html -o $VERSION/index.html
 
