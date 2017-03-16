@@ -72,6 +72,7 @@ Ext.define('Lada.view.FilterPanel', {
             items: [{
                 xtype: 'button',
                 action: 'search',
+                icon: 'resources/img/Find.png',
                 text: 'Suchen',
                 margin: '0 10 0 0'
             }, {
