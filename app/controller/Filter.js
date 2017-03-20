@@ -119,7 +119,7 @@ Ext.define('Lada.controller.Filter', {
         // Setup Columns
         if (this.displayFields &&
             this.displayFields.length > 0 &&
-            this.displayFields[0].index === 0) {
+            this.displayFields[0].index <= 1) {
             this.displayFields.reverse();
         }
 
