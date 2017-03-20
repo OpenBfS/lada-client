@@ -37,7 +37,7 @@ Ext.define('Lada.model.Messung', {
         name: 'messzeitpunkt',
         convert: function(v) {
             if (!v) {
-                return '';
+                return null;
             }
             return new Date(v);
         }
