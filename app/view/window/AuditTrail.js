@@ -159,6 +159,15 @@ Ext.define('Lada.view.window.AuditTrail', {
             else {
                 value = audit.changedFields[key];
             }
+            if (value === null) {
+                value = i18n.getMsg('noValue');
+            }
+            else if (value === true) {
+                value = i18n.getMsg('true');
+            }
+            else if (value === false) {
+                value = i18n.getMsg('false');
+            }
             html += '' + i18n.getMsg(key) + ': ' +
                 value + '<br>';
         }
