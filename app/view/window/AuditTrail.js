@@ -118,25 +118,7 @@ Ext.define('Lada.view.window.AuditTrail', {
                         audit[i].identifier.identifier;
 
                 }
-                if (audit[i].action === 'I') {
-                    html += '<br>angelegt<br><div style="margin-left:2em;">'
-                }
-                else {
-                    html += '<br>geändert in<br><div style="margin-left:2em;">'
-                }
-                for (var key in audit[i].changedFields) {
-                    var value = '';
-                    if (Ext.Array.contains(this.dateItems, key)) {
-                        value = Ext.Date.format(new Date(audit[i].changedFields[key]), 'd.m.Y H:i');
-                    }
-                    else {
-                        value = audit[i].changedFields[key];
-                    }
-                    html += '' + i18n.getMsg(key) + ': ' +
-                        value + '<br>';
-                }
-                html += '</div>';
-                html += '</p>';
+                html += this.createHtmlChangedFields(audit[i]);
             }
         }
         return html;
@@ -157,27 +139,31 @@ Ext.define('Lada.view.window.AuditTrail', {
                     html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
                     html += audit[i].identifier;
                 }
-                if (audit[i].action === 'I') {
-                    html += '<br>angelegt<br><div style="margin-left:2em;">'
-                }
-                else {
-                    html += '<br>geändert in<br><div style="margin-left:2em;">'
-                }
-                for (var key in audit[i].changedFields) {
-                    var value = '';
-                    if (Ext.Array.contains(this.dateItems, key)) {
-                        value = Ext.Date.format(new Date(audit[i].changedFields[key]), 'd.m.Y H:i');
-                    }
-                    else {
-                        value = audit[i].changedFields[key];
-                    }
-                    html += '' + i18n.getMsg(key) + ': ' +
-                        value + '<br>';
-                }
-                html += '</div>';
-                html += '</p>';
+                html += this.createHtmlChangedFields(audit[i]);
             }
         }
+        return html;
+    },
+
+    createHtmlChangedFields: function(audit) {
+        var i18n = Lada.getApplication().bundle;
+        html = '<br>' + i18n.getMsg(audit.action)
+            + '<br><div style="margin-left:2em;">';
+
+        for (var key in audit.changedFields) {
+            var value = '';
+            if (Ext.Array.contains(this.dateItems, key)) {
+                value = Ext.Date.format(new Date(audit.changedFields[key]),
+                                        'd.m.Y H:i');
+            }
+            else {
+                value = audit.changedFields[key];
+            }
+            html += '' + i18n.getMsg(key) + ': ' +
+                value + '<br>';
+        }
+        html += '</div>';
+        html += '</p>';
         return html;
     }
 });
