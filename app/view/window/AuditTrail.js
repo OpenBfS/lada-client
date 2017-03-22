@@ -75,14 +75,22 @@ Ext.define('Lada.view.window.AuditTrail', {
     },
 
     loadSuccess: function(response) {
+        var i18n = Lada.getApplication().bundle;
         var json = Ext.decode(response.responseText);
         var container = this.down('panel[name=auditcontainer]');
-        if (this.type === 'probe') {
-            var html = this.createHtmlProbe(json);
+        if (!json.success) {
+            var html = '<p><strong>' + i18n.getMsg(json.message.toString())
+                + '</strong></p>';
             container.update(html);
         }
-        else if (this.type === 'messung') {
-            container.update(this.createHtmlMessung(json));
+        else {
+            if (this.type === 'probe') {
+                var html = this.createHtmlProbe(json);
+                container.update(html);
+            }
+            else if (this.type === 'messung') {
+                container.update(this.createHtmlMessung(json));
+            }
         }
     },
 
