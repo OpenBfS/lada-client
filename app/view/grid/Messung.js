@@ -310,7 +310,7 @@ Ext.define('Lada.view.grid.Messung', {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly &&
-            record.get('statusWert') === 0 &&
+            record.get('statusKombi') === 1 &&
             record.get('owner')) {
             grid.down('button[action=delete]').enable();
         }

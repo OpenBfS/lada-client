@@ -36,6 +36,8 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
         this.store = Ext.data.StoreManager.get('messprogrammkategorie');
         if (!this.store) {
             this.store = Ext.create('Lada.store.MessprogrammKategorie');
+        } else {
+            this.store.clearFilter();
         }
         this.store.sort();
         this.callParent(arguments);

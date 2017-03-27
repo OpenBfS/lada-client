@@ -51,6 +51,9 @@ Ext.define('Lada.controller.grid.ProbeList', {
             'probelistgrid gridview': {
                 expandbody: this.expandBody,
                 collapsebody: this.collapseBody
+            },
+            'probelistgrid pagingtoolbar': {
+                change: this.pageChange
             }
         });
         this.callParent(arguments);
@@ -549,6 +552,19 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 }
             }
         });
+    },
+
+    pageChange: function(toolbar) {
+        var grid = toolbar.up('grid');
+        var store = grid.getStore();
+        var rowExpander = grid.plugins[0]
+        var nodes = rowExpander.view.getNodes();
+        for (var i = 0; i < nodes.length; i++) {
+            var node = Ext.fly(nodes[i]);
+            if (node.hasCls(rowExpander.rowCollapsedCls) === false) {
+                rowExpander.toggleRow(i, store.getAt(i));
+            }
+        }
     }
 
 });

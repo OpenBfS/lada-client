@@ -82,6 +82,13 @@ Ext.define('Lada.view.form.Messprogramm', {
                         },
                         margin: '0, 10, 0, 0',
                         items: [{
+                             xtype: 'displayfield',
+                             name: 'id',
+                             fieldLabel: i18n.getMsg('mprId'),
+                             margin: '0, 5, 5, 5',
+                             labelWidth: 95,
+                             maxLength: 20
+                            }, {
                             layout: {
                                 type: 'hbox',
                                 align: 'stretch'
@@ -103,6 +110,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                             var labor = newValue[0].get('laborMst');
                                             combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
                                             combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
+                                            combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
                                         }
                                     }
                                 }
@@ -134,6 +142,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 }
                             }, {
                                 xtype: 'netzbetreiber',
+                                name: 'netzbetreiber',
                                 editable: false,
                                 readOnly: true,
                                 isFormField: false,
@@ -374,7 +383,15 @@ Ext.define('Lada.view.form.Messprogramm', {
                     margin: '0, 5, 5, 5',
                     //width: '100%',
                     anchor: '100%',
-                    labelWidth: 115
+                    labelWidth: 115,
+                    listeners: {
+                        expand : {
+                            fn: function(combo) {
+                                Ext.StoreManager.get('messprogrammkategorie').clearFilter();
+                                Ext.StoreManager.get('messprogrammkategorie').filter('netzbetreiberId', combo.up('fieldset').down('netzbetreiber[name=netzbetreiber]').getValue());
+                            }
+                        }
+                    }
                 }, {
                     xtype: 'textarea',
                     name: 'probeKommentar',

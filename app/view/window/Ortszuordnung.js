@@ -135,13 +135,16 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 }],
                 dockedItems: [{
                     xtype: 'toolbar',
-                    dock: 'bottom',
+                    dock: 'top',
                     items: [{
                         xtype: 'textfield',
                         name: 'search',
-                        labelWidth: 50,
+                        icon: 'resources/img/Find.png',
+                        width: '150px',
                         enableKeyEvents: true,
-                        fieldLabel: i18n.getMsg('ortszuordnung.ortsuche')
+                        emptyText: 'Ortssuche',
+                        emptyCls: 'empty-text-field',
+                        fieldLabel: ''
                     }, '->', {
                         text: i18n.getMsg('orte.new'),
                         icon: 'resources/img/list-add.png',

@@ -85,3 +85,10 @@
 .row-expander-grid .x-grid-with-row-lines .x-grid-td {
     border-bottom: 1px solid #e0e0e0;
 }
+
+.empty-text-field {
+    background-image:url('../img/Find.png');
+    background-repeat: no-repeat;
+    background-position: left 5px center;
+    padding-left: 20px;
+}
