@@ -82,6 +82,13 @@ Ext.define('Lada.view.form.Messprogramm', {
                         },
                         margin: '0, 10, 0, 0',
                         items: [{
+                             xtype: 'displayfield',
+                             name: 'id',
+                             fieldLabel: i18n.getMsg('mprId'),
+                             margin: '0, 5, 5, 5',
+                             labelWidth: 95,
+                             maxLength: 20
+                            }, {
                             layout: {
                                 type: 'hbox',
                                 align: 'stretch'
