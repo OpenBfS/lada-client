@@ -42,30 +42,15 @@ Ext.define('Lada.controller.grid.Messung', {
         // we have a window with a probe record!
         if (grid.up('window')) {
             var probe = grid.up('window').record;
-            /* Only open a new Window when:
-               statusEdit = True
-               -or-
-               the value of status is not 0
-               -or-
-               the owner = True
-
-               the statusWert attribute is not present in the original data.
-               it is appended, when the value and name of the status were
-               determined.
-            */
-            if (record.get('statusEdit')
-                || record.get('statusWert') > 0
-                || record.get('owner')) {
-                var win = Ext.create('Lada.view.window.MessungEdit', {
-                    parentWindow: grid.up('window'),
-                    probe: probe,
-                    record: record,
-                    grid: grid
-                });
-                win.show();
-                win.setPosition(window.innerWidth - 30 -win.width);
-                win.initData();
-            }
+            var win = Ext.create('Lada.view.window.MessungEdit', {
+                parentWindow: grid.up('window'),
+                probe: probe,
+                record: record,
+                grid: grid
+            });
+            win.show();
+            win.setPosition(window.innerWidth - 30 -win.width);
+            win.initData();
             return;
         }
         var probeRecord = Ext.create('Lada.model.ProbeList');
