@@ -151,6 +151,9 @@ Ext.define('Lada.view.window.MessungEdit', {
                         }
                     });
                 }
+                var mStore = Ext.data.StoreManager.get('messgroessen');
+                    mStore.proxy.extraParams = {mmtId: record.get('mmtId')};
+                    mStore.load();
                 this.down('messungform').setRecord(record);
                 this.record = record;
 
