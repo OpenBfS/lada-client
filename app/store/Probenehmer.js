@@ -11,5 +11,6 @@
  */
 Ext.define('Lada.store.Probenehmer', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Probenehmer'
+    model: 'Lada.model.Probenehmer',
+    pageSize: 50
 });
