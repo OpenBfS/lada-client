@@ -269,5 +269,10 @@ Ext.define('Lada.view.widget.DayOfYear', {
 
     setValue: function(value) {
         this.down('numberfield[hidden]').setValue(value);
+    },
+
+    setReadOnly: function(value) {
+        this.down('numberfield[hidden=false]').setReadOnly(value);
+        this.down('combobox').setReadOnly(value);
     }
 });

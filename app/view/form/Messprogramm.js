@@ -665,7 +665,25 @@ Ext.define('Lada.view.form.Messprogramm', {
     },
 
     setReadOnly: function(value) {
-        // TODO
+        this.down('cbox[name=mstlabor]').setReadOnly(value);
+        this.down('cbox[name=datenbasisId]').setReadOnly(value);
+        this.down('cbox[name=baId]').setReadOnly(value);
+        this.down('chkbox[name=test]').setReadOnly(value);
+        this.down('cbox[name=probenartId]').setReadOnly(value);
+        this.down('netzbetreiber').setReadOnly(value);
+        this.down('cbox[name=probenintervall]').setReadOnly(value);
+        this.down('numfield[name=teilintervallVon]').setReadOnly(value);
+        this.down('numfield[name=teilintervallBis]').setReadOnly(value);
+        this.down('numfield[name=intervallOffset]').setReadOnly(value);
+        this.down('dayofyear[name=gueltigVon]').setReadOnly(value);
+        this.down('dayofyear[name=gueltigBis]').setReadOnly(value);
+        this.down('cbox[name=umwId]').setReadOnly(value);
+        this.down('cbox[name=probeNehmerId]').setReadOnly(value);
+        this.down('messprogrammland[name=mplId]').setReadOnly(value);
+        this.down('probenintervallslider').setReadOnly(value);
+        for (var i = 0; i < 12; i++) {
+            this.down('deskriptor[layer='+i+']').setReadOnly(value);
+        }
     },
 
     buildDescriptors: function() {

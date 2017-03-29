@@ -147,7 +147,6 @@ Ext.define('Lada.view.window.Messprogramm', {
         // create a Edit window
         if (this.record) {
             this.setLoading(true);
-            this.down('messmethodengrid').setReadOnly(false);
             Ext.ClassManager.get('Lada.model.Messprogramm').load(this.record.get('id'), {
                 failure: function(record, action) {
                     me.setLoading(false);
@@ -201,6 +200,7 @@ Ext.define('Lada.view.window.Messprogramm', {
 
     disableChildren: function() {
         this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(true);
+        this.down('messmethodengrid').setReadOnly(true);
     },
 
     enableChildren: function() {

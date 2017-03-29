@@ -143,8 +143,8 @@ Ext.define('Lada.controller.grid.Messmethode', {
         //Set Store
         ngrid.setData(mmtmessgroessenstore);
 
-        //Enable Editing
-        ngrid.setReadOnly(false);
+        //Enable Editing depending on the readonly state of the messprogramm.
+        ngrid.setReadOnly(row.view.up('window').record.get('readonly'));
     },
 
     /**
