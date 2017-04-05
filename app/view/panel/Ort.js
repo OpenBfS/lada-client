@@ -19,7 +19,7 @@ Ext.define('Lada.view.panel.Ort', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-
+ 
         // Different Layout of toolbar depending on the bars position.
         if (this.toolbarPos == 'top') {
             this.dockedItems = [{
@@ -71,11 +71,12 @@ Ext.define('Lada.view.panel.Ort', {
             xtype: 'ortstammdatengrid',
             width: '60%',
             editableGrid: this.editableGrid,
-            collapsible: true,
-            region: 'east'
+            region: 'center'
         }, {
             xtype: 'map',
-            region: 'center',
+            flex: 1,
+            collapsible: true,
+            region: 'east',
             layout: 'border',
             title: i18n.getMsg('map.title'),
             externalOrteStore: true,
@@ -83,9 +84,15 @@ Ext.define('Lada.view.panel.Ort', {
                 beforecollapse: function() {
                     var c = this.map.getControlsByClass('OpenLayers.Control.ScaleLine');
                     this.map.removeControl(c[0]);
+                    for (i = 0; i < this.map.layers.length; i++) {
+                        this.map.layers[i].setVisibility(false);
+                    }
                 },
                 expand: function() {
                     this.map.addControl(new OpenLayers.Control.ScaleLine());
+                    for (i = 0; i < this.map.layers.length; i++) {
+                        this.map.layers[i].setVisibility(true);
+                    }
                 }
             }
         }];
