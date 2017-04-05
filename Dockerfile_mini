@@ -39,7 +39,7 @@ RUN ./install-dependencies.sh
 #
 # compile and minify application
 #
-ENV VERSION=2.4.1
+ENV VERSION=2.6.1
 RUN ./build.sh
 RUN cd /var/www/html && cp -r /tmp/lada-client/lada-client-$VERSION/* .
 

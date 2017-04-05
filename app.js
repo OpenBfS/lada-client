@@ -89,7 +89,7 @@ Ext.application({
         Lada.logintime = '';
         Lada.mst = [];
         Lada.netzbetreiber = [];
-        Lada.clientVersion = '2.6';
+        Lada.clientVersion = '2.6.1';
         Lada.serverVersion = '';
 
         var queryString = document.location.href.split('?')[1];
