@@ -120,6 +120,7 @@ Ext.define('Lada.view.window.ImportResponse', {
      * @param data the payload of the response
      */
     parseResponse: function(data) {
+        var i18n = Lada.getApplication().bundle;
         var errors = data.data.errors;
         var warnings = data.data.warnings;
         var out = [];
@@ -165,13 +166,16 @@ Ext.define('Lada.view.window.ImportResponse', {
                         if (msgs[i].key === 'validation') {
                             validation.push('<ol>');
                             var parts = msgs[i].value.split('#');
-                            var str = Lada.getApplication().bundle.getMsg(parts[0]) +
+                            var str = i18n.getMsg(parts[0]) +
                                 parts[1] === undefined ? '' : parts[1];
-                            validation.push(str + ' (' + Lada.getApplication().bundle.getMsg(msgs[i].code.toString()) + ')');
+                            validation.push(str + ' ('
+                                + i18n.getMsg(msgs[i].code.toString()) + ')');
                             validation.push('</ol>');
                         }
                         else {
-                            out.push('<li>' + msgs[i].key + ' (' + Lada.getApplication().bundle.getMsg(msgs[i].code.toString())+'): '+msgs[i].value+'</li>')
+                            out.push('<li>' + msgs[i].key + ' ('
+                                     + i18n.getMsg(msgs[i].code.toString())
+                                     + '): ' + msgs[i].value + '</li>')
                         }
                     }
                     if (validation.length > 1) {
@@ -202,13 +206,16 @@ Ext.define('Lada.view.window.ImportResponse', {
                         if (msgs[i].key === 'validation') {
                             validation.push('<ol>');
                             var parts = msgs[i].value.split('#');
-                            var str = Lada.getApplication().bundle.getMsg(parts[0]) +
+                            var str = i18n.getMsg(parts[0]) +
                                 parts[1] === undefined ? '' : parts[1];
-                            validation.push(str + ' (' + Lada.getApplication().bundle.getMsg(msgs[i].code.toString()) + ')');
+                            validation.push(str + ' ('
+                                + i18n.getMsg(msgs[i].code.toString()) + ')');
                             validation.push('</ol>');
                         }
                         else {
-                            out.push('<li>' + msgs[i].key + ' (' + Lada.getApplication().bundle.getMsg(msgs[i].code.toString())+'): '+msgs[i].value+'</li>')
+                            out.push('<li>' + msgs[i].key + ' ('
+                                     + i18n.getMsg(msgs[i].code.toString())
+                                     + '): ' + msgs[i].value + '</li>')
                         }
                     }
                     if (validation.length > 1) {
