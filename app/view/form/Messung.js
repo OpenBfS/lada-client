@@ -316,7 +316,11 @@ Ext.define('Lada.view.form.Messung', {
         var i18n = Lada.getApplication().bundle;
         if (warnings) {
             for (key in warnings) {
-                element = this.down('component[name=' + key + ']');
+                var tmp = key;
+                if (tmp.indexOf('#') > 0) {
+                    tmp = tmp.split('#')[0];
+                }
+                element = this.down('component[name=' + tmp + ']');
                 if (!element) {
                     continue;
                 }
@@ -330,7 +334,11 @@ Ext.define('Lada.view.form.Messung', {
         }
         if (errors) {
             for (key in errors) {
-                element = this.down('component[name=' + key + ']');
+                var tmp = key;
+                if (tmp.indexOf('#') > 0) {
+                    tmp = tmp.split('#')[0];
+                }
+                element = this.down('component[name=' + tmp + ']');
                 if (!element) {
                     continue;
                 }

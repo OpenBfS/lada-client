@@ -164,7 +164,10 @@ Ext.define('Lada.view.window.ImportResponse', {
                     for (var i = msgs.length - 1; i >= 0; i--) {
                         if (msgs[i].key === 'validation') {
                             validation.push('<ol>');
-                            validation.push(Lada.getApplication().bundle.getMsg(msgs[i].value) + ' (' + Lada.getApplication().bundle.getMsg(msgs[i].code.toString()) + ')');
+                            var parts = msgs[i].value.split('#');
+                            var str = Lada.getApplication().bundle.getMsg(parts[0]) +
+                                parts[1] === undefined ? '' : parts[1];
+                            validation.push(str + ' (' + Lada.getApplication().bundle.getMsg(msgs[i].code.toString()) + ')');
                             validation.push('</ol>');
                         }
                         else {
@@ -198,7 +201,10 @@ Ext.define('Lada.view.window.ImportResponse', {
                     for (var i = msgs.length - 1; i >= 0; i--) {
                         if (msgs[i].key === 'validation') {
                             validation.push('<ol>');
-                            validation.push(Lada.getApplication().bundle.getMsg(msgs[i].value) + ' (' + Lada.getApplication().bundle.getMsg(msgs[i].code.toString()) + ')');
+                            var parts = msgs[i].value.split('#');
+                            var str = Lada.getApplication().bundle.getMsg(parts[0]) +
+                                parts[1] === undefined ? '' : parts[1];
+                            validation.push(str + ' (' + Lada.getApplication().bundle.getMsg(msgs[i].code.toString()) + ')');
                             validation.push('</ol>');
                         }
                         else {
