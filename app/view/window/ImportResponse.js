@@ -167,7 +167,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                             validation.push('<ol>');
                             var parts = msgs[i].value.split('#');
                             var str = i18n.getMsg(parts[0]) +
-                                (parts[1] === undefined ? '' : parts[1]);
+                                (parts[1] === undefined ? '' : ' ' + parts[1]);
                             validation.push(str + ' ('
                                 + i18n.getMsg(msgs[i].code.toString()) + ')');
                             validation.push('</ol>');
@@ -207,7 +207,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                             validation.push('<ol>');
                             var parts = msgs[i].value.split('#');
                             var str = i18n.getMsg(parts[0]) +
-                                (parts[1] === undefined ? '' : parts[1]);
+                                (parts[1] === undefined ? '' : ' ' + parts[1]);
                             validation.push(str + ' ('
                                 + i18n.getMsg(msgs[i].code.toString()) + ')');
                             validation.push('</ol>');
