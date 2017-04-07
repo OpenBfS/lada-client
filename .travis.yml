@@ -1,0 +1,9 @@
+language: python
+python: '2.7'
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y curl unzip python apache2
+install:
+- ./install_dependencies.sh
+script:
+- ./build.sh
