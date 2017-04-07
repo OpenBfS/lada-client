@@ -1,0 +1,12 @@
+doc
+css
+gfx
+build
+extjs
+*.orig
+*.jse
+*.rej
+*/.*
+*.swp
+ext-*/
+resources/
