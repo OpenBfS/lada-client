@@ -67,7 +67,6 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.height = Ext.getBody().getViewSize().height - 30;
 
         var mStore = Ext.data.StoreManager.get('messgroessen');
-        mStore.proxy.extraParams = {mmtId: this.record.get('mmtId')};
         mStore.load();
 
         this.items = [{
