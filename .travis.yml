@@ -7,3 +7,8 @@ install:
 - ./install_dependencies.sh
 script:
 - ./build.sh
+notifications:
+  email:
+    on_success: never
+    on_failure: never
+
