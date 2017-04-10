@@ -7,7 +7,7 @@ before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y curl unzip python apache2
 install:
-- ./install-dependencies.sh
+- travis_wait ./install-dependencies.sh
 script:
 - ./build.sh
 notifications:
