@@ -15,7 +15,26 @@ Ext.define('Lada.model.Ort', {
     fields: [{
         name: 'id'
     }, {
-        name: 'aktiv'
+        name: 'aktiv',
+        type: 'boolean',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            else if (v === 'f') {
+                return false;
+            }
+            return true;
+        },
+        serialize: function(v) {
+            if (v === null || v === '') {
+                return null;
+            }
+            else if (v === false) {
+                return 'f';
+            }
+            return 't';
+        }
     }, {
         name: 'ortId',
         convert: function(v) {
