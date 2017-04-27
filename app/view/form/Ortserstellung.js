@@ -31,13 +31,14 @@ Ext.define('Lada.view.form.Ortserstellung', {
         var me = this;
         this.items = [{
             xtype: 'netzbetreiber',
+            name: 'netzbetreiberId',
             editable: false,
             readOnly: true,
             submitValue: true,
             border: 0,
             fieldLabel: i18n.getMsg('netzbetreiberId'),
             labelWidth: 125,
-            value: Lada.netzbetreiber[0]
+            value: this.record.get('netzbetreiberId')
         }, {
             xtype: 'tfield',
             name: 'ortId',

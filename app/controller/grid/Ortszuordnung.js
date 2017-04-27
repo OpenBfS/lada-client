@@ -147,8 +147,15 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * Opens the form for a new Messpunkt
      */
     createort: function(button) {
+        var win = button.up('ortszuordnungwindow');
+        var mstId = win.probe.get('mstId');
+        var mst = Ext.data.StoreManager.get('messstellen');
+        var ndx = mst.findExact('id', mstId);
+        var nId = mst.getAt(ndx).get('netzbetreiberId');
         Ext.create('Lada.view.window.Ortserstellung',{
-            record: Ext.create('Lada.model.Ort', {ortTyp: 1}),
+            record: Ext.create('Lada.model.Ort', {
+                ortTyp: 1,
+                netzbetreiberId: nId}),
             parentWindow: button.up('ortszuordnungwindow')
         }).show();
     },
