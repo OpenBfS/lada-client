@@ -257,8 +257,18 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                     return true;
                 }
             }});
-        verwaltungseinheiten.filter('bezeichnung', filter);
-        staaten.filter('staat', filter);
+        var filterVerw = new Ext.util.Filter({
+            filterFn: function(item) {
+                return item.get('bezeichnung').indexOf(filter) > -1;
+            }
+        });
+        var filterStaat = new Ext.util.Filter({
+            filterFn: function(item) {
+                return item.get('staat').indexOf(filter) > -1;
+            }
+        });
+        verwaltungseinheiten.filter(filterVerw);
+        staaten.filter(filterStaat);
 
         if (!this.resultPanel) {
             this.resultPanel = Ext.create('Lada.view.window.OrtFilter', {
@@ -281,7 +291,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var grid = this.searchField.up('panel').down('ortstammdatengrid');
         var newrecord = grid.store.getById(record.get('id'));
         grid.getView().getSelectionModel().select(newrecord);
-        grid.getView().focusRow(record);
+        grid.getView().focusRow(newrecord);
         var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
         verwaltungseinheiten.clearFilter(true);
