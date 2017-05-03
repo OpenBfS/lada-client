@@ -303,8 +303,13 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var panel = this.searchField.up('panel').up('window');
         win.hide();
         this.searchField.reset();
+        var mstId = panel.probe.get('mstId');
+        var mst = Ext.data.StoreManager.get('messstellen');
+        var ndx = mst.findExact('id', mstId);
+        var nId = mst.getAt(ndx).get('netzbetreiberId');
         Ext.create('Lada.view.window.Ortserstellung', {
             record: Ext.create('Lada.model.Ort', {
+                netzbetreiberId: nId,
                 gemId: record.get('id'),
                 ortId: record.get('id'),
                 kurztext: record.get('bezeichnung'),
@@ -325,8 +330,13 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var panel = this.searchField.up('panel').up('window');
         win.hide();
         this.searchField.reset();
+        var mstId = panel.probe.get('mstId');
+        var mst = Ext.data.StoreManager.get('messstellen');
+        var ndx = mst.findExact('id', mstId);
+        var nId = mst.getAt(ndx).get('netzbetreiberId');
         Ext.create('Lada.view.window.Ortserstellung', {
             record: Ext.create('Lada.model.Ort', {
+                netzbetreiberId: nId,
                 staatId: record.get('id'),
                 ortId: 'Staat_' + record.get('staatIso'),
                 kurztext: record.get('staat'),
