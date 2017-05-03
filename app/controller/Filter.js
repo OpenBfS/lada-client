@@ -396,12 +396,26 @@ Ext.define('Lada.controller.Filter', {
         // Find the store or create a new one.
         var store = Ext.StoreManager.lookup(sname);
         if (!store) {
-            store = Ext.create(sname);
+            if (type === 'ort') {
+                store = Ext.create(sname, {
+                    autoLoad: false
+                });
+                store.proxy.pageParam = undefined;
+                store.proxy.startParam = undefined;
+                store.proxy.limitParam = undefined;
+            }
+            else {
+                store = Ext.create(sname);
+            }
         }
         if (store) {
             store.addListener('beforeload', this.loadingAnimationOn, resultGrid);
             store.addListener('load', this.loadingAnimationOff, resultGrid);
             if (type === 'ort') {
+                if (searchParams['netzbetreiberId'] === undefined ||
+                    searchParams['netzbetreiberId'] === '') {
+                    searchParams.netzbetreiberId = Lada.netzbetreiber[0];
+                }
                 var panel = resultGrid.up('ortpanel');
                 store.addListener('load', panel.down('map').addLocations, panel.down('map'));
                 panel.connectListeners();
