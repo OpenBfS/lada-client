@@ -134,8 +134,16 @@ Ext.define('Lada.view.panel.Map', {
         features.feature.geometry.transform(new OpenLayers.Projection('EPSG:3857'),
                                             new OpenLayers.Projection('EPSG:4326'));
         var parent = this.up('ortszuordnungwindow') || this.up('ortpanel');
+        var nId = ''
+        if (parent.probe) {
+            var mstId = parent.probe.get('mstId');
+            var mst = Ext.data.StoreManager.get('messstellen');
+            var ndx = mst.findExact('id', mstId);
+            nId = mst.getAt(ndx).get('netzbetreiberId');
+        }
         Ext.create('Lada.view.window.Ortserstellung', {
             record: Ext.create('Lada.model.Ort',{
+                netzbetreiberId: nId,
                 koordXExtern: features.feature.geometry.x,
                 koordYExtern: features.feature.geometry.y,
                 kdaId : 4,
