@@ -224,6 +224,18 @@ Ext.application({
         });
         Ext.create('Lada.store.DatensatzErzeuger', {
             storeId: 'datensatzerzeuger',
+            proxy: {
+                type: 'rest',
+                url: 'lada-server/rest/datensatzerzeuger',
+                reader: {
+                    type: 'json',
+                    totalProperty: 'totalCount',
+                    root: 'data'
+                },
+                limitParam: undefined,
+                startParam: undefined,
+                pageParam: undefined
+            },
             autoLoad: true
         });
         Ext.create('Lada.store.MessprogrammKategorie', {

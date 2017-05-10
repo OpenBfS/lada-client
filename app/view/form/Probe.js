@@ -220,7 +220,21 @@ Ext.define('Lada.view.form.Probe', {
                                 margin: '0, 5, 5, 5',
                                 width: '50%',
                                 anchor: '100%',
-                                labelWidth: 110
+                                labelWidth: 110,
+                                listeners: {
+                                    expand : {
+                                        fn: function(combo) {
+                                            var store = Ext.StoreManager.get('datensatzerzeuger');
+                                            store.clearFilter();
+                                            store.filter('netzbetreiberId', combo.up('fieldset').down('netzbetreiber[name=netzbetreiber]').getValue());
+                                        }
+                                    },
+                                    collapse: {
+                                        fn: function(combo) {
+                                           Ext.StoreManager.get('datensatzerzeuger').clearFilter();
+                                        }
+                                    }
+                                }
                             }]
                         },{
                             xtype: 'messprogrammland',

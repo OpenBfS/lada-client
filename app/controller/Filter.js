@@ -394,19 +394,19 @@ Ext.define('Lada.controller.Filter', {
         }
 
         // Find the store or create a new one.
-        var store = Ext.StoreManager.lookup(sname);
-        if (!store) {
-            if (type === 'ort') {
-                store = Ext.create(sname, {
-                    autoLoad: false
-                });
-                store.proxy.pageParam = undefined;
-                store.proxy.startParam = undefined;
-                store.proxy.limitParam = undefined;
-            }
-            else {
-                store = Ext.create(sname);
-            }
+        var store;
+        if (type === 'ort') {
+            store = Ext.create(sname, {
+                autoLoad: false
+            });
+            store.proxy.pageParam = undefined;
+            store.proxy.startParam = undefined;
+            store.proxy.limitParam = undefined;
+        }
+        else {
+            store = Ext.create(sname, {
+                pageSize: 50
+            });
         }
         if (store) {
             store.addListener('beforeload', this.loadingAnimationOn, resultGrid);
