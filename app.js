@@ -220,6 +220,18 @@ Ext.application({
         });
         Ext.create('Lada.store.Probenehmer', {
             storeId: 'probenehmer',
+            proxy: {
+                type: 'rest',
+                url: 'lada-server/rest/probenehmer',
+                reader: {
+                    type: 'json',
+                    totalProperty: 'totalCount',
+                    root: 'data'
+                },
+                limitParam: undefined,
+                startParam: undefined,
+                pageParam: undefined
+            },
             autoLoad: true
         });
         Ext.create('Lada.store.DatensatzErzeuger', {

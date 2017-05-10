@@ -375,7 +375,21 @@ Ext.define('Lada.view.form.Messprogramm', {
                     //width: '100%',
                     minValue: 0,
                     anchor: '100%',
-                    labelWidth: 95
+                    labelWidth: 95,
+                    listeners: {
+                        expand : {
+                            fn: function(combo) {
+                                var store = Ext.StoreManager.get('probenehmer');
+                                store.clearFilter();
+                                store.filter('netzbetreiberId', combo.up('fieldset').down('netzbetreiber[name=netzbetreiber]').getValue());
+                            }
+                        },
+                        collapse: {
+                            fn: function(combo) {
+                               Ext.StoreManager.get('probenehmer').clearFilter();
+                            }
+                        }
+                    }
                 }, {
                     xtype: 'messprogrammland',
                     name: 'mplId',
