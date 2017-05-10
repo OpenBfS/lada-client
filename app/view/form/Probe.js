@@ -218,7 +218,18 @@ Ext.define('Lada.view.form.Probe', {
                                         fn: function(combo) {
                                             var store = Ext.StoreManager.get('probenehmer');
                                             store.clearFilter();
-                                            store.filter('netzbetreiberId', combo.up('fieldset').down('netzbetreiber[name=netzbetreiber]').getValue());
+                                            var nId = combo.up('fieldset')
+                                                .down('netzbetreiber[name=netzbetreiber]')
+                                                .getValue();
+                                            if (!nId || nId.length === 0) {
+                                                store.filterBy(function(record) {
+                                                    return Lada.netzbetreiber.indexOf(
+                                                        record.get('netzbetreiberId')) > -1;
+                                                });
+                                            }
+                                            else {
+                                                store.filter('netzbetreiberId', nId);
+                                            }
                                         }
                                     },
                                     collapse: {
@@ -240,7 +251,18 @@ Ext.define('Lada.view.form.Probe', {
                                         fn: function(combo) {
                                             var store = Ext.StoreManager.get('datensatzerzeuger');
                                             store.clearFilter();
-                                            store.filter('netzbetreiberId', combo.up('fieldset').down('netzbetreiber[name=netzbetreiber]').getValue());
+                                            var nId = combo.up('fieldset')
+                                                .down('netzbetreiber[name=netzbetreiber]')
+                                                .getValue();
+                                            if (!nId || nId.length === 0) {
+                                                store.filterBy(function(record) {
+                                                    return Lada.netzbetreiber.indexOf(
+                                                        record.get('netzbetreiberId')) > -1;
+                                                });
+                                            }
+                                            else {
+                                                store.filter('netzbetreiberId', nId);
+                                            }
                                         }
                                     },
                                     collapse: {
@@ -261,8 +283,25 @@ Ext.define('Lada.view.form.Probe', {
                             listeners: {
                                 expand : {
                                     fn: function(combo) {
+                                        var store = Ext.StoreManager.get('messprogrammkategorie');
+                                        store.clearFilter();
+                                        var nId = combo.up('fieldset')
+                                            .down('netzbetreiber[name=netzbetreiber]')
+                                            .getValue();
+                                        if (!nId || nId.length === 0) {
+                                            store.filterBy(function(record) {
+                                                return Lada.netzbetreiber.indexOf(
+                                                    record.get('netzbetreiberId')) > -1;
+                                            });
+                                        }
+                                        else {
+                                            store.filter('netzbetreiberId', nId);
+                                        }
+                                    }
+                                },
+                                collapse: {
+                                    fn: function(combo) {
                                        Ext.StoreManager.get('messprogrammkategorie').clearFilter();
-                                       Ext.StoreManager.get('messprogrammkategorie').filter('netzbetreiberId', combo.up('fieldset').down('netzbetreiber[name=netzbetreiber]').getValue());
                                     }
                                 }
                             }
