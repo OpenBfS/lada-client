@@ -17,7 +17,7 @@ Ext.define('Lada.model.DatensatzErzeuger', {
     }, {
         name: 'netzbetreiberId'
     }, {
-        name: 'daErzeugerId'
+        name: 'datensatzErzeugerId'
     }, {
         name: 'mstId'
     }, {
