@@ -252,6 +252,18 @@ Ext.application({
         });
         Ext.create('Lada.store.MessprogrammKategorie', {
             storeId: 'messprogrammkategorie',
+            proxy: {
+                type: 'rest',
+                url: 'lada-server/rest/messprogrammkategorie',
+                reader: {
+                    type: 'json',
+                    totalProperty: 'totalCount',
+                    root: 'data'
+                },
+                limitParam: undefined,
+                startParam: undefined,
+                pageParam: undefined
+            },
             autoLoad: true
         });
         Ext.create('Lada.store.StatusWerte', {
