@@ -15,6 +15,5 @@ Ext.define('Lada.store.Orte', {
     sorters: [{
         property: 'gemId'
     }],
-    pageSize: 50,
     autoLoad: true
 });

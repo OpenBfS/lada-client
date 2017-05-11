@@ -31,13 +31,12 @@ Ext.define('Lada.view.form.Ortserstellung', {
         var me = this;
         this.items = [{
             xtype: 'netzbetreiber',
-            editable: false,
-            readOnly: true,
+            name: 'netzbetreiberId',
             submitValue: true,
             border: 0,
             fieldLabel: i18n.getMsg('netzbetreiberId'),
             labelWidth: 125,
-            value: Lada.netzbetreiber[0]
+            value: this.record.get('netzbetreiberId')
         }, {
             xtype: 'tfield',
             name: 'ortId',
@@ -181,6 +180,11 @@ Ext.define('Lada.view.form.Ortserstellung', {
         }];
         this.callParent(arguments);
         this.getForm().loadRecord(this.record);
+        if (this.record.get('netzbetreiberId') &&
+            this.record.get('netzbetreiberId') !== '') {
+            this.down('netzbetreiber').down('combobox').setEditable(false);
+            this.down('netzbetreiber').down('combobox').setReadOnly(true);
+        }
     },
 
     setMessages: function(errors, warnings) {

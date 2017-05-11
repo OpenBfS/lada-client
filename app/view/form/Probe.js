@@ -212,7 +212,32 @@ Ext.define('Lada.view.form.Probe', {
                                 width: '50%',
                                 minValue: 0,
                                 anchor: '100%',
-                                labelWidth: 95
+                                labelWidth: 95,
+                                listeners: {
+                                    expand : {
+                                        fn: function(combo) {
+                                            var store = Ext.StoreManager.get('probenehmer');
+                                            store.clearFilter();
+                                            var nId = combo.up('fieldset')
+                                                .down('netzbetreiber[name=netzbetreiber]')
+                                                .getValue();
+                                            if (!nId || nId.length === 0) {
+                                                store.filterBy(function(record) {
+                                                    return Lada.netzbetreiber.indexOf(
+                                                        record.get('netzbetreiberId')) > -1;
+                                                });
+                                            }
+                                            else {
+                                                store.filter('netzbetreiberId', nId);
+                                            }
+                                        }
+                                    },
+                                    collapse: {
+                                        fn: function(combo) {
+                                           Ext.StoreManager.get('probenehmer').clearFilter();
+                                        }
+                                    }
+                                }
                             }, {
                                 xtype: 'datensatzerzeuger',
                                 name: 'erzeugerId',
@@ -220,7 +245,32 @@ Ext.define('Lada.view.form.Probe', {
                                 margin: '0, 5, 5, 5',
                                 width: '50%',
                                 anchor: '100%',
-                                labelWidth: 110
+                                labelWidth: 110,
+                                listeners: {
+                                    expand : {
+                                        fn: function(combo) {
+                                            var store = Ext.StoreManager.get('datensatzerzeuger');
+                                            store.clearFilter();
+                                            var nId = combo.up('fieldset')
+                                                .down('netzbetreiber[name=netzbetreiber]')
+                                                .getValue();
+                                            if (!nId || nId.length === 0) {
+                                                store.filterBy(function(record) {
+                                                    return Lada.netzbetreiber.indexOf(
+                                                        record.get('netzbetreiberId')) > -1;
+                                                });
+                                            }
+                                            else {
+                                                store.filter('netzbetreiberId', nId);
+                                            }
+                                        }
+                                    },
+                                    collapse: {
+                                        fn: function(combo) {
+                                           Ext.StoreManager.get('datensatzerzeuger').clearFilter();
+                                        }
+                                    }
+                                }
                             }]
                         },{
                             xtype: 'messprogrammland',
@@ -233,8 +283,25 @@ Ext.define('Lada.view.form.Probe', {
                             listeners: {
                                 expand : {
                                     fn: function(combo) {
+                                        var store = Ext.StoreManager.get('messprogrammkategorie');
+                                        store.clearFilter();
+                                        var nId = combo.up('fieldset')
+                                            .down('netzbetreiber[name=netzbetreiber]')
+                                            .getValue();
+                                        if (!nId || nId.length === 0) {
+                                            store.filterBy(function(record) {
+                                                return Lada.netzbetreiber.indexOf(
+                                                    record.get('netzbetreiberId')) > -1;
+                                            });
+                                        }
+                                        else {
+                                            store.filter('netzbetreiberId', nId);
+                                        }
+                                    }
+                                },
+                                collapse: {
+                                    fn: function(combo) {
                                        Ext.StoreManager.get('messprogrammkategorie').clearFilter();
-                                       Ext.StoreManager.get('messprogrammkategorie').filter('netzbetreiberId', combo.up('fieldset').down('netzbetreiber[name=netzbetreiber]').getValue());
                                     }
                                 }
                             }

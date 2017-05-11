@@ -47,7 +47,18 @@ Ext.define('Lada.view.grid.Orte', {
                 disabled: false,
                 pluginId: 'rowedit'
             });
-            this.plugins = [this.rowEditing];
+            this.plugins = [this.rowEditing, {
+                ptype: 'bufferedrenderer',
+                trailingBufferZone: 20,
+                leadingBufferZone: 50
+            }];
+        }
+        else {
+            this.plugins = [{
+                ptype: 'bufferedrenderer',
+                trailingBufferZone: 20,
+                leadingBufferZone: 50
+            }];
         }
 
         filters = {
@@ -418,20 +429,6 @@ Ext.define('Lada.view.grid.Orte', {
 
         if (store) {
             this.reconfigure(store);
-
-            var ptbar = this.down('pagingtoolbar');
-            if (ptbar) {
-                this.removeDocked(ptbar);
-            }
-
-            if (store.pageSize > 0) {
-                this.addDocked([{
-                    xtype: 'pagingtoolbar',
-                    dock: 'bottom',
-                    store: store,
-                    displayInfo: true
-                }]);
-            }
         }
 
         if (Ext.Array.contains(Lada.funktionen, 4)) {
