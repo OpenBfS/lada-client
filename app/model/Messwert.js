@@ -79,7 +79,7 @@ Ext.define('Lada.model.Messwert', {
         url: 'lada-server/rest/messwert',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

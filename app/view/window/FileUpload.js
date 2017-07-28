@@ -12,6 +12,7 @@
 Ext.define('Lada.view.window.FileUpload', {
     extend: 'Ext.window.Window',
     requires: [
+        //TODO: Migration Ext.form.field.File
         'Ext.ux.upload.BrowseButton',
         'Ext.ux.upload.Item',
         'Ext.ux.upload.uploader.ExtJsUploader',

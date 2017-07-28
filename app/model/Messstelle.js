@@ -42,7 +42,7 @@ Ext.define('Lada.model.Messstelle', {
         url: 'lada-server/rest/messstelle',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

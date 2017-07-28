@@ -14,7 +14,8 @@ Ext.define('Lada.view.grid.Orte', {
     alias: 'widget.ortstammdatengrid',
 
     requires: [
-        'Ext.ux.grid.FiltersFeature',
+        //TODO: Migration, FiltersFeatures removed, added: Ext.grid.filters.Filters
+            //'Ext.ux.grid.FiltersFeature',
         'Lada.view.widget.KoordinatenArt',
         'Lada.view.widget.Kta',
         'Lada.view.widget.OrtsZusatz',
@@ -62,6 +63,7 @@ Ext.define('Lada.view.grid.Orte', {
         }
 
         filters = {
+            //TODO: Migration
             ftype: 'filters',
             // encode and local configuration options defined previously for easier reuse
             encode: false, // json encode the filter query

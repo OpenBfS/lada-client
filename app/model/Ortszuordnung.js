@@ -63,7 +63,7 @@ Ext.define('Lada.model.Ortszuordnung', {
         url: 'lada-server/rest/ortszuordnung',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

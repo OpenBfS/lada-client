@@ -70,7 +70,7 @@ Ext.define('Lada.model.Status', {
         url: 'lada-server/rest/status',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

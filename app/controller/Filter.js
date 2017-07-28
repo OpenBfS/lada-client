@@ -426,8 +426,8 @@ Ext.define('Lada.controller.Filter', {
             // for each Type.
 
             if (resultGrid.isDynamic) {
-               //only the dynamic resultgrid can and needs to do the following:
-               resultGrid.setupColumns(this.displayFields);
+                //only the dynamic resultgrid can and needs to do the following:
+                resultGrid.setupColumns(this.displayFields);
             }
 
             resultGrid.getStore().proxy.extraParams = searchParams;

@@ -36,7 +36,7 @@ Ext.define('Lada.model.Umwelt', {
         url: 'lada-server/rest/umwelt',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

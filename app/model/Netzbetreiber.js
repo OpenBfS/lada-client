@@ -45,7 +45,7 @@ Ext.define('Lada.model.Netzbetreiber', {
         url: 'lada-server/rest/netzbetreiber',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

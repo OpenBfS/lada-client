@@ -39,7 +39,7 @@ Ext.define('Lada.model.Messeinheit', {
         url: 'lada-server/rest/messeinheit',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

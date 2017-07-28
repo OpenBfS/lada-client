@@ -40,7 +40,7 @@ Ext.define('Lada.model.Messmethode', {
         url: 'lada-server/rest/messmethode',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

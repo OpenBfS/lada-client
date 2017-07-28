@@ -18,7 +18,7 @@ Ext.define('Lada.store.ProbeQueries', {
         url: 'lada-server/rest/query/probe',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

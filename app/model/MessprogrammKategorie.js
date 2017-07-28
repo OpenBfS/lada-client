@@ -42,7 +42,7 @@ Ext.define('Lada.model.MessprogrammKategorie', {
         reader: {
             type: 'json',
             totalProperty: 'totalCount',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

@@ -97,7 +97,7 @@ Ext.define('Lada.model.Messung', {
         url: 'lada-server/rest/messung/',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

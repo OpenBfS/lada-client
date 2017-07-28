@@ -30,7 +30,7 @@ Ext.define('Lada.model.OrtsZusatz', {
         url: 'lada-server/rest/ortszusatz',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

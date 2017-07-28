@@ -26,7 +26,7 @@ Ext.define('Lada.model.StatusWerte', {
         url: 'lada-server/rest/statuswert',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 

@@ -46,7 +46,7 @@ Ext.define('Lada.model.Probenzusatz', {
         url: 'lada-server/rest/probenzusatz',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

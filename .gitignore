@@ -8,5 +8,14 @@ extjs
 *.rej
 */.*
 *.swp
+ext
 ext-*/
 resources/
+
+bootstrap.*
+build.xml
+packages
+sass
+workspace.json
+.sencha
+

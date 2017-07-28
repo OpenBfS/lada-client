@@ -186,14 +186,15 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         });
         me.callParent();
     },
-
-    finishRenderChildren: function() {
-        var me = this;
-        me.callParent();
-        me.timeLabel.finishRender();
-        me.hourField.finishRender();
-        me.minuteField.finishRender();
-        me.acceptBtn.finishRender();
+    privates: {
+        finishRenderChildren: function() {
+            var me = this;
+            me.callParent();
+            me.timeLabel.finishRender();
+            me.hourField.finishRender();
+            me.minuteField.finishRender();
+            me.acceptBtn.finishRender();
+        }
     },
 
     showTimePicker: function() {

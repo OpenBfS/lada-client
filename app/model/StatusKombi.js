@@ -15,11 +15,9 @@ Ext.define('Lada.model.StatusKombi', {
     fields: [{
         name: 'id'
     }, {
-        name: 'statusStufe',
-        type: 'object'
+        name: 'statusStufe'
     }, {
-        name: 'statusWert',
-        type: 'object'
+        name: 'statusWert'
     }],
 
     idProperty: 'id',
@@ -29,7 +27,7 @@ Ext.define('Lada.model.StatusKombi', {
         url: 'lada-server/rest/statuskombi',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

@@ -45,7 +45,7 @@ Ext.define('Lada.model.PKommentar', {
         url: 'lada-server/rest/pkommentar',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

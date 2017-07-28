@@ -33,7 +33,7 @@ Ext.define('Lada.model.Datenbasis', {
         url: 'lada-server/rest/datenbasis',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

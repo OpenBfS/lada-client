@@ -22,7 +22,7 @@ Ext.define('Lada.store.StammdatenQueries', {
         url: 'lada-server/rest/query/stammdaten',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

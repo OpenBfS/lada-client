@@ -29,7 +29,7 @@ Ext.define('Lada.model.ProbeList', {
         url: 'lada-server/rest/probe',
         reader: {
             type: 'json',
-            root: 'data',
+            rootProperty: 'data',
             totalProperty: 'totalCount'
         }
     }

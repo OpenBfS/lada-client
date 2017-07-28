@@ -106,7 +106,8 @@ Ext.define('Lada.view.grid.ProbeList', {
                 }
             }]
         });
-        this.store.model.setFields(fields);
+        //TODO: Migration store.model.setFields() removed
+        this.store.setFields(fields);
         this.reconfigure(this.store, columns);
     }
 });

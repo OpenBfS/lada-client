@@ -45,7 +45,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform dayofyear [hidden]': {
                 change: this.alignSubIntervall
             },
-            'messprogrammform panel[xtype="deskriptor] combobox': {
+            //TODO: Single quote intentional?
+            'messprogrammform panel[xtype="deskriptor"] combobox': {
                 select: this.deskriptorSelect
             }
         });

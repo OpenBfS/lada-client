@@ -60,7 +60,7 @@ Ext.define('Lada.model.Probenehmer', {
         reader: {
             type: 'json',
             totalProperty: 'totalCount',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

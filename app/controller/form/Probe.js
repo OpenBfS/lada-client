@@ -40,7 +40,8 @@ Ext.define('Lada.controller.form.Probe', {
             'probeform [xtype="datetime"] field': {
                 blur: this.checkDate
             },
-            'probeform panel[xtype="deskriptor] combobox': {
+            //TODO: Single quote intentional
+            'probeform panel[xtype="deskriptor"] combobox': {
                 select: this.deskriptorSelect
             }
         });
@@ -92,12 +93,15 @@ Ext.define('Lada.controller.form.Probe', {
         var data = formPanel.getForm().getFieldValues(true);
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
+            console.log(data[key]);
         }
         if (!formPanel.getForm().getRecord().get('letzteAenderung')) {
             formPanel.getForm().getRecord().data.letzteAenderung = new Date();
         }
         formPanel.getForm().getRecord().save({
             success: function(record, response) {
+                console.log('success');
+                console.log(response);
                 var json = Ext.decode(response.response.responseText);
                 if (json) {
                     button.setDisabled(true);
@@ -117,13 +121,16 @@ Ext.define('Lada.controller.form.Probe', {
                 }
             },
             failure: function(record, response) {
+                console.log('failure');
+                console.log(response);
                 button.setDisabled(true);
                 button.up('toolbar').down('button[action=discard]')
                     .setDisabled(true);
                 var rec = formPanel.getForm().getRecord();
                 rec.dirty = false;
                 formPanel.getForm().loadRecord(record);
-                var json = response.request.scope.reader.jsonData;
+                
+                var json = response.request.getScope().reader.jsonData;
                 if (json) {
                     if(json.message){
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')

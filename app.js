@@ -6,7 +6,7 @@
  * and comes with ABSOLUTELY NO WARRANTY! Check out
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
-Ext.Loader.setConfig({
+/*Ext.Loader.setConfig({
     enabled: true,
     paths: {
         'Ext.i18n': 'resources/lib/ext/i18n/',
@@ -14,7 +14,7 @@ Ext.Loader.setConfig({
         'Ext.ux.util': 'resources/lib/ext/util',
         'Ext.ux.grid': 'resources/lib/ext/grid'
     }
-});
+});*/
 
 Ext.application({
 
@@ -73,7 +73,7 @@ Ext.application({
     ],
     bundle: {
         bundle: 'Lada',
-        lang: 'de-DE',
+        language: 'de-DE',
         path: 'resources/i18n',
         noCache: true
     },
@@ -226,7 +226,8 @@ Ext.application({
                 reader: {
                     type: 'json',
                     totalProperty: 'totalCount',
-                    root: 'data'
+                    //TODO: Migration: root deprecated
+                    rootProperty: 'data'
                 },
                 limitParam: undefined,
                 startParam: undefined,
@@ -241,8 +242,9 @@ Ext.application({
                 url: 'lada-server/rest/datensatzerzeuger',
                 reader: {
                     type: 'json',
+                    //TODO: Migration: root deprecated
                     totalProperty: 'totalCount',
-                    root: 'data'
+                    rootProperty: 'data'
                 },
                 limitParam: undefined,
                 startParam: undefined,
@@ -258,7 +260,8 @@ Ext.application({
                 reader: {
                     type: 'json',
                     totalProperty: 'totalCount',
-                    root: 'data'
+                    //TODO: Migration: root deprecated
+                    rootProperty: 'data'
                 },
                 limitParam: undefined,
                 startParam: undefined,

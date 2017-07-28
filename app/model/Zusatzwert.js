@@ -68,7 +68,7 @@ Ext.define('Lada.model.Zusatzwert', {
         url: 'lada-server/rest/zusatzwert',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

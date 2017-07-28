@@ -40,7 +40,7 @@ Ext.define('Lada.model.MmtMessprogramm', {
         url: 'lada-server/rest/messprogrammmmt',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

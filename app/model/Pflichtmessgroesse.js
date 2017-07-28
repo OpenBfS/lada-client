@@ -39,7 +39,7 @@ Ext.define('Lada.model.Pflichtmessgroesse', {
         url: 'lada-server/rest/pflichtmessgroesse',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

@@ -4,9 +4,18 @@ CUR_DIR=`pwd`
 SCRIPT_DIR=`dirname $0`
 
 cd $SCRIPT_DIR
-curl -O https://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip
-unzip -n ext-4.2.1-gpl.zip
-ln -sf ext-4.2.1.883 extjs
+
+#TODO: Upgrade elmasse-bundle to 1.2, use as sencha cmd package in packages/local
+#mkdir -p packages/local
+#cd packages/local
+#curl -O https://cdn.sencha.com/ext/gpl/ext-4.2.1-gpl.zip
+#unzip -n ext-4.2.1-gpl.zip
+#ln -sf ext-4.2.1.883 extjs
+#cd ../..
+
+curl -L https://github.com/elmasse/elmasse-bundle/archive/v1.2.0.zip \
+    -o elmasse-1.2.0.zip
+unzip -n elmasse-1.2.0.zip
 
 mkdir -p resources/lib/ext
 cd resources/lib
@@ -29,16 +38,15 @@ cd OpenLayers/build
 python build.py full.cfg ../OpenLayers.js
 
 cd ../../ext
-curl -L https://github.com/elmasse/Ext.i18n.Bundle/archive/v0.3.3.zip \
-     -o Ext-i18n-Bundle-v0-3-3.zip
-unzip -n Ext-i18n-Bundle-v0-3-3.zip
-ln -sf elmasse-bundle-0.3.3/i18n i18n
+#curl -L https://github.com/elmasse/Ext.i18n.Bundle/archive/v0.3.3.zip \
+#     -o Ext-i18n-Bundle-v0-3-3.zip
+#unzip -n Ext-i18n-Bundle-v0-3-3.zip
+#ln -sf elmasse-bundle-0.3.3/i18n i18n
 
 curl -L https://github.com/ivan-novakov/extjs-upload-widget/archive/1.1.1.zip \
      -o Ext-ux-Upload-1-1-1.zip
 unzip -n Ext-ux-Upload-1-1-1.zip
 ln -sf extjs-upload-widget-1.1.1/lib/upload upload
 
-ln -sf ../../../extjs/examples/ux/grid grid
 
 cd $CUR_DIR

@@ -44,7 +44,7 @@ Ext.define('Lada.model.DatensatzErzeuger', {
         reader: {
             type: 'json',
             totalProperty: 'totalCount',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

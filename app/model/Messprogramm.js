@@ -91,7 +91,7 @@ Ext.define('Lada.model.Messprogramm', {
         url: 'lada-server/rest/messprogramm',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

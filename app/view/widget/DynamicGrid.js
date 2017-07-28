@@ -59,7 +59,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         var caf = this.generateColumnsAndFields(cols);
         var columns = caf[0];
         var fields = caf[1];
-        this.store.model.setFields(fields);
+        this.store.setFields(fields);
         this.reconfigure(this.store, columns);
     },
 
@@ -128,6 +128,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         });
 
         for (var i = cols.length - 1; i >= 0; i--) {
+            //Change id field to a valid ExtJS6 id
+            cols[i].id = 'col-' + cols[i].id;
             fields.push(new Ext.data.Field({
                 name: cols[i].dataIndex
             }));
