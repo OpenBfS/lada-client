@@ -208,7 +208,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 // TODO
             },
             success: function(record, response) {
-                var json = Ext.decode(response.response.responseText);
+                var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     this.warnings = json.warnings;
                     this.errors = json.errors;

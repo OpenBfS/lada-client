@@ -56,6 +56,7 @@ Ext.define('Lada.override.RowEditor', {
                 me.onColumnShow(column);
             }
         }
-        me.mon(field, 'change', me.onFieldChange, me);
+        //TODO: Migrate onFieldChange removed, no replacement
+        //me.mon(field, 'change', me.onFieldChange, me);
     }
 });

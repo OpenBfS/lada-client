@@ -14,7 +14,8 @@ Ext.define('Lada.model.Probe', {
     extend: 'Ext.data.Model',
 
     fields: [{
-        name: 'id'
+        name: 'id',
+        persist: false
     }, {
         name: 'owner',
         type: 'boolean',
@@ -33,9 +34,11 @@ Ext.define('Lada.model.Probe', {
         name: 'test',
         type: 'boolean'
     }, {
-        name: 'mstId'
+        name: 'mstId',
+        persist: true,
     }, {
-        name: 'laborMstId'
+        name: 'laborMstId',
+        persist: true,
     }, {
         name: 'datenbasisId'
     }, {
@@ -146,6 +149,7 @@ Ext.define('Lada.model.Probe', {
     proxy: {
         type: 'rest',
         url: 'lada-server/rest/probe',
+        idParam: '',
         reader: {
             type: 'json',
             rootProperty: 'data'

@@ -72,7 +72,6 @@ Ext.define('Lada.view.panel.Map', {
         keyControl.activate();
         this.bodyStyle = {background: '#fff'};
         this.initData();
-        this.addEvents('featureselected');
         this.callParent(arguments);
     },
 

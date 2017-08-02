@@ -163,7 +163,10 @@ Ext.define('Lada.view.window.MessungEdit', {
                               + ' Mst: ' + messstelle.get('messStelle')
                               + ' editieren.');
 
-                var json = Ext.decode(response.response.responseText);
+                var json = null;
+                try {
+                    json = Ext.decode(response.response.responseText);
+                } catch (e) {}
                 if (json) {
                     this.setMessages(json.errors, json.warnings);
                 }

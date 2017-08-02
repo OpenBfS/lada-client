@@ -75,7 +75,7 @@ Ext.define('Lada.controller.form.Probe', {
     setNetzbetreiber: function(combo, records){
         var netzbetreiber = combo.up().up('form')
                 .down('netzbetreiber').down('combobox');
-        var nbId = records[0].get('netzbetreiberId');
+        var nbId = records.get('netzbetreiberId');
 
         if (nbId != null) {
             //select the NB in the NB-Combobox
@@ -90,10 +90,11 @@ Ext.define('Lada.controller.form.Probe', {
      */
     save: function(button) {
         var formPanel = button.up('form');
-        var data = formPanel.getForm().getFieldValues(true);
+        console.log(formPanel.getForm());
+        var data = formPanel.getForm().getFieldValues(false);
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
-            console.log(data[key]);
+            console.log(key + ' - ' + data[key]);
         }
         if (!formPanel.getForm().getRecord().get('letzteAenderung')) {
             formPanel.getForm().getRecord().data.letzteAenderung = new Date();
@@ -121,16 +122,16 @@ Ext.define('Lada.controller.form.Probe', {
                 }
             },
             failure: function(record, response) {
-                console.log('failure');
-                console.log(response);
+                var json = null;
+                try {
+                    json = JSON.parse(response.getResponse().responseText);
+                } catch (e) {}
                 button.setDisabled(true);
                 button.up('toolbar').down('button[action=discard]')
                     .setDisabled(true);
                 var rec = formPanel.getForm().getRecord();
                 rec.dirty = false;
                 formPanel.getForm().loadRecord(record);
-                
-                var json = response.request.getScope().reader.jsonData;
                 if (json) {
                     if(json.message){
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')

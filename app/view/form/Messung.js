@@ -208,8 +208,8 @@ Ext.define('Lada.view.form.Messung', {
                     se = sStore.getById(statusId).get('mstId');
                     var kombis = Ext.data.StoreManager.get('statuskombi');
                     var rec = kombis.getById(sk);
-                    sw = rec.raw.statusWert.id;
-                    ss = rec.raw.statusStufe.id;
+                    sw = rec.data.statusWert.id;
+                    ss = rec.data.statusStufe.id;
                 }
                 this.setStatusWert(sw);
                 this.setStatusStufe(ss);

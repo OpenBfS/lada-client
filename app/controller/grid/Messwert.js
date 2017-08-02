@@ -54,7 +54,7 @@ Ext.define('Lada.controller.grid.Messwert', {
                 context.grid.up('window').initData();
             },
             failure: function(request, response) {
-                var json = response.request.scope.reader.jsonData;
+                var json = response.request.getScope().reader.jsonData;
                 if (json) {
                     if (json.message){
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')

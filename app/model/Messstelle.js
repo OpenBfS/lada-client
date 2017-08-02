@@ -22,7 +22,8 @@ Ext.define('Lada.model.Messstelle', {
      *  - amtskennung:
      */
     fields: [{
-        name: 'id'
+        name: 'id',
+        persist: true
     }, {
         name: 'beschreibung'
     }, {

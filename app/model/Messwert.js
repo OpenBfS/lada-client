@@ -13,7 +13,8 @@ Ext.define('Lada.model.Messwert', {
     extend: 'Ext.data.Model',
 
     fields: [{
-        name: 'id'
+        name: 'id',
+        persist: false
     }, {
         name: 'owner',
         type: 'boolean'

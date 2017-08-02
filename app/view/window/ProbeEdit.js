@@ -147,7 +147,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                     me.enableAddMessungen();
                 }
 
-                var json = Ext.decode(response.response.responseText);
+                var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     this.setMessages(json.errors, json.warnings);
                     if (!json.warnings.mediaDesk) {
