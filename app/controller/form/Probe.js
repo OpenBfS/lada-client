@@ -81,6 +81,13 @@ Ext.define('Lada.controller.form.Probe', {
             //select the NB in the NB-Combobox
             netzbetreiber.select(nbId);
         }
+        //TODO: Migration: Moved code from view creation.
+        var mst = records.get('messStelle');
+        var labor = records.get('laborMst');
+        combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
+        combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
+        combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
+
     },
 
     /**
@@ -90,20 +97,16 @@ Ext.define('Lada.controller.form.Probe', {
      */
     save: function(button) {
         var formPanel = button.up('form');
-        console.log(formPanel.getForm());
         var data = formPanel.getForm().getFieldValues(false);
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
-            console.log(key + ' - ' + data[key]);
         }
         if (!formPanel.getForm().getRecord().get('letzteAenderung')) {
             formPanel.getForm().getRecord().data.letzteAenderung = new Date();
         }
         formPanel.getForm().getRecord().save({
             success: function(record, response) {
-                console.log('success');
-                console.log(response);
-                var json = Ext.decode(response.response.responseText);
+                var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     button.setDisabled(true);
                     button.up('toolbar').down('button[action=discard]')

@@ -16,7 +16,7 @@ Ext.define('Lada.store.Probenintervall', {
     fields: ['probenintervall',
             {
                 name: 'piTexti18nId',
-                convert: function(v, record) {
+                convert: function(v) {
                     var i18n = Lada.getApplication().bundle;
                     return i18n.getMsg(v);
                 }

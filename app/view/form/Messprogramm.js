@@ -103,6 +103,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 labelWidth: 95,
                                 allowBlank: false,
                                 editable: true,
+                                //TODO: Migration: Doesnt seem to work here, moved to controller
+                                /*
                                 listeners: {
                                     select: {
                                         fn: function(combo, newValue) {
@@ -113,7 +115,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                             combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
                                         }
                                     }
-                                }
+                                }*/
                             }, {
                                 xtype: 'messstelle',
                                 name: 'mstId',
@@ -492,6 +494,7 @@ Ext.define('Lada.view.form.Messprogramm', {
             s.setDisabled(false);
         }
 
+        console.log('Probeninterval ' + intervall);
         var intrec = intervallstore
             .findRecord('probenintervall',
                 intervall, 0, false, false, true);

@@ -76,11 +76,19 @@ Ext.define('Lada.controller.form.Messprogramm', {
     setNetzbetreiber: function(combo, records){
         var netzbetreiber = combo.up().up('form')
                 .down('netzbetreiber').down('combobox');
-        var nbId = records[0].get('netzbetreiberId');
+        var nbId = records.get('netzbetreiberId');
         if (nbId != null) {
             //select the NB in the NB-Combobox
             netzbetreiber.select(nbId);
         }
+        //TODO: Migration: Moved select listener from view
+        console.log(records);
+        var mst = records.get('messStelle');
+        var labor = records.get('laborMst');
+        combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
+        combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
+        combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
+
     },
 
     /**
@@ -88,9 +96,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
      * and the numberfield.
      */
     updateIntervalls: function(field) {
+        //TODO: Migration: Intervall combo box is not saved/submitted
         var form = field.up('messprogrammform');
         var record = form.getRecord();
         form.populateIntervall(record, field.getValue());
+        
     },
 
     /**
@@ -163,7 +173,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
         formPanel.getForm().getRecord().save({
             success: function(record, response) {
-                var json = Ext.decode(response.response.responseText);
+                var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     button.setDisabled(true);
                     button.up('toolbar').down('button[action=discard]')
@@ -188,7 +198,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 var rec = formPanel.getForm().getRecord();
                 rec.dirty = false;
                 formPanel.getForm().loadRecord(record);
-                var json = response.request.scope.reader.jsonData;
+                var json = response.getRequest().getScope().reader.jsonData;
                 if (json) {
                     if(json.message){
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
