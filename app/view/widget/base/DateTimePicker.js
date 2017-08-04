@@ -17,7 +17,6 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         'Ext.picker.Date',
         'Ext.form.field.Number'
     ],
-
     todayText: 'Jetzt',
 
     renderTpl: [
@@ -106,6 +105,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
 
     beforeRender: function () {
         var me = this;
+        me.callParent(arguments);
         me.hourField = new Ext.form.field.Number({
             ownerCt: me,
             ownerLayout: me.getComponentLayout(),
@@ -184,7 +184,6 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
             handler: me.acceptDate,
             scope: me
         });
-        me.callParent();
     },
     privates: {
         finishRenderChildren: function() {

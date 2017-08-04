@@ -41,13 +41,13 @@ Ext.define('Lada.controller.form.Messung', {
     save: function(button) {
         var formPanel = button.up('form');
         formPanel.setLoading(true);
-        var data = formPanel.getForm().getFieldValues(true);
+        var data = formPanel.getForm().getFieldValues();
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
         }
         formPanel.getForm().getRecord().save({
             success: function(record, response) {
-                var json = Ext.decode(response.response.responseText);
+                var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     button.setDisabled(true);
                     button.up('toolbar').down('button[action=discard]')
@@ -80,7 +80,13 @@ Ext.define('Lada.controller.form.Messung', {
                 button.up('toolbar').down('button[action=discard]')
                     .setDisabled(true);
                 formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
-                var json = response.request.scope.reader.jsonData;
+                //var json = response.request.scope.reader.jsonData;
+                var json = null;
+                try {
+                    console.log(response);
+                    json = JSON.parse(response.getResponse().responseText);
+                } catch (e) {}
+
                 if (json) {
                     if (json.message) {
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
