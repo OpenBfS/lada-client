@@ -10,7 +10,7 @@ extjs
 *.swp
 ext
 ext-*/
-resources/
+resources/lib/
 
 bootstrap.*
 build.xml
