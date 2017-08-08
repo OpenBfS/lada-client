@@ -39,26 +39,60 @@ Ext.define('Lada.view.form.OrtInfo', {
                 fieldLabel: i18n.getMsg('orte.langtext'),
                 name: 'langtext'
             }, {
-                fieldLabel: i18n.getMsg('staat'),
-                name: 'staat'
+                xtype: 'ortinforow',
+                label: i18n.getMsg('staat'),
+                firstitem: 'staatISO',
+                seconditem: 'staat'
             }, {
-                fieldLabel: i18n.getMsg('orte.verwaltungseinheit'),
-                name: 'gemeinde'
+                xtype: 'ortinforow',
+                label: i18n.getMsg('orte.verwaltungseinheit'),
+                firstitem: 'gemId',
+                seconditem: 'gemeinde'
             }, {
-                fieldLabel: i18n.getMsg('orte.gemId'),
-                name: 'gemId'
-            },
-           {
-                fieldLabel: i18n.getMsg('orte.kda'),
-                name: 'kdaId'
-            }, {
-                fieldLabel: i18n.getMsg('orte.koordx'),
-                name: 'koordXExtern'
-            }, {
-                fieldLabel: i18n.getMsg('orte.koordy'),
-                name: 'koordYExtern'
+                xtype: 'ortinforow',
+                label: i18n.getMsg('orte.kda'),
+                firstitem:'kdaId',
+                seconditem: 'koordinatenart'
+            },{
+                xtype: 'ortinforow',
+                label: i18n.getMsg('orte.koords'),
+                firstitem: 'koordXExtern',
+                seconditem: 'koordYExtern'
             }]
         }];
         this.callParent(arguments);
     }
 });
+
+/**
+ * A row with a label and two values, to be properly aligned in ortinfo form
+ */
+Ext.define('Lada.view.form.OrtInfoRow',{
+    // TODO Migration needs to be 5 px to the left to align properly with parent grid
+    extend: 'Ext.form.FieldSet',
+    alias: 'widget.ortinforow',
+    border: 0,
+    flex: 2,
+    layout: 'hbox',
+    label: '',
+    firstitem: '',
+    secondtitem: '',
+    defaults: {
+        submitValue: false,
+        xtype: 'displayfield'
+    },
+    initComponent: function(){
+        this.items = [{
+            xtype: 'label',
+            html: this.label,
+            width: 125
+        },{
+            name: this.firstitem,
+            width: 100
+        },{
+            name: this.seconditem
+        }];
+        this.callParent();
+    }
+});
+

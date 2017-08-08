@@ -89,12 +89,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                             border: 0,
                             margin: '0, 20, 0, 0',
                             items: [{
-                                xtype: 'tfield',
-                                labelWidth: 125,
-                                maxLength: 100,
-                                name: 'ortszusatztext',
-                                fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszusatztext')
-                            }, {
                                 xtype: 'ortszuordnungtyp',
                                 labelWidth: 125,
                                 allowBlank: false,
@@ -102,7 +96,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 name: 'ortszuordnungTyp',
                                 disableKeyFilter: true,
                                 fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp')
-                            }, {
+                            },{
                                 // this field is hidden because the user doesn't
                                 // need to know the internal ortID
                                 xtype: 'textfield',
@@ -114,10 +108,16 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 listeners: {
                                     change: me.changed
                                 }
+                            },
+                            Ext.create('Lada.view.form.OrtInfo'),
+                            {
+                                xtype: 'tfield',
+                                labelWidth: 125,
+                                maxLength: 100,
+                                name: 'ortszusatztext',
+                                fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszusatztext')
                             }]
-                        },
-                        Ext.create('Lada.view.form.OrtInfo')
-                        ]
+                        }]
                     }]
                 }]
             }]
@@ -156,6 +156,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         var verw = verwStore.getById(ortrecord.get('gemId'));
         var staatStore = Ext.StoreManager.get('staaten');
         var staat = staatStore.getById(ortrecord.get('staatId'));
+        var kdaStore = Ext.StoreManager.get('koordinatenart');
+        var kda = kdaStore.getById(ortrecord.get('kdaId'));
         var ortinfo = this.down('ortinfo');
         ortinfo.loadRecord(ortrecord);
         if (verw !== null) {
@@ -164,9 +166,17 @@ Ext.define('Lada.view.form.Ortszuordnung', {
             ortinfo.getForm().setValues({gemeinde: ''});
         }
         if (staat !== null) {
-            ortinfo.getForm().setValues({staat: staat.get('staatIso')});
+            ortinfo.getForm().setValues({
+                staatISO: staat.get('staatIso'),
+                staat: staat.get('staat')});
         } else {
-            ortinfo.getForm().setValues({staat: ''});
+            ortinfo.getForm().setValues({staat: '', staatISO: ''});
+        }
+        if (kda !== null){
+            ortinfo.getForm().setValues({
+                koordinatenart: kda.get('koordinatenart')});
+        } else {
+            ortinfo.getForm().setValues({koordinatenart: ''});
         }
     },
 
