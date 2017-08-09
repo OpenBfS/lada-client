@@ -20,7 +20,8 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         'Lada.view.form.Ortszuordnung',
         'Lada.view.form.Ortserstellung',
         'Lada.view.panel.Map',
-        'Lada.view.grid.Orte'
+        'Lada.view.grid.Orte',
+        'Lada.view.grid.Staaten'
     ],
 
     collapsible: true,
@@ -95,7 +96,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             handler: this.close
         }];
         this.width = 900;
-        this.height = 465;
+        this.height = 800;
         this.bodyStyle = {background: '#fff'};
 
         // add listeners to change the window appearence when it becomes inactive
@@ -123,15 +124,22 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 region: 'east',
                 type: this.probe? 'probe': 'mpr'
             }, {
+                xtype: 'tabpanel',
+                tabBarPosition: 'top',
                 region: 'south',
                 border: 0,
                 layout: 'fit',
-                name: 'ortgrid',
-                hidden: true,
                 height: 240,
                 items: [{
                     xtype: 'ortstammdatengrid',
+                    title: 'Orte', //TODO i18n.getMsg
                     isMessprogramm: this.messprogramm? true: false
+                }, {
+                    xtype: 'verwaltungseinheitengrid',
+                    title: 'Verwaltungseinheiten'
+                }, {
+                    title: 'Staaten',
+                    xtype: 'staatengrid'
                 }],
                 dockedItems: [{
                     xtype: 'toolbar',
@@ -145,6 +153,10 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                         emptyText: 'Ortssuche',
                         emptyCls: 'empty-text-field',
                         fieldLabel: ''
+                    }, '->', {
+                        text: i18n.getMsg('orte.all'),
+                        icon: 'resources/img/network-workgroup.png', //TODO better icon
+			// action: 'showallorte' //TODO implement
                     }, '->', {
                         text: i18n.getMsg('orte.new'),
                         icon: 'resources/img/list-add.png',
@@ -216,7 +228,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         }
         map.addListener('featureselected', osg.selectOrt, osg);
         osg.addListener('select', map.selectFeature, map);
-        osg.addListener('select', me.activateCloneButton, me);
     },
 
     /**
@@ -245,11 +256,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         //todo this is a stub
     },
 
-    activateCloneButton: function() {
-        var toolbar = this.down('panel[name=ortgrid]').getDockedItems()[0];
-        toolbar.down('button[action=clone]').enable();
-    },
-
     /**
      * childs will be populated with store entries after all entries are loaded
      * from all sources
@@ -258,7 +264,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         var map = this.down('map');
         var osg = this.down('ortstammdatengrid');
         osg.setStore(this.ortstore);
-        map.addLocations(this.ortstore);
+        map.addLocations(this.ortstore); //TODO Migration adds all locations, even the filtered?
         map.featureLayer.setVisibility(false);
         map.selectedFeatureLayer = new OpenLayers.Layer.Vector(
             'gewählter Messpunkt', {

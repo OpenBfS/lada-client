@@ -54,8 +54,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             'ortfilterwindow grid[name=verwaltungseinheiten]': {
                 itemclick: this.selectedVerwaltungseinheit
             },
-            'ortfilterwindow grid[name=staaten]': {
-                itemclick: this.selectedStaat
+            'staatengrid': {
+                itemdblclick: this.selectedStaat
             }
         });
     },
@@ -190,27 +190,21 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      */
     search: function(field, evt, opts) {
         if (evt.getKey() === 27) {
-            if (this.resultPanel.isVisible()) {
-                this.resultPanel.close();
-                verwaltungseinheiten.clearFilter(true);
-                staaten.clearFilter(true);
-                return;
-            }
-            else {
-                field.up('window').close();
-                return;
-            }
+            verwaltungseinheiten.clearFilter(true);
+            staaten.clearFilter(true);
+            messpunkte.clearFilter(true);
         }
         this.searchField = field;
         if ((evt.getKey() == 13 || evt.getKey() == 8) && field.getValue() && field.getValue().length > 0) {
             this.execSearch(field, field.getValue());
         }
         if (field.getValue().length === 0) {
-            this.resultPanel.hide();
             var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
             var staaten = Ext.data.StoreManager.get('staaten');
+            var messpunkte = Ext.data.StoreManager.get('orte');
             verwaltungseinheiten.clearFilter(true);
             staaten.clearFilter(true);
+            messpunkte.clearFilter(true);
             return;
         }
         if (field.getValue().length < 3) {
@@ -226,62 +220,47 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     execSearch: function(field, filter) {
         // Filter stores
         var messpunkte = Ext.data.StoreManager.get('orte');
-        var cloneRecords = [];
-        messpunkte.each(function(r) {
-            cloneRecords.push(r.copy());
-        });
-        var filterMesspunkte = Ext.create('Lada.store.Orte',{
-            autoLoad: false
-        });
-        filterMesspunkte.add(cloneRecords);
         var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
+        messpunkte.clearFilter(true);
         verwaltungseinheiten.clearFilter(true);
         staaten.clearFilter(true);
-        filterMesspunkte.filter({filterFn: function(item) {
-                if (item.get('ortId').indexOf(filter) > -1) {
+        messpunkte.filter({filterFn: function(item) {
+                if (item.data.ortId.indexOf(filter) > -1) {
                     return true;
                 }
-                if (item.get('kurztext').indexOf(filter) > -1) {
+                if (item.data.kurztext.indexOf(filter) > -1) {
                     return true;
                 }
-                if (item.get('langtext').indexOf(filter) > -1) {
+                if (item.data.langtext.indexOf(filter) > -1) {
                     return true;
                 }
-                if (item.get('berichtstext') &&
-                    item.get('berichtstext').indexOf(filter) > -1) {
+                if (item.data.berichtstext &&
+                    item.data.berichtstext.indexOf(filter) > -1) {
                     return true;
                 }
-                if (item.get('gemId') &&
-                    item.get('gemId').indexOf(filter) > -1) {
+                if (item.data.gemId &&
+                    item.data.gemId.indexOf(filter) > -1) {
                     return true;
                 }
             }});
-        var filterVerw = new Ext.util.Filter({
-            filterFn: function(item) {
-                return item.get('bezeichnung').indexOf(filter) > -1;
-            }
+        var ozw = field.up('ortszuordnungwindow');
+        var ortgrid= ozw.down('ortstammdatengrid').getView();
+        var staatgrid= ozw.down('staatengrid').getView();
+        var verwgrid = ozw.down('verwaltungseinheitengrid').getView();
+        verwaltungseinheiten.filter({
+                property: 'bezeichnung',
+                anyMatch: true,
+                value: filter
         });
-        var filterStaat = new Ext.util.Filter({
-            filterFn: function(item) {
-                return item.get('staat').indexOf(filter) > -1;
-            }
+        staaten.filter({
+                property: 'staat',
+                anyMatch: true,
+                value: filter
         });
-        verwaltungseinheiten.filter(filterVerw);
-        staaten.filter(filterStaat);
-
-        if (!this.resultPanel) {
-            this.resultPanel = Ext.create('Lada.view.window.OrtFilter', {
-                x: 500,
-                y: 500,
-                alwaysOnTop: true,
-                parentWindow: this
-            });
-        }
-        this.resultPanel.show();
-        this.resultPanel.updateGrids(filterMesspunkte, verwaltungseinheiten, staaten);
-        this.resultPanel.reposition(field.getX() + field.getLabelWidth(), field.getY());
-        field.focus();
+        staatgrid.setStore(staaten);
+        ortgrid.setStore(messpunkte);
+        verwgrid.setStore(verwaltungseinheiten);
     },
 
     selectedMesspunkt: function(grid, record) {
@@ -326,9 +305,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     },
 
     selectedStaat: function(grid, record) {
-        var win = grid.up('window');
         var panel = this.searchField.up('panel').up('window');
-        win.hide();
         this.searchField.reset();
         var mstId = panel.probe.get('mstId');
         var mst = Ext.data.StoreManager.get('messstellen');
