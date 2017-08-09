@@ -26,8 +26,6 @@ Ext.define('Lada.controller.Ort', {
                 select: me.selectPanel
             },
             'ortszuordnungwindow ortstammdatengrid': {
-                edit: me.gridSave,
-                canceledit: me.cancelEdit,
                 select: me.selectWindow
             }
         });
@@ -85,34 +83,13 @@ Ext.define('Lada.controller.Ort', {
     },
 
     selectPanel: function(rowModel, record) {
-        this.checkEditPanel(rowModel, record);
         this.buttonToggle(rowModel, record);
     },
 
     selectWindow: function(rowModel, record) {
-        this.checkEditWindow(rowModel, record);
         this.buttonToggle(rowModel, record);
     },
 
-    checkEditWindow: function(rowModel, record) {
-        if (!Ext.Array.contains(Lada.netzbetreiber,
-            record.get('netzbetreiberId')) &&
-            record.get('netzbetreiberId') !== '') {
-            var grid = Ext.ComponentQuery.query('ortszuordnungwindow ortstammdatengrid')[0];
-            grid.rowEditing.cancelEdit();
-            return;
-        }
-    },
-
-    checkEditPanel: function(rowModel, record) {
-        if (!Ext.Array.contains(Lada.netzbetreiber,
-            record.get('netzbetreiberId')) &&
-            record.get('netzbetreiberId') !== '') {
-            var grid = Ext.ComponentQuery.query('ortpanel ortstammdatengrid')[0];
-            grid.rowEditing.cancelEdit();
-            return;
-        }
-    },
 
     /**
      * This function is called when the grids roweditor saves

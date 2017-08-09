@@ -36,6 +36,8 @@ Ext.define('Lada.view.grid.Orte', {
     allowDeselect: true,
     editableGrid: true,
     features: [],
+    //TODO: Migration
+    // Ext.plugin.grid doesn't have filters as feature anymore
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -48,19 +50,21 @@ Ext.define('Lada.view.grid.Orte', {
                 disabled: false,
                 pluginId: 'rowedit'
             });
-            this.plugins = [this.rowEditing, {
+/* TODO Migration. If in a tabpanel, bufferedRenderer does not work anymore?
+            this.plugins = [this.rowEditing, {// TODO Migration not needed?
                 ptype: 'bufferedrenderer',
                 trailingBufferZone: 20,
                 leadingBufferZone: 50
-            }];
-        }
-        else {
-            this.plugins = [{
-                ptype: 'bufferedrenderer',
-                trailingBufferZone: 20,
-                leadingBufferZone: 50
-            }];
-        }
+             }];
+       }
+       else {
+           this.plugins = [{
+               ptype: 'bufferedrenderer',
+               trailingBufferZone: 20,
+               leadingBufferZone: 50
+           }];
+      }
+*/
 
         filters = {
             //TODO: Migration
@@ -68,7 +72,6 @@ Ext.define('Lada.view.grid.Orte', {
             // encode and local configuration options defined previously for easier reuse
             encode: false, // json encode the filter query
             local: true,   // defaults to false (remote filtering)
-
             // Filters are most naturally placed in the column definition, but can also be
             // added here.
             filters: [{
