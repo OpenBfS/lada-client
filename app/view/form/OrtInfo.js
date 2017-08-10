@@ -68,9 +68,9 @@ Ext.define('Lada.view.form.OrtInfo', {
  * A row with a label and two values, to be properly aligned in ortinfo form
  */
 Ext.define('Lada.view.form.OrtInfoRow',{
-    // TODO Migration needs to be 5 px to the left to align properly with parent grid
     extend: 'Ext.form.FieldSet',
     alias: 'widget.ortinforow',
+    padding: 0,
     border: 0,
     flex: 2,
     layout: 'hbox',
@@ -85,12 +85,15 @@ Ext.define('Lada.view.form.OrtInfoRow',{
         this.items = [{
             xtype: 'label',
             html: this.label,
-            width: 125
+            width: 125,
+            padding: '4, 0, 5, 0'
         },{
             name: this.firstitem,
-            width: 100
+            width: 80,
+            margin: '0,5'
         },{
-            name: this.seconditem
+            name: this.seconditem,
+            margin: '0,5'
         }];
         this.callParent();
     }
