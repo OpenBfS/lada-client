@@ -97,9 +97,10 @@ Ext.define('Lada.controller.form.Probe', {
      */
     save: function(button) {
         var formPanel = button.up('form');
-        var data = formPanel.getForm().getFieldValues(false);
+        var data = formPanel.getForm().getFieldValues();
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
+            console.log(key + " - " + data[key]);
         }
         if (!formPanel.getForm().getRecord().get('letzteAenderung')) {
             formPanel.getForm().getRecord().data.letzteAenderung = new Date();

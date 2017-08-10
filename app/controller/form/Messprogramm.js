@@ -165,6 +165,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
     save: function(button) {
         var formPanel = button.up('form');
         var data = formPanel.getForm().getFieldValues();
+        console.log(data);
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
         }
@@ -173,6 +174,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
         formPanel.getForm().getRecord().save({
             success: function(record, response) {
+                console.log(response);
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     button.setDisabled(true);
@@ -198,7 +200,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 var rec = formPanel.getForm().getRecord();
                 rec.dirty = false;
                 formPanel.getForm().loadRecord(record);
-                var json = response.getRequest().getScope().reader.jsonData;
+                var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     if(json.message){
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')

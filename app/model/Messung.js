@@ -13,8 +13,7 @@ Ext.define('Lada.model.Messung', {
     extend: 'Ext.data.Model',
 
     fields: [{
-        name: 'id',
-        persist: false,
+        name: 'id'
     }, {
         name: 'owner',
         type: 'boolean'
@@ -99,6 +98,10 @@ Ext.define('Lada.model.Messung', {
         reader: {
             type: 'json',
             rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });
