@@ -13,7 +13,8 @@ Ext.define('Lada.model.Status', {
     extend: 'Ext.data.Model',
 
     fields: [{
-        name: 'id'
+        name: 'id',
+        persist: false
     }, {
         name: 'readonly',
         type: 'boolean',

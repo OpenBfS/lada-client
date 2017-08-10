@@ -106,14 +106,13 @@ Ext.define('Lada.view.form.Probe', {
                                 allowBlank: false,
                                 editable: true,
                                 listeners: {
-                                    select: {
-                                        fn: function(combo, newValue) {
-                                            var mst = newValue[0].get('messStelle');
-                                            var labor = newValue[0].get('laborMst');
-                                            combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
-                                            combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
-                                            combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
-                                        }
+                                    'select': function(combo, newValue) {
+                                        console.log(newValue);
+                                        var mst = newValue[0].get('messStelle');
+                                        var labor = newValue[0].get('laborMst');
+                                        combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
+                                        combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
+                                        combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
                                     }
                                 }
                             }, {

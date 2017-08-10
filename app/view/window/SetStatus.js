@@ -167,17 +167,18 @@ Ext.define('Lada.view.window.SetStatus', {
         }
 
         for (var i = 0; i < this.selection.length; i++) {
-            var data = Ext.create('Lada.model.Status', {
+            var data =  {
                 messungsId: this.selection[i].get('id'),
                 mstId: this.down('combobox').getValue(),
                 datum: new Date(),
                 statusKombi: kombis.getAt(kombiIdx).get('id'),
                 text: this.down('textarea').getValue()
-            });
+            }
+            console.log(data);
             Ext.Ajax.request({
                 url: 'lada-server/rest/status',
                 method: 'POST',
-                jsonData: data.raw,
+                jsonData: data,
                 success: function(response) {
                     var json = Ext.JSON.decode(response.responseText);
                     me.resultMessage += '<strong>' + i18n.getMsg('messung') + ': ';
@@ -193,13 +194,12 @@ Ext.define('Lada.view.window.SetStatus', {
                         me.down('button[name=abort]').hide();
                         me.down('button[name=close]').show();
                         result.setSize(values.getWidth(), values.getHeight());
-                        result.getEl().setHTML(me.resultMessage);
+                        result.setHtml(me.resultMessage);
                         result.show();
                         values.hide();
                     }
                 },
                 failure: function(response) {
-                    console.log(response);
                     count++;
                     progress.updateProgress(count / me.selection.length);
                     if (count === me.selection.length) {

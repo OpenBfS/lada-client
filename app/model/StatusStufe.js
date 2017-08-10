@@ -13,7 +13,8 @@ Ext.define('Lada.model.StatusStufe', {
     extend: 'Ext.data.Model',
 
     fields: [{
-        name: 'id'
+        name: 'id',
+        persist: false
     }, {
         name: 'stufe',
         type: 'string'

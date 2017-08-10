@@ -77,6 +77,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             height: 14,
             hidden: true
         }];
+
         this.callParent(arguments);
         /* listeners have been passed to combobox. Thus, clear them on panel
          * to avoid double effects of events fired on combobox and panel. */
