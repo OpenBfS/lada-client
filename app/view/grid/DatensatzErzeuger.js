@@ -102,7 +102,7 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             }
         }, {
             header: i18n.getMsg('daErzeugerId'),
-            dataIndex: 'daErzeugerId',
+            dataIndex: 'datensatzErzeugerId',
             editor: {
                 xtype: 'textfield',
                 maxLength: 2,
