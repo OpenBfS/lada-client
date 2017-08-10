@@ -50,6 +50,7 @@ Ext.define('Lada.view.grid.Orte', {
                 disabled: false,
                 pluginId: 'rowedit'
             });
+        }
 /* TODO Migration. If in a tabpanel, bufferedRenderer does not work anymore?
             this.plugins = [this.rowEditing, {// TODO Migration not needed?
                 ptype: 'bufferedrenderer',
@@ -66,20 +67,20 @@ Ext.define('Lada.view.grid.Orte', {
       }
 */
 
-        filters = {
+//         filters = {
             //TODO: Migration
-            ftype: 'filters',
+//             ftype: 'filters',
             // encode and local configuration options defined previously for easier reuse
-            encode: false, // json encode the filter query
-            local: true,   // defaults to false (remote filtering)
+//             encode: false, // json encode the filter query
+//             local: true,   // defaults to false (remote filtering)
             // Filters are most naturally placed in the column definition, but can also be
             // added here.
-            filters: [{
-                type: 'boolean',
-                dataIndex: 'visible'
-            }]
-        };
-        this.features = [filters];
+//             filters: [{
+//                 type: 'boolean',
+//                 dataIndex: 'visible'
+//             }]
+//         };
+//         this.features = [filters];
         var me = this;
         this.columns = [{
             xtype: 'actioncolumn',
