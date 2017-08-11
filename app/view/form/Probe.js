@@ -450,7 +450,7 @@ Ext.define('Lada.view.form.Probe', {
     setRecord: function(probeRecord) {
         this.clearMessages();
         this.getForm().loadRecord(probeRecord);
-        if (!probeRecord.raw) {
+        if (!probeRecord.data) {
             return;
         }
         var mstStore = Ext.data.StoreManager.get('messstellen');

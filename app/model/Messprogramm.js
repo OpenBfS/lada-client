@@ -14,8 +14,7 @@ Ext.define('Lada.model.Messprogramm', {
     extend: 'Ext.data.Model',
 
     fields: [{
-        name: 'id',
-        persist: false
+        name: 'id'
     }, {
         name: 'test',
         type: 'boolean'

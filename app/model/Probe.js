@@ -74,7 +74,6 @@ Ext.define('Lada.model.Probe', {
             return new Date(v);
         },
         serialize: function(v, record) {
-            console.log(v);
             var formatted = Ext.Date.format(v, 'Y-m-d\\TH:i:sP');
             return formatted;
         }
@@ -88,7 +87,6 @@ Ext.define('Lada.model.Probe', {
             return new Date(v);
         },
         serialize: function(v, record) {
-            console.log(v);
             var formatted = Ext.Date.format(v, 'Y-m-d\\TH:i:sP');
             return formatted;
         }
@@ -104,7 +102,6 @@ Ext.define('Lada.model.Probe', {
             return new Date(v);
         },
         serialize: function(v, record) {
-            console.log(v);
             var formatted = Ext.Date.format(v, 'Y-m-d\\TH:i:sP');
             return formatted;
         }
@@ -165,7 +162,6 @@ Ext.define('Lada.model.Probe', {
     proxy: {
         type: 'rest',
         url: 'lada-server/rest/probe',
-        idParam: '',
         reader: {
             type: 'json',
             rootProperty: 'data'

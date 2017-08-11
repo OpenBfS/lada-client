@@ -69,6 +69,10 @@ Ext.define('Lada.model.Zusatzwert', {
         reader: {
             type: 'json',
             rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });
