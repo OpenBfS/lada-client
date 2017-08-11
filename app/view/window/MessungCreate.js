@@ -82,6 +82,8 @@ Ext.define('Lada.view.window.MessungCreate', {
         var messung = Ext.create('Lada.model.Messung', {
             probeId: this.record.get('id')
         });
+        //Delete generated id to prevent sending invalid ids to the server
+        messung.set('id', null);
         this.down('messungform').setRecord(messung);
     },
 

@@ -183,6 +183,8 @@ Ext.define('Lada.view.window.Messprogramm', {
         // Create a Create Window
         else {
             var record = Ext.create('Lada.model.Messprogramm');
+            //Delete genereated id to prevent sending invalid ids to the server
+            record.set('id', null);
             this.down('messmethodengrid').setReadOnly(true);
             this.down('messprogrammform').setRecord(record);
             this.down('dayofyear[name=gueltigBis]').setValue(365);

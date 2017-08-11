@@ -20,15 +20,15 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
     todayText: 'Jetzt',
 
     renderTpl: [
-        '<div id="{id}-innerEl" role="grid">',
+        '<div id="{id}-innerEl" data-ref="innerEl" role="grid">',
             '<div role="presentation" class="{baseCls}-header">',
                  // the href attribute is required for the :hover selector to work in IE6/7/quirks
-                '<a id="{id}-prevEl" class="{baseCls}-prev {baseCls}-arrow" href="#" role="button" title="{prevText}" hidefocus="on" ></a>',
+                '<a id="{id}-prevEl" data-ref="prevEl" class="{baseCls}-prev {baseCls}-arrow" href="#" role="button" title="{prevText}" hidefocus="on" ></a>',
                 '<div class="{baseCls}-month" id="{id}-middleBtnEl">{%this.renderMonthBtn(values, out)%}</div>',
                  // the href attribute is required for the :hover selector to work in IE6/7/quirks
-                '<a id="{id}-nextEl" class="{baseCls}-next {baseCls}-arrow" href="#" role="button" title="{nextText}" hidefocus="on" ></a>',
+                '<a id="{id}-nextEl" data-ref="nextEl" class="{baseCls}-next {baseCls}-arrow" href="#" role="button" title="{nextText}" hidefocus="on" ></a>',
             '</div>',
-            '<table id="{id}-eventEl" class="{baseCls}-inner" cellspacing="0" role="grid">',
+            '<table id="{id}-eventEl" data-ref="eventEl" class="{baseCls}-inner" cellspacing="0" role="grid">',
                 '<thead role="presentation"><tr role="row">',
                     '<tpl for="dayNames">',
                         '<th role="columnheader" class="{parent.baseCls}-column-header" title="{.}">',
@@ -41,7 +41,10 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
                         '{#:this.isEndOfWeek}',
                         '<td role="gridcell" id="{[Ext.id()]}">',
                             // the href attribute is required for the :hover selector to work in IE6/7/quirks
-                            '<a role="presentation" hidefocus="on" class="{parent.baseCls}-date" href="#"></a>',
+                            //TODO: Migration: ExtJS6 requires a div tag here 
+                            //'<a role="presentation" hidefocus="on" class="{parent.baseCls}-date" href="#"></a>',
+                            '<div role="presentation" hidefocus="on" class="{parent.baseCls}-date" href="#"></div>',
+
                         '</td>',
                     '</tpl>',
                 '</tr></tbody>',
@@ -188,7 +191,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
     privates: {
         finishRenderChildren: function() {
             var me = this;
-            me.callParent();
+            me.callParent(arguments);
             me.timeLabel.finishRender();
             me.hourField.finishRender();
             me.minuteField.finishRender();

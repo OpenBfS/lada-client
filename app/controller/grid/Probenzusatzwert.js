@@ -44,7 +44,10 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
                 context.grid.up('window').initData();
             },
             failure: function(record, response) {
-                var json = response.request.scope.reader.jsonData;
+                var json = null;
+                try{
+                    json = Ext.decode(response.getResponse().responseText);
+                } catch (e) {}
                 if (json) {
                     if (json.message){
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
@@ -80,6 +83,8 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
         var record = Ext.create('Lada.model.Zusatzwert', {
             probeId: button.up('probenzusatzwertgrid').recordId
         });
+        //Remove generated id id to prevent sending invalid ids to the server
+        record.set('id', null);
         button.up('probenzusatzwertgrid').store.insert(0, record);
         button.up('probenzusatzwertgrid').rowEditing.startEdit(0, 1);
     },

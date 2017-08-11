@@ -54,7 +54,7 @@ Ext.define('Lada.controller.grid.Messwert', {
                 context.grid.up('window').initData();
             },
             failure: function(request, response) {
-                var json = response.request.getScope().reader.jsonData;
+                var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     if (json.message){
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
@@ -90,6 +90,7 @@ Ext.define('Lada.controller.grid.Messwert', {
         var record = Ext.create('Lada.model.Messwert', {
             messungsId: button.up('messwertgrid').recordId
         });
+        record.set('id', null);
         if (!record.get('letzteAenderung')) {
             record.data.letzteAenderung = new Date();
         }
