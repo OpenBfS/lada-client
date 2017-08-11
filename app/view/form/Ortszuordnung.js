@@ -97,6 +97,10 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 disableKeyFilter: true,
                                 fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp')
                             },{
+                                // empty conttainer for vertical separation
+                                xtype:'container',
+                                minHeight: 30
+                            }, {
                                 // this field is hidden because the user doesn't
                                 // need to know the internal ortID
                                 xtype: 'textfield',
@@ -115,7 +119,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 labelWidth: 125,
                                 maxLength: 100,
                                 name: 'ortszusatztext',
-                                fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszusatztext')
+                                fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszusatztext'),
+                                flex: 1
                             }]
                         }]
                     }]
