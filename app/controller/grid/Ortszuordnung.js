@@ -17,7 +17,6 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         'Lada.view.window.Ortserstellung'
     ],
 
-    resultPanel: null,
     searchField: null,
 
     /**
@@ -177,6 +176,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         this.searchField = field;
         if ((evt.getKey() == 13 || evt.getKey() == 8) && field.getValue() && field.getValue().length > 0) {
             this.execSearch(field, field.getValue());
+            //TODO backspace triggers too often (i.e. with empty field)
         }
         if (field.getValue().length === 0) {
             var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
@@ -228,7 +228,6 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
     selectedMesspunkt: function(grid, record) {
         var win = grid.up('ortzuordnungwindow');
-        this.searchField.reset();
         var newrecord = grid.store.getById(record.get('id'));
         grid.getView().getSelectionModel().select(newrecord);
         grid.getView().focusRow(newrecord);
@@ -240,7 +239,6 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
     selectedVerwaltungseinheit: function(grid, record) {
         var win = grid.up('ortszuordnungwindow');
-        this.searchField.reset();
         var mstId = win.probe.get('mstId');
         var mst = Ext.data.StoreManager.get('messstellen');
         var ndx = mst.findExact('id', mstId);
@@ -255,7 +253,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 berichtstext: record.get('bezeichnung'),
                 ortTyp: 4
             }),
-            parentWindow: panel
+            parentWindow: win
         }).show();
         var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
@@ -265,8 +263,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
     selectedStaat: function(grid, record) {
         var win = grid.up('ortszuordnungwindow');
-        this.searchField.reset();
-        var mstId = panel.probe.get('mstId');
+        var mstId = win.probe.get('mstId');
         var mst = Ext.data.StoreManager.get('messstellen');
         var ndx = mst.findExact('id', mstId);
         var nId = mst.getAt(ndx).get('netzbetreiberId');
@@ -280,7 +277,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 berichtstext: record.get('staat'),
                 ortTyp: 5
             }),
-            parentWindow: panel
+            parentWindow: win
         }).show();
         var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
@@ -323,6 +320,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             ozw.ortstore.addFilter({
                 name: 'ortstringsearch',
                 filterFn: function(item) {
+                    if (!item.data){return false;}
                     if (item.data.ortId.indexOf(filterstring) > -1) {
                         return true;
                     }
@@ -342,11 +340,11 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                     }
                 }});
         }
-        // ozw.ortstore.addFilter({
-        // name: 'netzbetreiberfilter',
-        // property: 'netzbetreiberId',
-        // value: //TODO
-        // });
+        ozw.ortstore.addFilter({
+            name: 'netzbetreiberfilter',
+            property: 'netzbetreiberId',
+            value: Lada.netzbetreiber[0]
+        });
         if (localfilter){
             ortgrid.setStore(ozw.ortstore);
         } else {
