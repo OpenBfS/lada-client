@@ -140,11 +140,13 @@ Ext.define('Lada.view.panel.Map', {
             var ndx = mst.findExact('id', mstId);
             nId = mst.getAt(ndx).get('netzbetreiberId');
         }
+        var koord_x = Math.round(features.feature.geometry.x * 100000)/100000;
+        var koord_y = Math.round(features.feature.geometry.y * 100000)/100000;
         Ext.create('Lada.view.window.Ortserstellung', {
             record: Ext.create('Lada.model.Ort',{
                 netzbetreiberId: nId,
-                koordXExtern: features.feature.geometry.x,
-                koordYExtern: features.feature.geometry.y,
+                koordXExtern: koord_x,
+                koordYExtern: koord_y,
                 kdaId : 4,
                 ortTyp: 1
             }),
