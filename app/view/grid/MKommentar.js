@@ -100,6 +100,7 @@ Ext.define('Lada.view.grid.MKommentar', {
                 xtype: 'textarea',
                 allowBlank: false,
                 maxLength: 1000,
+                height: '1.5em',
                 enforceMaxLength: true
             }
         }];

@@ -450,7 +450,7 @@ Ext.define('Lada.view.form.Probe', {
     setRecord: function(probeRecord) {
         this.clearMessages();
         this.getForm().loadRecord(probeRecord);
-        if (!probeRecord.data) {
+        if (!probeRecord.data || probeRecord.data.id == null) {
             return;
         }
         var mstStore = Ext.data.StoreManager.get('messstellen');
@@ -474,6 +474,7 @@ Ext.define('Lada.view.form.Probe', {
                         '/' + laborMstId
                 }]
             });
+            newStore.load();
             this.down('messstellelabor').down('combobox').store = newStore;
             this.down('messstellelabor').setValue(id);
         }

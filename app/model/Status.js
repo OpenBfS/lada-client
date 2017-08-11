@@ -72,6 +72,10 @@ Ext.define('Lada.model.Status', {
         reader: {
             type: 'json',
             rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });

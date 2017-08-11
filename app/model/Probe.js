@@ -36,10 +36,10 @@ Ext.define('Lada.model.Probe', {
         type: 'boolean'
     }, {
         name: 'mstId',
-        persist: true,
+        persist: true
     }, {
         name: 'laborMstId',
-        persist: true,
+        persist: true
     }, {
         name: 'datenbasisId'
     }, {
