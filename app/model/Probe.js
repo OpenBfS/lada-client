@@ -15,7 +15,8 @@ Ext.define('Lada.model.Probe', {
 
     fields: [{
         name: 'id',
-        persist: false
+        allowNull: true
+        //persist: false
     }, {
         name: 'owner',
         type: 'boolean',
@@ -66,11 +67,16 @@ Ext.define('Lada.model.Probe', {
     }, {
         name: 'probeentnahmeBeginn',
         type: 'date',
-        convert: function(v) {
+        convert: function(v, record) {
             if (!v) {
                 return v;
             }
             return new Date(v);
+        },
+        serialize: function(v, record) {
+            console.log(v);
+            var formatted = Ext.Date.format(v, 'Y-m-d\\TH:i:sP');
+            return formatted;
         }
     }, {
         name: 'probeentnahmeEnde',
@@ -80,6 +86,11 @@ Ext.define('Lada.model.Probe', {
                 return v;
             }
             return new Date(v);
+        },
+        serialize: function(v, record) {
+            console.log(v);
+            var formatted = Ext.Date.format(v, 'Y-m-d\\TH:i:sP');
+            return formatted;
         }
     }, {
         name: 'mittelungsdauer'
@@ -91,7 +102,13 @@ Ext.define('Lada.model.Probe', {
                 return v;
             }
             return new Date(v);
+        },
+        serialize: function(v, record) {
+            console.log(v);
+            var formatted = Ext.Date.format(v, 'Y-m-d\\TH:i:sP');
+            return formatted;
         }
+
     }, {
         name: 'erzeugerId'
     }, {
@@ -143,7 +160,6 @@ Ext.define('Lada.model.Probe', {
             return value;
         }
     }],
-
     idProperty: 'id',
 
     proxy: {
@@ -153,6 +169,10 @@ Ext.define('Lada.model.Probe', {
         reader: {
             type: 'json',
             rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });

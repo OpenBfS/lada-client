@@ -53,7 +53,7 @@
      * The name of the theme for this application.
      */
     
-    "theme": "theme-classic",
+    "theme": "theme-gray",
     
     
     /**
