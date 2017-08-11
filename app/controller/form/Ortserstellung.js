@@ -65,35 +65,22 @@ Ext.define('Lada.controller.form.Ortserstellung', {
                 formpanel.down('button[action=revert]').setDisabled(true);
                 button.hide();
                 var ozw = formpanel.up('panel').parentWindow;
-                var json = Ext.decode(response.response.responseText);
+                var json = Ext.decode(response._response.responseText);
                 if (json) {
                     formpanel.clearMessages();
                     formpanel.setMessages(json.errors, json.warnings);
                 }
                 if (ozw.ortstore) {
-                    ozw.ortstore.load({
-                        callback: function(records, operation, success) {
-                            ozw.ortstore.filter('netzbetreiberId', Lada.netzbetreiber[0]);
-                            ozw.down('map').addLocations(ozw.ortstore);
-                            var osg = ozw.down('ortstammdatengrid');
-                            osg.setStore(ozw.ortstore);
-                            me.afterSave(formpanel, json);
-                        },
-                        scope: this
-                    });
-                } else {
-                    var osgstore = ozw.down('ortstammdatengrid').getStore();
-                    osgstore.load({
-                        callback: function() {
-                            osgstore.filter('netzbetreiberId', Lada.netzbetreiber[0]);
-                        }
-                    });
-                    ozw.down('map').addLocations(osgstore);
+                    ozw.ortstore.add(newrecord);
+                    ozw.down('map').addLocations(ozw.ortstore); //TODO
+                    var osg = ozw.down('ortstammdatengrid');
+                    osg.setStore(ozw.ortstore);
                     me.afterSave(formpanel, json);
                 }
+                //TODO other parents might have other stores
             },
             failure: function(record, response) {
-                var json = response.request.scope.reader.jsonData;
+                var json = response._request._jsonData;
                 if (json) {
                     if(json.message){
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
@@ -114,13 +101,13 @@ Ext.define('Lada.controller.form.Ortserstellung', {
     },
 
     /**
-     * Callbacks after a Ort has been saved and the store is reloaded
+     * Callbacks after a Ort has been saved
      */
     afterSave: function(form, json) {
         var ozw = form.up('panel').parentWindow;
         var osg = ozw.down('ortstammdatengrid');
         var id = json.data.id;
-        var record = osg.store.getById(id);
+        var record = ozw.ortstore.getById(id);
         if (record) {
             var selmod = osg.getView().getSelectionModel();
             selmod.select(record);
