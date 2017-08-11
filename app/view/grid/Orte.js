@@ -52,35 +52,12 @@ Ext.define('Lada.view.grid.Orte', {
             });
         }
 /* TODO Migration. If in a tabpanel, bufferedRenderer does not work anymore?
-            this.plugins = [this.rowEditing, {// TODO Migration not needed?
-                ptype: 'bufferedrenderer',
+            this.plugins = [{ptype: 'bufferedrenderer',
                 trailingBufferZone: 20,
                 leadingBufferZone: 50
              }];
        }
-       else {
-           this.plugins = [{
-               ptype: 'bufferedrenderer',
-               trailingBufferZone: 20,
-               leadingBufferZone: 50
-           }];
-      }
-*/
-
-//         filters = {
-            //TODO: Migration
-//             ftype: 'filters',
-            // encode and local configuration options defined previously for easier reuse
-//             encode: false, // json encode the filter query
-//             local: true,   // defaults to false (remote filtering)
-            // Filters are most naturally placed in the column definition, but can also be
-            // added here.
-//             filters: [{
-//                 type: 'boolean',
-//                 dataIndex: 'visible'
-//             }]
-//         };
-//         this.features = [filters];
+      */
         var me = this;
         this.columns = [{
             xtype: 'actioncolumn',
@@ -446,6 +423,7 @@ Ext.define('Lada.view.grid.Orte', {
             panel.down('button[action=add]').enable();
             panel.down('button[action=addMap]').enable();
         }
+
     },
 
     selectOrt: function(map, feature) {

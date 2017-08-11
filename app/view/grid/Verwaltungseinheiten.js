@@ -27,7 +27,9 @@ Ext.define('Lada.view.grid.verwaltungseinheiten', {
             dataIndex: 'id'
         }, {
             header: 'Name', //i18n.getMsg(TODO)
-            dataIndex: 'bezeichnung'
+            dataIndex: 'bezeichnung',
+            align:'left',
+            flex: 1
         }];
         this.callParent(arguments);
     },
