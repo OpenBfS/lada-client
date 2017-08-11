@@ -154,10 +154,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                         emptyCls: 'empty-text-field',
                         fieldLabel: ''
                     }, '->', {
-                        text: i18n.getMsg('orte.all'),
-                        icon: 'resources/img/network-workgroup.png', //TODO better icon
-			// action: 'showallorte' //TODO implement
-                    }, '->', {
                         text: i18n.getMsg('orte.new'),
                         icon: 'resources/img/list-add.png',
                         action: 'createort'
@@ -166,10 +162,9 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                         icon: 'resources/img/list-add.png',
                         action: 'frommap'
                     }, {
-                        text: i18n.getMsg('orte.clone'),
-                        icon: 'resources/img/list-add.png',
-                        action: 'clone',
-                        disabled : true
+                        text: i18n.getMsg('orte.all'),
+                        icon: 'resources/img/network-workgroup.png', //TODO better icon
+                        action: 'allorte'
                     }]
                 }]
             }]
@@ -200,6 +195,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         osg.setLoading(true);
         map.setLoading(true);
         this.ortstore = Ext.data.StoreManager.get('orte');
+        this.ortstore.load();
         var ortId;
         if (this.messprogramm) {
             ortId = this.record.get('ort');
@@ -263,7 +259,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     onStoreLoaded: function() {
         var map = this.down('map');
         var osg = this.down('ortstammdatengrid');
-        osg.setStore(this.ortstore);
+        // osg.setStore(this.ortstore); //TODO trigger reload without affecting filters
         map.addLocations(this.ortstore); //TODO Migration adds all locations, even the filtered?
         map.featureLayer.setVisibility(false);
         map.selectedFeatureLayer = new OpenLayers.Layer.Vector(
@@ -286,7 +282,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         if (ortId){
             var feat = map.featureLayer.getFeaturesByAttribute('id', ortId);
             var ortrecord = this.ortstore.findRecord('id', ortId);
-            osg.selectOrt(map, feat);
+//             osg.selectOrt(map, feat); TODO
             map.selectFeature(this.model, ortrecord);
             this.down('ortszuordnungform').setOrt(null,ortrecord);
         }

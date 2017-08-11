@@ -14,8 +14,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
     requires: [
         'Lada.view.window.Ortszuordnung',
-        'Lada.view.window.Ortserstellung',
-        'Lada.view.window.OrtFilter'
+        'Lada.view.window.Ortserstellung'
     ],
 
     resultPanel: null,
@@ -42,20 +41,17 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             'ortszuordnungwindow toolbar button[action=frommap]':{
                 click: this.frommap
             },
-            'ortszuordnungwindow toolbar button[action=clone]':{
-                click: this.cloneort
+            'ortszuordnungwindow toolbar button[action=allorte]': {
+                click: this.allorte
             },
             'ortszuordnungwindow toolbar textfield[name=search]': {
                 keyup: this.search
             },
-            'ortfilterwindow grid[name=messpunkte]': {
-                itemclick: this.selectedMesspunkt
-            },
-            'ortfilterwindow grid[name=verwaltungseinheiten]': {
-                itemclick: this.selectedVerwaltungseinheit
-            },
             'staatengrid': {
                 itemdblclick: this.selectedStaat
+            },
+            'verwaltungseinheitengrid': {
+                itemdblclick: this.selectedVerwaltungseinheit
             }
         });
     },
@@ -170,22 +166,6 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     },
 
     /**
-     * Opens the form for a new Messpunkt, with all values prefilled from the currently
-     * selected item
-     */
-    cloneort: function(button) {
-        var grid = button.up('ortszuordnungwindow').down('ortstammdatengrid').getView();
-        var selected = grid.getSelectionModel().getSelection()[0];
-        var newRecord = Ext.create('Lada.model.Ort', selected.data);
-        newRecord.set('ortId', null);
-        newRecord.set('id', null);
-        Ext.create('Lada.view.window.Ortserstellung', {
-             record: newRecord,
-             parentWindow: button.up('ortszuordnungwindow')
-        }).show();
-    },
-
-    /**
      * Search triggered by textfield key event.
      */
     search: function(field, evt, opts) {
@@ -223,51 +203,32 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
         messpunkte.clearFilter(true);
-        verwaltungseinheiten.clearFilter(true);
         staaten.clearFilter(true);
-        messpunkte.filter({filterFn: function(item) {
-                if (item.data.ortId.indexOf(filter) > -1) {
-                    return true;
-                }
-                if (item.data.kurztext.indexOf(filter) > -1) {
-                    return true;
-                }
-                if (item.data.langtext.indexOf(filter) > -1) {
-                    return true;
-                }
-                if (item.data.berichtstext &&
-                    item.data.berichtstext.indexOf(filter) > -1) {
-                    return true;
-                }
-                if (item.data.gemId &&
-                    item.data.gemId.indexOf(filter) > -1) {
-                    return true;
-                }
-            }});
         var ozw = field.up('ortszuordnungwindow');
         var ortgrid= ozw.down('ortstammdatengrid').getView();
-        var staatgrid= ozw.down('staatengrid').getView();
+        this.doOrtFilter(ozw, filter);
+
         var verwgrid = ozw.down('verwaltungseinheitengrid').getView();
+        verwaltungseinheiten.clearFilter(true);
         verwaltungseinheiten.filter({
                 property: 'bezeichnung',
                 anyMatch: true,
                 value: filter
         });
+        verwgrid.setStore(verwaltungseinheiten);
+
+        var staatgrid= ozw.down('staatengrid').getView();
         staaten.filter({
                 property: 'staat',
                 anyMatch: true,
                 value: filter
         });
         staatgrid.setStore(staaten);
-        ortgrid.setStore(messpunkte);
-        verwgrid.setStore(verwaltungseinheiten);
     },
 
     selectedMesspunkt: function(grid, record) {
-        var win = grid.up('window');
-        win.hide();
+        var win = grid.up('ortzuordnungwindow');
         this.searchField.reset();
-        var grid = this.searchField.up('panel').down('ortstammdatengrid');
         var newrecord = grid.store.getById(record.get('id'));
         grid.getView().getSelectionModel().select(newrecord);
         grid.getView().focusRow(newrecord);
@@ -278,11 +239,9 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     },
 
     selectedVerwaltungseinheit: function(grid, record) {
-        var win = grid.up('window');
-        var panel = this.searchField.up('panel').up('window');
-        win.hide();
+        var win = grid.up('ortszuordnungwindow');
         this.searchField.reset();
-        var mstId = panel.probe.get('mstId');
+        var mstId = win.probe.get('mstId');
         var mst = Ext.data.StoreManager.get('messstellen');
         var ndx = mst.findExact('id', mstId);
         var nId = mst.getAt(ndx).get('netzbetreiberId');
@@ -305,7 +264,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     },
 
     selectedStaat: function(grid, record) {
-        var panel = this.searchField.up('panel').up('window');
+        var win = grid.up('ortszuordnungwindow');
         this.searchField.reset();
         var mstId = panel.probe.get('mstId');
         var mst = Ext.data.StoreManager.get('messstellen');
@@ -327,5 +286,78 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var staaten = Ext.data.StoreManager.get('staaten');
         verwaltungseinheiten.clearFilter(true);
         staaten.clearFilter(true);
+    },
+
+    //button to search
+    allorte: function(button) {
+        var ozw = button.up('ortszuordnungwindow');
+        this.doOrtFilter(ozw);
+        var searchfield = button.up('toolbar').down('textfield[name=search]');
+        searchfield.setValue('');
+    },
+
+    /*
+     * contains the filter last applied to the ortestore
+     */
+    ortefilter: null,
+
+    /*
+     * Checks if a reload of the ortstore is needed, and reloads, if nessecary
+     * @param ozw: The current ortzuordnungwindow
+     * @param filterstring (optional): The string to filter
+     */
+    doOrtFilter: function(ozw, filterstring){
+        var localfilter = false;
+        if (!ozw){return;}
+        if (filterstring && this.ortefilter) {
+            if (filterstring === this.ortfilter){
+                return;
+            }
+            if (!filterstring.indexOf(this.ortfilter) > -1){
+                localFilter = true;
+            }
+        }
+        var messpunkte = Ext.data.StoreManager.get('orte');
+        var ortgrid= ozw.down('ortstammdatengrid');
+        messpunkte.clearFilter(true);
+        if (filterstring){
+            console.log(filterstring);
+            messpunkte.addFilter({
+                name: 'ortstringsearch',
+                filterFn: function(item) {
+                    if (item.data.ortId.indexOf(filterstring) > -1) {
+                        return true;
+                    }
+                    if (item.data.kurztext.indexOf(filterstring) > -1) {
+                        return true;
+                    }
+                    if (item.data.langtext.indexOf(filterstring) > -1) {
+                        return true;
+                    }
+                    if (item.data.berichtstext &&
+                        item.data.berichtstext.indexOf(filterstring) > -1) {
+                        return true;
+                    }
+                    if (item.data.gemId &&
+                        item.data.gemId.indexOf(filterstring) > -1) {
+                        return true;
+                    }
+                }});
+        }
+        // messpunkte.addFilter({
+        // name: 'netzbetreiberfilter',
+        // property: 'netzbetreiberId',
+        // value: //TODO
+        // });
+        if (localfilter){
+            ortgrid.setStore(messpunkte);
+        } else {
+            this.ortefilter = filterstring || null;
+            messpunkte.load({
+                callback: function(records, operation, success){
+                    ortgrid.setStore(messpunkte);
+                }
+            });
+        }
     }
 });
