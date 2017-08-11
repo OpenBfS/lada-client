@@ -317,12 +317,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 localFilter = true;
             }
         }
-        var messpunkte = Ext.data.StoreManager.get('orte');
         var ortgrid= ozw.down('ortstammdatengrid');
-        messpunkte.clearFilter(true);
+        ozw.ortstore.clearFilter(true);
         if (filterstring){
-            console.log(filterstring);
-            messpunkte.addFilter({
+            ozw.ortstore.addFilter({
                 name: 'ortstringsearch',
                 filterFn: function(item) {
                     if (item.data.ortId.indexOf(filterstring) > -1) {
@@ -344,18 +342,18 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                     }
                 }});
         }
-        // messpunkte.addFilter({
+        // ozw.ortstore.addFilter({
         // name: 'netzbetreiberfilter',
         // property: 'netzbetreiberId',
         // value: //TODO
         // });
         if (localfilter){
-            ortgrid.setStore(messpunkte);
+            ortgrid.setStore(ozw.ortstore);
         } else {
             this.ortefilter = filterstring || null;
-            messpunkte.load({
+            ozw.ortstore.load({
                 callback: function(records, operation, success){
-                    ortgrid.setStore(messpunkte);
+                    ortgrid.setStore(ozw.ortstore);
                 }
             });
         }
