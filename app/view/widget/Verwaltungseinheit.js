@@ -30,6 +30,7 @@ Ext.define('Lada.view.widget.Verwaltungseinheit', {
         if (!this.store) {
             this.store = Ext.create('Lada.store.Verwaltungseinheiten');
         }
+        this.store.clearFilter();
         this.callParent(arguments);
     },
     // This listener is used to load currently "selected" verwaltungseinheit.

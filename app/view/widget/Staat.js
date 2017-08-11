@@ -29,6 +29,7 @@ Ext.define('Lada.view.widget.Staat', {
         if (!this.store) {
             this.store = Ext.create('Lada.store.Staaten');
         }
+        this.store.clearFilter();
         this.callParent(arguments);
     }
 });
