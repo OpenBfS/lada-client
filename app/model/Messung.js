@@ -99,6 +99,10 @@ Ext.define('Lada.model.Messung', {
         reader: {
             type: 'json',
             rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });
