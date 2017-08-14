@@ -50,7 +50,7 @@ Ext.define('Lada.controller.form.Ortserstellung', {
         var formpanel = button.up('ortserstellungsform');
         var form = formpanel.getForm();
         var record = form.getRecord();
-        var data = form.getFieldValues(true);
+        var data = form.getFieldValues();
         for (var key in data) {
             record.set(key, data[key]);
         }
