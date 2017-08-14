@@ -71,11 +71,14 @@ Ext.define('Lada.controller.form.Ortserstellung', {
                     formpanel.setMessages(json.errors, json.warnings);
                 }
                 if (ozw.ortstore) {
-                    ozw.ortstore.add(newrecord);
-                    ozw.down('map').addLocations(ozw.ortstore); //TODO
-                    var osg = ozw.down('ortstammdatengrid');
-                    osg.setStore(ozw.ortstore);
-                    me.afterSave(formpanel, json);
+                    ozw.ortstore.load({
+                        callback: function(){
+                            var osg = ozw.down('ortstammdatengrid');
+                            osg.setStore(ozw.ortstore);
+                            ozw.down('map').addLocations(ozw.ortstore);
+                            me.afterSave(formpanel, json);
+                        }
+                    });
                 }
                 //TODO other parents might have other stores
             },
@@ -109,6 +112,7 @@ Ext.define('Lada.controller.form.Ortserstellung', {
         var id = json.data.id;
         var record = ozw.ortstore.getById(id);
         if (record) {
+            ozw.down('tabpanel').setActiveTab(0);
             var selmod = osg.getView().getSelectionModel();
             selmod.select(record);
         }
