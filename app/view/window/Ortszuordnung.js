@@ -259,8 +259,8 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     onStoreLoaded: function() {
         var map = this.down('map');
         var osg = this.down('ortstammdatengrid');
-        // osg.setStore(this.ortstore); //TODO trigger reload without affecting filters
-        map.addLocations(this.ortstore); //TODO Migration adds all locations, even the filtered?
+        osg.setStore(this.ortstore);
+        map.addLocations(this.ortstore);
         map.featureLayer.setVisibility(false);
         map.selectedFeatureLayer = new OpenLayers.Layer.Vector(
             'gewählter Messpunkt', {
@@ -282,7 +282,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         if (ortId){
             var feat = map.featureLayer.getFeaturesByAttribute('id', ortId);
             var ortrecord = this.ortstore.findRecord('id', ortId);
-//             osg.selectOrt(map, feat); TODO
+            osg.selectOrt(map, feat);
             map.selectFeature(this.model, ortrecord);
             this.down('ortszuordnungform').setOrt(null,ortrecord);
         }
