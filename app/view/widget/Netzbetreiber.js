@@ -13,7 +13,7 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.netzbetreiber',
     store: 'StaNetzbetreiber',
-    displayField: 'netzbetreiber',
+    displayField: 'id',
     valueField: 'id',
     editable: this.editable || false,
     readOnly: this.readOnly,
@@ -24,6 +24,11 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
+    tpl: Ext.create("Ext.XTemplate",
+        '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
+        '{id} - {netzbereiber}</div></tpl>'),
+    displayTpl: Ext.create('Ext.XTemplate',
+         '<tpl for=".">{id} - {netzbetreiber}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
