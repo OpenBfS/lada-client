@@ -13,7 +13,8 @@ Ext.define('Lada.store.Verwaltungseinheiten', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Verwaltungseinheit',
     sorters: [{
-        property: 'bezeichnung'
+        property: 'bezeichnung',
+        direction: 'ASC'
     }],
     autoLoad: true
 });

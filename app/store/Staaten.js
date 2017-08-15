@@ -13,7 +13,8 @@ Ext.define('Lada.store.Staaten', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Staat',
     sorters: [{
-        property: 'staat'
+        property: 'staat',
+        direction: 'ASC'
     }],
     autoLoad: true
 });
