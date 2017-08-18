@@ -18,7 +18,7 @@ Ext.define('Lada.view.window.FileUpload', {
         'Lada.view.window.ImportResponse'
     ],
 
-    layout: 'hbox',
+    layout: 'auto',
 
     file: null,
 
@@ -37,10 +37,39 @@ Ext.define('Lada.view.window.FileUpload', {
             hideLabel: true,
             margin: '3, 3, 3, 3'
         });
-        this.items = [
-            this.fileInput,
-            this.browseButton
-        ];
+        this.encodingSelector = Ext.create('Ext.form.field.ComboBox', {
+            fieldLabel: 'Encoding',
+            displayField: 'name',
+            valueField: 'value',
+            margin: '3, 3, 3, 3',
+            labelWidth: '94px',
+            store: Ext.create('Ext.data.Store', {
+                fields: ['name', 'value'],
+                data: [{
+                    name: 'UTF-8',
+                    value: 'utf-8'
+                }, {
+                    name: 'ISO-8859-15',
+                    value: 'iso-8859-15'
+                }, {
+                    name: 'IBM437',
+                    value: 'ibm437'
+                }]
+            })
+        });
+        this.items = [{
+            layout: 'hbox',
+            border: 0,
+            items: [
+                this.fileInput,
+                this.browseButton
+            ]
+        }, {
+            border: 0,
+            items: [
+                this.encodingSelector
+            ]
+        }];
         this.buttons = [{
             text: 'Speichern',
             handler: this.uploadFile
@@ -83,14 +112,13 @@ Ext.define('Lada.view.window.FileUpload', {
     uploadFile: function(button) {
         // TODO Error handling ?
         var win = button.up('window');
-        var uploader = Ext.create('Ext.ux.upload.uploader.ExtJsUploader', {
-            extraHeaders: {
-                'X-OPENID-PARAMS': Lada.openIDParams
-            },
+        var cb = win.down('combobox');
+        var uploader = Ext.create('Lada.view.plugin.ExtJsUploader', {
             method: 'POST',
             timeout: 600 * 1000,
             url: 'lada-server/data/import/laf'
         });
+        uploader.extraContentType = cb.getValue();
         this.mon(uploader, 'uploadsuccess', win.uploadSuccess, win);
         this.mon(uploader, 'uploadfailure', win.uploadFailure, win);
         if (button.up('window').file !== null) {
