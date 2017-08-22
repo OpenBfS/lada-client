@@ -41,10 +41,6 @@ Ext.define('Lada.controller.Ort', {
             record: Ext.create('Lada.model.Ort', {ortTyp: 1}),
             parentWindow: button.up('ortpanel')
         }).show();
-        var grid = button.up('ortpanel').down('ortstammdatengrid');
-        // if (grid.getCollapsed()) {
-        //    grid.expand();
-        // }
     },
 
     editRecord: function(grid, record) {
@@ -120,23 +116,5 @@ Ext.define('Lada.controller.Ort', {
             rowModel.selected.items.length === 0) {
             grid.up('ortpanel').down('button[action=delete]').disable();
         }
-        /*
-        if (!enabled &&
-            panel.down('button[action=delete]')) {
-            panel.down('button[action=delete]').disable();
-        }
-        else {
-            if (panel.down('ortstammdatengrid').getPlugin('rowedit') &&
-                !panel.down('ortstammdatengrid').getPlugin('rowedit').editing &&
-                panel.down('button[action=delete]')) {
-            //only enable buttons, when grid is not beeing edited
-                panel.down('button[action=delete]').enable();
-            }
-            //else turn them off again!
-            else if (panel.down('button[action=delete]')) {
-                panel.down('button[action=delete]').disable();
-            }
-        }
-        */
     }
 });
