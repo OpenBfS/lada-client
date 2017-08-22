@@ -49,19 +49,20 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         catch (e) {
         }
         var data = formPanel.getForm().getFieldValues(false);
+        var record = formPanel.getForm().getRecord();
         var i18n = Lada.getApplication().bundle;
-        var recordData = formPanel.getForm().getRecord().data;
-        recordData.ortId = data.ortId[0];
-        recordData.ortszuordnungTyp = data.ortszuordnungTyp;
-        recordData.ortszusatztext = data.ortszusatztext;
-        if (!data.letzteAenderung) {
-            recordData.letzteAenderung = new Date();
-        } else {
-            recordData.letzteAenderung = data.letzteAenderung;
+        record.set('ortId', data.ortId[0]);
+        record.set('ortszuordnungTyp', data.ortszuordnungTyp);
+        record.set('ortszusatztext', data.ortszusatztext);
+        if (!record.get('letzteAenderung')) {
+            record.set('letzteAenderung', Date());
         }
-        formPanel.getForm().getRecord().save({
+        if (record.phantom){
+            record.set('id', null);
+        }
+        record.save({
             success: function(record, response) {
-                var json = Ext.decode(response.response.responseText);
+                var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     formPanel.clearMessages();
                     formPanel.setRecord(record);
@@ -72,7 +73,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                         'button[action=revert]').setDisabled(true);
                 }
                 //try to refresh the Grid of the Probe
-                try {
+                try { //TODO Migration
                     formPanel.up('window').parentWindow
                         .down('ortszuordnunggrid').store.reload();
                 }
@@ -81,9 +82,10 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 }
             },
             failure: function(record, response) {
+                //TODO: Migration Server responds with "200 success", but fails. So this is not triggered, and code above fails
                 button.setDisabled(true);
                 formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
-                var json = response.request.scope.reader.jsonData;
+                var json = response.getResponse().responseText;
                 if (json) {
                     if(Object.keys(json.errors).length > 0 ||
                         Object.keys(json.warnings).length > 0) {
@@ -133,58 +135,27 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
      */
     chooseLocation: function(button, pressed, opts) {
         var i18n = Lada.getApplication().bundle;
-        var win = button.up('window');
-        var gridPanel = win.down('panel[name=ortgrid]');
+        var win = button.up('ortszuordnungwindow');
+        win.down('tabpanel').setActiveTab(0);
         var osg = win.down('ortstammdatengrid');
-        var oForm = button.up('window').down('ortszuordnungform');
+        var oForm = win.down('ortszuordnungform');
         osg.addListener('select',oForm.setOrt, oForm);
         var map = win.down('map');
         if (pressed) {
-            win.setHeight(Ext.getBody().getViewSize().height - 50);
             button.setText(i18n.getMsg('ortszuordnung.form.setOrt.pressed'));
             map.featureLayer.setVisibility(true);
-            win.setY(25);
-            gridPanel.show();
             var mstId = oForm.up('window').probe ? oForm.up('window').probe.get('mstId') :
                 oForm.up('window').messprogramm.get('mstId');
             var mst = Ext.data.StoreManager.get('messstellen');
             var ndx = mst.findExact('id', mstId);
             var nId = mst.getAt(ndx).get('netzbetreiberId');
-            var store = Ext.create('Lada.store.Orte', {
-                defaultPageSize: 0,
-                listeners: {
-                    beforeload: {
-                        fn: function() {
-                            osg.setLoading(true);
-                        }
-                    },
-                    load: {
-                        fn: function() {
-                            osg.setLoading(false);
-                            osg.setStore(store);
-                            osg.store.filterBy(function(record) {
-                                if (record.get('netzbetreiberId') ===
-                                    nId) {
-                                        return true;
-                                    }
-                            });
-                        }
-                    }
-                }
-            });
-            win.doLayout();
             osg.addListener('select',oForm.setOrt, oForm);
 
         }
         else {
             map.featureLayer.setVisibility(false);
-            var y = (Ext.getBody().getViewSize().height - 465) / 2;
-            win.setHeight(465);
-            win.setY(y);
             button.setText(i18n.getMsg('ortszuordnung.form.setOrt'));
-            gridPanel.hide();
             osg.removeListener('select',oForm.setOrt, oForm);
-            oForm.doLayout();
         }
     },
 

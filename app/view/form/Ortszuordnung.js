@@ -17,7 +17,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         'Lada.view.form.OrtInfo',
         'Lada.view.widget.OrtszuordnungTyp',
         'Lada.view.widget.Verwaltungseinheit',
-        'Lada.view.widget.Staat'
+        'Lada.view.widget.Staat',
+        'Lada.view.widget.base.TextArea'
     ],
 
     layout: 'fit',
@@ -79,7 +80,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                 items: [{
                     layout: 'hbox',
                     border: 0,
-                    margin: '0, 0, 10, 0',
+                    margin: '0, 0, 5, 0',
                     items: [{
                         layout: 'vbox',
                         border: 0,
@@ -115,7 +116,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                             },
                             Ext.create('Lada.view.form.OrtInfo'),
                             {
-                                xtype: 'tfield',
+                                xtype: 'tarea',
                                 labelWidth: 125,
                                 maxLength: 100,
                                 name: 'ortszusatztext',
@@ -221,11 +222,11 @@ Ext.define('Lada.view.form.Ortszuordnung', {
      },
 
     clearMessages: function() {
-        this.down('tfield[name=ortszusatztext]').clearWarningOrError();
+        this.down('tarea[name=ortszusatztext]').clearWarningOrError();
      },
 
     setReadOnly: function(value) {
-        this.down('tfield[name=ortszusatztext]').setReadOnly(value);
+        this.down('tarea[name=ortszusatztext]').setReadOnly(value);
         var fieldId = 'textfield[name=ortszuordnungTyp]';
         this.down(fieldId).setReadOnly(value);
     },

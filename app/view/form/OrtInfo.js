@@ -72,7 +72,7 @@ Ext.define('Lada.view.form.OrtInfoRow',{
     alias: 'widget.ortinforow',
     padding: 0,
     border: 0,
-    flex: 2,
+    flex: 1,
     layout: 'hbox',
     label: '',
     firstitem: '',
@@ -93,7 +93,8 @@ Ext.define('Lada.view.form.OrtInfoRow',{
             margin: '0,5'
         },{
             name: this.seconditem,
-            margin: '0,5'
+            margin: '0,5',
+            width: 120
         }];
         this.callParent();
     }
