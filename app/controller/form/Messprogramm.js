@@ -81,14 +81,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
             //select the NB in the NB-Combobox
             netzbetreiber.select(nbId);
         }
-        //TODO: Migration: Moved select listener from view
-        console.log(records);
         var mst = records.get('messStelle');
         var labor = records.get('laborMst');
         combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
         combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
         combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
-
     },
 
     /**
@@ -96,11 +93,9 @@ Ext.define('Lada.controller.form.Messprogramm', {
      * and the numberfield.
      */
     updateIntervalls: function(field) {
-        //TODO: Migration: Intervall combo box is not saved/submitted
         var form = field.up('messprogrammform');
         var record = form.getRecord();
         form.populateIntervall(record, field.getValue());
-        
     },
 
     /**
@@ -164,8 +159,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
      */
     save: function(button) {
         var formPanel = button.up('form');
-        var data = formPanel.getForm().getFieldValues();
-        console.log(data);
+        var data = formPanel.getForm().getFieldValues(false);
         for (var key in data) {
             formPanel.getForm().getRecord().set(key, data[key]);
         }

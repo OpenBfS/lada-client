@@ -158,8 +158,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                 success: function(record, response) {
                     this.down('messprogrammform').setRecord(record);
                     this.record = record;
-
-                    var json = Ext.decode(response.response.responseText);
+                    var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
                         this.setMessages(json.errors, json.warnings);
                         if (!json.warnings.mediaDesk) {

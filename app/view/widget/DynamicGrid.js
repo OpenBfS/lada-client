@@ -106,7 +106,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             width: 30,
             getClass: function (val, meta, rec) {
                 if (rec.get('readonly') === false &&
-                    (rec.get('owner') === true || rec.get('owner') === '') &&
+                    (   rec.get('owner') === undefined ||
+                        rec.get('owner') === true ||
+                        rec.get('owner') === '') &&
                     !rec.get('statusEdit')) {
                         return 'edit';
                 }

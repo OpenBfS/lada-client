@@ -97,29 +97,16 @@ Ext.define('Lada.view.form.Messprogramm', {
                             items: [{
                                 xtype: 'messstellelabor',
                                 name: 'mstlabor',
-                                fieldLabel: 'Messstelle/Labor',
+                                fieldLabel: i18n.getMsg('labor_mst_id'),
                                 margin: '0, 5, 5, 5',
                                 width: '35%',
                                 labelWidth: 95,
                                 allowBlank: false,
-                                editable: true,
-                                //TODO: Migration: Doesnt seem to work here, moved to controller
-                                /*
-                                listeners: {
-                                    select: {
-                                        fn: function(combo, newValue) {
-                                            var mst = newValue[0].get('messStelle');
-                                            var labor = newValue[0].get('laborMst');
-                                            combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
-                                            combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
-                                            combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
-                                        }
-                                    }
-                                }*/
+                                editable: true
                             }, {
                                 xtype: 'messstelle',
                                 name: 'mstId',
-                                fieldLabel: 'Messstelle/Labor',
+                                fieldLabel: i18n.getMsg('mst_id'),
                                 margin: '0, 5, 5, 5',
                                 width: '35%',
                                 labelWidth: 95,
@@ -132,7 +119,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             }, {
                                 xtype: 'messstelle',
                                 name: 'laborMstId',
-                                fieldLabel: 'Messstelle/Labor',
+                                fieldLabel: i18n.getMsg('labor_mst_id'),
                                 margin: '0, 5, 5, 5',
                                 width: '35%',
                                 labelWidth: 95,
@@ -494,7 +481,6 @@ Ext.define('Lada.view.form.Messprogramm', {
             s.setDisabled(false);
         }
 
-        console.log('Probeninterval ' + intervall);
         var intrec = intervallstore
             .findRecord('probenintervall',
                 intervall, 0, false, false, true);
@@ -588,8 +574,9 @@ Ext.define('Lada.view.form.Messprogramm', {
                     displayCombi: displayCombi
                 }]
             });
-            this.down('messstellelabor').down('combobox').store = newStore;
-            this.down('messstellelabor').setValue(id);
+            //TODO Migration preselecting the entry does not currently work
+            this.down('messstellelabor').store = newStore;
+            this.down('messstellelabor').down('combobox').setValue(id);
         }
         else {
             var mstLaborStore = Ext.data.StoreManager.get('messstellelabor');

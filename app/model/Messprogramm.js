@@ -92,6 +92,10 @@ Ext.define('Lada.model.Messprogramm', {
         reader: {
             type: 'json',
             rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+           writeAllFields: true
         }
     }
 });
