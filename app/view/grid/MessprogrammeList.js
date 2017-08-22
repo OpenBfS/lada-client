@@ -34,7 +34,8 @@ Ext.define('Lada.view.grid.MessprogrammeList', {
             {
                 text: i18n.getMsg('messprogramme.button.create'),
                 icon: 'resources/img/list-add.png',
-                action: 'addMessprogramm'
+                action: 'addMessprogramm',
+                disabled: true
             }, {
                 text: i18n.getMsg('messprogramme.button.generate'),
                 icon: 'resources/img/view-time-schedule-insert.png',
@@ -44,6 +45,9 @@ Ext.define('Lada.view.grid.MessprogrammeList', {
         }];
         this.columns = [];
         this.callParent(arguments);
+        if (Ext.Array.contains(Lada.funktionen, 4)) {
+            this.down('button[action=addMessprogramm]').enable();
+        }
     }
 });
 
