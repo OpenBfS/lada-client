@@ -376,7 +376,7 @@ Ext.application({
         'Lada.controller.grid.Probenehmer',
         'Lada.controller.form.Probe',
         'Lada.controller.form.Messung',
-        'Lada.controller.form.Ortserstellung',
+        'Lada.controller.form.Ort',
         'Lada.controller.grid.Probenzusatzwert',
         'Lada.controller.grid.PKommentar',
         'Lada.controller.grid.MKommentar',

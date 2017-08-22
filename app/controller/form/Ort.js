@@ -7,9 +7,9 @@
  */
 
 /*
- * This is a controller for an Ortserstellung Form
+ * This is a controller for an Ort Form
  */
-Ext.define('Lada.controller.form.Ortserstellung', {
+Ext.define('Lada.controller.form.Ort', {
     extend: 'Ext.app.Controller',
 
     /**
@@ -17,28 +17,28 @@ Ext.define('Lada.controller.form.Ortserstellung', {
      */
     init: function() {
         this.control({
-            'ortserstellungsform button[action=save]': {
+            'ortform button[action=save]': {
                 click: this.save
             },
-            'ortserstellungsform button[action=revert]': {
+            'ortform button[action=revert]': {
                 click: this.discard
             },
-            'ortserstellungsform staat combobox' : {
+            'ortform staat combobox' : {
                 change: this.checkCommitEnabled
             },
-            'ortserstellungsform verwaltungseinheit combobox' : {
+            'ortform verwaltungseinheit combobox' : {
                 change: this.checkCommitEnabled
             },
-            'ortserstellungsform koordinatenart combobox': {
+            'ortform koordinatenart combobox': {
                 change: this.checkCommitEnabled
             },
-            'ortserstellungsform numfield [name=koordXExtern]': {
+            'ortform numfield [name=koordXExtern]': {
                 change: this.checkCommitEnabled
             },
-            'ortserstellungsform numfield [name=koordYExtern]': {
+            'ortform numfield [name=koordYExtern]': {
                 change: this.checkCommitEnabled
             },
-            'ortserstellungsform': {
+            'ortform': {
                 validitychange: this.checkCommitEnabled,
                 dirtychange: this.checkCommitEnabled
             }
@@ -47,7 +47,7 @@ Ext.define('Lada.controller.form.Ortserstellung', {
 
     save: function(button) {
         var me = this;
-        var formpanel = button.up('ortserstellungsform');
+        var formpanel = button.up('ortform');
         var form = formpanel.getForm();
         var record = form.getRecord();
         var data = form.getFieldValues(false);
@@ -146,7 +146,7 @@ Ext.define('Lada.controller.form.Ortserstellung', {
     checkCommitEnabled: function(callingEl) {
         var panel;
         if (callingEl.up) { //called by a field in the form
-            panel = callingEl.up('ortserstellungsform');
+            panel = callingEl.up('ortform');
         } else { //called by the form
             panel = callingEl.owner;
         }

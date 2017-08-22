@@ -7,14 +7,14 @@
  */
 
 /**
- * Window for new Ort, wraps around a {@link Lada.view.form.Ortsertellung}
+ * Window for new Ort, wraps around a {@link Lada.view.form.Ort}
  */
-Ext.define('Lada.view.window.Ortserstellung', {
+Ext.define('Lada.view.window.Ort', {
     extend: 'Ext.window.Window',
-    alias: 'window.ortserstellung',
+    alias: 'window.ort',
     requires: [
         'Lada.model.Ort',
-        'Lada.view.form.Ortserstellung'
+        'Lada.view.form.Ort'
     ],
 
     minWidth: 350,
@@ -45,7 +45,7 @@ Ext.define('Lada.view.window.Ortserstellung', {
             this.record = Ext.create('Lada.model.Ort');
         }
         this.items = [
-            Ext.create('Lada.view.form.Ortserstellung', {
+            Ext.create('Lada.view.form.Ort', {
                 record: me.record,
                 listeners: {
                     destroy: {fn: function() {me.close();}}

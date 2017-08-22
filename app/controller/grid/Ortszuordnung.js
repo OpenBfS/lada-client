@@ -14,7 +14,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
     requires: [
         'Lada.view.window.Ortszuordnung',
-        'Lada.view.window.Ortserstellung'
+        'Lada.view.window.Ort'
     ],
 
     searchField: null,
@@ -147,7 +147,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var mst = Ext.data.StoreManager.get('messstellen');
         var ndx = mst.findExact('id', mstId);
         var nId = mst.getAt(ndx).get('netzbetreiberId');
-        Ext.create('Lada.view.window.Ortserstellung',{
+        Ext.create('Lada.view.window.Ort',{
             record: Ext.create('Lada.model.Ort', {
                 ortTyp: 1,
                 netzbetreiberId: nId}),
@@ -243,7 +243,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var mst = Ext.data.StoreManager.get('messstellen');
         var ndx = mst.findExact('id', mstId);
         var nId = mst.getAt(ndx).get('netzbetreiberId');
-        Ext.create('Lada.view.window.Ortserstellung', {
+        Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Ort', {
                 netzbetreiberId: nId,
                 gemId: record.get('id'),
@@ -267,7 +267,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var mst = Ext.data.StoreManager.get('messstellen');
         var ndx = mst.findExact('id', mstId);
         var nId = mst.getAt(ndx).get('netzbetreiberId');
-        Ext.create('Lada.view.window.Ortserstellung', {
+        Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Ort', {
                 netzbetreiberId: nId,
                 staatId: record.get('id'),

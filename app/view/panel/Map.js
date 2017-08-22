@@ -142,7 +142,7 @@ Ext.define('Lada.view.panel.Map', {
         }
         var koord_x = Math.round(features.feature.geometry.x * 100000)/100000;
         var koord_y = Math.round(features.feature.geometry.y * 100000)/100000;
-        Ext.create('Lada.view.window.Ortserstellung', {
+        Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Ort',{
                 netzbetreiberId: nId,
                 koordXExtern: koord_x,

@@ -9,9 +9,9 @@
 /**
  * Form to create a new Messpunkt
  */
-Ext.define('Lada.view.form.Ortserstellung', {
+Ext.define('Lada.view.form.Ort', {
     extend: 'Ext.form.Panel',
-    alias: 'widget.ortserstellungsform',
+    alias: 'widget.ortform',
     requires: [
         'Lada.view.widget.Verwaltungseinheit',
         'Lada.view.widget.Staat'

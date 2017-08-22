@@ -19,7 +19,8 @@ Ext.define('Lada.view.grid.Orte', {
         'Lada.view.widget.KoordinatenArt',
         'Lada.view.widget.Kta',
         'Lada.view.widget.OrtsZusatz',
-        'Lada.view.widget.OrtTyp'
+        'Lada.view.widget.OrtTyp',
+        'Lada.view.window.Ort'
     ],
     // minHeight and deferEmptyText are needed to be able to show the
     // emptyText message.
@@ -58,7 +59,7 @@ Ext.define('Lada.view.grid.Orte', {
             handler: function(grid, rowIndex, colIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
                 if (rec.get('readonly') === false) {
-                    Ext.create('Lada.view.window.Ortserstellung',{
+                    Ext.create('Lada.view.window.Ort',{
                         record: rec,
                         parentWindow: grid.up('panel') //TODO Migration: check if there is an 'ortpanel' above every ortgrid
                     }).show();

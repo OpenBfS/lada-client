@@ -37,7 +37,7 @@ Ext.define('Lada.controller.Ort', {
     },
 
     addRecord: function(button) {
-        Ext.create('Lada.view.window.Ortserstellung',{
+        Ext.create('Lada.view.window.Ort',{
             record: Ext.create('Lada.model.Ort', {ortTyp: 1}),
             parentWindow: button.up('ortpanel')
         }).show();
@@ -49,7 +49,7 @@ Ext.define('Lada.controller.Ort', {
 
     editRecord: function(grid, record) {
         if (record.get('readonly') === false) {
-            Ext.create('Lada.view.window.Ortserstellung',{
+            Ext.create('Lada.view.window.Ort',{
                 record: record,
                 parentWindow: grid.up('ortpanel')
             }).show();
