@@ -50,12 +50,14 @@ Ext.define('Lada.controller.form.Ortserstellung', {
         var formpanel = button.up('ortserstellungsform');
         var form = formpanel.getForm();
         var record = form.getRecord();
-        var data = form.getFieldValues();
+        var data = form.getFieldValues(false);
         for (var key in data) {
             record.set(key, data[key]);
         }
-        record.set('id', null);
-        record.set('netzbetreiberId', Lada.netzbetreiber[0]);
+        if (record.phantom) {
+            record.set('netzbetreiberId', Lada.netzbetreiber[0]);
+            record.set('id', null);
+        }
         record.save({
             success: function(newrecord, response) {
                 form.loadRecord(newrecord);

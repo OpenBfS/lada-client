@@ -146,6 +146,10 @@ Ext.define('Lada.model.Ort', {
             type: 'json',
             totalProperty: 'totalCount',
             rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });

@@ -39,6 +39,7 @@ Ext.define('Lada.view.window.Ortserstellung', {
     parentWindow: null,
 
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
         var me = this;
         if (this.record === null) {
             this.record = Ext.create('Lada.model.Ort');
@@ -52,7 +53,7 @@ Ext.define('Lada.view.window.Ortserstellung', {
             })
         ];
         this.buttons = [{
-            text: 'Schließen',
+            text: i18n.getMsg('close'),
             scope: this,
             handler: this.close
         }];

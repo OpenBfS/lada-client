@@ -34,7 +34,6 @@ Ext.define('Lada.view.grid.Orte', {
     errors: null,
     readOnly: true,
     allowDeselect: true,
-    editableGrid: true,
     features: [],
     //TODO: Migration
     // Ext.plugin.grid doesn't have filters as feature anymore
@@ -43,21 +42,6 @@ Ext.define('Lada.view.grid.Orte', {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('orte.emptyGrid');
 
-        if (this.editableGrid) {
-            this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
-                clicksToMoveEditor: 1,
-                autoCancel: false,
-                disabled: false,
-                pluginId: 'rowedit'
-            });
-        }
-/* TODO Migration. If in a tabpanel, bufferedRenderer does not work anymore?
-            this.plugins = [{ptype: 'bufferedrenderer',
-                trailingBufferZone: 20,
-                leadingBufferZone: 50
-             }];
-       }
-      */
         var me = this;
         this.columns = [{
             xtype: 'actioncolumn',
@@ -74,7 +58,10 @@ Ext.define('Lada.view.grid.Orte', {
             handler: function(grid, rowIndex, colIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
                 if (rec.get('readonly') === false) {
-                    me.rowEditing.startEdit(rowIndex, colIndex);
+                    Ext.create('Lada.view.window.Ortserstellung',{
+                        record: rec,
+                        parentWindow: grid.up('panel') //TODO Migration: check if there is an 'ortpanel' above every ortgrid
+                    }).show();
                 }
             }
         }, {
@@ -91,22 +78,10 @@ Ext.define('Lada.view.grid.Orte', {
                 }
                 return r;
             },
-            editor: {
-                xtype: 'combobox',
-                store: Ext.data.StoreManager.get('netzbetreiberFiltered'),
-                displayField: 'netzbetreiber',
-                valueField: 'id',
-                allowBlank: false
-            },
             dataIndex: 'netzbetreiberId'
         }, {
             header: i18n.getMsg('orte.ortId'),
             width: 60,
-            editor: {
-                xtype: 'textfield',
-                maxLength: 10,
-                allowBlank: false
-            },
             filter: {
                 type: 'string'
             },
@@ -116,12 +91,6 @@ Ext.define('Lada.view.grid.Orte', {
             width: 40,
             filter: {
                 type: 'string'
-            },
-            editor: {
-                xtype: 'combobox',
-                store: Ext.data.StoreManager.get('orttyp'),
-                displayField: 'code',
-                valueField: 'id'
             },
             renderer: function(value) {
                 if (value === undefined ||
@@ -140,22 +109,12 @@ Ext.define('Lada.view.grid.Orte', {
             filter: {
                 type: 'string'
             },
-            editor: {
-                xtype: 'textfield',
-                maxLength: 15,
-                allowBlank: false
-            },
             dataIndex: 'kurztext'
         }, {
             header: i18n.getMsg('orte.langtext'),
             width: 200,
             filter: {
                 type: 'string'
-            },
-            editor: {
-                xtype: 'textfield',
-                maxLength: 100,
-                allowBlank: false
             },
             dataIndex: 'langtext'
         }, {
@@ -175,13 +134,6 @@ Ext.define('Lada.view.grid.Orte', {
                 var store = Ext.data.StoreManager.get('verwaltungseinheiten');
                 var record = store.getById(value);
                 return record.get('bezeichnung');
-            },
-            editor: {
-                xtype: 'combobox',
-                store: Ext.data.StoreManager.get('verwaltungseinheiten'),
-                displayField: 'bezeichnung',
-                valueField: 'id',
-                allowBlank: false
             }
         }, {
             header: i18n.getMsg('orte.staatId'),
@@ -200,20 +152,9 @@ Ext.define('Lada.view.grid.Orte', {
                 var staaten = Ext.data.StoreManager.get('staaten');
                 var record = staaten.getById(value);
                 return record.get('staatIso');
-            },
-            editor: {
-                xtype: 'combobox',
-                store: Ext.data.StoreManager.get('staaten'),
-                displayField: 'staatIso',
-                valueField: 'id',
-                allowBlank: false
             }
         }, {
             header: i18n.getMsg('orte.nutsCode'),
-            editor: {
-                xtype: 'textfield',
-                maxLength: 10
-            },
             filter: {
                 type: 'string'
             },
@@ -222,12 +163,6 @@ Ext.define('Lada.view.grid.Orte', {
             header: i18n.getMsg('orte.ozId'),
             filter: {
                 type: 'string'
-            },
-            editor: {
-                xtype: 'combobox',
-                store: Ext.data.StoreManager.get('ortszusatz'),
-                displayField: 'ozsId',
-                valueField: 'ozsId'
             },
             renderer: function(value) {
                 if (value === undefined ||
@@ -243,12 +178,6 @@ Ext.define('Lada.view.grid.Orte', {
             dataIndex: 'ozId'
         }, {
             header: i18n.getMsg('orte.anlageId'),
-            editor: {
-                xtype: 'combobox',
-                store: Ext.data.StoreManager.get('ktas'),
-                displayField: 'code',
-                valueField: 'id'
-            },
             renderer: function(value) {
                 if (value === undefined ||
                     value === null ||
@@ -266,19 +195,11 @@ Ext.define('Lada.view.grid.Orte', {
             filter: {
                 type: 'string'
             },
-            editor: {
-                xtype: 'textfield',
-                maxLength: 10
-            },
             dataIndex: 'mpArt'
         }, {
             header: i18n.getMsg('orte.zone'),
             filter: {
                 type: 'string'
-            },
-            editor: {
-                xtype: 'textfield',
-                maxLength: 1
             },
             dataIndex: 'zone'
         }, {
@@ -286,19 +207,11 @@ Ext.define('Lada.view.grid.Orte', {
             filter: {
                 type: 'string'
             },
-            editor: {
-                xtype: 'textfield',
-                maxLength: 2
-            },
             dataIndex: 'sektor'
         }, {
             header: i18n.getMsg('orte.zustaendigkeit'),
             filter: {
                 type: 'string'
-            },
-            editor: {
-                xtype: 'textfield',
-                maxLength: 10
             },
             dataIndex: 'zustaendigkeit'
         }, {
@@ -306,30 +219,17 @@ Ext.define('Lada.view.grid.Orte', {
             filter: {
                 type: 'string'
             },
-            editor: {
-                xtype: 'textfield',
-                maxLength: 70
-            },
             dataIndex: 'berichtstext'
         }, {
             header: i18n.getMsg('orte.unscharf'),
             filter: {
                 type: 'string'
             },
-            editor: {
-                xtype: 'textfield'
-            },
             dataIndex: 'unscharf'
         }, {
             header: i18n.getMsg('orte.kdaId'),
             filter: {
                 type: 'string'
-            },
-            editor: {
-                xtype: 'combobox',
-                store: Ext.data.StoreManager.get('koordinatenart'),
-                displayField: 'koordinatenart',
-                valueField: 'id'
             },
             renderer: function(value) {
                 if (value === undefined ||
@@ -348,21 +248,11 @@ Ext.define('Lada.view.grid.Orte', {
             filter: {
                 type: 'string'
             },
-            editor: {
-                xtype: 'textfield',
-                maxLength: 22,
-                allowBlank: false
-            },
             dataIndex: 'koordXExtern'
         }, {
             header: i18n.getMsg('orte.koordYExtern'),
             filter: {
                 type: 'string'
-            },
-            editor: {
-                xtype: 'textfield',
-                maxLength: 22,
-                allowBlank: false
             },
             dataIndex: 'koordYExtern'
         }, {
@@ -370,26 +260,17 @@ Ext.define('Lada.view.grid.Orte', {
             filter: {
                 type: 'numeric'
             },
-            editor: {
-                xtype: 'numberfield'
-            },
             dataIndex: 'longitude'
         }, {
             header: i18n.getMsg('orte.latitude'),
             filter: {
                 type: 'numeric'
             },
-            editor: {
-                xtype: 'numberfield'
-            },
             dataIndex: 'latitude'
         }, {
             header: i18n.getMsg('orte.hoeheLand'),
             filter: {
                 type: 'numeric'
-            },
-            editor: {
-                xtype: 'numberfield'
             },
             dataIndex: 'hoeheLand'
         }, {
