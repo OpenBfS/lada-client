@@ -65,7 +65,7 @@ Ext.define('Lada.controller.form.Ortserstellung', {
                 formpanel.down('button[action=revert]').setDisabled(true);
                 button.hide();
                 var ozw = formpanel.up('panel').parentWindow;
-                var json = Ext.decode(response._response.responseText);
+                var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     formpanel.clearMessages();
                     formpanel.setMessages(json.errors, json.warnings);
