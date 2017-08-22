@@ -64,6 +64,10 @@ Ext.define('Lada.model.Ortszuordnung', {
         reader: {
             type: 'json',
             rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });
