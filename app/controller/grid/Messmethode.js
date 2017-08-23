@@ -52,7 +52,10 @@ Ext.define('Lada.controller.grid.Messmethode', {
      * On failure it displays a message
      */
      gridSave: function(editor, context) {
-        context.record.save({
+         if (context.record.phantom){
+             context.record.set('id', null);
+         }
+         context.record.save({
             success: function() {
                 context.grid.initData();
                 context.grid.up('window').initData();
@@ -119,8 +122,7 @@ Ext.define('Lada.controller.grid.Messmethode', {
      * the empty row might have been created by the roweditor is removed
      */
     cancelEdit: function(editor, context) {
-        if (!context.record.get('id') ||
-            context.record.get('id') === '') {
+        if (context.record.phantom){
             editor.getCmp().store.remove(context.record);
         }
     },

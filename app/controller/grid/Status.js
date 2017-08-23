@@ -51,6 +51,9 @@ Ext.define('Lada.controller.grid.Status', {
             }
         });
         context.record.set('statusKombi', kombis.getAt(kombiNdx).get('id'));
+        if (context.record.phantom){
+            context.record.set('id', null);
+        }
         context.record.save({
             success: function(response) {
                 var i18n = Lada.getApplication().bundle;
@@ -106,9 +109,8 @@ Ext.define('Lada.controller.grid.Status', {
      * When the edit was canceled,
      * the empty row might have been created by the roweditor is removed
      */
-     cancelEdit: function(editor, context) {
-        if (!context.record.get('id') ||
-            context.record.get('id') === '') {
+    cancelEdit: function(editor, context) {
+        if (context.record.phantom){
             editor.getCmp().store.remove(context.record);
         }
     },

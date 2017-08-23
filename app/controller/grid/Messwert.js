@@ -38,6 +38,9 @@ Ext.define('Lada.controller.grid.Messwert', {
      * On failure it displays a message
      */
     gridSave: function(editor, context) {
+        if (context.record.phantom){
+            context.record.set('id', null);
+        }
         context.record.save({
             success: function(request, response) {
                 if (Ext.data.StoreManager.get('messeinheiten')) {
@@ -77,9 +80,8 @@ Ext.define('Lada.controller.grid.Messwert', {
      * the empty row might have been created by the roweditor is removed
      */
     cancelEdit: function(editor, context) {
-        if (!context.record.get('id') ||
-            context.record.get('id') === '') {
-            editor.getCmp().store.remove(context.record);
+          if (context.record.phantom){
+              editor.getCmp().store.remove(context.record);
         }
     },
 

@@ -103,7 +103,7 @@ Ext.define('Lada.view.grid.PKommentar', {
                     value + '</div>';
             },
             editor: {
-                xtype: 'textarea',
+                xtype: 'textfield',
                 allowBlank: false
             }
         }];

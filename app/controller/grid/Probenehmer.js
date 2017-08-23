@@ -69,6 +69,9 @@ Ext.define('Lada.controller.grid.Probenehmer', {
      */
     gridSave: function(editor, context) {
         var i18n = Lada.getApplication().bundle;
+        if (context.record.phantom){
+            context.record.set('id', null);
+        }
         context.record.save({
             success: function(record, response) {
                 var grid = Ext.ComponentQuery.query('probenehmergrid')[0];
@@ -95,12 +98,10 @@ Ext.define('Lada.controller.grid.Probenehmer', {
      * the empty row might have been created by the roweditor is removed
      */
     cancelEdit: function(editor, context) {
-        if (!context.record.get('id') ||
-            context.record.get('id') === '') {
+        if (context.record.phantom){
             editor.getCmp().store.remove(context.record);
             this.buttonToggle();
-        }
-        else {
+        } else {
             this.buttonToggle(context.grid.getSelectionModel(), context.record);
         }
     },

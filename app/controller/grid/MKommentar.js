@@ -41,6 +41,9 @@ Ext.define('Lada.controller.grid.MKommentar', {
      */
     gridSave: function(editor, context) {
         context.record.set('datum', new Date());
+        if (context.record.phantom){
+            context.record.set('id', null);
+        }
         context.record.save({
             success: function(record, response) {
                 context.grid.initData();
@@ -67,8 +70,7 @@ Ext.define('Lada.controller.grid.MKommentar', {
      * the empty row might have been created by the roweditor is removed
      */
     cancelEdit: function(editor, context) {
-        if (!context.record.get('id') ||
-            context.record.get('id') === '') {
+        if (context.record.phantom){
             editor.getCmp().store.remove(context.record);
         }
     },

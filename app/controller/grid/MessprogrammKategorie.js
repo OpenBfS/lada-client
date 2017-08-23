@@ -69,6 +69,9 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
      */
     gridSave: function(editor, context) {
         var i18n = Lada.getApplication().bundle;
+        if (context.record.phantom){
+             context.record.set('id', null);
+        }
         context.record.save({
             success: function(record, response) {
                 var grid = Ext.ComponentQuery.query('messprogrammkategoriegrid')[0];
@@ -95,13 +98,14 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
      * the empty row might have been created by the roweditor is removed
      */
     cancelEdit: function(editor, context) {
-        if (!context.record.get('id') ||
-            context.record.get('id') === '') {
-            editor.getCmp().store.remove(context.record);
-            this.buttonToggle();
+        // TODO Migration: this approach differed from other rowEditings. doublecheck required
+        if (context.record.phantom){
+             context.record.set('id', null);
+             this.buttonToggle();
+        } else {
+            context.grid.getSelectionModel().deselect(context.record);
+            this.buttonToggle(context.grid.getSelectionModel(), context.record);
         }
-        context.grid.getSelectionModel().deselect(context.record);
-        this.buttonToggle(context.grid.getSelectionModel(), context.record);
     },
 
     /**
