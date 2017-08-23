@@ -34,6 +34,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             clicksToMoveEditor: 1,
             autoCancel: false,
             disabled: false,
+            errorSummary: false,
             pluginId: 'rowedit',
             listeners:{
                 // Make row ineditable when readonly is set to true

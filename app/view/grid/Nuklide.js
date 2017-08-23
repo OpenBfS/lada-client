@@ -88,6 +88,7 @@ Ext.define('Lada.view.grid.Nuklide', {
             clicksToMoveEditor: 1,
             autoCancel: false,
             disabled: false,
+            errorSummary: false,
             pluginId: 'nuklidrowedit',
             listeners:{
                 // Make row ineditable when readonly is set to true

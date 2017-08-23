@@ -42,6 +42,7 @@ Ext.define('Lada.view.grid.Status', {
             clicksToMoveEditor: 1,
             autoCancel: false,
             disabled: true, //has no effect... but why?
+            errorSummary: false,
             pluginId: 'rowedit',
             listeners: {
                 beforeedit: function(editor, context, eOpts) {

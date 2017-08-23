@@ -35,6 +35,7 @@ Ext.define('Lada.view.grid.Messwert', {
     initComponent: function() {
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
+            errorSummary: false,
             autoCancel: false,
             disabled: false,
             pluginId: 'rowedit',

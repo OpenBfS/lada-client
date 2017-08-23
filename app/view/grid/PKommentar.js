@@ -35,6 +35,7 @@ Ext.define('Lada.view.grid.PKommentar', {
             autoCancel: false,
             disabled: false,
             pluginId: 'rowedit',
+            errorSummary: false,
             listeners:{
                 // Make row ineditable when readonly is set to true
                 // Normally this would belong into a controller an not the view.

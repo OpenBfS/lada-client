@@ -29,6 +29,7 @@ Ext.define('Lada.view.grid.MKommentar', {
             clicksToMoveEditor: 1,
             autoCancel: false,
             disabled: false,
+            errorSummary: false,
             pluginId: 'rowedit',
             listeners:{
                 // Make row ineditable when readonly is set to true
