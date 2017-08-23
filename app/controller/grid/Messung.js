@@ -118,7 +118,7 @@ Ext.define('Lada.controller.grid.Messung', {
             'Sind Sie sicher?',
             function(btn) {
                 if (btn === 'yes') {
-                    selection.destroy({
+                    selection.erase({
                         success: function() {
                             button.up('window').initData();
                         },

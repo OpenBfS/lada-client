@@ -134,9 +134,8 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
                                 i18n.getMsg('confirmation.question'),
                                 function(btn) {
             if (btn === 'yes') {
-                selection.destroy({
+                selection.erase({
                     success: function() {
-                        //DO NOTHING
                     },
                     failure: function(request, response) {
                         var json = response.request.scope.reader.jsonData;

@@ -111,7 +111,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         Ext.MessageBox.confirm(i18n.getMsg('delete'), i18n.getMsg('confirmation.question'),
                                 function(btn) {
                 if (btn === 'yes') {
-                selection.destroy({
+                selection.erase({
                     success: function() {
                         button.up('window').initData();
                     },

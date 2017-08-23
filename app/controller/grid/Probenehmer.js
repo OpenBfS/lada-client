@@ -132,7 +132,7 @@ Ext.define('Lada.controller.grid.Probenehmer', {
                                 i18n.getMsg('confirmation.question'),
                                 function(btn) {
             if (btn === 'yes') {
-                selection.destroy({
+                selection.erase({
                     success: function() {
                         //DO NOTHING
                     },

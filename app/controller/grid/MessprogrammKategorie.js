@@ -134,7 +134,7 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
                                 i18n.getMsg('confirmation.question'),
                                 function(btn) {
             if (btn === 'yes') {
-                selection.destroy({
+                selection.erase({
                     success: function() {
                         var grid = Ext.ComponentQuery.query('messprogrammkategoriegrid')[0];
                         grid.store.reload();

@@ -98,7 +98,7 @@ Ext.define('Lada.controller.grid.PKommentar', {
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn) {
             if (btn === 'yes') {
-                selection.destroy({
+                selection.erase({
                     success: function() {
                         button.up('window').initData();
                     },
