@@ -58,7 +58,6 @@ Ext.define('Lada.view.grid.MKommentar', {
                 action: 'delete'
             }]
         }];
-        //TODO: Migration: Resize row to fit into container
         this.columns = [{
             header: 'erstellt',
             dataIndex: 'datum',
@@ -97,10 +96,9 @@ Ext.define('Lada.view.grid.MKommentar', {
                 value + '</div>';
             },
             editor: {
-                xtype: 'textarea',
+                xtype: 'textfield',
                 allowBlank: false,
                 maxLength: 1000,
-                height: '1.5em',
                 enforceMaxLength: true
             }
         }];
