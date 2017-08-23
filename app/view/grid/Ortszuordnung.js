@@ -177,7 +177,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         };
         this.initData();
         this.callParent(arguments);
-        this.setReadOnly(true); //Grid is always initialised as RO
     },
 
     initData: function() {
@@ -218,25 +217,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         });
     },
 
-    setReadOnly: function(b) {
-        this.readOnly = b;
-        if (b) {
-            //Readonly
-            if (this.getPlugin('rowedit')) {
-                this.getPlugin('rowedit').disable();
-            }
-            this.down('button[action=delete]').disable();
-            this.down('button[action=add]').disable();
-        }
-        else {
-            //Writable
-            if (this.getPlugin('rowedit')) {
-                this.getPlugin('rowedit').enable();
-            }
-            //this.down('button[action=delete]').enable();
-            this.down('button[action=add]').enable();
-        }
-    },
     /**
      * Activate the Remove Button
      */
