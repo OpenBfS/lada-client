@@ -29,7 +29,7 @@ Ext.define('Lada.view.window.Ort', {
 
     layout: 'fit',
 
-    title: 'Neuen Messpunkt anlegen',
+    title: null,
 
     /**
      * The record for the new Ort. Should be a {@link Lada.model.Ort}
@@ -44,6 +44,7 @@ Ext.define('Lada.view.window.Ort', {
         if (this.record === null) {
             this.record = Ext.create('Lada.model.Ort');
         }
+        this.title = this.record.phantom? i18n.getMsg('orte.new'): i18n.getMsg('orte.edit');
         this.items = [
             Ext.create('Lada.view.form.Ort', {
                 record: me.record,
