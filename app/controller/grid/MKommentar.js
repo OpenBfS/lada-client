@@ -50,7 +50,12 @@ Ext.define('Lada.controller.grid.MKommentar', {
                 context.grid.up('window').initData();
             },
             failure: function(record, response) {
-              var json = response.request.scope.reader.jsonData;
+                if (response.error){
+                    //TODO: check content of error.status (html error code)
+                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                  i18n.getMsg('err.msg.generic.body'));
+                } else {
+                    var json = Ext.decode(response.getResponse().responseText);
               if (json) {
                 if (json.message){
                     Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
@@ -61,6 +66,7 @@ Ext.define('Lada.controller.grid.MKommentar', {
                             Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
                    }
               }
+            }
             }
         });
     },

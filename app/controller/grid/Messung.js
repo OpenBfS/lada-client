@@ -123,7 +123,12 @@ Ext.define('Lada.controller.grid.Messung', {
                             button.up('window').initData();
                         },
                         failure: function(request, response) {
-                            var json = response.request.scope.reader.jsonData;
+                            if (response.error){
+                                //TODO: check content of error.status (html error code)
+                                Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
+                                              i18n.getMsg('err.msg.generic.body'));
+                            } else {
+                                var json = Ext.decode(response.getResponse().responseText);
                             if (json) {
                                 if (json.message){
                                     Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title')
@@ -137,6 +142,7 @@ Ext.define('Lada.controller.grid.Messung', {
                                 Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
                                     Lada.getApplication().bundle.getMsg('err.msg.response.body'));
                             }
+                        }
                         }
                     });
                 }

@@ -85,7 +85,12 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 //TODO: Migration Server responds with "200 success", but fails. So this is not triggered, and code above fails
                 button.setDisabled(true);
                 formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
-                var json = response.getResponse().responseText;
+                if (response.error){
+                    //TODO: check content of error.status (html error code)
+                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                  i18n.getMsg('err.msg.generic.body'));
+                } else {
+                    var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     if(Object.keys(json.errors).length > 0 ||
                         Object.keys(json.warnings).length > 0) {
@@ -102,6 +107,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 } else {
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                         i18n.getMsg('err.msg.response.body'));
+                }
                 }
             }
         });

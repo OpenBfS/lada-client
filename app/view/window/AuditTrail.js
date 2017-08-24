@@ -70,7 +70,7 @@ Ext.define('Lada.view.window.AuditTrail', {
             method: 'GET',
             scope: this,
             success: this.loadSuccess,
-            failure: this.loadFailure
+            failure: this.loadFailure //TODO does not exist
         });
     },
 

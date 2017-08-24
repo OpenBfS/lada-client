@@ -117,7 +117,12 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                     },
                     failure: function(request, response) {
                         var i18n = Lada.getApplication().bundle;
-                        var json = response.request.scope.reader.jsonData;
+                        if (response.error){
+                            //TODO: check content of error.status (html error code)
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                          i18n.getMsg('err.msg.generic.body'));
+                        } else {
+                            var json = Ext.decode(response.getResponse().responseText);
                         if (json) {
                             if (json.message){
                                 Ext.Msg.alert(i18n.getMsg('err.msg.delete.title')
@@ -131,6 +136,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                             Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
                                 i18n.getMsg('err.msg.response.body'));
                         }
+                    }
                     }
                 });
             }
