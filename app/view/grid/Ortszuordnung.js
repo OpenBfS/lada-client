@@ -218,6 +218,13 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     },
 
     /**
+     * Set readOnly. Legacy function because it is still referenced.
+     */
+    setReadOnly: function(b) {
+        this.readOnly = b;
+    },
+
+    /**
      * Activate the Remove Button
      */
     activateRemoveButton: function(selection, record) {
