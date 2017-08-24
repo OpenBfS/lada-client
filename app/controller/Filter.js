@@ -93,27 +93,26 @@ Ext.define('Lada.controller.Filter', {
      * vary between orte, kategorien, ...
      */
     selectSql: function(element, record) {
+        record = Array.isArray(record)? record[0]:record;
         var filters = element.up('panel[name=main]').down('panel[name=filtervariables]');
         var filterValues = element.up('panel[name=main]').down('panel[name=filtervalues]');
 
         var desc = element.up('fieldset').down('displayfield[name=description]');
-        if (!record[0]) {
+        if (!record) {
             desc.setValue('');
             return;
         }
         // Set "Filter Auswahl" Description
-        desc.setValue(record[0].data.description);
+        desc.setValue(record.data.description);
 
-        this.displayFields = record[0].data.results;
-        var filterFields = record[0].data.filters;
+        this.displayFields = record.data.results;
+        var filterFields = record.data.filters;
         var contentPanel = element.up('panel[name=main]').down('panel[name=contentpanel]');
-        var queryType = record[0].get('type'); //The type of the query, might be proben, messprogramme,
+        var queryType = record.get('type'); //The type of the query, might be proben, messprogramme,
             // or a stammdatendtype
         var details = element.up('panel[name=main]').down('filterdetails');
-        details.setRecord(record[0]);
-
+        details.setRecord(record);
         this.reset(element);
-
         contentPanel.removeAll(); //clear the panel: make space for new grids
 
         // Setup Columns
@@ -394,6 +393,7 @@ Ext.define('Lada.controller.Filter', {
         }
 
         // Find the store or create a new one.
+        // TODO migration. Do we need new stores here with the new filtering?
         var store;
         if (type === 'ort') {
             store = Ext.create(sname, {
