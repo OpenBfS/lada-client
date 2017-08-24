@@ -33,7 +33,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             ta = this.disableKeyFilter ? 'all' : 'query'
         }
         this.items = [{
-            xtype: 'combobox',
+            xtype: this.multiSelect? 'tagfield':'combobox',
             flex: 1,
             name: this.name,
             maxLength: this.maxLength,
