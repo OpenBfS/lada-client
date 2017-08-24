@@ -26,7 +26,7 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
     minChars: 0,
     tpl: Ext.create("Ext.XTemplate",
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-        '{id} - {netzbereiber}</div></tpl>'),
+        '{id} - {netzbetreiber}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
          '<tpl for=".">{id} - {netzbetreiber}</tpl>'),
 
