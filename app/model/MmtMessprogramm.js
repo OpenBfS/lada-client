@@ -41,6 +41,10 @@ Ext.define('Lada.model.MmtMessprogramm', {
         reader: {
             type: 'json',
             rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });

@@ -111,16 +111,10 @@ Ext.define('Lada.view.window.Messprogramm', {
                 title: i18n.getMsg('mmtmessprogramm.form.fieldset.title'),
                 margin: 5,
                 layout: {
-                    type: 'column'
+                    type: 'fit'
                 },
                 items: [{
                     xtype: 'messmethodengrid',
-                    columnWidth: 0.5,
-                    recordId: this.record ? this.record.get('id') : null,
-                    flex: 1
-                }, {
-                    xtype: 'nuklidegrid',
-                    columnWidth: 0.5,
                     recordId: this.record ? this.record.get('id') : null,
                     flex: 1
                 }]

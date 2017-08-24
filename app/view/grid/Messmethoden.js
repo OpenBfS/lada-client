@@ -7,7 +7,7 @@
  */
 
 /**
- * Grid to list Messmethoden
+ * Grid to list Messmethoden and Messgroessen
  */
 Ext.define('Lada.view.grid.Messmethoden', {
     extend: 'Ext.grid.Panel',
@@ -15,7 +15,8 @@ Ext.define('Lada.view.grid.Messmethoden', {
 
     requires: [
         'Lada.store.MmtMessprogramm',
-        'Lada.view.widget.Messmethode'
+        'Lada.view.widget.Messmethode',
+        'Lada.view.widget.NuklidTagfield'
     ],
 
     maxHeight: 150,
@@ -88,7 +89,6 @@ Ext.define('Lada.view.grid.Messmethoden', {
             editor: {
                 xtype: 'combobox',
                 store: Ext.data.StoreManager.get('messmethoden'),
-                //displayField: 'mmtId',
                 valueField: 'id',
                 allowBlank: false,
                 editable: true,
@@ -103,6 +103,33 @@ Ext.define('Lada.view.grid.Messmethoden', {
                     '{id} - {messmethode}</div></tpl>'),
                 displayTpl: Ext.create('Ext.XTemplate',
                     '<tpl for=".">{id} - {messmethode}</tpl>')
+            }
+        }, {
+            header: i18n.getMsg('nuklide'),
+            dataIndex: 'messgroessen',
+            flex: 2,
+            renderer: function(value) {
+                if (!value || value === '') {
+                    return '';
+                }
+                var store = Ext.data.StoreManager.get('messgroessen');
+                if (!store) {
+                    store = Ext.create('Lada.store.Messgroessen');
+                }
+                returnvalues = '';
+                for (var i = 0; i < value.length; i++){
+                    if (i){
+                        returnvalues = returnvalues + ', '
+                    }
+                    var record = store.findRecord('id', value[i], 0, false, false, true);
+                    returnvalues = returnvalues + record.get('messgroesse');
+                }
+                return returnvalues;
+            },
+            editor: {
+               xtype: 'nuklidtags',
+               multiSelect:true,
+               editable: true
             }
         }];
         this.initData();
