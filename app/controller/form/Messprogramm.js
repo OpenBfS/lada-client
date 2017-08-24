@@ -187,6 +187,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 }
             },
             failure: function(record, response) {
+                var i18n = Lada.getApplication().bundle;
                 button.setDisabled(true);
                 button.up('toolbar').down('button[action=discard]')
                     .setDisabled(true);
@@ -198,22 +199,22 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                     i18n.getMsg('err.msg.generic.body'));
                 } else {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    if(json.message){
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
-                            +' #'+json.message,
-                            Lada.getApplication().bundle.getMsg(json.message));
+                    var json = Ext.decode(response.getResponse().responseText);
+                    if (json) {
+                        if(json.message){
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                                +' #'+json.message,
+                                i18n.getMsg(json.message));
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                i18n.getMsg('err.msg.generic.body'));
+                        }
+                        formPanel.clearMessages();
+                        formPanel.setMessages(json.errors, json.warnings);
                     } else {
-                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                            Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.response.body'));
                     }
-                    formPanel.clearMessages();
-                    formPanel.setMessages(json.errors, json.warnings);
-                } else {
-                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                        Lada.getApplication().bundle.getMsg('err.msg.response.body'));
-                }
                 }
             }
         });

@@ -39,7 +39,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
       * on failure, it will display an Errormessage
       */
      save: function(button) {
-
         var formPanel = button.up('ortszuordnungform');
 
         //try to disable ortPickerButton:
@@ -82,6 +81,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 }
             },
             failure: function(record, response) {
+                var i18n = Lada.getApplication().bundle;
                 //TODO: Migration Server responds with "200 success", but fails. So this is not triggered, and code above fails
                 button.setDisabled(true);
                 formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
@@ -91,23 +91,23 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                                   i18n.getMsg('err.msg.generic.body'));
                 } else {
                     var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    if(Object.keys(json.errors).length > 0 ||
-                        Object.keys(json.warnings).length > 0) {
-                        formPanel.setMessages(json.errors, json.warnings);
-                    }
-                    if(json.message){
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                            +' #'+json.message,
-                            i18n.getMsg(json.message));
+                    if (json) {
+                        if(Object.keys(json.errors).length > 0 ||
+                            Object.keys(json.warnings).length > 0) {
+                            formPanel.setMessages(json.errors, json.warnings);
+                        }
+                        if(json.message){
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                                +' #'+json.message,
+                                i18n.getMsg(json.message));
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                i18n.getMsg('err.msg.generic.body'));
+                        }
                     } else {
-                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.generic.body'));
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.response.body'));
                     }
-                } else {
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.response.body'));
-                }
                 }
             }
         });

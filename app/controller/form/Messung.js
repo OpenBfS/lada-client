@@ -80,35 +80,35 @@ Ext.define('Lada.controller.form.Messung', {
                 button.up('toolbar').down('button[action=discard]')
                     .setDisabled(true);
                 formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
-                //var json = response.request.scope.reader.jsonData;
+                var i18n = Lada.getApplication().bundle;
                 if (response.error){
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                   i18n.getMsg('err.msg.generic.body'));
                 } else {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    if (json.message) {
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
+                    var json = Ext.decode(response.getResponse().responseText);
+                    if (json) {
+                        if (json.message) {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
                             + ' #' + json.message,
-                            Lada.getApplication().bundle.getMsg(json.message));
+                            i18n.getMsg(json.message));
+                        }
+                        else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                i18n.getMsg('err.msg.generic.body'));
+                        }
+                        formPanel.clearMessages();
+                        formPanel.setRecord(record);
+                        formPanel.setMessages(json.errors, json.warnings);
+                        formPanel.up('window').initData();
+                        formPanel.up('window').grid.store.reload();
                     }
                     else {
-                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                            Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.response.body'));
                     }
-                    formPanel.clearMessages();
-                    formPanel.setRecord(record);
-                    formPanel.setMessages(json.errors, json.warnings);
-                    formPanel.up('window').initData();
-                    formPanel.up('window').grid.store.reload();
-                  }
-                else {
-                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                        Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                    formPanel.setLoading(false);
                 }
-                formPanel.setLoading(false);
-            }
             }
         });
     },

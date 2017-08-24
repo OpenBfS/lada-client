@@ -78,23 +78,24 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
                 grid.store.reload();
             },
             failure: function(record, response) {
+                var i18n = Lada.getApplication().bundle;
                 if (response.error){
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                   i18n.getMsg('err.msg.generic.body'));
                 } else {
                     var json = Ext.decode(response.getResponse().responseText);
-              if (json) {
-                if (json.message){
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                        +' #'+json.message,
-                        i18n.getMsg(json.message));
-                   } else {
-                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.generic.body'));
-                   }
-              }
-            }
+                    if (json) {
+                        if (json.message){
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                                +' #'+json.message,
+                                i18n.getMsg(json.message));
+                        } else {
+                                Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                    i18n.getMsg('err.msg.generic.body'));
+                        }
+                    }
+                }
             }
         });
     },
@@ -142,28 +143,34 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
             if (btn === 'yes') {
                 selection.erase({
                     success: function() {
+                        //TODO store reloading
                     },
                     failure: function(request, response) {
+                        var i18n = Lada.getApplication().bundle;
                         if (response.error){
                             //TODO: check content of error.status (html error code)
                             Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
                                           i18n.getMsg('err.msg.generic.body'));
                         } else {
-                            var json = Ext.decode(response.getResponse().responseText);
-                        if (json) {
-                            if (json.message){
-                                Ext.Msg.alert(i18n.getMsg('err.msg.delete.title')
+                            var json = Ext.decode(
+                                response.getResponse().responseText);
+                            if (json) {
+                                if (json.message){
+                                    Ext.Msg.alert(i18n.getMsg(
+                                        'err.msg.delete.title')
                                     +' #'+json.message,
                                     i18n.getMsg(json.message));
+                                } else {
+                                    Ext.Msg.alert(i18n.getMsg(
+                                        'err.msg.delete.title'),
+                                        i18n.getMsg('err.msg.generic.body'));
+                                }
                             } else {
-                                Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
-                                    i18n.getMsg('err.msg.generic.body'));
+                                Ext.Msg.alert(i18n.getMsg(
+                                    'err.msg.delete.title'),
+                                    i18n.getMsg('err.msg.response.body'));
                             }
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
-                                i18n.getMsg('err.msg.response.body'));
                         }
-                    }
                     }
                 });
             }

@@ -93,19 +93,19 @@ Ext.define('Lada.controller.grid.Status', {
                                   i18n.getMsg('err.msg.generic.body'));
                 } else {
                     var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    if (json.message){
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                            +' #'+json.message,
+                    if (json) {
+                        if (json.message){
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                            + ' #' + json.message,
                             i18n.getMsg(json.message));
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                          i18n.getMsg('err.msg.generic.body'));
+                        }
                     } else {
-                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.generic.body'));
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                      i18n.getMsg('err.msg.response.body'));
                     }
-                } else {
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.response.body'));
-                }
                 }
             }
         });
