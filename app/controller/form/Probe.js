@@ -98,13 +98,17 @@ Ext.define('Lada.controller.form.Probe', {
     save: function(button) {
         var formPanel = button.up('form');
         var data = formPanel.getForm().getFieldValues(false);
+        var record = formPanel.getForm().getRecord();
         for (var key in data) {
-            formPanel.getForm().getRecord().set(key, data[key]);
+            record.set(key, data[key]);
         }
-        if (!formPanel.getForm().getRecord().get('letzteAenderung')) {
-            formPanel.getForm().getRecord().data.letzteAenderung = new Date();
+        if (!record.get('letzteAenderung')) {
+            record.set('letzteAenderung', new Date());
         }
-        formPanel.getForm().getRecord().save({
+        if (record.phantom){
+            record.set('id',null);
+        }
+        record.save({
             success: function(record, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
