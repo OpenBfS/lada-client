@@ -17,7 +17,7 @@ Ext.define('Lada.view.widget.NuklidTagfield' ,{
     displayField: 'messgroesse',
     valueField: 'id',
     editable: this.editable || false,
-    disableKeyFilter: true,
+    disableKeyFilter: false,
     forceSelection: true,
     autoSelect: false,
     queryMode: 'local',

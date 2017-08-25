@@ -128,6 +128,7 @@ Ext.define('Lada.view.form.Ort', {
             xtype: 'orttyp',
             labelWidth: 125,
             maxLength: 100,
+            editable: true,
             name: 'ortTyp',
             fieldLabel: i18n.getMsg('orte.ortTyp')
         },{
@@ -151,6 +152,7 @@ Ext.define('Lada.view.form.Ort', {
         },{
             xtype: 'ortszusatz',
             labelWidth: 125,
+            editable:true,
             name: 'ozId',
             fieldLabel: i18n.getMsg('orte.ozId')
         }];
