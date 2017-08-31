@@ -12,14 +12,15 @@
 Ext.define('Lada.view.window.FileUpload', {
     extend: 'Ext.window.Window',
     requires: [
-        //TODO: Migration Ext.form.field.File
-        'Ext.ux.upload.BrowseButton',
-        'Ext.ux.upload.Item',
-        'Ext.ux.upload.uploader.ExtJsUploader',
+        'Ext.form.field.File',
         'Lada.view.window.ImportResponse'
     ],
 
     layout: 'auto',
+    
+    fileInput: null,
+
+    encodingSelector: null,
 
     file: null,
 
@@ -28,18 +29,15 @@ Ext.define('Lada.view.window.FileUpload', {
      */
     initComponent: function() {
         var me = this;
-        this.browseButton = Ext.create('Ext.ux.upload.BrowseButton', {
-            buttonText: 'Durchsuchen...',
-            margin: '3, 3, 3, 3'
-        });
-        this.fileInput = Ext.create('Ext.form.field.Text', {
+        this.fileInput = Ext.create('Ext.form.field.File', {
+            emptyText: 'Wählen sie eine Datei',
             allowBlank: false,
-            emptyText: 'Wählen Sie eine Datei',
-            hideLabel: true,
-            margin: '3, 3, 3, 3'
+            buttonText: 'Durchsuchen...',
+            margin: '3 3 3 3'
         });
         this.encodingSelector = Ext.create('Ext.form.field.ComboBox', {
             fieldLabel: 'Encoding',
+            allowBlank: false,
             displayField: 'name',
             valueField: 'value',
             margin: '3, 3, 3, 3',
@@ -58,30 +56,21 @@ Ext.define('Lada.view.window.FileUpload', {
                 }]
             })
         });
-        this.items = [{
-            layout: 'hbox',
-            border: 0,
-            items: [
-                this.fileInput,
-                this.browseButton
-            ]
-        }, {
-            border: 0,
-            items: [
-                this.encodingSelector
-            ]
-        }];
-        this.buttons = [{
+        var buttons = [{
+            xtype: 'button',
             text: 'Speichern',
-            handler: this.uploadFile
+            handler: this.readFile
         }, {
+            xtype: 'button',
             text: 'Abbrechen',
             handler: this.abort
         }];
-        this.on('afterrender', function() {
-            this.browseButton.fileInputEl.dom.removeAttribute('multiple', '0');
-        }, this);
-        this.browseButton.on('fileselected', this.fileSelected, this);
+        var buttonPanel = Ext.create('Ext.panel.Panel', {
+            layout: 'hbox',
+            items: buttons
+        });
+
+        me.items = [this.fileInput, this.encodingSelector, buttonPanel];
         this.callParent(arguments);
     },
 
@@ -96,48 +85,58 @@ Ext.define('Lada.view.window.FileUpload', {
 
     /**
      * @private
-     * A handler for the Input field
+     * A handler for the Uploade-Button, reading the file specified in the form field
      */
-    fileSelected: function(input, file) {
-        var item = Ext.create('Ext.ux.upload.Item', {
-            fileApiObject: file[0]
-        });
-        this.fileInput.setValue(item.getName());
-        this.file = item;
+    readFile: function(button) {
+        var me = this;
+        var win = button.up('window');
+        var cb = win.down('combobox');
+        var file = win.fileInput.fileInputEl.dom.files[0];
+        win.file = file;
+        console.log(file);
+        var reader = new FileReader();
+        reader.onload = function() {
+            var binData = reader.result;
+            win.uploadFile(button, binData);
+        };
+        reader.readAsBinaryString(file);
     },
 
     /**
      * @private
-     * A handler for the Upload-Button
+     * A handler uploading a file, given as binary string
      */
-    uploadFile: function(button) {
+    uploadFile: function(button, binData) {
+        console.log(binData);
         // TODO Error handling ?
         var win = button.up('window');
         var cb = win.down('combobox');
-        var uploader = Ext.create('Lada.view.plugin.ExtJsUploader', {
+        var contentType = 'text/plain; charset=' + cb.getValue();
+        Ext.Ajax.request({
+            url: 'lada-server/data/import/laf',
             method: 'POST',
-            timeout: 600 * 1000,
-            url: 'lada-server/data/import/laf'
+            headers: {
+                'Content-Type': contentType
+            },
+            scope: win,
+            rawData: binData,
+            success: win.uploadSuccess,
+            failure: win.uploadFailure
         });
-        uploader.extraContentType = cb.getValue();
-        this.mon(uploader, 'uploadsuccess', win.uploadSuccess, win);
-        this.mon(uploader, 'uploadfailure', win.uploadFailure, win);
-        if (button.up('window').file !== null) {
-            uploader.uploadItem(button.up('window').file);
-            win.setLoading(Lada.getApplication().bundle.getMsg('processingData'));
-        }
     },
 
     /**
      * @private
      */
-    uploadSuccess: function(file, response) {
+    uploadSuccess: function(response, opts) {
         this.close();
+        console.log(response.responseText);
+        console.log(response);
         var win = Ext.create('Lada.view.window.ImportResponse', {
-            data: response.response.responseText,
-            message: response.message,
+            responseData: response.responseText,
+            message: '', //TODO:response.message,
             modal: true,
-            fileName: file.config.fileApiObject.name,
+            fileName: this.file.name,
             title: 'Importergebnis'
         });
         win.show();
@@ -146,13 +145,15 @@ Ext.define('Lada.view.window.FileUpload', {
     /**
      * @private
      */
-    uploadFailure: function(file, response) {
+    uploadFailure: function(response, opts) {
         // TODO handle Errors correctly, especially AuthenticationTimeouts
         this.close();
+        console.log(response);
+        console.log(opts);
         var win = Ext.create('Lada.view.window.ImportResponse', {
-            data: response.response.responseText,
-            message: response.message,
-            fileName: file.config.fileApiObject.name,
+            responseData: response.responseText,
+            message: '',//TODO:response.responseText.message,
+            fileName: this.file.name,
             title: 'Importergebnis'
         });
         win.show();

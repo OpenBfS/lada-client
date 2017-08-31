@@ -5,8 +5,8 @@ Ext.define('Lada.view.window.ImportResponse', {
     extend: 'Ext.window.Window',
     alias: 'widget.importresponse',
 
-    data: null,
-    message: null,
+    responseData: '',
+    message: '',
     fileName: '',
 
     layout: 'fit',
@@ -19,7 +19,9 @@ Ext.define('Lada.view.window.ImportResponse', {
         var html;
         var download;
         var i18n = Lada.getApplication().bundle;
-        var data = Ext.JSON.decode(me.data, true);
+        var data = Ext.decode(me.responseData);
+        console.log(this.responseData);
+        console.log(data);
         if (data) {
             html = me.parseShortResponse(data);
         }
