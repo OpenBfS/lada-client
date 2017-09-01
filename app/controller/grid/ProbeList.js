@@ -36,6 +36,9 @@ Ext.define('Lada.controller.grid.ProbeList', {
             'probelistgrid toolbar button[action=export]': {
                 click: this.downloadFile
             },
+            'probelistgrid toolbar button[action=deleteSelected]': {
+                click: this.deleteSelected
+            },
             'probelistgrid toolbar button[action=printSheet]': {
                 click: {
                     fn: this.printSelection,
@@ -291,11 +294,13 @@ Ext.define('Lada.controller.grid.ProbeList', {
      **/
     buttonToggle: function(enabled, grid) {
         if (!enabled) {
+            grid.down('button[action=deleteSelected]').disable();
             grid.down('button[action=export]').disable();
             grid.down('button[action=printExtract]').disable();
             grid.down('button[action=printSheet]').disable();
         }
         else {
+            grid.down('button[action=deleteSelected]').enable();
             grid.down('button[action=export]').enable();
             grid.down('button[action=printExtract]').enable();
             grid.down('button[action=printSheet]').enable();
@@ -500,6 +505,22 @@ Ext.define('Lada.controller.grid.ProbeList', {
             }
         }
         return printData;
+    },
+
+    /**
+     * Deletes selected list items
+     */
+    deleteSelected: function(button) {
+        var me = button.up('grid');
+        var selection = me.getView().getSelectionModel().getSelection();
+        console.log('delete selected');
+        console.log(selection);
+        var win = Ext.create('Lada.view.window.DeleteMultipleProbe', {
+            selection: selection,
+            parentWindow: me
+        });
+        win.show();
+        //TODO: reload after items deleted
     },
 
     /**

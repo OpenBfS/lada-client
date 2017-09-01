@@ -14,6 +14,7 @@ Ext.define('Lada.view.grid.ProbeList', {
     alias: 'widget.probelistgrid',
 
     requires: [
+        'Lada.view.window.DeleteMultipleProbe',
         'Lada.view.window.DeleteProbe',
         'Lada.view.window.ProbeCreate'
     ],
@@ -47,6 +48,11 @@ Ext.define('Lada.view.grid.ProbeList', {
                 text: i18n.getMsg('probe.button.export'),
                 icon: 'resources/img/svn-update.png',
                 action: 'export',
+                disabled: true //disabled on start, enabled by the controller
+            }, {
+                text: i18n.getMsg('probe.button.delete_selected'),
+                icon: 'resources/img/edit-delete.png',
+                action: 'deleteSelected',
                 disabled: true //disabled on start, enabled by the controller
             }, {
                 text: i18n.getMsg('probe.button.printSheet'),

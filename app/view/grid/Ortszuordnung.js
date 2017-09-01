@@ -222,7 +222,15 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
      */
     setReadOnly: function(b) {
         this.readOnly = b;
+        addButton = this.down('button[action=add]')
+        if(b == true) {
+            addButton.disable();
+            this.deactivateRemoveButton(null, null);
+        } else {
+            addButton.enable();
+        }
     },
+
 
     /**
      * Activate the Remove Button
@@ -240,7 +248,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     deactivateRemoveButton: function(selection, record) {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
-        if (! grid.readOnly) {
+        if (grid.readOnly) {
             grid.down('button[action=delete]').disable();
         }
     }

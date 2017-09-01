@@ -112,6 +112,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         me.hourField = new Ext.form.field.Number({
             ownerCt: me,
             ownerLayout: me.getComponentLayout(),
+            width: 40,
             value: 0,
             valueToRaw: function (value) {
                 return (value < 10 ? '0' : '') + value; // add leading Zero
@@ -145,6 +146,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         me.minuteField = new Ext.form.field.Number({
             ownerCt: me,
             ownerLayout: me.getComponentLayout(),
+            width: 40,
             value: 0,
             maxValue: 59,
             valueToRaw: function (value) {

@@ -174,7 +174,6 @@ Ext.define('Lada.view.window.SetStatus', {
                 statusKombi: kombis.getAt(kombiIdx).get('id'),
                 text: this.down('textarea').getValue()
             }
-            console.log(data);
             Ext.Ajax.request({
                 url: 'lada-server/rest/status',
                 method: 'POST',

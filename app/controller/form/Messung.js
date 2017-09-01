@@ -42,8 +42,9 @@ Ext.define('Lada.controller.form.Messung', {
         var formPanel = button.up('form');
         formPanel.setLoading(true);
         var record = formPanel.getForm().getRecord();
+        var data = formPanel.getForm().getFieldValues();
         for (var key in data) {
-            formPanel.getForm().getRecord().set(key, data[key]);
+            record.set(key, data[key]);
         }
         if (record.phantom){
             record.set('id', null);
