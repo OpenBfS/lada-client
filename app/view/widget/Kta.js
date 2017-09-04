@@ -7,7 +7,7 @@
  */
 
 /**
- * Combobox for Datenbasis
+ * Combobox for kta (Anlage)
  */
 Ext.define('Lada.view.widget.Kta', {
     extend: 'Lada.view.widget.base.ComboBox',

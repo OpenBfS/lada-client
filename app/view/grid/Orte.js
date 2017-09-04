@@ -58,7 +58,7 @@ Ext.define('Lada.view.grid.Orte', {
                 if (rec.get('readonly') === false) {
                     Ext.create('Lada.view.window.Ort',{
                         record: rec,
-                        parentWindow: grid.up('panel') //TODO Migration: check if there is an 'ortpanel' above every ortgrid
+                        parentWindow: grid.up('panel')
                     }).show();
                 }
             }
