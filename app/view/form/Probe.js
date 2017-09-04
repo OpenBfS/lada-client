@@ -149,6 +149,7 @@ Ext.define('Lada.view.form.Probe', {
                             }, {
                                 xtype: 'datenbasis',
                                 editable: false,
+                                allowBlank: false,
                                 name: 'datenbasisId',
                                 fieldLabel: 'Datenbasis',
                                 margin: '0, 5, 5, 5',
