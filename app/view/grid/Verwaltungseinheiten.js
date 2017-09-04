@@ -12,11 +12,14 @@
 Ext.define('Lada.view.grid.verwaltungseinheiten', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.verwaltungseinheitengrid',
+    requires: ['Ext.grid.filters.Filters'],
 
     // minHeight and deferEmptyText are needed to be able to show the
     // emptyText message.
     minHeight: 110,
     store: Ext.data.StoreManager.get('verwaltungseinheiten'),
+
+    plugins: 'gridfilters',
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

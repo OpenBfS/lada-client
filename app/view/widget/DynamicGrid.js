@@ -138,6 +138,17 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (cols[i] === 'id' || cols[i].dataIndex === 'probeId') {
                 continue;
             }
+            switch (cols[i].dataIndex){
+                //TODO Migration: check filter types
+                case 'status':
+                case 'mstId':
+                case 'laborMstId':
+                case 'netzId':
+                    cols[i].filter = {type: 'list'};
+                    break;
+                default:
+                    cols[i].filter = {type: 'string'};
+            }
             resultColumns.push(cols[i]);
         }
         var caf = new Array();

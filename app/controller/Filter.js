@@ -26,7 +26,8 @@ Ext.define('Lada.controller.Filter', {
         'Lada.store.MessungenList',
         'Lada.view.window.FilterManagement',
         'Lada.view.window.About',
-        'Lada.view.widget.Umwelt'
+        'Lada.view.widget.Umwelt',
+        'Ext.grid.filters.Filters'
     ],
 
     stores: [
@@ -141,7 +142,9 @@ Ext.define('Lada.controller.Filter', {
                             gridConfig: {
                                 bottomBar: false
                             }
-                        }]
+                        },
+                        'gridfilters'
+                        ]
                     });
                     break;
                 case 'messung':
@@ -154,12 +157,15 @@ Ext.define('Lada.controller.Filter', {
                             gridConfig: {
                                 bottomBar: false
                             }
-                        }]
+                        },
+                        'gridfilters'
+                        ]
                     });
                     break;
                 case 'messprogramm':
                     gridstore = Ext.create('Lada.store.MessprogrammeList');
-                    frgrid = Ext.create('Lada.view.grid.MessprogrammeList');
+                    frgrid = Ext.create('Lada.view.grid.MessprogrammeList',{
+                        plugins: 'gridfilters'});
                     break;
             }
 

@@ -13,6 +13,9 @@ Ext.define('Lada.view.grid.Status', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.statusgrid',
 
+    requires: ['Ext.grid.filters.Filters'],
+    plugins: 'gridfilters',
+
     maxHeight: 350,
     minHeight: 110,
     viewConfig: {

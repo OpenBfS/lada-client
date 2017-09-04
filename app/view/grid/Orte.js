@@ -18,7 +18,8 @@ Ext.define('Lada.view.grid.Orte', {
         'Lada.view.widget.Kta',
         'Lada.view.widget.OrtsZusatz',
         'Lada.view.widget.OrtTyp',
-        'Lada.view.window.Ort'
+        'Lada.view.window.Ort',
+        'Ext.grid.filters.Filters'
     ],
     // minHeight and deferEmptyText are needed to be able to show the
     // emptyText message.
@@ -33,6 +34,7 @@ Ext.define('Lada.view.grid.Orte', {
     errors: null,
     readOnly: true,
     allowDeselect: true,
+    plugins: 'gridfilters',
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
