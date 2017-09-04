@@ -77,6 +77,8 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             + ' '
                             + i18n.getMsg('messprogramm')
                             + ' '
+                            + this.messprogramm.get('id')
+                            + ' '
                             + i18n.getMsg('edit');
             } else  {
                 // A new messprogramm record will be created
@@ -85,6 +87,8 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             + i18n.getMsg('ortszuordnung.window.title2')
                             + ' '
                             + i18n.getMsg('messprogramm')
+                            + ' '
+                            + this.messprogramm.get('id')
                             + ' '
                             + i18n.getMsg('create');
             }
