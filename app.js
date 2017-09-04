@@ -366,7 +366,6 @@ Ext.application({
     controllers: [
         'Lada.controller.Filter',
         'Lada.controller.ModeSwitcher',
-        'Lada.controller.Map',
         'Lada.controller.Ort',
         'Lada.controller.grid.ProbeList',
         'Lada.controller.grid.MessungList',
