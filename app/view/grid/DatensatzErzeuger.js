@@ -114,7 +114,7 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 enforceMaxLength: true,
                 allowBlank: false
             },
-            filter: {type: 'list'},
+            filter: {type: 'list'}
         }, {
             header: i18n.getMsg('bezeichnung'),
             dataIndex: 'bezeichnung',
@@ -124,7 +124,7 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 maxLength: 120,
                 enforceMaxLength: true
             },
-            filter: {type: 'string'},
+            filter: {type: 'string'}
         }, {
             header: i18n.getMsg('mstId'),
             dataIndex: 'mstId',

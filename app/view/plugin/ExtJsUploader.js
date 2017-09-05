@@ -13,8 +13,7 @@ Ext.define('Lada.view.plugin.ExtJsUploader', {
 
     initHeaders: function (item) {
         var headers =  this.callParent(arguments);
-        console.log("override");
         headers['Content-Type'] = 'text/plain; charset=' + this.extraContentType;
         return headers;
-    },
+    }
 });
