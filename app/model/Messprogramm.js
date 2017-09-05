@@ -69,6 +69,7 @@ Ext.define('Lada.model.Messprogramm', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return v;

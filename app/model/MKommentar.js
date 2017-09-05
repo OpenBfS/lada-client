@@ -29,6 +29,7 @@ Ext.define('Lada.model.MKommentar', {
     }, {
         name: 'datum',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return v;

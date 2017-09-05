@@ -41,6 +41,7 @@ Ext.define('Lada.model.Probenehmer', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return v;

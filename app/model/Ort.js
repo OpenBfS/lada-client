@@ -126,6 +126,7 @@ Ext.define('Lada.model.Ort', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return null;

@@ -25,6 +25,7 @@ Ext.define('Lada.model.MmtMessprogramm', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return v;

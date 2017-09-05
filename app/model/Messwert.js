@@ -48,6 +48,7 @@ Ext.define('Lada.model.Messwert', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return new Date();
