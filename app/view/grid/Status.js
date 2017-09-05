@@ -49,7 +49,7 @@ Ext.define('Lada.view.grid.Status', {
             pluginId: 'rowedit',
             listeners: {
                 beforeedit: function(editor, context, eOpts) {
-                    if (context.record.get('id') ||
+                    if ( !context.record.phantom ||
                         ! context.grid.up('window').record.get('statusEdit')) {
                     //Check if edit is allowed, this is true, when the selected
                     // Record has an id (=is not new)
@@ -121,7 +121,7 @@ Ext.define('Lada.view.grid.Status', {
                 var r = '';
                 var item = kombi.getById(value);
                 if (item) {
-                    r = item.raw.statusStufe.stufe;
+                    r = item.data.statusStufe.stufe;
                 }
                 return r;
             },
@@ -145,7 +145,7 @@ Ext.define('Lada.view.grid.Status', {
                 var r = '';
                 var item = kombi.getById(value);
                 if (item) {
-                    r = item.raw.statusWert.wert;
+                    r = item.data.statusWert.wert;
                 }
                 return r;
             },

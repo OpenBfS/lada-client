@@ -39,18 +39,19 @@ Ext.define('Lada.controller.grid.Status', {
      * On failure it displays a message
      */
      gridSave: function(editor, context) {
-        context.record.set('datum', new Date());
         var wert = editor.getEditor().down('combobox[displayField=wert]').value;
         var stufe = editor.getEditor().down('combobox[displayField=stufe]').value;
         var kombis = Ext.data.StoreManager.get('statuskombi');
         var kombiNdx = kombis.findBy(function(record, id) {
-            if (record.raw.statusStufe.id === stufe &&
-                record.raw.statusWert.id === wert
-            ) {
+            if (record.get('statusStufe').id == stufe &&
+                record.get('statusWert').id == wert){
                 return true;
             }
+            return false;
         });
-        context.record.set('statusKombi', kombis.getAt(kombiNdx).get('id'));
+        // TODO error handling if no match present.
+        var statuskombi = kombis.getAt(kombiNdx);
+        context.record.set('statusKombi', statuskombi.get('id'));
         if (context.record.phantom){
             context.record.set('id', null);
         }
@@ -145,19 +146,19 @@ Ext.define('Lada.controller.grid.Status', {
                 var record = recentStatus.copy()
             }
 
-            record.set('id', null);
             if (record.get('statusWert') === 0) {
                 record.set('statusWert', '');
             }
         } else {
             //create a new one
             var record = Ext.create('Lada.model.Status', {
-                messungsId: button.up('statusgrid').recordId
+                messungsId: button.up('statusgrid').recordId,
+                mstId: Lada.mst
             });
             //Remove sencha generated id from phantom record
-            record.set('id', null);
+
             if (Ext.data.StoreManager.get('messstellenFiltered').count() === 1) {
-                record.set('erzeuger', Ext.data.StoreManager.get('messstellenFiltered').getAt(0).get('id'));
+                record.set('mstId', Ext.data.StoreManager.get('messstellenFiltered').getAt(0).get('id'));
             }
         }
 
@@ -165,7 +166,7 @@ Ext.define('Lada.controller.grid.Status', {
         record.set('datum', new Date());
 
         button.up('statusgrid').store.insert(lastrow, record);
-        button.up('statusgrid').getPlugin('rowedit').startEdit(lastrow, 1);
+        button.up('statusgrid').getPlugin('rowedit').startEdit(lastrow, 2);
     },
 
     /**
