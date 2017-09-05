@@ -88,7 +88,7 @@ Ext.define('Lada.view.grid.Orte', {
             header: i18n.getMsg('orte.ortTyp'),
             width: 40,
             filter: {
-                type: 'string'
+                type: 'list'
             },
             renderer: function(value) {
                 if (value === undefined ||

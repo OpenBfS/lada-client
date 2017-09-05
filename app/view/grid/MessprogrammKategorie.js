@@ -12,6 +12,7 @@
 Ext.define('Lada.view.grid.MessprogrammKategorie', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.messprogrammkategoriegrid',
+    requires: ['Ext.grid.filters.Filters'],
 
     // minHeight and deferEmptyText are needed to be able to show the
     // emptyText message.
@@ -26,6 +27,8 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
     allowDeselect: true,
     border: false,
 
+    plugins: ['gridfilters'],
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('mk.emptyGrid');
@@ -38,7 +41,7 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
                 disabled: false,
                 pluginId: 'rowedit'
             });
-            this.plugins = [this.rowEditing];
+            this.plugins.push(this.rowEditing);
         }
 
         // TODO: Which docked Items are required?
@@ -78,7 +81,8 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
             handler: function(grid, rowIndex, colIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
                 grid.fireEvent('itemdblclick', grid, rec);
-            }
+            },
+            filter: {type: 'list'}
         }, {
             header: i18n.getMsg('netzbetreiberId'),
             dataIndex: 'netzbetreiberId',
@@ -100,7 +104,8 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
                 displayField: 'netzbetreiber',
                 valueField: 'id',
                 allowBlank: false
-            }
+            },
+            filter: {type: 'string'}
         }, {
             header: i18n.getMsg('mplId'),
             dataIndex: 'code',
@@ -109,7 +114,8 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
                 maxLength: 3,
                 enforceMaxLength: true,
                 allowBlank: false
-            }
+            },
+            filter: {type: 'string'}
         }, {
             header: i18n.getMsg('bezeichnung'),
             dataIndex: 'bezeichnung',
@@ -118,7 +124,8 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
                 maxLength: 120,
                 enforceMaxLength: true,
                 allowBlank: false
-            }
+            },
+            filter: {type: 'string'}
         }, {
             header: i18n.getMsg('letzteAenderung'),
             xtype: 'datecolumn',

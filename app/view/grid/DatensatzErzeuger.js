@@ -12,6 +12,7 @@
 Ext.define('Lada.view.grid.DatensatzErzeuger', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.datensatzerzeugergrid',
+    requires: ['Ext.grid.filters.Filters'],
 
     // minHeight and deferEmptyText are needed to be able to show the
     // emptyText message.
@@ -26,6 +27,8 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
     allowDeselect: true,
     border: false,
 
+    plugins: ['gridfilters'],
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('de.emptyGrid');
@@ -37,7 +40,7 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 disabled: false,
                 pluginId: 'rowedit'
             });
-            this.plugins = [this.rowEditing];
+            this.plugins.push(this.rowEditing);
         }
         // TODO: Which docked Items are required?
         this.dockedItems = [{
@@ -77,7 +80,8 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             handler: function(grid, rowIndex, colIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
                 grid.fireEvent('itemdblclick', grid, rec);
-            }
+            },
+            filter: {type: 'list'}
         }, {
             header: i18n.getMsg('netzbetreiberId'),
             dataIndex: 'netzbetreiberId',
@@ -99,7 +103,8 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 displayField: 'netzbetreiber',
                 valueField: 'id',
                 allowBlank: false
-            }
+            },
+            filter: {type: 'list'}
         }, {
             header: i18n.getMsg('daErzeugerId'),
             dataIndex: 'datensatzErzeugerId',
@@ -108,7 +113,8 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 maxLength: 2,
                 enforceMaxLength: true,
                 allowBlank: false
-            }
+            },
+            filter: {type: 'list'},
         }, {
             header: i18n.getMsg('bezeichnung'),
             dataIndex: 'bezeichnung',
@@ -117,7 +123,8 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 xtype: 'textfield',
                 maxLength: 120,
                 enforceMaxLength: true
-            }
+            },
+            filter: {type: 'string'},
         }, {
             header: i18n.getMsg('mstId'),
             dataIndex: 'mstId',
@@ -139,7 +146,8 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 displayField: 'messStelle',
                 valueField: 'id',
                 allowBlank: false
-            }
+            },
+            filter: {type: 'list'}
         }, {
             header: i18n.getMsg('letzteAenderung'),
             xtype: 'datecolumn',
