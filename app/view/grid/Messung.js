@@ -104,7 +104,7 @@ Ext.define('Lada.view.grid.Messung', {
                 }
                 var kombis = Ext.data.StoreManager.get('statuskombi');
                 var kombi = kombis.getById(value);
-                var st = kombi.raw.statusWert.wert
+                var st = kombi.data.statusWert.wert
                 return st;
             }
         }, {
@@ -123,7 +123,7 @@ Ext.define('Lada.view.grid.Messung', {
                 }
                 var kombis = Ext.data.StoreManager.get('statuskombi');
                 var kombi = kombis.getById(value);
-                var st = kombi.raw.statusStufe.stufe
+                var st = kombi.data.statusStufe.stufe
                 return st;
             }
         }, {

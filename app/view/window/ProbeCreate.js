@@ -67,10 +67,8 @@ Ext.define('Lada.view.window.ProbeCreate', {
       */
     initData: function() {
         var record = Ext.create('Lada.model.Probe');
-        //Delete generated id to prevent sending invalid ids to the server
-        record.set('id', null);
-        record.data.probeentnahmeBeginn = new Date();
-        record.data.probeentnahmeEnde = new Date();
+        record.set('probeentnahmeBeginn', new Date());
+        record.set('probeentnahmeEnde', new Date());
         this.down('probeform').setRecord(record);
     },
 
