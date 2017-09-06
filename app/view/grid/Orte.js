@@ -291,6 +291,9 @@ Ext.define('Lada.view.grid.Orte', {
 
         if (store) {
             this.reconfigure(store);
+            if (this.up('tabpanel')){
+                this.setTitle('Orte(' + store.getCount() + ')');
+            }
         }
 
         if (Ext.Array.contains(Lada.funktionen, 4)) {
@@ -302,7 +305,6 @@ Ext.define('Lada.view.grid.Orte', {
             panel.down('button[action=add]').enable();
             panel.down('button[action=addMap]').enable();
         }
-
     },
 
     selectOrt: function(map, feature) {

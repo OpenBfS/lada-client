@@ -218,7 +218,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var ortgrid= ozw.down('ortstammdatengrid').getView();
         this.doOrtFilter(ozw, filter);
 
-        var verwgrid = ozw.down('verwaltungseinheitengrid').getView();
+        var verwgrid = ozw.down('verwaltungseinheitengrid');
         verwaltungseinheiten.clearFilter(true);
         verwaltungseinheiten.filter({
                 property: 'bezeichnung',
@@ -227,7 +227,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         });
         verwgrid.setStore(verwaltungseinheiten);
 
-        var staatgrid= ozw.down('staatengrid').getView();
+        var staatgrid= ozw.down('staatengrid');
         staaten.filter({
                 property: 'staat',
                 anyMatch: true,

@@ -54,6 +54,7 @@ Ext.define('Lada.view.grid.Staaten', {
     setStore: function(store){
         if (store) {
             this.reconfigure(store);
+            this.setTitle('Staaten(' + store.getCount() + ')');
         }
     }
 });

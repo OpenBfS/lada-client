@@ -43,6 +43,8 @@ Ext.define('Lada.view.grid.verwaltungseinheiten', {
     setStore: function(store){
         if (store) {
             this.reconfigure(store);
+            this.setTitle(
+                'Verwaltungseinheiten (' + store.getCount() + ')');
         }
     }
 });
