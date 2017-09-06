@@ -63,8 +63,13 @@ Ext.define('Lada.controller.form.Messung', {
                     formPanel.up('window').grid.store.reload();
                     var parentWin = button.up('window').parentWindow;
                     parentWin.initData();
+                    var parentGrid = Ext.ComponentQuery.query('messunglistgrid');
+                    if (parentGrid.length == 1){
+                        parentGrid[0].store.reload();
+                    }
                     if (response.action === 'create' && json.success) {
                         var oldWin = button.up('window');
+                        // TODO: messunglistgrid.store.reload()
                         var probe = oldWin.record;
                         oldWin.close();
                         var win = Ext.create('Lada.view.window.MessungEdit', {

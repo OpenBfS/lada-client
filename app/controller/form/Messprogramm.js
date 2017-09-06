@@ -45,7 +45,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform dayofyear [hidden]': {
                 change: this.alignSubIntervall
             },
-            //TODO: Single quote intentional?
             'messprogrammform panel[xtype="deskriptor"] combobox': {
                 select: this.deskriptorSelect
             }
@@ -177,6 +176,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     button.setDisabled(true);
                     button.up('toolbar').down('button[action=discard]')
                         .setDisabled(true);
+                    var parentGrid = Ext.ComponentQuery.query(
+                        'messprogrammelistgrid');
+                    if (parentGrid.length == 1){
+                        parentGrid[0].store.reload();
+                    }
                     formPanel.clearMessages();
                     formPanel.setRecord(record);
                     formPanel.setMessages(json.errors, json.warnings);

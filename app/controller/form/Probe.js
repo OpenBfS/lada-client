@@ -40,7 +40,6 @@ Ext.define('Lada.controller.form.Probe', {
             'probeform [xtype="datetime"] field': {
                 blur: this.checkDate
             },
-            //TODO: Single quote intentional
             'probeform panel[xtype="deskriptor"] combobox': {
                 select: this.deskriptorSelect
             }
@@ -115,6 +114,10 @@ Ext.define('Lada.controller.form.Probe', {
                     button.setDisabled(true);
                     button.up('toolbar').down('button[action=discard]')
                         .setDisabled(true);
+                    var parentGrid = Ext.ComponentQuery.query('probelistgrid');
+                    if (parentGrid.length == 1){
+                        parentGrid[0].store.reload();
+                    }
                     formPanel.clearMessages();
                     formPanel.setRecord(record);
                     formPanel.setMessages(json.errors, json.warnings);
