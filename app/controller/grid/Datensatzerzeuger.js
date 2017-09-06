@@ -143,7 +143,7 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
             if (btn === 'yes') {
                 selection.erase({
                     success: function() {
-                        //TODO store reloading
+                        grid.store.reload();
                     },
                     failure: function(request, response) {
                         var i18n = Lada.getApplication().bundle;

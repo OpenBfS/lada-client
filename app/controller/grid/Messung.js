@@ -121,6 +121,11 @@ Ext.define('Lada.controller.grid.Messung', {
                     selection.erase({
                         success: function() {
                             button.up('window').initData();
+                            var parentGrid = Ext.ComponentQuery.query(
+                                'messunglistgrid');
+                            if (parentGrid.length == 1){
+                                parentGrid[0].store.reload();
+                            }
                         },
                         failure: function(request, response) {
                             var i18n = Lada.getApplication().bundle;

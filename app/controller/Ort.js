@@ -62,7 +62,7 @@ Ext.define('Lada.controller.Ort', {
             if (btn === 'yes') {
                 selection.erase({
                     success: function() {
-                        //DO NOTHING
+                        grid.store.reload();
                     },
                     failure: function(request, response) {
                         var json = response.request.scope.reader.jsonData;

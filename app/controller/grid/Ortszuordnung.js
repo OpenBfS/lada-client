@@ -357,6 +357,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         });
         if (localfilter){
             ortgrid.setStore(ozw.ortstore);
+            //TODO Migration this is a stub. Don't reload store, but apply filter
         } else {
             this.ortefilter = filterstring || null;
             ozw.ortstore.load({
