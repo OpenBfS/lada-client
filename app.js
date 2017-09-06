@@ -212,11 +212,17 @@ Ext.application({
         Ext.create('Lada.store.Staaten', {
             storeId: 'staaten'
         });
+        Ext.create('Lada.store.Staaten', {
+            storeId: 'staatenwidget'
+        });
         Ext.create('Lada.store.Umwelt', {
             storeId: 'umwelt'
         });
         Ext.create('Lada.store.Verwaltungseinheiten', {
             storeId: 'verwaltungseinheiten'
+        });
+        Ext.create('Lada.store.Verwaltungseinheiten', {
+            storeId: 'verwaltungseinheitenwidget'
         });
         Ext.create('Lada.store.Probenehmer', {
             storeId: 'probenehmer',
