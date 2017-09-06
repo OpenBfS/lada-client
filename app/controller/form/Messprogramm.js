@@ -25,7 +25,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 click: this.discard
             },
             'messprogrammform': {
-                dirtychange: this.dirtyForm
+                dirtychange: this.dirtyForm,
+                save: this.saveHeadless
             },
             'messprogrammform messstellelabor combobox': {
                 select: this.setNetzbetreiber
@@ -227,6 +228,63 @@ Ext.define('Lada.controller.form.Messprogramm', {
             }
         });
     },
+
+    /**
+     * Saves the current form content without manipulating the gui.
+     */
+    saveHeadless: function(panel) {
+        var formPanel = panel;
+        var data = formPanel.getForm().getFieldValues(false);
+        var record = formPanel.getForm().getRecord();
+        for (var key in data) {
+            record.set(key, data[key]);
+        }
+        if (!record.get('letzteAenderung')) {
+            record.set('letzteAenderung', new Date());
+        }
+        if (record.phantom){
+            record.set('id', null);
+        }
+        record.save({
+            success: function(record, response) {
+                var json = Ext.decode(response.getResponse().responseText);
+                if (json) {
+                    var parentGrid = Ext.ComponentQuery.query(
+                        'messprogrammelistgrid');
+                    if (parentGrid.length == 1){
+                        parentGrid[0].store.reload();
+                    }
+                }
+            },
+            failure: function(record, response) {
+                var i18n = Lada.getApplication().bundle;
+                var rec = formPanel.getForm().getRecord();
+                rec.dirty = false;
+                formPanel.getForm().loadRecord(record);
+                if (response.error){
+                    //TODO: check content of error.status (html error code)
+                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                    i18n.getMsg('err.msg.generic.body'));
+                } else {
+                    var json = Ext.decode(response.getResponse().responseText);
+                    if (json) {
+                        if(json.message){
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                                +' #'+json.message,
+                                i18n.getMsg(json.message));
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                i18n.getMsg('err.msg.generic.body'));
+                        }
+                    } else {
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.response.body'));
+                    }
+                }
+            }
+        });
+    },
+
 
      /**
       * The discard function resets the form

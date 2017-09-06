@@ -192,6 +192,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
     handleBeforeClose: function() {
         //TODO: Causes "el is null" error on saving
         var me = this;
+        
         var item = me.items.items[0].items.get(0);
         if (item.isDirty()) {
             var confWin = Ext.create('Ext.window.Window', {
@@ -211,13 +212,14 @@ Ext.define('Lada.view.window.ProbeEdit', {
                         margin: '5, 0, 5, 5',
 
                         handler: function() {
-                            var saveButton = me.down('probeform').down('button[action=save]');
-                            saveButton.click();
+                            me.down('probeform').fireEvent('save', me.down('probeform'));
+                            //var saveButton = me.down('probeform').down('button[action=save]');
+                            //saveButton.click();
                             confWin.close();
                         }
                     }, {
                         xtype: 'button',
-                        text: 'Abbrechen',
+                        text: 'Schließen',
                         margin: '5, 5, 5, 5',
 
                         handler: function() {

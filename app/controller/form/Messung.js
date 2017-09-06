@@ -28,7 +28,8 @@ Ext.define('Lada.controller.form.Messung', {
                 click: this.showAuditTrail
             },
             'messungform': {
-                dirtychange: this.dirtyForm
+                dirtychange: this.dirtyForm,
+                save: this.saveHeadless
             }
         });
     },
@@ -111,6 +112,58 @@ Ext.define('Lada.controller.form.Messung', {
                         formPanel.setMessages(json.errors, json.warnings);
                         formPanel.up('window').initData();
                         formPanel.up('window').grid.store.reload();
+                    }
+                    else {
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.response.body'));
+                    }
+                    formPanel.setLoading(false);
+                }
+            }
+        });
+    },
+
+    /**
+     * Saves the current form without manipulating the gui
+     */
+    saveHeadless: function(panel) {
+        var formPanel = panel;
+        var record = formPanel.getForm().getRecord();
+        var data = formPanel.getForm().getFieldValues();
+        for (var key in data) {
+            record.set(key, data[key]);
+        }
+        if (record.phantom){
+            record.set('id', null);
+        }
+        formPanel.getForm().getRecord().save({
+            success: function(record, response) {
+                var json = Ext.decode(response.getResponse().responseText);
+                if (json) {
+                    var parentGrid = Ext.ComponentQuery.query('messunglistgrid');
+                    if (parentGrid.length == 1){
+                        parentGrid[0].store.reload();
+                    }
+                }
+            },
+            failure: function(record, response) {
+                var i18n = Lada.getApplication().bundle;
+                if (response.error){
+                    //TODO: check content of error.status (html error code)
+                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                  i18n.getMsg('err.msg.generic.body'));
+                } else {
+                    var json = Ext.decode(response.getResponse().responseText);
+                    if (json) {
+                        if (json.message) {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                            + ' #' + json.message,
+                            i18n.getMsg(json.message));
+                        }
+                        else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                i18n.getMsg('err.msg.generic.body'));
+                        }
                     }
                     else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),

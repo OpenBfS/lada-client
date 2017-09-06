@@ -65,31 +65,40 @@ Ext.define('Lada.view.window.ProbeCreate', {
         this.callParent(arguments);
     },
 
+    /**
+     * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
     handleBeforeClose: function() {
         //TODO: Causes "el is null" error on saving
         var me = this;
-        var item = me.down('probeform');
+        var item = me.items.items[0].items.get(0);
         if (item.isDirty()) {
             var confWin = Ext.create('Ext.window.Window', {
                 title: 'Änderungen Speichern',
                 modal: true,
                 layout: 'vbox',
                 items: [{
-                    xtype: 'panel',
-                    html: 'Änderungen vor dem schließen speichern?'
+                    xtype: 'container',
+                    html: 'Änderungen vor dem Schließen speichern?',
+                    margin: '10, 5, 5, 5'
                 }, {
                     xtype: 'container',
                     layout: 'hbox',
                     items: [{
                         xtype: 'button',
                         text:   'OK',
+                        margin: '5, 0, 5, 5',
+
                         handler: function() {
-                            me.down('probeform').down('button[action=save]').click();
+                            me.down('probeform').fireEvent('save', me.down('probeform'));
+                            //var saveButton = me.down('probeform').down('button[action=save]');
+                            //saveButton.click();
                             confWin.close();
                         }
                     }, {
                         xtype: 'button',
-                        text: 'Abbrechen',
+                        text: 'Schließen',
+                        margin: '5, 5, 5, 5',
+
                         handler: function() {
                             confWin.close();
                         }
@@ -101,9 +110,8 @@ Ext.define('Lada.view.window.ProbeCreate', {
         } else {
             me.close();
         }
-
     },
-
+ 
     /**
      * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
      */

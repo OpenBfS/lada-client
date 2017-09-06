@@ -115,8 +115,7 @@ Ext.define('Lada.view.window.MessungCreate', {
                         margin: '5, 0, 5, 5',
 
                         handler: function() {
-                            var saveButton = me.down('messungform').down('button[action=save]');
-                            saveButton.click();
+                            me.down('messungform').fireEvent('save', me.down('messungform'));
                             confWin.close();
                         }
                     }, {

@@ -227,8 +227,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                         margin: '5, 0, 5, 5',
 
                         handler: function() {
-                            var saveButton = me.down('messprogrammform').down('button[action=save]');
-                            saveButton.click();
+                            me.down('messprogrammform').fireEvent('save', me.down('messprogrammform'));
                             confWin.close();
                         }
                     }, {
