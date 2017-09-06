@@ -95,7 +95,7 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
                     text: i18n.getMsg('cancel'),
                     scope: me,
                     handler: function() {
-                        me.conf.close();
+                        me.confWin.close();
                         me.close();
                     }
                 }, {
