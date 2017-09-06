@@ -227,15 +227,11 @@ Ext.define('Lada.controller.grid.MessungList', {
                 button.setLoading(false);
             },
             failure: function(response) {
-                console.log('failure');
-                // Error handling
-                // TODO
-                //console.log(response.responseText)
                 button.enable();
                 button.setLoading(false);
-                if (response.responseText) {
+                if (response.getResponse().responseText) {
                     try {
-                        var json = Ext.JSON.decode(response.responseText);
+                        var json = Ext.JSON.decode(response.getResponse().responseText);
                     }
                     catch(e){
                         console.log(e);

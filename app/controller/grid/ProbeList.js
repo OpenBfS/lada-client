@@ -136,7 +136,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 We assume that a 302 was send when the follwing statement
                 is true.
                 */
-                if (response.status == 0 && response.responseText === "") {
+                if (response.status == 0 && response.getResponse().responseText === "") {
                     Ext.MessageBox.confirm('Erneutes Login erforderlich',
                         'Ihre Session ist abgelaufen.<br/>'+
                         'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
@@ -363,13 +363,12 @@ Ext.define('Lada.controller.grid.ProbeList', {
             scope: cbscope,
             success: printFunctionCallback,
             failure: function(response) {
-                console.log('failure');
                 // Error handling
                 button.enable();
                 button.setLoading(false);
-                if (response.responseText) {
+                if (response.getResponse().responseText) {
                     try {
-                        var json = Ext.JSON.decode(response.responseText);
+                        var json = Ext.JSON.decode(response.getResponse().responseText);
                     }
                     catch(e){
                         console.log(e);
@@ -543,13 +542,12 @@ Ext.define('Lada.controller.grid.ProbeList', {
             },
             failure: function(response) {
                 var i18n = Lada.getApplication().bundle;
-                console.log('failure');
                 // Error handling
                 button.enable();
                 button.setLoading(false);
-                if (response.responseText) {
+                if (response.getResponse().responseText) {
                     try {
-                        var json = Ext.JSON.decode(response.responseText);
+                        var json = Ext.JSON.decode(response.getResponse().responseText);
                     }
                     catch(e){
                         console.log(e);

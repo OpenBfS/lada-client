@@ -69,8 +69,8 @@ Ext.define('Lada.view.window.AuditTrail', {
             url: 'lada-server/rest/audit/' + this.type + '/' + this.objectId,
             method: 'GET',
             scope: this,
-            success: this.loadSuccess,
-            failure: this.loadFailure //TODO does not exist
+            success: this.loadSuccess
+            // failure: this.loadFailure //TODO does not exist
         });
     },
 

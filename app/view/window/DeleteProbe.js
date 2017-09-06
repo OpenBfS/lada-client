@@ -53,7 +53,7 @@ Ext.define('Lada.view.window.DeleteProbe', {
                     url: 'lada-server/rest/probe/'+me.record.get('id'),
                     method: 'DELETE',
                     success: function(response) {
-                        var json = Ext.JSON.decode(response.responseText);
+                        var json = Ext.JSON.decode(response.getResponse().responseText);
                         if (json.success && json.message === '200') {
                             Ext.Msg.show({
                                 title: i18n.getMsg('success'),
@@ -74,7 +74,7 @@ Ext.define('Lada.view.window.DeleteProbe', {
                     failure: function(response) {
                         var json = null;
                         try {
-                            json = Ext.JSON.decode(response.responseText);
+                            json = Ext.JSON.decode(response.getResponse().responseText);
                         }
                         catch(err){
                             Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title'),
@@ -90,7 +90,7 @@ Ext.define('Lada.view.window.DeleteProbe', {
                             We assume that a 302 was send when the follwing statement
                             is true.
                             */
-                            if (response.status == 0 && response.responseText === "") {
+                            if (response.status == 0 && response.getResponse().responseText === "") {
                                 Ext.MessageBox.confirm('Erneutes Login erforderlich',
                                     'Ihre Session ist abgelaufen.<br/>'+
                                     'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +

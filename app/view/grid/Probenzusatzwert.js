@@ -87,7 +87,8 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 displayField: 'beschreibung',
                 valueField: 'id',
                 allowBlank: false,
-                editable: false
+                editable: true,
+                disableKeyFilter: false
             }
         }, {
             header: 'Messwert',

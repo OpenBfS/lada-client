@@ -283,7 +283,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
 
         var json = null;
         try {
-            json = Ext.JSON.decode(response.responseText);
+            json = Ext.JSON.decode(response.getResponse().responseText);
         }
         catch(err){
             Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
@@ -299,7 +299,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
               We assume that a 302 was send when the follwing statement
               is true.
             */
-            if (response.status == 0 && response.responseText === "") {
+            if (response.status == 0 && response.getResponse().responseText === "") {
                 Ext.MessageBox.confirm(
                     'Erneutes Login erforderlich',
                     'Ihre Session ist abgelaufen.<br/>'
