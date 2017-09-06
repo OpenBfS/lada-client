@@ -34,7 +34,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
         this.buttons = [{
             text: 'Schließen',
             scope: this,
-            handler: this.close
+            handler: this.handleBeforeClose
         }];
 
         // add listeners to change the window appearence when it becomes inactive
@@ -44,6 +44,9 @@ Ext.define('Lada.view.window.ProbeCreate', {
             },
             deactivate: function(){
                 this.getEl().addCls('window-inactive');
+            },
+            afterRender: function(){
+                this.customizeToolbar();
             }
         });
 
@@ -62,6 +65,59 @@ Ext.define('Lada.view.window.ProbeCreate', {
         this.callParent(arguments);
     },
 
+    handleBeforeClose: function() {
+        //TODO: Causes "el is null" error on saving
+        var me = this;
+        var item = me.down('probeform');
+        if (item.isDirty()) {
+            var confWin = Ext.create('Ext.window.Window', {
+                title: 'Änderungen Speichern',
+                modal: true,
+                layout: 'vbox',
+                items: [{
+                    xtype: 'panel',
+                    html: 'Änderungen vor dem schließen speichern?'
+                }, {
+                    xtype: 'container',
+                    layout: 'hbox',
+                    items: [{
+                        xtype: 'button',
+                        text:   'OK',
+                        handler: function() {
+                            me.down('probeform').down('button[action=save]').click();
+                            confWin.close();
+                        }
+                    }, {
+                        xtype: 'button',
+                        text: 'Abbrechen',
+                        handler: function() {
+                            confWin.close();
+                        }
+                    }]
+                }]
+            });
+            confWin.on('close', me.close, me);
+            confWin.show();
+        } else {
+            me.close();
+        }
+
+    },
+
+    /**
+     * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
+     */
+    customizeToolbar: function() {
+        var tools = this.tools;
+        for (var i = 0; i < tools.length; i++) {
+            if (tools[i].type == 'close') {
+                var closeButton = tools[i];
+                closeButton.handler = null;
+                closeButton.callback = this.handleBeforeClose;
+            }
+        }
+    },
+
      /**
       * Initialise the Data of this Window
       */
@@ -69,6 +125,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
         var record = Ext.create('Lada.model.Probe');
         record.set('probeentnahmeBeginn', new Date());
         record.set('probeentnahmeEnde', new Date());
+        console.log(record);
         this.down('probeform').setRecord(record);
     },
 

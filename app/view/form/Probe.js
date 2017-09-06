@@ -107,7 +107,6 @@ Ext.define('Lada.view.form.Probe', {
                                 editable: true,
                                 listeners: {
                                     'select': function(combo, newValue) {
-                                        console.log(newValue);
                                         var mst = newValue[0].get('messStelle');
                                         var labor = newValue[0].get('laborMst');
                                         combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);

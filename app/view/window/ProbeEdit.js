@@ -45,6 +45,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         }];
         this.width = 700;
 
+
         // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function(){
@@ -52,6 +53,9 @@ Ext.define('Lada.view.window.ProbeEdit', {
             },
             deactivate: function(){
                 this.getEl().addCls('window-inactive');
+            },
+            afterRender: function(){
+                this.customizeToolbar();
             }
         });
 
@@ -114,6 +118,20 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }]
         }];
         this.callParent(arguments);
+    },
+
+    /**
+     * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
+     */
+    customizeToolbar: function() {
+        var tools = this.tools;
+        for (var i = 0; i < tools.length; i++) {
+            if (tools[i].type == 'close') {
+                var closeButton = tools[i];
+                closeButton.handler = null;
+                closeButton.callback = this.handleBeforeClose;
+            }
+        }
     },
 
      /**
@@ -181,21 +199,27 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 modal: true,
                 layout: 'vbox',
                 items: [{
-                    xtype: 'panel',
-                    html: 'Änderungen vor dem schließen speichern?'
+                    xtype: 'container',
+                    html: 'Änderungen vor dem Schließen speichern?',
+                    margin: '10, 5, 5, 5'
                 }, {
                     xtype: 'container',
                     layout: 'hbox',
                     items: [{
                         xtype: 'button',
                         text:   'OK',
+                        margin: '5, 0, 5, 5',
+
                         handler: function() {
-                            me.down('probeform').down('button[action=save]').click();
+                            var saveButton = me.down('probeform').down('button[action=save]');
+                            saveButton.click();
                             confWin.close();
                         }
                     }, {
                         xtype: 'button',
                         text: 'Abbrechen',
+                        margin: '5, 5, 5, 5',
+
                         handler: function() {
                             confWin.close();
                         }
@@ -204,6 +228,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
             });
             confWin.on('close', me.close, me);
             confWin.show();
+        } else {
+            me.close();
         }
     },
 

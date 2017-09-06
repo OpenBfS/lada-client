@@ -100,7 +100,8 @@ Ext.define('Lada.controller.grid.ProbeList', {
     uploadFile: function() {
         var win = Ext.create('Lada.view.window.FileUpload', {
             title: 'Datenimport',
-            modal: true
+            modal: true,
+            width: 260,
         });
 
         win.show();

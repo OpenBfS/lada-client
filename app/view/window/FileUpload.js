@@ -16,7 +16,7 @@ Ext.define('Lada.view.window.FileUpload', {
         'Lada.view.window.ImportResponse'
     ],
 
-    layout: 'auto',
+    layout: 'vbox',
     
     fileInput: null,
 
@@ -30,13 +30,16 @@ Ext.define('Lada.view.window.FileUpload', {
     initComponent: function() {
         var me = this;
         this.fileInput = Ext.create('Ext.form.field.File', {
-            emptyText: 'Wählen sie eine Datei',
+            fieldLabel: 'Wählen Sie eine Datei',
+            labelAlign: 'top',
             allowBlank: false,
             buttonText: 'Durchsuchen...',
+            width: 240,
             margin: '3 3 3 3'
         });
         this.encodingSelector = Ext.create('Ext.form.field.ComboBox', {
             fieldLabel: 'Encoding',
+            labelAlign: 'top',
             allowBlank: false,
             displayField: 'name',
             valueField: 'value',
@@ -59,13 +62,15 @@ Ext.define('Lada.view.window.FileUpload', {
         var buttons = [{
             xtype: 'button',
             text: 'Speichern',
+            margin: '3, 3, 3, 3',
             handler: this.readFile
         }, {
             xtype: 'button',
             text: 'Abbrechen',
+            margin: '3, 3, 3, 3',
             handler: this.abort
         }];
-        var buttonPanel = Ext.create('Ext.panel.Panel', {
+        var buttonPanel = Ext.create('Ext.container.Container', {
             layout: 'hbox',
             items: buttons
         });

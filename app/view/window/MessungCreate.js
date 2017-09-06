@@ -50,7 +50,7 @@ Ext.define('Lada.view.window.MessungCreate', {
         this.buttons = [{
             text: 'Schließen',
             scope: this,
-            handler: this.close
+            handler: this.handleBeforeClose
         }];
         this.width = 700;
 
@@ -61,6 +61,9 @@ Ext.define('Lada.view.window.MessungCreate', {
             },
             deactivate: function(){
                 this.getEl().addCls('window-inactive');
+            },
+            afterRender: function() {
+                this.customizeToolbar();
             }
         });
 
@@ -73,6 +76,67 @@ Ext.define('Lada.view.window.MessungCreate', {
         }];
         this.callParent(arguments);
     },
+
+    /**
+     * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
+     */
+    customizeToolbar: function() {
+        var tools = this.tools;
+        for (var i = 0; i < tools.length; i++) {
+            if (tools[i].type == 'close') {
+                var closeButton = tools[i];
+                closeButton.handler = null;
+                closeButton.callback = this.handleBeforeClose;
+            }
+        }
+    },
+
+    /**
+     * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
+    handleBeforeClose: function() {
+        //TODO: Causes "el is null" error on saving
+        var me = this;
+        var item = me.down('messungform');
+        if (item.isDirty()) {
+            var confWin = Ext.create('Ext.window.Window', {
+                title: 'Änderungen Speichern',
+                modal: true,
+                layout: 'vbox',
+                items: [{
+                    xtype: 'container',
+                    html: 'Änderungen vor dem Schließen speichern?',
+                    margin: '10, 5, 5, 5'
+                }, {
+                    xtype: 'container',
+                    layout: 'hbox',
+                    items: [{
+                        xtype: 'button',
+                        text:   'OK',
+                        margin: '5, 0, 5, 5',
+
+                        handler: function() {
+                            var saveButton = me.down('messungform').down('button[action=save]');
+                            saveButton.click();
+                            confWin.close();
+                        }
+                    }, {
+                        xtype: 'button',
+                        text: 'Abbrechen',
+                        margin: '5, 5, 5, 5',
+
+                        handler: function() {
+                            confWin.close();
+                        }
+                    }]
+                }]
+            });
+            confWin.on('close', me.close, me);
+            confWin.show();
+        } else {
+            me.close();
+        }
+    },
+
 
     /**
      * Initialise the Data of this Window
