@@ -53,7 +53,7 @@ Ext.define('Lada.view.window.DeleteProbe', {
                     url: 'lada-server/rest/probe/'+me.record.get('id'),
                     method: 'DELETE',
                     success: function(response) {
-                        var json = Ext.JSON.decode(response.getResponse().responseText);
+                        var json = Ext.JSON.decode(response.responseText);
                         if (json.success && json.message === '200') {
                             Ext.Msg.show({
                                 title: i18n.getMsg('success'),
@@ -61,6 +61,10 @@ Ext.define('Lada.view.window.DeleteProbe', {
                                 msg: 'Probe gelöscht!',
                                 buttons: Ext.Msg.OK
                             });
+                            var parentGrid = Ext.ComponentQuery.query('probelistgrid');
+                            if (parentGrid.length == 1){
+                                parentGrid[0].store.reload();
+                            }
                         }
                         else {
                             Ext.Msg.show({
