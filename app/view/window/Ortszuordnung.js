@@ -199,7 +199,9 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         osg.setLoading(true);
         map.setLoading(true);
         this.ortstore = Ext.data.StoreManager.get('orte');
-        this.ortstore.load();
+        // leave the ortstore empty at begin.
+        // TODO check when changing filter method to remote/local
+        this.ortstore.removeAll();
         var ortId;
         if (this.messprogramm) {
             ortId = this.record.get('ort');
@@ -263,9 +265,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     onStoreLoaded: function() {
         var map = this.down('map');
         var osg = this.down('ortstammdatengrid');
-        osg.setStore(this.ortstore);
-        map.addLocations(this.ortstore);
-        map.featureLayer.setVisibility(false);
+        this.onStoreChanged();
         map.selectedFeatureLayer = new OpenLayers.Layer.Vector(
             'gewählter Messpunkt', {
                 styleMap: new OpenLayers.StyleMap({
@@ -301,6 +301,13 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             return;
         }
         me.callParent(arguments);
+     },
+
+     onStoreChanged: function() {
+         var map = this.down('map');
+         var osg = this.down('ortstammdatengrid');
+         osg.setStore(this.ortstore);
+         map.addLocations(this.ortstore);
      }
 });
 

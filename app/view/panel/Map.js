@@ -92,7 +92,7 @@ Ext.define('Lada.view.panel.Map', {
      * Select a feature by record (a Lada.model.Ort) and zoom to this Ort
      */
     selectFeature: function(model, record) {
-        if (!record.get('id') || record.get('id') === '') {
+        if (!record || !record.get('id') || record.get('id') === '') {
             return;
         }
         var feature = this.featureLayer.getFeaturesByAttribute('id', record.get('id'))[0];

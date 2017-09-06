@@ -357,12 +357,14 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         });
         if (localfilter){
             ortgrid.setStore(ozw.ortstore);
+            ozw.onStoreChanged();
             //TODO Migration this is a stub. Don't reload store, but apply filter
         } else {
             this.ortefilter = filterstring || null;
             ozw.ortstore.load({
                 callback: function(records, operation, success){
                     ortgrid.setStore(ozw.ortstore);
+                    ozw.onStoreChanged();
                 }
             });
         }

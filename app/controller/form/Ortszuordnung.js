@@ -128,7 +128,9 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         } else {
             var record = osg.store.getById(currentOrt);
             form.setOrt(null, record);
-            selmod.select(record);
+            if (record){
+                selmod.select(record);
+            }
         }
         button.setDisabled(true);
         button.up('toolbar').down('button[action=save]').setDisabled(true);

@@ -308,12 +308,14 @@ Ext.define('Lada.view.grid.Orte', {
     },
 
     selectOrt: function(map, feature) {
-        var id = feature[0].data.id;
-        var record = this.store.getById(id);
-        this.getSelectionModel().select(record);
-        var win = this.up('ortszuordnungwindow');
-        if (win){
-            win.down('ortszuordnungform').setOrt(null, record);
+        if (feature[0]){
+            var id = feature[0].data.id;
+            var record = this.store.getById(id);
+            this.getSelectionModel().select(record);
+            var win = this.up('ortszuordnungwindow');
+            if (win){
+                win.down('ortszuordnungform').setOrt(null, record);
+            }
         }
     }
 });
