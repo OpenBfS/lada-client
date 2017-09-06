@@ -513,8 +513,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
     deleteSelected: function(button) {
         var me = button.up('grid');
         var selection = me.getView().getSelectionModel().getSelection();
-        console.log('delete selected');
-        console.log(selection);
         var win = Ext.create('Lada.view.window.DeleteMultipleProbe', {
             selection: selection,
             parentWindow: me
