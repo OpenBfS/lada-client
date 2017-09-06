@@ -123,7 +123,10 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
      * Refreshes probe grid
      */
     refresh: function(){
-        //TODO: Soft reload
+        var parentGrid = Ext.ComponentQuery.query('probelistgrid');
+        if (parentGrid.length == 1){
+            parentGrid[0].store.reload();
+        }
     },
 
     /**
@@ -154,6 +157,7 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
         me.down('progressbar').show();
         for (var i = 0; i< me.selection.length; i++) {
             var id = me.selection[i].get('id');
+            var name = me.selection[i].get('probeId');
             Ext.Ajax.request({
                 url: 'lada-server/rest/probe/' + id,
                 method: 'DELETE',
@@ -164,17 +168,23 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
                     var html = me.down('panel').html;
 
                     if (json.success && json.message === '200') {
-                        html = html + 'Probe ' + delId + ' gelöscht<br>';
+                        html = html + 'Probe ' + name + ' gelöscht<br>';
                         me.down('panel').setHtml(html);
                     } else {
-                        html = html + 'Probe ' + delId + ' konnte nicht gelöscht werden:<br>'
+                        html = html + 'Probe ' + name + ' konnte nicht gelöscht werden:<br>'
                                  + i18n.getMsg(json.message) + '<br>';
                         me.down('panel').setHtml(html);
                     }
                     me.currentProgress += 1;
                     me.down('progressbar').updateProgress(me.currentProgress/me.maxSteps);
                     if (me.currentProgress == me.maxSteps) {
-                        me.refresh()
+                        me.refresh();
+                        me.down('progressbar').hide();
+                        me.add({
+                            xtype: 'button',
+                            text: 'Schließen',
+                            handler: function(){me.close();}
+                        });
                     }
 
                 },
@@ -186,9 +196,17 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
                     me.down('panel').setHtml(html);
                     me.currentProgress += 1;
                     me.down('progressbar').updateProgress(me.currentProgress/me.maxSteps);
-                    html = html + 'Probe ' + id + 'konnte nicht gelöscht werden<br>';
+                    html = html + 'Probe ' + name + 'konnte nicht gelöscht werden<br>';
                     me.down('panel').setHtml(html);
-                }
+                    if (me.currentProgress == me.maxSteps){
+                        me.down('progressbar').hide();
+                        me.add({
+                            xtype: 'button',
+                            text: 'Schließen',
+                            handler: function(){me.close();}
+                        });
+                    }
+                },
             });
         }
     }
