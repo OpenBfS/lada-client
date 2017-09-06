@@ -41,7 +41,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         this.buttons = [{
             text: 'Schließen',
             scope: this,
-            handler: this.close
+            handler: this.handleBeforeClose
         }];
         this.width = 700;
 
@@ -167,6 +167,44 @@ Ext.define('Lada.view.window.ProbeEdit', {
             },
             scope: this
         });
+    },
+
+    /**
+     * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
+    handleBeforeClose: function() {
+        //TODO: Causes "el is null" error on saving
+        var me = this;
+        var item = me.items.items[0].items.get(0);
+        if (item.isDirty()) {
+            var confWin = Ext.create('Ext.window.Window', {
+                title: 'Änderungen Speichern',
+                modal: true,
+                layout: 'vbox',
+                items: [{
+                    xtype: 'panel',
+                    html: 'Änderungen vor dem schließen speichern?'
+                }, {
+                    xtype: 'container',
+                    layout: 'hbox',
+                    items: [{
+                        xtype: 'button',
+                        text:   'OK',
+                        handler: function() {
+                            me.down('probeform').down('button[action=save]').click();
+                            confWin.close();
+                        }
+                    }, {
+                        xtype: 'button',
+                        text: 'Abbrechen',
+                        handler: function() {
+                            confWin.close();
+                        }
+                    }]
+                }]
+            });
+            confWin.on('close', me.close, me);
+            confWin.show();
+        }
     },
 
     /**
