@@ -92,3 +92,12 @@
     background-position: left 5px center;
     padding-left: 20px;
 }
+
+/* Overwrites from Migration. Temporary fixes */
+.x-form-clear-trigger {
+    background-color: #cdcdcd !important;
+}
+
+.x-grid-row-editor-buttons-top {
+    clip: auto !important;
+}
