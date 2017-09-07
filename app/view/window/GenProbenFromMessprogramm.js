@@ -214,7 +214,13 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         //Concatenate result json data
         for (r in results) {
             var json = Ext.JSON.decode(results[r].responseText);
+            if (json.data == null) {
+                continue;
+            }
             data = data.concat(json.data);
+        }
+        if (data.length == 0) {
+            return;
         }
 
         var radio = Ext.ComponentQuery.query('modeswitcher')[0]

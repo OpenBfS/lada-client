@@ -206,10 +206,13 @@ Ext.define('Lada.view.grid.Messung', {
      */
     updateStatus: function(value, statusId, record) {
         var statusStore = Ext.create('Lada.store.Status');
-        statusStore.on('load',
-            this.updateStatusColumn,
-            this,
-            {statusId: statusId, record: record});
+        statusStore.on({
+            load: {
+                fn: this.updateStatusColumn,
+                scope: this,
+                options: {statusId: statusId, record: record}
+            }
+        });
         statusStore.load({
             params: {
                 messungsId: value
@@ -219,10 +222,13 @@ Ext.define('Lada.view.grid.Messung', {
 
     updateNuklide: function(id, record) {
         var messwerte = Ext.create('Lada.store.Messwerte');
-        messwerte.on('load',
-            this.updateColumn,
-            this,
-            {record: record, type: 'messwerteCount'});
+        messwerte.on({
+            load: {
+                fn: this.updateColumn,
+                scope: this,
+                options: {record: record, type: 'messwerteCount'}
+            }
+        });
         messwerte.load({
             params: {
                 messungsId: id
@@ -264,7 +270,8 @@ Ext.define('Lada.view.grid.Messung', {
     /**
      * Retrieve Statuswert and update the column
      */
-    updateStatusColumn: function(sstore, record, success, opts) {
+    updateStatusColumn: function(sstore, record, success, operation, options) {
+        var opts = options.options;
         var value = 0;
         if (sstore.getTotalCount() === 0 || !opts.statusId) {
             value = 0;
@@ -279,6 +286,7 @@ Ext.define('Lada.view.grid.Messung', {
                 opts.record.beginEdit();
                 opts.record.set('statusKombi', value);
                 opts.record.endEdit();
+                opts.record.commit();
             }
         }
     },
