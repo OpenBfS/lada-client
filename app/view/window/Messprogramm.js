@@ -50,7 +50,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                 if (! this.probenWindow) {
                     var winname = 'Lada.view.window.GenProbenFromMessprogramm';
                     var win = Ext.create(winname, {
-                        record: this.record,
+                        records: [this.record],
                         parentWindow: this
                     });
                     win.show();
