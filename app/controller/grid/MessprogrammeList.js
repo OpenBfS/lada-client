@@ -16,6 +16,8 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
         'Lada.view.window.GenProbenFromMessprogramm'
     ],
 
+    
+
     /**
      * Initialize the Controller with listeners
      */
@@ -73,15 +75,32 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection();
         var i18n = Lada.getApplication().bundle;
+        //List of selected Messprogramm items
         var proben = [];
+        //List of models of selected Messprogramm items
+        var records = [];
         for (var i = 0; i < selection.length; i++) {
             proben.push(selection[i].get('id'));
         }
         var me = this;
 
         var winname = 'Lada.view.window.GenProbenFromMessprogramm';
+        var store = grid.getStore();
+        grid.setLoading(true);
+
         for (p in proben) {
-            grid.setLoading(true);
+            var record = store.getById(proben[p]);
+            records.push(record);
+        }
+        grid.setLoading(false);
+        var win = Ext.create(winname, {
+            records: records,
+            parentWindow: null
+        });
+        win.show();
+        win.initData();
+
+            /*var prog = p;
             Ext.ClassManager.get('Lada.model.Messprogramm').load(proben[p], {
                 failure: function(record, action) {
                     me.setLoading(false);
@@ -91,18 +110,22 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
                     console.log(record);
                     },
                 success: function(record, response) {
-                    grid.setLoading(false);
-
-                    var win = Ext.create(winname, {
-                        record: record,
-                        parentWindow: null
-                    });
-                    win.show();
-                    win.initData();
+                    records.push(record);
+                    var id = record.get('id');
+                    console.log('load ' + proben.indexOf(id) + ' of ' + proben.length);
+                    if (proben.indexOf(id) == proben.length -1) {
+                        console.log('Loaded last messprogramm');
+                        grid.setLoading(false);
+                        var win = Ext.create(winname, {
+                            record: records,
+                            parentWindow: null
+                        });
+                        win.show();
+                        win.initData();
+                    }
                 },
                 scope: this
-            });
-        }
+            });*/
     },
 
     /**

@@ -155,9 +155,14 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
         var i18n = Lada.getApplication().bundle;
         me.maxSteps = me.selection.length;
         me.down('progressbar').show();
+        var nameIdMap = new Ext.util.HashMap();
         for (var i = 0; i< me.selection.length; i++) {
             var id = me.selection[i].get('id');
             var name = me.selection[i].get('probeId');
+            if (name == undefined || name == null) {
+                name = '';
+            }
+            nameIdMap.add(id, name);
             Ext.Ajax.request({
                 url: 'lada-server/rest/probe/' + id,
                 method: 'DELETE',
@@ -168,10 +173,10 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
                     var html = me.down('panel').html;
 
                     if (json.success && json.message === '200') {
-                        html = html + 'Probe ' + name + ' gelöscht<br>';
+                        html = html + 'Probe ' + nameIdMap.get(delId) + ' gelöscht<br>';
                         me.down('panel').setHtml(html);
                     } else {
-                        html = html + 'Probe ' + name + ' konnte nicht gelöscht werden:<br>'
+                        html = html + 'Probe ' + nameIdMap.get(delId) + ' konnte nicht gelöscht werden:<br>'
                                  + i18n.getMsg(json.message) + '<br>';
                         me.down('panel').setHtml(html);
                     }
@@ -196,7 +201,7 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
                     me.down('panel').setHtml(html);
                     me.currentProgress += 1;
                     me.down('progressbar').updateProgress(me.currentProgress/me.maxSteps);
-                    html = html + 'Probe ' + name + 'konnte nicht gelöscht werden<br>';
+                    html = html + 'Probe ' + nameIdMap.get(delId) + 'konnte nicht gelöscht werden<br>';
                     me.down('panel').setHtml(html);
                     if (me.currentProgress == me.maxSteps){
                         me.down('progressbar').hide();
