@@ -113,7 +113,9 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 if (btn === 'yes') {
                 selection.erase({
                     success: function() {
-                        button.up('window').initData();
+                        var ozw = button.up('window');
+                        ozw.ortstore.reload();
+                        ozw.onStoreChanged();
                     },
                     failure: function(request, response) {
                         var i18n = Lada.getApplication().bundle;
@@ -215,7 +217,6 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         messpunkte.clearFilter(true);
         staaten.clearFilter(true);
         var ozw = field.up('ortszuordnungwindow');
-        var ortgrid= ozw.down('ortstammdatengrid').getView();
         this.doOrtFilter(ozw, filter);
 
         var verwgrid = ozw.down('verwaltungseinheitengrid');

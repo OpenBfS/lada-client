@@ -307,14 +307,21 @@ Ext.define('Lada.view.grid.Orte', {
         }
     },
 
+    /*
+     * callback for a feature selected on the map. Selects the corresponding Ort
+     * on the grid and the ortszuordnung form, if present
+     */
     selectOrt: function(map, feature) {
         if (feature[0]){
             var id = feature[0].data.id;
             var record = this.store.getById(id);
-            this.getSelectionModel().select(record);
-            var win = this.up('ortszuordnungwindow');
-            if (win){
-                win.down('ortszuordnungform').setOrt(null, record);
+            if (record){
+                //TODO paging: jump to page
+                this.getSelectionModel().select(record);
+                var win = this.up('ortszuordnungwindow');
+                if (win){
+                    win.down('ortszuordnungform').setOrt(null, record);
+                }
             }
         }
     }

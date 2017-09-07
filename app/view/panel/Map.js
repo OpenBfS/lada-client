@@ -76,16 +76,10 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     /**
-     * Initialise the Data and Create an
-     * Array of OpenLayers.Layer objects.
+     * Initialise the Data. TODO Migration: currently only stub
      */
     initData: function() {
         var me = this;
-
-        if (!this.externalOrteStore) {
-            this.locationStore = Ext.data.StoreManager.get('orte');
-            this.addLocations(this.locationStore);
-        }
     },
 
     /**
@@ -178,7 +172,7 @@ Ext.define('Lada.view.panel.Map', {
 
         // Create a new Feature Layer and add it to the map
         if (!this.featureLayer) {
-            this.featureLayer = new OpenLayers.Layer.Vector( 'alle Messpunkte', {
+            this.featureLayer = new OpenLayers.Layer.Vector( 'alle Orte', {
                 styleMap: new OpenLayers.StyleMap({
                     'default': new OpenLayers.Style(OpenLayers.Util.applyDefaults({
                         externalGraphic: 'resources/lib/OpenLayers/img/marker-green.png',
@@ -271,5 +265,43 @@ Ext.define('Lada.view.panel.Map', {
     onResize: function() {
         this.superclass.onResize.apply(this, arguments);
         this.map.updateSize();
+    },
+
+    addPreviousOrt: function (record){
+        if (!this.previousOrtLayer){
+            this.previousOrtLayer=  new OpenLayers.Layer.Vector(
+                'bisheriger Ort', {
+                    styleMap: new OpenLayers.StyleMap({
+                        externalGraphic: 'resources/lib/OpenLayers/img/marker-green.png',
+                        pointRadius: 12,
+                        label: '${bez}',
+                        labelAlign: 'rt',
+                        fontColor: 'green',
+                        fontWeight: 'bold',
+                        labelOutlineColor: 'white',
+                        labelOutlineWidth: 3
+                    }),
+                    displayInLayerSwitcher: false,
+                    projection: new OpenLayers.Projection('EPSG:3857')
+                });
+            this.map.addLayer(this.previousOrtLayer);
+        }
+        this.previousOrtLayer.removeAllFeatures();
+        if (record) {
+             var feature = new OpenLayers.Feature.Vector(
+                new OpenLayers.Geometry.Point(
+                    record.get('longitude'), record.get('latitude')),
+                {
+                    id: record.get('id'),
+                    bez: record.get('ortId')
+                }
+            );
+            feature.geometry.transform(new OpenLayers.Projection('EPSG:4326'),
+                                       new OpenLayers.Projection('EPSG:3857'));
+            this.previousOrtLayer.addFeatures([feature]);
+            this.map.setCenter(
+                new OpenLayers.LonLat(feature.geometry.x, feature.geometry.y));
+            this.map.zoomTo(12);
+        }
     }
 });

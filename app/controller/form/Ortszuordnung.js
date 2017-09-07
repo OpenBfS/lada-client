@@ -54,7 +54,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         record.set('ortszuordnungTyp', data.ortszuordnungTyp);
         record.set('ortszusatztext', data.ortszusatztext);
         if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', Date());
+            record.set('letzteAenderung', new Date());
         }
         if (record.phantom){
             record.set('id', null);
