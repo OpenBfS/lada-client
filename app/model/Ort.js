@@ -143,6 +143,7 @@ Ext.define('Lada.model.Ort', {
     proxy: {
         type: 'rest',
         url: 'lada-server/rest/ort',
+        timeout: 60000,
         reader: {
             type: 'json',
             totalProperty: 'totalCount',
