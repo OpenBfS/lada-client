@@ -82,6 +82,11 @@ Ext.define('Lada.view.window.FileUpload', {
         }, this);
         this.browseButton.on('fileselected', this.fileSelected, this);
         this.callParent(arguments);
+        var encoding = document.characterSet;
+        if (!encoding) {
+            encoding = document.defaultCharset;
+        }
+        this.encodingSelector.setValue(encoding.toLowerCase());
     },
 
     /**
@@ -118,6 +123,9 @@ Ext.define('Lada.view.window.FileUpload', {
             timeout: 600 * 1000,
             url: 'lada-server/data/import/laf'
         });
+        if (!cb.getValue()) {
+            return;
+        }
         uploader.extraContentType = cb.getValue();
         this.mon(uploader, 'uploadsuccess', win.uploadSuccess, win);
         this.mon(uploader, 'uploadfailure', win.uploadFailure, win);
