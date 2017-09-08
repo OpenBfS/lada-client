@@ -273,7 +273,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         map.addLocations(this.ortstore);
         var ortId;
         if (this.messprogramm) {
-            ortId = this.down('ortzuordnungsform').get('ort');
+            ortId = this.record.get('ort');
         } else {
             ortId = this.record.get('ortId');
         }
