@@ -105,12 +105,11 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
      * the empty row might have been created by the roweditor is removed
      */
     cancelEdit: function(editor, context) {
-        // TODO Migration: this approach differed from other rowEditings. doublecheck required
         if (context.record.phantom){
-             context.record.set('id', null);
-             this.buttonToggle();
+            editor.getCmp().store.remove(context.record);
+            context.record.set('id', null);
+            this.buttonToggle();
         } else {
-            context.grid.getSelectionModel().deselect(context.record);
             this.buttonToggle(context.grid.getSelectionModel(), context.record);
         }
     },
