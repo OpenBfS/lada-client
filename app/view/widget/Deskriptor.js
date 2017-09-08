@@ -19,38 +19,13 @@ Ext.define('Lada.view.widget.Deskriptor', {
     typeAhead: false,
     layer: null,
     queryMode: 'remote',
+    allowBlank: true,
     remoteFilter: true,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
             '{sn} - {beschreibung}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
          '<tpl for="."><tpl if="sn &gt; 0">{sn} - {beschreibung}</tpl></tpl>'),
-
-    listeners: {
-        focus: {
-            fn: function(field) {
-                if (field.up('deskriptor').layer === 0) {
-                    field.store.proxy.extraParams = {'layer': field.up('deskriptor').layer};
-                }
-                else {
-                    var parents = field.up('deskriptor').getParents(this);
-                    if (parents !== '') {
-                        field.store.proxy.extraParams = {
-                            'layer': field.up('deskriptor').layer,
-                            'parents': parents
-                        };
-                        field.store.load();
-                    }
-                    else {
-                        field.store.proxy.extraParams = {
-                            'layer': field.up('deskriptor').layer
-                        };
-                        field.store.load();
-                    }
-                }
-            }
-        }
-    },
 
     initComponent: function() {
         this.store = Ext.create('Lada.store.Deskriptoren');
@@ -63,14 +38,21 @@ Ext.define('Lada.view.widget.Deskriptor', {
         }, this.store);
 
         this.callParent(arguments);
-        this.down('combobox').isFormField = false;
+        var combobox = this.down('combobox');
+        combobox.isFormField = false;
+        combobox.on('focus', this.focusfn);
+        // normal clear action does not trigger the descriptorselect handler
+        // to delete child deskriptoren.
+        combobox.triggers.clear.handler = function(){
+            this.select('00');
+            this.fireEvent('select', this, this.store.getAt(0));
+        }
     },
 
     getParents: function(field) {
         var set = field.up('fieldset');
         var allS = set.items.items;
         var p = '';
-
         for (var i = 0; i < field.up('deskriptor').layer; i++) {
             if (allS[i].getValue() > 0) {
                 p += allS[i].getValue();
@@ -80,5 +62,28 @@ Ext.define('Lada.view.widget.Deskriptor', {
             }
         }
         return p;
+    },
+
+    focusfn: function(field) {
+        var deskriptor = field.up('deskriptor');
+        if (deskriptor.layer === 0) {
+            deskriptor.store.proxy.extraParams = {'layer': deskriptor.layer};
+        }
+        else {
+            var parents = deskriptor.getParents(field);
+            if (parents !== '') {
+                deskriptor.store.proxy.extraParams = {
+                    'layer': deskriptor.layer,
+                    'parents': parents
+                };
+                deskriptor.store.load();
+            }
+            else {
+                deskriptor.store.proxy.extraParams = {
+                    'layer': deskriptor.layer
+                };
+                deskriptor.store.load();
+            }
+        }
     }
 });

@@ -361,21 +361,21 @@ Ext.define('Lada.controller.form.Probe', {
         } else {
             if ( current[1] === '01') {
                 if ( (current[4] !== '00') && (desk.layer === 3) ) {
-                    mediatext.setValue(records[0].data.beschreibung);
+                    mediatext.setValue(records.get('beschreibung'));
                 } else if ( (current[3] !== '00') && (desk.layer === 2) ) {
-                    mediatext.setValue(records[0].data.beschreibung);
+                    mediatext.setValue(records.get('beschreibung'));
                 } else if ( (current[2] !== '00') && (desk.layer === 1) ) {
-                    mediatext.setValue(records[0].data.beschreibung);
+                    mediatext.setValue(records.get('beschreibung'));
                 } else if ( (current[1] !== '00') && (desk.layer === 0 )) {
-                    mediatext.setValue(records[0].data.beschreibung);
+                    mediatext.setValue(records.get('beschreibung'));
                 }
             }
 
             if ( current[1] !== '01') {
                 if ((current[2] !== '00') && (desk.layer === 1 )) {
-                    mediatext.setValue(records.data.beschreibung);
+                    mediatext.setValue(records.get('beschreibung'));
                 } else if ((current[1] !== '00') && (desk.layer === 0 )) {
-                    mediatext.setValue(records.data.beschreibung);
+                    mediatext.setValue(records.get('beschreibung'));
                 }
             }
         }
@@ -384,7 +384,7 @@ Ext.define('Lada.controller.form.Probe', {
     clearChildDesk: function(field) {
         var allS = field.up('fieldset').items.items;
         for (var i = field.layer + 1; i < 12; i++) {
-            allS[i].clearValue();
+            allS[i].down('combobox').clearValue();
         }
     },
 
