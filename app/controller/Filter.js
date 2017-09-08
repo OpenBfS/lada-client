@@ -405,7 +405,6 @@ Ext.define('Lada.controller.Filter', {
         }
 
         // Find the store or create a new one.
-        // TODO migration. Do we need new stores here with the new filtering?
         var store;
         if (type === 'ort') {
             store = Ext.create(sname, {
@@ -434,8 +433,6 @@ Ext.define('Lada.controller.Filter', {
             }
 
             resultGrid.setStore(store);
-            //TODO: Check if this is still necessary, as a Grid exists
-            // for each Type.
 
             if (resultGrid.isDynamic) {
                 //only the dynamic resultgrid can and needs to do the following:

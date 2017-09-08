@@ -44,7 +44,6 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
             this.plugins.push(this.rowEditing);
         }
 
-        // TODO: Which docked Items are required?
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'top',

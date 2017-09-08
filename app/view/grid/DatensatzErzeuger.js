@@ -42,7 +42,6 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             });
             this.plugins.push(this.rowEditing);
         }
-        // TODO: Which docked Items are required?
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'top',

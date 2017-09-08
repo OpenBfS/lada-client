@@ -232,7 +232,6 @@ Ext.application({
                 reader: {
                     type: 'json',
                     totalProperty: 'totalCount',
-                    //TODO: Migration: root deprecated
                     rootProperty: 'data'
                 },
                 limitParam: undefined,
@@ -248,7 +247,6 @@ Ext.application({
                 url: 'lada-server/rest/datensatzerzeuger',
                 reader: {
                     type: 'json',
-                    //TODO: Migration: root deprecated
                     totalProperty: 'totalCount',
                     rootProperty: 'data'
                 },
@@ -266,7 +264,6 @@ Ext.application({
                 reader: {
                     type: 'json',
                     totalProperty: 'totalCount',
-                    //TODO: Migration: root deprecated
                     rootProperty: 'data'
                 },
                 limitParam: undefined,

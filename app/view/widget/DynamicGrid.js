@@ -139,7 +139,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 continue;
             }
             switch (cols[i].dataIndex){
-                //TODO Migration: check filter types
+                //TODO check if all columns get their correct filter types
                 case 'status':
                 case 'mstId':
                 case 'laborMstId':

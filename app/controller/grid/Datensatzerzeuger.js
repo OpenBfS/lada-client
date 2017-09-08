@@ -136,7 +136,6 @@ Ext.define('Lada.controller.grid.Datensatzerzeuger', {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         var i18n = Lada.getApplication().bundle;
-        //TODO: i18n
         Ext.MessageBox.confirm(i18n.getMsg('delete'),
                                 i18n.getMsg('confirmation.question'),
                                 function(btn) {

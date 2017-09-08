@@ -82,7 +82,6 @@ Ext.define('Lada.controller.form.Ort', {
                         }
                     });
                 }
-                //TODO other parents might have other stores
             },
             failure: function(record, response) {
                 var i18n = Lada.getApplication().bundle;

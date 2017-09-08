@@ -17,7 +17,7 @@ Ext.define('Lada.view.window.FileUpload', {
     ],
 
     layout: 'vbox',
-    
+
     fileInput: null,
 
     encodingSelector: null,
@@ -112,7 +112,6 @@ Ext.define('Lada.view.window.FileUpload', {
      * A handler uploading a file, given as binary string
      */
     uploadFile: function(button, binData) {
-        console.log(binData);
         // TODO Error handling ?
         var win = button.up('window');
         var cb = win.down('combobox');

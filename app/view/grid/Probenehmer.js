@@ -44,7 +44,6 @@ Ext.define('Lada.view.grid.Probenehmer', {
             this.plugins = [this.rowEditing];
         }
 
-        // TODO: Which docked Items are required?
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'top',

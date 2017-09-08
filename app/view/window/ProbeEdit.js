@@ -190,9 +190,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
     /**
      * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
     handleBeforeClose: function() {
-        //TODO: Causes "el is null" error on saving
         var me = this;
-        
+
         var item = me.items.items[0].items.get(0);
         if (item.isDirty()) {
             var confWin = Ext.create('Ext.window.Window', {

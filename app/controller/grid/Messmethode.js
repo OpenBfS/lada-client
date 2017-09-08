@@ -105,7 +105,6 @@ Ext.define('Lada.controller.grid.Messmethode', {
      */
     remove: function(button) {
         var grid = button.up('grid');
-        //TODO i18n
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn) {
             if (btn === 'yes') {

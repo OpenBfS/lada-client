@@ -41,8 +41,6 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
                         '{#:this.isEndOfWeek}',
                         '<td role="gridcell" id="{[Ext.id()]}">',
                             // the href attribute is required for the :hover selector to work in IE6/7/quirks
-                            //TODO: Migration: ExtJS6 requires a div tag here 
-                            //'<a role="presentation" hidefocus="on" class="{parent.baseCls}-date" href="#"></a>',
                             '<div role="presentation" hidefocus="on" class="{parent.baseCls}-date" href="#"></div>',
 
                         '</td>',

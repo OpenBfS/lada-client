@@ -536,7 +536,6 @@ Ext.define('Lada.view.form.Messprogramm', {
             messRecord.get('teilintervallBis')
         ]);
 
-        //TODO Set Sliders MinMaxValue
         this.populateIntervall(messRecord);
 
         this.down('probenintervallslider').on(

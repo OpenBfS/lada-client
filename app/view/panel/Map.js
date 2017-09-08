@@ -76,10 +76,10 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     /**
-     * Initialise the Data. TODO Migration: currently only stub
+     * Initialise the Data.
+     * TODO currently only stub remaining after migration
      */
     initData: function() {
-        var me = this;
     },
 
     /**

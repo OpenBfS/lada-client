@@ -72,7 +72,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                         'button[action=revert]').setDisabled(true);
                 }
                 //try to refresh the Grid of the Probe
-                try { //TODO Migration
+                try {
                     formPanel.up('window').parentWindow
                         .down('ortszuordnunggrid').store.reload();
                 }

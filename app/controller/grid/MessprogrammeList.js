@@ -16,7 +16,6 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
         'Lada.view.window.GenProbenFromMessprogramm'
     ],
 
-    
 
     /**
      * Initialize the Controller with listeners

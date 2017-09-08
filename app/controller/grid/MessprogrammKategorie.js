@@ -200,7 +200,7 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
         }
         else {
             if (grid.getPlugin('rowedit').editing) {
-            //only enable buttons, when grid is not beeing edited
+            //only enable buttons, when grid is not being edited
                 grid.down('button[action=delete]').disable();
             }
             else {

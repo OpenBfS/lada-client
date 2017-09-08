@@ -94,7 +94,6 @@ Ext.define('Lada.view.window.MessungCreate', {
     /**
      * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
     handleBeforeClose: function() {
-        //TODO: Causes "el is null" error on saving
         var me = this;
         var item = me.down('messungform');
         if (item.isDirty()) {

@@ -68,7 +68,6 @@ Ext.define('Lada.view.window.ProbeCreate', {
     /**
      * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
     handleBeforeClose: function() {
-        //TODO: Causes "el is null" error on saving
         var me = this;
         var item = me.items.items[0].items.get(0);
         if (item.isDirty()) {
@@ -111,7 +110,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
             me.close();
         }
     },
- 
+
     /**
      * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
      */

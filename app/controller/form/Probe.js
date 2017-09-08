@@ -81,7 +81,6 @@ Ext.define('Lada.controller.form.Probe', {
             //select the NB in the NB-Combobox
             netzbetreiber.select(nbId);
         }
-        //TODO: Migration: Moved code from view creation.
         var mst = records.get('messStelle');
         var labor = records.get('laborMst');
         combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);

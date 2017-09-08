@@ -518,7 +518,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
             parentWindow: me
         });
         win.show();
-        //TODO: reload after items deleted
     },
 
     /**
