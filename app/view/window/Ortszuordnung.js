@@ -280,7 +280,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         var ortrecord = this.ortstore.findRecord('id', ortId);
         if (ortrecord){
             map.selectFeature(this.model, ortrecord);
-            // osg.selectOrt(map, feat); //TODO: feat(ure) is undefined, we have a record instead
             this.down('ortszuordnungform').setOrt(null,ortrecord);
         }
         osg.setLoading(false);
