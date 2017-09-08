@@ -70,7 +70,6 @@ Ext.define('Lada.controller.form.Messung', {
                     }
                     if (response.action === 'create' && json.success) {
                         var oldWin = button.up('window');
-                        // TODO: messunglistgrid.store.reload()
                         var probe = oldWin.record;
                         oldWin.close();
                         var win = Ext.create('Lada.view.window.MessungEdit', {
