@@ -139,10 +139,15 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 continue;
             }
             switch (cols[i].dataIndex){
-                //TODO check if all columns get their correct filter types
-                case 'status':
+                case 'dBasis':
+                case 'pArt':
+                case 'statusSt':
+                case 'statusW':
+                case 'baId':
+                case 'mstLaborId':
+                case 'messRegime':
+                case 'intervall':
                 case 'mstId':
-                case 'laborMstId':
                 case 'netzId':
                     cols[i].filter = {type: 'list'};
                     break;
