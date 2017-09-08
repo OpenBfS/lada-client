@@ -56,14 +56,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                         borderLeft: '1px solid #b5b8c8 !important',
                         borderRight: '1px solid #b5b8c8 !important'
                     },
-                    items: [{
-                        text: i18n.getMsg('ortszuordnung.form.setOrt'),
-                        tooltip: i18n.getMsg('ortszuordnung.form.setOrt.qtip'),
-                        icon: 'resources/img/dialog-ok-apply.png',
-                        action: 'setOrt',
-                        enableToggle: true,
-                        disabled: true
-                    }, '->', {
+                    items: ['->', {
                         text: i18n.getMsg('save'),
                         tooltip: i18n.getMsg('save.qtip'),
                         icon: 'resources/img/dialog-ok-apply.png',
@@ -135,7 +128,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         this.getForm().loadRecord(record);
         this.record = record;
         if (!record.get('readonly')) {
-            this.down('[action=setOrt]').enable();
             this.setReadOnly(false);
         }
         else {
@@ -239,6 +231,34 @@ Ext.define('Lada.view.form.Ortszuordnung', {
             'Lada.controller.form.Ortszuordnung');
         var form = this.up('form').getForm();
         controller.validityChange(form, form.isValid());
-    }
+    },
+
+     /**
+     * When the form is editable, a Record can be selected.
+     * If the Record was selected from a grid this function
+     * sets the ortzuordnung.
+     */
+    chooseLocation: function(){
+        var i18n = Lada.getApplication().bundle;
+        var win = this.up('ortszuordnungwindow');
+        var osg = win.down('ortstammdatengrid');
+        var oForm = win.down('ortszuordnungform');
+        if (!this.readOnly){
+            osg.addListener('select',oForm.setOrt, oForm);
+            var map = win.down('map');
+            if (!map.featureLayer){
+                map.initFeatureLayer();
+            }
+            map.featureLayer.setVisibility(true);
+            var mstId = oForm.up('window').probe ? oForm.up('window').probe.get('mstId') :
+                oForm.up('window').messprogramm.get('mstId');
+            var mst = Ext.data.StoreManager.get('messstellen');
+            var ndx = mst.findExact('id', mstId);
+            var nId = mst.getAt(ndx).get('netzbetreiberId');
+            osg.addListener('select',oForm.setOrt, oForm);
+        } else {
+            osg.removeListener('select',oForm.setOrt, oForm);
+        }
+    },
 });
 

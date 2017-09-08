@@ -17,9 +17,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
      */
     init: function() {
         this.control({
-            'ortszuordnungform button[action=setOrt]': {
-                toggle: this.chooseLocation
-            },
             'ortszuordnungform button[action=save]': {
                 click: this.save
             },
@@ -82,7 +79,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             },
             failure: function(record, response) {
                 var i18n = Lada.getApplication().bundle;
-                //TODO: Migration Server responds with "200 success", but fails. So this is not triggered, and code above fails
                 button.setDisabled(true);
                 formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
                 if (response.error){
@@ -136,36 +132,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         button.up('toolbar').down('button[action=save]').setDisabled(true);
     },
 
-    /**
-     * When the button is Active, a Record can be selected.
-     * If the Record was selected from a grid this function
-     * sets the ortzuordnung.
-     */
-    chooseLocation: function(button, pressed, opts) {
-        var i18n = Lada.getApplication().bundle;
-        var win = button.up('ortszuordnungwindow');
-        win.down('tabpanel').setActiveTab(0);
-        var osg = win.down('ortstammdatengrid');
-        var oForm = win.down('ortszuordnungform');
-        osg.addListener('select',oForm.setOrt, oForm);
-        var map = win.down('map');
-        if (pressed) {
-            button.setText(i18n.getMsg('ortszuordnung.form.setOrt.pressed'));
-            map.featureLayer.setVisibility(true);
-            var mstId = oForm.up('window').probe ? oForm.up('window').probe.get('mstId') :
-                oForm.up('window').messprogramm.get('mstId');
-            var mst = Ext.data.StoreManager.get('messstellen');
-            var ndx = mst.findExact('id', mstId);
-            var nId = mst.getAt(ndx).get('netzbetreiberId');
-            osg.addListener('select',oForm.setOrt, oForm);
-
-        }
-        else {
-            map.featureLayer.setVisibility(false);
-            button.setText(i18n.getMsg('ortszuordnung.form.setOrt'));
-            osg.removeListener('select',oForm.setOrt, oForm);
-        }
-    },
 
     /**
      * The validitychange function enables or disables the save button which

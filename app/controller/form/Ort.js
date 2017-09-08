@@ -73,7 +73,7 @@ Ext.define('Lada.controller.form.Ort', {
                     formpanel.setMessages(json.errors, json.warnings);
                 }
                 if (ozw.ortstore) {
-                    ozw.ortstore.load({
+                    ozw.ortstore.reload({
                         callback: function(){
                             var osg = ozw.down('ortstammdatengrid');
                             osg.setStore(ozw.ortstore);

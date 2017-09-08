@@ -172,39 +172,7 @@ Ext.define('Lada.view.panel.Map', {
 
         // Create a new Feature Layer and add it to the map
         if (!this.featureLayer) {
-            this.featureLayer = new OpenLayers.Layer.Vector( 'alle Orte', {
-                styleMap: new OpenLayers.StyleMap({
-                    'default': new OpenLayers.Style(OpenLayers.Util.applyDefaults({
-                        externalGraphic: 'resources/lib/OpenLayers/img/marker-green.png',
-                        graphicOpacity: 1,
-                        pointRadius: 10,
-                        label: '${bez}',
-                        labelAlign: 'rt',
-                        fontColor: 'green',
-                        fontWeight: 'bold'
-                    }, OpenLayers.Feature.Vector.style['default'])),
-                    'select': new OpenLayers.Style({
-                        externalGraphic: 'resources/lib/OpenLayers/img/marker-blue.png',
-                        pointRadius: 12,
-                        label: '${bez}',
-                        labelAlign: 'rt',
-                        fontColor: 'blue',
-                        fontWeight: 'bold'
-                    })
-                }),
-                projection: new OpenLayers.Projection('EPSG:3857')
-            });
-            this.selectControl = new OpenLayers.Control.SelectFeature(this.featureLayer, {
-                clickout: false,
-                toggle: false,
-                multiple: false,
-                hover: false,
-                onSelect: me.selectedFeature,
-                layers: [me.featureLayer],
-                scope: me
-            });
-            this.map.addControl(this.selectControl);
-            this.selectControl.activate();
+            this.initFeatureLayer();
         }
         this.featureLayer.removeAllFeatures();
         this.featureLayer.addFeatures(locationFeatures);
@@ -303,5 +271,46 @@ Ext.define('Lada.view.panel.Map', {
                 new OpenLayers.LonLat(feature.geometry.x, feature.geometry.y));
             this.map.zoomTo(12);
         }
+    },
+
+    /**
+     * initializes a layer to display Orte records, and a selection control to interact
+     * with grids and forms.
+     */
+    initFeatureLayer: function() {
+        var me = this;
+        this.featureLayer = new OpenLayers.Layer.Vector( 'alle Orte', {
+            styleMap: new OpenLayers.StyleMap({
+                'default': new OpenLayers.Style(OpenLayers.Util.applyDefaults({
+                    externalGraphic: 'resources/lib/OpenLayers/img/marker-green.png',
+                    graphicOpacity: 1,
+                    pointRadius: 10,
+                    label: '${bez}',
+                    labelAlign: 'rt',
+                    fontColor: 'green',
+                    fontWeight: 'bold'
+                }, OpenLayers.Feature.Vector.style['default'])),
+                'select': new OpenLayers.Style({
+                    externalGraphic: 'resources/lib/OpenLayers/img/marker-blue.png',
+                    pointRadius: 12,
+                    label: '${bez}',
+                    labelAlign: 'rt',
+                    fontColor: 'blue',
+                    fontWeight: 'bold'
+                })
+            }),
+            projection: new OpenLayers.Projection('EPSG:3857')
+        });
+        this.selectControl = new OpenLayers.Control.SelectFeature(this.featureLayer, {
+            clickout: false,
+            toggle: false,
+            multiple: false,
+            hover: false,
+            onSelect: me.selectedFeature,
+            layers: [me.featureLayer],
+            scope: me
+        });
+        this.map.addControl(this.selectControl);
+        this.selectControl.activate();
     }
 });
