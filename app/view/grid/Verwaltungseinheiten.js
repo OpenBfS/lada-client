@@ -37,17 +37,10 @@ Ext.define('Lada.view.grid.verwaltungseinheiten', {
             align:'left',
             flex: 1
         }];
-        this.store.on('filterchange', function(store){
-            var tb = me.down('pagingtoolbar');
-            if (tb){
-                var count = me.store.getCount();
-                tb.afterPageText = 'von ' + Math.ceil(count / me.store.pageSize);
-                tb.displayMsg = 'Zeige Eintrag {0} - {1} von ' + count;
-                tb.onLoad();
-            }
-        });
         this.callParent(arguments);
+
     },
+
 
     /**
      * This sets the Store of this Grid

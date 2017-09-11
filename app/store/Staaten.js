@@ -10,7 +10,7 @@
  * Store for Staaten
  */
 Ext.define('Lada.store.Staaten', {
-    extend: 'Ext.data.Store',
+    extend: 'Lada.store.LocalPagingStore',
     model: 'Lada.model.Staat',
     sorters: [{
         property: 'staat',

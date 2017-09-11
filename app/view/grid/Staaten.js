@@ -15,6 +15,10 @@ Ext.define('Lada.view.grid.Staaten', {
 
     requires: ['Ext.grid.filters.Filters'],
     plugins: 'gridfilters',
+    bbar: {
+        xtype: 'pagingtoolbar',
+        displayInfo: true,
+    },
 
     // minHeight and deferEmptyText are needed to be able to show the
     // emptyText message.

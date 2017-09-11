@@ -36,6 +36,7 @@ Ext.application({
         'Lada.view.plugin.GridRowExpander',
         'Ext.i18n.Bundle',
         'Ext.layout.container.Column',
+        'Lada.store.LocalPagingStore',
         'Lada.store.Deskriptoren',
         'Lada.store.Ortszuordnung',
         'Lada.store.OrtszuordnungMp',
