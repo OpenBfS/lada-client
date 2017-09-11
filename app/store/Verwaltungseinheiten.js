@@ -16,5 +16,30 @@ Ext.define('Lada.store.Verwaltungseinheiten', {
         property: 'bezeichnung',
         direction: 'ASC'
     }],
-    autoLoad: true
+    autoLoad: true,
+    pageSize: 25, //TODO configurable
+
+    createPageFilter : function (){
+        var me = this;
+        return function(record){
+            var low = (me.currentPage -1) * me.pageSize;
+            var high = (me.currentPage) * me.pageSize -1;
+            if (me.getRange(low,high).indexOf(record) > -1){
+                return true;
+            }
+            return false;
+        };
+    },
+
+    loadPage: function(page){
+        if (this.pageFilter){
+            this.filters.remove(this.pageFilter);
+        }
+        var count = this.getCount();
+        var maxpages = Math.ceil(count / this.pageSize);
+        page = (page > maxpages) ? maxpages : page;
+        this.currentPage = page;
+        this.pageFilter = this.createPageFilter();
+        this.filters.add(this.pageFilter);
+    }
 });

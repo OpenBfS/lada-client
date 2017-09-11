@@ -20,7 +20,10 @@ Ext.define('Lada.view.grid.verwaltungseinheiten', {
     store: Ext.data.StoreManager.get('verwaltungseinheiten'),
 
     plugins: 'gridfilters',
-
+    bbar: {
+        xtype: 'pagingtoolbar',
+        displayInfo: true,
+    },
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('grid.emptyGrid');
@@ -34,6 +37,15 @@ Ext.define('Lada.view.grid.verwaltungseinheiten', {
             align:'left',
             flex: 1
         }];
+        this.store.on('filterchange', function(store){
+            var tb = me.down('pagingtoolbar');
+            if (tb){
+                var count = me.store.getCount();
+                tb.afterPageText = 'von ' + Math.ceil(count / me.store.pageSize);
+                tb.displayMsg = 'Zeige Eintrag {0} - {1} von ' + count;
+                tb.onLoad();
+            }
+        });
         this.callParent(arguments);
     },
 
