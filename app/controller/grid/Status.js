@@ -49,7 +49,12 @@ Ext.define('Lada.controller.grid.Status', {
             }
             return false;
         });
-        // TODO error handling if no match present.
+        if (kombiNdx == -1){
+            var i18n = Lada.getApplication().bundle;
+            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                          i18n.getMsg('err.msg.generic.body'));
+            return;
+        }
         var statuskombi = kombis.getAt(kombiNdx);
         context.record.set('statusKombi', statuskombi.get('id'));
         if (context.record.phantom){
