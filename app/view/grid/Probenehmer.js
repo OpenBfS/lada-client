@@ -41,7 +41,7 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 disabled: false,
                 pluginId: 'rowedit'
             });
-            this.plugins = [this.rowEditing];
+            this.plugins = ['gridfilters', this.rowEditing];
         }
 
         this.dockedItems = [{

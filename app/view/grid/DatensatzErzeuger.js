@@ -40,7 +40,7 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 disabled: false,
                 pluginId: 'rowedit'
             });
-            this.plugins.push(this.rowEditing);
+            this.plugins = ['gridfilters', this.rowEditing];
         }
         this.dockedItems = [{
             xtype: 'toolbar',
