@@ -55,6 +55,23 @@ Ext.define('Lada.store.LocalPagingStore', {
         }
     },
 
+   /* overwrites Ext.data.Store function reload. Remove pagng filter before reload,
+    * apply pagingFilter after reload, try to load the page that was active before
+    */
+    reload: function(options) {
+        var me = this;
+        this.removeFilter('pageFilter');
+        return this.load(Ext.apply({}, options, this.lastOptions,
+                                   {
+                                       callback: function() {
+                                           me.pageFilter = me.createPageFilter();
+                                           me.addFilter(me.pageFilter);
+                                           me.loadPage(me.currentPage);
+                                        }
+                                    }
+        ));
+    },
+
     /*
      * custom listener filterchange: update the paging toolbar to reflect changes.
      */
