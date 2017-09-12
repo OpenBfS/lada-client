@@ -428,7 +428,10 @@ Ext.define('Lada.controller.Filter', {
                     searchParams.netzbetreiberId = Lada.netzbetreiber[0];
                 }
                 var panel = resultGrid.up('ortpanel');
-                store.addListener('load', panel.down('map').addLocations, panel.down('map'));
+                panel.ortstore = store;
+                panel.ortstore.addListener('load',
+                                           panel.down('map').addLocations,
+                                           panel.down('map'));
                 panel.connectListeners();
             }
 

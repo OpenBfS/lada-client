@@ -120,7 +120,9 @@ Ext.define('Lada.controller.form.Ort', {
         var id = json.data.id;
         var record = ozw.ortstore.getById(id);
         if (record) {
-            ozw.down('tabpanel').setActiveTab(0);
+            if (ozw.down('tabpanel')){
+                ozw.down('tabpanel').setActiveTab(0);
+            }
             var selmod = osg.getView().getSelectionModel();
             selmod.select(record);
         }

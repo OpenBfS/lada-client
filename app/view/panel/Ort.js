@@ -15,9 +15,11 @@ Ext.define('Lada.view.panel.Ort', {
     },
     toolbarPos: 'top',
 
+    ortstore: null,
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
- 
+
         // Different Layout of toolbar depending on the bars position.
         if (this.toolbarPos == 'top') {
             this.dockedItems = [{
@@ -107,13 +109,15 @@ Ext.define('Lada.view.panel.Ort', {
         var map = this.down('map');
         osg.setLoading(true);
         map.setLoading(true);
-        var ortstore = store;
-        if (!ortstore) {
-            ortstore = Ext.data.StoreManager.get('orte');
+        if (store){
+            me.ortstore = store;
         }
-        ortstore.clearFilter(true);
-        osg.setStore(ortstore);
-        map.addLocations(ortstore);
+        if (!me.ortstore) {
+            me.ortstore = Ext.data.StoreManager.get('orte');
+        }
+        me.ortstore.clearFilter(true);
+        osg.setStore(me.ortstore);
+        map.addLocations(me.ortstore);
         me.down('toolbar button[action=add]').enable();
         me.down('toolbar button[action=addMap]').enable();
         me.connectListeners();
