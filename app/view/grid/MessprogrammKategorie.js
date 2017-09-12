@@ -41,7 +41,7 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
                 disabled: false,
                 pluginId: 'rowedit'
             });
-            this.plugins.push(this.rowEditing);
+            this.plugins = ['gridfilters', this.rowEditing];
         }
 
         this.dockedItems = [{
