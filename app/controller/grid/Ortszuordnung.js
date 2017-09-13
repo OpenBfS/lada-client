@@ -300,8 +300,11 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     allorte: function(button) {
         var ozw = button.up('ortszuordnungwindow');
         this.doOrtFilter(ozw);
+        ozw.down('tabpanel').setActiveTab(0);
         var searchfield = button.up('toolbar').down('textfield[name=search]');
         searchfield.setValue('');
+        ozw.down('tabpanel').setActiveTab(0);
+        //TODO reset other filters?
     },
 
     /*
@@ -357,7 +360,6 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             value: Lada.netzbetreiber[0]
         });
         if (localfilter){
-            ortgrid.setStore(ozw.ortstore);
             ozw.onStoreChanged();
         } else {
             this.ortefilter = filterstring || null;
