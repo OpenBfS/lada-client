@@ -39,23 +39,35 @@ Ext.define('Lada.view.window.FileUpload', {
         });
         this.encodingSelector = Ext.create('Ext.form.field.ComboBox', {
             fieldLabel: 'Encoding',
+            name: 'encoding',
             displayField: 'name',
             valueField: 'value',
             margin: '3, 3, 3, 3',
             labelWidth: '94px',
+            valueNotFountText: 'Not found',
             store: Ext.create('Ext.data.Store', {
                 fields: ['name', 'value'],
                 data: [{
-                    name: 'UTF-8',
-                    value: 'utf-8'
-                }, {
                     name: 'ISO-8859-15',
                     value: 'iso-8859-15'
+                }, {
+                    name: 'UTF-8',
+                    value: 'utf-8'
                 }, {
                     name: 'IBM437',
                     value: 'ibm437'
                 }]
             })
+        });
+        this.mstSelector = Ext.create('Ext.form.field.ComboBox', {
+            store: Ext.data.StoreManager.get('messstellenFiltered'),
+            name: 'mst',
+            labelWidth: '94px',
+            margin: '3, 3, 3, 3',
+            displayField: 'messStelle',
+            valueField: 'id',
+            fieldLabel: 'Messstelle',
+            allowBlank: false
         });
         this.items = [{
             layout: 'hbox',
@@ -67,7 +79,8 @@ Ext.define('Lada.view.window.FileUpload', {
         }, {
             border: 0,
             items: [
-                this.encodingSelector
+                this.encodingSelector,
+                this.mstSelector
             ]
         }];
         this.buttons = [{
@@ -87,6 +100,12 @@ Ext.define('Lada.view.window.FileUpload', {
             encoding = document.defaultCharset;
         }
         this.encodingSelector.setValue(encoding.toLowerCase());
+        if (Lada.mst.length === 1) {
+            this.mstSelector.setValue(Lada.mst[0]);
+        }
+        else if (this.mstSelector.store.count() === 1) {
+            this.mstSelector.setValue(this.mstSelector.store.getAt(0));
+        }
     },
 
     /**
@@ -117,11 +136,15 @@ Ext.define('Lada.view.window.FileUpload', {
     uploadFile: function(button) {
         // TODO Error handling ?
         var win = button.up('window');
-        var cb = win.down('combobox');
+        var cb = win.down('combobox[name=encoding]');
+        var mst = win.down('combobox[name=mst]');
         var uploader = Ext.create('Lada.view.plugin.ExtJsUploader', {
             method: 'POST',
             timeout: 600 * 1000,
-            url: 'lada-server/data/import/laf'
+            url: 'lada-server/data/import/laf',
+            extraHeaders: {
+                'X-LADA-MST': mst.getValue()
+            }
         });
         if (!cb.getValue()) {
             return;
