@@ -62,6 +62,7 @@ Ext.define('Lada.store.LocalPagingStore', {
             if (!grid || !grid.store.model || grid.store.model != this.model ){
                 continue;
             }
+            this.totalCount = this.getCount();
             this.changeToolbar();
             this.pageFilter = new Ext.util.Filter({
                 filterFn: function(record){
