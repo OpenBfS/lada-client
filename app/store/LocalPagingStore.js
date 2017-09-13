@@ -17,27 +17,44 @@ Ext.define('Lada.store.LocalPagingStore', {
     /*items per page, may be overwritten with value in individual store,*/
     pageSize: 25, // TODO needs default config somewhere
 
-    /* creates a new filter with the current page setting.*/
-    createPageFilter : function (){
-        var me = this;
-        return new Ext.util.Filter({
-            filterFn: function(record){
-                var low = (me.currentPage -1) * me.pageSize;
-                var high = (me.currentPage) * me.pageSize -1;
-                if (me.getRange(low,high).indexOf(record) > -1){
-                    return true;
-                }
-                return false;
-            },
-            id: 'pageFilter'
-        });
-    },
+
 
     /* overwrite Ext.data.Store function. Remove old paging filter and apply
      * new one */
     loadPage: function(page){
-        // check if there is really a pagingtoolbar behind the store to be manipulated
-        // toolbar and grid are not used here, but needed to verify TODO
+        this.removePaging();
+        var count = this.getCount();
+        var maxpages = Math.ceil(count / this.pageSize);
+        page = (page > maxpages) ? maxpages : page;
+        this.currentPage = page;
+        this.applyPaging();
+    },
+
+   /* overwrites Ext.data.Store function reload. Remove paging filter before reload,
+    * apply pagingFilter after reload, try to load the page that was active before
+    */
+    reload: function(options) {
+        var me = this;
+        this.removePaging();
+        return this.load(Ext.apply({}, options, this.lastOptions,
+                                   {
+                                       callback: function() {
+                                           me.loadPage(me.currentPage);
+                                        }
+                                    }
+        ));
+    },
+
+
+    /* checks for the removes any paging filter removes it */
+    removePaging: function(){
+        this.removeFilter('pageFilter');
+    },
+
+    /* applies a new paging filter with the current page setting.*/
+    applyPaging: function(){
+        var me = this;
+        //check if there is really a paging toolbar
         var tbs = Ext.ComponentQuery.query('pagingtoolbar');
         if (!tbs.length){return;}
         for (var i= 0; i< tbs.length; i++){
@@ -45,51 +62,42 @@ Ext.define('Lada.store.LocalPagingStore', {
             if (!grid || !grid.store.model || grid.store.model != this.model ){
                 continue;
             }
-        this.removeFilter('pageFilter');
-        var count = this.getCount();
-        var maxpages = Math.ceil(count / this.pageSize);
-        page = (page > maxpages) ? maxpages : page;
-        this.currentPage = page;
-        this.pageFilter = this.createPageFilter();
-        this.addFilter(this.pageFilter);
+            this.changeToolbar();
+            this.pageFilter = new Ext.util.Filter({
+                filterFn: function(record){
+                    var low = (me.currentPage -1) * me.pageSize;
+                    var high = (me.currentPage) * me.pageSize -1;
+                    if (me.getRange(low,high).indexOf(record) > -1){
+                        return true;
+                    }
+                    return false;
+                },
+                id: 'pageFilter'
+            });
+            this.addFilter(this.pageFilter);
+            break;
         }
     },
 
-   /* overwrites Ext.data.Store function reload. Remove pagng filter before reload,
-    * apply pagingFilter after reload, try to load the page that was active before
-    */
-    reload: function(options) {
-        var me = this;
-        this.removeFilter('pageFilter');
-        return this.load(Ext.apply({}, options, this.lastOptions,
-                                   {
-                                       callback: function() {
-                                           me.pageFilter = me.createPageFilter();
-                                           me.addFilter(me.pageFilter);
-                                           me.loadPage(me.currentPage);
-                                        }
-                                    }
-        ));
-    },
-
-    /*
-     * custom listener filterchange: update the paging toolbar to reflect changes.
-     */
-    listeners: {
-        filterchange: function(store){
-            var tbs = Ext.ComponentQuery.query('pagingtoolbar');
-            for (var i= 0; i< tbs.length; i++){
-                var grid = tbs[i].up('grid');
-                if (!grid || !grid.store.model ||
-                    grid.store.model != store.model ){
-                    continue;
-                }
-                tbs[i].onLoad();
-                var count = store.getCount();
-                tbs[i].afterPageText = 'von ' + Math.ceil(count / store.pageSize);
-                tbs[i].displayMsg = 'Zeige Eintrag {0} - {1} von ' + count;
-                break;
+    changeToolbar: function(){
+        var tbs = Ext.ComponentQuery.query('pagingtoolbar');
+        for (var i= 0; i< tbs.length; i++){
+            var grid = tbs[i].up('grid');
+            if (!grid || !grid.store.model ||
+                grid.store.model != this.model ){
+                continue;
             }
+            var count = this.getCount();
+            tbs[i].afterPageText = 'von ' + Math.ceil(count / this.pageSize);
+            var low = (this.currentPage - 1) * this.pageSize;
+            var high = Math.min(low + this.pageSize, count);
+            tbs[i].displayMsg = 'Zeige Eintrag ' + low
+                                + ' - ' + high
+                                + ' von ' + count;
+            //TODO reload pagingtoolbar information now
+            tbs[i].onLoad(); //TODO is always one screen behind
+            break;
         }
     }
+
 });
