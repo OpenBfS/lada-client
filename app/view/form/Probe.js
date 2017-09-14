@@ -29,7 +29,8 @@ Ext.define('Lada.view.form.Probe', {
         'Lada.view.widget.base.FieldSet',
         'Lada.view.widget.base.DateField',
         'Lada.view.window.MessungCreate',
-        'Lada.model.Probe'
+        'Lada.model.Probe',
+        'Lada.model.MessstelleLabor'
     ],
 
     model: 'Lada.model.Probe',
@@ -105,13 +106,16 @@ Ext.define('Lada.view.form.Probe', {
                                 labelWidth: 95,
                                 allowBlank: false,
                                 editable: true,
-                                listeners: {
-                                    'select': function(combo, newValue) {
-                                        var mst = newValue[0].get('messStelle');
-                                        var labor = newValue[0].get('laborMst');
-                                        combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
-                                        combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
-                                        combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
+                                listenersJson: {
+                                    select: {
+                                        fn: function(combo, newValue) {
+                                            console.log('anon. listener');
+                                            var mst = newValue.get('messStelle');
+                                            var labor = newValue.get('laborMst');
+                                            combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
+                                            combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
+                                            combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
+                                        }
                                     }
                                 }
                             }, {
@@ -192,7 +196,7 @@ Ext.define('Lada.view.form.Probe', {
                                 name: 'probenartId',
                                 fieldLabel: 'Probenart',
                                 margin: '0, 15, 5, 5',
-                                width: '20%',
+                                width: '29%',
                                 labelWidth: 65,
                                 allowBlank: false
                             }]
@@ -464,19 +468,20 @@ Ext.define('Lada.view.form.Probe', {
                 laborMstId = '';
             }
             var id = this.down('messstellelabor').store.count() + 1;
+            var rec = Ext.create('Lada.model.MessstelleLabor', {
+                id: id,
+                laborMst: probeRecord.get('laborMstId'),
+                messStelle: probeRecord.get('mstId'),
+                displayCombi: mstId.get('messStelle') +
+                    '/' + laborMstId
+
+            });
             var newStore = Ext.create('Ext.data.Store', {
                 model: 'Lada.model.MessstelleLabor',
-                data: [{
-                    id: id,
-                    laborMst: probeRecord.get('laborMstId'),
-                    messStelle: probeRecord.get('mstId'),
-                    displayCombi: mstId.get('messStelle') +
-                        '/' + laborMstId
-                }]
+                data: rec
             });
-            newStore.load();
             this.down('messstellelabor').down('combobox').store = newStore;
-            this.down('messstellelabor').setValue(id);
+            this.down('messstellelabor').setValue(rec);
         }
         else {
             var mstLaborStore = Ext.data.StoreManager.get('messstellelabor');

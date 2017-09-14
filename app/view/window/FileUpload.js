@@ -112,7 +112,6 @@ Ext.define('Lada.view.window.FileUpload', {
      * A handler uploading a file, given as binary string
      */
     uploadFile: function(button, binData) {
-        // TODO Error handling ?
         var win = button.up('window');
         var cb = win.down('combobox');
         var contentType = 'text/plain; charset=' + cb.getValue();

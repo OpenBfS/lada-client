@@ -318,6 +318,8 @@ Ext.define('Lada.view.grid.Orte', {
             if (record){
                 //TODO paging: jump to page
                 this.getSelectionModel().select(record);
+                var rowIndex = this.store.find('id', id);
+                this.getView().focusRow(rowIndex);
                 var win = this.up('ortszuordnungwindow');
                 if (win){
                     win.down('ortszuordnungform').setOrt(null, record);

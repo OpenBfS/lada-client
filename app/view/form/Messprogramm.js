@@ -246,8 +246,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                         }]
                     }, {
                         xtype: 'probenintervallslider',
-//                        fieldLabel: i18n.getMsg('intervall'),
-//                        labelWidth: 70,
                         pack: 'center',
                         width: '70%',
                         margin: '0, 40, 10, 40',

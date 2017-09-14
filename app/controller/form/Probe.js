@@ -73,10 +73,10 @@ Ext.define('Lada.controller.form.Probe', {
      * according to the Messstelle
      */
     setNetzbetreiber: function(combo, records){
+        console.log('got event');
         var netzbetreiber = combo.up().up('form')
                 .down('netzbetreiber').down('combobox');
         var nbId = records.get('netzbetreiberId');
-
         if (nbId != null) {
             //select the NB in the NB-Combobox
             netzbetreiber.select(nbId);

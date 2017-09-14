@@ -98,33 +98,6 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
         });
         win.show();
         win.initData();
-
-            /*var prog = p;
-            Ext.ClassManager.get('Lada.model.Messprogramm').load(proben[p], {
-                failure: function(record, action) {
-                    me.setLoading(false);
-                    // TODO
-                    console.log('An unhandled Failure occured. See following Response and Record');
-                    console.log(action);
-                    console.log(record);
-                    },
-                success: function(record, response) {
-                    records.push(record);
-                    var id = record.get('id');
-                    console.log('load ' + proben.indexOf(id) + ' of ' + proben.length);
-                    if (proben.indexOf(id) == proben.length -1) {
-                        console.log('Loaded last messprogramm');
-                        grid.setLoading(false);
-                        var win = Ext.create(winname, {
-                            record: records,
-                            parentWindow: null
-                        });
-                        win.show();
-                        win.initData();
-                    }
-                },
-                scope: this
-            });*/
     },
 
     /**

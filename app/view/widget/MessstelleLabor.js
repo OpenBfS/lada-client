@@ -29,5 +29,6 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
         this.store = Ext.data.StoreManager.get('messstellelabor');
         this.callParent(arguments);
         this.down('combobox').isFormField = false;
-    }
+
+    },
 });

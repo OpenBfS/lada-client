@@ -47,7 +47,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             maxLength: this.maxLength,
             fieldLabel: this.fieldLabel,
             labelWidth: this.labelWidth,
-            listeners: this.listeners,
+            listeners: this.listenersJson,
             store: this.store,
             displayField: this.displayField,
             valueField: this.valueField,

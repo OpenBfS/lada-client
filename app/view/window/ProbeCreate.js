@@ -132,7 +132,16 @@ Ext.define('Lada.view.window.ProbeCreate', {
         var record = Ext.create('Lada.model.Probe');
         record.set('probeentnahmeBeginn', new Date());
         record.set('probeentnahmeEnde', new Date());
-        console.log(record);
+
+        var mstLabCb = this.down('probeform').down('messstellelabor').down('combobox');
+        var mstLabRecs = mstLabCb.store.getData();
+        //Try to preselect messstelle/labor
+        if (mstLabRecs.length == 1) {
+            var labRec = mstLabRecs.getAt(0);
+            record.set('owner', true);
+            record.set('mstId', labRec.get('messStelle'));
+            record.set('laborMstId', labRec.get('laborMst'));
+        }
         this.down('probeform').setRecord(record);
     },
 
