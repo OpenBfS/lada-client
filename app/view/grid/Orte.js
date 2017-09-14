@@ -27,6 +27,11 @@ Ext.define('Lada.view.grid.Orte', {
     viewConfig: {
         deferEmptyText: false
     },
+    bbar: {
+        xtype: 'pagingtoolbar',
+        displayInfo: true,
+        name: 'ortpagingtoolbar'
+    },
 
     recordId: null,
 

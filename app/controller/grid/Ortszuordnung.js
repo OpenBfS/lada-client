@@ -46,6 +46,9 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             'ortszuordnungwindow toolbar textfield[name=search]': {
                 keyup: this.search
             },
+            'ortszuordnungwindow tabpanel ortstammdatengrid pagingtoolbar[name=ortpagingtoolbar]': {
+                change: this.ortPageChanged
+            },
             'staatengrid': {
                 itemdblclick: this.selectedStaat
             },
@@ -227,6 +230,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 value: filter
         });
         verwgrid.setStore(verwaltungseinheiten);
+        verwgrid.down('pagingtoolbar').doRefresh();
+
 
         var staatgrid= ozw.down('staatengrid');
         staaten.filter({
@@ -234,6 +239,9 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 anyMatch: true,
                 value: filter
         });
+        staatgrid.down('pagingtoolbar').doRefresh();
+
+        
         staatgrid.setStore(staaten);
     },
 
@@ -360,6 +368,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             value: Lada.netzbetreiber[0]
         });
         if (localfilter){
+            
             ozw.onStoreChanged();
         } else {
             this.ortefilter = filterstring || null;
@@ -370,5 +379,18 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 }
             });
         }
+        //Update the toolbar;
+        console.log('Search result: ' + ozw.ortstore.count());
+        var toolbar = ozw.down('tabpanel').down('ortstammdatengrid').down('pagingtoolbar');
+        toolbar.doRefresh();
+    },
+
+    /**
+     * Calls onStoreChanged at ortzuordnungwindow if the ort toolbar paged changed.
+     */
+    ortPageChanged: function(toolbar, pageData, eOpts) {
+        console.log('ort page changed to ' + pageData.currentPage);
+        var ozw = toolbar.up().up().up('ortszuordnungwindow');
+        ozw.onStoreChanged();
     }
 });
