@@ -224,7 +224,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     afterRender: function(){
         this.superclass.afterRender.apply(this, arguments);
         var map = this.down('map');
-        map.map.addControl(new OpenLayers.Control.LayerSwitcher());
+//         map.map.addControl(new OpenLayers.Control.LayerSwitcher()); TODO migration
     },
 
     /**
@@ -252,24 +252,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         var map = this.down('map');
         osg.setLoading(true);
         map.setLoading(true);
-        if (!map.selectedFeatureLayer){
-            map.selectedFeatureLayer = new OpenLayers.Layer.Vector(
-                'gewählter Ort', {
-                    styleMap: new OpenLayers.StyleMap({
-                        externalGraphic: 'resources/lib/OpenLayers/img/marker-blue.png',
-                        pointRadius: 12,
-                        label: '${bez}',
-                        labelAlign: 'rt',
-                        fontColor: 'blue',
-                        fontWeight: 'bold',
-                        labelOutlineColor: 'white',
-                        labelOutlineWidth: 3
-                    }),
-                    displayInLayerSwitcher: false,
-                    projection: new OpenLayers.Projection('EPSG:3857')
-                });
-            map.map.addLayer(map.selectedFeatureLayer);
-        }
         map.addLocations(this.ortstore);
         var ortId;
         if (this.messprogramm) {

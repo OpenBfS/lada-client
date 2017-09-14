@@ -317,8 +317,8 @@ Ext.define('Lada.view.grid.Orte', {
      * on the grid and the ortszuordnung form, if present
      */
     selectOrt: function(map, feature) {
-        if (feature[0]){
-            var id = feature[0].data.id;
+        if (feature){
+            var id = feature.get('id');
             var record = this.store.getById(id);
             if (record){
                 //TODO paging: jump to page

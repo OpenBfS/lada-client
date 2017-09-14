@@ -78,29 +78,14 @@ Ext.define('Lada.view.panel.Ort', {
             region: 'east',
             layout: 'border',
             title: i18n.getMsg('map.title'),
-            externalOrteStore: true,
-            listeners: {
-                beforecollapse: function() {
-                    var c = this.map.getControlsByClass('OpenLayers.Control.ScaleLine');
-                    this.map.removeControl(c[0]);
-                    for (i = 0; i < this.map.layers.length; i++) {
-                        this.map.layers[i].setVisibility(false);
-                    }
-                },
-                expand: function() {
-                    this.map.addControl(new OpenLayers.Control.ScaleLine());
-                    for (i = 0; i < this.map.layers.length; i++) {
-                        this.map.layers[i].setVisibility(true);
-                    }
-                }
-            }
+            externalOrteStore: true
         }];
         this.callParent(arguments);
     },
 
     afterRender: function() {
         this.superclass.afterRender.apply(this, arguments);
-        this.down('map').map.zoomTo(6);
+        this.down('map').map.getView().setZoom(6);
     },
 
     setStore: function(store) {
