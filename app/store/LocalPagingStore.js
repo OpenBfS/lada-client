@@ -23,7 +23,7 @@ Ext.define('Lada.store.LocalPagingStore', {
      * new one */
     loadPage: function(page){
         this.removePaging();
-        var count = this.getTotalCount();//this.getCount();
+        var count = this.getCount();
         var maxpages = Math.ceil(count / this.pageSize);
         page = (page > maxpages) ? maxpages : page;
         this.currentPage = page;
@@ -62,12 +62,12 @@ Ext.define('Lada.store.LocalPagingStore', {
             if (!grid || !grid.store.model || grid.store.model != this.model ){
                 continue;
             }
-            //this.totalCount = this.getCount();
+            this.totalCount = this.getCount();
             this.changeToolbar();
             this.pageFilter = new Ext.util.Filter({
                 filterFn: function(record){
-                    var low = ((me.currentPage -1) * me.pageSize) + 1;
-                    var high = Math.min((low + me.pageSize) - 1, me.getTotalCount());
+                    var low = (me.currentPage -1) * me.pageSize;
+                    var high = (me.currentPage) * me.pageSize -1;
                     if (me.getRange(low,high).indexOf(record) > -1){
                         return true;
                     }
@@ -88,13 +88,13 @@ Ext.define('Lada.store.LocalPagingStore', {
                 grid.store.model != this.model ){
                 continue;
             }
-            var count = this.getTotalCount();
+            var count = this.getCount();
             tbs[i].afterPageText = 'von ' + Math.ceil(count / this.pageSize);
-            var low = ((this.currentPage - 1) * this.pageSize) + 1;
-            var high = Math.min((low + this.pageSize) - 1, count);
+            var low = (this.currentPage - 1) * this.pageSize;
+            var high = Math.min(low + this.pageSize, count);
             tbs[i].displayMsg = 'Zeige Eintrag ' + low
                                 + ' - ' + high
-                                + ' von ' + this.getTotalCount();
+                                + ' von ' + count;
             //TODO reload pagingtoolbar information now
             tbs[i].onLoad(); //TODO is always one screen behind
             break;
