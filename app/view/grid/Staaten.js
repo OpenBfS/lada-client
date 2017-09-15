@@ -50,7 +50,9 @@ Ext.define('Lada.view.grid.Staaten', {
             flex: 1,
             align: 'start'
         }];
-        this.store.loadPage(1);
+        if (this.store){
+            this.store.loadPage(1);
+        }
         var cbox = Ext.create('Lada.view.widget.PagingSize');
         this.callParent(arguments);
         this.down('pagingtoolbar').add('-');

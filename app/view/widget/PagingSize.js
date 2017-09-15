@@ -26,6 +26,7 @@ Ext.define('Lada.view.widget.PagingSize', {
         queryMode: 'local',
         width: 60,
         disableKeyFilter: true,
+        editable: false,
         onChange: function(newVal, oldVal){
             Lada.pagingSize = parseInt(newVal);
             var tb = this.up('pagingtoolbar');
@@ -39,8 +40,16 @@ Ext.define('Lada.view.widget.PagingSize', {
     }],
 
     initComponent: function(){
+        var me = this;
         this.callParent(arguments);
         this.down('combobox').setValue(Lada.pagingSize);
+        // TODO: synchronize other instances to reflect current setting. Does not work in ortszuordnung
+        //         var tb = this.up('pagingtoolbar');
+        //         if (tb){
+        //             tb.up('panel').on('activate', function(){ TODO: they are not "panels"
+        //                 me.down('combobox').setValue(Lada.pagingSize);
+        //             });
+        //         }
     }
 });
 
