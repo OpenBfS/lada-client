@@ -92,6 +92,18 @@ Ext.application({
         Lada.netzbetreiber = [];
         Lada.clientVersion = '2.7-SNAPSHOT';
         Lada.serverVersion = '';
+        // paging sizes available for the client
+        Lada.availablePagingSizes = [
+        {value: 10, label: '10'},
+        {value: 25, label: '25'},
+        {value: 50, label: '50'},
+        {value: 100, label: '100'},
+        {value: 500, label: '500'},
+        {value: 2000, label: '2000 (lange Ladezeit!)'}
+        ];
+
+        //initial default paging size, may be changed by user
+        Lada.pagingSize = 25;
 
         var queryString = document.location.href.split('?')[1];
         if (queryString) {
@@ -341,8 +353,19 @@ Ext.application({
                 return false;
             }
         });
+        Ext.create('Ext.data.Store', {
+            storeId: 'pagingSizes',
+            model: Ext.create('Ext.data.Model',{
+                fields: [
+                    {name: 'label', type: 'string'},
+                    {name: 'value', type: 'string'}],
+            }),
+            data: Lada.availablePagingSizes
+        });
         Ext.create('Lada.view.Viewport');
     },
+
+
 
     getServerVersion: function() {
         var i18n = Lada.getApplication().bundle;

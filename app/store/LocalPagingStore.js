@@ -15,7 +15,7 @@ Ext.define('Lada.store.LocalPagingStore', {
     extend: 'Ext.data.Store',
     autoLoad: true,
     /*items per page, may be overwritten with value in individual store,*/
-    pageSize: 25, // TODO needs default config somewhere
+    pageSize: Lada.pagingSize,
 
 
 
@@ -24,6 +24,7 @@ Ext.define('Lada.store.LocalPagingStore', {
     loadPage: function(page){
         this.removePaging();
         var count = this.getCount();
+        this.pageSize = Lada.pagingSize;
         var maxpages = Math.ceil(count / this.pageSize);
         page = (page > maxpages) ? maxpages : page;
         this.currentPage = page;
@@ -90,13 +91,12 @@ Ext.define('Lada.store.LocalPagingStore', {
             }
             var count = this.getCount();
             tbs[i].afterPageText = 'von ' + Math.ceil(count / this.pageSize);
-            var low = (this.currentPage - 1) * this.pageSize;
-            var high = Math.min(low + this.pageSize, count);
+            var low = (this.currentPage - 1) * this.pageSize + 1;
+            var high = Math.min(low - 1 + this.pageSize, count);
             tbs[i].displayMsg = 'Zeige Eintrag ' + low
                                 + ' - ' + high
                                 + ' von ' + count;
-            //TODO reload pagingtoolbar information now
-            tbs[i].onLoad(); //TODO is always one screen behind
+            tbs[i].onLoad();
             break;
         }
     }

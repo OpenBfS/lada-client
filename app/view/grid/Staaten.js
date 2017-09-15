@@ -13,11 +13,12 @@ Ext.define('Lada.view.grid.Staaten', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.staatengrid',
 
-    requires: ['Ext.grid.filters.Filters'],
+    requires: ['Ext.grid.filters.Filters',
+               'Lada.view.widget.PagingSize'],
     plugins: 'gridfilters',
     bbar: {
         xtype: 'pagingtoolbar',
-        displayInfo: true,
+        displayInfo: true
     },
 
     // minHeight and deferEmptyText are needed to be able to show the
@@ -49,8 +50,12 @@ Ext.define('Lada.view.grid.Staaten', {
             flex: 1,
             align: 'start'
         }];
+        this.store.loadPage(1);
+        var cbox = Ext.create('Lada.view.widget.PagingSize');
         this.callParent(arguments);
-    },
+        this.down('pagingtoolbar').add('-');
+        this.down('pagingtoolbar').add(cbox);
+     },
 
     /**
      * This sets the Store of this Grid

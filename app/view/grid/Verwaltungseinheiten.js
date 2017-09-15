@@ -12,7 +12,8 @@
 Ext.define('Lada.view.grid.verwaltungseinheiten', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.verwaltungseinheitengrid',
-    requires: ['Ext.grid.filters.Filters'],
+    requires: ['Ext.grid.filters.Filters',
+               'Lada.view.widget.PagingSize'],
 
     // minHeight and deferEmptyText are needed to be able to show the
     // emptyText message.
@@ -22,7 +23,7 @@ Ext.define('Lada.view.grid.verwaltungseinheiten', {
     plugins: 'gridfilters',
     bbar: {
         xtype: 'pagingtoolbar',
-        displayInfo: true,
+        displayInfo: true
     },
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -37,8 +38,11 @@ Ext.define('Lada.view.grid.verwaltungseinheiten', {
             align:'left',
             flex: 1
         }];
+        this.store.loadPage(1);
+        var cbox = Ext.create('Lada.view.widget.PagingSize');
         this.callParent(arguments);
-
+        this.down('pagingtoolbar').add('-');
+        this.down('pagingtoolbar').add(cbox);
     },
 
 
