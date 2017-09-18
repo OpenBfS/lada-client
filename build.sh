@@ -1,3 +1,4 @@
+# TODO: migration: outdated information!
 
 #Fallback: SENCHAPATH=~/bin/Sencha/Cmd/4.0.5.87/sencha
 if [ -z $SENCHAPATH ]; then SENCHAPATH="~/bin/Sencha/Cmd/4.0.5.87/"; fi

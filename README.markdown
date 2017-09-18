@@ -11,7 +11,7 @@ der Adresse: https://wald.intevation.org/projects/lada/
 
 Die Software entstand im Rahmen einer Software Entwicklung durch die
 Intevation GmbH im Auftrag des Bundesamt für Strahlenschutz in den Jahren 2013
-bis 2015.
+bis 2017.
 
 Kontakt
 -------
@@ -52,7 +52,7 @@ Einstellungen bezüglich der Generierung der Dokumentation sind in der Datei
 Entwicklung
 -----------
 Für die Entwicklung ist es notwendig in dem Wurzelordner die ExtJS-Bibliothek
-in der Version >=4.2.0 unter dem Namen "extjs" zur Verfügung zu stellen.
+in der Version >=6.2.0 unter dem Namen "ext" zur Verfügung zu stellen.
 
 Näheres dazu in der Datei `INSTALL.markdown`.
 

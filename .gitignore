@@ -16,6 +16,5 @@ bootstrap.*
 build.xml
 packages
 sass
-workspace.json
 .sencha
 

@@ -18,14 +18,26 @@ http://wald.intevation.org/projects/lada
 Die folgenden Hinweise beziehen sich auf die Installation und Einrichtung auf
 Basis eines Oracle-RedHat Linux Systems.
 
-Der Lada-Client ist eine Anwendung die auf dem Framework ExtJs 4.2.1
-(GPL-Version) basiert, welches mit `install-dependencies.sh` heruntergeladen
-und installiert wird.
+Der Lada-Client ist eine Anwendung die auf dem Framework ExtJs 6.2.0
+(GPL-Version) basiert. Es ist derzeit (gegen Anmeldung) erhältlich unter
+`https://www.sencha.com/legal/gpl/`. Ein automatisierter Download ist seitens
+Sencha nicht mehr vorgesehen.
 
+### Installation einer Entwicklungsumgebung der Anwendung
+
+    TODO: vorläufige Anleitung
+    Beachten Sie: Sencha Cmd ist keine freie Software.
+* cd (Umgebung)
+* sencha workspace init
+* Extjs6 nach ext/ kopieren/entpacken
+* https://github.com/elmasse/elmasse-bundle/archive/v1.2.0.tar.gz nach packages/local/ entpacken TODO Migration: benötigt dort?
+* sencha app install
+* sencha app build development
+* Einstiegspunkt für Webbrowser: index.html
 
 ### Kompilieren und Minifizieren der Anwendung
 
-Zum Kompilieren der Anwendung kommt das Tool Sencha Cmd 4.0.x zum Einsatz.
+Zum Kompilieren der Anwendung kommt das Tool Sencha Cmd 6.2.0.x zum Einsatz.
 Mit Hilfe dieses Tools kann der Quellcode in eine einzelne Datei zusammengefasst
 und minifiziert werden. Dies beschleunigt das Laden der Anwendung im Browser
 erheblich
@@ -34,20 +46,9 @@ Sencha bietet Sencha Cmd zum [Download](https://www.sencha.com/products/extjs/cm
 an. Beachten Sie: Sencha Cmd ist keine freie Software.
 
 Die Fa. Sencha beschreibt die Installation von Sencha Cmd in der
-[Dokumentation von ExtJs](http://docs.sencha.com/extjs/4.2.1/#!/guide/command)
+[Dokumentation von ExtJs](https://docs.sencha.com/cmd/guides/extjs/cmd_app.html)
 
 Zur Installation von Sencha Cmd werden Ruby und Java benötigt.
-
-Bevor Sie die Anwendung kompilieren können, müssen Sie die im Abschnitt
-*Lizenzen und Bibliotheken* genannten Bibliotheken mit
-`install-dependencies.sh` zum Projekt hinzufügen.
-
-Um die Anwendung zu erzeugen und alle notwendigen Bibliotheken an den richtigen
-Platz zu legen, passen Sie den Pfad zu SenchaCMD in der Datei `build.sh` an und
-führen Sie das Shell-Skript aus.
-Das Verzeichnis `lada-client-VERSIONSNUMMER` enthält dann eine Datei `index.html`
-und eine Datei `lada.js`. Die Datei `lada.js` ist eine komprimierte Version der
-Anwendung und enthält alle benötigten Klassen.
 
 
 ### Installation Apache
@@ -133,9 +134,9 @@ Folgende Bibliotheken werden neben ExtJs verwendet:
  * Blob.js
    https://github.com/eligrey/Blob.js
    MIT - License
- * Openlayers 2.13.1
+ * Openlayers 4.3.2
    http://www.openlayers.org
-   https://github.com/openlayers/ol2
+   https://github.com/openlayers/openlayers
    2-Clause BSD-License
 
 Diese werden in der `Index.html` referenziert.
