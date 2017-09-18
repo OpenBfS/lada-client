@@ -168,6 +168,10 @@ Ext.define('Lada.view.panel.Map', {
         this.map = new ol.Map(this.mapOptions);
 
         this.bodyStyle = {background: '#fff'};
+
+        // style definitions for markers
+        var stroke = new ol.style.Stroke({color: '#FFF', width: '0.5px'});
+
         this.standardStyle = function(feature, resolution) {
             return new ol.style.Style({
                 image: new ol.style.Icon({
@@ -175,13 +179,14 @@ Ext.define('Lada.view.panel.Map', {
                 }),
                 text: new ol.style.Text({
                     text: feature.get('bez') || '...',
-                    font: 'bold',
-                    scale: 1.3,
-                    offsetX: 20,
+                    font: 'bold 14px',
+                    scale: 1.2,
+                    offsetX: 38,
                     offsetY: 5,
                     fill: new ol.style.Fill({
-                        color: '#000000'
-                    })
+                        color: '#009900'
+                    }),
+                    stroke: stroke
                 })
             });
         };
@@ -192,10 +197,14 @@ Ext.define('Lada.view.panel.Map', {
                 }),
                 text: new ol.style.Text({
                     text: feature.get('bez') || '...',
-                    scale: 1.3,
+                    font: 'bold 14px',
+                    scale: 1.2,
+                    offsetX: 38,
+                    offsetY: 5,
                     fill: new ol.style.Fill({
-                        color: '#000088'
-                    })
+                        color: '#000099'
+                    }),
+                    stroke: stroke
                 })
             })
         };
@@ -205,11 +214,15 @@ Ext.define('Lada.view.panel.Map', {
                     src: 'resources/lib/OpenLayers/img/marker-blue.png',
                 }),
                 text: new ol.style.Text({
-                    text: 'neu..',
-                    scale: 1.3,
+                    text: 'neu ...',
+                    font: 'bold 14px',
+                    scale: 1.2,
+                    offsetX: 38,
+                    offsetY: 5,
                     fill: new ol.style.Fill({
-                        color: '#000088'
-                    })
+                        color: '#000099'
+                    }),
+                    stroke: stroke
                 })
             })
         };
