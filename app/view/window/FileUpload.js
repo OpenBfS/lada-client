@@ -28,6 +28,7 @@ Ext.define('Lada.view.window.FileUpload', {
      * This function initialises the Window
      */
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
         var me = this;
         this.fileInput = Ext.create('Ext.form.field.File', {
             fieldLabel: 'Wählen Sie eine Datei',
@@ -43,22 +44,36 @@ Ext.define('Lada.view.window.FileUpload', {
             allowBlank: false,
             displayField: 'name',
             valueField: 'value',
+            name: 'encoding',
+            valueNotFoundText: i18n.getMsg('notfound'),
             margin: '3, 3, 3, 3',
             labelWidth: '94px',
             store: Ext.create('Ext.data.Store', {
                 fields: ['name', 'value'],
                 data: [{
-                    name: 'UTF-8',
-                    value: 'utf-8'
-                }, {
                     name: 'ISO-8859-15',
                     value: 'iso-8859-15'
+                }, {
+                    name: 'UTF-8',
+                    value: 'utf-8'
                 }, {
                     name: 'IBM437',
                     value: 'ibm437'
                 }]
             })
         });
+        this.mstSelector = Ext.create('Ext.form.field.ComboBox', {
+            store: Ext.data.StoreManager.get('messstellenFiltered'),
+                name: 'mst',
+                labelWidth: '94px',
+                labelAlign: 'top',
+                margin: '3, 3, 3, 3',
+                displayField: 'messStelle',
+                valueField: 'id',
+                fieldLabel: 'Messstelle',
+                allowBlank: false
+        });
+
         var buttons = [{
             xtype: 'button',
             text: 'Speichern',
@@ -75,7 +90,8 @@ Ext.define('Lada.view.window.FileUpload', {
             items: buttons
         });
 
-        me.items = [this.fileInput, this.encodingSelector, buttonPanel];
+        me.items = [this.fileInput, this.encodingSelector, this.mstSelector,
+                    buttonPanel];
         this.callParent(arguments);
     },
 
@@ -119,7 +135,8 @@ Ext.define('Lada.view.window.FileUpload', {
             url: 'lada-server/data/import/laf',
             method: 'POST',
             headers: {
-                'Content-Type': contentType
+                'Content-Type': contentType,
+                'X-LADA-MST': this.mstSelector.getValue()
             },
             scope: win,
             rawData: binData,
