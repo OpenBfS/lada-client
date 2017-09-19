@@ -27,6 +27,7 @@ Ext.define('Lada.view.window.FileUpload', {
      */
     initComponent: function() {
         var me = this;
+        var i18n = Lada.getApplication().bundle;
         this.browseButton = Ext.create('Ext.ux.upload.BrowseButton', {
             buttonText: 'Durchsuchen...',
             margin: '3, 3, 3, 3'
@@ -44,7 +45,7 @@ Ext.define('Lada.view.window.FileUpload', {
             valueField: 'value',
             margin: '3, 3, 3, 3',
             labelWidth: '94px',
-            valueNotFountText: 'Not found',
+            valueNotFoundText: i18n.getMsg('notfound'),
             store: Ext.create('Ext.data.Store', {
                 fields: ['name', 'value'],
                 data: [{
