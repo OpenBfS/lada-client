@@ -66,6 +66,11 @@ Ext.define('Lada.view.panel.Map', {
             return;
         }
         if (this.selectedFeatureLayer){
+            if (this.tempFeature){
+                this.selectedFeatureLayer.getSource().removeFeature(
+                    this.tempFeature);
+                this.tempFeature = null;
+            }
             this.featureLayer.getSource().addFeatures(
                 this.selectedFeatureLayer.getSource().getFeatures());
             this.selectedFeatureLayer.getSource().clear();
@@ -79,26 +84,32 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     activateDraw: function() {
-        return;
-        //TODO Migration
-//         var me = this;
-//         if (!this.drawPoint){
-//             this.drawPoint = new ol.interaction.Draw({
-//                 type: 'Point',
-//                 handleEvent:{
-//                     'drawend': me.featureAdded
-//                 },
-//                 active:true
-//             });
-//         }
-//         this.map.addInteraction(this.drawPoint);
+        this.temporaryLayer = new ol.layer.Vector({
+            title: 'neuer Ort',
+            source: new ol.source.Vector({
+                features: []
+            }),
+            style: this.newFeatureStyle
+        });
+        this.map.addLayer(this.temporaryLayer);
+        if (!this.drawinteraction){
+            this.drawInteraction = new ol.interaction.Draw({
+                source: this.temporaryLayer.getSource(),
+                type: 'Point'
+            });
+        }
+        this.map.addInteraction(this.drawInteraction);
+        var me = this;
+        this.drawInteraction.on('drawend', me.featureAdded);
     },
 
-    featureAdded: function(feature) {
-        this.drawPoint.un('drawend');
-        var clone = feature.clone();
-        clone.geometry.transform('EPSG:3857', 'EPSG:4326');
-        var parent = this.up('ortszuordnungwindow') || this.up('ortpanel');
+    featureAdded: function(event) {
+        var me = Ext.ComponentQuery.query('map')[0];
+        me.map.removeInteraction(me.drawInteraction);
+        event.feature.set('bez', 'neuer Ort');
+        clone = event.feature.clone();
+        clone.getGeometry().transform('EPSG:3857', 'EPSG:4326');
+        var parent = me.up('ortszuordnungwindow') || me.up('ortpanel');
         var nId = ''
         if (parent.probe) {
             var mstId = parent.probe.get('mstId');
@@ -106,8 +117,8 @@ Ext.define('Lada.view.panel.Map', {
             var ndx = mst.findExact('id', mstId);
             nId = mst.getAt(ndx).get('netzbetreiberId');
         }
-        var koord_x = Math.round(clone.geometry.getCoordinates()[0] * 100000)/100000;
-        var koord_y = Math.round(clone.geometry.getCoordinates()[1] * 100000)/100000;
+        var koord_x = Math.round(clone.getGeometry().getCoordinates()[0] * 100000)/100000;
+        var koord_y = Math.round(clone.getGeometry().getCoordinates()[1] * 100000)/100000;
         Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Ort',{
                 netzbetreiberId: nId,
@@ -118,6 +129,7 @@ Ext.define('Lada.view.panel.Map', {
             }),
             parentWindow: parent
         }).show();
+        me.map.removeLayer(me.temporaryLayer);
     },
 
     addLocations: function(locationStore) {
