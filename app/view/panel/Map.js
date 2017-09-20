@@ -162,16 +162,20 @@ Ext.define('Lada.view.panel.Map', {
      */
     afterRender: function() {
         var backgroundMap = new ol.layer.Tile({
-             source: new ol.source.OSM({ //TODO reinsert bfs map. OSM map as placeholder
-            //                 url: https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png.
-            // url: 'http://www.imis.bfs.de/mapcache/tms/1.0.0/osm_bfs_google@GoogleMapsCompatible/{z}/{x}/{y}.png',
-            maxZoom: 18,
-            })
+             source: new ol.source.XYZ({
+                 url: 'http://www.imis.bfs.de/mapcache/tms/1.0.0/osm_bfs_google@GoogleMapsCompatible/{z}/{x}/{-y}.png',
+            }),
+            maxZoom: 18
         });
 
         var target = this.getTargetEl()? this.getTargetEl() : this.element;
         this.mapOptions.target= target.dom.id;
-        this.mapOptions.view = new ol.View({center: [1160000,6694000], zoom: 6,});
+        this.mapOptions.view = new ol.View({
+            center: [1160000,6694000],
+            zoom: 6,
+            minZoom: 2,
+            maxZoom: 17
+        });
         this.mapOptions.layers = [backgroundMap];
         this.mapOptions.controls = [new ol.control.Zoom(),
                                     new ol.control.ZoomSlider(),
