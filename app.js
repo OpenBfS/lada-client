@@ -32,7 +32,6 @@ Ext.application({
         'Lada.override.i18n.DE',
         'Lada.override.JSON',
         'Lada.override.RowExpander',
-        'Lada.view.plugin.ExtJsUploader',
         'Lada.view.plugin.GridRowExpander',
         'Ext.i18n.Bundle',
         'Ext.layout.container.Column',
