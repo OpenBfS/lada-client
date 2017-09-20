@@ -8,9 +8,12 @@ SCRIPT_DIR=`dirname $0`
 
 cd $SCRIPT_DIR
 
+mkdir -p packages/local
+cd packages/local
 curl -L https://github.com/elmasse/elmasse-bundle/archive/v1.2.0.zip \
     -o elmasse-1.2.0.zip
 unzip -n elmasse-1.2.0.zip
+cd ../..
 
 mkdir -p resources/lib/ext
 cd resources/lib
