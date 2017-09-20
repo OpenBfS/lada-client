@@ -412,7 +412,6 @@ Ext.application({
         'Lada.controller.form.Messprogramm',
         'Lada.controller.grid.MessprogrammKategorie',
         'Lada.controller.grid.Messmethode',
-        'Lada.controller.FilterManagement',
-        'Ext.ux.util.AlwaysOnTop'
+        'Lada.controller.FilterManagement'
         ]
 });
