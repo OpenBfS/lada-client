@@ -43,7 +43,7 @@ Ext.define('Lada.view.window.FileUpload', {
             name: 'encoding',
             displayField: 'name',
             valueField: 'value',
-            margin: '3, 3, 3, 3',
+            margin: '3, 0, 3, 3',
             labelWidth: '94px',
             valueNotFoundText: i18n.getMsg('notfound'),
             store: Ext.create('Ext.data.Store', {
@@ -63,11 +63,11 @@ Ext.define('Lada.view.window.FileUpload', {
         this.mstSelector = Ext.create('Ext.form.field.ComboBox', {
             store: Ext.data.StoreManager.get('messstellenFiltered'),
             name: 'mst',
-            labelWidth: '94px',
             margin: '3, 3, 3, 3',
             displayField: 'messStelle',
             valueField: 'id',
-            fieldLabel: 'Messstelle',
+            width: 155,
+            disabled: true,
             allowBlank: false
         });
         this.items = [{
@@ -81,7 +81,27 @@ Ext.define('Lada.view.window.FileUpload', {
             border: 0,
             items: [
                 this.encodingSelector,
-                this.mstSelector
+                {
+                    border: 0,
+                    layout: 'hbox',
+                    items: [{
+                        xtype: 'checkbox',
+                        margin: '3, 3, 3, 3',
+                        name: 'configSelector',
+                        labelWidth: '94px',
+                        fieldLabel: 'Vorbelegung',
+                        handler: function(chkBox, checked) {
+                            if (checked) {
+                                chkBox.up('panel').down('combobox[name=mst]').enable()
+                            }
+                            else {
+                                chkBox.up('panel').down('combobox[name=mst]').disable()
+                            }
+                        }
+                    },
+                        this.mstSelector
+                    ]
+                }
             ]
         }];
         this.buttons = [{
@@ -139,12 +159,17 @@ Ext.define('Lada.view.window.FileUpload', {
         var win = button.up('window');
         var cb = win.down('combobox[name=encoding]');
         var mst = win.down('combobox[name=mst]');
+        var chkBox = win.down('checkbox[name=configSelector]');
+        var mstSend = '';
+        if (chkBox.getValue()) {
+            mstSend = mst.getValue();
+        }
         var uploader = Ext.create('Lada.view.plugin.ExtJsUploader', {
             method: 'POST',
             timeout: 600 * 1000,
             url: 'lada-server/data/import/laf',
             extraHeaders: {
-                'X-LADA-MST': mst.getValue()
+                'X-LADA-MST': mstSend
             }
         });
         if (!cb.getValue()) {
