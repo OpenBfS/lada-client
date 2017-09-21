@@ -18,81 +18,87 @@ Ext.define('Lada.view.window.FileUpload', {
 
     layout: 'vbox',
 
-    fileInput: null,
-
-    encodingSelector: null,
-
     file: null,
 
+    defaults: {
+        maxWidth: 240,
+        width: 240,
+        labelAlign: 'top'
+    },
     /**
      * This function initialises the Window
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
-        this.fileInput = Ext.create('Ext.form.field.File', {
-            fieldLabel: 'Wählen Sie eine Datei',
-            labelAlign: 'top',
-            allowBlank: false,
-            buttonText: 'Durchsuchen...',
-            width: 240,
-            margin: '3 3 3 3'
-        });
-        this.encodingSelector = Ext.create('Ext.form.field.ComboBox', {
-            fieldLabel: 'Encoding',
-            labelAlign: 'top',
-            allowBlank: false,
-            displayField: 'name',
-            valueField: 'value',
-            name: 'encoding',
-            valueNotFoundText: i18n.getMsg('notfound'),
-            margin: '3, 3, 3, 3',
-            labelWidth: '94px',
-            store: Ext.create('Ext.data.Store', {
-                fields: ['name', 'value'],
-                data: [{
-                    name: 'ISO-8859-15',
-                    value: 'iso-8859-15'
-                }, {
-                    name: 'UTF-8',
-                    value: 'utf-8'
-                }, {
-                    name: 'IBM437',
-                    value: 'ibm437'
-                }]
-            })
-        });
-        this.mstSelector = Ext.create('Ext.form.field.ComboBox', {
-            store: Ext.data.StoreManager.get('messstellenFiltered'),
-                name: 'mst',
-                labelWidth: '94px',
-                labelAlign: 'top',
+        this.items = [
+            Ext.create('Ext.form.field.File', {
+                fieldLabel: i18n.getMsg('selectfile'),
+                allowBlank: false,
+                buttonText: i18n.getMsg('search'),
+                margin: '3 3 3 3'
+            }),
+            Ext.create('Ext.form.field.ComboBox', {
+                fieldLabel: i18n.getMsg('encoding'),
+                allowBlank: false,
+                displayField: 'name',
+                valueField: 'value',
+                name: 'encoding',
+                valueNotFoundText: i18n.getMsg('notfound'),
                 margin: '3, 3, 3, 3',
-                displayField: 'messStelle',
-                valueField: 'id',
-                fieldLabel: 'Messstelle',
-                allowBlank: false
-        });
-
-        var buttons = [{
-            xtype: 'button',
-            text: 'Speichern',
-            margin: '3, 3, 3, 3',
-            handler: this.readFile
-        }, {
-            xtype: 'button',
-            text: 'Abbrechen',
-            margin: '3, 3, 3, 3',
-            handler: this.abort
-        }];
-        var buttonPanel = Ext.create('Ext.container.Container', {
+                store: Ext.create('Ext.data.Store', {
+                    fields: ['name', 'value'],
+                    data: [{
+                        name: 'ISO-8859-15',
+                        value: 'iso-8859-15'
+                    }, {
+                        name: 'UTF-8',
+                        value: 'utf-8'
+                    }, {
+                        name: 'IBM437',
+                        value: 'ibm437'
+                    }]
+                })
+            }),
+           Ext.create('Ext.form.field.ComboBox', {
+               store: Ext.data.StoreManager.get('messstellenFiltered'),
+               name: 'mst',
+               margin: '3, 3, 3, 3',
+               displayField: 'messStelle',
+               valueField: 'id',
+               fieldLabel: i18n.getMsg('vorbelegung'),
+               allowBlank: true,
+               triggers: {
+                   clear:{
+                       cls: 'x-form-clear-trigger',
+                       handler: function() {
+                           this.clearValue();
+                       }
+                   }
+               }
+        }),
+        Ext.create('Ext.container.Container', {
+            flex: 1,
             layout: 'hbox',
-            items: buttons
-        });
-
-        me.items = [this.fileInput, this.encodingSelector, this.mstSelector,
-                    buttonPanel];
+            items: [{
+                xtype: 'button',
+                text: 'Speichern',
+                margin: '3, 3, 3, 3',
+                handler: this.readFile
+            }, {
+                xtype: 'button',
+                text: 'Abbrechen',
+                margin: '3, 3, 3, 3',
+                handler: this.abort
+            }]
+        })
+        ];
         this.callParent(arguments);
+        var encoding = document.characterSet;
+        if (!encoding) {
+            encoding = document.defaultCharset;
+        }
+        this.down('combobox[name=encoding]').setValue(encoding.toLowerCase());
     },
 
     /**
@@ -106,15 +112,18 @@ Ext.define('Lada.view.window.FileUpload', {
 
     /**
      * @private
-     * A handler for the Uploade-Button, reading the file specified in the form field
+     * A handler for the Upload-Button, reading the file specified in the form field
      */
     readFile: function(button) {
         var me = this;
         var win = button.up('window');
-        var cb = win.down('combobox');
-        var file = win.fileInput.fileInputEl.dom.files[0];
+        var fileInput = win.down('filefield');
+        var file = fileInput.fileInputEl.dom.files[0];
+        if (!file){
+            //TODO error handling
+            return;
+        }
         win.file = file;
-        console.log(file);
         var reader = new FileReader();
         reader.onload = function() {
             var binData = reader.result;
@@ -129,14 +138,15 @@ Ext.define('Lada.view.window.FileUpload', {
      */
     uploadFile: function(button, binData) {
         var win = button.up('window');
-        var cb = win.down('combobox');
+        var cb = win.down('combobox[name=encoding]');
         var contentType = 'text/plain; charset=' + cb.getValue();
+        var mstSelector = win.down('combobox[name=mst]').getValue();
         Ext.Ajax.request({
             url: 'lada-server/data/import/laf',
             method: 'POST',
             headers: {
                 'Content-Type': contentType,
-                'X-LADA-MST': this.mstSelector.getValue()
+                'X-LADA-MST': mstSelector
             },
             scope: win,
             rawData: binData,
@@ -150,8 +160,6 @@ Ext.define('Lada.view.window.FileUpload', {
      */
     uploadSuccess: function(response, opts) {
         this.close();
-        console.log(response.responseText);
-        console.log(response);
         var win = Ext.create('Lada.view.window.ImportResponse', {
             responseData: response.responseText,
             message: '', //TODO:response.message,
@@ -168,8 +176,6 @@ Ext.define('Lada.view.window.FileUpload', {
     uploadFailure: function(response, opts) {
         // TODO handle Errors correctly, especially AuthenticationTimeouts
         this.close();
-        console.log(response);
-        console.log(opts);
         var win = Ext.create('Lada.view.window.ImportResponse', {
             responseData: response.responseText,
             message: '',//TODO:response.responseText.message,
