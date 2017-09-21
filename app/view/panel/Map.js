@@ -48,7 +48,7 @@ Ext.define('Lada.view.panel.Map', {
 
     /**
      * Initialise the Data.
-     * TODO currently only stub remaining after migration
+     * currently only stub remaining
      */
     initData: function() {
     },
@@ -80,7 +80,11 @@ Ext.define('Lada.view.panel.Map', {
         this.map.getView().setCenter([feature.getGeometry().getCoordinates()[0],
                                      feature.getGeometry().getCoordinates()[1]]);
         this.map.getView().setZoom(12);
-        //TODO Migration: hideable main layer/make all except selected invisible
+        var ozw = this.up('ortszuordnungwindow');
+        if (ozw){
+            ozw.down('ortszuordnungform').setOrt(null, record);
+        }
+        //TODO: hideable main layer/make all except selected invisible
     },
 
     activateDraw: function() {
