@@ -25,9 +25,14 @@ Sencha nicht mehr vorgesehen.
 
 ###Sencha Cmd
 
-Bei der Einrichtung der Entwicklungsumgebung und beim Kompilieren der Anwendung kommt das Tool Sencha Cmd 6.2.0.x zum Einsatz.
-Sencha bietet Sencha Cmd zum [Download](https://www.sencha.com/products/extjs/cmd-download/)
-an. Beachten Sie: Sencha Cmd ist keine freie Software.
+Bei der Einrichtung der Entwicklungsumgebung und beim Kompilieren der Anwendung
+kommt das Tool Sencha Cmd 6.2.0.x zum Einsatz. Sencha bietet Sencha Cmd zum
+[Download](https://www.sencha.com/products/extjs/cmd-download/) an.
+
+Beachten Sie: Sencha Cmd ist keine freie Software. Bitte beachten Sie ebenfalls,
+dass Sencha Cmd in der Version 6.5.x nicht mit der GPL-Version von Extjs6
+(nur erhältlich in den Versionen bis 6.2.x) kompatibel ist.
+
 
 Die Fa. Sencha beschreibt die Installation von Sencha Cmd in der
 [Dokumentation von ExtJs](https://docs.sencha.com/cmd/guides/extjs/cmd_app.html)
@@ -39,19 +44,22 @@ Zur Installation von Sencha Cmd werden Ruby und Java benötigt.
 * cd (Umgebung)
 * sencha workspace init
 * Extjs6 nach ext/ kopieren/entpacken
-* https://github.com/elmasse/elmasse-bundle/archive/v1.2.0.tar.gz nach packages/local/
+* Externe Libraries installieren: install-dependencies.sh
 * sencha app install --framework=ext
 * sencha app build development
 * Einstiegspunkt für Webbrowser: index.html
 
 ### Kompilieren und Minifizieren der Anwendung
 
-Mit Hilfe von Sencha Cmd kann der Quellcode in eine einzelne Datei zusammengefasst
-und minifiziert werden. Dies beschleunigt das Laden der Anwendung im Browser
-erheblich. Die Minifizierung erfolgt über:
+Mit Hilfe von Sencha Cmd kann der Quellcode in eine wenige Dateien
+zusammengefasst und minifiziert werden. Dies beschleunigt das Laden der
+Anwendung im Browser erheblich. Die Minifizierung erfolgt über:
 ```
     sencha app build production
-```
+```.
+Die fertig minifizierte Anwendung wird unter build/production abgelegt,
+und kann danach gepackt werden. Die Datei build.sh im Wurzelverzeichnis der
+Anwendung automatisiert diesen Prozess.
 
 ### Installation Apache
 Zunächst wird der Apache Webserver aus dem Repository installiert:
@@ -73,7 +81,7 @@ der Option `LoadModule` angegeben. Folgende Module werden benötigt:
 ### Einrichtung der Anwendung
 
 Zunächst hinterlegen wir die Anwendung in dem Server. Hierzu verwenden wir die
-gebaute Version, welche sich im `build` Ordner befindet.
+gebaute Version, welche sich im `build/production` - Ordner befindet.
 
 ```
 cd /var/www/html
@@ -89,10 +97,6 @@ restorecon -Rv /var/www/html/
 
 Die Anwendung sollte nun bereits unter der Adresse `http://localhost/lada`
 erreichbar sein.
-
-Damit die Anwendung vollständig funktioniert, müssen ggfs. noch weitere
-Bibliotheken hinzugefügt werden.
-Dies wird im Abschnitt *Lizenzen und Bibliotheken* näher beschrieben
 
 ### Konfiguration Proxy Server
 
@@ -143,12 +147,9 @@ Folgende Bibliotheken werden neben ExtJs verwendet:
 
 Diese werden in der `Index.html` referenziert.
 
-In `resources/lib/ext` werden Bibliotheken installiert, die ExtJs
+In `packages/local/` werden Bibliotheken installiert, die ExtJs
 ergänzen und in der Datei `app.js` aufgeführt werden:
 
- * Ext.i18n.Bundle 0.3.3 (referenced as Ext.i18n in app.js)
-   https://github.com/elmasse/Ext.i18n.Bundle/tree/v0.3.3
+ * Ext.i18n.Bundle 1.2.0 (referenced as Ext.i18n in app.js)
+   https://github.com/elmasse/elmasse-bundle/tree/v1.2.0
    MIT - License
- * Ext.ux.upload 1.1.1
-   https://github.com/ivan-novakov/extjs-upload-widget/tree/1.1.1
-   3-Clause BSD-License

@@ -3,9 +3,6 @@
 CUR_DIR=`pwd`
 SCRIPT_DIR=`dirname $0`
 
-
-# TODO Migration: check
-
 cd $SCRIPT_DIR
 
 mkdir -p packages/local

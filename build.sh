@@ -7,11 +7,6 @@ VERSION=lada-client-$VNUMBER
 echo "Compiling and minifying...."
 $SENCHAPATH/sencha app build production
 
-# Copy additional files
-# Extjs Styles
-echo "Copying additional files...."
-
-mkdir --parents $VERSION
 mv build/production/Lada build/production/$VERSION
 tar -czf $VERSION.tgz build/production/$VERSION
 
