@@ -30,7 +30,6 @@ Ext.application({
         'Lada.override.RestProxy',
         'Lada.override.RowEditor',
         'Lada.override.i18n.DE',
-        'Lada.override.JSON',
         'Lada.override.RowExpander',
         'Lada.view.plugin.GridRowExpander',
         'Ext.i18n.Bundle',
@@ -369,7 +368,7 @@ Ext.application({
             model: Ext.create('Ext.data.Model',{
                 fields: [
                     {name: 'label', type: 'string'},
-                    {name: 'value', type: 'string'}],
+                    {name: 'value', type: 'string'}]
             }),
             data: Lada.availablePagingSizes
         });
