@@ -171,7 +171,7 @@ Ext.define('Lada.controller.grid.Status', {
         record.set('datum', new Date());
 
         button.up('statusgrid').store.insert(lastrow, record);
-        button.up('statusgrid').getPlugin('rowedit').startEdit(lastrow, 2);
+        button.up('statusgrid').rowEditing.startEdit(lastrow, 2);
     },
 
     /**

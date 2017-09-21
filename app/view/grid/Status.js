@@ -44,7 +44,7 @@ Ext.define('Lada.view.grid.Status', {
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false,
-            disabled: true, //has no effect... but why?
+            disabled: false,
             errorSummary: false,
             pluginId: 'rowedit',
             listeners: {
@@ -54,11 +54,8 @@ Ext.define('Lada.view.grid.Status', {
                     //Check if edit is allowed, this is true, when the selected
                     // Record has an id (=is not new)
                     // or is not allowed to add records.
-
                         return false;
                     }
-
-
                 }
             }
         });
