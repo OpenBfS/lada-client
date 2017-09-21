@@ -15,7 +15,7 @@ curl -L https://github.com/elmasse/elmasse-bundle/archive/v1.2.0.zip \
 unzip -n elmasse-1.2.0.zip
 cd ../..
 
-mkdir -p resources/lib/ext
+mkdir -p resources/lib
 cd resources/lib
 
 curl -L https://github.com/eligrey/FileSaver.js/archive/master.zip \
