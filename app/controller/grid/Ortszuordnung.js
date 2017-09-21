@@ -380,7 +380,6 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             });
         }
         //Update the toolbar;
-        console.log('Search result: ' + ozw.ortstore.count());
         var toolbar = ozw.down('tabpanel').down('ortstammdatengrid').down('pagingtoolbar');
         toolbar.doRefresh();
     },
@@ -389,7 +388,6 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * Calls onStoreChanged at ortzuordnungwindow if the ort toolbar paged changed.
      */
     ortPageChanged: function(toolbar, pageData, eOpts) {
-        console.log('ort page changed to ' + pageData.currentPage);
         var ozw = toolbar.up().up().up('ortszuordnungwindow');
         ozw.onStoreChanged();
     }

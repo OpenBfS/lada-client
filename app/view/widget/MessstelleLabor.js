@@ -30,5 +30,5 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
         this.callParent(arguments);
         this.down('combobox').isFormField = false;
 
-    },
+    }
 });

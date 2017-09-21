@@ -34,7 +34,6 @@ Ext.define('Lada.override.RestProxy', {
 
     parseStatus: function(status) {
         console.log(status);
-        this.callParent(arguments);
     },
 
     reload: function(btn) {

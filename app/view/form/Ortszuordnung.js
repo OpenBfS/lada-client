@@ -259,6 +259,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         } else {
             osg.removeListener('select',oForm.setOrt, oForm);
         }
-    },
+    }
 });
 

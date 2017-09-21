@@ -163,7 +163,7 @@ Ext.define('Lada.view.panel.Map', {
     afterRender: function() {
         var backgroundMap = new ol.layer.Tile({
              source: new ol.source.XYZ({
-                 url: 'http://www.imis.bfs.de/mapcache/tms/1.0.0/osm_bfs_google@GoogleMapsCompatible/{z}/{x}/{-y}.png',
+                 url: 'http://www.imis.bfs.de/mapcache/tms/1.0.0/osm_bfs_google@GoogleMapsCompatible/{z}/{x}/{-y}.png'
             }),
             maxZoom: 18
         });
@@ -191,7 +191,7 @@ Ext.define('Lada.view.panel.Map', {
         this.standardStyle = function(feature, resolution) {
             return new ol.style.Style({
                 image: new ol.style.Icon({
-                    src: 'resources/lib/OpenLayers/img/marker-green.png',
+                    src: 'resources/lib/OpenLayers/img/marker-green.png'
                 }),
                 text: new ol.style.Text({
                     text: feature.get('bez') || '...',
@@ -209,7 +209,7 @@ Ext.define('Lada.view.panel.Map', {
         this.selectStyle = function(feature, resolution){
             return new ol.style.Style({
                 image: new ol.style.Icon({
-                    src: 'resources/lib/OpenLayers/img/marker-blue.png',
+                    src: 'resources/lib/OpenLayers/img/marker-blue.png'
                 }),
                 text: new ol.style.Text({
                     text: feature.get('bez') || '...',
@@ -227,7 +227,7 @@ Ext.define('Lada.view.panel.Map', {
         this.newFeatureStyle= function(feature, resolution){
             return new ol.style.Style({
                 image: new ol.style.Icon({
-                    src: 'resources/lib/OpenLayers/img/marker-blue.png',
+                    src: 'resources/lib/OpenLayers/img/marker-blue.png'
                 }),
                 text: new ol.style.Text({
                     text: 'neu ...',
@@ -282,7 +282,7 @@ Ext.define('Lada.view.panel.Map', {
             this.previousOrtLayer =  new ol.layer.Vector({
                 title: 'oldOrt',
                 source: new ol.source.Vector({
-                    features: [],
+                    features: []
                 }),
                 style: this.standardStyle,
                 visible: true
@@ -340,6 +340,6 @@ Ext.define('Lada.view.panel.Map', {
             style: this.selectStyle
         });
         this.map.addLayer(this.selectedFeatureLayer);
-    },
+    }
 
 });

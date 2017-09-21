@@ -9,7 +9,7 @@
 /**
  * Grid to list Orte Stammdaten
  */
-Ext.define('Lada.view.grid.verwaltungseinheiten', {
+Ext.define('Lada.view.grid.Verwaltungseinheiten', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.verwaltungseinheitengrid',
     requires: ['Ext.grid.filters.Filters',
@@ -18,7 +18,6 @@ Ext.define('Lada.view.grid.verwaltungseinheiten', {
     // minHeight and deferEmptyText are needed to be able to show the
     // emptyText message.
     minHeight: 110,
-    store: Ext.data.StoreManager.get('verwaltungseinheiten'),
 
     plugins: 'gridfilters',
     bbar: {
@@ -26,6 +25,7 @@ Ext.define('Lada.view.grid.verwaltungseinheiten', {
         displayInfo: true
     },
     initComponent: function() {
+        this.store = Ext.data.StoreManager.lookup('verwaltungseinheiten');
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('grid.emptyGrid');
         var me = this;

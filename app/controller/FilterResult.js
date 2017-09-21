@@ -187,7 +187,7 @@ Ext.define('Lada.controller.FilterResult', {
                 We assume that a 302 was send when the follwing statement
                 is true.
                 */
-                if (response.status == 0 && response.getResponse().responseText === "") {
+                if (response.status == 0 && response.responseText === "") {
                     Ext.MessageBox.confirm('Erneutes Login erforderlich',
                         'Ihre Session ist abgelaufen.<br/>'+
                         'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
@@ -195,7 +195,7 @@ Ext.define('Lada.controller.FilterResult', {
                         'Soll die Anwendung jetzt neu geladen werden?', this.reload);
                 }
                 // further error handling
-                var json = Ext.JSON.decode(response.getResponse().responseText);
+                var json = Ext.JSON.decode(response.responseText);
                 if (json) {
                     if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
                         formPanel.setMessages(json.errors, json.warnings);
@@ -339,15 +339,11 @@ Ext.define('Lada.controller.FilterResult', {
                 button.setLoading(false);
             },
             failure: function(response) {
-                console.log('failure');
-                // Error handling
-                // TODO
-                //console.log(response.responseText)
                 button.enable();
                 button.setLoading(false);
                 if (response.responseText) {
                     try {
-                        var json = Ext.JSON.decode(response.getResponse().responseText);
+                        var json = Ext.JSON.decode(response.responseText);
                     }
                     catch(e){
                         console.log(e);

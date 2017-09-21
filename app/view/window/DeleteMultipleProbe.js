@@ -211,7 +211,7 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
                             handler: function(){me.close();}
                         });
                     }
-                },
+                }
             });
         }
     }

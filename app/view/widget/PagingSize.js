@@ -22,13 +22,15 @@ Ext.define('Lada.view.widget.PagingSize', {
         displayField: 'label',
         valueField: 'value',
         submitValue: false,
-        store: Ext.StoreManager.get('pagingSizes'),
         queryMode: 'local',
         width: 60,
         disableKeyFilter: true,
         editable: false,
         onChange: function(newVal, oldVal){
-            Lada.pagingSize = parseInt(newVal);
+            if (newVal == oldVal) {
+                return;
+            }
+            Lada.getApplication().setPagingSize(parseInt(newVal));
             var tb = this.up('pagingtoolbar');
             if (tb){
                 tb.doRefresh();
@@ -39,10 +41,17 @@ Ext.define('Lada.view.widget.PagingSize', {
         text: ' Einträge pro Seite'
     }],
 
+    refreshPagingSize: function() {
+        this.down('combobox').select(Lada.pagingSize);
+    },
+
     initComponent: function(){
         var me = this;
+        Lada.getApplication().on('pagingSizeChanged', me.refreshPagingSize, this);
+        me.store = Ext.StoreManager.get('pagingSizes');
         this.callParent(arguments);
-        this.down('combobox').setValue(Lada.pagingSize);
+        this.down('combobox').setStore(this.store);
+        this.down('combobox').select(Lada.pagingSize);
         // TODO: synchronize other instances to reflect current setting. Does not work in ortszuordnung
         //         var tb = this.up('pagingtoolbar');
         //         if (tb){

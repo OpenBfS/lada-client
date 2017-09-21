@@ -101,7 +101,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
         var win = Ext.create('Lada.view.window.FileUpload', {
             title: 'Datenimport',
             modal: true,
-            width: 260,
+            width: 260
         });
 
         win.show();
@@ -365,11 +365,12 @@ Ext.define('Lada.controller.grid.ProbeList', {
             success: printFunctionCallback,
             failure: function(response) {
                 // Error handling
+                console.log(response);
                 button.enable();
                 button.setLoading(false);
-                if (response.getResponse().responseText) {
+                if (response.responseText) {
                     try {
-                        var json = Ext.JSON.decode(response.getResponse().responseText);
+                        var json = Ext.JSON.decode(response.responseText);
                     }
                     catch(e){
                         console.log(e);
@@ -543,9 +544,9 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 // Error handling
                 button.enable();
                 button.setLoading(false);
-                if (response.getResponse().responseText) {
+                if (response.responseText) {
                     try {
-                        var json = Ext.JSON.decode(response.getResponse().responseText);
+                        var json = Ext.JSON.decode(response.responseText);
                     }
                     catch(e){
                         console.log(e);
