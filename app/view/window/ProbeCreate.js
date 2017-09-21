@@ -84,18 +84,16 @@ Ext.define('Lada.view.window.ProbeCreate', {
                     layout: 'hbox',
                     items: [{
                         xtype: 'button',
-                        text:   'OK',
+                        text:   'Ja',
                         margin: '5, 0, 5, 5',
 
                         handler: function() {
                             me.down('probeform').fireEvent('save', me.down('probeform'));
-                            //var saveButton = me.down('probeform').down('button[action=save]');
-                            //saveButton.click();
                             confWin.close();
                         }
                     }, {
                         xtype: 'button',
-                        text: 'Schließen',
+                        text: 'Nein',
                         margin: '5, 5, 5, 5',
 
                         handler: function() {

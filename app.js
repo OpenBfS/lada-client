@@ -56,6 +56,7 @@ Ext.application({
         'Lada.store.Staaten',
         'Lada.store.Umwelt',
         'Lada.store.Verwaltungseinheiten',
+        'Lada.store.VerwaltungseinheitenUnfiltered',
         'Lada.store.StatusWerte',
         'Lada.store.StatusStufe',
         'Lada.store.StatusKombi',
@@ -83,6 +84,10 @@ Ext.application({
 
     // Start the application.
     launch: function() {
+        Ext.JSON.encodeDate = function(o) {
+            return '"' + Ext.Date.format(o, 'c') + '"';
+        };
+
         Lada.username = '';
         Lada.userroles = '';
         Lada.logintime = '';
@@ -239,11 +244,11 @@ Ext.application({
                     var w = Ext.data.StoreManager.get(
                         'verwaltungseinheitenwidget');
                     w.removeAll(true);
-                    var records = [];
+                    var rec = [];
                     this.each(function(r){
-                        records.push(r.copy());
+                        rec.push(r.copy());
                     });
-                    w.add(records);
+                    w.add(rec);
                 }
             }
         });
@@ -368,7 +373,8 @@ Ext.application({
             model: Ext.create('Ext.data.Model',{
                 fields: [
                     {name: 'label', type: 'string'},
-                    {name: 'value', type: 'string'}]
+                    {name: 'value', type: 'string'}
+                ]
             }),
             data: Lada.availablePagingSizes
         });
@@ -396,6 +402,14 @@ Ext.application({
                 Lada.serverVersion = i18n.getMsg('err.msg.generic.title');
             }
         });
+    },
+
+    //Sets the paging size and fires 'pagingSizeChangedEvent' if new value differs from old
+    setPagingSize: function(newVal){
+        if (newVal != Lada.pagingSize) {
+            Lada.pagingSize = newVal;
+            Lada.getApplication().fireEvent('pagingSizeChanged');
+        }
     },
 
     // Define the controllers of the application. They will be initialized

@@ -23,25 +23,9 @@ Der Lada-Client ist eine Anwendung die auf dem Framework ExtJs 6.2.0
 `https://www.sencha.com/legal/gpl/`. Ein automatisierter Download ist seitens
 Sencha nicht mehr vorgesehen.
 
-### Installation einer Entwicklungsumgebung der Anwendung
+###Sencha Cmd
 
-    TODO: vorläufige Anleitung
-    Beachten Sie: Sencha Cmd ist keine freie Software.
-* cd (Umgebung)
-* sencha workspace init
-* Extjs6 nach ext/ kopieren/entpacken
-* https://github.com/elmasse/elmasse-bundle/archive/v1.2.0.tar.gz nach packages/local/ entpacken TODO Migration: benötigt dort?
-* sencha app install
-* sencha app build development
-* Einstiegspunkt für Webbrowser: index.html
-
-### Kompilieren und Minifizieren der Anwendung
-
-Zum Kompilieren der Anwendung kommt das Tool Sencha Cmd 6.2.0.x zum Einsatz.
-Mit Hilfe dieses Tools kann der Quellcode in eine einzelne Datei zusammengefasst
-und minifiziert werden. Dies beschleunigt das Laden der Anwendung im Browser
-erheblich
-
+Bei der Einrichtung der Entwicklungsumgebung und beim Kompilieren der Anwendung kommt das Tool Sencha Cmd 6.2.0.x zum Einsatz.
 Sencha bietet Sencha Cmd zum [Download](https://www.sencha.com/products/extjs/cmd-download/)
 an. Beachten Sie: Sencha Cmd ist keine freie Software.
 
@@ -50,6 +34,24 @@ Die Fa. Sencha beschreibt die Installation von Sencha Cmd in der
 
 Zur Installation von Sencha Cmd werden Ruby und Java benötigt.
 
+### Installation einer Entwicklungsumgebung der Anwendung
+
+* cd (Umgebung)
+* sencha workspace init
+* Extjs6 nach ext/ kopieren/entpacken
+* https://github.com/elmasse/elmasse-bundle/archive/v1.2.0.tar.gz nach packages/local/
+* sencha app install --framework=ext
+* sencha app build development
+* Einstiegspunkt für Webbrowser: index.html
+
+### Kompilieren und Minifizieren der Anwendung
+
+Mit Hilfe von Sencha Cmd kann der Quellcode in eine einzelne Datei zusammengefasst
+und minifiziert werden. Dies beschleunigt das Laden der Anwendung im Browser
+erheblich. Die Minifizierung erfolgt über:
+```
+    sencha app build production
+```
 
 ### Installation Apache
 Zunächst wird der Apache Webserver aus dem Repository installiert:

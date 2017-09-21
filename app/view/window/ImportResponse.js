@@ -19,9 +19,11 @@ Ext.define('Lada.view.window.ImportResponse', {
         var html;
         var download;
         var i18n = Lada.getApplication().bundle;
-        var data = Ext.decode(me.responseData);
-        console.log(this.responseData);
-        console.log(data);
+        try {
+            var data = Ext.decode(me.responseData);
+        } catch (e) {
+            var data = null;
+        }
         if (data) {
             html = me.parseShortResponse(data);
         }

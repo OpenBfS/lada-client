@@ -19,7 +19,7 @@
 FROM debian:jessie
 MAINTAINER tom.gottfried@intevation.de
 
-RUN apt-get update -y && apt-get install -y curl unzip python apache2
+RUN apt-get update -y && apt-get install -y curl unzip python apache2 openjdk-8-jre
 
 ADD . /var/www/html
 WORKDIR /var/www/html

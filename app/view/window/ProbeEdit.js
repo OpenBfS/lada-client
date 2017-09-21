@@ -188,7 +188,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
     },
 
     /**
-     * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
+     * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty
+     */
     handleBeforeClose: function() {
         var me = this;
 
@@ -207,18 +208,16 @@ Ext.define('Lada.view.window.ProbeEdit', {
                     layout: 'hbox',
                     items: [{
                         xtype: 'button',
-                        text:   'OK',
+                        text:   'Ja',
                         margin: '5, 0, 5, 5',
 
                         handler: function() {
                             me.down('probeform').fireEvent('save', me.down('probeform'));
-                            //var saveButton = me.down('probeform').down('button[action=save]');
-                            //saveButton.click();
                             confWin.close();
                         }
                     }, {
                         xtype: 'button',
-                        text: 'Schließen',
+                        text: 'Nein',
                         margin: '5, 5, 5, 5',
 
                         handler: function() {
