@@ -230,11 +230,23 @@ Ext.application({
         Ext.create('Lada.store.Umwelt', {
             storeId: 'umwelt'
         });
-        Ext.create('Lada.store.Verwaltungseinheiten', {
-            storeId: 'verwaltungseinheiten'
+        Ext.create('Lada.store.VerwaltungseinheitenUnfiltered', {
+            storeId: 'verwaltungseinheitenwidget'
         });
         Ext.create('Lada.store.Verwaltungseinheiten', {
-            storeId: 'verwaltungseinheitenwidget'
+            storeId: 'verwaltungseinheiten',
+            listeners: {
+                load: function(){
+                    var w = Ext.data.StoreManager.get(
+                        'verwaltungseinheitenwidget');
+                    w.removeAll(true);
+                    var records = [];
+                    this.each(function(r){
+                        records.push(r.copy());
+                    });
+                    w.add(records);
+                }
+            }
         });
         Ext.create('Lada.store.Probenehmer', {
             storeId: 'probenehmer',
