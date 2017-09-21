@@ -210,19 +210,19 @@ Ext.define('Lada.view.window.Messprogramm', {
         var item = me.down('messprogrammform');
         if (item.isDirty()) {
             var confWin = Ext.create('Ext.window.Window', {
-                title: 'Änderungen Speichern',
+                title: i18n.getMsg('form.saveonclosetitle'),
                 modal: true,
                 layout: 'vbox',
                 items: [{
                     xtype: 'container',
-                    html: 'Änderungen vor dem Schließen speichern?',
+                    html: i18n.getMsg('form.saveonclosequestion'),
                     margin: '10, 5, 5, 5'
                 }, {
                     xtype: 'container',
                     layout: 'hbox',
                     items: [{
                         xtype: 'button',
-                        text:   'OK',
+                        text:   i18n.getMsg('form.yes'),
                         margin: '5, 0, 5, 5',
 
                         handler: function() {
@@ -231,7 +231,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                         }
                     }, {
                         xtype: 'button',
-                        text: i18n.getMsg('close'),
+                        text: i18n.getMsg('form.no'),
                         margin: '5, 5, 5, 5',
 
                         handler: function() {

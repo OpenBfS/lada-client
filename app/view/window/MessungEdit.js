@@ -282,22 +282,23 @@ Ext.define('Lada.view.window.MessungEdit', {
      * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
     handleBeforeClose: function() {
         var me = this;
+        var i18n = Lada.getApplication().bundle;
         var item = me.down('messungform');
         if (item.isDirty()) {
             var confWin = Ext.create('Ext.window.Window', {
-                title: 'Änderungen Speichern',
+                title: i18n.getMsg('form.saveonclosetitle'),
                 modal: true,
                 layout: 'vbox',
                 items: [{
                     xtype: 'container',
-                    html: 'Änderungen vor dem Schließen speichern?',
+                    html: i18n.getMsg('form.saveonclosequestion'),
                     margin: '10, 5, 5, 5'
                 }, {
                     xtype: 'container',
                     layout: 'hbox',
                     items: [{
                         xtype: 'button',
-                        text:   'OK',
+                        text: i18n.getMsg('form.yes'),
                         margin: '5, 0, 5, 5',
 
                         handler: function() {
@@ -306,7 +307,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                         }
                     }, {
                         xtype: 'button',
-                        text: 'Abbrechen',
+                        text: i18n.getMsg('form.no'),
                         margin: '5, 5, 5, 5',
 
                         handler: function() {
