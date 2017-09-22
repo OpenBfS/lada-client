@@ -12,12 +12,13 @@
 Ext.define('Lada.view.widget.Deskriptor', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.deskriptor',
-    displayField: 'id',
+    displayField: 'beschreibung',
     valueField: 'id',
     // Enable filtering of comboboxes
     triggerAction: 'all',
     typeAhead: false,
     layer: null,
+    lastQuery: '',
     queryMode: 'remote',
     allowBlank: true,
     remoteFilter: true,

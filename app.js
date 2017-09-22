@@ -106,7 +106,7 @@ Ext.application({
         ];
 
         //initial default paging size, may be changed by user
-        Lada.pagingSize = 25;
+        Lada.pagingSize = 50;
 
         var queryString = document.location.href.split('?')[1];
         if (queryString) {

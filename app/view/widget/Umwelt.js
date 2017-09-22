@@ -13,13 +13,14 @@ Ext.define('Lada.view.widget.Umwelt' ,{
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.umwelt',
     store: 'Umwelt',
-    displayField: 'id',
+    displayField: 'umweltBereich',
     valueField: 'id',
     editable: this.editable || false,
     forceSelection: true,
     // Enable filtering of comboboxes
     autoSelect: false,
     queryMode: 'local',
+    lastQuery: '',
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
@@ -28,6 +29,7 @@ Ext.define('Lada.view.widget.Umwelt' ,{
             '{id} - {umweltBereich}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
          '<tpl for=".">{id} - {umweltBereich}</tpl>'),
+    enableKeyEvents: true,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -39,5 +41,6 @@ Ext.define('Lada.view.widget.Umwelt' ,{
         }
         this.store.sort();
         this.callParent(arguments);
+
     }
 });
