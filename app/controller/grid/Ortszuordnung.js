@@ -227,7 +227,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         verwaltungseinheiten.filter({
                 property: 'bezeichnung',
                 anyMatch: true,
-                value: filter
+                value: filter,
+                caseSensitive: false
         });
         verwgrid.setStore(verwaltungseinheiten);
         verwgrid.down('pagingtoolbar').doRefresh();
@@ -237,11 +238,11 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         staaten.filter({
                 property: 'staat',
                 anyMatch: true,
-                value: filter
+                value: filter,
+                caseSensitive: false
         });
         staatgrid.down('pagingtoolbar').doRefresh();
 
-        
         staatgrid.setStore(staaten);
     },
 
@@ -329,35 +330,36 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var localfilter = false;
         if (!ozw){return;}
         if (filterstring && this.ortefilter) {
-            if (filterstring === this.ortfilter){
+            if (filterstring.toLowerCase() === this.ortfilter){
                 return;
             }
-            if (!filterstring.indexOf(this.ortfilter) > -1){
+            if (!filterstring.toLowerCase().indexOf(this.ortfilter) > -1){
                 localFilter = true;
             }
         }
         var ortgrid= ozw.down('ortstammdatengrid');
-        ozw.ortstore.clearFilter(true);
+        ozw.ortstore.clearFilter();
         if (filterstring){
+            var filter_low = filterstring.toLowerCase();
             ozw.ortstore.addFilter({
                 name: 'ortstringsearch',
                 filterFn: function(item) {
                     if (!item.data){return false;}
-                    if (item.data.ortId.indexOf(filterstring) > -1) {
+                    if (item.data.ortId.indexOf(filter_low) > -1) {
                         return true;
                     }
-                    if (item.data.kurztext.indexOf(filterstring) > -1) {
+                    if (item.data.kurztext.toLowerCase().indexOf(filter_low) > -1) {
                         return true;
                     }
-                    if (item.data.langtext.indexOf(filterstring) > -1) {
+                    if (item.data.langtext.toLowerCase().indexOf(filter_low) > -1) {
                         return true;
                     }
                     if (item.data.berichtstext &&
-                        item.data.berichtstext.indexOf(filterstring) > -1) {
+                        item.data.berichtstext.toLowerCase().indexOf(filter_low) > -1) {
                         return true;
                     }
                     if (item.data.gemId &&
-                        item.data.gemId.indexOf(filterstring) > -1) {
+                        item.data.gemId.toLowerCase().indexOf(filter_low) > -1) {
                         return true;
                     }
                 }});
@@ -367,21 +369,21 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             property: 'netzbetreiberId',
             value: Lada.netzbetreiber[0]
         });
+        var toolbar = ozw.down('tabpanel').down('ortstammdatengrid').down('pagingtoolbar');
         if (localfilter){
-            
             ozw.onStoreChanged();
+            toolbar.doRefresh();
         } else {
             this.ortefilter = filterstring || null;
             ozw.ortstore.load({
                 callback: function(records, operation, success){
+                    console.log("reloaded");
                     ortgrid.setStore(ozw.ortstore);
                     ozw.onStoreChanged();
+                    toolbar.doRefresh();
                 }
             });
         }
-        //Update the toolbar;
-        var toolbar = ozw.down('tabpanel').down('ortstammdatengrid').down('pagingtoolbar');
-        toolbar.doRefresh();
     },
 
     /**
