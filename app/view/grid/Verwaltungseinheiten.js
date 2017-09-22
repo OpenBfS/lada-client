@@ -35,7 +35,6 @@ Ext.define('Lada.view.grid.Verwaltungseinheiten', {
         }, {
             header: 'Name', //i18n.getMsg(TODO)
             dataIndex: 'bezeichnung',
-            align:'left',
             flex: 1
         }];
         this.store.loadPage(1);
