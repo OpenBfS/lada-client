@@ -125,7 +125,23 @@ Ext.define('Lada.view.grid.Orte', {
             dataIndex: 'gemId',
             width: 200,
             filter: {
-                type: 'string'
+                type: 'string',
+                filterFn: function(record, value){
+                    var store = Ext.data.StoreManager.get('verwaltungseinheiten');
+                    var gemId = record.get('gemId');
+                    if (value && !gemId){
+                        return false;
+                    }
+                    if (!value){
+                        return true;
+                    }
+                    value = value.toLowerCase();
+                    var bezeichnung = store.getById(gemId).get('bezeichnung').toLowerCase();
+                    if (bezeichnung.indexOf(value) > -1){
+                        return true;
+                    }
+                    return false;
+                }
             },
             renderer: function(value) {
                 if (value === undefined ||
