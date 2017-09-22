@@ -101,3 +101,7 @@
 .x-grid-row-editor-buttons-top {
     clip: auto !important;
 }
+
+span.x-grid-checkcolumn {
+    pointer-events: none;
+}
