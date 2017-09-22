@@ -33,6 +33,10 @@ Ext.define('Lada.view.widget.PagingSize', {
             Lada.getApplication().setPagingSize(parseInt(newVal));
             var tb = this.up('pagingtoolbar');
             if (tb){
+                var pageStore = tb.getStore();
+                if (pageStore) {
+                    pageStore.setPageSize(newVal);
+                }
                 tb.doRefresh();
             }
         }

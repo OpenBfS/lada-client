@@ -26,6 +26,7 @@ Ext.define('Lada.view.grid.ProbeList', {
             checkOnly: true,
             injectCheckbox: 1
         });
+
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'top',

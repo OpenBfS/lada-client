@@ -416,7 +416,7 @@ Ext.define('Lada.controller.Filter', {
         }
         else {
             store = Ext.create(sname, {
-                pageSize: 50
+                pageSize: Lada.pagingSize
             });
         }
         if (store) {

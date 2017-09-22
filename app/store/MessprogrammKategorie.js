@@ -12,5 +12,5 @@
 Ext.define('Lada.store.MessprogrammKategorie', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.MessprogrammKategorie',
-    pageSize: 50
+    pageSize: Lada.pagingSize
 });
