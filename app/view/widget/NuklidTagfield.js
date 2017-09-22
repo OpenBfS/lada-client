@@ -33,7 +33,6 @@ Ext.define('Lada.view.widget.NuklidTagfield' ,{
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        this.emptyText = i18n.getMsg('emptytext.nuklidgrid'),
         this.callParent(arguments);
     }
 });

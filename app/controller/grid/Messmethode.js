@@ -94,7 +94,7 @@ Ext.define('Lada.controller.grid.Messmethode', {
         }
         record.set('messprogrammId', button.up('messmethodengrid').recordId);
         button.up('messmethodengrid').store.insert(0, record);
-        button.up('messmethodengrid').rowEditing.startEdit(0,1);
+        button.up('messmethodengrid').rowEditing.startEdit(0,0);
     },
 
     /**
