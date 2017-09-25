@@ -195,7 +195,7 @@ Ext.define('Lada.view.panel.Map', {
         this.standardStyle = function(feature, resolution) {
             return new ol.style.Style({
                 image: new ol.style.Icon({
-                    src: 'resources/lib/OpenLayers/img/marker-green.png'
+                    src: 'resources/img/marker-green.png'
                 }),
                 text: new ol.style.Text({
                     text: feature.get('bez') || '...',
@@ -213,7 +213,7 @@ Ext.define('Lada.view.panel.Map', {
         this.selectStyle = function(feature, resolution){
             return new ol.style.Style({
                 image: new ol.style.Icon({
-                    src: 'resources/lib/OpenLayers/img/marker-blue.png'
+                    src: 'resources/img/marker-blue.png'
                 }),
                 text: new ol.style.Text({
                     text: feature.get('bez') || '...',
@@ -231,7 +231,7 @@ Ext.define('Lada.view.panel.Map', {
         this.newFeatureStyle= function(feature, resolution){
             return new ol.style.Style({
                 image: new ol.style.Icon({
-                    src: 'resources/lib/OpenLayers/img/marker-blue.png'
+                    src: 'resources/img/marker-blue.png'
                 }),
                 text: new ol.style.Text({
                     text: 'neu ...',
