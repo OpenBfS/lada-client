@@ -391,7 +391,7 @@ Ext.define('Lada.view.form.Probe', {
                             name: 'umwId',
                             fieldLabel: 'Umweltbereich',
                             labelWidth: 100,
-                            allowBlank: false,
+                            allowBlank: true,
                             editable: true,
                             listeners: {
                                 dirtychange: {
