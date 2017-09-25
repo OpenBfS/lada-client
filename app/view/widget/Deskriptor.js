@@ -18,15 +18,18 @@ Ext.define('Lada.view.widget.Deskriptor', {
     triggerAction: 'all',
     typeAhead: false,
     layer: null,
-    lastQuery: '',
-    queryMode: 'remote',
+    lastQuery: null,
+    queryMode: 'local',
     allowBlank: true,
-    remoteFilter: true,
+    remoteFilter: false,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{sn} - {beschreibung}</div></tpl>'),
+        '<tpl if="sn &gt; 9">{sn} - {beschreibung}</tpl>',
+        '<tpl if="sn &lt; 10">0{sn} - {beschreibung}</tpl></div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-         '<tpl for="."><tpl if="sn &gt; 0">{sn} - {beschreibung}</tpl></tpl>'),
+         '<tpl for="."><tpl if="sn &gt; 9">{sn} - {beschreibung}</tpl>',
+         '<tpl if="sn &gt; 0 &amp;&amp;sn &lt; 10">0{sn} - {beschreibung}</tpl>',
+         '</tpl>'),
 
     initComponent: function() {
         this.store = Ext.create('Lada.store.Deskriptoren');
@@ -45,7 +48,7 @@ Ext.define('Lada.view.widget.Deskriptor', {
         // normal clear action does not trigger the descriptorselect handler
         // to delete child deskriptoren.
         combobox.triggers.clear.handler = function(){
-            this.select('00');
+            this.select('0');
             this.fireEvent('select', this, this.store.getAt(0));
         }
     },
