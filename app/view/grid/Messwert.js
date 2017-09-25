@@ -160,11 +160,14 @@ Ext.define('Lada.view.grid.Messwert', {
             header: 'Messfehler',
             dataIndex: 'messfehler',
             xtype: 'numbercolumn',
+            format: '0000.0',
             width: 80,
             editor: {
                 xtype: 'numberfield',
                 allowBlank: false,
                 maxLength: 10,
+                decimalPrecision: 1,
+                allowDecimals: true,
                 allowExponential: false,
                 enforceMaxLength: true
             }
