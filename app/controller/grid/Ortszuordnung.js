@@ -377,9 +377,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             this.ortefilter = filterstring || null;
             ozw.ortstore.load({
                 callback: function(records, operation, success){
-                    console.log("reloaded");
-                    ortgrid.setStore(ozw.ortstore);
                     ozw.onStoreChanged();
+                    ortgrid.setStore(ozw.ortstore);
                     toolbar.doRefresh();
                 }
             });
