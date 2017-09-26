@@ -14,6 +14,7 @@ Ext.define('Lada.view.widget.Deskriptor', {
     alias: 'widget.deskriptor',
     displayField: 'beschreibung',
     valueField: 'id',
+    searchValueField: 'sn',
     // Enable filtering of comboboxes
     triggerAction: 'all',
     typeAhead: false,
