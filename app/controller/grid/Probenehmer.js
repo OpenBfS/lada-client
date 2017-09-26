@@ -44,9 +44,7 @@ Ext.define('Lada.controller.grid.Probenehmer', {
             record.get('netzbetreiberId')) &&
             record.get('netzbetreiberId') !== '') {
             var grid = Ext.ComponentQuery.query('probenehmergrid')[0];
-            if (grid.rowEditing){
-                grid.rowEditing.cancelEdit();
-            }
+            grid.rowEditing.cancelEdit();
             return;
         }
     },
@@ -56,9 +54,7 @@ Ext.define('Lada.controller.grid.Probenehmer', {
         if (!Ext.Array.contains(Lada.netzbetreiber,
             record.get('netzbetreiberId')) &&
             record.get('netzbetreiberId') !== '') {
-            if (grid.rowEditing){
-                grid.rowEditing.cancelEdit();
-            }
+            grid.rowEditing.cancelEdit();
             return;
         }
         grid.rowEditing.startEdit(record, 0);
