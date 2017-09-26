@@ -35,14 +35,14 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         this.items = [{
             xtype: this.multiSelect? 'tagfield':'combobox',
             flex: 1,
-            triggers: this.allowBlank? {
+            triggers: {
                 clear:{
                     cls: 'x-form-clear-trigger',
                     handler: function() {
                         this.clearValue();
                     }
                 }
-            } : {},
+            },
             name: this.name,
             maxLength: this.maxLength,
             fieldLabel: this.fieldLabel,
