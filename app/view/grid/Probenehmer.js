@@ -254,6 +254,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 store: store,
                 displayInfo: true
             }]);
+            var cbox = Ext.create('Lada.view.widget.PagingSize');
+            this.down('pagingtoolbar').add('-');
+            this.down('pagingtoolbar').add(cbox);
         }
     }
 });

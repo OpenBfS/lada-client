@@ -302,6 +302,9 @@ Ext.define('Lada.view.grid.Orte', {
             dataIndex: 'letzteAenderung'
         }];
         this.callParent(arguments);
+        var cbox = Ext.create('Lada.view.widget.PagingSize');
+        this.down('pagingtoolbar').add('-');
+        this.down('pagingtoolbar').add(cbox);
     },
 
     /**

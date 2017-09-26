@@ -157,6 +157,11 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
                 store: store,
                 displayInfo: true
             }]);
+            var cbox = Ext.create('Lada.view.widget.PagingSize');
+            this.down('pagingtoolbar').add('-');
+            this.down('pagingtoolbar').add(cbox);
+
+
         }
     }
 });
