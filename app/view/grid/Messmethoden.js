@@ -32,6 +32,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.mmtgrid');
+        var me = this;
 
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
@@ -104,7 +105,11 @@ Ext.define('Lada.view.grid.Messmethoden', {
                     '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
                     '{id} - {messmethode}</div></tpl>'),
                 displayTpl: Ext.create('Ext.XTemplate',
-                    '<tpl for=".">{id} - {messmethode}</tpl>')
+                    '<tpl for=".">{id} - {messmethode}</tpl>'),
+                listeners: {
+                    //TODO initial event firing setNuklide upon editor activation
+                    change: me.setNuklide
+                }
             }
         }, {
             header: i18n.getMsg('nuklide'),
@@ -169,5 +174,20 @@ Ext.define('Lada.view.grid.Messmethoden', {
             this.down('button[action=delete]').enable();
             this.down('button[action=add]').enable();
          }
+    },
+
+    /* changes the nuklide store to reflect available nuklide for the method selected*/
+    setNuklide: function(cbox, newVal, oldVal){
+        if (oldVal && oldVal == newVal){
+            return;
+        }
+        var grid = cbox.up('messmethodengrid');
+        if (grid){
+            var nuklidfield = grid.columns[1].getEditor();
+            console.log(nuklidfield);
+            var params = newVal ? {mmtId: newVal} : {};
+            nuklidfield.getStore().proxy.extraParams = params;
+            nuklidfield.getStore().load();
+        }
     }
 });
