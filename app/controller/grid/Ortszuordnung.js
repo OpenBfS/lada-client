@@ -18,6 +18,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     ],
 
     searchField: null,
+    searchTimer: null,
+    searchTimeout: 500,
 
     /**
      * Initialize the controller
@@ -44,7 +46,28 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 click: this.allorte
             },
             'ortszuordnungwindow toolbar textfield[name=search]': {
-                keyup: this.search
+                keyup: function(field, evt, opts) {
+                    //Ignore keys like ctrl
+                    var key = evt.getKey();
+                    if ( (key - 48 < 0 && key - 90 > 0) //0-9 A-Z
+                            && key != 46 //Delete
+                            && key != 8 //Backspace
+                            && key != 32){
+                        return;
+                    }
+                    var me = this;
+                    if (!me.searchTimer) {
+                        me.searchTimer = new Ext.util.DelayedTask(function() {
+                            me.search(field, evt, opts);
+                        });
+                    }
+                    try{
+                        me.searchTimer.cancel();
+                        me.searchTimer.delay(me.searchTimeout);
+                    } catch(e) {
+                        me.search(field, evt, opts);
+                    }
+                }
             },
             'ortszuordnungwindow tabpanel ortstammdatengrid pagingtoolbar[name=ortpagingtoolbar]': {
                 change: this.ortPageChanged
@@ -56,6 +79,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 itemdblclick: this.selectedVerwaltungseinheit
             }
         });
+        var verwStore = Ext.data.StoreManager.get('verwaltungseinheiten');
     },
 
     /**
@@ -183,15 +207,18 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * Search triggered by textfield key event.
      */
     search: function(field, evt, opts) {
+
         if (evt.getKey() === 27) {
             verwaltungseinheiten.clearFilter(true);
             staaten.clearFilter(true);
             messpunkte.clearFilter(true);
         }
         this.searchField = field;
-        if ((evt.getKey() == 13 || evt.getKey() == 8) && field.getValue() && field.getValue().length > 0) {
+        if ((evt.getKey() == 13 || evt.getKey() == 8)
+                    && field.getValue()
+                    && field.getValue().length > 0
+                    && field.getValue().length < 3) {
             this.execSearch(field, field.getValue());
-            //TODO backspace triggers too often (i.e. with empty field)
         }
         if (field.getValue().length === 0) {
             var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
@@ -232,7 +259,6 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         });
         verwgrid.setStore(verwaltungseinheiten);
         verwgrid.down('pagingtoolbar').doRefresh();
-
 
         var staatgrid= ozw.down('staatengrid');
         staaten.filter({

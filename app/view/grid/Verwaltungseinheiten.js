@@ -48,7 +48,6 @@ Ext.define('Lada.view.grid.Verwaltungseinheiten', {
         this.down('pagingtoolbar').add(cbox);
     },
 
-
     /**
      * This sets the Store of this Grid
      */
