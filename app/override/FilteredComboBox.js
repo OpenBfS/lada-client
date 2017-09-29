@@ -10,15 +10,16 @@ Ext.define('Lada.override.FilteredComboBox', {
     override: 'Ext.form.field.ComboBox',
     alias: 'widget.filteredcombobox',
     anyMatch: true,
+    /* TODO: doQuery disturbs doLocalQuery in ways not yet fully understood
     doQuery: function(queryString, forceAll) {
         this.expand();
         this.store.clearFilter(!forceAll);
-
         if (!forceAll) {
             this.store.filter(this.displayField,
                     new RegExp(Ext.String.escapeRegex(queryString), 'i'));
         }
     },
+*/
     /* Overwrites the ExtJS local query with a filter that does the following:
         * 1. Partial matches will still return true
         * 2. not case sensitive
