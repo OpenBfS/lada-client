@@ -31,6 +31,7 @@ Ext.application({
         'Lada.override.RowEditor',
         'Lada.override.i18n.DE',
         'Lada.override.RowExpander',
+        'Lada.override.FilteredComboBox',
         'Lada.view.plugin.GridRowExpander',
         'Ext.i18n.Bundle',
         'Ext.layout.container.Column',
