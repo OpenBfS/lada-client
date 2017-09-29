@@ -20,6 +20,15 @@ Ext.define('Lada.override.FilteredComboBox', {
         }
     },
 */
+    triggers: {
+        clear:{
+            cls: 'x-form-clear-trigger',
+            handler: function() {
+                this.clearValue();
+            }
+        }
+    },
+
     /* Overwrites the ExtJS local query with a filter that does the following:
         * 1. Partial matches will still return true
         * 2. not case sensitive
@@ -27,6 +36,7 @@ Ext.define('Lada.override.FilteredComboBox', {
         * or (if latter non existant) in "ValueField".
         */
     lastQuery: '',
+
     doLocalQuery: function(queryPlan){
         var me = this,
             queryString = queryPlan.query,
