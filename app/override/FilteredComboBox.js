@@ -26,6 +26,7 @@ Ext.define('Lada.override.FilteredComboBox', {
         * 3. Will look either in "displayField" and in "searchValueField"
         * or (if latter non existant) in "ValueField".
         */
+    lastQuery: '',
     doLocalQuery: function(queryPlan){
         var me = this,
             queryString = queryPlan.query,

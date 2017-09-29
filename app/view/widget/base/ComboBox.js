@@ -35,14 +35,6 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         this.items = [{
             xtype: this.multiSelect? 'tagfield':'combobox',
             flex: 1,
-            triggers: {
-                clear:{
-                    cls: 'x-form-clear-trigger',
-                    handler: function() {
-                        this.clearValue();
-                    }
-                }
-            },
             name: this.name,
             maxLength: this.maxLength,
             fieldLabel: this.fieldLabel,
@@ -73,7 +65,6 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             // disable filtering of entries if disableKeyFilter is true
             disableKeyFilter: dkf,
             triggerAction: ta,
-            lastQuery: '',
             matchFieldWidth: this.matchFieldWidth || false,
             listConfig: this.listConfig || {maxWidth: 400},
         }, {
