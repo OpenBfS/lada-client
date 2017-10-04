@@ -22,7 +22,7 @@ Ext.define('Lada.override.FilteredComboBox', {
 */
     triggers: {
         clear:{
-            cls: 'x-form-clear-trigger',
+            extraCls: 'x-form-clear-trigger',
             handler: function() {
                 this.clearValue();
             }

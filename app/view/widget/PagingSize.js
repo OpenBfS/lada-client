@@ -54,15 +54,9 @@ Ext.define('Lada.view.widget.PagingSize', {
         Lada.getApplication().on('pagingSizeChanged', me.refreshPagingSize, this);
         me.store = Ext.StoreManager.get('pagingSizes');
         this.callParent(arguments);
+        this.down('combobox').getTriggers().clear.hidden = true;
         this.down('combobox').setStore(this.store);
         this.down('combobox').select(Lada.pagingSize);
-        // TODO: synchronize other instances to reflect current setting. Does not work in ortszuordnung
-        //         var tb = this.up('pagingtoolbar');
-        //         if (tb){
-        //             tb.up('panel').on('activate', function(){ TODO: they are not "panels"
-        //                 me.down('combobox').setValue(Lada.pagingSize);
-        //             });
-        //         }
     }
 });
 

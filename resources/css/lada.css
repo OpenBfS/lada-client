@@ -105,6 +105,3 @@
 span.x-grid-checkcolumn {
     pointer-events: none;
 }
-.x-form-clear-trigger-grid-cell {
-    background-image: url(../img/clear-trigger.gif) !important;
-}
