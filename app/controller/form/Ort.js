@@ -65,7 +65,7 @@ Ext.define('Lada.controller.form.Ort', {
                 formpanel.down('staat').store.clearFilter();
                 button.setDisabled(true);
                 formpanel.down('button[action=revert]').setDisabled(true);
-                button.hide();
+                button.setDisabled(true);
                 var ozw = formpanel.up('panel').parentWindow;
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
@@ -164,6 +164,7 @@ Ext.define('Lada.controller.form.Ort', {
             panel.down('button[action=revert]').setDisabled(false);
         } else {
             panel.down('button[action=revert]').setDisabled(true);
+            panel.down('button[action=save]').setDisabled(true);
         }
         if (form.isValid()) {
             //one of three conditions must apply, the first one depending
