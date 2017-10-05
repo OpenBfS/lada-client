@@ -362,49 +362,25 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         }
         var ortgrid= ozw.down('ortstammdatengrid');
         ozw.ortstore.clearFilter();
+        var filter_low = '';
         if (filterstring){
-            var filter_low = filterstring.toLowerCase();
+            filter_low = filterstring.toLowerCase();
             ozw.ortstore.addFilter({
-                name: 'ortstringsearch',
-                filterFn: function(item) {
-                    if (!item.data){return false;}
-                    if (item.data.ortId.indexOf(filter_low) > -1) {
-                        return true;
-                    }
-                    if (item.data.kurztext.toLowerCase().indexOf(filter_low) > -1) {
-                        return true;
-                    }
-                    if (item.data.langtext.toLowerCase().indexOf(filter_low) > -1) {
-                        return true;
-                    }
-                    if (item.data.berichtstext &&
-                        item.data.berichtstext.toLowerCase().indexOf(filter_low) > -1) {
-                        return true;
-                    }
-                    if (item.data.gemId &&
-                        item.data.gemId.toLowerCase().indexOf(filter_low) > -1) {
-                        return true;
-                    }
-                }});
+                name: 'ortStringSearch',
+                property: 'ort',
+                value: filter_low
+            });
+
         }
-        ozw.ortstore.addFilter({
-            name: 'netzbetreiberfilter',
-            property: 'netzbetreiberId',
-            value: Lada.netzbetreiber[0]
-        });
         var toolbar = ozw.down('tabpanel').down('ortstammdatengrid').down('pagingtoolbar');
         if (localfilter){
             ozw.onStoreChanged();
             toolbar.doRefresh();
         } else {
             this.ortefilter = filterstring || null;
-            ozw.ortstore.load({
-                callback: function(records, operation, success){
-                    ortgrid.setStore(ozw.ortstore);
-                    ozw.onStoreChanged();
-                    toolbar.doRefresh();
-                }
-            });
+            ortgrid.setStore(ozw.ortstore);
+            ozw.onStoreChanged();
+            toolbar.doRefresh();
         }
     },
 

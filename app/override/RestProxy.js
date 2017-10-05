@@ -31,6 +31,26 @@ Ext.define('Lada.override.RestProxy', {
         this.callParent(arguments);
     },
 
+    /**
+     * If parameter "filter" is set, convert it to a simple string,
+     * suitable for lada-server remote filtering.
+     */
+    getParams: function(operation) {
+        var filters = operation.getFilters();
+        var filterParam = this.getFilterParam();
+        var params = this.callParent(arguments);
+        if (filterParam && filters && filters.length > 0){
+            var filterJson = Ext.decode(params[filterParam]);
+            if (filterJson) {
+                for (var i = 0; i < filterJson.length; i++) {
+                    if (filterJson[i].name == 'ortStringSearch') {
+                        params[filterParam] = filterJson[i].value;
+                    }
+                }
+            }
+        }
+        return params;
+    },
 
     parseStatus: function(status) {
         console.log(status);
