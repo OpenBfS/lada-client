@@ -24,7 +24,6 @@ Ext.define('Lada.view.grid.Staaten', {
     // minHeight and deferEmptyText are needed to be able to show the
     // emptyText message.
     minHeight: 110,
-    store: Ext.data.StoreManager.get('staaten'),
     allowDeselect: true,
 
     initComponent: function() {
@@ -50,9 +49,9 @@ Ext.define('Lada.view.grid.Staaten', {
             flex: 1,
             align: 'start'
         }];
-        if (this.store){
-            this.store.loadPage(1);
-        }
+        this.store = Ext.data.StoreManager.get('staaten');
+        this.store.loadPage(1);
+        this.setTitle('Staaten(' + this.store.getCount() + ')');
         var cbox = Ext.create('Lada.view.widget.PagingSize');
         this.callParent(arguments);
         this.down('pagingtoolbar').add('-');

@@ -305,6 +305,9 @@ Ext.define('Lada.view.grid.Orte', {
         var cbox = Ext.create('Lada.view.widget.PagingSize');
         this.down('pagingtoolbar').add('-');
         this.down('pagingtoolbar').add(cbox);
+        if (this.up('tabpanel')){
+            this.setTitle('Orte(0)');
+        }
     },
 
     /**

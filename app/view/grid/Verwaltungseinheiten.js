@@ -37,7 +37,11 @@ Ext.define('Lada.view.grid.Verwaltungseinheiten', {
             dataIndex: 'bezeichnung',
             flex: 1
         }];
-        this.store.loadPage(1);
+        if (this.store){
+            this.store.loadPage(1);
+            this.setTitle(
+                'Verwaltungseinheiten (' + this.store.getCount() + ')');
+        }
         var cbox = Ext.create('Lada.view.widget.PagingSize');
         this.callParent(arguments);
         this.down('pagingtoolbar').add('-');
