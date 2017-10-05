@@ -241,9 +241,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 value: filter,
                 caseSensitive: false
         });
-        staatgrid.down('pagingtoolbar').doRefresh();
-
         staatgrid.setStore(staaten);
+        staatgrid.down('pagingtoolbar').doRefresh();
     },
 
     selectedMesspunkt: function(grid, record) {
