@@ -212,14 +212,14 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * Execute search in stores (ort, verwaltungseinheit and staat) and
      * display the resultset.
      */
-    execSearch: function(field, filter) {
+    execSearch: function(requestingCmp, filter) {
         // Filter stores
         var messpunkte = Ext.data.StoreManager.get('orte');
         var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
         messpunkte.clearFilter(true);
         staaten.clearFilter(true);
-        var ozw = field.up('ortszuordnungwindow');
+        var ozw = requestingCmp.up('ortszuordnungwindow');
         this.doOrtFilter(ozw, filter);
 
         var verwgrid = ozw.down('verwaltungseinheitengrid');
@@ -306,13 +306,11 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
     //button to search
     allorte: function(button) {
+        this.execSearch(button, '');
         var ozw = button.up('ortszuordnungwindow');
-        this.doOrtFilter(ozw);
-        ozw.down('tabpanel').setActiveTab(0);
         var searchfield = button.up('toolbar').down('textfield[name=search]');
         searchfield.setValue('');
         ozw.down('tabpanel').setActiveTab(0);
-        //TODO reset other filters?
     },
 
     /*
