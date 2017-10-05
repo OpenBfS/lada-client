@@ -27,6 +27,7 @@ Ext.define('Lada.store.LocalPagingStore', {
         this.pageSize = Lada.pagingSize;
         var maxpages = Math.ceil(count / this.pageSize);
         page = (page > maxpages) ? maxpages : page;
+        page = !page ? 1: page;
         this.currentPage = page;
         this.applyPaging();
     },
