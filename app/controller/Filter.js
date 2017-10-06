@@ -410,10 +410,7 @@ Ext.define('Lada.controller.Filter', {
             store = Ext.create(sname, {
                 autoLoad: false
             });
-            store.proxy.pageParam = undefined;
-            store.proxy.startParam = undefined;
-            store.proxy.limitParam = undefined;
-        }
+}
         else {
             store = Ext.create(sname, {
                 pageSize: Lada.pagingSize
