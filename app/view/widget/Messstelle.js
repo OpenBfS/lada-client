@@ -21,9 +21,11 @@ Ext.define('Lada.view.widget.Messstelle', {
     // Enable filtering of comboboxes
     autoSelect: true,
     queryMode: 'local',
+    lastQuery: '',
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
+
 
     initComponent: function() {
         this.store = Ext.data.StoreManager.get('messstellen');

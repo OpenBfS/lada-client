@@ -58,7 +58,12 @@ Ext.define('Lada.override.FilteredComboBox', {
                 filter = me.queryFilter = Ext.create('Ext.util.Filter', {
                     id: me.id + '-filter',
                     filterFn: function(candidate){
-                        var display = candidate.data[me.displayField].toString().toLowerCase();
+                        var display = candidate.data[me.displayField];
+                        if (!display) {
+                            return false;
+                        } else {
+                            display = display.toString().toLowerCase();
+                        }
                         if (display.indexOf(value) > -1){
                             return true;
                         }
