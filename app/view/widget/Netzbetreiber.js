@@ -13,7 +13,7 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.netzbetreiber',
     store: 'StaNetzbetreiber',
-    displayField: 'id',
+    displayField: 'netzbetreiber',
     valueField: 'id',
     editable: this.editable || false,
     readOnly: this.readOnly,
@@ -21,6 +21,7 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
     submitValue: this.submitValue,
     // Enable filtering of comboboxes
     queryMode: 'local',
+    lastQuery: '',
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
