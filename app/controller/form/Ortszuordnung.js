@@ -74,7 +74,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                         .down('ortszuordnunggrid').store.reload();
                 }
                 catch (e) {
-
                 }
             },
             failure: function(record, response) {
@@ -123,8 +122,14 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             selmod.deselectAll();
         } else {
             var record = osg.store.getById(currentOrt);
-            form.setOrt(null, record);
-            if (record){
+            if (!record){
+                Lada.model.Ort.load(currentOrt, {
+                    success: function(rec) {
+                        form.setFirstOrt(rec);
+                    }
+                });
+            } else {
+                form.setFirstOrt(record);
                 selmod.select(record);
             }
         }
@@ -142,6 +147,11 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         var ortIdIsDirty = true;
         if (form.getRecord().data.ortId == form.findField('ortId').getValue()) {
             ortIdIsDirty = false;
+        }
+        if (form.getRecord().get('readonly') === true){
+            form.owner.down('button[action=save]').setDisabled(true);
+            form.owner.down('button[action=revert]').setDisabled(true);
+            return;
         }
         if (form.findField('ortszusatztext').isDirty()
             || form.findField('ortszuordnungTyp').isDirty()

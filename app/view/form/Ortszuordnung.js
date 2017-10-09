@@ -142,10 +142,21 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     setOrt: function(row, selRecord, index, opts) {
         if (selRecord) {
             var newOrtId = selRecord.get('id');
-            if (newOrtId) {
+            if (!this.readOnly && newOrtId) {
                 this.getForm().setValues({ortId: newOrtId});
                 this.setOrtInfo(selRecord);
             }
+        }
+    },
+
+    /**
+     * sets the ort even if the record is readOnly. Used for initially setting a record
+     * on existing entries.
+     * */
+    setFirstOrt: function(record){
+        if (record){
+           this.getForm().setValues({ortId: record.get('id')});
+           this.setOrtInfo(record);
         }
     },
 
@@ -218,9 +229,14 @@ Ext.define('Lada.view.form.Ortszuordnung', {
      },
 
     setReadOnly: function(value) {
+        this.readOnly = value;
         this.down('tarea[name=ortszusatztext]').setReadOnly(value);
         var fieldId = 'textfield[name=ortszuordnungTyp]';
         this.down(fieldId).setReadOnly(value);
+        if (value){
+          var button = this.down('button[action=save]');
+          button.setDisabled(true);
+        }
     },
 
     /**

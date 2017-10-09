@@ -209,7 +209,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         if (ortId  || ortId === 0) {
             Lada.model.Ort.load(ortId, {
                 success: function(rec) {
-                    me.down('ortszuordnungform').setOrt(null,rec);
+                    me.down('ortszuordnungform').setFirstOrt(rec);
                     map.addPreviousOrt(rec);
                 }
             });
@@ -263,7 +263,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         var ortrecord = this.ortstore.findRecord('id', ortId);
         if (ortrecord){
             map.selectFeature(this.model, ortrecord);
-            this.down('ortszuordnungform').setOrt(null,ortrecord);
+            this.down('ortszuordnungform').setFirstOrt(ortrecord);
         }
         osg.setLoading(false);
         map.setLoading(false);
