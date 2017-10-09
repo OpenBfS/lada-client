@@ -58,14 +58,14 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                     var me = this;
                     if (!me.searchTimer) {
                         me.searchTimer = new Ext.util.DelayedTask(function() {
-                            me.search(field, evt, opts);
+                            me.search(evt, opts);
                         });
                     }
                     try{
                         me.searchTimer.cancel();
                         me.searchTimer.delay(me.searchTimeout);
                     } catch(e) {
-                        me.search(field, evt, opts);
+                        me.search(evt, opts);
                     }
                 }
             },
@@ -206,8 +206,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     /**
      * Search triggered by textfield key event.
      */
-    search: function(field, evt, opts) {
-
+    search: function(evt, opts) {
+      field = Ext.ComponentQuery.query('textfield[name=search]')[0];
         if (evt.getKey() === 27) {
             verwaltungseinheiten.clearFilter(true);
             staaten.clearFilter(true);
