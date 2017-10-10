@@ -350,7 +350,6 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * @param filterstring (optional): The string to filter
      */
     doOrtFilter: function(ozw, filterstring){
-        var localfilter = false;
         if (!ozw){return;}
         if (filterstring && this.ortefilter) {
             if (filterstring.toLowerCase() === this.ortfilter){
@@ -373,15 +372,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
         }
         var toolbar = ozw.down('tabpanel').down('ortstammdatengrid').down('pagingtoolbar');
-        if (localfilter){
-            ozw.onStoreChanged();
-            toolbar.doRefresh();
-        } else {
-            this.ortefilter = filterstring || null;
-            ortgrid.setStore(ozw.ortstore);
-            ozw.onStoreChanged();
-            toolbar.doRefresh();
-        }
+        this.ortefilter = filterstring || null;
+        ortgrid.setStore(ozw.ortstore);
+        ozw.onStoreChanged();
+        toolbar.doRefresh();
     },
 
     /**
