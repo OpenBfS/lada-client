@@ -315,14 +315,16 @@ Ext.define('Lada.view.grid.Orte', {
      */
     setStore: function(store){
         var i18n = Lada.getApplication().bundle;
+        var me = this;
 
         if (store) {
             this.reconfigure(store);
-            if (this.up('tabpanel')){
-                this.setTitle('Orte(' + store.getCount() + ')');
-            }
+            store.on('load', function(loadedStore){
+                if (me.up('tabpanel')){
+                    me.setTitle('Orte(' + loadedStore.getCount() + ')');
+                }
+            });
         }
-
         if (Ext.Array.contains(Lada.funktionen, 4)) {
             var panel = this.up('ortpanel');
             // We are not in stammdaten editor.
