@@ -132,6 +132,16 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 form.setFirstOrt(record);
                 selmod.select(record);
             }
+            var map = button.up('window').down('map');
+            if (map.previousOrtLayer){
+                prevOrt = map.previousOrtLayer.getSource().getFeatures()[0];
+                if (prevOrt){
+                    var geom = prevOrt.getGeometry();
+                    map.map.getView().setCenter([geom.getCoordinates()[0],
+                                                geom.getCoordinates()[1]]);
+                    map.map.getView().setZoom(12);
+                }
+            }
         }
         button.setDisabled(true);
         button.up('toolbar').down('button[action=save]').setDisabled(true);
