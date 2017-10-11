@@ -36,15 +36,17 @@ Ext.define('Lada.override.RestProxy', {
      * suitable for lada-server remote filtering.
      */
     getParams: function(operation) {
-        var filters = operation.getFilters();
-        var filterParam = this.getFilterParam();
         var params = this.callParent(arguments);
-        if (filterParam && filters && filters.length > 0){
-            var filterJson = Ext.decode(params[filterParam]);
-            if (filterJson) {
-                for (var i = 0; i < filterJson.length; i++) {
-                    if (filterJson[i].name == 'ortStringSearch') {
-                        params[filterParam] = filterJson[i].value;
+        if (operation.getFilters){
+            var filters = operation.getFilters();
+            var filterParam = this.getFilterParam();
+            if (filterParam && filters && filters.length > 0){
+                var filterJson = Ext.decode(params[filterParam]);
+                if (filterJson) {
+                    for (var i = 0; i < filterJson.length; i++) {
+                        if (filterJson[i].name == 'ortStringSearch') {
+                            params[filterParam] = filterJson[i].value;
+                        }
                     }
                 }
             }
