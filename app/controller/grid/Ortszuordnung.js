@@ -182,14 +182,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      */
     createort: function(button) {
         var win = button.up('ortszuordnungwindow');
-        var mstId = win.probe.get('mstId');
-        var mst = Ext.data.StoreManager.get('messstellen');
-        var ndx = mst.findExact('id', mstId);
-        var nId = mst.getAt(ndx).get('netzbetreiberId');
         Ext.create('Lada.view.window.Ort',{
             record: Ext.create('Lada.model.Ort', {
                 ortTyp: 1,
-                netzbetreiberId: nId}),
+                netzbetreiberId: win.netzbetreiberId}),
             parentWindow: button.up('ortszuordnungwindow')
         }).show();
     },
@@ -284,13 +280,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
     selectedVerwaltungseinheit: function(grid, record) {
         var win = grid.up('ortszuordnungwindow');
-        var mstId = win.probe.get('mstId');
-        var mst = Ext.data.StoreManager.get('messstellen');
-        var ndx = mst.findExact('id', mstId);
-        var nId = mst.getAt(ndx).get('netzbetreiberId');
+        var mstId = win.record.get('mstId');
         Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Ort', {
-                netzbetreiberId: nId,
+                netzbetreiberId: win.netzbetreiberId,
                 gemId: record.get('id'),
                 ortId: record.get('id'),
                 kurztext: record.get('bezeichnung'),
@@ -308,13 +301,9 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
     selectedStaat: function(grid, record) {
         var win = grid.up('ortszuordnungwindow');
-        var mstId = win.probe.get('mstId');
-        var mst = Ext.data.StoreManager.get('messstellen');
-        var ndx = mst.findExact('id', mstId);
-        var nId = mst.getAt(ndx).get('netzbetreiberId');
         Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Ort', {
-                netzbetreiberId: nId,
+                netzbetreiberId: win.netzbetreiberId,
                 staatId: record.get('id'),
                 ortId: 'Staat_' + record.get('staatIso'),
                 kurztext: record.get('staat'),
@@ -363,6 +352,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var ortgrid= ozw.down('ortstammdatengrid');
         ozw.ortstore.clearFilter();
         var filter_low = '';
+        ozw.ortstore.proxy.extraParams = {netzbetreiberId: ozw.netzbetreiberId};
         if (filterstring){
             filter_low = filterstring.toLowerCase();
             ozw.ortstore.addFilter({
@@ -370,7 +360,6 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 property: 'ort',
                 value: filter_low
             });
-
         }
         var toolbar = ozw.down('tabpanel').down('ortstammdatengrid').down('pagingtoolbar');
         if (localfilter){

@@ -191,6 +191,10 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 this.record.set('messprogrammId', this.messprogramm.get('id'));
             }
         }
+        var mstId = this.probe? this.probe.get('mstId') : this.messprogramm.get('mstId');
+        var mst = Ext.data.StoreManager.get('messstellen');
+        var ndx = mst.findExact('id', mstId);
+        this.netzbetreiberId = mst.getAt(ndx).get('netzbetreiberId');
         this.down('ortszuordnungform').setRecord(this.record);
         var osg = this.down('ortstammdatengrid');
         var map = this.down('map');
