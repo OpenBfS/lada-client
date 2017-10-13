@@ -67,7 +67,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             disableKeyFilter: dkf,
             triggerAction: ta,
             matchFieldWidth: this.matchFieldWidth || false,
-            listConfig: this.listConfig || {maxWidth: 400},
+            listConfig: this.listConfig || {maxWidth: 400}
         }, {
             xtype: 'image',
             name: 'warnImg',
