@@ -101,7 +101,18 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 width: '35%',
                                 labelWidth: 95,
                                 allowBlank: false,
-                                editable: true
+                                editable: true,
+                                listenersJson: {
+                                    select: {
+                                        fn: function(combo, newValue) {
+                                            var mst = newValue.get('messStelle');
+                                            var labor = newValue.get('laborMst');
+                                            combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
+                                            combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
+                                            combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
+                                        }
+                                    }
+                                }
                             }, {
                                 xtype: 'messstelle',
                                 name: 'mstId',
@@ -111,10 +122,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 labelWidth: 95,
                                 allowBlank: false,
                                 editable: true,
-                                hidden: true,
-                                listeners: {
-                                    validitychange: me.mstLaborValidity
-                                }
+                                hidden: true
                             }, {
                                 xtype: 'messstelle',
                                 name: 'laborMstId',
@@ -124,10 +132,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 labelWidth: 95,
                                 allowBlank: false,
                                 editable: true,
-                                hidden: true,
-                                listeners: {
-                                    validitychange: me.mstLaborValidity
-                                }
+                                hidden: true
                             }, {
                                 xtype: 'netzbetreiber',
                                 name: 'netzbetreiber',
@@ -514,20 +519,13 @@ Ext.define('Lada.view.form.Messprogramm', {
         i.setMaxValue(max-1);
     },
 
-    /*
-     * Set validity of messstellelabor field (not part of the form) based
-     * on validitychange event of hidden mstId and laborMstId
-     */
-    mstLaborValidity: function(field, isValid) {
-        if (!isValid) {
-            field.up('fieldset').down('messstellelabor')
-                .down('combobox').markInvalid('');
-        }
-    },
 
     setRecord: function(messRecord) {
         this.clearMessages();
         this.getForm().loadRecord(messRecord);
+        if (!messRecord.data || messRecord.data.id == null) {
+            return;
+        }
         //Set the intervall numberfields and the slider.
         this.down('probenintervallslider').setValue([
             messRecord.get('teilintervallVon'),
@@ -544,9 +542,6 @@ Ext.define('Lada.view.form.Messprogramm', {
         var mstStore = Ext.data.StoreManager.get('messstellen');
         var mstId = mstStore.getById(messRecord.get('mstId'));
         if (!messRecord.get('owner')) {
-            if (!mstId) {
-                return;
-            }
             var laborMstId = mstStore.getById(messRecord.get('laborMstId'));
             if (laborMstId) {
                 laborMstId = laborMstId.get('messStelle');
@@ -559,7 +554,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                 displayCombi = mstId.get('messStelle');
             } else {
                 displayCombi = mstId.get('messStelle') + '/' + laborMstId
-
             }
             var newStore = Ext.create('Ext.data.Store', {
                 model: 'Lada.model.MessstelleLabor',
@@ -570,7 +564,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                     displayCombi: displayCombi
                 }]
             });
-            //TODO Migration preselecting the entry does not currently work
             this.down('messstellelabor').store = newStore;
             this.down('messstellelabor').down('combobox').setValue(id);
         }
