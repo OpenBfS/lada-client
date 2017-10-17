@@ -177,10 +177,10 @@ Ext.define('Lada.view.window.Messprogramm', {
         }
         // Create a Create Window
         else {
-            var record = Ext.create('Lada.model.Messprogramm');
+            var record = Ext.create('Lada.model.Messprogramm',{
+                gueltigVon:1,
+                gueltigBis:365});
             this.down('messmethodengrid').setReadOnly(true);
-            this.down('dayofyear[name=gueltigBis]').setValue(365);
-            this.down('dayofyear[name=gueltigVon]').setValue(1);
             var mstLabCb = this.down('messprogrammform').down('messstellelabor').down('combobox');
             var mstLabRecs = mstLabCb.store.getData();
             //Try to preselect messstelle/labor
