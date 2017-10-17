@@ -15,6 +15,9 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
     store: 'messprogrammkategorie',
     displayField: 'id',
     valueField: 'id',
+
+    //additional actions to be taken after initComponent
+    extraParams: this.extraParams || null,
     editable: this.editable || false,
     forceSelection: true,
     // Enable filtering of comboboxes
@@ -41,5 +44,8 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
         }
         this.store.sort();
         this.callParent(arguments);
+        if (this.extraParams){
+            this.extraParams();
+        }
     }
 });

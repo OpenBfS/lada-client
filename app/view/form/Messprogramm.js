@@ -367,9 +367,9 @@ Ext.define('Lada.view.form.Messprogramm', {
                     minValue: 0,
                     anchor: '100%',
                     labelWidth: 95,
-                    listeners: {
-                        expand : {
-                            fn: function(combo) {
+                    extraParams: function(){
+                        this.down('combobox').on({ // this = widget
+                            expand : function(combo) {
                                 var store = Ext.StoreManager.get('probenehmer');
                                 store.clearFilter();
                                 var nId = combo.up('fieldset')
@@ -380,17 +380,14 @@ Ext.define('Lada.view.form.Messprogramm', {
                                         return Lada.netzbetreiber.indexOf(
                                             record.get('netzbetreiberId')) > -1;
                                     });
-                                }
-                                else {
+                                } else {
                                     store.filter('netzbetreiberId', nId);
                                 }
+                            },
+                            collapse: function(combo) {
+                                Ext.StoreManager.get('probenehmer').clearFilter();
                             }
-                        },
-                        collapse: {
-                            fn: function(combo) {
-                               Ext.StoreManager.get('probenehmer').clearFilter();
-                            }
-                        }
+                        });
                     }
                 }, {
                     xtype: 'messprogrammland',
@@ -400,9 +397,9 @@ Ext.define('Lada.view.form.Messprogramm', {
                     //width: '100%',
                     anchor: '100%',
                     labelWidth: 115,
-                    listeners: {
-                        expand : {
-                            fn: function(combo) {
+                    extraParams: function(){
+                        this.down('combobox').on({ // this = widget
+                            expand : function(combo) {
                                 var store = Ext.StoreManager.get('messprogrammkategorie');
                                 store.clearFilter();
                                 var nId = combo.up('fieldset')
@@ -417,13 +414,11 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 else {
                                     store.filter('netzbetreiberId', nId);
                                 }
+                            },
+                            collapse: function(combo) {
+                                Ext.StoreManager.get('messprogrammkategorie').clearFilter();
                             }
-                        },
-                        collapse: {
-                            fn: function(combo) {
-                               Ext.StoreManager.get('messprogrammkategorie').clearFilter();
-                            }
-                        }
+                        });
                     }
                 }, {
                     xtype: 'textarea',
