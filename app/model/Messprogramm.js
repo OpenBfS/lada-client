@@ -80,6 +80,10 @@ Ext.define('Lada.model.Messprogramm', {
         name: 'media',
         persist: false
     }, {
+        name: 'owner',
+        type: 'boolean',
+        persist: false
+    }, {
         name: 'readonly',
         type: 'boolean',
         persist: false
