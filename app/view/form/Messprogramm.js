@@ -559,7 +559,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     displayCombi: displayCombi
                 }]
             });
-            this.down('messstellelabor').store = newStore;
+            this.down('messstellelabor').setStore(newStore);
             this.down('messstellelabor').down('combobox').setValue(id);
         }
         else {

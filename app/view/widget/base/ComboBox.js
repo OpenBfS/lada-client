@@ -149,5 +149,10 @@ Ext.define('Lada.view.widget.base.ComboBox', {
 
     setReadOnly: function(value) {
         this.down('combobox').setReadOnly(value);
+    },
+
+    setStore: function(store){
+      this.store = store;
+      this.down('combobox').setStore(store);
     }
 });
