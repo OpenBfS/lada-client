@@ -67,7 +67,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             disableKeyFilter: dkf,
             triggerAction: ta,
             matchFieldWidth: this.matchFieldWidth || false,
-            listConfig: this.listConfig || {maxWidth: 400},
+            listConfig: this.listConfig || {maxWidth: 400}
         }, {
             xtype: 'image',
             name: 'warnImg',
@@ -149,5 +149,10 @@ Ext.define('Lada.view.widget.base.ComboBox', {
 
     setReadOnly: function(value) {
         this.down('combobox').setReadOnly(value);
+    },
+
+    setStore: function(store){
+      this.store = store;
+      this.down('combobox').setStore(store);
     }
 });

@@ -179,6 +179,9 @@ Ext.application({
         Ext.create('Lada.store.Messgroessen', {
             storeId: 'messgroessen'
         });
+        Ext.create('Lada.store.Messgroessen', {
+            storeId: 'messgroessenunfiltered'
+        });
         Ext.create('Lada.store.Messmethoden', {
             storeId: 'messmethoden'
         });

@@ -77,7 +77,7 @@ Ext.define('Lada.view.form.Messung', {
                 items: [{
                     xtype: 'tfield',
                     name: 'nebenprobenNr',
-                    maxLength: 10,
+                    maxLength: 4,
                     margin: '0, 10, 5, 0',
                     fieldLabel: i18n.getMsg('nebenprobenNr'),
                     width: 300,

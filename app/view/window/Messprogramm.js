@@ -198,13 +198,20 @@ Ext.define('Lada.view.window.Messprogramm', {
         }
         // Create a Create Window
         else {
-            var record = Ext.create('Lada.model.Messprogramm');
-            //Delete genereated id to prevent sending invalid ids to the server
-            record.set('id', null);
+            var record = Ext.create('Lada.model.Messprogramm',{
+                gueltigVon:1,
+                gueltigBis:365});
             this.down('messmethodengrid').setReadOnly(true);
-            this.down('messprogrammform').setRecord(record);
-            this.down('dayofyear[name=gueltigBis]').setValue(365);
-            this.down('dayofyear[name=gueltigVon]').setValue(1);
+            var mstLabCb = this.down('messprogrammform').down('messstellelabor').down('combobox');
+            var mstLabRecs = mstLabCb.store.getData();
+            //Try to preselect messstelle/labor
+            if (mstLabRecs.length == 1) {
+                var labRec = mstLabRecs.getAt(0);
+                record.set('owner', true);
+                record.set('mstId', labRec.get('messStelle'));
+                record.set('laborMstId', labRec.get('laborMst'));
+            }
+            this.down("messprogrammform").setRecord(record);
         }
         this.down('messprogrammform').isValid();
     },

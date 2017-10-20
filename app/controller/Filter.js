@@ -413,7 +413,8 @@ Ext.define('Lada.controller.Filter', {
         var store;
         if (type === 'ort') {
             store = Ext.create(sname, {
-                autoLoad: false
+                autoLoad: false,
+                pageSize: Lada.pagingSize
             });
 }
         else {

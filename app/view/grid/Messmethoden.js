@@ -119,16 +119,17 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 if (!value || value === '') {
                     return '';
                 }
-                var store = Ext.data.StoreManager.get('messgroessen');
+                var store = Ext.data.StoreManager.get('messgroessenunfiltered');
                 if (!store) {
-                    store = Ext.create('Lada.store.Messgroessen');
+                    store = Ext.create('Lada.store.Messgroessen', {
+                                       storeId: 'messgroessenunfiltered'});
                 }
                 returnvalues = '';
                 for (var i = 0; i < value.length; i++){
                     if (i){
                         returnvalues = returnvalues + ', '
                     }
-                    var record = store.findRecord('id', value[i], 0, false, false, true);
+                    var record = store.getById(value[i]);
                     returnvalues = returnvalues + record.get('messgroesse');
                 }
                 return returnvalues;
