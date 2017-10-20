@@ -304,7 +304,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
       * (the form is dirty).
       */
     dirtyForm: function(form, dirty) {
-        if (dirty) {
+        if (!form.getRecord().get('readonly') && dirty) {
             form.owner.down('button[action=save]').setDisabled(false);
             form.owner.down('button[action=discard]').setDisabled(false);
         }
