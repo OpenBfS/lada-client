@@ -53,6 +53,24 @@ Ext.define('Lada.view.window.Ort', {
                 }
             })
         ];
+        this.tools = [{
+            type: 'help',
+            tooltip: 'Hilfe',
+                callback: function() {
+                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                if (!imprintWin) {
+                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin.on('afterlayout', function() {
+                        var imprintWinController = this.getController();
+                        imprintWinController.setTopic('ort');
+                    }, imprintWin, {single: true});
+                } else {
+                    var imprintWinController = imprintWin.getController();
+                    imprintWinController.shake(imprintWin);
+                    imprintWinController.setTopic('ort');
+                }
+            }
+        }];
         this.buttons = [{
             text: i18n.getMsg('close'),
             scope: this,

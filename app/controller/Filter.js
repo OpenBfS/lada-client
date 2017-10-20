@@ -26,6 +26,7 @@ Ext.define('Lada.controller.Filter', {
         'Lada.store.MessungenList',
         'Lada.view.window.FilterManagement',
         'Lada.view.window.About',
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.widget.Umwelt',
         'Ext.grid.filters.Filters'
     ],
@@ -79,6 +80,10 @@ Ext.define('Lada.controller.Filter', {
             'menuitem[action=about]': {
                 // Map click event on Button.
                 click: this.about
+            },
+            'menuitem[action=ladahelp]': {
+                // Map click event on Button.
+                click: this.ladahelp
             }
         });
         this.callParent(arguments);

@@ -113,6 +113,27 @@ Ext.define('Lada.view.window.MessungEdit', {
                 }]
            }]
         }];
+        this.tools = [{
+            type: 'help',
+            tooltip: 'Hilfe',
+            titlePosition: 0,
+            callback: function() {
+                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                if (!imprintWin) {
+                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin.on('afterlayout', function() {
+                        var imprintWinController = this.getController();
+                        console.log(imprintWinController);
+                        imprintWinController.setTopic('messung');
+                    }, imprintWin, {single: true});
+                } else {
+                    // BasiGX.util.Animate.shake(imprintWin);
+                    var imprintWinController = imprintWin.getController();
+                    imprintWinController.shake(imprintWin);
+                    imprintWinController.setTopic('messung');
+                }
+            }
+        }];
         this.callParent(arguments);
     },
 

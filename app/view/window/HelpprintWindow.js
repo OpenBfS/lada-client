@@ -16,13 +16,13 @@
 /**
  * @class Lada.view.window.ImprintWindow
  */
-Ext.define('Lada.view.window.ImprintWindow', {
+Ext.define('Lada.view.window.HelpprintWindow', {
     extend: 'Ext.window.Window',
     xtype: 'k-window-imprint',
 
     requires: [
-        'Lada.controller.ImprintController',
-        'Lada.model.ImprintModel'
+        'Lada.controller.HelpprintController',
+        'Lada.model.HelpprintModel'
     ],
 
     controller: 'k-window-imprint',
@@ -62,7 +62,7 @@ Ext.define('Lada.view.window.ImprintWindow', {
     }, {
     //Content
         xtype: 'panel',
-        reference: 'imprintPanel',
+        reference: 'helpprintPanel',
         region: 'center',
         scrollable: 'vertical',
         bodyPadding: 10,
@@ -71,7 +71,7 @@ Ext.define('Lada.view.window.ImprintWindow', {
         }
     }],
 
-    //select default node 'imprint'
+    //select default node 'helpprint'
     listeners: {
         afterlayout: function() {
             var me = this,
@@ -79,7 +79,6 @@ Ext.define('Lada.view.window.ImprintWindow', {
                 store = treelist.getStore(),
                 selection = treelist.getSelection();
             if (store && !selection) {
-                console.log('Nix ausgewählt');
                 var winController = me.getController();
                 winController.setTopic('intro');
             }

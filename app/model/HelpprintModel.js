@@ -16,7 +16,7 @@
 /**
  * @class Lada.view.window.ImprintModel
  */
-Ext.define('Lada.model.ImprintModel', {
+Ext.define('Lada.model.HelpprintModel', {
     extend: 'Ext.app.ViewModel',
     alias: 'viewmodel.k-window-imprint',
 

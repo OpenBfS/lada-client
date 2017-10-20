@@ -16,7 +16,7 @@
 /**
  * @class Koala.view.window.ImprintController
  */
-Ext.define('Lada.controller.ImprintController', {
+Ext.define('Lada.controller.HelpprintController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.k-window-imprint',
 
@@ -27,17 +27,14 @@ Ext.define('Lada.controller.ImprintController', {
             topicNode = store.getNodeById(topic),
             imprintHtmlUrl = (topicNode.getData()) ? topicNode.getData().content : null;
             treelist.setSelection(topicNode);
-            console.log(topicNode);
         if (imprintHtmlUrl) {
-            console.log(imprintHtmlUrl);
             me.setHtmlInPanel(imprintHtmlUrl);
         }
     },
 
 
     setHtmlInPanel: function(imprintHtmlUrl) {
-        var panel = this.lookupReference('imprintPanel');
-
+        var panel = this.lookupReference('helpprintPanel');
         Ext.Ajax.request({
             method: 'GET',
             url: imprintHtmlUrl,
