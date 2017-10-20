@@ -34,12 +34,14 @@ Ext.define('Lada.view.widget.Deskriptor', {
 
     initComponent: function() {
         this.store = Ext.create('Lada.store.Deskriptoren');
+        var me = this;
         this.store.on('load', function() {
             this.insert(0, {sn: 0, beschreibung: 'leer'});
             if (this.proxy.extraParams.layer > 0 &&
                 !this.proxy.extraParams.parents) {
                 this.removeAll();
             }
+            me.down('combobox').setStore(this);
         }, this.store);
 
         this.callParent(arguments);
@@ -90,5 +92,13 @@ Ext.define('Lada.view.widget.Deskriptor', {
                 deskriptor.store.load();
             }
         }
+    },
+
+    setValue: function(value){
+      this.down('combobox').setValue(value);
+    },
+
+    setStore: function(store){
+      this.down('combobox').setStore(store);
     }
 });

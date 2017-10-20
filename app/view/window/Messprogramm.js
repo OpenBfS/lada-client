@@ -236,7 +236,7 @@ Ext.define('Lada.view.window.Messprogramm', {
         var me = this;
         var i18n = Lada.getApplication().bundle;
         var item = me.down('messprogrammform');
-        if (item.isDirty()) {
+        if (!item.getRecord().get('readonly') && item.isDirty()) {
             var confWin = Ext.create('Ext.window.Window', {
                 title: i18n.getMsg('form.saveonclosetitle'),
                 modal: true,
