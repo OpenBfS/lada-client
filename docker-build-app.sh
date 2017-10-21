@@ -7,7 +7,7 @@ EXTJS_VERSION="6.2.0"
 
 SENCHA_CMD="/opt/Sencha/sencha"
 
-ln -s ${WORKSPACE}/ext-{EXTJS_VERSION} ext
+ln -s ${WORKSPACE}/ext-${EXTJS_VERSION} ext
 
 $SENCHA_CMD app install --framework=ext
 #$SENCHA_CMD workspace upgrade
