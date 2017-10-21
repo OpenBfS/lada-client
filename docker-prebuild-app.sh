@@ -2,7 +2,7 @@
 
 CUR_DIR=`pwd`
 WORKSPACE=$CUR_DIR
-SENCHA_CMD_VERSION="6.2.1.29"
+SENCHA_CMD_VERSION="6.2.2.36"
 EXTJS_VERSION="6.2.0"
 
 curl -L http://cdn.sencha.com/cmd/$SENCHA_CMD_VERSION/no-jre/SenchaCmd-$SENCHA_CMD_VERSION-linux-amd64.sh.zip \
