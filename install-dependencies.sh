@@ -19,7 +19,7 @@ cd ../..
 mkdir -p resources/lib
 cd resources/lib
 
-curl -L https://github.com/eligrey/FileSaver.js/archive/v${FILESAVER_VERSION}.zip \
+curl -L https://github.com/eligrey/FileSaver.js/archive/${FILESAVER_VERSION}.zip \
      -o FileSaver-js-${FILESAVER_VERSION}.zip
 unzip -n FileSaver-js-${FILESAVER_VERSION}.zip
 ln -sf FileSaver.js-${FILESAVER_VERSION} FileSaver
