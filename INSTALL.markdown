@@ -13,7 +13,7 @@ Klienten auch die Installation eines Servers und entsprechender Datenbank
 notwendig. Für die Installation des Servers folgen Sie bitte den Hinweisen in
 der README Datei des Server-Pakets.
 Weitere Information finden Sie auf der Projektwebseite:
-http://wald.intevation.org/projects/lada
+[https://github.com/OpenBfS/lada-client](https://github.com/OpenBfS/lada-client)
 
 Die folgenden Hinweise beziehen sich auf die Installation und Einrichtung auf
 Basis eines Oracle-RedHat Linux Systems.
@@ -37,7 +37,7 @@ dass Sencha Cmd in der Version 6.5.x nicht mit der GPL-Version von Extjs6
 Die Fa. Sencha beschreibt die Installation von Sencha Cmd in der
 [Dokumentation von ExtJs](https://docs.sencha.com/cmd/guides/extjs/cmd_app.html)
 
-Zur Installation von Sencha Cmd werden Ruby und Java benötigt.
+Zur Installation von Sencha Cmd wird Java benötigt.
 
 ### Installation einer Entwicklungsumgebung der Anwendung
 
@@ -140,7 +140,7 @@ Folgende Bibliotheken werden neben ExtJs verwendet:
  * Blob.js
    https://github.com/eligrey/Blob.js
    MIT - License
- * Openlayers 4.3.2
+ * Openlayers 4.4.2
    http://www.openlayers.org
    https://github.com/openlayers/openlayers
    2-Clause BSD-License
