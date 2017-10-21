@@ -40,7 +40,7 @@ RUN ./docker-build-app.sh
 # httpd setup
 #
 RUN ln -sf $PWD/custom-httpd.conf $HTTPD_PREFIX/conf/httpd.conf
-RUN ln -sf $PWD/custom-vhosts.conf $HTTPD_PREFIX/conf/httpd-vhosts.conf
+RUN ln -sf $PWD/custom-vhosts.conf $HTTPD_PREFIX/conf/extra/httpd-vhosts.conf
 
 EXPOSE 80 81 82 83 84
 
