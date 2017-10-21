@@ -26,7 +26,7 @@ Sencha nicht mehr vorgesehen.
 ###Sencha Cmd
 
 Bei der Einrichtung der Entwicklungsumgebung und beim Kompilieren der Anwendung
-kommt das Tool Sencha Cmd 6.2.0.x zum Einsatz. Sencha bietet Sencha Cmd zum
+kommt das Tool Sencha Cmd 6.2.1.29 zum Einsatz. Sencha bietet Sencha Cmd zum
 [Download](https://www.sencha.com/products/extjs/cmd-download/) an.
 
 Beachten Sie: Sencha Cmd ist keine freie Software. Bitte beachten Sie ebenfalls,
