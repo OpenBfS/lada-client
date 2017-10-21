@@ -10,10 +10,8 @@ SENCHA_CMD="/opt/Sencha/sencha"
 ln -s ${WORKSPACE}/ext-${EXTJS_VERSION} ext
 
 $SENCHA_CMD app install --framework=ext
-#$SENCHA_CMD workspace upgrade
 $SENCHA_CMD app clean
-$SENCHA_CMD app build development
-#$SENCHA_CMD app build production
+$SENCHA_CMD app build production
 
 ln -sf $WORKSPACE/build/production/Lada $WORKSPACE/lada
 
