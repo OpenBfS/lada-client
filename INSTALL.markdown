@@ -54,9 +54,10 @@ Zur Installation von Sencha Cmd wird Java benötigt.
 Mit Hilfe von Sencha Cmd kann der Quellcode in eine wenige Dateien
 zusammengefasst und minifiziert werden. Dies beschleunigt das Laden der
 Anwendung im Browser erheblich. Die Minifizierung erfolgt über:
+
 ```
     sencha app build production
-```.
+```
 Die fertig minifizierte Anwendung wird unter build/production abgelegt,
 und kann danach gepackt werden. Die Datei build.sh im Wurzelverzeichnis der
 Anwendung automatisiert diesen Prozess.
@@ -134,7 +135,7 @@ Die Anwendung verwendet mehrere Unterkomponenten, die mit
 
 Folgende Bibliotheken werden neben ExtJs verwendet:
 
- * Filesaver.js
+ * Filesaver.js 1.3.3
    https://github.com/eligrey/FileSaver.js
    MIT - License
  * Blob.js
