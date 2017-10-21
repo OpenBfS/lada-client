@@ -32,7 +32,7 @@ WORKDIR /usr/local/apache2/htdocs
 #
 # Install dependencies and build application
 #
-RUN ./docker-prebuild-app.sh
+RUN ./install-sencha2opt.sh
 RUN ./install-dependencies.sh
 RUN ./docker-build-app.sh
 

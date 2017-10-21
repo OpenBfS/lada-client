@@ -14,7 +14,7 @@ curl -L  http://cdn.sencha.com/ext/gpl/ext-$EXTJS_VERSION-gpl.zip \
      -o ext-$EXTJS_VERSION-gpl.zip
 unzip -n ext-$EXTJS_VERSION-gpl.zip
 
+ln -s /opt/$SENCHA_CMD_VERSION /opt/Sencha
+
 SENCHA_CMD="/opt/$SENCHA_CMD_VERSION/sencha"
 
-$SENCHA_CMD workspace init
-$SENCHA_CMD app upgrade $WORKSPACE/ext-$EXTJS_VERSION
