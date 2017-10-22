@@ -6,10 +6,21 @@ python:
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y curl unzip python apache2
+before_install:
+  - "curl -L http://cdn.sencha.com/cmd/6.2.2.36/no-jre/SenchaCmd-6.2.2.36-linux-amd64.sh.zip -o SenchaCmd-6.2.2.36-linux-amd64.sh.zip"
+  - "unzip -qn SenchaCmd-6.2.2.36-linux-amd64.sh.zip"
+  - "./SenchaCmd-6.2.2.36-linux-amd64.sh -q -dir /opt/Sencha"
+  - "curl -L http://cdn.sencha.com/ext/gpl/ext-6.2.0-gpl.zip -o ext-6.2.0-gpl.zip"
+  - "unzip -qn ext-6.2.0-gpl.zip"
+  - "cd src"
+  - "ln -s ../ext-6.2.0 ext"
+  - "/opt/Sencha/sencha app install --framework=ext"
+#  - "/opt/Sencha/sencha app upgrade ../ext-6.2.0"
 install:
-- travis_wait ./install-dependencies.sh
+  - travis_wait ./install-dependencies.sh
 script:
-- ./build.sh
+#  - ./build.sh
+  - "/opt/Sencha/sencha app build"
 notifications:
   email:
     on_success: never
