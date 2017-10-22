@@ -15,7 +15,6 @@
     "combine-coverages": "istanbul report --root coverage --dir coverage-combined",
     "coverage-summary": "istanbul report --root coverage text-summary",
     "jsdoc": "jsdoc -c jsdoc-config.json",
-    "userdoc": "gitbook pdf ../docs/userdoc ../docs/userdoc/User-Documentation.pdf",
     "jsduck": "jsduck --config jsduck.json",
     "clean": "rimraf apidoc build/* coverage coverage-combined"
   },
