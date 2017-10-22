@@ -48,13 +48,13 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
             },
-            afterRender: function(){
+            afterRender: function() {
                 this.customizeToolbar();
             }
         });
@@ -79,7 +79,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                     xtype: 'ortszuordnunggrid',
                     recordId: this.record.get('id')
                 }]
-             }, {
+            }, {
                 xtype: 'fset',
                 name: 'messungen',
                 title: 'Messungen',
@@ -155,7 +155,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         }
     },
 
-     /**
+    /**
       * Initialise the Data of this Window
       */
     initData: function() {
@@ -169,7 +169,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 console.log('An unhandled Failure occured. See following Response and Record');
                 console.log(action);
                 console.log(record);
-             },
+            },
             success: function(record, response) {
                 this.down('probeform').setRecord(record);
                 this.record = record;
@@ -177,7 +177,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 var readonly = this.record.get('readonly');
 
                 var messstelle = Ext.data.StoreManager.get('messstellen')
-                                    .getById(this.record.get('mstId'));
+                    .getById(this.record.get('mstId'));
                 this.setTitle('§3 Probe - Hauptprobennr.: ' + this.record.get('hauptprobenNr')
                                      + ' Mst: ' + messstelle.get('messStelle'));
 
@@ -197,8 +197,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 if (readonly === true || !owner) {
                     this.down('probeform').setReadOnly(true);
                     this.disableChildren();
-                }
-                else {
+                } else {
                     this.down('probeform').setReadOnly(false);
                     this.enableChildren();
                 }

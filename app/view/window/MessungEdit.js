@@ -14,10 +14,10 @@ Ext.define('Lada.view.window.MessungEdit', {
     alias: 'widget.messungedit',
 
     requires: [
-      'Lada.view.form.Messung',
-      'Lada.view.grid.Messwert',
-      'Lada.view.grid.Status',
-      'Lada.view.grid.MKommentar'
+        'Lada.view.form.Messung',
+        'Lada.view.grid.Messwert',
+        'Lada.view.grid.Status',
+        'Lada.view.grid.MKommentar'
     ],
 
     collapsible: true,
@@ -55,13 +55,13 @@ Ext.define('Lada.view.window.MessungEdit', {
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
             },
-            afterRender: function(){
+            afterRender: function() {
                 this.customizeToolbar();
             }
         });
@@ -79,7 +79,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 xtype: 'messungform',
                 margin: 5,
                 recordId: this.record.get('id')
-           }, {
+            }, {
                 xtype: 'fset',
                 name: 'messwerte',
                 title: 'Messwerte',
@@ -87,7 +87,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 margin: 5,
                 items: [{
                     xtype: 'messwertgrid',
-                    minHeight:'110',
+                    minHeight: '110',
                     recordId: this.record.get('id'),
                     messgroesseStore: mStore
                 }]
@@ -101,7 +101,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                     xtype: 'statusgrid',
                     recordId: this.record.get('id')
                 }]
-           }, {
+            }, {
                 xtype: 'fset',
                 name: 'messungskommentare',
                 title: 'Kommentare',
@@ -111,7 +111,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                     xtype: 'mkommentargrid',
                     recordId: this.record.get('id')
                 }]
-           }]
+            }]
         }];
         this.tools = [{
             type: 'help',
@@ -166,8 +166,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                             if (button === 'ok') {
                                 me.close();
                                 me.parentWindow.initData();
-                            }
-                            else {
+                            } else {
                                 me.record.set('treeModified', me.probe.get('treeModified'));
                                 that.disableForm();
                             }
@@ -175,8 +174,8 @@ Ext.define('Lada.view.window.MessungEdit', {
                     });
                 }
                 var mStore = Ext.data.StoreManager.get('messgroessen');
-                    mStore.proxy.extraParams = {mmtId: record.get('mmtId')};
-                    mStore.load();
+                mStore.proxy.extraParams = {mmtId: record.get('mmtId')};
+                mStore.load();
                 this.down('messungform').setRecord(record);
                 this.record = record;
 
@@ -197,15 +196,13 @@ Ext.define('Lada.view.window.MessungEdit', {
                 if (this.record.get('readonly') === true ||
                     this.record.get('owner') === false) {
                     this.disableForm();
-                }
-                else {
+                } else {
                     this.enableForm();
                 }
                 //Check if it is allowed to edit Status
                 if (this.record.get('statusEdit') === true) {
                     this.enableStatusEdit();
-                }
-                else {
+                } else {
                     this.disableStatusEdit();
                 }
                 //Check if it is allowed to reset Status: done in Messungform
@@ -250,54 +247,54 @@ Ext.define('Lada.view.window.MessungEdit', {
      * Disable the Chilelements of this window
      */
     disableChildren: function() {
-            this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(true);
-            this.down('fset[name=messwerte]').down('messwertgrid').readOnly = true;
-            this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(true);
-            this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = true;
-            //this.disableStatusEdit();
-            //this.disableStatusReset();
+        this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(true);
+        this.down('fset[name=messwerte]').down('messwertgrid').readOnly = true;
+        this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(true);
+        this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = true;
+        //this.disableStatusEdit();
+        //this.disableStatusReset();
     },
 
     /**
      * Enable the Childelements of this window
      */
     enableChildren: function() {
-            this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(false);
-            this.down('fset[name=messwerte]').down('messwertgrid').readOnly = false;
-            this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(false);
-            this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = false;
-            //this.enableStatusEdit();
-            //this.enableStatusReset();
+        this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(false);
+        this.down('fset[name=messwerte]').down('messwertgrid').readOnly = false;
+        this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(false);
+        this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = false;
+        //this.enableStatusEdit();
+        //this.enableStatusReset();
     },
 
     /**
      * Enable to reset the statusgrid
      */
-     enableStatusReset: function() {
-            this.down('fset[name=messungstatus]').down('statusgrid').setResetable(true);
-     },
+    enableStatusReset: function() {
+        this.down('fset[name=messungstatus]').down('statusgrid').setResetable(true);
+    },
 
     /**
      * Disable to reset the statusgrid
      */
-     disableStatusReset: function() {
-            this.down('fset[name=messungstatus]').down('statusgrid').setResetable(false);
-     },
+    disableStatusReset: function() {
+        this.down('fset[name=messungstatus]').down('statusgrid').setResetable(false);
+    },
     /**
      * Enable to edit the statusgrid
      */
-     enableStatusEdit: function() {
-            this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(false);
-            this.down('fset[name=messungstatus]').down('statusgrid').readOnly = false;
-     },
+    enableStatusEdit: function() {
+        this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(false);
+        this.down('fset[name=messungstatus]').down('statusgrid').readOnly = false;
+    },
 
     /**
      * Disable to edit the statusgrid
      */
-     disableStatusEdit: function() {
-            this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(true);
-            this.down('fset[name=messungstatus]').down('statusgrid').readOnly = true;
-     },
+    disableStatusEdit: function() {
+        this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(true);
+        this.down('fset[name=messungstatus]').down('statusgrid').readOnly = true;
+    },
 
     /**
      * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/

@@ -14,18 +14,18 @@
 Ext.define('Lada.store.Probenintervall', {
     extend: 'Ext.data.Store',
     fields: ['probenintervall',
-            {
-                name: 'piTexti18nId',
-                convert: function(v) {
-                    if (!v.startsWith('pi.')){
-                        return v;
-                    }
-                    var i18n = Lada.getApplication().bundle;
-                    return i18n.getMsg(v);
+        {
+            name: 'piTexti18nId',
+            convert: function(v) {
+                if (!v.startsWith('pi.')) {
+                    return v;
                 }
-            },
-            'periodstart',
-            'periodend'],
+                var i18n = Lada.getApplication().bundle;
+                return i18n.getMsg(v);
+            }
+        },
+        'periodstart',
+        'periodend'],
     storeId: 'probenintervall',
     data: [{
         'probenintervall': 'J',

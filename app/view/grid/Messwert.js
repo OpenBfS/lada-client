@@ -39,7 +39,7 @@ Ext.define('Lada.view.grid.Messwert', {
             autoCancel: false,
             disabled: false,
             pluginId: 'rowedit',
-            listeners:{
+            listeners: {
                 // Make row ineditable when readonly is set to true
                 // Normally this would belong into a controller an not the view.
                 // But the RowEditPlugin is not handled there.
@@ -52,7 +52,7 @@ Ext.define('Lada.view.grid.Messwert', {
                     // edit.
                     var readonlywin = o.grid.up('window').record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
-                    if (readonlywin == true || readonlygrid == true || this.disabled)  {
+                    if (readonlywin == true || readonlygrid == true || this.disabled) {
                         return false;
                     }
                     return true;
@@ -206,9 +206,9 @@ Ext.define('Lada.view.grid.Messwert', {
             }
         }];
         this.listeners = {
-           select: {
-               fn: this.activateRemoveButton,
-               scope: this
+            select: {
+                fn: this.activateRemoveButton,
+                scope: this
             },
             deselect: {
                 fn: this.deactivateRemoveButton,
@@ -226,8 +226,7 @@ Ext.define('Lada.view.grid.Messwert', {
     initData: function() {
         if (this.store) {
             this.store.removeAll();
-        }
-        else {
+        } else {
             this.store = Ext.create('Lada.store.Messwerte');
         }
         this.store.load({
@@ -238,21 +237,21 @@ Ext.define('Lada.view.grid.Messwert', {
     },
 
     setReadOnly: function(b) {
-        if (b == true){
+        if (b == true) {
             //Readonly
-            if (this.getPlugin('rowedit')){
+            if (this.getPlugin('rowedit')) {
                 this.getPlugin('rowedit').disable();
             }
             this.down('button[action=delete]').disable();
             this.down('button[action=add]').disable();
-        }else{
+        } else {
             //Writable
-            if (this.getPlugin('rowedit')){
+            if (this.getPlugin('rowedit')) {
                 this.getPlugin('rowedit').enable();
             }
             //this.down('button[action=delete]').enable();
             this.down('button[action=add]').enable();
-         }
+        }
     },
     /**
      * Activate the Remove Button

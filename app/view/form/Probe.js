@@ -83,210 +83,143 @@ Ext.define('Lada.view.form.Probe', {
                 items: [{
                     layout: 'vbox',
                     border: 0,
+                    items: [{
+                        xtype: 'displayfield',
+                        name: 'idAlt',
+                        fieldLabel: i18n.getMsg('probeId'),
+                        margin: '0, 5, 5, 5',
+                        labelWidth: 95,
+                        maxLength: 20
+                    },{
+                        layout: {
+                            type: 'hbox',
+                            align: 'stretch'
+                        },
+                        border: 0,
+                        width: '100%',
                         items: [{
-                             xtype: 'displayfield',
-                             name: 'idAlt',
-                             fieldLabel: i18n.getMsg('probeId'),
-                             margin: '0, 5, 5, 5',
-                             labelWidth: 95,
-                             maxLength: 20
-                        },{
-                            layout: {
-                                type: 'hbox',
-                                align: 'stretch'
-                            },
-                            border: 0,
-                            width: '100%',
-                            items: [{
-                                xtype: 'messstellelabor',
-                                name: 'mstlabor',
-                                fieldLabel: 'Messstelle/Labor',
-                                margin: '0, 5, 5, 5',
-                                width: '35%',
-                                labelWidth: 95,
-                                allowBlank: false,
-                                editable: true,
-                                listenersJson: {
-                                    select: {
-                                        fn: function(combo, newValue) {
-                                            console.log('anon. listener');
-                                            var mst = newValue.get('messStelle');
-                                            var labor = newValue.get('laborMst');
-                                            combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
-                                            combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
-                                            combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
-                                        }
-                                    }
-                                }
-                            }, {
-                                xtype: 'messstelle',
-                                name: 'mstId',
-                                fieldLabel: 'Messstelle/Labor',
-                                margin: '0, 5, 5, 5',
-                                width: '35%',
-                                labelWidth: 95,
-                                allowBlank: false,
-                                editable: true,
-                                hidden: true
-                            }, {
-                                xtype: 'messstelle',
-                                name: 'laborMstId',
-                                fieldLabel: 'Messstelle/Labor',
-                                margin: '0, 5, 5, 5',
-                                width: '35%',
-                                labelWidth: 95,
-                                allowBlank: false,
-                                editable: true,
-                                hidden: true
-                            }, {
-                                xtype: 'netzbetreiber',
-                                name: 'netzbetreiber',
-                                editable: false,
-                                readOnly: true,
-                                isFormField: false,
-                                submitValue: false,
-                                fieldLabel: i18n.getMsg('netzbetreiberId'),
-                                margin: '0, 5, 5, 5',
-                                width: '35%',
-                                labelWidth: 80
-                            }, {
-                                xtype: 'datenbasis',
-                                editable: false,
-                                allowBlank: false,
-                                name: 'datenbasisId',
-                                fieldLabel: 'Datenbasis',
-                                margin: '0, 5, 5, 5',
-                                width: '20%',
-                                labelWidth: 65
-                            }, {
-                                xtype: 'chkbox',
-                                name: 'test',
-                                fieldLabel: 'Test',
-                                margin: '0, 5, 5, 5',
-                                width: '10%',
-                                anchor: '100%',
-                                labelWidth: 30
-                            }]
-                        }, {
-                            layout: {
-                                type: 'hbox',
-                                align: 'stretch'
-                            },
-                            border: 0,
-                            width: '100%',
-                            items: [{
-                                xtype: 'tfield',
-                                name: 'hauptprobenNr',
-                                fieldLabel: i18n.getMsg('hauptprobenNr'),
-                                margin: '0, 5, 5, 5',
-                                width: '35%',
-                                labelWidth: 95,
-                                maxLength: 20,
-                                allowBlank: true
-                            }, {
-                                xtype: 'betriebsart',
-                                name: 'baId',
-                                fieldLabel: 'Messregime',
-                                margin: '0, 5, 5, 5',
-                                width: '35%',
-                                labelWidth: 80
-                            }, {
-                                xtype: 'probenart',
-                                editable: false,
-                                name: 'probenartId',
-                                fieldLabel: 'Probenart',
-                                margin: '0, 15, 5, 5',
-                                width: '29%',
-                                labelWidth: 65,
-                                allowBlank: false
-                            }]
-                        }, {
-                            layout: {
-                                type: 'hbox',
-                                align: 'stretch'
-                            },
-                            border: 0,
-                            width: '100%',
-                            items: [{
-                                xtype: 'probenehmer',
-                                name: 'probeNehmerId',
-                                fieldLabel: 'Probennehmer',
-                                margin: '0, 5, 5, 5',
-                                width: '50%',
-                                minValue: 0,
-                                anchor: '100%',
-                                labelWidth: 95,
-                                listeners: {
-                                    expand : {
-                                        fn: function(combo) {
-                                            var store = Ext.StoreManager.get('probenehmer');
-                                            store.clearFilter();
-                                            var nId = combo.up('fieldset')
-                                                .down('netzbetreiber[name=netzbetreiber]')
-                                                .getValue();
-                                            if (!nId || nId.length === 0) {
-                                                store.filterBy(function(record) {
-                                                    return Lada.netzbetreiber.indexOf(
-                                                        record.get('netzbetreiberId')) > -1;
-                                                });
-                                            }
-                                            else {
-                                                store.filter('netzbetreiberId', nId);
-                                            }
-                                        }
-                                    },
-                                    collapse: {
-                                        fn: function(combo) {
-                                           Ext.StoreManager.get('probenehmer').clearFilter();
-                                        }
-                                    }
-                                }
-                            }, {
-                                xtype: 'datensatzerzeuger',
-                                name: 'erzeugerId',
-                                fieldLabel: 'Datensatzerzeuger',
-                                margin: '0, 5, 5, 5',
-                                width: '50%',
-                                anchor: '100%',
-                                labelWidth: 110,
-                                listeners: {
-                                    expand : {
-                                        fn: function(combo) {
-                                            var store = Ext.StoreManager.get('datensatzerzeuger');
-                                            store.clearFilter();
-                                            var nId = combo.up('fieldset')
-                                                .down('netzbetreiber[name=netzbetreiber]')
-                                                .getValue();
-                                            if (!nId || nId.length === 0) {
-                                                store.filterBy(function(record) {
-                                                    return Lada.netzbetreiber.indexOf(
-                                                        record.get('netzbetreiberId')) > -1;
-                                                });
-                                            }
-                                            else {
-                                                store.filter('netzbetreiberId', nId);
-                                            }
-                                        }
-                                    },
-                                    collapse: {
-                                        fn: function(combo) {
-                                           Ext.StoreManager.get('datensatzerzeuger').clearFilter();
-                                        }
-                                    }
-                                }
-                            }]
-                        },{
-                            xtype: 'messprogrammland',
-                            name: 'mplId',
-                            fieldLabel: 'Messprogramm-Land',
+                            xtype: 'messstellelabor',
+                            name: 'mstlabor',
+                            fieldLabel: 'Messstelle/Labor',
                             margin: '0, 5, 5, 5',
-                            width: '100%',
+                            width: '35%',
+                            labelWidth: 95,
+                            allowBlank: false,
+                            editable: true,
+                            listenersJson: {
+                                select: {
+                                    fn: function(combo, newValue) {
+                                        console.log('anon. listener');
+                                        var mst = newValue.get('messStelle');
+                                        var labor = newValue.get('laborMst');
+                                        combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
+                                        combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
+                                        combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
+                                    }
+                                }
+                            }
+                        }, {
+                            xtype: 'messstelle',
+                            name: 'mstId',
+                            fieldLabel: 'Messstelle/Labor',
+                            margin: '0, 5, 5, 5',
+                            width: '35%',
+                            labelWidth: 95,
+                            allowBlank: false,
+                            editable: true,
+                            hidden: true
+                        }, {
+                            xtype: 'messstelle',
+                            name: 'laborMstId',
+                            fieldLabel: 'Messstelle/Labor',
+                            margin: '0, 5, 5, 5',
+                            width: '35%',
+                            labelWidth: 95,
+                            allowBlank: false,
+                            editable: true,
+                            hidden: true
+                        }, {
+                            xtype: 'netzbetreiber',
+                            name: 'netzbetreiber',
+                            editable: false,
+                            readOnly: true,
+                            isFormField: false,
+                            submitValue: false,
+                            fieldLabel: i18n.getMsg('netzbetreiberId'),
+                            margin: '0, 5, 5, 5',
+                            width: '35%',
+                            labelWidth: 80
+                        }, {
+                            xtype: 'datenbasis',
+                            editable: false,
+                            allowBlank: false,
+                            name: 'datenbasisId',
+                            fieldLabel: 'Datenbasis',
+                            margin: '0, 5, 5, 5',
+                            width: '20%',
+                            labelWidth: 65
+                        }, {
+                            xtype: 'chkbox',
+                            name: 'test',
+                            fieldLabel: 'Test',
+                            margin: '0, 5, 5, 5',
+                            width: '10%',
                             anchor: '100%',
-                            labelWidth: 110,
+                            labelWidth: 30
+                        }]
+                    }, {
+                        layout: {
+                            type: 'hbox',
+                            align: 'stretch'
+                        },
+                        border: 0,
+                        width: '100%',
+                        items: [{
+                            xtype: 'tfield',
+                            name: 'hauptprobenNr',
+                            fieldLabel: i18n.getMsg('hauptprobenNr'),
+                            margin: '0, 5, 5, 5',
+                            width: '35%',
+                            labelWidth: 95,
+                            maxLength: 20,
+                            allowBlank: true
+                        }, {
+                            xtype: 'betriebsart',
+                            name: 'baId',
+                            fieldLabel: 'Messregime',
+                            margin: '0, 5, 5, 5',
+                            width: '35%',
+                            labelWidth: 80
+                        }, {
+                            xtype: 'probenart',
+                            editable: false,
+                            name: 'probenartId',
+                            fieldLabel: 'Probenart',
+                            margin: '0, 15, 5, 5',
+                            width: '29%',
+                            labelWidth: 65,
+                            allowBlank: false
+                        }]
+                    }, {
+                        layout: {
+                            type: 'hbox',
+                            align: 'stretch'
+                        },
+                        border: 0,
+                        width: '100%',
+                        items: [{
+                            xtype: 'probenehmer',
+                            name: 'probeNehmerId',
+                            fieldLabel: 'Probennehmer',
+                            margin: '0, 5, 5, 5',
+                            width: '50%',
+                            minValue: 0,
+                            anchor: '100%',
+                            labelWidth: 95,
                             listeners: {
-                                expand : {
+                                expand: {
                                     fn: function(combo) {
-                                        var store = Ext.StoreManager.get('messprogrammkategorie');
+                                        var store = Ext.StoreManager.get('probenehmer');
                                         store.clearFilter();
                                         var nId = combo.up('fieldset')
                                             .down('netzbetreiber[name=netzbetreiber]')
@@ -296,19 +229,83 @@ Ext.define('Lada.view.form.Probe', {
                                                 return Lada.netzbetreiber.indexOf(
                                                     record.get('netzbetreiberId')) > -1;
                                             });
-                                        }
-                                        else {
+                                        } else {
                                             store.filter('netzbetreiberId', nId);
                                         }
                                     }
                                 },
                                 collapse: {
                                     fn: function(combo) {
-                                       Ext.StoreManager.get('messprogrammkategorie').clearFilter();
+                                        Ext.StoreManager.get('probenehmer').clearFilter();
+                                    }
+                                }
+                            }
+                        }, {
+                            xtype: 'datensatzerzeuger',
+                            name: 'erzeugerId',
+                            fieldLabel: 'Datensatzerzeuger',
+                            margin: '0, 5, 5, 5',
+                            width: '50%',
+                            anchor: '100%',
+                            labelWidth: 110,
+                            listeners: {
+                                expand: {
+                                    fn: function(combo) {
+                                        var store = Ext.StoreManager.get('datensatzerzeuger');
+                                        store.clearFilter();
+                                        var nId = combo.up('fieldset')
+                                            .down('netzbetreiber[name=netzbetreiber]')
+                                            .getValue();
+                                        if (!nId || nId.length === 0) {
+                                            store.filterBy(function(record) {
+                                                return Lada.netzbetreiber.indexOf(
+                                                    record.get('netzbetreiberId')) > -1;
+                                            });
+                                        } else {
+                                            store.filter('netzbetreiberId', nId);
+                                        }
+                                    }
+                                },
+                                collapse: {
+                                    fn: function(combo) {
+                                        Ext.StoreManager.get('datensatzerzeuger').clearFilter();
                                     }
                                 }
                             }
                         }]
+                    },{
+                        xtype: 'messprogrammland',
+                        name: 'mplId',
+                        fieldLabel: 'Messprogramm-Land',
+                        margin: '0, 5, 5, 5',
+                        width: '100%',
+                        anchor: '100%',
+                        labelWidth: 110,
+                        listeners: {
+                            expand: {
+                                fn: function(combo) {
+                                    var store = Ext.StoreManager.get('messprogrammkategorie');
+                                    store.clearFilter();
+                                    var nId = combo.up('fieldset')
+                                        .down('netzbetreiber[name=netzbetreiber]')
+                                        .getValue();
+                                    if (!nId || nId.length === 0) {
+                                        store.filterBy(function(record) {
+                                            return Lada.netzbetreiber.indexOf(
+                                                record.get('netzbetreiberId')) > -1;
+                                        });
+                                    } else {
+                                        store.filter('netzbetreiberId', nId);
+                                    }
+                                }
+                            },
+                            collapse: {
+                                fn: function(combo) {
+                                    Ext.StoreManager.get('messprogrammkategorie').clearFilter();
+                                }
+                            }
+                        }
+                    }]
                 }, {
                     // Zeit
                     xtype: 'fieldset',
@@ -407,31 +404,31 @@ Ext.define('Lada.view.form.Probe', {
                             },
                             width: '100%',
                             items: [{
-                                    xtype: 'tfield',
-                                    maxLength: 38,
-                                    enforceMaxLength: true,
-                                    name: 'mediaDesk',
-                                    width: '58%',
-                                    minWidth: 290,
-                                    labelWidth: 100,
-                                    fieldLabel: 'Deskriptoren',
-                                    editable: false,
-                                    readOnly: true,
-                                    listeners: {
-                                        dirtychange: {
-                                            fn: this.updateOnChange,
-                                            scope: me
-                                        }
+                                xtype: 'tfield',
+                                maxLength: 38,
+                                enforceMaxLength: true,
+                                name: 'mediaDesk',
+                                width: '58%',
+                                minWidth: 290,
+                                labelWidth: 100,
+                                fieldLabel: 'Deskriptoren',
+                                editable: false,
+                                readOnly: true,
+                                listeners: {
+                                    dirtychange: {
+                                        fn: this.updateOnChange,
+                                        scope: me
                                     }
-                                }, {
-                                    xtype: 'textfield',
-                                    name: 'media',
-                                    margin: '0, 10, 5, 10',
-                                    width: '42%',
-                                    enforceMaxLength: true,
-                                    editable: false,
-                                    readOnly: true
-                                }]
+                                }
+                            }, {
+                                xtype: 'textfield',
+                                name: 'media',
+                                margin: '0, 10, 5, 10',
+                                width: '42%',
+                                enforceMaxLength: true,
+                                editable: false,
+                                readOnly: true
+                            }]
                         }, {
                             xtype: 'fieldset',
                             title: 'Details Deskriptoren',
@@ -463,8 +460,7 @@ Ext.define('Lada.view.form.Probe', {
             var laborMstId = mstStore.getById(probeRecord.get('laborMstId'));
             if (laborMstId) {
                 laborMstId = laborMstId.get('messStelle');
-            }
-            else {
+            } else {
                 laborMstId = '';
             }
             var id = this.down('messstellelabor').store.count() + 1;
@@ -482,8 +478,7 @@ Ext.define('Lada.view.form.Probe', {
             });
             this.down('messstellelabor').down('combobox').store = newStore;
             this.down('messstellelabor').setValue(rec);
-        }
-        else {
+        } else {
             var mstLaborStore = Ext.data.StoreManager.get('messstellelabor');
             var items = mstLaborStore.queryBy(function(record) {
                 if (record.get('messStelle') === probeRecord.get('mstId') &&
@@ -517,8 +512,7 @@ Ext.define('Lada.view.form.Probe', {
             cbox.store.proxy.extraParams = {
                 'layer': ndx
             };
-        }
-        else {
+        } else {
             var parents = current.getParents(current.down('combobox'));
             if (parents.length === 0) {
                 return;
@@ -535,9 +529,9 @@ Ext.define('Lada.view.form.Probe', {
             cbox.select(cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
             var mediatext = cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10));
             if (mediatext !== null) {
-                if ( (ndx <= 3) && (media[1] === '01') && (mediatext.data.beschreibung !== "leer") ) {
+                if ( (ndx <= 3) && (media[1] === '01') && (mediatext.data.beschreibung !== 'leer') ) {
                     beschreibung = mediatext.data.beschreibung;
-                } else if ( (media[1] !== '01') && (mediatext.data.beschreibung !== "leer") && (ndx <= 1) ) {
+                } else if ( (media[1] !== '01') && (mediatext.data.beschreibung !== 'leer') && (ndx <= 1) ) {
                     beschreibung = mediatext.data.beschreibung;
                 }
             }

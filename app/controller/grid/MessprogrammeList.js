@@ -51,7 +51,7 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
         var win = Ext.create(winname, {
             record: record,
             style: 'z-index: -1;' //Fixes an Issue where windows could not be created in IE8
-            });
+        });
         win.show();
         win.initData();
     },
@@ -125,8 +125,7 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
     buttonToggle: function(enabled, grid) {
         if (!enabled) {
             grid.down('button[action=genProbenFromMessprogramm]').disable();
-        }
-        else {
+        } else {
             grid.down('button[action=genProbenFromMessprogramm]').enable();
         }
     },

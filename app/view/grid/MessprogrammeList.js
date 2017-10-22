@@ -19,8 +19,8 @@ Ext.define('Lada.view.grid.MessprogrammeList', {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('messprogramme.emptyGrid');
         this.selModel = Ext.create('Ext.selection.CheckboxModel', {
-             checkOnly: true,
-             injectCheckbox: 0
+            checkOnly: true,
+            injectCheckbox: 0
         });
 
         this.dockedItems = [{

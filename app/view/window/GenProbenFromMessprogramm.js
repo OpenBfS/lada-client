@@ -35,10 +35,10 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
             }
         });
@@ -109,11 +109,11 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             if (json.success) {
                                 panel.setHtml(panel.html + '<br>'
                                         + i18n.getMsg('gpfm.generated.success',
-                                                json.data.length, id));
+                                        json.data.length, id));
                             } else {
                                 panel.setHtml(panel.html + '<br>'
                                         + i18n.getMsg('gpfm.generated.error',
-                                                id, i18n.getMsg(json.message)));
+                                        id, i18n.getMsg(json.message)));
                             }
                             if (finished == me.records.length) {
                                 me.down('toolbar').down('button').setDisabled(false);
@@ -142,13 +142,13 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
             },
-            close: function () {
+            close: function() {
                 if (this.parentWindow) {
                     this.parentWindow.probenWindow = null;
                 }
@@ -335,13 +335,13 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         gridstore.loadData(data);
         contentPanel.add(frgrid);
         me.down('panel').setHtml(me.down('panel').html + '<br><br>'
-                +  me.evalResponseData(data));
+                + me.evalResponseData(data));
     },
 
     /**
      * Callback on failure of request (HTTP status != 200)
      */
-    onFailure:  function(response) {
+    onFailure: function(response) {
         me.setLoading(false);
 
         var i18n = Lada.getApplication().bundle;
@@ -349,10 +349,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         var json = null;
         try {
             json = Ext.JSON.decode(response.getResponse().responseText);
-        }
-        catch(err){
+        } catch (err) {
             Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                          i18n.getMsg('err.msg.response.body'));
+                i18n.getMsg('err.msg.response.body'));
         }
         if (json) {
             /*
@@ -361,7 +360,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
               We assume that a 302 was send when the follwing statement
               is true.
             */
-            if (response.status == 0 && response.getResponse().responseText === "") {
+            if (response.status == 0 && response.getResponse().responseText === '') {
                 Ext.MessageBox.confirm(
                     'Erneutes Login erforderlich',
                     'Ihre Session ist abgelaufen.<br/>'
@@ -373,10 +372,10 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             }
             // further error handling
             Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                          i18n.getMsg('err.msg.generic.body'));
+                i18n.getMsg('err.msg.generic.body'));
         } else {
             Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                          i18n.getMsg('err.msg.response.body'));
+                i18n.getMsg('err.msg.response.body'));
         }
     },
 
@@ -392,9 +391,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     evalResponseData: function(data) {
         var i18n = Lada.getApplication().bundle;
         var r = '';
-            r += data.length;
-            r += ' ' + i18n.getMsg('probecreated');
-            r += '<br/>';
+        r += data.length;
+        r += ' ' + i18n.getMsg('probecreated');
+        r += '<br/>';
         return r;
     },
 
@@ -404,9 +403,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     evalResponse: function(response) {
         var i18n = Lada.getApplication().bundle;
         var r = '';
-            r += response.data.length;
-            r += ' ' + i18n.getMsg('probecreated');
-            r += '<br/>';
+        r += response.data.length;
+        r += ' ' + i18n.getMsg('probecreated');
+        r += '<br/>';
         return r;
     },
 

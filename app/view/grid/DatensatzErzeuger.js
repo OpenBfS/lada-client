@@ -70,9 +70,9 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             dataIndex: 'readonly',
             sortable: false,
             width: 30,
-            getClass: function (val, meta, rec) {
+            getClass: function(val, meta, rec) {
                 if (rec.get('readonly') === false) {
-                        return 'edit';
+                    return 'edit';
                 }
                 return 'noedit';
             },
@@ -92,7 +92,7 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 var store = Ext.data.StoreManager.get('netzbetreiber');
                 var record = store.getById(value);
                 if (record) {
-                  r = record.get('netzbetreiber');
+                    r = record.get('netzbetreiber');
                 }
                 return r;
             },
@@ -135,7 +135,7 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 var store = Ext.data.StoreManager.get('messstellen');
                 var record = store.getById(value);
                 if (record) {
-                  r = record.get('messStelle');
+                    r = record.get('messStelle');
                 }
                 return r;
             },
@@ -154,9 +154,9 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             dataIndex: 'letzteAenderung'
         }];
         this.listeners = {
-           select: {
-               fn: this.activateRemoveButton,
-               scope: this
+            select: {
+                fn: this.activateRemoveButton,
+                scope: this
             },
             deselect: {
                 fn: this.deactivateRemoveButton,

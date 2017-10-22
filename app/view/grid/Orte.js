@@ -52,9 +52,9 @@ Ext.define('Lada.view.grid.Orte', {
             dataIndex: 'readonly',
             sortable: false,
             width: 30,
-            getClass: function (val, meta, rec) {
+            getClass: function(val, meta, rec) {
                 if (rec.get('readonly') === false) {
-                        return 'edit';
+                    return 'edit';
                 }
                 return 'noedit';
             },
@@ -77,7 +77,7 @@ Ext.define('Lada.view.grid.Orte', {
                 var store = Ext.data.StoreManager.get('netzbetreiber');
                 var record = store.getById(value);
                 if (record) {
-                  r = record.get('netzbetreiber');
+                    r = record.get('netzbetreiber');
                 }
                 return r;
             },
@@ -126,18 +126,18 @@ Ext.define('Lada.view.grid.Orte', {
             width: 200,
             filter: {
                 type: 'string',
-                filterFn: function(record, value){
+                filterFn: function(record, value) {
                     var store = Ext.data.StoreManager.get('verwaltungseinheiten');
                     var gemId = record.get('gemId');
-                    if (value && !gemId){
+                    if (value && !gemId) {
                         return false;
                     }
-                    if (!value){
+                    if (!value) {
                         return true;
                     }
                     value = value.toLowerCase();
                     var bezeichnung = store.getById(gemId).get('bezeichnung').toLowerCase();
-                    if (bezeichnung.indexOf(value) > -1){
+                    if (bezeichnung.indexOf(value) > -1) {
                         return true;
                     }
                     return false;
@@ -305,7 +305,7 @@ Ext.define('Lada.view.grid.Orte', {
         var cbox = Ext.create('Lada.view.widget.PagingSize');
         this.down('pagingtoolbar').add('-');
         this.down('pagingtoolbar').add(cbox);
-        if (this.up('tabpanel')){
+        if (this.up('tabpanel')) {
             this.setTitle('Orte(0)');
         }
     },
@@ -313,14 +313,14 @@ Ext.define('Lada.view.grid.Orte', {
     /**
      * This sets the Store of this Grid
      */
-    setStore: function(store){
+    setStore: function(store) {
         var i18n = Lada.getApplication().bundle;
         var me = this;
 
         if (store) {
             this.reconfigure(store);
-            store.on('load', function(loadedStore){
-                if (me.up('tabpanel')){
+            store.on('load', function(loadedStore) {
+                if (me.up('tabpanel')) {
                     me.setTitle('Orte(' + loadedStore.getCount() + ')');
                 }
             });
@@ -341,16 +341,16 @@ Ext.define('Lada.view.grid.Orte', {
      * on the grid and the ortszuordnung form, if present
      */
     selectOrt: function(map, feature) {
-        if (feature){
+        if (feature) {
             var id = feature.get('id');
             var record = this.store.getById(id);
-            if (record){
+            if (record) {
                 //TODO paging: jump to page
                 this.getSelectionModel().select(record);
                 var rowIndex = this.store.find('id', id);
                 this.getView().focusRow(rowIndex);
                 var win = this.up('ortszuordnungwindow');
-                if (win){
+                if (win) {
                     win.down('ortszuordnungform').setOrt(null, record);
                 }
             }

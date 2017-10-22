@@ -23,11 +23,11 @@ Ext.define('Lada.view.widget.DatensatzErzeuger' ,{
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
-    tpl: Ext.create("Ext.XTemplate",
+    tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
             '{datensatzErzeugerId} - {bezeichnung}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-         '<tpl for=".">{datensatzErzeugerId} - {bezeichnung}</tpl>'),
+        '<tpl for=".">{datensatzErzeugerId} - {bezeichnung}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

@@ -58,7 +58,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
      * to the subset which the user is allowed to use.
      */
     filter: function(field) {
-        var fil =  Ext.create('Ext.util.Filter', {
+        var fil = Ext.create('Ext.util.Filter', {
             filterFn: function(item) {
                 if (Ext.Array.contains(Lada.mst, item.get('id'))) {
                     return true;
@@ -73,9 +73,9 @@ Ext.define('Lada.controller.form.Messprogramm', {
      * When a Messtelle is selected, modify the Netzbetreiber
      * according to the Messstelle
      */
-    setNetzbetreiber: function(combo, records){
+    setNetzbetreiber: function(combo, records) {
         var netzbetreiber = combo.up().up('form')
-                .down('netzbetreiber').down('combobox');
+            .down('netzbetreiber').down('combobox');
         var nbId = records.get('netzbetreiberId');
         if (nbId != null) {
             //select the NB in the NB-Combobox
@@ -127,12 +127,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
             formPanel.getForm()
                 .findField('teilintervallVon')
                 .setValue(newValue);
-        }
-        else if (thumb.index == 1) {
+        } else if (thumb.index == 1) {
             formPanel.getForm()
                 .findField('teilintervallBis')
                 .setValue(newValue);
-         }
+        }
 
     },
 
@@ -145,11 +144,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
         if (field.name == 'teilintervallVon') {
             formPanel.down('probenintervallslider')
                 .setValue(0, newValue, false);
-        }
-        else if (field.name == 'teilintervallBis') {
+        } else if (field.name == 'teilintervallBis') {
             formPanel.down('probenintervallslider')
                 .setValue(1, newValue, false);
-         }
+        }
 
     },
     /**
@@ -167,7 +165,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         if (!record.get('letzteAenderung')) {
             record.set('letzteAenderung', new Date());
         }
-        if (record.phantom){
+        if (record.phantom) {
             record.set('id', null);
         }
         record.save({
@@ -179,7 +177,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         .setDisabled(true);
                     var parentGrid = Ext.ComponentQuery.query(
                         'messprogrammelistgrid');
-                    if (parentGrid.length == 1){
+                    if (parentGrid.length == 1) {
                         parentGrid[0].store.reload();
                     }
                     formPanel.clearMessages();
@@ -203,17 +201,17 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 var rec = formPanel.getForm().getRecord();
                 rec.dirty = false;
                 formPanel.getForm().loadRecord(record);
-                if (response.error){
+                if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                    i18n.getMsg('err.msg.generic.body'));
+                        i18n.getMsg('err.msg.generic.body'));
                 } else {
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
-                        if(json.message){
+                        if (json.message) {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
                                 +' #'+json.message,
-                                i18n.getMsg(json.message));
+                            i18n.getMsg(json.message));
                         } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                 i18n.getMsg('err.msg.generic.body'));
@@ -242,7 +240,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         if (!record.get('letzteAenderung')) {
             record.set('letzteAenderung', new Date());
         }
-        if (record.phantom){
+        if (record.phantom) {
             record.set('id', null);
         }
         record.save({
@@ -251,7 +249,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 if (json) {
                     var parentGrid = Ext.ComponentQuery.query(
                         'messprogrammelistgrid');
-                    if (parentGrid.length == 1){
+                    if (parentGrid.length == 1) {
                         parentGrid[0].store.reload();
                     }
                 }
@@ -261,17 +259,17 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 var rec = formPanel.getForm().getRecord();
                 rec.dirty = false;
                 formPanel.getForm().loadRecord(record);
-                if (response.error){
+                if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                    i18n.getMsg('err.msg.generic.body'));
+                        i18n.getMsg('err.msg.generic.body'));
                 } else {
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
-                        if(json.message){
+                        if (json.message) {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
                                 +' #'+json.message,
-                                i18n.getMsg(json.message));
+                            i18n.getMsg(json.message));
                         } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                 i18n.getMsg('err.msg.generic.body'));
@@ -286,7 +284,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
     },
 
 
-     /**
+    /**
       * The discard function resets the form
       * to its original state.
       */
@@ -297,7 +295,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
             formPanel.getForm().getRecord());
     },
 
-     /**
+    /**
       * The dirtyForm function enables or disables the save and discard
       * button which are present in the toolbar of the form.
       * The Buttons are only active if the content of the form was altered
@@ -307,8 +305,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         if (!form.getRecord().get('readonly') && dirty) {
             form.owner.down('button[action=save]').setDisabled(false);
             form.owner.down('button[action=discard]').setDisabled(false);
-        }
-        else {
+        } else {
             form.owner.down('button[action=save]').setDisabled(true);
             form.owner.down('button[action=discard]').setDisabled(true);
         }
@@ -347,28 +344,23 @@ Ext.define('Lada.controller.form.Messprogramm', {
             for (var i = 0; i <= 12; i++) {
                 if (i === 0) {
                     current.push('D:');
-                }
-                else if (i === desk.layer + 1) {
+                } else if (i === desk.layer + 1) {
                     var value;
                     if (records[0].get('sn') < 10) {
                         value = '0' + records[0].get('sn');
-                    }
-                    else {
+                    } else {
                         value = records[0].get('sn');
                     }
                     current.push(value);
-                }
-                else {
+                } else {
                     current.push('00');
                 }
             }
-        }
-        else {
+        } else {
             var value;
             if (records[0].get('sn') < 10) {
                 value = '0' + records[0].get('sn');
-            }
-            else {
+            } else {
                 value = records[0].get('sn');
             }
             current[desk.layer + 1] = value;
@@ -377,8 +369,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     current[i] = '00';
                 }
                 this.clearChildDesk(desk);
-            }
-            else if (desk.layer === 2 && current[1] === '01') {
+            } else if (desk.layer === 2 && current[1] === '01') {
                 current[4] = '00';
                 desk.up('fieldset').down('deskriptor[layer=3]').clearValue();
             }
@@ -390,7 +381,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
         var mediatext = field.up('messprogrammform').down('textfield[name="media"]');
 
-        if ( (desk.layer === 0 ) && (records[0].get('sn') === 0) ){
+        if ( (desk.layer === 0 ) && (records[0].get('sn') === 0) ) {
             mediatext.setValue('');
         } else {
             if ( current[1] === '01') {

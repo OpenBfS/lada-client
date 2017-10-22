@@ -23,18 +23,17 @@ Ext.define('Lada.view.widget.Messmethode', {
     lastQuery: '',
     minChars: 0,
     layout: 'hbox',
-    tpl: Ext.create("Ext.XTemplate",
+    tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
             '{display}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-         '<tpl for=".">{display}</tpl>'),
+        '<tpl for=".">{display}</tpl>'),
 
     initComponent: function() {
         this.store = Ext.data.StoreManager.get('messmethoden');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Messmethoden');
-        }
-        else {
+        } else {
             this.store.clearFilter();
         }
         this.callParent(arguments);

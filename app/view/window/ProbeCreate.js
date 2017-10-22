@@ -39,13 +39,13 @@ Ext.define('Lada.view.window.ProbeCreate', {
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
             },
-            afterRender: function(){
+            afterRender: function() {
                 this.customizeToolbar();
             }
         });
@@ -106,7 +106,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
                     layout: 'hbox',
                     items: [{
                         xtype: 'button',
-                        text:   i18n.getMsg('form.yes'),
+                        text: i18n.getMsg('form.yes'),
                         margin: '5, 0, 5, 5',
 
                         handler: function() {
@@ -115,7 +115,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
                         }
                     }, {
                         xtype: 'button',
-                        text:   i18n.getMsg('form.no'),
+                        text: i18n.getMsg('form.no'),
                         margin: '5, 5, 5, 5',
 
                         handler: function() {
@@ -145,7 +145,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
         }
     },
 
-     /**
+    /**
       * Initialise the Data of this Window
       */
     initData: function() {
@@ -184,7 +184,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
     /**
      * Disable the Childelements of this window
      */
-    disableChildren: function(){
+    disableChildren: function() {
         //intentionally!
         return true;
     },
@@ -192,7 +192,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
     /**
      * Enable the Childelements of this window
      */
-    enableChildren: function(){
+    enableChildren: function() {
         //intentionally!
         return true;
     }

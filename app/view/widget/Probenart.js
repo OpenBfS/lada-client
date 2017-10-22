@@ -21,7 +21,7 @@ Ext.define('Lada.view.widget.Probenart', {
     typeAhead: false,
     minChars: 0,
     maxChars: 1,
-    tpl: Ext.create("Ext.XTemplate",
+    tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
             '{probenart} - {beschreibung}</div></tpl>'),
 
@@ -32,8 +32,7 @@ Ext.define('Lada.view.widget.Probenart', {
         this.store = Ext.data.StoreManager.get('probenarten');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Probenarten');
-        }
-        else {
+        } else {
             this.store.clearFilter();
         }
         this.callParent(arguments);

@@ -100,7 +100,7 @@ Ext.define('Lada.view.grid.ProbeList', {
                     }
                     return false;
                 },
-                handler: function(grid, rowIndex, colIndex){
+                handler: function(grid, rowIndex, colIndex) {
                     var rec = grid.getStore().getAt(rowIndex);
 
                     var winname = 'Lada.view.window.DeleteProbe';

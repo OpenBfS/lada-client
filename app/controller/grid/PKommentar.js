@@ -37,9 +37,9 @@ Ext.define('Lada.controller.grid.PKommentar', {
      * On success it refreshes the windows which contains the grid
      * On failure it displays a message
      */
-     gridSave: function(editor, context) {
+    gridSave: function(editor, context) {
         context.record.set('datum', new Date());
-        if (context.record.phantom){
+        if (context.record.phantom) {
             context.record.set('id', null);
         }
         context.record.save({
@@ -49,24 +49,24 @@ Ext.define('Lada.controller.grid.PKommentar', {
             },
             failure: function(request, response) {
                 var i18n = Lada.getApplication().bundle;
-                if (response.error){
+                if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                  i18n.getMsg('err.msg.generic.body'));
+                        i18n.getMsg('err.msg.generic.body'));
                 } else {
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
-                        if (json.message){
+                        if (json.message) {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
                             + ' #' + json.message,
                             i18n.getMsg(json.message));
                         } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                          i18n.getMsg('err.msg.generic.body'));
+                                i18n.getMsg('err.msg.generic.body'));
                         }
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                      i18n.getMsg('err.msg.response.body'));
+                            i18n.getMsg('err.msg.response.body'));
                     }
                 }
             }
@@ -77,8 +77,8 @@ Ext.define('Lada.controller.grid.PKommentar', {
      * When the edit was canceled,
      * the empty row might have been created by the roweditor is removed
      */
-     cancelEdit: function(editor, context) {
-        if (context.record.phantom){
+    cancelEdit: function(editor, context) {
+        if (context.record.phantom) {
             editor.getCmp().store.remove(context.record);
         }
     },
@@ -86,7 +86,7 @@ Ext.define('Lada.controller.grid.PKommentar', {
     /**
      * This function adds a new row to add a PKommentar
      */
-     add: function(button) {
+    add: function(button) {
         var record = Ext.create('Lada.model.PKommentar');
         record.data.datum = new Date();
         record.set('probeId', button.up('pkommentargrid').recordId);
@@ -100,7 +100,7 @@ Ext.define('Lada.controller.grid.PKommentar', {
      * If the removal was confirmed, it reloads the parent window on success,
      * on failure, an error message is shown.
      */
-     remove: function(button) {
+    remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         Ext.MessageBox.confirm('Löschen', 'Sind Sie sicher?', function(btn) {
@@ -111,14 +111,14 @@ Ext.define('Lada.controller.grid.PKommentar', {
                     },
                     failure: function(request, response) {
                         var i18n = Lada.getApplication().bundle;
-                        if (response.error){
+                        if (response.error) {
                             //TODO: check content of error.status (html error code)
                             Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
-                                          i18n.getMsg('err.msg.generic.body'));
+                                i18n.getMsg('err.msg.generic.body'));
                         } else {
                             var json = Ext.decode(response.getResponse().responseText);
                             if (json) {
-                                if (json.message){
+                                if (json.message) {
                                     Ext.Msg.alert(i18n.getMsg(
                                         'err.msg.delete.title')
                                     + ' #' + json.message,
@@ -126,12 +126,12 @@ Ext.define('Lada.controller.grid.PKommentar', {
                                 } else {
                                     Ext.Msg.alert(i18n.getMsg(
                                         'err.msg.delete.title'),
-                                        i18n.getMsg('err.msg.generic.body'));
+                                    i18n.getMsg('err.msg.generic.body'));
                                 }
                             } else {
                                 Ext.Msg.alert(i18n.getMsg(
                                     'err.msg.delete.title'),
-                                    i18n.getMsg('err.msg.response.body'));
+                                i18n.getMsg('err.msg.response.body'));
                             }
                         }
                     }

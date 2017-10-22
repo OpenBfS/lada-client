@@ -57,32 +57,32 @@ Ext.define('Lada.controller.Ort', {
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         var i18n = Lada.getApplication().bundle;
         Ext.MessageBox.confirm(i18n.getMsg('delete'),
-                                i18n.getMsg('confirmation.question'),
-                                function(btn) {
-            if (btn === 'yes') {
-                selection.erase({
-                    success: function() {
-                        grid.store.reload();
-                    },
-                    failure: function(request, response) {
-                        var json = response.request.scope.reader.jsonData;
-                        if (json) {
-                            if (json.message){
-                                Ext.Msg.alert(i18n.getMsg('err.msg.delete.title')
+            i18n.getMsg('confirmation.question'),
+            function(btn) {
+                if (btn === 'yes') {
+                    selection.erase({
+                        success: function() {
+                            grid.store.reload();
+                        },
+                        failure: function(request, response) {
+                            var json = response.request.scope.reader.jsonData;
+                            if (json) {
+                                if (json.message) {
+                                    Ext.Msg.alert(i18n.getMsg('err.msg.delete.title')
                                     +' #'+json.message,
                                     i18n.getMsg(json.message));
+                                } else {
+                                    Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
+                                        i18n.getMsg('err.msg.generic.body'));
+                                }
                             } else {
                                 Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
-                                    i18n.getMsg('err.msg.generic.body'));
+                                    i18n.getMsg('err.msg.response.body'));
                             }
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
-                                i18n.getMsg('err.msg.response.body'));
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
         grid.up('ortpanel').down('button[action=delete]').disable();
     },
 
@@ -108,7 +108,7 @@ Ext.define('Lada.controller.Ort', {
         }
         if (!record ||
             !Ext.Array.contains(Lada.netzbetreiber,
-            record.get('netzbetreiberId'))) {
+                record.get('netzbetreiberId'))) {
             grid.up('ortpanel').down('button[action=delete]').disable();
             return;
         }

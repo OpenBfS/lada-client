@@ -100,7 +100,7 @@ Ext.define('Lada.model.Messprogramm', {
         },
         writer: {
             type: 'json',
-           writeAllFields: true
+            writeAllFields: true
         }
     }
 });

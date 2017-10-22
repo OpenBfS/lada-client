@@ -28,9 +28,9 @@ Ext.define('Lada.view.widget.Deskriptor', {
         '<tpl if="sn &gt; 9">{sn} - {beschreibung}</tpl>',
         '<tpl if="sn &lt; 10">0{sn} - {beschreibung}</tpl></div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-         '<tpl for="."><tpl if="sn &gt; 9">{sn} - {beschreibung}</tpl>',
-         '<tpl if="sn &gt; 0 &amp;&amp;sn &lt; 10">0{sn} - {beschreibung}</tpl>',
-         '</tpl>'),
+        '<tpl for="."><tpl if="sn &gt; 9">{sn} - {beschreibung}</tpl>',
+        '<tpl if="sn &gt; 0 &amp;&amp;sn &lt; 10">0{sn} - {beschreibung}</tpl>',
+        '</tpl>'),
 
     initComponent: function() {
         this.store = Ext.create('Lada.store.Deskriptoren');
@@ -50,10 +50,10 @@ Ext.define('Lada.view.widget.Deskriptor', {
         combobox.on('focus', this.focusfn);
         // normal clear action does not trigger the descriptorselect handler
         // to delete child deskriptoren.
-        combobox.triggers.clear.handler = function(){
+        combobox.triggers.clear.handler = function() {
             this.select('0');
             this.fireEvent('select', this, this.store.getAt(0));
-        }
+        };
     },
 
     getParents: function(field) {
@@ -75,8 +75,7 @@ Ext.define('Lada.view.widget.Deskriptor', {
         var deskriptor = field.up('deskriptor');
         if (deskriptor.layer === 0) {
             deskriptor.store.proxy.extraParams = {'layer': deskriptor.layer};
-        }
-        else {
+        } else {
             var parents = deskriptor.getParents(field);
             if (parents !== '') {
                 deskriptor.store.proxy.extraParams = {
@@ -84,8 +83,7 @@ Ext.define('Lada.view.widget.Deskriptor', {
                     'parents': parents
                 };
                 deskriptor.store.load();
-            }
-            else {
+            } else {
                 deskriptor.store.proxy.extraParams = {
                     'layer': deskriptor.layer
                 };
@@ -94,11 +92,11 @@ Ext.define('Lada.view.widget.Deskriptor', {
         }
     },
 
-    setValue: function(value){
-      this.down('combobox').setValue(value);
+    setValue: function(value) {
+        this.down('combobox').setValue(value);
     },
 
-    setStore: function(store){
-      this.down('combobox').setStore(store);
+    setStore: function(store) {
+        this.down('combobox').setStore(store);
     }
 });

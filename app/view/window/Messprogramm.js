@@ -37,8 +37,7 @@ Ext.define('Lada.view.window.Messprogramm', {
 
         if (this.record == null) {
             this.title = i18n.getMsg('messprogramm.window.create.title');
-        }
-        else {
+        } else {
             this.title = i18n.getMsg('messprogramm.window.edit.title');
         }
         this.buttons = [{
@@ -56,11 +55,10 @@ Ext.define('Lada.view.window.Messprogramm', {
                     win.show();
                     win.initData();
                     this.probenWindow = win;
-               }
-               else {
+                } else {
                     this.probenWindow.focus();
                     this.probenWindow.setActive(true);
-               }
+                }
                 me.close();
             }
         },
@@ -74,13 +72,13 @@ Ext.define('Lada.view.window.Messprogramm', {
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
             },
-            afterRender: function(){
+            afterRender: function() {
                 this.customizeToolbar();
             }
         });
@@ -171,7 +169,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                     console.log('An unhandled Failure occured. See following Response and Record');
                     console.log(action);
                     console.log(record);
-                    },
+                },
                 success: function(record, response) {
                     this.down('messprogrammform').setRecord(record);
                     this.record = record;
@@ -186,8 +184,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                     if (this.record.get('readonly') === true) {
                         this.down('messprogrammform').setReadOnly(true);
                         this.disableChildren();
-                    }
-                    else {
+                    } else {
                         this.down('messprogrammform').setReadOnly(false);
                         this.enableChildren();
                     }
@@ -199,8 +196,8 @@ Ext.define('Lada.view.window.Messprogramm', {
         // Create a Create Window
         else {
             var record = Ext.create('Lada.model.Messprogramm',{
-                gueltigVon:1,
-                gueltigBis:365});
+                gueltigVon: 1,
+                gueltigBis: 365});
             this.down('messmethodengrid').setReadOnly(true);
             var mstLabCb = this.down('messprogrammform').down('messstellelabor').down('combobox');
             var mstLabRecs = mstLabCb.store.getData();
@@ -211,7 +208,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                 record.set('mstId', labRec.get('messStelle'));
                 record.set('laborMstId', labRec.get('laborMst'));
             }
-            this.down("messprogrammform").setRecord(record);
+            this.down('messprogrammform').setRecord(record);
         }
         this.down('messprogrammform').isValid();
     },
@@ -250,7 +247,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                     layout: 'hbox',
                     items: [{
                         xtype: 'button',
-                        text:   i18n.getMsg('form.yes'),
+                        text: i18n.getMsg('form.yes'),
                         margin: '5, 0, 5, 5',
 
                         handler: function() {

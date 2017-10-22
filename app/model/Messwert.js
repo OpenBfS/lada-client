@@ -33,7 +33,7 @@ Ext.define('Lada.model.Messwert', {
             if (!v) {
                 return null;
             }
-            return "<";
+            return '<';
         }
     }, {
         name: 'messfehler',

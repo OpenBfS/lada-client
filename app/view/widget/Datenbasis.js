@@ -27,8 +27,7 @@ Ext.define('Lada.view.widget.Datenbasis', {
         this.store = Ext.data.StoreManager.get('datenbasis');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Datenbasis');
-        }
-        else {
+        } else {
             this.store.clearFilter();
         }
         this.callParent(arguments);

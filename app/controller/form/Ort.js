@@ -23,10 +23,10 @@ Ext.define('Lada.controller.form.Ort', {
             'ortform button[action=revert]': {
                 click: this.discard
             },
-            'ortform staat combobox' : {
+            'ortform staat combobox': {
                 change: this.checkCommitEnabled
             },
-            'ortform verwaltungseinheit combobox' : {
+            'ortform verwaltungseinheit combobox': {
                 change: this.checkCommitEnabled
             },
             'ortform koordinatenart combobox': {
@@ -74,7 +74,7 @@ Ext.define('Lada.controller.form.Ort', {
                 }
                 if (ozw.ortstore) {
                     ozw.ortstore.reload({
-                        callback: function(){
+                        callback: function() {
                             var osg = ozw.down('ortstammdatengrid');
                             osg.setStore(ozw.ortstore);
                             ozw.down('map').addLocations(ozw.ortstore);
@@ -85,14 +85,14 @@ Ext.define('Lada.controller.form.Ort', {
             },
             failure: function(record, response) {
                 var i18n = Lada.getApplication().bundle;
-                if (response.error){
+                if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                  i18n.getMsg('err.msg.generic.body'));
+                        i18n.getMsg('err.msg.generic.body'));
                 } else {
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
-                        if(json.message){
+                        if (json.message) {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
                             +' #'+ json.message,
                             i18n.getMsg(json.message));
@@ -120,7 +120,7 @@ Ext.define('Lada.controller.form.Ort', {
         var id = json.data.id;
         var record = ozw.ortstore.getById(id);
         if (record) {
-            if (ozw.down('tabpanel')){
+            if (ozw.down('tabpanel')) {
                 ozw.down('tabpanel').setActiveTab(0);
             }
             var selmod = osg.getView().getSelectionModel();
@@ -137,9 +137,9 @@ Ext.define('Lada.controller.form.Ort', {
         }
         Ext.Msg.show({
             title: Lada.getApplication().bundle.getMsg('success'),
-                     autoScroll: true,
-                     msg: resulttext,
-                     buttons: Ext.Msg.OK
+            autoScroll: true,
+            msg: resulttext,
+            buttons: Ext.Msg.OK
         });
     },
 
@@ -158,7 +158,7 @@ Ext.define('Lada.controller.form.Ort', {
         } else { //called by the form
             panel = callingEl.owner;
         }
-        var savebutton =  panel.down('button[action=save]');
+        var savebutton = panel.down('button[action=save]');
         var form = panel.getForm();
         if (form.isDirty()) {
             panel.down('button[action=revert]').setDisabled(false);
@@ -176,7 +176,7 @@ Ext.define('Lada.controller.form.Ort', {
                 )
                 || form.findField('gemId').getValue() !== null
                 || form.findField('staatId').getValue() !== null
-                ) {
+            ) {
                 savebutton.setDisabled(false);
             } else {
                 savebutton.setDisabled(true);

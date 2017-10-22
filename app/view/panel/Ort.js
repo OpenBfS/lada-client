@@ -47,23 +47,22 @@ Ext.define('Lada.view.panel.Ort', {
                     disabled: true // disabled on startup, will be enabled by controller if necessary
                 }]
             }];
-        }
-        else {
+        } else {
             this.dockedItems = [{
                 xtype: 'toolbar',
                 dock: this.toolbarPos,
                 items: [ '->',
-                {
-                    text: i18n.getMsg('map.button.add'),
-                    icon: 'resources/img/list-add.png',
-                    action: 'addMap',
-                    disabled: true // disabled on startup, will be enabled by setStore
-                }, {
-                    text: i18n.getMsg('orte.button.add'),
-                    icon: 'resources/img/list-add.png',
-                    action: 'add',
-                    disabled: true // disabled on startup, will be enabled by setStore
-                }]
+                    {
+                        text: i18n.getMsg('map.button.add'),
+                        icon: 'resources/img/list-add.png',
+                        action: 'addMap',
+                        disabled: true // disabled on startup, will be enabled by setStore
+                    }, {
+                        text: i18n.getMsg('orte.button.add'),
+                        icon: 'resources/img/list-add.png',
+                        action: 'add',
+                        disabled: true // disabled on startup, will be enabled by setStore
+                    }]
             }];
         }
 
@@ -94,7 +93,7 @@ Ext.define('Lada.view.panel.Ort', {
         var map = this.down('map');
         osg.setLoading(true);
         map.setLoading(true);
-        if (store){
+        if (store) {
             me.ortstore = store;
         }
         if (!me.ortstore) {

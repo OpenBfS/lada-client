@@ -49,14 +49,16 @@ Ext.define('Lada.view.window.Ort', {
             Ext.create('Lada.view.form.Ort', {
                 record: me.record,
                 listeners: {
-                    destroy: {fn: function() {me.close();}}
+                    destroy: {fn: function() {
+                        me.close();
+                    }}
                 }
             })
         ];
         this.tools = [{
             type: 'help',
             tooltip: 'Hilfe',
-                callback: function() {
+            callback: function() {
                 var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
                 if (!imprintWin) {
                     imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();

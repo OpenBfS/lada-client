@@ -60,38 +60,38 @@ Ext.define('Lada.view.window.FileUpload', {
                     }]
                 })
             }),
-           Ext.create('Ext.form.field.ComboBox', {
-               store: Ext.data.StoreManager.get('messstellenFiltered'),
-               name: 'mst',
-               margin: '3, 3, 3, 3',
-               displayField: 'messStelle',
-               valueField: 'id',
-               fieldLabel: i18n.getMsg('vorbelegung'),
-               allowBlank: true,
-               triggers: {
-                   clear:{
-                       cls: 'x-form-clear-trigger',
-                       handler: function() {
-                           this.clearValue();
-                       }
-                   }
-               }
-        }),
-        Ext.create('Ext.container.Container', {
-            flex: 1,
-            layout: 'hbox',
-            items: [{
-                xtype: 'button',
-                text: 'Speichern',
+            Ext.create('Ext.form.field.ComboBox', {
+                store: Ext.data.StoreManager.get('messstellenFiltered'),
+                name: 'mst',
                 margin: '3, 3, 3, 3',
-                handler: this.readFile
-            }, {
-                xtype: 'button',
-                text: 'Abbrechen',
-                margin: '3, 3, 3, 3',
-                handler: this.abort
-            }]
-        })
+                displayField: 'messStelle',
+                valueField: 'id',
+                fieldLabel: i18n.getMsg('vorbelegung'),
+                allowBlank: true,
+                triggers: {
+                    clear: {
+                        cls: 'x-form-clear-trigger',
+                        handler: function() {
+                            this.clearValue();
+                        }
+                    }
+                }
+            }),
+            Ext.create('Ext.container.Container', {
+                flex: 1,
+                layout: 'hbox',
+                items: [{
+                    xtype: 'button',
+                    text: 'Speichern',
+                    margin: '3, 3, 3, 3',
+                    handler: this.readFile
+                }, {
+                    xtype: 'button',
+                    text: 'Abbrechen',
+                    margin: '3, 3, 3, 3',
+                    handler: this.abort
+                }]
+            })
         ];
         this.callParent(arguments);
         var encoding = document.characterSet;
@@ -119,7 +119,7 @@ Ext.define('Lada.view.window.FileUpload', {
         var win = button.up('window');
         var fileInput = win.down('filefield');
         var file = fileInput.fileInputEl.dom.files[0];
-        if (!file){
+        if (!file) {
             //TODO error handling
             return;
         }
@@ -169,8 +169,8 @@ Ext.define('Lada.view.window.FileUpload', {
         });
         win.show();
         var parentGrid = Ext.ComponentQuery.query('probelistgrid');
-         if (parentGrid.length == 1){
-             parentGrid[0].store.reload();
+        if (parentGrid.length == 1) {
+            parentGrid[0].store.reload();
         }
     },
 

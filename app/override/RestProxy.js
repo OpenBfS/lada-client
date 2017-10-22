@@ -8,20 +8,20 @@
 
 Ext.define('Lada.override.RestProxy', {
     override: 'Ext.data.proxy.Rest',
-/*
+    /*
     buildRequest: function (operation) {
         this.headers = { 'X-OPENID-PARAMS': Lada.openIDParams };
         return this.callParent(arguments);
     },
 */
-    processResponse: function (success, operation, request, response, callback, scope) {
+    processResponse: function(success, operation, request, response, callback, scope) {
         /*
            SSO will send a 302 if the Client is not authenticated
            unfortunately this seems to be filtered by the browser.
            We assume that a 302 was send when the follwing statement
            is true.
         */
-        if (!success && response.status == 0 && response.responseText === "") {
+        if (!success && response.status == 0 && response.responseText === '') {
             Ext.MessageBox.confirm('Erneutes Login erforderlich',
                 'Ihre Session ist abgelaufen.<br/>'+
                 'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
@@ -37,10 +37,10 @@ Ext.define('Lada.override.RestProxy', {
      */
     getParams: function(operation) {
         var params = this.callParent(arguments);
-        if (operation.getFilters){
+        if (operation.getFilters) {
             var filters = operation.getFilters();
             var filterParam = this.getFilterParam();
-            if (filterParam && filters && filters.length > 0){
+            if (filterParam && filters && filters.length > 0) {
                 var filterJson = Ext.decode(params[filterParam]);
                 if (filterJson) {
                     for (var i = 0; i < filterJson.length; i++) {

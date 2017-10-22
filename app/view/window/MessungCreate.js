@@ -14,7 +14,7 @@ Ext.define('Lada.view.window.MessungCreate', {
     alias: 'widget.messungcreate',
 
     requires: [
-      'Lada.view.form.Messung'
+        'Lada.view.form.Messung'
     ],
 
     collapsible: true,
@@ -56,10 +56,10 @@ Ext.define('Lada.view.window.MessungCreate', {
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
             },
             afterRender: function() {
@@ -72,7 +72,7 @@ Ext.define('Lada.view.window.MessungCreate', {
             autoScroll: true,
             items: [{
                 xtype: 'messungform'
-           }]
+            }]
         }];
         this.tools = [{
             type: 'help',
@@ -129,7 +129,7 @@ Ext.define('Lada.view.window.MessungCreate', {
                     layout: 'hbox',
                     items: [{
                         xtype: 'button',
-                        text:   i18n.getMsg('form.yes'),
+                        text: i18n.getMsg('form.yes'),
                         margin: '5, 0, 5, 5',
 
                         handler: function() {
@@ -187,7 +187,7 @@ Ext.define('Lada.view.window.MessungCreate', {
     /**
      * Disable the Childelements of this Window
      */
-    disableChildren: function(){
+    disableChildren: function() {
         //intentionally!
         return true;
     },
@@ -195,7 +195,7 @@ Ext.define('Lada.view.window.MessungCreate', {
     /**
      * Enable the Childelements of this Window
      */
-    enableChildren: function(){
+    enableChildren: function() {
         //intentionally!
         return true;
     },
@@ -203,31 +203,31 @@ Ext.define('Lada.view.window.MessungCreate', {
     /**
      * Enable to reset the statusgrid
      */
-     enableStatusReset: function() {
+    enableStatusReset: function() {
         //intentionally!
         return true;
-     },
+    },
 
     /**
      * Disable to reset the statusgrid
      */
-     disableStatusReset: function() {
+    disableStatusReset: function() {
         //intentionally!
         return true;
-     },
+    },
     /**
      * Enable to edit the statusgrid
      */
-     enableStatusEdit: function() {
+    enableStatusEdit: function() {
         //intentionally!
         return true;
-     },
+    },
 
     /**
      * Disable to edit the statusgrid
      */
-     disableStatusEdit: function() {
+    disableStatusEdit: function() {
         //intentionally!
         return true;
-     }
+    }
 });

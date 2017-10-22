@@ -26,11 +26,11 @@ Ext.define('Lada.view.widget.Probenehmer' ,{
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
-    tpl: Ext.create("Ext.XTemplate",
+    tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
             '{prnId} - {kurzBezeichnung}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-         '<tpl for=".">{kurzBezeichnung}</tpl>'),
+        '<tpl for=".">{kurzBezeichnung}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -42,8 +42,8 @@ Ext.define('Lada.view.widget.Probenehmer' ,{
         }
         this.store.sort();
         this.callParent(arguments);
-        if (this.extraParams){
-          this.extraParams();
+        if (this.extraParams) {
+            this.extraParams();
         }
     }
 });

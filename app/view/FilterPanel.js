@@ -117,7 +117,7 @@ Ext.define('Lada.view.FilterPanel', {
             model: 'Lada.model.Query'
         });
         var store = Ext.StoreManager.get('probequeries');
-        store.on('load', function storeLoad () {
+        store.on('load', function storeLoad() {
             var entries = store.queryBy(function(record) {
                 if (record.get('favorite')) {
                     return true;

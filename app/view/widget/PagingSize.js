@@ -11,11 +11,11 @@
  */
 Ext.define('Lada.view.widget.PagingSize', {
     extend: 'Ext.panel.Panel',
-    alias:'widget.pagingsize',
+    alias: 'widget.pagingsize',
     layout: 'hbox',
     baseCls: 'x-box-inner',
 
-    items : [{
+    items: [{
         xtype: 'combobox',
         allowBlank: false,
         forceSelection: true,
@@ -26,13 +26,13 @@ Ext.define('Lada.view.widget.PagingSize', {
         width: 60,
         disableKeyFilter: true,
         editable: false,
-        onChange: function(newVal, oldVal){
+        onChange: function(newVal, oldVal) {
             if (newVal == oldVal) {
                 return;
             }
             Lada.getApplication().setPagingSize(parseInt(newVal));
             var tb = this.up('pagingtoolbar');
-            if (tb){
+            if (tb) {
                 var pageStore = tb.getStore();
                 if (pageStore) {
                     pageStore.setPageSize(newVal);
@@ -49,7 +49,7 @@ Ext.define('Lada.view.widget.PagingSize', {
         this.down('combobox').select(Lada.pagingSize);
     },
 
-    initComponent: function(){
+    initComponent: function() {
         var me = this;
         Lada.getApplication().on('pagingSizeChanged', me.refreshPagingSize, this);
         me.store = Ext.StoreManager.get('pagingSizes');

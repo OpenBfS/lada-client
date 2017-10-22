@@ -32,7 +32,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     /**
      * This sets the Store of the DynamicGrid
      */
-    setStore: function(store){
+    setStore: function(store) {
         var i18n = Lada.getApplication().bundle;
         this.reconfigure(store);
         var ptbar = this.down('pagingtoolbar');
@@ -77,7 +77,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         var resultColumns = [];
         var fields = [];
         var i18n = Lada.getApplication().bundle;
-        switch(this.xtype) {
+        switch (this.xtype) {
             case 'probelistgrid':
                 var tooltiptext = i18n.getMsg('probe')+' '+i18n.getMsg('open');
                 break;
@@ -108,29 +108,27 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             sortable: false,
             tooltip: tooltiptext,
             width: 30,
-            getClass: function (val, meta, rec) {
+            getClass: function(val, meta, rec) {
                 if (rec.get('readonly') === false &&
-                    (   rec.get('owner') === undefined ||
+                    ( rec.get('owner') === undefined ||
                         rec.get('owner') === true ||
                         rec.get('owner') === '') &&
                     !rec.get('statusEdit')) {
-                        return 'edit';
-                }
-                else if (rec.get('readonly') === false &&
+                    return 'edit';
+                } else if (rec.get('readonly') === false &&
                     rec.get('owner') === true &&
                     rec.get('statusEdit')) {
-                        return 'editstatus';
-                }
-                else if (rec.get('readonly') === true &&
+                    return 'editstatus';
+                } else if (rec.get('readonly') === true &&
                     rec.get('statusEdit')) {
-                        return 'noeditstatus';
+                    return 'noeditstatus';
                 }
                 return 'noedit';
             },
             handler: function(grid, rowIndex, colIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
                 grid.fireEvent('itemdblclick', grid, rec);
-             }
+            }
         });
 
         for (var i = cols.length - 1; i >= 0; i--) {
@@ -142,7 +140,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (cols[i] === 'id' || cols[i].dataIndex === 'probeId') {
                 continue;
             }
-            switch (cols[i].dataIndex){
+            switch (cols[i].dataIndex) {
                 case 'dBasis':
                 case 'pArt':
                 case 'statusSt':
@@ -164,6 +162,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         caf[0] = resultColumns;
         caf[1] = fields;
         return caf;
-     }
+    }
 });
 

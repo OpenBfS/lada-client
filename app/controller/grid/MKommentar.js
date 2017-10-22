@@ -41,7 +41,7 @@ Ext.define('Lada.controller.grid.MKommentar', {
      */
     gridSave: function(editor, context) {
         context.record.set('datum', new Date());
-        if (context.record.phantom){
+        if (context.record.phantom) {
             context.record.set('id', null);
         }
         context.record.save({
@@ -51,14 +51,14 @@ Ext.define('Lada.controller.grid.MKommentar', {
             },
             failure: function(record, response) {
                 var i18n = Lada.getApplication().bundle;
-                if (response.error){
+                if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                  i18n.getMsg('err.msg.generic.body'));
+                        i18n.getMsg('err.msg.generic.body'));
                 } else {
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
-                        if (json.message){
+                        if (json.message) {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
                             +' #'+json.message,
                             i18n.getMsg(json.message));
@@ -77,7 +77,7 @@ Ext.define('Lada.controller.grid.MKommentar', {
      * the empty row might have been created by the roweditor is removed
      */
     cancelEdit: function(editor, context) {
-        if (context.record.phantom){
+        if (context.record.phantom) {
             editor.getCmp().store.remove(context.record);
         }
     },
@@ -109,16 +109,16 @@ Ext.define('Lada.controller.grid.MKommentar', {
                         button.up('window').initData();
                     },
                     failure: function(request, response) {
-                        if (response.error){
+                        if (response.error) {
                             var i18n = Lada.getApplication().bundle;
                             //TODO: check content of error.status (html error code)
                             Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
-                                          i18n.getMsg('err.msg.generic.body'));
+                                i18n.getMsg('err.msg.generic.body'));
                         } else {
                             var json = Ext.decode(
                                 response.getResponse().responseText);
                             if (json) {
-                                if (json.message){
+                                if (json.message) {
                                     Ext.Msg.alert(i18n.getMsg(
                                         'err.msg.delete.title')
                                     +' #'+json.message,
@@ -126,12 +126,12 @@ Ext.define('Lada.controller.grid.MKommentar', {
                                 } else {
                                     Ext.Msg.alert(i18n.getMsg(
                                         'err.msg.delete.title'),
-                                        i18n.getMsg('err.msg.generic.body'));
+                                    i18n.getMsg('err.msg.generic.body'));
                                 }
                             } else {
                                 Ext.Msg.alert(i18n.getMsg(
                                     'err.msg.delete.title'),
-                                    i18n.getMsg('err.msg.response.body'));
+                                i18n.getMsg('err.msg.response.body'));
                             }
                         }
                     }

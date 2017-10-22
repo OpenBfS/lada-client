@@ -26,7 +26,7 @@ Ext.define('Lada.controller.HelpprintController', {
             store = treelist.getStore(),
             topicNode = store.getNodeById(topic),
             imprintHtmlUrl = (topicNode.getData()) ? topicNode.getData().content : null;
-            treelist.setSelection(topicNode);
+        treelist.setSelection(topicNode);
         if (imprintHtmlUrl) {
             me.setHtmlInPanel(imprintHtmlUrl);
         }
@@ -47,7 +47,7 @@ Ext.define('Lada.controller.HelpprintController', {
         });
     },
 
-    shake: function(component, duration, amplitude){
+    shake: function(component, duration, amplitude) {
         duration = duration || 200;
         amplitude = amplitude || 5;
         var startX = component.getX();

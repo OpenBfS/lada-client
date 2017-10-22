@@ -123,21 +123,21 @@ Ext.define('Lada.controller.grid.Messung', {
                             button.up('window').initData();
                             var parentGrid = Ext.ComponentQuery.query(
                                 'messunglistgrid');
-                            if (parentGrid.length == 1){
+                            if (parentGrid.length == 1) {
                                 parentGrid[0].store.reload();
                             }
                         },
                         failure: function(request, response) {
                             var i18n = Lada.getApplication().bundle;
-                            if (response.error){
+                            if (response.error) {
                                 //TODO: check content of error.status (html error code)
                                 Ext.Msg.alert(i18n.getMsg(
                                     'err.msg.delete.title'),
-                                    i18n.getMsg('err.msg.generic.body'));
+                                i18n.getMsg('err.msg.generic.body'));
                             } else {
                                 var json = Ext.decode(response.getResponse().responseText);
                                 if (json) {
-                                    if (json.message){
+                                    if (json.message) {
                                         Ext.Msg.alert(i18n.getMsg(
                                             'err.msg.delete.title')
                                         +' #' + json.message,
@@ -145,13 +145,13 @@ Ext.define('Lada.controller.grid.Messung', {
                                     } else {
                                         Ext.Msg.alert(i18n.getMsg(
                                             'err.msg.delete.title'),
-                                            i18n.getMsg(
-                                                'err.msg.generic.body'));
+                                        i18n.getMsg(
+                                            'err.msg.generic.body'));
                                     }
                                 } else {
                                     Ext.Msg.alert(i18n.getMsg(
                                         'err.msg.delete.title'),
-                                        i18n.getMsg('err.msg.response.body'));
+                                    i18n.getMsg('err.msg.response.body'));
                                 }
                             }
                         }

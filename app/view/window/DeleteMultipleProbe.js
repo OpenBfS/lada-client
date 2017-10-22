@@ -33,10 +33,10 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
             }
         });
@@ -47,13 +47,13 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
         var me = this;
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
             },
-            close: function () {
+            close: function() {
                 this.parentWindow.probenWindow = null;
             }
         });
@@ -74,7 +74,7 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
             margin: '5, 5, 5, 5'
         }];
         this.confWin = Ext.create('Ext.window.Window', {
-            title:  i18n.getMsg('delete.multiple_probe.window.title'),
+            title: i18n.getMsg('delete.multiple_probe.window.title'),
             zIndex: 1,
             items: [{
                 xtype: 'panel',
@@ -101,7 +101,7 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
                 }, {
                     xtype: 'button',
                     text: i18n.getMsg('delete'),
-                    handler: function(btn){
+                    handler: function(btn) {
                         me.confWin.close();
                         me.startDelete(btn);
                     }
@@ -122,9 +122,9 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
     /**
      * Refreshes probe grid
      */
-    refresh: function(){
+    refresh: function() {
         var parentGrid = Ext.ComponentQuery.query('probelistgrid');
-        if (parentGrid.length == 1){
+        if (parentGrid.length == 1) {
             parentGrid[0].store.reload();
         }
     },
@@ -188,13 +188,15 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
                         me.add({
                             xtype: 'button',
                             text: 'Schließen',
-                            handler: function(){me.close();}
+                            handler: function() {
+                                me.close();
+                            }
                         });
                     }
 
                 },
                 failure: function(resp, opts) {
-                var json = Ext.JSON.decode(resp.responseText);
+                    var json = Ext.JSON.decode(resp.responseText);
                     urlArr = resp.request.url.split('/');
                     var delId = urlArr[urlArr.length - 1];
                     var html = me.down('panel').html;
@@ -203,12 +205,14 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
                     me.down('progressbar').updateProgress(me.currentProgress/me.maxSteps);
                     html = html + 'Probe ' + nameIdMap.get(delId) + 'konnte nicht gelöscht werden<br>';
                     me.down('panel').setHtml(html);
-                    if (me.currentProgress == me.maxSteps){
+                    if (me.currentProgress == me.maxSteps) {
                         me.down('progressbar').hide();
                         me.add({
                             xtype: 'button',
                             text: 'Schließen',
-                            handler: function(){me.close();}
+                            handler: function() {
+                                me.close();
+                            }
                         });
                     }
                 }

@@ -176,8 +176,7 @@ Ext.define('Lada.view.grid.Status', {
     initData: function() {
         if (this.store) {
             this.store.removeAll();
-        }
-        else {
+        } else {
             this.store = Ext.create('Lada.store.Status',{
                 sorters: [{
                     property: 'datum',
@@ -194,19 +193,19 @@ Ext.define('Lada.view.grid.Status', {
     },
 
     setReadOnly: function(b) {
-        if (b == true){
+        if (b == true) {
             //Readonly
             this.down('button[action=add]').disable();
-        }else{
+        } else {
             //Writable
             this.down('button[action=add]').enable();
         }
     },
 
     setResetable: function(b) {
-        if (b == true){
+        if (b == true) {
             this.down('button[action=reset]').enable();
-        }else{
+        } else {
             this.down('button[action=reset]').disable();
         }
     }

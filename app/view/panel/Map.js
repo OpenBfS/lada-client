@@ -65,8 +65,8 @@ Ext.define('Lada.view.panel.Map', {
         if (!feature) {
             return;
         }
-        if (this.selectedFeatureLayer){
-            if (this.tempFeature){
+        if (this.selectedFeatureLayer) {
+            if (this.tempFeature) {
                 this.selectedFeatureLayer.getSource().removeFeature(
                     this.tempFeature);
                 this.tempFeature = null;
@@ -78,10 +78,10 @@ Ext.define('Lada.view.panel.Map', {
             this.selectedFeatureLayer.getSource().addFeature(feature);
         }
         this.map.getView().setCenter([feature.getGeometry().getCoordinates()[0],
-                                     feature.getGeometry().getCoordinates()[1]]);
+            feature.getGeometry().getCoordinates()[1]]);
         this.map.getView().setZoom(12);
         var ozw = this.up('ortszuordnungwindow');
-        if (ozw){
+        if (ozw) {
             ozw.down('ortszuordnungform').setOrt(null, record);
         }
         //TODO: hideable main layer/make all except selected invisible
@@ -96,7 +96,7 @@ Ext.define('Lada.view.panel.Map', {
             style: this.newFeatureStyle
         });
         this.map.addLayer(this.temporaryLayer);
-        if (!this.drawinteraction){
+        if (!this.drawinteraction) {
             this.drawInteraction = new ol.interaction.Draw({
                 source: this.temporaryLayer.getSource(),
                 type: 'Point'
@@ -114,7 +114,7 @@ Ext.define('Lada.view.panel.Map', {
         clone = event.feature.clone();
         clone.getGeometry().transform('EPSG:3857', 'EPSG:4326');
         var parent = me.up('ortszuordnungwindow') || me.up('ortpanel');
-        var nId = ''
+        var nId = '';
         if (parent.probe) {
             var mstId = parent.probe.get('mstId');
             var mst = Ext.data.StoreManager.get('messstellen');
@@ -128,7 +128,7 @@ Ext.define('Lada.view.panel.Map', {
                 netzbetreiberId: nId,
                 koordXExtern: koord_x,
                 koordYExtern: koord_y,
-                kdaId : 4,
+                kdaId: 4,
                 ortTyp: 1
             }),
             parentWindow: parent
@@ -145,18 +145,18 @@ Ext.define('Lada.view.panel.Map', {
 
         // Iterate the Store and create features from it
         for (var i = 0; i < locationStore.count(); i++) {
-                var geom = new ol.geom.Point([
-                    locationStore.getAt(i).get('longitude'),
-                    locationStore.getAt(i).get('latitude')], 'XY');
-                geom.transform('EPSG:4326', 'EPSG:3857');
-                var id = locationStore.getAt(i).get('id');
-                var feature = new ol.Feature({
-                    geometry: geom,
-                    id: id,
-                    bez: locationStore.getAt(i).get('ortId')
-                });
-                feature.setId(id);
-                this.featureLayer.getSource().addFeature(feature);
+            var geom = new ol.geom.Point([
+                locationStore.getAt(i).get('longitude'),
+                locationStore.getAt(i).get('latitude')], 'XY');
+            geom.transform('EPSG:4326', 'EPSG:3857');
+            var id = locationStore.getAt(i).get('id');
+            var feature = new ol.Feature({
+                geometry: geom,
+                id: id,
+                bez: locationStore.getAt(i).get('ortId')
+            });
+            feature.setId(id);
+            this.featureLayer.getSource().addFeature(feature);
         }
     },
 
@@ -166,8 +166,8 @@ Ext.define('Lada.view.panel.Map', {
      */
     afterRender: function() {
         var backgroundMap = new ol.layer.Tile({
-             source: new ol.source.XYZ({
-                 url: 'http://www.imis.bfs.de/mapcache/tms/1.0.0/osm_bfs_google@GoogleMapsCompatible/{z}/{x}/{-y}.png'
+            source: new ol.source.XYZ({
+                url: 'http://www.imis.bfs.de/mapcache/tms/1.0.0/osm_bfs_google@GoogleMapsCompatible/{z}/{x}/{-y}.png'
             }),
             maxZoom: 18
         });
@@ -182,8 +182,8 @@ Ext.define('Lada.view.panel.Map', {
         });
         this.mapOptions.layers = [backgroundMap];
         this.mapOptions.controls = [new ol.control.Zoom(),
-                                    new ol.control.ZoomSlider(),
-                                    new ol.control.ScaleLine()];
+            new ol.control.ZoomSlider(),
+            new ol.control.ScaleLine()];
 
         this.map = new ol.Map(this.mapOptions);
 
@@ -210,7 +210,7 @@ Ext.define('Lada.view.panel.Map', {
                 })
             });
         };
-        this.selectStyle = function(feature, resolution){
+        this.selectStyle = function(feature, resolution) {
             return new ol.style.Style({
                 image: new ol.style.Icon({
                     src: 'resources/img/marker-blue.png'
@@ -226,9 +226,9 @@ Ext.define('Lada.view.panel.Map', {
                     }),
                     stroke: stroke
                 })
-            })
+            });
         };
-        this.newFeatureStyle= function(feature, resolution){
+        this.newFeatureStyle= function(feature, resolution) {
             return new ol.style.Style({
                 image: new ol.style.Icon({
                     src: 'resources/img/marker-blue.png'
@@ -244,7 +244,7 @@ Ext.define('Lada.view.panel.Map', {
                     }),
                     stroke: stroke
                 })
-            })
+            });
         };
         this.superclass.afterRender.apply(this, arguments);
     },
@@ -254,7 +254,7 @@ Ext.define('Lada.view.panel.Map', {
      */
     selectedFeature: function(selection) {
         var feature = selection.selected.length ? selection.selected[0] : null;
-        if (feature){
+        if (feature) {
             var me = Ext.ComponentQuery.query('map')[0];
             me.fireEvent('featureselected', me, feature, arguments);
             if (me.selectedFeatureLayer) {
@@ -268,8 +268,8 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     beforeDestroy: function() {
-//         delete this.map;
-//         this.callParent(arguments);
+        //         delete this.map;
+        //         this.callParent(arguments);
     },
 
     /**
@@ -281,9 +281,9 @@ Ext.define('Lada.view.panel.Map', {
         this.map.updateSize();
     },
 
-    addPreviousOrt: function (record){
-        if (!this.previousOrtLayer){
-            this.previousOrtLayer =  new ol.layer.Vector({
+    addPreviousOrt: function(record) {
+        if (!this.previousOrtLayer) {
+            this.previousOrtLayer = new ol.layer.Vector({
                 title: 'oldOrt',
                 source: new ol.source.Vector({
                     features: []
@@ -296,8 +296,8 @@ Ext.define('Lada.view.panel.Map', {
         this.previousOrtLayer.getSource().clear();
         if (record) {
             var geom = new ol.geom.Point([record.get('longitude'),
-                                         record.get('latitude')],
-                                         'XY');
+                record.get('latitude')],
+            'XY');
             geom.transform('EPSG:4326', 'EPSG:3857');
             var feature = new ol.Feature({
                 geometry: geom,
@@ -306,7 +306,7 @@ Ext.define('Lada.view.panel.Map', {
             });
             this.previousOrtLayer.getSource().addFeature(feature);
             this.map.getView().setCenter([geom.getCoordinates()[0],
-                                         geom.getCoordinates()[1]]);
+                geom.getCoordinates()[1]]);
             this.map.getView().setZoom(12);
         }
     },
@@ -324,7 +324,7 @@ Ext.define('Lada.view.panel.Map', {
 
             }),
             style: this.standardStyle,
-             visible: true
+            visible: true
         });
         this.map.addLayer(this.featureLayer);
         this.selectControl = new ol.interaction.Select({

@@ -26,11 +26,11 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
-    tpl: Ext.create("Ext.XTemplate",
+    tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
             '{id} - {bezeichnung}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-         '<tpl for=".">{id} - {bezeichnung}</tpl>'),
+        '<tpl for=".">{id} - {bezeichnung}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -44,7 +44,7 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
         }
         this.store.sort();
         this.callParent(arguments);
-        if (this.extraParams){
+        if (this.extraParams) {
             this.extraParams();
         }
     }

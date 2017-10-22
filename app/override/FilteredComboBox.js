@@ -21,7 +21,7 @@ Ext.define('Lada.override.FilteredComboBox', {
     },
 */
     triggers: {
-        clear:{
+        clear: {
             extraCls: 'x-form-clear-trigger',
             handler: function() {
                 this.clearValue();
@@ -37,7 +37,7 @@ Ext.define('Lada.override.FilteredComboBox', {
         */
     lastQuery: '',
 
-    doLocalQuery: function(queryPlan){
+    doLocalQuery: function(queryPlan) {
         var me = this,
             queryString = queryPlan.query,
             store = me.getStore(),
@@ -48,7 +48,7 @@ Ext.define('Lada.override.FilteredComboBox', {
             if (me.enableRegEx) {
                 try {
                     value = new RegExp(value);
-                } catch(e) {
+                } catch (e) {
                     value = null;
                 }
             }
@@ -57,19 +57,19 @@ Ext.define('Lada.override.FilteredComboBox', {
                 me.changingFilters = true;
                 filter = me.queryFilter = Ext.create('Ext.util.Filter', {
                     id: me.id + '-filter',
-                    filterFn: function(candidate){
+                    filterFn: function(candidate) {
                         var display = candidate.data[me.displayField];
                         if (!display) {
                             return false;
                         } else {
                             display = display.toString().toLowerCase();
                         }
-                        if (display.indexOf(value) > -1){
+                        if (display.indexOf(value) > -1) {
                             return true;
                         }
                         var secondarySearchField = me.searchValueField || me.valueField;
                         var val = candidate.data[secondarySearchField].toString().toLowerCase();
-                        if (val.indexOf(value) > -1){
+                        if (val.indexOf(value) > -1) {
                             return true;
                         }
                         return false;

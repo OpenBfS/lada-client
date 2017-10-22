@@ -36,10 +36,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             'ortszuordnunggrid button[action=delete]': {
                 click: this.remove
             },
-            'ortszuordnungwindow toolbar button[action=createort]':{
+            'ortszuordnungwindow toolbar button[action=createort]': {
                 click: this.createort
             },
-            'ortszuordnungwindow toolbar button[action=frommap]':{
+            'ortszuordnungwindow toolbar button[action=frommap]': {
                 click: this.frommap
             },
             'ortszuordnungwindow toolbar button[action=allorte]': {
@@ -52,7 +52,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                     if ( (key - 48 < 0 && key - 90 > 0) //0-9 A-Z
                             && key != 46 //Delete
                             && key != 8 //Backspace
-                            && key != 32){
+                            && key != 32) {
                         return;
                     }
                     var me = this;
@@ -61,10 +61,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                             me.search(evt, opts);
                         });
                     }
-                    try{
+                    try {
                         me.searchTimer.cancel();
                         me.searchTimer.delay(me.searchTimeout);
-                    } catch(e) {
+                    } catch (e) {
                         me.search(evt, opts);
                     }
                 }
@@ -136,44 +136,44 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         var i18n = Lada.getApplication().bundle;
         Ext.MessageBox.confirm(i18n.getMsg('delete'), i18n.getMsg('confirmation.question'),
-                                function(btn) {
+            function(btn) {
                 if (btn === 'yes') {
-                selection.erase({
-                    success: function() {
-                        var ozw = button.up('window');
-                        ozw.ortstore.reload();
-                        ozw.onStoreChanged();
-                    },
-                    failure: function(request, response) {
-                        var i18n = Lada.getApplication().bundle;
-                        if (response.error){
+                    selection.erase({
+                        success: function() {
+                            var ozw = button.up('window');
+                            ozw.ortstore.reload();
+                            ozw.onStoreChanged();
+                        },
+                        failure: function(request, response) {
+                            var i18n = Lada.getApplication().bundle;
+                            if (response.error) {
                             //TODO: check content of error.status (html error code)
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                          i18n.getMsg('err.msg.generic.body'));
-                        } else {
-                            var json = Ext.decode(
-                                response.getResponse().responseText);
-                            if (json) {
-                                if (json.message){
-                                    Ext.Msg.alert(i18n.getMsg(
-                                        'err.msg.delete.title')
+                                Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                    i18n.getMsg('err.msg.generic.body'));
+                            } else {
+                                var json = Ext.decode(
+                                    response.getResponse().responseText);
+                                if (json) {
+                                    if (json.message) {
+                                        Ext.Msg.alert(i18n.getMsg(
+                                            'err.msg.delete.title')
                                     + ' #' + json.message,
-                                    i18n.getMsg(json.message));
+                                        i18n.getMsg(json.message));
+                                    } else {
+                                        Ext.Msg.alert(i18n.getMsg(
+                                            'err.msg.delete.title'),
+                                        i18n.getMsg('err.msg.generic.body'));
+                                    }
                                 } else {
                                     Ext.Msg.alert(i18n.getMsg(
                                         'err.msg.delete.title'),
-                                        i18n.getMsg('err.msg.generic.body'));
-                                }
-                            } else {
-                                Ext.Msg.alert(i18n.getMsg(
-                                    'err.msg.delete.title'),
                                     i18n.getMsg('err.msg.response.body'));
+                                }
                             }
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
         grid.down('button[action=delete]').disable();
     },
 
@@ -203,7 +203,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * Search triggered by textfield key event.
      */
     search: function(evt, opts) {
-      field = Ext.ComponentQuery.query('textfield[name=search]')[0];
+        field = Ext.ComponentQuery.query('textfield[name=search]')[0];
         if (evt.getKey() === 27) {
             verwaltungseinheiten.clearFilter(true);
             staaten.clearFilter(true);
@@ -248,20 +248,20 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var verwgrid = ozw.down('verwaltungseinheitengrid');
         verwaltungseinheiten.clearFilter(true);
         verwaltungseinheiten.filter({
-                property: 'bezeichnung',
-                anyMatch: true,
-                value: filter,
-                caseSensitive: false
+            property: 'bezeichnung',
+            anyMatch: true,
+            value: filter,
+            caseSensitive: false
         });
         verwgrid.setStore(verwaltungseinheiten);
         verwgrid.down('pagingtoolbar').doRefresh();
 
         var staatgrid= ozw.down('staatengrid');
         staaten.filter({
-                property: 'staat',
-                anyMatch: true,
-                value: filter,
-                caseSensitive: false
+            property: 'staat',
+            anyMatch: true,
+            value: filter,
+            caseSensitive: false
         });
         staatgrid.setStore(staaten);
         staatgrid.down('pagingtoolbar').doRefresh();
@@ -338,14 +338,16 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * @param ozw: The current ortzuordnungwindow
      * @param filterstring (optional): The string to filter
      */
-    doOrtFilter: function(ozw, filterstring){
+    doOrtFilter: function(ozw, filterstring) {
         var localfilter = false;
-        if (!ozw){return;}
+        if (!ozw) {
+            return;
+        }
         if (filterstring && this.ortefilter) {
-            if (filterstring.toLowerCase() === this.ortfilter){
+            if (filterstring.toLowerCase() === this.ortfilter) {
                 return;
             }
-            if (!filterstring.toLowerCase().indexOf(this.ortfilter) > -1){
+            if (!filterstring.toLowerCase().indexOf(this.ortfilter) > -1) {
                 localFilter = true;
             }
         }
@@ -353,7 +355,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         ozw.ortstore.clearFilter();
         var filter_low = '';
         ozw.ortstore.proxy.extraParams = {netzbetreiberId: ozw.netzbetreiberId};
-        if (filterstring){
+        if (filterstring) {
             filter_low = filterstring.toLowerCase();
             ozw.ortstore.addFilter({
                 name: 'ortStringSearch',
@@ -362,7 +364,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             });
         }
         var toolbar = ozw.down('tabpanel').down('ortstammdatengrid').down('pagingtoolbar');
-        if (localfilter){
+        if (localfilter) {
             ozw.onStoreChanged();
             toolbar.doRefresh();
         } else {

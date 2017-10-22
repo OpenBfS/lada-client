@@ -9,7 +9,7 @@
 Ext.define('Lada.view.widget.base.FavColumn', {
     extend: 'Ext.grid.column.CheckColumn',
     alias: 'widget.favcolumn',
-/*
+    /*
     constructor: function() {
         this.addEvents(
             'checkchange'
@@ -22,8 +22,7 @@ Ext.define('Lada.view.widget.base.FavColumn', {
         var cls = [cssPrefix + 'grid-checkheader'];
         if (value) {
             cls.push(cssPrefix + 'grid-favcolumn-checked');
-        }
-        else {
+        } else {
             cls.push(cssPrefix + 'grid-favcolumn-unchecked');
         }
         return '<div class="' + cls.join(' ') + '">&#160;</div>';

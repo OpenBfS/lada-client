@@ -57,7 +57,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             + this.probe.get('hauptprobenNr')
                             + ' '
                             + i18n.getMsg('edit');
-            } else  {
+            } else {
                 // A new probe record will be created
                 this.title = i18n.getMsg('ortszuordnung.window.title')
                             + ' '
@@ -81,7 +81,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             + this.messprogramm.get('id')
                             + ' '
                             + i18n.getMsg('edit');
-            } else  {
+            } else {
                 // A new messprogramm record will be created
                 this.title = i18n.getMsg('ortszuordnung.window.title')
                             + ' '
@@ -93,7 +93,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             + ' '
                             + i18n.getMsg('create');
             }
-        };
+        }
         this.tools = [{
             type: 'help',
             tooltip: 'Hilfe',
@@ -124,10 +124,10 @@ Ext.define('Lada.view.window.Ortszuordnung', {
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
             }
         });
@@ -228,7 +228,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         } else {
             ortId = this.record.get('ortId');
         }
-        if (ortId  || ortId === 0) {
+        if (ortId || ortId === 0) {
             Lada.model.Ort.load(ortId, {
                 success: function(rec) {
                     me.down('ortszuordnungform').setFirstOrt(rec);
@@ -244,10 +244,10 @@ Ext.define('Lada.view.window.Ortszuordnung', {
      * @private
      * Override to display and update the map view in the panel.
      */
-    afterRender: function(){
+    afterRender: function() {
         this.superclass.afterRender.apply(this, arguments);
         var map = this.down('map');
-//         map.map.addControl(new OpenLayers.Control.LayerSwitcher()); TODO migration
+        //         map.map.addControl(new OpenLayers.Control.LayerSwitcher()); TODO migration
     },
 
     /**
@@ -283,7 +283,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             ortId = this.record.get('ortId');
         }
         var ortrecord = this.ortstore.findRecord('id', ortId);
-        if (ortrecord){
+        if (ortrecord) {
             map.selectFeature(this.model, ortrecord);
             this.down('ortszuordnungform').setFirstOrt(ortrecord);
         }
@@ -298,6 +298,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             return;
         }
         me.callParent(arguments);
-     }
+    }
 });
 

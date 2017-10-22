@@ -38,18 +38,18 @@ Ext.define('Lada.model.Status', {
         name: 'treeModified',
         serialize: function(value) {
             if (value === '') {
-               return null;
-           }
-           return value;
+                return null;
+            }
+            return value;
         }
     }, {
-       name: 'parentModified',
-       serialize: function(value) {
-           if (value === '') {
-               return null;
-           }
-           return value;
-       }
+        name: 'parentModified',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
     }, {
         name: 'datum',
         type: 'date',

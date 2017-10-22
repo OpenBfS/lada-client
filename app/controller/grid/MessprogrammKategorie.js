@@ -69,8 +69,8 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
      */
     gridSave: function(editor, context) {
         var i18n = Lada.getApplication().bundle;
-        if (context.record.phantom){
-             context.record.set('id', null);
+        if (context.record.phantom) {
+            context.record.set('id', null);
         }
         context.record.save({
             success: function(record, response) {
@@ -79,20 +79,20 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
             },
             failure: function(record, response) {
                 var i18n = Lada.getApplication().bundle;
-                if (response.error){
+                if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                  i18n.getMsg('err.msg.generic.body'));
+                        i18n.getMsg('err.msg.generic.body'));
                 } else {
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
-                        if (json.message){
+                        if (json.message) {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
                             +' #'+json.message,
                             i18n.getMsg(json.message));
                         } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                          i18n.getMsg('err.msg.generic.body'));
+                                i18n.getMsg('err.msg.generic.body'));
                         }
                     }
                 }
@@ -105,7 +105,7 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
      * the empty row might have been created by the roweditor is removed
      */
     cancelEdit: function(editor, context) {
-        if (context.record.phantom){
+        if (context.record.phantom) {
             editor.getCmp().store.remove(context.record);
             context.record.set('id', null);
             this.buttonToggle();
@@ -137,45 +137,45 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         var i18n = Lada.getApplication().bundle;
         Ext.MessageBox.confirm(i18n.getMsg('delete'),
-                                i18n.getMsg('confirmation.question'),
-                                function(btn) {
-            if (btn === 'yes') {
-                selection.erase({
-                    success: function() {
-                        var grid = Ext.ComponentQuery.query('messprogrammkategoriegrid')[0];
-                        grid.store.reload();
-                    },
-                    failure: function(request, response) {
-                        var i18n = Lada.getApplication().bundle;
-                        if (response.error){
+            i18n.getMsg('confirmation.question'),
+            function(btn) {
+                if (btn === 'yes') {
+                    selection.erase({
+                        success: function() {
+                            var grid = Ext.ComponentQuery.query('messprogrammkategoriegrid')[0];
+                            grid.store.reload();
+                        },
+                        failure: function(request, response) {
+                            var i18n = Lada.getApplication().bundle;
+                            if (response.error) {
                             //TODO: check content of error.status (html error code)
-                            Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
-                                          i18n.getMsg('err.msg.generic.body'));
-                        } else {
-                            var json = Ext.decode(
-                                response.getResponse().responseText);
-                            if (json) {
-                                if (json.message){
-                                    Ext.Msg.alert(i18n.getMsg(
-                                        'err.msg.delete.title')
+                                Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
+                                    i18n.getMsg('err.msg.generic.body'));
+                            } else {
+                                var json = Ext.decode(
+                                    response.getResponse().responseText);
+                                if (json) {
+                                    if (json.message) {
+                                        Ext.Msg.alert(i18n.getMsg(
+                                            'err.msg.delete.title')
                                     +' #'+json.message,
-                                    i18n.getMsg(json.message));
+                                        i18n.getMsg(json.message));
+                                    } else {
+                                        Ext.Msg.alert(i18n.getMsg(
+                                            'err.msg.delete.title'),
+                                        i18n.getMsg(
+                                            'err.msg.generic.body'));
+                                    }
                                 } else {
                                     Ext.Msg.alert(i18n.getMsg(
                                         'err.msg.delete.title'),
-                                        i18n.getMsg(
-                                            'err.msg.generic.body'));
-                                }
-                            } else {
-                                Ext.Msg.alert(i18n.getMsg(
-                                    'err.msg.delete.title'),
                                     i18n.getMsg('err.msg.response.body'));
+                                }
                             }
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
         grid.down('button[action=delete]').disable();
     },
 
@@ -189,20 +189,18 @@ Ext.define('Lada.controller.grid.MessprogrammKategorie', {
         var grid = Ext.ComponentQuery.query('messprogrammkategoriegrid')[0];
         if (!record ||
             !Ext.Array.contains(Lada.netzbetreiber,
-            record.get('netzbetreiberId'))) {
+                record.get('netzbetreiberId'))) {
             grid.down('button[action=delete]').disable();
             return;
         }
         if (record.get('readonly') ||
             rowModel.selected.items.length === 0) {
             grid.down('button[action=delete]').disable();
-        }
-        else {
+        } else {
             if (grid.getPlugin('rowedit').editing) {
             //only enable buttons, when grid is not being edited
                 grid.down('button[action=delete]').disable();
-            }
-            else {
+            } else {
                 grid.down('button[action=delete]').enable();
             }
         }

@@ -127,12 +127,11 @@ Ext.define('Lada.controller.grid.MessungList', {
         try {
             for (key in selection[0].data) {
                 // Do not write owner or readonly or id
-                if (["owner", "readonly", "id", "probeId"].indexOf(key) == -1){
+                if (['owner', 'readonly', 'id', 'probeId'].indexOf(key) == -1) {
                     columns.push(key);
                 }
             }
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e);
         }
 
@@ -150,8 +149,7 @@ Ext.define('Lada.controller.grid.MessungList', {
                     visibleColumns[cols[key].dataIndex] = cols[key].text;
                 }
             }
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e);
         }
 
@@ -162,21 +160,19 @@ Ext.define('Lada.controller.grid.MessungList', {
                 var row = selection[item].data;
                 var out = [];
                 //Lookup every column and write to data array.
-                for (key in columns){
+                for (key in columns) {
                     var attr = columns[key];
                     //Only write data to output when the column is not hidden.
                     if (row[attr] != null &&
                         visibleColumns[attr] != null) {
                         out.push(row[attr].toString());
-                    }
-                    else if (visibleColumns[attr] != null) {
+                    } else if (visibleColumns[attr] != null) {
                         out.push('');
                     }
                 }
                 data.push(out);
             }
-        }
-        catch (e){
+        } catch (e) {
             console.log(e);
         }
 
@@ -187,16 +183,15 @@ Ext.define('Lada.controller.grid.MessungList', {
             var cols = cman.getColumns();
             //Iterate columns and find column names for the key...
             // This WILL run into bad behaviour when column-keys exist twice.
-            for (key in columns){
-                for (k in cols){
-                    if (cols[k].dataIndex == columns[key]){
+            for (key in columns) {
+                for (k in cols) {
+                    if (cols[k].dataIndex == columns[key]) {
                         columnNames.push(cols[k].text);
                         break;
                     }
                 }
             }
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e);
         }
 
@@ -211,7 +206,7 @@ Ext.define('Lada.controller.grid.MessungList', {
                     'data': data
                 }
             }
-        }
+        };
 
         Ext.Ajax.request({
             url: 'lada-printer/buildreport.pdf',
@@ -232,26 +227,25 @@ Ext.define('Lada.controller.grid.MessungList', {
                 if (response.getResponse().responseText) {
                     try {
                         var json = Ext.JSON.decode(response.getResponse().responseText);
-                    }
-                    catch(e){
+                    } catch (e) {
                         console.log(e);
                     }
                 }
                 if (json) {
-                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
+                    if (json.errors.totalCount > 0 || json.warnings.totalCount > 0) {
                         formPanel.setMessages(json.errors, json.warnings);
                     }
-                    if(json.message){
+                    if (json.message) {
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
                             +' #'+json.message,
-                            Lada.getApplication().bundle.getMsg(json.message));
+                        Lada.getApplication().bundle.getMsg(json.message));
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                             i18n.getMsg('err.msg.print.noContact'));
                     }
                 } else {
                     Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                    i18n.getMsg('err.msg.print.noContact'));
+                        i18n.getMsg('err.msg.print.noContact'));
                 }
             }
         });
@@ -283,8 +277,7 @@ Ext.define('Lada.controller.grid.MessungList', {
         if (!enabled) {
             grid.down('button[action=print]').disable();
             grid.down('button[action=setstatus]').disable();
-        }
-        else {
+        } else {
             grid.down('button[action=print]').enable();
             // TODO: enable button only on messungen with owner == true and
             // readonly == false
@@ -301,7 +294,7 @@ Ext.define('Lada.controller.grid.MessungList', {
     pageChange: function(toolbar) {
         var grid = toolbar.up('grid');
         var store = grid.getStore();
-        var rowExpander = grid.plugins[0]
+        var rowExpander = grid.plugins[0];
         var nodes = rowExpander.view.getNodes();
         for (var i = 0; i < nodes.length; i++) {
             var node = Ext.fly(nodes[i]);

@@ -36,14 +36,14 @@ Ext.define('Lada.view.grid.PKommentar', {
             disabled: false,
             pluginId: 'rowedit',
             errorSummary: false,
-            listeners:{
+            listeners: {
                 // Make row ineditable when readonly is set to true
                 // Normally this would belong into a controller an not the view.
                 // But the RowEditPlugin is not handled there.
                 beforeedit: function(e, o) {
                     var readonlywin = o.grid.up('window').record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
-                    if (readonlywin == true || readonlygrid == true || this.disabled)  {
+                    if (readonlywin == true || readonlygrid == true || this.disabled) {
                         return false;
                     }
                     return true;
@@ -83,7 +83,7 @@ Ext.define('Lada.view.grid.PKommentar', {
                 var store = Ext.data.StoreManager.get('messstellen');
                 var record = store.getById(value);
                 if (record) {
-                  r = record.get('messStelle');
+                    r = record.get('messStelle');
                 }
                 return r;
             },
@@ -108,9 +108,9 @@ Ext.define('Lada.view.grid.PKommentar', {
             }
         }];
         this.listeners = {
-           select: {
-               fn: this.activateRemoveButton,
-               scope: this
+            select: {
+                fn: this.activateRemoveButton,
+                scope: this
             },
             deselect: {
                 fn: this.deactivateRemoveButton,
@@ -140,8 +140,7 @@ Ext.define('Lada.view.grid.PKommentar', {
             }
             this.down('button[action=delete]').disable();
             this.down('button[action=add]').disable();
-        }
-        else {
+        } else {
             //Writable
             if (this.getPlugin('rowedit')) {
                 this.getPlugin('rowedit').enable();

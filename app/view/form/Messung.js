@@ -164,10 +164,9 @@ Ext.define('Lada.view.form.Messung', {
     setRecord: function(record) {
         var form = this.getForm();
         form.loadRecord(record);
-        if (record.getId()){
+        if (record.getId()) {
             this.retrieveStatus(record.getId(), record.get('status'));
-        }
-        else {
+        } else {
             //remove the StatusWert and StatusStufe field from the form
             var sw = this.down('[name=status]');
             var ss = this.down('[name=stufe]');
@@ -186,7 +185,7 @@ Ext.define('Lada.view.form.Messung', {
         var textfield = this.down('[name=status]');
         var messwin = this.up('window');
 
-        if(textfield) {
+        if (textfield) {
             textfield.setRawValue(msg);
         }
 
@@ -201,8 +200,7 @@ Ext.define('Lada.view.form.Messung', {
                 var i18n = Lada.getApplication().bundle;
                 if (sStore.getTotalCount() === 0 || !statusId) {
                     sw = 0;
-                }
-                else {
+                } else {
                     me.currentStatus = sStore.getById(statusId);
                     sk = sStore.getById(statusId).get('statusKombi');
                     se = sStore.getById(statusId).get('mstId');
@@ -221,8 +219,7 @@ Ext.define('Lada.view.form.Messung', {
                         Ext.Array.contains(Lada.mst, se)) {
 
                     messwin.enableStatusReset();
-                }
-                else {
+                } else {
                     messwin.disableStatusReset();
                 }
 
@@ -234,7 +231,7 @@ Ext.define('Lada.view.form.Messung', {
     /**
      * Updates the Messungform and fills the Statuswert
      */
-    setStatusWert: function(value){
+    setStatusWert: function(value) {
         var swStore = Ext.data.StoreManager.get('statuswerte');
         var i18n = Lada.getApplication().bundle;
         var msg = i18n.getMsg('load.statuswert.error');
@@ -257,8 +254,7 @@ Ext.define('Lada.view.form.Messung', {
                     }
                 }
             });
-        }
-        else {
+        } else {
             //Set the textfield
             var item = swStore.getById(value);
             if (item) {
@@ -274,8 +270,8 @@ Ext.define('Lada.view.form.Messung', {
     /**
      * Updates the Messungform and fills the StatusStufe
      */
-    setStatusStufe: function(value){
-        var ssStore = Ext.data.StoreManager.get('statusstufe')
+    setStatusStufe: function(value) {
+        var ssStore = Ext.data.StoreManager.get('statusstufe');
         var i18n = Lada.getApplication().bundle;
         var msg = i18n.getMsg('load.statusstufe.error');
         var textfield = this.down('[name=stufe]');
@@ -296,8 +292,7 @@ Ext.define('Lada.view.form.Messung', {
                     }
                 }
             });
-        }
-        else {
+        } else {
             //Set the value.
             var item = ssStore.getById(value);
             if (item) {

@@ -47,7 +47,7 @@ Ext.define('Lada.controller.form.Messung', {
         for (var key in data) {
             record.set(key, data[key]);
         }
-        if (record.phantom){
+        if (record.phantom) {
             record.set('id', null);
         }
         formPanel.getForm().getRecord().save({
@@ -65,7 +65,7 @@ Ext.define('Lada.controller.form.Messung', {
                     var parentWin = button.up('window').parentWindow;
                     parentWin.initData();
                     var parentGrid = Ext.ComponentQuery.query('messunglistgrid');
-                    if (parentGrid.length == 1){
+                    if (parentGrid.length == 1) {
                         parentGrid[0].store.reload();
                     }
                     if (response.action === 'create' && json.success) {
@@ -90,10 +90,10 @@ Ext.define('Lada.controller.form.Messung', {
                     .setDisabled(true);
                 formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
                 var i18n = Lada.getApplication().bundle;
-                if (response.error){
+                if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                  i18n.getMsg('err.msg.generic.body'));
+                        i18n.getMsg('err.msg.generic.body'));
                 } else {
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
@@ -101,8 +101,7 @@ Ext.define('Lada.controller.form.Messung', {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
                             + ' #' + json.message,
                             i18n.getMsg(json.message));
-                        }
-                        else {
+                        } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                 i18n.getMsg('err.msg.generic.body'));
                         }
@@ -111,8 +110,7 @@ Ext.define('Lada.controller.form.Messung', {
                         formPanel.setMessages(json.errors, json.warnings);
                         formPanel.up('window').initData();
                         formPanel.up('window').grid.store.reload();
-                    }
-                    else {
+                    } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                             i18n.getMsg('err.msg.response.body'));
                     }
@@ -132,7 +130,7 @@ Ext.define('Lada.controller.form.Messung', {
         for (var key in data) {
             record.set(key, data[key]);
         }
-        if (record.phantom){
+        if (record.phantom) {
             record.set('id', null);
         }
         formPanel.getForm().getRecord().save({
@@ -140,17 +138,17 @@ Ext.define('Lada.controller.form.Messung', {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     var parentGrid = Ext.ComponentQuery.query('messunglistgrid');
-                    if (parentGrid.length == 1){
+                    if (parentGrid.length == 1) {
                         parentGrid[0].store.reload();
                     }
                 }
             },
             failure: function(record, response) {
                 var i18n = Lada.getApplication().bundle;
-                if (response.error){
+                if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                  i18n.getMsg('err.msg.generic.body'));
+                        i18n.getMsg('err.msg.generic.body'));
                 } else {
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
@@ -158,13 +156,11 @@ Ext.define('Lada.controller.form.Messung', {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
                             + ' #' + json.message,
                             i18n.getMsg(json.message));
-                        }
-                        else {
+                        } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                 i18n.getMsg('err.msg.generic.body'));
                         }
-                    }
-                    else {
+                    } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                             i18n.getMsg('err.msg.response.body'));
                     }
@@ -174,16 +170,16 @@ Ext.define('Lada.controller.form.Messung', {
         });
     },
 
-     /**
+    /**
       * The discard function resets the Location form
       * to its original state.
       */
-     discard: function(button) {
+    discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
     },
 
-     /**
+    /**
       * The dirtyForm function enables or disables the save and discard
       * button which are present in the toolbar of the form.
       * The Buttons are only active if the content of the form was altered
@@ -192,13 +188,12 @@ Ext.define('Lada.controller.form.Messung', {
       * embedding the form. Only when the record does not carry the readonly
       * flag, the function calls the embedding windows enableChilren() function
       */
-     dirtyForm: function(form, dirty) {
+    dirtyForm: function(form, dirty) {
         if (dirty) {
             form.owner.down('button[action=save]').setDisabled(false);
             form.owner.down('button[action=discard]').setDisabled(false);
             form.owner.up('window').disableChildren();
-        }
-        else {
+        } else {
             form.owner.down('button[action=save]').setDisabled(true);
             form.owner.down('button[action=discard]').setDisabled(true);
             //Only enable children if the form was not readOnly

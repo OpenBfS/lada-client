@@ -92,7 +92,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp')
                             },{
                                 // empty conttainer for vertical separation
-                                xtype:'container',
+                                xtype: 'container',
                                 minHeight: 30
                             }, {
                                 // this field is hidden because the user doesn't
@@ -129,8 +129,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         this.record = record;
         if (!record.get('readonly')) {
             this.setReadOnly(false);
-        }
-        else {
+        } else {
             this.setReadOnly(true);
         }
     },
@@ -153,10 +152,10 @@ Ext.define('Lada.view.form.Ortszuordnung', {
      * sets the ort even if the record is readOnly. Used for initially setting a record
      * on existing entries.
      * */
-    setFirstOrt: function(record){
-        if (record){
-           this.getForm().setValues({ortId: record.get('id')});
-           this.setOrtInfo(record);
+    setFirstOrt: function(record) {
+        if (record) {
+            this.getForm().setValues({ortId: record.get('id')});
+            this.setOrtInfo(record);
         }
     },
 
@@ -181,7 +180,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         } else {
             ortinfo.getForm().setValues({staat: '', staatISO: ''});
         }
-        if (kda !== null){
+        if (kda !== null) {
             ortinfo.getForm().setValues({
                 koordinatenart: kda.get('koordinatenart')});
         } else {
@@ -222,20 +221,20 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                 element.showErrors(errorText);
             }
         }
-     },
+    },
 
     clearMessages: function() {
         this.down('tarea[name=ortszusatztext]').clearWarningOrError();
-     },
+    },
 
     setReadOnly: function(value) {
         this.readOnly = value;
         this.down('tarea[name=ortszusatztext]').setReadOnly(value);
         var fieldId = 'textfield[name=ortszuordnungTyp]';
         this.down(fieldId).setReadOnly(value);
-        if (value){
-          var button = this.down('button[action=save]');
-          button.setDisabled(true);
+        if (value) {
+            var button = this.down('button[action=save]');
+            button.setDisabled(true);
         }
     },
 
@@ -249,20 +248,20 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         controller.validityChange(form, form.isValid());
     },
 
-     /**
+    /**
      * When the form is editable, a Record can be selected.
      * If the Record was selected from a grid this function
      * sets the ortzuordnung.
      */
-    chooseLocation: function(){
+    chooseLocation: function() {
         var i18n = Lada.getApplication().bundle;
         var win = this.up('ortszuordnungwindow');
         var osg = win.down('ortstammdatengrid');
         var oForm = win.down('ortszuordnungform');
-        if (!this.readOnly){
+        if (!this.readOnly) {
             osg.addListener('select',oForm.setOrt, oForm);
             var map = win.down('map');
-            if (!map.featureLayer){
+            if (!map.featureLayer) {
                 map.initFeatureLayer();
             }
             map.featureLayer.setVisibility(true);

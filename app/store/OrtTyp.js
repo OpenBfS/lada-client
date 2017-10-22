@@ -16,7 +16,7 @@ Ext.define('Lada.store.OrtTyp', {
         {
             property: 'id',
             direction: 'ASC'
-    }],
+        }],
     autoLoad: true,
     sortOnLoad: true
 });

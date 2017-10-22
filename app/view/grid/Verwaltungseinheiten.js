@@ -13,7 +13,7 @@ Ext.define('Lada.view.grid.Verwaltungseinheiten', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.verwaltungseinheitengrid',
     requires: ['Ext.grid.filters.Filters',
-               'Lada.view.widget.PagingSize'],
+        'Lada.view.widget.PagingSize'],
 
     // minHeight and deferEmptyText are needed to be able to show the
     // emptyText message.
@@ -37,7 +37,7 @@ Ext.define('Lada.view.grid.Verwaltungseinheiten', {
             dataIndex: 'bezeichnung',
             flex: 1
         }];
-        if (this.store){
+        if (this.store) {
             this.store.loadPage(1);
             this.setTitle(
                 'Verwaltungseinheiten (' + this.store.getCount() + ')');
@@ -51,7 +51,7 @@ Ext.define('Lada.view.grid.Verwaltungseinheiten', {
     /**
      * This sets the Store of this Grid
      */
-    setStore: function(store){
+    setStore: function(store) {
         if (store) {
             this.reconfigure(store);
             this.setTitle(

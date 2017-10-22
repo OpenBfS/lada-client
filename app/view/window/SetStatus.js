@@ -167,13 +167,13 @@ Ext.define('Lada.view.window.SetStatus', {
         }
 
         for (var i = 0; i < this.selection.length; i++) {
-            var data =  {
+            var data = {
                 messungsId: this.selection[i].get('id'),
                 mstId: this.down('combobox').getValue(),
                 datum: new Date(),
                 statusKombi: kombis.getAt(kombiIdx).get('id'),
                 text: this.down('textarea').getValue()
-            }
+            };
             Ext.Ajax.request({
                 url: 'lada-server/rest/status',
                 method: 'POST',

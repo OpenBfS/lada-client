@@ -15,8 +15,8 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
 
     maxHeight: 350,
     emptyText: 'Keine Orte gefunden.',
-        // minHeight and deferEmptyText are needed to be able to show the
-        // emptyText message.
+    // minHeight and deferEmptyText are needed to be able to show the
+    // emptyText message.
     minHeight: 110,
     viewConfig: {
         deferEmptyText: false
@@ -56,9 +56,9 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             dataIndex: 'readonly',
             sortable: false,
             width: 30,
-            getClass: function (val, meta, rec) {
+            getClass: function(val, meta, rec) {
                 if (rec.get('readonly') === false) {
-                        return 'edit';
+                    return 'edit';
                 }
                 return 'noedit';
             },
@@ -166,9 +166,9 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             }
         }];
         this.listeners = {
-           select: {
-               fn: this.activateRemoveButton,
-               scope: this
+            select: {
+                fn: this.activateRemoveButton,
+                scope: this
             },
             deselect: {
                 fn: this.deactivateRemoveButton,
@@ -189,12 +189,10 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                         messprogrammId: this.recordId
                     }});
                 modelname = 'Lada.model.Messprogramm';
-            }
-            else {
+            } else {
                 return;
             }
-        }
-        else {
+        } else {
             modelname = 'Lada.model.Probe';
             this.store = Ext.create('Lada.store.Ortszuordnung');
             this.store.load({
@@ -222,8 +220,8 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
      */
     setReadOnly: function(b) {
         this.readOnly = b;
-        addButton = this.down('button[action=add]')
-        if(b == true) {
+        addButton = this.down('button[action=add]');
+        if (b == true) {
             addButton.disable();
             this.deactivateRemoveButton(null, null);
         } else {

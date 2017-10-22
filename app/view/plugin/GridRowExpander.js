@@ -85,8 +85,7 @@ Ext.define('Lada.view.plugin.GridRowExpander', {
 
             me.showCmp(expandDiv, record);
             me.view.fireEvent('expandbody', rowNode, record, nextBd.dom);
-        }
-        else {
+        } else {
             row.addCls(me.rowCollapsedCls);
             nextBd.addCls(me.rowBodyHiddenCls);
             me.recordsExpanded[record.internalId] = false;

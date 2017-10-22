@@ -9,12 +9,12 @@
 
 // Require all Libraries from de/
 
-Ext.define("Lada.override.i18n.DE", {
-    requires:[
-       'Lada.override.i18n.de.toolbar.Paging',
-       'Lada.override.i18n.de.picker.Date',
-       'Lada.override.i18n.de.RowEditor',
-       'Lada.override.i18n.de.LoadMask'
+Ext.define('Lada.override.i18n.DE', {
+    requires: [
+        'Lada.override.i18n.de.toolbar.Paging',
+        'Lada.override.i18n.de.picker.Date',
+        'Lada.override.i18n.de.RowEditor',
+        'Lada.override.i18n.de.LoadMask'
     ]
 });
 

@@ -20,8 +20,7 @@ Ext.define('Lada.model.Ort', {
         convert: function(v) {
             if (v === '') {
                 return null;
-            }
-            else if (v === 'f') {
+            } else if (v === 'f') {
                 return false;
             }
             return true;
@@ -29,8 +28,7 @@ Ext.define('Lada.model.Ort', {
         serialize: function(v) {
             if (v === null || v === '') {
                 return null;
-            }
-            else if (v === false) {
+            } else if (v === false) {
                 return 'f';
             }
             return 't';

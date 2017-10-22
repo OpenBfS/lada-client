@@ -51,7 +51,7 @@ Ext.define('Lada.view.form.OrtInfo', {
             }, {
                 xtype: 'ortinforow',
                 label: i18n.getMsg('orte.kda'),
-                firstitem:'kdaId',
+                firstitem: 'kdaId',
                 seconditem: 'koordinatenart'
             },{
                 xtype: 'ortinforow',
@@ -81,7 +81,7 @@ Ext.define('Lada.view.form.OrtInfoRow',{
         submitValue: false,
         xtype: 'displayfield'
     },
-    initComponent: function(){
+    initComponent: function() {
         this.items = [{
             xtype: 'label',
             html: this.label,

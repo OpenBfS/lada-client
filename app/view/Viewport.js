@@ -39,7 +39,7 @@ Ext.define('Lada.view.Viewport', {
                             imprintWinController.setTopic('intro');
                         }, imprintWin, {single: true});
                     } else {
-                            // BasiGX.util.Animate.shake(imprintWin);
+                        // BasiGX.util.Animate.shake(imprintWin);
                         var imprintWinController = imprintWin.getController();
                         imprintWinController.shake(imprintWin);
                         imprintWinController.setTopic('intro');

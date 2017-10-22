@@ -27,11 +27,11 @@ Ext.define('Lada.view.widget.Probenintervall', {
     queryMode: 'local',
     triggerAction: 'all',
     typeAhead: false,
-    tpl: Ext.create("Ext.XTemplate",
+    tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
             '{probenintervall} - {piTexti18nId}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-         '<tpl for=".">{probenintervall} -'+
+        '<tpl for=".">{probenintervall} -'+
          '{piTexti18nId}</tpl>'),
 
     initComponent: function() {
@@ -42,8 +42,7 @@ Ext.define('Lada.view.widget.Probenintervall', {
 
         if (!this.store) {
             this.store = Ext.create('Lada.store.Probenintervall');
-        }
-        else {
+        } else {
             this.store.clearFilter();
         }
         this.callParent(arguments);

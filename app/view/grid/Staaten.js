@@ -14,7 +14,7 @@ Ext.define('Lada.view.grid.Staaten', {
     alias: 'widget.staatengrid',
 
     requires: ['Ext.grid.filters.Filters',
-               'Lada.view.widget.PagingSize'],
+        'Lada.view.widget.PagingSize'],
     plugins: 'gridfilters',
     bbar: {
         xtype: 'pagingtoolbar',
@@ -56,12 +56,12 @@ Ext.define('Lada.view.grid.Staaten', {
         this.callParent(arguments);
         this.down('pagingtoolbar').add('-');
         this.down('pagingtoolbar').add(cbox);
-     },
+    },
 
     /**
      * This sets the Store of this Grid
      */
-    setStore: function(store){
+    setStore: function(store) {
         if (store) {
             this.reconfigure(store);
             this.setTitle('Staaten(' + store.getCount() + ')');

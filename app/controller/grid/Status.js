@@ -16,7 +16,7 @@ Ext.define('Lada.controller.grid.Status', {
      * Initialize the Controller with
      * 3 Listeners
      */
-     init: function() {
+    init: function() {
         this.control({
             'statusgrid': {
                 edit: this.gridSave,
@@ -38,26 +38,26 @@ Ext.define('Lada.controller.grid.Status', {
      *   it also tries to refresh the ProbeWindow and the messunggrid
      * On failure it displays a message
      */
-     gridSave: function(editor, context) {
+    gridSave: function(editor, context) {
         var wert = editor.getEditor().down('combobox[displayField=wert]').value;
         var stufe = editor.getEditor().down('combobox[displayField=stufe]').value;
         var kombis = Ext.data.StoreManager.get('statuskombi');
         var kombiNdx = kombis.findBy(function(record, id) {
             if (record.get('statusStufe').id == stufe &&
-                record.get('statusWert').id == wert){
+                record.get('statusWert').id == wert) {
                 return true;
             }
             return false;
         });
-        if (kombiNdx == -1){
+        if (kombiNdx == -1) {
             var i18n = Lada.getApplication().bundle;
             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                          i18n.getMsg('err.msg.generic.body'));
+                i18n.getMsg('err.msg.generic.body'));
             return;
         }
         var statuskombi = kombis.getAt(kombiNdx);
         context.record.set('statusKombi', statuskombi.get('id'));
-        if (context.record.phantom){
+        if (context.record.phantom) {
             context.record.set('id', null);
         }
         context.record.save({
@@ -65,19 +65,19 @@ Ext.define('Lada.controller.grid.Status', {
                 var i18n = Lada.getApplication().bundle;
                 var json = Ext.JSON.decode(response.responseText);
 
-                if(json) {
+                if (json) {
                     if (!json.success) {
-                        if(json.message){
+                        if (json.message) {
                             Ext.Msg.alert(i18n.getMsg('err.msg.generic.title')
                                 +' #'+json.message,
-                                i18n.getMsg(json.message));
+                            i18n.getMsg(json.message));
                         } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                                 i18n.getMsg('err.msg.generic.body'));
                         }
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                        i18n.getMsg('err.msg.generic.body'));
+                            i18n.getMsg('err.msg.generic.body'));
                     }
                 }
 
@@ -87,30 +87,29 @@ Ext.define('Lada.controller.grid.Status', {
                 try {
                     win.parentWindow.initData();
                     win.parentWindow.down('messunggrid').store.reload();
-                }
-                catch(e) {
+                } catch (e) {
                 }
             },
             failure: function(request, response) {
                 var i18n = Lada.getApplication().bundle;
-                if (response.error){
+                if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                  i18n.getMsg('err.msg.generic.body'));
+                        i18n.getMsg('err.msg.generic.body'));
                 } else {
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
-                        if (json.message){
+                        if (json.message) {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
                             + ' #' + json.message,
                             i18n.getMsg(json.message));
                         } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                          i18n.getMsg('err.msg.generic.body'));
+                                i18n.getMsg('err.msg.generic.body'));
                         }
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                      i18n.getMsg('err.msg.response.body'));
+                            i18n.getMsg('err.msg.response.body'));
                     }
                 }
             }
@@ -122,7 +121,7 @@ Ext.define('Lada.controller.grid.Status', {
      * the empty row might have been created by the roweditor is removed
      */
     cancelEdit: function(editor, context) {
-        if (context.record.phantom){
+        if (context.record.phantom) {
             editor.getCmp().store.remove(context.record);
         }
     },
@@ -132,8 +131,8 @@ Ext.define('Lada.controller.grid.Status', {
      *  and copies the data of the previous status into the new one
      *  if possible.
      */
-     add: function(button) {
-        var lastrow = button.up('statusgrid').store.count()
+    add: function(button) {
+        var lastrow = button.up('statusgrid').store.count();
 
         // retrive current status from the messung.
         var s = button.up('window').down('messungform').getRecord().get('status');
@@ -148,7 +147,7 @@ Ext.define('Lada.controller.grid.Status', {
                 Ext.Array.contains(Lada.mst, recentStatus.get('erzeuger'))) {
             if (recentStatus) {
                 // clone the status
-                var record = recentStatus.copy()
+                var record = recentStatus.copy();
             }
 
             if (record.get('statusWert') === 0) {
@@ -192,15 +191,15 @@ Ext.define('Lada.controller.grid.Status', {
                     me.doReset(rstbutton);
                 }
             });
-     },
+    },
 
-     doReset: function(button) {
+    doReset: function(button) {
         var i18n = Lada.getApplication().bundle;
 
         var s = button.up('window').down('messungform').getCurrentStatus();
         var messId = button.up('window').down('messungform').getRecord().get('id');
 
-        if(!s) {
+        if (!s) {
             Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                 i18n.getMsg('err.msg.generic.body'));
             return;
@@ -211,7 +210,7 @@ Ext.define('Lada.controller.grid.Status', {
         var stufe = kombis.getById(s.get('statusKombi')).get('statusStufe').id;
         var kombiNdx = kombis.findBy(function(record, id) {
             return record.get('statusStufe').id === stufe
-                && record.get('statusWert').id === 8
+                && record.get('statusWert').id === 8;
         });
         var record = s.copy();
         record.set('datum', new Date());
@@ -227,12 +226,12 @@ Ext.define('Lada.controller.grid.Status', {
                 var i18n = Lada.getApplication().bundle;
                 var json = Ext.JSON.decode(response.responseText);
 
-                if(json) {
+                if (json) {
                     if (!json.success) {
-                        if(json.message){
+                        if (json.message) {
                             Ext.Msg.alert(i18n.getMsg('err.msg.generic.title')
                                 +' #'+json.message,
-                                i18n.getMsg(json.message));
+                            i18n.getMsg(json.message));
                         } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                                 i18n.getMsg('err.msg.generic.body'));
@@ -246,28 +245,27 @@ Ext.define('Lada.controller.grid.Status', {
                 try {
                     win.parentWindow.initData();
                     win.parentWindow.down('messunggrid').store.reload();
-                }
-                catch(e) {
+                } catch (e) {
                 }
             },
             failure: function(response) {
                 // TODO sophisticated error handling, with understandable Texts
                 var json = Ext.JSON.decode(response.responseText);
                 if (json) {
-                    if(json.message){
+                    if (json.message) {
                         Ext.Msg.alert(i18n.getMsg('err.msg.generic.title')
                             +' #'+json.message,
-                            i18n.getMsg(json.message));
+                        i18n.getMsg(json.message));
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                             i18n.getMsg('err.msg.generic.body'));
                     }
                 } else {
                     Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                    i18n.getMsg('err.msg.generic.body'));
+                        i18n.getMsg('err.msg.generic.body'));
                 }
             }
         });
-     }
+    }
 
 });

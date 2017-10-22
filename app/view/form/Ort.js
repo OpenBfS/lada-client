@@ -152,7 +152,7 @@ Ext.define('Lada.view.form.Ort', {
         },{
             xtype: 'ortszusatz',
             labelWidth: 125,
-            editable:true,
+            editable: true,
             name: 'ozId',
             fieldLabel: i18n.getMsg('orte.ozId')
         }];
@@ -222,9 +222,9 @@ Ext.define('Lada.view.form.Ort', {
                 element.showErrors(errorText);
             }
         }
-     },
+    },
 
     clearMessages: function() {
         // TODO: this is a stub
-     }
+    }
 });

@@ -36,7 +36,7 @@ Ext.define('Lada.view.widget.Betriebsart', {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.betriebsart');
 
-        this.store = Ext.data.StoreManager.get('betriebsartStore')
+        this.store = Ext.data.StoreManager.get('betriebsartStore');
         this.store.clearFilter();
         this.callParent(arguments);
     }

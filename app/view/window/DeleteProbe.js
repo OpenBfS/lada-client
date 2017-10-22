@@ -31,10 +31,10 @@ Ext.define('Lada.view.window.DeleteProbe', {
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
             }
         });
@@ -62,11 +62,10 @@ Ext.define('Lada.view.window.DeleteProbe', {
                                 buttons: Ext.Msg.OK
                             });
                             var parentGrid = Ext.ComponentQuery.query('probelistgrid');
-                            if (parentGrid.length == 1){
+                            if (parentGrid.length == 1) {
                                 parentGrid[0].store.reload();
                             }
-                        }
-                        else {
+                        } else {
                             Ext.Msg.show({
                                 title: 'Fehler!',
                                 msg: i18n.getMsg(json.message),
@@ -79,13 +78,12 @@ Ext.define('Lada.view.window.DeleteProbe', {
                         var json = null;
                         try {
                             json = Ext.JSON.decode(response.responseText);
-                        }
-                        catch(err){
+                        } catch (err) {
                             Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title'),
                                 Lada.getApplication().bundle.getMsg('err.msg.response.body'));
                         }
                         if (json) {
-                            if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
+                            if (json.errors.totalCount > 0 || json.warnings.totalCount > 0) {
                                 formPanel.setMessages(json.errors, json.warnings);
                             }
                             /*
@@ -94,7 +92,7 @@ Ext.define('Lada.view.window.DeleteProbe', {
                             We assume that a 302 was send when the follwing statement
                             is true.
                             */
-                            if (response.status == 0 && response.responseText === "") {
+                            if (response.status == 0 && response.responseText === '') {
                                 Ext.MessageBox.confirm('Erneutes Login erforderlich',
                                     'Ihre Session ist abgelaufen.<br/>'+
                                     'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
@@ -102,10 +100,10 @@ Ext.define('Lada.view.window.DeleteProbe', {
                                     'Soll die Anwendung jetzt neu geladen werden?', this.reload);
                             }
                             // further error handling
-                            if(json.message){
+                            if (json.message) {
                                 Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
                                     +' #'+json.message,
-                                    Lada.getApplication().bundle.getMsg(json.message));
+                                Lada.getApplication().bundle.getMsg(json.message));
                             } else {
                                 Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title'),
                                     Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
@@ -123,13 +121,13 @@ Ext.define('Lada.view.window.DeleteProbe', {
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
             },
-            close: function () {
+            close: function() {
                 this.parentWindow.probenWindow = null;
             }
         });
@@ -173,8 +171,8 @@ Ext.define('Lada.view.window.DeleteProbe', {
     evalResponse: function(response) {
         var i18n = Lada.getApplication().bundle;
         var r = '';
-            r += response.data.length;
-            r += ' ' + i18n.getMsg('probedeleted');
+        r += response.data.length;
+        r += ' ' + i18n.getMsg('probedeleted');
         return r;
     },
 

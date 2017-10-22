@@ -30,7 +30,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         var ta = 'all';
         if (this.disableKeyFilter !== undefined) {
             dkf = this.disableKeyFilter;
-            ta = this.disableKeyFilter ? 'all' : 'query'
+            ta = this.disableKeyFilter ? 'all' : 'query';
         }
         this.items = [{
             xtype: this.multiSelect? 'tagfield':'combobox',
@@ -151,8 +151,8 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         this.down('combobox').setReadOnly(value);
     },
 
-    setStore: function(store){
-      this.store = store;
-      this.down('combobox').setStore(store);
+    setStore: function(store) {
+        this.store = store;
+        this.down('combobox').setStore(store);
     }
 });

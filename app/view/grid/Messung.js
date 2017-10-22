@@ -50,9 +50,9 @@ Ext.define('Lada.view.grid.Messung', {
             dataIndex: 'readonly',
             sortable: false,
             width: 30,
-            getClass: function (val, meta, rec) {
+            getClass: function(val, meta, rec) {
                 if (rec.get('readonly') === false) {
-                        return 'edit';
+                    return 'edit';
                 }
                 return 'noedit';
             },
@@ -104,7 +104,7 @@ Ext.define('Lada.view.grid.Messung', {
                 }
                 var kombis = Ext.data.StoreManager.get('statuskombi');
                 var kombi = kombis.getById(value);
-                var st = kombi.data.statusWert.wert
+                var st = kombi.data.statusWert.wert;
                 return st;
             }
         }, {
@@ -123,7 +123,7 @@ Ext.define('Lada.view.grid.Messung', {
                 }
                 var kombis = Ext.data.StoreManager.get('statuskombi');
                 var kombi = kombis.getById(value);
-                var st = kombi.data.statusStufe.stufe
+                var st = kombi.data.statusStufe.stufe;
                 return st;
             }
         }, {
@@ -169,9 +169,9 @@ Ext.define('Lada.view.grid.Messung', {
             }
         }];
         this.listeners = {
-           select: {
-               fn: this.activateRemoveButton,
-               scope: this
+            select: {
+                fn: this.activateRemoveButton,
+                scope: this
             },
             deselect: {
                 fn: this.deactivateRemoveButton,
@@ -193,7 +193,7 @@ Ext.define('Lada.view.grid.Messung', {
             params: {
                 probeId: this.recordId
             },
-            callback: function (records, operation, success) {
+            callback: function(records, operation, success) {
                 this.setLoading(false);
             },
             scope: this
@@ -254,12 +254,10 @@ Ext.define('Lada.view.grid.Messung', {
         if (success) {
             if (store.getTotalCount() === 0) {
                 value = '0';
-            }
-            else {
+            } else {
                 value = store.getTotalCount();
             }
-        }
-        else {
+        } else {
             value = '-';
         }
         opts.record.beginEdit();
@@ -275,8 +273,7 @@ Ext.define('Lada.view.grid.Messung', {
         var value = 0;
         if (sstore.getTotalCount() === 0 || !opts.statusId) {
             value = 0;
-        }
-        else {
+        } else {
             var rec = sstore.getById(opts.statusId);
             if (rec) {
                 value = rec.get('statusKombi');
@@ -300,8 +297,7 @@ Ext.define('Lada.view.grid.Messung', {
             }
             this.down('button[action=delete]').disable();
             this.down('button[action=add]').disable();
-        }
-        else {
+        } else {
             //Writable
             if (this.getPlugin('rowedit')) {
                 this.getPlugin('rowedit').enable();
