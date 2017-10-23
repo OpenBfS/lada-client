@@ -7,7 +7,7 @@ Die Software bietet Funktionalität zur Erfassung und Bearbeitung
 von Messdaten. Sowie der Planung der Messungen.
 
 Weitere Informationen finden sich auf der Projektwebseite unter
-der Adresse: https://wald.intevation.org/projects/lada/
+der Adresse: https://github.com/OpenBfS/lada-client
 
 Die Software entstand im Rahmen einer Software Entwicklung durch die
 Intevation GmbH im Auftrag des Bundesamt für Strahlenschutz in den Jahren 2013
