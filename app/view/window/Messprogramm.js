@@ -199,16 +199,26 @@ Ext.define('Lada.view.window.Messprogramm', {
                 gueltigVon: 1,
                 gueltigBis: 365});
             this.down('messmethodengrid').setReadOnly(true);
-            var mstLabCb = this.down('messprogrammform').down('messstellelabor').down('combobox');
-            var mstLabRecs = mstLabCb.store.getData();
-            //Try to preselect messstelle/labor
-            if (mstLabRecs.length == 1) {
-                var labRec = mstLabRecs.getAt(0);
-                record.set('owner', true);
-                record.set('mstId', labRec.get('messStelle'));
-                record.set('laborMstId', labRec.get('laborMst'));
+
+            var mstLaborStore = Ext.data.StoreManager.get('messstellelabor');
+            var items = mstLaborStore.queryBy(function(record) {
+                if ( (Lada.mst.indexOf(record.get('messStelle')) > -1) &&
+                   (Lada.mst.indexOf(record.get('laborMst')) > -1)){
+                    return true;
+                }
+            });
+            record.set('owner', true);
+            record.set('id', null);
+            defaultentry = items.items[0];
+            if (defaultentry){
+              record.set('mstId', defaultentry.get('messStelle'));
+              record.set('laborMstId', defaultentry.get('laborMst'));
+              var mstStore = Ext.data.StoreManager.get('messstellen');
+              var netzbetreiber = mstStore.getById(defaultentry.get('messStelle')).get('netzbetreiberId');
+              this.down('messprogrammform').down('netzbetreiber').setValue(netzbetreiber);
             }
             this.down('messprogrammform').setRecord(record);
+            this.down('messprogrammform').down('messstellelabor').down('combobox').select(1);
         }
         this.down('messprogrammform').isValid();
     },

@@ -30,5 +30,15 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
         this.callParent(arguments);
         this.down('combobox').isFormField = false;
 
+    },
+    setStore: function (store){
+      if (store){
+        this.store = store;
+        this.down('combobox').setStore(store);
+      }
+    },
+
+    setValue: function(value){
+      this.down('combobox').setValue(value);
     }
 });

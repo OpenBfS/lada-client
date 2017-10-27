@@ -561,13 +561,17 @@ Ext.define('Lada.view.form.Messprogramm', {
             this.down('messstellelabor').down('combobox').setValue(id);
         } else {
             var mstLaborStore = Ext.data.StoreManager.get('messstellelabor');
-            var items = mstLaborStore.queryBy(function(record) {
+            var availableitems = mstLaborStore.queryBy(function(record) {
                 if (record.get('messStelle') === messRecord.get('mstId') &&
                     record.get('laborMst') === messRecord.get('laborMstId')) {
                     return true;
                 }
             });
-            this.down('messstellelabor').setValue(items.getAt(0));
+            var newStore = Ext.create('Ext.data.Store', {
+                model: 'Lada.model.MessstelleLabor',
+                data: availableitems.items});
+            this.down('messstellelabor').setStore(newStore);
+            this.down('messstellelabor').setValue(messRecord.get('messstellelabor'));
         }
         this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
     },
@@ -685,7 +689,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('cbox[name=baId]').setReadOnly(value);
         this.down('chkbox[name=test]').setReadOnly(value);
         this.down('cbox[name=probenartId]').setReadOnly(value);
-        this.down('netzbetreiber').setReadOnly(value);
+//         this.down('netzbetreiber').setReadOnly(value);
         this.down('cbox[name=probenintervall]').setReadOnly(value);
         this.down('numfield[name=teilintervallVon]').setReadOnly(value);
         this.down('numfield[name=teilintervallBis]').setReadOnly(value);

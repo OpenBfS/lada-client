@@ -290,7 +290,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
       */
     discard: function(button) {
         var formPanel = button.up('form');
-        formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
+        formPanel.getForm().reset();
         formPanel.getForm().owner.populateIntervall(
             formPanel.getForm().getRecord());
     },
