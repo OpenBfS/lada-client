@@ -619,7 +619,13 @@ Ext.define('Lada.controller.Filter', {
                     if (!json.success) {
                         return;
                     }
-                    filter.setValue(json.data.value);
+                    for (var j = 0; j < filters.items.length; j++) {
+                        if (filters.items.items[j].filterId === json.data.id) {
+                            f = filters.items.items[j];
+                            break;
+                        }
+                    }
+                    f.setValue(json.data.value);
                     for (var j = 0; j < query.data.filters.length; j++) {
                         if (query.data.filters[j].id === json.data.id) {
                             query.data.filters[j].value = json.data.value;
