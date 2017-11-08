@@ -18,7 +18,8 @@ Ext.define('Lada.view.form.Messung', {
         'Lada.view.widget.base.CheckBox',
         'Lada.view.widget.Messmethode',
         'Lada.view.widget.base.TextField',
-        'Lada.view.widget.base.Datetime'
+        'Lada.view.widget.base.Datetime',
+        'Lada.view.widget.Statuskombi'
     ],
 
     model: 'Lada.model.Messung',
@@ -155,6 +156,14 @@ Ext.define('Lada.view.form.Messung', {
                     validateValue: function() {
                         return true; //this field is always valid
                     }
+                }, {
+                  xtype:'statuskombi',
+                  name: 'statuskombi',
+                  fieldLabel: 'Stufe/Status',
+                  margin: '0, 10, 5, 0',
+                  colspan: 2,
+                  submitValue: false,
+                  preventMark: true
                 }]
             }]
         }];
@@ -166,12 +175,14 @@ Ext.define('Lada.view.form.Messung', {
         form.loadRecord(record);
         if (record.getId()) {
             this.retrieveStatus(record.getId(), record.get('status'));
+            this.down('statuskombi').setValue(record.get('status'));
         } else {
             //remove the StatusWert and StatusStufe field from the form
             var sw = this.down('[name=status]');
             var ss = this.down('[name=stufe]');
             ss.hide();
             sw.hide();
+            this.down('statuskombi').hide();
         }
     },
 
@@ -206,6 +217,7 @@ Ext.define('Lada.view.form.Messung', {
                     se = sStore.getById(statusId).get('mstId');
                     var kombis = Ext.data.StoreManager.get('statuskombi');
                     var rec = kombis.getById(sk);
+                    this.down('statuskombi').setValue(rec);
                     sw = rec.data.statusWert.id;
                     ss = rec.data.statusStufe.id;
                 }
