@@ -11,15 +11,17 @@
  */
 Ext.define('Lada.view.widget.Statuskombi', {
     extend: 'Lada.view.widget.base.TextField',
-    alias: 'widget.statuskombi',
-    store: Ext.data.StoreManager.get('statuskombi'),
+    readOnly: true,
     editable: false,
-    readonly: true,
+    alias: 'widget.statuskombi',
+    store: Ext.data.StoreManager.get('status'),
+    trackResetOnLoad:true,
     changebutton: function() {
         var btn = Ext.create('Ext.Button', {
             text:'Status ändern',
             tooltip: 'neuen Status vergeben',
-            action: 'newstatus'
+            action: 'newstatus',
+            disabled: true
         });
         return btn;
     },
@@ -28,29 +30,36 @@ Ext.define('Lada.view.widget.Statuskombi', {
         var btn = Ext.create('Ext.Button', {
             text: 'Zurücksetzen',
             tooltip:'letzte Statusänderung zurücknehmen',
-            action: 'resetstatus'
+            action: 'resetstatus',
+            disabled: true
         });
         return btn;
     },
 
     setValue: function(value){
-        if(!this.store){
-            this.store = Ext.data.StoreManager.get('statuskombi');
+      var me = this;
+        Ext.ClassManager.get('Lada.model.Status').load(value, {
+            success: function (record, response) {
+              var statuskombistore = Ext.data.StoreManager.get('statuskombi');
+              var kombi = statuskombistore.getById(record.data.statusKombi);
+              var text = kombi.get('statusStufe').stufe + ' - ' +
+                  kombi.get('statusWert').wert;
+              me.down('textfield').setValue(text);
+            }
+        });
+      // instead of overwriting/appending initComponent, add the button at loading of values
+        var button = this.down('button[action=newstatus]');
+        if (!button){
+            this.add(this.changebutton());
         }
-        var entry = this.store.getById(value);
-        if(!entry){
-            return;
+        button = this.down('button[action=resetstatus]');
+        if (!button){
+            this.add(this.resetbutton());
         }
-        var text = entry.statusstufe.stufe + ' -' + entry.statusWert.wert;
-        this.down('combobox').setValue(text);
     },
 
     setReadOnly: function(readonly){
         var button = this.down('button[action=newstatus]');
-        if (!button){
-          this.add(this.changebutton());
-          button = this.down('button[action=newstatus]');
-        }
         if (!readonly){
           button.setDisabled(false);
         }
@@ -61,10 +70,6 @@ Ext.define('Lada.view.widget.Statuskombi', {
 
     setResetable: function(resetable){
         var button = this.down('button[action=resetstatus]');
-        if (!button){
-          this.add(this.resetbutton());
-          button = this.down('button[action=resetstatus]');
-        }
         if (resetable){
             button.setDisabled(false);
         }

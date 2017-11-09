@@ -126,44 +126,13 @@ Ext.define('Lada.view.form.Messung', {
                     width: 300,
                     labelWidth: 100
                 }, {
-                    xtype: 'textfield',
-                    name: 'status',
+                    xtype:'statuskombi',
+                    name: 'statuskombi',
                     readOnly: true,
                     isFormField: false,
-                    maxLength: 10,
+                    fieldLabel: 'Stufe/Status',
                     margin: '0, 10, 5, 0',
-                    fieldLabel: 'Status',
-                    width: 300,
-                    labelWidth: 100,
-                    submitValue: false,
-                    preventMark: true, //Do not display error msg.
-                    validateValue: function() {
-                        return true; //this field is always valid
-                    }
-                }, {
-                    xtype: 'textfield',
-                    name: 'stufe',
-                    readOnly: true,
-                    isFormField: false,
-                    maxLength: 10,
-                    margin: '0, 10, 5, 0',
-                    fieldLabel: 'Stufe',
-                    width: 300,
-                    labelWidth: 100,
-                    submitValue: false,
-                    isFormField: false,
-                    preventMark: true, //Do not display error msg.
-                    validateValue: function() {
-                        return true; //this field is always valid
-                    }
-                }, {
-                  xtype:'statuskombi',
-                  name: 'statuskombi',
-                  fieldLabel: 'Stufe/Status',
-                  margin: '0, 10, 5, 0',
-                  colspan: 2,
-                  submitValue: false,
-                  preventMark: true
+                    colspan: 2
                 }]
             }]
         }];
@@ -174,146 +143,15 @@ Ext.define('Lada.view.form.Messung', {
         var form = this.getForm();
         form.loadRecord(record);
         if (record.getId()) {
-            this.retrieveStatus(record.getId(), record.get('status'));
             this.down('statuskombi').setValue(record.get('status'));
         } else {
-            //remove the StatusWert and StatusStufe field from the form
-            var sw = this.down('[name=status]');
-            var ss = this.down('[name=stufe]');
-            ss.hide();
-            sw.hide();
+            //remove the Statuskombi field from the form
             this.down('statuskombi').hide();
         }
     },
 
     getCurrentStatus: function() {
         return this.currentStatus;
-    },
-
-    retrieveStatus: function(messungsId, statusId) {
-        var i18n = Lada.getApplication().bundle;
-        var msg = i18n.getMsg('load.statuswert');
-        var textfield = this.down('[name=status]');
-        var messwin = this.up('window');
-
-        if (textfield) {
-            textfield.setRawValue(msg);
-        }
-
-        var me = this;
-        var sStore = Ext.create('Lada.store.Status');
-        sStore.load({
-            params: {
-                messungsId: messungsId
-            },
-            callback: function(records, operation, success) {
-                var sw, ss, se;
-                var i18n = Lada.getApplication().bundle;
-                if (sStore.getTotalCount() === 0 || !statusId) {
-                    sw = 0;
-                } else {
-                    me.currentStatus = sStore.getById(statusId);
-                    sk = sStore.getById(statusId).get('statusKombi');
-                    se = sStore.getById(statusId).get('mstId');
-                    var kombis = Ext.data.StoreManager.get('statuskombi');
-                    var rec = kombis.getById(sk);
-                    this.down('statuskombi').setValue(rec);
-                    sw = rec.data.statusWert.id;
-                    ss = rec.data.statusStufe.id;
-                }
-                this.setStatusWert(sw);
-                this.setStatusStufe(ss);
-
-                // Enable / Disable the statusreset button of the statusgrid of the messungwindow
-                if (messwin.record.get('statusEdit') === true &&
-                        sw != 0 &&
-                        sw != 4 &&
-                        Ext.Array.contains(Lada.mst, se)) {
-
-                    messwin.enableStatusReset();
-                } else {
-                    messwin.disableStatusReset();
-                }
-
-            },
-            scope: this
-        });
-    },
-
-    /**
-     * Updates the Messungform and fills the Statuswert
-     */
-    setStatusWert: function(value) {
-        var swStore = Ext.data.StoreManager.get('statuswerte');
-        var i18n = Lada.getApplication().bundle;
-        var msg = i18n.getMsg('load.statuswert.error');
-        var textfield = this.down('[name=status]');
-
-        if (!swStore) {
-            //Set the textfield asynchronously
-            swStore = Ext.create('Lada.store.StatusWerte');
-            swStore.load({
-                scope: this,
-                callback: function(records, operation, success) {
-                    if (success) {
-                        var item = swStore.getById(value);
-                        if (item) {
-                            msg = item.get('wert');
-                        }
-                    }
-                    if (textfield) {
-                        textfield.setRawValue(msg);
-                    }
-                }
-            });
-        } else {
-            //Set the textfield
-            var item = swStore.getById(value);
-            if (item) {
-                msg = item.get('wert');
-            }
-            if (textfield) {
-                textfield.setRawValue(msg);
-            }
-        }
-
-    },
-
-    /**
-     * Updates the Messungform and fills the StatusStufe
-     */
-    setStatusStufe: function(value) {
-        var ssStore = Ext.data.StoreManager.get('statusstufe');
-        var i18n = Lada.getApplication().bundle;
-        var msg = i18n.getMsg('load.statusstufe.error');
-        var textfield = this.down('[name=stufe]');
-        if (!ssStore) {
-            //set the value asynchronously
-            Ext.create('Lada.store.StatusStufe');
-            ssStore.load({
-                scope: this,
-                callback: function(records, operation, success) {
-                    if (success) {
-                        var item = ssStore.getById(value);
-                        if (item) {
-                            msg = item.get('stufe');
-                        }
-                    }
-                    if (textfield) {
-                        textfield.setRawValue(msg);
-                    }
-                }
-            });
-        } else {
-            //Set the value.
-            var item = ssStore.getById(value);
-            if (item) {
-                msg = item.get('stufe');
-            }
-            if (textfield) {
-                textfield.setRawValue(msg);
-            }
-        }
     },
 
     setMessages: function(errors, warnings) {

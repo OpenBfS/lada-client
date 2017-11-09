@@ -197,15 +197,15 @@ Ext.define('Lada.controller.form.Messung', {
       */
     dirtyForm: function(form, dirty) {
         if (dirty) {
-            form.down('button[action=save]').setDisabled(false);
-            form.down('button[action=discard]').setDisabled(false);
-            form.up('window').disableChildren();
+            form.owner.down('button[action=save]').setDisabled(false);
+            form.owner.down('button[action=discard]').setDisabled(false);
+            form.owner.up('window').disableChildren();
         } else {
-            form.down('button[action=save]').setDisabled(true);
-            form.down('button[action=discard]').setDisabled(true);
+            form.owner.down('button[action=save]').setDisabled(true);
+            form.owner.down('button[action=discard]').setDisabled(true);
             //Only enable children if the form was not readOnly
             if (!form.getRecord().get('readonly')) {
-                form.up('window').enableChildren();
+                form.owner.up('window').enableChildren();
             }
         }
     },
@@ -238,7 +238,7 @@ Ext.define('Lada.controller.form.Messung', {
             i18n.getMsg('statusgrid.reset.mbox.text'),
             function(btn) {
                 if (btn === 'yes') {
-                    me.doReset(rstbutton);
+                    me.doResetStatus(rstbutton);
                 }
         });
     },
