@@ -107,7 +107,7 @@ Ext.define('Lada.view.grid.Status', {
             this.store = Ext.create('Lada.store.Status',{
                 sorters: [{
                     property: 'datum',
-                    direction: 'ASC'
+                    direction: 'DESC'
                 }]
             });
         }
