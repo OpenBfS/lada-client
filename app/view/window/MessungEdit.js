@@ -288,7 +288,7 @@ Ext.define('Lada.view.window.MessungEdit', {
     enableStatusEdit: function() {
         this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(false);
         this.down('fset[name=messungstatus]').down('statusgrid').readOnly = false;
-        this.down('statuskombi').setReadOnly(true);
+        this.down('statuskombi').setReadOnly(false);
     },
 
     /**
@@ -297,7 +297,7 @@ Ext.define('Lada.view.window.MessungEdit', {
     disableStatusEdit: function() {
         this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(true);
         this.down('fset[name=messungstatus]').down('statusgrid').readOnly = true;
-        this.down('statuskombi').setReadOnly(false);
+        this.down('statuskombi').setReadOnly(true);
     },
 
     /**
