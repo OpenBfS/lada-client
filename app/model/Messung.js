@@ -84,6 +84,9 @@ Ext.define('Lada.model.Messung', {
         name: 'statusStufe',
         persist: false
     }, {
+        name: 'statuskombi',
+        persist: false
+    }, {
         name: 'messwerteCount',
         persist: false
     }, {

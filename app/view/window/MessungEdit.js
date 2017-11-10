@@ -271,29 +271,27 @@ Ext.define('Lada.view.window.MessungEdit', {
      * Enable to reset the statusgrid
      */
     enableStatusReset: function() {
-        this.down('fset[name=messungstatus]').down('statusgrid').setResetable(true);
+        this.down('statuskombi').setResetable(true);
     },
 
     /**
      * Disable to reset the statusgrid
      */
     disableStatusReset: function() {
-        this.down('fset[name=messungstatus]').down('statusgrid').setResetable(false);
+        this.down('statuskombi').setResetable(false);
     },
     /**
      * Enable to edit the statusgrid
      */
     enableStatusEdit: function() {
-        this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(false);
-        this.down('fset[name=messungstatus]').down('statusgrid').readOnly = false;
+        this.down('statuskombi').setReadOnly(false);
     },
 
     /**
      * Disable to edit the statusgrid
      */
     disableStatusEdit: function() {
-        this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(true);
-        this.down('fset[name=messungstatus]').down('statusgrid').readOnly = true;
+        this.down('statuskombi').setReadOnly(true);
     },
 
     /**
