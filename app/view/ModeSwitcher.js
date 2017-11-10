@@ -32,7 +32,7 @@ Ext.define('Lada.view.ModeSwitcher', {
                 name: 'modeswitch',
                 boxLabel: i18n.getMsg('proben'),
                 inputValue: 'proben', //this determines the store
-                    // which will be loaded by the controller,
+                // which will be loaded by the controller,
                 checked: true,
                 handler: function(field, state) {
                     if (state === true) {
@@ -44,7 +44,7 @@ Ext.define('Lada.view.ModeSwitcher', {
                 name: 'modeswitch',
                 boxLabel: i18n.getMsg('messungen'),
                 inputValue: 'messungen', //this determines the store
-                    // which will be loaded by the controller,
+                // which will be loaded by the controller,
                 handler: function(field, state) {
                     if (state === true) {
                         this.fireEvent('check', field);

@@ -21,29 +21,29 @@
 .window-inactive .x-window-header-text {color: #a9a9a9;}
 
 
-.x-action-col-cell img
+.x-action-col-cell
 {
   cursor: pointer;
   background-repeat: no-repeat;
   background-position: center;
 }
 
-.x-action-col-cell img.noedit
+.x-action-col-icon.noedit
 {
   background-image: url(../img/view-time-schedule-baselined.png);
 }
 
-.x-action-col-cell img.noeditstatus
+.x-action-col-icon.noeditstatus
 {
   background-image: url(../img/view-time-schedule-baselined-status.png);
 }
 
-.x-action-col-cell img.edit
+.x-action-col-icon.edit
 {
   background-image: url(../img/view-time-schedule-edit.png);
 }
 
-.x-action-col-cell img.editstatus
+.x-action-col-icon.editstatus
 {
   background-image: url(../img/view-time-schedule-edit-status.png);
 }
@@ -91,4 +91,17 @@
     background-repeat: no-repeat;
     background-position: left 5px center;
     padding-left: 20px;
+}
+
+/* Overwrites from Migration. Temporary fixes */
+.x-form-clear-trigger {
+    background-color: #cdcdcd !important;
+}
+
+.x-grid-row-editor-buttons-top {
+    clip: auto !important;
+}
+
+span.x-grid-checkcolumn {
+    pointer-events: none;
 }

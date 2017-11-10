@@ -30,7 +30,7 @@ Ext.define('Lada.model.OrtszuordnungTyp', {
         url: 'lada-server/rest/ortszuordnungtyp',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

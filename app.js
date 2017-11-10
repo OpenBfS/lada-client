@@ -6,7 +6,7 @@
  * and comes with ABSOLUTELY NO WARRANTY! Check out
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
-Ext.Loader.setConfig({
+/*Ext.Loader.setConfig({
     enabled: true,
     paths: {
         'Ext.i18n': 'resources/lib/ext/i18n/',
@@ -14,7 +14,7 @@ Ext.Loader.setConfig({
         'Ext.ux.util': 'resources/lib/ext/util',
         'Ext.ux.grid': 'resources/lib/ext/grid'
     }
-});
+});*/
 
 Ext.application({
 
@@ -30,13 +30,12 @@ Ext.application({
         'Lada.override.RestProxy',
         'Lada.override.RowEditor',
         'Lada.override.i18n.DE',
-        'Lada.override.JSON',
         'Lada.override.RowExpander',
-        'Lada.override.StringFilter',
-        'Lada.view.plugin.ExtJsUploader',
+        'Lada.override.FilteredComboBox',
         'Lada.view.plugin.GridRowExpander',
         'Ext.i18n.Bundle',
         'Ext.layout.container.Column',
+        'Lada.store.LocalPagingStore',
         'Lada.store.Deskriptoren',
         'Lada.store.Ortszuordnung',
         'Lada.store.OrtszuordnungMp',
@@ -58,6 +57,7 @@ Ext.application({
         'Lada.store.Staaten',
         'Lada.store.Umwelt',
         'Lada.store.Verwaltungseinheiten',
+        'Lada.store.VerwaltungseinheitenUnfiltered',
         'Lada.store.StatusWerte',
         'Lada.store.StatusStufe',
         'Lada.store.StatusKombi',
@@ -74,7 +74,7 @@ Ext.application({
     ],
     bundle: {
         bundle: 'Lada',
-        lang: 'de-DE',
+        language: 'de-DE',
         path: 'resources/i18n',
         noCache: true
     },
@@ -85,6 +85,10 @@ Ext.application({
 
     // Start the application.
     launch: function() {
+        Ext.JSON.encodeDate = function(o) {
+            return '"' + Ext.Date.format(o, 'c') + '"';
+        };
+
         Lada.username = '';
         Lada.userroles = '';
         Lada.logintime = '';
@@ -92,6 +96,18 @@ Ext.application({
         Lada.netzbetreiber = [];
         Lada.clientVersion = '2.7-SNAPSHOT';
         Lada.serverVersion = '';
+        // paging sizes available for the client
+        Lada.availablePagingSizes = [
+        {value: 10, label: '10'},
+        {value: 25, label: '25'},
+        {value: 50, label: '50'},
+        {value: 100, label: '100'},
+        {value: 500, label: '500'},
+        {value: 2000, label: '2000 (lange Ladezeit!)'}
+        ];
+
+        //initial default paging size, may be changed by user
+        Lada.pagingSize = 50;
 
         var queryString = document.location.href.split('?')[1];
         if (queryString) {
@@ -163,6 +179,9 @@ Ext.application({
         Ext.create('Lada.store.Messgroessen', {
             storeId: 'messgroessen'
         });
+        Ext.create('Lada.store.Messgroessen', {
+            storeId: 'messgroessenunfiltered'
+        });
         Ext.create('Lada.store.Messmethoden', {
             storeId: 'messmethoden'
         });
@@ -213,11 +232,29 @@ Ext.application({
         Ext.create('Lada.store.Staaten', {
             storeId: 'staaten'
         });
+        Ext.create('Lada.store.Staaten', {
+            storeId: 'staatenwidget'
+        });
         Ext.create('Lada.store.Umwelt', {
             storeId: 'umwelt'
         });
+        Ext.create('Lada.store.VerwaltungseinheitenUnfiltered', {
+            storeId: 'verwaltungseinheitenwidget'
+        });
         Ext.create('Lada.store.Verwaltungseinheiten', {
-            storeId: 'verwaltungseinheiten'
+            storeId: 'verwaltungseinheiten',
+            listeners: {
+                load: function(){
+                    var w = Ext.data.StoreManager.get(
+                        'verwaltungseinheitenwidget');
+                    w.removeAll(true);
+                    var rec = [];
+                    this.each(function(r){
+                        rec.push(r.copy());
+                    });
+                    w.add(rec);
+                }
+            }
         });
         Ext.create('Lada.store.Probenehmer', {
             storeId: 'probenehmer',
@@ -227,7 +264,7 @@ Ext.application({
                 reader: {
                     type: 'json',
                     totalProperty: 'totalCount',
-                    root: 'data'
+                    rootProperty: 'data'
                 },
                 limitParam: undefined,
                 startParam: undefined,
@@ -243,7 +280,7 @@ Ext.application({
                 reader: {
                     type: 'json',
                     totalProperty: 'totalCount',
-                    root: 'data'
+                    rootProperty: 'data'
                 },
                 limitParam: undefined,
                 startParam: undefined,
@@ -259,7 +296,7 @@ Ext.application({
                 reader: {
                     type: 'json',
                     totalProperty: 'totalCount',
-                    root: 'data'
+                    rootProperty: 'data'
                 },
                 limitParam: undefined,
                 startParam: undefined,
@@ -335,8 +372,20 @@ Ext.application({
                 return false;
             }
         });
+        Ext.create('Ext.data.Store', {
+            storeId: 'pagingSizes',
+            model: Ext.create('Ext.data.Model',{
+                fields: [
+                    {name: 'label', type: 'string'},
+                    {name: 'value', type: 'string'}
+                ]
+            }),
+            data: Lada.availablePagingSizes
+        });
         Ext.create('Lada.view.Viewport');
     },
+
+
 
     getServerVersion: function() {
         var i18n = Lada.getApplication().bundle;
@@ -359,12 +408,19 @@ Ext.application({
         });
     },
 
+    //Sets the paging size and fires 'pagingSizeChangedEvent' if new value differs from old
+    setPagingSize: function(newVal){
+        if (newVal != Lada.pagingSize) {
+            Lada.pagingSize = newVal;
+            Lada.getApplication().fireEvent('pagingSizeChanged');
+        }
+    },
+
     // Define the controllers of the application. They will be initialized
     // first before the application "launch" function is called.
     controllers: [
         'Lada.controller.Filter',
         'Lada.controller.ModeSwitcher',
-        'Lada.controller.Map',
         'Lada.controller.Ort',
         'Lada.controller.grid.ProbeList',
         'Lada.controller.grid.MessungList',
@@ -373,19 +429,17 @@ Ext.application({
         'Lada.controller.grid.Probenehmer',
         'Lada.controller.form.Probe',
         'Lada.controller.form.Messung',
-        'Lada.controller.form.Ortserstellung',
+        'Lada.controller.form.Ort',
         'Lada.controller.grid.Probenzusatzwert',
         'Lada.controller.grid.PKommentar',
         'Lada.controller.grid.MKommentar',
         'Lada.controller.grid.Messung',
         'Lada.controller.grid.Messwert',
-        'Lada.controller.grid.Status',
         'Lada.controller.grid.Ortszuordnung',
         'Lada.controller.form.Ortszuordnung',
         'Lada.controller.form.Messprogramm',
         'Lada.controller.grid.MessprogrammKategorie',
         'Lada.controller.grid.Messmethode',
-        'Lada.controller.FilterManagement',
-        'Ext.ux.util.AlwaysOnTop'
+        'Lada.controller.FilterManagement'
         ]
 });

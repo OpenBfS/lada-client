@@ -24,7 +24,7 @@ Ext.define('Lada.model.MessprogrammList', {
         url: 'lada-server/rest/messprogramm',
         reader: {
             type: 'json',
-            root: 'data',
+            rootProperty: 'data',
             totalProperty: 'totalCount'
         }
     }

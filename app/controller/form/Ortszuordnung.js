@@ -17,9 +17,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
      */
     init: function() {
         this.control({
-            'ortszuordnungform button[action=setOrt]': {
-                toggle: this.chooseLocation
-            },
             'ortszuordnungform button[action=save]': {
                 click: this.save
             },
@@ -33,35 +30,34 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         });
     },
 
-     /**
+    /**
       * The save function saves the content of the Ort form.
       * On success it will reload the Store,
       * on failure, it will display an Errormessage
       */
-     save: function(button) {
-
+    save: function(button) {
         var formPanel = button.up('ortszuordnungform');
 
         //try to disable ortPickerButton:
         try {
-           formPanel.down('button[action=setOrt]').toggle(false);
-        }
-        catch (e) {
+            formPanel.down('button[action=setOrt]').toggle(false);
+        } catch (e) {
         }
         var data = formPanel.getForm().getFieldValues(false);
+        var record = formPanel.getForm().getRecord();
         var i18n = Lada.getApplication().bundle;
-        var recordData = formPanel.getForm().getRecord().data;
-        recordData.ortId = data.ortId[0];
-        recordData.ortszuordnungTyp = data.ortszuordnungTyp;
-        recordData.ortszusatztext = data.ortszusatztext;
-        if (!data.letzteAenderung) {
-            recordData.letzteAenderung = new Date();
-        } else {
-            recordData.letzteAenderung = data.letzteAenderung;
+        record.set('ortId', data.ortId[0]);
+        record.set('ortszuordnungTyp', data.ortszuordnungTyp);
+        record.set('ortszusatztext', data.ortszusatztext);
+        if (!record.get('letzteAenderung')) {
+            record.set('letzteAenderung', new Date());
         }
-        formPanel.getForm().getRecord().save({
+        if (record.phantom) {
+            record.set('id', null);
+        }
+        record.save({
             success: function(record, response) {
-                var json = Ext.decode(response.response.responseText);
+                var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     formPanel.clearMessages();
                     formPanel.setRecord(record);
@@ -75,31 +71,36 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 try {
                     formPanel.up('window').parentWindow
                         .down('ortszuordnunggrid').store.reload();
-                }
-                catch (e) {
-
+                } catch (e) {
                 }
             },
             failure: function(record, response) {
+                var i18n = Lada.getApplication().bundle;
                 button.setDisabled(true);
                 formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
-                var json = response.request.scope.reader.jsonData;
-                if (json) {
-                    if(Object.keys(json.errors).length > 0 ||
-                        Object.keys(json.warnings).length > 0) {
-                        formPanel.setMessages(json.errors, json.warnings);
-                    }
-                    if(json.message){
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                            +' #'+json.message,
-                            i18n.getMsg(json.message));
-                    } else {
-                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.generic.body'));
-                    }
-                } else {
+                if (response.error) {
+                    //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.response.body'));
+                        i18n.getMsg('err.msg.generic.body'));
+                } else {
+                    var json = Ext.decode(response.getResponse().responseText);
+                    if (json) {
+                        if (Object.keys(json.errors).length > 0 ||
+                            Object.keys(json.warnings).length > 0) {
+                            formPanel.setMessages(json.errors, json.warnings);
+                        }
+                        if (json.message) {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                                +' #'+json.message,
+                            i18n.getMsg(json.message));
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                i18n.getMsg('err.msg.generic.body'));
+                        }
+                    } else {
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.response.body'));
+                    }
                 }
             }
         });
@@ -119,74 +120,31 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             selmod.deselectAll();
         } else {
             var record = osg.store.getById(currentOrt);
-            form.setOrt(null, record);
-            selmod.select(record);
+            if (!record) {
+                Lada.model.Ort.load(currentOrt, {
+                    success: function(rec) {
+                        form.setFirstOrt(rec);
+                    }
+                });
+            } else {
+                form.setFirstOrt(record);
+                selmod.select(record);
+            }
+            var map = button.up('window').down('map');
+            if (map.previousOrtLayer) {
+                prevOrt = map.previousOrtLayer.getSource().getFeatures()[0];
+                if (prevOrt) {
+                    var geom = prevOrt.getGeometry();
+                    map.map.getView().setCenter([geom.getCoordinates()[0],
+                        geom.getCoordinates()[1]]);
+                    map.map.getView().setZoom(12);
+                }
+            }
         }
         button.setDisabled(true);
         button.up('toolbar').down('button[action=save]').setDisabled(true);
     },
 
-    /**
-     * When the button is Active, a Record can be selected.
-     * If the Record was selected from a grid this function
-     * sets the ortzuordnung.
-     */
-    chooseLocation: function(button, pressed, opts) {
-        var i18n = Lada.getApplication().bundle;
-        var win = button.up('window');
-        var gridPanel = win.down('panel[name=ortgrid]');
-        var osg = win.down('ortstammdatengrid');
-        var oForm = button.up('window').down('ortszuordnungform');
-        osg.addListener('select',oForm.setOrt, oForm);
-        var map = win.down('map');
-        if (pressed) {
-            win.setHeight(Ext.getBody().getViewSize().height - 50);
-            button.setText(i18n.getMsg('ortszuordnung.form.setOrt.pressed'));
-            map.featureLayer.setVisibility(true);
-            win.setY(25);
-            gridPanel.show();
-            var mstId = oForm.up('window').probe ? oForm.up('window').probe.get('mstId') :
-                oForm.up('window').messprogramm.get('mstId');
-            var mst = Ext.data.StoreManager.get('messstellen');
-            var ndx = mst.findExact('id', mstId);
-            var nId = mst.getAt(ndx).get('netzbetreiberId');
-            var store = Ext.create('Lada.store.Orte', {
-                defaultPageSize: 0,
-                listeners: {
-                    beforeload: {
-                        fn: function() {
-                            osg.setLoading(true);
-                        }
-                    },
-                    load: {
-                        fn: function() {
-                            osg.setLoading(false);
-                            osg.setStore(store);
-                            osg.store.filterBy(function(record) {
-                                if (record.get('netzbetreiberId') ===
-                                    nId) {
-                                        return true;
-                                    }
-                            });
-                        }
-                    }
-                }
-            });
-            win.doLayout();
-            osg.addListener('select',oForm.setOrt, oForm);
-
-        }
-        else {
-            map.featureLayer.setVisibility(false);
-            var y = (Ext.getBody().getViewSize().height - 465) / 2;
-            win.setHeight(465);
-            win.setY(y);
-            button.setText(i18n.getMsg('ortszuordnung.form.setOrt'));
-            gridPanel.hide();
-            osg.removeListener('select',oForm.setOrt, oForm);
-            oForm.doLayout();
-        }
-    },
 
     /**
      * The validitychange function enables or disables the save button which
@@ -197,6 +155,11 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         var ortIdIsDirty = true;
         if (form.getRecord().data.ortId == form.findField('ortId').getValue()) {
             ortIdIsDirty = false;
+        }
+        if (form.getRecord().get('readonly') === true) {
+            form.owner.down('button[action=save]').setDisabled(true);
+            form.owner.down('button[action=revert]').setDisabled(true);
+            return;
         }
         if (form.findField('ortszusatztext').isDirty()
             || form.findField('ortszuordnungTyp').isDirty()

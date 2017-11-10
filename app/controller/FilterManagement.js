@@ -42,8 +42,7 @@ Ext.define('Lada.controller.FilterManagement', {
                     record.set('favorite', true);
                 }
             });
-        }
-        else {
+        } else {
             Ext.Ajax.request({
                 url: 'lada-server/rest/favorite?queryId=' + record.get('id'),
                 method: 'DELETE',

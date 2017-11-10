@@ -16,7 +16,7 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
      * Initialize the Controller with
      * 3 Listeners
      */
-     init: function() {
+    init: function() {
         this.control({
             'probenzusatzwertgrid': {
                 edit: this.gridSave,
@@ -37,21 +37,27 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
      * On success it refreshes the windows which contains the grid
      * On failure it displays a message
      */
-     gridSave: function(editor, context) {
+    gridSave: function(editor, context) {
+        if (context.record.phantom) {
+            context.record.set('id', null);
+        }
         context.record.save({
             success: function() {
                 context.grid.store.reload();
                 context.grid.up('window').initData();
             },
             failure: function(record, response) {
-                var json = response.request.scope.reader.jsonData;
+                var json = null;
+                try {
+                    json = Ext.decode(response.getResponse().responseText);
+                } catch (e) {}
                 if (json) {
-                    if (json.message){
+                    if (json.message) {
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
                             +' #'+json.message,
-                            Lada.getApplication().bundle.getMsg(json.message));
+                        Lada.getApplication().bundle.getMsg(json.message));
                     } else {
-                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
+                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
                             Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
                     }
                 } else {
@@ -66,9 +72,8 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
      * When the edit was canceled,
      * the empty row might have been created by the roweditor is removed
      */
-     cancelEdit: function(editor, context) {
-        if (!context.record.get('id') ||
-            context.record.get('id') === '') {
+    cancelEdit: function(editor, context) {
+        if (context.record.phantom) {
             editor.getCmp().store.remove(context.record);
         }
     },
@@ -76,10 +81,12 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
     /**
      * This function adds a new row to add a Probenzusatzwert
      */
-     add: function(button) {
+    add: function(button) {
         var record = Ext.create('Lada.model.Zusatzwert', {
             probeId: button.up('probenzusatzwertgrid').recordId
         });
+        //Remove generated id id to prevent sending invalid ids to the server
+        record.set('id', null);
         button.up('probenzusatzwertgrid').store.insert(0, record);
         button.up('probenzusatzwertgrid').rowEditing.startEdit(0, 1);
     },
@@ -90,22 +97,22 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
      * If the removal was confirmed, it reloads the parent window on success,
      * on failure, an error message is shown.
      */
-     remove: function(button) {
+    remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         Ext.MessageBox.confirm('Zusatzwert löschen', 'Sind Sie sicher?', function(btn) {
             if (btn === 'yes') {
-                selection.destroy({
+                selection.erase({
                     success: function() {
                         button.up('window').initData();
                     },
                     failure: function(request, response) {
                         var json = response.request.scope.reader.jsonData;
                         if (json) {
-                            if (json.message){
+                            if (json.message) {
                                 Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title')
                                     +' #'+json.message,
-                                    Lada.getApplication().bundle.getMsg(json.message));
+                                Lada.getApplication().bundle.getMsg(json.message));
                             } else {
                                 Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
                                     Lada.getApplication().bundle.getMsg('err.msg.generic.body'));

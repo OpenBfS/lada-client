@@ -33,7 +33,7 @@ Ext.define('Lada.model.Messwert', {
             if (!v) {
                 return null;
             }
-            return "<";
+            return '<';
         }
     }, {
         name: 'messfehler',
@@ -48,6 +48,7 @@ Ext.define('Lada.model.Messwert', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return new Date();
@@ -79,7 +80,11 @@ Ext.define('Lada.model.Messwert', {
         url: 'lada-server/rest/messwert',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });

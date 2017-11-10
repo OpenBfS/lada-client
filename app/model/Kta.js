@@ -33,7 +33,7 @@ Ext.define('Lada.model.Kta', {
         url: 'lada-server/rest/kta',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

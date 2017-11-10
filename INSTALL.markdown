@@ -13,42 +13,54 @@ Klienten auch die Installation eines Servers und entsprechender Datenbank
 notwendig. Für die Installation des Servers folgen Sie bitte den Hinweisen in
 der README Datei des Server-Pakets.
 Weitere Information finden Sie auf der Projektwebseite:
-http://wald.intevation.org/projects/lada
+[https://github.com/OpenBfS/lada-client](https://github.com/OpenBfS/lada-client)
 
 Die folgenden Hinweise beziehen sich auf die Installation und Einrichtung auf
 Basis eines Oracle-RedHat Linux Systems.
 
-Der Lada-Client ist eine Anwendung die auf dem Framework ExtJs 4.2.1
-(GPL-Version) basiert, welches mit `install-dependencies.sh` heruntergeladen
-und installiert wird.
+Der Lada-Client ist eine Anwendung die auf dem Framework ExtJs 6.2.0
+(GPL-Version) basiert. Es ist derzeit (gegen Anmeldung) erhältlich unter
+`https://www.sencha.com/legal/gpl/`. Ein automatisierter Download ist seitens
+Sencha nicht mehr vorgesehen.
 
+###Sencha Cmd
+
+Bei der Einrichtung der Entwicklungsumgebung und beim Kompilieren der Anwendung
+kommt das Tool Sencha Cmd 6.2.1.29 zum Einsatz. Sencha bietet Sencha Cmd zum
+[Download](https://www.sencha.com/products/extjs/cmd-download/) an.
+
+Beachten Sie: Sencha Cmd ist keine freie Software. Bitte beachten Sie ebenfalls,
+dass Sencha Cmd in der Version 6.5.x nicht mit der GPL-Version von Extjs6
+(nur erhältlich in den Versionen bis 6.2.x) kompatibel ist.
+
+
+Die Fa. Sencha beschreibt die Installation von Sencha Cmd in der
+[Dokumentation von ExtJs](https://docs.sencha.com/cmd/guides/extjs/cmd_app.html)
+
+Zur Installation von Sencha Cmd wird Java benötigt.
+
+### Installation einer Entwicklungsumgebung der Anwendung
+
+* cd (Umgebung)
+* sencha workspace init
+* Extjs6 nach ext/ kopieren/entpacken
+* Externe Libraries installieren: install-dependencies.sh
+* sencha app install --framework=ext
+* sencha app build development
+* Einstiegspunkt für Webbrowser: index.html
 
 ### Kompilieren und Minifizieren der Anwendung
 
-Zum Kompilieren der Anwendung kommt das Tool Sencha Cmd 4.0.x zum Einsatz.
-Mit Hilfe dieses Tools kann der Quellcode in eine einzelne Datei zusammengefasst
-und minifiziert werden. Dies beschleunigt das Laden der Anwendung im Browser
-erheblich
+Mit Hilfe von Sencha Cmd kann der Quellcode in eine wenige Dateien
+zusammengefasst und minifiziert werden. Dies beschleunigt das Laden der
+Anwendung im Browser erheblich. Die Minifizierung erfolgt über:
 
-Sencha bietet Sencha Cmd zum [Download](https://www.sencha.com/products/extjs/cmd-download/)
-an. Beachten Sie: Sencha Cmd ist keine freie Software.
-
-Die Fa. Sencha beschreibt die Installation von Sencha Cmd in der
-[Dokumentation von ExtJs](http://docs.sencha.com/extjs/4.2.1/#!/guide/command)
-
-Zur Installation von Sencha Cmd werden Ruby und Java benötigt.
-
-Bevor Sie die Anwendung kompilieren können, müssen Sie die im Abschnitt
-*Lizenzen und Bibliotheken* genannten Bibliotheken mit
-`install-dependencies.sh` zum Projekt hinzufügen.
-
-Um die Anwendung zu erzeugen und alle notwendigen Bibliotheken an den richtigen
-Platz zu legen, passen Sie den Pfad zu SenchaCMD in der Datei `build.sh` an und
-führen Sie das Shell-Skript aus.
-Das Verzeichnis `lada-client-VERSIONSNUMMER` enthält dann eine Datei `index.html`
-und eine Datei `lada.js`. Die Datei `lada.js` ist eine komprimierte Version der
-Anwendung und enthält alle benötigten Klassen.
-
+```
+    sencha app build production
+```
+Die fertig minifizierte Anwendung wird unter build/production abgelegt,
+und kann danach gepackt werden. Die Datei build.sh im Wurzelverzeichnis der
+Anwendung automatisiert diesen Prozess.
 
 ### Installation Apache
 Zunächst wird der Apache Webserver aus dem Repository installiert:
@@ -70,7 +82,7 @@ der Option `LoadModule` angegeben. Folgende Module werden benötigt:
 ### Einrichtung der Anwendung
 
 Zunächst hinterlegen wir die Anwendung in dem Server. Hierzu verwenden wir die
-gebaute Version, welche sich im `build` Ordner befindet.
+gebaute Version, welche sich im `build/production` - Ordner befindet.
 
 ```
 cd /var/www/html
@@ -86,10 +98,6 @@ restorecon -Rv /var/www/html/
 
 Die Anwendung sollte nun bereits unter der Adresse `http://localhost/lada`
 erreichbar sein.
-
-Damit die Anwendung vollständig funktioniert, müssen ggfs. noch weitere
-Bibliotheken hinzugefügt werden.
-Dies wird im Abschnitt *Lizenzen und Bibliotheken* näher beschrieben
 
 ### Konfiguration Proxy Server
 
@@ -127,25 +135,22 @@ Die Anwendung verwendet mehrere Unterkomponenten, die mit
 
 Folgende Bibliotheken werden neben ExtJs verwendet:
 
- * Filesaver.js
+ * Filesaver.js 1.3.3
    https://github.com/eligrey/FileSaver.js
    MIT - License
  * Blob.js
    https://github.com/eligrey/Blob.js
    MIT - License
- * Openlayers 2.13.1
+ * Openlayers 4.4.2
    http://www.openlayers.org
-   https://github.com/openlayers/ol2
+   https://github.com/openlayers/openlayers
    2-Clause BSD-License
 
 Diese werden in der `Index.html` referenziert.
 
-In `resources/lib/ext` werden Bibliotheken installiert, die ExtJs
+In `packages/local/` werden Bibliotheken installiert, die ExtJs
 ergänzen und in der Datei `app.js` aufgeführt werden:
 
- * Ext.i18n.Bundle 0.3.3 (referenced as Ext.i18n in app.js)
-   https://github.com/elmasse/Ext.i18n.Bundle/tree/v0.3.3
+ * Ext.i18n.Bundle 1.2.0 (referenced as Ext.i18n in app.js)
+   https://github.com/elmasse/elmasse-bundle/tree/v1.2.0
    MIT - License
- * Ext.ux.upload 1.1.1
-   https://github.com/ivan-novakov/extjs-upload-widget/tree/1.1.1
-   3-Clause BSD-License

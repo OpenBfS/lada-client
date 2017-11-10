@@ -20,8 +20,7 @@ Ext.define('Lada.model.Ort', {
         convert: function(v) {
             if (v === '') {
                 return null;
-            }
-            else if (v === 'f') {
+            } else if (v === 'f') {
                 return false;
             }
             return true;
@@ -29,8 +28,7 @@ Ext.define('Lada.model.Ort', {
         serialize: function(v) {
             if (v === null || v === '') {
                 return null;
-            }
-            else if (v === false) {
+            } else if (v === false) {
                 return 'f';
             }
             return 't';
@@ -126,6 +124,7 @@ Ext.define('Lada.model.Ort', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return null;
@@ -146,7 +145,11 @@ Ext.define('Lada.model.Ort', {
         reader: {
             type: 'json',
             totalProperty: 'totalCount',
-            root: 'data'
+            rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });

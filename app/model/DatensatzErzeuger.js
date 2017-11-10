@@ -25,6 +25,7 @@ Ext.define('Lada.model.DatensatzErzeuger', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return v;
@@ -44,7 +45,7 @@ Ext.define('Lada.model.DatensatzErzeuger', {
         reader: {
             type: 'json',
             totalProperty: 'totalCount',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

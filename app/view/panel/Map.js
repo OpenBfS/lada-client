@@ -31,201 +31,133 @@ Ext.define('Lada.view.panel.Map', {
      * 7 = 1:4000000 14 = 1:35000
      */
     mapOptions: {
-        maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
-        numZoomLevels: 15,
-        projection: 'EPSG:3857',
-        displayProjection: new OpenLayers.Projection('EPSG:4326')
+        extent: [-20037508.34,-20037508.34,20037508.34,20037508.34],
+        minZoom: 3,
+        maxZoom: 18,
+        projection: 'EPSG:3857'
     },
-
 
     /**
      * @private
      * Initialize the map panel.
      */
     initComponent: function() {
-        var id = Ext.id();
-        this.layers = [
-            new OpenLayers.Layer.TMS(
-                'Standard' + id,
-                'http://www.imis.bfs.de/mapcache/tms/',
-                {
-                    layername: 'osm_bfs_google@GoogleMapsCompatible',
-                    isBaseLayer: true,
-                    displayInLayerSwitcher: false,
-                    type: 'png',
-                    visibility: true,
-                    projection: 'EPSG:3857'
-                })
-        ];
-        this.map = new OpenLayers.Map('map_' + id, {
-            controls: [],
-            tileManager: null,
-            zoomMethod: null,
-            // initializing with view centered on germany
-            center: new OpenLayers.LonLat(1160000,6694000)
-        });
-        this.map.setOptions(this.mapOptions);
-        this.map.addLayers(this.layers);
-        this.map.zoomTo(6);
-        var keyControl = new OpenLayers.Control.KeyboardDefaults();
-        this.map.addControl(keyControl);
-        keyControl.activate();
-        this.bodyStyle = {background: '#fff'};
         this.initData();
-        this.addEvents('featureselected');
         this.callParent(arguments);
     },
 
     /**
-     * Initialise the Data and Create an
-     * Array of OpenLayers.Layer objects.
+     * Initialise the Data.
+     * currently only stub remaining
      */
     initData: function() {
-        var me = this;
-
-        if (!this.externalOrteStore) {
-            this.locationStore = Ext.data.StoreManager.get('orte');
-            this.addLocations(this.locationStore);
-        }
     },
 
     /**
      * Select a feature by record (a Lada.model.Ort) and zoom to this Ort
      */
     selectFeature: function(model, record) {
-        if (!record.get('id') || record.get('id') === '') {
+        if (!record || !record.get('id') || record.get('id') === '') {
             return;
         }
-        var feature = this.featureLayer.getFeaturesByAttribute('id', record.get('id'))[0];
+        var features = this.featureLayer.getSource();
+        var feature = features.getFeatureById(record.get('id'));
         if (!feature) {
             return;
         }
-        this.map.setCenter(
-            new OpenLayers.LonLat(feature.geometry.x, feature.geometry.y));
-        this.map.zoomTo(12);
         if (this.selectedFeatureLayer) {
-            this.selectControl.unselectAll();
-            var prev = this.selectedFeatureLayer.features[0];
-            if (prev){
-                this.featureLayer.addFeatures([prev.clone()]);
+            if (this.tempFeature) {
+                this.selectedFeatureLayer.getSource().removeFeature(
+                    this.tempFeature);
+                this.tempFeature = null;
             }
-            this.selectedFeatureLayer.removeAllFeatures();
-            this.selectedFeatureLayer.addFeatures(feature.clone());
-            this.featureLayer.removeFeatures([feature]);
-            this.selectedFeatureLayer.refresh({force: true});
-            this.featureLayer.refresh({force: true});
-        } else {
-            this.selectControl.unselectAll();
-            this.selectControl.select(feature);
+            this.featureLayer.getSource().addFeatures(
+                this.selectedFeatureLayer.getSource().getFeatures());
+            this.selectedFeatureLayer.getSource().clear();
+            this.featureLayer.getSource().removeFeature(feature);
+            this.selectedFeatureLayer.getSource().addFeature(feature);
         }
+        this.map.getView().setCenter([feature.getGeometry().getCoordinates()[0],
+            feature.getGeometry().getCoordinates()[1]]);
+        this.map.getView().setZoom(12);
+        var ozw = this.up('ortszuordnungwindow');
+        if (ozw) {
+            ozw.down('ortszuordnungform').setOrt(null, record);
+        }
+        //TODO: hideable main layer/make all except selected invisible
     },
 
     activateDraw: function() {
-        if (!this.drawPoint) {
-            this.drawPoint = new OpenLayers.Control.DrawFeature(this.featureLayer,
-                OpenLayers.Handler.Point);
-            this.map.addControl(this.drawPoint);
-            this.drawPoint.events.register('featureadded', this, this.featureAdded);
+        this.temporaryLayer = new ol.layer.Vector({
+            title: 'neuer Ort',
+            source: new ol.source.Vector({
+                features: []
+            }),
+            style: this.newFeatureStyle
+        });
+        this.map.addLayer(this.temporaryLayer);
+        if (!this.drawinteraction) {
+            this.drawInteraction = new ol.interaction.Draw({
+                source: this.temporaryLayer.getSource(),
+                type: 'Point'
+            });
         }
-        this.drawPoint.activate();
+        this.map.addInteraction(this.drawInteraction);
+        var me = this;
+        this.drawInteraction.on('drawend', me.featureAdded);
     },
 
-    featureAdded: function(features) {
-        features.feature.geometry.transform(new OpenLayers.Projection('EPSG:3857'),
-                                            new OpenLayers.Projection('EPSG:4326'));
-        var parent = this.up('ortszuordnungwindow') || this.up('ortpanel');
-        var nId = ''
+    featureAdded: function(event) {
+        var me = Ext.ComponentQuery.query('map')[0];
+        me.map.removeInteraction(me.drawInteraction);
+        event.feature.set('bez', 'neuer Ort');
+        clone = event.feature.clone();
+        clone.getGeometry().transform('EPSG:3857', 'EPSG:4326');
+        var parent = me.up('ortszuordnungwindow') || me.up('ortpanel');
+        var nId = '';
         if (parent.probe) {
             var mstId = parent.probe.get('mstId');
             var mst = Ext.data.StoreManager.get('messstellen');
             var ndx = mst.findExact('id', mstId);
             nId = mst.getAt(ndx).get('netzbetreiberId');
         }
-        Ext.create('Lada.view.window.Ortserstellung', {
+        var koord_x = Math.round(clone.getGeometry().getCoordinates()[0] * 100000)/100000;
+        var koord_y = Math.round(clone.getGeometry().getCoordinates()[1] * 100000)/100000;
+        Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Ort',{
                 netzbetreiberId: nId,
-                koordXExtern: features.feature.geometry.x,
-                koordYExtern: features.feature.geometry.y,
-                kdaId : 4,
+                koordXExtern: koord_x,
+                koordYExtern: koord_y,
+                kdaId: 4,
                 ortTyp: 1
             }),
             parentWindow: parent
         }).show();
-        this.drawPoint.deactivate();
+        me.map.removeLayer(me.temporaryLayer);
     },
 
     addLocations: function(locationStore) {
         var me = this;
-        locationFeatures = [];
+        if (!this.featureLayer) {
+            this.initFeatureLayer();
+        }
+        this.featureLayer.getSource().clear();
 
         // Iterate the Store and create features from it
         for (var i = 0; i < locationStore.count(); i++) {
-            var feature = new OpenLayers.Feature.Vector(
-                new OpenLayers.Geometry.Point(
-                    locationStore.getAt(i).get('longitude'),
-                    locationStore.getAt(i).get('latitude')
-                ),
-                {
-                    id: locationStore.getAt(i).get('id'),
-                    bez: locationStore.getAt(i).get('ortId')
-                }
-            );
-            feature.geometry.transform(new OpenLayers.Projection('EPSG:4326'),
-                                       new OpenLayers.Projection('EPSG:3857'));
-            locationFeatures.push(feature);
-        }
-
-        // Create a new Feature Layer and add it to the map
-        if (!this.featureLayer) {
-            this.featureLayer = new OpenLayers.Layer.Vector( 'alle Messpunkte', {
-                styleMap: new OpenLayers.StyleMap({
-                    'default': new OpenLayers.Style(OpenLayers.Util.applyDefaults({
-                        externalGraphic: 'resources/lib/OpenLayers/img/marker-green.png',
-                        graphicOpacity: 1,
-                        pointRadius: 10,
-                        label: '${bez}',
-                        labelAlign: 'rt',
-                        fontColor: 'green',
-                        fontWeight: 'bold'
-                    }, OpenLayers.Feature.Vector.style['default'])),
-                    'select': new OpenLayers.Style({
-                        externalGraphic: 'resources/lib/OpenLayers/img/marker-blue.png',
-                        pointRadius: 12,
-                        label: '${bez}',
-                        labelAlign: 'rt',
-                        fontColor: 'blue',
-                        fontWeight: 'bold'
-                    })
-                }),
-                projection: new OpenLayers.Projection('EPSG:3857')
+            var geom = new ol.geom.Point([
+                locationStore.getAt(i).get('longitude'),
+                locationStore.getAt(i).get('latitude')], 'XY');
+            geom.transform('EPSG:4326', 'EPSG:3857');
+            var id = locationStore.getAt(i).get('id');
+            var feature = new ol.Feature({
+                geometry: geom,
+                id: id,
+                bez: locationStore.getAt(i).get('ortId')
             });
-            this.selectControl = new OpenLayers.Control.SelectFeature(this.featureLayer, {
-                clickout: false,
-                toggle: false,
-                multiple: false,
-                hover: false,
-                onSelect: me.selectedFeature,
-                layers: [me.featureLayer],
-                scope: me
-            });
-            this.map.addControl(this.selectControl);
-            this.selectControl.activate();
+            feature.setId(id);
+            this.featureLayer.getSource().addFeature(feature);
         }
-        this.featureLayer.removeAllFeatures();
-        this.featureLayer.addFeatures(locationFeatures);
-        if (this.selectedFeatureLayer
-            && this.selectedFeatureLayer.features
-            && this.selectedFeatureLayer.features.length > 0){
-            var oldSelection = this.selectedFeatureLayer.features[0].data.id;
-            var feature = this.featureLayer.getFeaturesByAttribute('id', oldSelection)[0];
-            this.selectControl.unselectAll();
-            this.selectedFeatureLayer.removeAllFeatures();
-            this.selectedFeatureLayer.addFeatures(feature.clone());
-            this.featureLayer.removeFeatures([feature]);
-            this.selectedFeatureLayer.refresh({force: true});
-            this.featureLayer.refresh({force: true});
-        }
-        this.map.addLayer(this.featureLayer);
     },
 
     /**
@@ -233,32 +165,111 @@ Ext.define('Lada.view.panel.Map', {
      * Override to display and update the map view in the panel.
      */
     afterRender: function() {
-        this.superclass.afterRender.apply(this, arguments);
+        var backgroundMap = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                url: 'http://www.imis.bfs.de/mapcache/tms/1.0.0/osm_bfs_google@GoogleMapsCompatible/{z}/{x}/{-y}.png'
+            }),
+            maxZoom: 18
+        });
 
-        this.map.render(this.body.dom);
-        this.map.addControl(new OpenLayers.Control.Navigation());
-        this.map.addControl(new OpenLayers.Control.PanZoomBar());
-        this.map.addControl(new OpenLayers.Control.ScaleLine());
+        var target = this.getTargetEl()? this.getTargetEl() : this.element;
+        this.mapOptions.target= target.dom.id;
+        this.mapOptions.view = new ol.View({
+            center: [1160000,6694000],
+            zoom: 6,
+            minZoom: 2,
+            maxZoom: 17
+        });
+        this.mapOptions.layers = [backgroundMap];
+        this.mapOptions.controls = [new ol.control.Zoom(),
+            new ol.control.ZoomSlider(),
+            new ol.control.ScaleLine()];
+
+        this.map = new ol.Map(this.mapOptions);
+
+        this.bodyStyle = {background: '#fff'};
+
+        // style definitions for markers
+        var stroke = new ol.style.Stroke({color: '#FFF', width: '0.5px'});
+
+        this.standardStyle = function(feature, resolution) {
+            return new ol.style.Style({
+                image: new ol.style.Icon({
+                    src: 'resources/img/marker-green.png'
+                }),
+                text: new ol.style.Text({
+                    text: feature.get('bez') || '...',
+                    font: 'bold 14px',
+                    scale: 1.2,
+                    offsetX: 38,
+                    offsetY: 5,
+                    fill: new ol.style.Fill({
+                        color: '#009900'
+                    }),
+                    stroke: stroke
+                })
+            });
+        };
+        this.selectStyle = function(feature, resolution) {
+            return new ol.style.Style({
+                image: new ol.style.Icon({
+                    src: 'resources/img/marker-blue.png'
+                }),
+                text: new ol.style.Text({
+                    text: feature.get('bez') || '...',
+                    font: 'bold 14px',
+                    scale: 1.2,
+                    offsetX: 38,
+                    offsetY: 5,
+                    fill: new ol.style.Fill({
+                        color: '#000099'
+                    }),
+                    stroke: stroke
+                })
+            });
+        };
+        this.newFeatureStyle= function(feature, resolution) {
+            return new ol.style.Style({
+                image: new ol.style.Icon({
+                    src: 'resources/img/marker-blue.png'
+                }),
+                text: new ol.style.Text({
+                    text: 'neu ...',
+                    font: 'bold 14px',
+                    scale: 1.2,
+                    offsetX: 38,
+                    offsetY: 5,
+                    fill: new ol.style.Fill({
+                        color: '#000099'
+                    }),
+                    stroke: stroke
+                })
+            });
+        };
+        this.superclass.afterRender.apply(this, arguments);
     },
 
     /**
      * Forward OpenlayersEvent to EXT
      */
-    selectedFeature: function(feature) {
-        this.fireEvent('featureselected', this, arguments);
-        this.featureLayer.refresh({force: true});
-        if (this.selectedFeatureLayer) {
-            this.selectedFeatureLayer.refresh({force: true});
-
+    selectedFeature: function(selection) {
+        var feature = selection.selected.length ? selection.selected[0] : null;
+        if (feature) {
+            var me = Ext.ComponentQuery.query('map')[0];
+            me.fireEvent('featureselected', me, feature, arguments);
+            if (me.selectedFeatureLayer) {
+                me.featureLayer.getSource().addFeatures(
+                    me.selectedFeatureLayer.getSource().getFeatures());
+                me.selectedFeatureLayer.getSource().clear();
+                me.featureLayer.getSource().removeFeature(feature);
+                me.selectedFeatureLayer.getSource().addFeature(feature);
+            }
         }
     },
 
     beforeDestroy: function() {
-        if (this.map) {
-            this.map.destroy();
-        }
-        delete this.map;
-        this.callParent(arguments);
+        //         delete this.map;
+        //         this.callParent(arguments);
     },
 
     /**
@@ -268,5 +279,71 @@ Ext.define('Lada.view.panel.Map', {
     onResize: function() {
         this.superclass.onResize.apply(this, arguments);
         this.map.updateSize();
+    },
+
+    addPreviousOrt: function(record) {
+        if (!this.previousOrtLayer) {
+            this.previousOrtLayer = new ol.layer.Vector({
+                title: 'oldOrt',
+                source: new ol.source.Vector({
+                    features: []
+                }),
+                style: this.standardStyle,
+                visible: true
+            });
+            this.map.addLayer(this.previousOrtLayer);
+        }
+        this.previousOrtLayer.getSource().clear();
+        if (record) {
+            var geom = new ol.geom.Point([record.get('longitude'),
+                record.get('latitude')],
+            'XY');
+            geom.transform('EPSG:4326', 'EPSG:3857');
+            var feature = new ol.Feature({
+                geometry: geom,
+                id: record.get('id'),
+                bez: record.get('ortId')
+            });
+            this.previousOrtLayer.getSource().addFeature(feature);
+            this.map.getView().setCenter([geom.getCoordinates()[0],
+                geom.getCoordinates()[1]]);
+            this.map.getView().setZoom(12);
+        }
+    },
+
+    /**
+     * initializes a layer to display Orte records, and a selection control to interact
+     * with grids and forms.
+     */
+    initFeatureLayer: function() {
+        var me = this;
+        this.featureLayer = new ol.layer.Vector({
+            title: 'allOrte',
+            source: new ol.source.Vector({
+                features: []
+
+            }),
+            style: this.standardStyle,
+            visible: true
+        });
+        this.map.addLayer(this.featureLayer);
+        this.selectControl = new ol.interaction.Select({
+            condition: ol.events.condition.click,
+            style: this.selectStyle,
+            multi: false,
+            layers: [me.featureLayer]
+        });
+        this.selectControl.on('select', me.selectedFeature);
+        this.map.addInteraction(this.selectControl);
+
+        this.selectedFeatureLayer= new ol.layer.Vector({
+            title: 'gewählter Ort',
+            source: new ol.source.Vector({
+                features: []
+            }),
+            style: this.selectStyle
+        });
+        this.map.addLayer(this.selectedFeatureLayer);
     }
+
 });

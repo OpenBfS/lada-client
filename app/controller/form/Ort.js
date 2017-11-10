@@ -7,9 +7,9 @@
  */
 
 /*
- * This is a controller for an Ortserstellung Form
+ * This is a controller for an Ort Form
  */
-Ext.define('Lada.controller.form.Ortserstellung', {
+Ext.define('Lada.controller.form.Ort', {
     extend: 'Ext.app.Controller',
 
     /**
@@ -17,28 +17,28 @@ Ext.define('Lada.controller.form.Ortserstellung', {
      */
     init: function() {
         this.control({
-            'ortserstellungsform button[action=save]': {
+            'ortform button[action=save]': {
                 click: this.save
             },
-            'ortserstellungsform button[action=revert]': {
+            'ortform button[action=revert]': {
                 click: this.discard
             },
-            'ortserstellungsform staat combobox' : {
+            'ortform staat combobox': {
                 change: this.checkCommitEnabled
             },
-            'ortserstellungsform verwaltungseinheit combobox' : {
+            'ortform verwaltungseinheit combobox': {
                 change: this.checkCommitEnabled
             },
-            'ortserstellungsform koordinatenart combobox': {
+            'ortform koordinatenart combobox': {
                 change: this.checkCommitEnabled
             },
-            'ortserstellungsform numfield [name=koordXExtern]': {
+            'ortform numfield [name=koordXExtern]': {
                 change: this.checkCommitEnabled
             },
-            'ortserstellungsform numfield [name=koordYExtern]': {
+            'ortform numfield [name=koordYExtern]': {
                 change: this.checkCommitEnabled
             },
-            'ortserstellungsform': {
+            'ortform': {
                 validitychange: this.checkCommitEnabled,
                 dirtychange: this.checkCommitEnabled
             }
@@ -47,15 +47,17 @@ Ext.define('Lada.controller.form.Ortserstellung', {
 
     save: function(button) {
         var me = this;
-        var formpanel = button.up('ortserstellungsform');
+        var formpanel = button.up('ortform');
         var form = formpanel.getForm();
         var record = form.getRecord();
-        var data = form.getFieldValues(true);
+        var data = form.getFieldValues(false);
         for (var key in data) {
             record.set(key, data[key]);
         }
-        record.set('id', null);
-        record.set('netzbetreiberId', Lada.netzbetreiber[0]);
+        if (record.phantom) {
+            record.set('netzbetreiberId', Lada.netzbetreiber[0]);
+            record.set('id', null);
+        }
         record.save({
             success: function(newrecord, response) {
                 form.loadRecord(newrecord);
@@ -63,65 +65,64 @@ Ext.define('Lada.controller.form.Ortserstellung', {
                 formpanel.down('staat').store.clearFilter();
                 button.setDisabled(true);
                 formpanel.down('button[action=revert]').setDisabled(true);
-                button.hide();
+                button.setDisabled(true);
                 var ozw = formpanel.up('panel').parentWindow;
-                var json = Ext.decode(response.response.responseText);
+                var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     formpanel.clearMessages();
                     formpanel.setMessages(json.errors, json.warnings);
                 }
                 if (ozw.ortstore) {
-                    ozw.ortstore.load({
-                        callback: function(records, operation, success) {
-                            ozw.ortstore.filter('netzbetreiberId', Lada.netzbetreiber[0]);
-                            ozw.down('map').addLocations(ozw.ortstore);
+                    ozw.ortstore.reload({
+                        callback: function() {
                             var osg = ozw.down('ortstammdatengrid');
                             osg.setStore(ozw.ortstore);
+                            ozw.down('map').addLocations(ozw.ortstore);
                             me.afterSave(formpanel, json);
-                        },
-                        scope: this
-                    });
-                } else {
-                    var osgstore = ozw.down('ortstammdatengrid').getStore();
-                    osgstore.load({
-                        callback: function() {
-                            osgstore.filter('netzbetreiberId', Lada.netzbetreiber[0]);
                         }
                     });
-                    ozw.down('map').addLocations(osgstore);
-                    me.afterSave(formpanel, json);
                 }
             },
             failure: function(record, response) {
-                var json = response.request.scope.reader.jsonData;
-                if (json) {
-                    if(json.message){
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
-                            +' #'+json.message,
-                             Lada.getApplication().bundle.getMsg(json.message));
-                    } else {
-                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                             Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
-                    }
-                    formpanel.clearMessages();
-                    formpanel.setMessages(json.errors, json.warnings);
+                var i18n = Lada.getApplication().bundle;
+                if (response.error) {
+                    //TODO: check content of error.status (html error code)
+                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                        i18n.getMsg('err.msg.generic.body'));
                 } else {
-                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                        Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                    var json = Ext.decode(response.getResponse().responseText);
+                    if (json) {
+                        if (json.message) {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                            +' #'+ json.message,
+                            i18n.getMsg(json.message));
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                i18n.getMsg('err.msg.generic.body'));
+                        }
+                        formpanel.clearMessages();
+                        formpanel.setMessages(json.errors, json.warnings);
+                    } else {
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.response.body'));
+                    }
                 }
             }
         });
     },
 
     /**
-     * Callbacks after a Ort has been saved and the store is reloaded
+     * Callbacks after a Ort has been saved
      */
     afterSave: function(form, json) {
         var ozw = form.up('panel').parentWindow;
         var osg = ozw.down('ortstammdatengrid');
         var id = json.data.id;
-        var record = osg.store.getById(id);
+        var record = ozw.ortstore.getById(id);
         if (record) {
+            if (ozw.down('tabpanel')) {
+                ozw.down('tabpanel').setActiveTab(0);
+            }
             var selmod = osg.getView().getSelectionModel();
             selmod.select(record);
         }
@@ -136,9 +137,9 @@ Ext.define('Lada.controller.form.Ortserstellung', {
         }
         Ext.Msg.show({
             title: Lada.getApplication().bundle.getMsg('success'),
-                     autoScroll: true,
-                     msg: resulttext,
-                     buttons: Ext.Msg.OK
+            autoScroll: true,
+            msg: resulttext,
+            buttons: Ext.Msg.OK
         });
     },
 
@@ -153,16 +154,17 @@ Ext.define('Lada.controller.form.Ortserstellung', {
     checkCommitEnabled: function(callingEl) {
         var panel;
         if (callingEl.up) { //called by a field in the form
-            panel = callingEl.up('ortserstellungsform');
+            panel = callingEl.up('ortform');
         } else { //called by the form
             panel = callingEl.owner;
         }
-        var savebutton =  panel.down('button[action=save]');
+        var savebutton = panel.down('button[action=save]');
         var form = panel.getForm();
         if (form.isDirty()) {
             panel.down('button[action=revert]').setDisabled(false);
         } else {
             panel.down('button[action=revert]').setDisabled(true);
+            panel.down('button[action=save]').setDisabled(true);
         }
         if (form.isValid()) {
             //one of three conditions must apply, the first one depending
@@ -174,7 +176,7 @@ Ext.define('Lada.controller.form.Ortserstellung', {
                 )
                 || form.findField('gemId').getValue() !== null
                 || form.findField('staatId').getValue() !== null
-                ) {
+            ) {
                 savebutton.setDisabled(false);
             } else {
                 savebutton.setDisabled(true);

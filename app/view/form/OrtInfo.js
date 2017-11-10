@@ -39,26 +39,64 @@ Ext.define('Lada.view.form.OrtInfo', {
                 fieldLabel: i18n.getMsg('orte.langtext'),
                 name: 'langtext'
             }, {
-                fieldLabel: i18n.getMsg('staat'),
-                name: 'staat'
+                xtype: 'ortinforow',
+                label: i18n.getMsg('staat'),
+                firstitem: 'staatISO',
+                seconditem: 'staat'
             }, {
-                fieldLabel: i18n.getMsg('orte.verwaltungseinheit'),
-                name: 'gemeinde'
+                xtype: 'ortinforow',
+                label: i18n.getMsg('orte.verwaltungseinheit'),
+                firstitem: 'gemId',
+                seconditem: 'gemeinde'
             }, {
-                fieldLabel: i18n.getMsg('orte.gemId'),
-                name: 'gemId'
-            },
-           {
-                fieldLabel: i18n.getMsg('orte.kda'),
-                name: 'kdaId'
-            }, {
-                fieldLabel: i18n.getMsg('orte.koordx'),
-                name: 'koordXExtern'
-            }, {
-                fieldLabel: i18n.getMsg('orte.koordy'),
-                name: 'koordYExtern'
+                xtype: 'ortinforow',
+                label: i18n.getMsg('orte.kda'),
+                firstitem: 'kdaId',
+                seconditem: 'koordinatenart'
+            },{
+                xtype: 'ortinforow',
+                label: i18n.getMsg('orte.koords'),
+                firstitem: 'koordXExtern',
+                seconditem: 'koordYExtern'
             }]
         }];
         this.callParent(arguments);
     }
 });
+
+/**
+ * A row with a label and two values, to be properly aligned in ortinfo form
+ */
+Ext.define('Lada.view.form.OrtInfoRow',{
+    extend: 'Ext.form.FieldSet',
+    alias: 'widget.ortinforow',
+    padding: 0,
+    border: 0,
+    flex: 1,
+    layout: 'hbox',
+    label: '',
+    firstitem: '',
+    secondtitem: '',
+    defaults: {
+        submitValue: false,
+        xtype: 'displayfield'
+    },
+    initComponent: function() {
+        this.items = [{
+            xtype: 'label',
+            html: this.label,
+            width: 125,
+            padding: '4, 0, 5, 0'
+        },{
+            name: this.firstitem,
+            width: 80,
+            margin: '0,5'
+        },{
+            name: this.seconditem,
+            margin: '0,5',
+            width: 120
+        }];
+        this.callParent();
+    }
+});
+

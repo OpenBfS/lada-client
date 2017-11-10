@@ -13,6 +13,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.probenehmergrid',
 
+    requires: ['Ext.grid.filters.Filters'],
+    plugins: 'gridfilters',
+
     // minHeight and deferEmptyText are needed to be able to show the
     // emptyText message.
     minHeight: 110,
@@ -38,10 +41,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 disabled: false,
                 pluginId: 'rowedit'
             });
-            this.plugins = [this.rowEditing];
+            this.plugins = ['gridfilters', this.rowEditing];
         }
 
-        // TODO: Which docked Items are required?
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'top',
@@ -69,9 +71,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
             dataIndex: 'readonly',
             sortable: false,
             width: 30,
-            getClass: function (val, meta, rec) {
+            getClass: function(val, meta, rec) {
                 if (rec.get('readonly') === false) {
-                        return 'edit';
+                    return 'edit';
                 }
                 return 'noedit';
             },
@@ -90,7 +92,7 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 var store = Ext.data.StoreManager.get('netzbetreiber');
                 var record = store.getById(value);
                 if (record) {
-                  r = record.get('netzbetreiber');
+                    r = record.get('netzbetreiber');
                 }
                 return r;
             },
@@ -100,6 +102,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 displayField: 'netzbetreiber',
                 valueField: 'id',
                 allowBlank: false
+            },
+            filter: {
+                type: 'list'
             }
         }, {
             header: i18n.getMsg('bearbeiter'),
@@ -108,6 +113,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 xtype: 'textfield',
                 maxLength: 25,
                 enforceMaxLength: true
+            },
+            filter: {
+                type: 'string'
             }
         }, {
             header: i18n.getMsg('prnId'),
@@ -117,6 +125,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 maxLength: 9,
                 enforceMaxLength: true,
                 xtype: 'textfield'
+            },
+            filter: {
+                type: 'string'
             }
         }, {
             header: i18n.getMsg('bemerkung'),
@@ -126,6 +137,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 xtype: 'textfield',
                 maxLength: 60,
                 enforceMaxLength: true
+            },
+            filter: {
+                type: 'string'
             }
         }, {
             header: i18n.getMsg('kurzBezeichnung'),
@@ -135,6 +149,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 xtype: 'textfield',
                 maxLength: 10,
                 enforceMaxLength: true
+            },
+            filter: {
+                type: 'string'
             }
         }, {
             header: i18n.getMsg('ort'),
@@ -151,6 +168,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 xtype: 'textfield',
                 maxLength: 5,
                 enforceMaxLength: true
+            },
+            filter: {
+                type: 'string'
             }
         }, {
             header: i18n.getMsg('strasse'),
@@ -159,6 +179,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 xtype: 'textfield',
                 maxLength: 30,
                 enforceMaxLength: true
+            },
+            filter: {
+                type: 'string'
             }
         }, {
             header: i18n.getMsg('telefon'),
@@ -167,6 +190,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 xtype: 'textfield',
                 maxLength: 20,
                 enforceMaxLength: true
+            },
+            filter: {
+                type: 'string'
             }
         }, {
             header: i18n.getMsg('tp'),
@@ -175,6 +201,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 xtype: 'textfield',
                 maxLength: 3,
                 enforceMaxLength: true
+            },
+            filter: {
+                type: 'string'
             }
         }, {
             header: i18n.getMsg('typ'),
@@ -183,6 +212,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 xtype: 'textfield',
                 maxLength: 1,
                 enforceMaxLength: true
+            },
+            filter: {
+                type: 'string'
             }
         }, {
             header: i18n.getMsg('letzteAenderung'),
@@ -191,9 +223,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
             dataIndex: 'letzteAenderung'
         }];
         this.listeners = {
-           select: {
-               fn: this.activateRemoveButton,
-               scope: this
+            select: {
+                fn: this.activateRemoveButton,
+                scope: this
             },
             deselect: {
                 fn: this.deactivateRemoveButton,
@@ -222,6 +254,9 @@ Ext.define('Lada.view.grid.Probenehmer', {
                 store: store,
                 displayInfo: true
             }]);
+            var cbox = Ext.create('Lada.view.widget.PagingSize');
+            this.down('pagingtoolbar').add('-');
+            this.down('pagingtoolbar').add(cbox);
         }
     }
 });

@@ -14,7 +14,9 @@ Ext.define('Lada.model.Probe', {
     extend: 'Ext.data.Model',
 
     fields: [{
-        name: 'id'
+        name: 'id',
+        allowNull: true
+        //persist: false
     }, {
         name: 'owner',
         type: 'boolean',
@@ -33,9 +35,11 @@ Ext.define('Lada.model.Probe', {
         name: 'test',
         type: 'boolean'
     }, {
-        name: 'mstId'
+        name: 'mstId',
+        persist: true
     }, {
-        name: 'laborMstId'
+        name: 'laborMstId',
+        persist: true
     }, {
         name: 'datenbasisId'
     }, {
@@ -63,11 +67,15 @@ Ext.define('Lada.model.Probe', {
     }, {
         name: 'probeentnahmeBeginn',
         type: 'date',
-        convert: function(v) {
+        convert: function(v, record) {
             if (!v) {
                 return v;
             }
             return new Date(v);
+        },
+        serialize: function(v, record) {
+            var formatted = Ext.Date.format(v, 'Y-m-d\\TH:i:sP');
+            return formatted;
         }
     }, {
         name: 'probeentnahmeEnde',
@@ -77,6 +85,10 @@ Ext.define('Lada.model.Probe', {
                 return v;
             }
             return new Date(v);
+        },
+        serialize: function(v, record) {
+            var formatted = Ext.Date.format(v, 'Y-m-d\\TH:i:sP');
+            return formatted;
         }
     }, {
         name: 'mittelungsdauer'
@@ -88,7 +100,12 @@ Ext.define('Lada.model.Probe', {
                 return v;
             }
             return new Date(v);
+        },
+        serialize: function(v, record) {
+            var formatted = Ext.Date.format(v, 'Y-m-d\\TH:i:sP');
+            return formatted;
         }
+
     }, {
         name: 'erzeugerId'
     }, {
@@ -140,7 +157,6 @@ Ext.define('Lada.model.Probe', {
             return value;
         }
     }],
-
     idProperty: 'id',
 
     proxy: {
@@ -148,7 +164,11 @@ Ext.define('Lada.model.Probe', {
         url: 'lada-server/rest/probe',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });

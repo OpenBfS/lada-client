@@ -36,7 +36,7 @@ Ext.define('Lada.model.Probenart', {
         url: 'lada-server/rest/probenart',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

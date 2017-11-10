@@ -59,7 +59,7 @@ Ext.define('Lada.view.grid.MessungList', {
         var fields = caf[1];
         var i18n = Lada.getApplication().bundle;
 
-        this.store.model.setFields(fields);
+        this.store.setFields(fields);
         this.reconfigure(this.store, columns);
     }
 });

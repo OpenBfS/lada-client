@@ -15,8 +15,8 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
 
     maxHeight: 350,
     emptyText: 'Keine Orte gefunden.',
-        // minHeight and deferEmptyText are needed to be able to show the
-        // emptyText message.
+    // minHeight and deferEmptyText are needed to be able to show the
+    // emptyText message.
     minHeight: 110,
     viewConfig: {
         deferEmptyText: false
@@ -56,9 +56,9 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             dataIndex: 'readonly',
             sortable: false,
             width: 30,
-            getClass: function (val, meta, rec) {
+            getClass: function(val, meta, rec) {
                 if (rec.get('readonly') === false) {
-                        return 'edit';
+                    return 'edit';
                 }
                 return 'noedit';
             },
@@ -166,9 +166,9 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             }
         }];
         this.listeners = {
-           select: {
-               fn: this.activateRemoveButton,
-               scope: this
+            select: {
+                fn: this.activateRemoveButton,
+                scope: this
             },
             deselect: {
                 fn: this.deactivateRemoveButton,
@@ -177,7 +177,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         };
         this.initData();
         this.callParent(arguments);
-        this.setReadOnly(true); //Grid is always initialised as RO
     },
 
     initData: function() {
@@ -190,12 +189,10 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                         messprogrammId: this.recordId
                     }});
                 modelname = 'Lada.model.Messprogramm';
-            }
-            else {
+            } else {
                 return;
             }
-        }
-        else {
+        } else {
             modelname = 'Lada.model.Probe';
             this.store = Ext.create('Lada.store.Ortszuordnung');
             this.store.load({
@@ -208,7 +205,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 // TODO
             },
             success: function(record, response) {
-                var json = Ext.decode(response.response.responseText);
+                var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     this.warnings = json.warnings;
                     this.errors = json.errors;
@@ -218,25 +215,21 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         });
     },
 
+    /**
+     * Set readOnly. Legacy function because it is still referenced.
+     */
     setReadOnly: function(b) {
         this.readOnly = b;
-        if (b) {
-            //Readonly
-            if (this.getPlugin('rowedit')) {
-                this.getPlugin('rowedit').disable();
-            }
-            this.down('button[action=delete]').disable();
-            this.down('button[action=add]').disable();
-        }
-        else {
-            //Writable
-            if (this.getPlugin('rowedit')) {
-                this.getPlugin('rowedit').enable();
-            }
-            //this.down('button[action=delete]').enable();
-            this.down('button[action=add]').enable();
+        addButton = this.down('button[action=add]');
+        if (b == true) {
+            addButton.disable();
+            this.deactivateRemoveButton(null, null);
+        } else {
+            addButton.enable();
         }
     },
+
+
     /**
      * Activate the Remove Button
      */
@@ -253,7 +246,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     deactivateRemoveButton: function(selection, record) {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
-        if (! grid.readOnly) {
+        if (grid.readOnly) {
             grid.down('button[action=delete]').disable();
         }
     }

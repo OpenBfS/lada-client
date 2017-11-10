@@ -26,11 +26,13 @@ Ext.define('Lada.controller.Filter', {
         'Lada.store.MessungenList',
         'Lada.view.window.FilterManagement',
         'Lada.view.window.About',
-        'Lada.view.widget.Umwelt'
+        'Lada.view.window.HelpprintWindow',
+        'Lada.view.widget.Umwelt',
+        'Ext.grid.filters.Filters'
     ],
 
     stores: [
-        'ProbenList',    // List of found Proben
+        'ProbenList', // List of found Proben
         'MessprogrammeList' //List of found Messprogramme
     ],
 
@@ -78,6 +80,10 @@ Ext.define('Lada.controller.Filter', {
             'menuitem[action=about]': {
                 // Map click event on Button.
                 click: this.about
+            },
+            'menuitem[action=ladahelp]': {
+                // Map click event on Button.
+                click: this.ladahelp
             }
         });
         this.callParent(arguments);
@@ -93,27 +99,26 @@ Ext.define('Lada.controller.Filter', {
      * vary between orte, kategorien, ...
      */
     selectSql: function(element, record) {
+        record = Array.isArray(record)? record[0]:record;
         var filters = element.up('panel[name=main]').down('panel[name=filtervariables]');
         var filterValues = element.up('panel[name=main]').down('panel[name=filtervalues]');
 
         var desc = element.up('fieldset').down('displayfield[name=description]');
-        if (!record[0]) {
+        if (!record) {
             desc.setValue('');
             return;
         }
         // Set "Filter Auswahl" Description
-        desc.setValue(record[0].data.description);
+        desc.setValue(record.data.description);
 
-        this.displayFields = record[0].data.results;
-        var filterFields = record[0].data.filters;
+        this.displayFields = record.data.results;
+        var filterFields = record.data.filters;
         var contentPanel = element.up('panel[name=main]').down('panel[name=contentpanel]');
-        var queryType = record[0].get('type'); //The type of the query, might be proben, messprogramme,
-            // or a stammdatendtype
+        var queryType = record.get('type'); //The type of the query, might be proben, messprogramme,
+        // or a stammdatendtype
         var details = element.up('panel[name=main]').down('filterdetails');
-        details.setRecord(record[0]);
-
+        details.setRecord(record);
         this.reset(element);
-
         contentPanel.removeAll(); //clear the panel: make space for new grids
 
         // Setup Columns
@@ -142,7 +147,9 @@ Ext.define('Lada.controller.Filter', {
                             gridConfig: {
                                 bottomBar: false
                             }
-                        }]
+                        },
+                        'gridfilters'
+                        ]
                     });
                     break;
                 case 'messung':
@@ -155,12 +162,15 @@ Ext.define('Lada.controller.Filter', {
                             gridConfig: {
                                 bottomBar: false
                             }
-                        }]
+                        },
+                        'gridfilters'
+                        ]
                     });
                     break;
                 case 'messprogramm':
                     gridstore = Ext.create('Lada.store.MessprogrammeList');
-                    frgrid = Ext.create('Lada.view.grid.MessprogrammeList');
+                    frgrid = Ext.create('Lada.view.grid.MessprogrammeList',{
+                        plugins: 'gridfilters'});
                     break;
             }
 
@@ -169,8 +179,7 @@ Ext.define('Lada.controller.Filter', {
             }
 
             contentPanel.add(frgrid);
-        }
-        else {
+        } else {
             // Grids which are not build with dynamic columns
             // The store is configured in each grid, hence we only need to set the
             // grid
@@ -229,8 +238,7 @@ Ext.define('Lada.controller.Filter', {
                     filterId: filterId,
                     value: value
                 });
-            }
-            else if (type === 'number') {
+            } else if (type === 'number') {
                 field = Ext.create('Ext.form.field.Number', {
                     name: name,
                     labelWidth: 135,
@@ -238,8 +246,7 @@ Ext.define('Lada.controller.Filter', {
                     filterId: filterId,
                     value: value
                 });
-            }
-            else if (type === 'datetime') {
+            } else if (type === 'datetime') {
                 field = Ext.create('Lada.view.widget.Datetime', {
                     name: name,
                     labelWidth: 135,
@@ -247,8 +254,7 @@ Ext.define('Lada.controller.Filter', {
                     filterId: filterId,
                     value: value
                 });
-            }
-            else if (type === 'bool') {
+            } else if (type === 'bool') {
                 field = Ext.create('Lada.view.widget.Testdatensatz', {
                     name: name,
                     labelWidth: 135,
@@ -257,19 +263,18 @@ Ext.define('Lada.controller.Filter', {
                     filterId: filterId,
                     emptyText: ''
                 });
-            }
-            else if (type === 'listmst') {
+            } else if (type === 'listmst') {
                 field = Ext.create('Lada.view.widget.Messstelle', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
                     multiSelect: multi,
+                    editable: true,
                     forceSelection: false,
                     filterId: filterId,
                     value: value
                 });
-            }
-            else if (type === 'listumw') {
+            } else if (type === 'listumw') {
                 field = Ext.create('Lada.view.widget.Umwelt', {
                     name: name,
                     labelWidth: 135,
@@ -278,11 +283,11 @@ Ext.define('Lada.controller.Filter', {
                     filterId: filterId,
                     forceSelection: false,
                     multiSelect: multi,
+                    editable: true,
                     displayTpl: Ext.create('Ext.XTemplate',
-                     '<tpl for=".">{id} </tpl>')
+                        '<tpl for=".">{id} </tpl>')
                 });
-            }
-            else if (type === 'listdbasis') {
+            } else if (type === 'listdbasis') {
                 field = Ext.create('Lada.view.widget.Datenbasis', {
                     name: name,
                     labelWidth: 135,
@@ -290,10 +295,10 @@ Ext.define('Lada.controller.Filter', {
                     forceSelection: false,
                     value: value,
                     filterId: filterId,
-                    multiSelect: multi
+                    multiSelect: multi,
+                    editable: true
                 });
-            }
-            else if (type === 'listver') {
+            } else if (type === 'listver') {
                 field = Ext.create('Lada.view.widget.Verwaltungseinheit', {
                     name: name,
                     labelWidth: 135,
@@ -301,10 +306,10 @@ Ext.define('Lada.controller.Filter', {
                     forceSelection: false,
                     value: value,
                     filterId: filterId,
-                    multiSelect: multi
+                    multiSelect: multi,
+                    editable: true
                 });
-            }
-            else if (type === 'listnetz') {
+            } else if (type === 'listnetz') {
                 field = Ext.create('Lada.view.widget.Netzbetreiber', {
                     name: name,
                     labelWidth: 135,
@@ -312,20 +317,21 @@ Ext.define('Lada.controller.Filter', {
                     forceSelection: false,
                     value: value,
                     filterId: filterId,
-                    multiSelect: multi
+                    multiSelect: multi,
+                    editable: true
                 });
-            }
-            else if (type === 'liststatus') {
+            } else if (type === 'liststatus') {
                 field = Ext.create('Lada.view.widget.Status', {
                     name: name,
+                    editable: true,
                     store: Ext.StoreManager.get('statuswerte'),
                     labelWidth: 135,
                     fieldLabel: label,
                     forceSelection: false,
                     value: value,
                     filterId: filterId,
-                    editable: false,
-                    multiSelect: multi
+                    multiSelect: multi,
+                    editable: true
                 });
             }
             if (field) {
@@ -397,15 +403,12 @@ Ext.define('Lada.controller.Filter', {
         var store;
         if (type === 'ort') {
             store = Ext.create(sname, {
-                autoLoad: false
+                autoLoad: false,
+                pageSize: Lada.pagingSize
             });
-            store.proxy.pageParam = undefined;
-            store.proxy.startParam = undefined;
-            store.proxy.limitParam = undefined;
-        }
-        else {
+        } else {
             store = Ext.create(sname, {
-                pageSize: 50
+                pageSize: Lada.pagingSize
             });
         }
         if (store) {
@@ -417,17 +420,18 @@ Ext.define('Lada.controller.Filter', {
                     searchParams.netzbetreiberId = Lada.netzbetreiber[0];
                 }
                 var panel = resultGrid.up('ortpanel');
-                store.addListener('load', panel.down('map').addLocations, panel.down('map'));
+                panel.ortstore = store;
+                panel.ortstore.addListener('load',
+                    panel.down('map').addLocations,
+                    panel.down('map'));
                 panel.connectListeners();
             }
 
             resultGrid.setStore(store);
-            //TODO: Check if this is still necessary, as a Grid exists
-            // for each Type.
 
             if (resultGrid.isDynamic) {
-               //only the dynamic resultgrid can and needs to do the following:
-               resultGrid.setupColumns(this.displayFields);
+                //only the dynamic resultgrid can and needs to do the following:
+                resultGrid.setupColumns(this.displayFields);
             }
 
             resultGrid.getStore().proxy.extraParams = searchParams;
@@ -489,8 +493,7 @@ Ext.define('Lada.controller.Filter', {
         details.setRecord(record);
         if (element.pressed) {
             details.show();
-        }
-        else {
+        } else {
             details.hide();
         }
     },
@@ -513,17 +516,13 @@ Ext.define('Lada.controller.Filter', {
         var fav = combobox.up('fieldset').down('checkbox[name=favorites]');
         if (this.mode === 'proben') {
             store = Ext.StoreManager.get('probequeries');
-        }
-        else if (this.mode === 'messprogramme') {
+        } else if (this.mode === 'messprogramme') {
             store = Ext.StoreManager.get('messprogrammqueries');
-        }
-        else if (this.mode === 'stammdaten') {
+        } else if (this.mode === 'stammdaten') {
             store = Ext.StoreManager.get('stammdatenqueries');
-        }
-        else if (this.mode === 'messungen') {
+        } else if (this.mode === 'messungen') {
             store = Ext.StoreManager.get('messungqueries');
-        }
-        else {
+        } else {
             return;
         }
         var allEntries = store.queryBy(function() {
@@ -537,14 +536,12 @@ Ext.define('Lada.controller.Filter', {
         combobox.store.removeAll();
         if (fav.checked && favorites.getCount() > 0) {
             combobox.store.add(favorites.items);
-        }
-        else {
+        } else {
             combobox.store.add(allEntries.items);
             if (favorites.getCount() === 0) {
                 fav.setValue(false);
                 fav.disable();
-            }
-            else {
+            } else {
                 fav.enable();
             }
         }
@@ -588,14 +585,11 @@ Ext.define('Lada.controller.Filter', {
                     }
                     if (query.get('type') === 'probe') {
                         Ext.StoreManager.get('probequeries').load();
-                    }
-                    else if (query.get('type') === 'messprogramm') {
+                    } else if (query.get('type') === 'messprogramm') {
                         Ext.StoreManager.get('messprogrammqueries').load();
-                    }
-                    else if (query.get('type') === 'messung') {
+                    } else if (query.get('type') === 'messung') {
                         Ext.StoreManager.get('messungqueries').load();
-                    }
-                    else {
+                    } else {
                         Ext.StoreManager.get('stammdatenqueries').load();
                     }
                 }
@@ -625,7 +619,13 @@ Ext.define('Lada.controller.Filter', {
                     if (!json.success) {
                         return;
                     }
-                    filter.setValue(json.data.value);
+                    for (var j = 0; j < filters.items.length; j++) {
+                        if (filters.items.items[j].filterId === json.data.id) {
+                            f = filters.items.items[j];
+                            break;
+                        }
+                    }
+                    f.setValue(json.data.value);
                     for (var j = 0; j < query.data.filters.length; j++) {
                         if (query.data.filters[j].id === json.data.id) {
                             query.data.filters[j].value = json.data.value;
@@ -634,14 +634,11 @@ Ext.define('Lada.controller.Filter', {
                     }
                     if (query.get('type') === 'probe') {
                         Ext.StoreManager.get('probequeries').reload();
-                    }
-                    else if (query.get('type') === 'messprogramm') {
+                    } else if (query.get('type') === 'messprogramm') {
                         Ext.StoreManager.get('messprogrammqueries').reload();
-                    }
-                    else if (query.get('type') === 'messung') {
+                    } else if (query.get('type') === 'messung') {
                         Ext.StoreManager.get('messungqueries').reload();
-                    }
-                    else {
+                    } else {
                         Ext.StoreManager.get('stammdatenqueries').reload();
                     }
                 }

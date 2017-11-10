@@ -16,7 +16,7 @@ Ext.define('Lada.store.OrtsZusatz', {
         {
             property: 'ozsId',
             direction: 'ASC'
-    }],
+        }],
     autoLoad: true,
     sortOnLoad: true
 });

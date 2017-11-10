@@ -26,7 +26,7 @@ Ext.define('Lada.model.MessungList', {
         url: 'lada-server/rest/messung',
         reader: {
             type: 'json',
-            root: 'data',
+            rootProperty: 'data',
             totalProperty: 'totalCount'
         }
     }

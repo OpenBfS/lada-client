@@ -36,6 +36,9 @@ Ext.define('Lada.controller.grid.ProbeList', {
             'probelistgrid toolbar button[action=export]': {
                 click: this.downloadFile
             },
+            'probelistgrid toolbar button[action=deleteSelected]': {
+                click: this.deleteSelected
+            },
             'probelistgrid toolbar button[action=printSheet]': {
                 click: {
                     fn: this.printSelection,
@@ -97,7 +100,8 @@ Ext.define('Lada.controller.grid.ProbeList', {
     uploadFile: function() {
         var win = Ext.create('Lada.view.window.FileUpload', {
             title: 'Datenimport',
-            modal: true
+            modal: true,
+            width: 260
         });
 
         win.show();
@@ -133,7 +137,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 We assume that a 302 was send when the follwing statement
                 is true.
                 */
-                if (response.status == 0 && response.responseText === "") {
+                if (response.status == 0 && response.getResponse().responseText === '') {
                     Ext.MessageBox.confirm('Erneutes Login erforderlich',
                         'Ihre Session ist abgelaufen.<br/>'+
                         'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
@@ -142,7 +146,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 } else {
                     // further error handling
                     Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                    i18n.getMsg('err.msg.laf.filecreatefailed'));
+                        i18n.getMsg('err.msg.laf.filecreatefailed'));
                 }
             }
         });
@@ -153,22 +157,22 @@ Ext.define('Lada.controller.grid.ProbeList', {
      */
     printSelection: function(button, e, eOpts) {
         switch (eOpts.mode) {
-            case "printextract" :
+            case 'printextract' :
                 var printData = this.createExtractData(button);
                 this.printpdf(printData, 'lada_print', 'lada-print.pdf', button);
                 break;
-            case "printsheet" :
+            case 'printsheet' :
                 // The Data is loaded from the server again, so we need
                 // to be a little bit asynchronous here...
                 callback = function(response) {
                     var data = response.responseText;
                     data = this.prepareData(data); // Wraps all messstellen and deskriptoren objects into an array
                     var printData = '{"layout": "A4 portrait", "outputFormat": "pdf",'
-                            +   '"attributes": { "proben": ' +  data
-                            +   '}}';
+                            + '"attributes": { "proben": ' + data
+                            + '}}';
                     this.printpdf(printData, 'lada_erfassungsbogen',
-                                  'lada-erfassungsbogen.pdf', button);
-                }
+                        'lada-erfassungsbogen.pdf', button);
+                };
 
                 this.createSheetData(button, callback, this);
                 break;
@@ -183,27 +187,27 @@ Ext.define('Lada.controller.grid.ProbeList', {
         // if json.parse changes order of things
 
         emptyMessstelle = {
-            "id": null,
-            "amtskennung": null,
-            "beschreibung": null,
-            "messStelle": null,
-            "mstTyp": null,
-            "netzbetreiberId":null
+            'id': null,
+            'amtskennung': null,
+            'beschreibung': null,
+            'messStelle': null,
+            'mstTyp': null,
+            'netzbetreiberId': null
         };
 
         emptyDeskriptor = {
-            "s0":  null,
-            "s1":  null,
-            "s2":  null,
-            "s3":  null,
-            "s4":  null,
-            "s5":  null,
-            "s6":  null,
-            "s7":  null,
-            "s8":  null,
-            "s9":  null,
-            "s10": null,
-            "s11": null
+            's0': null,
+            's1': null,
+            's2': null,
+            's3': null,
+            's4': null,
+            's5': null,
+            's6': null,
+            's7': null,
+            's8': null,
+            's9': null,
+            's10': null,
+            's11': null
         };
 
         for (var i in data) {
@@ -218,8 +222,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 prep[i].messstelle = [];
                 prep[i].messstelle[0] = messstelle;
                 prep[i]['messstelle.messStelle'] = messstelle.messStelle;
-            }
-            else {
+            } else {
                 prep[i].messstelle = [];
                 prep[i].messstelle[0] = emptyMessstelle;
                 prep[i]['messstelle.messStelle'] = '';
@@ -227,29 +230,26 @@ Ext.define('Lada.controller.grid.ProbeList', {
 
             if (labormessstelle != null) {
                 prep[i]['labormessstelle.messStelle'] = labormessstelle.messStelle;
-            }
-            else {
+            } else {
                 prep[i]['labormessstelle.messStelle'] = '';
             }
 
             if (deskriptoren != null) {
                 prep[i].deskriptoren = [];
                 prep[i].deskriptoren[0] = deskriptoren;
-            }
-            else {
+            } else {
                 prep[i].deskriptoren = [];
                 prep[i].deskriptoren[0] = emptyDeskriptor;
             }
 
             // See: app/view/grid/Probenzusatzwert.js
             // Calculate NWG < symbol , as this is NOT done by the server
-            for (z in zusatzwerte){
+            for (z in zusatzwerte) {
                 var nwg = zusatzwerte[z]['nwgZuMesswert'];
                 var mw = zusatzwerte[z]['messwertPzs'];
                 if ( mw < nwg) {
                     prep[i].zusatzwerte[z]['messwertNwg'] = '<';
-                }
-                else {
+                } else {
                     prep[i].zusatzwerte[z]['messwertNwg'] = null;
                 }
             }
@@ -291,11 +291,12 @@ Ext.define('Lada.controller.grid.ProbeList', {
      **/
     buttonToggle: function(enabled, grid) {
         if (!enabled) {
+            grid.down('button[action=deleteSelected]').disable();
             grid.down('button[action=export]').disable();
             grid.down('button[action=printExtract]').disable();
             grid.down('button[action=printSheet]').disable();
-        }
-        else {
+        } else {
+            grid.down('button[action=deleteSelected]').enable();
             grid.down('button[action=export]').enable();
             grid.down('button[action=printExtract]').enable();
             grid.down('button[action=printSheet]').enable();
@@ -309,19 +310,19 @@ Ext.define('Lada.controller.grid.ProbeList', {
     },
 
     expandBody: function(rowNode, record, expandRow) {
-//        var row = Ext.get('probe-row-' + record.get('id'));
-//        var messungGrid = Ext.create('Lada.view.grid.Messung', {
-//            recordId: record.get('id'),
-//            bottomBar: false,
-//            rowLines: true
-//        });
-//        row.swallowEvent(['click', 'mousedown', 'mouseup', 'dblclick'], true);
-//        messungGrid.render(row);
+        //        var row = Ext.get('probe-row-' + record.get('id'));
+        //        var messungGrid = Ext.create('Lada.view.grid.Messung', {
+        //            recordId: record.get('id'),
+        //            bottomBar: false,
+        //            rowLines: true
+        //        });
+        //        row.swallowEvent(['click', 'mousedown', 'mouseup', 'dblclick'], true);
+        //        messungGrid.render(row);
     },
 
     collapseBody: function(rowNode, record, expandRow) {
-//        var element = Ext.get('probe-row-' + record.get('id')).down('div');
-//        element.destroy();
+        //        var element = Ext.get('probe-row-' + record.get('id')).down('div');
+        //        element.destroy();
     },
 
     /**
@@ -330,7 +331,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
      * The parameter printFunctionCallback will be called once the ajax-request
      * starting the json-export was evaluated
      **/
-    createSheetData: function(button, printFunctionCallback, cbscope){
+    createSheetData: function(button, printFunctionCallback, cbscope) {
         //disable Button and setLoading...
         button.disable();
         button.setLoading(true);
@@ -358,33 +359,32 @@ Ext.define('Lada.controller.grid.ProbeList', {
             scope: cbscope,
             success: printFunctionCallback,
             failure: function(response) {
-                console.log('failure');
                 // Error handling
+                console.log(response);
                 button.enable();
                 button.setLoading(false);
                 if (response.responseText) {
                     try {
                         var json = Ext.JSON.decode(response.responseText);
-                    }
-                    catch(e){
+                    } catch (e) {
                         console.log(e);
                     }
                 }
                 if (json) {
-                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
+                    if (json.errors.totalCount > 0 || json.warnings.totalCount > 0) {
                         formPanel.setMessages(json.errors, json.warnings);
                     }
-                    if(json.message){
+                    if (json.message) {
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
                             +' #'+json.message,
-                            Lada.getApplication().bundle.getMsg(json.message));
+                        Lada.getApplication().bundle.getMsg(json.message));
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                             i18n.getMsg('err.msg.response.body'));
                     }
                 } else {
                     Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                    i18n.getMsg('err.msg.response.body'));
+                        i18n.getMsg('err.msg.response.body'));
                 }
                 return null;
             }
@@ -395,7 +395,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
      * Returns a Json-Object which contains the data which has
      * to be printed.
      **/
-    createExtractData: function(button){
+    createExtractData: function(button) {
         //disable Button and setLoading...
         button.disable();
         button.setLoading(true);
@@ -414,12 +414,11 @@ Ext.define('Lada.controller.grid.ProbeList', {
         try {
             for (key in selection[0].data) {
                 // Do not write owner or readonly or id
-                if (["owner", "readonly", "id", "probeId"].indexOf(key) == -1){
+                if (['owner', 'readonly', 'id', 'probeId'].indexOf(key) == -1) {
                     columns.push(key);
                 }
             }
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e);
         }
 
@@ -437,8 +436,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
                     visibleColumns[cols[key].dataIndex] = cols[key].text;
                 }
             }
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e);
         }
 
@@ -449,21 +447,19 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 var row = selection[item].data;
                 var out = [];
                 //Lookup every column and write to data array.
-                for (key in columns){
+                for (key in columns) {
                     var attr = columns[key];
                     //Only write data to output when the column is not hidden.
                     if (row[attr] != null &&
                         visibleColumns[attr] != null) {
                         out.push(row[attr].toString());
-                    }
-                    else if (visibleColumns[attr] != null) {
+                    } else if (visibleColumns[attr] != null) {
                         out.push('');
                     }
                 }
                 data.push(out);
             }
-        }
-        catch (e){
+        } catch (e) {
             console.log(e);
         }
 
@@ -474,16 +470,15 @@ Ext.define('Lada.controller.grid.ProbeList', {
             var cols = cman.getColumns();
             //Iterate columns and find column names for the key...
             // This WILL run into bad behaviour when column-keys exist twice.
-            for (key in columns){
-                for (k in cols){
-                    if (cols[k].dataIndex == columns[key]){
+            for (key in columns) {
+                for (k in cols) {
+                    if (cols[k].dataIndex == columns[key]) {
                         columnNames.push(cols[k].text);
                         break;
                     }
                 }
             }
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e);
         }
 
@@ -498,15 +493,28 @@ Ext.define('Lada.controller.grid.ProbeList', {
                     'data': data
                 }
             }
-        }
+        };
         return printData;
+    },
+
+    /**
+     * Deletes selected list items
+     */
+    deleteSelected: function(button) {
+        var me = button.up('grid');
+        var selection = me.getView().getSelectionModel().getSelection();
+        var win = Ext.create('Lada.view.window.DeleteMultipleProbe', {
+            selection: selection,
+            parentWindow: me
+        });
+        win.show();
     },
 
     /**
      * this function uses an AJAX request in order to
      * send the data to the endpoint of the mapfish-print
      */
-    printpdf: function(data, endpoint, filename, button){
+    printpdf: function(data, endpoint, filename, button) {
         Ext.Ajax.request({
             url: 'lada-printer/'+endpoint+'/buildreport.pdf',
             //configure a proxy in apache conf!
@@ -522,33 +530,31 @@ Ext.define('Lada.controller.grid.ProbeList', {
             },
             failure: function(response) {
                 var i18n = Lada.getApplication().bundle;
-                console.log('failure');
                 // Error handling
                 button.enable();
                 button.setLoading(false);
                 if (response.responseText) {
                     try {
                         var json = Ext.JSON.decode(response.responseText);
-                    }
-                    catch(e){
+                    } catch (e) {
                         console.log(e);
                     }
                 }
                 if (json) {
-                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
+                    if (json.errors.totalCount > 0 || json.warnings.totalCount > 0) {
                         formPanel.setMessages(json.errors, json.warnings);
                     }
-                    if(json.message){
+                    if (json.message) {
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
                             +' #'+json.message,
-                            Lada.getApplication().bundle.getMsg(json.message));
+                        Lada.getApplication().bundle.getMsg(json.message));
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                             i18n.getMsg('err.msg.print.noContact'));
                     }
                 } else {
                     Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                    i18n.getMsg('err.msg.print.noContact'));
+                        i18n.getMsg('err.msg.print.noContact'));
                 }
             }
         });
@@ -557,7 +563,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
     pageChange: function(toolbar) {
         var grid = toolbar.up('grid');
         var store = grid.getStore();
-        var rowExpander = grid.plugins[0]
+        var rowExpander = grid.plugins[0];
         var nodes = rowExpander.view.getNodes();
         for (var i = 0; i < nodes.length; i++) {
             var node = Ext.fly(nodes[i]);

@@ -13,6 +13,9 @@ Ext.define('Lada.view.grid.Status', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.statusgrid',
 
+    requires: ['Ext.grid.filters.Filters'],
+    plugins: 'gridfilters',
+
     maxHeight: 350,
     minHeight: 110,
     viewConfig: {
@@ -38,52 +41,13 @@ Ext.define('Lada.view.grid.Status', {
         this.statusStufeStore = Ext.create('Lada.store.StatusStufe');
         this.statusStufeStore.load();
 
-        this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
-            clicksToMoveEditor: 1,
-            autoCancel: false,
-            disabled: true, //has no effect... but why?
-            pluginId: 'rowedit',
-            listeners: {
-                beforeedit: function(editor, context, eOpts) {
-                    if (context.record.get('id') ||
-                        ! context.grid.up('window').record.get('statusEdit')) {
-                    //Check if edit is allowed, this is true, when the selected
-                    // Record has an id (=is not new)
-                    // or is not allowed to add records.
-
-                        return false;
-                    }
-
-
-                }
-            }
-        });
-        this.plugins = [this.rowEditing];
-
-        this.dockedItems = [{
-            xtype: 'toolbar',
-            dock: 'bottom',
-            items: ['->', {
-                text: i18n.getMsg('reset'),
-                icon: 'resources/img/edit-redo.png',
-                action: 'reset',
-                probeId: this.probeId,
-                parentId: this.parentId
-            }, {
-                text: i18n.getMsg('add'),
-                icon: 'resources/img/list-add.png',
-                action: 'add',
-                probeId: this.probeId,
-                parentId: this.parentId
-            }]
-        }];
         this.columns = [{
             header: i18n.getMsg('statusgrid.header.datum'),
             dataIndex: 'datum',
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
             width: 110,
-            sortable: false
+            sortable: true
         }, {
             header: i18n.getMsg('statusgrid.header.erzeuger'),
             dataIndex: 'mstId',
@@ -99,15 +63,6 @@ Ext.define('Lada.view.grid.Status', {
                 }
                 return r;
             },
-            editor: {
-                xtype: 'combobox',
-                store: Ext.data.StoreManager.get('messstellenFiltered'),
-                displayField: 'messStelle',
-                valueField: 'id',
-                allowBlank: false,
-                queryMode: 'local',
-                editable: false
-            },
             sortable: false
         }, {
             header: i18n.getMsg('statusgrid.header.statusStufe'),
@@ -117,19 +72,9 @@ Ext.define('Lada.view.grid.Status', {
                 var r = '';
                 var item = kombi.getById(value);
                 if (item) {
-                    r = item.raw.statusStufe.stufe;
+                    r = item.data.statusStufe.stufe;
                 }
                 return r;
-            },
-            editor: {
-                xtype: 'combobox',
-                store: this.statusStufeStore,
-                queryMode: 'local',
-                displayField: 'stufe',
-                valueField: 'id',
-                allowBlank: false,
-                editable: false,
-                forceSelection: true
             },
             sortable: false
         }, {
@@ -137,50 +82,32 @@ Ext.define('Lada.view.grid.Status', {
             dataIndex: 'statusKombi',
             renderer: function(value) {
                 var kombi = Ext.data.StoreManager.get('statuskombi');
-                //This store is NOT used in the editor...
                 var r = '';
                 var item = kombi.getById(value);
                 if (item) {
-                    r = item.raw.statusWert.wert;
+                    r = item.data.statusWert.wert;
                 }
                 return r;
-            },
-            editor: {
-                xtype: 'combobox',
-                store: this.statusWerteStore,
-                queryMode: 'local',
-                displayField: 'wert',
-                valueField: 'id',
-                allowBlank: false,
-                editable: false,
-                forceSelection: true
             },
             sortable: false
         }, {
             header: i18n.getMsg('statusgrid.header.text'),
             dataIndex: 'text',
             flex: 1,
-            editor: {
-                allowBlank: true,
-                maxLength: 1000,
-                enforceMaxLength: true
-            },
             sortable: false
         }];
         this.initData();
         this.callParent(arguments);
-        this.setReadOnly(true); //Grid is always initialised as RO
     },
 
     initData: function() {
         if (this.store) {
             this.store.removeAll();
-        }
-        else {
+        } else {
             this.store = Ext.create('Lada.store.Status',{
                 sorters: [{
                     property: 'datum',
-                    direction: 'ASC'
+                    direction: 'DESC'
                 }]
             });
         }
@@ -190,23 +117,6 @@ Ext.define('Lada.view.grid.Status', {
                 messungsId: this.recordId
             }
         });
-    },
-
-    setReadOnly: function(b) {
-        if (b == true){
-            //Readonly
-            this.down('button[action=add]').disable();
-        }else{
-            //Writable
-            this.down('button[action=add]').enable();
-        }
-    },
-
-    setResetable: function(b) {
-        if (b == true){
-            this.down('button[action=reset]').enable();
-        }else{
-            this.down('button[action=reset]').disable();
-        }
     }
+
 });

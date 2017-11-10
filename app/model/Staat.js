@@ -30,7 +30,7 @@ Ext.define('Lada.model.Staat', {
         url: 'lada-server/rest/staat',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

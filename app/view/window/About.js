@@ -22,10 +22,10 @@ Ext.define('Lada.view.window.About', {
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
             }
         });
@@ -78,9 +78,9 @@ Ext.define('Lada.view.window.About', {
      */
     rolesToHtml: function() {
         var roles = '';
-//        var r = Lada.userroles.split(',');
+        //        var r = Lada.userroles.split(',');
         var i;
-        for (i in Lada.userroles){
+        for (i in Lada.userroles) {
             roles += '<br />' + Lada.userroles[i];
         }
         return roles;

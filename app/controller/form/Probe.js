@@ -32,7 +32,8 @@ Ext.define('Lada.controller.form.Probe', {
                 click: this.showAuditTrail
             },
             'probeform': {
-                dirtychange: this.dirtyForm
+                dirtychange: this.dirtyForm,
+                save: this.saveHeadless
             },
             'probeform messstellelabor combobox': {
                 select: this.setNetzbetreiber
@@ -40,7 +41,7 @@ Ext.define('Lada.controller.form.Probe', {
             'probeform [xtype="datetime"] field': {
                 blur: this.checkDate
             },
-            'probeform panel[xtype="deskriptor] combobox': {
+            'probeform panel[xtype="deskriptor"] combobox': {
                 select: this.deskriptorSelect
             }
         });
@@ -56,7 +57,7 @@ Ext.define('Lada.controller.form.Probe', {
      * TODO
      */
     filter: function(field) {
-        var fil =  Ext.create('Ext.util.Filter', {
+        var fil = Ext.create('Ext.util.Filter', {
             filterFn: function(item) {
                 if (Ext.Array.contains(Lada.mst, item.get('id'))) {
                     return true;
@@ -71,15 +72,75 @@ Ext.define('Lada.controller.form.Probe', {
      * When a Messtelle is selected, modify the Netzbetreiber
      * according to the Messstelle
      */
-    setNetzbetreiber: function(combo, records){
+    setNetzbetreiber: function(combo, records) {
+        console.log('got event');
         var netzbetreiber = combo.up().up('form')
-                .down('netzbetreiber').down('combobox');
-        var nbId = records[0].get('netzbetreiberId');
-
+            .down('netzbetreiber').down('combobox');
+        var nbId = records.get('netzbetreiberId');
         if (nbId != null) {
             //select the NB in the NB-Combobox
             netzbetreiber.select(nbId);
         }
+        var mst = records.get('messStelle');
+        var labor = records.get('laborMst');
+        combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
+        combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
+        combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
+
+    },
+
+    /**
+     * Saves the current form without manipulating the GUI.
+     */
+    saveHeadless: function(panel) {
+        var formPanel = panel;
+        var data = formPanel.getForm().getFieldValues(false);
+        var record = formPanel.getForm().getRecord();
+        for (var key in data) {
+            record.set(key, data[key]);
+        }
+        if (!record.get('letzteAenderung')) {
+            record.set('letzteAenderung', new Date());
+        }
+        if (record.phantom) {
+            record.set('id',null);
+        }
+        record.save({
+            success: function(record, response) {
+                var json = Ext.decode(response.getResponse().responseText);
+                if (json) {
+                    var parentGrid = Ext.ComponentQuery.query('probelistgrid');
+                    if (parentGrid.length == 1) {
+                        parentGrid[0].store.reload();
+                    }
+                }
+            },
+            failure: function(record, response) {
+                var i18n = Lada.getApplication().bundle;
+                if (response.error) {
+                    //TODO: check content of error.status (html error code)
+                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                        i18n.getMsg('err.msg.generic.body'));
+                } else {
+                    var rec = formPanel.getForm().getRecord();
+                    rec.dirty = false;
+                    var json = Ext.decode(response.getResponse().responseText);
+                    if (json) {
+                        if (json.message) {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                                +' #'+json.message,
+                            i18n.getMsg(json.message));
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                i18n.getMsg('err.msg.generic.body'));
+                        }
+                    } else {
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.response.body'));
+                    }
+                }
+            }
+        });
     },
 
     /**
@@ -89,20 +150,28 @@ Ext.define('Lada.controller.form.Probe', {
      */
     save: function(button) {
         var formPanel = button.up('form');
-        var data = formPanel.getForm().getFieldValues(true);
+        var data = formPanel.getForm().getFieldValues(false);
+        var record = formPanel.getForm().getRecord();
         for (var key in data) {
-            formPanel.getForm().getRecord().set(key, data[key]);
+            record.set(key, data[key]);
         }
-        if (!formPanel.getForm().getRecord().get('letzteAenderung')) {
-            formPanel.getForm().getRecord().data.letzteAenderung = new Date();
+        if (!record.get('letzteAenderung')) {
+            record.set('letzteAenderung', new Date());
         }
-        formPanel.getForm().getRecord().save({
+        if (record.phantom) {
+            record.set('id',null);
+        }
+        record.save({
             success: function(record, response) {
-                var json = Ext.decode(response.response.responseText);
+                var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     button.setDisabled(true);
                     button.up('toolbar').down('button[action=discard]')
                         .setDisabled(true);
+                    var parentGrid = Ext.ComponentQuery.query('probelistgrid');
+                    if (parentGrid.length == 1) {
+                        parentGrid[0].store.reload();
+                    }
                     formPanel.clearMessages();
                     formPanel.setRecord(record);
                     formPanel.setMessages(json.errors, json.warnings);
@@ -117,35 +186,40 @@ Ext.define('Lada.controller.form.Probe', {
                 }
             },
             failure: function(record, response) {
-                button.setDisabled(true);
-                button.up('toolbar').down('button[action=discard]')
-                    .setDisabled(true);
-                var rec = formPanel.getForm().getRecord();
-                rec.dirty = false;
-                formPanel.getForm().loadRecord(record);
-                var json = response.request.scope.reader.jsonData;
-                if (json) {
-                    if(json.message){
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
-                            +' #'+json.message,
-                            Lada.getApplication().bundle.getMsg(json.message));
-                    } else {
-                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                            Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
-                    }
-                    formPanel.clearMessages();
-                    //formPanel.setRecord(record);
-                    formPanel.setMessages(json.errors, json.warnings);
+                var i18n = Lada.getApplication().bundle;
+                if (response.error) {
+                    //TODO: check content of error.status (html error code)
+                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                        i18n.getMsg('err.msg.generic.body'));
                 } else {
-                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                        Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                    button.setDisabled(true);
+                    button.up('toolbar').down('button[action=discard]')
+                        .setDisabled(true);
+                    var rec = formPanel.getForm().getRecord();
+                    rec.dirty = false;
+                    formPanel.getForm().loadRecord(record);
+                    var json = Ext.decode(response.getResponse().responseText);
+                    if (json) {
+                        if (json.message) {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                                +' #'+json.message,
+                            i18n.getMsg(json.message));
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                i18n.getMsg('err.msg.generic.body'));
+                        }
+                        formPanel.clearMessages();
+                        formPanel.setMessages(json.errors, json.warnings);
+                    } else {
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.response.body'));
+                    }
                 }
-
             }
         });
     },
 
-     /**
+    /**
       * The discard function resets the Probe form
       * to its original state.
       */
@@ -161,7 +235,7 @@ Ext.define('Lada.controller.form.Probe', {
         formPanel.setRecord(formPanel.getForm().getRecord());
     },
 
-     /**
+    /**
       * The dirtyForm function enables or disables the save and discard
       * button which are present in the toolbar of the form.
       * The Buttons are only active if the content of the form was altered
@@ -175,8 +249,7 @@ Ext.define('Lada.controller.form.Probe', {
             form.owner.down('button[action=save]').setDisabled(false);
             form.owner.down('button[action=discard]').setDisabled(false);
             form.owner.up('window').disableChildren();
-        }
-        else {
+        } else {
             form.owner.down('button[action=save]').setDisabled(true);
             form.owner.down('button[action=discard]').setDisabled(true);
             form.owner.up('window').enableChildren(); // todo this might not be true in all cases
@@ -192,12 +265,12 @@ Ext.define('Lada.controller.form.Probe', {
      */
     checkDate: function(field) {
         var now = Date.now();
-        var w = 0 //amount of warnings
-        var e = 0 //errors
+        var w = 0; //amount of warnings
+        var e = 0; //errors
         var emsg = '';
         var wmsg = '';
 
-        if (field.getValue() > now){
+        if (field.getValue() > now) {
             wmsg += Lada.getApplication().bundle.getMsg('661');
             w++;
         }
@@ -206,8 +279,8 @@ Ext.define('Lada.controller.form.Probe', {
         // End Before Start validation
         if (field.period) {
             var partners = new Array();
-                partners[0] = field.up('fieldset').down('datetime[period=start]').down().getValue()
-                partners[1] = field.up('fieldset').down('datetime[period=end]').down().getValue()
+            partners[0] = field.up('fieldset').down('datetime[period=start]').down().getValue();
+            partners[1] = field.up('fieldset').down('datetime[period=end]').down().getValue();
             if (partners[0] && partners[1] && partners[0] > partners [1]) {
                 var msg = Lada.getApplication().bundle.getMsg('662');
                 field.up('fieldset').showWarningOrError(true, msg, false, '');
@@ -238,29 +311,24 @@ Ext.define('Lada.controller.form.Probe', {
             for (var i = 0; i < 13; i++) {
                 if (i === 0) {
                     current.push('D:');
-                }
-                else if (i === desk.layer + 1) {
+                } else if (i === desk.layer + 1) {
                     var value;
-                    if (records[0].get('sn') < 10) {
-                        value = '0' + records[0].get('sn');
-                    }
-                    else {
-                        value = records[0].get('sn');
+                    if (records.get('sn') < 10) {
+                        value = '0' + records.get('sn');
+                    } else {
+                        value = records.get('sn');
                     }
                     current.push(value);
-                }
-                else {
+                } else {
                     current.push('00');
                 }
             }
-        }
-        else {
+        } else {
             var value;
-            if (records[0].get('sn') < 10) {
-                value = '0' + records[0].get('sn');
-            }
-            else {
-                value = records[0].get('sn');
+            if (records.get('sn') < 10) {
+                value = '0' + records.get('sn');
+            } else {
+                value = records.get('sn');
             }
             current[desk.layer + 1] = value;
             if (desk.layer < 2) {
@@ -268,8 +336,7 @@ Ext.define('Lada.controller.form.Probe', {
                     current[i] = '00';
                 }
                 this.clearChildDesk(desk);
-            }
-            else if (desk.layer === 2 && current[1] === '01') {
+            } else if (desk.layer === 2 && current[1] === '01') {
                 current[4] = '00';
                 desk.up('fieldset').down('deskriptor[layer=3]').clearValue();
             }
@@ -281,26 +348,26 @@ Ext.define('Lada.controller.form.Probe', {
         }
         var mediatext = field.up('probeform').down('textfield[name="media"]');
 
-        if ( (desk.layer === 0 ) && (records[0].get('sn') === 0) ){
+        if ( (desk.layer === 0 ) && (records.get('sn') === 0) ) {
             mediatext.setValue('');
         } else {
             if ( current[1] === '01') {
                 if ( (current[4] !== '00') && (desk.layer === 3) ) {
-                    mediatext.setValue(records[0].data.beschreibung);
+                    mediatext.setValue(records.get('beschreibung'));
                 } else if ( (current[3] !== '00') && (desk.layer === 2) ) {
-                    mediatext.setValue(records[0].data.beschreibung);
+                    mediatext.setValue(records.get('beschreibung'));
                 } else if ( (current[2] !== '00') && (desk.layer === 1) ) {
-                    mediatext.setValue(records[0].data.beschreibung);
+                    mediatext.setValue(records.get('beschreibung'));
                 } else if ( (current[1] !== '00') && (desk.layer === 0 )) {
-                    mediatext.setValue(records[0].data.beschreibung);
+                    mediatext.setValue(records.get('beschreibung'));
                 }
             }
 
             if ( current[1] !== '01') {
                 if ((current[2] !== '00') && (desk.layer === 1 )) {
-                    mediatext.setValue(records[0].data.beschreibung);
+                    mediatext.setValue(records.get('beschreibung'));
                 } else if ((current[1] !== '00') && (desk.layer === 0 )) {
-                    mediatext.setValue(records[0].data.beschreibung);
+                    mediatext.setValue(records.get('beschreibung'));
                 }
             }
         }
@@ -309,7 +376,7 @@ Ext.define('Lada.controller.form.Probe', {
     clearChildDesk: function(field) {
         var allS = field.up('fieldset').items.items;
         for (var i = field.layer + 1; i < 12; i++) {
-            allS[i].clearValue();
+            allS[i].down('combobox').clearValue();
         }
     },
 

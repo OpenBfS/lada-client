@@ -45,8 +45,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
                         target: imgId,
                         html: errorText
                     });
-                }
-                else {
+                } else {
                     tooltip.html = errorText;
                 }
             }
@@ -62,8 +61,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
                         target: Ext.get(imgId),
                         html: warningText
                     });
-                }
-                else {
+                } else {
                     tooltip.html = warningText;
                 }
             }
@@ -72,7 +70,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
     },
 
     clearMessages: function() {
-        if (this.plainTitle){
+        if (this.plainTitle) {
             this.setTitle(this.plainTitle);
         }
         if (this.getEl()) {

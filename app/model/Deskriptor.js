@@ -29,7 +29,7 @@ Ext.define('Lada.model.Deskriptor', {
         url: 'lada-server/rest/deskriptor',
         reader: {
             type: 'json',
-            root: 'data',
+            rootProperty: 'data',
             totalProperty: 'totalCount'
         }
     }

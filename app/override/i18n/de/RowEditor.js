@@ -10,7 +10,7 @@
 
 Ext.define('Lada.override.i18n.de.RowEditor', {
     override: 'Ext.grid.RowEditor',
-    saveBtnText:  'Speichern',
+    saveBtnText: 'Speichern',
     cancelBtnText: 'Abbrechen',
     errorsText: 'Fehler',
     dirtyText: 'Sie müssen Ihre Änderungen Speichern oder durch Abbrechen verwerfen'

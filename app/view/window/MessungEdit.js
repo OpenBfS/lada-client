@@ -14,10 +14,10 @@ Ext.define('Lada.view.window.MessungEdit', {
     alias: 'widget.messungedit',
 
     requires: [
-      'Lada.view.form.Messung',
-      'Lada.view.grid.Messwert',
-      'Lada.view.grid.Status',
-      'Lada.view.grid.MKommentar'
+        'Lada.view.form.Messung',
+        'Lada.view.grid.Messwert',
+        'Lada.view.grid.Status',
+        'Lada.view.grid.MKommentar'
     ],
 
     collapsible: true,
@@ -50,16 +50,19 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.buttons = [{
             text: 'Schließen',
             scope: this,
-            handler: this.close
+            handler: this.handleBeforeClose
         }];
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
+            },
+            afterRender: function() {
+                this.customizeToolbar();
             }
         });
 
@@ -76,7 +79,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 xtype: 'messungform',
                 margin: 5,
                 recordId: this.record.get('id')
-           }, {
+            }, {
                 xtype: 'fset',
                 name: 'messwerte',
                 title: 'Messwerte',
@@ -84,7 +87,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 margin: 5,
                 items: [{
                     xtype: 'messwertgrid',
-                    minHeight:'110',
+                    minHeight: '110',
                     recordId: this.record.get('id'),
                     messgroesseStore: mStore
                 }]
@@ -98,7 +101,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                     xtype: 'statusgrid',
                     recordId: this.record.get('id')
                 }]
-           }, {
+            }, {
                 xtype: 'fset',
                 name: 'messungskommentare',
                 title: 'Kommentare',
@@ -108,7 +111,28 @@ Ext.define('Lada.view.window.MessungEdit', {
                     xtype: 'mkommentargrid',
                     recordId: this.record.get('id')
                 }]
-           }]
+            }]
+        }];
+        this.tools = [{
+            type: 'help',
+            tooltip: 'Hilfe',
+            titlePosition: 0,
+            callback: function() {
+                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                if (!imprintWin) {
+                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin.on('afterlayout', function() {
+                        var imprintWinController = this.getController();
+                        console.log(imprintWinController);
+                        imprintWinController.setTopic('messung');
+                    }, imprintWin, {single: true});
+                } else {
+                    // BasiGX.util.Animate.shake(imprintWin);
+                    var imprintWinController = imprintWin.getController();
+                    imprintWinController.shake(imprintWin);
+                    imprintWinController.setTopic('messung');
+                }
+            }
         }];
         this.callParent(arguments);
     },
@@ -142,8 +166,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                             if (button === 'ok') {
                                 me.close();
                                 me.parentWindow.initData();
-                            }
-                            else {
+                            } else {
                                 me.record.set('treeModified', me.probe.get('treeModified'));
                                 that.disableForm();
                             }
@@ -151,8 +174,8 @@ Ext.define('Lada.view.window.MessungEdit', {
                     });
                 }
                 var mStore = Ext.data.StoreManager.get('messgroessen');
-                    mStore.proxy.extraParams = {mmtId: record.get('mmtId')};
-                    mStore.load();
+                mStore.proxy.extraParams = {mmtId: record.get('mmtId')};
+                mStore.load();
                 this.down('messungform').setRecord(record);
                 this.record = record;
 
@@ -163,28 +186,43 @@ Ext.define('Lada.view.window.MessungEdit', {
                               + ' Mst: ' + messstelle.get('messStelle')
                               + ' editieren.');
 
-                var json = Ext.decode(response.response.responseText);
+                var json = null;
+                try {
+                    json = Ext.decode(response.response.responseText);
+                } catch (e) {}
                 if (json) {
                     this.setMessages(json.errors, json.warnings);
                 }
                 if (this.record.get('readonly') === true ||
                     this.record.get('owner') === false) {
                     this.disableForm();
-                }
-                else {
+                } else {
                     this.enableForm();
                 }
                 //Check if it is allowed to edit Status
                 if (this.record.get('statusEdit') === true) {
                     this.enableStatusEdit();
-                }
-                else {
+                } else {
                     this.disableStatusEdit();
                 }
                 //Check if it is allowed to reset Status: done in Messungform
             },
             scope: this
         });
+    },
+
+    /**
+     * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
+     */
+    customizeToolbar: function() {
+        var tools = this.tools;
+        for (var i = 0; i < tools.length; i++) {
+            if (tools[i].type == 'close') {
+                var closeButton = tools[i];
+                closeButton.handler = null;
+                closeButton.callback = this.handleBeforeClose;
+            }
+        }
     },
 
     /**
@@ -209,54 +247,98 @@ Ext.define('Lada.view.window.MessungEdit', {
      * Disable the Chilelements of this window
      */
     disableChildren: function() {
-            this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(true);
-            this.down('fset[name=messwerte]').down('messwertgrid').readOnly = true;
-            this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(true);
-            this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = true;
-            //this.disableStatusEdit();
-            //this.disableStatusReset();
+        this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(true);
+        this.down('fset[name=messwerte]').down('messwertgrid').readOnly = true;
+        this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(true);
+        this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = true;
+        //this.disableStatusEdit();
+        //this.disableStatusReset();
     },
 
     /**
      * Enable the Childelements of this window
      */
     enableChildren: function() {
-            this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(false);
-            this.down('fset[name=messwerte]').down('messwertgrid').readOnly = false;
-            this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(false);
-            this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = false;
-            //this.enableStatusEdit();
-            //this.enableStatusReset();
+        this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(false);
+        this.down('fset[name=messwerte]').down('messwertgrid').readOnly = false;
+        this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(false);
+        this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = false;
+        //this.enableStatusEdit();
+        //this.enableStatusReset();
     },
 
     /**
      * Enable to reset the statusgrid
      */
-     enableStatusReset: function() {
-            this.down('fset[name=messungstatus]').down('statusgrid').setResetable(true);
-     },
+    enableStatusReset: function() {
+        this.down('statuskombi').setResetable(true);
+    },
 
     /**
      * Disable to reset the statusgrid
      */
-     disableStatusReset: function() {
-            this.down('fset[name=messungstatus]').down('statusgrid').setResetable(false);
-     },
+    disableStatusReset: function() {
+        this.down('statuskombi').setResetable(false);
+    },
     /**
      * Enable to edit the statusgrid
      */
-     enableStatusEdit: function() {
-            this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(false);
-            this.down('fset[name=messungstatus]').down('statusgrid').readOnly = false;
-     },
+    enableStatusEdit: function() {
+        this.down('statuskombi').setReadOnly(false);
+    },
 
     /**
      * Disable to edit the statusgrid
      */
-     disableStatusEdit: function() {
-            this.down('fset[name=messungstatus]').down('statusgrid').setReadOnly(true);
-            this.down('fset[name=messungstatus]').down('statusgrid').readOnly = true;
-     },
+    disableStatusEdit: function() {
+        this.down('statuskombi').setReadOnly(true);
+    },
+
+    /**
+     * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
+    handleBeforeClose: function() {
+        var me = this;
+        var i18n = Lada.getApplication().bundle;
+        var item = me.down('messungform');
+        if (item.isDirty()) {
+            var confWin = Ext.create('Ext.window.Window', {
+                title: i18n.getMsg('form.saveonclosetitle'),
+                modal: true,
+                layout: 'vbox',
+                items: [{
+                    xtype: 'container',
+                    html: i18n.getMsg('form.saveonclosequestion'),
+                    margin: '10, 5, 5, 5'
+                }, {
+                    xtype: 'container',
+                    layout: 'hbox',
+                    items: [{
+                        xtype: 'button',
+                        text: i18n.getMsg('form.yes'),
+                        margin: '5, 0, 5, 5',
+
+                        handler: function() {
+                            me.down('messungform').fireEvent('save', me.down('messungform'));
+                            confWin.close();
+                        }
+                    }, {
+                        xtype: 'button',
+                        text: i18n.getMsg('form.no'),
+                        margin: '5, 5, 5, 5',
+
+                        handler: function() {
+                            confWin.close();
+                        }
+                    }]
+                }]
+            });
+            confWin.on('close', me.close, me);
+            confWin.show();
+        } else {
+            me.close();
+        }
+    },
+
 
     /**
      * Instructs the fields / forms listed in this method to set a message.

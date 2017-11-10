@@ -29,6 +29,7 @@ Ext.define('Lada.model.OrtszuordnungMp', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return v;
@@ -52,7 +53,11 @@ Ext.define('Lada.model.OrtszuordnungMp', {
         url: 'lada-server/rest/ortszuordnungmp',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });

@@ -22,11 +22,11 @@ Ext.define('Lada.view.widget.KoordinatenArt', {
     editable: this.editable || false,
     disableKeyFilter: true,
     forceSelection: true,
-    tpl: Ext.create("Ext.XTemplate",
+    tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
             '{idfGeoKey} - {koordinatenart}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-         '<tpl for=".">{idfGeoKey} - {koordinatenart}</tpl>'),
+        '<tpl for=".">{idfGeoKey} - {koordinatenart}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -35,8 +35,7 @@ Ext.define('Lada.view.widget.KoordinatenArt', {
         this.store = Ext.data.StoreManager.get('koordinatenart');
         if (!this.store) {
             this.store = Ext.create('Lada.store.KoordinatenArt');
-        }
-        else {
+        } else {
             this.store.clearFilter();
         }
         this.callParent(arguments);

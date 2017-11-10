@@ -9,9 +9,9 @@
 /**
  * Form to create a new Messpunkt
  */
-Ext.define('Lada.view.form.Ortserstellung', {
+Ext.define('Lada.view.form.Ort', {
     extend: 'Ext.form.Panel',
-    alias: 'widget.ortserstellungsform',
+    alias: 'widget.ortform',
     requires: [
         'Lada.view.widget.Verwaltungseinheit',
         'Lada.view.widget.Staat'
@@ -128,6 +128,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
             xtype: 'orttyp',
             labelWidth: 125,
             maxLength: 100,
+            editable: true,
             name: 'ortTyp',
             fieldLabel: i18n.getMsg('orte.ortTyp')
         },{
@@ -151,6 +152,7 @@ Ext.define('Lada.view.form.Ortserstellung', {
         },{
             xtype: 'ortszusatz',
             labelWidth: 125,
+            editable: true,
             name: 'ozId',
             fieldLabel: i18n.getMsg('orte.ozId')
         }];
@@ -220,9 +222,9 @@ Ext.define('Lada.view.form.Ortserstellung', {
                 element.showErrors(errorText);
             }
         }
-     },
+    },
 
     clearMessages: function() {
         // TODO: this is a stub
-     }
+    }
 });

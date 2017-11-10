@@ -13,7 +13,8 @@ Ext.define('Lada.model.MKommentar', {
     extend: 'Ext.data.Model',
 
     fields: [{
-        name: 'id'
+        name: 'id',
+        persist: false
     }, {
         name: 'owner',
         type: 'boolean'
@@ -28,6 +29,7 @@ Ext.define('Lada.model.MKommentar', {
     }, {
         name: 'datum',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return v;
@@ -45,7 +47,7 @@ Ext.define('Lada.model.MKommentar', {
         url: 'lada-server/rest/mkommentar',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

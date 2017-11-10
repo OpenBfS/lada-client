@@ -18,9 +18,11 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         'Lada.model.Ortszuordnung',
         'Lada.model.OrtszuordnungMp',
         'Lada.view.form.Ortszuordnung',
-        'Lada.view.form.Ortserstellung',
+        'Lada.view.form.Ort',
         'Lada.view.panel.Map',
-        'Lada.view.grid.Orte'
+        'Lada.view.grid.Orte',
+        'Lada.view.grid.Staaten',
+        'Lada.view.grid.Verwaltungseinheiten'
     ],
 
     collapsible: true,
@@ -55,7 +57,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             + this.probe.get('hauptprobenNr')
                             + ' '
                             + i18n.getMsg('edit');
-            } else  {
+            } else {
                 // A new probe record will be created
                 this.title = i18n.getMsg('ortszuordnung.window.title')
                             + ' '
@@ -76,8 +78,10 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             + ' '
                             + i18n.getMsg('messprogramm')
                             + ' '
+                            + this.messprogramm.get('id')
+                            + ' '
                             + i18n.getMsg('edit');
-            } else  {
+            } else {
                 // A new messprogramm record will be created
                 this.title = i18n.getMsg('ortszuordnung.window.title')
                             + ' '
@@ -85,25 +89,45 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             + ' '
                             + i18n.getMsg('messprogramm')
                             + ' '
+                            + this.messprogramm.get('id')
+                            + ' '
                             + i18n.getMsg('create');
             }
         }
-
+        this.tools = [{
+            type: 'help',
+            tooltip: 'Hilfe',
+            titlePosition: 0,
+            callback: function() {
+                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                if (!imprintWin) {
+                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin.on('afterlayout', function() {
+                        var imprintWinController = this.getController();
+                        imprintWinController.setTopic('ort');
+                    }, imprintWin, {single: true});
+                } else {
+                    var imprintWinController = imprintWin.getController();
+                    imprintWinController.shake(imprintWin);
+                    imprintWinController.setTopic('ort');
+                }
+            }
+        }];
         this.buttons = [{
             text: i18n.getMsg('close'),
             scope: this,
             handler: this.close
         }];
         this.width = 900;
-        this.height = 465;
+        this.height = 800;
         this.bodyStyle = {background: '#fff'};
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
             }
         });
@@ -123,15 +147,22 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 region: 'east',
                 type: this.probe? 'probe': 'mpr'
             }, {
+                xtype: 'tabpanel',
+                tabBarPosition: 'top',
                 region: 'south',
                 border: 0,
                 layout: 'fit',
-                name: 'ortgrid',
-                hidden: true,
                 height: 240,
                 items: [{
                     xtype: 'ortstammdatengrid',
+                    title: 'Orte', //TODO i18n.getMsg
                     isMessprogramm: this.messprogramm? true: false
+                }, {
+                    xtype: 'verwaltungseinheitengrid',
+                    title: 'Verwaltungseinheiten'
+                }, {
+                    title: 'Staaten',
+                    xtype: 'staatengrid'
                 }],
                 dockedItems: [{
                     xtype: 'toolbar',
@@ -154,10 +185,9 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                         icon: 'resources/img/list-add.png',
                         action: 'frommap'
                     }, {
-                        text: i18n.getMsg('orte.clone'),
-                        icon: 'resources/img/list-add.png',
-                        action: 'clone',
-                        disabled : true
+                        text: i18n.getMsg('orte.all'),
+                        icon: 'resources/img/network-workgroup.png', //TODO better icon
+                        action: 'allorte'
                     }]
                 }]
             }]
@@ -178,55 +208,46 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 this.record = Ext.create('Lada.model.OrtszuordnungMp');
                 this.record.set('messprogrammId', this.messprogramm.get('id'));
             }
-            if (!this.record.get('letzteAenderung')) {
-                this.record.data.letzteAenderung = new Date();
-            }
         }
+        var mstId = this.probe? this.probe.get('mstId') : this.messprogramm.get('mstId');
+        var mst = Ext.data.StoreManager.get('messstellen');
+        var ndx = mst.findExact('id', mstId);
+        this.netzbetreiberId = mst.getAt(ndx).get('netzbetreiberId');
         this.down('ortszuordnungform').setRecord(this.record);
         var osg = this.down('ortstammdatengrid');
         var map = this.down('map');
-        osg.setLoading(true);
-        map.setLoading(true);
+        osg.setLoading(false);
+        map.setLoading(false);
         this.ortstore = Ext.data.StoreManager.get('orte');
+        // leave the ortstore empty at begin.
+        // TODO check when changing filter method to remote/local
+        this.ortstore.removeAll();
         var ortId;
         if (this.messprogramm) {
             ortId = this.record.get('ort');
         } else {
             ortId = this.record.get('ortId');
         }
-        if (ortId !== undefined
-            && ortId !== ''
-            && ortId !== null
-            && !this.ortstore.findRecord('id', ortId)) {
-            var record = Ext.create('Lada.model.Ort');
-            record.set('id', ortId);
-            this.ortstore.add(record);
+        if (ortId || ortId === 0) {
             Lada.model.Ort.load(ortId, {
                 success: function(rec) {
-                    record.beginEdit();
-                    for (key in rec.getData()) {
-                        record.set(key, rec.getData()[key]);
-                    }
-                    record.endEdit();
-                    me.onStoreLoaded();
+                    me.down('ortszuordnungform').setFirstOrt(rec);
+                    map.addPreviousOrt(rec);
                 }
             });
-        } else {
-            me.onStoreLoaded();
         }
         map.addListener('featureselected', osg.selectOrt, osg);
         osg.addListener('select', map.selectFeature, map);
-        osg.addListener('select', me.activateCloneButton, me);
     },
 
     /**
      * @private
      * Override to display and update the map view in the panel.
      */
-    afterRender: function(){
+    afterRender: function() {
         this.superclass.afterRender.apply(this, arguments);
         var map = this.down('map');
-        map.map.addControl(new OpenLayers.Control.LayerSwitcher());
+        //         map.map.addControl(new OpenLayers.Control.LayerSwitcher()); TODO migration
     },
 
     /**
@@ -245,44 +266,26 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         //todo this is a stub
     },
 
-    activateCloneButton: function() {
-        var toolbar = this.down('panel[name=ortgrid]').getDockedItems()[0];
-        toolbar.down('button[action=clone]').enable();
-    },
-
     /**
      * childs will be populated with store entries after all entries are loaded
      * from all sources
      */
-    onStoreLoaded: function() {
-        var map = this.down('map');
+    onStoreChanged: function() {
         var osg = this.down('ortstammdatengrid');
-        osg.setStore(this.ortstore);
+        var map = this.down('map');
+        osg.setLoading(true);
+        map.setLoading(true);
         map.addLocations(this.ortstore);
-        map.featureLayer.setVisibility(false);
-        map.selectedFeatureLayer = new OpenLayers.Layer.Vector(
-            'gewählter Messpunkt', {
-                styleMap: new OpenLayers.StyleMap({
-                    externalGraphic: 'resources/lib/OpenLayers/img/marker-blue.png',
-                    pointRadius: 12,
-                    label: '${bez}',
-                    labelAlign: 'rt',
-                    fontColor: 'blue',
-                    fontWeight: 'bold',
-                    labelOutlineColor: 'white',
-                    labelOutlineWidth: 3
-                }),
-                displayInLayerSwitcher: false,
-                projection: new OpenLayers.Projection('EPSG:3857')
-            });
-        map.map.addLayer(map.selectedFeatureLayer);
-        var ortId = this.record.get('ortId');
-        if (ortId){
-            var feat = map.featureLayer.getFeaturesByAttribute('id', ortId);
-            var ortrecord = this.ortstore.findRecord('id', ortId);
-            osg.selectOrt(map, feat);
+        var ortId;
+        if (this.messprogramm) {
+            ortId = this.record.get('ort');
+        } else {
+            ortId = this.record.get('ortId');
+        }
+        var ortrecord = this.ortstore.findRecord('id', ortId);
+        if (ortrecord) {
             map.selectFeature(this.model, ortrecord);
-            this.down('ortszuordnungform').setOrt(null,ortrecord);
+            this.down('ortszuordnungform').setFirstOrt(ortrecord);
         }
         osg.setLoading(false);
         map.setLoading(false);
@@ -295,6 +298,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             return;
         }
         me.callParent(arguments);
-     }
+    }
 });
 

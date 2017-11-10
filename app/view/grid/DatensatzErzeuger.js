@@ -12,6 +12,7 @@
 Ext.define('Lada.view.grid.DatensatzErzeuger', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.datensatzerzeugergrid',
+    requires: ['Ext.grid.filters.Filters'],
 
     // minHeight and deferEmptyText are needed to be able to show the
     // emptyText message.
@@ -26,6 +27,8 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
     allowDeselect: true,
     border: false,
 
+    plugins: ['gridfilters'],
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('de.emptyGrid');
@@ -37,9 +40,8 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 disabled: false,
                 pluginId: 'rowedit'
             });
-            this.plugins = [this.rowEditing];
+            this.plugins = ['gridfilters', this.rowEditing];
         }
-        // TODO: Which docked Items are required?
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'top',
@@ -68,16 +70,17 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             dataIndex: 'readonly',
             sortable: false,
             width: 30,
-            getClass: function (val, meta, rec) {
+            getClass: function(val, meta, rec) {
                 if (rec.get('readonly') === false) {
-                        return 'edit';
+                    return 'edit';
                 }
                 return 'noedit';
             },
             handler: function(grid, rowIndex, colIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
                 grid.fireEvent('itemdblclick', grid, rec);
-            }
+            },
+            filter: {type: 'list'}
         }, {
             header: i18n.getMsg('netzbetreiberId'),
             dataIndex: 'netzbetreiberId',
@@ -89,7 +92,7 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 var store = Ext.data.StoreManager.get('netzbetreiber');
                 var record = store.getById(value);
                 if (record) {
-                  r = record.get('netzbetreiber');
+                    r = record.get('netzbetreiber');
                 }
                 return r;
             },
@@ -99,7 +102,8 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 displayField: 'netzbetreiber',
                 valueField: 'id',
                 allowBlank: false
-            }
+            },
+            filter: {type: 'list'}
         }, {
             header: i18n.getMsg('daErzeugerId'),
             dataIndex: 'datensatzErzeugerId',
@@ -108,7 +112,8 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 maxLength: 2,
                 enforceMaxLength: true,
                 allowBlank: false
-            }
+            },
+            filter: {type: 'list'}
         }, {
             header: i18n.getMsg('bezeichnung'),
             dataIndex: 'bezeichnung',
@@ -117,7 +122,8 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 xtype: 'textfield',
                 maxLength: 120,
                 enforceMaxLength: true
-            }
+            },
+            filter: {type: 'string'}
         }, {
             header: i18n.getMsg('mstId'),
             dataIndex: 'mstId',
@@ -129,7 +135,7 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 var store = Ext.data.StoreManager.get('messstellen');
                 var record = store.getById(value);
                 if (record) {
-                  r = record.get('messStelle');
+                    r = record.get('messStelle');
                 }
                 return r;
             },
@@ -139,7 +145,8 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 displayField: 'messStelle',
                 valueField: 'id',
                 allowBlank: false
-            }
+            },
+            filter: {type: 'list'}
         }, {
             header: i18n.getMsg('letzteAenderung'),
             xtype: 'datecolumn',
@@ -147,9 +154,9 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             dataIndex: 'letzteAenderung'
         }];
         this.listeners = {
-           select: {
-               fn: this.activateRemoveButton,
-               scope: this
+            select: {
+                fn: this.activateRemoveButton,
+                scope: this
             },
             deselect: {
                 fn: this.deactivateRemoveButton,
@@ -178,6 +185,9 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
                 store: store,
                 displayInfo: true
             }]);
+            var cbox = Ext.create('Lada.view.widget.PagingSize');
+            this.down('pagingtoolbar').add('-');
+            this.down('pagingtoolbar').add(cbox);
         }
     }
 });

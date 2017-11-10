@@ -36,14 +36,13 @@ Ext.define('Lada.override.RowEditor', {
             }
 
             if (column.xtype === 'actioncolumn') {
-                field.fieldCls += ' ' + Ext.baseCSSPrefix + 'form-action-col-field'
+                field.fieldCls += ' ' + Ext.baseCSSPrefix + 'form-action-col-field';
             }
 
             if (me.isVisible() && me.context) {
                 if (field.is('displayfield')) {
                     me.renderColumnData(field, me.context.record, column);
-                }
-                else {
+                } else {
                     field.suspendEvents();
                     field.setValue(me.context.record.get(column.dataIndex));
                     field.resumeEvents();
@@ -56,6 +55,5 @@ Ext.define('Lada.override.RowEditor', {
                 me.onColumnShow(column);
             }
         }
-        me.mon(field, 'change', me.onFieldChange, me);
     }
 });

@@ -58,7 +58,7 @@ Ext.define('Lada.model.Verwaltungseinheit', {
         url: 'lada-server/rest/verwaltungseinheit',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

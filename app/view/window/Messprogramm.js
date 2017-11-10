@@ -15,8 +15,7 @@ Ext.define('Lada.view.window.Messprogramm', {
 
     requires: [
         'Lada.view.form.Messprogramm',
-        'Lada.view.grid.Messmethoden',
-        'Lada.view.grid.Nuklide'
+        'Lada.view.grid.Messmethoden'
     ],
 
     collapsible: true,
@@ -38,8 +37,7 @@ Ext.define('Lada.view.window.Messprogramm', {
 
         if (this.record == null) {
             this.title = i18n.getMsg('messprogramm.window.create.title');
-        }
-        else {
+        } else {
             this.title = i18n.getMsg('messprogramm.window.edit.title');
         }
         this.buttons = [{
@@ -51,17 +49,16 @@ Ext.define('Lada.view.window.Messprogramm', {
                 if (! this.probenWindow) {
                     var winname = 'Lada.view.window.GenProbenFromMessprogramm';
                     var win = Ext.create(winname, {
-                        record: this.record,
+                        records: [this.record],
                         parentWindow: this
                     });
                     win.show();
                     win.initData();
                     this.probenWindow = win;
-               }
-               else {
+                } else {
                     this.probenWindow.focus();
                     this.probenWindow.setActive(true);
-               }
+                }
                 me.close();
             }
         },
@@ -69,17 +66,20 @@ Ext.define('Lada.view.window.Messprogramm', {
         {
             text: i18n.getMsg('close'),
             scope: this,
-            handler: this.close
+            handler: this.handleBeforeClose
         }];
         this.width = 700;
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
+            },
+            afterRender: function() {
+                this.customizeToolbar();
             }
         });
 
@@ -111,20 +111,35 @@ Ext.define('Lada.view.window.Messprogramm', {
                 title: i18n.getMsg('mmtmessprogramm.form.fieldset.title'),
                 margin: 5,
                 layout: {
-                    type: 'column'
+                    type: 'fit'
                 },
                 items: [{
                     xtype: 'messmethodengrid',
-                    columnWidth: 0.5,
-                    recordId: this.record ? this.record.get('id') : null,
-                    flex: 1
-                }, {
-                    xtype: 'nuklidegrid',
-                    columnWidth: 0.5,
                     recordId: this.record ? this.record.get('id') : null,
                     flex: 1
                 }]
             }]
+        }];
+        this.tools = [{
+            type: 'help',
+            tooltip: 'Hilfe',
+            titlePosition: 0,
+            callback: function() {
+                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                if (!imprintWin) {
+                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin.on('afterlayout', function() {
+                        var imprintWinController = this.getController();
+                        console.log(imprintWinController);
+                        imprintWinController.setTopic('messprogramm');
+                    }, imprintWin, {single: true});
+                } else {
+                    // BasiGX.util.Animate.shake(imprintWin);
+                    var imprintWinController = imprintWin.getController();
+                    imprintWinController.shake(imprintWin);
+                    imprintWinController.setTopic('messprogramm');
+                }
+            }
         }];
         this.callParent(arguments);
     },
@@ -154,12 +169,11 @@ Ext.define('Lada.view.window.Messprogramm', {
                     console.log('An unhandled Failure occured. See following Response and Record');
                     console.log(action);
                     console.log(record);
-                    },
+                },
                 success: function(record, response) {
                     this.down('messprogrammform').setRecord(record);
                     this.record = record;
-
-                    var json = Ext.decode(response.response.responseText);
+                    var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
                         this.setMessages(json.errors, json.warnings);
                         if (!json.warnings.mediaDesk) {
@@ -170,8 +184,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                     if (this.record.get('readonly') === true) {
                         this.down('messprogrammform').setReadOnly(true);
                         this.disableChildren();
-                    }
-                    else {
+                    } else {
                         this.down('messprogrammform').setReadOnly(false);
                         this.enableChildren();
                     }
@@ -182,14 +195,93 @@ Ext.define('Lada.view.window.Messprogramm', {
         }
         // Create a Create Window
         else {
-            var record = Ext.create('Lada.model.Messprogramm');
+            var record = Ext.create('Lada.model.Messprogramm',{
+                gueltigVon: 1,
+                gueltigBis: 365});
             this.down('messmethodengrid').setReadOnly(true);
+
+            var mstLaborStore = Ext.data.StoreManager.get('messstellelabor');
+            var items = mstLaborStore.queryBy(function(record) {
+                if ( (Lada.mst.indexOf(record.get('messStelle')) > -1) &&
+                   (Lada.mst.indexOf(record.get('laborMst')) > -1)){
+                    return true;
+                }
+            });
+            record.set('owner', true);
+            record.set('id', null);
+            defaultentry = items.items[0];
+            if (defaultentry){
+              record.set('mstId', defaultentry.get('messStelle'));
+              record.set('laborMstId', defaultentry.get('laborMst'));
+              var mstStore = Ext.data.StoreManager.get('messstellen');
+              var netzbetreiber = mstStore.getById(defaultentry.get('messStelle')).get('netzbetreiberId');
+              this.down('messprogrammform').down('netzbetreiber').setValue(netzbetreiber);
+            }
             this.down('messprogrammform').setRecord(record);
-            this.down('dayofyear[name=gueltigBis]').setValue(365);
-            this.down('dayofyear[name=gueltigVon]').setValue(1);
+            this.down('messprogrammform').down('messstellelabor').down('combobox').select(1);
         }
         this.down('messprogrammform').isValid();
     },
+
+    /**
+     * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
+     */
+    customizeToolbar: function() {
+        var tools = this.tools;
+        for (var i = 0; i < tools.length; i++) {
+            if (tools[i].type == 'close') {
+                var closeButton = tools[i];
+                closeButton.handler = null;
+                closeButton.callback = this.handleBeforeClose;
+            }
+        }
+    },
+
+    /**
+     * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
+    handleBeforeClose: function() {
+        var me = this;
+        var i18n = Lada.getApplication().bundle;
+        var item = me.down('messprogrammform');
+        if (!item.getRecord().get('readonly') && item.isDirty()) {
+            var confWin = Ext.create('Ext.window.Window', {
+                title: i18n.getMsg('form.saveonclosetitle'),
+                modal: true,
+                layout: 'vbox',
+                items: [{
+                    xtype: 'container',
+                    html: i18n.getMsg('form.saveonclosequestion'),
+                    margin: '10, 5, 5, 5'
+                }, {
+                    xtype: 'container',
+                    layout: 'hbox',
+                    items: [{
+                        xtype: 'button',
+                        text: i18n.getMsg('form.yes'),
+                        margin: '5, 0, 5, 5',
+
+                        handler: function() {
+                            me.down('messprogrammform').fireEvent('save', me.down('messprogrammform'));
+                            confWin.close();
+                        }
+                    }, {
+                        xtype: 'button',
+                        text: i18n.getMsg('form.no'),
+                        margin: '5, 5, 5, 5',
+
+                        handler: function() {
+                            confWin.close();
+                        }
+                    }]
+                }]
+            });
+            confWin.on('close', me.close, me);
+            confWin.show();
+        } else {
+            me.close();
+        }
+    },
+
 
     //This was used in a Probewindow, I left it here for reference...
     /*

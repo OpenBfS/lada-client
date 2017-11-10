@@ -49,7 +49,7 @@ Ext.define('Lada.controller.grid.Probenehmer', {
         }
     },
 
-    edit: function (gridView, record) {
+    edit: function(gridView, record) {
         var grid = Ext.ComponentQuery.query('probenehmergrid')[0];
         if (!Ext.Array.contains(Lada.netzbetreiber,
             record.get('netzbetreiberId')) &&
@@ -69,23 +69,33 @@ Ext.define('Lada.controller.grid.Probenehmer', {
      */
     gridSave: function(editor, context) {
         var i18n = Lada.getApplication().bundle;
+        if (context.record.phantom) {
+            context.record.set('id', null);
+        }
         context.record.save({
             success: function(record, response) {
                 var grid = Ext.ComponentQuery.query('probenehmergrid')[0];
                 grid.store.reload();
             },
             failure: function(record, response) {
-              var json = response.request.scope.reader.jsonData;
-              if (json) {
-                if (json.message){
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                        +' #'+json.message,
-                        i18n.getMsg(json.message));
-                   } else {
-                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.generic.body'));
-                   }
-              }
+                var i18n = Lada.getApplication().bundle;
+                if (response.error) {
+                    //TODO: check content of error.status (html error code)
+                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                        i18n.getMsg('err.msg.generic.body'));
+                } else {
+                    var json = Ext.decode(response.getResponse().responseText);
+                    if (json) {
+                        if (json.message) {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                            + ' #' + json.message,
+                            i18n.getMsg(json.message));
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                i18n.getMsg('err.msg.generic.body'));
+                        }
+                    }
+                }
             }
         });
     },
@@ -95,12 +105,10 @@ Ext.define('Lada.controller.grid.Probenehmer', {
      * the empty row might have been created by the roweditor is removed
      */
     cancelEdit: function(editor, context) {
-        if (!context.record.get('id') ||
-            context.record.get('id') === '') {
+        if (context.record.phantom) {
             editor.getCmp().store.remove(context.record);
             this.buttonToggle();
-        }
-        else {
+        } else {
             this.buttonToggle(context.grid.getSelectionModel(), context.record);
         }
     },
@@ -128,32 +136,43 @@ Ext.define('Lada.controller.grid.Probenehmer', {
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         var i18n = Lada.getApplication().bundle;
         Ext.MessageBox.confirm(i18n.getMsg('delete'),
-                                i18n.getMsg('confirmation.question'),
-                                function(btn) {
-            if (btn === 'yes') {
-                selection.destroy({
-                    success: function() {
+            i18n.getMsg('confirmation.question'),
+            function(btn) {
+                if (btn === 'yes') {
+                    selection.erase({
+                        success: function() {
                         //DO NOTHING
-                    },
-                    failure: function(request, response) {
-                        var json = response.request.scope.reader.jsonData;
-                        if (json) {
-                            if (json.message){
-                                Ext.Msg.alert(i18n.getMsg('err.msg.delete.title')
-                                    +' #'+json.message,
-                                    i18n.getMsg(json.message));
-                            } else {
+                        },
+                        failure: function(request, response) {
+                            var i18n = Lada.getApplication().bundle;
+                            if (response.error) {
+                            //TODO: check content of error.status (html error code)
                                 Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
                                     i18n.getMsg('err.msg.generic.body'));
+                            } else {
+                                var json = Ext.decode(
+                                    response.getResponse().responseText);
+                                if (json) {
+                                    if (json.message) {
+                                        Ext.Msg.alert(i18n.getMsg(
+                                            'err.msg.delete.title')
+                                    + ' #' + json.message,
+                                        i18n.getMsg(json.message));
+                                    } else {
+                                        Ext.Msg.alert(i18n.getMsg(
+                                            'err.msg.delete.title'),
+                                        i18n.getMsg('err.msg.generic.body'));
+                                    }
+                                } else {
+                                    Ext.Msg.alert(i18n.getMsg(
+                                        'err.msg.delete.title'),
+                                    i18n.getMsg('err.msg.response.body'));
+                                }
                             }
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
-                                i18n.getMsg('err.msg.response.body'));
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
         grid.down('button[action=delete]').disable();
     },
 
@@ -167,20 +186,18 @@ Ext.define('Lada.controller.grid.Probenehmer', {
         var grid = Ext.ComponentQuery.query('probenehmergrid')[0];
         if (!record ||
             !Ext.Array.contains(Lada.netzbetreiber,
-            record.get('netzbetreiberId'))) {
+                record.get('netzbetreiberId'))) {
             grid.down('button[action=delete]').disable();
             return;
         }
         if (record.get('readonly') ||
             rowModel.selected.items.length === 0) {
             grid.down('button[action=delete]').disable();
-        }
-        else {
+        } else {
             if (grid.getPlugin('rowedit').editing) {
             //only enable buttons, when grid is not beeing edited
                 grid.down('button[action=delete]').disable();
-            }
-            else {
+            } else {
                 grid.down('button[action=delete]').enable();
             }
         }

@@ -63,21 +63,19 @@ Ext.define('Lada.controller.FilterResult', {
         var winname = '';
 
         //Based upon the Model that was loaded, act differently
-        if (mname == 'Lada.model.ProbeList'){
+        if (mname == 'Lada.model.ProbeList') {
             winname = 'Lada.view.window.ProbeEdit';
-        }
-        else if (mname == 'Lada.model.MessprogrammList'){
+        } else if (mname == 'Lada.model.MessprogrammList') {
             winname = 'Lada.view.window.Messprogramm';
         }
-        if (winname){
+        if (winname) {
             var win = Ext.create(winname, {
                 record: record,
                 style: 'z-index: -1;' //Fixes an Issue where windows could not be created in IE8
-             });
+            });
             win.show();
             win.initData();
-        }
-        else {
+        } else {
             console.log('The model is unknown.'
                 +'No window was configured to display the data.'
                 +'I retrieved a model named:' + mname
@@ -129,7 +127,7 @@ Ext.define('Lada.controller.FilterResult', {
                     console.log('An unhandled Failure occured. See following Response and Record');
                     console.log(action);
                     console.log(record);
-                    },
+                },
                 success: function(record, response) {
                     grid.setLoading(false);
 
@@ -187,7 +185,7 @@ Ext.define('Lada.controller.FilterResult', {
                 We assume that a 302 was send when the follwing statement
                 is true.
                 */
-                if (response.status == 0 && response.responseText === "") {
+                if (response.status == 0 && response.responseText === '') {
                     Ext.MessageBox.confirm('Erneutes Login erforderlich',
                         'Ihre Session ist abgelaufen.<br/>'+
                         'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
@@ -197,20 +195,20 @@ Ext.define('Lada.controller.FilterResult', {
                 // further error handling
                 var json = Ext.JSON.decode(response.responseText);
                 if (json) {
-                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
+                    if (json.errors.totalCount > 0 || json.warnings.totalCount > 0) {
                         formPanel.setMessages(json.errors, json.warnings);
                     }
-                    if(json.message){
+                    if (json.message) {
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
                             +' #'+json.message,
-                            Lada.getApplication().bundle.getMsg(json.message));
+                        Lada.getApplication().bundle.getMsg(json.message));
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                             i18n.getMsg('err.msg.laf.filecreatefailed'));
                     }
                 } else {
                     Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                    i18n.getMsg('err.msg.laf.filecreatefailed'));
+                        i18n.getMsg('err.msg.laf.filecreatefailed'));
                 }
             }
         });
@@ -239,12 +237,11 @@ Ext.define('Lada.controller.FilterResult', {
         try {
             for (key in selection[0].data) {
                 // Do not write owner or readonly or id
-                if (["owner", "readonly", "id"].indexOf(key) == -1){
+                if (['owner', 'readonly', 'id'].indexOf(key) == -1) {
                     columns.push(key);
                 }
             }
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e);
         }
 
@@ -262,8 +259,7 @@ Ext.define('Lada.controller.FilterResult', {
                     visibleColumns[cols[key].dataIndex] = cols[key].text;
                 }
             }
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e);
         }
 
@@ -274,21 +270,19 @@ Ext.define('Lada.controller.FilterResult', {
                 var row = selection[item].data;
                 var out = [];
                 //Lookup every column and write to data array.
-                for (key in columns){
+                for (key in columns) {
                     var attr = columns[key];
                     //Only write data to output when the column is not hidden.
                     if (row[attr] != null &&
                         visibleColumns[attr] != null) {
                         out.push(row[attr].toString());
-                    }
-                    else if (visibleColumns[attr] != null) {
+                    } else if (visibleColumns[attr] != null) {
                         out.push('');
                     }
                 }
                 data.push(out);
             }
-        }
-        catch (e){
+        } catch (e) {
             console.log(e);
         }
 
@@ -299,16 +293,15 @@ Ext.define('Lada.controller.FilterResult', {
             var cols = cman.getColumns();
             //Iterate columns and find column names for the key...
             // This WILL run into bad behaviour when column-keys exist twice.
-            for (key in columns){
-                for (k in cols){
-                    if (cols[k].dataIndex == columns[key]){
+            for (key in columns) {
+                for (k in cols) {
+                    if (cols[k].dataIndex == columns[key]) {
                         columnNames.push(cols[k].text);
                         break;
                     }
                 }
             }
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e);
         }
 
@@ -323,7 +316,7 @@ Ext.define('Lada.controller.FilterResult', {
                     'data': data
                 }
             }
-        }
+        };
 
         Ext.Ajax.request({
             url: 'lada-printer/buildreport.pdf',
@@ -339,35 +332,30 @@ Ext.define('Lada.controller.FilterResult', {
                 button.setLoading(false);
             },
             failure: function(response) {
-                console.log('failure');
-                // Error handling
-                // TODO
-                //console.log(response.responseText)
                 button.enable();
                 button.setLoading(false);
                 if (response.responseText) {
                     try {
                         var json = Ext.JSON.decode(response.responseText);
-                    }
-                    catch(e){
+                    } catch (e) {
                         console.log(e);
                     }
                 }
                 if (json) {
-                    if(json.errors.totalCount > 0 || json.warnings.totalCount > 0){
+                    if (json.errors.totalCount > 0 || json.warnings.totalCount > 0) {
                         formPanel.setMessages(json.errors, json.warnings);
                     }
-                    if(json.message){
+                    if (json.message) {
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
                             +' #'+json.message,
-                            Lada.getApplication().bundle.getMsg(json.message));
+                        Lada.getApplication().bundle.getMsg(json.message));
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                             i18n.getMsg('err.msg.print.noContact'));
                     }
                 } else {
                     Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                    i18n.getMsg('err.msg.print.noContact'));
+                        i18n.getMsg('err.msg.print.noContact'));
                 }
             }
         });

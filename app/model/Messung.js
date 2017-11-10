@@ -49,6 +49,7 @@ Ext.define('Lada.model.Messung', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return new Date();
@@ -83,6 +84,9 @@ Ext.define('Lada.model.Messung', {
         name: 'statusStufe',
         persist: false
     }, {
+        name: 'statuskombi',
+        persist: false
+    }, {
         name: 'messwerteCount',
         persist: false
     }, {
@@ -97,7 +101,11 @@ Ext.define('Lada.model.Messung', {
         url: 'lada-server/rest/messung/',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });

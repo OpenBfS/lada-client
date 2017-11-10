@@ -12,7 +12,7 @@
 Ext.define('Lada.view.widget.Staat', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.staat',
-    store: 'Staaten',
+    store: 'staatenwidget',
     displayField: 'staat',
     valueField: 'id',
     emptyText: 'Wählen Sie einen Staat',
@@ -25,10 +25,12 @@ Ext.define('Lada.view.widget.Staat', {
     forceSelection: this.forceSelection || false,
 
     initComponent: function() {
-        this.store = Ext.data.StoreManager.get('staaten');
+        // This widget requires a separate store to not change the grid during typing
+        this.store = Ext.data.StoreManager.get('staatenwidget');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Staaten');
         }
+        this.store.clearFilter();
         this.callParent(arguments);
     }
 });

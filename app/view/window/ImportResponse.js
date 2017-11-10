@@ -5,8 +5,8 @@ Ext.define('Lada.view.window.ImportResponse', {
     extend: 'Ext.window.Window',
     alias: 'widget.importresponse',
 
-    data: null,
-    message: null,
+    responseData: '',
+    message: '',
     fileName: '',
 
     layout: 'fit',
@@ -19,11 +19,14 @@ Ext.define('Lada.view.window.ImportResponse', {
         var html;
         var download;
         var i18n = Lada.getApplication().bundle;
-        var data = Ext.JSON.decode(me.data, true);
+        try {
+            var data = Ext.decode(me.responseData);
+        } catch (e) {
+            var data = null;
+        }
         if (data) {
             html = me.parseShortResponse(data);
-        }
-        else {
+        } else {
             html = 'Der Import der Datei ' + this.fileName +
                     ' war nicht erfolgreich.';
         }
@@ -70,28 +73,24 @@ Ext.define('Lada.view.window.ImportResponse', {
         var numWarnings;
         if (!Ext.isObject(errors)) {
             numErrors = 0;
-        }
-        else {
+        } else {
             numErrors = Object.keys(errors).length;
         }
         if (!Ext.isObject(warnings)) {
             numWarnings = 0;
-        }
-        else {
+        } else {
             numWarnings = Object.keys(warnings).length;
         }
         if (!data.success) {
-                out.push('Der Import der Datei ' + this.fileName +
+            out.push('Der Import der Datei ' + this.fileName +
                     ' war nicht erfolgreich. Der Importvorgang konnte ' +
                     'aufgrund eines Fehlers im Server nicht beendet werden.');
-        }
-        else {
+        } else {
             if (numErrors > 0) {
                 if (errors.parser) {
                     out.push('Die Probe(n) konnten nicht erfolgreich ' +
                              'importiert werden.');
-                }
-                else {
+                } else {
                     out.push(numErrors + ' Probe(n) konnten nicht ' +
                              'erfolgreich importiert werden.');
                 }
@@ -106,8 +105,7 @@ Ext.define('Lada.view.window.ImportResponse', {
             if (numErrors > 0 || numWarnings > 0) {
                 out.push('Der ausführliche Bericht steht als Download bereit.');
                 out.push('<br/>');
-            }
-            else {
+            } else {
                 out.push('Die Proben wurden importiert.');
                 out.push('<br/>');
             }
@@ -131,22 +129,19 @@ Ext.define('Lada.view.window.ImportResponse', {
         var numWarnings;
         if (!Ext.isObject(errors)) {
             numErrors = 0;
-        }
-        else {
+        } else {
             numErrors = Object.keys(errors).length;
         }
         if (!Ext.isObject(warnings)) {
             numWarnings = 0;
-        }
-        else {
+        } else {
             numWarnings = Object.keys(warnings).length;
         }
         if (!data.success) {
-                out.push('Der Import der Datei ' + this.fileName +
+            out.push('Der Import der Datei ' + this.fileName +
                     ' war nicht erfolgreich. Der Importvorgang konnte ' +
                     'aufgrund eines Fehlers im Server nicht beendet werden.');
-        }
-        else {
+        } else {
             out.push('<!DOCTYPE html>' +
                 '<head><meta charset="utf-8"></head><body>');
             if (numErrors > 0) {
@@ -160,7 +155,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                         out.push('<li>Probe: ' + key);
                     }
                     out.push('<ol>');
-                    validation = []
+                    validation = [];
                     validation.push('Validierungsfehler: ');
                     for (var i = msgs.length - 1; i >= 0; i--) {
                         if (msgs[i].key === 'validation') {
@@ -171,17 +166,16 @@ Ext.define('Lada.view.window.ImportResponse', {
                             validation.push(str + ' ('
                                 + i18n.getMsg(msgs[i].code.toString()) + ')');
                             validation.push('</ol>');
-                        }
-                        else {
+                        } else {
                             out.push('<li>' + msgs[i].key + ' ('
                                      + i18n.getMsg(msgs[i].code.toString())
-                                     + '): ' + msgs[i].value + '</li>')
+                                     + '): ' + msgs[i].value + '</li>');
                         }
                     }
                     if (validation.length > 1) {
-                        out.push('<li>')
+                        out.push('<li>');
                         out.push(validation.join(''));
-                        out.push('</li>')
+                        out.push('</li>');
                     }
                     out.push('</ol>');
                     if (key !== 'parser') {
@@ -200,7 +194,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                     out.push('<li>' + key);
                     msgs = warnings[key];
                     out.push('<ol>');
-                    validation = []
+                    validation = [];
                     validation.push('Validierungswarnungen: ');
                     for (var i = msgs.length - 1; i >= 0; i--) {
                         if (msgs[i].key === 'validation') {
@@ -211,17 +205,16 @@ Ext.define('Lada.view.window.ImportResponse', {
                             validation.push(str + ' ('
                                 + i18n.getMsg(msgs[i].code.toString()) + ')');
                             validation.push('</ol>');
-                        }
-                        else {
+                        } else {
                             out.push('<li>' + msgs[i].key + ' ('
                                      + i18n.getMsg(msgs[i].code.toString())
-                                     + '): ' + msgs[i].value + '</li>')
+                                     + '): ' + msgs[i].value + '</li>');
                         }
                     }
                     if (validation.length > 1) {
-                        out.push('<li>')
+                        out.push('<li>');
                         out.push(validation.join(''));
-                        out.push('</li>')
+                        out.push('</li>');
                     }
                     out.push('</ol>');
                     out.push('</li>');
@@ -229,7 +222,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                 out.push('</ol>');
             }
             out.push('<br/>');
-            out.push('</body></html>')
+            out.push('</body></html>');
             if (numWarnings > 0 || numErrors > 0) {
                 this.down('button[name=download]').enable();
             }

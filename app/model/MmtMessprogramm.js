@@ -25,6 +25,7 @@ Ext.define('Lada.model.MmtMessprogramm', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return v;
@@ -40,7 +41,11 @@ Ext.define('Lada.model.MmtMessprogramm', {
         url: 'lada-server/rest/messprogrammmmt',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });

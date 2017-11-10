@@ -1,10 +1,13 @@
 {
-    "--title": "Lada Client",
+    "--title": "IMIS3 Lada Client",
     "--": [
-        "extjs/src",
         "app.js",
         "app",
-        "resources/lib/ext"
+        "ext",
+        "resources/lib/Blob",
+        "resources/lib/FileSaver",
+        "resources/lib/ol",
+        "packages/local/elmasse-bundle-1.2.0"
     ],
     "--warnings": [
         "-no_doc:extjs/src",

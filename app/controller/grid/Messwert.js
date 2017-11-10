@@ -16,7 +16,7 @@ Ext.define('Lada.controller.grid.Messwert', {
      * Inhitialize the controller
      * It has 3 listeners
      */
-     init: function() {
+    init: function() {
         this.control({
             'messwertgrid': {
                 edit: this.gridSave,
@@ -38,6 +38,9 @@ Ext.define('Lada.controller.grid.Messwert', {
      * On failure it displays a message
      */
     gridSave: function(editor, context) {
+        if (context.record.phantom) {
+            context.record.set('id', null);
+        }
         context.record.save({
             success: function(request, response) {
                 if (Ext.data.StoreManager.get('messeinheiten')) {
@@ -54,19 +57,26 @@ Ext.define('Lada.controller.grid.Messwert', {
                 context.grid.up('window').initData();
             },
             failure: function(request, response) {
-                var json = response.request.scope.reader.jsonData;
-                if (json) {
-                    if (json.message){
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
-                            +' #'+json.message,
-                            Lada.getApplication().bundle.getMsg(json.message));
-                    } else {
-                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                            Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
-                    }
+                var i18n = Lada.getApplication().bundle;
+                if (response.error) {
+                    //TODO: check content of error.status (html error code)
+                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                        i18n.getMsg('err.msg.generic.body'));
                 } else {
-                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                        Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                    var json = Ext.decode(response.getResponse().responseText);
+                    if (json) {
+                        if (json.message) {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                            + ' #' + json.message,
+                            i18n.getMsg(json.message));
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                i18n.getMsg('err.msg.generic.body'));
+                        }
+                    } else {
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.response.body'));
+                    }
                 }
             }
         });
@@ -77,8 +87,7 @@ Ext.define('Lada.controller.grid.Messwert', {
      * the empty row might have been created by the roweditor is removed
      */
     cancelEdit: function(editor, context) {
-        if (!context.record.get('id') ||
-            context.record.get('id') === '') {
+        if (context.record.phantom) {
             editor.getCmp().store.remove(context.record);
         }
     },
@@ -90,6 +99,7 @@ Ext.define('Lada.controller.grid.Messwert', {
         var record = Ext.create('Lada.model.Messwert', {
             messungsId: button.up('messwertgrid').recordId
         });
+        record.set('id', null);
         if (!record.get('letzteAenderung')) {
             record.data.letzteAenderung = new Date();
         }
@@ -103,30 +113,40 @@ Ext.define('Lada.controller.grid.Messwert', {
      * If the removal was confirmed, it reloads the parent window on success,
      * on failure, an error message is shown.
      */
-     remove: function(button) {
+    remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         Ext.MessageBox.confirm('Messwert löschen', 'Sind Sie sicher?', function(btn) {
             if (btn === 'yes') {
-                selection.destroy({
+                selection.erase({
                     success: function() {
                         button.up('window').initData();
                         grid.initData();
                     },
                     failure: function(request, response) {
-                        var json = response.request.scope.reader.jsonData;
-                        if (json) {
-                            if (json.message){
-                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title')
-                                    +' #'+json.message,
-                                    Lada.getApplication().bundle.getMsg(json.message));
-                            } else {
-                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
-                                    Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
-                            }
+                        var i18n = Lada.getApplication().bundle;
+                        if (response.error) {
+                            //TODO: check content of error.status (html error code)
+                            Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
+                                i18n.getMsg('err.msg.generic.body'));
                         } else {
-                            Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
-                                Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                            var json = Ext.decode(response.getResponse().responseText);
+                            if (json) {
+                                if (json.message) {
+                                    Ext.Msg.alert(i18n.getMsg(
+                                        'err.msg.delete.title')
+                                    + ' #' + json.message,
+                                    i18n.getMsg(json.message));
+                                } else {
+                                    Ext.Msg.alert(i18n.getMsg(
+                                        'err.msg.delete.title'),
+                                    i18n.getMsg('err.msg.generic.body'));
+                                }
+                            } else {
+                                Ext.Msg.alert(i18n.getMsg(
+                                    'err.msg.delete.title'),
+                                i18n.getMsg('err.msg.response.body'));
+                            }
                         }
                     }
                 });

@@ -30,22 +30,26 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         var ta = 'all';
         if (this.disableKeyFilter !== undefined) {
             dkf = this.disableKeyFilter;
-            ta = this.disableKeyFilter ? 'all' : 'query'
+            ta = this.disableKeyFilter ? 'all' : 'query';
         }
         this.items = [{
-            xtype: 'combobox',
+            xtype: this.multiSelect? 'tagfield':'combobox',
             flex: 1,
             name: this.name,
             maxLength: this.maxLength,
             fieldLabel: this.fieldLabel,
             labelWidth: this.labelWidth,
-            listeners: this.listeners,
+            listeners: this.listenersJson,
             store: this.store,
             displayField: this.displayField,
             valueField: this.valueField,
+            // additional field to search for in typing filters.
+            // If not present, the combobox value may be used
+            searchValueField: this.searchValueField || null,
             emptyText: this.emptyText,
             autoSelect: this.autoSelect || true,
             queryMode: this.queryMode,
+            lastQuery: this.lastQuery || '',
             triggerAction: this.triggerAction,
             typeAhead: this.typeAhead,
             minChars: this.minChars,
@@ -61,7 +65,9 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             displayTpl: this.displayTpl,
             // disable filtering of entries if disableKeyFilter is true
             disableKeyFilter: dkf,
-            triggerAction: ta
+            triggerAction: ta,
+            matchFieldWidth: this.matchFieldWidth || false,
+            listConfig: this.listConfig || {maxWidth: 400}
         }, {
             xtype: 'image',
             name: 'warnImg',
@@ -77,6 +83,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             height: 14,
             hidden: true
         }];
+
         this.callParent(arguments);
         /* listeners have been passed to combobox. Thus, clear them on panel
          * to avoid double effects of events fired on combobox and panel. */
@@ -142,5 +149,10 @@ Ext.define('Lada.view.widget.base.ComboBox', {
 
     setReadOnly: function(value) {
         this.down('combobox').setReadOnly(value);
+    },
+
+    setStore: function(store) {
+        this.store = store;
+        this.down('combobox').setStore(store);
     }
 });

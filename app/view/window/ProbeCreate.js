@@ -34,16 +34,19 @@ Ext.define('Lada.view.window.ProbeCreate', {
         this.buttons = [{
             text: 'Schließen',
             scope: this,
-            handler: this.close
+            handler: this.handleBeforeClose
         }];
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
+            },
+            afterRender: function() {
+                this.customizeToolbar();
             }
         });
 
@@ -59,16 +62,106 @@ Ext.define('Lada.view.window.ProbeCreate', {
                 xtype: 'probeform'
             }]
         }];
+        this.tools = [{
+            type: 'help',
+            tooltip: 'Hilfe',
+            titlePosition: 0,
+            callback: function() {
+                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                if (!imprintWin) {
+                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin.on('afterlayout', function() {
+                        var imprintWinController = this.getController();
+                        console.log(imprintWinController);
+                        imprintWinController.setTopic('probe');
+                    }, imprintWin, {single: true});
+                } else {
+                    // BasiGX.util.Animate.shake(imprintWin);
+                    var imprintWinController = imprintWin.getController();
+                    imprintWinController.shake(imprintWin);
+                    imprintWinController.setTopic('probe');
+                }
+            }
+        }];
         this.callParent(arguments);
     },
 
-     /**
+    /**
+     * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
+    handleBeforeClose: function() {
+        var me = this;
+        var i18n = Lada.getApplication().bundle;
+        var item = me.items.items[0].items.get(0);
+        if (item.isDirty()) {
+            var confWin = Ext.create('Ext.window.Window', {
+                title: i18n.getMsg('form.saveonclosetitle'),
+                modal: true,
+                layout: 'vbox',
+                items: [{
+                    xtype: 'container',
+                    html: i18n.getMsg('form.saveonclosequestion'),
+                    margin: '10, 5, 5, 5'
+                }, {
+                    xtype: 'container',
+                    layout: 'hbox',
+                    items: [{
+                        xtype: 'button',
+                        text: i18n.getMsg('form.yes'),
+                        margin: '5, 0, 5, 5',
+
+                        handler: function() {
+                            me.down('probeform').fireEvent('save', me.down('probeform'));
+                            confWin.close();
+                        }
+                    }, {
+                        xtype: 'button',
+                        text: i18n.getMsg('form.no'),
+                        margin: '5, 5, 5, 5',
+
+                        handler: function() {
+                            confWin.close();
+                        }
+                    }]
+                }]
+            });
+            confWin.on('close', me.close, me);
+            confWin.show();
+        } else {
+            me.close();
+        }
+    },
+
+    /**
+     * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
+     */
+    customizeToolbar: function() {
+        var tools = this.tools;
+        for (var i = 0; i < tools.length; i++) {
+            if (tools[i].type == 'close') {
+                var closeButton = tools[i];
+                closeButton.handler = null;
+                closeButton.callback = this.handleBeforeClose;
+            }
+        }
+    },
+
+    /**
       * Initialise the Data of this Window
       */
     initData: function() {
         var record = Ext.create('Lada.model.Probe');
-        record.data.probeentnahmeBeginn = new Date();
-        record.data.probeentnahmeEnde = new Date();
+        record.set('probeentnahmeBeginn', new Date());
+        record.set('probeentnahmeEnde', new Date());
+
+        var mstLabCb = this.down('probeform').down('messstellelabor').down('combobox');
+        var mstLabRecs = mstLabCb.store.getData();
+        //Try to preselect messstelle/labor
+        if (mstLabRecs.length == 1) {
+            var labRec = mstLabRecs.getAt(0);
+            record.set('owner', true);
+            record.set('mstId', labRec.get('messStelle'));
+            record.set('laborMstId', labRec.get('laborMst'));
+        }
         this.down('probeform').setRecord(record);
     },
 
@@ -91,7 +184,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
     /**
      * Disable the Childelements of this window
      */
-    disableChildren: function(){
+    disableChildren: function() {
         //intentionally!
         return true;
     },
@@ -99,7 +192,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
     /**
      * Enable the Childelements of this window
      */
-    enableChildren: function(){
+    enableChildren: function() {
         //intentionally!
         return true;
     }

@@ -69,6 +69,7 @@ Ext.define('Lada.model.Messprogramm', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return v;
@@ -77,6 +78,10 @@ Ext.define('Lada.model.Messprogramm', {
         }
     }, {
         name: 'media',
+        persist: false
+    }, {
+        name: 'owner',
+        type: 'boolean',
         persist: false
     }, {
         name: 'readonly',
@@ -91,7 +96,11 @@ Ext.define('Lada.model.Messprogramm', {
         url: 'lada-server/rest/messprogramm',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });

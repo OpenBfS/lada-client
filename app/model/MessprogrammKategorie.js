@@ -23,6 +23,7 @@ Ext.define('Lada.model.MessprogrammKategorie', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return v;
@@ -42,7 +43,7 @@ Ext.define('Lada.model.MessprogrammKategorie', {
         reader: {
             type: 'json',
             totalProperty: 'totalCount',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

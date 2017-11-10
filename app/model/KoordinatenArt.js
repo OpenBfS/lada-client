@@ -33,7 +33,7 @@ Ext.define('Lada.model.KoordinatenArt', {
         url: 'lada-server/rest/koordinatenart',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

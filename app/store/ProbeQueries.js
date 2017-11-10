@@ -12,13 +12,13 @@
 Ext.define('Lada.store.ProbeQueries', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Query',
-//    autoLoad: true,
+    //    autoLoad: true,
     proxy: {
         type: 'rest',
         url: 'lada-server/rest/query/probe',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

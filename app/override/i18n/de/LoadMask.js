@@ -8,8 +8,8 @@
 
 // This file adds or corrects translations.
 
-Ext.define("Lada.override.i18n.de.LoadMask", {
-    override: "Ext.LoadMask",
-    loadingText: "Lade Daten...",
-    msg: "Lade Daten..."
+Ext.define('Lada.override.i18n.de.LoadMask', {
+    override: 'Ext.LoadMask',
+    loadingText: 'Lade Daten...',
+    msg: 'Lade Daten...'
 });

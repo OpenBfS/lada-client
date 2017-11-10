@@ -29,7 +29,7 @@ Ext.define('Lada.store.Messgroessen', {
         url: 'lada-server/rest/messgroesse',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 

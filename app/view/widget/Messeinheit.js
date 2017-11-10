@@ -26,8 +26,7 @@ Ext.define('Lada.view.widget.Messeinheit', {
         this.store = Ext.data.StoreManager.get('messeinheiten');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Messeinheiten');
-        }
-        else {
+        } else {
             this.store.clearFilter();
         }
         this.callParent(arguments);

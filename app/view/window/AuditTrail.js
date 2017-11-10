@@ -22,12 +22,12 @@ Ext.define('Lada.view.window.AuditTrail', {
     objectId: null,
 
     dateItems: [
-        "probeentnahme_beginn",
-        "probeentnahme_ende",
-        "solldatum_beginn",
-        "solldatum_ende",
-        "messzeitpunkt",
-        "datum"
+        'probeentnahme_beginn',
+        'probeentnahme_ende',
+        'solldatum_beginn',
+        'solldatum_ende',
+        'messzeitpunkt',
+        'datum'
     ],
 
 
@@ -43,7 +43,7 @@ Ext.define('Lada.view.window.AuditTrail', {
             }
         });
 
-        me.title = i18n.getMsg("audit.title");
+        me.title = i18n.getMsg('audit.title');
         me.buttons = [{
             text: i18n.getMsg('close'),
             scope: me,
@@ -69,8 +69,8 @@ Ext.define('Lada.view.window.AuditTrail', {
             url: 'lada-server/rest/audit/' + this.type + '/' + this.objectId,
             method: 'GET',
             scope: this,
-            success: this.loadSuccess,
-            failure: this.loadFailure
+            success: this.loadSuccess
+            // failure: this.loadFailure //TODO does not exist
         });
     },
 
@@ -82,13 +82,11 @@ Ext.define('Lada.view.window.AuditTrail', {
             var html = '<p><strong>' + i18n.getMsg(json.message.toString())
                 + '</strong></p>';
             container.update(html);
-        }
-        else {
+        } else {
             if (this.type === 'probe') {
                 var html = this.createHtmlProbe(json);
                 container.update(html);
-            }
-            else if (this.type === 'messung') {
+            } else if (this.type === 'messung') {
                 container.update(this.createHtmlMessung(json));
             }
         }
@@ -100,8 +98,12 @@ Ext.define('Lada.view.window.AuditTrail', {
         var audit = json.data.audit;
         if (audit.length === 0) {
             html += '<p>Keine Änderungen</p>';
-        }
-        else {
+        } else {
+            if (audit.length > 1){
+              audit.sort(function (a, b) {
+                return b.timestamp - a.timestamp;
+              });
+            }
             for (var i = 0; i < audit.length; i++) {
                 html += '<p style="margin-bottom:0"><b>' + i18n.getMsg('date') + ': ' +
                 (Ext.Date.format(new Date(audit[i].timestamp), 'd.m.Y H:i')) + '</b>';
@@ -110,8 +112,7 @@ Ext.define('Lada.view.window.AuditTrail', {
                         html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
                         html += audit[i].identifier;
                     }
-                }
-                else {
+                } else {
                     html += '<br>' + i18n.getMsg('messung') + ': ' +
                         audit[i].identifier.messung + ' -> ' +
                         i18n.getMsg(audit[i].type) + ': ' +
@@ -130,8 +131,12 @@ Ext.define('Lada.view.window.AuditTrail', {
         var audit = json.data.audit;
         if (audit.length === 0) {
             html += '<p>Keine Änderungen</p>';
-        }
-        else {
+        } else {
+            if (audit.length > 1){
+              audit.sort(function (a, b) {
+                return b.timestamp - a.timestamp;
+              });
+            }
             for (var i = 0; i < audit.length; i++) {
                 html += '<p style="margin-bottom:0"><b>' + i18n.getMsg('date') + ': ' +
                 (Ext.Date.format(new Date(audit[i].timestamp), 'd.m.Y H:i')) + '</b>';
@@ -154,18 +159,15 @@ Ext.define('Lada.view.window.AuditTrail', {
             var value = '';
             if (Ext.Array.contains(this.dateItems, key)) {
                 value = Ext.Date.format(new Date(audit.changedFields[key]),
-                                        'd.m.Y H:i');
-            }
-            else {
+                    'd.m.Y H:i');
+            } else {
                 value = audit.changedFields[key];
             }
             if (value === null) {
                 value = i18n.getMsg('noValue');
-            }
-            else if (value === true) {
+            } else if (value === true) {
                 value = i18n.getMsg('true');
-            }
-            else if (value === false) {
+            } else if (value === false) {
                 value = i18n.getMsg('false');
             }
             html += '' + i18n.getMsg(key) + ': ' +

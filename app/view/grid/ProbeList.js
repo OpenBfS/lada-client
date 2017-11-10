@@ -14,6 +14,7 @@ Ext.define('Lada.view.grid.ProbeList', {
     alias: 'widget.probelistgrid',
 
     requires: [
+        'Lada.view.window.DeleteMultipleProbe',
         'Lada.view.window.DeleteProbe',
         'Lada.view.window.ProbeCreate'
     ],
@@ -25,6 +26,7 @@ Ext.define('Lada.view.grid.ProbeList', {
             checkOnly: true,
             injectCheckbox: 1
         });
+
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'top',
@@ -47,6 +49,11 @@ Ext.define('Lada.view.grid.ProbeList', {
                 text: i18n.getMsg('probe.button.export'),
                 icon: 'resources/img/svn-update.png',
                 action: 'export',
+                disabled: true //disabled on start, enabled by the controller
+            }, {
+                text: i18n.getMsg('probe.button.delete_selected'),
+                icon: 'resources/img/edit-delete.png',
+                action: 'deleteSelected',
                 disabled: true //disabled on start, enabled by the controller
             }, {
                 text: i18n.getMsg('probe.button.printSheet'),
@@ -93,7 +100,7 @@ Ext.define('Lada.view.grid.ProbeList', {
                     }
                     return false;
                 },
-                handler: function(grid, rowIndex, colIndex){
+                handler: function(grid, rowIndex, colIndex) {
                     var rec = grid.getStore().getAt(rowIndex);
 
                     var winname = 'Lada.view.window.DeleteProbe';
@@ -106,7 +113,7 @@ Ext.define('Lada.view.grid.ProbeList', {
                 }
             }]
         });
-        this.store.model.setFields(fields);
+        this.store.setFields(fields);
         this.reconfigure(this.store, columns);
     }
 });

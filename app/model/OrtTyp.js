@@ -33,7 +33,7 @@ Ext.define('Lada.model.OrtTyp', {
         url: 'lada-server/rest/orttyp',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

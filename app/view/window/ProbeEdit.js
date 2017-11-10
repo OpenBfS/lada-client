@@ -41,17 +41,21 @@ Ext.define('Lada.view.window.ProbeEdit', {
         this.buttons = [{
             text: 'Schließen',
             scope: this,
-            handler: this.close
+            handler: this.handleBeforeClose
         }];
         this.width = 700;
 
+
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
+            },
+            afterRender: function() {
+                this.customizeToolbar();
             }
         });
 
@@ -75,7 +79,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                     xtype: 'ortszuordnunggrid',
                     recordId: this.record.get('id')
                 }]
-             }, {
+            }, {
                 xtype: 'fset',
                 name: 'messungen',
                 title: 'Messungen',
@@ -113,10 +117,45 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 }]
             }]
         }];
+        this.tools = [{
+            type: 'help',
+            tooltip: 'Hilfe',
+            titlePosition: 0,
+            callback: function() {
+                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                if (!imprintWin) {
+                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin.on('afterlayout', function() {
+                        var imprintWinController = this.getController();
+                        console.log(imprintWinController);
+                        imprintWinController.setTopic('probe');
+                    }, imprintWin, {single: true});
+                } else {
+                    // BasiGX.util.Animate.shake(imprintWin);
+                    var imprintWinController = imprintWin.getController();
+                    imprintWinController.shake(imprintWin);
+                    imprintWinController.setTopic('probe');
+                }
+            }
+        }];
         this.callParent(arguments);
     },
 
-     /**
+    /**
+     * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
+     */
+    customizeToolbar: function() {
+        var tools = this.tools;
+        for (var i = 0; i < tools.length; i++) {
+            if (tools[i].type == 'close') {
+                var closeButton = tools[i];
+                closeButton.handler = null;
+                closeButton.callback = this.handleBeforeClose;
+            }
+        }
+    },
+
+    /**
       * Initialise the Data of this Window
       */
     initData: function() {
@@ -130,7 +169,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 console.log('An unhandled Failure occured. See following Response and Record');
                 console.log(action);
                 console.log(record);
-             },
+            },
             success: function(record, response) {
                 this.down('probeform').setRecord(record);
                 this.record = record;
@@ -138,7 +177,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 var readonly = this.record.get('readonly');
 
                 var messstelle = Ext.data.StoreManager.get('messstellen')
-                                    .getById(this.record.get('mstId'));
+                    .getById(this.record.get('mstId'));
                 this.setTitle('§3 Probe - Hauptprobennr.: ' + this.record.get('hauptprobenNr')
                                      + ' Mst: ' + messstelle.get('messStelle'));
 
@@ -147,7 +186,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                     me.enableAddMessungen();
                 }
 
-                var json = Ext.decode(response.response.responseText);
+                var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     this.setMessages(json.errors, json.warnings);
                     if (!json.warnings.mediaDesk) {
@@ -158,8 +197,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 if (readonly === true || !owner) {
                     this.down('probeform').setReadOnly(true);
                     this.disableChildren();
-                }
-                else {
+                } else {
                     this.down('probeform').setReadOnly(false);
                     this.enableChildren();
                 }
@@ -167,6 +205,52 @@ Ext.define('Lada.view.window.ProbeEdit', {
             },
             scope: this
         });
+    },
+
+    /**
+     * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty
+     */
+    handleBeforeClose: function() {
+        var me = this;
+        var i18n = Lada.getApplication().bundle;
+        var item = me.items.items[0].items.get(0);
+        if (item.isDirty()) {
+            var confWin = Ext.create('Ext.window.Window', {
+                title: i18n.getMsg('form.saveonclosetitle'),
+                modal: true,
+                layout: 'vbox',
+                items: [{
+                    xtype: 'container',
+                    html: i18n.getMsg('form.saveonclosequestion'),
+                    margin: '10, 5, 5, 5'
+                }, {
+                    xtype: 'container',
+                    layout: 'hbox',
+                    items: [{
+                        xtype: 'button',
+                        text: i18n.getMsg('form.yes'),
+                        margin: '5, 0, 5, 5',
+
+                        handler: function() {
+                            me.down('probeform').fireEvent('save', me.down('probeform'));
+                            confWin.close();
+                        }
+                    }, {
+                        xtype: 'button',
+                        text: i18n.getMsg('form.no'),
+                        margin: '5, 5, 5, 5',
+
+                        handler: function() {
+                            confWin.close();
+                        }
+                    }]
+                }]
+            });
+            confWin.on('close', me.close, me);
+            confWin.show();
+        } else {
+            me.close();
+        }
     },
 
     /**

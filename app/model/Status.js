@@ -38,21 +38,22 @@ Ext.define('Lada.model.Status', {
         name: 'treeModified',
         serialize: function(value) {
             if (value === '') {
-               return null;
-           }
-           return value;
+                return null;
+            }
+            return value;
         }
     }, {
-       name: 'parentModified',
-       serialize: function(value) {
-           if (value === '') {
-               return null;
-           }
-           return value;
-       }
+        name: 'parentModified',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
     }, {
         name: 'datum',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return v;
@@ -70,7 +71,11 @@ Ext.define('Lada.model.Status', {
         url: 'lada-server/rest/status',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });

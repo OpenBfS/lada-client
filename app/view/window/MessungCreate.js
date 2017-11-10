@@ -14,7 +14,7 @@ Ext.define('Lada.view.window.MessungCreate', {
     alias: 'widget.messungcreate',
 
     requires: [
-      'Lada.view.form.Messung'
+        'Lada.view.form.Messung'
     ],
 
     collapsible: true,
@@ -50,17 +50,20 @@ Ext.define('Lada.view.window.MessungCreate', {
         this.buttons = [{
             text: 'Schließen',
             scope: this,
-            handler: this.close
+            handler: this.handleBeforeClose
         }];
         this.width = 700;
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function(){
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
-            deactivate: function(){
+            deactivate: function() {
                 this.getEl().addCls('window-inactive');
+            },
+            afterRender: function() {
+                this.customizeToolbar();
             }
         });
 
@@ -69,10 +72,88 @@ Ext.define('Lada.view.window.MessungCreate', {
             autoScroll: true,
             items: [{
                 xtype: 'messungform'
-           }]
+            }]
+        }];
+        this.tools = [{
+            type: 'help',
+            tooltip: 'Hilfe',
+            callback: function() {
+                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                if (!imprintWin) {
+                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin.on('afterlayout', function() {
+                        var imprintWinController = this.getController();
+                        imprintWinController.setTopic('messung');
+                    }, imprintWin, {single: true});
+                } else {
+                    var imprintWinController = imprintWin.getController();
+                    imprintWinController.shake(imprintWin);
+                    imprintWinController.setTopic('messung');
+                }
+            }
         }];
         this.callParent(arguments);
     },
+
+    /**
+     * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
+     */
+    customizeToolbar: function() {
+        var tools = this.tools;
+        for (var i = 0; i < tools.length; i++) {
+            if (tools[i].type == 'close') {
+                var closeButton = tools[i];
+                closeButton.handler = null;
+                closeButton.callback = this.handleBeforeClose;
+            }
+        }
+    },
+
+    /**
+     * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
+    handleBeforeClose: function() {
+        var me = this;
+        var i18n = Lada.getApplication().bundle;
+        var item = me.down('messungform');
+        if (item.isDirty()) {
+            var confWin = Ext.create('Ext.window.Window', {
+                title: i18n.getMsg('form.saveonclosetitle'),
+                modal: true,
+                layout: 'vbox',
+                items: [{
+                    xtype: 'container',
+                    html: i18n.getMsg('form.saveonclosequestion'),
+                    margin: '10, 5, 5, 5'
+                }, {
+                    xtype: 'container',
+                    layout: 'hbox',
+                    items: [{
+                        xtype: 'button',
+                        text: i18n.getMsg('form.yes'),
+                        margin: '5, 0, 5, 5',
+
+                        handler: function() {
+                            me.down('messungform').fireEvent('save', me.down('messungform'));
+                            confWin.close();
+                        }
+                    }, {
+                        xtype: 'button',
+                        text: i18n.getMsg('form.no'),
+                        margin: '5, 5, 5, 5',
+
+                        handler: function() {
+                            confWin.close();
+                        }
+                    }]
+                }]
+            });
+            confWin.on('close', me.close, me);
+            confWin.show();
+        } else {
+            me.close();
+        }
+    },
+
 
     /**
      * Initialise the Data of this Window
@@ -82,6 +163,8 @@ Ext.define('Lada.view.window.MessungCreate', {
         var messung = Ext.create('Lada.model.Messung', {
             probeId: this.record.get('id')
         });
+        //Delete generated id to prevent sending invalid ids to the server
+        messung.set('id', null);
         this.down('messungform').setRecord(messung);
     },
 
@@ -104,7 +187,7 @@ Ext.define('Lada.view.window.MessungCreate', {
     /**
      * Disable the Childelements of this Window
      */
-    disableChildren: function(){
+    disableChildren: function() {
         //intentionally!
         return true;
     },
@@ -112,7 +195,7 @@ Ext.define('Lada.view.window.MessungCreate', {
     /**
      * Enable the Childelements of this Window
      */
-    enableChildren: function(){
+    enableChildren: function() {
         //intentionally!
         return true;
     },
@@ -120,31 +203,31 @@ Ext.define('Lada.view.window.MessungCreate', {
     /**
      * Enable to reset the statusgrid
      */
-     enableStatusReset: function() {
+    enableStatusReset: function() {
         //intentionally!
         return true;
-     },
+    },
 
     /**
      * Disable to reset the statusgrid
      */
-     disableStatusReset: function() {
+    disableStatusReset: function() {
         //intentionally!
         return true;
-     },
+    },
     /**
      * Enable to edit the statusgrid
      */
-     enableStatusEdit: function() {
+    enableStatusEdit: function() {
         //intentionally!
         return true;
-     },
+    },
 
     /**
      * Disable to edit the statusgrid
      */
-     disableStatusEdit: function() {
+    disableStatusEdit: function() {
         //intentionally!
         return true;
-     }
+    }
 });

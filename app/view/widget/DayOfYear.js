@@ -248,7 +248,7 @@ Ext.define('Lada.view.widget.DayOfYear', {
      */
     validityChange: function(field, isValid) {
         if (!isValid) {
-            var errors = field.getActiveErrors()
+            var errors = field.getActiveErrors();
             field.up('panel').down('combobox').markInvalid(errors);
             field.up('panel').down('numberfield[hidden=false]')
                 .markInvalid(errors);

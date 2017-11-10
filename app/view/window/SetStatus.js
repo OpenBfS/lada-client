@@ -19,6 +19,7 @@ Ext.define('Lada.view.window.SetStatus', {
 
     grid: null,
     selection: null,
+    record: null,
 
     modal: true,
     closable: false,
@@ -31,19 +32,27 @@ Ext.define('Lada.view.window.SetStatus', {
         var i18n = Lada.getApplication().bundle;
         var me = this;
         var statusWerteStore = Ext.create('Lada.store.StatusWerte');
-        statusWerteStore.load({
-            params: {
-                messungsId: Ext.Array.pluck(this.selection, 'id').toString()
-            }
-        });
-
+        if ( this.selection) {
+            statusWerteStore.load({
+                params: {
+                    messungsId: Ext.Array.pluck(this.selection, 'id').toString()
+                }
+            });
+        }
+        else {
+          statusWerteStore.load({
+              params: {
+                  messungsId: this.record.get('id')
+              }
+            });
+        }
         this.items = [{
             xtype: 'form',
             name: 'valueselection',
             border: 0,
             items: [{
                 xtype: 'fieldset',
-                title: 'Status für ' + this.selection.length + ' Messung(en) setzen',
+                title: '',
                 margin: '5, 5, 10, 5',
                 items: [{
                     xtype: 'combobox',
@@ -116,7 +125,19 @@ Ext.define('Lada.view.window.SetStatus', {
             handler: this.closeWindow
         }];
 
+        var title = '';
+        if (this.record) {
+            title = 'Status für Messung ' +
+                this.record.get('hauptprobenNr') +
+                ' - ' +
+                this.record.get('nebenprobenNr') +
+                ' setzen';
+        }
+        else {
+            title = 'Status für ' + this.selection.length + ' Messung(en) setzen';
+        }
         this.callParent(arguments);
+        this.down('fieldset').setTitle(title)
 
         // Initially validate to indicate mandatory fields clearly.
         this.down('form').isValid();
@@ -165,48 +186,86 @@ Ext.define('Lada.view.window.SetStatus', {
             me.down('button[name=close]').show();
             return;
         }
-
-        for (var i = 0; i < this.selection.length; i++) {
-            var data = Ext.create('Lada.model.Status', {
-                messungsId: this.selection[i].get('id'),
-                mstId: this.down('combobox').getValue(),
-                datum: new Date(),
-                statusKombi: kombis.getAt(kombiIdx).get('id'),
-                text: this.down('textarea').getValue()
-            });
-            Ext.Ajax.request({
-                url: 'lada-server/rest/status',
-                method: 'POST',
-                jsonData: data.raw,
-                success: function(response) {
-                    var json = Ext.JSON.decode(response.responseText);
-                    me.resultMessage += '<strong>' + i18n.getMsg('messung') + ': ';
-                    var sel = me.selection[count];
-                    me.resultMessage += sel.get('hauptprobenNr') + ' - ' + sel.get('nebenprobenNr') + '</strong><br><dd>';
-                    me.resultMessage += i18n.getMsg('status-' + json.message) + '</dd><br>';
-                    count++;
-                    progress.updateProgress(count / me.selection.length, progressText + ' (' + count + ')');
-                    if (count === me.selection.length) {
+        if (this.selection){
+            for (var i = 0; i < this.selection.length; i++) {
+                var data = {
+                    messungsId: this.selection[i].get('id'),
+                    mstId: this.down('combobox').getValue(),
+                    datum: new Date(),
+                    statusKombi: kombis.getAt(kombiIdx).get('id'),
+                    text: this.down('textarea').getValue()
+                };
+                Ext.Ajax.request({
+                    url: 'lada-server/rest/status',
+                    method: 'POST',
+                    jsonData: data,
+                    success: function(response) {
+                        var json = Ext.JSON.decode(response.responseText);
+                        me.resultMessage += '<strong>' + i18n.getMsg('messung') + ': ';
+                        var sel = me.selection[count];
+                        me.resultMessage += sel.get('hauptprobenNr') + ' - ' + sel.get('nebenprobenNr') + '</strong><br><dd>';
+                        me.resultMessage += i18n.getMsg('status-' + json.message) + '</dd><br>';
+                        count++;
+                        progress.updateProgress(count / me.selection.length, progressText + ' (' + count + ')');
+                        if (count === me.selection.length) {
+                            var result = me.down('panel[name=result]');
+                            var values = me.down('panel[name=valueselection]');
+                            me.down('button[name=start]').hide();
+                            me.down('button[name=abort]').hide();
+                            me.down('button[name=close]').show();
+                            result.setSize(values.getWidth(), values.getHeight());
+                            result.setHtml(me.resultMessage);
+                            result.show();
+                            values.hide();
+                        }
+                    },
+                    failure: function(response) {
+                        count++;
+                        progress.updateProgress(count / me.selection.length);
+                        if (count === me.selection.length) {
+                            me.close();
+                        }
+                    }
+                });
+            }
+        } else {
+            if (this.record){
+                var me = this;
+                var data = {
+                    messungsId: this.record.get('id'),
+                    mstId: this.down('combobox').getValue(),
+                    datum: new Date(),
+                    statusKombi: kombis.getAt(kombiIdx).get('id'),
+                    text: this.down('textarea').getValue()
+                };
+                Ext.Ajax.request({ //TODO not checked yet
+                    url: 'lada-server/rest/status',
+                    method: 'POST',
+                    jsonData: data,
+                    success: function(response) {
+                        var json = Ext.JSON.decode(response.responseText);
+                        me.resultMessage += '<strong>' + i18n.getMsg('messung') + ': ' +
+                        me.record.get('hauptprobenNr') + ' - '  + me.record.get('nebenprobenNr') +
+                        '</strong><br><dd>' +
+                        i18n.getMsg('status-' + json.message) + '</dd><br>';
+                        progress.updateProgress(1, progressText + ' (' + 1 + ')');
                         var result = me.down('panel[name=result]');
                         var values = me.down('panel[name=valueselection]');
                         me.down('button[name=start]').hide();
                         me.down('button[name=abort]').hide();
                         me.down('button[name=close]').show();
-                        result.setSize(values.getWidth(), values.getHeight());
-                        result.getEl().setHTML(me.resultMessage);
+                        result.setHtml(me.resultMessage);
                         result.show();
-                        values.hide();
+                        var grids = Ext.ComponentQuery.query('statusgrid');
+                        if (grids.length){
+                          grids[0].store.reload();
+                        }
+                    },
+                    failure: function(response) {
+                      // TODO
                     }
-                },
-                failure: function(response) {
-                    console.log(response);
-                    count++;
-                    progress.updateProgress(count / me.selection.length);
-                    if (count === me.selection.length) {
-                        me.close();
-                    }
-                }
-            });
+                });
+            }
         }
     }
 });

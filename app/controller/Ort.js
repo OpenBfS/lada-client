@@ -21,13 +21,10 @@ Ext.define('Lada.controller.Ort', {
                 click: me.deleteItem
             },
             'ortpanel ortstammdatengrid': {
-                edit: me.gridSave,
-                canceledit: me.cancelEdit,
+                itemdblclick: me.editRecord,
                 select: me.selectPanel
             },
             'ortszuordnungwindow ortstammdatengrid': {
-                edit: me.gridSave,
-                canceledit: me.cancelEdit,
                 select: me.selectWindow
             }
         });
@@ -40,14 +37,19 @@ Ext.define('Lada.controller.Ort', {
     },
 
     addRecord: function(button) {
-        Ext.create('Lada.view.window.Ortserstellung',{
+        Ext.create('Lada.view.window.Ort',{
             record: Ext.create('Lada.model.Ort', {ortTyp: 1}),
             parentWindow: button.up('ortpanel')
         }).show();
-        var grid = button.up('ortpanel').down('ortstammdatengrid');
-        // if (grid.getCollapsed()) {
-        //    grid.expand();
-        // }
+    },
+
+    editRecord: function(grid, record) {
+        if (record.get('readonly') === false) {
+            Ext.create('Lada.view.window.Ort',{
+                record: record,
+                parentWindow: grid.up('ortpanel')
+            }).show();
+        }
     },
 
     deleteItem: function(button) {
@@ -55,121 +57,43 @@ Ext.define('Lada.controller.Ort', {
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         var i18n = Lada.getApplication().bundle;
         Ext.MessageBox.confirm(i18n.getMsg('delete'),
-                                i18n.getMsg('confirmation.question'),
-                                function(btn) {
-            if (btn === 'yes') {
-                selection.destroy({
-                    success: function() {
-                        //DO NOTHING
-                    },
-                    failure: function(request, response) {
-                        var json = response.request.scope.reader.jsonData;
-                        if (json) {
-                            if (json.message){
-                                Ext.Msg.alert(i18n.getMsg('err.msg.delete.title')
+            i18n.getMsg('confirmation.question'),
+            function(btn) {
+                if (btn === 'yes') {
+                    selection.erase({
+                        success: function() {
+                            grid.store.reload();
+                        },
+                        failure: function(request, response) {
+                            var json = response.request.scope.reader.jsonData;
+                            if (json) {
+                                if (json.message) {
+                                    Ext.Msg.alert(i18n.getMsg('err.msg.delete.title')
                                     +' #'+json.message,
                                     i18n.getMsg(json.message));
+                                } else {
+                                    Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
+                                        i18n.getMsg('err.msg.generic.body'));
+                                }
                             } else {
                                 Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
-                                    i18n.getMsg('err.msg.generic.body'));
+                                    i18n.getMsg('err.msg.response.body'));
                             }
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
-                                i18n.getMsg('err.msg.response.body'));
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
         grid.up('ortpanel').down('button[action=delete]').disable();
     },
 
     selectPanel: function(rowModel, record) {
-        this.checkEditPanel(rowModel, record);
         this.buttonToggle(rowModel, record);
     },
 
     selectWindow: function(rowModel, record) {
-        this.checkEditWindow(rowModel, record);
         this.buttonToggle(rowModel, record);
     },
 
-    checkEditWindow: function(rowModel, record) {
-        if (!Ext.Array.contains(Lada.netzbetreiber,
-            record.get('netzbetreiberId')) &&
-            record.get('netzbetreiberId') !== '') {
-            var grid = Ext.ComponentQuery.query('ortszuordnungwindow ortstammdatengrid')[0];
-            grid.rowEditing.cancelEdit();
-            return;
-        }
-    },
-
-    checkEditPanel: function(rowModel, record) {
-        if (!Ext.Array.contains(Lada.netzbetreiber,
-            record.get('netzbetreiberId')) &&
-            record.get('netzbetreiberId') !== '') {
-            var grid = Ext.ComponentQuery.query('ortpanel ortstammdatengrid')[0];
-            grid.rowEditing.cancelEdit();
-            return;
-        }
-    },
-
-    /**
-     * This function is called when the grids roweditor saves
-     * the record.
-     * On success it refreshes the windows which contains the grid
-     * On failure it displays a message
-     */
-    gridSave: function(editor, context) {
-        var i18n = Lada.getApplication().bundle;
-        context.record.save({
-            success: function(record, response) {
-                Ext.StoreManager.get('orte').load();
-                var grid = Ext.ComponentQuery.query('ortstammdatengrid')[0];
-                grid.store.load({
-                    callback: function() {
-                        var map = Ext.ComponentQuery.query('map')[0];
-                        map.addLocations(grid.store);
-                        var parentPanel = grid.up('panel').ownerCt;
-                        if (parentPanel){
-                            if (parentPanel.ortstore) {
-                                parentPanel.ortstore.load();
-                            }
-                            var ozf = parentPanel.down('ortszuordnungform');
-                            if (ozf){
-                                ozf.setOrt(null, record);
-                            }
-                        }
-                    }
-                });
-            },
-            failure: function(record, response) {
-                var json = response.request.scope.reader.jsonData;
-                if (json) {
-                    if (json.message){
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                            +' #'+json.message,
-                            i18n.getMsg(json.message));
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                      i18n.getMsg('err.msg.generic.body'));
-                    }
-                }
-            }
-        });
-    },
-
-    /**
-     * When the edit was canceled,
-     * the empty row might have been created by the roweditor is removed
-     */
-    cancelEdit: function(editor, context) {
-        if (!context.record.get('id') ||
-            context.record.get('id') === '') {
-            editor.getCmp().store.remove(context.record);
-        }
-        context.grid.getSelectionModel().deselect(context.record);
-    },
 
     /**
      * Enables/Disables a set of buttons
@@ -184,7 +108,7 @@ Ext.define('Lada.controller.Ort', {
         }
         if (!record ||
             !Ext.Array.contains(Lada.netzbetreiber,
-            record.get('netzbetreiberId'))) {
+                record.get('netzbetreiberId'))) {
             grid.up('ortpanel').down('button[action=delete]').disable();
             return;
         }
@@ -192,32 +116,5 @@ Ext.define('Lada.controller.Ort', {
             rowModel.selected.items.length === 0) {
             grid.up('ortpanel').down('button[action=delete]').disable();
         }
-        else {
-            if (grid.getPlugin('rowedit').editing) {
-            //only enable buttons, when grid is not beeing edited
-                grid.up('ortpanel').down('button[action=delete]').disable();
-            }
-            else {
-                grid.up('ortpanel').down('button[action=delete]').enable();
-            }
-        }
-        /*
-        if (!enabled &&
-            panel.down('button[action=delete]')) {
-            panel.down('button[action=delete]').disable();
-        }
-        else {
-            if (panel.down('ortstammdatengrid').getPlugin('rowedit') &&
-                !panel.down('ortstammdatengrid').getPlugin('rowedit').editing &&
-                panel.down('button[action=delete]')) {
-            //only enable buttons, when grid is not beeing edited
-                panel.down('button[action=delete]').enable();
-            }
-            //else turn them off again!
-            else if (panel.down('button[action=delete]')) {
-                panel.down('button[action=delete]').disable();
-            }
-        }
-        */
     }
 });

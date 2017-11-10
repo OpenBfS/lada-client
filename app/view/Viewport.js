@@ -27,11 +27,48 @@ Ext.define('Lada.view.Viewport', {
             title: '<center>Labordatenerfassung</center>',
             layout: 'border',
             name: 'main',
+            tools: [{
+                type: 'help',
+                tooltip: 'Hilfe',
+                callback: function() {
+                    var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                    if (!imprintWin) {
+                        imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                        imprintWin.on('afterlayout', function() {
+                            var imprintWinController = this.getController();
+                            imprintWinController.setTopic('intro');
+                        }, imprintWin, {single: true});
+                    } else {
+                        // BasiGX.util.Animate.shake(imprintWin);
+                        var imprintWinController = imprintWin.getController();
+                        imprintWinController.shake(imprintWin);
+                        imprintWinController.setTopic('intro');
+                    }
+                }
+            }],
             items: [{
                 layout: {
                     type: 'vbox',
                     align: 'stretch'
                 },
+                tools: [{
+                    type: 'help',
+                    tooltip: 'Hilfe',
+                    callback: function() {
+                        var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                        if (!imprintWin) {
+                            imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                            imprintWin.on('afterlayout', function() {
+                                var imprintWinController = this.getController();
+                                imprintWinController.setTopic('query');
+                            }, imprintWin, {single: true});
+                        } else {
+                            var imprintWinController = imprintWin.getController();
+                            imprintWinController.shake(imprintWin);
+                            imprintWinController.setTopic('query');
+                        }
+                    }
+                }],
                 region: 'west',
                 split: true,
                 flex: 1,

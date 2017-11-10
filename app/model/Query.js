@@ -29,4 +29,4 @@ Ext.define('Lada.model.Query', {
     }, {
         name: 'type'
     }]
- });
+});

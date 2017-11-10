@@ -15,11 +15,11 @@ Ext.define('Lada.view.panel.Ort', {
     },
     toolbarPos: 'top',
 
-    editableGrid: true,
+    ortstore: null,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
- 
+
         // Different Layout of toolbar depending on the bars position.
         if (this.toolbarPos == 'top') {
             this.dockedItems = [{
@@ -47,30 +47,28 @@ Ext.define('Lada.view.panel.Ort', {
                     disabled: true // disabled on startup, will be enabled by controller if necessary
                 }]
             }];
-        }
-        else {
+        } else {
             this.dockedItems = [{
                 xtype: 'toolbar',
                 dock: this.toolbarPos,
                 items: [ '->',
-                {
-                    text: i18n.getMsg('map.button.add'),
-                    icon: 'resources/img/list-add.png',
-                    action: 'addMap',
-                    disabled: true // disabled on startup, will be enabled by setStore
-                }, {
-                    text: i18n.getMsg('orte.button.add'),
-                    icon: 'resources/img/list-add.png',
-                    action: 'add',
-                    disabled: true // disabled on startup, will be enabled by setStore
-                }]
+                    {
+                        text: i18n.getMsg('map.button.add'),
+                        icon: 'resources/img/list-add.png',
+                        action: 'addMap',
+                        disabled: true // disabled on startup, will be enabled by setStore
+                    }, {
+                        text: i18n.getMsg('orte.button.add'),
+                        icon: 'resources/img/list-add.png',
+                        action: 'add',
+                        disabled: true // disabled on startup, will be enabled by setStore
+                    }]
             }];
         }
 
         this.items = [{
             xtype: 'ortstammdatengrid',
             width: '60%',
-            editableGrid: this.editableGrid,
             region: 'center'
         }, {
             xtype: 'map',
@@ -79,29 +77,14 @@ Ext.define('Lada.view.panel.Ort', {
             region: 'east',
             layout: 'border',
             title: i18n.getMsg('map.title'),
-            externalOrteStore: true,
-            listeners: {
-                beforecollapse: function() {
-                    var c = this.map.getControlsByClass('OpenLayers.Control.ScaleLine');
-                    this.map.removeControl(c[0]);
-                    for (i = 0; i < this.map.layers.length; i++) {
-                        this.map.layers[i].setVisibility(false);
-                    }
-                },
-                expand: function() {
-                    this.map.addControl(new OpenLayers.Control.ScaleLine());
-                    for (i = 0; i < this.map.layers.length; i++) {
-                        this.map.layers[i].setVisibility(true);
-                    }
-                }
-            }
+            externalOrteStore: true
         }];
         this.callParent(arguments);
     },
 
     afterRender: function() {
         this.superclass.afterRender.apply(this, arguments);
-        this.down('map').map.zoomTo(6);
+        this.down('map').map.getView().setZoom(6);
     },
 
     setStore: function(store) {
@@ -110,13 +93,15 @@ Ext.define('Lada.view.panel.Ort', {
         var map = this.down('map');
         osg.setLoading(true);
         map.setLoading(true);
-        var ortstore = store;
-        if (!ortstore) {
-            ortstore = Ext.data.StoreManager.get('orte');
+        if (store) {
+            me.ortstore = store;
         }
-        ortstore.clearFilter(true);
-        osg.setStore(ortstore);
-        map.addLocations(ortstore);
+        if (!me.ortstore) {
+            me.ortstore = Ext.data.StoreManager.get('orte');
+        }
+        me.ortstore.clearFilter(true);
+        osg.setStore(me.ortstore);
+        map.addLocations(me.ortstore);
         me.down('toolbar button[action=add]').enable();
         me.down('toolbar button[action=addMap]').enable();
         me.connectListeners();

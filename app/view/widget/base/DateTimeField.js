@@ -19,18 +19,6 @@ Ext.define('Lada.view.widget.base.DateTimeField', {
 
     format: 'm/d/Y H:i',
 
-    mimicBlur: function(e) {
-        var me = this,
-        picker = me.picker;
-
-        // ignore mousedown events within the picker element
-        if (!picker ||
-            !e.within(picker.el, false, true)
-        ) {
-            me.callParent(arguments);
-        }
-    },
-
     collapseIf: function(e) {
         var me = this;
 

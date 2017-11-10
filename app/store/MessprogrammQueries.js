@@ -18,7 +18,7 @@ Ext.define('Lada.store.MessprogrammQueries', {
         url: 'lada-server/rest/query/messprogramm',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

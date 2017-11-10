@@ -1,0 +1,51 @@
+{
+  "private": true,
+  "name": "Lada",
+  "version": "2.7.0",
+  "description": "IMIS3 LADA",
+  "scripts": {
+    "pretest": "npm run lint",
+    "lint": "eslint -c .eslintrc app/ classic/ modern/ && eslint -c test/.eslintrc test/",
+    "lint-fix": "eslint --fix -c .eslintrc app/ classic/ modern/ && eslint --fix -c test/.eslintrc test/",
+    "test": "npm-run-all --parallel --race test:all",
+    "test:all": "npm-run-all test:classic test:modern",
+    "test:classic": "karma start karma.conf.js --single-run --toolkit classic",
+    "test:modern": "karma start karma.conf.js --single-run --toolkit modern",
+    "test:watch": "karma start karma.conf.js",
+    "combine-coverages": "istanbul report --root coverage --dir coverage-combined",
+    "coverage-summary": "istanbul report --root coverage text-summary",
+    "jsdoc": "jsdoc -c jsdoc-config.json",
+    "jsduck": "jsduck --config jsduck.json",
+    "clean": "rimraf apidoc build/* coverage coverage-combined"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OpenBfS/lada-client"
+  },
+  "author": "German Federal Office for Radiation protection",
+  "license": "gpl-3",
+  "devDependencies": {
+    "eslint": "4.1.1",
+    "expect.js": "0.3.1",
+    "express": "4.15.3",
+    "istanbul": "0.4.5",
+    "istanbul-middleware": "0.2.2",
+    "jsdoc": "3.4.3",
+    "karma": "1.7.0",
+    "karma-chrome-launcher": "2.2.0",
+    "karma-coverage": "1.1.1",
+    "karma-coverage-istanbul-reporter": "1.3.0",
+    "karma-expect": "1.1.3",
+    "karma-firefox-launcher": "1.0.1",
+    "karma-mocha": "1.3.0",
+    "karma-mocha-reporter": "2.2.3",
+    "karma-phantomjs-launcher": "1.0.4",
+    "karma-sinon": "1.0.5",
+    "mocha": "3.4.2",
+    "mocha-phantomjs": "4.1.0",
+    "npm-run-all": "4.0.2",
+    "rimraf": "2.6.1",
+    "serve-static": "1.12.3",
+    "sinon": "2.3.5"
+  }
+}

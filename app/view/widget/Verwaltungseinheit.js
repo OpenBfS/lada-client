@@ -12,7 +12,7 @@
 Ext.define('Lada.view.widget.Verwaltungseinheit', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.verwaltungseinheit',
-    store: 'Verwaltungseinheiten',
+    store: 'verwaltungseinheitenwidget',
     displayField: 'bezeichnung',
     valueField: 'id',
     emptyText: 'Wählen Sie eine Verwaltungseinheit',
@@ -26,10 +26,12 @@ Ext.define('Lada.view.widget.Verwaltungseinheit', {
     forceSelection: this.forceSelection || false,
 
     initComponent: function() {
-        this.store = Ext.data.StoreManager.get('verwaltungseinheiten');
+        // This widget requires a separate store to not change the grid during typing
+        this.store = Ext.data.StoreManager.get('verwaltungseinheitenwidget');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Verwaltungseinheiten');
         }
+        this.store.clearFilter();
         this.callParent(arguments);
     },
     // This listener is used to load currently "selected" verwaltungseinheit.

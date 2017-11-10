@@ -13,7 +13,9 @@ Ext.define('Lada.store.Orte', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Ort',
     sorters: [{
-        property: 'gemId'
+        property: 'ortId',
+        direction: 'ASC'
     }],
-    autoLoad: true
+    remoteFilter: true,// TODO true,
+    autoLoad: false
 });

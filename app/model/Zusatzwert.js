@@ -36,6 +36,7 @@ Ext.define('Lada.model.Zusatzwert', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return v;
@@ -68,7 +69,11 @@ Ext.define('Lada.model.Zusatzwert', {
         url: 'lada-server/rest/zusatzwert',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });

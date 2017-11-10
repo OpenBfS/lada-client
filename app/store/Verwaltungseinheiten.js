@@ -10,10 +10,11 @@
  * Store for Verwaltungseinheiten
  */
 Ext.define('Lada.store.Verwaltungseinheiten', {
-    extend: 'Ext.data.Store',
+    extend: 'Lada.store.LocalPagingStore',
     model: 'Lada.model.Verwaltungseinheit',
     sorters: [{
-        property: 'bezeichnung'
+        property: 'bezeichnung',
+        direction: 'ASC'
     }],
     autoLoad: true
 });

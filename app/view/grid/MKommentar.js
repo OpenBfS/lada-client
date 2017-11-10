@@ -29,15 +29,16 @@ Ext.define('Lada.view.grid.MKommentar', {
             clicksToMoveEditor: 1,
             autoCancel: false,
             disabled: false,
+            errorSummary: false,
             pluginId: 'rowedit',
-            listeners:{
+            listeners: {
                 // Make row ineditable when readonly is set to true
                 // Normally this would belong into a controller an not the view.
                 // But the RowEditPlugin is not handled there.
                 beforeedit: function(e, o) {
                     var readonlywin = o.grid.up('window').record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
-                    if (readonlywin == true || readonlygrid == true || this.disabled)  {
+                    if (readonlywin == true || readonlygrid == true || this.disabled) {
                         return false;
                     }
                     return true;
@@ -75,7 +76,7 @@ Ext.define('Lada.view.grid.MKommentar', {
                 var store = Ext.data.StoreManager.get('messstellen');
                 var record = store.getById(value);
                 if (record) {
-                  r = record.get('messStelle');
+                    r = record.get('messStelle');
                 }
                 return r;
             },
@@ -96,16 +97,16 @@ Ext.define('Lada.view.grid.MKommentar', {
                 value + '</div>';
             },
             editor: {
-                xtype: 'textarea',
+                xtype: 'textfield',
                 allowBlank: false,
                 maxLength: 1000,
                 enforceMaxLength: true
             }
         }];
         this.listeners = {
-           select: {
-               fn: this.activateRemoveButton,
-               scope: this
+            select: {
+                fn: this.activateRemoveButton,
+                scope: this
             },
             deselect: {
                 fn: this.deactivateRemoveButton,
@@ -120,8 +121,7 @@ Ext.define('Lada.view.grid.MKommentar', {
     initData: function() {
         if (this.store) {
             this.store.removeAll();
-        }
-        else {
+        } else {
             this.store = Ext.create('Lada.store.MKommentare');
         }
         this.store.load({
@@ -132,16 +132,16 @@ Ext.define('Lada.view.grid.MKommentar', {
     },
 
     setReadOnly: function(b) {
-        if (b == true){
+        if (b == true) {
             //Readonly
-            if (this.getPlugin('rowedit')){
+            if (this.getPlugin('rowedit')) {
                 this.getPlugin('rowedit').disable();
             }
             this.down('button[action=delete]').disable();
             this.down('button[action=add]').disable();
-        }else{
+        } else {
             //Writable
-            if (this.getPlugin('rowedit')){
+            if (this.getPlugin('rowedit')) {
                 this.getPlugin('rowedit').enable();
             }
             //this.down('button[action=delete]').enable();

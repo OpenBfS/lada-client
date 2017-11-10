@@ -28,6 +28,7 @@ Ext.define('Lada.model.PKommentar', {
     }, {
         name: 'datum',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return v;
@@ -45,7 +46,7 @@ Ext.define('Lada.model.PKommentar', {
         url: 'lada-server/rest/pkommentar',
         reader: {
             type: 'json',
-            root: 'data'
+            rootProperty: 'data'
         }
     }
 });

@@ -17,60 +17,60 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         'Ext.picker.Date',
         'Ext.form.field.Number'
     ],
-
     todayText: 'Jetzt',
 
     renderTpl: [
-        '<div id="{id}-innerEl" role="grid">',
-            '<div role="presentation" class="{baseCls}-header">',
-                 // the href attribute is required for the :hover selector to work in IE6/7/quirks
-                '<a id="{id}-prevEl" class="{baseCls}-prev {baseCls}-arrow" href="#" role="button" title="{prevText}" hidefocus="on" ></a>',
-                '<div class="{baseCls}-month" id="{id}-middleBtnEl">{%this.renderMonthBtn(values, out)%}</div>',
-                 // the href attribute is required for the :hover selector to work in IE6/7/quirks
-                '<a id="{id}-nextEl" class="{baseCls}-next {baseCls}-arrow" href="#" role="button" title="{nextText}" hidefocus="on" ></a>',
-            '</div>',
-            '<table id="{id}-eventEl" class="{baseCls}-inner" cellspacing="0" role="grid">',
-                '<thead role="presentation"><tr role="row">',
-                    '<tpl for="dayNames">',
-                        '<th role="columnheader" class="{parent.baseCls}-column-header" title="{.}">',
-                            '<div class="{parent.baseCls}-column-header-inner">{.:this.firstInitial}</div>',
-                        '</th>',
-                    '</tpl>',
-                '</tr></thead>',
-                '<tbody role="presentation"><tr role="row">',
-                    '<tpl for="days">',
-                        '{#:this.isEndOfWeek}',
-                        '<td role="gridcell" id="{[Ext.id()]}">',
-                            // the href attribute is required for the :hover selector to work in IE6/7/quirks
-                            '<a role="presentation" hidefocus="on" class="{parent.baseCls}-date" href="#"></a>',
-                        '</td>',
-                    '</tpl>',
-                '</tr></tbody>',
-            '</table>',
-            '<div id="{id}-timeEl" role="presentation" class="{baseCls}-footer">',
-            '<table cellspacing="0">',
-                '<colgroup><col width="70"><col width="40"><col width="40"></colgroup>',
-                '<tr>',
-                    '<td>',
-                        '<div id="{id}-timeLabelEl" role="presentation">{%this.renderTimeLabel(values, out)%}</div>',
-                    '</td><td>',
-                        '<div id="{id}-timeHourEl" role="presentation">{%this.renderTimeHour(values, out)%}</div>',
-                    '</td><td>',
-                        '<div id="{id}-timeMinuteEl" role="presentation">{%this.renderTimeMinute(values, out)%}</div>',
-                    '</td>',
-                '</tr>',
-            '</table>',
-            '<table cellspacing="0">',
-                '<colgroup width="75"></colgroup>',
-                '<tr>',
-                    '<td>',
-                        '<div id="{id}-footerNowEl" role="presentation">{%this.renderTodayBtn(values, out)%}</div>',
-                    '</td><td>',
-                        '<div id="{id}-footerAcceptEl" role="presentation">{%this.renderAcceptBtn(values, out)%}</div>',
-                    '</td>',
-                '</tr>',
-            '</table>',
-            '</div>',
+        '<div id="{id}-innerEl" data-ref="innerEl" role="grid">',
+        '<div role="presentation" class="{baseCls}-header">',
+        // the href attribute is required for the :hover selector to work in IE6/7/quirks
+        '<a id="{id}-prevEl" data-ref="prevEl" class="{baseCls}-prev {baseCls}-arrow" href="#" role="button" title="{prevText}" hidefocus="on" ></a>',
+        '<div class="{baseCls}-month" id="{id}-middleBtnEl">{%this.renderMonthBtn(values, out)%}</div>',
+        // the href attribute is required for the :hover selector to work in IE6/7/quirks
+        '<a id="{id}-nextEl" data-ref="nextEl" class="{baseCls}-next {baseCls}-arrow" href="#" role="button" title="{nextText}" hidefocus="on" ></a>',
+        '</div>',
+        '<table id="{id}-eventEl" data-ref="eventEl" class="{baseCls}-inner" cellspacing="0" role="grid">',
+        '<thead role="presentation"><tr role="row">',
+        '<tpl for="dayNames">',
+        '<th role="columnheader" class="{parent.baseCls}-column-header" title="{.}">',
+        '<div class="{parent.baseCls}-column-header-inner">{.:this.firstInitial}</div>',
+        '</th>',
+        '</tpl>',
+        '</tr></thead>',
+        '<tbody role="presentation"><tr role="row">',
+        '<tpl for="days">',
+        '{#:this.isEndOfWeek}',
+        '<td role="gridcell" id="{[Ext.id()]}">',
+        // the href attribute is required for the :hover selector to work in IE6/7/quirks
+        '<div role="presentation" hidefocus="on" class="{parent.baseCls}-date" href="#"></div>',
+
+        '</td>',
+        '</tpl>',
+        '</tr></tbody>',
+        '</table>',
+        '<div id="{id}-timeEl" role="presentation" class="{baseCls}-footer">',
+        '<table cellspacing="0">',
+        '<colgroup><col width="70"><col width="40"><col width="40"></colgroup>',
+        '<tr>',
+        '<td>',
+        '<div id="{id}-timeLabelEl" role="presentation">{%this.renderTimeLabel(values, out)%}</div>',
+        '</td><td>',
+        '<div id="{id}-timeHourEl" role="presentation">{%this.renderTimeHour(values, out)%}</div>',
+        '</td><td>',
+        '<div id="{id}-timeMinuteEl" role="presentation">{%this.renderTimeMinute(values, out)%}</div>',
+        '</td>',
+        '</tr>',
+        '</table>',
+        '<table cellspacing="0">',
+        '<colgroup width="75"></colgroup>',
+        '<tr>',
+        '<td>',
+        '<div id="{id}-footerNowEl" role="presentation">{%this.renderTodayBtn(values, out)%}</div>',
+        '</td><td>',
+        '<div id="{id}-footerAcceptEl" role="presentation">{%this.renderAcceptBtn(values, out)%}</div>',
+        '</td>',
+        '</tr>',
+        '</table>',
+        '</div>',
         '</div>',
         {
             firstInitial: function(value) {
@@ -104,13 +104,15 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         }
     ],
 
-    beforeRender: function () {
+    beforeRender: function() {
         var me = this;
+        me.callParent(arguments);
         me.hourField = new Ext.form.field.Number({
             ownerCt: me,
             ownerLayout: me.getComponentLayout(),
+            width: 40,
             value: 0,
-            valueToRaw: function (value) {
+            valueToRaw: function(value) {
                 return (value < 10 ? '0' : '') + value; // add leading Zero
             },
             maxValue: 23,
@@ -142,9 +144,10 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         me.minuteField = new Ext.form.field.Number({
             ownerCt: me,
             ownerLayout: me.getComponentLayout(),
+            width: 40,
             value: 0,
             maxValue: 59,
-            valueToRaw: function (value) {
+            valueToRaw: function(value) {
                 return (value < 10 ? '0' : '') + value; // add leading Zero
             },
             maxLength: 2,
@@ -184,16 +187,16 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
             handler: me.acceptDate,
             scope: me
         });
-        me.callParent();
     },
-
-    finishRenderChildren: function() {
-        var me = this;
-        me.callParent();
-        me.timeLabel.finishRender();
-        me.hourField.finishRender();
-        me.minuteField.finishRender();
-        me.acceptBtn.finishRender();
+    privates: {
+        finishRenderChildren: function() {
+            var me = this;
+            me.callParent(arguments);
+            me.timeLabel.finishRender();
+            me.hourField.finishRender();
+            me.minuteField.finishRender();
+            me.acceptBtn.finishRender();
+        }
     },
 
     showTimePicker: function() {
@@ -220,12 +223,12 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         me.callParent();
     },
 
-    changeTimeValue: function (field, nValue) {
+    changeTimeValue: function(field, nValue) {
         var value = parseInt(nValue);
         if (value > field.maxValue) {
             field.setValue(field.maxValue);
         }
-        if (value == null || value == "" || isNaN(value)) {
+        if (value == null || value == '' || isNaN(value)) {
             field.setValue('0');
         }
     },
