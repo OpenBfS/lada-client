@@ -115,6 +115,10 @@ Ext.define('Lada.model.Probe', {
     }, {
         name: 'mprId'
     }, {
+        name: 'reiProgpunktGrpId'
+    }, {
+        name: 'ktaGruppeId'
+    }, {
         name: 'solldatumBeginn',
         type: 'date',
         convert: function(v) {

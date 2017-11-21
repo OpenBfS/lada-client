@@ -35,10 +35,8 @@ Ext.define('Lada.view.widget.Umwelt' ,{
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.umweltbereich');
 
-        this.store = Ext.data.StoreManager.get('umwelt');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.Umwelt');
-        }
+        this.store = Ext.create('Lada.store.Umwelt');
+        this.store.extraParams = {};
         this.store.sort();
         this.callParent(arguments);
 

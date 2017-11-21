@@ -16,6 +16,12 @@ Ext.define('Lada.view.widget.Statuskombi', {
     alias: 'widget.statuskombi',
     store: Ext.data.StoreManager.get('status'),
     trackResetOnLoad:true,
+
+    initComponent: function() {
+        this.textFieldCls = 'status-empty';
+        this.callParent(arguments);
+    },
+
     changebutton: function() {
         var btn = Ext.create('Ext.Button', {
             text:'Status ändern',
@@ -37,14 +43,18 @@ Ext.define('Lada.view.widget.Statuskombi', {
     },
 
     setValue: function(value){
-      var me = this;
+        var me = this;
         Ext.ClassManager.get('Lada.model.Status').load(value, {
             success: function (record, response) {
-              var statuskombistore = Ext.data.StoreManager.get('statuskombi');
-              var kombi = statuskombistore.getById(record.data.statusKombi);
-              var text = kombi.get('statusStufe').stufe + ' - ' +
-                  kombi.get('statusWert').wert;
-              me.down('textfield').setValue(text);
+                var statuskombistore = Ext.data.StoreManager.get('statuskombi');
+                var kombi = statuskombistore.getById(record.data.statusKombi);
+                var text = kombi.get('statusStufe').stufe + ' - ' +
+                        kombi.get('statusWert').wert;
+                //me.down('textfield').setValue(text);
+                var textfield = me.down('textfield');
+                if (textfield) {
+                    textfield.setEmptyText(text);
+                }
             }
         });
       // instead of overwriting/appending initComponent, add the button at loading of values

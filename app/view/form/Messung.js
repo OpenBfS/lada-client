@@ -28,6 +28,7 @@ Ext.define('Lada.view.form.Messung', {
     border: 0,
 
     recordId: null,
+    record: null,
 
     trackResetOnLoad: true,
 
@@ -140,6 +141,7 @@ Ext.define('Lada.view.form.Messung', {
     },
 
     setRecord: function(record) {
+        this.record = record;
         var form = this.getForm();
         form.loadRecord(record);
         if (record.getId()) {
@@ -148,6 +150,15 @@ Ext.define('Lada.view.form.Messung', {
             //remove the Statuskombi field from the form
             this.down('statuskombi').hide();
         }
+    },
+
+    updateStatusText: function() {
+        this.record.load({
+            scope: this,
+            success: function() { 
+                this.down('statuskombi').setValue(this.record.get('status'));
+            }
+        });
     },
 
     getCurrentStatus: function() {

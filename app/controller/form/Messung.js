@@ -12,7 +12,6 @@
 Ext.define('Lada.controller.form.Messung', {
     extend: 'Ext.app.Controller',
     requires: ['Lada.view.window.SetStatus'],
-
     /**
      * Initialize the Controller
      * It has 3 listeners
@@ -220,11 +219,16 @@ Ext.define('Lada.controller.form.Messung', {
     },
 
     addStatus: function(button){
+        var me = this;
         var i18n = Lada.getApplication().bundle;
         var win = Ext.create('Lada.view.window.SetStatus', {
             title: i18n.getMsg('statusSetzen.win.title'),
             record: button.up('window').down('messungform').getForm().getRecord(),
             modal: true
+        });
+        var view = button.up().up().up().up();
+        win.on('statussetend', function(){
+            view.updateStatusText();
         });
         win.show();
     },

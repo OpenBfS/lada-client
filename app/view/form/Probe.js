@@ -22,6 +22,8 @@ Ext.define('Lada.view.form.Probe', {
         'Lada.view.widget.Netzbetreiber',
         'Lada.view.widget.Betriebsart',
         'Lada.view.widget.Probenart',
+        'Lada.view.widget.ReiProgpunktGruppe',
+        'Lada.view.widget.KtaGruppe',
         'Lada.view.widget.Umwelt',
         'Lada.view.widget.Deskriptor',
         'Lada.view.widget.base.TextField',
@@ -45,6 +47,8 @@ Ext.define('Lada.view.form.Probe', {
     initComponent: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
+        this.umweltStore = Ext.create('Lada.store.Umwelt');
+        this.reiProgpunktStore = Ext.create('Lada.store.ReiProgpunktGruppe');
         this.items = [{
             xtype: 'fieldset',
             title: 'Allgemein',
@@ -205,6 +209,7 @@ Ext.define('Lada.view.form.Probe', {
                             type: 'hbox',
                             align: 'stretch'
                         },
+                        
                         border: 0,
                         width: '100%',
                         items: [{
@@ -305,6 +310,26 @@ Ext.define('Lada.view.form.Probe', {
                                 }
                             }
                         }
+                    }, {
+                        xtype: 'container',
+                        name: 'reiComboContainer',
+                        width: '100%',
+                        layout: {
+                            type: 'hbox',
+                            align: 'stretch'
+                        },
+                        items: [{
+                            xtype: 'reiprogpunktgruppe',
+                            name: 'reiProgpunktGrpId',
+                            fieldLabel: 'REI Programmgruppe',
+                            hidden: true
+                        }, {
+                            xtype: 'ktagruppe',
+                            name: 'ktaGruppeId',
+                            fieldLabel: 'KTA Gruppe',
+                            hidden: true,
+                            allowBlank: false
+                        }]
                     }]
                 }, {
                     // Zeit

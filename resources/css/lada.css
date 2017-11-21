@@ -105,3 +105,26 @@
 span.x-grid-checkcolumn {
     pointer-events: none;
 }
+
+/* EmptyText styling for Statuskombi textfield */
+.status-empty .x-form-empty-field { /* IE that does not support placeholder */
+    color: black !important;
+}
+
+.status-empty ::-webkit-input-placeholder { /* WebKit/Chrome/Safari */
+    color: black !important;
+}
+
+.status-empty :-moz-placeholder { /* Firefox 18- */
+    color: black;
+    opacity: 1;
+}
+
+.status-empty ::-moz-placeholder { /* Firefox 19+ */
+    color: black;
+    opacity: 1;
+}
+
+.status-empty :-ms-input-placeholder { /* IE that supports placeholder */
+    color: black;
+}

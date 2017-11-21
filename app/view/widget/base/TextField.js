@@ -18,10 +18,13 @@ Ext.define('Lada.view.widget.base.TextField', {
     border: 0,
     margin: '0, 0, 5, 0',
 
+    textFieldCls: '',
+
     initComponent: function() {
         this.items = [{
             xtype: 'textfield',
             flex: 1,
+            cls: this.textFieldCls,
             name: this.name,
             msgTarget: 'none',
             maxLength: this.maxLength || 1000,

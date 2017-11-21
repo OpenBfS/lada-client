@@ -218,6 +218,7 @@ Ext.define('Lada.view.window.SetStatus', {
                             result.show();
                             values.hide();
                         }
+                        me.fireEvent('statussetend');
                     },
                     failure: function(response) {
                         count++;
@@ -260,6 +261,7 @@ Ext.define('Lada.view.window.SetStatus', {
                         if (grids.length){
                           grids[0].store.reload();
                         }
+                        me.fireEvent('statussetend');
                     },
                     failure: function(response) {
                       // TODO

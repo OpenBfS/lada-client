@@ -35,8 +35,17 @@ Ext.define('Lada.controller.form.Probe', {
                 dirtychange: this.dirtyForm,
                 save: this.saveHeadless
             },
+            'probeform umwelt combobox': {
+                change: this.umweltChanged,
+            },
+            'probeform datenbasis combobox': {
+                select: this.datenbasisChanged
+            },
             'probeform messstellelabor combobox': {
                 select: this.setNetzbetreiber
+            },
+            'probeform container[name="reiComboContainer"] reiprogpunktgruppe combobox': {
+                change: this.reiProgpunktGruppeChanged
             },
             'probeform [xtype="datetime"] field': {
                 blur: this.checkDate
@@ -46,6 +55,68 @@ Ext.define('Lada.controller.form.Probe', {
             }
         });
     },
+
+    /**
+     * Called if reiProgpunktGruppe value has changed. Filters Umweltbereich values according to the new value
+     */
+    reiProgpunktGruppeChanged: function(combo, rec, opts) {
+        //Check if reiprogpunktgruppe widget is contained in a probeform
+        var formPanel = combo.up().up().up().up().up().up('probeform');
+        if (!formPanel) {
+            return;
+        }
+
+        var umweltStore = formPanel.down('fieldset[title=Medium]').down('umwelt').down('combobox').store;
+        var reiId = combo.getValue();
+        if (reiId == null || reiId === '') {
+            umweltStore.proxy.extraParams = {};
+        } else {
+            umweltStore.proxy.extraParams = {
+                'reiprogpunktgruppe': reiId
+            };
+        }
+        umweltStore.reload();
+    },
+
+    /**
+     * Called if umweltBereich value has changed. filters reiProgpunktgruppe values according to the new value.
+     */
+    umweltChanged: function(combo, rec, opts) {
+        //Check if umwelt widget is contained in a probeform
+        var formPanel = combo.up().up().up().up().up().up('probeform');
+        if (!formPanel) {
+            return;
+        }
+
+        var reiStore = formPanel.down('fieldset[title=Allgemein]').down('container[name=reiComboContainer]')
+                .down('reiprogpunktgruppe').down('combobox').store;
+        var umwId = combo.getModelData().umwId;
+        if (umwId == null || umwId === '') {
+            reiStore.proxy.extraParams = {};
+        } else {
+            reiStore.proxy.extraParams = {
+                'umwelt': umwId
+            };
+        }
+        reiStore.reload();
+    },
+
+    datenbasisChanged: function(combo, record, opts) {
+        var datenbasis = record.get('datenbasis');
+        var reiComboContainer = combo.up().up().up().down('container[name=reiComboContainer]');
+        if ( datenbasis === 'REI-E' || datenbasis === 'REI-I') {
+            reiComboContainer.down('reiprogpunktgruppe[name=reiProgpunktGrpId]').setHidden(false);
+            reiComboContainer.down('ktagruppe[name=ktaGruppeId]').setHidden(false);
+        } else {
+            var reiCombo = reiComboContainer.down('reiprogpunktgruppe[name=reiProgpunktGrpId]');
+            reiCombo.setHidden(true);
+            reiCombo.setValue(null);
+            var ktaCombo = reiComboContainer.down('ktagruppe[name=ktaGruppeId]');
+            ktaCombo.setHidden(true);
+            ktaCombo.setValue(null);
+        }
+    },
+
 
     /**
      * The Messtellen Store contains ALL Messtellen.
