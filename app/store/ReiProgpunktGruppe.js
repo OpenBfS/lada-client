@@ -18,5 +18,42 @@ Ext.define('Lada.store.ReiProgpunktGruppe', {
             direction: 'ASC'
         }],
     autoLoad: true,
-    sortOnLoad: true
+    sortOnLoad: true,
+    setExtraParams: function(params, oldVal, reicombo, umweltcombo) {
+        var backupRecord = this.getById(oldVal);
+        if (backupRecord) {
+            this.on({
+                load: {
+                    fn: function(store, records) {
+                        reicombo.up('reiprogpunktgruppe').clearWarningOrError();
+                        umweltcombo.up('umwelt').clearWarningOrError();
+                        reicombo.up('reiprogpunktgruppe').setUmweltWarningVisible(false);
+                        umweltcombo.up('umwelt').setReiWarningVisible(true);
+
+                        var found = false;
+                        for (var i = 0; i < records.length; i++) {
+                            if (records[i].id === backupRecord.id) {
+                                found = true;
+                            }
+                        }
+                        if (!found) {
+                            store.add(backupRecord);
+                            reicombo.suspendEvents();
+                            reicombo.select(backupRecord);
+                            reicombo.resumeEvents();
+                            reicombo.up('reiprogpunktgruppe').setUmweltWarningVisible(true);
+                            umweltcombo.up('umwelt').setReiWarningVisible(true);
+                        }
+                    },
+                    single: true,
+                    scope: this,
+                    options: {
+                        priority: 999
+                    }
+                }
+            });
+        }
+        this.proxy.extraParams = params;
+        this.load();
+    }
 });

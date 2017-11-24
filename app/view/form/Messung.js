@@ -28,7 +28,12 @@ Ext.define('Lada.view.form.Messung', {
     border: 0,
 
     recordId: null,
+
     record: null,
+    //The probe model instance connected to this messung
+    probe: null,
+    //The probes datenbasis connected to this messung
+    probedatenbasis: null,
 
     trackResetOnLoad: true,
 
@@ -133,7 +138,24 @@ Ext.define('Lada.view.form.Messung', {
                     isFormField: false,
                     fieldLabel: 'Stufe/Status',
                     margin: '0, 10, 5, 0',
-                    colspan: 2
+                    colspan: 2,
+                    buttonListener: {
+                        click: {
+                            fn: function() {
+                                if ((this.probedatenbasis === 'REI-E'
+                                            || this.probedatenbasis.get === 'REI-I')
+                                    && (this.probe.get('ktagruppe') == null
+                                            ||this.probe.get('ktagruppe') === '')) {
+                                    Ext.Msg.alert('Statusvergabe nicht möglich', 'text');
+                                    return false;
+                                }
+                            },
+                            scope: this,
+                            options: {
+                                priority: 999
+                            }
+                        }
+                    }
                 }]
             }]
         }];
@@ -142,14 +164,32 @@ Ext.define('Lada.view.form.Messung', {
 
     setRecord: function(record) {
         this.record = record;
-        var form = this.getForm();
+        var me = this;
+        var form = me.getForm();
         form.loadRecord(record);
         if (record.getId()) {
-            this.down('statuskombi').setValue(record.get('status'));
+            me.down('statuskombi').setValue(record.get('status'));
         } else {
             //remove the Statuskombi field from the form
-            this.down('statuskombi').hide();
+            me.down('statuskombi').hide();
         }
+        //Get the connected Probe instance and Datenbasis
+        Lada.model.Probe.load(this.record.get('probeId'), {
+            success: function(proberecord) {
+                me.probe = proberecord;
+                Lada.model.Datenbasis.load(proberecord.get('datenbasisId'),{
+                    success: function(dbrecord) {
+                        me.probedatenbasis = dbrecord.get('datenbasis');
+                    },
+                    failure: function() {
+                        //TODO: handle failure
+                    }
+                });
+            },
+            failure: function(proberecord) {
+                //TODO: handle failure
+            }
+        });
     },
 
     updateStatusText: function() {

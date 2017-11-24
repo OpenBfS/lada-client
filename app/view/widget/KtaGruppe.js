@@ -34,5 +34,38 @@ Ext.define('Lada.view.widget.KtaGruppe', {
             this.store = Ext.create('Lada.store.KtaGruppe');
         }
         this.callParent(arguments);
+        //TODO: warning texts
+        if (!this.isConsistent()) {
+            this.showWarnings('kta warn');
+        } else {
+            this.clearWarningOrError();
+        }
+        this.on({
+            show: {
+                scope: this,
+                fn: function() {
+                    if (this.isConsistent()) {
+                        this.clearWarningOrError();
+                    } else {
+                        //TODO: Warning texts
+                        this.showWarnings('kta warn');
+                    }
+                }
+            }
+        });
+    },
+
+
+    /**
+     * Checks if field visible and not null
+     */
+    isConsistent: function() {
+        console.log((this.getValue() != null || this.getValue() != ''));
+
+        if (!this.visible) {
+            return true;
+        }
+        return this.getValue() != null || this.getValue() != '';
     }
+
 });

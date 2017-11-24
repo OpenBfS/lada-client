@@ -39,7 +39,7 @@ Ext.define('Lada.controller.form.Probe', {
                 change: this.umweltChanged,
             },
             'probeform datenbasis combobox': {
-                select: this.datenbasisChanged
+               change: this.datenbasisChanged
             },
             'probeform messstellelabor combobox': {
                 select: this.setNetzbetreiber
@@ -56,63 +56,89 @@ Ext.define('Lada.controller.form.Probe', {
         });
     },
 
+    
+
     /**
      * Called if reiProgpunktGruppe value has changed. Filters Umweltbereich values according to the new value
      */
-    reiProgpunktGruppeChanged: function(combo, rec, opts) {
+    reiProgpunktGruppeChanged: function(combo, newVal, oldVal, opts) {
         //Check if reiprogpunktgruppe widget is contained in a probeform
         var formPanel = combo.up().up().up().up().up().up('probeform');
         if (!formPanel) {
             return;
         }
-
-        var umweltStore = formPanel.down('fieldset[title=Medium]').down('umwelt').down('combobox').store;
+        var umweltCombo = formPanel.down('fieldset[title=Medium]').down('umwelt').down('combobox');
+        var umweltStore = umweltCombo.store;
         var reiId = combo.getValue();
         if (reiId == null || reiId === '') {
             umweltStore.proxy.extraParams = {};
+            umweltStore.reload();
         } else {
-            umweltStore.proxy.extraParams = {
-                'reiprogpunktgruppe': reiId
-            };
+            umwId = umweltCombo.getModelData().umwId;
+            if (!umweltStore.isLoaded()){
+                umweltStore.load({
+                    callback: function() {
+                        umweltStore.setExtraParams({'reiprogpunktgruppe': reiId}, umwId, umweltCombo, combo);
+                    }
+                });
+            } else {
+                umweltStore.setExtraParams({'reiprogpunktgruppe': reiId}, umwId, umweltCombo, combo);
+            }
         }
-        umweltStore.reload();
     },
 
     /**
      * Called if umweltBereich value has changed. filters reiProgpunktgruppe values according to the new value.
      */
-    umweltChanged: function(combo, rec, opts) {
+    umweltChanged: function(combo, newVal, oldVal, opts) {
         //Check if umwelt widget is contained in a probeform
         var formPanel = combo.up().up().up().up().up().up('probeform');
         if (!formPanel) {
             return;
         }
 
-        var reiStore = formPanel.down('fieldset[title=Allgemein]').down('container[name=reiComboContainer]')
-                .down('reiprogpunktgruppe').down('combobox').store;
+        var reiCombo = formPanel.down('fieldset[title=Allgemein]').down('container[name=reiComboContainer]')
+                .down('reiprogpunktgruppe').down('combobox');
+        if (!reiCombo.isVisible) {
+            return;
+        }
+        var reiStore = reiCombo.store;
         var umwId = combo.getModelData().umwId;
+        var progPunktId = reiCombo.getModelData().reiProgpunktGrpId;
         if (umwId == null || umwId === '') {
             reiStore.proxy.extraParams = {};
+            reiStore.reload();
         } else {
-            reiStore.proxy.extraParams = {
-                'umwelt': umwId
-            };
+            //reiStore.proxy.extraParams = {
+            //    'umwelt': umwId
+            //};
+            if (!reiStore.isLoaded){
+                reiStore.load({
+                    callback: function(){
+                        reistore.setExtraParams({'umwelt': umwId}, progPunktId, reiCombo, combo);
+                    }
+                });
+            } else {
+                reiStore.setExtraParams({'umwelt': umwId}, progPunktId, reiCombo, combo);
+            }
         }
-        reiStore.reload();
     },
 
-    datenbasisChanged: function(combo, record, opts) {
-        var datenbasis = record.get('datenbasis');
+    /**
+     * Called if Datenbasis value changed. Changes visibility of REI specific containers if Datenbasis is REI
+     */
+    datenbasisChanged: function(combo, newVal, oldVal, opts) {
+        var datenbasis = combo.getRawValue();
         var reiComboContainer = combo.up().up().up().down('container[name=reiComboContainer]');
         if ( datenbasis === 'REI-E' || datenbasis === 'REI-I') {
             reiComboContainer.down('reiprogpunktgruppe[name=reiProgpunktGrpId]').setHidden(false);
-            reiComboContainer.down('ktagruppe[name=ktaGruppeId]').setHidden(false);
+            reiComboContainer.down('ktagruppe[name=ktaGruppeId]').show();
         } else {
             var reiCombo = reiComboContainer.down('reiprogpunktgruppe[name=reiProgpunktGrpId]');
             reiCombo.setHidden(true);
             reiCombo.setValue(null);
             var ktaCombo = reiComboContainer.down('ktagruppe[name=ktaGruppeId]');
-            ktaCombo.setHidden(true);
+            ktaCombo.hide();
             ktaCombo.setValue(null);
         }
     },
@@ -144,7 +170,6 @@ Ext.define('Lada.controller.form.Probe', {
      * according to the Messstelle
      */
     setNetzbetreiber: function(combo, records) {
-        console.log('got event');
         var netzbetreiber = combo.up().up('form')
             .down('netzbetreiber').down('combobox');
         var nbId = records.get('netzbetreiberId');

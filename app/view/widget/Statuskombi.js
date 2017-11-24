@@ -16,6 +16,7 @@ Ext.define('Lada.view.widget.Statuskombi', {
     alias: 'widget.statuskombi',
     store: Ext.data.StoreManager.get('status'),
     trackResetOnLoad:true,
+    buttonListener: null,
 
     initComponent: function() {
         this.textFieldCls = 'status-empty';
@@ -27,7 +28,8 @@ Ext.define('Lada.view.widget.Statuskombi', {
             text:'Status ändern',
             tooltip: 'neuen Status vergeben',
             action: 'newstatus',
-            disabled: true
+            disabled: true,
+            listeners: this.buttonListener
         });
         return btn;
     },
@@ -37,7 +39,8 @@ Ext.define('Lada.view.widget.Statuskombi', {
             text: 'Zurücksetzen',
             tooltip:'letzte Statusänderung zurücknehmen',
             action: 'resetstatus',
-            disabled: true
+            disabled: true,
+            listeners: this.buttonListener
         });
         return btn;
     },

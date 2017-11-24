@@ -24,6 +24,7 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
+    umweltWarning: null,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -33,5 +34,16 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
 
         this.store.proxy.extraParams = {};
         this.callParent(arguments);
+        //TODO: Warning Texts
+        this.umweltWarning = Ext.create('Ext.tip.ToolTip', {
+            target: this.down('image[name=warnImg]').getEl(),
+            html: 'umwelt warning',
+            hidden: true
+        });
+    },
+
+    setUmweltWarningVisible: function(state) {
+        this.down('image[name=warnImg]').setVisible(state);
+        this.umweltWarning.setVisible(state);
     }
 });

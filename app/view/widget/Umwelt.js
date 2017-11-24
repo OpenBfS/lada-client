@@ -30,6 +30,7 @@ Ext.define('Lada.view.widget.Umwelt' ,{
     displayTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">{id} - {umweltBereich}</tpl>'),
     enableKeyEvents: true,
+    reiWarning: null,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -39,6 +40,15 @@ Ext.define('Lada.view.widget.Umwelt' ,{
         this.store.extraParams = {};
         this.store.sort();
         this.callParent(arguments);
+        this.reiWarning = Ext.create('Ext.tip.ToolTip', {
+            target: this.down('image[name=warnImg]').getEl(),
+            html: 'rei warning',
+            hidden: true
+        });
+    },
 
+    setReiWarningVisible: function(state) {
+        this.down('image[name=warnImg]').setVisible(state);
+        this.reiWarning.setVisible(state);
     }
 });

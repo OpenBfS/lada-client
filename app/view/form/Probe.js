@@ -47,8 +47,6 @@ Ext.define('Lada.view.form.Probe', {
     initComponent: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
-        this.umweltStore = Ext.create('Lada.store.Umwelt');
-        this.reiProgpunktStore = Ext.create('Lada.store.ReiProgpunktGruppe');
         this.items = [{
             xtype: 'fieldset',
             title: 'Allgemein',
@@ -322,11 +320,13 @@ Ext.define('Lada.view.form.Probe', {
                             xtype: 'reiprogpunktgruppe',
                             name: 'reiProgpunktGrpId',
                             fieldLabel: 'REI Programmgruppe',
+                            margin: '0 5 5 5',
                             hidden: true
                         }, {
                             xtype: 'ktagruppe',
                             name: 'ktaGruppeId',
                             fieldLabel: 'KTA Gruppe',
+                            margin: '0 5 5 5',
                             hidden: true,
                             allowBlank: false
                         }]
