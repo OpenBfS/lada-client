@@ -61,16 +61,14 @@ Ext.define('Lada.view.widget.KtaGruppe', {
             this.clearWarningOrError();
             return true;
         }
-        
-        if (!this.allowBlank) {
-            if (this.getValue() == null || this.getValue() == '') {
-                this.showWarnings(i18n.getMsg('warn.msg.ktagruppe.empty'));
-                cons = false;
-            }
+
+        if (this.getValue() == null || this.getValue() == '') {
+            this.showWarnings(i18n.getMsg('warn.msg.ktagruppe.empty'));
+            cons = false;
         }
 
         if (cons) {
-            this.clearWarningOrError();
+            this.removeWarningTooltip(i18n.getMsg('warn.msg.ktagruppe.empty'));
         }
         return cons;
     }

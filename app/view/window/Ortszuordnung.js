@@ -161,7 +161,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 xtype: 'ortszuordnungform',
                 region: 'east',
                 type: this.probe? 'probe': 'mpr',
-                datenbasis: this.datenbasis,
+                datenbasis: this.datenbasis
             }, {
                 xtype: 'tabpanel',
                 tabBarPosition: 'top',

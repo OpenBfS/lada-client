@@ -31,6 +31,7 @@ Ext.define('Lada.view.widget.Umwelt' ,{
         '<tpl for=".">{id} - {umweltBereich}</tpl>'),
     enableKeyEvents: true,
     reiWarning: null,
+    allowBlank: true,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -40,15 +41,14 @@ Ext.define('Lada.view.widget.Umwelt' ,{
         this.store.extraParams = {};
         this.store.sort();
         this.callParent(arguments);
-        this.reiWarning = Ext.create('Ext.tip.ToolTip', {
-            target: this.down('image[name=warnImg]').getEl(),
-            html: i18n.getMsg('warn.msg.umwelt.reiprogpunktgruppe'),
-            hidden: true
-        });
     },
 
     setReiWarningVisible: function(state) {
-        this.down('image[name=warnImg]').setVisible(state);
-        this.reiWarning.setVisible(state);
+        var i18n = Lada.getApplication().bundle;
+        if (state) {
+            this.showWarnings(i18n.getMsg('warn.msg.umwelt.reiprogpunktgruppe'));
+        } else {
+            this.removeWarningTooltip(i18n.getMsg('warn.msg.umwelt.reiprogpunktgruppe'));
+        }
     }
 });

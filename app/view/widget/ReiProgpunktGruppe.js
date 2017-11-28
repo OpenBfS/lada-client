@@ -25,25 +25,71 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
     typeAhead: false,
     minChars: 0,
     umweltWarning: null,
+    allowBlank: true,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        var me = this;
         this.emptyText = i18n.getMsg('emptytext.rei_progpunkt_gruppe');
+
 
         this.store = Ext.create('Lada.store.ReiProgpunktGruppe');
 
         this.store.proxy.extraParams = {};
         this.callParent(arguments);
-        //TODO: Warning Texts
-        this.umweltWarning = Ext.create('Ext.tip.ToolTip', {
-            target: this.down('image[name=warnImg]').getEl(),
-            html: i18n.getMsg('warn.msg.reiprogpunktgruppe.umwelt'),
-            hidden: true
+
+        this.down('combobox').enableBubble('change');
+
+        this.onAfter({
+            show: {
+                scope: this,
+                fn: this.isConsistent
+            }
         });
+        this.down('combobox').onAfter({
+            change: {
+                scope: this,
+                fn: this.isConsistent
+            }
+        });
+        this.down('combobox').triggers.clear.scope = this;
+        this.down('combobox').triggers.clear.handler = function() {
+            var combo = me.down('combobox');
+            var oldVal = combo.getValue();
+            combo.clearValue();
+            combo.fireEvent('change', combo, '', oldVal);
+        }
+    },
+
+
+    /**
+     * Checks if field visible and contains consistent Data
+     */
+    isConsistent: function() {
+        var i18n = Lada.getApplication().bundle;
+        var cons = true;
+        if (!this.isVisible()) {
+            this.clearWarningOrError();
+            return true;
+        }
+        if (this.getValue() == null || this.getValue() == '') {
+            this.showWarnings(
+                    i18n.getMsg('warn.msg.reiprogpunktgruppe.empty'));
+            cons = false;
+        }
+
+        if (cons) {
+            this.removeWarningTooltip(i18n.getMsg('warn.msg.reiprogpunktgruppe.empty'));
+        }
+        return cons;
     },
 
     setUmweltWarningVisible: function(state) {
-        this.down('image[name=warnImg]').setVisible(state);
-        this.umweltWarning.setVisible(state);
+        var i18n = Lada.getApplication().bundle;
+        if (state) {
+            this.showWarnings(i18n.getMsg('warn.msg.reiprogpunktgruppe.umwelt'));
+        } else {
+            this.removeWarningTooltip(i18n.getMsg('warn.msg.reiprogpunktgruppe.umwelt'));
+        }
     }
 });

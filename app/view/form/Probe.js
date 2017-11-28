@@ -321,6 +321,7 @@ Ext.define('Lada.view.form.Probe', {
                             name: 'reiProgpunktGrpId',
                             fieldLabel: i18n.getMsg('reiprogpunktgruppe'),
                             margin: '0 5 5 5',
+                            allowBlank: true,
                             hidden: true
                         }, {
                             xtype: 'ktagruppe',
@@ -328,7 +329,7 @@ Ext.define('Lada.view.form.Probe', {
                             fieldLabel: i18n.getMsg('ktagruppe'),
                             margin: '0 5 5 5',
                             hidden: true,
-                            allowBlank: false
+                            allowBlank: true
                         }]
                     }]
                 }, {

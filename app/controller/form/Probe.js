@@ -36,7 +36,7 @@ Ext.define('Lada.controller.form.Probe', {
                 save: this.saveHeadless
             },
             'probeform umwelt combobox': {
-                change: this.umweltChanged,
+                change: this.umweltChanged
             },
             'probeform datenbasis combobox': {
                change: this.datenbasisChanged
@@ -67,23 +67,17 @@ Ext.define('Lada.controller.form.Probe', {
         if (!formPanel) {
             return;
         }
+
         var umweltCombo = formPanel.down('fieldset[title=Medium]').down('umwelt').down('combobox');
         var umweltStore = umweltCombo.store;
         var reiId = combo.getValue();
-        if (reiId == null || reiId === '') {
+        if (newVal == '' || newVal == null) {
+            umweltStore.clearListeners();
             umweltStore.proxy.extraParams = {};
-            umweltStore.reload();
+            umweltStore.load();
         } else {
             umwId = umweltCombo.getModelData().umwId;
-            if (!umweltStore.isLoaded()){
-                umweltStore.load({
-                    callback: function() {
-                        umweltStore.setExtraParams({'reiprogpunktgruppe': reiId}, umwId, umweltCombo, combo);
-                    }
-                });
-            } else {
-                umweltStore.setExtraParams({'reiprogpunktgruppe': reiId}, umwId, umweltCombo, combo);
-            }
+            umweltStore.setExtraParams({'reiprogpunktgruppe': reiId}, umwId, umweltCombo, combo);
         }
     },
 
@@ -105,22 +99,12 @@ Ext.define('Lada.controller.form.Probe', {
         var reiStore = reiCombo.store;
         var umwId = combo.getModelData().umwId;
         var progPunktId = reiCombo.getModelData().reiProgpunktGrpId;
-        if (umwId == null || umwId === '') {
+        if (newVal == null || newVal === '') {
+            reiStore.clearListeners();
             reiStore.proxy.extraParams = {};
-            reiStore.reload();
+            reiStore.load();
         } else {
-            //reiStore.proxy.extraParams = {
-            //    'umwelt': umwId
-            //};
-            if (!reiStore.isLoaded){
-                reiStore.load({
-                    callback: function(){
-                        reistore.setExtraParams({'umwelt': umwId}, progPunktId, reiCombo, combo);
-                    }
-                });
-            } else {
-                reiStore.setExtraParams({'umwelt': umwId}, progPunktId, reiCombo, combo);
-            }
+            reiStore.setExtraParams({'umwelt': umwId}, progPunktId, reiCombo, combo);
         }
     },
 
