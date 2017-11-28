@@ -146,7 +146,7 @@ Ext.define('Lada.view.form.Messung', {
                                             || this.probedatenbasis.get === 'REI-I')
                                     && (this.probe.get('ktagruppe') == null
                                             ||this.probe.get('ktagruppe') === '')) {
-                                    Ext.Msg.alert('Statusvergabe nicht möglich', 'text');
+                                    Ext.Msg.alert('Statusvergabe nicht möglich', i18n.getMsg('err.msg.status.consistency'));
                                     return false;
                                 }
                             },

@@ -37,7 +37,7 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
         //TODO: Warning Texts
         this.umweltWarning = Ext.create('Ext.tip.ToolTip', {
             target: this.down('image[name=warnImg]').getEl(),
-            html: 'umwelt warning',
+            html: i18n.getMsg('warn.msg.reiprogpunktgruppe.umwelt'),
             hidden: true
         });
     },

@@ -24,6 +24,7 @@ Ext.define('Lada.view.widget.KtaGruppe', {
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
+    allowBlank: true,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -34,38 +35,44 @@ Ext.define('Lada.view.widget.KtaGruppe', {
             this.store = Ext.create('Lada.store.KtaGruppe');
         }
         this.callParent(arguments);
-        //TODO: warning texts
-        if (!this.isConsistent()) {
-            this.showWarnings('kta warn');
-        } else {
-            this.clearWarningOrError();
-        }
-        this.on({
+
+        this.onAfter({
             show: {
                 scope: this,
-                fn: function() {
-                    if (this.isConsistent()) {
-                        this.clearWarningOrError();
-                    } else {
-                        //TODO: Warning texts
-                        this.showWarnings('kta warn');
-                    }
-                }
+                fn: this.isConsistent
+            }
+        });
+        this.down('combobox').onAfter({
+            change: {
+                scope: this,
+                fn: this.isConsistent
             }
         });
     },
 
 
     /**
-     * Checks if field visible and not null
+     * Checks if field visible and contains consistent Data
      */
     isConsistent: function() {
-        console.log((this.getValue() != null || this.getValue() != ''));
-
-        if (!this.visible) {
+        var i18n = Lada.getApplication().bundle;
+        var cons = true;
+        if (!this.isVisible()) {
+            this.clearWarningOrError();
             return true;
         }
-        return this.getValue() != null || this.getValue() != '';
+        
+        if (!this.allowBlank) {
+            if (this.getValue() == null || this.getValue() == '') {
+                this.showWarnings(i18n.getMsg('warn.msg.ktagruppe.empty'));
+                cons = false;
+            }
+        }
+
+        if (cons) {
+            this.clearWarningOrError();
+        }
+        return cons;
     }
 
 });

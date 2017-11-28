@@ -42,7 +42,7 @@ Ext.define('Lada.view.widget.Umwelt' ,{
         this.callParent(arguments);
         this.reiWarning = Ext.create('Ext.tip.ToolTip', {
             target: this.down('image[name=warnImg]').getEl(),
-            html: 'rei warning',
+            html: i18n.getMsg('warn.msg.umwelt.reiprogpunktgruppe'),
             hidden: true
         });
     },
