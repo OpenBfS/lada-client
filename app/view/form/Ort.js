@@ -110,8 +110,8 @@ Ext.define('Lada.view.form.Ort', {
             xtype: 'kta',
             labelWidth: 125,
             maxLength: 100,
-            name: 'anlageId',
-            fieldLabel: i18n.getMsg('orte.anlageId')
+            name: 'ktaGruppeId',
+            fieldLabel: i18n.getMsg('orte.ktaGruppe')
         }, {
             xtype: 'tfield',
             labelWidth: 125,
