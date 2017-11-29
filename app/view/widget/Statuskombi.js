@@ -17,6 +17,10 @@ Ext.define('Lada.view.widget.Statuskombi', {
     store: Ext.data.StoreManager.get('status'),
     trackResetOnLoad:true,
     buttonListener: null,
+    currentValue: {
+      statusStufe: null,
+      statusWert: null
+    },
 
     initComponent: function() {
         this.textFieldCls = 'status-empty';
@@ -54,6 +58,10 @@ Ext.define('Lada.view.widget.Statuskombi', {
                 var text = kombi.get('statusStufe').stufe + ' - ' +
                         kombi.get('statusWert').wert;
                 //me.down('textfield').setValue(text);
+                me.currentValue = {
+                  statusStufe: kombi.get('statusStufe'),
+                  statusWert: kombi.get('statusWert')
+                };
                 var textfield = me.down('textfield');
                 if (textfield) {
                     textfield.setEmptyText(text);
@@ -70,6 +78,7 @@ Ext.define('Lada.view.widget.Statuskombi', {
             this.add(this.resetbutton());
         }
     },
+
 
     setReadOnly: function(readonly){
         var button = this.down('button[action=newstatus]');
@@ -90,4 +99,5 @@ Ext.define('Lada.view.widget.Statuskombi', {
             button.setDisabled(true);
         }
     }
+
 });
