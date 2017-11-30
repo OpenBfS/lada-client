@@ -127,11 +127,14 @@ Ext.define('Lada.view.window.SetStatus', {
 
         var title = '';
         if (this.record) {
-            title = 'Status für Messung ' +
-                this.record.get('hauptprobenNr') +
-                ' - ' +
-                this.record.get('nebenprobenNr') +
-                ' setzen';
+          var probenform = Ext.ComponentQuery.query('probeform');
+          if (probenform){
+            var hauptprobennummer = probenform[0].getRecord().get('hauptprobenNr');
+            if (hauptprobennummer){
+              title = 'Status für Messung ' + hauptprobennummer +
+                ' - ' + me.record.get('nebenprobenNr') + ' setzen';
+            }
+          }
         }
         else {
             title = 'Status für ' + this.selection.length + ' Messung(en) setzen';
