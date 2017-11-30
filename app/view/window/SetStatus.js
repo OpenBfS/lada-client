@@ -248,10 +248,13 @@ Ext.define('Lada.view.window.SetStatus', {
                     jsonData: data,
                     success: function(response) {
                         var json = Ext.JSON.decode(response.responseText);
-                        me.resultMessage += '<strong>' + i18n.getMsg('messung') + ': ' +
-                        me.record.get('hauptprobenNr') + ' - '  + me.record.get('nebenprobenNr') +
-                        '</strong><br><dd>' +
-                        i18n.getMsg('status-' + json.message) + '</dd><br>';
+                        var probenform = Ext.ComponentQuery.query('probeform');
+                        var hauptprobennummer = probenform[0].getRecord().get('hauptprobenNr');
+                        me.resultMessage += '<strong>' + i18n.getMsg('messung') + ': '
+                        me.resultMessage +=  hauptprobennummer || '';
+                        me.resultMessage +=  ' - '  + me.record.get('nebenprobenNr') +
+                          '</strong><br><dd>' +
+                          i18n.getMsg('status-' + json.message) + '</dd><br>';
                         progress.updateProgress(1, progressText + ' (' + 1 + ')');
                         var result = me.down('panel[name=result]');
                         var values = me.down('panel[name=valueselection]');
@@ -259,6 +262,7 @@ Ext.define('Lada.view.window.SetStatus', {
                         me.down('button[name=abort]').hide();
                         me.down('button[name=close]').show();
                         result.setHtml(me.resultMessage);
+                        result.setSize(values.getWidth(), values.getHeight());
                         result.show();
                         var grids = Ext.ComponentQuery.query('statusgrid');
                         if (grids.length){
