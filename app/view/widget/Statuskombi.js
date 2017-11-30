@@ -29,6 +29,7 @@ Ext.define('Lada.view.widget.Statuskombi', {
 
     changebutton: function() {
         var btn = Ext.create('Ext.Button', {
+            margin: '0 5',
             text:'Status ändern',
             tooltip: 'neuen Status vergeben',
             action: 'newstatus',
@@ -40,6 +41,7 @@ Ext.define('Lada.view.widget.Statuskombi', {
 
     resetbutton: function() {
         var btn = Ext.create('Ext.Button', {
+            margin: '0 5',
             text: 'Zurücksetzen',
             tooltip:'letzte Statusänderung zurücknehmen',
             action: 'resetstatus',
