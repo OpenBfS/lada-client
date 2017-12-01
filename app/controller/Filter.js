@@ -214,6 +214,9 @@ Ext.define('Lada.controller.Filter', {
          * * listver
          * * listdbasis
          * * listnetz
+         * * liststatus
+         * * listrei
+         * * listkta
          *
          * Iterate over all configured filters and add filters dynamically
          *
@@ -323,7 +326,6 @@ Ext.define('Lada.controller.Filter', {
             } else if (type === 'liststatus') {
                 field = Ext.create('Lada.view.widget.Status', {
                     name: name,
-                    editable: true,
                     store: Ext.StoreManager.get('statuswerte'),
                     labelWidth: 135,
                     fieldLabel: label,
@@ -332,6 +334,28 @@ Ext.define('Lada.controller.Filter', {
                     filterId: filterId,
                     multiSelect: multi,
                     editable: true
+                });
+            } else if (type === 'listrei') {
+                field = Ext.create('Lada.view.widget.ReiProgPunktGruppe', {
+                    name: name,
+                    editable: true,
+                    labelWidth: 135,
+                    fieldLabel: label,
+                    forceSelection: false,
+                    value: value,
+                    filterId: filterId,
+                    multiSelect: multi
+                });
+            } else if (type === 'listkta') {
+                field = Ext.create('Lada.view.widget.KtaGruppe', {
+                    name: name,
+                    editable: true,
+                    labelWidth: 135,
+                    fieldLabel: label,
+                    forceSelection: false,
+                    value: value,
+                    filterId: filterId,
+                    multiSelect: multi
                 });
             }
             if (field) {
