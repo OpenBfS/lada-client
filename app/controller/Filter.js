@@ -255,7 +255,7 @@ Ext.define('Lada.controller.Filter', {
                     value: value
                 });
             } else if (type === 'bool') {
-                field = Ext.create('Lada.view.widget.Testdatensatz', {
+                field = Ext.create('Lada.view.widget.BoolFilter', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
