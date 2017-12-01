@@ -19,6 +19,18 @@ Ext.define('Lada.store.ReiProgpunktGruppe', {
         }],
     autoLoad: true,
     sortOnLoad: true,
+    proxy: {
+        type: 'rest',
+        url: 'lada-server/rest/reiprogpunktgruppe',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
+        }
+    },
 
 
     setExtraParams: function(params, oldVal, reicombo, umweltcombo) {

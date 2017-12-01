@@ -28,6 +28,14 @@ Ext.define('Lada.store.Umwelt', {
     sortOnLoad: true,
     remoteSort: false,
     autoLoad: true,
+    proxy: {
+        type: 'rest',
+        url: 'lada-server/rest/umwelt',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
 
 
     setExtraParams: function(params, oldVal, umweltcombo, reicombo) {

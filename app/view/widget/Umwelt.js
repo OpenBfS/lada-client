@@ -39,6 +39,7 @@ Ext.define('Lada.view.widget.Umwelt' ,{
 
         this.store = Ext.create('Lada.store.Umwelt');
         this.store.extraParams = {};
+        this.store.load();
         this.store.sort();
         this.callParent(arguments);
     },
