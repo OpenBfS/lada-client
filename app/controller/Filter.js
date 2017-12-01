@@ -247,7 +247,7 @@ Ext.define('Lada.controller.Filter', {
                     value: value
                 });
             } else if (type === 'datetime') {
-                field = Ext.create('Lada.view.widget.Datetime', {
+                field = Ext.create('Lada.view.widget.base.Datetime', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
