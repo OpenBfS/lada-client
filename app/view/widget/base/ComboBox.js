@@ -19,9 +19,9 @@ Ext.define('Lada.view.widget.base.ComboBox', {
 
     margin: '0, 0, 5, 0',
 
-    warnings: [],
+    warning: null,
 
-    errors: [],
+    error: null,
 
     initComponent: function() {
         if (this.editable === undefined) {
@@ -95,13 +95,13 @@ Ext.define('Lada.view.widget.base.ComboBox', {
     },
 
     showWarnings: function(warnings) {
-        this.removeWarningTooltip(warnings);
+        this.clearWarningOrError();
         var img = this.down('image[name=warnImg]');
         var tt = Ext.create('Ext.tip.ToolTip', {
             target: img.getEl(),
             html: warnings
         });
-        this.warnings.push(tt);
+        this.warning = tt;
         this.down('combobox').invalidCls = 'x-lada-warning';
         this.down('combobox').markInvalid('');
         img.show();
@@ -111,41 +111,6 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             var warningText = i18n.getMsg(this.name) + ': ' + warnings;
             fieldset.showWarningOrError(true, warningText);
         }
-    },
-
-    /**
-     * Removes a warning tooltip with specific content
-     */
-    removeWarningTooltip: function(content) {
-        if (!content) {
-            return;
-        }
-        for (var i = 0; i < this.warnings.length; i++) {
-            if (content === this.warnings[i].html) {
-                this.warnings[i].destroy();
-                Ext.Array.removeAt(this.warnings, i);
-            }
-        }
-        if (this.warnings.length == 0 && this.errors.length == 0) {
-            this.clearWarningOrError();
-        }
-    },
-
-    /**
-     * Removes all warning tooltips
-     */
-    clearWarningTooltips: function() {
-        if (this.warnings.length == 0) {
-            return;
-        }
-        for (var i = 0; i < this.warnings.length; i++) {
-            this.warnings[i].destroy();
-            Ext.Array.removeAt(this.warnings, i);
-        }
-        if (this.warnings.length == 0 && this.errors.length == 0) {
-            this.clearWarningOrError();
-        }
-
     },
 
     showErrors: function(errors) {
@@ -168,7 +133,9 @@ Ext.define('Lada.view.widget.base.ComboBox', {
     },
 
     clearWarningOrError: function() {
-        this.clearWarningTooltips();
+        if (this.warning) {
+            this.warning.destroy();
+        }
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
     },

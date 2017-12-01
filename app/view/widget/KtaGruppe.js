@@ -39,17 +39,30 @@ Ext.define('Lada.view.widget.KtaGruppe', {
         this.onAfter({
             show: {
                 scope: this,
-                fn: this.isConsistent
+                fn: this.handleShow
             }
         });
         this.down('combobox').onAfter({
             change: {
                 scope: this,
-                fn: this.isConsistent
+                fn: this.handleChange
             }
         });
     },
 
+    /**
+     * Handles show events
+     */
+    handleShow: function() {
+        this.isConsistent();
+    },
+
+    /**
+     * Handle change events
+     */
+    handleChange: function() {
+        this.isConsistent();
+    },
 
     /**
      * Checks if field visible and contains consistent Data
@@ -68,7 +81,7 @@ Ext.define('Lada.view.widget.KtaGruppe', {
         }
 
         if (cons) {
-            this.removeWarningTooltip(i18n.getMsg('warn.msg.ktagruppe.empty'));
+            this.clearWarningOrError();
         }
         return cons;
     }

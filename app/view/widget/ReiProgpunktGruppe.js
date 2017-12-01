@@ -43,13 +43,13 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
         this.onAfter({
             show: {
                 scope: this,
-                fn: this.isConsistent
+                fn: this.handleShow
             }
         });
         this.down('combobox').onAfter({
             change: {
                 scope: this,
-                fn: this.isConsistent
+                fn: this.handleChange
             }
         });
         this.down('combobox').triggers.clear.scope = this;
@@ -61,6 +61,19 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
         }
     },
 
+    /**
+     * Handle show events
+     */
+    handleShow: function() {
+        this.isConsistent();
+    },
+
+    /**
+     * Handle change events
+     */
+    handleChange: function() {
+        this.isConsistent();
+    },
 
     /**
      * Checks if field visible and contains consistent Data
@@ -79,7 +92,7 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
         }
 
         if (cons) {
-            this.removeWarningTooltip(i18n.getMsg('warn.msg.reiprogpunktgruppe.empty'));
+            this.clearWarningOrError();
         }
         return cons;
     },
@@ -89,7 +102,7 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
         if (state) {
             this.showWarnings(i18n.getMsg('warn.msg.reiprogpunktgruppe.umwelt'));
         } else {
-            this.removeWarningTooltip(i18n.getMsg('warn.msg.reiprogpunktgruppe.umwelt'));
+            this.clearWarningOrError();
         }
     }
 });

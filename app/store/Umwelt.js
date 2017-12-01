@@ -37,40 +37,52 @@ Ext.define('Lada.store.Umwelt', {
             this.load();
             return;
         }
-        Lada.model.Umwelt.load(oldVal, {
+        this.proxy.extraParams = params;
+        var fieldset = umweltcombo.up('umwelt').up('fieldset[title=Medium]');
+        fieldset.setLoading(true);
+        this.load({
             scope: this,
-            callback: function(record, op, success) {
-                if (record && success) {
-                    this.onAfter({
-                        load: {
-                            fn: function(store, records) {
-                                reicombo.up('reiprogpunktgruppe').setUmweltWarningVisible(false);
-                                reicombo.up('reiprogpunktgruppe').clearWarningOrError();
-                                umweltcombo.up('umwelt').clearWarningOrError();
-                                umweltcombo.up('umwelt').setReiWarningVisible(false);
-                                var found = false;
-                                for (var i = 0; i < records.length; i++) {
-                                    if (records[i].id === record.id) {
-                                        found = true;
+            callback: function(records, op, success) {
+                reicombo.up('reiprogpunktgruppe').clearWarningOrError();
+                umweltcombo.up('umwelt').clearWarningOrError();
+                var found = false;
+                for (var i = 0; i < records.length; i++) {
+                    if (records[i].id === oldVal) {
+                        found = true;
+                        umweltcombo.select(records[i]);
+                    }
+                }
+                if (!found) {
+                    Lada.model.Umwelt.load(oldVal, {
+                        scope: this,
+                        callback: function(record, op, success) {
+                            if (record && success) {
+                                this.add(record);
+                                umweltcombo.select(record);
+                                umweltcombo.up('umwelt').setReiWarningVisible(true);
+                                reicombo.up('reiprogpunktgruppe').setUmweltWarningVisible(true);
+
+                                this.onAfter({
+                                    load: {
+                                        fn: function(store, records) {
+                                            store.add(record);
+                                            umweltcombo.select(record);
+                                            umweltcombo.up('umwelt').setReiWarningVisible(true);
+                                            reicombo.up('reiprogpunktgruppe')
+                                                    .setUmweltWarningVisible(true);
+                                        },
+                                        single: true,
+                                        scope: this,
+                                        options: {
+                                            priority: 999
+                                        }
                                     }
-                                }
-                                if (!found) {
-                                    store.add(record);
-                                    umweltcombo.select(record);
-                                    umweltcombo.up('umwelt').setReiWarningVisible(true);
-                                    reicombo.up('reiprogpunktgruppe').setUmweltWarningVisible(true);
-                                }
-                            },
-                            single: true,
-                            scope: this,
-                            options: {
-                                priority: 999
+                                });
                             }
                         }
                     });
                 }
-                this.proxy.extraParams = params;
-                this.load();
+                fieldset.setLoading(false);
             }
         });
     }

@@ -127,7 +127,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
                     imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
                     imprintWin.on('afterlayout', function() {
                         var imprintWinController = this.getController();
-                        console.log(imprintWinController);
                         imprintWinController.setTopic('probe');
                     }, imprintWin, {single: true});
                 } else {

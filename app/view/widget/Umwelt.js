@@ -48,7 +48,7 @@ Ext.define('Lada.view.widget.Umwelt' ,{
         if (state) {
             this.showWarnings(i18n.getMsg('warn.msg.umwelt.reiprogpunktgruppe'));
         } else {
-            this.removeWarningTooltip(i18n.getMsg('warn.msg.umwelt.reiprogpunktgruppe'));
+            this.clearWarningOrError();
         }
     }
 });

@@ -28,41 +28,53 @@ Ext.define('Lada.store.ReiProgpunktGruppe', {
             this.load();
             return;
         }
-        Lada.model.ReiProgpunktGruppe.load(oldVal, {
+        this.proxy.extraParams = params;
+        this.load({
             scope: this,
-            callback: function(record, op, success) {
-                if (record && success) {
-                    this.onAfter({
-                        load: {
-                            fn: function(store, records) {
-                                reicombo.up('reiprogpunktgruppe').clearWarningOrError();
-                                umweltcombo.up('umwelt').clearWarningOrError();
-                                reicombo.up('reiprogpunktgruppe').setUmweltWarningVisible(false);
-                                umweltcombo.up('umwelt').setReiWarningVisible(false);
+            callback: function(records, op, success) {
+                reicombo.up('reiprogpunktgruppe').clearWarningOrError();
+                umweltcombo.up('umwelt').clearWarningOrError();
+                reicombo.up('reiprogpunktgruppe').setUmweltWarningVisible(false);
+                umweltcombo.up('umwelt').setReiWarningVisible(false);
 
-                                var found = false;
-                                for (var i = 0; i < records.length; i++) {
-                                    if (records[i].id === record.id) {
-                                        found = true;
+                var found = false;
+                for (var i = 0; i < records.length; i++) {
+                    if (records[i].id === oldVal) {
+                        found = true;
+                        reicombo.select(records[i]);
+                    }
+                }
+                if (!found) {
+                    Lada.model.ReiProgpunktGruppe.load(oldVal, {
+                        scope: this,
+                        callback: function(record, op, success) {
+                            if (record && success) {
+                                this.add(record);
+                                reicombo.select(record);
+                                reicombo.up('reiprogpunktgruppe')
+                                        .setUmweltWarningVisible(true);
+                                umweltcombo.up('umwelt').setReiWarningVisible(true);
+
+                                this.onAfter({
+                                    load: {
+                                        fn: function(store) {
+                                            store.add(record);
+                                            reicombo.select(record);
+                                            reicombo.up('reiprogpunktgruppe')
+                                                    .setUmweltWarningVisible(true);
+                                            umweltcombo.up('umwelt').setReiWarningVisible(true);
+                                        },
+                                        single: true,
+                                        scope: this,
+                                        options: {
+                                            priority: 999
+                                        }
                                     }
-                                }
-                                if (!found) {
-                                    store.add(record);
-                                    reicombo.select(record);
-                                    reicombo.up('reiprogpunktgruppe').setUmweltWarningVisible(true);
-                                    umweltcombo.up('umwelt').setReiWarningVisible(true);
-                                }
-                            },
-                            single: true,
-                            scope: this,
-                            options: {
-                                priority: 999
+                                });
                             }
                         }
                     });
                 }
-                this.proxy.extraParams = params;
-                this.load();
             }
         });
     }

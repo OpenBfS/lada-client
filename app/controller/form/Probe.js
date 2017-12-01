@@ -65,12 +65,13 @@ Ext.define('Lada.controller.form.Probe', {
         //Check if reiprogpunktgruppe widget is contained in a probeform
         var formPanel = combo.up().up().up().up().up().up('probeform');
         if (!formPanel) {
-            return;
+            return true;
         }
 
         var umweltCombo = formPanel.down('fieldset[title=Medium]').down('umwelt').down('combobox');
         var umweltStore = umweltCombo.store;
-        var reiId = combo.getValue();
+        //var reiId = combo.getValue();
+        var reiId = combo.getModelData().reiProgpunktGrpId;
         if (newVal == '' || newVal == null) {
             umweltStore.clearListeners();
             umweltStore.proxy.extraParams = {};
@@ -88,13 +89,13 @@ Ext.define('Lada.controller.form.Probe', {
         //Check if umwelt widget is contained in a probeform
         var formPanel = combo.up().up().up().up().up().up('probeform');
         if (!formPanel) {
-            return;
+            return true;
         }
-
-        var reiCombo = formPanel.down('fieldset[title=Allgemein]').down('container[name=reiComboContainer]')
+        var reiCombo = formPanel.down('fieldset[title=Allgemein]')
+                .down('container[name=reiComboContainer]')
                 .down('reiprogpunktgruppe').down('combobox');
         if (!reiCombo.isVisible) {
-            return;
+            return true;
         }
         var reiStore = reiCombo.store;
         var umwId = combo.getModelData().umwId;
