@@ -10,7 +10,7 @@
  * Grid to list Orte Stammdaten
  */
 Ext.define('Lada.view.grid.Orte', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.widget.DynamicGrid',
     alias: 'widget.ortstammdatengrid',
 
     requires: [
@@ -104,6 +104,9 @@ Ext.define('Lada.view.grid.Orte', {
                 }
                 var ot = Ext.data.StoreManager.get('orttyp');
                 var record = ot.getById(value);
+                if (!record) {
+                    return value;
+                }
                 return record.get('code');
             },
             dataIndex: 'ortTyp'
@@ -126,32 +129,25 @@ Ext.define('Lada.view.grid.Orte', {
             width: 200,
             filter: {
                 type: 'string',
-                filterFn: function(record, value) {
-                    var store = Ext.data.StoreManager.get('verwaltungseinheiten');
-                    var gemId = record.get('gemId');
-                    if (value && !gemId) {
-                        return false;
-                    }
-                    if (!value) {
-                        return true;
-                    }
-                    value = value.toLowerCase();
-                    var bezeichnung = store.getById(gemId).get('bezeichnung').toLowerCase();
-                    if (bezeichnung.indexOf(value) > -1) {
-                        return true;
-                    }
-                    return false;
-                }
+                dataIndex: 'verwaltungseinheit'
             },
-            renderer: function(value) {
+            renderer: function(value, metadata, record) {
                 if (value === undefined ||
                     value === null ||
                     value === ''
                 ) {
-                    return '';
+                    //Check if filter changed the response field into verwaltungseinheiten
+                    if (record.get('verwaltungseinheit')) {
+                        return record.get('verwaltungseinheit');
+                    } else {
+                        return '';
+                    }
                 }
                 var store = Ext.data.StoreManager.get('verwaltungseinheiten');
                 var record = store.getById(value);
+                if (!record) {
+                    return value;
+                }
                 return record.get('bezeichnung');
             }
         }, {
@@ -159,17 +155,26 @@ Ext.define('Lada.view.grid.Orte', {
             dataIndex: 'staatId',
             width: 50,
             filter: {
-                type: 'string'
+                type: 'string',
+                dataIndex: 'staat'
             },
-            renderer: function(value) {
+            renderer: function(value, meta, record) {
                 if (value === undefined ||
                     value === null ||
                     value === ''
                 ) {
-                    return '';
+                    //Check if filter changed the response field into staat
+                    if (record.get('staat')) {
+                        return record.get('staat');
+                    } else {
+                        return '';
+                    }
                 }
                 var staaten = Ext.data.StoreManager.get('staaten');
                 var record = staaten.getById(value);
+                if (!record) {
+                    return value;
+                }
                 return record.get('staatIso');
             }
         }, {
@@ -192,6 +197,9 @@ Ext.define('Lada.view.grid.Orte', {
                 }
                 var oz = Ext.data.StoreManager.get('ortszusatz');
                 var record = oz.getById(value);
+                if (!record) {
+                    return value;
+                }
                 return record.get('ozsId');
             },
             dataIndex: 'ozId'
@@ -206,6 +214,9 @@ Ext.define('Lada.view.grid.Orte', {
                 }
                 var store = Ext.data.StoreManager.get('ktas');
                 var record = store.getById(value);
+                if (!record) {
+                    return value;
+                }
                 return record.get('code');
             },
             dataIndex: 'anlageId'
@@ -259,6 +270,9 @@ Ext.define('Lada.view.grid.Orte', {
                 }
                 var kda = Ext.data.StoreManager.get('koordinatenart');
                 var record = kda.getById(value);
+                if (!record) {
+                    return value;
+                }
                 return record.get('koordinatenart');
             },
             dataIndex: 'kdaId'
@@ -318,6 +332,17 @@ Ext.define('Lada.view.grid.Orte', {
         var me = this;
 
         if (store) {
+            //Insert qid param to prevent Error 500
+            var queryStore = Ext.create('Lada.store.StammdatenQueries');
+            queryStore.load({
+                callback: function(records, op, success) {
+                    for (var i = 0; i < records.length; i++) {
+                        if( records[i].get('type') === 'ort') {
+                            store.getProxy().extraParams.qid = records[i].get('id');
+                        }
+                    }
+                }
+            });
             this.reconfigure(store);
             store.on('load', function(loadedStore) {
                 if (me.up('tabpanel')) {
@@ -355,5 +380,5 @@ Ext.define('Lada.view.grid.Orte', {
                 }
             }
         }
-    }
+    },
 });
