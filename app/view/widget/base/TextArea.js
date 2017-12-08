@@ -62,7 +62,7 @@ Ext.define('Lada.view.widget.base.TextArea', {
             html: warnings
         });
         img.show();
-        this.down('textarea').invalidCls = 'x-lada-warning';
+        this.down('textarea').invalidCls = 'x-lada-warning-field';
         this.down('textarea').markInvalid('');
         var fieldset = this.up('fieldset[collapsible=true]');
         if (fieldset) {
@@ -80,7 +80,7 @@ Ext.define('Lada.view.widget.base.TextArea', {
             target: img.getEl(),
             html: errors
         });
-        this.down('textarea').invalidCls = 'x-lada-error';
+        this.down('textarea').invalidCls = 'x-lada-error-field';
         this.down('textarea').markInvalid('');
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
@@ -100,6 +100,7 @@ Ext.define('Lada.view.widget.base.TextArea', {
     },
 
     clearWarningOrError: function() {
+        this.down('textarea').clearInvalid();
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
     },

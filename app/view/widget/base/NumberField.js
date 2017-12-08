@@ -64,7 +64,7 @@ Ext.define('Lada.view.widget.base.NumberField', {
             html: warnings
         });
         img.show();
-        this.down('numberfield').invalidCls = 'x-lada-warning';
+        this.down('numberfield').invalidCls = 'x-lada-warning-field';
         this.down('numberfield').markInvalid('');
         var fieldset = this.up('fieldset[collapsible=true]');
         if (fieldset) {
@@ -82,7 +82,7 @@ Ext.define('Lada.view.widget.base.NumberField', {
             target: img.getEl(),
             html: errors
         });
-        this.down('numberfield').invalidCls = 'x-lada-error';
+        this.down('numberfield').invalidCls = 'x-lada-error-field';
         this.down('numberfield').markInvalid('');
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
@@ -104,6 +104,7 @@ Ext.define('Lada.view.widget.base.NumberField', {
     clearWarningOrError: function() {
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
+        this.down('numberfield').clearInvalid();
     },
 
     setReadOnly: function(value) {

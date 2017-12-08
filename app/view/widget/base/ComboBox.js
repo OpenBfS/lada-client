@@ -23,6 +23,8 @@ Ext.define('Lada.view.widget.base.ComboBox', {
 
     error: null,
 
+    defaultInputWrapCls: null,
+
     initComponent: function() {
         if (this.editable === undefined) {
             this.editable = true;
@@ -92,6 +94,8 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         /* listeners have been passed to combobox. Thus, clear them on panel
          * to avoid double effects of events fired on combobox and panel. */
         this.clearListeners();
+
+        this.defaultInputWrapCls = this.down('combobox').inputWrapCls;
     },
 
     showWarnings: function(warnings) {
@@ -102,8 +106,22 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             html: warnings
         });
         this.warning = tt;
-        this.down('combobox').invalidCls = 'x-lada-warning';
-        this.down('combobox').markInvalid('');
+        var cb = this.down('combobox');
+        cb.invalidCls = 'x-lada-warning-field';
+        cb.markInvalid('');
+        if (cb.inputWrap) {
+            cb.inputWrap.addCls('x-lada-warning-field');
+        } else {
+            cb.onAfter({
+                render: {
+                    fn: function(el) {
+                        el.addCls('x-lada-warning-field');
+                    },
+                    single: true
+                }
+            });
+        }
+
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
         if (fieldset) {
@@ -121,7 +139,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             target: img.getEl(),
             html: errors
         });
-        this.down('combobox').invalidCls = 'x-lada-error';
+        this.down('combobox').invalidCls = 'x-lada-error-field';
         this.down('combobox').markInvalid('');
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
@@ -138,6 +156,22 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         }
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
+        cb = this.down('combobox');
+        if (cb.inputWrap) {
+            cb.inputWrap.removeCls('x-lada-warning-field')
+            cb.inputWrap.removeCls('x-lada-error-field')
+        }  else {
+            cb.onAfter({
+                render: {
+                    fn: function(el) {
+                        el.inputWrap.removeCls('x-lada-warning-field');
+                        el.inputWrap.removeCls('x-lada-error-field');
+                    },
+                    single: true
+                }
+            });
+        }
+        cb.clearInvalid();
     },
 
     getValue: function() {

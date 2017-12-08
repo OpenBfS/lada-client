@@ -55,7 +55,7 @@ Ext.define('Lada.view.widget.base.CheckBox', {
             target: img.getEl(),
             html: warnings
         });
-        this.down('checkbox').invalidCls = 'x-lada-warning';
+        this.down('checkbox').invalidCls = 'x-lada-warning-field';
         this.down('checkbox').markInvalid('');
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
@@ -74,7 +74,7 @@ Ext.define('Lada.view.widget.base.CheckBox', {
             target: img.getEl(),
             html: errors
         });
-        this.down('checkbox').invalidCls = 'x-lada-error';
+        this.down('checkbox').invalidCls = 'x-lada-error-field';
         this.down('checkbox').markInvalid('');
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
@@ -88,6 +88,7 @@ Ext.define('Lada.view.widget.base.CheckBox', {
     clearWarningOrError: function() {
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
+        this.down('checkbox').clearInvalid();
     },
 
     getValue: function() {

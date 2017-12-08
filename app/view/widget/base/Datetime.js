@@ -61,7 +61,7 @@ Ext.define('Lada.view.widget.base.Datetime', {
             target: img.getEl(),
             html: warnings
         }) : this.tooltip.html = warnings;
-        this.down('datetimefield').invalidCls = 'x-lada-warning';
+        this.down('datetimefield').invalidCls = 'x-lada-warning-field';
         this.down('datetimefield').markInvalid('');
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
@@ -81,7 +81,7 @@ Ext.define('Lada.view.widget.base.Datetime', {
             target: img.getEl(),
             html: errors
         }) : this.tooltip.html = errors;
-        this.down('datetimefield').invalidCls = 'x-lada-error';
+        this.down('datetimefield').invalidCls = 'x-lada-error-field';
         this.down('datetimefield').markInvalid('');
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');

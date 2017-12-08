@@ -3,7 +3,7 @@
   background-image: url(../img/warning_line.png);
   background-repeat: repeat-x;
   background-position: bottom;
-  border-color: #FFE25D;
+  border-color: #FFE25D !important;
 }
 
 .x-lada-error-field {
@@ -11,7 +11,7 @@
   background-image: url(../img/error_line.gif);
   background-repeat: repeat-x;
   background-position: bottom;
-  border-color: #FF0000;
+  border-color: #FF0000 !important;
 }
 
 .x-lada-multiline-grid .x-grid-cell-inner{

@@ -59,7 +59,7 @@ Ext.define('Lada.view.widget.base.DateField', {
             target: img.getEl(),
             html: warnings
         });
-        this.down('datefield').invalidCls = 'x-lada-warning';
+        this.down('datefield').invalidCls = 'x-lada-warning-field';
         this.down('datefield').markInvalid('');
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
@@ -78,7 +78,7 @@ Ext.define('Lada.view.widget.base.DateField', {
             target: img.getEl(),
             html: errors
         });
-        this.down('datefield').invalidCls = 'x-lada-error';
+        this.down('datefield').invalidCls = 'x-lada-error-field';
         this.down('datefield').markInvalid('');
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
@@ -92,6 +92,7 @@ Ext.define('Lada.view.widget.base.DateField', {
     clearWarningOrError: function() {
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
+        this.down('datefield').clearInvalid();
     },
 
     getValue: function() {
