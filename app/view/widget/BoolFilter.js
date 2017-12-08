@@ -20,12 +20,7 @@ var boolStore = Ext.create('Ext.data.Store', {
         'value': 'ungefiltert'
     }]
 });
-Ext.define('boolFilter', {
-    extend: 'Ext.data.Model',
-    fields: [
-        {name: 'id',  type: 'boolean'},
-        {name: 'value',   type: 'string'}
-    ],
+
 /**
  * Combobox for boolean filter.
  */
