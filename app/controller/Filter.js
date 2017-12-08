@@ -336,7 +336,7 @@ Ext.define('Lada.controller.Filter', {
                     editable: true
                 });
             } else if (type === 'listrei') {
-                field = Ext.create('Lada.view.widget.ReiProgPunktGruppe', {
+                field = Ext.create('Lada.view.widget.ReiProgpunktGruppe', {
                     name: name,
                     editable: true,
                     labelWidth: 135,
