@@ -391,6 +391,14 @@ Ext.define('Lada.controller.Filter', {
         for (var i = filters.items.length - 1; i >= 0; i--) {
             var filter = filters.items.items[i];
             var value = filter.getValue();
+            if (filter.xtype == 'datetime'){
+              if (!isNaN(value) && value !== null){
+                value = Date.parse(value) / 1000;
+              }
+              else {
+                value = null;
+              }
+            }
             if (value instanceof Array) {
                 value = value.join(',');
             }

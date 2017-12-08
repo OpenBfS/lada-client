@@ -106,6 +106,10 @@ Ext.define('Lada.view.widget.base.Datetime', {
         this.down('image[name=warnImg]').hide();
     },
 
+    getName: function() {
+        return this.name;
+    },
+
     setReadOnly: function(value) {
         this.down('datetimefield').setReadOnly(value);
     }
