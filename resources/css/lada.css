@@ -1,16 +1,16 @@
 .x-lada-warning-field {
   background-color: white;
-  background-image: url(../img/warning_line.png);
-  background-repeat: repeat-x;
-  background-position: bottom;
+  background-image: url(../img/warning_line.png) !important;
+  background-repeat: repeat-x !important;
+  background-position: bottom !important;
   border-color: #FFE25D !important;
 }
 
 .x-lada-error-field {
   background-color: white;
-  background-image: url(../img/error_line.gif);
-  background-repeat: repeat-x;
-  background-position: bottom;
+  background-image: url(../img/error_line.gif) !important;
+  background-repeat: repeat-x !important;
+  background-position: bottom !important;
   border-color: #FF0000 !important;
 }
 

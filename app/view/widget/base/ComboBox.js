@@ -107,15 +107,16 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         });
         this.warning = tt;
         var cb = this.down('combobox');
-        //cb.invalidCls = 'x-lada-warning-field';
         cb.markInvalid('');
-        if (cb.inputWrap) {
+        if (cb.inputWrap && cb.inputEl) {
             cb.inputWrap.addCls('x-lada-warning-field');
+            cb.inputEl.addCls('x-lada-warning-field');
         } else {
             cb.onAfter({
                 render: {
                     fn: function(el) {
-                        el.addCls('x-lada-warning-field');
+                        el.inputWrap.addCls('x-lada-warning-field');
+                        el.inputEl.addCls('x-lada-warning-field');
                     },
                     single: true
                 }
@@ -139,7 +140,6 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             target: img.getEl(),
             html: errors
         });
-        //this.down('combobox').invalidCls = 'x-lada-error-field';
         this.down('combobox').markInvalid('');
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
@@ -157,15 +157,19 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
         cb = this.down('combobox');
-        if (cb.inputWrap) {
+        if (cb.inputWrap && cb.inputEl) {
             cb.inputWrap.removeCls('x-lada-warning-field')
             cb.inputWrap.removeCls('x-lada-error-field')
+            cb.inputEl.removeCls('x-lada-warning-field');
+            cb.inputEl.removeCls('x-lada-error-field');
         }  else {
             cb.onAfter({
                 render: {
                     fn: function(el) {
                         el.inputWrap.removeCls('x-lada-warning-field');
                         el.inputWrap.removeCls('x-lada-error-field');
+                        el.inputEl.removeCls('x-lada-warning-field');
+                        el.inputEl.removeCls('x-lada-error-field');
                     },
                     single: true
                 }
