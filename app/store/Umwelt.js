@@ -51,8 +51,6 @@ Ext.define('Lada.store.Umwelt', {
         this.load({
             scope: this,
             callback: function(records, op, success) {
-                reicombo.up('reiprogpunktgruppe').clearWarningOrError();
-                umweltcombo.up('umwelt').clearWarningOrError();
                 var found = false;
                 for (var i = 0; i < records.length; i++) {
                     if (records[i].id === oldVal) {
@@ -89,6 +87,9 @@ Ext.define('Lada.store.Umwelt', {
                             }
                         }
                     });
+                } else {
+                    reicombo.up('reiprogpunktgruppe').clearWarningOrError();
+                    umweltcombo.up('umwelt').clearWarningOrError();
                 }
                 fieldset.setLoading(false);
             }

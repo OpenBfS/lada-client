@@ -56,7 +56,12 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                     load: {
                         scope: this,
                         fn: function(store, records, success, op, opts) {
-                            this.datenbasis = store.getById(this.probe.get('datenbasisId')).get('datenbasis');
+                            var id = this.probe.get('datenbasisId');
+                            if (!id) {
+                                this.datenbasis = null;
+                            } else {
+                                this.datenbasis = store.getById(this.probe.get('datenbasisId')).get('datenbasis');
+                            }
                         }
                     }
                 }

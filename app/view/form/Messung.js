@@ -143,7 +143,7 @@ Ext.define('Lada.view.form.Messung', {
                         click: {
                             fn: function() {
                                 if ((this.probedatenbasis === 'REI-E'
-                                            || this.probedatenbasis.get === 'REI-I')
+                                            || this.probedatenbasis === 'REI-I')
                                     && (this.probe.get('reiprogpunktgruppe') == null
                                             ||this.probe.get('reiprogpunktgruppe') === '')
                                     && (this.probe.get('ktagruppe') == null
@@ -179,7 +179,11 @@ Ext.define('Lada.view.form.Messung', {
         Lada.model.Probe.load(this.record.get('probeId'), {
             success: function(proberecord) {
                 me.probe = proberecord;
-                Lada.model.Datenbasis.load(proberecord.get('datenbasisId'),{
+                var dbid = proberecord.get('datenbasisId');
+                if (!dbid) {
+                    return;
+                }
+                Lada.model.Datenbasis.load(dbid, {
                     success: function(dbrecord) {
                         me.probedatenbasis = dbrecord.get('datenbasis');
                     },

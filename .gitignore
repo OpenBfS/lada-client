@@ -16,6 +16,5 @@ resources/lib/
 bootstrap.*
 build.xml
 packages
-sass
 .sencha
 

@@ -107,7 +107,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         });
         this.warning = tt;
         var cb = this.down('combobox');
-        cb.invalidCls = 'x-lada-warning-field';
+        //cb.invalidCls = 'x-lada-warning-field';
         cb.markInvalid('');
         if (cb.inputWrap) {
             cb.inputWrap.addCls('x-lada-warning-field');
@@ -139,7 +139,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             target: img.getEl(),
             html: errors
         });
-        this.down('combobox').invalidCls = 'x-lada-error-field';
+        //this.down('combobox').invalidCls = 'x-lada-error-field';
         this.down('combobox').markInvalid('');
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');

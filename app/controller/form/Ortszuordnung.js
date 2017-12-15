@@ -72,6 +72,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                     formPanel.up('window').parentWindow
                         .down('ortszuordnunggrid').store.reload();
                 } catch (e) {
+                    console.log(e);
                 }
             },
             failure: function(record, response) {

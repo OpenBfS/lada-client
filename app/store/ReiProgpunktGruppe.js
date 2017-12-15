@@ -44,10 +44,6 @@ Ext.define('Lada.store.ReiProgpunktGruppe', {
         this.load({
             scope: this,
             callback: function(records, op, success) {
-                reicombo.up('reiprogpunktgruppe').clearWarningOrError();
-                umweltcombo.up('umwelt').clearWarningOrError();
-                reicombo.up('reiprogpunktgruppe').setUmweltWarningVisible(false);
-                umweltcombo.up('umwelt').setReiWarningVisible(false);
 
                 var found = false;
                 for (var i = 0; i < records.length; i++) {
@@ -86,6 +82,9 @@ Ext.define('Lada.store.ReiProgpunktGruppe', {
                             }
                         }
                     });
+                } else {
+                    reicombo.up('reiprogpunktgruppe').clearWarningOrError();
+                    umweltcombo.up('umwelt').clearWarningOrError();
                 }
             }
         });

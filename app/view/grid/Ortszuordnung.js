@@ -260,8 +260,12 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         if (!this.isMessprogramm){
             var readonly = this.up('probenedit').down('probeform').getRecord().get('readonly');
             var dbId = this.up('probenedit').down('probeform').getRecord().get('datenbasisId');
-            var datenbasis =  Ext.data.StoreManager.get('datenbasis').getById(dbId).get('datenbasis');
-            if (datenbasis == 'REI-I' || datenbasis == 'REI-E'){
+            var dbStore = Ext.data.StoreManager.get('datenbasis')
+            var datenbasis = null;
+            if (dbStore && dbId) {
+                datenbasis =  dbStore.getById(dbId).get('datenbasis');
+            }
+            if (datenbasis && (datenbasis == 'REI-I' || datenbasis == 'REI-E')){
                 if (this.store.getCount() === 0 && !readonly){
                     this.down('button[action=add]').enable();
                     this.down('button[action=delete]').disable();
