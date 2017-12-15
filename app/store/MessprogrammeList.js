@@ -13,6 +13,6 @@ Ext.define('Lada.store.MessprogrammeList', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.MessprogrammList',
     pageSize: Lada.pagingSize,
-    remoteFilter: true,
-    remoteSort: true
+    remoteSort: true,
+    remoteFilter: true
 });
