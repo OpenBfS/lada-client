@@ -217,7 +217,8 @@ Ext.define('Lada.view.form.Probe', {
                             anchor: '100%',
                             labelWidth: 95,
                             editable: true,
-                            listeners: {
+                            extraParams: function(){
+                              this.down('combobox').on({
                                 expand: {
                                     fn: function(combo) {
                                         var store = Ext.StoreManager.get('probenehmer');
@@ -240,6 +241,7 @@ Ext.define('Lada.view.form.Probe', {
                                         Ext.StoreManager.get('probenehmer').clearFilter();
                                     }
                                 }
+                               });
                             }
                         }, {
                             xtype: 'datensatzerzeuger',
@@ -250,7 +252,8 @@ Ext.define('Lada.view.form.Probe', {
                             anchor: '100%',
                             editable: true,
                             labelWidth: 110,
-                            listeners: {
+                            extraParams: function(){
+                              this.down('combobox').on({
                                 expand: {
                                     fn: function(combo) {
                                         var store = Ext.StoreManager.get('datensatzerzeuger');
@@ -273,6 +276,7 @@ Ext.define('Lada.view.form.Probe', {
                                         Ext.StoreManager.get('datensatzerzeuger').clearFilter();
                                     }
                                 }
+                              });
                             }
                         }]
                     },{
@@ -284,7 +288,8 @@ Ext.define('Lada.view.form.Probe', {
                         anchor: '100%',
                         labelWidth: 110,
                         editable: true,
-                        listeners: {
+                        extraParams: function(){
+                          this.down('combobox').on({
                             expand: {
                                 fn: function(combo) {
                                     var store = Ext.StoreManager.get('messprogrammkategorie');
@@ -307,6 +312,7 @@ Ext.define('Lada.view.form.Probe', {
                                     Ext.StoreManager.get('messprogrammkategorie').clearFilter();
                                 }
                             }
+                          });
                         }
                     }]
                 }, {
