@@ -192,7 +192,7 @@ Ext.define('Lada.view.form.Probe', {
                             labelWidth: 80
                         }, {
                             xtype: 'probenart',
-                            editable: false,
+                            editable: true,
                             name: 'probenartId',
                             fieldLabel: 'Probenart',
                             margin: '0, 15, 5, 5',
@@ -216,6 +216,7 @@ Ext.define('Lada.view.form.Probe', {
                             minValue: 0,
                             anchor: '100%',
                             labelWidth: 95,
+                            editable: true,
                             listeners: {
                                 expand: {
                                     fn: function(combo) {
@@ -247,6 +248,7 @@ Ext.define('Lada.view.form.Probe', {
                             margin: '0, 5, 5, 5',
                             width: '50%',
                             anchor: '100%',
+                            editable: true,
                             labelWidth: 110,
                             listeners: {
                                 expand: {
@@ -281,6 +283,7 @@ Ext.define('Lada.view.form.Probe', {
                         width: '100%',
                         anchor: '100%',
                         labelWidth: 110,
+                        editable: true,
                         listeners: {
                             expand: {
                                 fn: function(combo) {
