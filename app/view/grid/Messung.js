@@ -148,7 +148,7 @@ Ext.define('Lada.view.grid.Messung', {
             dataIndex: 'messwerteCount',
             flex: 1,
             renderer: function(value, meta, record) {
-                if (value === '') {
+                if (!value || value === '') {
                     var mId = record.get('id');
                     this.updateNuklide(mId, record);
                     return 'Lade...';
@@ -160,7 +160,7 @@ Ext.define('Lada.view.grid.Messung', {
             flex: 1,
             dataIndex: 'kommentarCount',
             renderer: function(value, meta, record) {
-                if (value === '') {
+                if (!value || value === '') {
                     var mId = record.get('id');
                     this.updateKommentare(mId, record);
                     return 'Lade...';
@@ -222,13 +222,10 @@ Ext.define('Lada.view.grid.Messung', {
 
     updateNuklide: function(id, record) {
         var messwerte = Ext.create('Lada.store.Messwerte');
-        messwerte.on({
-            load: {
-                fn: this.updateColumn,
-                scope: this,
-                options: {record: record, type: 'messwerteCount'}
-            }
-        });
+        messwerte.on('load',
+                     this.updateColumn,
+                     this,
+                     {record: record, type: 'messwerteCount'});
         messwerte.load({
             params: {
                 messungsId: id
@@ -249,7 +246,7 @@ Ext.define('Lada.view.grid.Messung', {
         });
     },
 
-    updateColumn: function(store, record, success, opts) {
+    updateColumn: function(store, record, success, operation, opts) {
         var value;
         if (success) {
             if (store.getTotalCount() === 0) {
