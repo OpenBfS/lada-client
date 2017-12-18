@@ -143,7 +143,6 @@ Ext.define('Lada.view.grid.Messwert', {
         }, {
             header: 'Messeinheit',
             dataIndex: 'mehId',
-            id: 'mehColumnId',
             width: 90,
             renderer: function(value) {
                 if (!value || value === '') {
