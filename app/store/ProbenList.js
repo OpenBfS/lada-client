@@ -13,5 +13,6 @@ Ext.define('Lada.store.ProbenList', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.ProbeList',
     pageSize: Lada.pagingSize,
+    remoteFilter: true,
     remoteSort: true
 });
