@@ -13,8 +13,9 @@ Ext.define('Lada.view.widget.DatensatzErzeuger' ,{
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.datensatzerzeuger',
     store: 'datensatzerzeuger',
-    displayField: 'id',
+    displayField: 'datensatzErzeugerId',
     valueField: 'id',
+    searchValueField: 'bezeichnung',
     editable: this.editable || false,
     forceSelection: true,
     // Enable filtering of comboboxes
