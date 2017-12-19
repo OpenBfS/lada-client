@@ -13,8 +13,9 @@ Ext.define('Lada.view.widget.Probenehmer' ,{
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.probenehmer',
     store: 'Probenehmer',
-    displayField: 'id',
+    displayField: 'prnId',
     valueField: 'id',
+    searchValueField: 'kurzBezeichnung',
 
     //additional actions to be taken after initComponent
     extraParams: this.extraParams || null,
