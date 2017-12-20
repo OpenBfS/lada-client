@@ -207,7 +207,6 @@ Ext.define('Lada.view.form.Probe', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        
                         border: 0,
                         width: '100%',
                         items: [{
@@ -222,7 +221,7 @@ Ext.define('Lada.view.form.Probe', {
                             editable: true,
                             extraParams: function(){
                               this.down('combobox').on({
-                                expand: {
+                                focus: {
                                     fn: function(combo) {
                                         var store = Ext.StoreManager.get('probenehmer');
                                         store.clearFilter();
@@ -238,13 +237,8 @@ Ext.define('Lada.view.form.Probe', {
                                             store.filter('netzbetreiberId', nId);
                                         }
                                     }
-                                },
-                                collapse: {
-                                    fn: function(combo) {
-                                        Ext.StoreManager.get('probenehmer').clearFilter();
-                                    }
                                 }
-                               });
+                              });
                             }
                         }, {
                             xtype: 'datensatzerzeuger',
@@ -257,8 +251,8 @@ Ext.define('Lada.view.form.Probe', {
                             labelWidth: 110,
                             extraParams: function(){
                               this.down('combobox').on({
-                                expand: {
-                                    fn: function(combo) {
+                                focus: {
+                                  fn: function(combo) {
                                         var store = Ext.StoreManager.get('datensatzerzeuger');
                                         store.clearFilter();
                                         var nId = combo.up('fieldset')
@@ -272,11 +266,6 @@ Ext.define('Lada.view.form.Probe', {
                                         } else {
                                             store.filter('netzbetreiberId', nId);
                                         }
-                                    }
-                                },
-                                collapse: {
-                                    fn: function(combo) {
-                                        Ext.StoreManager.get('datensatzerzeuger').clearFilter();
                                     }
                                 }
                               });

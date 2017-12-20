@@ -16,6 +16,8 @@ Ext.define('Lada.view.widget.DatensatzErzeuger' ,{
     displayField: 'datensatzErzeugerId',
     valueField: 'id',
     searchValueField: 'bezeichnung',
+
+    extraParams: this.extraParams || null,
     editable: this.editable || false,
     forceSelection: true,
     // Enable filtering of comboboxes
@@ -40,5 +42,8 @@ Ext.define('Lada.view.widget.DatensatzErzeuger' ,{
         }
         this.store.sort();
         this.callParent(arguments);
+        if (this.extraParams) {
+            this.extraParams();
+        }
     }
 });
