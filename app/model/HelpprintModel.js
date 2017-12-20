@@ -43,32 +43,37 @@ Ext.define('Lada.model.HelpprintModel', {
                 children: [{
                     id: 'intro',
                     text: 'Einführung',
-                    content: 'resources/intro.html',
+                    content: 'resources/ladaHelp/intro.html',
                     leaf: true
                 }, {
                     id: 'query',
                     text: 'Query',
-                    content: 'resources/query.html',
+                    content: 'resources/ladaHelp/query.html',
                     leaf: true
                 }, {
                     id: 'probe',
                     text: 'Proben-Fenster',
-                    content: 'resources/probe.html',
+                    content: 'resources/ladaHelp/probe.html',
                     leaf: true
                 }, {
                     id: 'messung',
                     text: 'Messungs-Fenster',
-                    content: 'resources/messung.html',
+                    content: 'resources/ladaHelp/messung.html',
                     leaf: true
                 }, {
                     id: 'ort',
                     text: 'Orte-Fenster',
-                    content: 'resources/ort.html',
+                    content: 'resources/ladaHelp/ort.html',
                     leaf: true
                 }, {
                     id: 'messprogramm',
                     text: 'Messprogramm-Fenster',
-                    content: 'resources/messprogramm.html',
+                    content: 'resources/ladaHelp/messprogramm.html',
+                    leaf: true
+                }, {
+                    id: 'glossar',
+                    text: 'Glossar',
+                    content: 'resources/ladaHelp/glossar.html',
                     leaf: true
                 }
                 ]
