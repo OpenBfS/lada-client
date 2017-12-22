@@ -10,13 +10,13 @@ var boolStore = Ext.create('Ext.data.Store', {
     fields: ['id', 'value'],
     storeId: 'booleanStore',
     data: [{
-        'id': true,
+        'id': 'true',
         'value': 'Ja'
     }, {
-        'id': false,
+        'id': 'false',
         'value': 'Nein'
     },{
-        'id': null,
+        'id': '',
         'value': 'ungefiltert'
     }]
 });
