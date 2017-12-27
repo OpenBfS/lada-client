@@ -50,7 +50,6 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             autoSelect: this.autoSelect || true,
             queryMode: this.queryMode,
             lastQuery: this.lastQuery || '',
-            triggerAction: this.triggerAction,
             typeAhead: this.typeAhead,
             minChars: this.minChars,
             maxChars: this.maxChars,
