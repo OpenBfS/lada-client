@@ -223,15 +223,19 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             return;
         }
 
-        var radio = Ext.ComponentQuery.query('modeswitcher')[0]
-            .down('radiofield[inputValue=proben]');
-        radio.setValue(true);
+        //var radio = Ext.ComponentQuery.query('modeswitcher')[0]
+        //    .down('radiofield[inputValue=proben]');
+        //radio.setValue(true);
 
         var contentPanel = Ext.ComponentQuery.query('panel[name=main]')[0]
             .down('panel[name=contentpanel]');
-        contentPanel.removeAll(); //clear panel: make space for new grids
+        //contentPanel.removeAll(); //clear panel: make space for new grids
         var gridstore = Ext.create('Lada.store.Proben');
         var frgrid = Ext.create('Lada.view.grid.ProbeList', {
+            hideCreate: true,
+            hideImport: true,
+            hidePrintSheet: true,
+            hidePrint: true,
             plugins: [{
                 ptype: 'gridrowexpander',
                 gridType: 'Lada.view.grid.Messung',
@@ -333,7 +337,14 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         frgrid.reconfigure(gridstore, columns);
 
         gridstore.loadData(data);
-        contentPanel.add(frgrid);
+        var win = Ext.create('Ext.window.Window', {
+            layout: 'fit',
+            width: 750,
+            minHeight: 500,
+            items: [frgrid]
+        });
+        win.show();
+        //contentPanel.add(frgrid);
         me.down('panel').setHtml(me.down('panel').html + '<br><br>'
                 + me.evalResponseData(data));
     },

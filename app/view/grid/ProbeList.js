@@ -19,6 +19,13 @@ Ext.define('Lada.view.grid.ProbeList', {
         'Lada.view.window.ProbeCreate'
     ],
 
+    hideCreate: false,
+    hideImport: false,
+    hideExport: false,
+    hideDeleteSelected: false,
+    hidePrintSheet: false,
+    hidePrint: false,
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('probe.emptyGrid');
@@ -39,31 +46,37 @@ Ext.define('Lada.view.grid.ProbeList', {
                 text: i18n.getMsg('probe.button.create'),
                 icon: 'resources/img/list-add.png',
                 action: 'addProbe',
+                hidden: this.hideCreate,
                 disabled: false
             }, {
                 text: i18n.getMsg('probe.button.import'),
                 icon: 'resources/img/svn-commit.png',
                 action: 'import',
+                hidden: this.hideImport,
                 disabled: false
             }, {
                 text: i18n.getMsg('probe.button.export'),
                 icon: 'resources/img/svn-update.png',
                 action: 'export',
+                hidden: this.hideExport,
                 disabled: true //disabled on start, enabled by the controller
             }, {
                 text: i18n.getMsg('probe.button.delete_selected'),
                 icon: 'resources/img/edit-delete.png',
                 action: 'deleteSelected',
+                hidden: this.hideDeleteSelected,
                 disabled: true //disabled on start, enabled by the controller
             }, {
                 text: i18n.getMsg('probe.button.printSheet'),
                 icon: 'resources/img/printer.png',
                 action: 'printSheet',
+                hidden: this.hidePrintSheet,
                 disabled: true //disabled on start, enabled by the controller
             }, {
                 text: i18n.getMsg('probe.button.print'),
                 icon: 'resources/img/printer.png',
                 action: 'printExtract',
+                hidden: this.hidePrint,
                 disabled: true //disabled on start, enabled by the controller
             }]
         }];
