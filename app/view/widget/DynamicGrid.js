@@ -134,6 +134,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         for (var i = cols.length - 1; i >= 0; i--) {
             //Change id field to a valid ExtJS6 id
             cols[i].id = 'col-' + cols[i].id;
+
+            //Check column type and set to string of invalid
+            if (!cols[i].type ||
+                    (!cols[i].type != 'id' &&
+                     !cols[i].type != 'timestamp' &&
+                     !cols[i].type != 'number' &&
+                     !cols[i].type != 'geometry')
+                ) {
+                cols[i].type = 'string';
+            }
             fields.push(new Ext.data.Field({
                 name: cols[i].dataIndex
             }));

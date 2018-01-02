@@ -227,9 +227,39 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         //    .down('radiofield[inputValue=proben]');
         //radio.setValue(true);
 
-        var contentPanel = Ext.ComponentQuery.query('panel[name=main]')[0]
-            .down('panel[name=contentpanel]');
-        //contentPanel.removeAll(); //clear panel: make space for new grids
+        var loadedStores = 0;
+
+        //Create and load neccessary stores
+        var umwStore = Ext.create('Lada.store.Umwelt', {
+                asynchronousLoad: false
+        });
+
+        var mpStore = Ext.create('Lada.store.MessprogrammeList');
+
+        var stores = [umwStore, mpStore];
+        storeJson = {
+            umweltStore: umwStore,
+            mpStore: mpStore
+        };
+
+        for (var i = 0; i < stores.length; i++) {
+            stores[i].load({
+                scope: this,
+                callback: function() {
+                    loadedStores++;
+                    if (loadedStores == stores.length) {
+                        this.createGrid(data, storeJson);
+                    }
+                }
+            });
+        }
+    },
+
+    createGrid: function(data, storeJson) {
+        var umwStore = storeJson.umweltStore;
+        var mpStore = storeJson.mpStore;
+
+        var i18n = Lada.getApplication().bundle;
         var gridstore = Ext.create('Lada.store.Proben');
         var frgrid = Ext.create('Lada.view.grid.ProbeList', {
             hideCreate: true,
@@ -333,14 +363,51 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 }
                 return Ext.Date.format(value, 'd.m.Y');
             }
+        }, {
+            header: i18n.getMsg('messprogramm.form.fieldset.title'),
+            dataIndex: 'mprId'
+        }, {
+            //TODO: load description
+            header: i18n.getMsg('umw_id'),
+            dataIndex: 'umwId',
+            renderer: function(value, metadata) {
+                if (!value) {
+                    return '';
+                }
+                var store = umwStore;
+                var model = store.getById(value);
+                if (model) {
+                    return value + ' - ' + model.get('umweltBereich');
+                } else {
+                    return value;
+                }
+            }
+            //TODO: Anzahl Messungen
+        }, {
+            header: i18n.getMsg('entnahmeOrt'),
+            renderer: function(value, metadata, rec) {
+                var mprModel = mpStore.getById(rec.get('mprId'));
+                if (mprModel) {
+                    var eGemId = mprModel.get('eGemId')
+                    var eGem = mprModel.get('eGem');
+                    if (eGemId != null && eGem != null) {
+                        return eGemId  + ' - ' + eGem;
+                    }
+                }
+                return '';
+            }
+        }, {
+            header: i18n.getMsg('probe_nehmer_id'),
+            dataIndex: 'probeNehmerId'
         }];
         frgrid.reconfigure(gridstore, columns);
 
         gridstore.loadData(data);
         var win = Ext.create('Ext.window.Window', {
             layout: 'fit',
-            width: 750,
+            width: 800,
             minHeight: 500,
+            maxHeight: 750,
             items: [frgrid]
         });
         win.show();
