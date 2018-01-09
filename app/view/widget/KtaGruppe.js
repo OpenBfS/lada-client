@@ -28,6 +28,7 @@ Ext.define('Lada.view.widget.KtaGruppe', {
     autoSelect: false,
     queryMode: 'local',
     triggerAction: 'all',
+    listConfig: {maxWidth: 500},
     typeAhead: false,
     minChars: 0,
     allowBlank: true,

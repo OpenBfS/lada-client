@@ -26,6 +26,7 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
     forceSelection: true,
     // Enable filtering of comboboxes
     autoSelect: false,
+    listConfig: {maxWidth: 500},
     queryMode: 'local',
     triggerAction: 'all',
     typeAhead: false,
