@@ -258,8 +258,8 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
 
     reiHandling: function(value){
         if (!this.isMessprogramm){
-            var readonly = this.up('probenedit').down('probeform').getRecord().get('readonly');
-            var dbId = this.up('probenedit').down('probeform').getRecord().get('datenbasisId');
+            var readonly = this.up('probenedit').record.get('readonly');
+            var dbId = this.up('probenedit').record.get('datenbasisId');
             var dbStore = Ext.data.StoreManager.get('datenbasis')
             var datenbasis = null;
             if (dbStore && dbId) {
