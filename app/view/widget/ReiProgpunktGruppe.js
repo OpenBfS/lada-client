@@ -15,6 +15,12 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
     store: 'Lada.store.ReiProgpunktGruppe',
     displayField: 'beschreibung',
     valueField: 'id',
+    searchValueField: 'reiProgPunktGruppe',
+    tpl: Ext.create('Ext.XTemplate',
+        '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
+            '{reiProgPunktGruppe} - {beschreibung}</div></tpl>'),
+    displayTpl: Ext.create('Ext.XTemplate',
+        '<tpl for=".">{reiProgPunktGruppe}</tpl>'),
     editable: this.editable || false,
     disableKeyFilter: true,
     forceSelection: true,

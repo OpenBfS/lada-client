@@ -15,7 +15,7 @@ Ext.define('Lada.model.KtaGruppe', {
     fields: [{
         name: 'id'
     }, {
-        name: 'kta_gruppe'
+        name: 'ktaGruppe'
     }, {
         name: 'beschreibung'
     }],
