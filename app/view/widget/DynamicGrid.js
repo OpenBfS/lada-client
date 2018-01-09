@@ -12,6 +12,10 @@
 Ext.define('Lada.view.widget.DynamicGrid', {
     extend: 'Ext.grid.Panel',
 
+    requires: [
+        'Lada.view.window.Map'
+    ],
+
     store: null,
 
     border: false,
@@ -77,6 +81,27 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         var resultColumns = [];
         var fields = [];
         var i18n = Lada.getApplication().bundle;
+        var getClassFunc = function(val, meta, rec) {
+            if (rec.get('readonly') === false &&
+                ( rec.get('owner') === undefined ||
+                    rec.get('owner') === true ||
+                    rec.get('owner') === '') &&
+                !rec.get('statusEdit')) {
+                return 'edit';
+            } else if (rec.get('readonly') === false &&
+                rec.get('owner') === true &&
+                rec.get('statusEdit')) {
+                return 'editstatus';
+            } else if (rec.get('readonly') === true &&
+                rec.get('statusEdit')) {
+                return 'noeditstatus';
+            }
+            return 'noedit';
+        };
+        var handlerFunc =  function(grid, rowIndex, colIndex) {
+            var rec = grid.getStore().getAt(rowIndex);
+            grid.fireEvent('itemdblclick', grid, rec);
+        };
         switch (this.xtype) {
             case 'probelistgrid':
                 var tooltiptext = i18n.getMsg('probe')+' '+i18n.getMsg('open');
@@ -135,14 +160,20 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             //Change id field to a valid ExtJS6 id
             cols[i].id = 'col-' + cols[i].id;
 
-            //Check column type and set to string of invalid
-            if (!cols[i].type ||
-                    (!cols[i].type != 'id' &&
-                     !cols[i].type != 'timestamp' &&
-                     !cols[i].type != 'number' &&
-                     !cols[i].type != 'geometry')
-                ) {
-                cols[i].type = 'string';
+            //### DEBUG
+            /*
+            switch(cols[i].dataIndex){
+                //Use pArt column for geometry testing
+                case 'pArt':
+                    cols[i].dataType.name = 'geom';
+                    break;
+            }
+            */
+            //###
+
+            //Check column type and set to string if unknown
+            if (!cols[i].dataType.name) {
+                cols[i].dataType = 'string';
             }
             fields.push(new Ext.data.Field({
                 name: cols[i].dataIndex
@@ -150,21 +181,192 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (cols[i] === 'id' || cols[i].dataIndex === 'probeId') {
                 continue;
             }
-            switch (cols[i].dataIndex) {
-                case 'dBasis':
-                case 'pArt':
-                case 'statusSt':
-                case 'statusW':
-                case 'baId':
-                case 'mstLaborId':
-                case 'messRegime':
-                case 'intervall':
-                case 'mstId':
-                case 'netzId':
-                    cols[i].filter = {type: 'list'};
+            var openIconPath = 'img/document-open.png';
+            //TODO: Use proper icons
+            switch (cols[i].dataType.name) {
+                case 'probeId':
+                    colImg = Ext.getResourcePath(openIconPath, null, null);
+                    cols[i].xtype =  'widgetcolumn';
+                    cols[i].widget = {
+                        xtype: 'button',
+                        icon: colImg,
+                        width: '16px',
+                        height: '16px',
+                        userCls: 'widget-column-button',
+                        tooltip: i18n.getMsg('typedgrid.tooltip.probeid'),
+                        hidden: true,
+                        listeners: {
+                            click: function(button) {
+                                var id = Number(button.text);
+                                Lada.model.Probe.load(id, {
+                                    scope: this,
+                                    callback: function(record, operation, success) {
+                                        if (success) {
+                                            var win = Ext.create('Lada.view.window.ProbeEdit', {
+                                                record: record,
+                                                style: 'z-index: -1;'
+                                            });
+                                            win.setPosition(30);
+                                            win.show();
+                                            win.initData();
+                                        }
+                                    }
+                                });
+                            },
+                            textchange: function(button, oldval, newval) {
+                                if (!newval || newval == '') {
+                                    button.hide();
+                                } else {
+                                    button.show();
+                                }
+                            }
+                        }
+                    }
                     break;
+                case 'messungId':
+                    colImg = Ext.getResourcePath(openIconPath, null, null);
+                    cols[i].xtype =  'widgetcolumn';
+                    cols[i].widget = {
+                        xtype: 'button',
+                        icon: colImg,
+                        width: '16px',
+                        height: '16px',
+                        userCls: 'widget-column-button',
+                        tooltip: i18n.getMsg('typedgrid.tooltip.messungid'),
+                        hidden: true,
+                        listeners: {
+                            click: function(button) {
+                                var id = Number(button.text);
+                                Lada.model.Messung.load(id, {
+                                    scope: this,
+                                    callback: function(record, operation, success) {
+                                        if (success) {
+                                            var messungRecord = record;
+                                            Lada.model.Probe.load(messungRecord.get('probeid'), {
+                                                scope: this,
+                                                callback: function(precord, poperation, psuccess) {
+                                                    var win = Ext.create('Lada.view.window.MessungEdit', {
+                                                        probe: precord,
+                                                        record: record,
+                                                        style: 'z-index: -1;'
+                                                    });
+                                                    win.show();
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            },
+                            textchange: function(button, oldval, newval) {
+                                if (!newval || newval == '') {
+                                    button.hide();
+                                } else {
+                                    button.show();
+                                }
+                            }
+                        }
+                    }
+                    break;
+
+                case 'ortId':
+                    colImg = Ext.getResourcePath(openIconPath, null, null);
+                    cols[i].xtype =  'widgetcolumn';
+                    cols[i].widget = {
+                        xtype: 'button',
+                        icon: colImg,
+                        width: '16px',
+                        height: '16px',
+                        userCls: 'widget-column-button',
+                        tooltip: i18n.getMsg('typedgrid.tooltip.ortid'),
+                        hidden: true,
+                        listeners: {
+                            click: function(button) {
+                                var id = button.getText();
+                                Lada.model.Ort.load(id, {
+                                    success: function(record) {
+                                        var win = Ext.create('Lada.view.window.Ort', {
+                                            record: record
+                                        });
+                                        win.show();
+                                    }
+                                });
+                            },
+                            textchange: function(button, oldval, newval) {
+                                if (!newval || newval == '') {
+                                    button.hide();
+                                } else {
+                                    button.show();
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case 'geom':
+                    colImg = Ext.getResourcePath('img/document-open.png', null, null);
+                    cols[i].xtype =  'widgetcolumn';
+                    cols[i].widget = {
+                        xtype: 'button',
+                        icon: colImg,
+                        width: '16px',
+                        height: '16px',
+                        userCls: 'widget-column-button',
+                        tooltip: i18n.getMsg('typedgrid.tooltip.geometry'),
+                        hidden: true,
+                        listeners: {
+                            click: function(button) {
+                                var geom = '';
+                                ///### DEBUG
+                                /*geom = {
+                                    'type': 'FeatureCollection',
+                                        'crs': {
+                                            'type': 'name',
+                                            'properties': {
+                                            'name': 'EPSG:3857'
+                                        }
+                                    },
+                                    'features': [{
+                                        "type": "Feature",
+                                        "geometry": {
+                                            "type": "Point",
+                                            "coordinates": [1527496,6634996]
+                                        }
+                                    }]
+                                };*/
+                                //TODO: Open a map window and show geom
+                                var mapWin = Ext.create('Lada.view.window.Map', {
+                                    geom: geom
+                                });
+                                mapWin.show();
+                            },
+                            textchange: function(button, oldval, newval) {
+                                button.text = '';
+                                button.tooltip = newval;
+                                if (!newval || newval == '') {
+                                    button.hide();
+                                } else {
+                                    button.show();
+                                }
+                            }
+                        }
+                    }
+                break;
                 default:
-                    cols[i].filter = {type: 'string'};
+                    switch (cols[i].dataIndex) {
+                        case 'dBasis':
+                        case 'pArt':
+                        case 'statusSt':
+                        case 'statusW':
+                        case 'baId':
+                        case 'mstLaborId':
+                        case 'messRegime':
+                        case 'intervall':
+                        case 'mstId':
+                        case 'netzId':
+                            cols[i].filter = {type: 'list'};
+                            break;
+                        default:
+                            cols[i].filter = {type: 'string'};
+                    }
             }
             resultColumns.push(cols[i]);
         }

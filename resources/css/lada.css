@@ -105,3 +105,9 @@
 span.x-grid-checkcolumn {
     pointer-events: none;
 }
+
+.widget-column-button {
+    background-color: transparent !important;
+    background-image: none !important;
+    border-style: none !important;
+}
