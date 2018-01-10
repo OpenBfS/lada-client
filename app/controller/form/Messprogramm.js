@@ -54,7 +54,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
              },
             'messprogrammform container[name="reiComboContainer"] reiprogpunktgruppe combobox': {
                 change: this.reiProgpunktGruppeChanged
+            },
+            'messprogrammform datenbasis combobox': {
+                change: this.datenbasisChanged
             }
+
         });
     },
 
@@ -471,5 +475,23 @@ Ext.define('Lada.controller.form.Messprogramm', {
             reiStore.proxy.extraParams.umwelt = umwId;
         }
         reiStore.load();
+    },
+
+    /* Called if Datenbasis value changed. Changes visibility of REI specific containers if Datenbasis is REI
+    */
+    datenbasisChanged: function(combo, newVal, oldVal, opts) {
+        var datenbasis = combo.getRawValue();
+        var reiComboContainer = combo.up('messprogrammform').down('container[name=reiComboContainer]');
+        if ( datenbasis === 'REI-E' || datenbasis === 'REI-I') {
+            reiComboContainer.down('reiprogpunktgruppe[name=reiProgpunktGrpId]').setHidden(false);
+            reiComboContainer.down('ktagruppe[name=ktaGruppeId]').show();
+        } else {
+            var reiCombo = reiComboContainer.down('reiprogpunktgruppe[name=reiProgpunktGrpId]');
+            reiCombo.setHidden(true);
+            reiCombo.setValue(null);
+            var ktaCombo = reiComboContainer.down('ktagruppe[name=ktaGruppeId]');
+            ktaCombo.hide();
+            ktaCombo.setValue(null);
+        }
     }
 });
