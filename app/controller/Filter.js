@@ -214,6 +214,9 @@ Ext.define('Lada.controller.Filter', {
          * * listver
          * * listdbasis
          * * listnetz
+         * * liststatus
+         * * listrei
+         * * listkta
          *
          * Iterate over all configured filters and add filters dynamically
          *
@@ -247,7 +250,7 @@ Ext.define('Lada.controller.Filter', {
                     value: value
                 });
             } else if (type === 'datetime') {
-                field = Ext.create('Lada.view.widget.Datetime', {
+                field = Ext.create('Lada.view.widget.base.Datetime', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
@@ -255,7 +258,7 @@ Ext.define('Lada.controller.Filter', {
                     value: value
                 });
             } else if (type === 'bool') {
-                field = Ext.create('Lada.view.widget.Testdatensatz', {
+                field = Ext.create('Lada.view.widget.BoolFilter', {
                     name: name,
                     labelWidth: 135,
                     fieldLabel: label,
@@ -323,7 +326,6 @@ Ext.define('Lada.controller.Filter', {
             } else if (type === 'liststatus') {
                 field = Ext.create('Lada.view.widget.Status', {
                     name: name,
-                    editable: true,
                     store: Ext.StoreManager.get('statuswerte'),
                     labelWidth: 135,
                     fieldLabel: label,
@@ -332,6 +334,28 @@ Ext.define('Lada.controller.Filter', {
                     filterId: filterId,
                     multiSelect: multi,
                     editable: true
+                });
+            } else if (type === 'listrei') {
+                field = Ext.create('Lada.view.widget.ReiProgpunktGruppe', {
+                    name: name,
+                    editable: true,
+                    labelWidth: 135,
+                    fieldLabel: label,
+                    forceSelection: false,
+                    value: value,
+                    filterId: filterId,
+                    multiSelect: multi
+                });
+            } else if (type === 'listkta') {
+                field = Ext.create('Lada.view.widget.KtaGruppe', {
+                    name: name,
+                    editable: true,
+                    labelWidth: 135,
+                    fieldLabel: label,
+                    forceSelection: false,
+                    value: value,
+                    filterId: filterId,
+                    multiSelect: multi
                 });
             }
             if (field) {
@@ -367,6 +391,19 @@ Ext.define('Lada.controller.Filter', {
         for (var i = filters.items.length - 1; i >= 0; i--) {
             var filter = filters.items.items[i];
             var value = filter.getValue();
+            if (filter.xtype === 'boolfilter'){
+                if (value !== 'false' && value !== 'true'){
+                    value = '';
+                }
+            }
+            if (filter.xtype == 'datetime'){
+              if (!isNaN(value) && value !== null){
+                value = Date.parse(value) / 1000;
+              }
+              else {
+                value = null;
+              }
+            }
             if (value instanceof Array) {
                 value = value.join(',');
             }

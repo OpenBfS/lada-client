@@ -40,7 +40,7 @@ Ext.define('Lada.view.form.Ort', {
         }, {
             xtype: 'tfield',
             name: 'ortId',
-            maxLength: 10,
+            maxLength: 12,
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.ortId')
         }, {
@@ -107,11 +107,11 @@ Ext.define('Lada.view.form.Ort', {
             fieldLabel: i18n.getMsg('orte.berichtstext'),
             name: 'berichtstext'
         }, {
-            xtype: 'kta',
+            xtype: 'ktagruppe',
             labelWidth: 125,
             maxLength: 100,
-            name: 'anlageId',
-            fieldLabel: i18n.getMsg('orte.anlageId')
+            name: 'ktaGruppeId',
+            fieldLabel: i18n.getMsg('orte.ktaGruppe')
         }, {
             xtype: 'tfield',
             labelWidth: 125,

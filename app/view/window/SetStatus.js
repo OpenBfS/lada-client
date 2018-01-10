@@ -127,11 +127,14 @@ Ext.define('Lada.view.window.SetStatus', {
 
         var title = '';
         if (this.record) {
-            title = 'Status für Messung ' +
-                this.record.get('hauptprobenNr') +
-                ' - ' +
-                this.record.get('nebenprobenNr') +
-                ' setzen';
+          var probenform = Ext.ComponentQuery.query('probeform');
+          if (probenform){
+            var hauptprobennummer = probenform[0].getRecord().get('hauptprobenNr');
+            if (hauptprobennummer){
+              title = 'Status für Messung ' + hauptprobennummer +
+                ' - ' + me.record.get('nebenprobenNr') + ' setzen';
+            }
+          }
         }
         else {
             title = 'Status für ' + this.selection.length + ' Messung(en) setzen';
@@ -218,6 +221,7 @@ Ext.define('Lada.view.window.SetStatus', {
                             result.show();
                             values.hide();
                         }
+                        me.fireEvent('statussetend');
                     },
                     failure: function(response) {
                         count++;
@@ -244,10 +248,13 @@ Ext.define('Lada.view.window.SetStatus', {
                     jsonData: data,
                     success: function(response) {
                         var json = Ext.JSON.decode(response.responseText);
-                        me.resultMessage += '<strong>' + i18n.getMsg('messung') + ': ' +
-                        me.record.get('hauptprobenNr') + ' - '  + me.record.get('nebenprobenNr') +
-                        '</strong><br><dd>' +
-                        i18n.getMsg('status-' + json.message) + '</dd><br>';
+                        var probenform = Ext.ComponentQuery.query('probeform');
+                        var hauptprobennummer = probenform[0].getRecord().get('hauptprobenNr');
+                        me.resultMessage += '<strong>' + i18n.getMsg('messung') + ': '
+                        me.resultMessage +=  hauptprobennummer || '';
+                        me.resultMessage +=  ' - '  + me.record.get('nebenprobenNr') +
+                          '</strong><br><dd>' +
+                          i18n.getMsg('status-' + json.message) + '</dd><br>';
                         progress.updateProgress(1, progressText + ' (' + 1 + ')');
                         var result = me.down('panel[name=result]');
                         var values = me.down('panel[name=valueselection]');
@@ -255,11 +262,13 @@ Ext.define('Lada.view.window.SetStatus', {
                         me.down('button[name=abort]').hide();
                         me.down('button[name=close]').show();
                         result.setHtml(me.resultMessage);
+                        result.setSize(values.getWidth(), values.getHeight());
                         result.show();
                         var grids = Ext.ComponentQuery.query('statusgrid');
                         if (grids.length){
                           grids[0].store.reload();
                         }
+                        me.fireEvent('statussetend');
                     },
                     failure: function(response) {
                       // TODO

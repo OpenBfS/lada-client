@@ -61,9 +61,25 @@ Ext.define('Lada.view.widget.base.Datetime', {
             target: img.getEl(),
             html: warnings
         }) : this.tooltip.html = warnings;
-        this.down('datetimefield').invalidCls = 'x-lada-warning';
-        this.down('datetimefield').markInvalid('');
+        var df = this.down('datetimefield');
+        df.markInvalid('');
         img.show();
+
+        if (df.inputWrap && df.inputEl) {
+            df.inputWrap.addCls('x-lada-warning-field');
+            df.inputEl.addCls('x-lada-warning-field');
+        } else {
+            df.onAfter({
+                render: {
+                    fn: function(el) {
+                        el.inputWrap.addCls('x-lada-warning-field');
+                        el.inputEl.addCls('x-lada-warning-field');
+                    },
+                    single: true
+                }
+            });
+        }
+
         var fieldset = this.up('fieldset[collapsible=true]');
         if (fieldset) {
             var i18n = Lada.getApplication().bundle;
@@ -81,7 +97,7 @@ Ext.define('Lada.view.widget.base.Datetime', {
             target: img.getEl(),
             html: errors
         }) : this.tooltip.html = errors;
-        this.down('datetimefield').invalidCls = 'x-lada-error';
+        this.down('datetimefield').invalidCls = 'x-lada-error-field';
         this.down('datetimefield').markInvalid('');
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
@@ -104,6 +120,34 @@ Ext.define('Lada.view.widget.base.Datetime', {
         this.down('datetimefield').clearInvalid();
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
+        cb = this.down('datetimefield');
+        if (cb.inputWrap && cb.inputEl) {
+            cb.inputWrap.removeCls('x-lada-warning-field')
+            cb.inputWrap.removeCls('x-lada-error-field')
+            cb.inputEl.removeCls('x-lada-warning-field');
+            cb.inputEl.removeCls('x-lada-error-field');
+        }  else {
+            cb.onAfter({
+                render: {
+                    fn: function(el) {
+                        el.inputWrap.removeCls('x-lada-warning-field');
+                        el.inputWrap.removeCls('x-lada-error-field');
+                        el.inputEl.removeCls('x-lada-warning-field');
+                        el.inputEl.removeCls('x-lada-error-field');
+                    },
+                    single: true
+                }
+            });
+        }
+        cb.clearInvalid();
+        if (this.tooltip) {
+            this.tooltip.destroy();
+        }
+
+    },
+
+    getName: function() {
+        return this.name;
     },
 
     setReadOnly: function(value) {

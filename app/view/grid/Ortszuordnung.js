@@ -181,6 +181,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
 
     initData: function() {
         var modelname;
+        var me = this;
         if (this.isMessprogramm) {
             this.store = Ext.create('Lada.store.OrtszuordnungMp');
             if (this.recordId) {
@@ -198,7 +199,11 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             this.store.load({
                 params: {
                     probeId: this.recordId
-                }});
+                },
+                callback: function(){
+                    me.reiHandling();
+                }
+            });
         }
         Ext.ClassManager.get(modelname).load(this.recordId, {
             failure: function(record, action) {
@@ -248,6 +253,38 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         //only enable the remove buttone, when the grid is editable.
         if (grid.readOnly) {
             grid.down('button[action=delete]').disable();
+        }
+    },
+
+    reiHandling: function(value){
+        if (!this.isMessprogramm){
+            var readonly = this.up('probenedit').record.get('readonly');
+            var dbId = this.up('probenedit').record.get('datenbasisId');
+            var dbStore = Ext.data.StoreManager.get('datenbasis')
+            var datenbasis = null;
+            if (dbStore && dbId) {
+                datenbasis =  dbStore.getById(dbId).get('datenbasis');
+            }
+            if (datenbasis && (datenbasis == 'REI-I' || datenbasis == 'REI-E')){
+                if (this.store.getCount() === 0 && !readonly){
+                    this.down('button[action=add]').enable();
+                    this.down('button[action=delete]').disable();
+                }
+                if (this.store.getCount() > 0 && !readonly){
+                    this.down('button[action=add]').disable();
+                    this.down('button[action=delete]').enable();
+                    //TODO error handling/Warning)
+                }
+            }
+            else {
+                if (readonly){
+                    this.down('button[action=add]').disable();
+                    this.down('button[action=delete]').disable();
+                } else {
+                    this.down('button[action=add]').enable();
+                    this.down('button[action=delete]').enable();
+                }
+            }
         }
     }
 });

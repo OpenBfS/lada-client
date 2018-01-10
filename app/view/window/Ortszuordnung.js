@@ -38,6 +38,8 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     record: null,
     grid: null,
 
+    datenbasis: null,
+
     /**
      * This function initialises the Window
      */
@@ -45,7 +47,25 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('ortszuordnung.window.title');
         var recordtype;
+        var reiRecord = false;
         if (this.probe) {
+            //Get datenbasis to check if its a REI Probe
+            Ext.create('Lada.store.Datenbasis', {
+                autoLoad: true,
+                listeners: {
+                    load: {
+                        scope: this,
+                        fn: function(store, records, success, op, opts) {
+                            var id = this.probe.get('datenbasisId');
+                            if (!id) {
+                                this.datenbasis = null;
+                            } else {
+                                this.datenbasis = store.getById(this.probe.get('datenbasisId')).get('datenbasis');
+                            }
+                        }
+                    }
+                }
+            });
             if (this.record) {
                 // A probe record will be edited
                 this.title = i18n.getMsg('ortszuordnung.window.title')
@@ -145,7 +165,8 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             }, {
                 xtype: 'ortszuordnungform',
                 region: 'east',
-                type: this.probe? 'probe': 'mpr'
+                type: this.probe? 'probe': 'mpr',
+                datenbasis: this.datenbasis
             }, {
                 xtype: 'tabpanel',
                 tabBarPosition: 'top',

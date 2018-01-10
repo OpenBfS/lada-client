@@ -18,10 +18,17 @@ Ext.define('Lada.view.widget.base.TextField', {
     border: 0,
     margin: '0, 0, 5, 0',
 
+    textFieldCls: '',
+
+    warning: null,
+
+    error: null,
+
     initComponent: function() {
         this.items = [{
             xtype: 'textfield',
             flex: 1,
+            cls: this.textFieldCls,
             name: this.name,
             msgTarget: 'none',
             maxLength: this.maxLength || 1000,
@@ -57,13 +64,28 @@ Ext.define('Lada.view.widget.base.TextField', {
 
     showWarnings: function(warnings) {
         var img = this.down('image[name=warnImg]');
-        Ext.create('Ext.tip.ToolTip', {
+        this.warning = Ext.create('Ext.tip.ToolTip', {
             target: img.getEl(),
             html: warnings
         });
         img.show();
-        this.down('textfield').invalidCls = 'x-lada-warning';
-        this.down('textfield').markInvalid('');
+        var tf = this.down('textfield');
+        tf.markInvalid('');
+        if (tf.inputWrap) {
+            tf.inputWrap.addCls('x-lada-warning-field');
+            tf.inputEl.addCls('x-lada-warning-field');
+        } else {
+            tf.onAfter({
+                render: {
+                    fn: function(el) {
+                        el.inputWrap.addCls('x-lada-warning-field');
+                        el.inputEl.addCls('x-lada-warning-field');
+                    },
+                    single: true
+                }
+            });
+        }
+
         var fieldset = this.up('fieldset[collapsible=true]');
         if (fieldset) {
             var i18n = Lada.getApplication().bundle;
@@ -76,11 +98,11 @@ Ext.define('Lada.view.widget.base.TextField', {
         var img = this.down('image[name=errorImg]');
         var warnImg = this.down('image[name=warnImg]');
         warnImg.hide();
-        Ext.create('Ext.tip.ToolTip', {
+        this.error = Ext.create('Ext.tip.ToolTip', {
             target: img.getEl(),
             html: errors
         });
-        this.down('textfield').invalidCls = 'x-lada-error';
+        this.down('textfield').invalidCls = 'x-lada-error-field';
         this.down('textfield').markInvalid('');
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
@@ -100,6 +122,35 @@ Ext.define('Lada.view.widget.base.TextField', {
     },
 
     clearWarningOrError: function() {
+        if (this.warning) {
+            this.warning.destroy();
+        }
+        if (this.error) {
+            this.error.destroy();
+        }
+        var tf = this.down('textfield');
+        tf.invalidCls = 'x-lada-warning-field';
+        tf.markInvalid('');
+        if (tf.inputWrap) {
+            tf.inputWrap.removeCls('x-lada-warning-field');
+            tf.inputWrap.removeCls('x-lada-error-field');
+            tf.inputEl.removeCls('x-lada-warning-field');
+            tf.inputEl.removeCls('x-lada-error-field');
+        } else {
+            tf.onAfter({
+                render: {
+                    fn: function(el) {
+                        el.inputWrap.removeCls('x-lada-warning-field');
+                        el.inputWrap.removeCls('x-lada-error-field');
+                        el.inputEl.removeCls('x-lada-warning-field');
+                        el.inputEl.removeCls('x-lada-error-field');
+                    },
+                    single: true
+                }
+            });
+        }
+
+        this.down('textfield').clearInvalid();
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
     },

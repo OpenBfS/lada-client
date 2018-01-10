@@ -102,13 +102,18 @@ Ext.define('Lada.view.grid.Messwert', {
                 store: me.messgroesseStore,
                 displayField: 'messgroesse',
                 valueField: 'id',
-                allowBlank: false,
+                allowBlank: true,
                 editable: true,
                 forceSelection: true,
                 autoSelect: true,
                 queryMode: 'local',
                 minChars: 0,
                 typeAhead: false,
+                triggers: {
+                    clear: {
+                        extraCls: 'x-form-clear-trigger'
+                    }
+                },
                 triggerAction: 'all'
             }
         }, {
@@ -156,13 +161,18 @@ Ext.define('Lada.view.grid.Messwert', {
                 store: Ext.data.StoreManager.get('messeinheiten'),
                 displayField: 'einheit',
                 valueField: 'id',
-                allowBlank: false,
+                allowBlank: true,
                 editable: true,
                 forceSelection: true,
                 autoSelect: true,
                 queryMode: 'local',
                 minChars: 0,
                 typeAhead: false,
+                triggers: {
+                    clear: {
+                        extraCls: 'x-form-clear-trigger'
+                    }
+                },
                 triggerAction: 'all'
             }
         }, {

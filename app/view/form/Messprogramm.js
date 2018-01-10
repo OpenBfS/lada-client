@@ -420,6 +420,29 @@ Ext.define('Lada.view.form.Messprogramm', {
                         });
                     }
                 }, {
+                    xtype: 'container',
+                    name: 'reiComboContainer',
+                    width: '100%',
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch'
+                    },
+                    items: [{
+                        xtype: 'reiprogpunktgruppe',
+                        name: 'reiProgpunktGrpId',
+                        fieldLabel: i18n.getMsg('reiprogpunktgruppe'),
+                        margin: '0 5 5 5',
+                        allowBlank: true,
+                        hidden: true
+                    }, {
+                        xtype: 'ktagruppe',
+                        name: 'ktaGruppeId',
+                        fieldLabel: i18n.getMsg('ktagruppe'),
+                        margin: '0 5 5 5',
+                        hidden: true,
+                        allowBlank: true
+                    }]
+                }, {
                     xtype: 'textarea',
                     name: 'probeKommentar',
                     labelAlign: 'top',

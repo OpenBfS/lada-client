@@ -211,7 +211,7 @@ Ext.define('Lada.view.widget.DayOfYear', {
             html: warnings
         });
         img.show();
-        this.down('numberfield[hidden=false]').invalidCls = 'x-lada-warning';
+        this.down('numberfield[hidden=false]').invalidCls = 'x-lada-warning-field';
         this.down('numberfield[hidden=false]').markInvalid('');
         this.down('combobox').markInvalid('');
         var fieldset = this.up('fieldset[collapsible=true]');

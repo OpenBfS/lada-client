@@ -48,6 +48,12 @@ Ext.define('Lada.controller.form.Messprogramm', {
             },
             'messprogrammform panel[xtype="deskriptor"] combobox': {
                 select: this.deskriptorSelect
+            },
+            'messprogrammform datenbasis combobox': {
+                change: this.datenbasisChanged
+             },
+            'messprogrammform container[name="reiComboContainer"] reiprogpunktgruppe combobox': {
+                change: this.reiProgpunktGruppeChanged
             }
         });
     },
@@ -411,6 +417,47 @@ Ext.define('Lada.controller.form.Messprogramm', {
         for (var i = field.layer + 1; i < 12; i++) {
             allS[i].clearValue();
         }
-    }
+    },
 
+    /**
+     * Called if reiProgpunktGruppe value has changed. Filters Umweltbereich values according to the new value
+     */
+    reiProgpunktGruppeChanged: function(combo, newVal, oldVal, opts) {
+        //Check if reiprogpunktgruppe widget is contained in a probeform
+        var formPanel = combo.up('messprogrammform');
+        if (!formPanel) {
+            return true;
+        }
+
+        var umweltCombo = formPanel.down('fieldset[title=Medium]').down('umwelt').down('combobox');
+        var umweltStore = umweltCombo.store;
+        var reiId = combo.getModelData().reiProgpunktGrpId;
+        if (newVal == '' || newVal == null) {
+            umweltStore.clearListeners();
+            umweltStore.proxy.extraParams = {};
+            umweltStore.load();
+        } else {
+            umwId = umweltCombo.getModelData().umwId;
+            umweltStore.setExtraParams({'reiprogpunktgruppe': reiId}, umwId, umweltCombo, combo);
+        }
+    },
+
+    /**
+     * Called if Datenbasis value changed. Changes visibility of REI specific containers if Datenbasis is REI
+     */
+    datenbasisChanged: function(combo, newVal, oldVal, opts) {
+        var datenbasis = combo.getRawValue();
+        var reiComboContainer = combo.up('messprogrammform').down('container[name=reiComboContainer]');
+        if ( datenbasis === 'REI-E' || datenbasis === 'REI-I') {
+            reiComboContainer.down('reiprogpunktgruppe[name=reiProgpunktGrpId]').setHidden(false);
+            reiComboContainer.down('ktagruppe[name=ktaGruppeId]').show();
+        } else {
+            var reiCombo = reiComboContainer.down('reiprogpunktgruppe[name=reiProgpunktGrpId]');
+            reiCombo.setHidden(true);
+            reiCombo.setValue(null);
+            var ktaCombo = reiComboContainer.down('ktagruppe[name=ktaGruppeId]');
+            ktaCombo.hide();
+            ktaCombo.setValue(null);
+        }
+    }
 });

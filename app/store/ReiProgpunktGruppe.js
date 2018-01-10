@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 by Bundesamt fuer Strahlenschutz
+/* Copyright (C) 2017 by Bundesamt fuer Strahlenschutz
  * Software engineering by Intevation GmbH
  *
  * This file is Free Software under the GNU GPL (v>=3)
@@ -7,38 +7,33 @@
  */
 
 /**
- * Store for Umweltbereiche
+ * Store for KtaGruppe
  */
-Ext.define('Lada.store.Umwelt', {
+Ext.define('Lada.store.ReiProgpunktGruppe', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Umwelt',
-    sorters: [{
-        property: 'id',
-        direction: 'ASC'
-    }, {
-        property: 'umweltBereich',
-        direction: 'ASC',
-        transform: function(val) {
-            if (val) {
-                return val.toLowerCase();
-            }
-            return '';
-        }
-    }],
-    sortOnLoad: true,
-    remoteSort: false,
+    model: 'Lada.model.ReiProgpunktGruppe',
+    sorters: [
+        {
+            property: 'id',
+            direction: 'ASC'
+        }],
     autoLoad: true,
+    sortOnLoad: true,
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/umwelt',
+        url: 'lada-server/rest/reiprogpunktgruppe',
         reader: {
             type: 'json',
             rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     },
 
 
-    setExtraParams: function(params, oldVal, umweltcombo, reicombo) {
+    setExtraParams: function(params, oldVal, reicombo, umweltcombo) {
         this.clearListeners();
         if (!oldVal) {
             this.proxy.extraParams = params;
@@ -46,36 +41,36 @@ Ext.define('Lada.store.Umwelt', {
             return;
         }
         this.proxy.extraParams = params;
-        var fieldset = umweltcombo.up('umwelt').up('fieldset[title=Medium]');
-        fieldset.setLoading(true);
         this.load({
             scope: this,
             callback: function(records, op, success) {
+
                 var found = false;
                 for (var i = 0; i < records.length; i++) {
                     if (records[i].id === oldVal) {
                         found = true;
-                        umweltcombo.select(records[i]);
+                        reicombo.select(records[i]);
                     }
                 }
                 if (!found) {
-                    Lada.model.Umwelt.load(oldVal, {
+                    Lada.model.ReiProgpunktGruppe.load(oldVal, {
                         scope: this,
                         callback: function(record, op, success) {
                             if (record && success) {
                                 this.add(record);
-                                umweltcombo.select(record);
+                                reicombo.select(record);
+                                reicombo.up('reiprogpunktgruppe')
+                                        .setUmweltWarningVisible(true);
                                 umweltcombo.up('umwelt').setReiWarningVisible(true);
-                                reicombo.up('reiprogpunktgruppe').setUmweltWarningVisible(true);
 
                                 this.onAfter({
                                     load: {
-                                        fn: function(store, records) {
+                                        fn: function(store) {
                                             store.add(record);
-                                            umweltcombo.select(record);
-                                            umweltcombo.up('umwelt').setReiWarningVisible(true);
+                                            reicombo.select(record);
                                             reicombo.up('reiprogpunktgruppe')
                                                     .setUmweltWarningVisible(true);
+                                            umweltcombo.up('umwelt').setReiWarningVisible(true);
                                         },
                                         single: true,
                                         scope: this,
@@ -91,7 +86,6 @@ Ext.define('Lada.store.Umwelt', {
                     reicombo.up('reiprogpunktgruppe').clearWarningOrError();
                     umweltcombo.up('umwelt').clearWarningOrError();
                 }
-                fieldset.setLoading(false);
             }
         });
     }

@@ -1,17 +1,17 @@
 .x-lada-warning-field {
   background-color: white;
-  background-image: url(../img/warning_line.png);
-  background-repeat: repeat-x;
-  background-position: bottom;
-  border-color: #FFE25D;
+  background-image: url(../img/warning_line.png) !important;
+  background-repeat: repeat-x !important;
+  background-position: bottom !important;
+  border-color: #FFE25D !important;
 }
 
 .x-lada-error-field {
   background-color: white;
-  background-image: url(../img/error_line.gif);
-  background-repeat: repeat-x;
-  background-position: bottom;
-  border-color: #FF0000;
+  background-image: url(../img/error_line.gif) !important;
+  background-repeat: repeat-x !important;
+  background-position: bottom !important;
+  border-color: #FF0000 !important;
 }
 
 .x-lada-multiline-grid .x-grid-cell-inner{
@@ -93,11 +93,6 @@
     padding-left: 20px;
 }
 
-/* Overwrites from Migration. Temporary fixes */
-.x-form-clear-trigger {
-    background-color: #cdcdcd !important;
-}
-
 .x-grid-row-editor-buttons-top {
     clip: auto !important;
 }
@@ -110,4 +105,26 @@ span.x-grid-checkcolumn {
     background-color: transparent !important;
     background-image: none !important;
     border-style: none !important;
+
+/* EmptyText styling for Statuskombi textfield */
+.status-empty .x-form-empty-field { /* IE that does not support placeholder */
+    color: black !important;
+}
+
+.status-empty ::-webkit-input-placeholder { /* WebKit/Chrome/Safari */
+    color: black !important;
+}
+
+.status-empty :-moz-placeholder { /* Firefox 18- */
+    color: black;
+    opacity: 1;
+}
+
+.status-empty ::-moz-placeholder { /* Firefox 19+ */
+    color: black;
+    opacity: 1;
+}
+
+.status-empty :-ms-input-placeholder { /* IE that supports placeholder */
+    color: black;
 }

@@ -13,7 +13,8 @@ Ext.define('Lada.model.Ort', {
     extend: 'Ext.data.Model',
 
     fields: [{
-        name: 'id'
+        name: 'id',
+        type: 'int'
     }, {
         name: 'aktiv',
         type: 'boolean',

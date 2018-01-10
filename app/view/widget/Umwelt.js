@@ -30,17 +30,26 @@ Ext.define('Lada.view.widget.Umwelt' ,{
     displayTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">{id} - {umweltBereich}</tpl>'),
     enableKeyEvents: true,
+    reiWarning: null,
+    allowBlank: true,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.umweltbereich');
 
-        this.store = Ext.data.StoreManager.get('umwelt');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.Umwelt');
-        }
+        this.store = Ext.create('Lada.store.Umwelt');
+        this.store.extraParams = {};
+        this.store.load();
         this.store.sort();
         this.callParent(arguments);
+    },
 
+    setReiWarningVisible: function(state) {
+        var i18n = Lada.getApplication().bundle;
+        if (state) {
+            this.showWarnings(i18n.getMsg('warn.msg.umwelt.reiprogpunktgruppe'));
+        } else {
+            this.clearWarningOrError();
+        }
     }
 });

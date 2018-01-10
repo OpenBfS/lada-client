@@ -140,9 +140,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 if (btn === 'yes') {
                     selection.erase({
                         success: function() {
-                            var ozw = button.up('window');
-                            ozw.ortstore.reload();
-                            ozw.onStoreChanged();
+                            grid.store.reload();
                         },
                         failure: function(request, response) {
                             var i18n = Lada.getApplication().bundle;

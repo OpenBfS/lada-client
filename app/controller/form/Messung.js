@@ -12,7 +12,6 @@
 Ext.define('Lada.controller.form.Messung', {
     extend: 'Ext.app.Controller',
     requires: ['Lada.view.window.SetStatus'],
-
     /**
      * Initialize the Controller
      * It has 3 listeners
@@ -69,11 +68,15 @@ Ext.define('Lada.controller.form.Messung', {
                     formPanel.setMessages(json.errors, json.warnings);
                     formPanel.up('window').initData();
                     formPanel.up('window').grid.store.reload();
+                    var messwertgrid  = formPanel.up('window').down('messwertgrid');
                     var parentWin = button.up('window').parentWindow;
                     parentWin.initData();
                     var parentGrid = Ext.ComponentQuery.query('messunglistgrid');
                     if (parentGrid.length == 1) {
                         parentGrid[0].store.reload();
+                    }
+                    if (messwertgrid) {
+                        messwertgrid.store.reload();
                     }
                     if (response.action === 'create' && json.success) {
                         var oldWin = button.up('window');
@@ -220,25 +223,29 @@ Ext.define('Lada.controller.form.Messung', {
     },
 
     addStatus: function(button){
+        var me = this;
         var i18n = Lada.getApplication().bundle;
         var win = Ext.create('Lada.view.window.SetStatus', {
             title: i18n.getMsg('statusSetzen.win.title'),
             record: button.up('window').down('messungform').getForm().getRecord(),
             modal: true
         });
+        var view = button.up().up().up().up();
+        win.on('statussetend', function(){
+            view.updateStatusText();
+        });
         win.show();
     },
 
     resetStatus: function(button){
         var me = this;
-        var rstbutton = button;
         var i18n = Lada.getApplication().bundle;
         Ext.MessageBox.confirm(
             i18n.getMsg('statusgrid.reset.mbox.title'),
             i18n.getMsg('statusgrid.reset.mbox.text'),
             function(btn) {
                 if (btn === 'yes') {
-                    me.doResetStatus(rstbutton);
+                    me.doResetStatus(button);
                 }
         });
     },
@@ -246,31 +253,31 @@ Ext.define('Lada.controller.form.Messung', {
     doResetStatus: function(button){
         var i18n = Lada.getApplication().bundle;
         button.setDisabled(true);
-        var s = button.up('window').down('messungform').getCurrentStatus();
-        var messId = button.up('window').down('messungform').getRecord().get('id');
-
-        if (!s) {
+        var record = button.up('window').down('messungform').getRecord();
+        if (!record) {
             Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                 i18n.getMsg('err.msg.generic.body'));
             return;
         }
-
+        var currentstatus = button.up('statuskombi').currentValue;
         //Set Status to 'Resetted' (8)
         var kombis = Ext.data.StoreManager.get('statuskombi');
-        var stufe = kombis.getById(s.get('statusKombi')).get('statusStufe').id;
-        var kombiNdx = kombis.findBy(function(record, id) {
-            return record.get('statusStufe').id === stufe
-                && record.get('statusWert').id === 8;
+        var stufe = currentstatus.statusStufe.id;
+        var kombiNdx = kombis.findBy(function(rec, id) {
+            return rec.get('statusStufe').id === stufe
+                && rec.get('statusWert').id === 8;
         });
-        var record = s.copy();
-        record.set('datum', new Date());
-        record.set('statusKombi', kombis.getAt(kombiNdx).get('id'));
-        record.set('id', null);
-        record.set('text', i18n.getMsg('statusgrid.resetText'));
+        var data = {
+          messungsId: record.get('id'),
+           mstId: Lada.mst[0], // TODO check if this is the correct one
+           datum: new Date(),
+           statusKombi: kombis.getAt(kombiNdx).get('id'),
+           text: i18n.getMsg('statusgrid.resetText')
+        };
 
         Ext.Ajax.request({
             url: 'lada-server/rest/status',
-            jsonData: record.getData(),
+            jsonData: data,
             method: 'POST',
             success: function(response) {
                 var i18n = Lada.getApplication().bundle;
@@ -288,11 +295,12 @@ Ext.define('Lada.controller.form.Messung', {
                         }
                     }
                 }
-
                 var win = button.up('window');
                 win.initData();
                 win.down('statusgrid').initData();
-                button.up('statuskombi').setValue(response.data.status);
+                if (response.data){
+                  button.up('statuskombi').setValue(response.data.status);
+                }
                 try {
                     win.parentWindow.initData();
                     win.parentWindow.down('messunggrid').store.reload();

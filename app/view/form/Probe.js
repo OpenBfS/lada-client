@@ -22,6 +22,8 @@ Ext.define('Lada.view.form.Probe', {
         'Lada.view.widget.Netzbetreiber',
         'Lada.view.widget.Betriebsart',
         'Lada.view.widget.Probenart',
+        'Lada.view.widget.ReiProgpunktGruppe',
+        'Lada.view.widget.KtaGruppe',
         'Lada.view.widget.Umwelt',
         'Lada.view.widget.Deskriptor',
         'Lada.view.widget.base.TextField',
@@ -304,6 +306,29 @@ Ext.define('Lada.view.form.Probe', {
                             }
                           });
                         }
+                    }, {
+                        xtype: 'container',
+                        name: 'reiComboContainer',
+                        width: '100%',
+                        layout: {
+                            type: 'hbox',
+                            align: 'stretch'
+                        },
+                        items: [{
+                            xtype: 'reiprogpunktgruppe',
+                            name: 'reiProgpunktGrpId',
+                            fieldLabel: i18n.getMsg('reiprogpunktgruppe'),
+                            margin: '0 5 5 5',
+                            allowBlank: true,
+                            hidden: true
+                        }, {
+                            xtype: 'ktagruppe',
+                            name: 'ktaGruppeId',
+                            fieldLabel: i18n.getMsg('ktagruppe'),
+                            margin: '0 5 5 5',
+                            hidden: true,
+                            allowBlank: true
+                        }]
                     }]
                 }, {
                     // Zeit

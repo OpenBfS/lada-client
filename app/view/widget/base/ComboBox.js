@@ -19,6 +19,12 @@ Ext.define('Lada.view.widget.base.ComboBox', {
 
     margin: '0, 0, 5, 0',
 
+    warning: null,
+
+    error: null,
+
+    defaultInputWrapCls: null,
+
     initComponent: function() {
         if (this.editable === undefined) {
             this.editable = true;
@@ -87,16 +93,35 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         /* listeners have been passed to combobox. Thus, clear them on panel
          * to avoid double effects of events fired on combobox and panel. */
         this.clearListeners();
+
+        this.defaultInputWrapCls = this.down('combobox').inputWrapCls;
     },
 
     showWarnings: function(warnings) {
+        this.clearWarningOrError();
         var img = this.down('image[name=warnImg]');
-        Ext.create('Ext.tip.ToolTip', {
+        var tt = Ext.create('Ext.tip.ToolTip', {
             target: img.getEl(),
             html: warnings
         });
-        this.down('combobox').invalidCls = 'x-lada-warning';
-        this.down('combobox').markInvalid('');
+        this.warning = tt;
+        var cb = this.down('combobox');
+        cb.markInvalid('');
+        if (cb.inputWrap && cb.inputEl) {
+            cb.inputWrap.addCls('x-lada-warning-field');
+            cb.inputEl.addCls('x-lada-warning-field');
+        } else {
+            cb.onAfter({
+                render: {
+                    fn: function(el) {
+                        el.inputWrap.addCls('x-lada-warning-field');
+                        el.inputEl.addCls('x-lada-warning-field');
+                    },
+                    single: true
+                }
+            });
+        }
+
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
         if (fieldset) {
@@ -114,7 +139,6 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             target: img.getEl(),
             html: errors
         });
-        this.down('combobox').invalidCls = 'x-lada-error';
         this.down('combobox').markInvalid('');
         img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
@@ -126,8 +150,31 @@ Ext.define('Lada.view.widget.base.ComboBox', {
     },
 
     clearWarningOrError: function() {
+        if (this.warning) {
+            this.warning.destroy();
+        }
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
+        cb = this.down('combobox');
+        if (cb.inputWrap && cb.inputEl) {
+            cb.inputWrap.removeCls('x-lada-warning-field')
+            cb.inputWrap.removeCls('x-lada-error-field')
+            cb.inputEl.removeCls('x-lada-warning-field');
+            cb.inputEl.removeCls('x-lada-error-field');
+        }  else {
+            cb.onAfter({
+                render: {
+                    fn: function(el) {
+                        el.inputWrap.removeCls('x-lada-warning-field');
+                        el.inputWrap.removeCls('x-lada-error-field');
+                        el.inputEl.removeCls('x-lada-warning-field');
+                        el.inputEl.removeCls('x-lada-error-field');
+                    },
+                    single: true
+                }
+            });
+        }
+        cb.clearInvalid();
     },
 
     getValue: function() {
