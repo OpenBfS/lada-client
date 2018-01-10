@@ -49,8 +49,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform panel[xtype="deskriptor"] combobox': {
                 select: this.deskriptorSelect
             },
-            'messprogrammform datenbasis combobox': {
-                change: this.datenbasisChanged
+            'messprogrammform umwelt combobox': {
+                change: this.umweltChanged
              },
             'messprogrammform container[name="reiComboContainer"] reiprogpunktgruppe combobox': {
                 change: this.reiProgpunktGruppeChanged
@@ -423,41 +423,53 @@ Ext.define('Lada.controller.form.Messprogramm', {
      * Called if reiProgpunktGruppe value has changed. Filters Umweltbereich values according to the new value
      */
     reiProgpunktGruppeChanged: function(combo, newVal, oldVal, opts) {
-        //Check if reiprogpunktgruppe widget is contained in a probeform
+        // avoids endless loop
+         if (combo.name !== 'reiProgpunktGrpId'){
+            return true;
+        }
+        //Check if reiprogpunktgruppe widget is contained in a messprogrammform
         var formPanel = combo.up('messprogrammform');
         if (!formPanel) {
             return true;
         }
 
         var umweltCombo = formPanel.down('fieldset[title=Medium]').down('umwelt').down('combobox');
+        if (!umweltCombo){
+            return true;
+        }
         var umweltStore = umweltCombo.store;
         var reiId = combo.getModelData().reiProgpunktGrpId;
-        if (newVal == '' || newVal == null) {
-            umweltStore.clearListeners();
-            umweltStore.proxy.extraParams = {};
-            umweltStore.load();
-        } else {
-            umwId = umweltCombo.getModelData().umwId;
-            umweltStore.setExtraParams({'reiprogpunktgruppe': reiId}, umwId, umweltCombo, combo);
+        umweltStore.proxy.extraParams = {};
+        if (reiId || reiId === 0) {
+            umweltStore.proxy.extraParams.reiprogpunktgruppe = reiId;
         }
+        umweltStore.load();
     },
 
     /**
-     * Called if Datenbasis value changed. Changes visibility of REI specific containers if Datenbasis is REI
+     * Called if umweltBereich value has changed. filters reiProgpunktgruppe values according to the new value.
      */
-    datenbasisChanged: function(combo, newVal, oldVal, opts) {
-        var datenbasis = combo.getRawValue();
-        var reiComboContainer = combo.up('messprogrammform').down('container[name=reiComboContainer]');
-        if ( datenbasis === 'REI-E' || datenbasis === 'REI-I') {
-            reiComboContainer.down('reiprogpunktgruppe[name=reiProgpunktGrpId]').setHidden(false);
-            reiComboContainer.down('ktagruppe[name=ktaGruppeId]').show();
-        } else {
-            var reiCombo = reiComboContainer.down('reiprogpunktgruppe[name=reiProgpunktGrpId]');
-            reiCombo.setHidden(true);
-            reiCombo.setValue(null);
-            var ktaCombo = reiComboContainer.down('ktagruppe[name=ktaGruppeId]');
-            ktaCombo.hide();
-            ktaCombo.setValue(null);
+    umweltChanged: function(combo, newVal, oldVal, opts) {
+        // avoids endless loop
+        if (combo.name !== 'umwId'){
+            return true;
         }
+        //Check if umwelt widget is contained in a messprogrammform
+        var formPanel = combo.up('messprogrammform');
+        if (!formPanel) {
+            return true;
+        }
+
+        var reiCombo = formPanel.down('reiprogpunktgruppe').down('combobox');
+        if (!reiCombo) {
+            return true;
+        }
+        var reiStore = reiCombo.store;
+        reiStore.proxy.extraParams = {};
+        var umwId = combo.getModelData().umwId;
+        if (umwId || umwId === 0) {
+            reiStore.proxy.extraParams.umwelt = umwId;
+        }
+        reiStore.load();
     }
 });
