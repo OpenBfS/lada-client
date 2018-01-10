@@ -604,7 +604,10 @@ Ext.define('Lada.view.form.Messprogramm', {
         if (media) {
             var mediaParts = media.split(' ');
             this.setMediaSN(0, mediaParts);
+        } else {
+            this.setMediaSN(0, '0');
         }
+
     },
 
     setMediaSN: function(ndx, media, beschreibung) {
@@ -616,35 +619,28 @@ Ext.define('Lada.view.form.Messprogramm', {
         var me = this;
         var current = this.down('deskriptor[layer=' + ndx + ']');
         var cbox = current.down('combobox');
-        if (ndx === 0) {
-            current.store.proxy.extraParams = {
-                'layer': ndx
-            };
-        } else {
+        cbox.store.proxy.extraParams = {
+           'layer': ndx,
+        };
+        if (ndx >= 1) {
             var parents = current.getParents(cbox);
             if (parents.length === 0) {
                 return;
             }
-            current.store.proxy.extraParams = {
-                'layer': ndx,
-                'parents': parents
-            };
-        }
-        current.store.load(function(records, op, success) {
+            cbox.store.proxy.extraParams.parents = parents;
+        };
+        cbox.store.load(function(records, op, success) {
             if (!success) {
                 return;
             }
-            var value = current.store.findRecord('sn', parseInt(media[ndx + 1], 10));
-            if (value) {
-                current.setValue(value.get('id'));
-                if ( (ndx <= 3) && (media[1] === '01') && (value.get('beschreibung') !== 'leer') ) {
-                    beschreibung = value.get('beschreibung');
-                } else if ( (media[1] !== '01') && (value.get('beschreibung') !== 'leer') && (ndx <= 1) ) {
-                    beschreibung = value.get('beschreibung');
+            cbox.select(cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
+            var mediatext = cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10));
+            if (mediatext !== null) {
+                if ( (ndx <= 3) && (media[1] === '01') && (mediatext.data.beschreibung !== 'leer') ) {
+                    beschreibung = mediatext.data.beschreibung;
+                } else if ( (media[1] !== '01') && (mediatext.data.beschreibung !== 'leer') && (ndx <= 1) ) {
+                    beschreibung = mediatext.data.beschreibung;
                 }
-            } else {
-                current.setValue(0);
-                beschreibung = 'leer';
             }
             me.setMediaSN(++ndx, media, beschreibung);
         });

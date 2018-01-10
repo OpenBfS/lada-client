@@ -163,6 +163,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
             record.set('laborMstId', labRec.get('laborMst'));
         }
         this.down('probeform').setRecord(record);
+        this.down('probeform').setMediaDesk(record);
     },
 
     /**

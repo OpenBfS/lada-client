@@ -520,7 +520,10 @@ Ext.define('Lada.view.form.Probe', {
         if (media) {
             var mediaParts = media.split(' ');
             this.setMediaSN(0, mediaParts);
+        } else {
+            this.setMediaSN(0, '0');
         }
+
     },
 
     setMediaSN: function(ndx, media, beschreibung) {
@@ -532,19 +535,15 @@ Ext.define('Lada.view.form.Probe', {
         var me = this;
         var current = this.down('deskriptor[layer=' + ndx + ']');
         var cbox = current.down('combobox');
-        if (ndx === 0) {
-            cbox.store.proxy.extraParams = {
+        cbox.store.proxy.extraParams = {
                 'layer': ndx
-            };
-        } else {
-            var parents = current.getParents(current.down('combobox'));
+        };
+        if (ndx >= 1){
+            var parents = current.getParents(cbox);
             if (parents.length === 0) {
                 return;
             }
-            cbox.store.proxy.extraParams = {
-                'layer': ndx,
-                'parents': parents
-            };
+            cbox.store.proxy.extraParams.parents = parents;
         }
         cbox.store.load(function(records, op, success) {
             if (!success) {

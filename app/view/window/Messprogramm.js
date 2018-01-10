@@ -218,6 +218,7 @@ Ext.define('Lada.view.window.Messprogramm', {
               this.down('messprogrammform').down('netzbetreiber').setValue(netzbetreiber);
             }
             this.down('messprogrammform').setRecord(record);
+            this.down('messprogrammform').setMediaDesk(record);
             this.down('messprogrammform').down('messstellelabor').down('combobox').select(1);
         }
         this.down('messprogrammform').isValid();
