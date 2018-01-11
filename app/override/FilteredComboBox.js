@@ -88,9 +88,6 @@ Ext.define('Lada.override.FilteredComboBox', {
             }
             me.afterQuery(queryPlan);
         }
-    },
-    clearLocalFilter: function() {
-        this.getStore().clearFilter(true);
     }
 });
 
