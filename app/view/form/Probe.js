@@ -282,7 +282,7 @@ Ext.define('Lada.view.form.Probe', {
                         editable: true,
                         extraParams: function(){
                           this.down('combobox').on({
-                            expand: {
+                            focus: {
                                 fn: function(combo) {
                                     var store = Ext.StoreManager.get('messprogrammkategorie');
                                     store.clearFilter();
@@ -297,11 +297,6 @@ Ext.define('Lada.view.form.Probe', {
                                     } else {
                                         store.filter('netzbetreiberId', nId);
                                     }
-                                }
-                            },
-                            collapse: {
-                                fn: function(combo) {
-                                    Ext.StoreManager.get('messprogrammkategorie').clearFilter();
                                 }
                             }
                           });

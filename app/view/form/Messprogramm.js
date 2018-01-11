@@ -370,7 +370,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     labelWidth: 95,
                     extraParams: function() {
                         this.down('combobox').on({ // this = widget
-                            expand: function(combo) {
+                            focus: function(combo) {
                                 var store = Ext.StoreManager.get('probenehmer');
                                 store.clearFilter();
                                 var nId = combo.up('fieldset')
@@ -384,9 +384,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 } else {
                                     store.filter('netzbetreiberId', nId);
                                 }
-                            },
-                            collapse: function(combo) {
-                                Ext.StoreManager.get('probenehmer').clearFilter();
                             }
                         });
                     }
@@ -401,7 +398,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     editable: true,
                     extraParams: function() {
                         this.down('combobox').on({ // this = widget
-                            expand: function(combo) {
+                            focus: function(combo) {
                                 var store = Ext.StoreManager.get('messprogrammkategorie');
                                 store.clearFilter();
                                 var nId = combo.up('fieldset')
@@ -415,9 +412,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 } else {
                                     store.filter('netzbetreiberId', nId);
                                 }
-                            },
-                            collapse: function(combo) {
-                                Ext.StoreManager.get('messprogrammkategorie').clearFilter();
                             }
                         });
                     }
