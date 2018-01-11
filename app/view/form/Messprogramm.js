@@ -366,6 +366,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     //width: '100%',
                     minValue: 0,
                     anchor: '100%',
+                    editable: true,
                     labelWidth: 95,
                     extraParams: function() {
                         this.down('combobox').on({ // this = widget
@@ -397,6 +398,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     //width: '100%',
                     anchor: '100%',
                     labelWidth: 115,
+                    editable: true,
                     extraParams: function() {
                         this.down('combobox').on({ // this = widget
                             expand: function(combo) {
