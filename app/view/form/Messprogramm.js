@@ -433,6 +433,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         fieldLabel: i18n.getMsg('reiprogpunktgruppe'),
                         margin: '0 5 5 5',
                         allowBlank: true,
+                        editable: true,
                         hidden: true
                     }, {
                         xtype: 'ktagruppe',
@@ -440,6 +441,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         fieldLabel: i18n.getMsg('ktagruppe'),
                         margin: '0 5 5 5',
                         hidden: true,
+                        editable: true,
                         allowBlank: true
                     }]
                 }, {
