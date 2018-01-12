@@ -13,7 +13,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     extend: 'Ext.grid.Panel',
 
     requires: [
-        'Lada.view.window.Map'
+        'Lada.view.window.Map',
+        'Ext.grid.column.Widget'
     ],
 
     store: null,
