@@ -17,20 +17,22 @@ Ext.define('Lada.view.window.Map', {
      */
     geom: null,
 
-    height: '500px',
+    height: '350px',
 
     width: '500px',
+
+    layout: 'fit',
 
     map: null,
 
     initComponent: function() {
         this.map = Ext.create('Lada.view.panel.Map',{
-            resizable: true,
+            resizable: false,
             layout: 'fit',
             collapsible: false,
             externalOrteStore: true,
-            height: '100%',
-            width: '100%'
+            height: this.height,
+            width: this.width
         });
         this.items = [this.map];
 

@@ -161,33 +161,33 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     /**
-     * Draws a the content of a given GeoJSON Object
+     * Draws the content of a given GeoJSON Object
      */
     drawGeoJson: function(json) {
         if (!json) {
             return;
         }
         var style = new ol.style.Style({
-          stroke: new ol.style.Stroke({
-            color: 'blue',
-            lineDash: [4],
-            width: 30
-          }),
-          fill: new ol.style.Fill({
-            color: 'rgba(0, 0, 255, 0.1)'
-          })
+            stroke: new ol.style.Stroke({
+                color: 'blue',
+                lineDash: [4],
+                width: 4
+            }),
+            fill: new ol.style.Fill({
+                color: 'rgba(0, 0, 255, 0.1)'
+            })
         });
         var format = new ol.format.GeoJSON();
         var features = format.readFeatures(json);
         var vectorSource = new ol.source.Vector({
             features: features
         });
-
         var extent = vectorSource.getExtent();
 
         var vectorLayer = new ol.layer.Vector({
             source: vectorSource,
-            style: style
+            style: style,
+            visible: true
         });
         this.map.addLayer(vectorLayer);
 
@@ -311,7 +311,6 @@ Ext.define('Lada.view.panel.Map', {
      * Override to resize the map and reposition the logo.
      */
     onResize: function() {
-        console.log('resize');
         this.superclass.onResize.apply(this, arguments);
         this.map.updateSize();
     },

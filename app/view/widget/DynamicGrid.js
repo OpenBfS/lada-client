@@ -160,20 +160,15 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             //Change id field to a valid ExtJS6 id
             cols[i].id = 'col-' + cols[i].id;
 
-            //### DEBUG
-            /*
-            switch(cols[i].dataIndex){
-                //Use pArt column for geometry testing
-                case 'pArt':
-                    cols[i].dataType.name = 'geom';
-                    break;
-            }
-            */
-            //###
-
             //Check column type and set to string if unknown
             if (!cols[i].dataType.name) {
                 cols[i].dataType = 'string';
+            }
+
+            //If defined, apply an ExtJS formatter string
+            if (cols[i].dataType.format) {
+                //TODO: Valid formatter strings in database
+                //cols[i].formatter = cols[i].dataType.format;
             }
             fields.push(new Ext.data.Field({
                 name: cols[i].dataIndex
@@ -181,6 +176,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (cols[i] === 'id' || cols[i].dataIndex === 'probeId') {
                 continue;
             }
+
             var openIconPath = 'img/document-open.png';
             //TODO: Use proper icons
             switch (cols[i].dataType.name) {
@@ -314,31 +310,14 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         hidden: true,
                         listeners: {
                             click: function(button) {
-                                var geom = '';
-                                ///### DEBUG
-                                /*geom = {
-                                    'type': 'FeatureCollection',
-                                        'crs': {
-                                            'type': 'name',
-                                            'properties': {
-                                            'name': 'EPSG:3857'
-                                        }
-                                    },
-                                    'features': [{
-                                        "type": "Feature",
-                                        "geometry": {
-                                            "type": "Point",
-                                            "coordinates": [1527496,6634996]
-                                        }
-                                    }]
-                                };*/
-                                //TODO: Open a map window and show geom
+                                var geom = button.geom;
                                 var mapWin = Ext.create('Lada.view.window.Map', {
                                     geom: geom
                                 });
                                 mapWin.show();
                             },
                             textchange: function(button, oldval, newval) {
+                                button.geom = newval;
                                 button.text = '';
                                 button.tooltip = newval;
                                 if (!newval || newval == '') {
