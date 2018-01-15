@@ -354,12 +354,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var filter_low = '';
         ozw.ortstore.proxy.extraParams = {netzbetreiberId: ozw.netzbetreiberId};
         if (filterstring) {
-            filter_low = filterstring.toLowerCase();
-            ozw.ortstore.addFilter({
-                name: 'ortStringSearch',
-                property: 'ort',
-                value: filter_low
-            });
+            ozw.ortstore.proxy.extraParams = {'search': filterstring};
         }
         var toolbar = ozw.down('tabpanel').down('ortstammdatengrid').down('pagingtoolbar');
         if (localfilter) {

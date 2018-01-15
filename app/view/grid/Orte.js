@@ -332,17 +332,6 @@ Ext.define('Lada.view.grid.Orte', {
         var me = this;
 
         if (store) {
-            //Insert qid param to prevent Error 500
-            var queryStore = Ext.create('Lada.store.StammdatenQueries');
-            queryStore.load({
-                callback: function(records, op, success) {
-                    for (var i = 0; i < records.length; i++) {
-                        if( records[i].get('type') === 'ort') {
-                            store.getProxy().extraParams.qid = records[i].get('id');
-                        }
-                    }
-                }
-            });
             this.reconfigure(store);
             store.on('load', function(loadedStore) {
                 if (me.up('tabpanel')) {
