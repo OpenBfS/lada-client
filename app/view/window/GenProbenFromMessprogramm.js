@@ -234,12 +234,17 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 asynchronousLoad: false
         });
 
-        var mpStore = Ext.create('Lada.store.MessprogrammeList');
+        var mmtStore = Ext.create('Lada.store.MmtMessprogramm', {
+            asynchronousLoad: false,
+            autoLoad: true
+        });
 
+        var mpStore = Ext.create('Lada.store.MessprogrammeList');
         var stores = [umwStore, mpStore];
         storeJson = {
             umweltStore: umwStore,
-            mpStore: mpStore
+            mpStore: mpStore,
+            mmtStore: mmtStore
         };
 
         for (var i = 0; i < stores.length; i++) {
@@ -258,6 +263,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     createGrid: function(data, storeJson) {
         var umwStore = storeJson.umweltStore;
         var mpStore = storeJson.mpStore;
+        var mmtStore = storeJson.mmtStore;
 
         var i18n = Lada.getApplication().bundle;
         var gridstore = Ext.create('Lada.store.Proben');
@@ -382,7 +388,30 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     return value;
                 }
             }
-            //TODO: Anzahl Messungen
+        }, {
+            header: 'Messungen',
+            renderer: function(value, metadata, rec) {
+                var mprId = rec.get('mprId');
+                mmtStore.clearFilter();
+                mmtStore.filter('messprogrammId', mprId);
+                var count = mmtStore.getCount();
+                if (!count){
+                    return '(0)';
+                }
+                var mgrtext = '';
+                var mmth = mmtStore.getAt(0).get('mmtId');
+                if (mmth){
+                    mgrtext = mmth;
+                }
+                for (var i = 1; i < count; i ++ ){
+                    var mmth = mmtStore.getAt(i).get('mmtId');
+                    if (mmth){
+                        mgrtext += ', ' + mmth;
+                    }
+                }
+                mgrtext += '(' + count + ')';
+                return mgrtext;
+            }
         }, {
             header: i18n.getMsg('entnahmeOrt'),
             renderer: function(value, metadata, rec) {
