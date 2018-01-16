@@ -97,7 +97,6 @@ Ext.define('Lada.view.grid.ProbeList', {
         var columns = caf[0];
         var fields = caf[1];
         var i18n = Lada.getApplication().bundle;
-
         columns.push({
             xtype: 'actioncolumn',
             text: i18n.getMsg('action'),

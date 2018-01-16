@@ -166,14 +166,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 cols[i].dataType = 'string';
             }
 
-            //If defined, apply an ExtJS formatter string
-            if (cols[i].dataType.format) {
-                //TODO: Valid formatter strings in database
-                //cols[i].formatter = cols[i].dataType.format;
-            }
-            fields.push(new Ext.data.Field({
+            var curField = {
                 name: cols[i].dataIndex
-            }));
+            };
             if (cols[i] === 'id' || cols[i].dataIndex === 'probeId') {
                 continue;
             }
@@ -330,6 +325,36 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         }
                     }
                 break;
+                case 'date':
+                    curField.depends = cols[i].dataIndex;
+
+                    cols[i].xtype = 'datecolumn';
+                    cols[i].format = cols[i].dataType.format;
+                    cols[i].renderer = function(value, cell){
+                        if (!value || value == '') {
+                            return '';
+                        }
+                        var format = cell.column.format;
+                        var dt =  Ext.Date.format(new Date(value), format);
+                        return dt;
+                    };
+
+                break;
+                case 'number':
+                cols[i].xtype = 'numbercolumn';
+                cols[i].format = cols[i].dataType.format;
+                cols[i].renderer = function(value, cell) {
+                    if (!value) {
+                        return '';
+                    }
+                    var format = cell.column.format;
+                    if (format === 'e') {
+                        return value.toExponential();
+                    } else {
+                        return Ext.util.Format.number(value, format);
+                    }
+                }
+                break;
                 default:
                     switch (cols[i].dataIndex) {
                         case 'dBasis':
@@ -348,6 +373,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                             cols[i].filter = {type: 'string'};
                     }
             }
+            fields.push(curField);
             resultColumns.push(cols[i]);
         }
         var caf = new Array();
