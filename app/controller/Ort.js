@@ -44,12 +44,15 @@ Ext.define('Lada.controller.Ort', {
     },
 
     editRecord: function(grid, record) {
-        if (record.get('readonly') === false) {
-            Ext.create('Lada.view.window.Ort',{
-                record: record,
-                parentWindow: grid.up('ortpanel')
-            }).show();
-        }
+        if (record.get('readonly') === false)
+        Lada.model.Ort.load(record.get('id'), {
+            success: function(record) {
+                Ext.create('Lada.view.window.Ort',{
+                    record: record,
+                    parentWindow: grid.up('panel')
+                }).show();
+            }
+        });
     },
 
     deleteItem: function(button) {

@@ -60,11 +60,15 @@ Ext.define('Lada.view.grid.Orte', {
             },
             handler: function(grid, rowIndex, colIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
-                if (rec.get('readonly') === false) {
-                    Ext.create('Lada.view.window.Ort',{
-                        record: rec,
-                        parentWindow: grid.up('panel')
-                    }).show();
+                if (rec.get('readonly') == false){
+                    Lada.model.Ort.load(rec.get('id'), {
+                        success: function(record) {
+                            Ext.create('Lada.view.window.Ort',{
+                                record: record,
+                                parentWindow: grid.up('panel')
+                            }).show();
+                        }
+                    });
                 }
             }
         }, {
