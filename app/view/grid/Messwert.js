@@ -27,6 +27,8 @@ Ext.define('Lada.view.grid.Messwert', {
     margin: '0, 5, 15, 5',
 
     recordId: null,
+    umwId: null,
+    defaultMehId: null,
     readOnly: true,
     allowDeselect: true,
     messgroesseStore: null,
@@ -43,19 +45,26 @@ Ext.define('Lada.view.grid.Messwert', {
                 // Make row ineditable when readonly is set to true
                 // Normally this would belong into a controller an not the view.
                 // But the RowEditPlugin is not handled there.
-                beforeedit: function(e, o) {
-                    // We are not in a messung window!
-                    if (!o.grid.up('window')) {
-                        return false;
+                beforeedit: {
+                    scope: this,
+                    fn: function(e, o) {
+                        // We are not in a messung window!
+                        if (!o.grid.up('window')) {
+                            return false;
+                        }
+                        // We are in a messung window and should check if we can
+                        // edit.
+                        var readonlywin = o.grid.up('window').record.get('readonly');
+                        var readonlygrid = o.record.get('readonly');
+                        if (readonlywin == true || readonlygrid == true || this.disabled) {
+                            return false;
+                        }
+                        //Preselect Messeinheit
+                        if (this.defaultMehId) {
+                            o.record.set('mehId', this.defaultMehId);
+                        }
+                        return true;
                     }
-                    // We are in a messung window and should check if we can
-                    // edit.
-                    var readonlywin = o.grid.up('window').record.get('readonly');
-                    var readonlygrid = o.record.get('readonly');
-                    if (readonlywin == true || readonlygrid == true || this.disabled) {
-                        return false;
-                    }
-                    return true;
                 }
             }
         });
@@ -228,6 +237,16 @@ Ext.define('Lada.view.grid.Messwert', {
             this.store.removeAll();
         } else {
             this.store = Ext.create('Lada.store.Messwerte');
+        }
+
+        if (this.umwId) {
+            var umwStore = Ext.create('Lada.store.Umwelt');
+            var umwModel = umwStore.getModel().load(this.umwId, {
+                scope: this,
+                success: function(rec, op) {
+                    this.defaultMehId = rec.get('mehId');
+                }
+            });
         }
         this.store.load({
             params: {
