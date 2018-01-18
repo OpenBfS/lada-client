@@ -38,17 +38,6 @@ Ext.define('Lada.view.form.Ort', {
             labelWidth: 125,
             value: this.record.get('netzbetreiberId')
         }, {
-            xtype: 'tfield',
-            name: 'ortId',
-            maxLength: 10,
-            labelWidth: 125,
-            fieldLabel: i18n.getMsg('orte.ortId')
-        }, {
-            xtype: 'checkbox',
-            labelWidth: 125,
-            name: 'aktiv',
-            fieldLabel: 'aktiv:'
-        },{
             xtype: 'staat',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('staat'),
@@ -60,6 +49,87 @@ Ext.define('Lada.view.form.Ort', {
             fieldLabel: i18n.getMsg('orte.verwaltungseinheit'),
             forceSelection: true,
             name: 'gemId'
+        }, {
+            xtype: 'tfield',
+            labelWidth: 125,
+            maxLength: 15,
+            name: 'kurztext',
+            fieldLabel: i18n.getMsg('orte.kurztext')
+        }, {
+            xtype: 'tfield',
+            labelWidth: 125,
+            maxLength: 100,
+            fieldLabel: i18n.getMsg('orte.langtext'),
+            name: 'langtext'
+        }, {
+            xtype: 'box',
+            autoEl: {tag: 'hr'}
+        }, {
+            xtype: 'ortszusatz',
+            labelWidth: 125,
+            editable: true,
+            name: 'ozId',
+            fieldLabel: i18n.getMsg('orte.ozId')
+        }, {
+            xtype: 'orttyp',
+            labelWidth: 125,
+            maxLength: 100,
+            editable: true,
+            name: 'ortTyp',
+            fieldLabel: i18n.getMsg('orte.ortTyp')
+        }, {
+            xtype: 'tfield',
+            name: 'ortId',
+            maxLength: 10,
+            labelWidth: 125,
+            fieldLabel: i18n.getMsg('orte.ortId')
+        }, {
+            xtype: 'fieldset',
+            collapsible: true,
+            collapsed: true,
+            title: i18n.getMsg('orte.prop'),
+            items :[{
+                xtype: 'tfield',
+                labelWidth: 125,
+                maxLength: 70,
+                fieldLabel: i18n.getMsg('orte.berichtstext'),
+                name: 'berichtstext'
+            }, {
+                xtype: 'kta',
+                labelWidth: 125,
+                maxLength: 100,
+                name: 'anlageId',
+                fieldLabel: i18n.getMsg('orte.anlageId')
+            }, {
+                xtype: 'tfield',
+                labelWidth: 125,
+                maxLength: 1,
+                name: 'zone',
+                fieldLabel: i18n.getMsg('orte.zone')
+            }, {
+                xtype: 'tfield',
+                labelWidth: 125,
+                maxLength: 2,
+                name: 'sektor',
+                fieldLabel: i18n.getMsg('orte.sektor')
+            }, {
+                xtype: 'tfield',
+                labelWidth: 125,
+                maxLength: 10,
+                name: 'zustaendigkeit',
+                fieldLabel: i18n.getMsg('orte.zustaendigkeit')
+            }, {
+                xtype: 'tfield',
+                labelWidth: 125,
+                maxLength: 10,
+                name: 'mpArt',
+                fieldLabel: i18n.getMsg('orte.mpArt')
+            }, {
+                xtype: 'checkbox',
+                labelWidth: 125,
+                name: 'aktiv',
+                fieldLabel: 'aktiv:'
+            }]
         }, {
             xtype: 'koordinatenart',
             labelWidth: 125,
@@ -82,6 +152,11 @@ Ext.define('Lada.view.form.Ort', {
             decimalPrecision: 5,
             maxLength: 22
         }, {
+            xtype: 'checkbox',
+            labelWidth: 125,
+            fieldLabel: i18n.getMsg('orte.unscharf'),
+            name: 'unscharf'
+        }, {
             xtype: 'numfield',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.hoeheLand'),
@@ -91,70 +166,9 @@ Ext.define('Lada.view.form.Ort', {
         }, {
             xtype: 'tfield',
             labelWidth: 125,
-            maxLength: 15,
-            name: 'kurztext',
-            fieldLabel: i18n.getMsg('orte.kurztext')
-        },{
-            xtype: 'tfield',
-            labelWidth: 125,
-            maxLength: 100,
-            fieldLabel: i18n.getMsg('orte.langtext'),
-            name: 'langtext'
-        },{
-            xtype: 'tfield',
-            labelWidth: 125,
-            maxLength: 70,
-            fieldLabel: i18n.getMsg('orte.berichtstext'),
-            name: 'berichtstext'
-        }, {
-            xtype: 'kta',
-            labelWidth: 125,
-            maxLength: 100,
-            name: 'anlageId',
-            fieldLabel: i18n.getMsg('orte.anlageId')
-        }, {
-            xtype: 'tfield',
-            labelWidth: 125,
-            maxLength: 1,
-            name: 'zone',
-            fieldLabel: i18n.getMsg('orte.zone')
-        },{
-            xtype: 'tfield',
-            labelWidth: 125,
-            maxLength: 2,
-            name: 'sektor',
-            fieldLabel: i18n.getMsg('orte.sektor')
-        },{
-            xtype: 'orttyp',
-            labelWidth: 125,
-            maxLength: 100,
-            editable: true,
-            name: 'ortTyp',
-            fieldLabel: i18n.getMsg('orte.ortTyp')
-        },{
-            xtype: 'tfield',
-            labelWidth: 125,
-            maxLength: 10,
-            name: 'zustaendigkeit',
-            fieldLabel: i18n.getMsg('orte.zustaendigkeit')
-        },{
-            xtype: 'tfield',
-            labelWidth: 125,
-            maxLength: 10,
-            name: 'mpArt',
-            fieldLabel: i18n.getMsg('orte.mpArt')
-        },{
-            xtype: 'tfield',
-            labelWidth: 125,
             maxLength: 10,
             name: 'nutsCode',
             fieldLabel: i18n.getMsg('orte.nutsCode')
-        },{
-            xtype: 'ortszusatz',
-            labelWidth: 125,
-            editable: true,
-            name: 'ozId',
-            fieldLabel: i18n.getMsg('orte.ozId')
         }];
 
         this.dockedItems = [{
@@ -182,6 +196,9 @@ Ext.define('Lada.view.form.Ort', {
         }];
         this.callParent(arguments);
         this.getForm().loadRecord(this.record);
+        if (this.record.get('ortTyp') == 3) {
+            this.down('fieldset').expand();
+        }
         if (this.record.get('netzbetreiberId') &&
             this.record.get('netzbetreiberId') !== '') {
             this.down('netzbetreiber').down('combobox').setEditable(false);
@@ -226,5 +243,8 @@ Ext.define('Lada.view.form.Ort', {
 
     clearMessages: function() {
         // TODO: this is a stub
+        this.down('numfield[name=koordXExtern]').clearWarningOrError();
+        this.down('numfield[name=koordYExtern]').clearWarningOrError();
+        this.down('verwaltungseinheit[name=gemId]').clearWarningOrError();
     }
 });

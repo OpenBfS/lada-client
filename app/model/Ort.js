@@ -96,7 +96,8 @@ Ext.define('Lada.model.Ort', {
     }, {
         name: 'langtext'
     }, {
-        name: 'unscharf'
+        name: 'unscharf',
+        type: 'boolean'
     }, {
         name: 'hoeheLand'
     }, {

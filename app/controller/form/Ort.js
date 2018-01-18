@@ -54,6 +54,9 @@ Ext.define('Lada.controller.form.Ort', {
         for (var key in data) {
             record.set(key, data[key]);
         }
+        if ( typeof data.unscharf === 'undefined' ) {
+            record.set('unscharf', false);
+        }
         if (record.phantom) {
             record.set('netzbetreiberId', Lada.netzbetreiber[0]);
             record.set('id', null);

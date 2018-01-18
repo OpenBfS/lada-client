@@ -244,6 +244,11 @@ Ext.define('Lada.view.grid.Orte', {
             filter: {
                 type: 'string'
             },
+            renderer: function(value) {
+                if (value === true)
+                   { return 'ja';}
+                else { return 'nein';}
+            },
             dataIndex: 'unscharf'
         }, {
             header: i18n.getMsg('orte.kdaId'),
