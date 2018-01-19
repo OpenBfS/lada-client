@@ -125,10 +125,10 @@ Ext.define('Lada.view.form.Ort', {
                 name: 'mpArt',
                 fieldLabel: i18n.getMsg('orte.mpArt')
             }, {
-                xtype: 'checkbox',
+                xtype: 'chkbox',
                 labelWidth: 125,
                 name: 'aktiv',
-                fieldLabel: 'aktiv:'
+                fieldLabel: i18n.getMsg('orte.aktiv')
             }]
         }, {
             xtype: 'koordinatenart',
@@ -152,7 +152,7 @@ Ext.define('Lada.view.form.Ort', {
             decimalPrecision: 5,
             maxLength: 22
         }, {
-            xtype: 'checkbox',
+            xtype: 'chkbox',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.unscharf'),
             name: 'unscharf'
