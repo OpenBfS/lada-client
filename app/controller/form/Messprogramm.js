@@ -41,7 +41,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 change: this.synchronizeSlider
             },
             'messprogrammform probenintervall combobox': {
-                select: this.updateIntervalls
+                change: this.updateIntervalls
             },
             'messprogrammform dayofyear [hidden]': {
                 change: this.alignSubIntervall
@@ -102,7 +102,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
      * When the Probenintervall was changed, update the Sliders
      * and the numberfield.
      */
-    updateIntervalls: function(field) {
+    updateIntervalls: function(field, newval, oldval) {
+        if (newval == oldval) {
+            return false;
+        }
         var form = field.up('messprogrammform');
         var record = form.getRecord();
         form.populateIntervall(record, field.getValue());
