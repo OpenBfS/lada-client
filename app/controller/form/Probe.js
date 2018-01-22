@@ -265,6 +265,7 @@ Ext.define('Lada.controller.form.Probe', {
                         var win = Ext.create('Lada.view.window.ProbeEdit', {
                             record: record
                         });
+                        win.setPosition(30);
                         win.show();
                         win.initData();
                     }
