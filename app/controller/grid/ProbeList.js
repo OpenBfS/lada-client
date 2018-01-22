@@ -14,7 +14,8 @@ Ext.define('Lada.controller.grid.ProbeList', {
     requires: [
         'Lada.view.window.FileUpload',
         'Lada.view.window.ProbeEdit',
-        'Lada.view.window.GenProbenFromMessprogramm'
+        'Lada.view.window.GenProbenFromMessprogramm',
+        'Lada.view.window.DataExport'
     ],
 
     /**
@@ -34,7 +35,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 click: this.uploadFile
             },
             'probelistgrid toolbar button[action=export]': {
-                click: this.downloadFile
+                click: this.exportData
             },
             'probelistgrid toolbar button[action=deleteSelected]': {
                 click: this.deleteSelected
@@ -107,11 +108,16 @@ Ext.define('Lada.controller.grid.ProbeList', {
         win.show();
     },
 
-    /**
-     * This function can be used to Download the items which
-     * were selected in the {@link Lada.view.grid.ProbeList}
-     * The Download does not work with Internet Explorers older than v.10
-     */
+    exportData: function(button){
+        Ext.create('Lada.view.window.DataExport', {
+            grid: button.up('grid'),
+            hasProbe: true
+        }).show();
+    },
+
+    // TODO: obsolete, but some of it may still need migration to
+    // view/window/Export.js, e.g. error handling
+    /*
     downloadFile: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection();
@@ -137,7 +143,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 We assume that a 302 was send when the follwing statement
                 is true.
                 */
-                if (response.status == 0 && response.getResponse().responseText === '') {
+/*                if (response.status == 0 && response.getResponse().responseText === '') {
                     Ext.MessageBox.confirm('Erneutes Login erforderlich',
                         'Ihre Session ist abgelaufen.<br/>'+
                         'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
@@ -150,7 +156,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 }
             }
         });
-    },
+    }, */
 
     /**
      * Send the selection to a Printservice

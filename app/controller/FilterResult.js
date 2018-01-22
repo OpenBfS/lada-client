@@ -16,7 +16,8 @@ Ext.define('Lada.controller.FilterResult', {
         'Lada.view.window.ProbeEdit',
         'Lada.view.window.ProbeCreate',
         'Lada.view.window.Messprogramm',
-        'Lada.view.window.GenProbenFromMessprogramm'
+        'Lada.view.window.GenProbenFromMessprogramm',
+        'Lada.view.window.DataExport'
     ],
 
     /**
@@ -40,7 +41,7 @@ Ext.define('Lada.controller.FilterResult', {
                 click: this.uploadFile
             },
             'filterresultgrid toolbar button[action=export]': {
-                click: this.downloadFile
+                click: this.exportData
             },
             'filterresultgrid toolbar button[action=print]': {
                 click: this.printSelection
@@ -156,6 +157,13 @@ Ext.define('Lada.controller.FilterResult', {
         win.show();
     },
 
+    exportData: function(button){
+        Ext.create('Lada.view.window.DataExport', {
+            grid: button.up('grid')
+        }).show();
+    },
+
+    //TODO: downloadFile obsolete.
     /**
      * This function can be used to Download the items which
      * were selected in the {@link Lada.view.grid.FilterResult}
