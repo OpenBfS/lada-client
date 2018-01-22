@@ -47,6 +47,7 @@ Ext.define('Lada.view.FilterPanel', {
             layout: {
                 type: 'hbox'
             },
+            margin: '10 0 10 0',
             border: false,
             items: [{
                 xtype: 'checkbox',
