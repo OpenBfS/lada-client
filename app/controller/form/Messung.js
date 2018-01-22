@@ -89,6 +89,7 @@ Ext.define('Lada.controller.form.Messung', {
                             record: record
                         });
                         win.show();
+                        win.setPosition(window.innerWidth - 30 -win.width);
                         win.initData();
                     }
                 }
