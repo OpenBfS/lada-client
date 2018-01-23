@@ -131,10 +131,10 @@ Ext.define('Lada.view.window.DataExport', {
                 //     this.hasGeojson = true;
                 //     break;
                 case 'messungId':
-                    this.hasMessung = true;
+                    this.hasMessung = columns[i];
                     break;
                 case 'probeId':
-                    this.hasProbe = true;
+                    this.hasProbe = columns[i];
                     break;
             }
         }
@@ -274,8 +274,9 @@ Ext.define('Lada.view.window.DataExport', {
         if (actionresult){
             win.close();
         } else {
+            win.showError();
+            //TODO: more detailled error handling:
             //we did not export
-            //TODO: error handling
         }
     },
 
@@ -286,20 +287,19 @@ Ext.define('Lada.view.window.DataExport', {
         var data = this.getDataSets();
         if (data){
             var columns = this.getColumns();
-            console.log(columns);
             var resultset = {};
             for (var i=0; i < data.length; i++ ) {
                 var iresult = {};
                 for (var col = 0; col < columns.length; col ++ ){
                     if (columns[col]
                       && data[i].get(columns[col]) !== undefined ){
-                        iresult[columns[col]]= data[i].get(columns[col]);
+                        iresult[columns[col]] = data[i].get(columns[col]);
                     }
                 }
                 resultset[i] = iresult;
             }
-            return this.exportFile(
-                JSON.stringify(resultset), 'export.json');
+            this.exportFile(JSON.stringify(resultset), 'export.json');
+            return true;
         } else {
             return false;
         }
@@ -315,30 +315,32 @@ Ext.define('Lada.view.window.DataExport', {
             var resultset = {
                 type: 'FeatureCollection',
                 features: [],
-                crs: null //TODO
+                crs: null // TODO
                 // type: "name",
                 //     "properties": {
                 //       "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
             };
-            data.each(function(item){
+            for (var i=0; i < data.length; i++){
                 var iresult = {
                     properties: null,
                     geometry : null};
 
-                columns.each(function(col){
-                    if (item.get('col') !== undefined){
-                        iresult.properties.col = item.get(col);
-                        if (item.get(col).dataType.name === 'geom'){
-                            var gjson = item.get(col).data.geometry;
+                for (var col = 0; col < columns.length; col ++){
+                    if (data[i].get(columns[col]) !== undefined){
+                        iresult.properties[columns[col]] = data[i].get(
+                            columns[col]);
+                        if (columns[col].dataType.name === 'geom'){
+                            var gjson = data[i].get(
+                                columns[col]).data.geometry;
                             iresult.geometry.coordinates = gjson.coordinates;
                             iresult.geometry.type = gjson.type;
                         }
                     }
-                });
+                }
                 resultset.features.push(iresult);
-            });
-            return this.exportFile(
-                JSON.stringify(resultset), 'export.geojson');
+            }
+            this.exportFile(JSON.stringify(resultset), 'export.geojson');
+            return true;
         } else {
             return false;
         }
@@ -387,7 +389,8 @@ Ext.define('Lada.view.window.DataExport', {
                 for (var col = 0; col < columns.length; col++ ) {
                     var newvalue =  record.get(columns[col]);
                     line += col > 0 ? colsep: '';
-                    switch(typeof(newvalue)){
+                    switch( typeof(newvalue) ){
+                        //TODO: should not only check newvalue, but type of column,
                         case 'number':
                             newvalue = newvalue.toString();
                             if (decsep === ',' && newvalue.indexOf(".") > -1){
@@ -432,10 +435,10 @@ Ext.define('Lada.view.window.DataExport', {
             // TODO: if grouping different (i.e. one line per messung:
             // secondaryInfo{sortitem: index: extraColumns: }
             for (var entry = 0; entry < data.length; entry++){
-                console.log(data[entry]);
                 resulttable += addline(data[entry]);
             }
             me.exportFile(resulttable, 'export.csv');
+            return true;
         }
     },
 
@@ -449,8 +452,7 @@ Ext.define('Lada.view.window.DataExport', {
             jsondata.messungen = [];
             for (var i = 0; i < dataset.length; i++){
                 // TODO: what about proben without messungen in this case?
-                var mid = dataset[i].get('messungId');
-                // TODO: get correct value after typisierung
+                var mid = dataset[i].get(this.hasMessung.dataIndex);
                 if (Array.isArray(mid)){
                     for (var j=0; j < mid.length; j++){
                         jsondata.messungen.push(mid[j]);
@@ -461,23 +463,49 @@ Ext.define('Lada.view.window.DataExport', {
             };
         } else if (this.hasProbe) {
             jsondata.proben = [];
-            for (var i= 0; i < dataset.length; i++) {
-                var pid = dataset[i].get('pid');
-                if (!pid && pid !== 0){
-                    pid = dataset[i].get('probeId');
-                    // TODO: get correct data after typisierung.
-                    // now could be: probeId, pid, ...?, depending on grid
+            if (this.hasProbe === true){
+                // temporary: we may not have a column containing the probeId
+                // (old probengrid)
+                for (var i= 0; i < dataset.length; i++) {
+                    var pid = dataset[i].get('pid');
+                    if (!pid && pid !== 0){
+                        pid = dataset[i].get('probeId');
+                    }
                 }
-                jsondata.proben.push(pid);
-            };
+            } else {
+                for (var i= 0; i < dataset.length; i++) {
+                    var pid = dataset[i].get(this.hasProbe.dataIndex);
+                    jsondata.proben.push(pid);
+                }
+            }
         }
         var me = this;
         Ext.Ajax.request({
             url: 'lada-server/data/export/laf',
             jsonData: jsondata,
+            timeout: 2 * 60 * 1000,
             success: function(response) {
                 var content = response.responseText;
                 me.exportFile(content, 'export.laf')
+                return true;
+            },
+            failure: function(response) {
+                /* SSO will send a 302 if the Client is not authenticated
+                unfortunately this seems to be filtered by the browser.
+                We assume that a 302 was send when the follwing statement
+                is true.
+                */
+                if (response.status == 0 &&
+                  response.getResponse().responseText === '') {
+                    Ext.MessageBox.confirm('Erneutes Login erforderlich',
+                        'Ihre Session ist abgelaufen.<br/>'+
+                        'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
+                        'Alle ungesicherten Daten gehen dabei verloren.<br/>' +
+                        'Soll die Anwendung jetzt neu geladen werden?', this.reload);
+                } else {
+                    me.showError();
+                    return false;
+                }
             }
         });
     },
@@ -530,8 +558,9 @@ Ext.define('Lada.view.window.DataExport', {
                 columns.push(rawcolumns[col]);
             }
         }
-        if (!columns){
+        if (!columns.length){
             this.showError('export.nocolumn');
+            //TODO: error handling: Do not continue execution
         }
         return columns;
     },
