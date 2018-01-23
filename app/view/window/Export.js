@@ -127,9 +127,9 @@ Ext.define('Lada.view.window.DataExport', {
                 continue;
             }
             switch (columns[i].dataType.name){
-                // case 'geom':                 //TODO: not ready yet
-                //     this.hasGeojson = true;
-                //     break;
+                case 'geom':
+                    this.hasGeojson = true;
+                    break;
                 case 'messungId':
                     this.hasMessung = columns[i];
                     break;
@@ -283,7 +283,7 @@ Ext.define('Lada.view.window.DataExport', {
         var data = this.getDataSets();
         if (data){
             var columns = this.getColumns();
-            if (!columns.length){
+            if (!columns){
                 return false;
             }
             var resultset = {};
@@ -312,10 +312,15 @@ Ext.define('Lada.view.window.DataExport', {
         var data = this.getDataSets();
         if (data){
             var columns = this.getColumns();
+            if (!columns) {
+                return false;
+            }
             var resultset = {
                 type: 'FeatureCollection',
                 features: [],
-                crs: null // TODO
+                crs: null // TODO: always 4326?
+                // st_asText ->  POINT(X,Y)
+                // ST_AsEWKT
                 // type: "name",
                 //     "properties": {
                 //       "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
@@ -327,13 +332,15 @@ Ext.define('Lada.view.window.DataExport', {
 
                 for (var col = 0; col < columns.length; col ++){
                     if (data[i].get(columns[col]) !== undefined){
-                        iresult.properties[columns[col]] = data[i].get(
-                            columns[col]);
                         if (columns[col].dataType.name === 'geom'){
                             var gjson = data[i].get(
                                 columns[col]).data.geometry;
+                            console.log(gjson);
                             iresult.geometry.coordinates = gjson.coordinates;
                             iresult.geometry.type = gjson.type;
+                        } else {
+                            iresult.properties[columns[col]] = data[i].get(
+                                columns[col]);
                         }
                     }
                 }
@@ -373,6 +380,9 @@ Ext.define('Lada.view.window.DataExport', {
 
             // create header
             var columns = this.getColumns();
+            if (!columns) {
+                return false;
+            }
 
             //first column doesn't start with a column separator
             var resulttable = [columns[0]];
@@ -384,14 +394,12 @@ Ext.define('Lada.view.window.DataExport', {
             //iterate through entries
             var me = this;
             var addline = function(record, secondaryInfo){
-                //TODO: use secondaryInfo
                 //TODO: use data from rowExpander
                 var line = '';
                 for (var col = 0; col < columns.length; col++ ) {
                     var newvalue =  record.get(columns[col]);
                     line += col > 0 ? colsep: '';
                     switch( typeof(newvalue) ){
-                        //TODO: should not only check newvalue, but type of column,
                         case 'number':
                             newvalue = newvalue.toString();
                             if (decsep === ',' && newvalue.indexOf(".") > -1){
@@ -399,15 +407,17 @@ Ext.define('Lada.view.window.DataExport', {
                             }
                             line += newvalue;
                             break;
-                        //case datetime TODO!
                         case 'undefined': //leave column empty
                             break;
                         case 'object': //leave column empty
                             break;
                         case 'string':
                             if (newvalue && newvalue.indexOf(textsep) > -1 ){
+                                // TODO: By default, this will alter the data
+                                // exported (exchanging single/double quotes)
+                                // user should be warned that this is necessary
                                 if (!me.csv_asked){
-                                    // ask! TODO return with error if "no:"
+                                    //TODO abort export if user doesn't want it
                                     me.csv_asked = true;
                                 }
                                 if (textsep ===  '"'){
@@ -433,8 +443,8 @@ Ext.define('Lada.view.window.DataExport', {
                 line += linesep;
                 return line;
             };
-            // TODO: if grouping different (i.e. one line per messung:
-            // secondaryInfo{sortitem: index: extraColumns: }
+            // TODO: if grouping is different (i.e. one line per row of
+            // rowexpander, next loop needs to be expanded
             for (var entry = 0; entry < data.length; entry++){
                 resulttable += addline(data[entry]);
             }
@@ -492,7 +502,7 @@ Ext.define('Lada.view.window.DataExport', {
                 return false;
             }
         } else { //should not happen
-            this.showError(); //TODO: "wrong format"
+            this.showError('wrongformat'); //TODO: "wrong format"
             return false;
         }
         var me = this;
@@ -576,7 +586,6 @@ Ext.define('Lada.view.window.DataExport', {
         }
         if (!columns.length){
             this.showError('export.nocolumn');
-            //TODO: error handling: Do not continue execution
         }
         return columns;
     },
