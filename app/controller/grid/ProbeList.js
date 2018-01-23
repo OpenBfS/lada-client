@@ -115,49 +115,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
         }).show();
     },
 
-    // TODO: obsolete, but some of it may still need migration to
-    // view/window/Export.js, e.g. error handling
-    /*
-    downloadFile: function(button) {
-        var grid = button.up('grid');
-        var selection = grid.getView().getSelectionModel().getSelection();
-        var i18n = Lada.getApplication().bundle;
-        var proben = [];
-        for (var i = 0; i < selection.length; i++) {
-            proben.push(selection[i].get('id'));
-        }
-        var me = this;
-        Ext.Ajax.request({
-            url: 'lada-server/data/export/laf',
-            jsonData: {'proben': proben},
-            timeout: 2 * 60 * 1000,
-            success: function(response) {
-                var content = response.responseText;
-                var blob = new Blob([content],{type: 'text/plain'});
-                saveAs(blob, 'export.laf');
-            },
-            failure: function(response) {
-                /*
-                SSO will send a 302 if the Client is not authenticated
-                unfortunately this seems to be filtered by the browser.
-                We assume that a 302 was send when the follwing statement
-                is true.
-                */
-/*                if (response.status == 0 && response.getResponse().responseText === '') {
-                    Ext.MessageBox.confirm('Erneutes Login erforderlich',
-                        'Ihre Session ist abgelaufen.<br/>'+
-                        'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
-                        'Alle ungesicherten Daten gehen dabei verloren.<br/>' +
-                        'Soll die Anwendung jetzt neu geladen werden?', this.reload);
-                } else {
-                    // further error handling
-                    Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                        i18n.getMsg('err.msg.laf.filecreatefailed'));
-                }
-            }
-        });
-    }, */
-
     /**
      * Send the selection to a Printservice
      */
