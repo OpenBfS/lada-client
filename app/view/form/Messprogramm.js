@@ -626,7 +626,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         var current = this.down('deskriptor[layer=' + ndx + ']');
         var cbox = current.down('combobox');
         cbox.store.proxy.extraParams = {
-           'layer': ndx,
+           'layer': ndx
         };
         if (ndx >= 1) {
             var parents = current.getParents(cbox);

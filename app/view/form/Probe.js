@@ -99,7 +99,7 @@ Ext.define('Lada.view.form.Probe', {
                             margin: '0, 5, 5, 5',
                             labelWidth: 95,
                             maxLength: 20,
-                            width: '70%',
+                            width: '70%'
                         }, {
                             xtype: 'chkbox',
                             name: 'test',

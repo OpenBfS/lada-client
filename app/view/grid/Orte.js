@@ -378,5 +378,5 @@ Ext.define('Lada.view.grid.Orte', {
                 }
             }
         }
-    },
+    }
 });
