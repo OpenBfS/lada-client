@@ -273,10 +273,6 @@ Ext.define('Lada.view.window.DataExport', {
         }
         if (actionresult){
             win.close();
-        } else {
-            win.showError();
-            //TODO: more detailled error handling:
-            //we did not export
         }
     },
 
@@ -287,6 +283,9 @@ Ext.define('Lada.view.window.DataExport', {
         var data = this.getDataSets();
         if (data){
             var columns = this.getColumns();
+            if (!columns.length){
+                return false;
+            }
             var resultset = {};
             for (var i=0; i < data.length; i++ ) {
                 var iresult = {};
@@ -301,6 +300,7 @@ Ext.define('Lada.view.window.DataExport', {
             this.exportFile(JSON.stringify(resultset), 'export.json');
             return true;
         } else {
+            this.showError('export.nodata');
             return false;
         }
     },
@@ -342,6 +342,7 @@ Ext.define('Lada.view.window.DataExport', {
             this.exportFile(JSON.stringify(resultset), 'export.geojson');
             return true;
         } else {
+            this.showError('export.nodata');
             return false;
         }
     },
@@ -439,7 +440,11 @@ Ext.define('Lada.view.window.DataExport', {
             }
             me.exportFile(resulttable, 'export.csv');
             return true;
+        } else {
+            this.showError('export.nodata');
+            return false;
         }
+
     },
 
     /**
@@ -461,6 +466,10 @@ Ext.define('Lada.view.window.DataExport', {
                     jsondata.messungen.push(mid);
                 }
             };
+            if (!jsondata.messungen.length){
+                this.showError('export.nodata');
+                return false;
+            }
         } else if (this.hasProbe) {
             jsondata.proben = [];
             if (this.hasProbe === true){
@@ -478,6 +487,13 @@ Ext.define('Lada.view.window.DataExport', {
                     jsondata.proben.push(pid);
                 }
             }
+            if (!jsondata.proben.length){
+                this.showError('export.nodata');
+                return false;
+            }
+        } else { //should not happen
+            this.showError(); //TODO: "wrong format"
+            return false;
         }
         var me = this;
         Ext.Ajax.request({
@@ -529,7 +545,7 @@ Ext.define('Lada.view.window.DataExport', {
     exportFile: function (data, defaultname){
         this.filename = this.down('filefield').getValue() || defaultname;
         var blob = new Blob([data]);
-        //TODO validation of filename: is export format? json;csv;laf;geojson
+        //TODO (optional) validation of filename
         saveAs(blob, this.filename);
     },
 
@@ -544,7 +560,7 @@ Ext.define('Lada.view.window.DataExport', {
             dataset = this.grid.store.getData().items;
         }
         if (!dataset.length){
-            this.showError('export.nodata')
+            this.showError('export.nodata');
         }
         return dataset;
     },
