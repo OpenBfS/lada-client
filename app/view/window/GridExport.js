@@ -61,17 +61,14 @@ Ext.define('Lada.view.window.GridExport', {
         var columns = this.grid.getColumns();
         // CSV export options
         this.csv_linesepstore = Ext.create('Ext.data.Store', {
-            model: Ext.create('Ext.data.Model', {
-                fields: ['name', 'value'],
-                data : [{
-                    name: 'Windows',
-                    value: 'windows'
-                },{
-                    name: 'Linux',
-                    value: 'linux'
-                }]
-            }),
-            autoLoad: true
+            fields: ['name', 'value'],
+            data : [{
+                name: 'Windows',
+                value: 'windows'
+            },{
+                name: 'Linux',
+                value: 'linux'
+            }]
         });
 
         this.csv_textlimstore = Ext.create('Ext.data.Store', {
