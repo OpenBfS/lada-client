@@ -46,9 +46,9 @@ Ext.define('Lada.view.window.GridExport', {
         }]
     }],
 
-    hasGeojson : false,
-    hasProbe: false,
-    hasMessung: false,
+    hasGeojson : null,
+    hasProbe: null,
+    hasMessung: null,
 
     /**
      * This function initialises the Window and the options available
@@ -459,31 +459,39 @@ Ext.define('Lada.view.window.GridExport', {
         var jsondata = {};
         if (this.hasMessung){
             jsondata.messungen = [];
-            for (var i = 0; i < dataset.length; i++){
-                // TODO: what about proben without messungen in this case?
-                var mid = dataset[i].get(this.hasMessung.dataIndex);
-                if (Array.isArray(mid)){
-                    for (var j=0; j < mid.length; j++){
-                        jsondata.messungen.push(mid[j]);
-                    }
-                } else {
+
+            // normally, hasMessung and hasProbe are expected to contain a
+            // column with messungId/probeId type. Some grids still don't have
+            // that info, so just true is passed and we need to look up the
+            // (hard coded) id
+            if (this.hasMessung === true){
+                for (var i= 0; i < dataset.length; i++) {
+                    var mid = dataset[i].get('id');
                     jsondata.messungen.push(mid);
                 }
-            };
+            } else {
+                for (var i = 0; i < dataset.length; i++){
+                    var mid = dataset[i].get(this.hasMessung.dataIndex);
+                    if (Array.isArray(mid)){
+                        for (var j=0; j < mid.length; j++){
+                            jsondata.messungen.push(mid[j]);
+                        }
+                    } else {
+                        jsondata.messungen.push(mid);
+                    }
+                };
+            }
             if (!jsondata.messungen.length){
                 this.showError('export.nodata');
                 return false;
             }
         } else if (this.hasProbe) {
             jsondata.proben = [];
+
+            // see comment in messungen above
             if (this.hasProbe === true){
-                // temporary: we may not have a column containing the probeId
-                // (old probengrid)
                 for (var i= 0; i < dataset.length; i++) {
-                    var pid = dataset[i].get('pid');
-                    if (!pid && pid !== 0){
-                        pid = dataset[i].get('probeId');
-                    }
+                    var pid = dataset[i].get('id');
                 }
             } else {
                 for (var i= 0; i < dataset.length; i++) {

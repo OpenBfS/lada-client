@@ -34,9 +34,13 @@ Ext.define('Lada.controller.GridExport', {
         if (!grid){
             return;
         }
-        // TODO: if probelistgrid: hasProbe: true (maybe no real probeid?)
+
+        // special handling of probe+messung grids not yet containing their ids
+        // TODO might become obsolete soon (Jan 2018)
         Ext.create('Lada.view.window.GridExport', {
-            grid: grid
+            grid: grid,
+            hasProbe: (grid.xtype === 'probelistgrid'),
+            hasMessung: (grid.xtype === 'messunglistgrid')
         }).show();
     }
 });
