@@ -52,7 +52,7 @@ Ext.define('Lada.view.grid.DatensatzErzeuger', {
             },
             '->',
             {
-                text: i18n.getMsg('probe.button.export'),
+                text: i18n.getMsg('export.button'),
                 icon: 'resources/img/svn-update.png',
                 action: 'gridexport',
                 disabled: false

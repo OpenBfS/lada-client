@@ -59,7 +59,9 @@ Ext.define('Lada.view.window.GridExport', {
         this.callParent(arguments);
         this.title = i18n.getMsg('export.title');
         var columns = this.grid.getColumns();
+
         // CSV export options
+
         this.csv_linesepstore = Ext.create('Ext.data.Store', {
             fields: ['name', 'value'],
             data : [{
@@ -138,7 +140,8 @@ Ext.define('Lada.view.window.GridExport', {
             data: columnstore
         });
 
-        // Export formats
+        // add export formats
+
         var formatdata = [
             {name: 'CSV', value: 'csv'},
             {name: 'JSON', value: 'json'}];
@@ -158,6 +161,8 @@ Ext.define('Lada.view.window.GridExport', {
             fields: ['name', 'value'],
             data: formatdata
         });
+
+        // create comboboxes and checkboxes
 
         this.down('container[name=form]').add([{
             xtype: 'checkbox',
@@ -186,6 +191,9 @@ Ext.define('Lada.view.window.GridExport', {
             allowBlank: false
         }, {
             xtype: 'fieldset',
+            title: i18n.getMsg('export.csvdetails'),
+            collapsible: true,
+            collapsed: true,
             name: 'csvoptions',
             visible: false,
             margins: '5,5,5,5',
@@ -233,6 +241,9 @@ Ext.define('Lada.view.window.GridExport', {
             this.down('checkbox[name=selection]').setVisible(true);
             this.down('checkbox[name=selection]').setValue(true);
         }
+
+        // listeners
+
         this.down('button[action=export]').on({
             click: me.doExport
         });
@@ -243,7 +254,6 @@ Ext.define('Lada.view.window.GridExport', {
             }
         });
     },
-
 
     /**
      * Evaluates the options set and starts the corresponding export
@@ -305,7 +315,7 @@ Ext.define('Lada.view.window.GridExport', {
     /**
      * Exports the geometry as geojson points with the table data as properties
      */
-    exportGeoJson: function(){ //TODO not ready yet, stub!
+    exportGeoJson: function(){ //TODO not tested yet!
         var data = this.getDataSets();
         if (data){
             var columns = this.getColumns();
@@ -326,7 +336,6 @@ Ext.define('Lada.view.window.GridExport', {
                         if (columns[col].dataType.name === 'geom'){
                             var gjson = data[i].get(
                                 columns[col]).data.geometry;
-                            console.log(gjson);
                             iresult.geometry.coordinates = gjson.coordinates;
                             iresult.geometry.type = gjson.type;
                         } else {
