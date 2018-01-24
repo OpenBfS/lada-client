@@ -16,8 +16,7 @@ Ext.define('Lada.controller.FilterResult', {
         'Lada.view.window.ProbeEdit',
         'Lada.view.window.ProbeCreate',
         'Lada.view.window.Messprogramm',
-        'Lada.view.window.GenProbenFromMessprogramm',
-        'Lada.view.window.DataExport'
+        'Lada.view.window.GenProbenFromMessprogramm'
     ],
 
     /**
@@ -39,9 +38,6 @@ Ext.define('Lada.controller.FilterResult', {
             },
             'filterresultgrid toolbar button[action=import]': {
                 click: this.uploadFile
-            },
-            'filterresultgrid toolbar button[action=export]': {
-                click: this.exportData
             },
             'filterresultgrid toolbar button[action=print]': {
                 click: this.printSelection
@@ -155,12 +151,6 @@ Ext.define('Lada.controller.FilterResult', {
         });
 
         win.show();
-    },
-
-    exportData: function(button){
-        Ext.create('Lada.view.window.DataExport', {
-            grid: button.up('grid')
-        }).show();
     },
 
     /**

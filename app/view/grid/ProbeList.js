@@ -21,7 +21,6 @@ Ext.define('Lada.view.grid.ProbeList', {
 
     hideCreate: false,
     hideImport: false,
-    hideExport: false,
     hideDeleteSelected: false,
     hidePrintSheet: false,
     hidePrint: false,
@@ -57,9 +56,8 @@ Ext.define('Lada.view.grid.ProbeList', {
             }, {
                 text: i18n.getMsg('probe.button.export'),
                 icon: 'resources/img/svn-update.png',
-                action: 'export',
-                hidden: this.hideExport,
-                disabled: true //disabled on start, enabled by the controller
+                action: 'gridexport',
+                disabled: false
             }, {
                 text: i18n.getMsg('probe.button.delete_selected'),
                 icon: 'resources/img/edit-delete.png',

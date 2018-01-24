@@ -9,9 +9,7 @@
 /**
  * Window to select data export and settings
  */
-Ext.define('Lada.view.window.DataExport', {
-
-    // app/controller/Filterresult: Export LAF
+Ext.define('Lada.view.window.GridExport', {
     extend: 'Ext.window.Window',
     alias: 'widget.exportdata',
 
@@ -231,6 +229,7 @@ Ext.define('Lada.view.window.DataExport', {
         if(!this.grid || !this.grid.store.getCount()){
             this.showError('export.nodata');
             this.close();
+            return;
         }
         // if rows are selected, assume that only marked are to be exported
         if (this.grid.getSelectionModel().getSelection().length){
@@ -243,6 +242,7 @@ Ext.define('Lada.view.window.DataExport', {
         this.down('button[action=close]').on({
             click: function(button){
                 button.up('window').close();
+                return;
             }
         });
     },
@@ -317,13 +317,7 @@ Ext.define('Lada.view.window.DataExport', {
             }
             var resultset = {
                 type: 'FeatureCollection',
-                features: [],
-                crs: null // TODO: always 4326?
-                // st_asText ->  POINT(X,Y)
-                // ST_AsEWKT
-                // type: "name",
-                //     "properties": {
-                //       "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+                features: []
             };
             for (var i=0; i < data.length; i++){
                 var iresult = {

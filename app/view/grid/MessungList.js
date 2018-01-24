@@ -30,6 +30,11 @@ Ext.define('Lada.view.grid.MessungList', {
             },
             '->',
             {
+                text: i18n.getMsg('probe.button.export'),
+                icon: 'resources/img/svn-update.png',
+                action: 'gridexport',
+                disabled: false
+            }, {
                 text: i18n.getMsg('probe.button.print'),
                 icon: 'resources/img/printer.png',
                 action: 'print',

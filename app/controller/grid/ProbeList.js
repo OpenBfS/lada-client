@@ -14,8 +14,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
     requires: [
         'Lada.view.window.FileUpload',
         'Lada.view.window.ProbeEdit',
-        'Lada.view.window.GenProbenFromMessprogramm',
-        'Lada.view.window.DataExport'
+        'Lada.view.window.GenProbenFromMessprogramm'
     ],
 
     /**
@@ -33,9 +32,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
             },
             'probelistgrid toolbar button[action=import]': {
                 click: this.uploadFile
-            },
-            'probelistgrid toolbar button[action=export]': {
-                click: this.exportData
             },
             'probelistgrid toolbar button[action=deleteSelected]': {
                 click: this.deleteSelected
@@ -106,13 +102,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
         });
 
         win.show();
-    },
-
-    exportData: function(button){
-        Ext.create('Lada.view.window.DataExport', {
-            grid: button.up('grid'),
-            hasProbe: true
-        }).show();
     },
 
     /**
@@ -255,12 +244,10 @@ Ext.define('Lada.controller.grid.ProbeList', {
     buttonToggle: function(enabled, grid) {
         if (!enabled) {
             grid.down('button[action=deleteSelected]').disable();
-            grid.down('button[action=export]').disable();
             grid.down('button[action=printExtract]').disable();
             grid.down('button[action=printSheet]').disable();
         } else {
             grid.down('button[action=deleteSelected]').enable();
-            grid.down('button[action=export]').enable();
             grid.down('button[action=printExtract]').enable();
             grid.down('button[action=printSheet]').enable();
         }
@@ -294,6 +281,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
      * The parameter printFunctionCallback will be called once the ajax-request
      * starting the json-export was evaluated
      **/
+    // TODO: check if getting json printing could be refactored with gridexport
     createSheetData: function(button, printFunctionCallback, cbscope) {
         //disable Button and setLoading...
         button.disable();
