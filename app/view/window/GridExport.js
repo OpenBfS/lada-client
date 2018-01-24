@@ -236,11 +236,13 @@ Ext.define('Lada.view.window.GridExport', {
             this.close();
             return;
         }
-        // if rows are selected, assume that only marked are to be exported
+        // if rows are selected, preselect option to only export marked entries
+        var sel = false;
         if (this.grid.getSelectionModel().getSelection().length){
-            this.down('checkbox[name=selection]').setVisible(true);
-            this.down('checkbox[name=selection]').setValue(true);
+            sel = true;
         }
+        this.down('checkbox[name=selection]').setVisible(sel);
+        this.down('checkbox[name=selection]').setValue(sel);
 
         // listeners
 
