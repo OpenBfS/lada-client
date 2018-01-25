@@ -219,8 +219,6 @@ Ext.define('Lada.view.window.GridExport', {
                 displayField: 'name',
                 valueField: 'value',
                 labelWidth: 120,
-                maxWidth: 270
-                //TODO: layout and margins
             },
             items: [{
                 xtype: 'combobox',
