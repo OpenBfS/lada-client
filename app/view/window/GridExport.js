@@ -46,8 +46,15 @@ Ext.define('Lada.view.window.GridExport', {
         }]
     }],
 
+    /** the column defining the geometry data for geojson export */
     hasGeojson : null,
-    hasProbe: null,
+
+    /** the column defining the probeId for LAF export, or true if grid
+     * * consists of Proben without having a probeId result_type column */
+     hasProbe: null,
+
+    /** the column defining the messungId for LAF export, or true if grid
+* consists of Messungen without having a messungId result_type column */
     hasMessung: null,
 
     /**
@@ -60,7 +67,7 @@ Ext.define('Lada.view.window.GridExport', {
         this.title = i18n.getMsg('export.title');
         var columns = this.grid.getColumns();
 
-        // CSV export options
+        // add CSV export options
 
         this.csv_linesepstore = Ext.create('Ext.data.Store', {
             fields: ['name', 'value'],
@@ -495,11 +502,12 @@ Ext.define('Lada.view.window.GridExport', {
             }
         } else if (this.hasProbe) {
             jsondata.proben = [];
-
             // see comment in messungen above
             if (this.hasProbe === true){
                 for (var i= 0; i < dataset.length; i++) {
+
                     var pid = dataset[i].get('id');
+                    jsondata.proben.push(pid);
                 }
             } else {
                 for (var i= 0; i < dataset.length; i++) {
