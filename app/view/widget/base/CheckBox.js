@@ -22,6 +22,7 @@ Ext.define('Lada.view.widget.base.CheckBox', {
     initComponent: function() {
         this.items = [{
             xtype: 'checkbox',
+            uncheckedValue: false,
             flex: 1,
             name: this.name,
             fieldLabel: this.fieldLabel,

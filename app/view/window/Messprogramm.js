@@ -72,7 +72,7 @@ Ext.define('Lada.view.window.Messprogramm', {
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-            activate: function() {
+           activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
             deactivate: function() {

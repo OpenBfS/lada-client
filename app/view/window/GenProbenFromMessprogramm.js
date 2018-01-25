@@ -266,7 +266,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         var mmtStore = storeJson.mmtStore;
 
         var i18n = Lada.getApplication().bundle;
-        var gridstore = Ext.create('Lada.store.Proben');
+        var gridstore = Ext.create('Lada.store.Proben', {
+        });
         var frgrid = Ext.create('Lada.view.grid.ProbeList', {
             hideCreate: true,
             hideImport: true,
@@ -432,6 +433,14 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         frgrid.reconfigure(gridstore, columns);
 
         gridstore.loadData(data);
+        gridstore.getFilters().add(function(item) {
+            for (var i = 0; i < data.length; i++) {
+                if (item.data.id == data[i].id) {
+                    return true;
+                }
+            }
+            return false;
+        });
         var win = Ext.create('Ext.window.Window', {
             layout: 'fit',
             width: 800,
@@ -439,6 +448,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             maxHeight: 750,
             items: [frgrid]
         });
+        me.hide();
         win.show();
         //contentPanel.add(frgrid);
         me.down('panel').setHtml(me.down('panel').html + '<br><br>'

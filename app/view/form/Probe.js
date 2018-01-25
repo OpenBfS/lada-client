@@ -86,13 +86,6 @@ Ext.define('Lada.view.form.Probe', {
                     layout: 'vbox',
                     border: 0,
                     items: [{
-                        xtype: 'displayfield',
-                        name: 'idAlt',
-                        fieldLabel: i18n.getMsg('probeId'),
-                        margin: '0, 5, 5, 5',
-                        labelWidth: 95,
-                        maxLength: 20
-                    },{
                         layout: {
                             type: 'hbox',
                             align: 'stretch'
@@ -100,6 +93,30 @@ Ext.define('Lada.view.form.Probe', {
                         border: 0,
                         width: '100%',
                         items: [{
+                            xtype: 'displayfield',
+                            name: 'idAlt',
+                            fieldLabel: i18n.getMsg('probeId'),
+                            margin: '0, 5, 5, 5',
+                            labelWidth: 95,
+                            maxLength: 20,
+                            width: '70%'
+                        }, {
+                            xtype: 'chkbox',
+                            name: 'test',
+                            fieldLabel: 'Test',
+                            margin: '0, 5, 5, 5',
+                            width: '30%',
+                            labelWidth: 30
+                        }]
+                    }, {
+                        layout: {
+                            type: 'hbox',
+                            align: 'stretch'
+                        },
+                        border: 0,
+                        width: '100%',
+                        items: [{
+
                             xtype: 'messstellelabor',
                             name: 'mstlabor',
                             fieldLabel: 'Messstelle/Labor',
@@ -158,16 +175,8 @@ Ext.define('Lada.view.form.Probe', {
                             name: 'datenbasisId',
                             fieldLabel: 'Datenbasis',
                             margin: '0, 5, 5, 5',
-                            width: '20%',
+                            width: '30%',
                             labelWidth: 65
-                        }, {
-                            xtype: 'chkbox',
-                            name: 'test',
-                            fieldLabel: 'Test',
-                            margin: '0, 5, 5, 5',
-                            width: '10%',
-                            anchor: '100%',
-                            labelWidth: 30
                         }]
                     }, {
                         layout: {
@@ -197,8 +206,8 @@ Ext.define('Lada.view.form.Probe', {
                             editable: true,
                             name: 'probenartId',
                             fieldLabel: 'Probenart',
-                            margin: '0, 15, 5, 5',
-                            width: '29%',
+                            margin: '0, 5, 5, 5',
+                            width: '30%',
                             labelWidth: 65,
                             allowBlank: false
                         }]

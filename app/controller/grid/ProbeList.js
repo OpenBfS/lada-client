@@ -86,6 +86,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
      */
     addProbeItem: function() {
         var win = Ext.create('Lada.view.window.ProbeCreate');
+        win.setPosition(30);
         win.show();
         win.initData();
     },

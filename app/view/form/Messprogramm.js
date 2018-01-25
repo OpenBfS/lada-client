@@ -81,12 +81,29 @@ Ext.define('Lada.view.form.Messprogramm', {
                     },
                     margin: '0, 10, 0, 0',
                     items: [{
-                        xtype: 'displayfield',
-                        name: 'id',
-                        fieldLabel: i18n.getMsg('mprId'),
-                        margin: '0, 5, 5, 5',
-                        labelWidth: 95,
-                        maxLength: 20
+                        layout: {
+                            type: 'hbox',
+                            align: 'stretch'
+                        },
+                        border: 0,
+                        items: [{
+                            xtype: 'displayfield',
+                            name: 'id',
+                            fieldLabel: i18n.getMsg('mprId'),
+                            margin: '0, 5, 5, 5',
+                            width: '80%',
+                            labelWidth: 95,
+                            maxLength: 20
+                        }, {
+                            xtype: 'chkbox',
+                            name: 'test',
+                            fieldLabel: i18n.getMsg('test'),
+                            anchor: '100%',
+                            margin: '0, 5, 5, 5',
+                            width: '20%',
+                            labelWidth: 30,
+                            allowBlank: false
+                        }]
                     }, {
                         layout: {
                             type: 'hbox',
@@ -151,7 +168,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             name: 'datenbasisId',
                             fieldLabel: i18n.getMsg('datenbasisId'),
                             margin: '0, 5, 5, 5',
-                            width: '20%',
+                            width: '23%',
                             labelWidth: 65
                         }]
                     }, {
@@ -177,15 +194,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                             //anchor: '100%',
                             width: '45%',
                             labelWidth: 80
-                        }, {
-                            xtype: 'chkbox',
-                            name: 'test',
-                            fieldLabel: i18n.getMsg('test'),
-                            anchor: '100%',
-                            margin: '0, 5, 5, 5',
-                            width: '20%',
-                            labelWidth: 30,
-                            allowBlank: false
                         }]
                     }, {
                         xtype: 'tfield',
@@ -195,6 +203,171 @@ Ext.define('Lada.view.form.Messprogramm', {
                         margin: '0, 5, 5, 5',
                         labelWidth: 95
                     }]
+                }, {
+                    xtype: 'probenehmer',
+                    name: 'probeNehmerId',
+                    fieldLabel: i18n.getMsg('probeNehmerId'),
+                    margin: '0, 5, 5, 5',
+                    //width: '100%',
+                    minValue: 0,
+                    anchor: '100%',
+                    editable: true,
+                    labelWidth: 95,
+                    extraParams: function() {
+                        this.down('combobox').on({ // this = widget
+                            focus: function(combo) {
+                                var store = Ext.StoreManager.get('probenehmer');
+                                store.clearFilter();
+                                var nId = combo.up('fieldset')
+                                    .down('netzbetreiber[name=netzbetreiber]')
+                                    .getValue();
+                                if (!nId) {
+                                    store.filterBy(function(record) {
+                                        return Lada.netzbetreiber.indexOf(
+                                            record.get('netzbetreiberId')) > -1;
+                                    });
+                                } else {
+                                    store.filter('netzbetreiberId', nId);
+                                }
+                            }
+                        });
+                    }
+                }, {
+                    xtype: 'messprogrammland',
+                    name: 'mplId',
+                    fieldLabel: 'Messprogramm-Land',
+                    margin: '0, 5, 5, 5',
+                    //width: '100%',
+                    anchor: '100%',
+                    labelWidth: 115,
+                    editable: true,
+                    extraParams: function() {
+                        this.down('combobox').on({ // this = widget
+                            focus: function(combo) {
+                                var store = Ext.StoreManager.get('messprogrammkategorie');
+                                store.clearFilter();
+                                var nId = combo.up('fieldset')
+                                    .down('netzbetreiber[name=netzbetreiber]')
+                                    .getValue();
+                                if (!nId) {
+                                    store.filterBy(function(record) {
+                                        return Lada.netzbetreiber.indexOf(
+                                            record.get('netzbetreiberId')) > -1;
+                                    });
+                                } else {
+                                    store.filter('netzbetreiberId', nId);
+                                }
+                            }
+                        });
+                    }
+                }, {
+                    xtype: 'container',
+                    name: 'reiComboContainer',
+                    width: '100%',
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch'
+                    },
+                    items: [{
+                        xtype: 'reiprogpunktgruppe',
+                        name: 'reiProgpunktGrpId',
+                        fieldLabel: i18n.getMsg('reiprogpunktgruppe'),
+                        margin: '0 5 5 5',
+                        allowBlank: true,
+                        editable: true,
+                        hidden: true
+                    }, {
+                        xtype: 'ktagruppe',
+                        name: 'ktaGruppeId',
+                        fieldLabel: i18n.getMsg('ktagruppe'),
+                        margin: '0 5 5 5',
+                        hidden: true,
+                        editable: true,
+                        allowBlank: true
+                    }]
+                }, {
+                    // Medium
+                    xtype: 'fieldset',
+                    title: i18n.getMsg('medium'),
+                    width: '100%',
+                    items: [{
+                        border: 0,
+                        layout: {
+                            type: 'vbox',
+                            align: 'stretch'
+                        },
+                        width: '100%',
+                        items: [{
+                            xtype: 'umwelt',
+                            name: 'umwId',
+                            fieldLabel: i18n.getMsg('umwId'),
+                            labelWidth: 100,
+                            editable: true,
+                            listeners: {
+                                dirtychange: {
+                                    fn: this.updateOnChange,
+                                    scope: me
+                                }
+                            }
+                        }, {
+                            border: 0,
+                            layout: {
+                                type: 'hbox',
+                                align: 'stretch'
+                            },
+                            width: '100%',
+                            items: [{
+                                xtype: 'tfield',
+                                maxLength: 38,
+                                enforceMaxLength: true,
+                                name: 'mediaDesk',
+                                width: '58%',
+                                labelWidth: 100,
+                                fieldLabel: i18n.getMsg('mediaDesk'),
+                                editable: false,
+                                readOnly: true,
+                                listeners: {
+                                    dirtychange: {
+                                        fn: this.updateOnChange,
+                                        scope: me
+                                    }
+                                }
+                            }, {
+                                xtype: 'textfield',
+                                name: 'media',
+                                margin: '0, 10, 5, 10',
+                                width: '42%',
+                                enforceMaxLength: true,
+                                editable: false,
+                                readOnly: true
+                            }]
+                        }, {
+                            xtype: 'fieldset',
+                            title: i18n.getMsg('deskDetails'),
+                            collapsible: true,
+                            collapsed: true,
+                            defaultType: 'textfield',
+                            layout: {
+                                type: 'vbox',
+                                align: 'stretch'
+                            },
+                            items: this.buildDescriptors(),
+                            listeners: {
+                                dirtychange: {
+                                    fn: this.updateOnChange,
+                                    scope: me
+                                }
+                            }
+                        }]
+                    }]
+                }, {
+                    xtype: 'textarea',
+                    name: 'probeKommentar',
+                    labelAlign: 'top',
+                    fieldLabel: i18n.getMsg('probeKommentar'),
+                    width: '100%',
+                    labelwidth: 135,
+                    anchor: '100%'
                 }, {
                     // Zeit
                     xtype: 'fieldset',
@@ -283,171 +456,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                             border: false
                         }]
                     }]
-                }, {
-                    // Medium
-                    xtype: 'fieldset',
-                    title: i18n.getMsg('medium'),
-                    width: '100%',
-                    items: [{
-                        border: 0,
-                        layout: {
-                            type: 'vbox',
-                            align: 'stretch'
-                        },
-                        width: '100%',
-                        items: [{
-                            xtype: 'umwelt',
-                            name: 'umwId',
-                            fieldLabel: i18n.getMsg('umwId'),
-                            labelWidth: 100,
-                            editable: true,
-                            listeners: {
-                                dirtychange: {
-                                    fn: this.updateOnChange,
-                                    scope: me
-                                }
-                            }
-                        }, {
-                            border: 0,
-                            layout: {
-                                type: 'hbox',
-                                align: 'stretch'
-                            },
-                            width: '100%',
-                            items: [{
-                                xtype: 'tfield',
-                                maxLength: 38,
-                                enforceMaxLength: true,
-                                name: 'mediaDesk',
-                                width: '58%',
-                                labelWidth: 100,
-                                fieldLabel: i18n.getMsg('mediaDesk'),
-                                editable: false,
-                                readOnly: true,
-                                listeners: {
-                                    dirtychange: {
-                                        fn: this.updateOnChange,
-                                        scope: me
-                                    }
-                                }
-                            }, {
-                                xtype: 'textfield',
-                                name: 'media',
-                                margin: '0, 10, 5, 10',
-                                width: '42%',
-                                enforceMaxLength: true,
-                                editable: false,
-                                readOnly: true
-                            }]
-                        }, {
-                            xtype: 'fieldset',
-                            title: i18n.getMsg('deskDetails'),
-                            collapsible: true,
-                            collapsed: true,
-                            defaultType: 'textfield',
-                            layout: {
-                                type: 'vbox',
-                                align: 'stretch'
-                            },
-                            items: this.buildDescriptors(),
-                            listeners: {
-                                dirtychange: {
-                                    fn: this.updateOnChange,
-                                    scope: me
-                                }
-                            }
-                        }]
-                    }]
-                }, {
-                    xtype: 'probenehmer',
-                    name: 'probeNehmerId',
-                    fieldLabel: i18n.getMsg('probeNehmerId'),
-                    margin: '0, 5, 5, 5',
-                    //width: '100%',
-                    minValue: 0,
-                    anchor: '100%',
-                    editable: true,
-                    labelWidth: 95,
-                    extraParams: function() {
-                        this.down('combobox').on({ // this = widget
-                            focus: function(combo) {
-                                var store = Ext.StoreManager.get('probenehmer');
-                                store.clearFilter();
-                                var nId = combo.up('fieldset')
-                                    .down('netzbetreiber[name=netzbetreiber]')
-                                    .getValue();
-                                if (!nId) {
-                                    store.filterBy(function(record) {
-                                        return Lada.netzbetreiber.indexOf(
-                                            record.get('netzbetreiberId')) > -1;
-                                    });
-                                } else {
-                                    store.filter('netzbetreiberId', nId);
-                                }
-                            }
-                        });
-                    }
-                }, {
-                    xtype: 'messprogrammland',
-                    name: 'mplId',
-                    fieldLabel: 'Messprogramm-Land',
-                    margin: '0, 5, 5, 5',
-                    //width: '100%',
-                    anchor: '100%',
-                    labelWidth: 115,
-                    editable: true,
-                    extraParams: function() {
-                        this.down('combobox').on({ // this = widget
-                            focus: function(combo) {
-                                var store = Ext.StoreManager.get('messprogrammkategorie');
-                                store.clearFilter();
-                                var nId = combo.up('fieldset')
-                                    .down('netzbetreiber[name=netzbetreiber]')
-                                    .getValue();
-                                if (!nId) {
-                                    store.filterBy(function(record) {
-                                        return Lada.netzbetreiber.indexOf(
-                                            record.get('netzbetreiberId')) > -1;
-                                    });
-                                } else {
-                                    store.filter('netzbetreiberId', nId);
-                                }
-                            }
-                        });
-                    }
-                }, {
-                    xtype: 'container',
-                    name: 'reiComboContainer',
-                    width: '100%',
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretch'
-                    },
-                    items: [{
-                        xtype: 'reiprogpunktgruppe',
-                        name: 'reiProgpunktGrpId',
-                        fieldLabel: i18n.getMsg('reiprogpunktgruppe'),
-                        margin: '0 5 5 5',
-                        allowBlank: true,
-                        editable: true,
-                        hidden: true
-                    }, {
-                        xtype: 'ktagruppe',
-                        name: 'ktaGruppeId',
-                        fieldLabel: i18n.getMsg('ktagruppe'),
-                        margin: '0 5 5 5',
-                        hidden: true,
-                        editable: true,
-                        allowBlank: true
-                    }]
-                }, {
-                    xtype: 'textarea',
-                    name: 'probeKommentar',
-                    labelAlign: 'top',
-                    fieldLabel: i18n.getMsg('probeKommentar'),
-                    width: '100%',
-                    labelwidth: 135,
-                    anchor: '100%'
                 }]
             }]
         }];
@@ -618,7 +626,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         var current = this.down('deskriptor[layer=' + ndx + ']');
         var cbox = current.down('combobox');
         cbox.store.proxy.extraParams = {
-           'layer': ndx,
+           'layer': ndx
         };
         if (ndx >= 1) {
             var parents = current.getParents(cbox);
