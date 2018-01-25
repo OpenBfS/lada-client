@@ -17,16 +17,18 @@ Ext.define('Lada.view.window.GridExport', {
     maximizable: true,
     autoShow: true,
     layout: 'vbox',
+    align: 'stretch',
     grid: null,
     items: [{
         xtype: 'container',
         name: 'form',
         layout: 'vbox',
+        align: 'stretch',
         defaults: {
             displayField: 'name',
             valueField: 'value',
-            labelWidth: 125,
-            maxWidth: 300,
+            labelWidth: 200,
+            width: 400,
         }
     } ,
     {
@@ -198,15 +200,12 @@ Ext.define('Lada.view.window.GridExport', {
         }, {
             xtype: 'tagfield',
             name: 'exportcolumns',
+            labelWidth: 100,
             fieldLabel: i18n.getMsg('export.columns'),
             store: me.columnStore,
             hidden: true,
             value: preselected,
             multiSelect: true
-        }, {
-            xtype: 'filefield',
-            fieldLabel: i18n.getMsg('export.filename'),
-            allowBlank: false
         }, {
             xtype: 'fieldset',
             title: i18n.getMsg('export.csvdetails'),
@@ -215,6 +214,7 @@ Ext.define('Lada.view.window.GridExport', {
             name: 'csvoptions',
             visible: false,
             margins: '5,5,5,5',
+            align: 'end',
             defaults: {
                 displayField: 'name',
                 valueField: 'value',
@@ -247,7 +247,12 @@ Ext.define('Lada.view.window.GridExport', {
                 fieldLabel: 'Dezimaltrenner:',
                 value: ','
             }]
-        }]);
+        }, {
+            xtype: 'filefield',
+            fieldLabel: i18n.getMsg('export.filename'),
+            allowBlank: false
+        }
+    ]);
 
         // if rows are selected, preselect option to only export marked entries
         var sel = false;
