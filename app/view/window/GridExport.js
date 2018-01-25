@@ -192,11 +192,15 @@ Ext.define('Lada.view.window.GridExport', {
             name: 'allcolumns',
             fieldLabel: i18n.getMsg('export.allcolumns'),
             checked: true,
+            listeners: {
+                change: me.exportalltoggle
+            }
         }, {
             xtype: 'tagfield',
             name: 'exportcolumns',
             fieldLabel: i18n.getMsg('export.columns'),
             store: me.columnStore,
+            hidden: true,
             value: preselected,
             multiSelect: true
         }, {
@@ -582,9 +586,21 @@ Ext.define('Lada.view.window.GridExport', {
         box.up('window').down('fieldset[name=csvoptions]').setVisible(
             newValue === 'csv' ? true: false
         );
+        var ecolVisible = true;
+        if (box.up('window').down('checkbox[name=allcolumns]').getValue()){
+            ecolVisible = false;
+        }
+        if (newValue === 'laf'){
+            ecolVisible = false;
+        }
         box.up('window').down('tagfield[name=exportcolumns]').setVisible(
-            newValue === 'laf' ? false: true
-        )
+            ecolVisible);
+    },
+
+    exportalltoggle: function(box, newValue, oldValue){
+        console.log('toggle');
+        box.up('window').down('tagfield[name=exportcolumns]').setVisible(
+            !newValue);
     },
 
     /**
@@ -706,6 +722,6 @@ Ext.define('Lada.view.window.GridExport', {
             case 'ortId':
             default:
                 return value.toString();
-            }
         }
+    }
 });
