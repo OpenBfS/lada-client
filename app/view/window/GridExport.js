@@ -122,24 +122,26 @@ Ext.define('Lada.view.window.GridExport', {
         var columnstore= [];
         var preselected= [];
         for (var i =0; i < columns.length; i++){
-            columnstore.push({
-                value: columns[i].dataIndex,
-                name: columns[i].text
-            });
-            preselected.push(columns[i].dataIndex);
-            if (!columns[i].dataType) {
-                continue;
-            }
-            switch (columns[i].dataType.name){
-                case 'geom':
-                    this.hasGeojson = true;
-                    break;
-                case 'messungId':
-                    this.hasMessung = columns[i];
-                    break;
-                case 'probeId':
-                    this.hasProbe = columns[i];
-                    break;
+            if (columns[i].dataIndex && columns[i].text){
+                columnstore.push({
+                    value: columns[i].dataIndex,
+                    name: columns[i].text
+                });
+                preselected.push(columns[i].dataIndex);
+                if (!columns[i].dataType) {
+                    continue;
+                }
+                switch (columns[i].dataType.name){
+                    case 'geom':
+                        this.hasGeojson = true;
+                        break;
+                    case 'messungId':
+                        this.hasMessung = columns[i];
+                        break;
+                    case 'probeId':
+                        this.hasProbe = columns[i];
+                        break;
+                }
             }
         }
         this.columnStore = Ext.create('Ext.data.Store',{
@@ -185,6 +187,11 @@ Ext.define('Lada.view.window.GridExport', {
             listeners: {
                 change: me.changeFormat
             }
+        }, {
+            xtype: 'checkbox',
+            name: 'allcolumns',
+            fieldLabel: i18n.getMsg('export.allcolumns'),
+            checked: true,
         }, {
             xtype: 'tagfield',
             name: 'exportcolumns',
@@ -238,11 +245,6 @@ Ext.define('Lada.view.window.GridExport', {
             }]
         }]);
 
-        if(!this.grid || !this.grid.store.getCount()){
-            this.showError('export.nodata');
-            this.close();
-            return;
-        }
         // if rows are selected, preselect option to only export marked entries
         var sel = false;
         if (this.grid.getSelectionModel().getSelection().length){
@@ -306,9 +308,11 @@ Ext.define('Lada.view.window.GridExport', {
             for (var i=0; i < data.length; i++ ) {
                 var iresult = {};
                 for (var col = 0; col < columns.length; col ++ ){
-                    if (columns[col]
-                      && data[i].get(columns[col]) !== undefined ){
-                        iresult[columns[col]] = data[i].get(columns[col]);
+                    var c = columns[col];
+                    if (c && data[i].get(c.dataIndex) !== undefined ){
+                        var value = this.formatValue(
+                            data[i].get(c.dataIndex), c, true);
+                        iresult[c.text] = value;
                     }
                 }
                 resultset[i] = iresult;
@@ -341,15 +345,20 @@ Ext.define('Lada.view.window.GridExport', {
                     geometry : null};
 
                 for (var col = 0; col < columns.length; col ++){
-                    if (data[i].get(columns[col]) !== undefined){
-                        if (columns[col].dataType.name === 'geom'){
-                            var gjson = data[i].get(
-                                columns[col]).data.geometry;
-                            iresult.geometry.coordinates = gjson.coordinates;
-                            iresult.geometry.type = gjson.type;
+                    var c = columns[col];
+                    if (data[i].get(c.dataIndex) !== undefined){
+                        if (c.dataType && c.dataType.name === 'geom'){
+                            var data = data[i].get(c.dataIndex);
+                            var gjs = null;
+                            if (data){
+                                gjs = data.data.geometry;
+                                iresult.geometry.coordinates = gjs.coordinates;
+                                iresult.geometry.type = gjs.type;
+                            }
                         } else {
-                            iresult.properties[columns[col]] = data[i].get(
-                                columns[col]);
+                            var value = this.formatValue(
+                                data[i].get(c.dataIndex), c, true);
+                            iresult.properties[c.text] = value;
                         }
                     }
                 }
@@ -394,9 +403,9 @@ Ext.define('Lada.view.window.GridExport', {
             }
 
             //first column doesn't start with a column separator
-            var resulttable = [columns[0]];
+            var resulttable = textsep + columns[0].text + textsep;
             for (var col = 1; col < columns.length; col ++){
-                resulttable += colsep + columns[col];
+                resulttable += colsep + textsep + columns[col].text + textsep;
             }
             resulttable += linesep;
 
@@ -406,22 +415,23 @@ Ext.define('Lada.view.window.GridExport', {
                 //TODO: use data from rowExpander
                 var line = '';
                 for (var col = 0; col < columns.length; col++ ) {
-                    var newvalue =  record.get(columns[col]);
+                    var newvalue =  record.get(columns[col].dataIndex);
                     line += col > 0 ? colsep: '';
-                    switch( typeof(newvalue) ){
+                    var value = me.formatValue(newvalue, columns[col], false);
+                    switch( typeof(value) ){
                         case 'number':
-                            newvalue = newvalue.toString();
-                            if (decsep === ',' && newvalue.indexOf(".") > -1){
-                            newvalue.replace(/'.'/g, ',');
+                            value = value.toString();
+                            if (decsep === ',' && value.indexOf(".") > -1){
+                            value.replace(/'.'/g, ',');
                             }
-                            line += newvalue;
+                            line += value;
                             break;
                         case 'undefined': //leave column empty
                             break;
                         case 'object': //leave column empty
                             break;
                         case 'string':
-                            if (newvalue && newvalue.indexOf(textsep) > -1 ){
+                            if (value.indexOf(textsep) > -1 ){
                                 // TODO: By default, this will alter the data
                                 // exported (exchanging single/double quotes)
                                 // user should be warned that this is necessary
@@ -430,15 +440,26 @@ Ext.define('Lada.view.window.GridExport', {
                                     me.csv_asked = true;
                                 }
                                 if (textsep ===  '"'){
-                                    newvalue.replace(/\"/g, "'");
+                                    value.replace(/\"/g, "'");
                                 } else {
-                                    newvalue.replace(/\'"'/g, '"');
+                                    value.replace(/\'"'/g, '"');
                                 }
                             }
-                            line += textsep + newvalue + textsep;
+                            line += textsep + value + textsep;
                             break;
-                        case 'boolean':
-                            if (newvalue){
+                        case 'object':
+                        // may be an unformatted date. Try
+                        // converting it into a string.
+                            var val = '';
+                            try {
+                                val = textsep + value.toIsoString() + textsep;
+                            }
+                            catch(err){
+                                val = ''
+                            }
+                            line += val;
+                        case 'boolean': // convert into 1 and 0
+                            if (value){
                                 line += '1';
                             } else{
                                 line += '0';
@@ -446,7 +467,7 @@ Ext.define('Lada.view.window.GridExport', {
                             break;
                         default:
                             console.log('Fehler: Kein Exportformat für ' +
-                                typeof(newvalue) + ' definiert.');
+                                typeof(value) + ' definiert.');
                     }
                 }
                 line += linesep;
@@ -594,18 +615,22 @@ Ext.define('Lada.view.window.GridExport', {
     },
 
     getColumns: function(){
-        var rawcolumns = this.down('tagfield[name=exportcolumns]').getValue();
-        var columns = [];
-        // avoid local columns without dataIndex
-        for (var col = 0; col < rawcolumns.length; col ++) {
-            if (rawcolumns[col]){
-                columns.push(rawcolumns[col]);
+        var allcolumns = this.down('checkbox[name=allcolumns]').getValue();
+        var columnlist = [];
+        var cols = this.grid.getColumns();
+        var exportcols = this.down('tagfield[name=exportcolumns]').getValue();
+        for (var i=0; i < cols.length; i ++){
+            if (!cols[i].dataIndex){
+                continue;
+            }
+            if (allcolumns || exportcols.indexOf(cols[i].dataIndex) > -1){
+                columnlist.push(cols[i]);
             }
         }
-        if (!columns.length){
+        if (!columnlist.length){
             this.showError('export.nocolumn');
         }
-        return columns;
+        return columnlist;
     },
 
     showError: function(message){
@@ -641,6 +666,46 @@ Ext.define('Lada.view.window.GridExport', {
                 }]
             }]
         }).show();
-    }
+    },
 
+    /**
+     * formats the (originally string) value according to the data type defined
+     * in the database. Optional parameter 'json' returns dates as Date,
+     * regardless of format string
+     */
+    formatValue: function(value, column, json){
+        if (!column || value === undefined || value === null ) {
+            return null;
+        }
+        if (!column.dataType){
+            return value;
+        }
+        switch (column.dataType.name) {
+            case 'number':
+                if (!value && value !== 0){
+                    return null;
+                }
+                if (value.indexOf('<') === 0){
+                    // TODO better handling of '<'. it really is a 0 with
+                    // additional info, but it is a string, not a number
+                    return value;
+                }
+                return Number.parseFloat(value);
+            case 'date':
+                if (column.dataType.format && !json){
+                    return Ext.Date.format(new Date(value),
+                        column.dataType.format);
+                } else {
+                    return new Date(value);
+                }
+            case 'geom':
+                return value;
+            case 'text':
+            case 'probeId':
+            case 'messungId':
+            case 'ortId':
+            default:
+                return value.toString();
+            }
+        }
 });

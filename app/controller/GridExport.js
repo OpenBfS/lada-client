@@ -31,16 +31,40 @@ Ext.define('Lada.controller.GridExport', {
         if (!grid){ // special cases, as stammdaten.probegrid (Jan 2018)
             grid = button.up('toolbar').up().down('grid');
         }
-        if (!grid){
-            return;
+        if (!grid || !grid.store.getCount()){
+            var i18n = Lada.getApplication().bundle;
+            Ext.create('Ext.window.Window', {
+                title : i18n.getMsg('export.failed'),
+                modal: true,
+                layout: 'vbox',
+                items: [{
+                    xtype: 'container',
+                    html: i18n.getMsg('export.nodata'),
+                    margin: '10, 5, 5, 5'
+                }, {
+                    xtype: 'container',
+                    layout: 'hbox',
+                    defaults: {
+                        margin: '5,5,5,5'
+                    },
+                    items: [{
+                        xtype: 'button',
+                        text: i18n.getMsg('export.continue'),
+                        margin: '5, 0, 5, 5',
+                        handler: function(button) {
+                            button.up('window').close();
+                        }
+                    }]
+                }]
+            }).show();
+        } else {
+            // special handling of probe+messung grids not yet containing their ids
+            // TODO might become obsolete soon (Jan 2018)
+            Ext.create('Lada.view.window.GridExport', {
+                grid: grid,
+                hasProbe: (grid.xtype === 'probelistgrid'),
+                hasMessung: (grid.xtype === 'messunglistgrid')
+            }).show();
         }
-
-        // special handling of probe+messung grids not yet containing their ids
-        // TODO might become obsolete soon (Jan 2018)
-        Ext.create('Lada.view.window.GridExport', {
-            grid: grid,
-            hasProbe: (grid.xtype === 'probelistgrid'),
-            hasMessung: (grid.xtype === 'messunglistgrid')
-        }).show();
     }
 });
