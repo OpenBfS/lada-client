@@ -52,9 +52,10 @@
     /**
      * The name of the theme for this application.
     "theme": "theme-gray",
+    "theme": "theme-neptune",
      */
     
-    "theme": "theme-neptune",
+    "theme": "theme-gray",
     
     
     /**
