@@ -246,9 +246,11 @@ Ext.define('Lada.view.window.GridExport', {
                 value: ','
             }]
         }, {
-            xtype: 'filefield',
+            xtype: 'textfield',
+            name: 'filename',
             fieldLabel: i18n.getMsg('export.filename'),
-            allowBlank: false
+            allowBlank: true,
+            editable: true
         }
     ]);
 
@@ -604,7 +606,6 @@ Ext.define('Lada.view.window.GridExport', {
     },
 
     exportalltoggle: function(box, newValue, oldValue){
-        console.log('toggle');
         box.up('window').down('tagfield[name=exportcolumns]').setVisible(
             !newValue);
     },
@@ -614,9 +615,9 @@ Ext.define('Lada.view.window.GridExport', {
      * widget, or if not given, to a filename specified as default
      */
     exportFile: function (data, defaultname){
-        this.filename = this.down('filefield').getValue() || defaultname;
+        //TODO validation of filename, textfield cannot yet be trusted
+        this.filename = defaultname; // this.down('textfield[name=filename]').getValue() ||
         var blob = new Blob([data]);
-        //TODO (optional) validation of filename
         saveAs(blob, this.filename);
     },
 
