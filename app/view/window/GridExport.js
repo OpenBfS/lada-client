@@ -447,17 +447,44 @@ Ext.define('Lada.view.window.GridExport', {
                                 // TODO: By default, this will alter the data
                                 // exported (exchanging single/double quotes)
                                 // user should be warned that this is necessary
+                                var i18n = Lada.getApplication().bundle;
+
+                                var oldChar;
+                                var newChar;
+                                if (textsep ===  '"'){
+                                    value.replace(/\"/g, "'");
+                                    oldChar = '"';
+                                    newChar = "'";
+                                } else {
+                                    oldChar= "'";
+                                    newChar = '"';
+                                    value.replace(/\'"'/g, '"');
+                                }
                                 if (!me.csv_asked){
                                     //TODO abort export if user doesn't want it
                                     me.csv_asked = true;
-                                }
-                                if (textsep ===  '"'){
-                                    value.replace(/\"/g, "'");
-                                } else {
-                                    value.replace(/\'"'/g, '"');
+                                    var warntext = i18n.getMsg('warn.msg.export.csv.stringseparator', oldChar, newChar);
+                                    line += textsep + value + textsep;
+                                    var win = Ext.create('Ext.window.Window', {
+                                        title: i18n.getMsg('warn'),
+                                        items: [{
+                                            xtype: 'panel',
+                                            margin: '5 5 0 5',
+                                            bodyStyle: 'background: none; border: none',
+                                            html: warntext
+                                        }, {
+                                            xtype: 'button',
+                                            margin: '5 5 5 5',
+                                            text: 'OK',
+                                            handler: function(button) {
+                                                button.up().close();
+                                            }
+                                        }]
+                                    });
+                                    win.show();
                                 }
                             }
-                            line += textsep + value + textsep;
+
                             break;
                         case 'object':
                         // may be an unformatted date. Try
