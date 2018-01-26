@@ -28,7 +28,7 @@ Ext.define('Lada.view.window.GridExport', {
             displayField: 'name',
             valueField: 'value',
             labelWidth: 200,
-            width: 400,
+            width: 400
         }
     } ,
     {
@@ -135,7 +135,7 @@ Ext.define('Lada.view.window.GridExport', {
                 }
                 switch (columns[i].dataType.name){
                     case 'geom':
-                        this.hasGeojson = true;
+                        this.hasGeojson = columns[i];
                         break;
                     case 'messungId':
                         this.hasMessung = columns[i];
@@ -156,7 +156,7 @@ Ext.define('Lada.view.window.GridExport', {
         var formatdata = [
             {name: 'CSV', value: 'csv'},
             {name: 'JSON', value: 'json'}];
-        if (this.geojson){
+        if (this.hasGeojson){
             formatdata.push({
                 name: 'geoJSON',
                 value: 'geojson'
@@ -218,7 +218,7 @@ Ext.define('Lada.view.window.GridExport', {
             defaults: {
                 displayField: 'name',
                 valueField: 'value',
-                labelWidth: 120,
+                labelWidth: 120
             },
             items: [{
                 xtype: 'combobox',
@@ -335,7 +335,7 @@ Ext.define('Lada.view.window.GridExport', {
     /**
      * Exports the geometry as geojson points with the table data as properties
      */
-    exportGeoJson: function(){ //TODO not tested yet!
+    exportGeoJson: function(){
         var data = this.getDataSets();
         if (data){
             var columns = this.getColumns();
@@ -348,24 +348,27 @@ Ext.define('Lada.view.window.GridExport', {
             };
             for (var i=0; i < data.length; i++){
                 var iresult = {
-                    properties: null,
-                    geometry : null};
+                    type: "Feature",
+                    properties: {},
+                    geometry : {}
+                };
 
                 for (var col = 0; col < columns.length; col ++){
                     var c = columns[col];
                     if (data[i].get(c.dataIndex) !== undefined){
                         if (c.dataType && c.dataType.name === 'geom'){
-                            var data = data[i].get(c.dataIndex);
-                            var gjs = null;
-                            if (data){
-                                gjs = data.data.geometry;
-                                iresult.geometry.coordinates = gjs.coordinates;
-                                iresult.geometry.type = gjs.type;
+                            var geodata = data[i].get(c.dataIndex);
+                            if (geodata){
+                                var realdata = JSON.parse(geodata);
+                                iresult.geometry['coordinates'] = realdata.coordinates;
+                                iresult.geometry['type'] = realdata.type;
                             }
                         } else {
                             var value = this.formatValue(
                                 data[i].get(c.dataIndex), c, true);
-                            iresult.properties[c.text] = value;
+                            if (value !== undefined){
+                                iresult.properties[c.text] = value;
+                            }
                         }
                     }
                 }
