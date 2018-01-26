@@ -517,7 +517,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
      */
     printpdf: function(data, endpoint, filename, button) {
         Ext.Ajax.request({
-            url: 'lada-printer/'+endpoint+'/buildreport.pdf',
+            url: 'lada-printer/print/'+endpoint+'/buildreport.pdf',
             //configure a proxy in apache conf!
             jsonData: data,
             binary: true,

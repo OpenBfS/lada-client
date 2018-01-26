@@ -18,60 +18,43 @@ Ext.define('Lada.view.ModeSwitcher', {
     },
     /**
      * Initialise the Widget.
-     * When the Checkbox is checked, it fires a 'check' Event
+     * Use a combobox to choose display mode
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('modus');
-        this.items = [{
-            xtype: 'radiogroup',
-            columns: 1,
-            width: '100%',
-            items: [{
-                xtype: 'radiofield',
-                name: 'modeswitch',
-                boxLabel: i18n.getMsg('proben'),
-                inputValue: 'proben', //this determines the store
-                // which will be loaded by the controller,
-                checked: true,
-                handler: function(field, state) {
-                    if (state === true) {
-                        this.fireEvent('check', field);
-                    }
+        var store = Ext.create('Ext.data.Store', {
+            //Fields are internal value and display value
+            fields: ['value', 'display'],
+            data: [
+                {'value': 'proben', 'display': i18n.getMsg('proben')},
+                {'value': 'messungen', 'display': i18n.getMsg('messungen')},
+                {'value': 'messprogramme', 'display': i18n.getMsg('messprogramme')},
+                {'value': 'stammdaten', 'display': i18n.getMsg('stammdaten')},
+                {'value': 'gen_query', 'display': i18n.getMsg('gen_query')}
+            ]
+        });
+
+        var combo = Ext.create('Ext.form.field.ComboBox', {
+            xtype: 'combobox',
+            name: 'modeswitch',
+            allowBlank: false,
+            displayField: 'display',
+            editable: false,
+            queryMode: 'local',
+            store: store,
+            valueField: 'value',
+            triggers: {
+                clear: {
+                    hidden: true
                 }
-            }, {
-                xtype: 'radiofield',
-                name: 'modeswitch',
-                boxLabel: i18n.getMsg('messungen'),
-                inputValue: 'messungen', //this determines the store
-                // which will be loaded by the controller,
-                handler: function(field, state) {
-                    if (state === true) {
-                        this.fireEvent('check', field);
-                    }
-                }
-            }, {
-                xtype: 'radiofield',
-                name: 'modeswitch',
-                boxLabel: i18n.getMsg('messprogramme'),
-                inputValue: 'messprogramme',
-                handler: function(field, state) {
-                    if (state === true) {
-                        this.fireEvent('check', field);
-                    }
-                }
-            }, {
-                xtype: 'radiofield',
-                name: 'modeswitch',
-                boxLabel: i18n.getMsg('stammdaten'),
-                inputValue: 'stammdaten',
-                handler: function(field, state) {
-                    if (state === true) {
-                        this.fireEvent('check', field);
-                    }
-                }
-            }]
-        }];
+            }
+        });
+        //Preselect entry
+        combo.suspendEvents();
+        combo.select('proben');
+        combo.resumeEvents();
+        this.items = [combo];
         this.callParent(arguments);
     }
 });

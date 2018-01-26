@@ -23,12 +23,12 @@ Ext.define('Lada.controller.ModeSwitcher', {
     /**
      * Initialize this Controller
      * It has 1 Listeners
-     * A checked ModeSwithch-Radiofield fired a 'check'-event
+     * A checked ModeSwitch-Combobox fired a 'change'-event
      */
     init: function() {
         this.control({
-            'radiofield[name=modeswitch]': {
-                check: this.switchModes
+            'combobox[name=modeswitch]': {
+                change: this.switchModes
             }
         });
         this.callParent(arguments);
@@ -40,15 +40,16 @@ Ext.define('Lada.controller.ModeSwitcher', {
      * the function alters the store which was loaded by the
      * filterpanels combobox,
      */
-    switchModes: function(field) {
-        var cbox = field.up('modeswitcher').up().down('combobox');
+    switchModes: function(field, newVal) {
+        var cbox = field.up('modeswitcher').up().down('combobox[name=filter]');
         var filterValues = field.up('panel[name=main]').down('panel[name=filtervalues]');
         var filters = field.up('panel[name=main]').down('panel[name=filtervariables]');
         filterValues.removeAll();
         filters.hide();
 
         var filterController = this.getController('Lada.controller.Filter');
-        filterController.mode = field.inputValue;
+        filterController.mode = newVal;
+        
         filterController.updateFilter(cbox);
     }
 });
