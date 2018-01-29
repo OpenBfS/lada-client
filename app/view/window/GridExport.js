@@ -591,7 +591,7 @@ Ext.define('Lada.view.window.GridExport', {
                 return false;
             }
         } else { //should not happen
-            this.showError('wrongformat'); //TODO: "wrong format"
+            this.showError('export.wrongformat');
             return false;
         }
         var me = this;
