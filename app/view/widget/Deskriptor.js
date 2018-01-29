@@ -77,7 +77,7 @@ Ext.define('Lada.view.widget.Deskriptor', {
             deskriptor.store.proxy.extraParams = {'layer': deskriptor.layer};
         } else {
             var parents = deskriptor.getParents(field);
-            if (parents !== '') {
+            if (parents !== '' || parents !== undefined) {
                 deskriptor.store.proxy.extraParams = {
                     'layer': deskriptor.layer,
                     'parents': parents
