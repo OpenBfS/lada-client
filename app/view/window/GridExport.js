@@ -457,9 +457,8 @@ Ext.define('Lada.view.window.GridExport', {
                             break;
                         case 'string':
                             if (value.indexOf(textsep) > -1 ){
-                                // TODO: By default, this will alter the data
-                                // exported (exchanging single/double quotes)
-                                // user should be warned that this is necessary
+                                // This will alter the data exported
+                                // (exchanging single/double quotes)
                                 var i18n = Lada.getApplication().bundle;
 
                                 var oldChar;
@@ -474,7 +473,6 @@ Ext.define('Lada.view.window.GridExport', {
                                     value.replace(/\'"'/g, '"');
                                 }
                                 if (!me.csv_asked){
-                                    //TODO abort export if user doesn't want it
                                     me.csv_asked = true;
                                     var warntext = i18n.getMsg('warn.msg.export.csv.stringseparator', oldChar, newChar);
                                     line += textsep + value + textsep;
