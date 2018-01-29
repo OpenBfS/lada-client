@@ -282,18 +282,31 @@ Ext.define('Lada.view.window.GridExport', {
         var win = button.up('window');
         var format = win.down('combobox[name=formatselection]').getValue();
         var actionresult = false;
+        var filename = '';
         switch(format){
             case 'json':
-                actionresult = win.exportJson();
+                filename = win.validateFilename('export.json')
+                if (filename){
+                    actionresult = win.exportJson(filename);
+                }
                 break;
             case 'geojson':
-                actionresult = win.exportGeoJson();
+                filename = win.validateFilename('export.geojson')
+                if (filename){
+                    actionresult = win.exportGeoJson(filename);
+                }
                 break;
             case 'csv':
-                actionresult = win.exportCSV();
+                filename = win.validateFilename('export.csv')
+                if (filename){
+                    actionresult = win.exportCSV(filename);
+                }
                 break;
             case 'laf':
-                actionresult = win.exportLAF();
+                filename = win.validateFilename('export.laf')
+                if (filename){
+                    actionresult = win.exportLAF(filename);
+                }
                 break;
             default:
                 win.showError('export.noformat');
@@ -306,7 +319,7 @@ Ext.define('Lada.view.window.GridExport', {
     /**
     * Exports the table data as json objects
     */
-    exportJson: function(){
+    exportJson: function(filename){
         var data = this.getDataSets();
         if (data){
             var columns = this.getColumns();
@@ -326,7 +339,7 @@ Ext.define('Lada.view.window.GridExport', {
                 }
                 resultset[i] = iresult;
             }
-            this.exportFile(JSON.stringify(resultset), 'export.json');
+            this.exportFile(JSON.stringify(resultset), filename);
             return true;
         } else {
             this.showError('export.nodata');
@@ -337,7 +350,7 @@ Ext.define('Lada.view.window.GridExport', {
     /**
      * Exports the geometry as geojson points with the table data as properties
      */
-    exportGeoJson: function(){
+    exportGeoJson: function(filename){
         var data = this.getDataSets();
         if (data){
             var columns = this.getColumns();
@@ -376,7 +389,7 @@ Ext.define('Lada.view.window.GridExport', {
                 }
                 resultset.features.push(iresult);
             }
-            this.exportFile(JSON.stringify(resultset), 'export.geojson');
+            this.exportFile(JSON.stringify(resultset), filename);
             return true;
         } else {
             this.showError('export.nodata');
@@ -387,7 +400,7 @@ Ext.define('Lada.view.window.GridExport', {
     /**
      * Exports the table data as csv files, with header.
      */
-    exportCSV: function (){
+    exportCSV: function (filename){
         var data = this.getDataSets();
         if (data){
             var lineseptype = this.down('combobox[name=linesep]').getValue();
@@ -517,7 +530,7 @@ Ext.define('Lada.view.window.GridExport', {
             for (var entry = 0; entry < data.length; entry++){
                 resulttable += addline(data[entry]);
             }
-            me.exportFile(resulttable, 'export.csv');
+            me.exportFile(resulttable, filename);
             return true;
         } else {
             this.showError('export.nodata');
@@ -529,7 +542,7 @@ Ext.define('Lada.view.window.GridExport', {
     /**
      * Exports as probe-LAF, or, if available, as messung-LAF
      */
-    exportLAF: function(records){
+    exportLAF: function(filename){
         var dataset = this.getDataSets();
         var jsondata = {};
         if (this.hasMessung){
@@ -590,7 +603,7 @@ Ext.define('Lada.view.window.GridExport', {
             timeout: 2 * 60 * 1000,
             success: function(response) {
                 var content = response.responseText;
-                me.exportFile(content, 'export.laf')
+                me.exportFile(content, filename)
                 return true;
             },
             failure: function(response) {
@@ -638,14 +651,11 @@ Ext.define('Lada.view.window.GridExport', {
     },
 
     /**
-     * Saves the resulting data to the optional filename specified in the
-     * widget, or if not given, to a filename specified as default
+     * Saves the resulting data
      */
-    exportFile: function (data, defaultname){
-        //TODO validation of filename, textfield cannot yet be trusted
-        this.filename = defaultname; // this.down('textfield[name=filename]').getValue() ||
+    exportFile: function (data, filename){
         var blob = new Blob([data]);
-        saveAs(blob, this.filename);
+        saveAs(blob, filename);
     },
 
     /**
@@ -757,5 +767,25 @@ Ext.define('Lada.view.window.GridExport', {
             default:
                 return value.toString();
         }
+    },
+
+    /**
+     * Validation of filename input. Returns the valid filename, the defaultname
+     * if textfield is empty or "false" if the text is invalid
+     */
+    validateFilename: function(defaultname){
+        var defname = defaultname || 'export.txt';
+        var fname = this.down('textfield[name=filename]').getValue();
+        if (fname) {
+            //TODO better regex: this is quite basic
+            var pattern =
+                new RegExp(/^(\w|[äöüß])+(\w|\.|\s|[äüöß])*[^\W\.]$/i);
+            if (!pattern.test(fname)){
+                this.showError('export.invalidfilename');
+                return false;
+            }
+            return fname;
+        }
+        return defaultname;
     }
 });
