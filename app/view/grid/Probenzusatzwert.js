@@ -30,6 +30,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
     allowDeselect: true,
 
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false,
@@ -144,7 +145,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                     + Math.abs(exponent).toString();
             }
         }, {
-            header: 'Maßeinheit',
+            header: i18n.getMsg('meh_id'),
             dataIndex: 'pzsId',
             flex: 1,
             renderer: function(value) {
