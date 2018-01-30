@@ -16,11 +16,15 @@
     }
 });*/
 
-// ask before closing/refreshing the window. Not all browsers will respect this
-window.onbeforeunload = function(event)
-{
-    return confirm("Confirm refresh");
-};
+// ask before closing/refreshing the window.
+// Not all browsers will respect this, depending on settings
+
+window.addEventListener('beforeunload', function (evt){
+    // match different handling from different browsers
+    var confirmMessage = "Wollen Sie die aktuelle Seite verlassen/ neu laden?";
+    evt.returnValue = confirmMessage;
+    return confirmMessage;
+});
 
 Ext.application({
 
