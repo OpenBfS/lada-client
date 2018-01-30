@@ -475,7 +475,6 @@ Ext.define('Lada.view.window.GridExport', {
                                 if (!me.csv_asked){
                                     me.csv_asked = true;
                                     var warntext = i18n.getMsg('warn.msg.export.csv.stringseparator', oldChar, newChar);
-                                    line += textsep + value + textsep;
                                     var win = Ext.create('Ext.window.Window', {
                                         title: i18n.getMsg('warn'),
                                         items: [{
@@ -495,7 +494,7 @@ Ext.define('Lada.view.window.GridExport', {
                                     win.show();
                                 }
                             }
-
+                            line += textsep + value + textsep;
                             break;
                         case 'object':
                         // may be an unformatted date. Try
@@ -508,6 +507,7 @@ Ext.define('Lada.view.window.GridExport', {
                                 val = ''
                             }
                             line += val;
+                            break;
                         case 'boolean': // convert into 1 and 0
                             if (value){
                                 line += '1';
