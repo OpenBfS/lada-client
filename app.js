@@ -16,6 +16,12 @@
     }
 });*/
 
+// ask before closing/refreshing the window. Not all browsers will respect this
+window.onbeforeunload = function(event)
+{
+    return confirm("Confirm refresh");
+};
+
 Ext.application({
 
     // Name of the application. Do not change as this name is used in
