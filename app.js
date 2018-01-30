@@ -16,15 +16,6 @@
     }
 });*/
 
-// ask before closing/refreshing the window.
-// Not all browsers will respect this, depending on settings
-
-window.addEventListener('beforeunload', function (evt){
-    // match different handling from different browsers
-    var confirmMessage = "Wollen Sie die aktuelle Seite verlassen/ neu laden?";
-    evt.returnValue = confirmMessage;
-    return confirmMessage;
-});
 
 Ext.application({
 
@@ -131,6 +122,15 @@ Ext.application({
             scope: this,
             success: this.onLoginSuccess,
             failure: this.onLoginFailure
+        });
+        var i18n = Lada.getApplication().bundle;
+        // ask before closing/refreshing the window.
+        // Not all browsers will respect this, depending on settings
+        window.addEventListener('beforeunload', function (evt){
+            // match different handling from different browsers
+            var confirmMessage = i18n.getMsg('window.confirmclose');
+            evt.returnValue = confirmMessage;
+            return confirmMessage;
         });
     },
 
