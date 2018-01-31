@@ -156,7 +156,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
         var mstLabCb = this.down('probeform').down('messstellelabor').down('combobox');
         var mstLabRecs = mstLabCb.store.getData();
         //Try to preselect messstelle/labor
-        if (mstLabRecs.length == 1) {
+        if (mstLabRecs.length >= 1) {
             var labRec = mstLabRecs.getAt(0);
             record.set('owner', true);
             record.set('mstId', labRec.get('messStelle'));
