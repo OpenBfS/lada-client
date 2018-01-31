@@ -31,15 +31,22 @@ Ext.define('Lada.controller.GridExport', {
         if (!grid){ // special cases, as stammdaten.probegrid (Jan 2018)
             grid = button.up('toolbar').up().down('grid');
         }
+        var i18n = Lada.getApplication().bundle;
+        var failmessage = false;
         if (!grid || !grid.store.getCount()){
-            var i18n = Lada.getApplication().bundle;
+            failmessage=  i18n.getMsg('export.nodata');
+        }
+        else if (!grid.getSelectionModel().getSelection().length){
+            failmessage=  i18n.getMsg('export.noselection');
+        }
+        if (failmessage !== false){
             Ext.create('Ext.window.Window', {
                 title : i18n.getMsg('export.failed'),
                 modal: true,
                 layout: 'vbox',
                 items: [{
                     xtype: 'container',
-                    html: i18n.getMsg('export.nodata'),
+                    html: failmessage,
                     margin: '10, 5, 5, 5'
                 }, {
                     xtype: 'container',

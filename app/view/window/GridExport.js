@@ -176,11 +176,6 @@ Ext.define('Lada.view.window.GridExport', {
         // create comboboxes and checkboxes
 
         this.down('container[name=form]').add([{
-            xtype: 'checkbox',
-            name: 'selection',
-            fieldLabel: i18n.getMsg('export.selected'),
-            checked: false
-        }, {
             xtype: 'combobox',
             fieldLabel: i18n.getMsg('export.format'),
             name:'formatselection',
@@ -253,14 +248,6 @@ Ext.define('Lada.view.window.GridExport', {
             editable: true
         }
     ]);
-
-        // if rows are selected, preselect option to only export marked entries
-        var sel = false;
-        if (this.grid.getSelectionModel().getSelection().length){
-            sel = true;
-        }
-        this.down('checkbox[name=selection]').setVisible(sel);
-        this.down('checkbox[name=selection]').setValue(sel);
 
         // listeners
 
@@ -660,14 +647,10 @@ Ext.define('Lada.view.window.GridExport', {
      * Prepares the data selected
      */
     getDataSets: function(){
-        var dataset = [];
-        if (this.down('checkbox[name=selection]').getValue()){
-            dataset = this.grid.getSelectionModel().getSelection();
-        } else {
-            dataset = this.grid.store.getData().items;
-        }
+        var dataset = this.grid.getSelectionModel().getSelection();
         if (!dataset.length){
             this.showError('export.nodata');
+            this.close();
         }
         return dataset;
     },
