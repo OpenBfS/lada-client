@@ -189,7 +189,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         hidden: true,
                         listeners: {
                             click: function(button) {
-                                button.swallowEvent(['click', 'dblclick'], true);
                                 var id = Number(button.text);
                                 Lada.model.Probe.load(id, {
                                     scope: this,
@@ -229,7 +228,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         hidden: true,
                         listeners: {
                             click: function(button) {
-                                button.swallowEvent(['click', 'dblclick'], true);
                                 var id = Number(button.text);
                                 Lada.model.Messung.load(id, {
                                     scope: this,
@@ -275,7 +273,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         hidden: true,
                         listeners: {
                             click: function(button) {
-                                button.swallowEvent(['click', 'dblclick'], true);
                                 var id = button.getText();
                                 Lada.model.Ort.load(id, {
                                     success: function(record) {
@@ -309,7 +306,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         hidden: true,
                         listeners: {
                             click: function(button) {
-                                button.swallowEvent(['click', 'dblclick'], true);
                                 var geom = button.geom;
                                 var mapWin = Ext.create('Lada.view.window.Map', {
                                     geom: geom
