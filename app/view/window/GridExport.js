@@ -48,6 +48,11 @@ Ext.define('Lada.view.window.GridExport', {
         }]
     }],
 
+    /**
+     * CSV options (separators etc), set by dialogue. TODO: write config here
+     */
+    csv: {},
+
     /** the column defining the geometry data for geojson export */
     hasGeojson : null,
 
@@ -56,11 +61,21 @@ Ext.define('Lada.view.window.GridExport', {
      hasProbe: null,
 
     /** the column defining the messungId for LAF export, or true if grid
-* consists of Messungen without having a messungId result_type column */
+    * consists of Messungen without having a messungId result_type column */
     hasMessung: null,
 
     /**
-     * This function initialises the Window and the options available
+     * the rowexpander object; will be set on initialize and expanded once at
+     * the first entry (to get column definitions).
+     */
+    rowexp: null,
+
+    // Counter to keep track of asynchronous actions
+    totalentries: 0,
+    parsedEntries: 0,
+
+    /**
+     *Initializ the Window and the options available
      */
     initComponent: function() {
         var me = this;
@@ -151,6 +166,11 @@ Ext.define('Lada.view.window.GridExport', {
             data: columnstore
         });
 
+        //store for additional rowExpander columns
+        this.expcolumnStore = Ext.create('Ext.data.Store',{
+            fields: ['name', 'value']
+        });
+
         // add export formats
 
         var formatdata = [
@@ -202,6 +222,15 @@ Ext.define('Lada.view.window.GridExport', {
             value: preselected,
             multiSelect: true
         }, {
+            xtype: 'tagfield',
+            name: 'exportexpcolumns',
+            labelWidth: 100,
+            fieldLabel: i18n.getMsg('export.expcolumns'),
+            store: me.expcolumnStore,
+            hidden: true,
+            value: null,
+            multiSelect: true
+        }, {
             xtype: 'fieldset',
             title: i18n.getMsg('export.csvdetails'),
             collapsible: true,
@@ -250,7 +279,6 @@ Ext.define('Lada.view.window.GridExport', {
     ]);
 
         // listeners
-
         this.down('button[action=export]').on({
             click: me.doExport
         });
@@ -260,6 +288,31 @@ Ext.define('Lada.view.window.GridExport', {
                 return;
             }
         });
+
+        // get rowexpander and their columns
+        for (var i=0; i < this.grid.plugins.length; i++) {
+            if (this.grid.plugins[i].ptype === 'gridrowexpander'){
+                this.rowexp = this.grid.plugins[i];
+                var nodes = this.rowexp.view.getNodes();
+                var node = Ext.fly(nodes[0]);
+                if (node.hasCls(this.rowexp.rowCollapsedCls) === true) {
+                    this.rowexp.toggleRow(0);
+                }
+                this.expcolumns  = this.rowexp.cmps.items[0].getColumns();
+                var preselectedEx = [];
+                for (var i =0; i < this.expcolumns.length; i++){
+                    if (this.expcolumns[i].dataIndex && this.expcolumns[i].text){
+                        this.expcolumnStore.add({
+                            value: this.expcolumns[i].dataIndex,
+                            name: this.expcolumns[i].text
+                        });
+                        preselectedEx.push(this.expcolumns[i].dataIndex);
+                    }
+                }
+                this.down('tagfield[name=exportexpcolumns]').select(preselectedEx);
+                break;
+            }
+        }
     },
 
     /**
@@ -267,53 +320,54 @@ Ext.define('Lada.view.window.GridExport', {
      */
     doExport: function(button){
         var win = button.up('window');
-        var format = win.down('combobox[name=formatselection]').getValue();
-        var actionresult = false;
+        win.exportformat = win.down('combobox[name=formatselection]').getValue();
         var filename = '';
-        switch(format){
+        switch(win.exportformat){
             case 'json':
-                filename = win.validateFilename('export.json')
-                if (filename){
-                    actionresult = win.exportJson(filename);
+                var namecheck = win.validateFilename('export.json');
+                if (namecheck){
+                    win.down('button[action=close]').setDisabled(true);
+                    win.exportJson();
                 }
                 break;
             case 'geojson':
-                filename = win.validateFilename('export.geojson')
-                if (filename){
-                    actionresult = win.exportGeoJson(filename);
+                var namecheck = win.validateFilename('export.geojson')
+                if (namecheck){
+                    win.down('button[action=close]').setDisabled(true);
+                    win.exportGeoJson();
                 }
                 break;
             case 'csv':
-                filename = win.validateFilename('export.csv')
-                if (filename){
-                    actionresult = win.exportCSV(filename);
+                var namecheck = win.validateFilename('export.csv')
+                if (namecheck){
+                    win.down('button[action=close]').setDisabled(true);
+                    win.exportCSV();
                 }
                 break;
             case 'laf':
-                filename = win.validateFilename('export.laf')
-                if (filename){
-                    actionresult = win.exportLAF(filename);
+                namecheck = win.validateFilename('export.laf')
+                if (namecheck){
+                    win.down('button[action=close]').setDisabled(true);
+                    win.exportLAF(filename);
                 }
                 break;
             default:
                 win.showError('export.noformat');
-        }
-        if (actionresult){
-            win.close();
         }
     },
 
     /**
     * Exports the table data as json objects
     */
-    exportJson: function(filename){
+    exportJson: function(){
         var data = this.getDataSets();
         if (data){
             var columns = this.getColumns();
+            var expcolumns = this.getColumns(true);
             if (!columns){
                 return false;
             }
-            var resultset = {};
+            this.resultobject = {};
             for (var i=0; i < data.length; i++ ) {
                 var iresult = {};
                 for (var col = 0; col < columns.length; col ++ ){
@@ -324,9 +378,14 @@ Ext.define('Lada.view.window.GridExport', {
                         iresult[c.text] = value;
                     }
                 }
-                resultset[i] = iresult;
+                var entryId = data[i].get('id');
+                this.resultobject[entryId] = iresult;
+                if (this.rowexp){
+                    this.setSecondaryJson(data[i], 'json', entryId, expcolumns);
+                } else {
+                    this.countDown();
+                }
             }
-            this.exportFile(JSON.stringify(resultset), filename);
             return true;
         } else {
             this.showError('export.nodata');
@@ -337,14 +396,15 @@ Ext.define('Lada.view.window.GridExport', {
     /**
      * Exports the geometry as geojson points with the table data as properties
      */
-    exportGeoJson: function(filename){
+    exportGeoJson: function(){
         var data = this.getDataSets();
         if (data){
             var columns = this.getColumns();
             if (!columns) {
                 return false;
             }
-            var resultset = {
+            var expcolumns = this.getColumns(true);
+            this.resultobject = {
                 type: 'FeatureCollection',
                 features: []
             };
@@ -354,7 +414,6 @@ Ext.define('Lada.view.window.GridExport', {
                     properties: {},
                     geometry : {}
                 };
-
                 for (var col = 0; col < columns.length; col ++){
                     var c = columns[col];
                     if (data[i].get(c.dataIndex) !== undefined){
@@ -375,8 +434,14 @@ Ext.define('Lada.view.window.GridExport', {
                     }
                 }
                 resultset.features.push(iresult);
+                if (this.rowexp){
+                    this.setSecondaryJson(data[i],
+                        this.resultobject.features[i].properties, 'geojson', i,
+                        expcolumns);
+                } else {
+                    this.countDown();
+                }
             }
-            this.exportFile(JSON.stringify(resultset), filename);
             return true;
         } else {
             this.showError('export.nodata');
@@ -387,136 +452,65 @@ Ext.define('Lada.view.window.GridExport', {
     /**
      * Exports the table data as csv files, with header.
      */
-    exportCSV: function (filename){
+    exportCSV: function (){
         var data = this.getDataSets();
         if (data){
             var lineseptype = this.down('combobox[name=linesep]').getValue();
-            var linesep = '\r\n';
+            this.csv.linesep = '\r\n';
             if (lineseptype == "linux") {
-                linesep = '\n';
+                this.csv.linesep = '\n';
             }
-            var colsep = this.down('combobox[name=colsep]').getValue();
-            var decsep = this.down('combobox[name=decsep]').getValue();
-            var textsep = this.down('combobox[name=textlim]').getValue();
+            this.csv.colsep = this.down('combobox[name=colsep]').getValue();
+            this.csv.decsep = this.down('combobox[name=decsep]').getValue();
+            this.csv.textsep = this.down('combobox[name=textlim]').getValue();
             // validate csv options
-            if (!linesep || !colsep || !decsep){
+            if (!this.csv.linesep ||
+              !this.csv.colsep ||
+              !this.csv.decsep){
                 this.showError('export.missingvaluescsv');
                 return false;
             }
-            if (colsep === decsep){
+            if (this.csv.colsep === this.csv.decsep){
                 this.showError('export.differentcoldecimal');
                 return false;
             }
-
             // create header
+            var expcolumns = this.getColumns(true);
             var columns = this.getColumns();
-            if (!columns) {
+            if (!columns.length && !expcolumns.length){
                 return false;
             }
-
-            //first column doesn't start with a column separator
-            var resulttable = textsep + columns[0].text + textsep;
-            for (var col = 1; col < columns.length; col ++){
-                resulttable += colsep + textsep + columns[col].text + textsep;
+            this.resultobject = this.csv.textsep;
+            if (expcolumns.length){
+                this.resultobject += expcolumns[0].text + this.csv.textsep;
+            } else if (columns.length){
+                this.resultobject += columns[0].text + this.csv.textsep;
             }
-            resulttable += linesep;
+            for (var col = 1; col < expcolumns.length; col ++){
+                this.resultobject += this.csv.colsep + this.csv.textsep +
+                    expcolumns[col].text + this.csv.textsep;
+            }
+            for (var col = 0; col < columns.length; col ++){
+                this.resultobject += this.csv.colsep + this.csv.textsep +
+                    columns[col].text + this.csv.textsep;
+            }
+            this.resultobject += this.csv.linesep;
 
             //iterate through entries
             var me = this;
-            var addline = function(record, secondaryInfo){
-                //TODO: use data from rowExpander
-                var line = '';
-                for (var col = 0; col < columns.length; col++ ) {
-                    var newvalue =  record.get(columns[col].dataIndex);
-                    line += col > 0 ? colsep: '';
-                    var value = me.formatValue(newvalue, columns[col], false);
-                    switch( typeof(value) ){
-                        case 'number':
-                            value = value.toString();
-                            if (decsep === ',' && value.indexOf(".") > -1){
-                            value.replace(/'.'/g, ',');
-                            }
-                            line += value;
-                            break;
-                        case 'undefined': //leave column empty
-                            break;
-                        case 'object': //leave column empty
-                            break;
-                        case 'string':
-                            if (value.indexOf(textsep) > -1 ){
-                                // This will alter the data exported
-                                // (exchanging single/double quotes)
-                                var i18n = Lada.getApplication().bundle;
-
-                                var oldChar;
-                                var newChar;
-                                if (textsep ===  '"'){
-                                    value.replace(/\"/g, "'");
-                                    oldChar = '"';
-                                    newChar = "'";
-                                } else {
-                                    oldChar= "'";
-                                    newChar = '"';
-                                    value.replace(/\'"'/g, '"');
-                                }
-                                if (!me.csv_asked){
-                                    me.csv_asked = true;
-                                    var warntext = i18n.getMsg('warn.msg.export.csv.stringseparator', oldChar, newChar);
-                                    var win = Ext.create('Ext.window.Window', {
-                                        title: i18n.getMsg('warn'),
-                                        items: [{
-                                            xtype: 'panel',
-                                            margin: '5 5 0 5',
-                                            bodyStyle: 'background: none; border: none',
-                                            html: warntext
-                                        }, {
-                                            xtype: 'button',
-                                            margin: '5 5 5 5',
-                                            text: 'OK',
-                                            handler: function(button) {
-                                                button.up().close();
-                                            }
-                                        }]
-                                    });
-                                    win.show();
-                                }
-                            }
-                            line += textsep + value + textsep;
-                            break;
-                        case 'object':
-                        // may be an unformatted date. Try
-                        // converting it into a string.
-                            var val = '';
-                            try {
-                                val = textsep + value.toIsoString() + textsep;
-                            }
-                            catch(err){
-                                val = ''
-                            }
-                            line += val;
-                            break;
-                        case 'boolean': // convert into 1 and 0
-                            if (value){
-                                line += '1';
-                            } else{
-                                line += '0';
-                            }
-                            break;
-                        default:
-                            console.log('Fehler: Kein Exportformat für ' +
-                                typeof(value) + ' definiert.');
-                    }
+            for (var entry = 0; entry < data.length; entry++ ){
+                var entryline = me.addline(data[entry], columns);
+                if (expcolumns.length){
+                    me.setSecondaryCsv(data[entry], expcolumns, entryline);
                 }
-                line += linesep;
-                return line;
-            };
-            // TODO: if grouping is different (i.e. one line per row of
-            // rowexpander, next loop needs to be expanded
-            for (var entry = 0; entry < data.length; entry++){
-                resulttable += addline(data[entry]);
+                else {
+                    this.resultobject += addline(data[entry], columns)
+                        + this.csv.linesep;
+                    this.countDown();
+                }
             }
-            me.exportFile(resulttable, filename);
             return true;
+
         } else {
             this.showError('export.nodata');
             return false;
@@ -527,7 +521,7 @@ Ext.define('Lada.view.window.GridExport', {
     /**
      * Exports as probe-LAF, or, if available, as messung-LAF
      */
-    exportLAF: function(filename){
+    exportLAF: function(){
         var dataset = this.getDataSets();
         var jsondata = {};
         if (this.hasMessung){
@@ -588,7 +582,7 @@ Ext.define('Lada.view.window.GridExport', {
             timeout: 2 * 60 * 1000,
             success: function(response) {
                 var content = response.responseText;
-                me.exportFile(content, filename)
+                me.exportFile(content);
                 return true;
             },
             failure: function(response) {
@@ -631,16 +625,21 @@ Ext.define('Lada.view.window.GridExport', {
     },
 
     exportalltoggle: function(box, newValue, oldValue){
-        box.up('window').down('tagfield[name=exportcolumns]').setVisible(
+        var me = box.up('window');
+        me.down('tagfield[name=exportcolumns]').setVisible(
             !newValue);
+        if (me.rowexp){
+            me.down('tagfield[name=exportexpcolumns]').setVisible(!newValue);
+        }
     },
 
     /**
      * Saves the resulting data
      */
-    exportFile: function (data, filename){
+    exportFile: function (data){
         var blob = new Blob([data]);
-        saveAs(blob, filename);
+        saveAs(blob, this.filename);
+        this.close();
     },
 
     /**
@@ -652,14 +651,25 @@ Ext.define('Lada.view.window.GridExport', {
             this.showError('export.nodata');
             this.close();
         }
+        this.totalentries = dataset.length;
         return dataset;
     },
 
-    getColumns: function(){
+    getColumns: function(sec){
         var allcolumns = this.down('checkbox[name=allcolumns]').getValue();
         var columnlist = [];
-        var cols = this.grid.getColumns();
-        var exportcols = this.down('tagfield[name=exportcolumns]').getValue();
+        var cols = [];
+        if (sec){
+            cols = this.expcolumns;
+        } else {
+            cols = this.grid.getColumns();
+        }
+        var vols = [];
+        if (sec){
+            exportcols = this.down('tagfield[name=exportexpcolumns]').getValue();
+        } else {
+            exportcols = this.down('tagfield[name=exportcolumns]').getValue();
+        }
         for (var i=0; i < cols.length; i ++){
             if (!cols[i].dataIndex){
                 continue;
@@ -764,9 +774,282 @@ Ext.define('Lada.view.window.GridExport', {
             if (!pattern.test(fname)){
                 this.showError('export.invalidfilename');
                 return false;
+            } else {
+                this.filename = fname;
+                return true;
             }
-            return fname;
+        } else {
+            this.filename = defname;
+            return true;
         }
-        return defaultname;
+
+    },
+
+    /**
+     * Adds the rowExpander data by sending an AJAX request; the resultobject
+     * will be ammended asynchronously after an answer is received.
+     * @param {*} entry The record of the row.
+     * @param {*} type String ("json" or "geojson") to determine where in the
+     * resultobject data is written to.
+     * @param {*} idx Number/String to find the original record entry in the
+     * resultobject
+     * @param {*} columns Columns to be included
+     */
+    setSecondaryJson(entry, type, idx, columns){
+        if (!this.rowexp){
+            this.parsedEntries +=1;
+            return;
+        }
+        var me = this;
+        var fillData = function(content){
+            var results = [];
+            Object.keys(content).forEach(function(key,index) {
+                var result = {};
+                for (var i=0; i< columns.length; i++){
+                    var di = columns[i].dataIndex;
+                    if (di){
+                        result[di] = content[key][di];
+                    }
+                }
+                results.push(result);
+            });
+            return results;
+        };
+        switch (this.rowexp.type){
+            case 'Lada.view.grid.Messung':
+                Ext.Ajax.request({
+                    url: 'lada-server/rest/messung?probeId=' + idx,
+                    timeout: 5 * 1000,
+                    success: function(response) {
+                        var content = JSON.parse(response.responseText);
+                        if (type === 'json'){
+                            me.resultobject[idx].Messungen =
+                                fillData(content.data);
+                        } else if (type === 'geojson'){
+                            me.resultobject.features[idx].Messungen =
+                                fillData(content.data);
+                        }
+                        me.countDown();
+                    },
+                    failure: function(){
+                        //TODO error handling.
+                        me.countDown();
+                        return null;
+                    }
+                })
+                break;
+            case 'Lada.view.grid.Messwert':
+                Ext.Ajax.request({
+                    url: 'lada-server/rest/messwert?messungId=' + id,
+                    timeout: 5 * 1000,
+                    success: function(response) {
+                        var content = JSON.parse(response.responseText);
+                        if (type === 'json'){
+                            me.resultobject[idx].Messwerte =
+                                fillData(content.data);
+                        } else if (type === 'geojson'){
+                            me.resultobject.features[idx].Messwerte =
+                                fillData(content.data);
+                        }
+                        me.countDown();
+                    },
+                    failure: function(){
+                        //TODO error handling.
+                        me.countDown();
+                        return null;
+                    }
+                })
+                break;
+            default:
+                me.countDown();
+                return null;
+        }
+    },
+
+    /**
+     * asynchronously adds one csv line per subentry in the rowexpander.
+     * @param item the original item of the grid
+     * @param columns the columns to be added
+     * @param primaryRow The prepared part of the csv which adds (redundant)
+     * information for all subitems
+     */
+    setSecondaryCsv: function (item, columns, primaryRow){
+        var me = this;
+        if (!this.rowexp){
+            this.parsedEntries +=1;
+            return;
+        }
+        var id = item.get('id');
+        switch (this.rowexp.type){
+            case 'Lada.view.grid.Messung':
+                Ext.Ajax.request({
+                    url: 'lada-server/rest/messung?probeId=' + id,
+                    timeout: 5 * 1000,
+                    success: function(response) {
+                        var content = JSON.parse(response.responseText);
+                        var line = '';
+                        Object.keys(content.data).forEach(function(key,index) {
+                            line += me.addline(content.data[key], columns)
+                                + primaryRow
+                                + me.csv.linesep;
+                        });
+                        me.resultobject += line;
+
+                        me.countDown();
+                    },
+                    failure: function(){
+                        me.countDown();
+                        //TODO error handling.
+                        return null;
+                    }
+                })
+                break;
+            case 'Lada.view.grid.Messwert':
+                Ext.Ajax.request({
+                    url: 'lada-server/rest/messwert?messungId=' + id,
+                    timeout: 5 * 1000,
+                    success: function(response) {
+                        var content = JSON.parse(response.responseText);
+                        var line = '';
+                        Object.keys(content.data).forEach(function(key,index) {
+                            line += me.addline(content.data[key], columns)
+                                + primaryRow
+                                + me.csv.linesep;
+                        });
+                        me.resultobject += line;
+                        me.countDown();
+                    },
+                    failure: function(){
+                        //TODO error handling.
+                        me.countDown();
+                        return null;
+                    }
+                })
+                break;
+            default:
+                me.countDown();
+                return null;
+        }
+    },
+
+    /**
+     * Creates a partial csv line based on the columns and csv parameters specified
+     * @param record The data record to use. May be an Ext.data.model or a
+     * javascript object
+     * @param columns A prepared list of column definitions extracted from a grid
+     */
+    addline: function(record, columns){
+        var line = '';
+        for (var col = 0; col < columns.length; col++ ) {
+            var newvalue = null;
+            if (record.get){
+                newvalue =  record.get(columns[col].dataIndex);
+            } else { // not an extJS model, but a direct json object
+                newvalue =  record[columns[col].dataIndex];
+            }
+            line += col > 0 ? this.csv.colsep: '';
+            var value = this.formatValue(newvalue, columns[col], false);
+            switch( typeof(value) ){
+                case 'number':
+                    value = value.toString();
+                    if (this.csv.decsep === ',' && value.indexOf(".") > -1){
+                    value.replace(/'.'/g, ',');
+                    }
+                    line += value;
+                    break;
+                case 'undefined': //leave column empty
+                    break;
+                case 'object': //leave column empty
+                    break;
+                case 'string':
+                    if (value.indexOf(this.textsep) > -1 ){
+                        // This will alter the data exported
+                        // (exchanging single/double quotes)
+                        var i18n = Lada.getApplication().bundle;
+
+                        var oldChar;
+                        var newChar;
+                        if (textsep ===  '"'){
+                            value.replace(/\"/g, "'");
+                            oldChar = '"';
+                            newChar = "'";
+                        } else {
+                            oldChar= "'";
+                            newChar = '"';
+                            value.replace(/\'"'/g, '"');
+                        }
+                        if (!this.csv_asked){
+                            this.csv_asked = true;
+                            var warntext = i18n.getMsg('warn.msg.export.csv.stringseparator', oldChar, newChar);
+                            var win = Ext.create('Ext.window.Window', {
+                                title: i18n.getMsg('warn'),
+                                items: [{
+                                    xtype: 'panel',
+                                    margin: '5 5 0 5',
+                                    bodyStyle: 'background: none; border: none',
+                                    html: warntext
+                                }, {
+                                    xtype: 'button',
+                                    margin: '5 5 5 5',
+                                    text: 'OK',
+                                    handler: function(button) {
+                                        button.up().close();
+                                    }
+                                }]
+                            });
+                            win.show();
+                        }
+                    }
+                    line += this.csv.textsep + value + this.csv.textsep;
+                    break;
+                case 'object':
+                // may be an unformatted date. Try
+                // converting it into a string.
+                    var val = '';
+                    try {
+                        val = this.csv.textsep + value.toIsoString() +
+                        this.csv.textsep;
+                    }
+                    catch(err){
+                        val = ''
+                    }
+                    line += val;
+                    break;
+                case 'boolean': // convert into 1 and 0
+                    if (value){
+                        line += '1';
+                    } else{
+                        line += '0';
+                    }
+                    break;
+                default:
+                    console.log('Fehler: Kein Exportformat für ' +
+                        typeof(value) + ' definiert.');
+            }
+        }
+        return line;
+    },
+
+    /**
+    * Keeps track of how many data still needs to be parsed, and saves the data
+    * to file upon completion. Is not yet used by LAF export (as there are no
+    * multiple queries at the same time.
+    */
+    countDown: function(){
+        this.parsedEntries += 1;
+        if (this.parsedEntries < this.totalentries){
+            return;
+        }
+        switch (this.exportformat){
+            case 'json':
+                this.exportFile(JSON.stringify(this.resultobject));
+                break;
+            case 'geojson':
+                this.exportFile(JSON.stringify(this.resultobject));
+                break;
+            case 'csv':
+                this.exportFile(this.resultobject);
+                break;
+        }
     }
 });
