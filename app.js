@@ -16,6 +16,7 @@
     }
 });*/
 
+
 Ext.application({
 
     // Name of the application. Do not change as this name is used in
@@ -96,7 +97,7 @@ Ext.application({
         Lada.logintime = '';
         Lada.mst = [];
         Lada.netzbetreiber = [];
-        Lada.clientVersion = '3.1';
+        Lada.clientVersion = '3.1.1';
         Lada.serverVersion = '';
         // paging sizes available for the client
         Lada.availablePagingSizes = [
@@ -121,6 +122,15 @@ Ext.application({
             scope: this,
             success: this.onLoginSuccess,
             failure: this.onLoginFailure
+        });
+        var i18n = Lada.getApplication().bundle;
+        // ask before closing/refreshing the window.
+        // Not all browsers will respect this, depending on settings
+        window.addEventListener('beforeunload', function (evt){
+            // match different handling from different browsers
+            var confirmMessage = i18n.getMsg('window.confirmclose');
+            evt.returnValue = confirmMessage;
+            return confirmMessage;
         });
     },
 

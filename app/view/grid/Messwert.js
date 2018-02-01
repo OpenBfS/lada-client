@@ -35,6 +35,7 @@ Ext.define('Lada.view.grid.Messwert', {
     bottomBar: true,
 
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             errorSummary: false,
@@ -146,7 +147,7 @@ Ext.define('Lada.view.grid.Messwert', {
                     + Math.abs(exponent).toString();
             }
         }, {
-            header: 'Messeinheit',
+            header: i18n.getMsg('meh_id'),
             dataIndex: 'mehId',
             width: 90,
             renderer: function(value) {
