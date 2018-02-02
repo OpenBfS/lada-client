@@ -1,7 +1,7 @@
 {
-  "private": true,
-  "name": "Lada",
-  "version": "2.7.0",
+  "private": false,
+  "name": "lada",
+  "version": "3.1-SNAPSHOT",
   "description": "IMIS3 LADA",
   "scripts": {
     "pretest": "npm run lint",
