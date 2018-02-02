@@ -782,7 +782,6 @@ Ext.define('Lada.view.window.GridExport', {
             this.filename = defname;
             return true;
         }
-
     },
 
     /**
@@ -795,7 +794,7 @@ Ext.define('Lada.view.window.GridExport', {
      * resultobject
      * @param {*} columns Columns to be included
      */
-    setSecondaryJson(entry, type, idx, columns){
+    setSecondaryJson: function(entry, type, idx, columns){
         if (!this.rowexp){
             this.parsedEntries +=1;
             return;
