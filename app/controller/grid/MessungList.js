@@ -29,6 +29,9 @@ Ext.define('Lada.controller.grid.MessungList', {
             'messunglistgrid toolbar button[action=setstatus]': {
                 click: this.setStatus
             },
+            'messunglistgrid toolbar button[action=print]':{
+                click: this.printSelection
+            },
             'messunglistgrid pagingtoolbar': {
                 change: this.pageChange
             }
@@ -122,6 +125,7 @@ Ext.define('Lada.controller.grid.MessungList', {
         var visibleColumns = [];
         var displayName = '';
         var data = [];
+        var endpoint = 'lada_print';
 
         // Write the columns to an array
         try {
@@ -209,7 +213,7 @@ Ext.define('Lada.controller.grid.MessungList', {
         };
 
         Ext.Ajax.request({
-            url: 'lada-printer/buildreport.pdf',
+            url: 'lada-printer/print/' + endpoint + '/buildreport.pdf',
             //configure a proxy in apache conf!
             jsonData: printData,
             binary: true,

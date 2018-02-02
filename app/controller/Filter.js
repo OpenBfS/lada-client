@@ -102,8 +102,10 @@ Ext.define('Lada.controller.Filter', {
         record = Array.isArray(record)? record[0]:record;
         var filters = element.up('panel[name=main]').down('panel[name=filtervariables]');
         var filterValues = element.up('panel[name=main]').down('panel[name=filtervalues]');
-
+        var contentPanel = element.up('panel[name=main]').down('panel[name=contentpanel]');
         var desc = element.up('fieldset').down('displayfield[name=description]');
+
+        contentPanel.removeAll(); //clear the panel: make space for new grids
         if (!record) {
             desc.setValue('');
             return;
@@ -113,13 +115,11 @@ Ext.define('Lada.controller.Filter', {
 
         this.displayFields = record.data.results;
         var filterFields = record.data.filters;
-        var contentPanel = element.up('panel[name=main]').down('panel[name=contentpanel]');
         var queryType = record.get('type'); //The type of the query, might be proben, messprogramme,
         // or a stammdatendtype
         var details = element.up('panel[name=main]').down('filterdetails');
         details.setRecord(record);
         this.reset(element);
-        contentPanel.removeAll(); //clear the panel: make space for new grids
 
         // Setup Columns
         if (this.displayFields &&
@@ -559,6 +559,8 @@ Ext.define('Lada.controller.Filter', {
             store = Ext.StoreManager.get('stammdatenqueries');
         } else if (this.mode === 'messungen') {
             store = Ext.StoreManager.get('messungqueries');
+        } else if (this.mode === 'gen_query') {
+            store = Ext.StoreManager.get('genericqueries');
         } else {
             return;
         }
