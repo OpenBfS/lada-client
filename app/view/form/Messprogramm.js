@@ -371,7 +371,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                 }, {
                     // Zeit
                     xtype: 'fieldset',
-                    title: i18n.getMsg('probenintervall'),
+                    title: i18n.getMsg('probenintervallFieldset'),
                     layout: {
                         type: 'vbox',
                         align: 'stretch'
