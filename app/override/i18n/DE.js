@@ -14,7 +14,8 @@ Ext.define('Lada.override.i18n.DE', {
         'Lada.override.i18n.de.toolbar.Paging',
         'Lada.override.i18n.de.picker.Date',
         'Lada.override.i18n.de.RowEditor',
-        'Lada.override.i18n.de.LoadMask'
+        'Lada.override.i18n.de.LoadMask',
+        'Lada.override.i18n.de.DynamicGrid'
     ]
 });
 
