@@ -30,7 +30,8 @@ Ext.define('Lada.view.window.ProbeCreate', {
      * This function initialises the Window
      */
     initComponent: function() {
-        this.title = '§3-Probe';
+        var i18n = Lada.getApplication().bundle;
+        this.title = i18n.getMsg('probe.new');
         this.buttons = [{
             text: 'Schließen',
             scope: this,

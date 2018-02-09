@@ -177,7 +177,9 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
                 var messstelle = Ext.data.StoreManager.get('messstellen')
                     .getById(this.record.get('mstId'));
-                this.setTitle('§3 Probe - Hauptprobennr.: ' + this.record.get('hauptprobenNr')
+                var datenbasis = Ext.data.StoreManager.get('datenbasis')
+                    .getById(this.record.get('datenbasisId'));
+                this.setTitle(datenbasis.get('datenbasis') + ' Probe - Hauptprobennr.: ' + this.record.get('hauptprobenNr')
                                      + ' Mst: ' + messstelle.get('messStelle'));
 
                 if (owner) {
