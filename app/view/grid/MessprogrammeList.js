@@ -35,7 +35,7 @@ Ext.define('Lada.view.grid.MessprogrammeList', {
                 text: i18n.getMsg('export.button'),
                 icon: 'resources/img/svn-update.png',
                 action: 'gridexport',
-                disabled: false
+                disabled: true
             }, {
                 text: i18n.getMsg('messprogramme.button.create'),
                 icon: 'resources/img/list-add.png',

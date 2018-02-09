@@ -57,7 +57,7 @@ Ext.define('Lada.view.grid.ProbeList', {
                 text: i18n.getMsg('probe.button.export'),
                 icon: 'resources/img/svn-update.png',
                 action: 'gridexport',
-                disabled: false
+                disabled: true
             }, {
                 text: i18n.getMsg('probe.button.delete_selected'),
                 icon: 'resources/img/edit-delete.png',

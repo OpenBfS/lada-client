@@ -277,11 +277,13 @@ Ext.define('Lada.controller.grid.MessungList', {
         if (!enabled) {
             grid.down('button[action=print]').disable();
             grid.down('button[action=setstatus]').disable();
+            grid.down('button[action=gridexport]').disable();
         } else {
             grid.down('button[action=print]').enable();
             // TODO: enable button only on messungen with owner == true and
             // readonly == false
             grid.down('button[action=setstatus]').enable();
+            grid.down('button[action=gridexport]').enable();
         }
     },
 

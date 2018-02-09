@@ -125,8 +125,10 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
     buttonToggle: function(enabled, grid) {
         if (!enabled) {
             grid.down('button[action=genProbenFromMessprogramm]').disable();
+            grid.down('button[action=gridexport]').disable();
         } else {
             grid.down('button[action=genProbenFromMessprogramm]').enable();
+            grid.down('button[action=gridexport]').enable();
         }
     },
 

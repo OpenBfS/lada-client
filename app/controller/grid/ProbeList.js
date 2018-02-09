@@ -247,10 +247,12 @@ Ext.define('Lada.controller.grid.ProbeList', {
             grid.down('button[action=deleteSelected]').disable();
             grid.down('button[action=printExtract]').disable();
             grid.down('button[action=printSheet]').disable();
+            grid.down('button[action=gridexport]').disable();
         } else {
             grid.down('button[action=deleteSelected]').enable();
             grid.down('button[action=printExtract]').enable();
             grid.down('button[action=printSheet]').enable();
+            grid.down('button[action=gridexport]').enable();
         }
     },
 
