@@ -12,6 +12,7 @@
 Ext.define('Lada.view.ModeSwitcher', {
     extend: 'Ext.form.FieldSet',
     alias: 'widget.modeswitcher',
+    layout: 'fit',
 
     mixins: {
         observable: 'Ext.util.Observable'
@@ -38,6 +39,8 @@ Ext.define('Lada.view.ModeSwitcher', {
         var combo = Ext.create('Ext.form.field.ComboBox', {
             xtype: 'combobox',
             name: 'modeswitch',
+            margin: '5,5,5,5',
+
             allowBlank: false,
             displayField: 'display',
             editable: false,
