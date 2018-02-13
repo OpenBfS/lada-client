@@ -66,6 +66,7 @@ Ext.application({
         'Lada.store.Probenehmer',
         'Lada.store.DatensatzErzeuger',
         'Lada.store.GenericQueries',
+        'Lada.store.GenericResults',
         'Lada.store.MessprogrammKategorie',
         'Lada.store.MessungQueries',
         'Lada.store.Ktas',
@@ -358,6 +359,10 @@ Ext.application({
         Ext.create('Lada.store.KoordinatenArt', {
             storeId: 'koordinatenart',
             autoLoad: 'true'
+        });
+        Ext.create('Lada.store.GenericResults', {
+            storeId: 'genericresults',
+            autoLoad: true
         });
 
         //A Store containing all MST a User is allowed to set.

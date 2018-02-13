@@ -197,6 +197,9 @@ Ext.define('Lada.controller.Filter', {
                 case 'probenehmer':
                     resultGrid = Ext.create('Lada.view.grid.Probenehmer');
                     break;
+                case 'universal':
+                    resultGrid = Ext.create('Lada.view.widget.DynamicGrid');
+                    break;
             }
             if (resultGrid) {
                 contentPanel.add(resultGrid);
@@ -433,6 +436,9 @@ Ext.define('Lada.controller.Filter', {
                 break;
             case 'probenehmer':
                 sname = 'Lada.store.Probenehmer';
+                break;
+            case 'universal':
+                sname = 'Lada.store.GenericResults';
                 break;
         }
 

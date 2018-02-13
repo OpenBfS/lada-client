@@ -7,15 +7,15 @@
  */
 
 /**
- * Store for generic queries
+ * Store for generic query results
  */
-Ext.define('Lada.store.GenericQueries', {
+Ext.define('Lada.store.GenericResults', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Query',
     //    autoLoad: true,
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/query/universal',
+        url: 'lada-server/rest/universal',
         reader: {
             type: 'json',
             rootProperty: 'data'
