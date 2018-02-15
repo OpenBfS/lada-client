@@ -365,6 +365,7 @@ Ext.define('Lada.view.window.GridExport', {
             var columns = this.getColumns();
             var expcolumns = this.getColumns(true);
             if (!columns){
+                this.showError('export.nocolumn');
                 return false;
             }
             this.resultobject = {};
@@ -401,6 +402,7 @@ Ext.define('Lada.view.window.GridExport', {
         if (data){
             var columns = this.getColumns();
             if (!columns) {
+                this.showError('export.nocolumn');
                 return false;
             }
             var expcolumns = this.getColumns(true);
@@ -478,6 +480,7 @@ Ext.define('Lada.view.window.GridExport', {
             var expcolumns = this.getColumns(true);
             var columns = this.getColumns();
             if (!columns.length && !expcolumns.length){
+                this.showError('export.nocolumn');
                 return false;
             }
             this.resultobject = this.csv.textsep;
@@ -664,7 +667,7 @@ Ext.define('Lada.view.window.GridExport', {
         } else {
             cols = this.grid.getColumns();
         }
-        var vols = [];
+        var exportcols = null;
         if (sec){
             exportcols = this.down('tagfield[name=exportexpcolumns]').getValue();
         } else {
@@ -677,9 +680,6 @@ Ext.define('Lada.view.window.GridExport', {
             if (allcolumns || exportcols.indexOf(cols[i].dataIndex) > -1){
                 columnlist.push(cols[i]);
             }
-        }
-        if (!columnlist.length){
-            this.showError('export.nocolumn');
         }
         return columnlist;
     },
