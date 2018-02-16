@@ -198,7 +198,12 @@ Ext.define('Lada.controller.Filter', {
                     resultGrid = Ext.create('Lada.view.grid.Probenehmer');
                     break;
                 case 'universal':
-                    resultGrid = Ext.create('Lada.view.widget.DynamicGrid');
+                    resultGrid = Ext.create('Lada.view.widget.DynamicGrid', {
+                        selModel : Ext.create('Ext.selection.CheckboxModel', {
+                            checkOnly: true,
+                            injectCheckbox: 1
+                        })
+                    });
                     break;
             }
             if (resultGrid) {
