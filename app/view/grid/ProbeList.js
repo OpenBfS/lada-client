@@ -23,64 +23,35 @@ Ext.define('Lada.view.grid.ProbeList', {
     hideImport: false,
     hideDeleteSelected: false,
     hidePrintSheet: false,
-    hidePrint: false,
 
-    initComponent: function() {
-        var i18n = Lada.getApplication().bundle;
-        this.emptyText = i18n.getMsg('probe.emptyGrid');
-        this.selModel = Ext.create('Ext.selection.CheckboxModel', {
-            checkOnly: true,
-            injectCheckbox: 1
-        });
+    title: 'probe.gridTitle',
+    emptyText: 'probe.emptyGrid',
 
-        this.dockedItems = [{
-            xtype: 'toolbar',
-            dock: 'top',
-            items: [{
-                xtype: 'tbtext',
-                text: i18n.getMsg('probe.gridTitle')
-            },
-            '->',
-            {
-                text: i18n.getMsg('probe.button.create'),
-                icon: 'resources/img/list-add.png',
-                action: 'addProbe',
-                hidden: this.hideCreate,
-                disabled: false
-            }, {
-                text: i18n.getMsg('probe.button.import'),
-                icon: 'resources/img/svn-commit.png',
-                action: 'import',
-                hidden: this.hideImport,
-                disabled: false
-            }, {
-                text: i18n.getMsg('probe.button.export'),
-                icon: 'resources/img/svn-update.png',
-                action: 'gridexport',
-                disabled: true
-            }, {
-                text: i18n.getMsg('probe.button.delete_selected'),
-                icon: 'resources/img/edit-delete.png',
-                action: 'deleteSelected',
-                hidden: this.hideDeleteSelected,
-                disabled: true //disabled on start, enabled by the controller
-            }, {
-                text: i18n.getMsg('probe.button.printSheet'),
-                icon: 'resources/img/printer.png',
-                action: 'printSheet',
-                hidden: this.hidePrintSheet,
-                disabled: true //disabled on start, enabled by the controller
-            }, {
-                text: i18n.getMsg('probe.button.print'),
-                icon: 'resources/img/printer.png',
-                action: 'printExtract',
-                hidden: this.hidePrint,
-                disabled: true //disabled on start, enabled by the controller
-            }]
-        }];
-        this.columns = [];
-        this.callParent(arguments);
-    },
+    toolbarbuttons: [{
+        text: 'probe.button.create',
+        icon: 'resources/img/list-add.png',
+        action: 'addProbe',
+        hidden: this.hideCreate,
+        disabled: false
+    }, {
+        text: 'probe.button.import',
+        icon: 'resources/img/svn-commit.png',
+        action: 'import',
+        hidden: this.hideImport,
+        disabled: false
+    }, {
+        text: 'probe.button.delete_selected',
+        icon: 'resources/img/edit-delete.png',
+        action: 'deleteSelected',
+        hidden: this.hideDeleteSelected,
+        disabled: true //disabled on start, enabled by the controller
+    }, {
+        text: 'probe.button.printSheet',
+        icon: 'resources/img/printer.png',
+        action: 'printSheet',
+        hidden: this.hidePrintSheet,
+        disabled: true //disabled on start, enabled by the controller
+    }],
 
     /**
      * Setup columns of the Grid dynamically based on a list of given cols.

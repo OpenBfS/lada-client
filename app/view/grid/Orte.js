@@ -41,6 +41,9 @@ Ext.define('Lada.view.grid.Orte', {
     allowDeselect: true,
     plugins: 'gridfilters',
 
+    /**
+     * TODO: currently does not use DynamicGrid behaviour, although it is defined as Dynamig Grid
+     */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('orte.emptyGrid');
@@ -334,7 +337,8 @@ Ext.define('Lada.view.grid.Orte', {
     },
 
     /**
-     * This sets the Store of this Grid
+     * This sets the Store of this Grid.
+     * TODO: check against dynamicGrid changes 2/2018
      */
     setStore: function(store) {
         var i18n = Lada.getApplication().bundle;

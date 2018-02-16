@@ -11,13 +11,25 @@
  */
 Ext.define('Lada.view.widget.DynamicGrid', {
     extend: 'Ext.grid.Panel',
-
+    alias: 'widget.dynamicgrid',
     requires: [
         'Lada.view.window.Map',
         'Ext.grid.column.Widget'
     ],
 
     store: null,
+
+    /** toggle for the button and option "print grid"*/
+    printable: true,
+
+    /** toggle for the button and option "export data"*/
+    exportable: true,
+
+    /** additional non-generic buttons */
+    toolbarbuttons: [],
+
+    /** The untranslated i18n-Message for a grid title*/
+    title: null,
 
     border: false,
     multiSelect: true,
@@ -31,15 +43,66 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg(this.emptyText);
+        this.selModel = Ext.create('Ext.selection.CheckboxModel', {
+            checkOnly: true,
+            injectCheckbox: 1
+        });
+        this.setToolbar();
         this.callParent(arguments);
     },
+
+    setToolbar: function (){
+        var i18n = Lada.getApplication().bundle;
+        var tbcontent = [];
+        if (this.title){
+            this.title = i18n.getMsg(this.title);
+        }
+        tbcontent.push('->');
+        if (this.toolbarbuttons && this.toolbarbuttons.length){
+            for (var i= 0; i < this.toolbarbuttons.length; i++){
+                // TODO this is very ugly: naming the buttons here
+                var buttontext = i18n.getMsg(this.toolbarbuttons[i].text);
+                if (buttontext.substring(buttontext.length-10, buttontext.length) !== '.undefined'){
+                    this.toolbarbuttons[i].text = buttontext;
+                }
+                tbcontent.push(this.toolbarbuttons[i]);
+            }
+        }
+
+        if (this.printable){
+            tbcontent.push({
+                text: i18n.getMsg('probe.button.print'),
+                icon: 'resources/img/printer.png',
+                action: 'print',
+                disabled: true //disabled on start, enabled by the controller
+            });
+        }
+        if (this.exportable){
+            tbcontent.push({
+                text: i18n.getMsg('probe.button.export'),
+                icon: 'resources/img/svn-update.png',
+                action: 'gridexport',
+                hidden: this.hideExport,
+                disabled: true //disabled on start, enabled by the controller
+            });
+        }
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: tbcontent
+        }];
+    },
+
 
     /**
      * This sets the Store of the DynamicGrid
      */
     setStore: function(store) {
         var i18n = Lada.getApplication().bundle;
-        this.reconfigure(store);
+        if (store){
+            this.reconfigure(store);
+        }
         var ptbar = this.down('pagingtoolbar');
         if (ptbar) {
             this.removeDocked(ptbar);
@@ -66,10 +129,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      */
     setupColumns: function(cols) {
         var caf = this.generateColumnsAndFields(cols);
-        var columns = caf[0];
+        this.columns = caf[0];
         var fields = caf[1];
         this.store.setFields(fields);
-        this.reconfigure(this.store, columns);
+        this.reconfigure(this.store, this.columns);
     },
 
     /**

@@ -31,7 +31,9 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
                 click: this.addMessprogrammItem
             },
             'messprogrammelistgrid toolbar button[action=genProbenFromMessprogramm]': {
-                click: this.genProbenFromMessprogramm
+                click: this.genProbenFromMessprogramm,
+                // afterrender: this.activateButtons TODO: afterrender is the wrong event
+                //TODO event 'as soon as the button is there'
             }
         });
         this.callParent(arguments);
@@ -105,7 +107,9 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
      **/
     activateButtons: function(rowModel, record) {
         var grid = rowModel.view.up('grid');
-        this.buttonToggle(true, grid);
+        if (Ext.Array.contains(Lada.funktionen, 4)) {
+            this.buttonToggle(true, grid);
+        }
     },
 
     /**
@@ -125,16 +129,8 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
     buttonToggle: function(enabled, grid) {
         if (!enabled) {
             grid.down('button[action=genProbenFromMessprogramm]').disable();
-            grid.down('button[action=gridexport]').disable();
         } else {
             grid.down('button[action=genProbenFromMessprogramm]').enable();
-            grid.down('button[action=gridexport]').enable();
-        }
-    },
-
-    reload: function(btn) {
-        if (btn === 'yes') {
-            location.reload();
         }
     }
 });

@@ -41,19 +41,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
                     fn: this.printSelection,
                     mode: 'printsheet'
                 }
-            },
-            'probelistgrid toolbar button[action=printExtract]': {
-                click: {
-                    fn: this.printSelection,
-                    mode: 'printextract'
-                }
-            },
-            'probelistgrid gridview': {
-                expandbody: this.expandBody,
-                collapsebody: this.collapseBody
-            },
-            'probelistgrid pagingtoolbar': {
-                change: this.pageChange
             }
         });
         this.callParent(arguments);
@@ -109,27 +96,19 @@ Ext.define('Lada.controller.grid.ProbeList', {
      * Send the selection to a Printservice
      */
     printSelection: function(button, e, eOpts) {
-        switch (eOpts.mode) {
-            case 'printextract' :
-                var printData = this.createExtractData(button);
-                this.printpdf(printData, 'lada_print', 'lada-print.pdf', button);
-                break;
-            case 'printsheet' :
-                // The Data is loaded from the server again, so we need
-                // to be a little bit asynchronous here...
-                callback = function(response) {
-                    var data = response.responseText;
-                    data = this.prepareData(data); // Wraps all messstellen and deskriptoren objects into an array
-                    var printData = '{"layout": "A4 portrait", "outputFormat": "pdf",'
-                            + '"attributes": { "proben": ' + data
-                            + '}}';
-                    this.printpdf(printData, 'lada_erfassungsbogen',
-                        'lada-erfassungsbogen.pdf', button);
-                };
+        // The Data is loaded from the server again, so we need
+        // to be a little bit asynchronous here...
+        callback = function(response) {
+            var data = response.responseText;
+            data = this.prepareData(data); // Wraps all messstellen and deskriptoren objects into an array
+            var printData = '{"layout": "A4 portrait", "outputFormat": "pdf",'
+                    + '"attributes": { "proben": ' + data
+                    + '}}';
+            this.printpdf(printData, 'lada_erfassungsbogen',
+                'lada-erfassungsbogen.pdf', button);
+        };
 
-                this.createSheetData(button, callback, this);
-                break;
-        }
+        this.createSheetData(button, callback, this);
     },
 
     prepareData: function(data) {
@@ -245,37 +224,11 @@ Ext.define('Lada.controller.grid.ProbeList', {
     buttonToggle: function(enabled, grid) {
         if (!enabled) {
             grid.down('button[action=deleteSelected]').disable();
-            grid.down('button[action=printExtract]').disable();
             grid.down('button[action=printSheet]').disable();
-            grid.down('button[action=gridexport]').disable();
         } else {
             grid.down('button[action=deleteSelected]').enable();
-            grid.down('button[action=printExtract]').enable();
             grid.down('button[action=printSheet]').enable();
-            grid.down('button[action=gridexport]').enable();
         }
-    },
-
-    reload: function(btn) {
-        if (btn === 'yes') {
-            location.reload();
-        }
-    },
-
-    expandBody: function(rowNode, record, expandRow) {
-        //        var row = Ext.get('probe-row-' + record.get('id'));
-        //        var messungGrid = Ext.create('Lada.view.grid.Messung', {
-        //            recordId: record.get('id'),
-        //            bottomBar: false,
-        //            rowLines: true
-        //        });
-        //        row.swallowEvent(['click', 'mousedown', 'mouseup', 'dblclick'], true);
-        //        messungGrid.render(row);
-    },
-
-    collapseBody: function(rowNode, record, expandRow) {
-        //        var element = Ext.get('probe-row-' + record.get('id')).down('div');
-        //        element.destroy();
     },
 
     /**
@@ -346,112 +299,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
     },
 
     /**
-     * Returns a Json-Object which contains the data which has
-     * to be printed.
-     **/
-    createExtractData: function(button) {
-        //disable Button and setLoading...
-        button.disable();
-        button.setLoading(true);
-
-        var grid = button.up('grid');
-        var selection = grid.getView().getSelectionModel().getSelection();
-        var i18n = Lada.getApplication().bundle;
-        var me = this;
-        var columns = [];
-        var columnNames = [];
-        var visibleColumns = [];
-        var displayName = '';
-        var data = [];
-
-        // Write the columns to an array
-        try {
-            for (key in selection[0].data) {
-                // Do not write owner or readonly or id
-                if (['owner', 'readonly', 'id', 'probeId'].indexOf(key) == -1) {
-                    columns.push(key);
-                }
-            }
-        } catch (e) {
-            console.log(e);
-        }
-
-        //Retrieve visible columns' id's and names.
-        // and set displayName
-        try {
-            var grid = button.up('grid');
-            var cman = grid.columnManager;
-            var cols = cman.getColumns();
-
-            displayName = grid.down('tbtext').text;
-
-            for (key in cols) {
-                if (cols[key].dataIndex) {
-                    visibleColumns[cols[key].dataIndex] = cols[key].text;
-                }
-            }
-        } catch (e) {
-            console.log(e);
-        }
-
-
-        // Retrieve Data from selection
-        try {
-            for (item in selection) {
-                var row = selection[item].data;
-                var out = [];
-                //Lookup every column and write to data array.
-                for (key in columns) {
-                    var attr = columns[key];
-                    //Only write data to output when the column is not hidden.
-                    if (row[attr] != null &&
-                        visibleColumns[attr] != null) {
-                        out.push(row[attr].toString());
-                    } else if (visibleColumns[attr] != null) {
-                        out.push('');
-                    }
-                }
-                data.push(out);
-            }
-        } catch (e) {
-            console.log(e);
-        }
-
-        //Retrieve the names of the columns.
-        try {
-            var grid = button.up('grid');
-            var cman = grid.columnManager;
-            var cols = cman.getColumns();
-            //Iterate columns and find column names for the key...
-            // This WILL run into bad behaviour when column-keys exist twice.
-            for (key in columns) {
-                for (k in cols) {
-                    if (cols[k].dataIndex == columns[key]) {
-                        columnNames.push(cols[k].text);
-                        break;
-                    }
-                }
-            }
-        } catch (e) {
-            console.log(e);
-        }
-
-        var printData = {
-            'layout': 'A4 landscape',
-            'outputFormat': 'pdf',
-            'attributes': {
-                'title': 'Auszug aus LADA',
-                'displayName': displayName,
-                'table': {
-                    'columns': columnNames,
-                    'data': data
-                }
-            }
-        };
-        return printData;
-    },
-
-    /**
      * Deletes selected list items
      */
     deleteSelected: function(button) {
@@ -468,6 +315,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
      * this function uses an AJAX request in order to
      * send the data to the endpoint of the mapfish-print
      */
+    // TODO: check if obsolete/mergeable  with generic printing in controller/DynamicGrid
     printpdf: function(data, endpoint, filename, button) {
         Ext.Ajax.request({
             url: 'lada-printer/'+endpoint+'/buildreport.pdf',
@@ -512,19 +360,5 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 }
             }
         });
-    },
-
-    pageChange: function(toolbar) {
-        var grid = toolbar.up('grid');
-        var store = grid.getStore();
-        var rowExpander = grid.plugins[0];
-        var nodes = rowExpander.view.getNodes();
-        for (var i = 0; i < nodes.length; i++) {
-            var node = Ext.fly(nodes[i]);
-            if (node.hasCls(rowExpander.rowCollapsedCls) === false) {
-                rowExpander.toggleRow(i, store.getAt(i));
-            }
-        }
     }
-
 });

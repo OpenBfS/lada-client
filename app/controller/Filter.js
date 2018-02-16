@@ -180,7 +180,7 @@ Ext.define('Lada.controller.Filter', {
 
             contentPanel.add(frgrid);
         } else {
-            // Grids which are not build with dynamic columns
+            // Grids which are not build with expandable columns
             // The store is configured in each grid, hence we only need to set the
             // grid
             var resultGrid;

@@ -443,6 +443,7 @@ Ext.application({
         'Lada.controller.grid.MessprogrammKategorie',
         'Lada.controller.grid.Messmethode',
         'Lada.controller.FilterManagement',
-        'Lada.controller.GridExport'
+        'Lada.controller.GridExport',
+        'Lada.controller.grid.DynamicGrid'
         ]
 });
