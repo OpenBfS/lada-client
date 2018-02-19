@@ -154,6 +154,11 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             failure: function(response) {
                 button.enable();
                 button.setLoading(false);
+                if (!response.getResponse){
+                    Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                        i18n.getMsg('err.msg.print.noContact'));
+                    return;
+                }
                 if (response.getResponse().responseText) {
                     try {
                         var json = Ext.JSON.decode(response.getResponse().responseText);
