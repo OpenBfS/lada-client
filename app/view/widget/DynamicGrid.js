@@ -80,7 +80,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         }
         if (this.exportable){
             tbcontent.push({
-                text: i18n.getMsg('probe.button.export'),
+                text: i18n.getMsg('export.button'),
                 icon: 'resources/img/svn-update.png',
                 action: 'gridexport',
                 hidden: this.hideExport,
