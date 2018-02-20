@@ -39,9 +39,6 @@ Ext.define('Lada.controller.FilterResult', {
             'filterresultgrid toolbar button[action=import]': {
                 click: this.uploadFile
             },
-            'filterresultgrid toolbar button[action=export]': {
-                click: this.downloadFile
-            },
             'filterresultgrid toolbar button[action=print]': {
                 click: this.printSelection
             }
@@ -154,64 +151,6 @@ Ext.define('Lada.controller.FilterResult', {
         });
 
         win.show();
-    },
-
-    /**
-     * This function can be used to Download the items which
-     * were selected in the {@link Lada.view.grid.FilterResult}
-     * The Download does not work with Internet Explorers older than v.10
-     */
-    downloadFile: function(button) {
-        var grid = button.up('grid');
-        var selection = grid.getView().getSelectionModel().getSelection();
-        var i18n = Lada.getApplication().bundle;
-        var proben = [];
-        for (var i = 0; i < selection.length; i++) {
-            proben.push(selection[i].get('id'));
-        }
-        var me = this;
-        Ext.Ajax.request({
-            url: 'lada-server/data/export/laf',
-            jsonData: {'proben': proben},
-            success: function(response) {
-                var content = response.responseText;
-                var blob = new Blob([content],{type: 'text/plain'});
-                saveAs(blob, 'export.laf');
-            },
-            failure: function(response) {
-                /*
-                SSO will send a 302 if the Client is not authenticated
-                unfortunately this seems to be filtered by the browser.
-                We assume that a 302 was send when the follwing statement
-                is true.
-                */
-                if (response.status == 0 && response.responseText === '') {
-                    Ext.MessageBox.confirm('Erneutes Login erforderlich',
-                        'Ihre Session ist abgelaufen.<br/>'+
-                        'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
-                        'Alle ungesicherten Daten gehen dabei verloren.<br/>' +
-                        'Soll die Anwendung jetzt neu geladen werden?', this.reload);
-                }
-                // further error handling
-                var json = Ext.JSON.decode(response.responseText);
-                if (json) {
-                    if (json.errors.totalCount > 0 || json.warnings.totalCount > 0) {
-                        formPanel.setMessages(json.errors, json.warnings);
-                    }
-                    if (json.message) {
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
-                            +' #'+json.message,
-                        Lada.getApplication().bundle.getMsg(json.message));
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                            i18n.getMsg('err.msg.laf.filecreatefailed'));
-                    }
-                } else {
-                    Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                        i18n.getMsg('err.msg.laf.filecreatefailed'));
-                }
-            }
-        });
     },
 
     /**

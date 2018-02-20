@@ -38,6 +38,7 @@ Ext.define('Lada.view.window.FilterManagement', {
         var messungstore = Ext.StoreManager.get('messungqueries');
         var messpstore = Ext.StoreManager.get('messprogrammqueries');
         var stammstore = Ext.StoreManager.get('stammdatenqueries');
+        var genericstore = Ext.StoreManager.get('genericqueries');
         me.items = [{
             xtype: 'tabpanel',
             items: [{
@@ -194,6 +195,30 @@ Ext.define('Lada.view.window.FilterManagement', {
                     }
                 },
                 store: stammstore,
+                columns: [{
+                    header: i18n.getMsg('querygrid.header.favorite'),
+                    width: 48,
+                    dataIndex: 'favorite',
+                    xtype: 'favcolumn'
+                }, {
+                    header: i18n.getMsg('querygrid.header.name'),
+                    dataIndex: 'name',
+                    width: 200
+                }, {
+                    header: i18n.getMsg('querygrid.header.description'),
+                    dataIndex: 'description',
+                    flex: 1
+                }],
+            }, {
+                title: i18n.getMsg('gen_query'),
+                xtype: 'grid',
+                viewConfig: {
+                    markDirty: false,
+                    getRowClass: function() {
+                        return 'x-lada-multiline-grid';
+                    }
+                },
+                store: genericstore,
                 columns: [{
                     header: i18n.getMsg('querygrid.header.favorite'),
                     width: 48,

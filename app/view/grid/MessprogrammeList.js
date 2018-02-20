@@ -15,40 +15,22 @@ Ext.define('Lada.view.grid.MessprogrammeList', {
 
     requires: 'Lada.view.window.DeleteProbe',
 
-    initComponent: function() {
-        var i18n = Lada.getApplication().bundle;
-        this.emptyText = i18n.getMsg('messprogramme.emptyGrid');
-        this.selModel = Ext.create('Ext.selection.CheckboxModel', {
-            checkOnly: true,
-            injectCheckbox: 0
-        });
+    printable: true,
+    exportable: true,
+    title: 'messprogramme.gridTitle',
+    emptyText: 'messprogramme.emptyGrid',
 
-        this.dockedItems = [{
-            xtype: 'toolbar',
-            dock: 'top',
-            items: [{
-                xtype: 'tbtext',
-                text: i18n.getMsg('messprogramme.gridTitle')
-            },
-            '->',
-            {
-                text: i18n.getMsg('messprogramme.button.create'),
-                icon: 'resources/img/list-add.png',
-                action: 'addMessprogramm',
-                disabled: true
-            }, {
-                text: i18n.getMsg('messprogramme.button.generate'),
-                icon: 'resources/img/view-time-schedule-insert.png',
-                action: 'genProbenFromMessprogramm',
-                disabled: true // disabled on startup, will be enabled by controller if necessary
-            }]
-        }];
-        this.columns = [];
-        this.callParent(arguments);
-        if (Ext.Array.contains(Lada.funktionen, 4)) {
-            this.down('button[action=addMessprogramm]').enable();
-        }
-    }
+    toolbarbuttons: [{
+        text: 'messprogramme.button.create',
+        icon: 'resources/img/list-add.png',
+        action: 'addMessprogramm',
+        disabled: true
+    }, {
+        text: 'messprogramme.button.generate',
+        icon: 'resources/img/view-time-schedule-insert.png',
+        action: 'genProbenFromMessprogramm',
+        disabled: true // disabled on startup, will be enabled by controller if necessary
+    }]
 });
 
 

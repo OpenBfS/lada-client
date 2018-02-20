@@ -7,102 +7,32 @@
  */
 
 /**
- * Controller for the MessungList result grid.
+ * Controller for dynamic grids.
  */
-Ext.define('Lada.controller.grid.MessungList', {
+Ext.define('Lada.controller.grid.DynamicGrid', {
     extend: 'Ext.app.Controller',
-    requires: [
-        'Lada.view.window.SetStatus',
-        'Lada.view.window.ProbeEdit'
-    ],
+    requires: [],
 
     /**
      * Initialize the Controller with listeners
      */
     init: function() {
         this.control({
-            'messunglistgrid': {
-                itemdblclick: this.editItem
+            'dynamicgrid': {
+                // itemdblclick: this.TODO,
+                // TODO: Should check if the line contains/is a probe, messung, etc.,
+                // TODO and infer  the action from there #1926
+                select: this.activateButtons,
+                deselect: this.deactivateButtons
             },
-            'messunglistgrid toolbar button[action=setstatus]': {
-                click: this.setStatus
-            },
-            'messunglistgrid toolbar button[action=print]':{
-                click: this.printSelection
-            },
-            'messunglistgrid pagingtoolbar': {
+            'dynamicgrid pagingtoolbar': {
                 change: this.pageChange
+            },
+            'button[action=print]': {
+                click: this.printSelection
             }
         });
         this.callParent(arguments);
-    },
-
-    /**
-     * Sets the Status on Bulk
-     **/
-    setStatus: function(button) {
-        //disable Button and setLoading...
-
-        var grid = button.up('grid');
-        var selection = grid.getView().getSelectionModel().getSelection();
-        var i18n = Lada.getApplication().bundle;
-
-        var win = Ext.create('Lada.view.window.SetStatus', {
-            title: i18n.getMsg('statusSetzen.win.title'),
-            grid: grid,
-            modal: true,
-            selection: selection
-        });
-
-        win.show();
-
-    },
-
-
-    /**
-     * This function is called after a Row in the
-     * {@link Lada.view.grid.ProbeList}
-     * was double-clicked.
-     * The function opens a {@link Lada.view.window.ProbeEdit}
-     * or a {@link Lada.view.window.Messprogramm}.
-     * To determine which window has to be opened, the function
-     * analyse the records modelname.
-     */
-    editItem: function(grid, record) {
-        var probeRecord = Ext.create('Lada.model.ProbeList');
-        probeRecord.setId(record.get('probeId'));
-        probeRecord.set('owner', record.get('owner'));
-        probeRecord.set('readonly', record.get('readonly'));
-
-        var probeWin = Ext.create('Lada.view.window.ProbeEdit', {
-            record: probeRecord,
-            style: 'z-index: -1;' //Fixes an Issue where windows could not be created in IE8
-        });
-
-        probeWin.setPosition(30);
-        probeWin.show();
-        probeWin.initData();
-
-        Ext.ClassManager.get('Lada.model.Probe').load(record.get('probeId'), {
-            failure: function(record, action) {
-                me.setLoading(false);
-                // TODO
-                console.log('An unhandled Failure occured. See following Response and Record');
-                console.log(action);
-                console.log(record);
-            },
-            success: function(precord, response) {
-                var messungWin = Ext.create('Lada.view.window.MessungEdit', {
-                    parentWindow: probeWin,
-                    probe: precord,
-                    record: record,
-                    grid: grid
-                });
-                messungWin.show();
-                messungWin.setPosition(window.innerWidth - 30 - messungWin.width);
-                messungWin.initData();
-            }
-        });
     },
 
     /**
@@ -123,7 +53,6 @@ Ext.define('Lada.controller.grid.MessungList', {
         var visibleColumns = [];
         var displayName = '';
         var data = [];
-        var endpoint = 'lada_print';
 
         // Write the columns to an array
         try {
@@ -154,7 +83,6 @@ Ext.define('Lada.controller.grid.MessungList', {
         } catch (e) {
             console.log(e);
         }
-
 
         // Retrieve Data from selection
         try {
@@ -211,7 +139,7 @@ Ext.define('Lada.controller.grid.MessungList', {
         };
 
         Ext.Ajax.request({
-            url: 'lada-printer/print/' + endpoint + '/buildreport.pdf',
+            url: 'lada-printer/buildreport.pdf',
             //configure a proxy in apache conf!
             jsonData: printData,
             binary: true,
@@ -226,6 +154,11 @@ Ext.define('Lada.controller.grid.MessungList', {
             failure: function(response) {
                 button.enable();
                 button.setLoading(false);
+                if (!response.getResponse){
+                    Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                        i18n.getMsg('err.msg.print.noContact'));
+                    return;
+                }
                 if (response.getResponse().responseText) {
                     try {
                         var json = Ext.JSON.decode(response.getResponse().responseText);
@@ -253,8 +186,9 @@ Ext.define('Lada.controller.grid.MessungList', {
         });
     },
 
+
     /**
-     * Toggles the buttons in the toolbar
+     * Toggles the generic buttons in the toolbar
      **/
     activateButtons: function(rowModel, record) {
         var grid = rowModel.view.up('grid');
@@ -262,7 +196,7 @@ Ext.define('Lada.controller.grid.MessungList', {
     },
 
     /**
-     * Toggles the buttons in the toolbar
+     * Toggles the generic buttons in the toolbar
      **/
     deactivateButtons: function(rowModel, record) {
         var grid = rowModel.view.up('grid');
@@ -273,15 +207,36 @@ Ext.define('Lada.controller.grid.MessungList', {
     },
 
     /**
-     * Enables/Disables a set of buttons
+     * Enables/Disables the generic set of buttons
      **/
     buttonToggle: function(enabled, grid) {
         if (!enabled) {
-            grid.down('button[action=setstatus]').disable();
+            grid.down('button[action=print]').disable();
+            grid.down('button[action=gridexport]').disable();
         } else {
-            // TODO: enable button only on messungen with owner == true and
-            // readonly == false
-            grid.down('button[action=setstatus]').enable();
+            grid.down('button[action=print]').enable();
+            grid.down('button[action=gridexport]').enable();
+        }
+    },
+
+    reload: function(btn) {
+        if (btn === 'yes') {
+            location.reload();
+        }
+    },
+
+    pageChange: function(toolbar) {
+        var grid = toolbar.up('grid');
+        var store = grid.getStore();
+        var rowExpander = grid.plugins[0];
+        if (rowExpander && rowExpander.ptype === 'gridrowexpander'){
+            var nodes = rowExpander.view.getNodes();
+            for (var i = 0; i < nodes.length; i++) {
+                var node = Ext.fly(nodes[i]);
+                if (node.hasCls(rowExpander.rowCollapsedCls) === false) {
+                    rowExpander.toggleRow(i, store.getAt(i));
+                }
+            }
         }
     }
 });
