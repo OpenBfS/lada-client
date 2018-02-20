@@ -74,7 +74,8 @@ Ext.application({
         'Lada.store.OrtszuordnungTyp',
         'Lada.store.OrtTyp',
         'Lada.store.KoordinatenArt',
-        'Lada.model.MessstelleLabor'
+        'Lada.model.MessstelleLabor',
+        'Lada.model.GenericResults'
     ],
     bundle: {
         bundle: 'Lada',

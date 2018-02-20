@@ -11,14 +11,7 @@
  */
 Ext.define('Lada.store.GenericResults', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Query',
+    model: 'Lada.model.GenericResults',
     //    autoLoad: true,
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/universal',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
+    pageSize: Lada.pagingSize
 });
