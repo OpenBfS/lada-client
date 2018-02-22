@@ -111,7 +111,7 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
             },
             filter: {type: 'string'}
         }, {
-            header: i18n.getMsg('mplId'),
+            header: i18n.getMsg('mpl_grid_header'),
             dataIndex: 'code',
             editor: {
                 xtype: 'textfield',
@@ -123,6 +123,7 @@ Ext.define('Lada.view.grid.MessprogrammKategorie', {
         }, {
             header: i18n.getMsg('bezeichnung'),
             dataIndex: 'bezeichnung',
+            width: 250,
             editor: {
                 xtype: 'textfield',
                 maxLength: 120,
