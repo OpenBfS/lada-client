@@ -69,6 +69,11 @@ Ext.define('Lada.view.window.GridExport', {
      * the first entry (to get column definitions).
      */
     rowexp: null,
+    /**
+     * the (optional) list of gridrowExpander columns to be exported. Will be
+     * filled by the ui user
+     */
+    expcolumns: [],
 
     // Counter to keep track of asynchronous actions
     totalentries: 0,
@@ -507,7 +512,7 @@ Ext.define('Lada.view.window.GridExport', {
                     me.setSecondaryCsv(data[entry], expcolumns, entryline);
                 }
                 else {
-                    this.resultobject += addline(data[entry], columns)
+                    this.resultobject += me.addline(data[entry], columns)
                         + this.csv.linesep;
                     this.countDown();
                 }
