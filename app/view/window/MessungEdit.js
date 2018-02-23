@@ -153,7 +153,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             },
             success: function(record, response) {
                 var me = this;
-                if (this.parentWindow.record.get('treeModified') < record.get('parentModified')) {
+                if (this.parentWindow && this.parentWindow.record.get('treeModified') < record.get('parentModified')) {
                     Ext.Msg.show({
                         title: 'Probe nicht aktuell!',
                         msg: 'Die zugehörige Probe wurde verändert.\n' +

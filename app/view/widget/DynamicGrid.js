@@ -297,7 +297,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                     callback: function(record, operation, success) {
                                         if (success) {
                                             var messungRecord = record;
-                                            Lada.model.Probe.load(messungRecord.get('probeid'), {
+                                            Lada.model.Probe.load(messungRecord.get('probeId'), {
                                                 scope: this,
                                                 callback: function(precord, poperation, psuccess) {
                                                     var win = Ext.create('Lada.view.window.MessungEdit', {
@@ -305,6 +305,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                                         record: record,
                                                         style: 'z-index: -1;'
                                                     });
+                                                    win.initData();
                                                     win.show();
                                                 }
                                             });

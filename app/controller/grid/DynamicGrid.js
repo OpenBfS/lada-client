@@ -139,7 +139,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         };
 
         Ext.Ajax.request({
-            url: 'lada-printer/buildreport.pdf',
+            url: 'lada-printer/print/lada_print/buildreport.pdf',
             //configure a proxy in apache conf!
             jsonData: printData,
             binary: true,
