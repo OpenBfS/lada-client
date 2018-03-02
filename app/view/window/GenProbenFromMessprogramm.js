@@ -283,7 +283,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         });
 
         var columns = [{
-            header: i18n.getMsg('prnId'),
+            header: i18n.getMsg('probeId'),
             dataIndex: 'idAlt'
         }, {
             header: i18n.getMsg('mstId'),
