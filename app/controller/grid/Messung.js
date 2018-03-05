@@ -83,7 +83,7 @@ Ext.define('Lada.controller.grid.Messung', {
                     grid: grid
                 });
                 messungWin.show();
-                messungWin.setPosition(window.innerWidth - 30 - win.width);
+                messungWin.setPosition(window.innerWidth - 30 - probeWin.width);
                 messungWin.initData();
             }
         });
