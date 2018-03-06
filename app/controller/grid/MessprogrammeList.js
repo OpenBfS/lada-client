@@ -24,6 +24,7 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
         this.control({
             'messprogrammelistgrid': {
                 itemdblclick: this.editItem,
+                render: this.activateButtons,
                 select: this.activateButtons,
                 deselect: this.deactivateButtons
             },
@@ -108,6 +109,12 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
     activateButtons: function(rowModel, record) {
         var grid = rowModel.view.up('grid');
         if (Ext.Array.contains(Lada.funktionen, 4)) {
+            var genMessprog = grid.down('button[action=addMessprogramm]');
+            if (genMessprog){
+                genMessprog.enable();
+            }
+        }
+        if (rowModel.selected && rowModel.selected.length) {
             this.buttonToggle(true, grid);
         }
     },
@@ -120,6 +127,12 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
         // Only disable buttons when nothing is selected
         if (rowModel.selected.items == 0) {
             this.buttonToggle(false, grid);
+        }
+        if (!Ext.Array.contains(Lada.funktionen, 4)) {
+            var genMessprog = grid.down('button[action=addMessprogramm]');
+            if (genMessprog){
+                genMessprog.disable();
+            }
         }
     },
 
