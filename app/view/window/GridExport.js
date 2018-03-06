@@ -734,6 +734,22 @@ Ext.define('Lada.view.window.GridExport', {
             return null;
         }
         if (!column.dataType){
+            /** This section contains special treatment for probe items. Probe
+            grids are supposed to be "dynamic grid', but don't contain poperly
+            formatted dataTypes. Some fields may be thought of as to be
+            exported as displayed, as real data.
+            TODO: check for obsoleteness. Mar 2018*/
+            if (column.dataIndex == 'probenartId'){
+                var store = Ext.data.StoreManager.get('probenarten');
+                var record = store.getById(value);
+                if (record) {
+                    var r = record.get('probenart');
+                    return r || '';
+                }
+                return '';
+            }
+            /** end of (hopefully temporary) section */
+
             return value;
         }
         switch (column.dataType.name) {
