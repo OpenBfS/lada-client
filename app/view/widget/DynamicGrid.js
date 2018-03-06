@@ -420,22 +420,26 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 }
                 break;
                 default:
-                    switch (cols[i].dataIndex) {
-                        case 'dBasis':
-                        case 'pArt':
-                        case 'statusSt':
-                        case 'statusW':
-                        case 'baId':
-                        case 'mstLaborId':
-                        case 'messRegime':
-                        case 'intervall':
-                        case 'mstId':
-                        case 'netzId':
-                            cols[i].filter = {type: 'list'};
-                            break;
-                        default:
-                            cols[i].filter = {type: 'string'};
+                    cols[i].xtype = 'gridcolumn';
+                    cols[i].renderer = function(value, cell){
+                        return value || '';
                     }
+            };
+            switch (cols[i].dataIndex) {
+                case 'dBasis':
+                case 'pArt':
+                case 'statusSt':
+                case 'statusW':
+                case 'baId':
+                case 'mstLaborId':
+                case 'messRegime':
+                case 'intervall':
+                case 'mstId':
+                case 'netzId':
+                    cols[i].filter = {type: 'list'};
+                    break;
+                default:
+                    cols[i].filter = {type: 'string'};
             }
             fields.push(curField);
             resultColumns.push(cols[i]);

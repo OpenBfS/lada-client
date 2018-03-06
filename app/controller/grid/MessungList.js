@@ -29,9 +29,6 @@ Ext.define('Lada.controller.grid.MessungList', {
             },
             'messunglistgrid toolbar button[action=print]':{
                 click: this.printSelection
-            },
-            'messunglistgrid pagingtoolbar': {
-                change: this.pageChange
             }
         });
         this.callParent(arguments);
