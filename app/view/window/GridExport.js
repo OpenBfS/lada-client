@@ -963,8 +963,6 @@ Ext.define('Lada.view.window.GridExport', {
                     break;
                 case 'undefined': //leave column empty
                     break;
-                case 'object': //leave column empty
-                    break;
                 case 'string':
                     if (value.indexOf(this.textsep) > -1 ){
                         // This will alter the data exported
@@ -1011,8 +1009,8 @@ Ext.define('Lada.view.window.GridExport', {
                 // converting it into a string.
                     var val = '';
                     try {
-                        val = this.csv.textsep + value.toIsoString() +
-                        this.csv.textsep;
+                        var isostring = value.toISOString();
+                        val = this.csv.textsep + isostring + this.csv.textsep;
                     }
                     catch(err){
                         val = ''
