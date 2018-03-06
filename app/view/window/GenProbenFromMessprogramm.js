@@ -373,6 +373,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             header: i18n.getMsg('messprogramm.form.fieldset.title'),
             dataIndex: 'mprId'
         }, {
+            header: i18n.getMsg('mediaDesk'),
+            dataIndex: 'mediaDesk'
+        }, {
             //TODO: load description
             header: i18n.getMsg('umw_id'),
             dataIndex: 'umwId',
