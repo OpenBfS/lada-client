@@ -220,6 +220,14 @@ Ext.define('Lada.view.window.GridExport', {
                 change: me.exportalltoggle
             }
         }, {
+            xtype: 'checkbox',
+            name: 'secondarycolumns',
+            fieldLabel: i18n.getMsg('export.secondarycolumns'),
+            checked: this.grid.export_rowexp ? true: false,
+            listeners: {
+                change: me.exportsecondarytoggle
+            }
+        }, {
             xtype: 'tagfield',
             name: 'exportcolumns',
             labelWidth: 100,
@@ -486,7 +494,10 @@ Ext.define('Lada.view.window.GridExport', {
                 return false;
             }
             // create header
-            var expcolumns = this.getColumns(true);
+            var expcolumns = [];
+            if ( this.down('checkbox[name=secondarycolumns]').value){
+                expcolumns = this.getColumns(true);
+            }
             var columns = this.getColumns();
             if (!columns.length && !expcolumns.length){
                 this.showError('export.nocolumn');
@@ -515,12 +526,13 @@ Ext.define('Lada.view.window.GridExport', {
             for (var entry = 0; entry < data.length; entry++ ){
                 var entryline = me.addline(data[entry], columns);
 
-                this.resultobject += me.addline(data[entry], columns)
-                    + this.csv.linesep;
                 if (expcolumns.length){
                     me.setSecondaryCsv(data[entry], expcolumns, entryline);
+                } else {
+                    this.resultobject += entryline + this.csv.linesep;
+                    this.countDown();
                 }
-                this.countDown();
+
             }
             return true;
 
@@ -641,10 +653,22 @@ Ext.define('Lada.view.window.GridExport', {
         var me = box.up('window');
         me.down('tagfield[name=exportcolumns]').setVisible(
             !newValue);
-        if (me.rowexp){
+        if (me.rowexp && me.down('checkbox[name=secondarycolumns]').value){
             me.down('tagfield[name=exportexpcolumns]').setVisible(!newValue);
         }
     },
+
+    exportsecondarytoggle: function(box, newValue, oldValue){
+        var me = box.up('window');
+        me.down('checkbox[name=allcolumns]')
+        if (newValue && !me.down('checkbox[name=allcolumns]').value){
+            me.down('tagfield[name=exportcolumns]').setVisible(true);
+        }
+        else {
+            me.down('tagfield[name=exportcolumns]').setVisible(false);
+        }
+    },
+
 
     /**
      * Saves the resulting data
@@ -821,8 +845,8 @@ Ext.define('Lada.view.window.GridExport', {
      * @param {*} columns Columns to be included
      */
     setSecondaryJson: function(entry, type, idx, columns){
-        if (!this.rowexp){
-            this.parsedEntries +=1;
+        if (!this.rowexp || !this.down('checkbox[name=secondarycolumns]').value){
+            this.countDown();
             return;
         }
         var me = this;
@@ -900,8 +924,8 @@ Ext.define('Lada.view.window.GridExport', {
      */
     setSecondaryCsv: function (item, columns, primaryRow){
         var me = this;
-        if (!this.rowexp){
-            this.parsedEntries +=1;
+        if (!this.rowexp || !this.down('checkbox[name=secondarycolumns]').value ){
+            this.countDown();
             return;
         }
         var id = item.get('id');

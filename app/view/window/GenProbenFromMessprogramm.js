@@ -272,6 +272,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             hideCreate: true,
             hideImport: true,
             hidePrintSheet: true,
+            export_rowexp: true,
             plugins: [{
                 ptype: 'gridrowexpander',
                 gridType: 'Lada.view.grid.Messung',
