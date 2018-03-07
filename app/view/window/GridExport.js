@@ -144,7 +144,9 @@ Ext.define('Lada.view.window.GridExport', {
         var columnstore= [];
         var preselected= [];
         for (var i =0; i < columns.length; i++){
-            if (columns[i].dataIndex && columns[i].text){
+            if (columns[i].dataIndex &&
+                columns[i].dataIndex !== 'readonly' &&
+                columns[i].text.length){
                 columnstore.push({
                     value: columns[i].dataIndex,
                     name: columns[i].text
@@ -306,7 +308,9 @@ Ext.define('Lada.view.window.GridExport', {
                 this.expcolumns  = this.rowexp.cmps.items[0].getColumns();
                 var preselectedEx = [];
                 for (var i =0; i < this.expcolumns.length; i++){
-                    if (this.expcolumns[i].dataIndex && this.expcolumns[i].text){
+                    if (this.expcolumns[i].dataIndex &&
+                      columns[i].dataIndex !== 'readonly' &&
+                      this.expcolumns[i].text.length){
                         this.expcolumnStore.add({
                             value: this.expcolumns[i].dataIndex,
                             name: this.expcolumns[i].text
@@ -679,7 +683,7 @@ Ext.define('Lada.view.window.GridExport', {
             exportcols = this.down('tagfield[name=exportcolumns]').getValue();
         }
         for (var i=0; i < cols.length; i ++){
-            if (!cols[i].dataIndex){
+            if (!cols[i].dataIndex || cols[i].dataIndex === 'readonly'){
                 continue;
             }
             if (allcolumns || exportcols.indexOf(cols[i].dataIndex) > -1){
