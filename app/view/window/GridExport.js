@@ -510,14 +510,17 @@ Ext.define('Lada.view.window.GridExport', {
             } else if (expcolumns.length){
                 this.resultobject += expcolumns[0].text + this.csv.textsep;
             }
-            for (var col = 0; col < columns.length; col ++){
+            for (var col = 1; col < columns.length; col ++){
                 this.resultobject += this.csv.colsep + this.csv.textsep +
                     columns[col].text + this.csv.textsep;
             }
-
-            for (var col = 1; col < expcolumns.length; col ++){
+            var col_i = 0;
+            if (!columns.length  && expcolumns.length){
+                col_i = 1;
+            }
+            for (col_i; col_i < expcolumns.length; col_i ++){
                 this.resultobject += this.csv.colsep + this.csv.textsep +
-                    expcolumns[col].text + this.csv.textsep;
+                    expcolumns[col_i].text + this.csv.textsep;
             }
             this.resultobject += this.csv.linesep;
 
