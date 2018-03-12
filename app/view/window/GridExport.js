@@ -305,6 +305,7 @@ Ext.define('Lada.view.window.GridExport', {
         });
 
         // get rowexpander and their columns
+        var toggled = false;
         for (var i=0; i < this.grid.plugins.length; i++) {
             if (this.grid.plugins[i].ptype === 'gridrowexpander'){
                 this.rowexp = this.grid.plugins[i];
@@ -312,6 +313,7 @@ Ext.define('Lada.view.window.GridExport', {
                 var node = Ext.fly(nodes[0]);
                 if (node.hasCls(this.rowexp.rowCollapsedCls) === true) {
                     this.rowexp.toggleRow(0);
+                    toggled = true;
                 }
                 this.expcolumns  = this.rowexp.cmps.items[0].getColumns();
                 var preselectedEx = [];
@@ -325,6 +327,9 @@ Ext.define('Lada.view.window.GridExport', {
                         });
                         preselectedEx.push(this.expcolumns[i].dataIndex);
                     }
+                }
+                if (toggled){
+                    this.rowexp.toggleRow(0);
                 }
                 this.down('tagfield[name=exportexpcolumns]').select(preselectedEx);
                 break;

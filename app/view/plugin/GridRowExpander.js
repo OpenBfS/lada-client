@@ -136,7 +136,7 @@ Ext.define('Lada.view.plugin.GridRowExpander', {
     collapseCmp: function(row, record) {
         var me = this;
         var cmps = me.cmps;
-        var id = record.getObservableId();
+        var id = record.get('id');
         var idx = cmps.findIndex('recordId', id);
         var cmp = cmps.getAt(idx);
 
