@@ -771,6 +771,9 @@ Ext.define('Lada.view.window.GridExport', {
             formatted dataTypes. Some fields may be thought of as to be
             exported as displayed, as real data.
             TODO: check for obsoleteness. Mar 2018*/
+            if (column.dataIndex == 'messzeitpunkt' && !column.dataType){
+                return new Date(value);
+            }
             if (column.dataIndex == 'probenartId'){
                 var store = Ext.data.StoreManager.get('probenarten');
                 var record = store.getById(value);
