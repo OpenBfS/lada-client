@@ -341,28 +341,28 @@ Ext.define('Lada.view.window.GridExport', {
         var filename = '';
         switch(win.exportformat){
             case 'json':
-                var namecheck = win.validateFilename('export.json');
+                var namecheck = win.validateFilename('json');
                 if (namecheck){
                     win.down('button[action=close]').setDisabled(true);
                     win.exportJson();
                 }
                 break;
             case 'geojson':
-                var namecheck = win.validateFilename('export.geojson')
+                var namecheck = win.validateFilename('geojson')
                 if (namecheck){
                     win.down('button[action=close]').setDisabled(true);
                     win.exportGeoJson();
                 }
                 break;
             case 'csv':
-                var namecheck = win.validateFilename('export.csv')
+                var namecheck = win.validateFilename('csv')
                 if (namecheck){
                     win.down('button[action=close]').setDisabled(true);
                     win.exportCSV();
                 }
                 break;
             case 'laf':
-                namecheck = win.validateFilename('export.laf')
+                namecheck = win.validateFilename('laf')
                 if (namecheck){
                     win.down('button[action=close]').setDisabled(true);
                     win.exportLAF(filename);
@@ -817,26 +817,31 @@ Ext.define('Lada.view.window.GridExport', {
     },
 
     /**
-     * Validation of filename input. Returns the valid filename, the defaultname
-     * if textfield is empty or "false" if the text is invalid
+     * Validation of filename input. Returns the valid filename, 'export' if
+     * textfield is empty or "false" if the text is invalid.
+     * Appends the extension if not already present
      */
-    validateFilename: function(defaultname){
-        var defname = defaultname || 'export.txt';
+    validateFilename: function(defaultending){
+        var defaultend = defaultending || 'txt';
         var fname = this.down('textfield[name=filename]').getValue();
-        if (fname) {
-            //TODO better regex: this is quite basic
-            var pattern =
-                new RegExp(/^(\w|[äöüß])+(\w|\.|\s|[äüöß])*[^\W\.]$/i);
-            if (!pattern.test(fname)){
-                this.showError('export.invalidfilename');
-                return false;
-            } else {
+        if (!fname) {
+            fname = 'export.' + defaultend;
+        }
+        //TODO better regex: this is quite basic
+        var pattern = new RegExp(/^(\w|[äöüß])+(\w|\.|\s|[äüöß])*[^\W\.]$/i);
+        if (!pattern.test(fname)){
+            this.showError('export.invalidfilename');
+            return false;
+        } else {
+            if (fname.length > defaultend.length && // fname may be shorter than ending
+                fname.toLowerCase().indexOf(defaultend.toLowerCase()) ==
+                    fname.length - defaultend.length){
                 this.filename = fname;
                 return true;
+            } else {
+                this.filename = fname + '.' + defaultend;
+                return true;
             }
-        } else {
-            this.filename = defname;
-            return true;
         }
     },
 
