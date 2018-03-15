@@ -93,21 +93,10 @@ Ext.define('Lada.view.Viewport', {
                     }]
                 }],
                 items: [{
-                    xtype: 'modeswitcher',
-                    margin: '0, 10, 0, 10'
-                }, {
-                    // Auswahl einer Abfrage.
-                    xtype: 'filterpanel',
-                    margin: '0, 10, 0, 10'
-                }, {
-                // Variables settings for the current selected sql statement.
-                    xtype: 'filterdetails',
-                    name: 'filterdetails',
-                    title: i18n.getMsg('filterdetails.title'),
-                    hidden: true,
+                    xtype: 'querypanel',
                     margin: '0, 10, 0, 10'
                 }]
-            }, {
+            },{
                 xtype: 'panel',
                 layout: 'fit',
                 name: 'contentpanel',

@@ -405,6 +405,9 @@ Ext.application({
             }),
             data: Lada.availablePagingSizes
         });
+        Ext.create('Lada.store.DummyStore', {
+            storeId: 'dummystore'
+        });
         Ext.create('Lada.view.Viewport');
     },
 
@@ -442,15 +445,15 @@ Ext.application({
     // Define the controllers of the application. They will be initialized
     // first before the application "launch" function is called.
     controllers: [
-        'Lada.controller.Filter',
-        'Lada.controller.ModeSwitcher',
+        'Lada.controller.Filter', //TODO obsolete?
+        'Lada.controller.ModeSwitcher', //TODO obsolete
         'Lada.controller.Ort',
-        'Lada.controller.grid.ProbeList',
-        'Lada.controller.grid.MessungList',
-        'Lada.controller.grid.MessprogrammeList',
-        'Lada.controller.grid.Datensatzerzeuger',
-        'Lada.controller.grid.Probenehmer',
-        'Lada.controller.form.Probe',
+        'Lada.controller.grid.ProbeList', //TODO obsolete
+        'Lada.controller.grid.MessungList', //TODO obsolete
+        'Lada.controller.grid.MessprogrammeList', //TODO obsolete
+        'Lada.controller.grid.Datensatzerzeuger', //TODO obsolete?
+        'Lada.controller.grid.Probenehmer', //TODO obsolete?
+        'Lada.controller.form.Probe', //TODO obsolete
         'Lada.controller.form.Messung',
         'Lada.controller.form.Ort',
         'Lada.controller.grid.Probenzusatzwert',
@@ -463,8 +466,9 @@ Ext.application({
         'Lada.controller.form.Messprogramm',
         'Lada.controller.grid.MessprogrammKategorie',
         'Lada.controller.grid.Messmethode',
-        'Lada.controller.FilterManagement',
+        'Lada.controller.FilterManagement', //TODO obsolete
         'Lada.controller.GridExport',
-        'Lada.controller.grid.DynamicGrid'
+        'Lada.controller.grid.DynamicGrid',
+        'Lada.controller.Query'
         ]
 });
