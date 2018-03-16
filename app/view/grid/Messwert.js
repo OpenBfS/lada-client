@@ -123,6 +123,7 @@ Ext.define('Lada.view.grid.Messwert', {
             dataIndex: 'messwertNwg',
             editor: {
                 xtype: 'checkbox',
+                uncheckedValue: false,
                 inputValue: '<'
             }
         }, {
