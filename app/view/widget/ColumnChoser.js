@@ -14,8 +14,9 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
     alias: 'widget.columnchoser',
     layout: {
         type: 'hbox',
-        align: 'stretch',
+        align: 'stretchmax'
     },
+    margin: '5,0,0,5',
     initComponent: function(){
         var i18n = Lada.getApplication().bundle;
         var group1 = this.id + 'group1',
@@ -42,27 +43,28 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                     drop: function(node, data, dropRec, dropPosition) {
                     var dropOn = dropRec ? ' ' + dropPosition + ' ' + dropRec.get('name') : ' on empty view';
                     Ext.example.msg('Drag from right to left', 'Dropped ' + data.records[0].get('name') + dropOn);
-                    },
-                    //storeload: targetGrid.update
+                    }
                 }
             },
             store: new Ext.data.Store({
-                model: Ext.create('Ext.data.Model', {
-                    fields: [{name: 'dataIndex'}]
-                }),
+                model: 'Lada.model.Column',
             }),
             columns: col_columns,
-            title: i18n.getMsg('query.availablecolumns'),
-            // margin: '0 5 0 0'
+            title: i18n.getMsg('query.availablecolumns')
             }, {
                 xtype: 'container',
                 layout: {
                     type: 'vbox',
                     align: 'middle'
                 },
-                margin: '5,5,5,5',
-                items: [{
+                margin: 10,
+                defaults: {
                     xtype: 'button',
+                    width: 25,
+                    padding: 0,
+                    margin: '5 0'
+                },
+                items: [{
                     action: 'moveR',
                     text: '>',
                     listener: {
@@ -72,7 +74,6 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                         }
                     }
                 }, {
-                    xtype: 'button',
                     action: 'moveRR',
                     text: '>>',
                     listener: {
@@ -82,7 +83,6 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                         }
                     }
                 },{
-                    xtype: 'button',
                     action: 'moveL',
                     text: '<',
                     listener: {
@@ -92,7 +92,6 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                         }
                     }
                 }, {
-                    xtype: 'button',
                     action: 'moveLL',
                     text: '<<',
                     listener: {
@@ -124,20 +123,12 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                     }
                 },
                 store: new Ext.data.Store({
-                    model: Ext.create('Ext.data.Model', {
-                        fields: [{name: 'dataIndex'}]
-                    })
+                    model: 'Lada.model.Column',
                 }),
                 columns: col_columns,
                 stripeRows: true,
                 title: i18n.getMsg('query.usecols')
-            } // , {
-        //     //sortgrid
-        //     // has itself as target?
-        //     // order. Uses targetgrid.getStore() as base,
-        //     //needs to be updated as targetgrid changes
-        // }
-        ];
+            }];
             this.callParent();
 
             //this.on: button R
@@ -158,4 +149,10 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
     // if available columns change: reset everything?
     // or only reset (with animation) the new/missing ones?
     },
+    search: function (button){
+        // send: baseQuery;
+        // send: verwendeteSpalten
+        // send verwendeteSpalten.Filter
+        // send verwendeteSpalten.sort
+    }
 });

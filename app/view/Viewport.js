@@ -94,7 +94,7 @@ Ext.define('Lada.view.Viewport', {
                 }],
                 items: [{
                     xtype: 'querypanel',
-                    margin: '0, 10, 0, 10'
+                    margin: 0
                 }]
             },{
                 xtype: 'panel',

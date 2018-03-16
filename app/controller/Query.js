@@ -93,16 +93,21 @@ Ext.define('Lada.controller.Query', {
     },
 
     changeCurrentQuery: function(combobox){
+        var newquery = combobox.getStore().getById(combobox.getValue());
+        combobox.up('querypanel').down('form').load(newquery);
         // Details need to be filed, expanded or not
         // FilterQueries need to be updated
     },
 
     saveQuery: function(button){
+        Ext.Msg.alert('Query gespeichert','Query gespeichert');
         // check for uniqueness of name/owner
         //send to server, wait for callback, reload availableQueriesstore
     },
 
     reset: function (button){
+        button.up('querypanel').down('form').reset();
+        Ext.Msg.alert('Query zurückgesetzt','Query zurückgesetzt');
                     // reload these details
                     // reload these filters
     },
