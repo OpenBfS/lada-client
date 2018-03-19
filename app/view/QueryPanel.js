@@ -13,9 +13,11 @@ Ext.define('Lada.view.QueryPanel', {
     extend: 'Ext.form.Panel',
     alias: 'widget.querypanel',
     model: 'Lada.model.DummyQuery',
+    currentColumns: null, //store for the columns
     require: [
         'Lada.view.widget.ColumnChoser',
-        'Lada.view.widget.ColumnSort'],
+        'Lada.view.widget.ColumnSort'
+    ],
     layout: {
         type: 'vbox',
         align: 'stretch',
@@ -101,17 +103,23 @@ Ext.define('Lada.view.QueryPanel', {
             fieldLabel: 'query.groups'
         }, {
             xtype: 'columnchoser'
-            // allcolumns: baseQuery.columns
-            //selectedColumns: Model.columns
         },{
             xtype: 'columnsort'
-            //selectedColumns: Model.columns
-            //selectedColumns: Model.columns
         }, {
             xtype: 'cbox',
             name: 'activefilters',
+            store: Ext.create('Ext.data.Store',{
+                model: 'Lada.model.Column'
+            }),
             multiselect: true,
-            fieldLabel: 'query.filters.visible'
+            valueField: 'dataIndex',
+            fieldLabel: 'query.filters.visible',
+            tpl: Ext.create('Ext.XTemplate',
+            '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
+                '{dataIndex}</div></tpl>'),
+            displayTpl: Ext.create('Ext.XTemplate',
+                '<tpl for=".">{dataIndex}</tpl>')
+
         }]
     }, {
         xtype: 'fieldset',
@@ -159,25 +167,25 @@ Ext.define('Lada.view.QueryPanel', {
             name: 'basequery in database',
             fields: [{
                 dataIndex: 'MessstelleLabor',
-                dataType: {name: 'string'}
+                dataType: {name: 'text'}
             },{
                 dataIndex: 'Netzbetreiber',
-                dataType: {name: 'string'}
+                dataType: {name: 'text'}
             },{
                 dataIndex: 'Datenbasis',
-                dataType: {name: 'string'}
+                dataType: {name: 'text'}
             },{
                 dataIndex: 'Probenart',
-                dataType: {name: 'string'}
+                dataType: {name: 'text'}
             },{
                 dataIndex: 'Probenehmer',
-                dataType: {name: 'string'}
+                dataType: {name: 'text'}
             },{
                 dataIndex: 'Messregime',
-                dataType: {name: 'string'}
+                dataType: {name: 'text'}
             },{
                 dataIndex: 'MST-ID',
-                dataType: {name: 'mstId'}
+                dataType: {name: 'text'}
             },{
                 dataIndex: 'Datum',
                 dataType: {name: 'date'}
@@ -193,7 +201,8 @@ Ext.define('Lada.view.QueryPanel', {
             columns: [{
                 dataIndex: 'MessstelleLabor',
                 sort: 'asc',
-                filter:'06010'
+                filter:'06010',
+                filteractive: true
             }, {
                 dataIndex: 'Probenart',
                 sort: 'desc'
@@ -216,13 +225,16 @@ Ext.define('Lada.view.QueryPanel', {
                 sort: 'asc'
             },{
                 dataIndex: 'Probenart',
-                sort: 'asc'
+                sort: 'asc',
+                filteractive: true
             },{
                 dataIndex:'MST-ID',
                 sort: 'asc'
             }, {
                 dataIndex:'Messregime',
-                sort: 'none'
+                sort: 'none',
+                filteractive: true
+
             }]
         });
 // end of dummy data
@@ -245,6 +257,7 @@ Ext.define('Lada.view.QueryPanel', {
         //TODO these two are ugly hacks:
         this.down('cbox[name=groups]').down().fieldLabel = i18n.getMsg('query.groups');
         this.down('cbox[name=activefilters]').down().fieldLabel = i18n.getMsg('query.filters.visible');
+
         this.down('combobox[name=selectedQuery]').store = Ext.create(
             'Ext.data.Store',{
                 model: 'Lada.model.DummyBaseQuery'
@@ -258,6 +271,7 @@ Ext.define('Lada.view.QueryPanel', {
         this.down('combobox[name=selectedQuery]').select(query0);
         this.loadRecord(query0);
         this.down('columnchoser').setQuery(query0);
+        this.down('columnchoser').filterUpdate();
 
     }
 });

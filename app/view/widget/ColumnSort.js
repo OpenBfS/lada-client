@@ -22,32 +22,17 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
         var i18n = Lada.getApplication().bundle;
         var group1 = this.id + 'group1';
         this.items = [{
-            itemId: 'sortGrid',
+            name: 'sortGrid',
             flex: 1,
             xtype: 'grid',
             multiSelect: true,
             stripeRows: true,
             viewConfig: {
-                // plugins: {
-                //     ptype: 'gridviewdragdrop',
-                //     containerScroll: true,
-                //     dragGroup: group1,
-                //     dropGroup: group1
-                // },
-                // listeners: {
-                //     drop: function(node, data, dropRec, dropPosition) {
-                //     var dropOn = dropRec ? ' ' + dropPosition + ' ' + dropRec.get('name') : ' on empty view';
-                //     Ext.example.msg('Drag from right to left', 'Dropped ' + data.records[0].get('name') + dropOn);
-                //     },
-                //     //storeload: targetGrid.update
-                // }
+                plugins: {
+                    ptype: 'gridviewdragdrop',
+                    containerScroll: false
+                }
             },
-            store: new Ext.data.Store({
-                model: Ext.create('Ext.data.Model', {
-                    fields: [{name: 'dataIndex'},
-                    {name: 'sort'}]
-                })
-            }),
             columns: [{
                 text: '',
                 sortable: false,
@@ -67,5 +52,11 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
             minHeight:20
             }];
             this.callParent();
+    },
+    setStore: function (store){
+        if (store){
+            this.down('grid').store = store;
+        }
     }
+    //TODO on datachange: change this.up('querypanel').currentColumns
 });

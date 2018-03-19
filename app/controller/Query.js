@@ -30,25 +30,24 @@ Ext.define('Lada.controller.Query', {
             'querypanel combobox[name=selectedQuery]': {
                 select: me.changeCurrentQuery
             },
-            'querypanel combobox[action=save]':{
+            'querypanel button[action=save]':{
                 click: me.saveQuery
             },
-            'querypanel combobox[action=reset]':{
+            'querypanel button[action=reset]':{
                 click: me.reset
             },
-            'querypanel combobox[action=search]':{
+            'querypanel button[action=search]':{
                 click: me.search
             },
-            'querypanel targetGrid': {
-                change: me.changeColumns
-            },
-            'querypanel tagfield[name=activefilters]': {
-                 select: me.showFilter
+            'querypanel cbox[name=activefilters] tagfield': {
+                 select: me.activeChanged
+
             }
         });
     },
 
     listAllQueries: function(checkbox, newval){
+        checkbox.resetOriginalValue(); //avoids field being cleaned on reset
         if (newval === true){
             checkbox.up('panel').down('combobox[name=selectedQuery]').store.clearFilter();
         }
@@ -61,15 +60,23 @@ Ext.define('Lada.controller.Query', {
     },
 
     cloneQuery: function(button){
-    //currentquery = get(this.query)
-    // Ext.create new Query based on currentquery
-    // expand details
-    // change name(?)
-    // activate speichern button
+        var cbox = button.up('panel').down('combobox[name=selectedQuery]');
+        var cquery = cbox.getStore().getById(cbox.getValue());
+        panel.getForm().loadRecord(
+            Ext.create('Lada.model.DummyQuery',{
+                basequery: cquery.get('basequery'),
+                id: 3, //TODO:
+                name : cquery.get('name'),
+                owner: cquery.get('owner'), //TODO add "myself"
+                groups: cquery.get('groups'),
+                columns: cquery.get('columns')
+            })
+        );
+        // change name(?)
+        this.up('panel').down('button[action=save]').setDisabled(false);
     },
 
     expandDetails: function(button){
-        // TODO check syntax
         button.up('querypanel').down('fieldset[name=querydetails]').setCollapsed(false);
     },
 
@@ -79,22 +86,19 @@ Ext.define('Lada.controller.Query', {
             return;
         }
         //check permission to delete
-        if (currentQuery.owner === 'Testlabor_1'){ //TODO dummy data!
-            //TODO: confirm message or just delete?
-            // TODO Ext.message "this query is deleted from server"
-            // delete query from querystore
-            // reload store in selectedQuery
-            // querystore.delete(currentQuery)
-            //if querystore leer:
-            // toggle "only local queries"
-            // select Query[0]
-            // collapse details
-        } else{
-            //error message needed?
+        if (currentQuery.owner === 'Testlabor_4'){ //TODO dummy data!
+            var combobox = button.up('querypanel').down('combobox[name=selectedQuery]');
+            combobox.getStore().remove(currentQuery);
+            combobox.select(0);
+            Ext.Msg.alert('','Query gelöscht');
+            button.up('querypanel').down('fieldset[name=querydetails]').collapse();
+        } else {
+            Ext.Msg.alert('','Query nicht gelöscht');
         }
     },
 
     changeCurrentQuery: function(combobox){
+        combobox.resetOriginalValue(); //avoids field being cleaned on reset
         var newquery = combobox.getStore().getById(combobox.getValue());
         var panel = combobox.up('querypanel');
         panel.getForm().loadRecord(newquery);
@@ -118,21 +122,82 @@ Ext.define('Lada.controller.Query', {
 
     reset: function (button){
         button.up('querypanel').getForm().reset();
+        button.up('querypanel').down('columnchoser').setQuery(
+            button.up('querypanel').getRecord());
         Ext.Msg.alert('Query zurückgesetzt','Query zurückgesetzt');
-                    // reload these details
                     // reload these filters
     },
     search: function (button){
-                    //search. See existing controller (filterresult etc.)
+        Ext.Msg.alert('', 'Suche - TODO');
+        //search. See existing controller (filterresult etc.)
     },
 
-    changeColumns: function(button){
-    //triggers sortgrid change
-    // changes store of activeFilter and triggers showFilter
-    //showFilter Filters that are not available anymore --> too jumpy?
+    showFilter: function(combo){
+        var panel = combo.up('querypanel');
+
+
+        var currentActive = panel.down('cbox[name=activefilters]').getValue();
+        var filtervalues = panel.down('panel[name=filtervalues]');
+        filtervalues.removeAll(); //excessive? Could be made more efficient by not deleting and reintroducing?
+
+        for (var i = 0; i < panel.currentColumns.length; i++){
+            var col = panel.currentColumns[i];
+            if (currentActive.indexOf(col.get('dataIndex')) > -1){
+                col.setValue('filteractive', true);
+                var field = null;
+                switch(col.dataType.name){
+                    case 'text':
+                        field = Ext.create('Ext.form.field.Text', {
+                            name: col.get('dataIndex'),
+                            fieldLabel: col.get('dataIndex'), //needs "beschreibung"
+                            value: col.get('filter')
+                        });
+                        break;
+                    case 'date':
+                        field = Ext.create('Lada.view.widget.base.Datetime', {
+                            name: col.get('dataIndex'),
+                            fieldLabel: col.get('dataIndex'),
+                            value: col.get('filter')
+                        });
+                        break;
+                }
+                if (field){
+                    filtervalues.add(field);
+                }
+            } else {
+                col.setValue('filteractive', false);
+                col.setValue('filter', null);
+            }
+        }
     },
 
-    showFilter: function(button){
-    // fieldset filtervariables neubauen
+
+TODO: initially filling the activeFilterstore and the sortstore
+    setSortandFilterActive: function(me){
+        var qpanel = me.up('querypanel');
+        qpanel.down('columnsort').setStore(qpanel.currentColumns);
+        qpanel.down('cbox[name=activefilters]').setStore(qpanel.currentColumns);
+        var cols = qpanel.currentColumns.getRange();
+        var active = [];
+        for (var i = 0; i< cols.length; i++){
+            if (cols[i].get('filteractive') === true){
+                active.push(cols[i].get('dataIndex'));
+            }
+        }
+        qpanel.down('cbox[name=activefilters]').setValue(active);
+    },
+
+    activeChanged: function(box, newvalue){
+        var colstore = box.up('querypanel').currentColumns;
+        var cols = qpanel.currentColumns.getRange();
+        for (var i=0;i< cols.lentgh; i++){
+            if (newvalue.indexOf(cols[i].get('dataIndex')) > -1){
+                cols[i].setValue('filteractive', true);
+            } else {
+                cols[i].setValue('filteractive', false);
+            }
+        }
+        box.up('querypanel').currentColumns = colstore;
+        this.showFilter();
     }
 });

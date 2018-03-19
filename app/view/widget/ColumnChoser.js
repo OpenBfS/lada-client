@@ -42,13 +42,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 },
                 listeners: {
                     drop: function(node, data, dropRec, dropPosition) {
-                        me.filterUpdate(me);
-                    //up(panel).getForm() update fields
-                    //sortColumn update
-                    // activefilter update (combobox and filters)
-                    },
-                    catachanged: function(){
-                        me.filterUpdate(me);
+                        me.filterUpdate();
                     }
                 }
             },
@@ -105,6 +99,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 }]
             }, {
                 itemId: 'targetGrid',
+                name: 'targetGrid',
                 flex: 1,
                 xtype: 'grid',
                 multiSelect: true,
@@ -115,10 +110,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                     },
                     listeners: {
                         drop: function(node, data, dropRec, dropPosition) {
-                            me.filterUpdate(me);
-                        },
-                        datachanged: function(){
-                            me.filterUpdate(me);
+                            me.filterUpdate();
                         }
                     }
                 },
@@ -146,6 +138,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             this.getComponent(target).getStore().add(data[i]);
             this.getComponent(source).getStore().remove(data[i]);
         }
+        this.filterUpdate();
     },
 
     /**
@@ -172,6 +165,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 dataIndex: selCols[i].dataIndex,
                 sort: selCols[i].sort,
                 filter: selCols[i].filter,
+                filteractive: selCols[i].filteractive,
                 dataType:  selCols[i].dataType
             });
             var baseentry = baseQstore.findRecord('dataIndex', selCols[i].dataIndex);
@@ -181,11 +175,11 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
         this.getComponent('targetGrid').setStore(this.selectedStore);
     },
 
-    // TODO needed here?
-    filterUpdate: function(me){ //element: some element inside the panel
-        // var store = me.getComponent('targetGrid').getStore();
-        // me.up('panel').down('cbox[name=activefilters]').setStore(store);
-        //todo filter list update?
-    }
-
+    filterUpdate: function(){
+        var currentcolstore  = this.getComponent('targetGrid').getStore();
+        this.up('querypanel').currentColumns = currentcolstore;
+        this.up('querypanel').down('cbox[name=activefilters]').setStore(currentcolstore);
+        var ctl = Lada.app.getController('Lada.controller.Query');
+        ctl.showFilter(this);
+    },
 });
