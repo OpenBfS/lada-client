@@ -100,7 +100,7 @@ Ext.define('Lada.view.QueryPanel', {
             multiselect: true,
             fieldLabel: 'query.groups'
         }, {
-            xtype: 'columnchoser',
+            xtype: 'columnchoser'
             // allcolumns: baseQuery.columns
             //selectedColumns: Model.columns
         },{
@@ -186,6 +186,7 @@ Ext.define('Lada.view.QueryPanel', {
 
         var query0 = Ext.create('Lada.model.DummyQuery',{
             basequery: baseQuery,
+            id: 1,
             name : 'Beispiel 1',
             owner: 'Testlabor_4',
             groups: ['imis_world', 'Testlabor_4'],
@@ -205,6 +206,7 @@ Ext.define('Lada.view.QueryPanel', {
             }]
         });
         var query1 = Ext.create('Lada.model.DummyQuery',{
+            id: 2,
             basequery: baseQuery,
             name: 'Beispiel 2, fremder Eintrag',
             owner: 'imis_world',
@@ -234,7 +236,6 @@ Ext.define('Lada.view.QueryPanel', {
         this.down('button[action=search]').text = i18n.getMsg('query.search');
         this.down('button[action=save]').text = i18n.getMsg('query.save');
         this.down('button[action=reset]').text =i18n.getMsg('query.reset');
-        this.down('combobox[name=selectedQuery]').title = i18n.getMsg('query.query');
         this.down('checkbox[name=allqueries]').boxLabel = i18n.getMsg('query.showall');
         this.down('fieldset[name=querydetails]').setTitle(i18n.getMsg('query.details'));
         this.down('button[action=newquery]').text = i18n.getMsg('query.new');
@@ -244,14 +245,19 @@ Ext.define('Lada.view.QueryPanel', {
         //TODO these two are ugly hacks:
         this.down('cbox[name=groups]').down().fieldLabel = i18n.getMsg('query.groups');
         this.down('cbox[name=activefilters]').down().fieldLabel = i18n.getMsg('query.filters.visible');
-
         this.down('combobox[name=selectedQuery]').store = Ext.create(
             'Ext.data.Store',{
                 model: 'Lada.model.DummyBaseQuery'
         });
-        this.down('combobox[name=selectedQuery]').getStore().add([query0, query1]);
+        var selquery = this.down('combobox[name=selectedQuery]');
+        selquery.title = i18n.getMsg('query.query');
+        selquery.getStore().add([query0, query1]);
+        selquery.getStore().filter('owner', 'Testlabor_4');//hardcoded dummy data
+        this.down('button[action=delquery]').setDisabled(false);
+
         this.down('combobox[name=selectedQuery]').select(query0);
         this.loadRecord(query0);
+        this.down('columnchoser').setQuery(query0);
 
     }
 });

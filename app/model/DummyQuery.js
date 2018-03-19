@@ -3,6 +3,7 @@
 Ext.define('Lada.model.DummyQuery', {
     extend: 'Ext.data.Model',
     fields: [
+        {name: 'id'},
         {name: 'basequery'},
         {name: 'name'},
         {name: 'owner'},

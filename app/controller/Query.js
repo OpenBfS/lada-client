@@ -49,12 +49,14 @@ Ext.define('Lada.controller.Query', {
     },
 
     listAllQueries: function(checkbox, newval){
-        if (newVal === true){
-            checkbox.up('panel').down('selectedQuery').store.clearFilter();
+        if (newval === true){
+            checkbox.up('panel').down('combobox[name=selectedQuery]').store.clearFilter();
         }
         else {
             //TODO: currently selected may disappear from visible store!
-        checkbox.up('panel').down('selectedQuery').store.clearFilter();
+            checkbox.up('panel').down(
+                'combobox[name=selectedQuery]').store.filter(
+                'owner', 'Testlabor_4'); //TODO dummy entry!
         }
     },
 
@@ -68,7 +70,7 @@ Ext.define('Lada.controller.Query', {
 
     expandDetails: function(button){
         // TODO check syntax
-        button.up('querypanel').down('fieldset[name.querydetails').collapsed = false;
+        button.up('querypanel').down('fieldset[name=querydetails]').setCollapsed(false);
     },
 
     deleteQuery: function (button){
@@ -94,7 +96,16 @@ Ext.define('Lada.controller.Query', {
 
     changeCurrentQuery: function(combobox){
         var newquery = combobox.getStore().getById(combobox.getValue());
-        combobox.up('querypanel').down('form').load(newquery);
+        var panel = combobox.up('querypanel');
+        panel.getForm().loadRecord(newquery);
+        if (newquery.get('owner') === 'Testlabor_4') { //hardcoded dummy data
+            panel.down('button[action=delquery]').setDisabled(false);
+        } else {
+            panel.down('button[action=delquery]').setDisabled(true);
+        }
+        panel.down('columnchoser').setQuery(newquery);
+
+
         // Details need to be filed, expanded or not
         // FilterQueries need to be updated
     },
@@ -106,7 +117,7 @@ Ext.define('Lada.controller.Query', {
     },
 
     reset: function (button){
-        button.up('querypanel').down('form').reset();
+        button.up('querypanel').getForm().reset();
         Ext.Msg.alert('Query zurückgesetzt','Query zurückgesetzt');
                     // reload these details
                     // reload these filters

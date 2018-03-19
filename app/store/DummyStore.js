@@ -11,5 +11,12 @@
  */
 Ext.define('Lada.store.DummyStore', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.DummyQuery'
+    model: 'Lada.model.DummyQuery',
+    proxy: {
+        type: 'memory',
+        reader: {
+            type: 'json',
+            rootProperty: 'id'
+        }
+    }
 });
