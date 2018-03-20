@@ -69,7 +69,8 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
             columns: [{
                 text: '',
                 sortable: false,
-                dataIndex: 'dataIndex'
+                dataIndex: 'dataIndex',
+                flex: 2
             },{
                 xtype: 'widgetcolumn',
                 widget: {
@@ -78,12 +79,13 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                 },
                 text: '',
                 sortable: false,
-                dataIndex: 'sort'
+                flex: 1,
+                // dataIndex: 'sort'
             }],
             title: i18n.getMsg('query.sorting'),
             header: false,
-            margin: '5 0 5 0',
-            minHeight:20
+            margin: '15 0 15 0',
+            minHeight: 0
             }];
             this.callParent();
     },

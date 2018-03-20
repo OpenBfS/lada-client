@@ -27,7 +27,8 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
         col_columns = [{
             text: '',
             sortable: true,
-            dataIndex: 'dataIndex'
+            dataIndex: 'dataIndex',
+            flex: 1
         }];
         this.items = [{
             itemId: 'sourceGrid',
