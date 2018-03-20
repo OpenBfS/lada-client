@@ -17,7 +17,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
         align: 'stretchmax'
     },
     require: ['Lada.view.widget.Sort'],
-    margin: '5,0,5,0',
+    margin: '20,0,0,10',
     title: null,
     store: Ext.create('Ext.data.Store', {
         model: Ext.create('Ext.data.Model', {
@@ -78,13 +78,11 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                     store: comboboxstore
                 },
                 text: '',
-                sortable: false,
-                flex: 1,
+                sortable: false
                 // dataIndex: 'sort'
             }],
             title: i18n.getMsg('query.sorting'),
-            header: false,
-            margin: '15 0 15 0',
+            // header: false,
             minHeight: 0
             }];
             this.callParent();

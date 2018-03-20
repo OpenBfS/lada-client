@@ -19,7 +19,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
     selectedStore: Ext.create('Ext.data.Store',{
         model: 'Lada.model.Column'
     }),
-    margin: '5,0,0,5',
+    margin: '20,0,0,10',
 
     initComponent: function(){
         var i18n = Lada.getApplication().bundle;

@@ -21,10 +21,8 @@ Ext.define('Lada.view.QueryPanel', {
     layout: {
         type: 'vbox',
         align: 'stretch',
-        defaults: {
-            margin: '10,0,10,5'
-        }
     },
+    margin: '5,5,5,5',
     header: false,
     items: [{
         xtype: 'container',
@@ -32,31 +30,34 @@ Ext.define('Lada.view.QueryPanel', {
             type:'hbox',
             align: 'stretchmax'
         },
-        margin: '10,5,10,5',
+        margin: 10,
         items: [{
             xtype: 'combobox',
+                margin: 0,
                 title: 'query.query',
                 name: 'selectedQuery',
                 displayField: 'name',
                 valueField: 'id',
-                flex: 1,
-                margin: '0,10,0,0',
+                labelWidth: 125,
+                flex: 2
             }, {
                 xtype: 'checkbox',
                 name: 'allqueries',
                 boxLabel: 'query.showall',
-                checked: false
+                checked: false,
+                flex: 1,
+                margin: 0, //TODO is ignored
         }]
     }, {
         xtype: 'container',
+        margin: '10,10',
         layout: {
             type: 'hbox',
-            align: 'stretchmax'
+            align: 'stretch'
         },
-        margin: '5,15,5,15',
         defaults: {
             xtype: 'button',
-            margin: '5,5,5,5'
+            margin: '5,10,5,10'
         },
         items: [{
             action: 'newquery',
@@ -76,17 +77,22 @@ Ext.define('Lada.view.QueryPanel', {
         xtype : 'fieldset',
         name: 'querydetails',
         title: 'query.details',
+        margin: 15,
+        border: {
+            style: 'dotted',
+            width: 1
+        },
         collapsible : true,
         collapsed: true,
         layout: {
             type: 'vbox',
             align: 'stretch'
         },
-        width: '100%',
         items: [{
             xtype: 'textfield', //TODO tfield or textfield?
             name: 'name',
             fieldLabel: 'query.name',
+            labelWidth: 125,
             flex: 1,
             triggers: {
                 clear: {
@@ -100,6 +106,7 @@ Ext.define('Lada.view.QueryPanel', {
             xtype: 'cbox',
             name: 'groups',
             multiSelect: true,
+            labelWidth: 125,
             fieldLabel: 'query.groups',
             store: Ext.create('Ext.data.Store',{
                 model: 'Lada.model.QueryGroup'
@@ -118,6 +125,7 @@ Ext.define('Lada.view.QueryPanel', {
         }, {
             xtype: 'cbox',
             name: 'activefilters',
+            labelWidth: 125,
             store: Ext.create('Ext.data.Store',{
                 model: 'Lada.model.Column'
             }),
@@ -125,6 +133,7 @@ Ext.define('Lada.view.QueryPanel', {
             valueField: 'dataIndex',
             displayField: 'dataIndex',
             fieldLabel: 'query.filters.visible',
+            labelWidth: 125,
             tpl: Ext.create('Ext.XTemplate',
             '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
                 '{dataIndex}</div></tpl>'),
@@ -135,13 +144,20 @@ Ext.define('Lada.view.QueryPanel', {
     }, {
         xtype: 'fieldset',
         name: 'filtervariables',
-        margin: '10, 0, 20, 0',
+        margin: '10, 15, 20, 15',
         minHeight: 20,
+        title: 'Filter',
+        layout: {
+            type: 'hbox',
+            align:'stretchmax'
+        },
         items: [{
             xtype: 'panel',
             border: false,
+            layout: 'vbox',
             name: 'filtervalues',
-            items: []
+            items: [],
+            flex: 1
         }]
     }, {
         xtype: 'container',

@@ -151,14 +151,32 @@ Ext.define('Lada.controller.Query', {
                         field = Ext.create('Ext.form.field.Text', {
                             name: col.get('dataIndex'),
                             fieldLabel: col.get('dataIndex'), //needs "beschreibung"
-                            value: col.get('filter')
+                            labelWidth: 125,
+                            value: col.get('filter'),
+                            triggers: {
+                                clear: {
+                                    extraCls: 'x-form-clear-trigger',
+                                    handler: function() {
+                                        this.clearValue();
+                                    }
+                                }
+                            }
                         });
                         break;
                     case 'date':
                         field = Ext.create('Lada.view.widget.base.Datetime', {
                             name: col.get('dataIndex'),
+                            labelWidth: 125,
                             fieldLabel: col.get('dataIndex'),
-                            value: col.get('filter')
+                            value: col.get('filter'),
+                            triggers: {
+                                clear: {
+                                    extraCls: 'x-form-clear-trigger',
+                                    handler: function() {
+                                        this.clearValue();
+                                    }
+                                }
+                            }
                         });
                         break;
                 }
