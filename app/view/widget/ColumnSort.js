@@ -17,10 +17,42 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
         align: 'stretchmax'
     },
     require: ['Lada.view.widget.Sort'],
-    margin: '5,0,0,5',
+    margin: '5,0,5,0',
+    title: null,
+    store: Ext.create('Ext.data.Store', {
+        model: Ext.create('Ext.data.Model', {
+            fields: [{name: 'dataIndex'},{name: 'sort'}]
+        }),
+        data: [{
+            dataIndex: 'Nulleintrag 1',
+            sort: 'asc'
+        },{
+            dataIndex: 'Nulleintrag 3',
+            sort: 'desc'
+        },{
+            dataIndex: 'Nulleintrag 2',
+            sort: 'none'
+        }]
+    }),
+
     initComponent: function(){
         var i18n = Lada.getApplication().bundle;
-        var group1 = this.id + 'group1';
+        var group = this.id;
+        var comboboxstore = Ext.create('Ext.data.Store', {
+            model: Ext.create('Ext.data.Model', {
+                fields: [{name: 'name'}, {name: 'value'}]
+            }),
+            data: [{
+                name: 'Aufsteigend',
+                value: 'asc'
+            }, {
+                name: 'Absteigend',
+                value: 'desc'
+            }, {
+                name: 'Keine Sortierung',
+                value: 'none'
+            }]
+        });
         this.items = [{
             name: 'sortGrid',
             flex: 1,
@@ -33,6 +65,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                     containerScroll: false
                 }
             },
+            store: this.store,
             columns: [{
                 text: '',
                 sortable: false,
@@ -40,7 +73,8 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
             },{
                 xtype: 'widgetcolumn',
                 widget: {
-                    xtype: 'combobox'
+                    xtype: 'combobox',
+                    store: comboboxstore
                 },
                 text: '',
                 sortable: false,

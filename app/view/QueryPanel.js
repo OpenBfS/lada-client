@@ -216,6 +216,7 @@ Ext.define('Lada.view.QueryPanel', {
             name : 'Beispiel 1',
             owner: 'Testlabor_4',
             groups: ['imis_world', 'Testlabor_4'],
+            sorting: ['MessstelleLabor','Probenart','Datum'],
             columns: [{
                 dataIndex: 'MessstelleLabor',
                 sort: 'asc',
@@ -238,6 +239,7 @@ Ext.define('Lada.view.QueryPanel', {
             name: 'Beispiel 2, fremder Eintrag',
             owner: 'imis_world',
             groups: ['imis_world', 'Testlabor_1'],
+            sorting: ['MessstelleLabor','Probenart','MST-ID'],
             columns: [{
                 dataIndex: 'MessstelleLabor',
                 sort: 'asc'
