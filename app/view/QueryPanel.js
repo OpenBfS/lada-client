@@ -111,8 +111,9 @@ Ext.define('Lada.view.QueryPanel', {
             store: Ext.create('Ext.data.Store',{
                 model: 'Lada.model.Column'
             }),
-            multiselect: true,
+            multiSelect: true,
             valueField: 'dataIndex',
+            displayField: 'dataIndex',
             fieldLabel: 'query.filters.visible',
             tpl: Ext.create('Ext.XTemplate',
             '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +

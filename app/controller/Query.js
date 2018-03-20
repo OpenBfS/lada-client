@@ -135,17 +135,17 @@ Ext.define('Lada.controller.Query', {
     showFilter: function(combo){
         var panel = combo.up('querypanel');
 
-
         var currentActive = panel.down('cbox[name=activefilters]').getValue();
         var filtervalues = panel.down('panel[name=filtervalues]');
         filtervalues.removeAll(); //excessive? Could be made more efficient by not deleting and reintroducing?
-
-        for (var i = 0; i < panel.currentColumns.length; i++){
-            var col = panel.currentColumns[i];
+        var cols = panel.currentColumns.getRange();
+        for (var i = 0; i < cols.length; i++){
+            var col = cols[i];
             if (currentActive.indexOf(col.get('dataIndex')) > -1){
-                col.setValue('filteractive', true);
+                col.set('filteractive', true);
                 var field = null;
-                switch(col.dataType.name){
+                var dt = col.get('dataType');
+                switch(dt.name){
                     case 'text':
                         field = Ext.create('Ext.form.field.Text', {
                             name: col.get('dataIndex'),
@@ -165,14 +165,12 @@ Ext.define('Lada.controller.Query', {
                     filtervalues.add(field);
                 }
             } else {
-                col.setValue('filteractive', false);
-                col.setValue('filter', null);
+                col.set('filteractive', false);
+                col.set('filter', null);
             }
         }
     },
 
-
-TODO: initially filling the activeFilterstore and the sortstore
     setSortandFilterActive: function(me){
         var qpanel = me.up('querypanel');
         qpanel.down('columnsort').setStore(qpanel.currentColumns);
@@ -189,7 +187,7 @@ TODO: initially filling the activeFilterstore and the sortstore
 
     activeChanged: function(box, newvalue){
         var colstore = box.up('querypanel').currentColumns;
-        var cols = qpanel.currentColumns.getRange();
+        var cols = colstore.getRange();
         for (var i=0;i< cols.lentgh; i++){
             if (newvalue.indexOf(cols[i].get('dataIndex')) > -1){
                 cols[i].setValue('filteractive', true);
@@ -198,6 +196,6 @@ TODO: initially filling the activeFilterstore and the sortstore
             }
         }
         box.up('querypanel').currentColumns = colstore;
-        this.showFilter();
+        this.showFilter(box);
     }
 });

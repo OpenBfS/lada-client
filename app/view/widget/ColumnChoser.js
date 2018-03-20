@@ -161,14 +161,15 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
         var selCols = newquery.get('columns');
         this.selectedStore.removeAll();
         for (var i=0; i < selCols.length; i++){
+            var baseentry = baseQstore.findRecord('dataIndex',
+                    selCols[i].dataIndex);
             var entry = Ext.create('Lada.model.Column',{
                 dataIndex: selCols[i].dataIndex,
                 sort: selCols[i].sort,
                 filter: selCols[i].filter,
                 filteractive: selCols[i].filteractive,
-                dataType:  selCols[i].dataType
+                dataType:  baseentry.get('dataType')
             });
-            var baseentry = baseQstore.findRecord('dataIndex', selCols[i].dataIndex);
             baseQstore.remove(baseentry);
             this.selectedStore.add(entry);
         }
@@ -180,6 +181,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
         this.up('querypanel').currentColumns = currentcolstore;
         this.up('querypanel').down('cbox[name=activefilters]').setStore(currentcolstore);
         var ctl = Lada.app.getController('Lada.controller.Query');
+        ctl.setSortandFilterActive(this);
         ctl.showFilter(this);
     },
 });
