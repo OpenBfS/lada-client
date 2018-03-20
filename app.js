@@ -77,7 +77,8 @@ Ext.application({
         'Lada.store.KoordinatenArt',
         'Lada.model.MessstelleLabor',
         'Lada.model.GenericResults',
-        'Lada.model.Column'
+        'Lada.model.Column',
+        'Lada.model.QueryGroup'
     ],
     bundle: {
         bundle: 'Lada',

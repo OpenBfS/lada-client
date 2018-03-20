@@ -107,9 +107,9 @@ Ext.define('Lada.controller.Query', {
         } else {
             panel.down('button[action=delquery]').setDisabled(true);
         }
+        button.up('querypanel').down('cbox[name=groups]').setValue(
+            button.up('querypanel').getRecord().get('groups'));
         panel.down('columnchoser').setQuery(newquery);
-
-
         // Details need to be filed, expanded or not
         // FilterQueries need to be updated
     },
@@ -122,10 +122,11 @@ Ext.define('Lada.controller.Query', {
 
     reset: function (button){
         button.up('querypanel').getForm().reset();
+        button.up('querypanel').down('cbox[name=groups]').setValue(
+            button.up('querypanel').getRecord().get('groups'));
         button.up('querypanel').down('columnchoser').setQuery(
             button.up('querypanel').getRecord());
         Ext.Msg.alert('Query zurückgesetzt','Query zurückgesetzt');
-                    // reload these filters
     },
     search: function (button){
         Ext.Msg.alert('', 'Suche - TODO');

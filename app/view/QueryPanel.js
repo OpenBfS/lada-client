@@ -99,8 +99,18 @@ Ext.define('Lada.view.QueryPanel', {
         }, {
             xtype: 'cbox',
             name: 'groups',
-            multiselect: true,
-            fieldLabel: 'query.groups'
+            multiSelect: true,
+            fieldLabel: 'query.groups',
+            store: Ext.create('Ext.data.Store',{
+                model: 'Lada.model.QueryGroup'
+            }),
+            valueField: 'name',
+            displayField: 'name',
+            tpl: Ext.create('Ext.XTemplate',
+            '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
+                '{name}</div></tpl>'),
+            displayTpl: Ext.create('Ext.XTemplate',
+                '<tpl for=".">{name}</tpl>')
         }, {
             xtype: 'columnchoser'
         },{
@@ -163,6 +173,13 @@ Ext.define('Lada.view.QueryPanel', {
     initComponent: function() {
 
 //dummy data
+        var q1 = Ext.create('Lada.model.QueryGroup',
+            {name: 'Testlabor_4'});
+        var q2 = Ext.create('Lada.model.QueryGroup',
+            {name: 'imis_world'});
+        var q3 = Ext.create('Lada.model.QueryGroup',
+        {name: 'Testlabor_1'});
+
         var baseQuery = Ext.create('Lada.model.DummyBaseQuery', {
             id: 1,
             name: 'basequery in database',
@@ -259,6 +276,7 @@ Ext.define('Lada.view.QueryPanel', {
         this.down('cbox[name=groups]').down().fieldLabel = i18n.getMsg('query.groups');
         this.down('cbox[name=activefilters]').down().fieldLabel = i18n.getMsg('query.filters.visible');
 
+        this.down('cbox[name=groups]').down('tagfield').getStore().add([q1,q2,q3]);
         this.down('combobox[name=selectedQuery]').store = Ext.create(
             'Ext.data.Store',{
                 model: 'Lada.model.DummyBaseQuery'
@@ -271,6 +289,7 @@ Ext.define('Lada.view.QueryPanel', {
 
         this.down('combobox[name=selectedQuery]').select(query0);
         this.loadRecord(query0);
+        this.down('cbox[name=groups]').setValue(query0.get('groups'));
         this.down('columnchoser').setQuery(query0);
         this.down('columnchoser').filterUpdate();
 
