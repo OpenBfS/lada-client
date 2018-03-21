@@ -19,29 +19,14 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
     require: ['Lada.view.widget.Sort'],
     margin: '20,0,0,10',
     title: null,
-    store: Ext.create('Ext.data.Store', {
-        model: Ext.create('Ext.data.Model', {
-            fields: [{name: 'dataIndex'},{name: 'sort'}]
-        }),
-        data: [{
-            dataIndex: 'Nulleintrag 1',
-            sort: 'asc'
-        },{
-            dataIndex: 'Nulleintrag 3',
-            sort: 'desc'
-        },{
-            dataIndex: 'Nulleintrag 2',
-            sort: 'none'
-        }]
-    }),
-
     initComponent: function(){
         var i18n = Lada.getApplication().bundle;
         var group = this.id;
+        var cboxmodel = Ext.create('Ext.data.Model', {
+            fields: [{name: 'name'}, {name: 'value'}]
+        });
         var comboboxstore = Ext.create('Ext.data.Store', {
-            model: Ext.create('Ext.data.Model', {
-                fields: [{name: 'name'}, {name: 'value'}]
-            }),
+            model: cboxmodel,
             data: [{
                 name: 'Aufsteigend',
                 value: 'asc'
@@ -62,10 +47,9 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
             viewConfig: {
                 plugins: {
                     ptype: 'gridviewdragdrop',
-                    containerScroll: false
+                    containerScroll: true
                 }
             },
-            store: this.store,
             columns: [{
                 text: '',
                 sortable: false,
@@ -75,11 +59,16 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                 xtype: 'widgetcolumn',
                 widget: {
                     xtype: 'combobox',
-                    store: comboboxstore
+                    model: cboxmodel,
+                    store: comboboxstore,
+                    queryMode: 'local',
+                    displayField: 'name',
+                    valueField: 'value'
                 },
                 text: '',
-                sortable: false
-                // dataIndex: 'sort'
+                dataIndex: 'sort',
+                sortable: false,
+
             }],
             title: i18n.getMsg('query.sorting'),
             // header: false,
@@ -89,7 +78,8 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
     },
     setStore: function (store){
         if (store){
-            this.down('grid').store = store;
+            store.clearFilter();
+            this.down('grid').reconfigure(store);
         }
     }
     //TODO on datachange: change this.up('querypanel').currentColumns

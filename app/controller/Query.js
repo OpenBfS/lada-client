@@ -196,7 +196,7 @@ Ext.define('Lada.controller.Query', {
 
     setSortandFilterActive: function(me){
         var qpanel = me.up('querypanel');
-        // qpanel.down('columnsort').setStore(qpanel.currentColumns);
+        qpanel.down('columnsort').setStore(qpanel.currentColumns);
         qpanel.down('cbox[name=activefilters]').setStore(qpanel.currentColumns);
         var cols = qpanel.currentColumns.getRange();
         var active = [];
