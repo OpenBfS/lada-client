@@ -40,8 +40,7 @@ Ext.define('Lada.controller.Query', {
                 click: me.search
             },
             'querypanel cbox[name=activefilters] tagfield': {
-                 select: me.activeChanged
-
+                 change: me.activeChanged,
             }
         });
     },
