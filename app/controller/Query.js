@@ -131,7 +131,6 @@ Ext.define('Lada.controller.Query', {
             button.up('querypanel').getRecord().get('groups'));
         button.up('querypanel').down('columnchoser').setQuery(
             button.up('querypanel').getRecord());
-        Ext.Msg.alert('Query zurückgesetzt','Query zurückgesetzt');
     },
     search: function (button){
         Ext.Msg.alert('', 'Suche - TODO');
