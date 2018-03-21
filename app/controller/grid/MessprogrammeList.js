@@ -32,7 +32,7 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
                 click: this.addMessprogrammItem
             },
             'messprogrammelistgrid toolbar button[action=genProbenFromMessprogramm]': {
-                click: this.genProbenFromMessprogramm,
+                click: this.genProbenFromMessprogramm
                 // afterrender: this.activateButtons TODO: afterrender is the wrong event
                 //TODO event 'as soon as the button is there'
             }
