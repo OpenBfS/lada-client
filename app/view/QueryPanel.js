@@ -181,9 +181,10 @@ Ext.define('Lada.view.QueryPanel', {
     }, {
         xtype: 'button',
         action: 'search',
-            text: 'query.search',
-            margin: '5,0,5,0',
-            flex: 1
+        icon: 'resources/img/Find.png',
+        text: 'query.search',
+        margin: '5,0,5,0',
+        flex: 1
     }],
 
     initComponent: function() {
