@@ -31,9 +31,10 @@ Ext.define('Lada.view.QueryPanel', {
             align: 'stretchmax'
         },
         margin: 10,
-        items: [{
-            xtype: 'combobox',
-                margin: 0,
+        items: [
+            {
+                xtype: 'combobox',
+                margin: 5,
                 title: 'query.query',
                 name: 'selectedQuery',
                 displayField: 'name',
@@ -42,11 +43,11 @@ Ext.define('Lada.view.QueryPanel', {
                 flex: 2
             }, {
                 xtype: 'checkbox',
+                margin: 5,
                 name: 'allqueries',
                 boxLabel: 'query.showall',
                 checked: false,
-                flex: 1,
-                margin: 0, //TODO is ignored
+                flex: 1
         }]
     }, {
         xtype: 'container',
