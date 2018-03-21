@@ -69,7 +69,7 @@ Ext.define('Lada.controller.Query', {
         panel.getForm().loadRecord(
             Ext.create('Lada.model.DummyQuery',{
                 basequery: cquery.get('basequery'),
-                id: cbox.getStore().totalCount + 1,
+                id: cbox.getStore().totalCount + 11,
                 name : cquery.get('name') + ' (Kopie)',
                 owner: 'Testlabor_4',
                 groups: newgroups,
@@ -102,20 +102,8 @@ Ext.define('Lada.controller.Query', {
     },
 
     changeCurrentQuery: function(combobox){
-        combobox.resetOriginalValue(); //avoids field being cleaned on reset
         var newquery = combobox.getStore().getById(combobox.getValue());
-        var panel = combobox.up('querypanel');
-        panel.getForm().loadRecord(newquery);
-        if (newquery.get('owner') === 'Testlabor_4') { //hardcoded dummy data
-            panel.down('button[action=delquery]').setDisabled(false);
-        } else {
-            panel.down('button[action=delquery]').setDisabled(true);
-        }
-        button.up('querypanel').down('cbox[name=groups]').setValue(
-            button.up('querypanel').getRecord().get('groups'));
-        panel.down('columnchoser').setQuery(newquery);
-        // Details need to be filed, expanded or not
-        // FilterQueries need to be updated
+        this.resetQueryParameters(combobox, newquery);
     },
 
     saveQuery: function(button){
@@ -125,12 +113,25 @@ Ext.define('Lada.controller.Query', {
     },
 
     reset: function (button){
-        button.up('querypanel').getForm().reset();
-        button.up('querypanel').down('cbox[name=groups]').setValue(
-            button.up('querypanel').getRecord().get('groups'));
-        button.up('querypanel').down('columnchoser').setQuery(
-            button.up('querypanel').getRecord());
+        var panel =  button.up('querypanel'); //Reset does not work here
+        var cbox = panel.down('combobox[name=selectedQuery]');
+        var originalrecord = null;
+        originalrecord = cbox.getStore().getById(cbox.getValue());
+        this.resetQueryParameters(button, originalrecord);
     },
+
+    resetQueryParameters: function(element, newquery){
+        var panel = element.up('querypanel');
+        panel.getForm().loadRecord(newquery);
+        if (newquery.get('owner') === 'Testlabor_4') { //hardcoded dummy data
+            panel.down('button[action=delquery]').setDisabled(false);
+        } else {
+            panel.down('button[action=delquery]').setDisabled(true);
+        }
+        panel.down('cbox[name=groups]').setValue(newquery.get('groups'));
+        panel.down('columnchoser').setQuery(newquery);
+    },
+
     search: function (button){
         Ext.Msg.alert('', 'Suche - TODO');
         //search. See existing controller (filterresult etc.)
@@ -160,7 +161,7 @@ Ext.define('Lada.controller.Query', {
                                 clear: {
                                     extraCls: 'x-form-clear-trigger',
                                     handler: function() {
-                                        this.clearValue();
+                                        this.setValue('');
                                     }
                                 }
                             }

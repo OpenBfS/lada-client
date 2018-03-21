@@ -175,6 +175,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             this.selectedStore.add(entry);
         }
         this.getComponent('targetGrid').setStore(this.selectedStore);
+        this.filterUpdate();
     },
 
     filterUpdate: function(){
