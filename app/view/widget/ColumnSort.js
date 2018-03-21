@@ -67,8 +67,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                 },
                 text: '',
                 dataIndex: 'sort',
-                sortable: false,
-
+                sortable: false
             }],
             title: i18n.getMsg('query.sorting'),
             // header: false,

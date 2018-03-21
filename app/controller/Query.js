@@ -62,20 +62,21 @@ Ext.define('Lada.controller.Query', {
         var panel =  button.up('panel');
         var cbox = panel.down('combobox[name=selectedQuery]');
         var cquery = cbox.getStore().getById(cbox.getValue());
-        var newgroups = cquery.get('owner');
+        var newgroups = cquery.get('groups');
         if (newgroups.indexOf('Testlabor_4') < 0){
             newgroups.push('Testlabor_4')
         };
-        panel.getForm().loadRecord(
-            Ext.create('Lada.model.DummyQuery',{
-                basequery: cquery.get('basequery'),
-                id: cbox.getStore().totalCount + 11,
-                name : cquery.get('name') + ' (Kopie)',
-                owner: 'Testlabor_4',
-                groups: newgroups,
-                columns: cquery.get('columns')
-            })
-        );
+        var newrecord = Ext.create('Lada.model.DummyQuery',{
+            basequery: cquery.get('basequery'),
+            id: cbox.getStore().totalCount + 11,
+            name : cquery.get('name') + ' (Kopie)',
+            owner: 'Testlabor_4',
+            groups: newgroups,
+            columns: cquery.get('columns')
+        });
+        cbox.getStore().add([newrecord]);
+        cbox.select(newrecord);
+        this.changeCurrentQuery(cbox);
         panel.down('fieldset[name=querydetails]').setCollapsed(false);
         panel.down('button[action=save]').setDisabled(false);
     },
@@ -85,16 +86,21 @@ Ext.define('Lada.controller.Query', {
     },
 
     deleteQuery: function (button){
-        var query = button.up('querypanel').currentQuery;
-        if (!currentQuery){
+        var query = button.up('querypanel').getRecord();
+        if (!query){
             return;
         }
         //check permission to delete
-        if (currentQuery.owner === 'Testlabor_4'){ //TODO dummy data!
+        if (query.get('owner') === 'Testlabor_4'){ //TODO dummy data!
             var combobox = button.up('querypanel').down('combobox[name=selectedQuery]');
-            combobox.getStore().remove(currentQuery);
-            combobox.select(0);
-            Ext.Msg.alert('','Query gelöscht');
+            combobox.getStore().remove(query);
+            var firstEntry = combobox.getStore().getAt(0);
+            if (firstEntry) {
+                combobox.select(combobox.getStore().getAt(0));
+            } else {
+                combobox.clearValue();
+                // what to do here? This should not happen
+            }
             button.up('querypanel').down('fieldset[name=querydetails]').collapse();
         } else {
             Ext.Msg.alert('','Query nicht gelöscht');
@@ -127,6 +133,7 @@ Ext.define('Lada.controller.Query', {
             panel.down('button[action=delquery]').setDisabled(false);
         } else {
             panel.down('button[action=delquery]').setDisabled(true);
+            panel.down('button[action=save]').setDisabled(true);
         }
         panel.down('cbox[name=groups]').setValue(newquery.get('groups'));
         panel.down('columnchoser').setQuery(newquery);
