@@ -60,20 +60,25 @@ Ext.define('Lada.controller.Query', {
     },
 
     cloneQuery: function(button){
-        var cbox = button.up('panel').down('combobox[name=selectedQuery]');
+        var panel =  button.up('panel');
+        var cbox = panel.down('combobox[name=selectedQuery]');
         var cquery = cbox.getStore().getById(cbox.getValue());
+        var newgroups = cquery.get('owner');
+        if (newgroups.indexOf('Testlabor_4') < 0){
+            newgroups.push('Testlabor_4')
+        };
         panel.getForm().loadRecord(
             Ext.create('Lada.model.DummyQuery',{
                 basequery: cquery.get('basequery'),
-                id: 3, //TODO:
-                name : cquery.get('name'),
-                owner: cquery.get('owner'), //TODO add "myself"
-                groups: cquery.get('groups'),
+                id: cbox.getStore().totalCount + 1,
+                name : cquery.get('name') + ' (Kopie)',
+                owner: 'Testlabor_4',
+                groups: newgroups,
                 columns: cquery.get('columns')
             })
         );
-        // change name(?)
-        this.up('panel').down('button[action=save]').setDisabled(false);
+        panel.down('fieldset[name=querydetails]').setCollapsed(false);
+        panel.down('button[action=save]').setDisabled(false);
     },
 
     expandDetails: function(button){
