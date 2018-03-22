@@ -42,6 +42,8 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
             name: 'sortGrid',
             flex: 1,
             xtype: 'grid',
+            scrollable: true,
+            maxHeight: 125,
             multiSelect: true,
             stripeRows: true,
             viewConfig: {
