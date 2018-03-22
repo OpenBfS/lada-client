@@ -109,11 +109,11 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             if (json.success) {
                                 panel.setHtml(panel.html + '<br>'
                                         + i18n.getMsg('gpfm.generated.success',
-                                        json.data.length, id));
+                                            json.data.length, id));
                             } else {
                                 panel.setHtml(panel.html + '<br>'
                                         + i18n.getMsg('gpfm.generated.error',
-                                        id, i18n.getMsg(json.message)));
+                                            id, i18n.getMsg(json.message)));
                             }
                             if (finished == me.records.length) {
                                 me.down('toolbar').down('button').setDisabled(false);
@@ -231,7 +231,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
 
         //Create and load neccessary stores
         var umwStore = Ext.create('Lada.store.Umwelt', {
-                asynchronousLoad: false
+            asynchronousLoad: false
         });
 
         var mmtStore = Ext.create('Lada.store.MmtMessprogramm', {
@@ -399,17 +399,17 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 mmtStore.clearFilter();
                 mmtStore.filter('messprogrammId', mprId);
                 var count = mmtStore.getCount();
-                if (!count){
+                if (!count) {
                     return '(0)';
                 }
                 var mgrtext = '';
                 var mmth = mmtStore.getAt(0).get('mmtId');
-                if (mmth){
+                if (mmth) {
                     mgrtext = mmth;
                 }
-                for (var i = 1; i < count; i ++ ){
+                for (var i = 1; i < count; i ++ ) {
                     var mmth = mmtStore.getAt(i).get('mmtId');
-                    if (mmth){
+                    if (mmth) {
                         mgrtext += ', ' + mmth;
                     }
                 }
@@ -421,10 +421,10 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             renderer: function(value, metadata, rec) {
                 var mprModel = mpStore.getById(rec.get('mprId'));
                 if (mprModel) {
-                    var eGemId = mprModel.get('eGemId')
+                    var eGemId = mprModel.get('eGemId');
                     var eGem = mprModel.get('eGem');
                     if (eGemId != null && eGem != null) {
-                        return eGemId  + ' - ' + eGem;
+                        return eGemId + ' - ' + eGem;
                     }
                 }
                 return '';

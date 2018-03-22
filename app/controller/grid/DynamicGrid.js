@@ -154,7 +154,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             failure: function(response) {
                 button.enable();
                 button.setLoading(false);
-                if (!response.getResponse){
+                if (!response.getResponse) {
                     Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                         i18n.getMsg('err.msg.print.noContact'));
                     return;
@@ -229,7 +229,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         var grid = toolbar.up('grid');
         var store = grid.getStore();
         var rowExpander = grid.plugins[0];
-        if (rowExpander && rowExpander.ptype === 'gridrowexpander'){
+        if (rowExpander && rowExpander.ptype === 'gridrowexpander') {
             var nodes = rowExpander.view.getNodes();
             for (var i = 0; i < nodes.length; i++) {
                 var node = Ext.fly(nodes[i]);

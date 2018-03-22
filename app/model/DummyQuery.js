@@ -9,7 +9,7 @@ Ext.define('Lada.model.DummyQuery', {
         {name: 'owner'},
         {name: 'groups'},
         {name: 'sorting'},
-        {name: 'columns'},
+        {name: 'columns'}
         //column:
         //      dataIndex
         //      sort

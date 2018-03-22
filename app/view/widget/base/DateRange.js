@@ -40,14 +40,14 @@ Ext.define('Lada.view.widget.base.DateRange', {
                 name: this.name + 'From',
                 readOnly: this.readOnly || false,
                 period: 'start', //TODO state of this Start/End indicator?
-                triggers:{
+                triggers: {
                     clear: {
                         extraCls: 'x-form-clear-trigger',
                         handler: function() {
                             this.setValue(null);
                         }
                     }
-                },
+                }
             }),
             Ext.create('Lada.view.widget.base.DateField', {
                 format: this.format || 'd.m.Y',
@@ -59,14 +59,14 @@ Ext.define('Lada.view.widget.base.DateRange', {
                 name: this.name + 'To',
                 readOnly: this.readOnly || false,
                 period: 'end', //TODO state of this Start/End indicator?
-                triggers:{
+                triggers: {
                     clear: {
                         extraCls: 'x-form-clear-trigger',
                         handler: function() {
                             this.setValue(null);
                         }
                     }
-                },
+                }
             })
         ];
         this.setValue(this.value);
@@ -89,7 +89,7 @@ Ext.define('Lada.view.widget.base.DateRange', {
     },
 
     setValue: function(value) {
-        if (value && value.length == 2 ){
+        if (value && value.length == 2 ) {
             this.down('datetimefield[name=dateFrom]').setValue(value[0]);
             this.down('datetimefield[name=dateTo]').setValue(value[1]);
         }

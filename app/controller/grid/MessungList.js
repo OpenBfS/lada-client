@@ -27,7 +27,7 @@ Ext.define('Lada.controller.grid.MessungList', {
             'messunglistgrid toolbar button[action=setstatus]': {
                 click: this.setStatus
             },
-            'messunglistgrid toolbar button[action=print]':{
+            'messunglistgrid toolbar button[action=print]': {
                 click: this.printSelection
             }
         });

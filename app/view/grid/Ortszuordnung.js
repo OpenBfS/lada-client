@@ -200,7 +200,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 params: {
                     probeId: this.recordId
                 },
-                callback: function(){
+                callback: function() {
                     me.reiHandling();
                 }
             });
@@ -256,28 +256,27 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }
     },
 
-    reiHandling: function(value){
-        if (!this.isMessprogramm){
+    reiHandling: function(value) {
+        if (!this.isMessprogramm) {
             var readonly = this.up('probenedit').record.get('readonly');
             var dbId = this.up('probenedit').record.get('datenbasisId');
-            var dbStore = Ext.data.StoreManager.get('datenbasis')
+            var dbStore = Ext.data.StoreManager.get('datenbasis');
             var datenbasis = null;
             if (dbStore && dbId) {
-                datenbasis =  dbStore.getById(dbId).get('datenbasis');
+                datenbasis = dbStore.getById(dbId).get('datenbasis');
             }
-            if (datenbasis && (datenbasis == 'REI-I' || datenbasis == 'REI-E')){
-                if (this.store.getCount() === 0 && !readonly){
+            if (datenbasis && (datenbasis == 'REI-I' || datenbasis == 'REI-E')) {
+                if (this.store.getCount() === 0 && !readonly) {
                     this.down('button[action=add]').enable();
                     this.down('button[action=delete]').disable();
                 }
-                if (this.store.getCount() > 0 && !readonly){
+                if (this.store.getCount() > 0 && !readonly) {
                     this.down('button[action=add]').disable();
                     this.down('button[action=delete]').enable();
                     //TODO error handling/Warning)
                 }
-            }
-            else {
-                if (readonly){
+            } else {
+                if (readonly) {
                     this.down('button[action=add]').disable();
                     this.down('button[action=delete]').disable();
                 } else {

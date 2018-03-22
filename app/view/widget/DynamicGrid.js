@@ -52,25 +52,25 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         this.callParent(arguments);
     },
 
-    setToolbar: function (){
+    setToolbar: function() {
         var i18n = Lada.getApplication().bundle;
         var tbcontent = [];
-        if (this.title){
+        if (this.title) {
             this.title = i18n.getMsg(this.title);
         }
         tbcontent.push('->');
-        if (this.toolbarbuttons && this.toolbarbuttons.length){
-            for (var i= 0; i < this.toolbarbuttons.length; i++){
+        if (this.toolbarbuttons && this.toolbarbuttons.length) {
+            for (var i= 0; i < this.toolbarbuttons.length; i++) {
                 // TODO this is very ugly: naming the buttons here
                 var buttontext = i18n.getMsg(this.toolbarbuttons[i].text);
-                if (buttontext.substring(buttontext.length-10, buttontext.length) !== '.undefined'){
+                if (buttontext.substring(buttontext.length-10, buttontext.length) !== '.undefined') {
                     this.toolbarbuttons[i].text = buttontext;
                 }
                 tbcontent.push(this.toolbarbuttons[i]);
             }
         }
 
-        if (this.printable){
+        if (this.printable) {
             tbcontent.push({
                 text: i18n.getMsg('probe.button.print'),
                 icon: 'resources/img/printer.png',
@@ -78,7 +78,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 disabled: true //disabled on start, enabled by the controller
             });
         }
-        if (this.exportable){
+        if (this.exportable) {
             tbcontent.push({
                 text: i18n.getMsg('export.button'),
                 icon: 'resources/img/svn-update.png',
@@ -100,7 +100,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      */
     setStore: function(store) {
         var i18n = Lada.getApplication().bundle;
-        if (store){
+        if (store) {
             this.reconfigure(store);
         }
         var ptbar = this.down('pagingtoolbar');
@@ -162,7 +162,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
             return 'noedit';
         };
-        var handlerFunc =  function(grid, rowIndex, colIndex) {
+        var handlerFunc = function(grid, rowIndex, colIndex) {
             var rec = grid.getStore().getAt(rowIndex);
             grid.fireEvent('itemdblclick', grid, rec);
         };
@@ -241,7 +241,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             switch (cols[i].dataType.name) {
                 case 'probeId':
                     colImg = Ext.getResourcePath(openIconPath, null, null);
-                    cols[i].xtype =  'widgetcolumn';
+                    cols[i].xtype = 'widgetcolumn';
                     cols[i].widget = {
                         xtype: 'button',
                         icon: colImg,
@@ -276,11 +276,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 }
                             }
                         }
-                    }
+                    };
                     break;
                 case 'messungId':
                     colImg = Ext.getResourcePath(openIconPath, null, null);
-                    cols[i].xtype =  'widgetcolumn';
+                    cols[i].xtype = 'widgetcolumn';
                     cols[i].widget = {
                         xtype: 'button',
                         icon: colImg,
@@ -321,12 +321,12 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 }
                             }
                         }
-                    }
+                    };
                     break;
 
                 case 'ortId':
                     colImg = Ext.getResourcePath(openIconPath, null, null);
-                    cols[i].xtype =  'widgetcolumn';
+                    cols[i].xtype = 'widgetcolumn';
                     cols[i].widget = {
                         xtype: 'button',
                         icon: colImg,
@@ -355,11 +355,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 }
                             }
                         }
-                    }
+                    };
                     break;
                 case 'geom':
                     colImg = Ext.getResourcePath('img/document-open.png', null, null);
-                    cols[i].xtype =  'widgetcolumn';
+                    cols[i].xtype = 'widgetcolumn';
                     cols[i].widget = {
                         xtype: 'button',
                         icon: colImg,
@@ -387,44 +387,44 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 }
                             }
                         }
-                    }
-                break;
+                    };
+                    break;
                 case 'date':
                     curField.depends = cols[i].dataIndex;
 
                     cols[i].xtype = 'datecolumn';
                     cols[i].format = cols[i].dataType.format;
-                    cols[i].renderer = function(value, cell){
+                    cols[i].renderer = function(value, cell) {
                         if (!value || value == '') {
                             return '';
                         }
                         var format = cell.column.format;
-                        var dt =  Ext.Date.format(new Date(value), format);
+                        var dt = Ext.Date.format(new Date(value), format);
                         return dt;
                     };
 
-                break;
+                    break;
                 case 'number':
-                cols[i].xtype = 'numbercolumn';
-                cols[i].format = cols[i].dataType.format;
-                cols[i].renderer = function(value, cell) {
-                    if (!value) {
-                        return '';
-                    }
-                    var format = cell.column.format;
-                    if (format === 'e') {
-                        return value.toExponential();
-                    } else {
-                        return Ext.util.Format.number(value, format);
-                    }
-                }
-                break;
+                    cols[i].xtype = 'numbercolumn';
+                    cols[i].format = cols[i].dataType.format;
+                    cols[i].renderer = function(value, cell) {
+                        if (!value) {
+                            return '';
+                        }
+                        var format = cell.column.format;
+                        if (format === 'e') {
+                            return value.toExponential();
+                        } else {
+                            return Ext.util.Format.number(value, format);
+                        }
+                    };
+                    break;
                 default:
                     cols[i].xtype = 'gridcolumn';
-                    cols[i].renderer = function(value, cell){
+                    cols[i].renderer = function(value, cell) {
                         return value || '';
-                    }
-            };
+                    };
+            }
             switch (cols[i].dataIndex) {
                 case 'dBasis':
                 case 'pArt':

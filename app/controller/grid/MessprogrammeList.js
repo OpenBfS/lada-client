@@ -32,7 +32,7 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
                 click: this.addMessprogrammItem
             },
             'messprogrammelistgrid toolbar button[action=genProbenFromMessprogramm]': {
-                click: this.genProbenFromMessprogramm,
+                click: this.genProbenFromMessprogramm
                 // afterrender: this.activateButtons TODO: afterrender is the wrong event
                 //TODO event 'as soon as the button is there'
             }
@@ -110,7 +110,7 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
         var grid = rowModel.view.up('grid');
         if (Ext.Array.contains(Lada.funktionen, 4)) {
             var genMessprog = grid.down('button[action=addMessprogramm]');
-            if (genMessprog){
+            if (genMessprog) {
                 genMessprog.enable();
             }
         }
@@ -130,7 +130,7 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
         }
         if (!Ext.Array.contains(Lada.funktionen, 4)) {
             var genMessprog = grid.down('button[action=addMessprogramm]');
-            if (genMessprog){
+            if (genMessprog) {
                 genMessprog.disable();
             }
         }

@@ -88,7 +88,7 @@ Ext.define('Lada.view.form.Ort', {
             collapsible: true,
             collapsed: true,
             title: i18n.getMsg('orte.prop'),
-            items :[{
+            items: [{
                 xtype: 'tfield',
                 labelWidth: 125,
                 maxLength: 70,

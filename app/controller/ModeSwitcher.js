@@ -49,7 +49,7 @@ Ext.define('Lada.controller.ModeSwitcher', {
 
         var filterController = this.getController('Lada.controller.Filter');
         filterController.mode = newVal;
-        
+
         filterController.updateFilter(cbox);
     }
 });

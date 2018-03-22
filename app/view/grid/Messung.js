@@ -223,9 +223,9 @@ Ext.define('Lada.view.grid.Messung', {
     updateNuklide: function(id, record) {
         var messwerte = Ext.create('Lada.store.Messwerte');
         messwerte.on('load',
-                     this.updateColumn,
-                     this,
-                     {record: record, type: 'messwerteCount'});
+            this.updateColumn,
+            this,
+            {record: record, type: 'messwerteCount'});
         messwerte.load({
             params: {
                 messungsId: id

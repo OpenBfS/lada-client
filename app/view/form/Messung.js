@@ -132,7 +132,7 @@ Ext.define('Lada.view.form.Messung', {
                     width: 300,
                     labelWidth: 100
                 }, {
-                    xtype:'statuskombi',
+                    xtype: 'statuskombi',
                     name: 'statuskombi',
                     readOnly: true,
                     isFormField: false,
@@ -201,7 +201,7 @@ Ext.define('Lada.view.form.Messung', {
     updateStatusText: function() {
         this.record.load({
             scope: this,
-            success: function() { 
+            success: function() {
                 this.down('statuskombi').setValue(this.record.get('status'));
             }
         });

@@ -43,7 +43,7 @@ Ext.define('Lada.view.window.Map', {
         }
     },
 
-    drawGeoJson: function(json){
+    drawGeoJson: function(json) {
         this.map.drawGeoJson(json);
     }
 

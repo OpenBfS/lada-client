@@ -15,11 +15,11 @@ Ext.define('Lada.view.widget.Statuskombi', {
     editable: false,
     alias: 'widget.statuskombi',
     store: Ext.data.StoreManager.get('status'),
-    trackResetOnLoad:true,
+    trackResetOnLoad: true,
     buttonListener: null,
     currentValue: {
-      statusStufe: null,
-      statusWert: null
+        statusStufe: null,
+        statusWert: null
     },
 
     initComponent: function() {
@@ -30,7 +30,7 @@ Ext.define('Lada.view.widget.Statuskombi', {
     changebutton: function() {
         var btn = Ext.create('Ext.Button', {
             margin: '0 5',
-            text:'Status ändern',
+            text: 'Status ändern',
             tooltip: 'neuen Status vergeben',
             action: 'newstatus',
             disabled: true,
@@ -43,7 +43,7 @@ Ext.define('Lada.view.widget.Statuskombi', {
         var btn = Ext.create('Ext.Button', {
             margin: '0 5',
             text: 'Zurücksetzen',
-            tooltip:'letzte Statusänderung zurücknehmen',
+            tooltip: 'letzte Statusänderung zurücknehmen',
             action: 'resetstatus',
             disabled: true,
             listeners: this.buttonListener
@@ -51,18 +51,18 @@ Ext.define('Lada.view.widget.Statuskombi', {
         return btn;
     },
 
-    setValue: function(value){
+    setValue: function(value) {
         var me = this;
         Ext.ClassManager.get('Lada.model.Status').load(value, {
-            success: function (record, response) {
+            success: function(record, response) {
                 var statuskombistore = Ext.data.StoreManager.get('statuskombi');
                 var kombi = statuskombistore.getById(record.data.statusKombi);
                 var text = kombi.get('statusStufe').stufe + ' - ' +
                         kombi.get('statusWert').wert;
                 //me.down('textfield').setValue(text);
                 me.currentValue = {
-                  statusStufe: kombi.get('statusStufe'),
-                  statusWert: kombi.get('statusWert')
+                    statusStufe: kombi.get('statusStufe'),
+                    statusWert: kombi.get('statusWert')
                 };
                 var textfield = me.down('textfield');
                 if (textfield) {
@@ -70,34 +70,32 @@ Ext.define('Lada.view.widget.Statuskombi', {
                 }
             }
         });
-      // instead of overwriting/appending initComponent, add the button at loading of values
+        // instead of overwriting/appending initComponent, add the button at loading of values
         var button = this.down('button[action=newstatus]');
-        if (!button){
+        if (!button) {
             this.add(this.changebutton());
         }
         button = this.down('button[action=resetstatus]');
-        if (!button){
+        if (!button) {
             this.add(this.resetbutton());
         }
     },
 
 
-    setReadOnly: function(readonly){
+    setReadOnly: function(readonly) {
         var button = this.down('button[action=newstatus]');
-        if (!readonly){
-          button.setDisabled(false);
-        }
-        else {
-          button.setDisabled(true);
+        if (!readonly) {
+            button.setDisabled(false);
+        } else {
+            button.setDisabled(true);
         }
     },
 
-    setResetable: function(resetable){
+    setResetable: function(resetable) {
         var button = this.down('button[action=resetstatus]');
-        if (resetable){
+        if (resetable) {
             button.setDisabled(false);
-        }
-        else {
+        } else {
             button.setDisabled(true);
         }
     }

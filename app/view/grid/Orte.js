@@ -63,7 +63,7 @@ Ext.define('Lada.view.grid.Orte', {
             },
             handler: function(grid, rowIndex, colIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
-                if (rec.get('readonly') == false){
+                if (rec.get('readonly') == false) {
                     Lada.model.Ort.load(rec.get('id'), {
                         success: function(record) {
                             Ext.create('Lada.view.window.Ort',{
@@ -263,9 +263,11 @@ Ext.define('Lada.view.grid.Orte', {
                 type: 'string'
             },
             renderer: function(value) {
-                if (value === true)
-                   { return 'ja';}
-                else { return 'nein';}
+                if (value === true) {
+                    return 'ja';
+                } else {
+                    return 'nein';
+                }
             },
             dataIndex: 'unscharf'
         }, {

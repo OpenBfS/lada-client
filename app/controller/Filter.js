@@ -199,7 +199,7 @@ Ext.define('Lada.controller.Filter', {
                     break;
                 case 'universal':
                     resultGrid = Ext.create('Lada.view.widget.DynamicGrid', {
-                        selModel : Ext.create('Ext.selection.CheckboxModel', {
+                        selModel: Ext.create('Ext.selection.CheckboxModel', {
                             checkOnly: true,
                             injectCheckbox: 1
                         })
@@ -399,18 +399,17 @@ Ext.define('Lada.controller.Filter', {
         for (var i = filters.items.length - 1; i >= 0; i--) {
             var filter = filters.items.items[i];
             var value = filter.getValue();
-            if (filter.xtype === 'boolfilter'){
-                if (value !== 'false' && value !== 'true'){
+            if (filter.xtype === 'boolfilter') {
+                if (value !== 'false' && value !== 'true') {
                     value = '';
                 }
             }
-            if (filter.xtype == 'datetime'){
-              if (!isNaN(value) && value !== null){
-                value = Date.parse(value) / 1000;
-              }
-              else {
-                value = null;
-              }
+            if (filter.xtype == 'datetime') {
+                if (!isNaN(value) && value !== null) {
+                    value = Date.parse(value) / 1000;
+                } else {
+                    value = null;
+                }
             }
             if (value instanceof Array) {
                 value = value.join(',');

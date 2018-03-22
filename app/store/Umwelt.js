@@ -75,7 +75,7 @@ Ext.define('Lada.store.Umwelt', {
                                             umweltcombo.select(record);
                                             umweltcombo.up('umwelt').setReiWarningVisible(true);
                                             reicombo.up('reiprogpunktgruppe')
-                                                    .setUmweltWarningVisible(true);
+                                                .setUmweltWarningVisible(true);
                                         },
                                         single: true,
                                         scope: this,

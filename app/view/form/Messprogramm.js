@@ -626,7 +626,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         var current = this.down('deskriptor[layer=' + ndx + ']');
         var cbox = current.down('combobox');
         cbox.store.proxy.extraParams = {
-           'layer': ndx
+            'layer': ndx
         };
         if (ndx >= 1) {
             var parents = current.getParents(cbox);
@@ -634,7 +634,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                 return;
             }
             cbox.store.proxy.extraParams.parents = parents;
-        };
+        }
         cbox.store.load(function(records, op, success) {
             if (!success) {
                 return;
@@ -714,7 +714,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('cbox[name=baId]').setReadOnly(value);
         this.down('chkbox[name=test]').setReadOnly(value);
         this.down('cbox[name=probenartId]').setReadOnly(value);
-//         this.down('netzbetreiber').setReadOnly(value);
+        //         this.down('netzbetreiber').setReadOnly(value);
         this.down('cbox[name=probenintervall]').setReadOnly(value);
         this.down('numfield[name=teilintervallVon]').setReadOnly(value);
         this.down('numfield[name=teilintervallBis]').setReadOnly(value);

@@ -20,14 +20,14 @@ Ext.define('Lada.view.QueryPanel', {
     ],
     layout: {
         type: 'vbox',
-        align: 'stretch',
+        align: 'stretch'
     },
     margin: '5,5,5,5',
     header: false,
     items: [{
         xtype: 'container',
         layout: {
-            type:'hbox',
+            type: 'hbox',
             align: 'stretchmax'
         },
         margin: 10,
@@ -52,7 +52,7 @@ Ext.define('Lada.view.QueryPanel', {
                 boxLabel: 'query.showall',
                 checked: false,
                 flex: 1
-        }]
+            }]
     }, {
         xtype: 'container',
         margin: '10,10',
@@ -79,7 +79,7 @@ Ext.define('Lada.view.QueryPanel', {
             disabled: true
         }]
     }, {
-        xtype : 'fieldset',
+        xtype: 'fieldset',
         name: 'querydetails',
         title: 'query.details',
         margin: 15,
@@ -87,7 +87,7 @@ Ext.define('Lada.view.QueryPanel', {
             style: 'dotted',
             width: 1
         },
-        collapsible : true,
+        collapsible: true,
         collapsed: true,
         layout: {
             type: 'vbox',
@@ -119,7 +119,7 @@ Ext.define('Lada.view.QueryPanel', {
             valueField: 'name',
             displayField: 'name',
             tpl: Ext.create('Ext.XTemplate',
-            '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
+                '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
                 '{name}</div></tpl>'),
             displayTpl: Ext.create('Ext.XTemplate',
                 '<tpl for=".">{name}</tpl>')
@@ -140,7 +140,7 @@ Ext.define('Lada.view.QueryPanel', {
             fieldLabel: 'query.filters.visible',
             labelWidth: 125,
             tpl: Ext.create('Ext.XTemplate',
-            '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
+                '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
                 '{dataIndex}</div></tpl>'),
             displayTpl: Ext.create('Ext.XTemplate',
                 '<tpl for=".">{dataIndex}</tpl>')
@@ -154,7 +154,7 @@ Ext.define('Lada.view.QueryPanel', {
         title: 'Filter',
         layout: {
             type: 'hbox',
-            align:'stretchmax'
+            align: 'stretchmax'
         },
 
         items: [{
@@ -195,13 +195,13 @@ Ext.define('Lada.view.QueryPanel', {
 
     initComponent: function() {
 
-//dummy data
+        //dummy data
         var q1 = Ext.create('Lada.model.QueryGroup',
             {name: 'Testlabor_4'});
         var q2 = Ext.create('Lada.model.QueryGroup',
             {name: 'imis_world'});
         var q3 = Ext.create('Lada.model.QueryGroup',
-        {name: 'Testlabor_1'});
+            {name: 'Testlabor_1'});
 
         var baseQuery = Ext.create('Lada.model.DummyBaseQuery', {
             id: 1,
@@ -236,23 +236,23 @@ Ext.define('Lada.view.QueryPanel', {
         var query0 = Ext.create('Lada.model.DummyQuery',{
             basequery: baseQuery,
             id: 1,
-            name : 'Beispiel 1',
+            name: 'Beispiel 1',
             owner: 'Testlabor_4',
             groups: ['imis_world', 'Testlabor_4'],
             sorting: ['MessstelleLabor','Probenart','Datum'],
             columns: [{
                 dataIndex: 'MessstelleLabor',
                 sort: 'asc',
-                filter:'06010',
+                filter: '06010',
                 filteractive: true
             }, {
                 dataIndex: 'Probenart',
                 sort: 'desc'
             }, {
-                dataIndex:'Datum',
+                dataIndex: 'Datum',
                 sort: 'desc'
             }, {
-                dataIndex:'Probenehmer',
+                dataIndex: 'Probenehmer',
                 sort: 'none'
             }]
         });
@@ -271,19 +271,19 @@ Ext.define('Lada.view.QueryPanel', {
                 sort: 'asc',
                 filteractive: true
             },{
-                dataIndex:'MST-ID',
+                dataIndex: 'MST-ID',
                 sort: 'asc'
             }, {
-                dataIndex:'Messregime',
+                dataIndex: 'Messregime',
                 sort: 'none',
                 filteractive: true
 
             }]
         });
-// end of dummy data
+        // end of dummy data
 
         var i18n = Lada.getApplication().bundle;
-        this.title =  i18n.getMsg('query.title');
+        this.title = i18n.getMsg('query.title');
         var me = this;
 
         this.callParent(arguments);
@@ -305,7 +305,7 @@ Ext.define('Lada.view.QueryPanel', {
         this.down('combobox[name=selectedQuery]').store = Ext.create(
             'Ext.data.Store',{
                 model: 'Lada.model.DummyBaseQuery'
-        });
+            });
         var selquery = this.down('combobox[name=selectedQuery]');
         selquery.fieldLabel = i18n.getMsg('query.query');
         selquery.getStore().add([query0, query1]);

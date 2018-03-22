@@ -39,7 +39,7 @@ Ext.define('Lada.controller.form.Probe', {
                 change: this.umweltChanged
             },
             'probeform datenbasis combobox': {
-               change: this.datenbasisChanged
+                change: this.datenbasisChanged
             },
             'probeform messstellelabor combobox': {
                 select: this.setNetzbetreiber
@@ -63,7 +63,7 @@ Ext.define('Lada.controller.form.Probe', {
      */
     reiProgpunktGruppeChanged: function(combo, newVal, oldVal, opts) {
         // avoids endless loop
-        if (combo.name !== 'reiProgpunktGrpId'){
+        if (combo.name !== 'reiProgpunktGrpId') {
             return true;
         }
         //Check if reiprogpunktgruppe widget is contained in a probeform
@@ -73,7 +73,7 @@ Ext.define('Lada.controller.form.Probe', {
         }
 
         var umweltCombo = formPanel.down('umwelt').down('combobox');
-        if (!umweltCombo){
+        if (!umweltCombo) {
             return true;
         }
         var umweltStore = umweltCombo.store;
@@ -90,7 +90,7 @@ Ext.define('Lada.controller.form.Probe', {
      */
     umweltChanged: function(combo, newVal, oldVal, opts) {
         // avoids endless loop
-        if (combo.name !== 'umwId'){
+        if (combo.name !== 'umwId') {
             return true;
         }
         //Check if umwelt widget is contained in a probeform

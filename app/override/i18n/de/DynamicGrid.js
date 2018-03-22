@@ -9,8 +9,8 @@
 // This file adds or corrects translations.
 
 Ext.define('Lada.override.i18n.de.DynamicGrid', {
-    override: "Ext.grid.header.Container",
-    sortAscText: "Aufsteigend",
-    sortDescText: "Absteigend",
-    columnsText: "Spalten"
+    override: 'Ext.grid.header.Container',
+    sortAscText: 'Aufsteigend',
+    sortDescText: 'Absteigend',
+    columnsText: 'Spalten'
 });

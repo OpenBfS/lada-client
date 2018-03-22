@@ -208,7 +208,7 @@ Ext.define('Lada.view.window.FilterManagement', {
                     header: i18n.getMsg('querygrid.header.description'),
                     dataIndex: 'description',
                     flex: 1
-                }],
+                }]
             }, {
                 title: i18n.getMsg('gen_query'),
                 xtype: 'grid',

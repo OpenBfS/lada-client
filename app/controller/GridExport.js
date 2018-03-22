@@ -22,26 +22,25 @@ Ext.define('Lada.controller.GridExport', {
         });
     },
 
-    openExportWindow: function(button){
-        if (button.isDisabled()){
+    openExportWindow: function(button) {
+        if (button.isDisabled()) {
             return;
         }
         // finding the grid to the button.
         var grid = button.up('grid');
-        if (!grid){ // special cases, as stammdaten.probegrid (Jan 2018)
+        if (!grid) { // special cases, as stammdaten.probegrid (Jan 2018)
             grid = button.up('toolbar').up().down('grid');
         }
         var i18n = Lada.getApplication().bundle;
         var failmessage = false;
-        if (!grid || !grid.store.getCount()){
-            failmessage=  i18n.getMsg('export.nodata');
+        if (!grid || !grid.store.getCount()) {
+            failmessage= i18n.getMsg('export.nodata');
+        } else if (!grid.getSelectionModel().getSelection().length) {
+            failmessage= i18n.getMsg('export.noselection');
         }
-        else if (!grid.getSelectionModel().getSelection().length){
-            failmessage=  i18n.getMsg('export.noselection');
-        }
-        if (failmessage !== false){
+        if (failmessage !== false) {
             Ext.create('Ext.window.Window', {
-                title : i18n.getMsg('export.failed'),
+                title: i18n.getMsg('export.failed'),
                 modal: true,
                 layout: 'vbox',
                 items: [{

@@ -19,7 +19,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
     require: ['Lada.view.widget.Sort'],
     margin: '20,0,0,10',
     title: null,
-    initComponent: function(){
+    initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var group = this.id;
         var cboxmodel = Ext.create('Ext.data.Model', {
@@ -79,13 +79,13 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                         }
                     },
                     listeners: {
-                        change: function(box, newValue, oldValue, eOpts){
+                        change: function(box, newValue, oldValue, eOpts) {
                             var newval = newValue || 'none';
                             var cols = box.up('querypanel').down(
                                 'columnchoser').getComponent('targetGrid').getStore();
                             var rec = cols.findRecord('dataIndex',
                                 box.$widgetRecord.get('dataIndex'));
-                            if (rec){
+                            if (rec) {
                                 rec.set('sort', newval);
                             }
                         }
@@ -98,33 +98,32 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
             title: i18n.getMsg('query.sorting'),
             // header: false,
             minHeight: 0
-            }];
-            this.callParent();
+        }];
+        this.callParent();
     },
-    setStore: function (newStore){
+    setStore: function(newStore) {
         var grid = this.down('grid');
-        if (newStore){
+        if (newStore) {
             var gridStore = grid.getStore();
-            if (!gridStore){
+            if (!gridStore) {
                 grid.setStore(newStore);
-            }
-            else {
+            } else {
                 var resulting_newstore = Ext.create('Ext.data.Store', {
-                    model: 'Lada.model.Column',
+                    model: 'Lada.model.Column'
                 });
                 var oldcolumns = gridStore.getRange();
-                for (var i=0; i < oldcolumns.length; i++){
+                for (var i=0; i < oldcolumns.length; i++) {
                     var rec = newStore.findRecord('dataIndex',
                         oldcolumns[i].get('dataIndex'));
-                    if (rec){
+                    if (rec) {
                         resulting_newstore.add(rec);
                     }
                 }
                 var newcolumns = newStore.getRange();
-                for (var j=0; j < newcolumns.length; j++){
+                for (var j=0; j < newcolumns.length; j++) {
                     var rec = resulting_newstore.findRecord('dataIndex',
-                    newcolumns[j].get('dataIndex'));
-                    if (!rec){
+                        newcolumns[j].get('dataIndex'));
+                    if (!rec) {
                         resulting_newstore.add(newcolumns[j]);
                     }
                 }
