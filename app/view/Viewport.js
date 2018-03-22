@@ -16,9 +16,7 @@
 Ext.define('Lada.view.Viewport', {
     extend: 'Ext.container.Viewport',
     requires: [
-        'Lada.view.ModeSwitcher',
-        'Lada.view.FilterPanel',
-        'Lada.view.panel.FilterDetails'
+        'Lada.view.QueryPanel',
     ],
     layout: 'fit',
     initComponent: function() {
@@ -73,6 +71,7 @@ Ext.define('Lada.view.Viewport', {
                 split: true,
                 flex: 1,
                 collapsible: true,
+                minWidth: 500,
                 collapsed: false,
                 dockedItems: [{
                     xtype: 'toolbar',
