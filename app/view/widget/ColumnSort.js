@@ -50,7 +50,8 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                 plugins: {
                     ptype: 'gridviewdragdrop',
                     containerScroll: true
-                }
+                },
+                markDirty: false
             },
             columns: [{
                 text: '',
@@ -64,9 +65,18 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                     xtype: 'combobox',
                     model: cboxmodel,
                     store: comboboxstore,
+                    defaultValue: 'none',
                     queryMode: 'local',
                     displayField: 'name',
-                    valueField: 'value'
+                    valueField: 'value',
+                    triggers: {
+                        clear: {
+                            extraCls: 'x-form-clear-trigger',
+                            handler: function() {
+                                this.setValue('none');
+                            }
+                        }
+                    }
                 },
                 text: '',
                 dataIndex: 'sort',

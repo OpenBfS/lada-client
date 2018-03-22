@@ -208,15 +208,19 @@ Ext.define('Lada.controller.Query', {
 
     setSortandFilterActive: function(me){
         var qpanel = me.up('querypanel');
-        qpanel.down('columnsort').setStore(qpanel.currentColumns);
+
         qpanel.down('cbox[name=activefilters]').setStore(qpanel.currentColumns);
         var cols = qpanel.currentColumns.getRange();
         var active = [];
         for (var i = 0; i< cols.length; i++){
+            if (!cols[i].get('sort')){
+                cols[i].set('sort', 'none');
+            }
             if (cols[i].get('filteractive') === true){
                 active.push(cols[i].get('dataIndex'));
             }
         }
+        qpanel.down('columnsort').setStore(qpanel.currentColumns);
         qpanel.down('cbox[name=activefilters]').setValue(active);
     },
 
