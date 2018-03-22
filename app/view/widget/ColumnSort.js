@@ -88,11 +88,35 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
             }];
             this.callParent();
     },
-    setStore: function (store){
-        if (store){
-            store.clearFilter();
-            this.down('grid').reconfigure(store);
+    setStore: function (newStore){
+        var grid = this.down('grid');
+        if (newStore){
+            var gridStore = grid.getStore();
+            if (!gridStore){
+                grid.setStore(newStore);
+            }
+            else {
+                var resulting_newstore = Ext.create('Ext.data.Store', {
+                    model: 'Lada.model.Column',
+                });
+                var oldcolumns = gridStore.getRange();
+                for (var i=0; i < oldcolumns.length; i++){
+                    var rec = newStore.findRecord('dataIndex',
+                        oldcolumns[i].get('dataIndex'));
+                    if (rec){
+                        resulting_newstore.add(rec);
+                    }
+                }
+                var newcolumns = newStore.getRange();
+                for (var j=0; j < newcolumns.length; j++){
+                    var rec = resulting_newstore.findRecord('dataIndex',
+                    newcolumns[j].get('dataIndex'));
+                    if (!rec){
+                        resulting_newstore.add(newcolumns[j]);
+                    }
+                }
+                grid.setStore(resulting_newstore);
+            }
         }
     }
-    //TODO on datachange: change this.up('querypanel').currentColumns
 });
