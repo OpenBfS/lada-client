@@ -71,9 +71,22 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                     valueField: 'value',
                     triggers: {
                         clear: {
-                            extraCls: 'x-form-clear-trigger',
-                            handler: function() {
-                                this.setValue('none');
+                            hidden: true
+                        //     extraCls: 'x-form-clear-trigger',
+                        //     handler: function() {
+                        //         this.setValue('none');
+                        //     }
+                        }
+                    },
+                    listeners: {
+                        change: function(box, newValue, oldValue, eOpts){
+                            var newval = newValue || 'none';
+                            var cols = box.up('querypanel').down(
+                                'columnchoser').getComponent('targetGrid').getStore();
+                            var rec = cols.findRecord('dataIndex',
+                                box.$widgetRecord.get('dataIndex'));
+                            if (rec){
+                                rec.set('sort', newval);
                             }
                         }
                     }

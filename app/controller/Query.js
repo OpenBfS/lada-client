@@ -114,9 +114,14 @@ Ext.define('Lada.controller.Query', {
     },
 
     saveQuery: function(button){
-        Ext.Msg.alert('Query gespeichert','Query gespeichert');
+        Ext.Msg.alert('Query gespeichert','Speicherung der gesamten Query- noch nciht implementiert');
+        //TODO:
         // check for uniqueness of name/owner
+        // validate fields.
+        // convert columns and column.filters
         //send to server, wait for callback, reload availableQueriesstore
+        button.up('querypanel').down('fieldset[name=querydetails]').setCollapsed(true);
+
     },
 
     reset: function (button){
