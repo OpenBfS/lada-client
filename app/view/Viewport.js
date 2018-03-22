@@ -73,6 +73,7 @@ Ext.define('Lada.view.Viewport', {
                 collapsible: true,
                 minWidth: 500,
                 collapsed: false,
+                scrollable: 'y',
                 dockedItems: [{
                     xtype: 'toolbar',
                     dock: 'top',
