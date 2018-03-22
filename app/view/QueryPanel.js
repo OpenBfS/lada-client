@@ -145,13 +145,14 @@ Ext.define('Lada.view.QueryPanel', {
     }, {
         xtype: 'fieldset',
         name: 'filtervariables',
-        margin: '10, 15, 20, 15',
+        margin: 10,
         minHeight: 20,
         title: 'Filter',
         layout: {
             type: 'hbox',
             align:'stretchmax'
         },
+
         items: [{
             xtype: 'panel',
             border: false,
