@@ -81,7 +81,6 @@ Ext.define('Lada.controller.Query', {
         cbox.select(newrecord);
         this.changeCurrentQuery(cbox);
         panel.down('fieldset[name=querydetails]').setCollapsed(false);
-        panel.down('button[action=save]').setDisabled(false);
     },
 
     expandDetails: function(button){
@@ -98,12 +97,11 @@ Ext.define('Lada.controller.Query', {
             var combobox = button.up('querypanel').down('combobox[name=selectedQuery]');
             combobox.getStore().remove(query);
             var firstEntry = combobox.getStore().getAt(0);
-            if (firstEntry) {
-                combobox.select(combobox.getStore().getAt(0));
-            } else {
-                combobox.clearValue();
-                // what to do here? This should not happen
+            if (!firstEntry) {
+                button.up('querypanel').down('checkbox[name=allqueries]').setValue(true);
+                firstEntry = combobox.getStore().getAt(0);
             }
+            combobox.select(combobox.getStore().getAt(0));
             button.up('querypanel').down('fieldset[name=querydetails]').collapse();
         } else {
             Ext.Msg.alert('','Query nicht gelöscht');
@@ -134,6 +132,7 @@ Ext.define('Lada.controller.Query', {
         panel.getForm().loadRecord(newquery);
         if (newquery.get('owner') === 'Testlabor_4') { //hardcoded dummy data
             panel.down('button[action=delquery]').setDisabled(false);
+            panel.down('button[action=save]').setDisabled(false);
         } else {
             panel.down('button[action=delquery]').setDisabled(true);
             panel.down('button[action=save]').setDisabled(true);
