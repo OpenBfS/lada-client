@@ -35,12 +35,16 @@ Ext.define('Lada.view.QueryPanel', {
             {
                 xtype: 'combobox',
                 margin: 5,
-                title: 'query.query',
+                fieldLabel: 'query.query',
                 name: 'selectedQuery',
                 displayField: 'name',
                 valueField: 'id',
                 labelWidth: 125,
-                flex: 2
+                minWidth: 250,
+                flex: 2,
+                triggers: {
+                    clear: { hidden: true}
+                }
             }, {
                 xtype: 'checkbox',
                 margin: 5,
@@ -303,7 +307,7 @@ Ext.define('Lada.view.QueryPanel', {
                 model: 'Lada.model.DummyBaseQuery'
         });
         var selquery = this.down('combobox[name=selectedQuery]');
-        selquery.title = i18n.getMsg('query.query');
+        selquery.fieldLabel = i18n.getMsg('query.query');
         selquery.getStore().add([query0, query1]);
         selquery.getStore().filter('owner', 'Testlabor_4');//hardcoded dummy data
         this.down('button[action=delquery]').setDisabled(false);
