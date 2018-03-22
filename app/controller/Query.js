@@ -8,6 +8,9 @@
 
 Ext.define('Lada.controller.Query', {
     extend: 'Ext.app.Controller',
+    requires: [
+        'Lada.view.widget.base.DatetimeRange'
+    ],
 
     /**
      * TODO
@@ -40,7 +43,7 @@ Ext.define('Lada.controller.Query', {
                 click: me.search
             },
             'querypanel cbox[name=activefilters] tagfield': {
-                 change: me.activeChanged,
+                 change: me.activeChanged
             }
         });
     },
@@ -175,7 +178,7 @@ Ext.define('Lada.controller.Query', {
                         });
                         break;
                     case 'date':
-                        field = Ext.create('Lada.view.widget.base.Datetime', {
+                        field = Ext.create('Lada.view.widget.base.DatetimeRange', {
                             name: col.get('dataIndex'),
                             labelWidth: 125,
                             fieldLabel: col.get('dataIndex'),
