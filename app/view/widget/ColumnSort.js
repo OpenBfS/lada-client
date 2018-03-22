@@ -57,6 +57,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                 flex: 2
             },{
                 xtype: 'widgetcolumn',
+                minWidth: 150,
                 widget: {
                     xtype: 'combobox',
                     model: cboxmodel,
