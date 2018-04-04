@@ -18,7 +18,7 @@ Ext.define('Lada.controller.Query', {
     init: function() {
         var me = this;
         this.control({
-            'querypanel checkbox[name=allqueries]': {
+            'querypanel checkbox[name=ownqueries]': {
                 change: me.listAllQueries
             },
             'querypanel button[action=newquery]': {
@@ -50,7 +50,7 @@ Ext.define('Lada.controller.Query', {
 
     listAllQueries: function(checkbox, newval) {
         checkbox.resetOriginalValue(); //avoids field being cleaned on reset
-        if (newval === true) {
+        if (newval === false) {
             checkbox.up('panel').down('combobox[name=selectedQuery]').store.clearFilter();
         } else {
             //TODO: currently selected may disappear from visible store!
@@ -97,7 +97,7 @@ Ext.define('Lada.controller.Query', {
             combobox.getStore().remove(query);
             var firstEntry = combobox.getStore().getAt(0);
             if (!firstEntry) {
-                button.up('querypanel').down('checkbox[name=allqueries]').setValue(true);
+                button.up('querypanel').down('checkbox[name=ownqueries]').setValue(false);
                 firstEntry = combobox.getStore().getAt(0);
             }
             combobox.select(combobox.getStore().getAt(0));

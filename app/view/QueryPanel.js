@@ -27,8 +27,7 @@ Ext.define('Lada.view.QueryPanel', {
     items: [{
         xtype: 'container',
         layout: {
-            type: 'hbox',
-            align: 'stretchmax'
+            type: 'vbox'
         },
         margin: 10,
         items: [
@@ -40,17 +39,16 @@ Ext.define('Lada.view.QueryPanel', {
                 displayField: 'name',
                 valueField: 'id',
                 labelWidth: 125,
-                minWidth: 250,
-                flex: 2,
+                width: '100%',
                 triggers: {
                     clear: { hidden: true}
                 }
             }, {
                 xtype: 'checkbox',
-                margin: 5,
-                name: 'allqueries',
-                boxLabel: 'query.showall',
-                checked: false,
+                margin: '5 5 5 135',
+                name: 'ownqueries',
+                boxLabel: 'query.showown',
+                checked: true,
                 flex: 1
             }]
     }, {
@@ -291,7 +289,7 @@ Ext.define('Lada.view.QueryPanel', {
         this.down('button[action=search]').text = i18n.getMsg('query.search');
         this.down('button[action=save]').text = i18n.getMsg('query.save');
         this.down('button[action=reset]').text =i18n.getMsg('query.reset');
-        this.down('checkbox[name=allqueries]').boxLabel = i18n.getMsg('query.showall');
+        this.down('checkbox[name=ownqueries]').boxLabel = i18n.getMsg('query.showown');
         this.down('fieldset[name=querydetails]').setTitle(i18n.getMsg('query.details'));
         this.down('button[action=newquery]').text = i18n.getMsg('query.new');
         this.down('button[action=editquery]').text= i18n.getMsg('query.edit');
