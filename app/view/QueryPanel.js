@@ -77,6 +77,13 @@ Ext.define('Lada.view.QueryPanel', {
             disabled: true
         }]
     }, {
+        xtype: 'button',
+        action: 'search',
+        icon: 'resources/img/Find.png',
+        text: 'query.search',
+        margin: '15,0,15,0',
+        flex: 1
+    }, {
         xtype: 'fieldset',
         name: 'querydetails',
         title: 'query.details',
@@ -182,13 +189,6 @@ Ext.define('Lada.view.QueryPanel', {
             flex: 1,
             text: 'query.reset'
         }]
-    }, {
-        xtype: 'button',
-        action: 'search',
-        icon: 'resources/img/Find.png',
-        text: 'query.search',
-        margin: '5,0,5,0',
-        flex: 1
     }],
 
     initComponent: function() {
