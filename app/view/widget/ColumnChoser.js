@@ -19,6 +19,9 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
     selectedStore: Ext.create('Ext.data.Store',{
         model: 'Lada.model.Column'
     }),
+    allColumnsStore: Ext.create('Ext.data.Store',{
+        model: 'Lada.model.Column'
+    }),
     margin: '20,0,0,10',
 
     initComponent: function() {
@@ -151,12 +154,15 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             'Ext.data.Store',{
                 model: 'Lada.model.Column'
             });
+
+        this.allColumnsStore.removeAll();
         for (var i=0; i < baseCols.length; i++) {
             var entry = Ext.create('Lada.model.Column',{
                 dataIndex: baseCols[i].dataIndex,
                 dataType: baseCols[i].dataType
             });
             baseQstore.add(entry);
+            this.allColumnsStore.add(entry);
         }
         this.getComponent('sourceGrid').setStore(baseQstore);
         var selCols = newquery.get('columns');
