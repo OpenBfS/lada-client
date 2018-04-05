@@ -73,7 +73,7 @@ Ext.define('Lada.view.QueryPanel', {
             flex: 1
         },{
             action: 'delquery',
-            text: 'query.delete',
+            text: 'delete',
             flex: 1,
             disabled: true
         }]
@@ -187,13 +187,13 @@ Ext.define('Lada.view.QueryPanel', {
             action: 'save',
             flex: 1,
             margin: '5,0,5,0',
-            text: 'query.save'
+            text: 'save'
         }, {
             xtype: 'button',
             action: 'reset',
             margin: '5,0,5,0',
             flex: 1,
-            text: 'query.reset'
+            text: 'reset'
         }]
     }],
 
@@ -295,13 +295,13 @@ Ext.define('Lada.view.QueryPanel', {
         this.callParent(arguments);
 
         this.down('button[action=search]').text = i18n.getMsg('query.search');
-        this.down('button[action=save]').text = i18n.getMsg('query.save');
-        this.down('button[action=reset]').text =i18n.getMsg('query.reset');
+        this.down('button[action=save]').text = i18n.getMsg('save');
+        this.down('button[action=reset]').text =i18n.getMsg('reset');
         this.down('checkbox[name=ownqueries]').boxLabel = i18n.getMsg('query.showown');
         this.down('fieldset[name=querydetails]').setTitle(i18n.getMsg('query.details'));
         this.down('button[action=newquery]').text = i18n.getMsg('query.new');
         this.down('button[action=editquery]').text= i18n.getMsg('query.edit');
-        this.down('button[action=delquery]').text = i18n.getMsg('query.delete');
+        this.down('button[action=delquery]').text = i18n.getMsg('delete');
         this.down('textfield[name=name]').fieldLabel = i18n.getMsg('query.name');
         this.down('textarea[name=comment]').fieldLabel = i18n.getMsg('query.comment');
         //TODO these two are ugly hacks:
