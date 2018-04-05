@@ -156,7 +156,7 @@ Ext.define('Lada.controller.Query', {
         var currentActive = panel.down('cbox[name=activefilters]').getValue();
         var filtervalues = panel.down('panel[name=filtervalues]');
         filtervalues.removeAll(); //excessive? Could be made more efficient by not deleting and reintroducing?
-        var cols = panel.currentColumns.getRange();
+        var cols = panel.down('columnchoser').allColumnsStore.getRange();
         for (var i = 0; i < cols.length; i++) {
             var col = cols[i];
             if (currentActive.indexOf(col.get('dataIndex')) > -1) {
