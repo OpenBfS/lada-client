@@ -129,6 +129,11 @@ Ext.define('Lada.view.QueryPanel', {
                 '{name}</div></tpl>'),
             displayTpl: Ext.create('Ext.XTemplate',
                 '<tpl for=".">{name}</tpl>')
+        },{
+            xtype: 'textarea',
+            name: 'comment',
+            fieldLabel: 'query.comment',
+            labelWidth: 125
         }, {
             xtype: 'columnchoser'
         },{
@@ -239,6 +244,7 @@ Ext.define('Lada.view.QueryPanel', {
             owner: 'Testlabor_4',
             groups: ['imis_world', 'Testlabor_4'],
             sorting: ['MessstelleLabor','Probenart','Datum'],
+            comment: 'Kommentar',
             columns: [{
                 dataIndex: 'MessstelleLabor',
                 sort: 'asc',
@@ -260,6 +266,7 @@ Ext.define('Lada.view.QueryPanel', {
             basequery: baseQuery,
             name: 'Beispiel 2, fremder Eintrag',
             owner: 'imis_world',
+            comment: 'Lorem Ipsum',
             groups: ['imis_world', 'Testlabor_1'],
             sorting: ['MessstelleLabor','Probenart','MST-ID'],
             columns: [{
@@ -296,6 +303,7 @@ Ext.define('Lada.view.QueryPanel', {
         this.down('button[action=editquery]').text= i18n.getMsg('query.edit');
         this.down('button[action=delquery]').text = i18n.getMsg('query.delete');
         this.down('textfield[name=name]').fieldLabel = i18n.getMsg('query.name');
+        this.down('textarea[name=comment]').fieldLabel = i18n.getMsg('query.comment');
         //TODO these two are ugly hacks:
         this.down('cbox[name=groups]').down().fieldLabel = i18n.getMsg('query.groups');
         this.down('cbox[name=activefilters]').down().fieldLabel = i18n.getMsg('query.filters.visible');
