@@ -14,9 +14,10 @@ Ext.define('Lada.view.QueryPanel', {
     alias: 'widget.querypanel',
     model: 'Lada.model.DummyQuery',
     currentColumns: null, //store for the columns
-    require: [
+    requires: [
         'Lada.view.widget.ColumnChoser',
-        'Lada.view.widget.ColumnSort'
+        'Lada.view.widget.ColumnSort',
+        'Lada.model.DummyBaseQuery'
     ],
     layout: {
         type: 'vbox',

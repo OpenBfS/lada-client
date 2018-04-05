@@ -78,7 +78,8 @@ Ext.application({
         'Lada.model.MessstelleLabor',
         'Lada.model.GenericResults',
         'Lada.model.Column',
-        'Lada.model.QueryGroup'
+        'Lada.model.QueryGroup',
+        'Lada.store.DummyStore'
     ],
     bundle: {
         bundle: 'Lada',

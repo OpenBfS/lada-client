@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.view.widget.base.DateRange', {
     extend: 'Ext.panel.Panel',
-    alias: 'widget.datetime',
+    alias: 'widget.daterange',
     requires: [
         'Lada.view.widget.base.DateField'
     ],
