@@ -195,6 +195,14 @@ Ext.define('Lada.view.QueryPanel', {
             flex: 1,
             text: 'reset'
         }]
+    },{
+        xtype: 'button',
+        name: 'search2',
+        action: 'search',
+        icon: 'resources/img/Find.png',
+        text: 'query.search',
+        margin: '5,0,5,0',
+        flex: 1
     }],
 
     initComponent: function() {
@@ -295,6 +303,7 @@ Ext.define('Lada.view.QueryPanel', {
         this.callParent(arguments);
 
         this.down('button[action=search]').text = i18n.getMsg('query.search');
+        this.down('button[name=search2]').text = i18n.getMsg('query.search');
         this.down('button[action=save]').text = i18n.getMsg('save');
         this.down('button[action=reset]').text =i18n.getMsg('reset');
         this.down('checkbox[name=ownqueries]').boxLabel = i18n.getMsg('query.showown');
