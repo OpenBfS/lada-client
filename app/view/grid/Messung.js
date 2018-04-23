@@ -61,6 +61,13 @@ Ext.define('Lada.view.grid.Messung', {
                 grid.fireEvent('itemdblclick', grid, rec);
             }
         }, {
+            header: 'extMID',
+            dataIndex: 'idAlt',
+            flex: 1,
+            editor: {
+                allowBlank: false
+            }
+        }, {
             header: 'Nebenproben-Nr.',
             dataIndex: 'nebenprobenNr',
             flex: 1,
