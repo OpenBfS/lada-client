@@ -223,10 +223,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             return;
         }
 
-        //var radio = Ext.ComponentQuery.query('modeswitcher')[0]
-        //    .down('radiofield[inputValue=proben]');
-        //radio.setValue(true);
-
         var loadedStores = 0;
 
         //Create and load neccessary stores

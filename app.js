@@ -453,7 +453,6 @@ Ext.application({
     // first before the application "launch" function is called.
     controllers: [
         'Lada.controller.Filter', //TODO obsolete?
-        'Lada.controller.ModeSwitcher', //TODO obsolete
         'Lada.controller.Ort',
         'Lada.controller.grid.ProbeList', //TODO obsolete
         'Lada.controller.grid.MessungList', //TODO obsolete
