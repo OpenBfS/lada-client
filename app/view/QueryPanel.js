@@ -13,7 +13,8 @@ Ext.define('Lada.view.QueryPanel', {
     extend: 'Ext.form.Panel',
     alias: 'widget.querypanel',
     model: 'Lada.model.DummyQuery',
-    currentColumns: null, //store for the columns
+    columnStore: null,
+    store: null,
     requires: [
         'Lada.view.widget.ColumnChoser',
         'Lada.view.widget.ColumnSort',
@@ -41,6 +42,7 @@ Ext.define('Lada.view.QueryPanel', {
                 valueField: 'id',
                 labelWidth: 125,
                 width: '100%',
+                submitValue: false,
                 triggers: {
                     clear: { hidden: true}
                 }
@@ -48,6 +50,7 @@ Ext.define('Lada.view.QueryPanel', {
                 xtype: 'checkbox',
                 margin: '5 5 5 135',
                 name: 'ownqueries',
+                submitValue: false,
                 boxLabel: 'query.showown',
                 checked: true,
                 flex: 1
@@ -149,7 +152,6 @@ Ext.define('Lada.view.QueryPanel', {
             valueField: 'dataIndex',
             displayField: 'dataIndex',
             fieldLabel: 'query.filters.visible',
-            labelWidth: 125,
             tpl: Ext.create('Ext.XTemplate',
                 '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
                 '{dataIndex}</div></tpl>'),
@@ -217,32 +219,7 @@ Ext.define('Lada.view.QueryPanel', {
 
         var baseQuery = Ext.create('Lada.model.DummyBaseQuery', {
             id: 1,
-            name: 'basequery in database',
-            fields: [{
-                dataIndex: 'MessstelleLabor',
-                dataType: {name: 'text'}
-            },{
-                dataIndex: 'Netzbetreiber',
-                dataType: {name: 'text'}
-            },{
-                dataIndex: 'Datenbasis',
-                dataType: {name: 'text'}
-            },{
-                dataIndex: 'Probenart',
-                dataType: {name: 'text'}
-            },{
-                dataIndex: 'Probenehmer',
-                dataType: {name: 'text'}
-            },{
-                dataIndex: 'Messregime',
-                dataType: {name: 'text'}
-            },{
-                dataIndex: 'MST-ID',
-                dataType: {name: 'text'}
-            },{
-                dataIndex: 'Datum',
-                dataType: {name: 'date'}
-            }]
+            name: 'basequery in database'
         });
 
         var query0 = Ext.create('Lada.model.DummyQuery',{
@@ -252,22 +229,7 @@ Ext.define('Lada.view.QueryPanel', {
             owner: 'Testlabor_4',
             groups: ['imis_world', 'Testlabor_4'],
             sorting: ['MessstelleLabor','Probenart','Datum'],
-            comment: 'Kommentar',
-            columns: [{
-                dataIndex: 'MessstelleLabor',
-                sort: 'asc',
-                filter: '06010',
-                filteractive: true
-            }, {
-                dataIndex: 'Probenart',
-                sort: 'desc'
-            }, {
-                dataIndex: 'Datum',
-                sort: 'desc'
-            }, {
-                dataIndex: 'Probenehmer',
-                sort: 'none'
-            }]
+            comment: 'Kommentar'
         });
         var query1 = Ext.create('Lada.model.DummyQuery',{
             id: 2,
@@ -298,8 +260,6 @@ Ext.define('Lada.view.QueryPanel', {
 
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('query.title');
-        var me = this;
-
         this.callParent(arguments);
 
         this.down('button[action=search]').text = i18n.getMsg('query.search');
@@ -326,13 +286,31 @@ Ext.define('Lada.view.QueryPanel', {
         selquery.fieldLabel = i18n.getMsg('query.query');
         selquery.getStore().add([query0, query1]);
         selquery.getStore().filter('owner', 'Testlabor_4');//hardcoded dummy data
-        this.down('button[action=delquery]').setDisabled(false);
 
+
+        this.down('button[action=delquery]').setDisabled(false);
         this.down('combobox[name=selectedQuery]').select(query0);
         this.loadRecord(query0);
         this.down('cbox[name=groups]').setValue(query0.get('groups'));
-        this.down('columnchoser').setQuery(query0);
-        this.down('columnchoser').filterUpdate();
+        this.setStore();
+        this.setColumnStore();
+    },
 
+    setColumnStore: function(query) {
+        var me = this;
+        if (query) {
+            this.columnStore.proxy.extraParams.qid = query.get('id');
+            this.columnStore.load(function() {
+                me.down('columnchoser').setStore(me.columnStore);
+                me.down('columnsort').setStore(me.columnStore);
+                me.down('activefilters').setStore(me.columnStore);
+            });
+        }
+    },
+
+    setStore: function(store) {
+        if (store) {
+            this.down('combobox[name=selectedQuery').setStore(store);
+        }
     }
 });

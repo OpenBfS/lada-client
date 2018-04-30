@@ -19,9 +19,13 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
     require: ['Lada.view.widget.Sort'],
     margin: '20,0,0,10',
     title: null,
+    store: Ext.data.Store({
+        model: 'Lada.model.Column'
+    }),
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        var group = this.id;
+        var me = this;
         var cboxmodel = Ext.create('Ext.data.Model', {
             fields: [{name: 'name'}, {name: 'value'}]
         });
@@ -35,7 +39,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                 value: 'desc'
             }, {
                 name: 'Keine Sortierung',
-                value: 'none'
+                value: null
             }]
         });
         this.items = [{
@@ -49,7 +53,22 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
             viewConfig: {
                 plugins: {
                     ptype: 'gridviewdragdrop',
-                    containerScroll: true
+                    containerScroll: true,
+                    listeners: {
+                        drop: function(node, data) {
+                            var ctl = Lada.app.getController(
+                                'Lada.controller.Query');
+                            for (var i = 0 ; i < data.records.length; i++ ) {
+                                var gcv = data.records[i].get(
+                                    'gridColumnValues');
+                                var newidx = node.indexOf(data.records[0]) + 1;
+                                gcv['sortIndex'] = newidx;
+                                data.records[i].set('gridColumnValues', gcv);
+                                ctl.changeQueryParameter(me, 'gridColumnValue',
+                                    data.records[i], gcv);
+                            }
+                        }
+                    }
                 },
                 markDirty: false
             },
@@ -63,31 +82,30 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                 minWidth: 150,
                 widget: {
                     xtype: 'combobox',
+                    dataIndex: 'sort',
                     model: cboxmodel,
                     store: comboboxstore,
-                    defaultValue: 'none',
+                    defaultValue: null,
                     queryMode: 'local',
                     displayField: 'name',
                     valueField: 'value',
                     triggers: {
                         clear: {
                             hidden: true
-                        //     extraCls: 'x-form-clear-trigger',
-                        //     handler: function() {
-                        //         this.setValue('none');
-                        //     }
                         }
                     },
                     listeners: {
-                        change: function(box, newValue, oldValue, eOpts) {
-                            var newval = newValue || 'none';
-                            var cols = box.up('querypanel').down(
-                                'columnchoser').getComponent('targetGrid').getStore();
-                            var rec = cols.findRecord('dataIndex',
-                                box.$widgetRecord.get('dataIndex'));
-                            if (rec) {
-                                rec.set('sort', newval);
-                            }
+                        change: function(box, newValue) {
+                            var ctl = Lada.app.getController(
+                                'Lada.controller.Query');
+                            var newval = newValue || null;
+                            var rec = box.$widgetRecord;
+                            var gcv = rec.get('gridColumnValues');
+                            gcv['sort'] = newval;
+                            rec.set('gridColumnValues', gcv);
+                            ctl.changeQueryParameter(me, 'gridColumnValue',
+                                rec, gcv);
+
                         }
                     }
                 },
@@ -96,39 +114,28 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                 sortable: false
             }],
             title: i18n.getMsg('query.sorting'),
-            // header: false,
             minHeight: 0
         }];
         this.callParent();
     },
+
+    setVisible: function(data, visible) {
+        var ctl = Lada.app.getController('Lada.controller.Query');
+        for (var i=0; i < data.records.length; i++) {
+            var gcv = data.records[i].get('gridColumnValues');
+            gcv['visible'] = visible;
+            ctl.changeQueryParameter(this, 'gridColumnValue', data[i], gcv);
+            data.records[i].set('gridColumnValues', gcv);
+        }
+    },
+
     setStore: function(newStore) {
-        var grid = this.down('grid');
         if (newStore) {
-            var gridStore = grid.getStore();
-            if (!gridStore) {
-                grid.setStore(newStore);
-            } else {
-                var resulting_newstore = Ext.create('Ext.data.Store', {
-                    model: 'Lada.model.Column'
-                });
-                var oldcolumns = gridStore.getRange();
-                for (var i=0; i < oldcolumns.length; i++) {
-                    var rec = newStore.findRecord('dataIndex',
-                        oldcolumns[i].get('dataIndex'));
-                    if (rec) {
-                        resulting_newstore.add(rec);
-                    }
-                }
-                var newcolumns = newStore.getRange();
-                for (var j=0; j < newcolumns.length; j++) {
-                    var rec = resulting_newstore.findRecord('dataIndex',
-                        newcolumns[j].get('dataIndex'));
-                    if (!rec) {
-                        resulting_newstore.add(newcolumns[j]);
-                    }
-                }
-                grid.setStore(resulting_newstore);
-            }
+            this.store.setData(newStore.getData());
+            this.store.filter([{
+                property: 'visible',
+                value: true
+            }]);
         }
     }
 });

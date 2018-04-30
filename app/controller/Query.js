@@ -43,20 +43,19 @@ Ext.define('Lada.controller.Query', {
                 click: me.search
             },
             'querypanel cbox[name=activefilters] tagfield': {
-                change: me.activeChanged
+                change: me.activeFiltersChanged
             }
         });
     },
 
     listAllQueries: function(checkbox, newval) {
-        checkbox.resetOriginalValue(); //avoids field being cleaned on reset
+        checkbox.resetOriginalValue(); // avoids field being cleaned on reset
         if (newval === false) {
-            checkbox.up('panel').down('combobox[name=selectedQuery]').store.clearFilter();
+            checkbox.up('querypanel').getStore().clearFilter();
         } else {
             //TODO: currently selected may disappear from visible store!
-            checkbox.up('panel').down(
-                'combobox[name=selectedQuery]').store.filter(
-                'owner', 'Testlabor_4'); //TODO dummy entry!
+            checkbox.up('querypanel').getStore().filter(
+                'owner', 'Testlabor_4'); // TODO dummy entry!
         }
     },
 
@@ -76,7 +75,8 @@ Ext.define('Lada.controller.Query', {
             groups: newgroups,
             columns: cquery.get('columns')
         });
-        cbox.getStore().add([newrecord]);
+        panel.getStore().add([newrecord]);
+        cbox.setStore(panel.getStore());
         cbox.select(newrecord);
         this.changeCurrentQuery(cbox);
         panel.down('fieldset[name=querydetails]').setCollapsed(false);
@@ -87,29 +87,46 @@ Ext.define('Lada.controller.Query', {
     },
 
     deleteQuery: function(button) {
-        var query = button.up('querypanel').getRecord();
+        var qp = button.up('querypanel');
+        var query = qp.getForm().getRecord();
         if (!query) {
             return;
         }
         //check permission to delete
         if (query.get('owner') === 'Testlabor_4') { //TODO dummy data!
-            var combobox = button.up('querypanel').down('combobox[name=selectedQuery]');
-            combobox.getStore().remove(query);
-            var firstEntry = combobox.getStore().getAt(0);
-            if (!firstEntry) {
-                button.up('querypanel').down('checkbox[name=ownqueries]').setValue(false);
-                firstEntry = combobox.getStore().getAt(0);
+            if (query.phantom) {
+                qp.getStore().remove(query);
             }
-            combobox.select(combobox.getStore().getAt(0));
-            button.up('querypanel').down('fieldset[name=querydetails]').collapse();
+            // else TODO: send a deletion request
+            var combobox = qp.down('combobox[name=selectedQuery]');
+            var firstEntry = qp.getStore().getAt(0);
+            if (!firstEntry) {
+                qp.down('checkbox[name=ownqueries]').setValue(false);
+                firstEntry = qp.getStore().getAt(0);
+            }
+            combobox.select(qp.getStore().getAt(0));
+            qp.down('fieldset[name=querydetails]').collapse();
         } else {
             Ext.Msg.alert('','Query nicht gelöscht');
         }
     },
 
     changeCurrentQuery: function(combobox) {
-        var newquery = combobox.getStore().getById(combobox.getValue());
-        this.resetQueryParameters(combobox, newquery);
+        var qp = combobox.up('querypanel');
+        var newquery = qp.getStore().getById(combobox.getValue());
+        qp.getForm().loadRecord(newquery);
+        if (newquery.get('owner') === 'Testlabor_4') {//hardcoded dummy data
+            qp.down('button[action=delquery]').setDisabled(false);
+            qp.down('button[action=save]').setDisabled(false);
+        } else {
+            qp.down('button[action=delquery]').setDisabled(true);
+            qp.down('button[action=save]').setDisabled(true);
+        }
+        var cs = Ext.data.StoreManager.get('columnstore');
+        cs.proxyextraParams.qid = newquery.get('id');
+        cs.load(function() {
+            qp.setColumnStore(cs);
+        });
     },
 
     saveQuery: function(button) {
@@ -120,29 +137,22 @@ Ext.define('Lada.controller.Query', {
         // convert columns and column.filters
         //send to server, wait for callback, reload availableQueriesstore
         button.up('querypanel').down('fieldset[name=querydetails]').setCollapsed(true);
-
     },
 
     reset: function(button) {
         var panel = button.up('querypanel'); //Reset does not work here
-        var cbox = panel.down('combobox[name=selectedQuery]');
-        var originalrecord = null;
-        originalrecord = cbox.getStore().getById(cbox.getValue());
-        this.resetQueryParameters(button, originalrecord);
+        panel.getForm().reset();
     },
 
-    resetQueryParameters: function(element, newquery) {
+    /**
+     * change data modified in derived stores in the main column store, too
+     * Expects a Lada.model.Column
+     */
+    changeQueryParameter: function(element, property, data, newvalue) {
+
         var panel = element.up('querypanel');
-        panel.getForm().loadRecord(newquery);
-        if (newquery.get('owner') === 'Testlabor_4') { //hardcoded dummy data
-            panel.down('button[action=delquery]').setDisabled(false);
-            panel.down('button[action=save]').setDisabled(false);
-        } else {
-            panel.down('button[action=delquery]').setDisabled(true);
-            panel.down('button[action=save]').setDisabled(true);
-        }
-        panel.down('cbox[name=groups]').setValue(newquery.get('groups'));
-        panel.down('columnchoser').setQuery(newquery);
+        var origentry = panel.store.getById(data.get('id'));
+        origentry.set(property, newvalue);
     },
 
     search: function(button) {
@@ -152,93 +162,94 @@ Ext.define('Lada.controller.Query', {
 
     showFilter: function(combo) {
         var panel = combo.up('querypanel');
+        filtervalues.removeAll();
+        var recs = panel.getStore().getData();
+        for (var i= 0; i< recs.length; i++) {
+            var gcv = recs[i].get('gridColumValues');
+            var dt = recs[i].get('datatype');
+            switch (dt) {
+                case '1': // 'text':
+                case '4': // probeId
+                case '5': // messungId
+                case '6': // ortId
 
-        var currentActive = panel.down('cbox[name=activefilters]').getValue();
-        var filtervalues = panel.down('panel[name=filtervalues]');
-        filtervalues.removeAll(); //excessive? Could be made more efficient by not deleting and reintroducing?
-        var cols = panel.down('columnchoser').allColumnsStore.getRange();
-        for (var i = 0; i < cols.length; i++) {
-            var col = cols[i];
-            if (currentActive.indexOf(col.get('dataIndex')) > -1) {
-                col.set('filteractive', true);
-                var field = null;
-                var dt = col.get('dataType');
-                switch (dt.name) {
-                    case 'text':
-                        field = Ext.create('Ext.form.field.Text', {
-                            name: col.get('dataIndex'),
-                            fieldLabel: col.get('dataIndex'), //needs "beschreibung"
-                            labelWidth: 125,
-                            margin: 5,
-                            width: '100%',
-                            value: col.get('filter'),
-                            triggers: {
-                                clear: {
-                                    extraCls: 'x-form-clear-trigger',
-                                    handler: function() {
-                                        this.setValue('');
-                                    }
+                    field = Ext.create('Ext.form.field.Text', {
+                        name: recs[i].get('dataIndex'),
+                        fieldLabel: recs[i].get('name'),
+                        labelWidth: 125,
+                        margin: 5,
+                        width: '100%',
+                        value: gcv.filterValue || '',
+                        triggers: {
+                            clear: {
+                                extraCls: 'x-form-clear-trigger',
+                                handler: function() {
+                                    this.setValue('');
                                 }
                             }
-                        });
-                        break;
-                    case 'date':
-                        field = Ext.create('Lada.view.widget.base.DateRange', {
-                            name: col.get('dataIndex'),
-                            labelWidth: 125,
-                            fieldLabel: col.get('dataIndex'),
-                            value: col.get('filter'),
-                            width: '100%',
-                            triggers: {
-                                clear: {
-                                    extraCls: 'x-form-clear-trigger',
-                                    handler: function() {
-                                        this.clearValue();
-                                    }
+                        }
+                    });
+                    break;
+                case '2': //'date':
+                    field = Ext.create('Lada.view.widget.base.DateRange', {
+                        name: recs[i].get('dataIndex'),
+                        labelWidth: 125,
+                        fieldLabel: recs[i].get('name'),
+                        value: gcv.filterValue || null,
+                        width: '100%',
+                        triggers: {
+                            clear: {
+                                extraCls: 'x-form-clear-trigger',
+                                handler: function() {
+                                    this.clearValue();
                                 }
                             }
-                        });
-                        break;
-                }
-                if (field) {
-                    filtervalues.add(field);
-                }
-            } else {
-                col.set('filteractive', false);
-                col.set('filter', null);
+                        }
+                    });
+                    break;
+                case '3': //'number'
+                    field = Ext.create('Lada.view.widget.base.NumberField', {
+                        name: recs[i].get('dataIndex'),
+                        labelWidth: 125,
+                        fieldLabel: recs[i].get('name'),
+                        value: gcv.filterValue || null,
+                        width: '100%',
+                        triggers: {
+                            clear: {
+                                extraCls: 'x-form-clear-trigger',
+                                handler: function() {
+                                    this.clearValue();
+                                }
+                            }
+                        }
+                    });
+                    break;
+                case '7':// 7 geom TODO: how/if to implement
+                default:
+                    break;
+            }
+            if (field) {
+                filtervalues.add(field);
             }
         }
     },
 
-    setSortandFilterActive: function(me) {
-        var qpanel = me.up('querypanel');
-        qpanel.down('cbox[name=activefilters]').setStore(
-            qpanel.down('columnchoser').allColumnsStore);
-        var cols = qpanel.currentColumns.getRange();
-        var active = [];
-        for (var i = 0; i< cols.length; i++) {
-            if (!cols[i].get('sort')) {
-                cols[i].set('sort', 'none');
-            }
-            if (cols[i].get('filteractive') === true) {
-                active.push(cols[i].get('dataIndex'));
+    activeFiltersChanged: function(box, newvalue, oldvalue) {
+        var store = box.up('querypanel').getStore();
+        for (var i=0; i< oldvalue.length; i++) {
+            if (newvalue.indexOf(oldvalue[i]) < 0) {
+                var rec = store.findRecord('dataIndex', oldvalue[i]);
+                var gcv = rec.get('gridColumValues');
+                gcv['filteractive'] = false;
+                rec.set('gridColumValues', gcv);
             }
         }
-        qpanel.down('columnsort').setStore(qpanel.currentColumns);
-        qpanel.down('cbox[name=activefilters]').setValue(active);
-    },
-
-    activeChanged: function(box, newvalue) {
-        var colstore = box.up('querypanel').currentColumns;
-        var cols = colstore.getRange();
-        for (var i=0;i< cols.lentgh; i++) {
-            if (newvalue.indexOf(cols[i].get('dataIndex')) > -1) {
-                cols[i].setValue('filteractive', true);
-            } else {
-                cols[i].setValue('filteractive', false);
-            }
+        for (var j= 0 ; j < newvalue.length; newvalue ++) {
+            var nrec = store.findRecord('dataIndex', newvalue[j]);
+            var ngcv = nrec.get('gridColumValues');
+            ngcv['filteractive'] = true;
+            nrec.set('gridColumValues', ngcv);
         }
-        box.up('querypanel').currentColumns = colstore;
         this.showFilter(box);
     }
 });

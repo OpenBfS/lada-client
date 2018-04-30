@@ -7,20 +7,35 @@
  */
 
 /**
- * Model for generic Columns configuration in queryui panel
+ * Model for generic Columns configuration
  */
 Ext.define('Lada.model.Column', {
     extend: 'Ext.data.Model',
     fields: [{
-        name: 'dataType'
+        name: 'id'
     }, {
         name: 'dataIndex'
     }, {
-        name: 'sort'
+        name: 'dataType'
     }, {
         name: 'filter'
     }, {
-        name: 'filteractive'
+        name: 'name'
+    }, {
+        name: 'position'
+    }, {
+        name: 'query'
+    }, {
+        name: 'gridColumnValues'
     }],
-    idProperty: 'dataIndex'
+    idProperty: 'id',
+    proxy: {
+        type: 'rest',
+        url: 'lada-server/rest/column',
+        reader: {
+            type: 'json',
+            totalProperty: 'totalCount',
+            rootProperty: 'data'
+        }
+    }
 });

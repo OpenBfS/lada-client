@@ -79,7 +79,8 @@ Ext.application({
         'Lada.model.GenericResults',
         'Lada.model.Column',
         'Lada.model.QueryGroup',
-        'Lada.store.DummyStore'
+        'Lada.store.DummyStore',
+        'Lada.store.Column'
     ],
     bundle: {
         bundle: 'Lada',
@@ -202,6 +203,9 @@ Ext.application({
         });
         Ext.create('Lada.store.Messmethoden', {
             storeId: 'messmethoden'
+        });
+        Ext.create('Lada.store.Column', {
+            storeId: 'columnstore'
         });
         Ext.create('Lada.store.Messstellen', {
             storeId: 'messstellen',
