@@ -24,7 +24,6 @@ Ext.define('Lada.controller.Filter', {
         'Lada.view.grid.MessprogrammKategorie',
         'Lada.view.panel.Ort',
         'Lada.store.MessungenList',
-        'Lada.view.window.FilterManagement',
         'Lada.view.window.About',
         'Lada.view.window.HelpprintWindow',
         'Lada.view.widget.Umwelt',
@@ -65,9 +64,7 @@ Ext.define('Lada.controller.Filter', {
             'filterpanel button[action=details]': {
                 click: this.showDetails
             },
-            'filterpanel button[action=manage]': {
-                click: this.showManagement
-            },
+
             'filterpanel checkbox[name=favorites]': {
                 change: this.triggerFilterUpdate
             },
@@ -543,13 +540,6 @@ Ext.define('Lada.controller.Filter', {
         } else {
             details.hide();
         }
-    },
-
-    showManagement: function() {
-        if (!this.managementWindow) {
-            this.managementWindow = Ext.create('Lada.view.window.FilterManagement');
-        }
-        this.managementWindow.show();
     },
 
     triggerFilterUpdate: function(checkbox) {

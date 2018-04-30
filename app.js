@@ -472,7 +472,6 @@ Ext.application({
         'Lada.controller.form.Messprogramm',
         'Lada.controller.grid.MessprogrammKategorie',
         'Lada.controller.grid.Messmethode',
-        'Lada.controller.FilterManagement', //TODO obsolete
         'Lada.controller.GridExport',
         'Lada.controller.grid.DynamicGrid',
         'Lada.controller.Query'
