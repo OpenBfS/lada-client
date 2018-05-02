@@ -103,7 +103,7 @@ Ext.define('Lada.view.QueryPanel', {
             align: 'stretch'
         },
         items: [{
-            xtype: 'textfield', //TODO tfield or textfield?
+            xtype: 'textfield',
             name: 'name',
             fieldLabel: 'query.name',
             labelWidth: 125,
@@ -112,7 +112,7 @@ Ext.define('Lada.view.QueryPanel', {
                 clear: {
                     extraCls: 'x-form-clear-trigger',
                     handler: function() {
-                        this.clearValue(); //not a function in textfield
+                        this.setValue('');
                     }
                 }
             }
