@@ -551,9 +551,7 @@ Ext.define('Lada.controller.Filter', {
         var store;
         var entries;
         var fav = combobox.up('fieldset').down('checkbox[name=favorites]');
-        if (this.mode === 'proben') {
-            store = Ext.StoreManager.get('probequeries');
-        } else if (this.mode === 'messprogramme') {
+        if (this.mode === 'messprogramme') {
             store = Ext.StoreManager.get('messprogrammqueries');
         } else if (this.mode === 'stammdaten') {
             store = Ext.StoreManager.get('stammdatenqueries');
@@ -622,8 +620,6 @@ Ext.define('Lada.controller.Filter', {
                     if (ndx < filters.items.items.length - 1) {
                         return;
                     }
-                    if (query.get('type') === 'probe') {
-                        Ext.StoreManager.get('probequeries').load();
                     } else if (query.get('type') === 'messprogramm') {
                         Ext.StoreManager.get('messprogrammqueries').load();
                     } else if (query.get('type') === 'messung') {
@@ -671,8 +667,6 @@ Ext.define('Lada.controller.Filter', {
                             break;
                         }
                     }
-                    if (query.get('type') === 'probe') {
-                        Ext.StoreManager.get('probequeries').reload();
                     } else if (query.get('type') === 'messprogramm') {
                         Ext.StoreManager.get('messprogrammqueries').reload();
                     } else if (query.get('type') === 'messung') {

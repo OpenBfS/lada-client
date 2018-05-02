@@ -17,16 +17,12 @@ Ext.define('Lada.model.Query', {
     }, {
         name: 'name'
     }, {
+        name: 'query'
+    }, {
         name: 'description'
     }, {
-        name: 'favorite'
+        name: 'owner'
     }, {
         name: 'sql'
-    }, {
-        name: 'results'
-    }, {
-        name: 'filters'
-    }, {
-        name: 'type'
     }]
 });

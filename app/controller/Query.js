@@ -51,10 +51,10 @@ Ext.define('Lada.controller.Query', {
     listAllQueries: function(checkbox, newval) {
         checkbox.resetOriginalValue(); // avoids field being cleaned on reset
         if (newval === false) {
-            checkbox.up('querypanel').getStore().clearFilter();
+            checkbox.up('querypanel').store.clearFilter();
         } else {
             //TODO: currently selected may disappear from visible store!
-            checkbox.up('querypanel').getStore().filter(
+            checkbox.up('querypanel').store.filter(
                 'owner', 'Testlabor_4'); // TODO dummy entry!
         }
     },
@@ -67,13 +67,13 @@ Ext.define('Lada.controller.Query', {
         if (newgroups.indexOf('Testlabor_4') < 0) {
             newgroups.push('Testlabor_4');
         }
-        var newrecord = Ext.create('Lada.model.DummyQuery',{
-            basequery: cquery.get('basequery'),
-            id: cbox.getStore().totalCount + 11,
+        var newrecord = Ext.create('Lada.model.Query',{
+            query: cquery.get('query'),
             name: cquery.get('name') + ' (Kopie)',
             owner: 'Testlabor_4',
-            groups: newgroups,
-            columns: cquery.get('columns')
+            description: cquery.get('description'),
+            sql: cquery.get('sql'),
+            // groups: newgroups
         });
         panel.getStore().add([newrecord]);
         cbox.setStore(panel.getStore());

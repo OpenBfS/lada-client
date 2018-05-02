@@ -79,8 +79,8 @@ Ext.application({
         'Lada.model.GenericResults',
         'Lada.model.Column',
         'Lada.model.QueryGroup',
-        'Lada.store.DummyStore',
-        'Lada.store.Column'
+        'Lada.store.Column',
+        'Lada.store.Query'
     ],
     bundle: {
         bundle: 'Lada',
@@ -342,10 +342,7 @@ Ext.application({
             storeId: 'genericqueries',
             autoLoad: true
         });
-        Ext.create('Lada.store.ProbeQueries', {
-            storeId: 'probequeries',
-            autoLoad: 'true'
-        });
+
         Ext.create('Lada.store.MessungQueries', {
             storeId: 'messungqueries',
             autoLoad: 'true'
@@ -412,8 +409,8 @@ Ext.application({
             }),
             data: Lada.availablePagingSizes
         });
-        Ext.create('Lada.store.DummyStore', {
-            storeId: 'dummystore'
+        Ext.create('Lada.store.Queries', {
+            storeId: 'querystore'
         });
         Ext.create('Lada.view.Viewport');
     },

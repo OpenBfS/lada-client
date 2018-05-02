@@ -117,21 +117,5 @@ Ext.define('Lada.view.FilterPanel', {
         combo.store = Ext.create('Ext.data.Store', {
             model: 'Lada.model.Query'
         });
-        var store = Ext.StoreManager.get('probequeries');
-        store.on('load', function storeLoad() {
-            var entries = store.queryBy(function(record) {
-                if (record.get('favorite')) {
-                    return true;
-                }
-            });
-            if (entries.getCount() === 0) {
-                var cb = me.down('checkbox[name=favorites]');
-                cb.setValue(false);
-            }
-            combo.store.add(entries.items);
-            combo.select(combo.store.getAt(0));
-            combo.fireEvent('select', combo, [combo.store.getAt(0)]);
-            store.un('load', storeLoad);
-        });
     }
 });

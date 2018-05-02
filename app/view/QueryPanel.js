@@ -12,14 +12,13 @@
 Ext.define('Lada.view.QueryPanel', {
     extend: 'Ext.form.Panel',
     alias: 'widget.querypanel',
-    model: 'Lada.model.DummyQuery',
-    columnStore: null,
-    store: null,
+    model: 'Lada.model.Query',
     requires: [
         'Lada.view.widget.ColumnChoser',
-        'Lada.view.widget.ColumnSort',
-        'Lada.model.DummyBaseQuery'
+        'Lada.view.widget.ColumnSort'
     ],
+    columnStore: null,
+    store: 'querystore',
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -119,6 +118,7 @@ Ext.define('Lada.view.QueryPanel', {
         }, {
             xtype: 'cbox',
             name: 'groups',
+            // TODO no groups yet
             multiSelect: true,
             labelWidth: 125,
             fieldLabel: 'query.groups',
@@ -134,7 +134,7 @@ Ext.define('Lada.view.QueryPanel', {
                 '<tpl for=".">{name}</tpl>')
         },{
             xtype: 'textarea',
-            name: 'comment',
+            name: 'description',
             fieldLabel: 'query.comment',
             labelWidth: 125
         }, {
@@ -209,55 +209,6 @@ Ext.define('Lada.view.QueryPanel', {
 
     initComponent: function() {
 
-        //dummy data
-        var q1 = Ext.create('Lada.model.QueryGroup',
-            {name: 'Testlabor_4'});
-        var q2 = Ext.create('Lada.model.QueryGroup',
-            {name: 'imis_world'});
-        var q3 = Ext.create('Lada.model.QueryGroup',
-            {name: 'Testlabor_1'});
-
-        var baseQuery = Ext.create('Lada.model.DummyBaseQuery', {
-            id: 1,
-            name: 'basequery in database'
-        });
-
-        var query0 = Ext.create('Lada.model.DummyQuery',{
-            basequery: baseQuery,
-            id: 1,
-            name: 'Beispiel 1',
-            owner: 'Testlabor_4',
-            groups: ['imis_world', 'Testlabor_4'],
-            sorting: ['MessstelleLabor','Probenart','Datum'],
-            comment: 'Kommentar'
-        });
-        var query1 = Ext.create('Lada.model.DummyQuery',{
-            id: 2,
-            basequery: baseQuery,
-            name: 'Beispiel 2, fremder Eintrag',
-            owner: 'imis_world',
-            comment: 'Lorem Ipsum',
-            groups: ['imis_world', 'Testlabor_1'],
-            sorting: ['MessstelleLabor','Probenart','MST-ID'],
-            columns: [{
-                dataIndex: 'MessstelleLabor',
-                sort: 'asc'
-            },{
-                dataIndex: 'Probenart',
-                sort: 'asc',
-                filteractive: true
-            },{
-                dataIndex: 'MST-ID',
-                sort: 'asc'
-            }, {
-                dataIndex: 'Messregime',
-                sort: 'none',
-                filteractive: true
-
-            }]
-        });
-        // end of dummy data
-
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('query.title');
         this.callParent(arguments);
@@ -277,29 +228,24 @@ Ext.define('Lada.view.QueryPanel', {
         this.down('cbox[name=groups]').down().fieldLabel = i18n.getMsg('query.groups');
         this.down('cbox[name=activefilters]').down().fieldLabel = i18n.getMsg('query.filters.visible');
 
-        this.down('cbox[name=groups]').down('tagfield').getStore().add([q1,q2,q3]);
-        this.down('combobox[name=selectedQuery]').store = Ext.create(
-            'Ext.data.Store',{
-                model: 'Lada.model.DummyBaseQuery'
-            });
         var selquery = this.down('combobox[name=selectedQuery]');
+        selquery.store = this.store;
         selquery.fieldLabel = i18n.getMsg('query.query');
-        selquery.getStore().add([query0, query1]);
-        selquery.getStore().filter('owner', 'Testlabor_4');//hardcoded dummy data
-
+        // selquery.getStore().filter('owner', 'Testlabor_4');//hardcoded dummy data
+        // TODO: 'owner' not in right now?
 
         this.down('button[action=delquery]').setDisabled(false);
-        this.down('combobox[name=selectedQuery]').select(query0);
-        this.loadRecord(query0);
-        this.down('cbox[name=groups]').setValue(query0.get('groups'));
+        this.down('combobox[name=selectedQuery]').select(0);
+        // this.down('cbox[name=groups]').setValue(query0.get('groups'));
         this.setStore();
-        this.setColumnStore();
+        this.setColumnStore(this.store.getAt(0));
     },
 
     setColumnStore: function(query) {
         var me = this;
         if (query) {
-            this.columnStore.proxy.extraParams.qid = query.get('id');
+            this.columnStore = Ext.create('Lada.store.Column');
+            this.columnStore.proxy.extraParams = {qid: query.get('query')};
             this.columnStore.load(function() {
                 me.down('columnchoser').setStore(me.columnStore);
                 me.down('columnsort').setStore(me.columnStore);

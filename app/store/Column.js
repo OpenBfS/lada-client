@@ -13,5 +13,14 @@ Ext.define('Lada.store.Column', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Column',
     remoteFilter: true,
-    remoteSort: true
+    remoteSort: true,
+    proxy: {
+        type: 'rest',
+        url: 'lada-server/rest/column',
+        reader: {
+            type: 'json',
+            totalProperty: 'totalCount',
+            rootProperty: 'data'
+        }
+    }
 });
