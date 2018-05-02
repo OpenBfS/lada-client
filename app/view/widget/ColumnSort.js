@@ -7,7 +7,7 @@
  */
 
 /**
- * Widget for chosing and sorting columns
+ * Widget for sorting columns
  */
 Ext.define('Lada.view.widget.ColumnSort' ,{
     extend: 'Ext.container.Container',
@@ -19,7 +19,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
     require: ['Lada.view.widget.Sort'],
     margin: '20,0,0,10',
     title: null,
-    store: Ext.data.Store({
+    store: Ext.create('Ext.data.Store', {
         model: 'Lada.model.Column'
     }),
 
@@ -46,36 +46,26 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
             name: 'sortGrid',
             flex: 1,
             xtype: 'grid',
+            store: this.store,
             scrollable: true,
             maxHeight: 125,
+            autoSort: false,
             multiSelect: true,
             stripeRows: true,
             viewConfig: {
                 plugins: {
                     ptype: 'gridviewdragdrop',
-                    containerScroll: true,
-                    listeners: {
-                        drop: function(node, data) {
-                            var ctl = Lada.app.getController(
-                                'Lada.controller.Query');
-                            for (var i = 0 ; i < data.records.length; i++ ) {
-                                var gcv = data.records[i].get(
-                                    'gridColumnValues');
-                                var newidx = node.indexOf(data.records[0]) + 1;
-                                gcv['sortIndex'] = newidx;
-                                data.records[i].set('gridColumnValues', gcv);
-                                ctl.changeQueryParameter(me, 'gridColumnValue',
-                                    data.records[i], gcv);
-                            }
-                        }
-                    }
+                    containerScroll: true
+                },
+                listeners: {
+                    // TODO sorting and persistence
                 },
                 markDirty: false
             },
             columns: [{
                 text: '',
                 sortable: false,
-                dataIndex: 'dataIndex',
+                dataIndex: 'name',
                 flex: 2
             },{
                 xtype: 'widgetcolumn',
@@ -96,16 +86,12 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                     },
                     listeners: {
                         change: function(box, newValue) {
-                            var ctl = Lada.app.getController(
-                                'Lada.controller.Query');
                             var newval = newValue || null;
                             var rec = box.$widgetRecord;
-                            var gcv = rec.get('gridColumnValues');
-                            gcv['sort'] = newval;
-                            rec.set('gridColumnValues', gcv);
-                            ctl.changeQueryParameter(me, 'gridColumnValue',
-                                rec, gcv);
-
+                            rec.set('sort', newval);
+                            var origindata = this.up('querypanel')
+                                .columnStore.getById(rec.get('id'));
+                            origindata.set('sort', newval);
                         }
                     }
                 },
@@ -114,28 +100,16 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                 sortable: false
             }],
             title: i18n.getMsg('query.sorting'),
-            minHeight: 0
+            minHeight: 40
         }];
         this.callParent();
     },
 
-    setVisible: function(data, visible) {
-        var ctl = Lada.app.getController('Lada.controller.Query');
-        for (var i=0; i < data.records.length; i++) {
-            var gcv = data.records[i].get('gridColumnValues');
-            gcv['visible'] = visible;
-            ctl.changeQueryParameter(this, 'gridColumnValue', data[i], gcv);
-            data.records[i].set('gridColumnValues', gcv);
-        }
-    },
-
     setStore: function(newStore) {
         if (newStore) {
-            this.store.setData(newStore.getData());
-            this.store.filter([{
-                property: 'visible',
-                value: true
-            }]);
+            this.store.setData(newStore.getData().items);
         }
+        this.store.filter('visible', true);
+        this.store.sort('sortIndex', 'ASC');
     }
 });

@@ -54,8 +54,7 @@ Ext.define('Lada.controller.Query', {
             checkbox.up('querypanel').store.clearFilter();
         } else {
             //TODO: currently selected may disappear from visible store!
-            checkbox.up('querypanel').store.filter(
-                'owner', 'Testlabor_4'); // TODO dummy entry!
+            checkbox.up('querypanel').store.filter('owner', true);
         }
     },
 
@@ -72,7 +71,7 @@ Ext.define('Lada.controller.Query', {
             name: cquery.get('name') + ' (Kopie)',
             owner: 'Testlabor_4',
             description: cquery.get('description'),
-            sql: cquery.get('sql'),
+            sql: cquery.get('sql')
             // groups: newgroups
         });
         panel.getStore().add([newrecord]);
@@ -113,20 +112,16 @@ Ext.define('Lada.controller.Query', {
 
     changeCurrentQuery: function(combobox) {
         var qp = combobox.up('querypanel');
-        var newquery = qp.getStore().getById(combobox.getValue());
+        var newquery = qp.store.getById(combobox.getValue());
         qp.getForm().loadRecord(newquery);
-        if (newquery.get('owner') === 'Testlabor_4') {//hardcoded dummy data
+        qp.setColumnStore(newquery);
+        if (newquery.get('owner') === true) {
             qp.down('button[action=delquery]').setDisabled(false);
             qp.down('button[action=save]').setDisabled(false);
         } else {
             qp.down('button[action=delquery]').setDisabled(true);
             qp.down('button[action=save]').setDisabled(true);
         }
-        var cs = Ext.data.StoreManager.get('columnstore');
-        cs.proxyextraParams.qid = newquery.get('id');
-        cs.load(function() {
-            qp.setColumnStore(cs);
-        });
     },
 
     saveQuery: function(button) {
@@ -144,17 +139,6 @@ Ext.define('Lada.controller.Query', {
         panel.getForm().reset();
     },
 
-    /**
-     * change data modified in derived stores in the main column store, too
-     * Expects a Lada.model.Column
-     */
-    changeQueryParameter: function(element, property, data, newvalue) {
-
-        var panel = element.up('querypanel');
-        var origentry = panel.store.getById(data.get('id'));
-        origentry.set(property, newvalue);
-    },
-
     search: function(button) {
         Ext.Msg.alert('', 'Suche - TODO');
         //search. See existing controller (filterresult etc.)
@@ -162,24 +146,27 @@ Ext.define('Lada.controller.Query', {
 
     showFilter: function(combo) {
         var panel = combo.up('querypanel');
-        filtervalues.removeAll();
-        var recs = panel.getStore().getData();
-        for (var i= 0; i< recs.length; i++) {
-            var gcv = recs[i].get('gridColumValues');
-            var dt = recs[i].get('datatype');
+        var fvpanel = panel.down('panel[name=filtervalues]');
+        fvpanel.removeAll(true);
+        var recs = panel.columnStore.getData().items;
+        for (var i= 0; i < recs.length; i++) {
+            if (recs[i].get('filterActive') !== true) {
+                continue;
+            }
+            var dt = recs[i].get('dataType');
+            var field = null;
             switch (dt) {
-                case '1': // 'text':
-                case '4': // probeId
-                case '5': // messungId
-                case '6': // ortId
-
+                case 1: // 'text'
+                case 4: // probeId
+                case 5: // messungId
+                case 6: // ortId
                     field = Ext.create('Ext.form.field.Text', {
                         name: recs[i].get('dataIndex'),
                         fieldLabel: recs[i].get('name'),
                         labelWidth: 125,
                         margin: 5,
                         width: '100%',
-                        value: gcv.filterValue || '',
+                        value: recs[i].get('filterValue') || '',
                         triggers: {
                             clear: {
                                 extraCls: 'x-form-clear-trigger',
@@ -190,12 +177,12 @@ Ext.define('Lada.controller.Query', {
                         }
                     });
                     break;
-                case '2': //'date':
+                case 2: //'date':
                     field = Ext.create('Lada.view.widget.base.DateRange', {
                         name: recs[i].get('dataIndex'),
                         labelWidth: 125,
                         fieldLabel: recs[i].get('name'),
-                        value: gcv.filterValue || null,
+                        value: recs[i].get('filterValue') || null,
                         width: '100%',
                         triggers: {
                             clear: {
@@ -207,12 +194,12 @@ Ext.define('Lada.controller.Query', {
                         }
                     });
                     break;
-                case '3': //'number'
+                case 3: //'number'
                     field = Ext.create('Lada.view.widget.base.NumberField', {
                         name: recs[i].get('dataIndex'),
                         labelWidth: 125,
                         fieldLabel: recs[i].get('name'),
-                        value: gcv.filterValue || null,
+                        value: recs[i].get('filterValue') || null,
                         width: '100%',
                         triggers: {
                             clear: {
@@ -224,31 +211,29 @@ Ext.define('Lada.controller.Query', {
                         }
                     });
                     break;
-                case '7':// 7 geom TODO: how/if to implement
+                case 7:// 7 geom TODO: how/if to implement
                 default:
                     break;
             }
             if (field) {
-                filtervalues.add(field);
+                fvpanel.add(field);
+                //TODO: only adds the first field. I'm lost here
+
             }
         }
     },
 
     activeFiltersChanged: function(box, newvalue, oldvalue) {
-        var store = box.up('querypanel').getStore();
+        var store = box.up('querypanel').columnStore;
         for (var i=0; i< oldvalue.length; i++) {
             if (newvalue.indexOf(oldvalue[i]) < 0) {
                 var rec = store.findRecord('dataIndex', oldvalue[i]);
-                var gcv = rec.get('gridColumValues');
-                gcv['filteractive'] = false;
-                rec.set('gridColumValues', gcv);
+                rec.set('filterActive',false);
             }
         }
         for (var j= 0 ; j < newvalue.length; newvalue ++) {
             var nrec = store.findRecord('dataIndex', newvalue[j]);
-            var ngcv = nrec.get('gridColumValues');
-            ngcv['filteractive'] = true;
-            nrec.set('gridColumValues', ngcv);
+            nrec.set('filterActive', true);
         }
         this.showFilter(box);
     }

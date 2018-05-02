@@ -18,7 +18,7 @@ Ext.define('Lada.view.QueryPanel', {
         'Lada.view.widget.ColumnSort'
     ],
     columnStore: null,
-    store: 'querystore',
+    store: null,
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -150,13 +150,13 @@ Ext.define('Lada.view.QueryPanel', {
             }),
             multiSelect: true,
             valueField: 'dataIndex',
-            displayField: 'dataIndex',
+            displayField: 'name',
             fieldLabel: 'query.filters.visible',
             tpl: Ext.create('Ext.XTemplate',
                 '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-                '{dataIndex}</div></tpl>'),
+                '{name}</div></tpl>'),
             displayTpl: Ext.create('Ext.XTemplate',
-                '<tpl for=".">{dataIndex}</tpl>')
+                '<tpl for=".">{name}</tpl>')
 
         }]
     }, {
@@ -223,40 +223,35 @@ Ext.define('Lada.view.QueryPanel', {
         this.down('button[action=editquery]').text= i18n.getMsg('query.edit');
         this.down('button[action=delquery]').text = i18n.getMsg('delete');
         this.down('textfield[name=name]').fieldLabel = i18n.getMsg('query.name');
-        this.down('textarea[name=comment]').fieldLabel = i18n.getMsg('query.comment');
+        this.down('textarea[name=description]').fieldLabel = i18n.getMsg('query.comment');
         //TODO these two are ugly hacks:
         this.down('cbox[name=groups]').down().fieldLabel = i18n.getMsg('query.groups');
         this.down('cbox[name=activefilters]').down().fieldLabel = i18n.getMsg('query.filters.visible');
 
         var selquery = this.down('combobox[name=selectedQuery]');
-        selquery.store = this.store;
         selquery.fieldLabel = i18n.getMsg('query.query');
-        // selquery.getStore().filter('owner', 'Testlabor_4');//hardcoded dummy data
-        // TODO: 'owner' not in right now?
-
+        this.store = Ext.data.StoreManager.get('querystore');
+        this.store.clearFilter();
+        this.store.filter('owner', true);
+        selquery.setStore(this.store);
         this.down('button[action=delquery]').setDisabled(false);
-        this.down('combobox[name=selectedQuery]').select(0);
-        // this.down('cbox[name=groups]').setValue(query0.get('groups'));
-        this.setStore();
-        this.setColumnStore(this.store.getAt(0));
+        var record0 = this.store.getAt(0);
+        selquery.select(record0);
+        this.getForm().loadRecord(record0);
+        this.setColumnStore(record0);
     },
 
     setColumnStore: function(query) {
         var me = this;
         if (query) {
             this.columnStore = Ext.create('Lada.store.Column');
-            this.columnStore.proxy.extraParams = {qid: query.get('query')};
+            this.columnStore.proxy.extraParams = {
+                qid: query.get('query')};
             this.columnStore.load(function() {
                 me.down('columnchoser').setStore(me.columnStore);
                 me.down('columnsort').setStore(me.columnStore);
-                me.down('activefilters').setStore(me.columnStore);
+                me.down('cbox[name=activefilters]').setStore(me.columnStore);
             });
-        }
-    },
-
-    setStore: function(store) {
-        if (store) {
-            this.down('combobox[name=selectedQuery').setStore(store);
         }
     }
 });

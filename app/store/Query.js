@@ -9,15 +9,23 @@
 /**
  * Store for Queries
  */
-Ext.define('Lada.store.Queries', {
+Ext.define('Lada.store.Query', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Query',
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/query',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
+    // proxy: {
+    //     type: 'rest',
+    //     url: 'lada-server/rest/query',
+    //     reader: {
+    //         type: 'json',
+    //         rootProperty: 'data'
+    //     }
+    // }
+    data: [{
+        'id': 1,
+        'name': 'Dummyquery',
+        'query': 1,
+        'description': 'Query not yet fully impletmented',
+        'owner': true,
+        'sql': ''
+    }]
 });

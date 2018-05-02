@@ -25,7 +25,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
         var col_columns = [{
             text: '',
             sortable: true,
-            dataIndex: 'dataIndex',
+            dataIndex: 'name',
             flex: 1
         }];
         this.items = [{
@@ -42,7 +42,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 },
                 listeners: {
                     drop: function(node, data) {
-                        me.setVisible(data, false);
+                        me.setVisible(data.records, false);
                     }
                 }
             },
@@ -108,7 +108,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 },
                 listeners: {
                     drop: function(node, data) {
-                        me.setVisible(data, true);
+                        me.setVisible(data.records, true);
                     }
                 }
             },
@@ -139,14 +139,13 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
     },
 
     setVisible: function(data, visible) {
-        var ctl = Lada.app.getController('Lada.controller.Query');
-        for (var i=0; i < data.records.length; i++) {
-            var gcv = data.records[i].get('gridColumnValues');
-            gcv['visible'] = visible;
-            ctl.changeQueryParameter(this, 'gridColumnValue', data[i], gcv);
-            data.records[i].set('gridColumnValues', gcv);
-
+        var qps = this.up('querypanel').columnStore;
+        for (var i=0; i < data.length; i++) {
+            data[i].set('visible', visible);
+            var origindata = qps.getById(data[i].get('id'));
+            origindata.set('visible', visible);
         }
+        this.up('querypanel').down('columnsort').setStore(qps);
     },
 
     setStore: function(store) {
@@ -157,7 +156,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             var sstore = new Ext.data.Store({
                 model: 'Lada.model.Column'
             });
-            var data =store.getData();
+            var data =store.getData().items;
             for (var i=0; i < data.length; i++) {
                 if (data[i].get('gridColumnValues').visible === true) {
                     tstore.add(data[i]);

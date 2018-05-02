@@ -409,7 +409,7 @@ Ext.application({
             }),
             data: Lada.availablePagingSizes
         });
-        Ext.create('Lada.store.Queries', {
+        Ext.create('Lada.store.Query', {
             storeId: 'querystore'
         });
         Ext.create('Lada.view.Viewport');
@@ -449,7 +449,6 @@ Ext.application({
     // Define the controllers of the application. They will be initialized
     // first before the application "launch" function is called.
     controllers: [
-        'Lada.controller.Filter', //TODO obsolete?
         'Lada.controller.Ort',
         'Lada.controller.grid.ProbeList', //TODO obsolete
         'Lada.controller.grid.MessungList', //TODO obsolete
