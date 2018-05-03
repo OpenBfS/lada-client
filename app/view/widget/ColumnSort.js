@@ -58,7 +58,23 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                     containerScroll: true
                 },
                 listeners: {
-                    // TODO sorting and persistence
+                    drop: function(node, data, overModel) {
+                        // write the new order to the store(s)
+                        // TODO this is still not good. It relies on uniqueness
+                        // of column names, and that the table's cell template
+                        // does not change.
+                        var nodes = me.down('grid[name=sortGrid]').getView()
+                            .getNodes();
+                        for (var i = 0 ; i < nodes.length; i++) {
+                            var nodename = nodes[i].innerText.substr(0,
+                                nodes[i].innerText.length -3);
+                            var entry = overModel.store.findRecord('name', nodename);
+                            var orig_entry = me.up('querypanel').columnStore
+                                .findRecord('dataIndex',entry.get('dataIndex'));
+                            entry.set('sortIndex', i);
+                            orig_entry.set('sortIndex', i);
+                        }
+                    }
                 },
                 markDirty: false
             },
@@ -111,5 +127,8 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
         }
         this.store.filter('visible', true);
         this.store.sort('sortIndex', 'ASC');
+        var sorter = this.store.getSorters();
+        sorter.remove('sortIndex');
+
     }
 });

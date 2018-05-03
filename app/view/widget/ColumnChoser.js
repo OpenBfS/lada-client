@@ -144,6 +144,10 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             data[i].set('visible', visible);
             var origindata = qps.getById(data[i].get('id'));
             origindata.set('visible', visible);
+            if (visible === false) {
+                origindata.set('sortIndex', null);
+                data[i].set('sortIndex', null);
+            }
         }
         this.up('querypanel').down('columnsort').setStore(qps);
     },
