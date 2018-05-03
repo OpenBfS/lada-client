@@ -217,21 +217,19 @@ Ext.define('Lada.controller.Query', {
             }
             if (field) {
                 fvpanel.add(field);
-                //TODO: only adds the first field. I'm lost here
-
             }
         }
     },
 
     activeFiltersChanged: function(box, newvalue, oldvalue) {
         var store = box.up('querypanel').columnStore;
-        for (var i=0; i< oldvalue.length; i++) {
+        for (var i=0; i < oldvalue.length; i++) {
             if (newvalue.indexOf(oldvalue[i]) < 0) {
                 var rec = store.findRecord('dataIndex', oldvalue[i]);
                 rec.set('filterActive',false);
             }
         }
-        for (var j= 0 ; j < newvalue.length; newvalue ++) {
+        for (var j= 0 ; j < newvalue.length; j++) {
             var nrec = store.findRecord('dataIndex', newvalue[j]);
             nrec.set('filterActive', true);
         }
