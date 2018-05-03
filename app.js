@@ -470,6 +470,7 @@ Ext.application({
         'Lada.controller.grid.Messmethode',
         'Lada.controller.GridExport',
         'Lada.controller.grid.DynamicGrid',
-        'Lada.controller.Query'
+        'Lada.controller.Query',
+        'Lada.controller.Global'
         ]
 });
