@@ -7,13 +7,11 @@
  */
 
 /**
- * Store for Queryresult columns, used in generic Queries
+ * Store for fixed database Column definitions
  */
 Ext.define('Lada.store.Column', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Column',
-    remoteFilter: true,
-    remoteSort: true,
     proxy: {
         type: 'rest',
         url: 'lada-server/rest/column',
@@ -22,5 +20,11 @@ Ext.define('Lada.store.Column', {
             totalProperty: 'totalCount',
             rootProperty: 'data'
         }
-    }
+    },
+    autoLoad: true,
+    sorters: [{
+        property: 'dataIndex',
+        direction: 'ASC'
+    }],
+    sortOnLoad: true
 });

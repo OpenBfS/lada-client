@@ -7,7 +7,8 @@
  */
 
 /**
- * Model for generic Columns configuration
+ * Model for fixed Column configuration. Columns are set in the database, and
+ * are readonly to the client.
  */
 Ext.define('Lada.model.Column', {
     extend: 'Ext.data.Model',
@@ -19,14 +20,20 @@ Ext.define('Lada.model.Column', {
         name: 'dataType'
     }, {
         name: 'filter'
+        // Object with: id, name, parameter, sql, filterType.id,
+        // filterType.multiselect, filterType.type
     }, {
         name: 'name'
     }, {
         name: 'position'
     }, {
-        name: 'query'
+        name: 'baseQuery'
     }, {
-        name: 'gridColumnValues'
+        name: 'dataIndex'
     }],
+
     idProperty: 'id'
+
+    // onLoad: function(){}
+
 });

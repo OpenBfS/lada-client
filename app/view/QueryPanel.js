@@ -17,7 +17,7 @@ Ext.define('Lada.view.QueryPanel', {
         'Lada.view.widget.ColumnChoser',
         'Lada.view.widget.ColumnSort'
     ],
-    columnStore: null,
+    gridColumnStore: null,
     store: null,
     layout: {
         type: 'vbox',
@@ -230,27 +230,33 @@ Ext.define('Lada.view.QueryPanel', {
 
         var selquery = this.down('combobox[name=selectedQuery]');
         selquery.fieldLabel = i18n.getMsg('query.query');
+
         this.store = Ext.data.StoreManager.get('querystore');
-        this.store.clearFilter();
-        this.store.filter('owner', true);
-        selquery.setStore(this.store);
-        this.down('button[action=delquery]').setDisabled(false);
-        var record0 = this.store.getAt(0);
-        selquery.select(record0);
-        this.getForm().loadRecord(record0);
-        this.setColumnStore(record0);
+        this.store.load({ //TODO: performance impact here?
+            scope: this,
+            callback: function() {
+                this.store.clearFilter();
+                this.store.filter('userId', 0); //TODO dummy data
+                selquery.setStore(this.store);
+                this.down('button[action=delquery]').setDisabled(false);
+                var record0 = this.store.getAt(0);
+                selquery.select(record0);
+                this.getForm().loadRecord(record0);
+                this.setGridColumnStore(record0);
+            }
+        });
     },
 
-    setColumnStore: function(query) {
+    setGridColumnStore: function(query) {
         var me = this;
         if (query) {
-            this.columnStore = Ext.create('Lada.store.Column');
-            this.columnStore.proxy.extraParams = {
-                qid: query.get('query')};
-            this.columnStore.load(function() {
-                me.down('columnchoser').setStore(me.columnStore);
-                me.down('columnsort').setStore(me.columnStore);
-                me.down('cbox[name=activefilters]').setStore(me.columnStore);
+            this.gridColumnStore = Ext.create('Lada.store.GridColumn');
+            this.gridColumnStore.proxy.extraParams = {
+                qid: query.get('id')};
+            this.gridColumnStore.load(function() {
+                me.down('columnchoser').setStore(me.gridColumnStore);
+                me.down('columnsort').setStore(me.gridColumnStore);
+                me.down('cbox[name=activefilters]').setStore(me.gridColumnStore);
             });
         }
     }

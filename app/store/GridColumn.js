@@ -1,4 +1,4 @@
-/* Copyright (C) 2018 by Bundesamt fuer Strahlenschutz
+/* Copyright (C) 2013 by Bundesamt fuer Strahlenschutz
  * Software engineering by Intevation GmbH
  *
  * This file is Free Software under the GNU GPL (v>=3)
@@ -7,17 +7,17 @@
  */
 
 /**
- * Store for generic queries
+ * Store for user defined columns
  */
-Ext.define('Lada.store.GenericQueries', {
+Ext.define('Lada.store.GridColumn', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Query',
-    //    autoLoad: true,
+    model: 'Lada.model.GridColumn',
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/query/universal',
+        url: 'lada-server/rest/columnvalue',
         reader: {
             type: 'json',
+            totalProperty: 'totalCount',
             rootProperty: 'data'
         }
     }

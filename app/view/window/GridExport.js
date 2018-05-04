@@ -141,13 +141,13 @@ Ext.define('Lada.view.window.GridExport', {
             }]
         });
 
-        var columnstore= [];
+        var columnslist= [];
         var preselected= [];
         for (var i =0; i < columns.length; i++) {
             if (columns[i].dataIndex &&
                 columns[i].dataIndex !== 'readonly' &&
                 columns[i].text.length) {
-                columnstore.push({
+                columnslist.push({
                     value: columns[i].dataIndex,
                     name: columns[i].text
                 });
@@ -168,13 +168,13 @@ Ext.define('Lada.view.window.GridExport', {
                 }
             }
         }
-        this.columnStore = Ext.create('Ext.data.Store',{
+        this.columnListStore = Ext.create('Ext.data.Store',{
             fields: ['name', 'value'],
-            data: columnstore
+            data: columnslist
         });
 
         //store for additional rowExpander columns
-        this.expcolumnStore = Ext.create('Ext.data.Store',{
+        this.expcolumnList = Ext.create('Ext.data.Store',{
             fields: ['name', 'value']
         });
 
@@ -232,7 +232,7 @@ Ext.define('Lada.view.window.GridExport', {
             name: 'exportcolumns',
             labelWidth: 100,
             fieldLabel: i18n.getMsg('export.columns'),
-            store: me.columnStore,
+            store: me.columnListStore,
             hidden: true,
             value: preselected,
             multiSelect: true
@@ -241,7 +241,7 @@ Ext.define('Lada.view.window.GridExport', {
             name: 'exportexpcolumns',
             labelWidth: 100,
             fieldLabel: i18n.getMsg('export.expcolumns'),
-            store: me.expcolumnStore,
+            store: me.expcolumnList,
             hidden: true,
             value: null,
             multiSelect: true
@@ -321,7 +321,7 @@ Ext.define('Lada.view.window.GridExport', {
                     if (this.expcolumns[i].dataIndex &&
                       columns[i].dataIndex !== 'readonly' &&
                       this.expcolumns[i].text.length) {
-                        this.expcolumnStore.add({
+                        this.expcolumnList.add({
                             value: this.expcolumns[i].dataIndex,
                             name: this.expcolumns[i].text
                         });

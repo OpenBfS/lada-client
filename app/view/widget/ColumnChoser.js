@@ -16,7 +16,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
         type: 'hbox',
         align: 'stretchmax'
     },
-    store: 'columnstore',
+    store: null,
     margin: '20,0,0,10',
 
     initComponent: function() {
@@ -25,7 +25,18 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
         var col_columns = [{
             text: '',
             sortable: true,
-            dataIndex: 'name',
+            dataIndex: 'gridColumnId',
+            renderer: function(value) {
+                if (!value || value === '') {
+                    return '';
+                }
+                var store = Ext.data.StoreManager.get('columnstore');
+                var record = store.findRecord('id', value);
+                if (record) {
+                    return record.ret('name');
+                }
+                return '';
+            },
             flex: 1
         }];
         this.items = [{
@@ -139,7 +150,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
     },
 
     setVisible: function(data, visible) {
-        var qps = this.up('querypanel').columnStore;
+        var qps = this.up('querypanel').gridColumnStore;
         for (var i=0; i < data.length; i++) {
             data[i].set('visible', visible);
             var origindata = qps.getById(data[i].get('id'));
@@ -155,14 +166,14 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
     setStore: function(store) {
         if (store) {
             var tstore = new Ext.data.Store({
-                model: 'Lada.model.Column'
+                model: 'Lada.model.GridColumn'
             });
             var sstore = new Ext.data.Store({
-                model: 'Lada.model.Column'
+                model: 'Lada.model.GridColumn'
             });
             var data =store.getData().items;
             for (var i=0; i < data.length; i++) {
-                if (data[i].get('gridColumnValues').visible === true) {
+                if (data[i].get('visible') === true) {
                     tstore.add(data[i]);
                 } else {
                     sstore.add(data[i]);

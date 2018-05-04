@@ -7,7 +7,7 @@
  */
 
 /**
- * Model class for SQL-Querys
+ * Model class for Queries
  */
 Ext.define('Lada.model.Query', {
     extend: 'Ext.data.Model',
@@ -17,12 +17,14 @@ Ext.define('Lada.model.Query', {
     }, {
         name: 'name'
     }, {
-        name: 'query'
+        name: 'userId'
+        // the owner/creator of this Query
     }, {
         name: 'description'
     }, {
-        name: 'owner'
-    }, {
-        name: 'sql'
-    }]
+        name: 'baseQuery'
+        // the linked stamm.query in the database.
+    }
+    //TODO: groups
+    ]
 });

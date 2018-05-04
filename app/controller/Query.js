@@ -44,7 +44,23 @@ Ext.define('Lada.controller.Query', {
             },
             'querypanel cbox[name=activefilters] tagfield': {
                 change: me.activeFiltersChanged
+            },
+            'querypanel panel[name=filtervalues] tagfield': {
+                change: me.filterValueChanged
+            },
+            'querypanel panel[name=filtervalues] numberfield': {
+                change: me.filterValueChanged
+            },
+            'querypanel panel[name=filtervalues] textfield': {
+                change: me.filterValueChanged
+            },
+            'querypanel panel[name=filtervalues] combobox': {
+                change: me.filterValueChanged
+            },
+            'querypanel panel[name=filtervalues] datefield': {
+                change: me.filterValueChanged
             }
+
         });
     },
 
@@ -54,7 +70,7 @@ Ext.define('Lada.controller.Query', {
             checkbox.up('querypanel').store.clearFilter();
         } else {
             //TODO: currently selected may disappear from visible store!
-            checkbox.up('querypanel').store.filter('owner', true);
+            checkbox.up('querypanel').store.filter('userId', 0); //TODO dummy value
         }
     },
 
@@ -62,20 +78,19 @@ Ext.define('Lada.controller.Query', {
         var panel = button.up('panel');
         var cbox = panel.down('combobox[name=selectedQuery]');
         var cquery = cbox.getStore().getById(cbox.getValue());
-        var newgroups = cquery.get('groups');
-        if (newgroups.indexOf('Testlabor_4') < 0) {
-            newgroups.push('Testlabor_4');
-        }
+        // var newgroups = cquery.get('groups');
+        // if (newgroups.indexOf('Testlabor_4') < 0) {
+        //     newgroups.push('Testlabor_4');
+        // }
         var newrecord = Ext.create('Lada.model.Query',{
-            query: cquery.get('query'),
+            baseQuery: cquery.get('baseQuery'),
             name: cquery.get('name') + ' (Kopie)',
-            owner: 'Testlabor_4',
-            description: cquery.get('description'),
-            sql: cquery.get('sql')
-            // groups: newgroups
+            owner: null, //TODO: 'myself'
+            description: cquery.get('description')
+            // groups: newgroups TODO
         });
         panel.getStore().add([newrecord]);
-        cbox.setStore(panel.getStore());
+        cbox.setStore(panel.store);
         cbox.select(newrecord);
         this.changeCurrentQuery(cbox);
         panel.down('fieldset[name=querydetails]').setCollapsed(false);
@@ -91,12 +106,12 @@ Ext.define('Lada.controller.Query', {
         if (!query) {
             return;
         }
+        if (query.phantom) {
+            qp.store.remove(query);
+        }
         //check permission to delete
-        if (query.get('owner') === 'Testlabor_4') { //TODO dummy data!
-            if (query.phantom) {
-                qp.getStore().remove(query);
-            }
-            // else TODO: send a deletion request
+        if (query.get('userId') === 1) { //TODO dummy data! Should not work yet
+            // else TODO: send a DELETE request to /rest/query?id=query.get('id')
             var combobox = qp.down('combobox[name=selectedQuery]');
             var firstEntry = qp.getStore().getAt(0);
             if (!firstEntry) {
@@ -114,7 +129,7 @@ Ext.define('Lada.controller.Query', {
         var qp = combobox.up('querypanel');
         var newquery = qp.store.getById(combobox.getValue());
         qp.getForm().loadRecord(newquery);
-        qp.setColumnStore(newquery);
+        qp.setGridColumnStore(newquery);
         if (newquery.get('owner') === true) {
             qp.down('button[action=delquery]').setDisabled(false);
             qp.down('button[action=save]').setDisabled(false);
@@ -140,20 +155,37 @@ Ext.define('Lada.controller.Query', {
     },
 
     search: function(button) {
-        Ext.Msg.alert('', 'Suche - TODO');
-        //search. See existing controller (filterresult etc.)
+        var cs = button.up('querypanel').gridColumnStore;
+        var cols = cs.getData().items;
+        var columns = [];
+        for (var i= 0; i < cols.length; i++) {
+            if (cols[i].get('filterActive') === true
+            || cols[i].get('visible') === true) {
+                columns.push(cols[i].getData());
+            }
+        }
+        Ext.Ajax.request({
+            url: 'lada-server/rest/universal',
+            method: 'GET',
+            jsonData: {'columns': columns },
+            scope: this,
+            success: this.createResultGrid
+        });
     },
 
     showFilter: function(combo) {
         var panel = combo.up('querypanel');
+        var queryno = panel.down('combobox[name=selectedQuery]').getValue;
+        var fixColumn = Ext.data.StoreManager.get('columnstore');
+        var fcr = fixColumn.findRecord('id', queryno);
         var fvpanel = panel.down('panel[name=filtervalues]');
         fvpanel.removeAll(true);
-        var recs = panel.columnStore.getData().items;
+        var recs = panel.gridColumnStore.getData().items;
         for (var i= 0; i < recs.length; i++) {
             if (recs[i].get('filterActive') !== true) {
                 continue;
             }
-            var dt = recs[i].get('dataType');
+            var dt = fcr.get('dataType');
             var field = null;
             switch (dt) {
                 case 1: // 'text'
@@ -161,8 +193,8 @@ Ext.define('Lada.controller.Query', {
                 case 5: // messungId
                 case 6: // ortId
                     field = Ext.create('Ext.form.field.Text', {
-                        name: recs[i].get('dataIndex'),
-                        fieldLabel: recs[i].get('name'),
+                        name: fcr.get('dataIndex'),
+                        fieldLabel: fcr.get('name'),
                         labelWidth: 125,
                         margin: 5,
                         width: '100%',
@@ -179,9 +211,9 @@ Ext.define('Lada.controller.Query', {
                     break;
                 case 2: //'date':
                     field = Ext.create('Lada.view.widget.base.DateRange', {
-                        name: recs[i].get('dataIndex'),
+                        name: fcr.get('dataIndex'),
                         labelWidth: 125,
-                        fieldLabel: recs[i].get('name'),
+                        fieldLabel: fcr.get('name'),
                         value: recs[i].get('filterValue') || null,
                         width: '100%',
                         triggers: {
@@ -196,9 +228,9 @@ Ext.define('Lada.controller.Query', {
                     break;
                 case 3: //'number'
                     field = Ext.create('Lada.view.widget.base.NumberField', {
-                        name: recs[i].get('dataIndex'),
+                        name: fcr.get('dataIndex'),
                         labelWidth: 125,
-                        fieldLabel: recs[i].get('name'),
+                        fieldLabel: fcr.get('name'),
                         value: recs[i].get('filterValue') || null,
                         width: '100%',
                         triggers: {
@@ -222,7 +254,7 @@ Ext.define('Lada.controller.Query', {
     },
 
     activeFiltersChanged: function(box, newvalue, oldvalue) {
-        var store = box.up('querypanel').columnStore;
+        var store = box.up('querypanel').gridColumnStore;
         for (var i=0; i < oldvalue.length; i++) {
             if (newvalue.indexOf(oldvalue[i]) < 0) {
                 var rec = store.findRecord('dataIndex', oldvalue[i]);
@@ -234,5 +266,18 @@ Ext.define('Lada.controller.Query', {
             nrec.set('filterActive', true);
         }
         this.showFilter(box);
+    },
+
+    filterValueChanged: function(box, newvalue, oldvalue) {
+        var store = box.up('querypanel').gridColumnStore;
+        var name = box.up('panel').name;
+        // TODO: check nesting for each type
+        var rec = store.findRecord('dataIndex', name);
+        rec.set('filterValue', newvalue);
+    },
+
+    createResultGrid: function(response) {
+        return true;
+        //TODO not yet implemented
     }
 });

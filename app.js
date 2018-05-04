@@ -66,7 +66,6 @@ Ext.application({
         'Lada.store.StatusKombi',
         'Lada.store.Probenehmer',
         'Lada.store.DatensatzErzeuger',
-        'Lada.store.GenericQueries',
         'Lada.store.GenericResults',
         'Lada.store.MessprogrammKategorie',
         'Lada.store.MessungQueries',
@@ -338,11 +337,6 @@ Ext.application({
             storeId: 'statuskombi',
             autoLoad: 'true'
         });
-        Ext.create('Lada.store.GenericQueries', {
-            storeId: 'genericqueries',
-            autoLoad: true
-        });
-
         Ext.create('Lada.store.MessungQueries', {
             storeId: 'messungqueries',
             autoLoad: 'true'
