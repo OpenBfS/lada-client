@@ -118,10 +118,6 @@ Ext.application({
         //initial default paging size, may be changed by user
         Lada.pagingSize = 50;
 
-        var queryString = document.location.href.split('?')[1];
-        if (queryString) {
-            Lada.openIDParams = queryString;
-        }
         Ext.Ajax.request({
             url: 'lada-server/rest/user',
             method: 'GET',
@@ -416,9 +412,7 @@ Ext.application({
         Ext.Ajax.request({
             url: 'lada-server/rest/version',
             method: 'GET',
-            headers: {
-                'X-OPENID-PARAMS': Lada.openIDParams
-            },
+            headers: {},
             success: function(response) {
                 var json = Ext.decode(response.responseText);
                 Lada.serverVersion = json.data;
