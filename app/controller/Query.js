@@ -160,33 +160,53 @@ Ext.define('Lada.controller.Query', {
         var jsonData = {columns: []};
         var csdata = cs.getData().items;
         for (var i=0; i < csdata.length; i++ ) {
-            if (csdata.get('visible') === true ||
-                csdata.filterActive === true ) {
-                jsonData.push(
-                    csdata.getData({
-                        persist: true
-                    })
-                );
+            if (csdata[i].get('visible') === true ||
+                csdata[i].get('filterActive') === true ) {
+                jsonData.columns.push({
+                    gridColumnId: csdata[i].get('gridColumnId'),
+                    filterActive: csdata[i].get('filterActive'),
+                    filterValue: csdata[i].get('filterValue'),
+                    visible: csdata[i].get('visible'),
+                    columnIndex: csdata[i].get('columnIndex'),
+                    sortIndex: csdata[i].get('sortIndex'),
+                    sort: csdata[i].get('sort')
+                });
             }
         }
-        Ext.Ajax.request({
-            url: 'lada-server/rest/status',
-            jsonData: jsonData,
-            method: 'POST',
-            success: function() {
-                var resultGrid = Ext.create('Lada.view.widget.DynamicGrid', {
-                    selModel: Ext.create('Ext.selection.CheckboxModel', {
-                        checkOnly: true,
-                        injectCheckbox: 1
-                    })
-                });
-                //TODO might already be there, so delete previous first
-                var contentPanel = button.up('panel[name=main]').down(
-                    'panel[name=contentpanel]');
-                contentPanel.removeAll();
-                contentPanel.add(resultGrid);
-            }
-        });
+        if (!jsonData.columns.length) {
+            //TODO warning: no data requested
+        } else {
+            var fixColumnStore = Ext.data.StoreManager.get('columnstore'); // TODO filter by queryno
+
+            Ext.Ajax.request({
+                url: 'lada-server/rest/universal',
+                jsonData: jsonData,
+                method: 'POST',
+                success: function(response) {
+                    if (response.responseText) {
+                        var responseData = Ext.JSON.decode(response.responseText).data;
+                        var contentPanel = button.up('panel[name=main]').down(
+                            'panel[name=contentpanel]');
+                        contentPanel.removeAll();
+                        var resultGrid = Ext.create('Lada.view.widget.DynamicGrid', {
+                            selModel: Ext.create('Ext.selection.CheckboxModel', {
+                                checkOnly: true,
+                                injectCheckbox: 1
+                            }),
+                            store: Ext.data.StoreManager.get('genericresults')
+                        });
+                        resultGrid.setup(cs, fixColumnStore);
+                        resultGrid.store.removeAll();
+                        resultGrid.store.add(responseData);
+                        resultGrid.show();
+                        //TODO might already be there, so delete previous first
+
+                        contentPanel.add(resultGrid);
+                    }
+                    //TODO error handling if search fails
+                }
+            });
+        }
     },
 
     showFilter: function(combo) {
@@ -288,14 +308,9 @@ Ext.define('Lada.controller.Query', {
 
     filterValueChanged: function(box, newvalue, oldvalue) {
         var store = box.up('querypanel').gridColumnStore;
-        var name = box.up('panel').name;
-        // TODO: check nesting for each type
+        var name = box.name;
+        // TODO: daterange still fails here not work as expected
         var rec = store.findRecord('dataIndex', name);
         rec.set('filterValue', newvalue);
-    },
-
-    createResultGrid: function(response) {
-        return true;
-        //TODO not yet implemented
     }
 });

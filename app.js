@@ -367,7 +367,7 @@ Ext.application({
         });
         Ext.create('Lada.store.GenericResults', {
             storeId: 'genericresults',
-            autoLoad: true
+            autoLoad: false
         });
 
         //A Store containing all MST a User is allowed to set.

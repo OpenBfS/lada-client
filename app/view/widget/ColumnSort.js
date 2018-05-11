@@ -65,11 +65,13 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                         // does not change.
                         var nodes = me.down('grid[name=sortGrid]').getView()
                             .getNodes();
-                        var querystore = Ext.data.StoreManager.get('columnstore');
+                        var columnstore = Ext.data.StoreManager.get('columnstore');
                         for (var i = 0 ; i < nodes.length; i++) {
                             var nodename = nodes[i].innerText.substr(0,
                                 nodes[i].innerText.length -3);
-                            var qf = querystore.findRecord('dataIndex', nodename);
+
+                            //TODO this relies on column names to be unique
+                            var qf = columnstore.findRecord('name', nodename);
                             var entry = overModel.store.findRecord(
                                 'gridColumnId', qf.get('id'));
                             var orig_entry = me.up(

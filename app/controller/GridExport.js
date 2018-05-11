@@ -67,9 +67,7 @@ Ext.define('Lada.controller.GridExport', {
             // special handling of probe+messung grids not yet containing their ids
             // TODO might become obsolete soon (Jan 2018)
             Ext.create('Lada.view.window.GridExport', {
-                grid: grid,
-                hasProbe: (grid.xtype === 'probelistgrid'),
-                hasMessung: (grid.xtype === 'messunglistgrid')
+                grid: grid
             }).show();
         }
     }

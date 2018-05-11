@@ -71,8 +71,8 @@ Ext.define('Lada.controller.form.Messung', {
                     var messwertgrid = formPanel.up('window').down('messwertgrid');
                     var parentWin = button.up('window').parentWindow;
                     parentWin.initData();
-                    var parentGrid = Ext.ComponentQuery.query('messunglistgrid');
-                    if (parentGrid.length == 1) {
+                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                    if (parentGrid.length === 1) {
                         parentGrid[0].store.reload();
                     }
                     if (messwertgrid) {
@@ -148,8 +148,8 @@ Ext.define('Lada.controller.form.Messung', {
             success: function(record, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
-                    var parentGrid = Ext.ComponentQuery.query('messunglistgrid');
-                    if (parentGrid.length == 1) {
+                    var parentGrid = Ext.ComponentQuery.query('dynamicGrid');
+                    if (parentGrid.length === 1) {
                         parentGrid[0].store.reload();
                     }
                 }

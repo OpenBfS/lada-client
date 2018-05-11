@@ -61,7 +61,7 @@ Ext.define('Lada.view.window.DeleteProbe', {
                                 msg: 'Probe gelöscht!',
                                 buttons: Ext.Msg.OK
                             });
-                            var parentGrid = Ext.ComponentQuery.query('probelistgrid');
+                            var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                             if (parentGrid.length == 1) {
                                 parentGrid[0].store.reload();
                             }

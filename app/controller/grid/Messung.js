@@ -123,8 +123,8 @@ Ext.define('Lada.controller.grid.Messung', {
                         success: function() {
                             button.up('window').initData();
                             var parentGrid = Ext.ComponentQuery.query(
-                                'messunglistgrid');
-                            if (parentGrid.length == 1) {
+                                'dynamicgrid');
+                            if (parentGrid.length === 1) {
                                 parentGrid[0].store.reload();
                             }
                         },

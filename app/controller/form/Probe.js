@@ -194,7 +194,7 @@ Ext.define('Lada.controller.form.Probe', {
             success: function(record, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
-                    var parentGrid = Ext.ComponentQuery.query('probelistgrid');
+                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                     if (parentGrid.length == 1) {
                         parentGrid[0].store.reload();
                     }
@@ -253,7 +253,7 @@ Ext.define('Lada.controller.form.Probe', {
                     button.setDisabled(true);
                     button.up('toolbar').down('button[action=discard]')
                         .setDisabled(true);
-                    var parentGrid = Ext.ComponentQuery.query('probelistgrid');
+                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                     if (parentGrid.length == 1) {
                         parentGrid[0].store.reload();
                     }

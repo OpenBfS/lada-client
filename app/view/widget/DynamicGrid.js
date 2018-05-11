@@ -122,16 +122,20 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     /**
-     * Setup columns of the Grid dynamically based on a list of given cols.
-     * The function is called from the {@link Lada.controller.Filter#search
+     * Setup columns of the Grid dynamically.
+     * @param data The result of a search request //TODO
+     * @param columnstore: store with currently available Lada.model.Column
+     * definitions
+     * The function is called from the {@link Lada.controller.Query#search
      * search event}
      * The Images for the Read-Write Icon are defined in CSS
      */
-    setupColumns: function(cols) {
-        var caf = this.generateColumnsAndFields(cols);
+    setup: function(data, columnstore) {
+        var caf = this.generateColumnsAndFields(data, columnstore);
         this.columns = caf[0];
         var fields = caf[1];
         this.store.setFields(fields);
+
         this.reconfigure(this.store, this.columns);
     },
 
@@ -141,53 +145,12 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      * @return an array of two arrays: [0] is an array of colums [1] an array
      *   of fields
      **/
-    generateColumnsAndFields: function(cols) {
+    generateColumnsAndFields: function(current_columns, fixedColumnStore) {
         var resultColumns = [];
         var fields = [];
         var i18n = Lada.getApplication().bundle;
-        var getClassFunc = function(val, meta, rec) {
-            if (rec.get('readonly') === false &&
-                ( rec.get('owner') === undefined ||
-                    rec.get('owner') === true ||
-                    rec.get('owner') === '') &&
-                !rec.get('statusEdit')) {
-                return 'edit';
-            } else if (rec.get('readonly') === false &&
-                rec.get('owner') === true &&
-                rec.get('statusEdit')) {
-                return 'editstatus';
-            } else if (rec.get('readonly') === true &&
-                rec.get('statusEdit')) {
-                return 'noeditstatus';
-            }
-            return 'noedit';
-        };
-        var handlerFunc = function(grid, rowIndex, colIndex) {
-            var rec = grid.getStore().getAt(rowIndex);
-            grid.fireEvent('itemdblclick', grid, rec);
-        };
-        switch (this.xtype) {
-            case 'probelistgrid':
-                var tooltiptext = i18n.getMsg('probe')+' '+i18n.getMsg('open');
-                break;
-            case 'messunglistgrid':
-                var tooltiptext = i18n.getMsg('messung')+' '+i18n.getMsg('open');
-                break;
-            case 'messprogrammelistgrid':
-                var tooltiptext = i18n.getMsg('messprogramm')+' '+i18n.getMsg('open');
-        }
-
-        fields.push(new Ext.data.Field({
-            name: 'owner'
-        }));
         fields.push(new Ext.data.Field({
             name: 'readonly'
-        }));
-        fields.push(new Ext.data.Field({
-            name: 'statusEdit'
-        }));
-        fields.push(new Ext.data.Field({
-            name: 'id'
         }));
 
         resultColumns.push({
@@ -195,7 +158,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             text: 'RW',
             dataIndex: 'readonly',
             sortable: false,
-            tooltip: tooltiptext,
+            // tooltip: tooltiptext,
             width: 30,
             getClass: function(val, meta, rec) {
                 if (rec.get('readonly') === false &&
@@ -214,35 +177,43 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 }
                 return 'noedit';
             },
-            handler: function(grid, rowIndex, colIndex) {
+            handler: function(grid, rowIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
                 grid.fireEvent('itemdblclick', grid, rec);
             }
         });
 
-        for (var i = cols.length - 1; i >= 0; i--) {
-            //Change id field to a valid ExtJS6 id
-            cols[i].id = 'col-' + cols[i].id;
-
-            //Check column type and set to string if unknown
-            if (!cols[i].dataType.name) {
-                cols[i].dataType = 'string';
-            }
-
-            var curField = {
-                name: cols[i].dataIndex
-            };
-            if (cols[i] === 'id' || cols[i].dataIndex === 'probeId') {
+        var cc = current_columns.getData().items;
+        for (var i = 0; i < cc.length; i++) {
+            if (cc[i].get('visible') !== true) {
                 continue;
             }
-
+            var col = {}; //TODO dataIndex Model etc?
+            var orig_column = fixedColumnStore.findRecord(
+                'id', cc[i].get('gridColumnId'));
+            //Change id field to a valid ExtJS6 id
+            col.id = 'col-' + (cc[i].get('id') + 1);
+            col.dataIndex = orig_column.get('dataIndex');
+            col.text = orig_column.get('name');
+            col.maxWidth = orig_column.get('width');
+            col.sortable = false;
+            //Check column type and set to string if unknown
+            var datatype = orig_column.get('dataType');
+            if (!datatype) {
+                datatype = {name: 'text'};
+            }
+            var curField = {
+                dataIndex: orig_column.get('dataIndex'),
+                name: orig_column.get('name')
+            };
             var openIconPath = 'img/document-open.png';
+            var colImg = null;
             //TODO: Use proper icons
-            switch (cols[i].dataType.name) {
+            switch (datatype.name) {
                 case 'probeId':
                     colImg = Ext.getResourcePath(openIconPath, null, null);
-                    cols[i].xtype = 'widgetcolumn';
-                    cols[i].widget = {
+                    col.xtype = 'widgetcolumn';
+                    col.widget = {
                         xtype: 'button',
                         icon: colImg,
                         width: '16px',
@@ -269,7 +240,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 });
                             },
                             textchange: function(button, oldval, newval) {
-                                if (!newval || newval == '') {
+                                if (!newval || newval === '') {
                                     button.hide();
                                 } else {
                                     button.show();
@@ -280,8 +251,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     break;
                 case 'messungId':
                     colImg = Ext.getResourcePath(openIconPath, null, null);
-                    cols[i].xtype = 'widgetcolumn';
-                    cols[i].widget = {
+                    col.xtype = 'widgetcolumn';
+                    col.widget = {
                         xtype: 'button',
                         icon: colImg,
                         width: '16px',
@@ -326,8 +297,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
                 case 'ortId':
                     colImg = Ext.getResourcePath(openIconPath, null, null);
-                    cols[i].xtype = 'widgetcolumn';
-                    cols[i].widget = {
+                    col.xtype = 'widgetcolumn';
+                    col.widget = {
                         xtype: 'button',
                         icon: colImg,
                         width: '16px',
@@ -359,8 +330,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     break;
                 case 'geom':
                     colImg = Ext.getResourcePath('img/document-open.png', null, null);
-                    cols[i].xtype = 'widgetcolumn';
-                    cols[i].widget = {
+                    col.xtype = 'widgetcolumn';
+                    col.widget = {
                         xtype: 'button',
                         icon: colImg,
                         width: '16px',
@@ -390,12 +361,12 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     };
                     break;
                 case 'date':
-                    curField.depends = cols[i].dataIndex;
+                    curField.depends = orig_column.dataIndex;
 
-                    cols[i].xtype = 'datecolumn';
-                    cols[i].format = cols[i].dataType.format;
-                    cols[i].renderer = function(value, cell) {
-                        if (!value || value == '') {
+                    col.xtype = 'datecolumn';
+                    col.format = orig_column.get('dataType').format;
+                    col.renderer = function(value, cell) {
+                        if (!value || value === '') {
                             return '';
                         }
                         var format = cell.column.format;
@@ -405,9 +376,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
                     break;
                 case 'number':
-                    cols[i].xtype = 'numbercolumn';
-                    cols[i].format = cols[i].dataType.format;
-                    cols[i].renderer = function(value, cell) {
+                    col.xtype = 'numbercolumn';
+                    col.format = orig_column.get('dataType').format;
+                    col.renderer = function(value, cell) {
                         if (!value) {
                             return '';
                         }
@@ -420,29 +391,13 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     };
                     break;
                 default:
-                    cols[i].xtype = 'gridcolumn';
-                    cols[i].renderer = function(value, cell) {
+                    col.xtype = 'gridcolumn';
+                    col.renderer = function(value, cell) {
                         return value || '';
                     };
             }
-            switch (cols[i].dataIndex) {
-                case 'dBasis':
-                case 'pArt':
-                case 'statusSt':
-                case 'statusW':
-                case 'baId':
-                case 'mstLaborId':
-                case 'messRegime':
-                case 'intervall':
-                case 'mstId':
-                case 'netzId':
-                    cols[i].filter = {type: 'list'};
-                    break;
-                default:
-                    cols[i].filter = {type: 'string'};
-            }
             fields.push(curField);
-            resultColumns.push(cols[i]);
+            resultColumns.push(col);
         }
         var caf = new Array();
         caf[0] = resultColumns;

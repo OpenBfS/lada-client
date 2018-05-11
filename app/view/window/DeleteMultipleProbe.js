@@ -123,8 +123,8 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
      * Refreshes probe grid
      */
     refresh: function() {
-        var parentGrid = Ext.ComponentQuery.query('probelistgrid');
-        if (parentGrid.length == 1) {
+        var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+        if (parentGrid.length === 1) {
             parentGrid[0].store.reload();
         }
     },

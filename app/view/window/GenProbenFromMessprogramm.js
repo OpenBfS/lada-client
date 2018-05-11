@@ -264,6 +264,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         var i18n = Lada.getApplication().bundle;
         var gridstore = Ext.create('Lada.store.Proben', {
         });
+        //TODO: broken as of now, should be a DynamicGrid
         var frgrid = Ext.create('Lada.view.grid.ProbeList', {
             hideCreate: true,
             hideImport: true,

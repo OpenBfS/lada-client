@@ -168,8 +168,8 @@ Ext.define('Lada.view.window.FileUpload', {
             title: 'Importergebnis'
         });
         win.show();
-        var parentGrid = Ext.ComponentQuery.query('probelistgrid');
-        if (parentGrid.length == 1) {
+        var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+        if (parentGrid.length === 1) {
             parentGrid[0].store.reload();
         }
     },
