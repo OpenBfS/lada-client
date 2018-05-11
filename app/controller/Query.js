@@ -130,7 +130,8 @@ Ext.define('Lada.controller.Query', {
         var newquery = qp.store.getById(combobox.getValue());
         qp.getForm().loadRecord(newquery);
         qp.setGridColumnStore(newquery);
-        if (newquery.get('owner') === true) {
+        if ( true ) {//newquery.get('owner') === Lada.user(?)) {
+            // TODO temp. owner not yet in interface
             qp.down('button[action=delquery]').setDisabled(false);
             qp.down('button[action=save]').setDisabled(false);
         } else {
@@ -156,28 +157,43 @@ Ext.define('Lada.controller.Query', {
 
     search: function(button) {
         var cs = button.up('querypanel').gridColumnStore;
-        var cols = cs.getData().items;
-        var columns = [];
-        for (var i= 0; i < cols.length; i++) {
-            if (cols[i].get('filterActive') === true
-            || cols[i].get('visible') === true) {
-                columns.push(cols[i].getData());
+        var jsonData = {columns: []};
+        var csdata = cs.getData().items;
+        for (var i=0; i < csdata.length; i++ ) {
+            if (csdata.get('visible') === true ||
+                csdata.filterActive === true ) {
+                jsonData.push(
+                    csdata.getData({
+                        persist: true
+                    })
+                );
             }
         }
         Ext.Ajax.request({
-            url: 'lada-server/rest/universal',
-            method: 'GET',
-            jsonData: {'columns': columns },
-            scope: this,
-            success: this.createResultGrid
+            url: 'lada-server/rest/status',
+            jsonData: jsonData,
+            method: 'POST',
+            success: function() {
+                var resultGrid = Ext.create('Lada.view.widget.DynamicGrid', {
+                    selModel: Ext.create('Ext.selection.CheckboxModel', {
+                        checkOnly: true,
+                        injectCheckbox: 1
+                    })
+                });
+                //TODO might already be there, so delete previous first
+                var contentPanel = button.up('panel[name=main]').down(
+                    'panel[name=contentpanel]');
+                contentPanel.removeAll();
+                contentPanel.add(resultGrid);
+            }
         });
     },
 
     showFilter: function(combo) {
         var panel = combo.up('querypanel');
-        var queryno = panel.down('combobox[name=selectedQuery]').getValue;
-        var fixColumn = Ext.data.StoreManager.get('columnstore');
-        var fcr = fixColumn.findRecord('id', queryno);
+        // var queryno = panel.down('combobox[name=selectedQuery]').getValue();
+        var fixColumnStore = Ext.data.StoreManager.get('columnstore'); // TODO filter by queryno
+
         var fvpanel = panel.down('panel[name=filtervalues]');
         fvpanel.removeAll(true);
         var recs = panel.gridColumnStore.getData().items;
@@ -185,7 +201,9 @@ Ext.define('Lada.controller.Query', {
             if (recs[i].get('filterActive') !== true) {
                 continue;
             }
-            var dt = fcr.get('dataType');
+            var fixcolumn = fixColumnStore.findRecord('id',
+                recs[i].get('gridColumnId'));
+            var dt = fixcolumn.get('dataType');
             var field = null;
             switch (dt) {
                 case 1: // 'text'
@@ -193,8 +211,8 @@ Ext.define('Lada.controller.Query', {
                 case 5: // messungId
                 case 6: // ortId
                     field = Ext.create('Ext.form.field.Text', {
-                        name: fcr.get('dataIndex'),
-                        fieldLabel: fcr.get('name'),
+                        name: fixcolumn.get('dataIndex'),
+                        fieldLabel: fixcolumn.get('name'),
                         labelWidth: 125,
                         margin: 5,
                         width: '100%',
@@ -211,9 +229,9 @@ Ext.define('Lada.controller.Query', {
                     break;
                 case 2: //'date':
                     field = Ext.create('Lada.view.widget.base.DateRange', {
-                        name: fcr.get('dataIndex'),
+                        name: fixcolumn.get('dataIndex'),
                         labelWidth: 125,
-                        fieldLabel: fcr.get('name'),
+                        fieldLabel: fixcolumn.get('name'),
                         value: recs[i].get('filterValue') || null,
                         width: '100%',
                         triggers: {
@@ -228,9 +246,9 @@ Ext.define('Lada.controller.Query', {
                     break;
                 case 3: //'number'
                     field = Ext.create('Lada.view.widget.base.NumberField', {
-                        name: fcr.get('dataIndex'),
+                        name: fixcolumn.get('dataIndex'),
                         labelWidth: 125,
-                        fieldLabel: fcr.get('name'),
+                        fieldLabel: fixcolumn.get('name'),
                         value: recs[i].get('filterValue') || null,
                         width: '100%',
                         triggers: {

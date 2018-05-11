@@ -28,12 +28,6 @@ Ext.define('Lada.model.Column', {
         name: 'position'
     }, {
         name: 'baseQuery'
-    }, {
-        name: 'dataIndex'
     }],
-
     idProperty: 'id'
-
-    // onLoad: function(){}
-
 });

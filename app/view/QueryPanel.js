@@ -253,7 +253,16 @@ Ext.define('Lada.view.QueryPanel', {
             this.gridColumnStore = Ext.create('Lada.store.GridColumn');
             this.gridColumnStore.proxy.extraParams = {
                 qid: query.get('id')};
+            var cs = Ext.data.StoreManager.get('columnstore');
+            //TODO: cs?qid must be loaded;
             this.gridColumnStore.load(function() {
+                var items = me.gridColumnStore.getData().items;
+                for (var i=0; i < items.length; i++) {
+                    var gc = cs.findRecord('id',
+                        items[i].get('gridColumnId'));
+                    items[i].set('dataIndex', gc.get('dataIndex'));
+                    items[i].set('name', gc.get('name'));
+                }
                 me.down('columnchoser').setStore(me.gridColumnStore);
                 me.down('columnsort').setStore(me.gridColumnStore);
                 me.down('cbox[name=activefilters]').setStore(me.gridColumnStore);

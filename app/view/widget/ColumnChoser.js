@@ -33,7 +33,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 var store = Ext.data.StoreManager.get('columnstore');
                 var record = store.findRecord('id', value);
                 if (record) {
-                    return record.ret('name');
+                    return record.get('name');
                 }
                 return '';
             },
