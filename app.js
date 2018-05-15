@@ -166,6 +166,7 @@ Ext.application({
         /* Parse Username and Timestamp */
         var json = Ext.decode(response.responseText);
         Lada.username = json.data.username;
+        Lada.userId = json.data.userId;
         Lada.userroles = json.data.roles;
         Lada.logintime = json.data.servertime;
         Lada.mst = []; //Store Messstellen this user may select
@@ -439,8 +440,6 @@ Ext.application({
     controllers: [
         'Lada.controller.Ort',
         'Lada.controller.grid.ProbeList', //TODO obsolete
-        'Lada.controller.grid.MessungList', //TODO obsolete
-        'Lada.controller.grid.MessprogrammeList', //TODO obsolete
         'Lada.controller.grid.Datensatzerzeuger', //TODO obsolete?
         'Lada.controller.grid.Probenehmer', //TODO obsolete?
         'Lada.controller.form.Probe', //TODO obsolete
