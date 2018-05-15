@@ -179,8 +179,21 @@ Ext.define('Lada.view.window.ProbeEdit', {
                     .getById(this.record.get('mstId'));
                 var datenbasis = Ext.data.StoreManager.get('datenbasis')
                     .getById(this.record.get('datenbasisId'));
-                this.setTitle(datenbasis.get('datenbasis') + ' Probe - Hauptprobennr.: ' + this.record.get('hauptprobenNr')
-                                     + ' Mst: ' + messstelle.get('messStelle'));
+                var title = '';
+                if (datenbasis) {
+                    title += datenbasis.get('datenbasis');
+                    title += ' ';
+                }
+                title += 'Probe'
+                if (this.record.get('hauptprobenNr')) {
+                    title += ' - Hauptprobennr.: ';
+                    title += this.record.get('hauptprobenNr');
+                }
+                if (messstelle) {
+                    title += ' Mst: ';
+                    title += messstelle.get('messStelle');
+                }
+                this.setTitle(title);
 
                 if (owner) {
                     //Always allow to Add Messungen.
