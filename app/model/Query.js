@@ -11,14 +11,13 @@
  */
 Ext.define('Lada.model.Query', {
     extend: 'Ext.data.Model',
-
+    autoLoad: true,
     fields: [{
         name: 'id'
     }, {
         name: 'name'
     }, {
         name: 'userId'
-        // the owner/creator of this Query
     }, {
         name: 'description'
     }, {

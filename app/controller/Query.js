@@ -70,7 +70,7 @@ Ext.define('Lada.controller.Query', {
             checkbox.up('querypanel').store.clearFilter();
         } else {
             //TODO: currently selected may disappear from visible store!
-            checkbox.up('querypanel').store.filter('userId', 0); //TODO dummy value
+            checkbox.up('querypanel').store.filter('userId', Lada.userId);
         }
     },
 
@@ -85,7 +85,7 @@ Ext.define('Lada.controller.Query', {
         var newrecord = Ext.create('Lada.model.Query',{
             baseQuery: cquery.get('baseQuery'),
             name: cquery.get('name') + ' (Kopie)',
-            owner: null, //TODO: 'myself'
+            userId: Lada.userId,
             description: cquery.get('description')
             // groups: newgroups TODO
         });
@@ -110,7 +110,8 @@ Ext.define('Lada.controller.Query', {
             qp.store.remove(query);
         }
         //check permission to delete
-        if (query.get('userId') === 1) { //TODO dummy data! Should not work yet
+        if (query.get('userId') === Lada.userId ) {
+
             // else TODO: send a DELETE request to /rest/query?id=query.get('id')
             var combobox = qp.down('combobox[name=selectedQuery]');
             var firstEntry = qp.getStore().getAt(0);
@@ -130,8 +131,7 @@ Ext.define('Lada.controller.Query', {
         var newquery = qp.store.getById(combobox.getValue());
         qp.getForm().loadRecord(newquery);
         qp.setGridColumnStore(newquery);
-        if ( true ) {//newquery.get('owner') === Lada.user(?)) {
-            // TODO temp. owner not yet in interface
+        if ( newquery.get('userId') === Lada.userId) {
             qp.down('button[action=delquery]').setDisabled(false);
             qp.down('button[action=save]').setDisabled(false);
         } else {
@@ -141,18 +141,31 @@ Ext.define('Lada.controller.Query', {
     },
 
     saveQuery: function(button) {
-        Ext.Msg.alert('Query gespeichert','Speicherung der gesamten Query- noch nciht implementiert');
-        //TODO:
-        // check for uniqueness of name/owner
-        // validate fields.
-        // convert columns and column.filters
-        //send to server, wait for callback, reload availableQueriesstore
+        var qp = button.up('querypanel');
+        var record = qp.getForm().getRecord();
+        if (record.phantom) {
+            record.set('id', null);
+        }
+        if (record.get('userId') === Lada.userId) {
+            record.save({
+                success: function(rec, response) {
+                    // TODO: save and reload column values, too
+                    qp.getForm().loadRecord(rec);
+                },
+                failure: function(rec, response) {
+                    //TODO error handling
+                }
+            });
+        } else {
+            //TODO error handling
+        }
         button.up('querypanel').down('fieldset[name=querydetails]').setCollapsed(true);
     },
 
     reset: function(button) {
-        var panel = button.up('querypanel'); //Reset does not work here
+        var panel = button.up('querypanel');
         panel.getForm().reset();
+        //TODO: reset columnstore and dependencies, too.
     },
 
     search: function(button) {
@@ -199,8 +212,6 @@ Ext.define('Lada.controller.Query', {
                         resultGrid.store.removeAll();
                         resultGrid.store.add(responseData);
                         resultGrid.show();
-                        //TODO might already be there, so delete previous first
-
                         contentPanel.add(resultGrid);
                     }
                     //TODO error handling if search fails
@@ -211,7 +222,6 @@ Ext.define('Lada.controller.Query', {
 
     showFilter: function(combo) {
         var panel = combo.up('querypanel');
-        // var queryno = panel.down('combobox[name=selectedQuery]').getValue();
         var fixColumnStore = Ext.data.StoreManager.get('columnstore'); // TODO filter by queryno
 
         var fvpanel = panel.down('panel[name=filtervalues]');
@@ -225,11 +235,11 @@ Ext.define('Lada.controller.Query', {
                 recs[i].get('gridColumnId'));
             var dt = fixcolumn.get('dataType');
             var field = null;
-            switch (dt) {
-                case 1: // 'text'
-                case 4: // probeId
-                case 5: // messungId
-                case 6: // ortId
+            switch (dt.name) {
+                case 'text':
+                case 'probeId':
+                case 'messungId':
+                case 'ortId':
                     field = Ext.create('Ext.form.field.Text', {
                         name: fixcolumn.get('dataIndex'),
                         fieldLabel: fixcolumn.get('name'),
@@ -247,7 +257,7 @@ Ext.define('Lada.controller.Query', {
                         }
                     });
                     break;
-                case 2: //'date':
+                case 'date':
                     field = Ext.create('Lada.view.widget.base.DateRange', {
                         name: fixcolumn.get('dataIndex'),
                         labelWidth: 125,
@@ -264,7 +274,7 @@ Ext.define('Lada.controller.Query', {
                         }
                     });
                     break;
-                case 3: //'number'
+                case 'number':
                     field = Ext.create('Lada.view.widget.base.NumberField', {
                         name: fixcolumn.get('dataIndex'),
                         labelWidth: 125,
@@ -281,7 +291,7 @@ Ext.define('Lada.controller.Query', {
                         }
                     });
                     break;
-                case 7:// 7 geom TODO: how/if to implement
+                case 'geom':// TODO: how/if to implement
                 default:
                     break;
             }
