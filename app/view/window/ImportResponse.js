@@ -98,7 +98,14 @@ Ext.define('Lada.view.window.ImportResponse', {
                 out.push('<br/>');
             }
             if (numWarnings > 0) {
-                out.push('Bei ' + numWarnings + ' Probe(n) traten Warnungen auf. ');
+                if (warnings.Parser) {
+                    out.push('Bei ' + (numWarnings - 1) + ' Probe(n) traten Warnungen auf. ');
+                    out.push('<br/>');
+                    out.push('Es traten Warnungen beim Parsen auf.')
+                }
+                else {
+                    out.push('Bei ' + numWarnings + ' Probe(n) traten Warnungen auf. ');
+                }
                 out.push('<br/>');
                 out.push('<br/>');
             }
@@ -187,11 +194,27 @@ Ext.define('Lada.view.window.ImportResponse', {
             }
             if (numWarnings > 0) {
                 out.push('<br/>');
-                out.push('Bei folgenden Proben traten  Warnungen auf:');
+                out.push('Folgende Warnungen traten beim Import auf:');
                 out.push('<br/>');
                 out.push('<ol>');
+                if (warnings.Parser) {
+                    out.push('Parser');
+                    out.push('<ol>');
+                    msgs = warnings.Parser;
+                    for (var i = msgs.length - 1; i >= 0; i--) {
+                        out.push('<li>' + msgs[i].key + ' ('
+                                 + i18n.getMsg(msgs[i].code.toString())
+                                 + '): ' + msgs[i].value + '</li>');
+                    }
+                    out.push('</ol>');
+                }
                 for (key in warnings) {
-                    out.push('<li>' + key);
+                    if (key != 'Parser') {
+                        out.push('<li>Probe: ' + key);
+                    }
+                    else {
+                        continue;
+                    }
                     msgs = warnings[key];
                     out.push('<ol>');
                     validation = [];
@@ -217,7 +240,9 @@ Ext.define('Lada.view.window.ImportResponse', {
                         out.push('</li>');
                     }
                     out.push('</ol>');
-                    out.push('</li>');
+                    if (key != 'Parser') {
+                        out.push('</li>');
+                    }
                 }
                 out.push('</ol>');
             }
