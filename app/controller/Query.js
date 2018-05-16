@@ -71,7 +71,11 @@ Ext.define('Lada.controller.Query', {
             checkbox.up('querypanel').store.clearFilter();
         } else {
             //TODO: currently selected may disappear from visible store!
-            checkbox.up('querypanel').store.filter('userId', Lada.userId);
+            checkbox.up('querypanel').store.filter({
+                property: 'userId',
+                value: Lada.userId,
+                exactMatch: true
+            });
         }
     },
 
@@ -203,9 +207,10 @@ Ext.define('Lada.controller.Query', {
         } else {
             var fixColumnStore = Ext.data.StoreManager.get('columnstore');
             fixColumnStore.clearFilter();
-
-            fixColumnStore.filter('baseQuery',
-                qp.getForm().getRecord().get('baseQuery'));
+            fixColumnStore.filter({
+                property: 'baseQuery',
+                value: qp.getForm().getRecord().get('baseQuery'),
+                exactMatch: true});
             Ext.Ajax.request({
                 url: 'lada-server/rest/universal',
                 jsonData: jsonData,
@@ -239,7 +244,11 @@ Ext.define('Lada.controller.Query', {
         var panel = combo.up('querypanel');
         var fixColumnStore = Ext.data.StoreManager.get('columnstore');
         fixColumnStore.clearFilter();
-        fixColumnStore.filter('baseQuery', panel.getForm().getRecord().get('baseQuery'));
+        fixColumnStore.filter({
+            property: 'baseQuery',
+            value: panel.getForm().getRecord().get('baseQuery'),
+            exactMatch: true
+        });
         var fvpanel = panel.down('panel[name=filtervalues]');
         fvpanel.removeAll();
         var recs = panel.gridColumnStore.getData().items;
@@ -322,7 +331,11 @@ Ext.define('Lada.controller.Query', {
         var store =qp.gridColumnStore;
         var cs = Ext.data.StoreManager.get('columnstore');
         cs.clearFilter();
-        cs.filter('baseQuery', qp.getForm().getRecord().get('baseQuery'));
+        cs.filter({
+            property:'baseQuery',
+            value: qp.getForm().getRecord().get('baseQuery'),
+            exactMatch: true
+        });
         for (var i=0; i < oldvalue.length; i++) {
             if (newvalue.indexOf(oldvalue[i]) < 0) {
                 var rec = store.findRecord('dataIndex', oldvalue[i]);
@@ -367,7 +380,6 @@ Ext.define('Lada.controller.Query', {
 
     loadGridColumnStore: function(element) {
         var panel = element.up('querypanel');
-
         var gcs = Ext.create('Lada.store.GridColumn');
         gcs.proxy.extraParams = {
             'qid': panel.getForm().getRecord().get('baseQuery')
@@ -375,9 +387,14 @@ Ext.define('Lada.controller.Query', {
         gcs.load({
             callback: function(records, op, success) {
                 var cs = Ext.data.StoreManager.get('columnstore');
+                console.log(cs.getData().length);
                 cs.clearFilter();
-                cs.filter('baseQuery',
-                    panel.getForm().getRecord().get('baseQuery'));
+                cs.filter({
+                    property: 'baseQuery',
+                    value: panel.getForm().getRecord().get('baseQuery'),
+                    exactMatch: true
+                });
+                console.log(cs.getData().length);
                 panel.gridColumnStore = gcs;
                 panel.down('columnchoser').setStore(gcs, cs);
                 panel.down('columnsort').setStore(gcs);

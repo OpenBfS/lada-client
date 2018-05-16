@@ -238,7 +238,11 @@ Ext.define('Lada.view.QueryPanel', {
             scope: this,
             callback: function() {
                 this.store.clearFilter();
-                this.store.filter('userId', Lada.userId);
+                this.store.filter({
+                    property: 'userId',
+                    value: Lada.userId,
+                    exactMatch: true
+                });
 
                 selquery.setStore(this.store);
                 var record0 = this.store.getAt(0);
@@ -264,7 +268,11 @@ Ext.define('Lada.view.QueryPanel', {
                 qid: query.get('id')};
             var cs = Ext.data.StoreManager.get('columnstore');
             cs.clearFilter();
-            cs.filter('baseQuery', query.get('baseQuery'));
+            cs.filter({
+                property: 'baseQuery',
+                value: query.get('baseQuery'),
+                exactMatch: true
+            });
             this.gridColumnStore.load({
                 callback: function() {
                     var items = me.gridColumnStore.getData().items;

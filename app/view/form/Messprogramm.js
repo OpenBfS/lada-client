@@ -227,7 +227,10 @@ Ext.define('Lada.view.form.Messprogramm', {
                                             record.get('netzbetreiberId')) > -1;
                                     });
                                 } else {
-                                    store.filter('netzbetreiberId', nId);
+                                    store.filter({
+                                        property: 'netzbetreiberId',
+                                        value: nId,
+                                        exactMatch: true});
                                 }
                             }
                         });
@@ -255,7 +258,11 @@ Ext.define('Lada.view.form.Messprogramm', {
                                             record.get('netzbetreiberId')) > -1;
                                     });
                                 } else {
-                                    store.filter('netzbetreiberId', nId);
+                                    store.filter({
+                                        property:'netzbetreiberId',
+                                        value: nId,
+                                        exactMatch: true
+                                    });
                                 }
                             }
                         });
