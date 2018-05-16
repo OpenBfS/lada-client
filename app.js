@@ -68,7 +68,6 @@ Ext.application({
         'Lada.store.DatensatzErzeuger',
         'Lada.store.GenericResults',
         'Lada.store.MessprogrammKategorie',
-        'Lada.store.MessungQueries',
         'Lada.store.Ktas',
         'Lada.store.OrtsZusatz',
         'Lada.store.OrtszuordnungTyp',
@@ -333,18 +332,6 @@ Ext.application({
         });
         Ext.create('Lada.store.StatusKombi', {
             storeId: 'statuskombi',
-            autoLoad: 'true'
-        });
-        Ext.create('Lada.store.MessungQueries', {
-            storeId: 'messungqueries',
-            autoLoad: 'true'
-        });
-        Ext.create('Lada.store.MessprogrammQueries', {
-            storeId: 'messprogrammqueries',
-            autoLoad: 'true'
-        });
-        Ext.create('Lada.store.StammdatenQueries', {
-            storeId: 'stammdatenqueries',
             autoLoad: 'true'
         });
         Ext.create('Lada.store.Ktas', {
