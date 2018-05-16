@@ -34,6 +34,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     border: false,
     multiSelect: true,
     allowDeselect: true,
+    sortable: false,
 
     isDynamic: true,
 
@@ -161,6 +162,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             xtype: 'actioncolumn',
             text: 'RW',
             dataIndex: 'readonly',
+            hideable: false,
             sortable: false,
             width: 30,
             getClass: function(val, meta, rec) {
@@ -478,6 +480,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     };
             }
             fields.push(curField);
+            col.hideable = false;
+            col.draggable = false;
             resultColumns.push(col);
         }
         var caf = new Array();
