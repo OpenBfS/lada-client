@@ -154,7 +154,11 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
         for (var i=0; i < data.length; i++) {
             data[i].set('visible', visible);
             var origindata = qps.getById(data[i].get('id'));
-            origindata.set('visible', visible);
+            if (!origindata) {
+                qps.add(data[i]);
+            } else {
+                origindata.set('visible', visible);
+            }
             if (visible === false) {
                 origindata.set('sortIndex', null);
                 data[i].set('sortIndex', null);
@@ -163,7 +167,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
         this.up('querypanel').down('columnsort').setStore(qps);
     },
 
-    setStore: function(store) {
+    setStore: function(store, fixedcolumnstore) {
         if (store) {
             var tstore = new Ext.data.Store({
                 model: 'Lada.model.GridColumn'
@@ -171,12 +175,25 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             var sstore = new Ext.data.Store({
                 model: 'Lada.model.GridColumn'
             });
-            var data =store.getData().items;
-            for (var i=0; i < data.length; i++) {
-                if (data[i].get('visible') === true) {
-                    tstore.add(data[i]);
+            // var data = store.getData().items;
+            var fixeddata = fixedcolumnstore.getData().items;
+            for (var i=0; i < fixeddata.length; i++) {
+                var col = store.findRecord('gridColumnId', fixeddata[i].get('id'));
+                if (col) {
+                    if (col.get('visible') === true) {
+                        tstore.add(col);
+                    } else {
+                        sstore.add(col);
+                    }
                 } else {
-                    sstore.add(data[i]);
+                    col = Ext.create('Lada.model.GridColumn', {
+                        gridColumnId: fixeddata[i].get('id'),
+                        visible: false,
+                        filterActive: false,
+                        name: fixeddata[i].get('name'),
+                        dataIndex: fixeddata[i].get('dataIndex')
+                    });
+                    sstore.add(col);
                 }
             }
             this.getComponent('targetGrid').setStore(tstore);

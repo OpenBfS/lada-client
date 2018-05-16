@@ -262,6 +262,8 @@ Ext.define('Lada.view.QueryPanel', {
             this.gridColumnStore.proxy.extraParams = {
                 qid: query.get('id')};
             var cs = Ext.data.StoreManager.get('columnstore');
+            cs.clearFilter();
+            cs.filter('baseQuery', query.get('baseQuery'));
             this.gridColumnStore.load({
                 callback: function() {
                     var items = me.gridColumnStore.getData().items;
@@ -271,9 +273,9 @@ Ext.define('Lada.view.QueryPanel', {
                         items[i].set('dataIndex', gc.get('dataIndex'));
                         items[i].set('name', gc.get('name'));
                     }
-                    me.down('columnchoser').setStore(me.gridColumnStore);
+                    me.down('columnchoser').setStore(me.gridColumnStore, cs);
                     me.down('columnsort').setStore(me.gridColumnStore);
-                    me.down('cbox[name=activefilters]').setStore(me.gridColumnStore);
+                    me.down('cbox[name=activefilters]').setStore(cs);
                 }
             });
         }

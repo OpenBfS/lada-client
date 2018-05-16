@@ -191,8 +191,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             var col = {}; //TODO dataIndex Model etc?
             var orig_column = fixedColumnStore.findRecord(
                 'id', cc[i].get('gridColumnId'));
-            //Change id field to a valid ExtJS6 id
-            col.id = 'col-' + (cc[i].get('id') + 1);
             col.dataIndex = orig_column.get('dataIndex');
             col.text = orig_column.get('name');
             col.maxWidth = orig_column.get('width');

@@ -130,7 +130,7 @@ Ext.define('Lada.controller.Query', {
         var qp = combobox.up('querypanel');
         var newquery = qp.store.getById(combobox.getValue());
         qp.getForm().loadRecord(newquery);
-        qp.setGridColumnStore(newquery);
+        this.loadGridColumnStore(combobox);
         if ( newquery.get('userId') === Lada.userId) {
             qp.down('button[action=delquery]').setDisabled(false);
             qp.down('button[action=save]').setDisabled(false);
@@ -147,10 +147,19 @@ Ext.define('Lada.controller.Query', {
             record.set('id', null);
         }
         if (record.get('userId') === Lada.userId) {
+            if (record.phantom) {
+                record.set('id', null);
+            }
             record.save({
                 success: function(rec, response) {
-                    // TODO: save and reload column values, too
-                    qp.getForm().loadRecord(rec);
+                    var columns = qp.gridColumnStore.getData().items;
+                    for (var i=0; i < columns.length; i++) {
+                        if (columns[i].phantom) {
+                            columns[i].set('id', null);
+                        }
+                        columns[i].save();
+                        //TODO callbacks: report errors
+                    }
                 },
                 failure: function(rec, response) {
                     //TODO error handling
@@ -165,13 +174,14 @@ Ext.define('Lada.controller.Query', {
     reset: function(button) {
         var panel = button.up('querypanel');
         panel.getForm().reset();
-        //TODO: reset columnstore and dependencies, too.
+        this.loadGridColumnStore(button);
     },
 
     search: function(button) {
-        var cs = button.up('querypanel').gridColumnStore;
+        var qp = button.up('querypanel');
+        var gcs = qp.gridColumnStore;
         var jsonData = {columns: []};
-        var csdata = cs.getData().items;
+        var csdata = gcs.getData().items;
         for (var i=0; i < csdata.length; i++ ) {
             if (csdata[i].get('visible') === true ||
                 csdata[i].get('filterActive') === true ) {
@@ -189,8 +199,11 @@ Ext.define('Lada.controller.Query', {
         if (!jsonData.columns.length) {
             //TODO warning: no data requested
         } else {
-            var fixColumnStore = Ext.data.StoreManager.get('columnstore'); // TODO filter by queryno
+            var fixColumnStore = Ext.data.StoreManager.get('columnstore');
+            fixColumnStore.clearFilter();
 
+            fixColumnStore.filter('baseQuery',
+                qp.getForm().getRecord().get('baseQuery'));
             Ext.Ajax.request({
                 url: 'lada-server/rest/universal',
                 jsonData: jsonData,
@@ -208,7 +221,7 @@ Ext.define('Lada.controller.Query', {
                             }),
                             store: Ext.data.StoreManager.get('genericresults')
                         });
-                        resultGrid.setup(cs, fixColumnStore);
+                        resultGrid.setup(gcs, fixColumnStore);
                         resultGrid.store.removeAll();
                         resultGrid.store.add(responseData);
                         resultGrid.show();
@@ -222,10 +235,11 @@ Ext.define('Lada.controller.Query', {
 
     showFilter: function(combo) {
         var panel = combo.up('querypanel');
-        var fixColumnStore = Ext.data.StoreManager.get('columnstore'); // TODO filter by queryno
-
+        var fixColumnStore = Ext.data.StoreManager.get('columnstore');
+        fixColumnStore.clearFilter();
+        fixColumnStore.filter('baseQuery', panel.getForm().getRecord().get('baseQuery'));
         var fvpanel = panel.down('panel[name=filtervalues]');
-        fvpanel.removeAll(true);
+        fvpanel.removeAll();
         var recs = panel.gridColumnStore.getData().items;
         for (var i= 0; i < recs.length; i++) {
             if (recs[i].get('filterActive') !== true) {
@@ -302,7 +316,11 @@ Ext.define('Lada.controller.Query', {
     },
 
     activeFiltersChanged: function(box, newvalue, oldvalue) {
-        var store = box.up('querypanel').gridColumnStore;
+        var qp = box.up('querypanel');
+        var store =qp.gridColumnStore;
+        var cs = Ext.data.StoreManager.get('columnstore');
+        cs.clearFilter();
+        cs.filter('baseQuery', qp.getForm().getRecord().get('baseQuery'));
         for (var i=0; i < oldvalue.length; i++) {
             if (newvalue.indexOf(oldvalue[i]) < 0) {
                 var rec = store.findRecord('dataIndex', oldvalue[i]);
@@ -311,16 +329,55 @@ Ext.define('Lada.controller.Query', {
         }
         for (var j= 0 ; j < newvalue.length; j++) {
             var nrec = store.findRecord('dataIndex', newvalue[j]);
-            nrec.set('filterActive', true);
+            if (!nrec) {
+                var fixrecord = cs.findRecord('dataIndex', newvalue[j]);
+                var col = Ext.create('Lada.model.GridColumn', {
+                    gridColumnId: fixrecord.get('id'),
+                    visible: false,
+                    filterActive: true,
+                    dataIndex: fixrecord.get('dataIndex'),
+                    name: fixrecord.get('name')
+                });
+                store.add(col);
+            } else {
+                nrec.set('filterActive', true);
+            }
         }
         this.showFilter(box);
     },
 
     filterValueChanged: function(box, newvalue, oldvalue) {
         var store = box.up('querypanel').gridColumnStore;
-        var name = box.name;
-        // TODO: daterange still fails here not work as expected
-        var rec = store.findRecord('dataIndex', name);
-        rec.set('filterValue', newvalue);
+        if (box.xytpe === 'datefield') {
+            if (box.name.indexOf('From') >= 0) {
+                var dataIndex = box.name.split('From')[0];
+                var rec = store.findRecord('dataIndex', dataIndex);
+                rec.set('filterValue', newvalue);
+            }
+            // TODO name+"To"; also agree on server connection protocol for two values
+        } else {
+            var name = box.name;
+            // TODO: daterange still fails here not work as expected
+            var rec = store.findRecord('dataIndex', name);
+            rec.set('filterValue', newvalue);
+        }
+    },
+
+    loadGridColumnStore: function(element) {
+        var panel = element.up('querypanel');
+        var cs = Ext.data.StoreManager.get('columnstore');
+        cs.clearFilter();
+        cs.filter('baseQuery',
+            panel.getForm().getRecord().get('baseQuery'));
+        var gcs = Ext.create('Lada.store.GridColumn');
+        gcs.proxy.extraParams = {
+            'qid': panel.getForm().getRecord().get('id')
+        };
+        gcs.load({
+            callback: function(records, op, success) {
+                panel.down('columnchoser').setStore(gcs, cs);
+                panel.down('columnsort').setStore(gcs);
+            }
+        });
     }
 });

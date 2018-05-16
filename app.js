@@ -201,7 +201,8 @@ Ext.application({
             storeId: 'messmethoden'
         });
         Ext.create('Lada.store.Column', {
-            storeId: 'columnstore'
+            storeId: 'columnstore',
+            autoLoad: true
         });
         Ext.create('Lada.store.Messstellen', {
             storeId: 'messstellen',
