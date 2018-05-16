@@ -16,12 +16,12 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
         type: 'hbox',
         align: 'stretchmax'
     },
-    require: ['Lada.view.widget.Sort'],
+    requires: ['Lada.view.widget.Sort',
+        'Lada.store.GridColumn'
+    ],
     margin: '20,0,0,10',
     title: null,
-    store: Ext.create('Ext.data.Store', {
-        model: 'Lada.model.Column'
-    }),
+    store: null,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -29,6 +29,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
         var cboxmodel = Ext.create('Ext.data.Model', {
             fields: [{name: 'name'}, {name: 'value'}]
         });
+        this.store = Ext.create('Lada.store.GridColumn');
         var comboboxstore = Ext.create('Ext.data.Store', {
             model: cboxmodel,
             data: [{
@@ -129,12 +130,14 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
 
     setStore: function(newStore) {
         if (newStore) {
+            this.store.clearFilter();
+            this.store.removeAll();
             this.store.setData(newStore.getData().items);
         }
         this.store.filter('visible', true);
         this.store.sort('sortIndex', 'ASC');
+        this.down('grid').setStore(this.store);
         var sorter = this.store.getSorters();
         sorter.remove('sortIndex');
-
     }
 });

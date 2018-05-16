@@ -559,26 +559,14 @@ Ext.define('Lada.view.window.GridExport', {
         var jsondata = {};
         if (this.hasMessung) {
             jsondata.messungen = [];
-
-            // normally, hasMessung and hasProbe are expected to contain a
-            // column with messungId/probeId type. Some grids still don't have
-            // that info, so just true is passed and we need to look up the
-            // (hard coded) id
-            if (this.hasMessung === true) {
-                for (var i= 0; i < dataset.length; i++) {
-                    var mid = dataset[i].get('id');
-                    jsondata.messungen.push(mid);
-                }
-            } else {
-                for (var i = 0; i < dataset.length; i++) {
-                    var mid = dataset[i].get(this.hasMessung.dataIndex);
-                    if (Array.isArray(mid)) {
-                        for (var j=0; j < mid.length; j++) {
-                            jsondata.messungen.push(mid[j]);
-                        }
-                    } else {
-                        jsondata.messungen.push(mid);
+            for (var i = 0; i < dataset.length; i++) {
+                var mid = dataset[i].get(this.hasMessung.dataIndex);
+                if (Array.isArray(mid)) {
+                    for (var j=0; j < mid.length; j++) {
+                        jsondata.messungen.push(mid[j]);
                     }
+                } else {
+                    jsondata.messungen.push(mid);
                 }
             }
             if (!jsondata.messungen.length) {
@@ -587,18 +575,9 @@ Ext.define('Lada.view.window.GridExport', {
             }
         } else if (this.hasProbe) {
             jsondata.proben = [];
-            // see comment in messungen above
-            if (this.hasProbe === true) {
-                for (var i= 0; i < dataset.length; i++) {
-
-                    var pid = dataset[i].get('id');
-                    jsondata.proben.push(pid);
-                }
-            } else {
-                for (var i= 0; i < dataset.length; i++) {
-                    var pid = dataset[i].get(this.hasProbe.dataIndex);
-                    jsondata.proben.push(pid);
-                }
+            for (var i= 0; i < dataset.length; i++) {
+                var pid = dataset[i].get(this.hasProbe.dataIndex);
+                jsondata.proben.push(pid);
             }
             if (!jsondata.proben.length) {
                 this.showError('export.nodata');

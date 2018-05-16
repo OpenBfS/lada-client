@@ -15,7 +15,8 @@ Ext.define('Lada.view.QueryPanel', {
     model: 'Lada.model.Query',
     requires: [
         'Lada.view.widget.ColumnChoser',
-        'Lada.view.widget.ColumnSort'
+        'Lada.view.widget.ColumnSort',
+        'Lada.store.GridColumn'
     ],
     gridColumnStore: null,
     store: null,
@@ -233,7 +234,7 @@ Ext.define('Lada.view.QueryPanel', {
 
         this.store = Ext.data.StoreManager.get('querystore');
 
-        this.store.load({ //TODO: performance impact here?
+        this.store.load({
             scope: this,
             callback: function() {
                 this.store.clearFilter();

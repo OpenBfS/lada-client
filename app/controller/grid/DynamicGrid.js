@@ -19,9 +19,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     init: function() {
         this.control({
             'dynamicgrid': {
-                // itemdblclick: this.TODO,
-                // TODO: Should check if the line contains/is a probe, messung, etc.,
-                // TODO and infer  the action from there #1926
+                // itemdblclick: this.openItem,
                 select: this.activateButtons,
                 deselect: this.deactivateButtons
             },
@@ -30,7 +28,11 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             },
             'button[action=print]': {
                 click: this.printSelection
-            }
+            }// ,
+            // 'button[action=delete]': {
+            //     click: this.deleteSelection //TODO
+            // }
+
         });
         this.callParent(arguments);
     },
@@ -190,7 +192,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     /**
      * Toggles the generic buttons in the toolbar
      **/
-    activateButtons: function(rowModel, record) {
+    activateButtons: function(rowModel) {
         var grid = rowModel.view.up('grid');
         this.buttonToggle(true, grid);
     },
@@ -198,10 +200,10 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     /**
      * Toggles the generic buttons in the toolbar
      **/
-    deactivateButtons: function(rowModel, record) {
+    deactivateButtons: function(rowModel) {
         var grid = rowModel.view.up('grid');
         // Only disable buttons when nothing is selected
-        if (rowModel.selected.items == 0) {
+        if (rowModel.selected.items.length === 0) {
             this.buttonToggle(false, grid);
         }
     },
@@ -210,12 +212,15 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
      * Enables/Disables the generic set of buttons
      **/
     buttonToggle: function(enabled, grid) {
-        if (!enabled) {
-            grid.down('button[action=print]').disable();
-            grid.down('button[action=gridexport]').disable();
-        } else {
-            grid.down('button[action=print]').enable();
-            grid.down('button[action=gridexport]').enable();
+        var buttons = grid.down('toolbar').items;
+        for (var i=0; i < buttons.items.length; i++) {
+            if (buttons.items[i].config.needsSelection === true) {
+                if (enabled === true) {
+                    buttons.items[i].enable();
+                } else {
+                    buttons.items[i].disable();
+                }
+            }
         }
     },
 
@@ -238,5 +243,14 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 }
             }
         }
+    },
+
+    // TODO: Button to add an item (probe, Messung, messprogramm)
+    // TODO: item deletion
+    openItem: function(item) {
+        //TODO: check which column has the highest priority, and thus should be opened
+        // TODO: Should check if the line contains/is a probe, messung, etc.,
+        // TODO and infer  the action from there #1926
     }
+
 });

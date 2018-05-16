@@ -9,7 +9,8 @@
 Ext.define('Lada.controller.Query', {
     extend: 'Ext.app.Controller',
     requires: [
-        'Lada.view.widget.base.DateRange'
+        'Lada.view.widget.base.DateRange',
+        'Lada.store.GridColumn'
     ],
 
     /**
@@ -145,6 +146,7 @@ Ext.define('Lada.controller.Query', {
         var record = qp.getForm().getRecord();
         if (record.phantom) {
             record.set('id', null);
+            record.set('userId', Lada.userId);
         }
         if (record.get('userId') === Lada.userId) {
             if (record.phantom) {
@@ -188,7 +190,7 @@ Ext.define('Lada.controller.Query', {
                 jsonData.columns.push({
                     gridColumnId: csdata[i].get('gridColumnId'),
                     filterActive: csdata[i].get('filterActive'),
-                    filterValue: csdata[i].get('filterValue'),
+                    filterValue: csdata[i].get('filterValue') || '',
                     visible: csdata[i].get('visible'),
                     columnIndex: csdata[i].get('columnIndex'),
                     sortIndex: csdata[i].get('sortIndex'),
@@ -365,16 +367,18 @@ Ext.define('Lada.controller.Query', {
 
     loadGridColumnStore: function(element) {
         var panel = element.up('querypanel');
-        var cs = Ext.data.StoreManager.get('columnstore');
-        cs.clearFilter();
-        cs.filter('baseQuery',
-            panel.getForm().getRecord().get('baseQuery'));
+
         var gcs = Ext.create('Lada.store.GridColumn');
         gcs.proxy.extraParams = {
-            'qid': panel.getForm().getRecord().get('id')
+            'qid': panel.getForm().getRecord().get('baseQuery')
         };
         gcs.load({
             callback: function(records, op, success) {
+                var cs = Ext.data.StoreManager.get('columnstore');
+                cs.clearFilter();
+                cs.filter('baseQuery',
+                    panel.getForm().getRecord().get('baseQuery'));
+                panel.gridColumnStore = gcs;
                 panel.down('columnchoser').setStore(gcs, cs);
                 panel.down('columnsort').setStore(gcs);
             }

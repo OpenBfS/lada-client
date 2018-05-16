@@ -26,6 +26,8 @@ Ext.define('Lada.model.GridColumn', {
     },{
         name: 'userId'
     },{
+        name: 'queryUserId'
+    },{
         name: 'visible'
     },{
         name: 'width'

@@ -22,21 +22,16 @@ Ext.define('Lada.controller.grid.ProbeList', {
      */
     init: function() {
         this.control({
-            'probelistgrid': {
-                itemdblclick: this.editItem,
-                select: this.activateButtons,
-                deselect: this.deactivateButtons
-            },
-            'probelistgrid toolbar button[action=addProbe]': {
+            'dynamicgrid toolbar button[action=addProbe]': {
                 click: this.addProbeItem
             },
-            'probelistgrid toolbar button[action=import]': {
+            'dynamicgrid toolbar button[action=importprobe]': {
                 click: this.uploadFile
             },
-            'probelistgrid toolbar button[action=deleteSelected]': {
+            'dynamicgrid toolbar button[action=deleteProbe]': {
                 click: this.deleteSelected
             },
-            'probelistgrid toolbar button[action=printSheet]': {
+            'dynamigrid toolbar button[action=printSheet]': {
                 click: {
                     fn: this.printSelection,
                     mode: 'printsheet'
@@ -44,27 +39,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
             }
         });
         this.callParent(arguments);
-    },
-
-    /**
-     * This function is called after a Row in the
-     * {@link Lada.view.grid.ProbeList}
-     * was double-clicked.
-     * The function opens a {@link Lada.view.window.ProbeEdit}
-     * or a {@link Lada.view.window.Messprogramm}.
-     * To determine which window has to be opened, the function
-     * analyse the records modelname.
-     */
-    editItem: function(grid, record) {
-        var winname = 'Lada.view.window.ProbeEdit';
-
-        var win = Ext.create(winname, {
-            record: record,
-            style: 'z-index: -1;' //Fixes an Issue where windows could not be created in IE8
-        });
-        win.setPosition(30);
-        win.show();
-        win.initData();
     },
 
     /**
@@ -197,38 +171,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
         }
 
         return JSON.stringify(prep);
-    },
-
-    /**
-     * Toggles the buttons in the toolbar
-     **/
-    activateButtons: function(rowModel, record) {
-        var grid = rowModel.view.up('grid');
-        this.buttonToggle(true, grid);
-    },
-
-    /**
-     * Toggles the buttons in the toolbar
-     **/
-    deactivateButtons: function(rowModel, record) {
-        var grid = rowModel.view.up('grid');
-        // Only disable buttons when nothing is selected
-        if (rowModel.selected.items == 0) {
-            this.buttonToggle(false, grid);
-        }
-    },
-
-    /**
-     * Enables/Disables a set of buttons
-     **/
-    buttonToggle: function(enabled, grid) {
-        if (!enabled) {
-            grid.down('button[action=deleteSelected]').disable();
-            grid.down('button[action=printSheet]').disable();
-        } else {
-            grid.down('button[action=deleteSelected]').enable();
-            grid.down('button[action=printSheet]').enable();
-        }
     },
 
     /**

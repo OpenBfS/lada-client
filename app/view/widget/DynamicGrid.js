@@ -61,21 +61,17 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         tbcontent.push('->');
         if (this.toolbarbuttons && this.toolbarbuttons.length) {
             for (var i= 0; i < this.toolbarbuttons.length; i++) {
-                // TODO this is very ugly: naming the buttons here
-                var buttontext = i18n.getMsg(this.toolbarbuttons[i].text);
-                if (buttontext.substring(buttontext.length-10, buttontext.length) !== '.undefined') {
-                    this.toolbarbuttons[i].text = buttontext;
-                }
                 tbcontent.push(this.toolbarbuttons[i]);
             }
         }
 
         if (this.printable) {
             tbcontent.push({
-                text: i18n.getMsg('probe.button.print'),
+                text: i18n.getMsg('button.print'),
                 icon: 'resources/img/printer.png',
                 action: 'print',
-                disabled: true //disabled on start, enabled by the controller
+                needsSelection: true,
+                disabled: true
             });
         }
         if (this.exportable) {
@@ -83,10 +79,17 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 text: i18n.getMsg('export.button'),
                 icon: 'resources/img/svn-update.png',
                 action: 'gridexport',
-                hidden: this.hideExport,
-                disabled: true //disabled on start, enabled by the controller
+                needsSelection: true,
+                disabled: true
             });
         }
+        tbcontent.push({
+            text: i18n.getMsg('delete'),
+            icon: 'resources/img/svn-update.png',
+            action: 'gridexport',
+            needsSelection: true,
+            disabled: true
+        });
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'top',
@@ -146,6 +149,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      *   of fields
      **/
     generateColumnsAndFields: function(current_columns, fixedColumnStore) {
+        this.toolbarbuttons = [];
         var resultColumns = [];
         var fields = [];
         var i18n = Lada.getApplication().bundle;
@@ -158,7 +162,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             text: 'RW',
             dataIndex: 'readonly',
             sortable: false,
-            // tooltip: tooltiptext,
             width: 30,
             getClass: function(val, meta, rec) {
                 if (rec.get('readonly') === false &&
@@ -209,6 +212,33 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             //TODO: Use proper icons
             switch (datatype.name) {
                 case 'probeId':
+                    this.toolbarbuttons.push({
+                        text: i18n.getMsg('probe.button.create'),
+                        icon: 'resources/img/list-add.png',
+                        action: 'addProbe',
+                        needsSelection: false,
+                        disabled: false
+                    });
+                    this.toolbarbuttons.push({
+                        text: i18n.getMsg('probe.button.import'),
+                        icon: 'resources/img/svn-commit.png',
+                        action: 'importprobe',
+                        needsSelection: false,
+                        disabled: false
+                    });
+                    this.toolbarbuttons.push({
+                        text: i18n.getMsg('probe.button.delete_selected'),
+                        icon: 'resources/img/edit-delete.png',
+                        action: 'deleteprobe',
+                        disabled: true
+                    });
+                    this.toolbarbuttons.push({
+                        text: i18n.getMsg('probe.button.printSheet'),
+                        icon: 'resources/img/printer.png',
+                        action: 'printSheet',
+                        needsSelection: true,
+                        disabled: true
+                    });
                     colImg = Ext.getResourcePath(openIconPath, null, null);
                     col.xtype = 'widgetcolumn';
                     col.widget = {
@@ -248,6 +278,13 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     };
                     break;
                 case 'messungId':
+                    this.toolbarbuttons.push({
+                        text: i18n.getMsg('statusSetzen'),
+                        icon: 'resources/img/mail-mark-notjunk.png',
+                        action: 'setstatus',
+                        needsSelection: true,
+                        disabled: true
+                    });
                     colImg = Ext.getResourcePath(openIconPath, null, null);
                     col.xtype = 'widgetcolumn';
                     col.widget = {
@@ -292,7 +329,53 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         }
                     };
                     break;
-
+                case 'mprId': //TODO not yet implemented, might be a wrong name
+                    this.toolbarbuttons.push({
+                        text: i18n.getMsg('messprogramme.button.create'),
+                        icon: 'resources/img/list-add.png',
+                        action: 'addMessprogramm',
+                        needsSelection: false,
+                        disabled: true
+                    });
+                    this.toolbarbuttons.push({
+                        text: i18n.getMsg('messprogramme.button.generate'),
+                        icon: 'resources/img/view-time-schedule-insert.png',
+                        action: 'genProbenFromMessprogramm',
+                        needsSelection: true,
+                        disabled: true
+                    });
+                    colImg = Ext.getResourcePath(openIconPath, null, null);
+                    col.xtype = 'widgetcolumn';
+                    col.widget = {
+                        xtype: 'button',
+                        icon: colImg,
+                        width: '16px',
+                        height: '16px',
+                        userCls: 'widget-column-button',
+                        tooltip: i18n.getMsg('typedgrid.tooltip.mprid'),
+                        hidden: true,
+                        listeners: {
+                            click: function(button) {
+                                var id = button.getText();
+                                Lada.model.Messprogramm.load(id, {
+                                    success: function(record) {
+                                        var win = Ext.create(
+                                            'Lada.view.window.Messprogramm', {
+                                                record: record});
+                                        win.show();
+                                    }
+                                });
+                            },
+                            textchange: function(button, oldval, newval) {
+                                if (!newval || newval === '') {
+                                    button.hide();
+                                } else {
+                                    button.show();
+                                }
+                            }
+                        }
+                    };
+                    break;
                 case 'ortId':
                     colImg = Ext.getResourcePath(openIconPath, null, null);
                     col.xtype = 'widgetcolumn';
