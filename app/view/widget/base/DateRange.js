@@ -69,8 +69,8 @@ Ext.define('Lada.view.widget.base.DateRange', {
                 }
             })
         ];
-        this.setValue(this.value);
         this.callParent(arguments);
+        this.setValue(this.value);
     },
     showWarnings: function(warnings) {
         //legacy - still called?
@@ -83,21 +83,42 @@ Ext.define('Lada.view.widget.base.DateRange', {
     },
 
     getValue: function() {
-        return [
-            this.down('datetimefield[name=dateFrom]').getValue(),
-            this.down('datetimefield[name=dateTo]').getValue()];
+        var val0 = this.down('[name=' + this.name + 'From]').getValue();
+        if (!val0) {
+            val0 = '';
+        } else {
+            val0 = val0.valueOf();
+        }
+        var val1 = this.down('[name='+ this.name + 'To]').getValue();
+        if (!val1) {
+            val1 = '';
+        } else {
+            val1 = val1.valueOf();
+        }
+        return '' + val0 + ',' + val1;
     },
 
     setValue: function(value) {
-        if (value && value.length == 2 ) {
-            this.down('datetimefield[name=dateFrom]').setValue(value[0]);
-            this.down('datetimefield[name=dateTo]').setValue(value[1]);
+        if (value && value.indexOf(',') <= 0) {
+            var val0 = parseInt(value.split(',')[0], 10);
+            var val1 = parseInt(value.split(',')[1], 10);
+            if (!isNaN(val0)) {
+                this.down('[name=' + this.name + 'From]').setValue(val0);
+            } else {
+                this.down('[name='+ this.name + 'From]').setValue(null);
+            }
+            if (!isNaN(val1)) {
+                this.down('[name='+ this.name + 'To]').setValue(val1);
+            } else {
+                this.down('[name='+ this.name + 'To]').setValue(null);
+            }
+        } else {
+            this.down('[name=' + this.name + 'From]').setValue(null);
+            this.down('[name=' + this.name + 'To]').setValue(null);
         }
     },
 
     clearWarningOrError: function() {
-        // legacy - still called?
-        this.down('datetimefield').clearInvalid();
     },
 
     getName: function() {
@@ -106,7 +127,7 @@ Ext.define('Lada.view.widget.base.DateRange', {
     },
 
     setReadOnly: function(value) {
-        this.down('datetimefield[name=dateFrom]').setReadOnly(value);
-        this.down('datetimefield[name=dateTo]').setReadOnly(value);
+        this.down('[name=' + this.name + 'From]').setReadOnly(value);
+        this.down('[name=' + this.name + 'To]').setReadOnly(value);
     }
 });

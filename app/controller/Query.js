@@ -52,14 +52,14 @@ Ext.define('Lada.controller.Query', {
             'querypanel panel[name=filtervalues] numberfield': {
                 change: me.filterValueChanged
             },
-            'querypanel panel[name=filtervalues] textfield': {
+            'querypanel panel[name=filtervalues] tfield': {
                 change: me.filterValueChanged
             },
             'querypanel panel[name=filtervalues] combobox': {
                 change: me.filterValueChanged
             },
             'querypanel panel[name=filtervalues] datefield': {
-                change: me.filterValueChanged
+                change: me.dateValueChanged
             }
 
         });
@@ -363,19 +363,17 @@ Ext.define('Lada.controller.Query', {
 
     filterValueChanged: function(box, newvalue, oldvalue) {
         var store = box.up('querypanel').gridColumnStore;
-        if (box.xytpe === 'datefield') {
-            if (box.name.indexOf('From') >= 0) {
-                var dataIndex = box.name.split('From')[0];
-                var rec = store.findRecord('dataIndex', dataIndex);
-                rec.set('filterValue', newvalue);
-            }
-            // TODO name+"To"; also agree on server connection protocol for two values
-        } else {
-            var name = box.name;
-            // TODO: daterange still fails here not work as expected
-            var rec = store.findRecord('dataIndex', name);
-            rec.set('filterValue', newvalue);
-        }
+        var name = box.name;
+
+        var rec = store.findRecord('dataIndex', name);
+        rec.set('filterValue', newvalue);
+    },
+
+    dateValueChanged: function(box, newvalue, oldvalue) {
+        var store = box.up('querypanel').gridColumnStore;
+        var widget = box.up().up();
+        var rec = store.findRecord('dataIndex', widget.name);
+        rec.set('filterValue', widget.getValue());
     },
 
     loadGridColumnStore: function(element) {
@@ -387,14 +385,12 @@ Ext.define('Lada.controller.Query', {
         gcs.load({
             callback: function(records, op, success) {
                 var cs = Ext.data.StoreManager.get('columnstore');
-                console.log(cs.getData().length);
                 cs.clearFilter();
                 cs.filter({
                     property: 'baseQuery',
                     value: panel.getForm().getRecord().get('baseQuery'),
                     exactMatch: true
                 });
-                console.log(cs.getData().length);
                 panel.gridColumnStore = gcs;
                 panel.down('columnchoser').setStore(gcs, cs);
                 panel.down('columnsort').setStore(gcs);
