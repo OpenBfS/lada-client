@@ -118,21 +118,20 @@ Ext.define('Lada.view.QueryPanel', {
             }
         }, {
             xtype: 'cbox',
-            name: 'groups',
-            // TODO no groups yet
+            name: 'messStellesIds',
             multiSelect: true,
             labelWidth: 125,
             fieldLabel: 'query.groups',
             store: Ext.create('Ext.data.Store',{
                 model: 'Lada.model.QueryGroup'
             }),
-            valueField: 'name',
-            displayField: 'name',
+            valueField: 'messStellesIds',
+            displayField: 'messStellesIds',
             tpl: Ext.create('Ext.XTemplate',
                 '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-                '{name}</div></tpl>'),
+                '{messStellesIds}</div></tpl>'),
             displayTpl: Ext.create('Ext.XTemplate',
-                '<tpl for=".">{name}</tpl>')
+                '<tpl for=".">{messStellesIds}</tpl>')
         },{
             xtype: 'textarea',
             name: 'description',
@@ -226,7 +225,7 @@ Ext.define('Lada.view.QueryPanel', {
         this.down('textfield[name=name]').fieldLabel = i18n.getMsg('query.name');
         this.down('textarea[name=description]').fieldLabel = i18n.getMsg('query.comment');
         //TODO these two are ugly hacks:
-        this.down('cbox[name=groups]').down().fieldLabel = i18n.getMsg('query.groups');
+        this.down('cbox[name=messStellesIds]').down().fieldLabel = i18n.getMsg('query.groups');
         this.down('cbox[name=activefilters]').down().fieldLabel = i18n.getMsg('query.filters.visible');
 
         var selquery = this.down('combobox[name=selectedQuery]');

@@ -83,16 +83,29 @@ Ext.define('Lada.controller.Query', {
         var panel = button.up('panel');
         var cbox = panel.down('combobox[name=selectedQuery]');
         var cquery = cbox.getStore().getById(cbox.getValue());
-        // var newgroups = cquery.get('groups');
-        // if (newgroups.indexOf('Testlabor_4') < 0) {
-        //     newgroups.push('Testlabor_4');
-        // }
+        var newgroups = cquery.get('groups');
+        var mst = cquery.get('messStellesIds');
+        var mst_in = false;
+        for (var i= 0; i < mst.length; i++) {
+            if ( Lada.mst.indexOf(mst[i]) >= 0) {
+                mst_in = true;
+                break;
+            }
+        }
+        if (mst_in === false) {
+            mst.push(Lada.mst[0]);
+        }
+        for (var j = 0; j < Lada.mst.length; j++) {
+            if (newgroups.indexOf(Lada.mst) < 0) {
+                newgroups.push(Lada.mst[j]);
+            }
+        }
         var newrecord = Ext.create('Lada.model.Query',{
             baseQuery: cquery.get('baseQuery'),
             name: cquery.get('name') + ' (Kopie)',
             userId: Lada.userId,
-            description: cquery.get('description')
-            // groups: newgroups TODO
+            description: cquery.get('description'),
+            messStellesIds: newgroups
         });
         panel.getStore().add([newrecord]);
         cbox.setStore(panel.store);
@@ -136,7 +149,33 @@ Ext.define('Lada.controller.Query', {
         var newquery = qp.store.getById(combobox.getValue());
         qp.getForm().loadRecord(newquery);
         this.loadGridColumnStore(combobox);
-        if ( newquery.get('userId') === Lada.userId) {
+        var groupstore = qp.down('cbox[name=messStellesIds]').down(
+            'tagfield').getStore();
+        groupstore.removeAll();
+        var newMst = newquery.get('messStellesIds');
+        if (newMst !== null) {
+            for (var i = 0; i < newMst.length; i++) {
+                groupstore.add(
+                    Ext.create('Lada.model.QueryGroup', {
+                        messStellesIds: newMst[i]
+                    })
+                );
+            }
+        }
+        if (this.isQueryReadonly(newquery) === false) {
+            for (var j =0; j < Lada.mst.length; j++) {
+                if (groupstore.findRecord('messStelle', Lada.mst[j]) === null) {
+                    groupstore.add(
+                        Ext.create('Lada.model.QueryGroup', {
+                            messStellesId: Lada.mst[j]
+                        })
+                    );
+                }
+            }
+        }
+
+        this.loadGridColumnStore(combobox);
+        if ( this.isQueryReadonly(newquery) === false) {
             qp.down('button[action=delquery]').setDisabled(false);
             qp.down('button[action=save]').setDisabled(false);
         } else {
@@ -396,5 +435,20 @@ Ext.define('Lada.controller.Query', {
                 panel.down('columnsort').setStore(gcs);
             }
         });
+    },
+
+    //checks checks if a query is editable by the current user
+    isQueryReadonly: function(query) {
+        var qmst = query.get('messStellesIds');
+        if (qmst === null) {
+            return true;
+        }
+        for (var i=0; i < Lada.mst.length; i++) {
+            if (qmst.indexOf(Lada.mst[i]) >= 0) {
+                return false;
+            }
+        }
+        return true;
     }
+
 });
