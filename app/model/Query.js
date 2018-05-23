@@ -23,7 +23,10 @@ Ext.define('Lada.model.Query', {
     }, {
         name: 'baseQuery'
         // the linked stamm.query in the database.
-    }
-    //TODO: groups
-    ]
+    }, {
+        name: 'messStellesIds'
+    }, {
+        name: 'clonedFrom',
+        persist: false
+    }]
 });

@@ -63,10 +63,8 @@ Ext.define('Lada.controller.Query', {
 
     listAllQueries: function(checkbox, newval) {
         checkbox.resetOriginalValue(); // avoids field being cleaned on reset
-        if (newval === false) {
-            checkbox.up('querypanel').store.clearFilter();
-        } else {
-            //TODO: currently selected may disappear from visible store!
+        checkbox.up('querypanel').store.clearFilter();
+        if (newval === true) {
             checkbox.up('querypanel').store.filter({
                 property: 'userId',
                 value: Lada.userId,
@@ -79,31 +77,15 @@ Ext.define('Lada.controller.Query', {
         var panel = button.up('panel');
         var cbox = panel.down('combobox[name=selectedQuery]');
         var cquery = cbox.getStore().getById(cbox.getValue());
-        var newgroups = cquery.get('groups');
-        var mst = cquery.get('messStellesIds');
-        var mst_in = false;
-        for (var i= 0; i < mst.length; i++) {
-            if ( Lada.mst.indexOf(mst[i]) >= 0) {
-                mst_in = true;
-                break;
-            }
-        }
-        if (mst_in === false) {
-            mst.push(Lada.mst[0]);
-        }
-        for (var j = 0; j < Lada.mst.length; j++) {
-            if (newgroups.indexOf(Lada.mst) < 0) {
-                newgroups.push(Lada.mst[j]);
-            }
-        }
         var newrecord = Ext.create('Lada.model.Query',{
             baseQuery: cquery.get('baseQuery'),
             name: cquery.get('name') + ' (Kopie)',
             userId: Lada.userId,
             description: cquery.get('description'),
-            messStellesIds: newgroups
+            messStellesIds: this.getMessStellenUnique(),
+            clonedFrom: cquery.get('id')
         });
-        panel.getStore().add([newrecord]);
+        panel.store.add([newrecord]);
         cbox.setStore(panel.store);
         cbox.select(newrecord);
         this.changeCurrentQuery(cbox);
@@ -143,6 +125,7 @@ Ext.define('Lada.controller.Query', {
     changeCurrentQuery: function(combobox) {
         var qp = combobox.up('querypanel');
         var newquery = qp.store.getById(combobox.getValue());
+        combobox.resetOriginalValue();
         qp.getForm().loadRecord(newquery);
         this.loadGridColumnStore(combobox);
         var groupstore = qp.down('cbox[name=messStellesIds]').down(
@@ -171,13 +154,11 @@ Ext.define('Lada.controller.Query', {
         }
 
         this.loadGridColumnStore(combobox);
-        if ( this.isQueryReadonly(newquery) === false) {
-            qp.down('button[action=delquery]').setDisabled(false);
-            qp.down('button[action=save]').setDisabled(false);
-        } else {
-            qp.down('button[action=delquery]').setDisabled(true);
-            qp.down('button[action=save]').setDisabled(true);
-        }
+        qp.down('button[action=newquery]').setDisabled(newquery.phantom);
+        qp.down('button[action=delquery]').setDisabled(
+            this.isQueryReadonly(newquery));
+        qp.down('button[action=save]').setDisabled(
+            this.isQueryReadonly(newquery));
     },
 
     saveQuery: function(button) {
@@ -214,7 +195,14 @@ Ext.define('Lada.controller.Query', {
 
     reset: function(button) {
         var panel = button.up('querypanel');
-        panel.getForm().reset();
+        var qid = '';
+        var rec = panel.getForm().getRecord();
+        if (rec.phantom) {
+            qid = rec.get('clonedFrom');
+        } else {
+            qid = rec.get('id');
+        }
+        panel.getForm().loadRecord(panel.store.getById(qid));
         this.loadGridColumnStore(button);
     },
 
@@ -260,9 +248,11 @@ Ext.define('Lada.controller.Query', {
                             selModel: Ext.create('Ext.selection.CheckboxModel', {
                                 checkOnly: true,
                                 injectCheckbox: 1
-                            }),
-                            store: Ext.data.StoreManager.get('genericresults')
+                            })
                         });
+                        resultGrid.setStore(
+                            Ext.data.StoreManager.get('genericresults')
+                        );
                         resultGrid.setup(gcs, fixColumnStore);
                         resultGrid.store.removeAll();
                         resultGrid.store.add(responseData);
@@ -374,7 +364,9 @@ Ext.define('Lada.controller.Query', {
         for (var i=0; i < oldvalue.length; i++) {
             if (newvalue.indexOf(oldvalue[i]) < 0) {
                 var rec = store.findRecord('dataIndex', oldvalue[i]);
-                rec.set('filterActive',false);
+                if (rec) {
+                    rec.set('filterActive',false);
+                }
             }
         }
         for (var j= 0 ; j < newvalue.length; j++) {
@@ -418,7 +410,7 @@ Ext.define('Lada.controller.Query', {
         var panel = element.up('querypanel');
         var gcs = Ext.create('Lada.store.GridColumn');
         gcs.proxy.extraParams = {
-            'qid': panel.getForm().getRecord().get('baseQuery')
+            'queryUserId': panel.getForm().getRecord().get('id')
         };
         gcs.load({
             callback: function(records, op, success) {
@@ -433,8 +425,10 @@ Ext.define('Lada.controller.Query', {
                 panel.down('columnchoser').setStore(gcs, cs);
                 panel.down('columnchoser').setStore(gcs, cs);
                 panel.down('columnsort').setStore(gcs);
-                panel.down('activefilters').setStore(gcs);
-                panel.down('activefilters').setValues(gcs.get('active'));
+                panel.down('cbox[name=activefilters]').setStore(cs);
+
+                panel.down('cbox[name=activefilters]').setValue(
+                    panel.getForm().getRecord().get('filteractive'));
             }
         });
     },
@@ -451,6 +445,18 @@ Ext.define('Lada.controller.Query', {
             }
         }
         return true;
+    },
+
+    getMessStellenUnique: function() {
+        var mst = [];
+        if (Lada.mst) {
+            for (var j = 0; j < Lada.mst.length; j++) {
+                if (mst.indexOf(Lada.mst[j]) < 0) {
+                    mst.push(Lada.mst[j]);
+                }
+            }
+        }
+        return mst;
     }
 
 });
