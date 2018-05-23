@@ -26,16 +26,11 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             text: '',
             sortable: true,
             dataIndex: 'gridColumnId',
-            renderer: function(value) {
+            renderer: function(value, metadata, record) {
                 if (!value || value === '') {
                     return '';
                 }
-                var store = Ext.data.StoreManager.get('columnstore');
-                var record = store.findRecord('id', value);
-                if (record) {
-                    return record.get('name');
-                }
-                return '';
+                return record.get('name');
             },
             flex: 1
         }];

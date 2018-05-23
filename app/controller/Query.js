@@ -52,16 +52,12 @@ Ext.define('Lada.controller.Query', {
             'querypanel panel[name=filtervalues] numberfield': {
                 change: me.filterValueChanged
             },
-            'querypanel panel[name=filtervalues] tfield': {
+            'querypanel panel[name=filtervalues] textfield': {
                 change: me.filterValueChanged
             },
             'querypanel panel[name=filtervalues] combobox': {
                 change: me.filterValueChanged
-            },
-            'querypanel panel[name=filtervalues] datefield': {
-                change: me.dateValueChanged
             }
-
         });
     },
 
@@ -326,17 +322,17 @@ Ext.define('Lada.controller.Query', {
                         name: fixcolumn.get('dataIndex'),
                         labelWidth: 125,
                         fieldLabel: fixcolumn.get('name'),
-                        value: recs[i].get('filterValue') || null,
                         width: '100%',
                         triggers: {
                             clear: {
                                 extraCls: 'x-form-clear-trigger',
                                 handler: function() {
-                                    this.clearValue();
+                                    this.setValue(',');
                                 }
                             }
                         }
                     });
+                    field.setValue(recs[i].get('filterValue'));
                     break;
                 case 'number':
                     field = Ext.create('Lada.view.widget.base.NumberField', {
@@ -371,7 +367,7 @@ Ext.define('Lada.controller.Query', {
         var cs = Ext.data.StoreManager.get('columnstore');
         cs.clearFilter();
         cs.filter({
-            property:'baseQuery',
+            property: 'baseQuery',
             value: qp.getForm().getRecord().get('baseQuery'),
             exactMatch: true
         });
@@ -401,11 +397,14 @@ Ext.define('Lada.controller.Query', {
     },
 
     filterValueChanged: function(box, newvalue, oldvalue) {
-        var store = box.up('querypanel').gridColumnStore;
-        var name = box.name;
-
-        var rec = store.findRecord('dataIndex', name);
-        rec.set('filterValue', newvalue);
+        if (box.xtype === 'datefield') {
+            this.dateValueChanged(box, newvalue);
+        } else {
+            var store = box.up('querypanel').gridColumnStore;
+            var name = box.name;
+            var rec = store.findRecord('dataIndex', name);
+            rec.set('filterValue', newvalue);
+        }
     },
 
     dateValueChanged: function(box, newvalue, oldvalue) {
@@ -432,7 +431,10 @@ Ext.define('Lada.controller.Query', {
                 });
                 panel.gridColumnStore = gcs;
                 panel.down('columnchoser').setStore(gcs, cs);
+                panel.down('columnchoser').setStore(gcs, cs);
                 panel.down('columnsort').setStore(gcs);
+                panel.down('activefilters').setStore(gcs);
+                panel.down('activefilters').setValues(gcs.get('active'));
             }
         });
     },
