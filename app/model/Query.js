@@ -12,6 +12,14 @@
 Ext.define('Lada.model.Query', {
     extend: 'Ext.data.Model',
     autoLoad: true,
+    proxy: {
+        type: 'rest',
+        url: 'lada-server/rest/query',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        }
+    },
     fields: [{
         name: 'id'
     }, {

@@ -77,6 +77,7 @@ Ext.application({
         'Lada.model.GenericResults',
         'Lada.model.Column',
         'Lada.model.QueryGroup',
+        'Lada.model.Query',
         'Lada.store.Column',
         'Lada.store.Query'
     ],

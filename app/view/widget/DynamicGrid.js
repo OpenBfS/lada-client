@@ -331,7 +331,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         }
                     };
                     break;
-                case 'mprId': //TODO not yet implemented, might be a wrong name
+                case 'mpId':
                     this.toolbarbuttons.push({
                         text: i18n.getMsg('messprogramme.button.create'),
                         icon: 'resources/img/list-add.png',
@@ -402,7 +402,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 });
                             },
                             textchange: function(button, oldval, newval) {
-                                if (!newval || newval == '') {
+                                if (!newval || newval === '') {
                                     button.hide();
                                 } else {
                                     button.show();
