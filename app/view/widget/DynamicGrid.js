@@ -36,6 +36,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     allowDeselect: true,
     sortable: false,
 
+    // the dataType to be used on generic doubleclik/add/delete buttons.
+    rowHierarchy: ['messungId', 'probeId', 'mpId', 'ortId'],
+    rowtarget: null,
+
     isDynamic: true,
 
     viewConfig: {
@@ -151,6 +155,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      **/
     generateColumnsAndFields: function(current_columns, fixedColumnStore) {
         this.toolbarbuttons = [];
+        this.column_definitions = [];
+        this.rowtarget = {};
         var resultColumns = [];
         var fields = [];
         var i18n = Lada.getApplication().bundle;
@@ -196,6 +202,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             var col = {}; //TODO dataIndex Model etc?
             var orig_column = fixedColumnStore.findRecord(
                 'id', cc[i].get('gridColumnId'));
+            this.column_definitions.push(orig_column);
             col.dataIndex = orig_column.get('dataIndex');
             col.text = orig_column.get('name');
             col.maxWidth = orig_column.get('width');
@@ -212,6 +219,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             var openIconPath = 'img/document-open.png';
             var colImg = null;
             //TODO: Use proper icons
+            this.setrowtarget(col.dataIndex, datatype.name);
             switch (datatype.name) {
                 case 'probeId':
                     this.toolbarbuttons.push({
@@ -254,6 +262,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         listeners: {
                             click: function(button) {
                                 var id = Number(button.text);
+                                button.swallowEvent(['click', 'dblclick'], true);
                                 Lada.model.Probe.load(id, {
                                     scope: this,
                                     callback: function(record, operation, success) {
@@ -300,6 +309,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         listeners: {
                             click: function(button) {
                                 var id = Number(button.text);
+                                button.swallowEvent(['click', 'dblclick'], true);
                                 Lada.model.Messung.load(id, {
                                     scope: this,
                                     callback: function(record, operation, success) {
@@ -359,6 +369,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         listeners: {
                             click: function(button) {
                                 var id = button.getText();
+                                button.swallowEvent(['click', 'dblclick'], true);
                                 Lada.model.Messprogramm.load(id, {
                                     success: function(record) {
                                         var win = Ext.create(
@@ -392,6 +403,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         listeners: {
                             click: function(button) {
                                 var id = button.getText();
+                                button.swallowEvent(['click', 'dblclick'], true);
                                 Lada.model.Ort.load(id, {
                                     success: function(record) {
                                         var win = Ext.create('Lada.view.window.Ort', {
@@ -424,6 +436,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         hidden: true,
                         listeners: {
                             click: function(button) {
+                                button.swallowEvent(['click', 'dblclick'], true);
                                 var geom = button.geom;
                                 var mapWin = Ext.create('Lada.view.window.Map', {
                                     geom: geom
@@ -488,6 +501,31 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         caf[0] = resultColumns;
         caf[1] = fields;
         return caf;
+    },
+
+    setrowtarget: function(dataIndex, datatypename) {
+        if (this.rowHierarchy.indexOf(datatypename) < 0) {
+            return false;
+        }
+
+        if (!this.rowtarget.hasOwnProperty('dataType')) {
+            this.rowtarget = {
+                dataType: datatypename,
+                dataIndex: dataIndex
+            };
+            return true;
+        } else {
+            var currentIndex = this.rowHierarchy.indexOf(
+                this.rowtarget.dataType);
+            var newIndex = this.rowHierarchy.indexOf(datatypename);
+            if (newIndex < currentIndex) {
+                this.rowtarget = {
+                    dataType: datatypename,
+                    dataIndex: dataIndex
+                };
+            }
+            return true;
+        }
     }
 });
 

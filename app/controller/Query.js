@@ -203,6 +203,7 @@ Ext.define('Lada.controller.Query', {
             qid = rec.get('id');
         }
         panel.getForm().loadRecord(panel.store.getById(qid));
+        panel.store.remove(rec);
         this.loadGridColumnStore(button);
     },
 

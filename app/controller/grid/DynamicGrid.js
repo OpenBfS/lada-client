@@ -19,7 +19,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     init: function() {
         this.control({
             'dynamicgrid': {
-                // itemdblclick: this.openItem,
+                itemdblclick: this.openItem,
                 select: this.activateButtons,
                 deselect: this.deactivateButtons
             },
@@ -247,10 +247,73 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
 
     // TODO: Button to add an item (probe, Messung, messprogramm)
     // TODO: item deletion
-    openItem: function(item) {
-        //TODO: check which column has the highest priority, and thus should be opened
-        // TODO: Should check if the line contains/is a probe, messung, etc.,
-        // TODO and infer  the action from there #1926
+    openItem: function(row, record) {
+        if (!row.grid.rowtarget.hasOwnProperty('dataType')) {
+            return false;
+        }
+        var id = record.get(row.grid.rowtarget.dataIndex);
+        switch (row.grid.rowtarget.dataType) {
+            case 'messungId':
+                Lada.model.Messung.load(id, {
+                    scope: row,
+                    callback: function(record, operation, success) {
+                        if (success) {
+                            var messungRecord = record;
+                            Lada.model.Probe.load(
+                                messungRecord.get('probeId'), {
+                                    scope: this,
+                                    callback: function(
+                                        precord, poperation, psuccess) {
+                                        var win = Ext.create(
+                                            'Lada.view.window.MessungEdit', {
+                                            probe: precord,
+                                            record: record,
+                                            style: 'z-index: -1;'
+                                        });
+                                        win.initData();
+                                        win.show();
+                                    }
+                            });
+                        }
+                    }
+                });
+                break;
+            case 'probeId':
+                Lada.model.Probe.load(id, {
+                    scope: row,
+                    callback: function(record, operation, success) {
+                        if (success) {
+                            var win = Ext.create('Lada.view.window.ProbeEdit', {
+                                record: record,
+                                style: 'z-index: -1;'
+                            });
+                            win.setPosition(30);
+                            win.show();
+                            win.initData();
+                        }
+                    }
+                });
+                break;
+            case 'mpId':
+                Lada.model.Messprogramm.load(id, {
+                    success: function(record) {
+                        var win = Ext.create(
+                            'Lada.view.window.Messprogramm', {
+                                record: record});
+                        win.show();
+                    }
+                });
+                break;
+            case 'ortId':
+                Lada.model.Messprogramm.load(id, {
+                    success: function(record) {
+                        var win = Ext.create(
+                            'Lada.view.window.Messprogramm', {
+                                record: record});
+                        win.show();
+                    }
+                });
+                break;
+        }
     }
-
 });
