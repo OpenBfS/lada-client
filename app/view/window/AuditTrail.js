@@ -163,12 +163,25 @@ Ext.define('Lada.view.window.AuditTrail', {
             } else {
                 value = audit.changedFields[key];
             }
-            if (value === null) {
+            if (value === null || value === '') {
                 value = i18n.getMsg('noValue');
             } else if (value === true) {
                 value = i18n.getMsg('true');
             } else if (value === false) {
                 value = i18n.getMsg('false');
+            }
+            if (key === 'messwert' ||
+                key === 'messwert_pzs' ||
+                key === 'nwg_zu_messwert'
+            ) {
+                var strValue = value.toExponential(2).toString()
+                    .replace('.', Ext.util.Format.decimalSeparator);
+                var splitted = strValue.split('e');
+                var exponent = parseInt(splitted[1]);
+                value = splitted[0] + 'e'
+                    + ((exponent < 0) ? '-' : '+')
+                    + ((Math.abs(exponent) < 10) ? '0' : '')
+                    + Math.abs(exponent).toString();
             }
             html += '' + i18n.getMsg(key) + ': ' +
                 value + '<br>';
