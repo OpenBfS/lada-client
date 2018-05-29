@@ -26,7 +26,7 @@ Ext.define('Lada.model.GridColumn', {
     },{
         name: 'userId'
     },{
-        name: 'queryUserId'
+        name: 'qid'
     },{
         name: 'visible'
     },{
@@ -40,5 +40,17 @@ Ext.define('Lada.model.GridColumn', {
         name: 'name',
         persist: false
     }],
-    idProperty: 'id'
+    proxy: {
+        type: 'rest',
+        url: 'lada-server/rest/columnvalue',
+        reader: {
+            type: 'json',
+            totalProperty: 'totalCount',
+            rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
+        }
+    }
 });

@@ -18,6 +18,10 @@ Ext.define('Lada.model.Query', {
         reader: {
             type: 'json',
             rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     },
     fields: [{

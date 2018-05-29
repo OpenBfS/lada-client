@@ -163,34 +163,38 @@ Ext.define('Lada.controller.Query', {
 
     saveQuery: function(button) {
         var qp = button.up('querypanel');
+        var me = this;
         var record = qp.getForm().getRecord();
         if (record.phantom) {
             record.set('id', null);
             record.set('userId', Lada.userId);
         }
-        if (record.get('userId') === Lada.userId) {
-            if (record.phantom) {
-                record.set('id', null);
-            }
-            record.save({
-                success: function(rec, response) {
-                    var columns = qp.gridColumnStore.getData().items;
-                    for (var i=0; i < columns.length; i++) {
-                        if (columns[i].phantom) {
-                            columns[i].set('id', null);
-                        }
+        record.save({
+            success: function(rec, response) {
+                var json = Ext.decode(response.getResponse().responseText);
+                var newId = json.data.id;
+                var columns = qp.gridColumnStore.getData().items;
+                qp.gridColumnStore.proxy.extraParams = {};
+                for (var i=0; i < columns.length; i++) {
+                    columns[i].set('queryUserId', newId);
+                    if (columns[i].phantom) {
+                        // hack to avoid duplicate 'null' ids
+                        var tmpid = columns[i].get('id');
+                        columns[i].set('id', null);
                         columns[i].save();
-                        //TODO callbacks: report errors
+                        columns[i].set('id', tmpid);
+                    } else {
+                        columns[i].save();
                     }
-                },
-                failure: function(rec, response) {
-                    //TODO error handling
                 }
-            });
-        } else {
-            //TODO error handling
-        }
-        button.up('querypanel').down('fieldset[name=querydetails]').setCollapsed(true);
+                qp.store.reload();
+                qp.down('combobox[name=selectedQuery]').setStore(qp.store);
+                qp.down('combobox[name=selectedQuery]').setValue(newId);
+            },
+            failure: function(rec, response) {
+                //TODO error handling
+            }
+        });
     },
 
     reset: function(button) {
@@ -411,7 +415,7 @@ Ext.define('Lada.controller.Query', {
         var panel = element.up('querypanel');
         var gcs = Ext.create('Lada.store.GridColumn');
         gcs.proxy.extraParams = {
-            'queryUserId': panel.getForm().getRecord().get('id')
+            'qid': panel.getForm().getRecord().get('id')
         };
         gcs.load({
             callback: function(records, op, success) {

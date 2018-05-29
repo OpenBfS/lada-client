@@ -12,15 +12,6 @@
 Ext.define('Lada.store.Column', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Column',
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/column',
-        reader: {
-            type: 'json',
-            totalProperty: 'totalCount',
-            rootProperty: 'data'
-        }
-    },
     autoLoad: true,
     sorters: [{
         property: 'dataIndex',

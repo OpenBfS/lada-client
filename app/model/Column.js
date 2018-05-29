@@ -29,5 +29,14 @@ Ext.define('Lada.model.Column', {
     }, {
         name: 'baseQuery'
     }],
-    idProperty: 'id'
+    idProperty: 'id',
+    proxy: {
+        type: 'rest',
+        url: 'lada-server/rest/column',
+        reader: {
+            type: 'json',
+            totalProperty: 'totalCount',
+            rootProperty: 'data'
+        }
+    }
 });

@@ -11,14 +11,5 @@
  */
 Ext.define('Lada.store.GridColumn', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.GridColumn',
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/columnvalue',
-        reader: {
-            type: 'json',
-            totalProperty: 'totalCount',
-            rootProperty: 'data'
-        }
-    }
+    model: 'Lada.model.GridColumn'
 });
