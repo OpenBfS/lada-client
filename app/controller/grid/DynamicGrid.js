@@ -332,7 +332,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     break;
             }
         }
-    },
+    }
 
     // TODO: Button to add an item (probe, Messung, messprogramm
     // addData: function(button) {}

@@ -110,13 +110,14 @@ Ext.define('Lada.controller.Query', {
                         query.erase({
                             callback: function(record, operation, success) {
                                 var combobox = qp.down('combobox[name=selectedQuery]');
-                                qp.getStore().reload();
-                                var firstEntry = qp.getStore().getAt(0);
+                                qp.store.reload();
+                                combobox.setStore(qp.store);
+                                var firstEntry = qp.store.getAt(0);
                                 if (!firstEntry) {
                                     qp.down('checkbox[name=ownqueries]').setValue(false);
-                                    firstEntry = qp.getStore().getAt(0);
+                                    firstEntry = qp.store.getAt(0);
                                 }
-                                combobox.select(qp.getStore().getAt(0));
+                                combobox.select(qp.store.getAt(0));
                                 qp.down('fieldset[name=querydetails]').collapse();
                             }
                         });
