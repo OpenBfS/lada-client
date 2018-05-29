@@ -36,6 +36,7 @@ Ext.application({
         'Lada.view.plugin.GridRowExpander',
         'Ext.i18n.Bundle',
         'Ext.layout.container.Column',
+        'Lada.query.QueryProxy',
         'Lada.store.LocalPagingStore',
         'Lada.store.Deskriptoren',
         'Lada.store.Ortszuordnung',
@@ -134,6 +135,7 @@ Ext.application({
             evt.returnValue = confirmMessage;
             return confirmMessage;
         });
+        Ext.create('Lada.store.GenericResults');
     },
 
     onLoginFailure: function(response) {

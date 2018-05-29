@@ -11,7 +11,25 @@
  */
 Ext.define('Lada.store.GenericResults', {
     extend: 'Ext.data.Store',
+    storeId: 'genericresults',
     model: 'Lada.model.GenericResults',
+    require: ['Lada.query.QueryProxy'],
+    proxy: {
+        type: 'query',
+        url: 'lada-server/rest/universal',
+        actionMethods: {
+            read: 'POST',
+        },
+        reader: {
+            type: 'json',
+            rootProperty: 'data',
+            totalProperty: 'totalCount'
+        }
+    },
+    setProxyPayload: function(payload) {
+        this.getProxy().setPayload(payload);
+    },
+
     //    autoLoad: true,
     pageSize: Lada.pagingSize
 });

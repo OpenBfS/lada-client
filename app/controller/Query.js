@@ -10,8 +10,11 @@ Ext.define('Lada.controller.Query', {
     extend: 'Ext.app.Controller',
     requires: [
         'Lada.view.widget.base.DateRange',
-        'Lada.store.GridColumn'
+        'Lada.store.GridColumn',
+        'Lada.store.GenericResults'
     ],
+
+    resultStore: null,
 
     /**
      * TODO
@@ -59,6 +62,7 @@ Ext.define('Lada.controller.Query', {
                 change: me.filterValueChanged
             }
         });
+        this.resultStore = Ext.StoreManager.get('GenericResults');
     },
 
     listAllQueries: function(checkbox, newval) {
@@ -261,12 +265,15 @@ Ext.define('Lada.controller.Query', {
                                 injectCheckbox: 1
                             })
                         });
-                        resultGrid.setStore(
-                            Ext.data.StoreManager.get('genericresults')
-                        );
+                        if (!this.resultStore) {
+                            this.resultStore = Ext.StoreManager.get('genericresults');
+                        }
+                        this.resultStore.setProxyPayload(jsonData);
+                        this.resultStore.load();
+                        resultGrid.setStore(this.resultStore);
                         resultGrid.setup(gcs, fixColumnStore);
-                        resultGrid.store.removeAll();
-                        resultGrid.store.add(responseData);
+                        //resultGrid.store.removeAll();
+                        //resultGrid.store.add(responseData);
                         resultGrid.show();
                         contentPanel.add(resultGrid);
                     }

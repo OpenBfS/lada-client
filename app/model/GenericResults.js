@@ -10,14 +10,5 @@
  * Model for Datenbasis Stammdaten.
  */
 Ext.define('Lada.model.GenericResults', {
-    extend: 'Ext.data.Model',
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/universal',
-        reader: {
-            type: 'json',
-            rootProperty: 'data',
-            totalProperty: 'totalCount'
-        }
-    }
+    extend: 'Ext.data.Model'
 });
