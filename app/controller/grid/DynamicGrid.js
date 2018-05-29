@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.controller.grid.DynamicGrid', {
     extend: 'Ext.app.Controller',
-    requires: [],
+    requires: ['Lada.view.window.DeleteMultipleProbe'],
 
     /**
      * Initialize the Controller with listeners
@@ -28,11 +28,13 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             },
             'button[action=print]': {
                 click: this.printSelection
+            },
+            'button[action=genericdelete]': {
+                click: this.deleteData
             }// ,
-            // 'button[action=delete]': {
-            //     click: this.deleteSelection //TODO
+            // 'button[action=genericadd]': {
+            //     click: this.addData
             // }
-
         });
         this.callParent(arguments);
     },
@@ -245,8 +247,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         }
     },
 
-    // TODO: Button to add an item (probe, Messung, messprogramm)
-    // TODO: item deletion
+
     openItem: function(row, record) {
         if (!row.grid.rowtarget.hasOwnProperty('dataType')) {
             return false;
@@ -315,5 +316,24 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 });
                 break;
         }
-    }
+    },
+
+    deleteData: function(button) {
+        var grid = button.up('dynamicgrid');
+        if (grid.rowtarget.hasOwnProperty('dataType')) {
+            switch (grid.rowtarget.dataType) {
+                case 'probeId':
+                    var selection =grid.getView().getSelectionModel().getSelection();
+                    var win = Ext.create('Lada.view.window.DeleteMultipleProbe', {
+                        selection: selection,
+                        parentWindow: grid
+                    });
+                    win.show();
+                    break;
+            }
+        }
+    },
+
+    // TODO: Button to add an item (probe, Messung, messprogramm
+    // addData: function(button) {}
 });

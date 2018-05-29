@@ -28,9 +28,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
             'dynamicgrid toolbar button[action=importprobe]': {
                 click: this.uploadFile
             },
-            'dynamicgrid toolbar button[action=deleteProbe]': {
-                click: this.deleteSelected
-            },
             'dynamigrid toolbar button[action=printSheet]': {
                 click: {
                     fn: this.printSelection,
@@ -238,19 +235,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 return null;
             }
         });
-    },
-
-    /**
-     * Deletes selected list items
-     */
-    deleteSelected: function(button) {
-        var me = button.up('grid');
-        var selection = me.getView().getSelectionModel().getSelection();
-        var win = Ext.create('Lada.view.window.DeleteMultipleProbe', {
-            selection: selection,
-            parentWindow: me
-        });
-        win.show();
     },
 
     /**

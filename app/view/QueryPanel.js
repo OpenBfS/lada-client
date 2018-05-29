@@ -277,7 +277,7 @@ Ext.define('Lada.view.QueryPanel', {
                     var items = me.gridColumnStore.getData().items;
                     for (var i=0; i < items.length; i++) {
                         var gc = cs.findRecord('id',
-                            items[i].get('gridColumnId'));
+                            items[i].get('gridColumnId'),false,false, false, true);
                         items[i].set('dataIndex', gc.get('dataIndex'));
                         items[i].set('name', gc.get('name'));
                     }

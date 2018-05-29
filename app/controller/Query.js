@@ -102,23 +102,27 @@ Ext.define('Lada.controller.Query', {
         if (!query) {
             return;
         }
-        if (query.phantom) {
-            qp.store.remove(query);
-        }
-        //check permission to delete
-        if (query.get('userId') === Lada.userId ) {
-
-            // else TODO: send a DELETE request to /rest/query?id=query.get('id')
-            var combobox = qp.down('combobox[name=selectedQuery]');
-            var firstEntry = qp.getStore().getAt(0);
-            if (!firstEntry) {
-                qp.down('checkbox[name=ownqueries]').setValue(false);
-                firstEntry = qp.getStore().getAt(0);
-            }
-            combobox.select(qp.getStore().getAt(0));
-            qp.down('fieldset[name=querydetails]').collapse();
-        } else {
-            Ext.Msg.alert('','Query nicht gelöscht');
+        if ( (Lada.userId === query.get('userId'))) {
+            var i18n = Lada.getApplication().bundle;
+            Ext.MessageBox.confirm(i18n.getMsg('delete'),
+                i18n.getMsg('delete.query'), function(btn) {
+                    if (btn === 'yes') {
+                        query.erase({
+                            callback: function(record, operation, success) {
+                                var combobox = qp.down('combobox[name=selectedQuery]');
+                                qp.getStore().reload();
+                                var firstEntry = qp.getStore().getAt(0);
+                                if (!firstEntry) {
+                                    qp.down('checkbox[name=ownqueries]').setValue(false);
+                                    firstEntry = qp.getStore().getAt(0);
+                                }
+                                combobox.select(qp.getStore().getAt(0));
+                                qp.down('fieldset[name=querydetails]').collapse();
+                            }
+                        });
+                    }
+                }
+            );
         }
     },
 
@@ -143,7 +147,8 @@ Ext.define('Lada.controller.Query', {
         }
         if (this.isQueryReadonly(newquery) === false) {
             for (var j =0; j < Lada.mst.length; j++) {
-                if (groupstore.findRecord('messStelle', Lada.mst[j]) === null) {
+                if (groupstore.findRecord('messStelle', Lada.mst[j], false,
+                    false, false, true) === null) {
                     groupstore.add(
                         Ext.create('Lada.model.QueryGroup', {
                             messStellesId: Lada.mst[j]
@@ -287,7 +292,7 @@ Ext.define('Lada.controller.Query', {
                 continue;
             }
             var fixcolumn = fixColumnStore.findRecord('id',
-                recs[i].get('gridColumnId'));
+                recs[i].get('gridColumnId'), false, false, false, true);
             var dt = fixcolumn.get('dataType');
             var field = null;
             switch (dt.name) {
@@ -368,16 +373,19 @@ Ext.define('Lada.controller.Query', {
         });
         for (var i=0; i < oldvalue.length; i++) {
             if (newvalue.indexOf(oldvalue[i]) < 0) {
-                var rec = store.findRecord('dataIndex', oldvalue[i]);
+                var rec = store.findRecord('dataIndex', oldvalue[i],
+                    false, false, false, true);
                 if (rec) {
                     rec.set('filterActive',false);
                 }
             }
         }
         for (var j= 0 ; j < newvalue.length; j++) {
-            var nrec = store.findRecord('dataIndex', newvalue[j]);
+            var nrec = store.findRecord('dataIndex', newvalue[j],
+                false, false, false, true);
             if (!nrec) {
-                var fixrecord = cs.findRecord('dataIndex', newvalue[j]);
+                var fixrecord = cs.findRecord('dataIndex', newvalue[j],
+                    false, false, false, true);
                 var col = Ext.create('Lada.model.GridColumn', {
                     gridColumnId: fixrecord.get('id'),
                     visible: false,
@@ -399,7 +407,8 @@ Ext.define('Lada.controller.Query', {
         } else {
             var store = box.up('querypanel').gridColumnStore;
             var name = box.name;
-            var rec = store.findRecord('dataIndex', name);
+            var rec = store.findRecord('dataIndex', name, false, false, false,
+                true);
             rec.set('filterValue', newvalue);
         }
     },
@@ -407,7 +416,8 @@ Ext.define('Lada.controller.Query', {
     dateValueChanged: function(box, newvalue, oldvalue) {
         var store = box.up('querypanel').gridColumnStore;
         var widget = box.up().up();
-        var rec = store.findRecord('dataIndex', widget.name);
+        var rec = store.findRecord('dataIndex', widget.name, false, false,
+            false, true);
         rec.set('filterValue', widget.getValue());
     },
 

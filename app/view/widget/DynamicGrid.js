@@ -53,7 +53,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             checkOnly: true,
             injectCheckbox: 1
         });
-        this.setToolbar();
         this.callParent(arguments);
     },
 
@@ -88,18 +87,21 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 disabled: true
             });
         }
-        tbcontent.push({
-            text: i18n.getMsg('delete'),
-            icon: 'resources/img/svn-update.png',
-            action: 'gridexport',
-            needsSelection: true,
-            disabled: true
-        });
-        this.dockedItems = [{
+        if (['probeId'].indexOf(this.rowtarget.dataType) >= 0 ) {
+            //TODO: make other items deletable via this button, too
+            tbcontent.push({
+                text: i18n.getMsg('button.deleteselected'),
+                icon: 'resources/img/svn-update.png',
+                action: 'genericdelete',
+                needsSelection: true,
+                disabled: true
+            });
+        }
+        this.addDocked({
             xtype: 'toolbar',
             dock: 'top',
             items: tbcontent
-        }];
+        });
     },
 
 
@@ -143,8 +145,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         this.columns = caf[0];
         var fields = caf[1];
         this.store.setFields(fields);
-
         this.reconfigure(this.store, this.columns);
+        this.setToolbar();
     },
 
     /**
@@ -201,7 +203,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
             var col = {}; //TODO dataIndex Model etc?
             var orig_column = fixedColumnStore.findRecord(
-                'id', cc[i].get('gridColumnId'));
+                'id', cc[i].get('gridColumnId'), false, false, false, true);
             this.column_definitions.push(orig_column);
             col.dataIndex = orig_column.get('dataIndex');
             col.text = orig_column.get('name');
@@ -223,27 +225,21 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             switch (datatype.name) {
                 case 'probeId':
                     this.toolbarbuttons.push({
-                        text: i18n.getMsg('probe.button.create'),
+                        text: i18n.getMsg('probe.new'),
                         icon: 'resources/img/list-add.png',
                         action: 'addProbe',
                         needsSelection: false,
                         disabled: false
                     });
                     this.toolbarbuttons.push({
-                        text: i18n.getMsg('probe.button.import'),
+                        text: i18n.getMsg('button.import'),
                         icon: 'resources/img/svn-commit.png',
                         action: 'importprobe',
                         needsSelection: false,
                         disabled: false
                     });
                     this.toolbarbuttons.push({
-                        text: i18n.getMsg('probe.button.delete_selected'),
-                        icon: 'resources/img/edit-delete.png',
-                        action: 'deleteprobe',
-                        disabled: true
-                    });
-                    this.toolbarbuttons.push({
-                        text: i18n.getMsg('probe.button.printSheet'),
+                        text: i18n.getMsg('button.printsheet'),
                         icon: 'resources/img/printer.png',
                         action: 'printSheet',
                         needsSelection: true,
