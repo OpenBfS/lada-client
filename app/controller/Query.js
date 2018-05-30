@@ -11,7 +11,20 @@ Ext.define('Lada.controller.Query', {
     requires: [
         'Lada.view.widget.base.DateRange',
         'Lada.store.GridColumn',
-        'Lada.store.GenericResults'
+        'Lada.store.GenericResults',
+        'Lada.view.widget.Messstelle',
+        'Lada.view.widget.Umwelt',
+        'Lada.view.widget.Staat',
+        'Lada.view.widget.base.TextField',
+        'Lada.view.widget.Status',
+        'Lada.view.widget.MessprogrammLand',
+        'Lada.view.widget.Verwaltungseinheit',
+        'Lada.view.widget.BoolFilter',
+        'Lada.view.widget.base.NumberField',
+        'Lada.view.widget.Netzbetreiber',
+        'Lada.view.widget.Datenbasis',
+        'Lada.view.widget.Betriebsart'
+
     ],
 
     resultStore: null,
@@ -303,64 +316,110 @@ Ext.define('Lada.controller.Query', {
                 recs[i].get('gridColumnId'), false, false, false, true);
             var dt = fixcolumn.get('dataType');
             var field = null;
+            var options = {
+                name: fixcolumn.get('dataIndex'),
+                labelWidth: 125,
+                fieldLabel: fixcolumn.get('name'),
+                value: recs[i].get('filterValue') || null,
+                width: '100%',
+                triggers: {
+                    clear: {
+                        extraCls: 'x-form-clear-trigger',
+                        handler: function() {
+                            this.clearValue();
+                        }
+                    }
+                }
+            };
             switch (dt.name) {
                 case 'text':
                 case 'probeId':
                 case 'messungId':
                 case 'ortId':
-                    field = Ext.create('Ext.form.field.Text', {
-                        name: fixcolumn.get('dataIndex'),
-                        fieldLabel: fixcolumn.get('name'),
-                        labelWidth: 125,
-                        margin: 5,
-                        width: '100%',
-                        value: recs[i].get('filterValue') || '',
-                        triggers: {
-                            clear: {
-                                extraCls: 'x-form-clear-trigger',
-                                handler: function() {
-                                    this.setValue('');
-                                }
+                    options.triggers = {
+                        clear: {
+                            extraCls: 'x-form-clear-trigger',
+                            handler: function() {
+                                this.setValue('');
                             }
                         }
-                    });
+                    }
+                    field = Ext.create('Ext.form.field.Text', options);
                     break;
                 case 'date':
-                    field = Ext.create('Lada.view.widget.base.DateRange', {
-                        name: fixcolumn.get('dataIndex'),
-                        labelWidth: 125,
-                        fieldLabel: fixcolumn.get('name'),
-                        width: '100%',
-                        triggers: {
-                            clear: {
-                                extraCls: 'x-form-clear-trigger',
-                                handler: function() {
-                                    this.setValue(',');
-                                }
+                    options.triggers = {
+                        clear: {
+                            extraCls: 'x-form-clear-trigger',
+                            handler: function() {
+                                this.setValue(',');
                             }
                         }
-                    });
+                    };
+                    field = Ext.create('Lada.view.widget.base.DateRange',
+                        options);
                     field.setValue(recs[i].get('filterValue'));
                     break;
                 case 'number':
-                    field = Ext.create('Lada.view.widget.base.NumberField', {
-                        name: fixcolumn.get('dataIndex'),
-                        labelWidth: 125,
-                        fieldLabel: fixcolumn.get('name'),
-                        value: recs[i].get('filterValue') || null,
-                        width: '100%',
-                        triggers: {
-                            clear: {
-                                extraCls: 'x-form-clear-trigger',
-                                handler: function() {
-                                    this.clearValue();
-                                }
+                    options.triggers = {
+                        clear: {
+                            extraCls: 'x-form-clear-trigger',
+                            handler: function() {
+                                this.clearValue();
                             }
                         }
-                    });
+                    };
+                    field = Ext.create('Lada.view.widget.base.NumberField',
+                        options);
+                    break;
+                case 'land':
+                    options.store = Ext.data.StoreManager.get(
+                        'messprogrammkategorie');
+                    field = Ext.create('Lada.view.widget.MessprogrammLand',
+                        options);
+
+                    break;
+                case 'messsstelle':
+                    options.store = Ext.data.StoreManager.get('messstellen');
+                    field = Ext.create('Lada.view.widget.Messstelle', options);
+                    break;
+                case 'boolean':
+                    field = Ext.create('Lada.view.widget.BoolFilter', options);
+                    break;
+                case 'umwbereich':
+                    options.store = Ext.data.StoreManager.get('umwelt');
+                    field = Ext.create('Lada.view.widget.Umwelt' , options);
+                    break;
+                case 'status':
+                    options.store = Ext.data.StoreManager.get('statuswerte');
+                    field = Ext.create('Lada.view.widget.Status', options);
                     break;
                 case 'geom':// TODO: how/if to implement
+                    break;
+                case 'egem':// TODO not yet in db
+                    field = Ext.create('Lada.view.widget.Verwaltungseinheit',
+                        options);
+                    break;
+                case 'datenbasis':// TODO not yet in db
+                    field = Ext.create('Lada.view.widget.Datenbasis', options);
+                    break;
+                case 'netzbetr':// TODO not yet in db
+                    field = Ext.create('Lada.view.widget.Netzbetreiber',
+                        options);
+                    break;
+                case 'probenart':// TODO not yet in db
+                    field = Ext.create('Lada.view.widget.Probenart', options);
+                    break;
+                case 'staat':// TODO not yet in db
+                    field = Ext.create('Lada.view.widget.Staat', options);
+                    break;
+                case 'betrart':// TODO not yet in db
+                    field = Ext.create('Lada.view.widget.Betriebsart',
+                        options);
+                    break;
+                case 'statusstfe':// TODO not yet in db
                 default:
+                    field = Ext.create('Lada.view.widget.base.TextField',
+                        options);
                     break;
             }
             if (field) {
