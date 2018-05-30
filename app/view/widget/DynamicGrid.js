@@ -109,7 +109,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      * This sets the Store of the DynamicGrid
      */
     setStore: function(store) {
-        var i18n = Lada.getApplication().bundle;
         if (store) {
             this.reconfigure(store);
         }
@@ -482,9 +481,118 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         }
                     };
                     break;
+                case 'boolean':
+                    col.xtype='gridcolumns';
+                    col.renderer = function(value) {
+                        if (value === true) {
+                            return i18n.getMsg('true');
+                        } else if (value === false) {
+                            return i18n.getMsg('false');
+                        } else {
+                            return '';
+                        }
+                    };
+                    break;
+                case 'statusstfe':
+                    col.xtype='gridcolumns';
+                    col.renderer = function(value) {
+                        var st = Ext.data.StoreManager.get('statusstufe');
+                        var rec = st.findRecord('id', value, false,false,
+                            false,true);
+                        if (rec.get('stufe') !== undefined) {
+                            return rec.get('stufe');
+                        }
+                        return '';
+                    };
+                    break;
+                case 'umwbereich':
+                    col.xtype='gridcolumns';
+                    col.renderer = function(value) {
+                        var st = Ext.data.StoreManager.get('umwelt');
+                        var rec = st.findRecord('id', value, false,false,
+                            false,true);
+                        if (rec.get('umweltBereich') !== undefined) {
+                            return rec.get('umweltBereich');
+                        }
+                        return '';
+                    };
+                    break;
+                case 'status':
+                    col.xtype='gridcolumns';
+                    col.renderer = function(value) {
+                        var st = Ext.data.StoreManager.get('statuswerte');
+                        var rec = st.findRecord('id', value, false,false,
+                            false,true);
+                        if (rec.get('wert') !== undefined) {
+                            return rec.get('wert');
+                        }
+                        return '';
+                    };
+                    break;
+                case 'egem':
+                    col.xtype='gridcolumns';
+                    col.renderer = function(value) {
+                        var st = Ext.data.StoreManager.get(
+                            'verwaltungseinheiten');
+                        var rec = st.loadRecord('id', value);
+                        if (rec && rec.get('bezeichnung') !== undefined) {
+                            return rec.get('bezeichnung');
+                        }
+                        return '';
+                    };
+                    break;
+                case 'netzbetr':
+                    col.xtype='gridcolumns';
+                    col.renderer = function(value) {
+                        var st = Ext.data.StoreManager.get('netzbetreiber');
+                        var rec = st.findRecord('id', value, false,false,
+                            false,true);
+                        if (rec.get('netzbetreiber') !== undefined) {
+                            return rec.get('netzbetreiber');
+                        }
+                        return '';
+                    };
+                    break;
+                case 'datenbasis':
+                    col.xtype='gridcolumns';
+                    col.renderer = function(value) {
+                        var st = Ext.data.StoreManager.get('datenbasis');
+                        var rec = st.findRecord('id', value, false,false,
+                            false,true);
+                        if (rec.get('datenbasis') !== undefined) {
+                            return rec.get('datenbasis');
+                        }
+                        return '';
+                    };
+                    break;
+                case 'probenart':
+                    col.xtype='gridcolumns';
+                    col.renderer = function(value) {
+                        var st = Ext.data.StoreManager.get('probenaarten');
+                        var rec = st.findRecord('id', value, false,false,
+                            false,true);
+                        if (rec.get('datenbasis') !== undefined) {
+                            return rec.get('datenbasis');
+                        }
+                        return '';
+                    };
+                    break;
+
+                case 'staat':
+                    col.xtype='gridcolumns';
+                    col.renderer = function(value) {
+                        var st = Ext.data.StoreManager.get('staaten');
+                        var rec = st.findRecord('id', value, false,false,
+                            false,true);
+                        if (rec.get('staatIso') !== undefined) {
+                            return rec.get('staatIso');
+                        }
+                        return '';
+                    };
+                    break;
                 default:
                     col.xtype = 'gridcolumn';
-                    col.renderer = function(value, cell) {
+                    col.renderer = function(value) {
                         return value || '';
                     };
             }
