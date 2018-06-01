@@ -18,7 +18,7 @@ Ext.define('Lada.store.GenericResults', {
         type: 'query',
         url: 'lada-server/rest/universal',
         actionMethods: {
-            read: 'POST',
+            read: 'POST'
         },
         reader: {
             type: 'json',

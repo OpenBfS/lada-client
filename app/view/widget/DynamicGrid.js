@@ -461,7 +461,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                             return '';
                         }
                         var format = cell.column.format;
-                        var dt = Ext.Date.format(new Date(value), format);
+                        var dt='';
+                        if (!isNaN(value)){
+                            dt = Ext.Date.format(new Date(value), format);
+                        }
                         return dt;
                     };
 
@@ -482,7 +485,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     };
                     break;
                 case 'boolean':
-                    col.xtype='gridcolumns';
+                    col.xtype='gridcolumn';
                     col.renderer = function(value) {
                         if (value === true) {
                             return i18n.getMsg('true');
@@ -494,7 +497,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     };
                     break;
                 case 'statusstfe':
-                    col.xtype='gridcolumns';
+                    col.xtype='gridcolumn';
                     col.renderer = function(value) {
                         var st = Ext.data.StoreManager.get('statusstufe');
                         var rec = st.findRecord('id', value, false,false,
@@ -506,7 +509,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     };
                     break;
                 case 'umwbereich':
-                    col.xtype='gridcolumns';
+                    col.xtype='gridcolumn';
                     col.renderer = function(value) {
                         var st = Ext.data.StoreManager.get('umwelt');
                         var rec = st.findRecord('id', value, false,false,
@@ -518,7 +521,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     };
                     break;
                 case 'status':
-                    col.xtype='gridcolumns';
+                    col.xtype='gridcolumn';
                     col.renderer = function(value) {
                         var st = Ext.data.StoreManager.get('statuswerte');
                         var rec = st.findRecord('id', value, false,false,
@@ -530,7 +533,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     };
                     break;
                 case 'egem':
-                    col.xtype='gridcolumns';
+                    col.xtype='gridcolumn';
                     col.renderer = function(value) {
                         var st = Ext.data.StoreManager.get(
                             'verwaltungseinheiten');
@@ -542,7 +545,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     };
                     break;
                 case 'netzbetr':
-                    col.xtype='gridcolumns';
+                    col.xtype='gridcolumn';
                     col.renderer = function(value) {
                         var st = Ext.data.StoreManager.get('netzbetreiber');
                         var rec = st.findRecord('id', value, false,false,
@@ -554,7 +557,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     };
                     break;
                 case 'datenbasis':
-                    col.xtype='gridcolumns';
+                    col.xtype='gridcolumn';
                     col.renderer = function(value) {
                         var st = Ext.data.StoreManager.get('datenbasis');
                         var rec = st.findRecord('id', value, false,false,
@@ -566,7 +569,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     };
                     break;
                 case 'probenart':
-                    col.xtype='gridcolumns';
+                    col.xtype='gridcolumn';
                     col.renderer = function(value) {
                         var st = Ext.data.StoreManager.get('probenaarten');
                         var rec = st.findRecord('id', value, false,false,
@@ -579,7 +582,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     break;
 
                 case 'staat':
-                    col.xtype='gridcolumns';
+                    col.xtype='gridcolumn';
                     col.renderer = function(value) {
                         var st = Ext.data.StoreManager.get('staaten');
                         var rec = st.findRecord('id', value, false,false,
