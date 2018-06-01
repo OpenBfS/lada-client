@@ -262,13 +262,15 @@ Ext.define('Lada.controller.Query', {
                 property: 'baseQuery',
                 value: qp.getForm().getRecord().get('baseQuery'),
                 exactMatch: true});
-            Ext.Ajax.request({
-                url: 'lada-server/rest/universal',
-                jsonData: jsonData,
-                method: 'POST',
-                success: function(response) {
-                    if (response.responseText) {
-                        var responseData = Ext.JSON.decode(response.responseText).data;
+            if (!this.resultStore) {
+                this.resultStore = Ext.StoreManager.get('genericresults');
+            }
+            this.resultStore.setProxyPayload(jsonData);
+            this.resultStore.setPageSize(Lada.pagingSize);
+            this.resultStore.load({
+                scope: this,
+                callback: function(responseData, operation, success) {
+                    if (success && responseData) {
                         var contentPanel = button.up('panel[name=main]').down(
                             'panel[name=contentpanel]');
                         contentPanel.removeAll();
@@ -278,11 +280,7 @@ Ext.define('Lada.controller.Query', {
                                 injectCheckbox: 1
                             })
                         });
-                        if (!this.resultStore) {
-                            this.resultStore = Ext.StoreManager.get('genericresults');
-                        }
-                        this.resultStore.setProxyPayload(jsonData);
-                        this.resultStore.load();
+
                         resultGrid.setStore(this.resultStore);
                         resultGrid.setup(gcs, fixColumnStore);
                         //resultGrid.store.removeAll();
