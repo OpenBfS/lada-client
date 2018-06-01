@@ -509,8 +509,21 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                             return '';
                         }
                         var format = cell.column.format;
+                        if (isNaN (value)) {
+                            if (value[0] === '<' ) {
+                                if (format === 'e') {
+                                    return '<' + String(parseInt(
+                                        value.substring(1),10).toExponential());
+                                } else {
+                                    return '<' + String(
+                                        Ext.util.Format.number(value, format));
+                                }
+                            } else {
+                                return value;
+                            }
+                        }
                         if (format === 'e') {
-                            return value.toExponential();
+                            return parseFloat(value).toExponential();
                         } else {
                             return Ext.util.Format.number(value, format);
                         }
