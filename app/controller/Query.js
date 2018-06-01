@@ -280,9 +280,8 @@ Ext.define('Lada.controller.Query', {
                                 injectCheckbox: 1
                             })
                         });
-
-                        resultGrid.setStore(this.resultStore);
                         resultGrid.setup(gcs, fixColumnStore);
+                        resultGrid.setStore(this.resultStore);
                         //resultGrid.store.removeAll();
                         //resultGrid.store.add(responseData);
                         resultGrid.show();

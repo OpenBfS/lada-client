@@ -160,12 +160,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      */
     setup: function(data, columnstore) {
         var caf = this.generateColumnsAndFields(data, columnstore);
-
         this.columns = caf[0];
         var fields = caf[1];
         this.store.setFields(fields);
-        this.reconfigure(this.store, this.columns);
-
         if (this.rowtarget.dataType === 'probeId') {
             this.addPlugin({
                 ptype: 'gridrowexpander',
@@ -187,6 +184,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 }
             });
         }
+        this.reconfigure(this.store, this.columns);
         this.setToolbar();
     },
 
@@ -206,7 +204,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         fields.push(new Ext.data.Field({
             name: 'readonly'
         }));
-
         resultColumns.push({
             xtype: 'actioncolumn',
             text: 'RW',
@@ -242,7 +239,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (cc[i].get('visible') !== true) {
                 continue;
             }
-            var col = {}; //TODO dataIndex Model etc?
+            var col = {};
             var orig_column = fixedColumnStore.findRecord(
                 'id', cc[i].get('gridColumnId'), false, false, false, true);
             this.column_definitions.push(orig_column);
@@ -533,16 +530,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     break;
                 case 'statusstfe':
                     col.xtype='gridcolumn';
-                    var st = Ext.data.StoreManager.get('statusstufe');
-                    if (!st) {
-                        st = Ext.create('Lada.store.StatusStufe', {
-                            storeId: 'statusstufe',
-                            autoLoad: true
-                        });
-                    }
                     col.renderer = function(value) {
+                        if (!value) {
+                            return '';
+                        }
+                        var st = Ext.data.StoreManager.get('statusstufe');
                         var rec = st.findRecord('id', value, false,false,
                             false,true);
+                        if (!rec) {
+                            return value;
+                        }
                         if (rec.get('stufe') !== undefined) {
                             return rec.get('stufe');
                         }
@@ -551,16 +548,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     break;
                 case 'umwbereich':
                     col.xtype='gridcolumn';
-                    var st = Ext.data.StoreManager.get('umwelt');
-                    if (!st) {
-                        st = Ext.create('Lada.store.Umwelt', {
-                            storeId: 'umwelt',
-                            autoload: true
-                        });
-                    }
                     col.renderer = function(value) {
+                        if (!value) {
+                            return '';
+                        }
+                        var st = Ext.data.StoreManager.get('umwelt');
                         var rec = st.findRecord('id', value, false,false,
                             false,true);
+                        if (!rec) {
+                            return value;
+                        }
                         if (rec.get('umweltBereich') !== undefined) {
                             return rec.get('umweltBereich');
                         }
@@ -569,16 +566,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     break;
                 case 'status':
                     col.xtype='gridcolumn';
-                    var st = Ext.data.StoreManager.lookup('statuswerte');
-                    if (!st) {
-                        st =Ext.create('Lada.store.StatusWerte', {
-                            storeId: 'statuswerte',
-                            autoLoad: true
-                        });
-                    }
                     col.renderer = function(value) {
+                        if (!value) {
+                            return '';
+                        }
+                        var st = Ext.data.StoreManager.get('statuswerte');
                         var rec = st.findRecord('id', value, false,false,
                             false,true);
+                        if (!rec) {
+                            return value;
+                        }
                         if (rec.get('wert') !== undefined) {
                             return rec.get('wert');
                         }
@@ -587,18 +584,18 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     break;
                 case 'egem':
                     col.xtype='gridcolumn';
-                    var st = Ext.data.StoreManager.get(
-                        'verwaltungseinheitenwidget');
-                    if (!st) {
-                        st = Ext.create(
-                            'Lada.store.VerwaltungseinheitenUnfiltered', {
-                            storeId: 'verwaltungseinheitenwidget'
-                        });
-                    }
                     col.renderer = function(value) {
+                        if (!value) {
+                            return '';
+                        }
+                        var st = Ext.data.StoreManager.get(
+                            'verwaltungseinheitenwidget');
                         var rec = st.findRecord('id', value, false, false,
                             false, true);
-                        if (rec && rec.get('bezeichnung') !== undefined) {
+                        if (!rec) {
+                            return value;
+                        }
+                        if (rec.get('bezeichnung') !== undefined) {
                             return rec.get('bezeichnung');
                         }
                         return '';
@@ -606,15 +603,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     break;
                 case 'netzbetr':
                     col.xtype='gridcolumn';
-                    var st = Ext.data.StoreManager.get('netzbetreiber');
-                    if (!st) {
-                        st = Ext.create('Lada.store.Netzbetreiber', {
-                            storeId: 'netzbetreiber'
-                        });
-                    }
                     col.renderer = function(value) {
+                        if (!value) {
+                            return '';
+                        }
+                        var st = Ext.data.StoreManager.get('netzbetreiber');
                         var rec = st.findRecord('id', value, false,false,
                             false,true);
+                        if (!rec) {
+                            return value;
+                        }
                         if (rec.get('netzbetreiber') !== undefined) {
                             return rec.get('netzbetreiber');
                         }
@@ -623,16 +621,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     break;
                 case 'datenbasis':
                     col.xtype='gridcolumn';
-
-                    var st = Ext.data.StoreManager.get('datenbasis');
-                    if (!st) {
-                        st = Ext.create('Lada.store.Datenbasis', {
-                            storeId: 'datenbasis'
-                        });
-                    }
                     col.renderer = function(value) {
+                        if (!value) {
+                            return '';
+                        }
+                        var st = Ext.data.StoreManager.get('datenbasis');
                         var rec = st.findRecord('id', value, false,false,
                             false,true);
+                        if (!rec) {
+                            return value;
+                        }
                         if (rec.get('datenbasis') !== undefined) {
                             return rec.get('datenbasis');
                         }
@@ -641,15 +639,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     break;
                 case 'probenart':
                     col.xtype='gridcolumn';
-                    var st = Ext.data.StoreManager.lookup('probenarten');
-                    if (!st) {
-                        st = Ext.create('Lada.store.Probenarten', {
-                            storeId: 'probenarten'
-                        });
-                    }
                     col.renderer = function(value) {
+                        if (!value) {
+                            return '';
+                        }
+                        var st = Ext.data.StoreManager.get('probenarten');
                         var rec = st.findRecord('id', value, false,false,
                             false,true);
+                        if (!rec) {
+                            return value;
+                        }
                         if (rec.get('datenbasis') !== undefined) {
                             return rec.get('datenbasis');
                         }
@@ -659,15 +658,17 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
                 case 'staat':
                     col.xtype='gridcolumn';
-                    var st = Ext.data.StoreManager.lookup('staaten');
-                    if (!st) {
-                        st = Ext.create('Lada.store.Staaten', {
-                            storeId: 'staaten'
-                        });
-                    }
+
                     col.renderer = function(value) {
+                        if (!value) {
+                            return '';
+                        }
+                        var st = Ext.data.StoreManager.get('staaten');
                         var rec = st.findRecord('id', value, false,false,
                             false,true);
+                        if (!rec) {
+                            return value;
+                        }
                         if (rec.get('staatIso') !== undefined) {
                             return rec.get('staatIso');
                         }
