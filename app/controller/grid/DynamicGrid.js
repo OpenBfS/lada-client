@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.controller.grid.DynamicGrid', {
     extend: 'Ext.app.Controller',
-    requires: ['Lada.view.window.DeleteMultipleProbe'],
+    requires: ['Lada.view.window.DeleteMultipleItems'],
 
     /**
      * Initialize the Controller with listeners
@@ -31,10 +31,10 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             },
             'button[action=genericdelete]': {
                 click: this.deleteData
-            }// ,
-            // 'button[action=genericadd]': {
-            //     click: this.addData
-            // }
+            },
+            'button[action=genericadd]': {
+                click: this.addData
+            }
         });
         this.callParent(arguments);
     },
@@ -321,19 +321,36 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     deleteData: function(button) {
         var grid = button.up('dynamicgrid');
         if (grid.rowtarget.hasOwnProperty('dataType')) {
+            var selection =grid.getView().getSelectionModel().getSelection();
+            var ids = [];
+            for (var i=0; i < selection.length; i++) {
+                ids.push(selection.get(grid.rowtarget.dataIndex));
+            }
+            var win = Ext.create('Lada.view.window.DeleteMultipleItems', {
+                selection: selection,
+                parentWindow: grid
+            });
+            win.show();
+        }
+    },
+
+    addData: function(button) {
+        var grid = button.up('dynamicgrid');
+        if (grid.rowtarget.hasOwnProperty('dataType')) {
             switch (grid.rowtarget.dataType) {
-                case 'probeId':
-                    var selection =grid.getView().getSelectionModel().getSelection();
-                    var win = Ext.create('Lada.view.window.DeleteMultipleProbe', {
-                        selection: selection,
-                        parentWindow: grid
-                    });
+                case 'mpId':
+                    var win = Ext.create(
+                        'Lada.view.window.Messprogramm', {record: null});
                     win.show();
+                    win.initData();
+                    break;
+                case 'probeId':
+                    var win = Ext.create('Lada.view.window.ProbeCreate');
+                    win.setPosition(30);
+                    win.show();
+                    win.initData();
                     break;
             }
         }
     }
-
-    // TODO: Button to add an item (probe, Messung, messprogramm
-    // addData: function(button) {}
 });

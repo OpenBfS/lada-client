@@ -87,10 +87,26 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 disabled: true
             });
         }
-        if (['probeId'].indexOf(this.rowtarget.dataType) >= 0 ) {
-            //TODO: make other items deletable via this button, too
+
+        //generic "add" button
+        if (this.rowtarget.dataType === 'probeId' ||
+            ( this.rowtarget.dataType === 'mpId' && Ext.Array.contains(
+                Lada.funktionen, 4))) {
             tbcontent.push({
-                text: i18n.getMsg('button.deleteselected'),
+                text: i18n.getMsg('button.addselected'),
+                icon: 'resources/img/svn-update.png',
+                action: 'genericadd',
+                needsSelection: true,
+                disabled: false
+            });
+        }
+
+        // generic 'delete' button
+        if (this.rowtarget.dataType === 'probeId' ||
+            ( this.rowtarget.dataType === 'mpId' && Ext.Array.contains(
+                Lada.funktionen, 4))) {
+            tbcontent.push({
+                text: i18n.getMsg('add'),
                 icon: 'resources/img/svn-update.png',
                 action: 'genericdelete',
                 needsSelection: true,
@@ -223,13 +239,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             this.setrowtarget(col.dataIndex, datatype.name);
             switch (datatype.name) {
                 case 'probeId':
-                    this.toolbarbuttons.push({
-                        text: i18n.getMsg('probe.new'),
-                        icon: 'resources/img/list-add.png',
-                        action: 'addProbe',
-                        needsSelection: false,
-                        disabled: false
-                    });
                     this.toolbarbuttons.push({
                         text: i18n.getMsg('button.import'),
                         icon: 'resources/img/svn-commit.png',
@@ -462,7 +471,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         }
                         var format = cell.column.format;
                         var dt='';
-                        if (!isNaN(value)){
+                        if (!isNaN(value)) {
                             dt = Ext.Date.format(new Date(value), format);
                         }
                         return dt;
@@ -499,7 +508,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 case 'statusstfe':
                     col.xtype='gridcolumn';
                     col.renderer = function(value) {
-                        var st = Ext.data.StoreManager.get('statusstufe');
+                        var st = Ext.data.StoreManager.lookup('statusstufe');
                         var rec = st.findRecord('id', value, false,false,
                             false,true);
                         if (rec.get('stufe') !== undefined) {
@@ -511,7 +520,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 case 'umwbereich':
                     col.xtype='gridcolumn';
                     col.renderer = function(value) {
-                        var st = Ext.data.StoreManager.get('umwelt');
+                        var st = Ext.data.StoreManager.lookup('umwelt');
                         var rec = st.findRecord('id', value, false,false,
                             false,true);
                         if (rec.get('umweltBereich') !== undefined) {
@@ -523,7 +532,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 case 'status':
                     col.xtype='gridcolumn';
                     col.renderer = function(value) {
-                        var st = Ext.data.StoreManager.get('statuswerte');
+                        var st = Ext.data.StoreManager.lookup('statuswerte');
                         var rec = st.findRecord('id', value, false,false,
                             false,true);
                         if (rec.get('wert') !== undefined) {
@@ -535,9 +544,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 case 'egem':
                     col.xtype='gridcolumn';
                     col.renderer = function(value) {
-                        var st = Ext.data.StoreManager.get(
-                            'verwaltungseinheiten');
-                        var rec = st.loadRecord('id', value);
+                        var st = Ext.data.StoreManager.lookup(
+                            'verwaltungseinheitenwidget');
+                        var rec = st.findRecord('id', value, false, false,
+                            false, true);
                         if (rec && rec.get('bezeichnung') !== undefined) {
                             return rec.get('bezeichnung');
                         }
@@ -547,7 +557,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 case 'netzbetr':
                     col.xtype='gridcolumn';
                     col.renderer = function(value) {
-                        var st = Ext.data.StoreManager.get('netzbetreiber');
+                        var st = Ext.data.StoreManager.lookup('netzbetreiber');
                         var rec = st.findRecord('id', value, false,false,
                             false,true);
                         if (rec.get('netzbetreiber') !== undefined) {
@@ -559,7 +569,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 case 'datenbasis':
                     col.xtype='gridcolumn';
                     col.renderer = function(value) {
-                        var st = Ext.data.StoreManager.get('datenbasis');
+                        var st = Ext.data.StoreManager.lookup('datenbasis');
                         var rec = st.findRecord('id', value, false,false,
                             false,true);
                         if (rec.get('datenbasis') !== undefined) {
@@ -571,7 +581,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 case 'probenart':
                     col.xtype='gridcolumn';
                     col.renderer = function(value) {
-                        var st = Ext.data.StoreManager.get('probenaarten');
+                        var st = Ext.data.StoreManager.lookup('probenarten');
                         var rec = st.findRecord('id', value, false,false,
                             false,true);
                         if (rec.get('datenbasis') !== undefined) {
@@ -584,7 +594,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 case 'staat':
                     col.xtype='gridcolumn';
                     col.renderer = function(value) {
-                        var st = Ext.data.StoreManager.get('staaten');
+                        var st = Ext.data.StoreManager.lookup('staaten');
                         var rec = st.findRecord('id', value, false,false,
                             false,true);
                         if (rec.get('staatIso') !== undefined) {
@@ -631,6 +641,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     dataIndex: dataIndex
                 };
             }
+
             return true;
         }
     }
