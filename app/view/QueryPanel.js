@@ -242,13 +242,14 @@ Ext.define('Lada.view.QueryPanel', {
                     value: Lada.userId,
                     exactMatch: true
                 });
-
                 selquery.setStore(this.store);
                 var record0 = this.store.getAt(0);
                 if (!record0) {
-                    this.store.clearFilter();
+                    this.down('checkbox[name=ownqueries]').setValue(false);
                     this.down('button[action=delquery]').setDisabled(true);
+                    this.store.clearFilter();
                     record0 = this.store.getAt(0);
+                    selquery.select(record0);
                 } else {
                     this.down('button[action=delquery]').setDisabled(false);
                 }

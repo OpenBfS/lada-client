@@ -361,6 +361,10 @@ Ext.application({
             storeId: 'genericresults',
             autoLoad: false
         });
+        Ext.create('Lada.store.MmtMessprogramm', {
+            soreId: 'mmtstore',
+            autoLoad: true
+        });
 
         //A Store containing all MST a User is allowed to set.
         Ext.create('Lada.store.Messstellen', {

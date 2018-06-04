@@ -96,10 +96,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             ( this.rowtarget.dataType === 'mpId' && Ext.Array.contains(
                 Lada.funktionen, 4))) {
             tbcontent.push({
-                text: i18n.getMsg('button.addselected'),
+                text: i18n.getMsg('add'),
                 icon: 'resources/img/svn-update.png',
                 action: 'genericadd',
-                needsSelection: true,
+                needsSelection: false,
                 disabled: false
             });
         }
@@ -109,7 +109,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             ( this.rowtarget.dataType === 'mpId' && Ext.Array.contains(
                 Lada.funktionen, 4))) {
             tbcontent.push({
-                text: i18n.getMsg('add'),
+                text: i18n.getMsg('button.deleteseleted'),
                 icon: 'resources/img/svn-update.png',
                 action: 'genericdelete',
                 needsSelection: true,
@@ -196,7 +196,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      **/
     generateColumnsAndFields: function(current_columns, fixedColumnStore) {
         this.toolbarbuttons = [];
-        this.column_definitions = [];
         this.rowtarget = {};
         var resultColumns = [];
         var fields = [];
@@ -242,7 +241,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             var col = {};
             var orig_column = fixedColumnStore.findRecord(
                 'id', cc[i].get('gridColumnId'), false, false, false, true);
-            this.column_definitions.push(orig_column);
+
             col.dataIndex = orig_column.get('dataIndex');
             col.text = orig_column.get('name');
             col.maxWidth = orig_column.get('width');
@@ -369,20 +368,15 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     };
                     break;
                 case 'mpId':
-                    this.toolbarbuttons.push({
-                        text: i18n.getMsg('messprogramme.button.create'),
-                        icon: 'resources/img/list-add.png',
-                        action: 'addMessprogramm',
-                        needsSelection: false,
-                        disabled: true
-                    });
-                    this.toolbarbuttons.push({
-                        text: i18n.getMsg('messprogramme.button.generate'),
-                        icon: 'resources/img/view-time-schedule-insert.png',
-                        action: 'genProbenFromMessprogramm',
-                        needsSelection: true,
-                        disabled: true
-                    });
+                    if ( Ext.Array.contains(Lada.funktionen, 4)) {
+                        this.toolbarbuttons.push({
+                            text: i18n.getMsg('button.generateProben'),
+                            icon: 'resources/img/view-time-schedule-insert.png',
+                            action: 'genProbenFromMessprogramm',
+                            needsSelection: true,
+                            disabled: true
+                        });
+                    }
                     colImg = Ext.getResourcePath(openIconPath, null, null);
                     col.xtype = 'widgetcolumn';
                     col.widget = {

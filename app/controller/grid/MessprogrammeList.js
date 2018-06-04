@@ -48,29 +48,15 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
     genProbenFromMessprogramm: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection();
-        //List of selected Messprogramm items
-        var proben = [];
-        //List of models of selected Messprogramm items
-        var records = [];
-        for (var i = 0; i < selection.length; i++) {
-            proben.push(selection[i].get('id'));
+        var ids = [];
+        for (var i= 0; i < selection.length; i++) {
+            ids.push(selection[i].data[grid.rowtarget.dataIndex]);
         }
-
-        var winname = 'Lada.view.window.GenProbenFromMessprogramm';
-        var store = grid.getStore();
-        grid.setLoading(true);
-
-        for (p in proben) {
-            var record = store.getById(proben[p]);
-            records.push(record);
-        }
-        grid.setLoading(false);
-        var win = Ext.create(winname, {
-            records: records,
-            parentWindow: null
+        var win = Ext.create('Lada.view.window.GenProbenFromMessprogramm', {
+            ids: ids,
+            parentWindow: grid
         });
         win.show();
-        win.initData();
     }
 });
 

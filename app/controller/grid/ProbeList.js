@@ -13,8 +13,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
     extend: 'Ext.app.Controller',
     requires: [
         'Lada.view.window.FileUpload',
-        'Lada.view.window.ProbeEdit',
-        'Lada.view.window.GenProbenFromMessprogramm'
+        'Lada.view.window.ProbeEdit'
     ],
 
     /**
