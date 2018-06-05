@@ -267,7 +267,7 @@ Ext.define('Lada.controller.Query', {
             }
             this.resultStore.setProxyPayload(jsonData);
             this.resultStore.setPageSize(Lada.pagingSize);
-            this.resultStore.load({
+            this.resultStore.loadPage(1,{
                 scope: this,
                 callback: function(responseData, operation, success) {
                     if (success && responseData) {
