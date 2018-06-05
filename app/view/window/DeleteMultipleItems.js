@@ -29,6 +29,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        this.parentGrid = Ext.ComponentQuery.query('dynamicgrid')[0];
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
@@ -110,9 +111,8 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
      * Refreshes Dynamic grid
      */
     refresh: function() {
-        var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-        if (parentGrid.length === 1) {
-            parentGrid[0].store.reload();
+        if (this.parentGrid) {
+            this.parentGrid.store.reload();
         }
     },
 
@@ -146,8 +146,9 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 break;
         }
         for (var i = 0; i< me.selection.length; i++) {
+            var id = me.selection[i].get(me.parentGrid.rowtarget.dataType);
             Ext.Ajax.request({
-                url: url + me.selection[i],
+                url: url + id,
                 method: 'DELETE',
                 success: function(resp, opts) {
                     var json = Ext.JSON.decode(resp.responseText);

@@ -322,10 +322,6 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         var grid = button.up('dynamicgrid');
         if (grid.rowtarget.hasOwnProperty('dataType')) {
             var selection =grid.getView().getSelectionModel().getSelection();
-            var ids = [];
-            for (var i=0; i < selection.length; i++) {
-                ids.push(selection.get(grid.rowtarget.dataIndex));
-            }
             var win = Ext.create('Lada.view.window.DeleteMultipleItems', {
                 selection: selection,
                 parentWindow: grid
