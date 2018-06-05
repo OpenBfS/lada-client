@@ -340,7 +340,7 @@ Ext.define('Lada.controller.Query', {
                                 this.setValue('');
                             }
                         }
-                    }
+                    };
                     field = Ext.create('Ext.form.field.Text', options);
                     break;
                 case 'date':

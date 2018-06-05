@@ -151,15 +151,31 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             var origindata = qps.getById(data[i].get('id'));
             if (!origindata) {
                 qps.add(data[i]);
+                origindata = qps.getById(data[i].get('id'));
             } else {
                 origindata.set('visible', visible);
             }
             if (visible === false) {
-                origindata.set('sortIndex', null);
-                data[i].set('sortIndex', null);
+                origindata.set('columnIndex', null);
+                data[i].set('columnIndex', null);
             }
         }
-        this.up('querypanel').down('columnsort').setStore(qps);
+        this.sortvisibles();
+    },
+
+    sortvisibles: function() {
+        var qps = this.up('querypanel').gridColumnStore;
+        var qgs_data = qps.getData().items;
+        var tarstore = this.getComponent('targetGrid').getStore();
+        for (var i=0; i< qgs_data.length; i++) {
+            if (qgs_data[i].get('visible') === true) {
+                var pos = tarstore.findBy(function(item) {
+                    return item.get('dataIndex') === qgs_data[i].get(
+                        'dataIndex');
+                });
+                qgs_data[i].set('columnIndex', pos);
+           }
+        }
     },
 
     setStore: function(store, fixedcolumnstore) {

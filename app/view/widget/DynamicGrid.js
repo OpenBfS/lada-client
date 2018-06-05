@@ -233,7 +233,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
         });
 
+        current_columns.sort('columnIndex', 'ASC');
         var cc = current_columns.getData().items;
+
         for (var i = 0; i < cc.length; i++) {
             if (cc[i].get('visible') !== true) {
                 continue;
@@ -506,10 +508,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         if (isNaN (value)) {
                             if (value[0] === '<' ) {
                                 if (format === 'e') {
-                                    return '<' + String(parseInt(
+                                    return '< ' + String(parseInt(
                                         value.substring(1),10).toExponential());
                                 } else {
-                                    return '<' + String(
+                                    return '< ' + String(
                                         Ext.util.Format.number(value, format));
                                 }
                             } else {
