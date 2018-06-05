@@ -205,10 +205,18 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
      * Handle results of Probe creation from Messprogramm
      */
     onSuccess: function(results) {
+        var i18n = Lada.getApplication().bundle;
         var me = this;
         var data = [];
-        var mmtStore = Ext.data.StoreManager.get('mmtstore');
+        var umwStore = Ext.create('Lada.store.Umwelt', {
+            asynchronousLoad: false
+        });
 
+        var mmtStore = Ext.create('Lada.store.MmtMessprogramm', {
+            asynchronousLoad: false,
+            autoLoad: true
+        });
+        var mpStore = Ext.create('Lada.store.MessprogrammeList');
         //Concatenate result json data
         for (r in results) {
             var json = Ext.JSON.decode(results[r].responseText);
@@ -238,49 +246,173 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             gcs.add( new Ext.create('Lada.model.GridColumn',{
                 columnIndex: i,
                 filterActive: false,
-                qid: 1, //TODO: hardcoded value based on example data
+                qid: 0, //TODO: hardcoded value based on example data
                 dataIndex: columns[i],
                 visible: true,
-                gridColumnId: col.get('id')
+                gridColumnId: i
             }));
         }
-        var frgrid = Ext.create('Lada.view.widget.DynamicGrid');
-        var caf = frgrid.generateColumnsAndFields(data, gcs);
 
-        caf[1].push({
-            xtype: 'gridcolumn',
-            header: 'Messungen',
-            renderer: function(value, metadata, rec) {
-                var mprId = rec.get('mprId');
-                mmtStore.clearFilter();
-                mmtStore.filter('messprogrammId', mprId);
-                var count = mmtStore.getCount();
-                if (!count) {
-                    return '(0)';
+        var newStore = Ext.create('Lada.store.Proben', {data:data});
+
+        var frgrid = Ext.create('Lada.view.widget.DynamicGrid', {
+            rowtarget: { dataType: 'probeId', dataIndex: "id"},
+            store:newStore,
+            columns: [{
+                dataIndex: "id",
+                hidden: true
+            }, {
+                header: i18n.getMsg('probeId'),
+                dataIndex: 'idAlt'
+            }, {
+                header: i18n.getMsg('mstId'),
+                dataIndex: 'mstId',
+                renderer: function(value) {
+                    var r = '';
+                    if (!value || value === '') {
+                        r = 'Error';
+                    }
+                    var store = Ext.data.StoreManager.get('messstellen');
+                    var record = store.getById(value);
+                    if (record) {
+                        r = record.get('messStelle');
+                    }
+                    return r;
                 }
-                var mgrtext = '';
-                var mmth = mmtStore.getAt(0).get('mmtId');
-                if (mmth) {
-                    mgrtext = mmth;
+            }, {
+                header: i18n.getMsg('datenbasisId'),
+                dataIndex: 'datenbasisId',
+                renderer: function(value) {
+                    var r = '';
+                    if (!value || value === '') {
+                        r = value;
+                    }
+                    var store = Ext.data.StoreManager.get('datenbasis');
+                    var record = store.getById(value);
+                    if (record) {
+                        r = record.get('datenbasis');
+                    }
+                    return r;
                 }
-                for (var i = 1; i < count; i ++ ) {
-                    var mmth = mmtStore.getAt(i).get('mmtId');
-                    if (mmth) {
-                        mgrtext += ', ' + mmth;
+            }, {
+                header: i18n.getMsg('baId'),
+                dataIndex: 'baId',
+                renderer: function(value) {
+                    var r = '';
+                    var store = Ext.create('Ext.data.Store', {
+                        fields: ['id', 'betriebsart'],
+                        data: [{
+                            'id': 1,
+                            'betriebsart': 'Normal-/Routinebetrieb'
+                        }, {
+                            'id': 2,
+                            'betriebsart': 'Störfall/Intensivbetrieb'
+                        }]
+                    });
+                    var record = store.getById(value);
+                    if (record) {
+                        r = record.get('betriebsart');
+                    }
+                    return r;
+                }
+            }, {
+                header: i18n.getMsg('probenartId'),
+                dataIndex: 'probenartId',
+                renderer: function(value) {
+                    var r = '';
+                    if (!value || value === '') {
+                        r = value;
+                    }
+                    var store = Ext.data.StoreManager.get('probenarten');
+                    var record = store.getById(value);
+                    if (record) {
+                        r = record.get('probenart');
+                    }
+                    return r;
+                }
+            }, {
+                header: i18n.getMsg('sollVon'),
+                dataIndex: 'solldatumBeginn',
+                renderer: function(value) {
+                    if (!value) {
+                        return '';
+                    }
+                    return Ext.Date.format(value, 'd.m.Y');
+                }
+            }, {
+                header: i18n.getMsg('sollBis'),
+                dataIndex: 'solldatumEnde',
+                renderer: function(value) {
+                    if (!value) {
+                        return '';
+                    }
+                    return Ext.Date.format(value, 'd.m.Y');
+                }
+            }, {
+                header: i18n.getMsg('messprogramm.form.fieldset.title'),
+                dataIndex: 'mprId'
+            }, {
+                header: i18n.getMsg('mediaDesk'),
+                dataIndex: 'mediaDesk'
+            }, {
+                //TODO: load description
+                header: i18n.getMsg('umw_id'),
+                dataIndex: 'umwId',
+                renderer: function(value, metadata) {
+                    if (!value) {
+                        return '';
+                    }
+                    var store = umwStore;
+                    var model = store.getById(value);
+                    if (model) {
+                        return value + ' - ' + model.get('umweltBereich');
+                    } else {
+                        return value;
                     }
                 }
-                mgrtext += '(' + count + ')';
-                return mgrtext;
-            },
-            dataIndex: 'count',
-            sortable: false
+            }, {
+                header: 'Messungen',
+                renderer: function(value, metadata, rec) {
+                    var mprId = rec.get('mprId');
+                    mmtStore.clearFilter();
+                    mmtStore.filter('messprogrammId', mprId);
+                    var count = mmtStore.getCount();
+                    if (!count){
+                        return '(0)';
+                    }
+                    var mgrtext = '';
+                    var mmth = mmtStore.getAt(0).get('mmtId');
+                    if (mmth){
+                        mgrtext = mmth;
+                    }
+                    for (var i = 1; i < count; i ++ ){
+                        var mmth = mmtStore.getAt(i).get('mmtId');
+                        if (mmth){
+                            mgrtext += ', ' + mmth;
+                        }
+                    }
+                    mgrtext += '(' + count + ')';
+                    return mgrtext;
+                }
+            }, {
+                header: i18n.getMsg('entnahmeOrt'),
+                renderer: function(value, metadata, rec) {
+                    var mprModel = mpStore.getById(rec.get('mprId'));
+                    if (mprModel) {
+                        var eGemId = mprModel.get('eGemId')
+                        var eGem = mprModel.get('eGem');
+                        if (eGemId != null && eGem != null) {
+                            return eGemId  + ' - ' + eGem;
+                        }
+                    }
+                    return '';
+                }
+            }, {
+                header: i18n.getMsg('probe_nehmer_id'),
+                dataIndex: 'probeNehmerId'
+            }]
         });
-
-        caf[0].push({
-            dataIndex: 'count',
-            name: 'Anzahl Messungen'
-        });
-        frgrid.reconfigure(caf[0], caf[1]);
+        frgrid.setToolbar();
 
         var win = Ext.create('Ext.window.Window', {
             layout: 'fit',

@@ -29,7 +29,6 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        this.parentGrid = Ext.ComponentQuery.query('dynamicgrid')[0];
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
@@ -39,9 +38,6 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
             deactivate: function() {
                 this.getEl().addCls('window-inactive');
             },
-            close: function() {
-                this.parentWindow.probenWindow = null;
-            }
         });
         this.items = [{
             xtype: 'panel',
@@ -62,6 +58,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
         var title = '';
         var dialog1 = '';
         var dialog2 = '';
+
         switch (this.parentGrid.rowtarget.dataType) {
             case 'probeId':
                 title = i18n.getMsg('delete.multiple_probe.window.title');
@@ -135,6 +132,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
         me.down('progressbar').show();
         var url = '';
         var datatype = '';
+
         switch(me.parentGrid.rowtarget.dataType) {
             case 'probeId':
                 url = 'lada-server/rest/probe/';
@@ -146,7 +144,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 break;
         }
         for (var i = 0; i< me.selection.length; i++) {
-            var id = me.selection[i].get(me.parentGrid.rowtarget.dataType);
+            var id = me.selection[i].get(me.parentGrid.rowtarget.dataIndex);
             Ext.Ajax.request({
                 url: url + id,
                 method: 'DELETE',
