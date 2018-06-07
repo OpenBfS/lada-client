@@ -167,13 +167,19 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
         var qps = this.up('querypanel').gridColumnStore;
         var qgs_data = qps.getData().items;
         var tarstore = this.getComponent('targetGrid').getStore();
+        var last_tgtid = tarstore.getData().items.length;
         for (var i=0; i< qgs_data.length; i++) {
             if (qgs_data[i].get('visible') === true) {
                 var pos = tarstore.findBy(function(item) {
                     return item.get('dataIndex') === qgs_data[i].get(
                         'dataIndex');
                 });
-                qgs_data[i].set('columnIndex', pos);
+                if (pos === -1) {
+                    qgs_data[i].set('columnIndex', last_tgtid);
+                    last_tgtid +=1;
+                } else {
+                    qgs_data[i].set('columnIndex', pos);
+                }
            }
         }
     },
@@ -209,6 +215,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             }
             this.getComponent('targetGrid').setStore(tstore);
             this.getComponent('sourceGrid').setStore(sstore);
+            this.sortvisibles();
         }
     }
 });
