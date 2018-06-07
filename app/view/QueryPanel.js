@@ -54,6 +54,13 @@ Ext.define('Lada.view.QueryPanel', {
                 boxLabel: 'query.showown',
                 checked: true,
                 flex: 1
+            }, {
+                xtype: 'textarea',
+                name: 'description',
+                width: '100%',
+                fieldLabel: 'query.comment',
+                labelWidth: 125,
+                margin: '15 5 5 5'
             }]
     }, {
         xtype: 'container',
@@ -132,14 +139,9 @@ Ext.define('Lada.view.QueryPanel', {
                 '{messStellesIds}</div></tpl>'),
             displayTpl: Ext.create('Ext.XTemplate',
                 '<tpl for=".">{messStellesIds}</tpl>')
-        },{
-            xtype: 'textarea',
-            name: 'description',
-            fieldLabel: 'query.comment',
-            labelWidth: 125
         }, {
             xtype: 'columnchoser'
-        },{
+        }, {
             xtype: 'columnsort'
         }, {
             xtype: 'cbox',

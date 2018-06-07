@@ -79,7 +79,6 @@ Ext.define('Lada.controller.Query', {
     },
 
     listAllQueries: function(checkbox, newval) {
-        checkbox.resetOriginalValue(); // avoids field being cleaned on reset
         var qp = checkbox.up('querypanel');
         qp.store.clearFilter();
         if (newval === true) {
@@ -88,8 +87,13 @@ Ext.define('Lada.controller.Query', {
                 value: Lada.userId,
                 exactMatch: true
             });
-            if (qp.store.getData().items.length === 0) {
+            var newrec = qp.store.findRecord('id',
+                qp.down('combobox[name=selectedQuery]').getValue(), false, false,false, true);
+            if (newrec) {
+                checkbox.resetOriginalValue();
+            } else {
                 qp.down('combobox[name=selectedQuery]').clearValue();
+                qp.down('combobox[name=selectedQuery]').resetOriginalValue();
                 this.changeCurrentQuery(checkbox);
             }
         }
@@ -152,7 +156,6 @@ Ext.define('Lada.controller.Query', {
     changeCurrentQuery: function(combobox) {
         var qp = combobox.up('querypanel');
         var newquery = qp.store.getById(combobox.getValue());
-        combobox.resetOriginalValue();
         if (!newquery) {
             qp.getForm().reset(true);
             this.loadGridColumnStore(combobox);
@@ -160,6 +163,7 @@ Ext.define('Lada.controller.Query', {
             qp.down('button[action=delquery]').setDisabled(true);
             qp.down('button[action=save]').setDisabled(true);
         } else {
+            combobox.resetOriginalValue();
             qp.getForm().loadRecord(newquery);
             this.loadGridColumnStore(combobox);
             var groupstore = qp.down('cbox[name=messStellesIds]').down(
@@ -251,6 +255,10 @@ Ext.define('Lada.controller.Query', {
         var gcs = qp.gridColumnStore;
         var jsonData = {columns: []};
         var csdata = gcs.getData().items;
+        if (csdata.length === 0) {
+            //TODO warning: no data requested
+            return;
+        }
         var rowtarget = this.setrowtarget(qp);
         for (var i=0; i < csdata.length; i++ ) {
             if (csdata[i].get('dataIndex') === rowtarget.dataIndex) {
