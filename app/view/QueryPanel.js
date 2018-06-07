@@ -92,7 +92,7 @@ Ext.define('Lada.view.QueryPanel', {
         action: 'search',
         icon: 'resources/img/Find.png',
         text: 'query.search',
-        margin: '15,0,15,0',
+        margin: '0 15 0 15',
         flex: 1
     }, {
         xtype: 'fieldset',
@@ -164,7 +164,7 @@ Ext.define('Lada.view.QueryPanel', {
     }, {
         xtype: 'fieldset',
         name: 'filtervariables',
-        margin: 10,
+        margin: '10 15 10 15',
         minHeight: 20,
         title: 'Filter',
         layout: {
@@ -186,6 +186,7 @@ Ext.define('Lada.view.QueryPanel', {
             type: 'hbox',
             align: 'stretchmax'
         },
+        margin: '0 10 0 10',
         items: [{
             xtype: 'button',
             action: 'save',
@@ -205,7 +206,7 @@ Ext.define('Lada.view.QueryPanel', {
         action: 'search',
         icon: 'resources/img/Find.png',
         text: 'query.search',
-        margin: '5,0,5,0',
+        margin: '5 15 5 15',
         flex: 1
     }],
 
