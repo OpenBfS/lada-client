@@ -100,9 +100,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
         }];
         this.callParent(arguments);
         this.clearMessages();
-        if (this.record.get('readonly') === true) {
-            this.setReadOnly(true);
-        }
+        this.setReadOnly(this.record.get('readonly'));
     },
 
     setMessages: function(errors, warnings) {
@@ -156,7 +154,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
     },
 
     setReadOnly: function(value) {
-        this.down('netzbetreiber').setReadOnly(value);
+        this.down('netzbetreiber').readOnly = value;
         this.down('tfield[name=bezeichnung]').setReadOnly(value);
         this.down('tfield[name=datensatzerzeugerId]').setReadOnly(value);
         this.down('combobox[name=messstelle]').setReadOnly(value);

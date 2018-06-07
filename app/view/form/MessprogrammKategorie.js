@@ -89,9 +89,7 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
         }];
         this.callParent(arguments);
         this.clearMessages();
-        if (this.record.get('readonly') === true) {
-            this.setReadOnly(true);
-        }
+        this.setReadOnly(this.record.get('readonly'));
     },
 
     setMessages: function(errors, warnings) {

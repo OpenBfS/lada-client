@@ -48,7 +48,8 @@ Ext.define('Lada.view.window.Probenehmer', {
             border: 0,
             autoScroll: true,
             items: [{
-                xtype: 'probenehmerform'
+                xtype: 'probenehmerform',
+                record: this.record
             }]
         }];
         this.tools = [{

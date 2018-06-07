@@ -261,17 +261,17 @@ Ext.define('Lada.view.QueryPanel', {
         });
     },
 
-    setGridColumnStore: function(query) {
+    setGridColumnStore: function(baseQueryId) {
         var me = this;
-        if (query) {
+        if (baseQueryId !== undefined) {
             this.gridColumnStore = Ext.create('Lada.store.GridColumn');
             this.gridColumnStore.proxy.extraParams = {
-                qid: query.get('id')};
+                qid: baseQueryId};
             var cs = Ext.data.StoreManager.get('columnstore');
             cs.clearFilter();
             cs.filter({
                 property: 'baseQuery',
-                value: query.get('baseQuery'),
+                value: baseQueryId,
                 exactMatch: true
             });
             this.gridColumnStore.load({

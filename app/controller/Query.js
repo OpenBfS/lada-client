@@ -400,6 +400,10 @@ Ext.define('Lada.controller.Query', {
                             }
                         }
                     };
+                    options.allowDecimals = true;
+                    options.hideTrigger = true;
+                    options.keyNavEnabled = false;
+                    options.mouseWheelEnabled = false;
                     field = Ext.create('Lada.view.widget.base.NumberField',
                         options);
                     break;
@@ -529,8 +533,9 @@ Ext.define('Lada.controller.Query', {
             panel.down('cbox[name=activefilters]').store.removeAll();
             panel.down('cbox[name=activefilters]').setValue('');
         } else {
+            var qid = panel.getForm().getRecord().get('id');
             gcs.proxy.extraParams = {
-                'qid': panel.getForm().getRecord().get('id')
+                'qid': qid
             };
             gcs.load({
                 callback: function(records, op, success) {
@@ -542,8 +547,7 @@ Ext.define('Lada.controller.Query', {
                         exactMatch: true
                     });
                     panel.gridColumnStore = gcs;
-                    panel.down('columnchoser').setStore(gcs, cs);
-                    panel.down('columnsort').setStore(gcs);
+                    panel.setGridColumnStore(qid);
                     panel.down('cbox[name=activefilters]').setValue(
                         panel.getForm().getRecord().get('filteractive'));
                 }

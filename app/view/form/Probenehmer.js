@@ -22,7 +22,7 @@ Ext.define('Lada.view.form.Probenehmer', {
     margin: 5,
     border: 0,
 
-    recordId: null,
+    record: null,
 
     trackResetOnLoad: true,
 
@@ -41,14 +41,14 @@ Ext.define('Lada.view.form.Probenehmer', {
                     borderRight: '1px solid #b5b8c8 !important'
                 },
                 items: ['->', {
-                    text: 'Speichern',
-                    qtip: 'Daten speichern',
+                    text: i18n.getMsg('save'),
+                    qtip: i18n.getMsg('save.qtip'),
                     icon: 'resources/img/dialog-ok-apply.png',
                     action: 'save',
                     disabled: true
                 }, {
-                    text: 'Verwerfen',
-                    qtip: 'Änderungen verwerfen',
+                    text: i18n.getMsg('discard'),
+                    qtip: i18n.getMsg('discard.qtip'),
                     icon: 'resources/img/dialog-cancel.png',
                     action: 'discard',
                     disabled: true
@@ -63,7 +63,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                     editable: false,
                     readOnly: true,
                     isFormField: false,
-                    submitValue: false,
+                    emptyValue: '',
                     fieldLabel: i18n.getMsg('netzbetreiberId'),
                     margin: '0, 5, 5, 5',
                     width: '35%',
@@ -122,6 +122,11 @@ Ext.define('Lada.view.form.Probenehmer', {
                     fieldLabel: i18n.getMsg('plz'),
                     margin: '0, 5, 5, 5',
                     width: '35%',
+                    allowDecimals: false,
+                    maxLength: 5,
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false,
                     labelWidth: 80
                 }, {
                     xtype: 'tfield',
@@ -160,6 +165,7 @@ Ext.define('Lada.view.form.Probenehmer', {
         }];
         this.callParent(arguments);
         this.clearMessages();
+        this.setReadOnly(this.record.get('readonly'));
     },
 
     setMessages: function(errors, warnings) {
@@ -222,7 +228,7 @@ Ext.define('Lada.view.form.Probenehmer', {
 
     setReadOnly: function(value) {
         this.down('tfield[name=prnId]').setReadOnly(value);
-        this.down('netzbetreiber').setReadOnly(value);
+        this.down('netzbetreiber').readOnly = value;
         this.down('tfield[name=bearbeiter]').setReadOnly(value);
         this.down('tfield[name=bemerkung]').setReadOnly(value);
         this.down('tfield[name=bezeichnung]').setReadOnly(value);

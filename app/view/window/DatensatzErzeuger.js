@@ -51,7 +51,8 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
             border: 0,
             autoScroll: true,
             items: [{
-                xtype: 'datensatzerzeugerform'
+                xtype: 'datensatzerzeugerform',
+                record: this.record
             }]
         }];
         this.tools = [{
