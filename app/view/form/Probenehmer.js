@@ -75,7 +75,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                     margin: '0, 5, 5, 5',
                     width: '35%',
                     labelWidth: 80,
-                    maxLength: 9,
+                    maxLength: 9
                 }, {
                     xtype: 'tfield',
                     name: 'bearbeiter',

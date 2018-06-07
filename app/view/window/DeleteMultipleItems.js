@@ -68,10 +68,20 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 title = i18n.getMsg('delete.multiple_mpr.window.title');
                 dialog1 = i18n.getMsg('delete.multiple_mpr');
                 break;
-            case 'probenehmer':
+            case 'pnehmer':
                 title = i18n.getMsg('delete.multiple_probenehmer.window.title');
                 dialog1 = i18n.getMsg('delete.multiple_probenehmer');
                 break;
+            case 'dsatzerz':
+                title = i18n.getMsg('delete.multiple_datensatzerzeuger.window.title');
+                dialog1 = i18n.getMsg('delete.multiple_datensatzerzeuger');
+                break;
+            case 'mprkat':
+                title = i18n.getMsg('delete.multiple_mpr_kat.window.title');
+                dialog1 = i18n.getMsg('delete.multiple_mpr_kat');
+                break;
+
+
         }
         var me = this;
         this.confWin = Ext.create('Ext.window.Window', {
@@ -150,9 +160,17 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 url = 'lada-server/rest/messprogramm/';
                 datatype = 'Messprogramm ';
                 break;
-            case 'probenehmer':
+            case 'pnehmer':
                 url = 'lada-server/rest/probenehmer/';
                 datatype = 'Probenehmer ';
+                break;
+            case 'dsatzerz':
+                url = 'lada-server/rest/datensatzerzeuger/';
+                datatype = 'Datensatzerzeuger ';
+                break;
+            case 'mprkat':
+                url = 'lada-server/rest/messprogrammkategorie/';
+                datatype = 'Messprogrammkategorie ';
                 break;
         }
         for (var i = 0; i< me.selection.length; i++) {
@@ -175,7 +193,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                     }
                     me.currentProgress += 1;
                     me.down('progressbar').updateProgress(me.currentProgress/me.maxSteps);
-                    if (me.currentProgress == me.maxSteps) {
+                    if (me.currentProgress === me.maxSteps) {
                         me.refresh();
                         me.down('progressbar').hide();
                         me.add({
@@ -197,7 +215,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                     me.down('progressbar').updateProgress(me.currentProgress/me.maxSteps);
                     html = html + datatype + delId + 'konnte nicht gelöscht werden<br>';
                     me.down('panel').setHtml(html);
-                    if (me.currentProgress == me.maxSteps) {
+                    if (me.currentProgress === me.maxSteps) {
                         me.down('progressbar').hide();
                         me.add({
                             xtype: 'button',

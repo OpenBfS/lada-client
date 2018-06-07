@@ -17,7 +17,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         'Ext.grid.column.Widget',
         'Lada.view.grid.Messung',
         'Lada.view.grid.Messwert',
-        'Lada.view.plugin.GridRowExpander'
+        'Lada.view.plugin.GridRowExpander',
+        'Lada.view.window.Probenehmer',
+        'Lada.view.window.DatensatzErzeuger',
+        'Lada.view.window.MessprogrammKategorie'
+
     ],
 
     store: null,
@@ -682,6 +686,68 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     };
                     break;
                 case 'pnehmer':
+                case 'dsatzerz':
+                case 'mprkat':
+                    var clicklistener = null;
+
+                    if (datatype.name === 'pnehmer') {
+                        clicklistener = function(button) {
+                            var id = Number(button.text);
+                            button.getEl().swallowEvent(['click', 'dblclick'], true);
+                            Lada.model.Probenehmer.load(id, {
+                                scope: this,
+                                callback: function(record, operation, success) {
+                                    if (success) {
+                                        var win = Ext.create('Lada.view.window.Probenehmer', {
+                                            record: record,
+                                            style: 'z-index: -1;'
+                                        });
+                                        win.setPosition(30);
+                                        win.show();
+                                        win.initData();
+                                    }
+                                }
+                            });
+                        };
+                    } else if (datatype.name === 'dsatzerz') {
+                        clicklistener = function(button) {
+                            var id = Number(button.text);
+                            button.getEl().swallowEvent(['click', 'dblclick'], true);
+                            Lada.model.DatensatzErzeuger.load(id, {
+                                scope: this,
+                                callback: function(record, operation, success) {
+                                    if (success) {
+                                        var win = Ext.create('Lada.view.window.DatensatzErzeuger', {
+                                            record: record,
+                                            style: 'z-index: -1;'
+                                        });
+                                        win.setPosition(30);
+                                        win.show();
+                                        win.initData();
+                                    }
+                                }
+                            });
+                        };
+                    } else if (datatype.name === 'mprkat') {
+                        clicklistener = function(button) {
+                            var id = Number(button.text);
+                            button.getEl().swallowEvent(['click', 'dblclick'], true);
+                            Lada.model.MessprogrammKategorie.load(id, {
+                                scope: this,
+                                callback: function(record, operation, success) {
+                                    if (success) {
+                                        var win = Ext.create('Lada.view.window.MessprogrammKategorie', {
+                                            record: record,
+                                            style: 'z-index: -1;'
+                                        });
+                                        win.setPosition(30);
+                                        win.show();
+                                        win.initData();
+                                    }
+                                }
+                            });
+                        };
+                    }
                     colImg = Ext.getResourcePath(openIconPath, null, null);
                     col.xtype = 'widgetcolumn';
                     col.widget = {
@@ -692,24 +758,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         userCls: 'widget-column-button',
                         tooltip: i18n.getMsg('typedgrid.tooltip.pnehmer'),
                         listeners: {
-                            click: function(button) {
-                                var id = Number(button.text);
-                                button.getEl().swallowEvent(['click', 'dblclick'], true);
-                                Lada.model.Probenehmer.load(id, {
-                                    scope: this,
-                                    callback: function(record, operation, success) {
-                                        if (success) {
-                                            var win = Ext.create('Lada.view.window.Probenehmer', {
-                                                record: record,
-                                                style: 'z-index: -1;'
-                                            });
-                                            win.setPosition(30);
-                                            win.show();
-                                            win.initData();
-                                        }
-                                    }
-                                });
-                            },
+                            click: clicklistener,
                             textchange: function(button, oldval, newval) {
                                 if (!newval || newval === '') {
                                     button.hide();

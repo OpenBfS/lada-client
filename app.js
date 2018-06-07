@@ -437,7 +437,7 @@ Ext.application({
         'Lada.controller.grid.ProbeList',
         'Lada.controller.grid.MessprogrammeList',
         'Lada.controller.grid.MessungList',
-        'Lada.controller.grid.Datensatzerzeuger',
+        'Lada.controller.form.Datensatzerzeuger',
         'Lada.controller.form.Probenehmer',
         'Lada.controller.form.Probe',
         'Lada.controller.form.Messung',
@@ -450,11 +450,11 @@ Ext.application({
         'Lada.controller.grid.Ortszuordnung',
         'Lada.controller.form.Ortszuordnung',
         'Lada.controller.form.Messprogramm',
-        'Lada.controller.grid.MessprogrammKategorie',
+        'Lada.controller.form.MessprogrammKategorie',
         'Lada.controller.grid.Messmethode',
         'Lada.controller.GridExport',
         'Lada.controller.grid.DynamicGrid',
         'Lada.controller.Query',
         'Lada.controller.Global'
-        ]
+    ]
 });

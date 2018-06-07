@@ -356,6 +356,18 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     });
                     win.show();
                     break;
+                case 'dsatzerz':
+                    var win = Ext.create('Lada.view.window.DatensatzErzeuger', {
+                        record: Ext.create('Lada.model.DatensatzErzeuger')
+                    });
+                    win.show();
+                    break;
+                case 'mprkat':
+                    var win = Ext.create('Lada.view.window.MessprogrammKategorie', {
+                        record: Ext.create('Lada.model.MessprogrammKategorie')
+                    });
+                    win.show();
+                    break;
             }
         }
     }
