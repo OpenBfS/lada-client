@@ -36,9 +36,6 @@ Ext.define('Lada.view.window.Probenehmer', {
             },
             deactivate: function() {
                 this.getEl().addCls('window-inactive');
-            },
-            afterRender: function() {
-                this.customizeToolbar();
             }
         });
 

@@ -248,6 +248,7 @@ Ext.define('Lada.controller.Query', {
 
     search: function(button) {
         var qp = button.up('querypanel');
+        var me = this;
         var gcs = qp.gridColumnStore;
         var jsonData = {columns: []};
         var csdata = gcs.getData().items;
@@ -291,12 +292,11 @@ Ext.define('Lada.controller.Query', {
                             selModel: Ext.create('Ext.selection.CheckboxModel', {
                                 checkOnly: true,
                                 injectCheckbox: 1
-                            })
+                            }),
+                            rowtarget: me.setrowtarget(qp)
                         });
                         resultGrid.setup(gcs, fixColumnStore);
                         resultGrid.setStore(this.resultStore);
-                        //resultGrid.store.removeAll();
-                        //resultGrid.store.add(responseData);
                         resultGrid.show();
                         contentPanel.add(resultGrid);
                     }
@@ -553,6 +553,45 @@ Ext.define('Lada.controller.Query', {
             }
         }
         return mst;
+    },
+
+    setrowtarget: function(querypanel) {
+        var rowHierarchy = ['messungId', 'probeId', 'mpId', 'ortId', 'pnehmer',
+            'dsatzerz', 'mprkat'];
+        var result = {
+            dataType: null,
+            dataIndex: null,
+            idx: rowHierarchy.length + 1
+        };
+        var cs = Ext.data.StoreManager.get('columnstore');
+        cs.clearFilter();
+        cs.filter({
+            property: 'baseQuery',
+            value: querypanel.getForm().getRecord().get('baseQuery'),
+            exactMatch: true
+        });
+        var csdata = cs.getData().items;
+        for (var i=0; i < csdata.length; i++ ) {
+            var idx = rowHierarchy.indexOf(csdata[i].get('dataType').name);
+            if (idx > -1 && idx < result.idx) {
+                result = {
+                    dataType: csdata[i].get('dataType').name,
+                    dataIndex: csdata[i].get('dataIndex'),
+                    idx: idx
+                };
+            }
+        }
+        if (result.idx < rowHierarchy.length + 2) {
+            return {
+                dataType: result.dataType,
+                dataIndex: result.dataIndex
+            };
+        } else {
+            return {
+                dataType: null,
+                dataIndex: null
+            };
+        }
     }
 
 });

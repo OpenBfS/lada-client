@@ -22,7 +22,7 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
     margin: 5,
     border: 0,
 
-    recordId: null,
+    record: null,
 
     trackResetOnLoad: true,
 
@@ -69,6 +69,7 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
                     width: '35%',
                     labelWidth: 80
                 }, {
+                    xtype: 'tfield',
                     name: 'code',
                     fieldLabel: i18n.getMsg('code'),
                     margin: '0, 5, 5, 5',
@@ -76,6 +77,7 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
                     labelWidth: 80,
                     maxLength: 120
                 }, {
+                    xtype: 'tfield',
                     name: 'bezeichnung',
                     fieldLabel: i18n.getMsg('bezeichnung'),
                     margin: '0, 5, 5, 5',
@@ -87,7 +89,7 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
         }];
         this.callParent(arguments);
         this.clearMessages();
-        if (this.record.get('readonly') === true){
+        if (this.record.get('readonly') === true) {
             this.setReadOnly(true);
         }
     },

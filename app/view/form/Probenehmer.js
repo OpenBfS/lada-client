@@ -58,7 +58,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                 layout: 'vbox',
                 border: 0,
                 items: [{
-                    xtype:  'netzbetreiber',
+                    xtype: 'netzbetreiber',
                     name: 'netzbetreiberId',
                     editable: false,
                     readOnly: true,

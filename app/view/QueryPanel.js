@@ -249,13 +249,11 @@ Ext.define('Lada.view.QueryPanel', {
                     this.down('button[action=delquery]').setDisabled(true);
                     this.store.clearFilter();
                     record0 = this.store.getAt(0);
-                    selquery.select(record0);
                 } else {
                     this.down('button[action=delquery]').setDisabled(false);
                 }
                 selquery.select(record0);
-                this.getForm().loadRecord(record0);
-                this.setGridColumnStore(record0);
+                selquery.fireEvent('select', selquery);
             }
         });
     },

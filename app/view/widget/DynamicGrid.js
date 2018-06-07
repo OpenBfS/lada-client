@@ -44,7 +44,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     sortable: false,
 
     // the dataType to be used on generic doubleclik/add/delete buttons.
-    rowHierarchy: ['messungId', 'probeId', 'mpId', 'ortId', 'pnehmer'],
     rowtarget: null,
 
     isDynamic: true,
@@ -98,7 +97,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         //generic "add" button
         if (
             this.rowtarget.dataType === 'probeId' ||
-            ( ['probenehmer', 'mpId'].indexOf(this.rowtarget.dataType) >= 0
+            ( ['mpId', 'pnehmer', 'dsatzerz', 'mprkat'].indexOf(
+                this.rowtarget.dataType) >= 0
                 && Ext.Array.contains(Lada.funktionen, 4)
             )) {
             tbcontent.push({
@@ -108,7 +108,15 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 needsSelection: false,
                 disabled: false
             });
-            // generic 'delete' button
+        }
+        // generic 'delete' button
+        if (
+            ['messungId', 'probeId'].indexOf(this.rowtarget.dataType) >= 0 ||
+            ( ['mpId', 'pnehmer', 'dsatzerz', 'mprkat'].indexOf(
+                this.rowtarget.dataType) >= 0
+                && Ext.Array.contains(Lada.funktionen, 4)
+            )) {
+
             tbcontent.push({
                 text: i18n.getMsg('button.deleteseleted'),
                 icon: 'resources/img/svn-update.png',
@@ -197,7 +205,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      **/
     generateColumnsAndFields: function(current_columns, fixedColumnStore) {
         this.toolbarbuttons = [];
-        this.rowtarget = {};
         var resultColumns = [];
         var fields = [];
         var i18n = Lada.getApplication().bundle;
@@ -260,8 +267,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             };
             var openIconPath = 'img/document-open.png';
             var colImg = null;
-            //TODO: Use proper icons
-            this.setrowtarget(col.dataIndex, datatype.name);
             switch (datatype.name) {
                 case 'probeId':
                     this.toolbarbuttons.push({
@@ -788,32 +793,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         caf[0] = resultColumns;
         caf[1] = fields;
         return caf;
-    },
-
-    setrowtarget: function(dataIndex, datatypename) {
-        if (this.rowHierarchy.indexOf(datatypename) < 0) {
-            return false;
-        }
-
-        if (!this.rowtarget.hasOwnProperty('dataType')) {
-            this.rowtarget = {
-                dataType: datatypename,
-                dataIndex: dataIndex
-            };
-            return true;
-        } else {
-            var currentIndex = this.rowHierarchy.indexOf(
-                this.rowtarget.dataType);
-            var newIndex = this.rowHierarchy.indexOf(datatypename);
-            if (newIndex < currentIndex) {
-                this.rowtarget = {
-                    dataType: datatypename,
-                    dataIndex: dataIndex
-                };
-            }
-
-            return true;
-        }
     }
+
 });
 

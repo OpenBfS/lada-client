@@ -306,10 +306,40 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 });
                 break;
             case 'ortId':
-                Lada.model.Messprogramm.load(id, {
+                Lada.model.Ort.load(id, {
                     success: function(record) {
                         var win = Ext.create(
-                            'Lada.view.window.Messprogramm', {
+                            'Lada.view.window.Ort', {
+                                record: record});
+                        win.show();
+                    }
+                });
+                break;
+            case 'pnehmer':
+                Lada.model.Probenehmer.load(id, {
+                    success: function(record) {
+                        var win = Ext.create(
+                            'Lada.view.window.Probenehmer', {
+                                record: record});
+                        win.show();
+                    }
+                });
+                break;
+            case 'dsatzerz':
+                Lada.model.DatensatzErzeuger.load(id, {
+                    success: function(record) {
+                        var win = Ext.create(
+                            'Lada.view.window.DatensatzErzeuger', {
+                                record: record});
+                        win.show();
+                    }
+                });
+                break;
+            case 'mprkat':
+                Lada.model.MessprogrammKategorie.load(id, {
+                    success: function(record) {
+                        var win = Ext.create(
+                            'Lada.view.window.MessprogrammKategorie', {
                                 record: record});
                         win.show();
                     }

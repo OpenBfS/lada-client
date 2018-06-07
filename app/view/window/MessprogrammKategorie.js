@@ -36,9 +36,6 @@ Ext.define('Lada.view.window.MessprogrammKategorie', {
             },
             deactivate: function() {
                 this.getEl().addCls('window-inactive');
-            },
-            afterRender: function() {
-                this.customizeToolbar();
             }
         });
 
@@ -51,7 +48,8 @@ Ext.define('Lada.view.window.MessprogrammKategorie', {
             border: 0,
             autoScroll: true,
             items: [{
-                xtype: 'mprkatform'
+                xtype: 'mprkatform',
+                record: this.record
             }]
         }];
         this.tools = [{
