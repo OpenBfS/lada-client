@@ -37,7 +37,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
             },
             deactivate: function() {
                 this.getEl().addCls('window-inactive');
-            },
+            }
         });
         this.items = [{
             xtype: 'panel',
@@ -57,13 +57,21 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
         }];
         var title = '';
         var dialog1 = '';
-        var dialog2 = '';
+        var dialog2 = i18n.getMsg('delete.multiple.warning');
 
         switch (this.parentGrid.rowtarget.dataType) {
             case 'probeId':
                 title = i18n.getMsg('delete.multiple_probe.window.title');
                 dialog1 = i18n.getMsg('delete.multiple_probe');
-                dialog2 = i18n.getMsg('delete.multiple_probe.warning')
+                break;
+            case 'mpId':
+                title = i18n.getMsg('delete.multiple_mpr.window.title');
+                dialog1 = i18n.getMsg('delete.multiple_mpr');
+                break;
+            case 'probenehmer':
+                title = i18n.getMsg('delete.multiple_probenehmer.window.title');
+                dialog1 = i18n.getMsg('delete.multiple_probenehmer');
+                break;
         }
         var me = this;
         this.confWin = Ext.create('Ext.window.Window', {
@@ -133,7 +141,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
         var url = '';
         var datatype = '';
 
-        switch(me.parentGrid.rowtarget.dataType) {
+        switch (me.parentGrid.rowtarget.dataType) {
             case 'probeId':
                 url = 'lada-server/rest/probe/';
                 datatype = 'Probe ';
@@ -141,6 +149,10 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
             case 'mpId':
                 url = 'lada-server/rest/messprogramm/';
                 datatype = 'Messprogramm ';
+                break;
+            case 'probenehmer':
+                url = 'lada-server/rest/probenehmer/';
+                datatype = 'Probenehmer ';
                 break;
         }
         for (var i = 0; i< me.selection.length; i++) {

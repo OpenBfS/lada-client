@@ -350,6 +350,12 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     win.show();
                     win.initData();
                     break;
+                case 'pnehmer':
+                    var win = Ext.create('Lada.view.window.Probenehmer', {
+                        record: Ext.create('Lada.model.Probenehmer')
+                    });
+                    win.show();
+                    break;
             }
         }
     }

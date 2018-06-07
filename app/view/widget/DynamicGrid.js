@@ -40,7 +40,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     sortable: false,
 
     // the dataType to be used on generic doubleclik/add/delete buttons.
-    rowHierarchy: ['messungId', 'probeId', 'mpId', 'ortId'],
+    rowHierarchy: ['messungId', 'probeId', 'mpId', 'ortId', 'pnehmer'],
     rowtarget: null,
 
     isDynamic: true,
@@ -92,9 +92,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         }
 
         //generic "add" button
-        if (this.rowtarget.dataType === 'probeId' ||
-            ( this.rowtarget.dataType === 'mpId' && Ext.Array.contains(
-                Lada.funktionen, 4))) {
+        if (
+            this.rowtarget.dataType === 'probeId' ||
+            ( ['probenehmer', 'mpId'].indexOf(this.rowtarget.dataType) >= 0
+                && Ext.Array.contains(Lada.funktionen, 4)
+            )) {
             tbcontent.push({
                 text: i18n.getMsg('add'),
                 icon: 'resources/img/svn-update.png',
@@ -102,12 +104,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 needsSelection: false,
                 disabled: false
             });
-        }
-
-        // generic 'delete' button
-        if (this.rowtarget.dataType === 'probeId' ||
-            ( this.rowtarget.dataType === 'mpId' && Ext.Array.contains(
-                Lada.funktionen, 4))) {
+            // generic 'delete' button
             tbcontent.push({
                 text: i18n.getMsg('button.deleteseleted'),
                 icon: 'resources/img/svn-update.png',
@@ -682,6 +679,45 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                             return rec.get('staatIso');
                         }
                         return '';
+                    };
+                    break;
+                case 'pnehmer':
+                    colImg = Ext.getResourcePath(openIconPath, null, null);
+                    col.xtype = 'widgetcolumn';
+                    col.widget = {
+                        xtype: 'button',
+                        icon: colImg,
+                        width: '16px',
+                        height: '16px',
+                        userCls: 'widget-column-button',
+                        tooltip: i18n.getMsg('typedgrid.tooltip.pnehmer'),
+                        listeners: {
+                            click: function(button) {
+                                var id = Number(button.text);
+                                button.getEl().swallowEvent(['click', 'dblclick'], true);
+                                Lada.model.Probenehmer.load(id, {
+                                    scope: this,
+                                    callback: function(record, operation, success) {
+                                        if (success) {
+                                            var win = Ext.create('Lada.view.window.Probenehmer', {
+                                                record: record,
+                                                style: 'z-index: -1;'
+                                            });
+                                            win.setPosition(30);
+                                            win.show();
+                                            win.initData();
+                                        }
+                                    }
+                                });
+                            },
+                            textchange: function(button, oldval, newval) {
+                                if (!newval || newval === '') {
+                                    button.hide();
+                                } else {
+                                    button.show();
+                                }
+                            }
+                        }
                     };
                     break;
                 default:

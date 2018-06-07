@@ -438,7 +438,7 @@ Ext.application({
         'Lada.controller.grid.MessprogrammeList',
         'Lada.controller.grid.MessungList',
         'Lada.controller.grid.Datensatzerzeuger',
-        'Lada.controller.grid.Probenehmer',
+        'Lada.controller.form.Probenehmer',
         'Lada.controller.form.Probe',
         'Lada.controller.form.Messung',
         'Lada.controller.form.Ort',
