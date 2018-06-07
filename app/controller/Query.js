@@ -248,11 +248,23 @@ Ext.define('Lada.controller.Query', {
 
     search: function(button) {
         var qp = button.up('querypanel');
-        var me = this;
         var gcs = qp.gridColumnStore;
         var jsonData = {columns: []};
         var csdata = gcs.getData().items;
+        var rowtarget = this.setrowtarget(qp);
         for (var i=0; i < csdata.length; i++ ) {
+            if (csdata[i].get('dataIndex') === rowtarget.dataIndex) {
+                jsonData.columns.push({
+                    gridColumnId: csdata[i].get('gridColumnId'),
+                    filterActive: csdata[i].get('filterActive'),
+                    filterValue: csdata[i].get('filterValue') || '',
+                    visible: csdata[i].get('visible'),
+                    columnIndex: csdata[i].get('columnIndex'),
+                    sortIndex: csdata[i].get('sortIndex'),
+                    sort: csdata[i].get('sort')
+                });
+                continue;
+            }
             if (csdata[i].get('visible') === true ||
                 csdata[i].get('filterActive') === true ) {
                 jsonData.columns.push({
@@ -293,7 +305,7 @@ Ext.define('Lada.controller.Query', {
                                 checkOnly: true,
                                 injectCheckbox: 1
                             }),
-                            rowtarget: me.setrowtarget(qp)
+                            rowtarget: rowtarget
                         });
                         resultGrid.setup(gcs, fixColumnStore);
                         resultGrid.setStore(this.resultStore);
