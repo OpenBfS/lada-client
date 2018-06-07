@@ -129,9 +129,9 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
     },
 
     setStore: function(newStore) {
+        this.store.clearFilter();
+        this.store.removeAll();
         if (newStore) {
-            this.store.clearFilter();
-            this.store.removeAll();
             this.store.setData(newStore.getData().items);
         }
         this.store.filter('visible', true);

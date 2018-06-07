@@ -80,13 +80,18 @@ Ext.define('Lada.controller.Query', {
 
     listAllQueries: function(checkbox, newval) {
         checkbox.resetOriginalValue(); // avoids field being cleaned on reset
-        checkbox.up('querypanel').store.clearFilter();
+        var qp = checkbox.up('querypanel');
+        qp.store.clearFilter();
         if (newval === true) {
-            checkbox.up('querypanel').store.filter({
+            qp.store.filter({
                 property: 'userId',
                 value: Lada.userId,
                 exactMatch: true
             });
+            if (qp.store.getData().items.length === 0) {
+                qp.down('combobox[name=selectedQuery]').clearValue();
+                this.changeCurrentQuery(checkbox);
+            }
         }
     },
 
@@ -148,40 +153,47 @@ Ext.define('Lada.controller.Query', {
         var qp = combobox.up('querypanel');
         var newquery = qp.store.getById(combobox.getValue());
         combobox.resetOriginalValue();
-        qp.getForm().loadRecord(newquery);
-        this.loadGridColumnStore(combobox);
-        var groupstore = qp.down('cbox[name=messStellesIds]').down(
-            'tagfield').getStore();
-        groupstore.removeAll();
-        var newMst = newquery.get('messStellesIds');
-        if (newMst !== null) {
-            for (var i = 0; i < newMst.length; i++) {
-                groupstore.add(
-                    Ext.create('Lada.model.QueryGroup', {
-                        messStellesIds: newMst[i]
-                    })
-                );
-            }
-        }
-        if (this.isQueryReadonly(newquery) === false) {
-            for (var j =0; j < Lada.mst.length; j++) {
-                if (groupstore.findRecord('messStelle', Lada.mst[j], false,
-                    false, false, true) === null) {
+        if (!newquery) {
+            qp.getForm().reset(true);
+            this.loadGridColumnStore(combobox);
+            qp.down('button[action=newquery]').setDisabled(true);
+            qp.down('button[action=delquery]').setDisabled(true);
+            qp.down('button[action=save]').setDisabled(true);
+        } else {
+            qp.getForm().loadRecord(newquery);
+            this.loadGridColumnStore(combobox);
+            var groupstore = qp.down('cbox[name=messStellesIds]').down(
+                'tagfield').getStore();
+            groupstore.removeAll();
+            var newMst = newquery.get('messStellesIds');
+            if (newMst !== null) {
+                for (var i = 0; i < newMst.length; i++) {
                     groupstore.add(
                         Ext.create('Lada.model.QueryGroup', {
-                            messStellesId: Lada.mst[j]
+                            messStellesIds: newMst[i]
                         })
                     );
                 }
             }
+            if (this.isQueryReadonly(newquery) === false) {
+                for (var j =0; j < Lada.mst.length; j++) {
+                    if (groupstore.findRecord('messStelle', Lada.mst[j], false,
+                        false, false, true) === null) {
+                        groupstore.add(
+                            Ext.create('Lada.model.QueryGroup', {
+                                messStellesId: Lada.mst[j]
+                            })
+                        );
+                    }
+                }
+            }
+            this.loadGridColumnStore(combobox);
+            qp.down('button[action=newquery]').setDisabled(newquery.phantom);
+            qp.down('button[action=delquery]').setDisabled(
+                this.isQueryReadonly(newquery));
+            qp.down('button[action=save]').setDisabled(
+                this.isQueryReadonly(newquery));
         }
-
-        this.loadGridColumnStore(combobox);
-        qp.down('button[action=newquery]').setDisabled(newquery.phantom);
-        qp.down('button[action=delquery]').setDisabled(
-            this.isQueryReadonly(newquery));
-        qp.down('button[action=save]').setDisabled(
-            this.isQueryReadonly(newquery));
     },
 
     saveQuery: function(button) {
@@ -275,6 +287,7 @@ Ext.define('Lada.controller.Query', {
                             'panel[name=contentpanel]');
                         contentPanel.removeAll();
                         var resultGrid = Ext.create('Lada.view.widget.DynamicGrid', {
+                            basequery: qp.getForm().getRecord().get('baseQuery'),
                             selModel: Ext.create('Ext.selection.CheckboxModel', {
                                 checkOnly: true,
                                 injectCheckbox: 1
@@ -488,28 +501,32 @@ Ext.define('Lada.controller.Query', {
     loadGridColumnStore: function(element) {
         var panel = element.up('querypanel');
         var gcs = Ext.create('Lada.store.GridColumn');
-        gcs.proxy.extraParams = {
-            'qid': panel.getForm().getRecord().get('id')
-        };
-        gcs.load({
-            callback: function(records, op, success) {
-                var cs = Ext.data.StoreManager.get('columnstore');
-                cs.clearFilter();
-                cs.filter({
-                    property: 'baseQuery',
-                    value: panel.getForm().getRecord().get('baseQuery'),
-                    exactMatch: true
-                });
-                panel.gridColumnStore = gcs;
-                panel.down('columnchoser').setStore(gcs, cs);
-                panel.down('columnchoser').setStore(gcs, cs);
-                panel.down('columnsort').setStore(gcs);
-                panel.down('cbox[name=activefilters]').setStore(cs);
-
-                panel.down('cbox[name=activefilters]').setValue(
-                    panel.getForm().getRecord().get('filteractive'));
-            }
-        });
+        if (panel.getForm().getRecord() === undefined) {
+            panel.down('columnchoser').setStore(null);
+            panel.down('columnsort').setStore(null);
+            panel.down('cbox[name=activefilters]').store.removeAll();
+            panel.down('cbox[name=activefilters]').setValue('');
+        } else {
+            gcs.proxy.extraParams = {
+                'qid': panel.getForm().getRecord().get('id')
+            };
+            gcs.load({
+                callback: function(records, op, success) {
+                    var cs = Ext.data.StoreManager.get('columnstore');
+                    cs.clearFilter();
+                    cs.filter({
+                        property: 'baseQuery',
+                        value: panel.getForm().getRecord().get('baseQuery'),
+                        exactMatch: true
+                    });
+                    panel.gridColumnStore = gcs;
+                    panel.down('columnchoser').setStore(gcs, cs);
+                    panel.down('columnsort').setStore(gcs);
+                    panel.down('cbox[name=activefilters]').setValue(
+                        panel.getForm().getRecord().get('filteractive'));
+                }
+            });
+        }
     },
 
     //checks checks if a query is editable by the current user

@@ -185,13 +185,9 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
     },
 
     setStore: function(store, fixedcolumnstore) {
-        if (store) {
-            var tstore = new Ext.data.Store({
-                model: 'Lada.model.GridColumn'
-            });
-            var sstore = new Ext.data.Store({
-                model: 'Lada.model.GridColumn'
-            });
+        var tstore = new Ext.data.Store({model: 'Lada.model.GridColumn'});
+        var sstore = new Ext.data.Store({model: 'Lada.model.GridColumn'});
+        if (store && fixedcolumnstore) {
             // var data = store.getData().items;
             var fixeddata = fixedcolumnstore.getData().items;
             for (var i=0; i < fixeddata.length; i++) {
@@ -213,9 +209,10 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                     sstore.add(col);
                 }
             }
-            this.getComponent('targetGrid').setStore(tstore);
-            this.getComponent('sourceGrid').setStore(sstore);
-            this.sortvisibles();
         }
+        this.getComponent('targetGrid').setStore(tstore);
+        this.getComponent('sourceGrid').setStore(sstore);
+        this.sortvisibles();
+
     }
 });
