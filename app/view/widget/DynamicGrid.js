@@ -689,8 +689,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 case 'dsatzerz':
                 case 'mprkat':
                     var clicklistener = null;
+                    var tooltip = '';
 
                     if (datatype.name === 'pnehmer') {
+                        tooltip = i18n.getMsg('typedgrid.tooltip.pnehmer');
                         clicklistener = function(button) {
                             var id = Number(button.text);
                             button.getEl().swallowEvent(['click', 'dblclick'], true);
@@ -710,6 +712,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                             });
                         };
                     } else if (datatype.name === 'dsatzerz') {
+                        tooltip = i18n.getMsg('typedgrid.tooltip.dsatzerz');
                         clicklistener = function(button) {
                             var id = Number(button.text);
                             button.getEl().swallowEvent(['click', 'dblclick'], true);
@@ -729,6 +732,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                             });
                         };
                     } else if (datatype.name === 'mprkat') {
+                        tooltip = i18n.getMsg('typedgrid.tooltip.mprkat');
                         clicklistener = function(button) {
                             var id = Number(button.text);
                             button.getEl().swallowEvent(['click', 'dblclick'], true);
@@ -756,7 +760,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         width: '16px',
                         height: '16px',
                         userCls: 'widget-column-button',
-                        tooltip: i18n.getMsg('typedgrid.tooltip.pnehmer'),
+                        tooltip: tooltip,
                         listeners: {
                             click: clicklistener,
                             textchange: function(button, oldval, newval) {
