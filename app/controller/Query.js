@@ -73,6 +73,9 @@ Ext.define('Lada.controller.Query', {
             },
             'querypanel panel[name=filtervalues] combobox': {
                 change: me.filterValueChanged
+            },
+            'querypanel button[action=reload]': {
+                click: me.reloadQuery
             }
         });
         this.resultStore = Ext.StoreManager.get('GenericResults');
@@ -93,7 +96,6 @@ Ext.define('Lada.controller.Query', {
                 checkbox.resetOriginalValue();
             } else {
                 qp.down('combobox[name=selectedQuery]').clearValue();
-                qp.down('combobox[name=selectedQuery]').resetOriginalValue();
                 this.changeCurrentQuery(checkbox);
             }
         }
@@ -141,6 +143,7 @@ Ext.define('Lada.controller.Query', {
                                 var firstEntry = qp.store.getAt(0);
                                 if (!firstEntry) {
                                     qp.down('checkbox[name=ownqueries]').setValue(false);
+                                    qp.down('checkbox[name=ownqueries]').resetOriginalValue();
                                     firstEntry = qp.store.getAt(0);
                                 }
                                 combobox.select(qp.store.getAt(0));
@@ -618,6 +621,26 @@ Ext.define('Lada.controller.Query', {
                 dataIndex: null
             };
         }
+    },
+
+    reloadQuery: function(button) {
+        var me = this;
+        var qp = button.up('querypanel');
+        var cb = qp.down('combobox[name=selectedQuery]');
+        var current = cb.getValue();
+        qp.store.reload({
+            callback: function() {
+                cb.setStore(qp.store);
+                var newrec = qp.store.findRecord('id', current,
+                    false,false,false,true);
+                if (newrec !== null) {
+                    cb.select(newrec);
+                } else {
+                    cb.clearValue();
+                }
+                me.changeCurrentQuery(cb);
+            }
+        });
     }
 
 });

@@ -34,18 +34,30 @@ Ext.define('Lada.view.QueryPanel', {
         margin: 10,
         items: [
             {
-                xtype: 'combobox',
-                margin: 5,
-                fieldLabel: 'query.query',
-                name: 'selectedQuery',
-                displayField: 'name',
-                valueField: 'id',
-                labelWidth: 125,
-                width: '100%',
-                submitValue: false,
-                triggers: {
-                    clear: { hidden: true}
-                }
+                layout: 'hbox',
+                border: 0,
+                margin: 0,
+                items: [{
+                    xtype: 'combobox',
+                    margin: 5,
+                    fieldLabel: 'query.query',
+                    name: 'selectedQuery',
+                    displayField: 'name',
+                    valueField: 'id',
+                    labelWidth: 125,
+                    // TODO layout pending width: '100%',
+                    submitValue: false,
+                    triggers: {
+                        clear: { hidden: true}
+                    }
+                },{
+                    xtype: 'button',
+                    name: 'queryreload',
+                    action: 'reload',
+                    text: 'query.button.reload',
+                    margin: '0', //TODO layout pending
+                    submitValue: false
+                }]
             }, {
                 xtype: 'checkbox',
                 margin: '5 5 5 135',
@@ -230,6 +242,7 @@ Ext.define('Lada.view.QueryPanel', {
         //TODO these two are ugly hacks:
         this.down('cbox[name=messStellesIds]').down().fieldLabel = i18n.getMsg('query.groups');
         this.down('cbox[name=activefilters]').down().fieldLabel = i18n.getMsg('query.filters.visible');
+        this.down('button[name=queryreload]').text = i18n.getMsg('query.button.reload');
 
         var selquery = this.down('combobox[name=selectedQuery]');
         selquery.fieldLabel = i18n.getMsg('query.query');
@@ -240,11 +253,13 @@ Ext.define('Lada.view.QueryPanel', {
             scope: this,
             callback: function() {
                 this.store.clearFilter();
-                this.store.filter({
-                    property: 'userId',
-                    value: Lada.userId,
-                    exactMatch: true
-                });
+                if (this.down('checkbox[name=ownqueries]').getValue === true) {
+                    this.store.filter({
+                        property: 'userId',
+                        value: Lada.userId,
+                        exactMatch: true
+                    });
+                }
                 selquery.setStore(this.store);
                 var record0 = this.store.getAt(0);
                 if (!record0) {
