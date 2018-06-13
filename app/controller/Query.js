@@ -96,6 +96,7 @@ Ext.define('Lada.controller.Query', {
                 checkbox.resetOriginalValue();
             } else {
                 qp.down('combobox[name=selectedQuery]').clearValue();
+                qp.down('combobox[name=selectedQuery]').resetOriginalValue();
                 this.changeCurrentQuery(checkbox);
             }
         }
