@@ -253,7 +253,7 @@ Ext.define('Lada.view.QueryPanel', {
             scope: this,
             callback: function() {
                 this.store.clearFilter();
-                if (this.down('checkbox[name=ownqueries]').getValue === true) {
+                if (this.down('checkbox[name=ownqueries]').getValue() === true) {
                     this.store.filter({
                         property: 'userId',
                         value: Lada.userId,
