@@ -169,7 +169,9 @@ Ext.define('Lada.controller.Query', {
             qp.down('button[action=save]').setDisabled(true);
         } else {
             combobox.resetOriginalValue();
-            qp.getForm().loadRecord(newquery);
+            if (!newquery.phantom) {
+                qp.getForm().loadRecord(newquery);
+            }
             this.loadGridColumnStore(combobox);
             var groupstore = qp.down('cbox[name=messStellesIds]').down(
                 'tagfield').getStore();
