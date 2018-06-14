@@ -41,7 +41,7 @@ Ext.define('Lada.view.widget.Probenehmer' ,{
         if (!this.store) {
             this.store = Ext.create('Lada.store.Probenehmer');
         }
-        this.store.sort();
+        this.store.sort('kurzBezeichnung', 'ASC');
         this.callParent(arguments);
         if (this.extraParams) {
             this.extraParams();

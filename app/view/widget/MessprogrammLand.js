@@ -42,7 +42,7 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
         } else {
             this.store.clearFilter();
         }
-        this.store.sort();
+        this.store.sort('bezeichnung', 'ASC');
         this.callParent(arguments);
         if (this.extraParams) {
             this.extraParams();
