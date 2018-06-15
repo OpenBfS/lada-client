@@ -154,7 +154,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         var cbox = Ext.create('Lada.view.widget.PagingSize');
         this.down('pagingtoolbar').add('-');
         this.down('pagingtoolbar').add(cbox);
-
+        this.down('pagingtoolbar').down('#refresh').hide();
 
     },
 
