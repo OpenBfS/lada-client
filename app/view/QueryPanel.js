@@ -296,6 +296,9 @@ Ext.define('Lada.view.QueryPanel', {
             this.gridColumnStore.load({
                 callback: function() {
                     var items = me.gridColumnStore.getData().items;
+                    if (!items.length) {
+                        return;
+                    }
                     for (var i=0; i < items.length; i++) {
                         var gc = cs.findRecord('id',
                             items[i].get('gridColumnId'),false,false, false, true);

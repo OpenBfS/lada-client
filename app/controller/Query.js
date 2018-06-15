@@ -169,9 +169,7 @@ Ext.define('Lada.controller.Query', {
             qp.down('button[action=save]').setDisabled(true);
         } else {
             combobox.resetOriginalValue();
-            if (!newquery.phantom) {
-                qp.getForm().loadRecord(newquery);
-            }
+            qp.getForm().loadRecord(newquery);
             this.loadGridColumnStore(combobox);
             var groupstore = qp.down('cbox[name=messStellesIds]').down(
                 'tagfield').getStore();
@@ -210,7 +208,6 @@ Ext.define('Lada.controller.Query', {
 
     saveQuery: function(button) {
         var qp = button.up('querypanel');
-        var me = this;
         var record = qp.getForm().getRecord();
         if (record.phantom) {
             record.set('id', null);
@@ -539,7 +536,12 @@ Ext.define('Lada.controller.Query', {
             panel.down('cbox[name=activefilters]').store.removeAll();
             panel.down('cbox[name=activefilters]').setValue('');
         } else {
-            var qid = panel.getForm().getRecord().get('id');
+            var qid = null;
+            if (panel.getForm().getRecord().phantom) {
+                qid = panel.getForm().getRecord().clonedFrom;
+            } else {
+                qid = panel.getForm().getRecord().get('id');
+            }
             gcs.proxy.extraParams = {
                 'qid': qid
             };
