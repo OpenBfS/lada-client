@@ -35,6 +35,8 @@ Ext.define('Lada.view.QueryPanel', {
         items: [
             {
                 layout: 'hbox',
+                width: '100%',
+                align: 'stretch',
                 border: 0,
                 margin: 0,
                 items: [{
@@ -44,8 +46,8 @@ Ext.define('Lada.view.QueryPanel', {
                     name: 'selectedQuery',
                     displayField: 'name',
                     valueField: 'id',
+                    flex: 1,
                     labelWidth: 125,
-                    // TODO layout pending width: '100%',
                     submitValue: false,
                     triggers: {
                         clear: { hidden: true}
@@ -54,8 +56,10 @@ Ext.define('Lada.view.QueryPanel', {
                     xtype: 'button',
                     name: 'queryreload',
                     action: 'reload',
+                    maxWidth: 65,
+                    minWidth: 65,
                     text: 'query.button.reload',
-                    margin: '0', //TODO layout pending
+                    margin: '5 0 0 2.5', //TODO layout pending
                     submitValue: false
                 }]
             }, {
