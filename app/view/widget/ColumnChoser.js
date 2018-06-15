@@ -145,13 +145,13 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
     },
 
     setVisible: function(data, visible) {
-        var qps = this.up('querypanel').gridColumnStore;
+        var gcv_store = this.up('querypanel').gridColumnValueStore;
         for (var i=0; i < data.length; i++) {
             data[i].set('visible', visible);
-            var origindata = qps.getById(data[i].get('id'));
+            var origindata = gcv_store.getById(data[i].get('id'));
             if (!origindata) {
-                qps.add(data[i]);
-                origindata = qps.getById(data[i].get('id'));
+                gcv_store.add(data[i]);
+                origindata = gcv_store.getById(data[i].get('id'));
             } else {
                 origindata.set('visible', visible);
             }
@@ -164,25 +164,29 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
     },
 
     sortvisibles: function() {
-        var qps = this.up('querypanel').gridColumnValueStore;
+        var gcv_store = this.up('querypanel').gridColumnValueStore;
+        var gcv_items = gcv_store.getData().items;
         var tarstore = this.getComponent('targetGrid').getStore();
         var taritems = tarstore.getData().items;
-        var last_tgtid = tarstore.getData().items.length;
-        for (var i=0; i< taritems.length; i++) {
-            if (taritems[i].get('visible') === true) {
-                var pos = taritems.indexOf(
-                    tarstore.findRecord('gridColumnId', taritems[i].get('gridColumnId'), false, false, false, true));
-                if (pos === -1) {
-                    taritems[i].set('columnIndex', last_tgtid);
-                    qps.getById(taritems[i].get('id')).set('columnIndex', last_tgtid);
-                    console.log(qps.getById(taritems[i].get('id')));
-                    last_tgtid +=1;
-                } else {
-                    taritems[i].set('columnIndex', pos);
-                    console.log(qps.getById(taritems[i].get('id')));
-                    qps.getById(taritems[i].get('id')).set('columnIndex', pos);
+        for (var i=0; i< gcv_items.length; i++) {
+            var targetgridrecord = tarstore.findRecord('gridColumnId',
+                gcv_items[i].get('gridColumnId'), false, false, false,
+                true);
+            if ( gcv_items[i].get('visible') === true) {
+                var pos = -1;
+                for (var j=0; j < taritems.length; j++) {
+                    if (taritems[j].get('columnIndex') === gcv_items[i].get(
+                        'columnIndex')
+                    ) {
+                        pos = j;
+                        break;
+                    }
                 }
-           }
+                targetgridrecord.set('columnIndex', pos);
+                gcv_items[i].set('columnIndex', pos);
+            } else {
+                gcv_items[i].set('columnIndex', -1);
+            }
         }
     },
 

@@ -76,7 +76,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                             var entry = overModel.store.findRecord(
                                 'gridColumnId', qf.get('id'));
                             var orig_entry = me.up(
-                                'querypanel').gridColumnStore.findRecord(
+                                'querypanel').gridColumnValueStore.findRecord(
                                 'gridColumnId', qf.get('id'));
                             entry.set('sortIndex', i);
                             orig_entry.set('sortIndex', i);
@@ -113,7 +113,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                             var rec = box.$widgetRecord;
                             rec.set('sort', newval);
                             var origindata = this.up('querypanel')
-                                .gridColumnStore.getById(rec.get('id'));
+                                .gridColumnValueStore.getById(rec.get('id'));
                             origindata.set('sort', newval);
                         }
                     }

@@ -217,8 +217,8 @@ Ext.define('Lada.controller.Query', {
             success: function(rec, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 var newId = json.data.id;
-                var columns = qp.gridColumnStore.getData().items;
-                qp.gridColumnStore.proxy.extraParams = {};
+                var columns = qp.gridColumnValueStore.getData().items;
+                qp.gridColumnValueStore.proxy.extraParams = {};
                 for (var i=0; i < columns.length; i++) {
                     columns[i].set('queryUserId', newId);
                     if (columns[i].phantom) {
@@ -231,9 +231,9 @@ Ext.define('Lada.controller.Query', {
                         columns[i].save();
                     }
                 }
-                qp.store.load({callback: function(){
+                qp.store.load({callback: function() {
                     qp.down('combobox[name=selectedQuery]').setStore(qp.store);
-                    qp.down('combobox[name=selectedQuery]').select(newId);    
+                    qp.down('combobox[name=selectedQuery]').select(newId);
                 }});
             },
             failure: function(rec, response) {
@@ -253,12 +253,12 @@ Ext.define('Lada.controller.Query', {
         }
         panel.getForm().loadRecord(panel.store.getById(qid));
         panel.store.remove(rec);
-        this.loadGridColumnStore(button);
+        this.loadGridColumnValueStore(button);
     },
 
     search: function(button) {
         var qp = button.up('querypanel');
-        var gcs = qp.gridColumnStore;
+        var gcs = qp.gridColumnValueStore;
         var jsonData = {columns: []};
         var csdata = gcs.getData().items;
         if (csdata.length === 0) {
@@ -512,7 +512,7 @@ Ext.define('Lada.controller.Query', {
         if (box.xtype === 'datefield') {
             this.dateValueChanged(box, newvalue);
         } else {
-            var store = box.up('querypanel').gridColumnStore;
+            var store = box.up('querypanel').gridColumnValueStore;
             var name = box.name;
             var rec = store.findRecord('dataIndex', name, false, false, false,
                 true);
@@ -521,7 +521,7 @@ Ext.define('Lada.controller.Query', {
     },
 
     dateValueChanged: function(box, newvalue, oldvalue) {
-        var store = box.up('querypanel').gridColumnStore;
+        var store = box.up('querypanel').gridColumnValueStore;
         var widget = box.up().up();
         var rec = store.findRecord('dataIndex', widget.name, false, false,
             false, true);
