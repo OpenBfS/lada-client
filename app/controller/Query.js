@@ -253,7 +253,7 @@ Ext.define('Lada.controller.Query', {
         }
         panel.getForm().loadRecord(panel.store.getById(qid));
         panel.store.remove(rec);
-        this.loadGridColumnValueStore(button);
+        this.loadGridColumnStore(button);
     },
 
     search: function(button) {
