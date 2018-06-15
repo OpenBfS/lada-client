@@ -536,6 +536,7 @@ Ext.define('Lada.controller.Query', {
             panel.down('columnsort').setStore(null);
             panel.down('cbox[name=activefilters]').store.removeAll();
             panel.down('cbox[name=activefilters]').setValue('');
+            panel.down('cbox[name=messStellesIds]').clearValue();
         } else {
             var qid = null;
             if (panel.getForm().getRecord().phantom) {
@@ -559,6 +560,8 @@ Ext.define('Lada.controller.Query', {
                     panel.setGridColumnStore(qid, panel.getForm().getRecord().get('baseQuery'));
                     panel.down('cbox[name=activefilters]').setValue(
                         panel.getForm().getRecord().get('filteractive'));
+                    panel.down('cbox[name=messStellesIds]').setValue(
+                        panel.getForm().getRecord().get('messStellesIds'));
                 }
             });
         }
