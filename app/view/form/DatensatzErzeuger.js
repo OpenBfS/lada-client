@@ -97,7 +97,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                         margin: '0, 5, 5, 5',
                         width: '35%',
                         labelWidth: 120
-                    
+
                     }, {
                         xtype: 'tfield',
                         name: 'bezeichnung',
@@ -112,6 +112,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
         }];
         this.callParent(arguments);
         this.clearMessages();
+        this.loadRecord(this.record);
         this.setReadOnly(this.record.get('readonly'));
     },
 

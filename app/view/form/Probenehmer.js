@@ -79,7 +79,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                         fieldLabel: i18n.getMsg('netzbetreiberId'),
                         margin: '0, 5, 5, 5',
                         width: '35%',
-                        labelWidth: 80    
+                        labelWidth: 80
                     }]
                 }, {
                     xtype: 'tfield',
@@ -116,7 +116,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                         margin: '0, 5, 5, 5',
                         width: '35%',
                         labelWidth: 80,
-                        maxLength: 10    
+                        maxLength: 10
                     }]
                 }, {
                     layout: 'hbox',
@@ -180,6 +180,7 @@ Ext.define('Lada.view.form.Probenehmer', {
         }];
         this.callParent(arguments);
         this.clearMessages();
+        this.loadRecord(this.record);
         this.setReadOnly(this.record.get('readonly'));
     },
 
