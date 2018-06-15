@@ -164,21 +164,23 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
     },
 
     sortvisibles: function() {
-        var qps = this.up('querypanel').gridColumnStore;
-        var qgs_data = qps.getData().items;
+        var qps = this.up('querypanel').gridColumnValueStore;
         var tarstore = this.getComponent('targetGrid').getStore();
+        var taritems = tarstore.getData().items;
         var last_tgtid = tarstore.getData().items.length;
-        for (var i=0; i< qgs_data.length; i++) {
-            if (qgs_data[i].get('visible') === true) {
-                var pos = tarstore.findBy(function(item) {
-                    return item.get('dataIndex') === qgs_data[i].get(
-                        'dataIndex');
-                });
+        for (var i=0; i< taritems.length; i++) {
+            if (taritems[i].get('visible') === true) {
+                var pos = taritems.indexOf(
+                    tarstore.findRecord('gridColumnId', taritems[i].get('gridColumnId'), false, false, false, true));
                 if (pos === -1) {
-                    qgs_data[i].set('columnIndex', last_tgtid);
+                    taritems[i].set('columnIndex', last_tgtid);
+                    qps.getById(taritems[i].get('id')).set('columnIndex', last_tgtid);
+                    console.log(qps.getById(taritems[i].get('id')));
                     last_tgtid +=1;
                 } else {
-                    qgs_data[i].set('columnIndex', pos);
+                    taritems[i].set('columnIndex', pos);
+                    console.log(qps.getById(taritems[i].get('id')));
+                    qps.getById(taritems[i].get('id')).set('columnIndex', pos);
                 }
            }
         }
@@ -210,9 +212,9 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 }
             }
         }
+        tstore.sort('columnIndex', 'ASC');
         this.getComponent('targetGrid').setStore(tstore);
         this.getComponent('sourceGrid').setStore(sstore);
         this.sortvisibles();
-
     }
 });

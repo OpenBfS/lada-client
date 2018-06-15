@@ -231,9 +231,10 @@ Ext.define('Lada.controller.Query', {
                         columns[i].save();
                     }
                 }
-                qp.store.reload();
-                qp.down('combobox[name=selectedQuery]').setStore(qp.store);
-                qp.down('combobox[name=selectedQuery]').setValue(newId);
+                qp.store.load({callback: function(){
+                    qp.down('combobox[name=selectedQuery]').setStore(qp.store);
+                    qp.down('combobox[name=selectedQuery]').select(newId);    
+                }});
             },
             failure: function(rec, response) {
                 //TODO error handling
@@ -555,7 +556,7 @@ Ext.define('Lada.controller.Query', {
                         exactMatch: true
                     });
                     panel.gridColumnStore = gcs;
-                    panel.setGridColumnStore(qid);
+                    panel.setGridColumnStore(qid, panel.getForm().getRecord().get('baseQuery'));
                     panel.down('cbox[name=activefilters]').setValue(
                         panel.getForm().getRecord().get('filteractive'));
                 }

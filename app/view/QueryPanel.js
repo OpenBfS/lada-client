@@ -18,7 +18,7 @@ Ext.define('Lada.view.QueryPanel', {
         'Lada.view.widget.ColumnSort',
         'Lada.store.GridColumn'
     ],
-    gridColumnStore: null,
+    gridColumnValueStore: null,
     store: null,
     layout: {
         type: 'vbox',
@@ -280,12 +280,12 @@ Ext.define('Lada.view.QueryPanel', {
         });
     },
 
-    setGridColumnStore: function(baseQueryId) {
+    setGridColumnStore: function(userQueryId, baseQueryId) {
         var me = this;
-        if (baseQueryId !== undefined) {
-            this.gridColumnStore = Ext.create('Lada.store.GridColumn');
-            this.gridColumnStore.proxy.extraParams = {
-                qid: baseQueryId};
+        if (baseQueryId !== undefined && userQueryId !== undefined) {
+            this.gridColumnValueStore = Ext.create('Lada.store.GridColumn');
+            this.gridColumnValueStore.proxy.extraParams = {
+                qid: userQueryId};
             var cs = Ext.data.StoreManager.get('columnstore');
             cs.clearFilter();
             cs.filter({
@@ -293,20 +293,19 @@ Ext.define('Lada.view.QueryPanel', {
                 value: baseQueryId,
                 exactMatch: true
             });
-            this.gridColumnStore.load({
+            this.gridColumnValueStore.load({
                 callback: function() {
-                    var items = me.gridColumnStore.getData().items;
-                    if (!items.length) {
-                        return;
+                    var items = me.gridColumnValueStore.getData().items;
+                    if (items.length) {
+                        for (var i=0; i < items.length; i++) {
+                            var gc = cs.findRecord('id',
+                                items[i].get('gridColumnId'),0,false, false, true);
+                            items[i].set('dataIndex', gc.get('dataIndex'));
+                            items[i].set('name', gc.get('name'));
+                        }
                     }
-                    for (var i=0; i < items.length; i++) {
-                        var gc = cs.findRecord('id',
-                            items[i].get('gridColumnId'),false,false, false, true);
-                        items[i].set('dataIndex', gc.get('dataIndex'));
-                        items[i].set('name', gc.get('name'));
-                    }
-                    me.down('columnchoser').setStore(me.gridColumnStore, cs);
-                    me.down('columnsort').setStore(me.gridColumnStore);
+                    me.down('columnchoser').setStore(me.gridColumnValueStore, cs);
+                    me.down('columnsort').setStore(me.gridColumnValueStore);
                     me.down('cbox[name=activefilters]').setStore(cs);
                 }
             });
