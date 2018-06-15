@@ -58,24 +58,29 @@ Ext.define('Lada.view.form.Probenehmer', {
                 layout: 'vbox',
                 border: 0,
                 items: [{
-                    xtype: 'netzbetreiber',
-                    name: 'netzbetreiberId',
-                    editable: false,
-                    readOnly: true,
-                    isFormField: false,
-                    emptyValue: '',
-                    fieldLabel: i18n.getMsg('netzbetreiberId'),
-                    margin: '0, 5, 5, 5',
-                    width: '35%',
-                    labelWidth: 80
-                }, {
-                    xtype: 'tfield',
-                    name: 'prnId',
-                    fieldLabel: i18n.getMsg('probeNehmerId'),
-                    margin: '0, 5, 5, 5',
-                    width: '35%',
-                    labelWidth: 80,
-                    maxLength: 9
+                    layout: 'hbox',
+                    border: 0,
+                    margin: '0 5 5 5',
+                    items: [{
+                        xtype: 'tfield',
+                        name: 'prnId',
+                        fieldLabel: i18n.getMsg('probeNehmerId'),
+                        margin: '0, 5, 5, 0',
+                        width: '35%',
+                        labelWidth: 80,
+                        maxLength: 9
+                    }, {
+                        xtype: 'netzbetreiber',
+                        name: 'netzbetreiberId',
+                        editable: false,
+                        readOnly: true,
+                        isFormField: false,
+                        emptyValue: '',
+                        fieldLabel: i18n.getMsg('netzbetreiberId'),
+                        margin: '0, 5, 5, 5',
+                        width: '35%',
+                        labelWidth: 80    
+                    }]
                 }, {
                     xtype: 'tfield',
                     name: 'bearbeiter',
@@ -93,41 +98,51 @@ Ext.define('Lada.view.form.Probenehmer', {
                     labelWidth: 80,
                     maxLength: 60
                 }, {
-                    xtype: 'tfield',
-                    name: 'bezeichnung',
-                    fieldLabel: i18n.getMsg('bezeichnung'),
-                    margin: '0, 5, 5, 5',
-                    width: '35%',
-                    labelWidth: 80,
-                    maxLength: 80
+                    layout: 'hbox',
+                    border: 0,
+                    margin: '0 5 5 5',
+                    items: [{
+                        xtype: 'tfield',
+                        name: 'bezeichnung',
+                        fieldLabel: i18n.getMsg('bezeichnung'),
+                        margin: '0, 5, 5, 0',
+                        width: '35%',
+                        labelWidth: 80,
+                        maxLength: 80
+                    }, {
+                        xtype: 'tfield',
+                        name: 'kurzBezeichnung',
+                        fieldLabel: i18n.getMsg('kurzBezeichnung'),
+                        margin: '0, 5, 5, 5',
+                        width: '35%',
+                        labelWidth: 80,
+                        maxLength: 10    
+                    }]
                 }, {
-                    xtype: 'tfield',
-                    name: 'kurzBezeichnung',
-                    fieldLabel: i18n.getMsg('kurzBezeichnung'),
-                    margin: '0, 5, 5, 5',
-                    width: '35%',
-                    labelWidth: 80,
-                    maxLength: 10
-                }, {
-                    xtype: 'tfield',
-                    name: 'ort',
-                    fieldLabel: i18n.getMsg('ort'),
-                    margin: '0, 5, 5, 5',
-                    width: '35%',
-                    labelWidth: 80,
-                    maxLength: 20
-                }, {
-                    xtype: 'numfield',
-                    name: 'plz',
-                    fieldLabel: i18n.getMsg('plz'),
-                    margin: '0, 5, 5, 5',
-                    width: '35%',
-                    allowDecimals: false,
-                    maxLength: 5,
-                    hideTrigger: true,
-                    keyNavEnabled: false,
-                    mouseWheelEnabled: false,
-                    labelWidth: 80
+                    layout: 'hbox',
+                    margin: '0 5 5 5',
+                    border: 0,
+                    items: [{
+                        xtype: 'tfield',
+                        name: 'ort',
+                        fieldLabel: i18n.getMsg('ort'),
+                        margin: '0, 5, 5, 0',
+                        width: '35%',
+                        labelWidth: 80,
+                        maxLength: 20
+                    }, {
+                        xtype: 'numfield',
+                        name: 'plz',
+                        fieldLabel: i18n.getMsg('plz'),
+                        margin: '0, 5, 5, 5',
+                        width: '75',
+                        allowDecimals: false,
+                        maxLength: 5,
+                        hideTrigger: true,
+                        keyNavEnabled: false,
+                        mouseWheelEnabled: false,
+                        labelWidth: 80
+                    }]
                 }, {
                     xtype: 'tfield',
                     name: 'strasse',

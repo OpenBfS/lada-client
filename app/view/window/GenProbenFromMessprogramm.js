@@ -418,7 +418,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             layout: 'fit',
             width: 800,
             minHeight: 500,
-            maxHeight: 750,
+            maxHeight: 600,
             items: [frgrid]
         });
         me.hide();

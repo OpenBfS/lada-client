@@ -36,9 +36,6 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
             },
             deactivate: function() {
                 this.getEl().addCls('window-inactive');
-            },
-            afterRender: function() {
-                this.customizeToolbar();
             }
         });
 
