@@ -11,5 +11,8 @@
  */
 Ext.define('Lada.model.QueryGroup', {
     extend: 'Ext.data.Model',
-    fields: [{name: 'messStellesIds'}]
+    fields: [
+        {name: 'messStellesIds'},
+        {name: 'name', persist: false}
+    ]
 });
