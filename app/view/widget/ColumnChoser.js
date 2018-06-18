@@ -135,13 +135,13 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
         } else {
             data = this.getComponent(source).getStore().getRange();
         }
+        this.getComponent(source).getStore().remove(data);
+        this.getComponent(target).getStore().add(data);
         if (target === 'sourceGrid') {
             this.setVisible(data, false);
         } else if (target === 'targetGrid') {
             this.setVisible(data, true);
         }
-        this.getComponent(source).getStore().remove(data);
-        this.getComponent(target).getStore().add(data);
     },
 
     setVisible: function(data, visible) {
@@ -154,6 +154,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 origindata = gcv_store.getById(data[i].get('id'));
             } else {
                 origindata.set('visible', visible);
+
             }
             if (visible === false) {
                 origindata.set('columnIndex', null);
