@@ -11,12 +11,10 @@ Ext.define('Lada.controller.Ort', {
     init: function() {
         var me = this;
         this.control({
-            'ortpanel button[action=addMap]': {
+            'dynamicgrid button[action=addMap]': {
                 click: me.activateDraw
             },
-            'ortpanel button[action=add]': {
-                click: me.addRecord
-            },
+
             'ortpanel button[action=delete]': {
                 click: me.deleteItem
             },
@@ -39,7 +37,7 @@ Ext.define('Lada.controller.Ort', {
     addRecord: function(button) {
         Ext.create('Lada.view.window.Ort',{
             record: Ext.create('Lada.model.Ort', {ortTyp: 1}),
-            parentWindow: button.up('ortpanel')
+            parentWindow: button.up('dynamicgrid')
         }).show();
     },
 

@@ -20,7 +20,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         'Lada.view.plugin.GridRowExpander',
         'Lada.view.window.Probenehmer',
         'Lada.view.window.DatensatzErzeuger',
-        'Lada.view.window.MessprogrammKategorie'
+        'Lada.view.window.MessprogrammKategorie',
+        'Lada.view.panel.Map'
 
     ],
 
@@ -74,7 +75,17 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 tbcontent.push(this.toolbarbuttons[i]);
             }
         }
-
+        if (this.rowtarget.dataType === 'ortId'
+            && Ext.Array.contains(Lada.funktionen, 4)
+        ) {
+            tbcontent.push({
+                text: i18n.getMsg('orte.new'),
+                icon: 'resources/img/svn-commit.png',
+                action: 'addMap',
+                needsSelection: false,
+                disabled: false
+            });
+        }
         if (this.printable) {
             tbcontent.push({
                 text: i18n.getMsg('button.print'),
@@ -97,7 +108,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         //generic "add" button
         if (
             this.rowtarget.dataType === 'probeId' ||
-            ( ['mpId', 'pnehmer', 'dsatzerz', 'mprkat'].indexOf(
+            ( ['mpId', 'pnehmer', 'dsatzerz', 'mprkat', 'ortId'].indexOf(
                 this.rowtarget.dataType) >= 0
                 && Ext.Array.contains(Lada.funktionen, 4)
             )) {
@@ -151,11 +162,23 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             store: store,
             displayInfo: true
         }]);
+        if (this.rowtarget.dataType === 'ortId') {
+            var i18n = Lada.getApplication().bundle;
+            var map = Ext.create('Lada.view.panel.Map', {
+                collapsible: true,
+                minWidth: 400,
+                dock: 'right',
+                title: i18n.getMsg('map.title'),
+                externalOrteStore: false
+            });
+            this.addDocked(map);
+        }
         var cbox = Ext.create('Lada.view.widget.PagingSize');
         this.down('pagingtoolbar').add('-');
         this.down('pagingtoolbar').add(cbox);
         this.down('pagingtoolbar').down('#refresh').hide();
-
+        // this.on('select') zoom to map and select
+        // });
     },
 
     /**

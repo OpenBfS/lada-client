@@ -346,8 +346,25 @@ Ext.define('Lada.controller.Query', {
                         });
                         resultGrid.setup(gcs, fixColumnStore);
                         resultGrid.setStore(this.resultStore);
-                        resultGrid.show();
                         contentPanel.add(resultGrid);
+                        contentPanel.show();
+
+                        if (rowtarget.dataType === 'ortId') {
+                            resultGrid.ortstore = Ext.create(
+                                'Lada.store.Orte', {
+                                    autoLoad: true,
+                                    remoteFilter: false
+                                });
+                        //     resultGrid.store.addListener('datachanged',
+                        //     function(store){
+                        //         var items = store.getData().items;
+                        //         for (var i=0; i< items.length; i++){
+                        //             var id = items[i].get(rowtarget.dataIndex);
+                            resultGrid.ortstore.addListener('load',
+                                resultGrid.down('map').addLocations,
+                                resultGrid.down('map')
+                            );
+                        }
                     }
                     //TODO error handling if search fails
                 }

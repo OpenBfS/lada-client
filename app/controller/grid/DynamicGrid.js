@@ -51,7 +51,6 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection();
         var i18n = Lada.getApplication().bundle;
-        var me = this;
         var columns = [];
         var columnNames = [];
         var visibleColumns = [];
@@ -397,6 +396,12 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                         record: Ext.create('Lada.model.MessprogrammKategorie')
                     });
                     win.show();
+                    break;
+                case 'ortId':
+                    Ext.create('Lada.view.window.Ort',{
+                        record: Ext.create('Lada.model.Ort', {ortTyp: 1}),
+                        parentWindow: grid
+                    }).show();
                     break;
             }
         }

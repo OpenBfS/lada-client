@@ -111,33 +111,31 @@ Ext.define('Lada.view.panel.Map', {
         var me = Ext.ComponentQuery.query('map')[0];
         me.map.removeInteraction(me.drawInteraction);
         event.feature.set('bez', 'neuer Ort');
-        clone = event.feature.clone();
+        var clone = event.feature.clone();
         clone.getGeometry().transform('EPSG:3857', 'EPSG:4326');
-        var parent = me.up('ortszuordnungwindow') || me.up('ortpanel');
-        var nId = '';
-        if (parent.probe) {
+        var parent = me.up('ortszuordnungwindow'); //TODO changed queryui
+        if (parent && parent.probe) {
             var mstId = parent.probe.get('mstId');
             var mst = Ext.data.StoreManager.get('messstellen');
             var ndx = mst.findExact('id', mstId);
-            nId = mst.getAt(ndx).get('netzbetreiberId');
+            var nId = mst.getAt(ndx).get('netzbetreiberId');
+            var koord_x = Math.round(clone.getGeometry().getCoordinates()[0] * 100000)/100000;
+            var koord_y = Math.round(clone.getGeometry().getCoordinates()[1] * 100000)/100000;
+            Ext.create('Lada.view.window.Ort', {
+                record: Ext.create('Lada.model.Ort',{
+                    netzbetreiberId: nId,
+                    koordXExtern: koord_x,
+                    koordYExtern: koord_y,
+                    kdaId: 4,
+                    ortTyp: 1
+                }),
+                parentWindow: parent
+            }).show();
+            me.map.removeLayer(me.temporaryLayer);
         }
-        var koord_x = Math.round(clone.getGeometry().getCoordinates()[0] * 100000)/100000;
-        var koord_y = Math.round(clone.getGeometry().getCoordinates()[1] * 100000)/100000;
-        Ext.create('Lada.view.window.Ort', {
-            record: Ext.create('Lada.model.Ort',{
-                netzbetreiberId: nId,
-                koordXExtern: koord_x,
-                koordYExtern: koord_y,
-                kdaId: 4,
-                ortTyp: 1
-            }),
-            parentWindow: parent
-        }).show();
-        me.map.removeLayer(me.temporaryLayer);
     },
 
     addLocations: function(locationStore) {
-        var me = this;
         if (!this.featureLayer) {
             this.initFeatureLayer();
         }
@@ -205,9 +203,14 @@ Ext.define('Lada.view.panel.Map', {
             }),
             maxZoom: 18
         });
-
-        var target = this.getTargetEl()? this.getTargetEl() : this.element;
-        this.mapOptions.target= target.dom.id;
+        var target = null;
+        var parent = this.up('ortszuordnungwindow');
+        if (parent) {
+            target = this.getTargetEl()? this.getTargetEl() : this.element;
+        } else {
+            target = this.getTargetEl();
+        }
+        this.mapOptions.target = target.dom.childNodes[0].childNodes[0];
         this.mapOptions.view = new ol.View({
             center: [1160000,6694000],
             zoom: 6,
