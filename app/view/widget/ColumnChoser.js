@@ -176,8 +176,8 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             if ( gcv_items[i].get('visible') === true) {
                 var pos = -1;
                 for (var j=0; j < taritems.length; j++) {
-                    if (taritems[j].get('columnIndex') === gcv_items[i].get(
-                        'columnIndex')
+                    if (taritems[j].get('gridColumnId') === gcv_items[i].get(
+                        'gridColumnId')
                     ) {
                         pos = j;
                         break;

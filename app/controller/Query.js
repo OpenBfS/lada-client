@@ -114,7 +114,7 @@ Ext.define('Lada.controller.Query', {
             messStellesIds: this.getMessStellenUnique(),
             clonedFrom: cquery.get('id')
         });
-        panel.store.add([newrecord]);
+        panel.store.add(newrecord);
         cbox.setStore(panel.store);
         cbox.select(newrecord);
         this.changeCurrentQuery(cbox);
@@ -204,7 +204,6 @@ Ext.define('Lada.controller.Query', {
             } else {
                 qp.down('cbox[name=messStellesIds]').setValue('');
             }
-            this.loadGridColumnStore(combobox);
             qp.down('button[action=newquery]').setDisabled(newquery.phantom);
             qp.down('button[action=delquery]').setDisabled(
                 this.isQueryReadonly(newquery));
@@ -264,7 +263,7 @@ Ext.define('Lada.controller.Query', {
 
     reset: function(button) {
         var panel = button.up('querypanel');
-        var qid = '';
+        var qid = null;
         var rec = panel.getForm().getRecord();
         if (rec.phantom) {
             qid = rec.get('clonedFrom');
@@ -560,10 +559,11 @@ Ext.define('Lada.controller.Query', {
             panel.down('cbox[name=activefilters]').store.removeAll();
             panel.down('cbox[name=activefilters]').setValue('');
             panel.down('cbox[name=messStellesIds]').setValue('');
+            gcs.removeAll();
         } else {
             var qid = null;
             if (panel.getForm().getRecord().phantom) {
-                qid = panel.getForm().getRecord().clonedFrom;
+                qid = panel.getForm().getRecord().get('clonedFrom');
             } else {
                 qid = panel.getForm().getRecord().get('id');
             }
@@ -670,7 +670,7 @@ Ext.define('Lada.controller.Query', {
                 cb.setStore(qp.store);
                 var newrec = qp.store.findRecord('id', current,
                     false,false,false,true);
-                if (newrec !== null) {
+                if (newrec) {
                     cb.select(newrec);
                 } else {
                     cb.clearValue();
