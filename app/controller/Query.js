@@ -141,13 +141,8 @@ Ext.define('Lada.controller.Query', {
                                 var combobox = qp.down('combobox[name=selectedQuery]');
                                 qp.store.reload();
                                 combobox.setStore(qp.store);
-                                var firstEntry = qp.store.getAt(0);
-                                if (!firstEntry) {
-                                    qp.down('checkbox[name=ownqueries]').setValue(false);
-                                    qp.down('checkbox[name=ownqueries]').resetOriginalValue();
-                                    firstEntry = qp.store.getAt(0);
-                                }
-                                combobox.select(qp.store.getAt(0));
+                                combobox.select(null);
+                                this.changeCurrentQuery(combobox);
                                 qp.down('fieldset[name=querydetails]').collapse();
                             }
                         });
