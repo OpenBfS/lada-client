@@ -132,6 +132,7 @@ Ext.define('Lada.controller.Query', {
             return;
         }
         if ( (Lada.userId === query.get('userId'))) {
+            var me = this;
             var i18n = Lada.getApplication().bundle;
             Ext.MessageBox.confirm(i18n.getMsg('delete'),
                 i18n.getMsg('delete.query'), function(btn) {
@@ -142,7 +143,7 @@ Ext.define('Lada.controller.Query', {
                                 qp.store.reload();
                                 combobox.setStore(qp.store);
                                 combobox.select(null);
-                                this.changeCurrentQuery(combobox);
+                                me.changeCurrentQuery(combobox);
                                 qp.down('fieldset[name=querydetails]').collapse();
                             }
                         });
