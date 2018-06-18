@@ -207,12 +207,19 @@ Ext.define('Lada.controller.Query', {
     },
 
     saveQuery: function(button) {
+        var me = this;
         var qp = button.up('querypanel');
         var record = qp.getForm().getRecord();
+        var values = qp.getForm().getFieldValues(true);
+        var fv = Object.keys(values);
+        for (var i=0; i< fv.length; i++) {
+            record.set(fv[i], values[fv[i]]);
+        }
         if (record.phantom) {
             record.set('id', null);
             record.set('userId', Lada.userId);
         }
+        button.setDisabled(true);
         record.save({
             success: function(rec, response) {
                 var json = Ext.decode(response.getResponse().responseText);
@@ -234,6 +241,8 @@ Ext.define('Lada.controller.Query', {
                 qp.store.load({callback: function() {
                     qp.down('combobox[name=selectedQuery]').setStore(qp.store);
                     qp.down('combobox[name=selectedQuery]').select(newId);
+                    me.loadGridColumnStore(button);
+                    button.setDisabled(false);
                 }});
             },
             failure: function(rec, response) {
@@ -251,8 +260,11 @@ Ext.define('Lada.controller.Query', {
         } else {
             qid = rec.get('id');
         }
-        panel.getForm().loadRecord(panel.store.getById(qid));
-        panel.store.remove(rec);
+        panel.down('combobox[name=selectedQuery]').select(qid);
+        if (rec.phantom) {
+            panel.store.remove(rec);
+        }
+        panel.down('button[action=newquery]').setDisabled(false);
         this.loadGridColumnStore(button);
     },
 
