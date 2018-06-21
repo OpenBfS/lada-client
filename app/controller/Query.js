@@ -119,6 +119,7 @@ Ext.define('Lada.controller.Query', {
         cbox.select(newrecord);
         this.changeCurrentQuery(cbox);
         panel.down('fieldset[name=querydetails]').setCollapsed(false);
+        this.saveQuery(button);
     },
 
     expandDetails: function(button) {
@@ -173,17 +174,13 @@ Ext.define('Lada.controller.Query', {
             groupstore.removeAll();
             qp.down('button[action=editquery]').setDisabled(false);
             var newMst = newquery.get('messStellesIds');
-            if (newMst !== null) {
-                for (var i = 0; i < newMst.length; i++) {
-                    var mst = mst_store.getById(newMst[i]);
-                    var mst_name = mst ? mst.get('messStelle') : newMst[i];
-                    groupstore.add(
-                        Ext.create('Lada.model.QueryGroup', {
-                            messStellesIds: newMst[i],
-                            name: mst_name
-                        })
-                    );
-                }
+            for ( var i = 0; i < mst_store.data.items.length; i++){
+                groupstore.add(
+                    Ext.create('Lada.model.QueryGroup', {
+                        messStellesIds: mst_store.data.items[i].get('id'),
+                        mst_name: mst_store.data.items[i].get('beschreibung')
+                    })
+                )
             }
             if (this.isQueryReadonly(newquery) === false) {
                 for (var j =0; j < Lada.mst.length; j++) {

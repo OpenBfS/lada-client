@@ -75,6 +75,7 @@ Ext.application({
         'Lada.store.OrtTyp',
         'Lada.store.KoordinatenArt',
         'Lada.model.MessstelleLabor',
+        'Lada.model.Messstelle',
         'Lada.model.GenericResults',
         'Lada.model.Column',
         'Lada.model.QueryGroup',
