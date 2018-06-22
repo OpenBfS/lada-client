@@ -79,6 +79,7 @@ Ext.define('Lada.controller.Query', {
             }
         });
         this.resultStore = Ext.StoreManager.get('GenericResults');
+
     },
 
     listAllQueries: function(checkbox, newval) {
@@ -165,24 +166,15 @@ Ext.define('Lada.controller.Query', {
             qp.down('button[action=delquery]').setDisabled(true);
             qp.down('button[action=save]').setDisabled(true);
         } else {
-            var mst_store = Ext.data.StoreManager.get('messstellen');
+
             combobox.resetOriginalValue();
             qp.getForm().loadRecord(newquery);
             this.loadGridColumnStore(combobox);
-            var groupstore = qp.down('cbox[name=messStellesIds]').down(
-                'tagfield').getStore();
-            groupstore.removeAll();
+
             qp.down('button[action=editquery]').setDisabled(false);
             var newMst = newquery.get('messStellesIds');
-            for ( var i = 0; i < mst_store.data.items.length; i++){
-                groupstore.add(
-                    Ext.create('Lada.model.QueryGroup', {
-                        messStellesIds: mst_store.data.items[i].get('id'),
-                        mst_name: mst_store.data.items[i].get('beschreibung')
-                    })
-                )
-            }
-            if (this.isQueryReadonly(newquery) === false) {
+
+            /* if (this.isQueryReadonly(newquery) === false) {
                 for (var j =0; j < Lada.mst.length; j++) {
                     if (groupstore.findRecord('messStelle', Lada.mst[j], false,
                         false, false, true) === null) {
@@ -196,7 +188,7 @@ Ext.define('Lada.controller.Query', {
                         );
                     }
                 }
-            }
+            }*/
             if (newMst) {
                 qp.down('cbox[name=messStellesIds]').setValue(newMst);
             } else {

@@ -12,6 +12,7 @@
 Ext.define('Lada.view.QueryPanel', {
     extend: 'Ext.form.Panel',
     alias: 'widget.querypanel',
+    id: 'querypanelid',
     model: 'Lada.model.Query',
     requires: [
         'Lada.view.widget.ColumnChoser',
@@ -145,6 +146,7 @@ Ext.define('Lada.view.QueryPanel', {
             multiSelect: true,
             labelWidth: 125,
             fieldLabel: 'query.groups',
+            queryMode: 'local',
             store: Ext.create('Ext.data.Store',{
                 model: 'Lada.model.QueryGroup'
             }),
@@ -279,6 +281,24 @@ Ext.define('Lada.view.QueryPanel', {
                 selquery.fireEvent('select', selquery);
             }
         });
+        //Init messstellen data
+        var mst_store = Ext.data.StoreManager.get('messstellen');
+        mst_store.load({
+            scope: this,
+            callback: function(records){
+                var qp = this;
+                var groupstore = qp.down('cbox[name=messStellesIds]').down(
+                    'tagfield').getStore();
+                for ( var i = 0; i < records.length; i++){
+                    groupstore.add(
+                        Ext.create('Lada.model.QueryGroup', {
+                            messStellesIds: records[i].get('id'),
+                            mst_name:records[i].get('beschreibung')
+                        })
+                    )
+                }        
+            }
+        })
     },
 
     setGridColumnStore: function(userQueryId, baseQueryId) {

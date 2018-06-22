@@ -36,6 +36,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     /** additional non-generic buttons */
     toolbarbuttons: [],
 
+    /** path to an icon used for 'open' buttons */
+    openIconPath: 'img/document-open.png',
+
     /** The untranslated i18n-Message for a grid title*/
     title: null,
 
@@ -54,8 +57,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     initComponent: function() {
-        var i18n = Lada.getApplication().bundle;
-        this.emptyText = i18n.getMsg(this.emptyText);
+        this.i18n = Lada.getApplication().bundle;
+        this.emptyText = this.i18n.getMsg(this.emptyText);
         this.selModel = Ext.create('Ext.selection.CheckboxModel', {
             checkOnly: true,
             injectCheckbox: 1
@@ -64,10 +67,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     setToolbar: function() {
-        var i18n = Lada.getApplication().bundle;
+        this.i18n = Lada.getApplication().bundle;
         var tbcontent = [];
         if (this.title) {
-            this.title = i18n.getMsg(this.title);
+            this.title = this.i18n.getMsg(this.title);
         }
         tbcontent.push('->');
         if (this.toolbarbuttons && this.toolbarbuttons.length) {
@@ -79,7 +82,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             && Ext.Array.contains(Lada.funktionen, 4)
         ) {
             tbcontent.push({
-                text: i18n.getMsg('orte.new'),
+                text: this.i18n.getMsg('orte.new'),
                 icon: 'resources/img/svn-commit.png',
                 action: 'addMap',
                 needsSelection: false,
@@ -88,7 +91,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         }
         if (this.printable) {
             tbcontent.push({
-                text: i18n.getMsg('button.print'),
+                text: this.i18n.getMsg('button.print'),
                 icon: 'resources/img/printer.png',
                 action: 'print',
                 needsSelection: true,
@@ -97,7 +100,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         }
         if (this.exportable) {
             tbcontent.push({
-                text: i18n.getMsg('export.button'),
+                text: this.i18n.getMsg('export.button'),
                 icon: 'resources/img/svn-update.png',
                 action: 'gridexport',
                 needsSelection: true,
@@ -113,7 +116,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 && Ext.Array.contains(Lada.funktionen, 4)
             )) {
             tbcontent.push({
-                text: i18n.getMsg('add'),
+                text: this.i18n.getMsg('add'),
                 icon: 'resources/img/svn-update.png',
                 action: 'genericadd',
                 needsSelection: false,
@@ -129,7 +132,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             )) {
 
             tbcontent.push({
-                text: i18n.getMsg('button.deleteseleted'),
+                text: this.i18n.getMsg('button.deleteseleted'),
                 icon: 'resources/img/svn-update.png',
                 action: 'genericdelete',
                 needsSelection: true,
@@ -163,12 +166,12 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             displayInfo: true
         }]);
         if (this.rowtarget.dataType === 'ortId') {
-            var i18n = Lada.getApplication().bundle;
+            this.i18n = Lada.getApplication().bundle;
             var map = Ext.create('Lada.view.panel.Map', {
                 collapsible: true,
                 minWidth: 400,
                 dock: 'right',
-                title: i18n.getMsg('map.title'),
+                title: this.i18n.getMsg('map.title'),
                 externalOrteStore: false
             });
             this.addDocked(map);
@@ -230,7 +233,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         this.toolbarbuttons = [];
         var resultColumns = [];
         var fields = [];
-        var i18n = Lada.getApplication().bundle;
+        this.i18n = Lada.getApplication().bundle;
         fields.push(new Ext.data.Field({
             name: 'readonly'
         }));
@@ -288,518 +291,60 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 dataIndex: orig_column.get('dataIndex'),
                 name: orig_column.get('name')
             };
-            var openIconPath = 'img/document-open.png';
             var colImg = null;
             switch (datatype.name) {
                 case 'probeId':
-                    this.toolbarbuttons.push({
-                        text: i18n.getMsg('button.import'),
-                        icon: 'resources/img/svn-commit.png',
-                        action: 'importprobe',
-                        needsSelection: false,
-                        disabled: false
-                    });
-                    this.toolbarbuttons.push({
-                        text: i18n.getMsg('button.printsheet'),
-                        icon: 'resources/img/printer.png',
-                        action: 'printSheet',
-                        needsSelection: true,
-                        disabled: true
-                    });
-                    colImg = Ext.getResourcePath(openIconPath, null, null);
-                    col.xtype = 'widgetcolumn';
-                    col.widget = {
-                        xtype: 'button',
-                        icon: colImg,
-                        width: '16px',
-                        height: '16px',
-                        userCls: 'widget-column-button',
-                        tooltip: i18n.getMsg('typedgrid.tooltip.probeid'),
-                        hidden: true,
-                        listeners: {
-                            click: function(button) {
-                                var id = Number(button.text);
-                                button.getEl().swallowEvent(['click', 'dblclick'], true);
-                                Lada.model.Probe.load(id, {
-                                    scope: this,
-                                    callback: function(record, operation, success) {
-                                        if (success) {
-                                            var win = Ext.create('Lada.view.window.ProbeEdit', {
-                                                record: record,
-                                                style: 'z-index: -1;'
-                                            });
-                                            win.setPosition(30);
-                                            win.show();
-                                            win.initData();
-                                        }
-                                    }
-                                });
-                            },
-                            textchange: function(button, oldval, newval) {
-                                if (!newval || newval === '') {
-                                    button.hide();
-                                } else {
-                                    button.show();
-                                }
-                            }
-                        }
-                    };
+                    this.generateProbeColumn(colImg, col);
                     break;
                 case 'messungId':
-                    this.toolbarbuttons.push({
-                        text: i18n.getMsg('statusSetzen'),
-                        icon: 'resources/img/mail-mark-notjunk.png',
-                        action: 'setstatus',
-                        needsSelection: true,
-                        disabled: true
-                    });
-                    colImg = Ext.getResourcePath(openIconPath, null, null);
-                    col.xtype = 'widgetcolumn';
-                    col.widget = {
-                        xtype: 'button',
-                        icon: colImg,
-                        width: '16px',
-                        height: '16px',
-                        userCls: 'widget-column-button',
-                        tooltip: i18n.getMsg('typedgrid.tooltip.messungid'),
-                        hidden: true,
-                        listeners: {
-                            click: function(button) {
-                                var id = Number(button.text);
-                                button.getEl().swallowEvent(['click', 'dblclick'], true);
-                                Lada.model.Messung.load(id, {
-                                    scope: this,
-                                    callback: function(record, operation, success) {
-                                        if (success) {
-                                            var messungRecord = record;
-                                            Lada.model.Probe.load(messungRecord.get('probeId'), {
-                                                scope: this,
-                                                callback: function(precord, poperation, psuccess) {
-                                                    var win = Ext.create('Lada.view.window.MessungEdit', {
-                                                        probe: precord,
-                                                        record: record,
-                                                        style: 'z-index: -1;'
-                                                    });
-                                                    win.initData();
-                                                    win.show();
-                                                }
-                                            });
-                                        }
-                                    }
-                                });
-                            },
-                            textchange: function(button, oldval, newval) {
-                                if (!newval || newval == '') {
-                                    button.hide();
-                                } else {
-                                    button.show();
-                                }
-                            }
-                        }
-                    };
+                    this.generateMessungColumns(colImg, col);
                     break;
                 case 'mpId':
-                    if ( Ext.Array.contains(Lada.funktionen, 4)) {
-                        this.toolbarbuttons.push({
-                            text: i18n.getMsg('button.generateProben'),
-                            icon: 'resources/img/view-time-schedule-insert.png',
-                            action: 'genProbenFromMessprogramm',
-                            needsSelection: true,
-                            disabled: true
-                        });
-                    }
-                    colImg = Ext.getResourcePath(openIconPath, null, null);
-                    col.xtype = 'widgetcolumn';
-                    col.widget = {
-                        xtype: 'button',
-                        icon: colImg,
-                        width: '16px',
-                        height: '16px',
-                        userCls: 'widget-column-button',
-                        tooltip: i18n.getMsg('typedgrid.tooltip.mprid'),
-                        hidden: true,
-                        listeners: {
-                            click: function(button) {
-                                var id = button.getText();
-                                button.getEl().swallowEvent(['click', 'dblclick'], true);
-                                Lada.model.Messprogramm.load(id, {
-                                    success: function(record) {
-                                        var win = Ext.create(
-                                            'Lada.view.window.Messprogramm', {
-                                                record: record});
-                                        win.show();
-                                    }
-                                });
-                            },
-                            textchange: function(button, oldval, newval) {
-                                if (!newval || newval === '') {
-                                    button.hide();
-                                } else {
-                                    button.show();
-                                }
-                            }
-                        }
-                    };
+                    this.generateMessprogrammColumns(colImg, col);
                     break;
                 case 'ortId':
-                    colImg = Ext.getResourcePath(openIconPath, null, null);
-                    col.xtype = 'widgetcolumn';
-                    col.widget = {
-                        xtype: 'button',
-                        icon: colImg,
-                        width: '16px',
-                        height: '16px',
-                        userCls: 'widget-column-button',
-                        tooltip: i18n.getMsg('typedgrid.tooltip.ortid'),
-                        hidden: true,
-                        listeners: {
-                            click: function(button) {
-                                var id = button.getText();
-                                button.getEl().swallowEvent(['click', 'dblclick'], true);
-                                Lada.model.Ort.load(id, {
-                                    success: function(record) {
-                                        var win = Ext.create('Lada.view.window.Ort', {
-                                            record: record
-                                        });
-                                        win.show();
-                                    }
-                                });
-                            },
-                            textchange: function(button, oldval, newval) {
-                                if (!newval || newval === '') {
-                                    button.hide();
-                                } else {
-                                    button.show();
-                                }
-                            }
-                        }
-                    };
+                    this.generateOrtColumns(colImg, col);
                     break;
                 case 'geom':
-                    colImg = Ext.getResourcePath('img/document-open.png', null, null);
-                    col.xtype = 'widgetcolumn';
-                    col.widget = {
-                        xtype: 'button',
-                        icon: colImg,
-                        width: '16px',
-                        height: '16px',
-                        userCls: 'widget-column-button',
-                        tooltip: i18n.getMsg('typedgrid.tooltip.geometry'),
-                        hidden: true,
-                        listeners: {
-                            click: function(button) {
-                                button.getEl().swallowEvent(['click', 'dblclick'], true);
-                                var geom = button.geom;
-                                var mapWin = Ext.create('Lada.view.window.Map', {
-                                    geom: geom
-                                });
-                                mapWin.show();
-                            },
-                            textchange: function(button, oldval, newval) {
-                                button.geom = newval;
-                                button.text = '';
-                                button.tooltip = newval;
-                                if (!newval || newval == '') {
-                                    button.hide();
-                                } else {
-                                    button.show();
-                                }
-                            }
-                        }
-                    };
+                    this.generateGeomColumns(colImg, col);
                     break;
                 case 'date':
-                    curField.depends = orig_column.dataIndex;
-
-                    col.xtype = 'datecolumn';
-                    col.format = orig_column.get('dataType').format;
-                    col.renderer = function(value, cell) {
-                        if (!value || value === '') {
-                            return '';
-                        }
-                        var format = cell.column.format;
-                        var dt='';
-                        if (!isNaN(value)) {
-                            dt = Ext.Date.format(new Date(value), format);
-                        }
-                        return dt;
-                    };
-
+                    this.generateDateColumns(curField, orig_column, col);
                     break;
                 case 'number':
-                    col.xtype = 'numbercolumn';
-                    col.format = orig_column.get('dataType').format;
-                    col.renderer = function(value, cell) {
-                        if (!value) {
-                            return '';
-                        }
-                        var format = cell.column.format;
-                        if (isNaN (value)) {
-                            if (value[0] === '<' ) {
-                                if (format === 'e') {
-                                    return '< ' + String(parseInt(
-                                        value.substring(1),10).toExponential());
-                                } else {
-                                    return '< ' + String(
-                                        Ext.util.Format.number(value, format));
-                                }
-                            } else {
-                                return value;
-                            }
-                        }
-                        if (format === 'e') {
-                            return parseFloat(value).toExponential();
-                        } else {
-                            return Ext.util.Format.number(value, format);
-                        }
-                    };
+                    this.generateNumberColumns(orig_column, col);
                     break;
                 case 'boolean':
-                    col.xtype='gridcolumn';
-                    col.renderer = function(value) {
-                        if (value === true) {
-                            return i18n.getMsg('true');
-                        } else if (value === false) {
-                            return i18n.getMsg('false');
-                        } else {
-                            return '';
-                        }
-                    };
+                    this.generateBooleanColumns(col);
                     break;
                 case 'statusstfe':
-                    col.xtype='gridcolumn';
-                    col.renderer = function(value) {
-                        if (!value) {
-                            return '';
-                        }
-                        var st = Ext.data.StoreManager.get('statusstufe');
-                        var rec = st.findRecord('id', value, false,false,
-                            false,true);
-                        if (!rec) {
-                            return value;
-                        }
-                        if (rec.get('stufe') !== undefined) {
-                            return rec.get('stufe');
-                        }
-                        return '';
-                    };
+                    this.generateStatusStufeColumns(col);
                     break;
                 case 'umwbereich':
-                    col.xtype='gridcolumn';
-                    col.renderer = function(value) {
-                        if (!value) {
-                            return '';
-                        }
-                        var st = Ext.data.StoreManager.get('umwelt');
-                        var rec = st.findRecord('id', value, false,false,
-                            false,true);
-                        if (!rec) {
-                            return value;
-                        }
-                        if (rec.get('umweltBereich') !== undefined) {
-                            return rec.get('umweltBereich');
-                        }
-                        return '';
-                    };
+                    this.generateUmweltbereichColumns(col);
                     break;
                 case 'status':
-                    col.xtype='gridcolumn';
-                    col.renderer = function(value) {
-                        if (!value) {
-                            return '';
-                        }
-                        var st = Ext.data.StoreManager.get('statuswerte');
-                        var rec = st.findRecord('id', value, false,false,
-                            false,true);
-                        if (!rec) {
-                            return value;
-                        }
-                        if (rec.get('wert') !== undefined) {
-                            return rec.get('wert');
-                        }
-                        return '';
-                    };
+                    this.generateStatusColumns(col);
                     break;
                 case 'egem':
-                    col.xtype='gridcolumn';
-                    col.renderer = function(value) {
-                        if (!value) {
-                            return '';
-                        }
-                        var st = Ext.data.StoreManager.get(
-                            'verwaltungseinheitenwidget');
-                        var rec = st.findRecord('id', value, false, false,
-                            false, true);
-                        if (!rec) {
-                            return value;
-                        }
-                        if (rec.get('bezeichnung') !== undefined) {
-                            return rec.get('bezeichnung');
-                        }
-                        return '';
-                    };
+                    this.generateEgemColumns(col);
                     break;
                 case 'netzbetr':
-                    col.xtype='gridcolumn';
-                    col.renderer = function(value) {
-                        if (!value) {
-                            return '';
-                        }
-                        var st = Ext.data.StoreManager.get('netzbetreiber');
-                        var rec = st.findRecord('id', value, false,false,
-                            false,true);
-                        if (!rec) {
-                            return value;
-                        }
-                        if (rec.get('netzbetreiber') !== undefined) {
-                            return rec.get('netzbetreiber');
-                        }
-                        return '';
-                    };
+                    this.generateNetzbetreiberColumns(col);
                     break;
                 case 'datenbasis':
-                    col.xtype='gridcolumn';
-                    col.renderer = function(value) {
-                        if (!value) {
-                            return '';
-                        }
-                        var st = Ext.data.StoreManager.get('datenbasis');
-                        var rec = st.findRecord('id', value, false,false,
-                            false,true);
-                        if (!rec) {
-                            return value;
-                        }
-                        if (rec.get('datenbasis') !== undefined) {
-                            return rec.get('datenbasis');
-                        }
-                        return '';
-                    };
+                    this.generateDatenbasisColumns(col);
                     break;
                 case 'probenart':
-                    col.xtype='gridcolumn';
-                    col.renderer = function(value) {
-                        if (!value) {
-                            return '';
-                        }
-                        var st = Ext.data.StoreManager.get('probenarten');
-                        var rec = st.findRecord('id', value, false,false,
-                            false,true);
-                        if (!rec) {
-                            return value;
-                        }
-                        if (rec.get('datenbasis') !== undefined) {
-                            return rec.get('datenbasis');
-                        }
-                        return '';
-                    };
+                    this.generateProbenartColumns(col);
                     break;
-
                 case 'staat':
-                    col.xtype='gridcolumn';
-
-                    col.renderer = function(value) {
-                        if (!value) {
-                            return '';
-                        }
-                        var st = Ext.data.StoreManager.get('staaten');
-                        var rec = st.findRecord('id', value, false,false,
-                            false,true);
-                        if (!rec) {
-                            return value;
-                        }
-                        if (rec.get('staatIso') !== undefined) {
-                            return rec.get('staatIso');
-                        }
-                        return '';
-                    };
+                    this.generateStaatColumns(col);
                     break;
                 case 'pnehmer':
                 case 'dsatzerz':
                 case 'mprkat':
-                    var clicklistener = null;
-                    var tooltip = '';
-
-                    if (datatype.name === 'pnehmer') {
-                        tooltip = i18n.getMsg('typedgrid.tooltip.pnehmer');
-                        clicklistener = function(button) {
-                            var id = Number(button.text);
-                            button.getEl().swallowEvent(['click', 'dblclick'], true);
-                            Lada.model.Probenehmer.load(id, {
-                                scope: this,
-                                callback: function(record, operation, success) {
-                                    if (success) {
-                                        var win = Ext.create('Lada.view.window.Probenehmer', {
-                                            record: record,
-                                            style: 'z-index: -1;'
-                                        });
-                                        win.setPosition(30);
-                                        win.show();
-                                        win.initData();
-                                    }
-                                }
-                            });
-                        };
-                    } else if (datatype.name === 'dsatzerz') {
-                        tooltip = i18n.getMsg('typedgrid.tooltip.dsatzerz');
-                        clicklistener = function(button) {
-                            var id = Number(button.text);
-                            button.getEl().swallowEvent(['click', 'dblclick'], true);
-                            Lada.model.DatensatzErzeuger.load(id, {
-                                scope: this,
-                                callback: function(record, operation, success) {
-                                    if (success) {
-                                        var win = Ext.create('Lada.view.window.DatensatzErzeuger', {
-                                            record: record,
-                                            style: 'z-index: -1;'
-                                        });
-                                        win.setPosition(30);
-                                        win.show();
-                                        win.initData();
-                                    }
-                                }
-                            });
-                        };
-                    } else if (datatype.name === 'mprkat') {
-                        tooltip = i18n.getMsg('typedgrid.tooltip.mprkat');
-                        clicklistener = function(button) {
-                            var id = Number(button.text);
-                            button.getEl().swallowEvent(['click', 'dblclick'], true);
-                            Lada.model.MessprogrammKategorie.load(id, {
-                                scope: this,
-                                callback: function(record, operation, success) {
-                                    if (success) {
-                                        var win = Ext.create('Lada.view.window.MessprogrammKategorie', {
-                                            record: record,
-                                            style: 'z-index: -1;'
-                                        });
-                                        win.setPosition(30);
-                                        win.show();
-                                        win.initData();
-                                    }
-                                }
-                            });
-                        };
-                    }
-                    colImg = Ext.getResourcePath(openIconPath, null, null);
-                    col.xtype = 'widgetcolumn';
-                    col.widget = {
-                        xtype: 'button',
-                        icon: colImg,
-                        width: '16px',
-                        height: '16px',
-                        userCls: 'widget-column-button',
-                        tooltip: tooltip,
-                        listeners: {
-                            click: clicklistener,
-                            textchange: function(button, oldval, newval) {
-                                if (!newval || newval === '') {
-                                    button.hide();
-                                } else {
-                                    button.show();
-                                }
-                            }
-                        }
-                    };
+                    this.generateStammColumn(colImg, col, datatype);
                     break;
                 default:
                     col.xtype = 'gridcolumn';
@@ -816,7 +361,526 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         caf[0] = resultColumns;
         caf[1] = fields;
         return caf;
+    },
+
+    generateProbeColumn: function(colImg, col) {
+        this.toolbarbuttons.push({
+            text: this.i18n.getMsg('button.import'),
+            icon: 'resources/img/svn-commit.png',
+            action: 'importprobe',
+            needsSelection: false,
+            disabled: false
+        });
+        this.toolbarbuttons.push({
+            text: this.i18n.getMsg('button.printsheet'),
+            icon: 'resources/img/printer.png',
+            action: 'printSheet',
+            needsSelection: true,
+            disabled: true
+        });
+        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+        col.xtype = 'widgetcolumn';
+        col.widget = {
+            xtype: 'button',
+            icon: colImg,
+            width: '16px',
+            height: '16px',
+            userCls: 'widget-column-button',
+            tooltip: this.i18n.getMsg('typedgrid.tooltip.probeid'),
+            hidden: true,
+            listeners: {
+                click: function(button) {
+                    var id = Number(button.text);
+                    button.getEl().swallowEvent(['click', 'dblclick'], true);
+                    Lada.model.Probe.load(id, {
+                        scope: this,
+                        callback: function(record, operation, success) {
+                            if (success) {
+                                var win = Ext.create('Lada.view.window.ProbeEdit', {
+                                    record: record,
+                                    style: 'z-index: -1;'
+                                });
+                                win.setPosition(30);
+                                win.show();
+                                win.initData();
+                            }
+                        }
+                    });
+                },
+                textchange: function(button, oldval, newval) {
+                    if (!newval || newval === '') {
+                        button.hide();
+                    } else {
+                        button.show();
+                    }
+                }
+            }
+        };
+    },
+    generateMessungColumns: function(colImg, col) {
+        this.toolbarbuttons.push({
+            text: this.i18n.getMsg('statusSetzen'),
+            icon: 'resources/img/mail-mark-notjunk.png',
+            action: 'setstatus',
+            needsSelection: true,
+            disabled: true
+        });
+        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+        col.xtype = 'widgetcolumn';
+        col.widget = {
+            xtype: 'button',
+            icon: colImg,
+            width: '16px',
+            height: '16px',
+            userCls: 'widget-column-button',
+            tooltip: this.i18n.getMsg('typedgrid.tooltip.messungid'),
+            hidden: true,
+            listeners: {
+                click: function(button) {
+                    var id = Number(button.text);
+                    button.getEl().swallowEvent(['click', 'dblclick'], true);
+                    Lada.model.Messung.load(id, {
+                        scope: this,
+                        callback: function(record, operation, success) {
+                            if (success) {
+                                var messungRecord = record;
+                                Lada.model.Probe.load(messungRecord.get('probeId'), {
+                                    scope: this,
+                                    callback: function(precord, poperation, psuccess) {
+                                        var win = Ext.create('Lada.view.window.MessungEdit', {
+                                            probe: precord,
+                                            record: record,
+                                            style: 'z-index: -1;'
+                                        });
+                                        win.initData();
+                                        win.show();
+                                    }
+                                });
+                            }
+                        }
+                    });
+                },
+                textchange: function(button, oldval, newval) {
+                    if (!newval || newval == '') {
+                        button.hide();
+                    } else {
+                        button.show();
+                    }
+                }
+            }
+        };
+    },
+
+    generateMessprogrammColumns: function(colImg, col) {
+        if ( Ext.Array.contains(Lada.funktionen, 4)) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('button.generateProben'),
+                icon: 'resources/img/view-time-schedule-insert.png',
+                action: 'genProbenFromMessprogramm',
+                needsSelection: true,
+                disabled: true
+            });
+        }
+        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+        col.xtype = 'widgetcolumn';
+        col.widget = {
+            xtype: 'button',
+            icon: colImg,
+            width: '16px',
+            height: '16px',
+            userCls: 'widget-column-button',
+            tooltip: this.i18n.getMsg('typedgrid.tooltip.mprid'),
+            hidden: true,
+            listeners: {
+                click: function(button) {
+                    var id = button.getText();
+                    button.getEl().swallowEvent(['click', 'dblclick'], true);
+                    Lada.model.Messprogramm.load(id, {
+                        success: function(record) {
+                            var win = Ext.create(
+                                'Lada.view.window.Messprogramm', {
+                                    record: record});
+                            win.show();
+                        }
+                    });
+                },
+                textchange: function(button, oldval, newval) {
+                    if (!newval || newval === '') {
+                        button.hide();
+                    } else {
+                        button.show();
+                    }
+                }
+            }
+        };
+    },
+
+    generateOrtColumns: function(colImg, col) {
+        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+        col.xtype = 'widgetcolumn';
+        col.widget = {
+            xtype: 'button',
+            icon: colImg,
+            width: '16px',
+            height: '16px',
+            userCls: 'widget-column-button',
+            tooltip: this.i18n.getMsg('typedgrid.tooltip.ortid'),
+            hidden: true,
+            listeners: {
+                click: function(button) {
+                    var id = button.getText();
+                    button.getEl().swallowEvent(['click', 'dblclick'], true);
+                    Lada.model.Ort.load(id, {
+                        success: function(record) {
+                            var win = Ext.create('Lada.view.window.Ort', {
+                                record: record
+                            });
+                            win.show();
+                        }
+                    });
+                },
+                textchange: function(button, oldval, newval) {
+                    if (!newval || newval === '') {
+                        button.hide();
+                    } else {
+                        button.show();
+                    }
+                }
+            }
+        };
+    },
+
+    generateGeomColumns: function(colImg, col) {
+        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+        col.xtype = 'widgetcolumn';
+        col.widget = {
+            xtype: 'button',
+            icon: colImg,
+            width: '16px',
+            height: '16px',
+            userCls: 'widget-column-button',
+            tooltip: this.i18n.getMsg('typedgrid.tooltip.geometry'),
+            hidden: true,
+            listeners: {
+                click: function(button) {
+                    button.getEl().swallowEvent(['click', 'dblclick'], true);
+                    var geom = button.geom;
+                    var mapWin = Ext.create('Lada.view.window.Map', {
+                        geom: geom
+                    });
+                    mapWin.show();
+                },
+                textchange: function(button, oldval, newval) {
+                    button.geom = newval;
+                    button.text = '';
+                    button.tooltip = newval;
+                    if (!newval || newval == '') {
+                        button.hide();
+                    } else {
+                        button.show();
+                    }
+                }
+            }
+        };
+    },
+
+    generateDateColumns: function(curField, orig_column, col) {
+        curField.depends = orig_column.dataIndex;
+
+        col.xtype = 'datecolumn';
+        col.format = orig_column.get('dataType').format;
+        col.renderer = function(value, cell) {
+            if (!value || value === '') {
+                return '';
+            }
+            var format = cell.column.format;
+            var dt='';
+            if (!isNaN(value)) {
+                dt = Ext.Date.format(new Date(value), format);
+            }
+            return dt;
+        };
+    },
+
+    generateNumberColumns: function(orig_column, col) {
+        col.xtype = 'numbercolumn';
+        col.format = orig_column.get('dataType').format;
+        col.renderer = function(value, cell) {
+            if (!value) {
+                return '';
+            }
+            var format = cell.column.format;
+            if (isNaN (value)) {
+                if (value[0] === '<' ) {
+                    if (format === 'e') {
+                        return '< ' + String(parseInt(
+                            value.substring(1),10).toExponential());
+                    } else {
+                        return '< ' + String(
+                            Ext.util.Format.number(value, format));
+                    }
+                } else {
+                    return value;
+                }
+            }
+            if (format === 'e') {
+                return parseFloat(value).toExponential();
+            } else {
+                return Ext.util.Format.number(value, format);
+            }
+        };
+    },
+    generateBooleanColumns: function(col) {
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (value === true) {
+                return this.i18n.getMsg('true');
+            } else if (value === false) {
+                return this.i18n.getMsg('false');
+            } else {
+                return '';
+            }
+        };
+    },
+    generateStatusStufeColumns: function(col){
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get('statusstufe');
+            var rec = st.findRecord('id', value, false,false,
+                false,true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('stufe') !== undefined) {
+                return rec.get('stufe');
+            }
+            return '';
+        };
+    },
+    generateUmweltbereichColumns: function(col) {
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get('umwelt');
+            var rec = st.findRecord('id', value, false,false,
+                false,true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('umweltBereich') !== undefined) {
+                return rec.get('umweltBereich');
+            }
+            return '';
+        };
+    },
+    generateStatusColumns: function(col) {
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get('statuswerte');
+            var rec = st.findRecord('id', value, false,false,
+                false,true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('wert') !== undefined) {
+                return rec.get('wert');
+            }
+            return '';
+        };
+    },
+
+    generateEgemColumns: function(col) {
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get(
+                'verwaltungseinheitenwidget');
+            var rec = st.findRecord('id', value, false, false,
+                false, true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('bezeichnung') !== undefined) {
+                return rec.get('bezeichnung');
+            }
+            return '';
+        };
+    },
+
+    generateNetzbetreiberColumns: function(col) {
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get('netzbetreiber');
+            var rec = st.findRecord('id', value, false,false,
+                false,true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('netzbetreiber') !== undefined) {
+                return rec.get('netzbetreiber');
+            }
+            return '';
+        };
+    },
+
+    generateDatenbasisColumns: function(col) {
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get('datenbasis');
+            var rec = st.findRecord('id', value, false,false,
+                false,true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('datenbasis') !== undefined) {
+                return rec.get('datenbasis');
+            }
+            return '';
+        };
+    },
+
+    generateProbenartColumns: function(col) {
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get('probenarten');
+            var rec = st.findRecord('id', value, false,false,
+                false,true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('datenbasis') !== undefined) {
+                return rec.get('datenbasis');
+            }
+            return '';
+        };
+    },
+
+    generateStaatColumns: function(col) {
+        col.xtype='gridcolumn';
+
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get('staaten');
+            var rec = st.findRecord('id', value, false,false,
+                false,true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('staatIso') !== undefined) {
+                return rec.get('staatIso');
+            }
+            return '';
+        };
+    },
+
+    generateStammColumn: function(colImg, col, datatype) {
+        var clicklistener = null;
+        var tooltip = '';
+
+        if (datatype.name === 'pnehmer') {
+            tooltip = this.i18n.getMsg('typedgrid.tooltip.pnehmer');
+            clicklistener = function(button) {
+                var id = Number(button.text);
+                button.getEl().swallowEvent(['click', 'dblclick'], true);
+                Lada.model.Probenehmer.load(id, {
+                    scope: this,
+                    callback: function(record, operation, success) {
+                        if (success) {
+                            var win = Ext.create('Lada.view.window.Probenehmer', {
+                                record: record,
+                                style: 'z-index: -1;'
+                            });
+                            win.setPosition(30);
+                            win.show();
+                            win.initData();
+                        }
+                    }
+                });
+            };
+        } else if (datatype.name === 'dsatzerz') {
+            tooltip = this.i18n.getMsg('typedgrid.tooltip.dsatzerz');
+            clicklistener = function(button) {
+                var id = Number(button.text);
+                button.getEl().swallowEvent(['click', 'dblclick'], true);
+                Lada.model.DatensatzErzeuger.load(id, {
+                    scope: this,
+                    callback: function(record, operation, success) {
+                        if (success) {
+                            var win = Ext.create('Lada.view.window.DatensatzErzeuger', {
+                                record: record,
+                                style: 'z-index: -1;'
+                            });
+                            win.setPosition(30);
+                            win.show();
+                            win.initData();
+                        }
+                    }
+                });
+            };
+        } else if (datatype.name === 'mprkat') {
+            tooltip = this.i18n.getMsg('typedgrid.tooltip.mprkat');
+            clicklistener = function(button) {
+                var id = Number(button.text);
+                button.getEl().swallowEvent(['click', 'dblclick'], true);
+                Lada.model.MessprogrammKategorie.load(id, {
+                    scope: this,
+                    callback: function(record, operation, success) {
+                        if (success) {
+                            var win = Ext.create('Lada.view.window.MessprogrammKategorie', {
+                                record: record,
+                                style: 'z-index: -1;'
+                            });
+                            win.setPosition(30);
+                            win.show();
+                            win.initData();
+                        }
+                    }
+                });
+            };
+        }
+        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+        col.xtype = 'widgetcolumn';
+        col.widget = {
+            xtype: 'button',
+            icon: colImg,
+            width: '16px',
+            height: '16px',
+            userCls: 'widget-column-button',
+            tooltip: tooltip,
+            listeners: {
+                click: clicklistener,
+                textchange: function(button, oldval, newval) {
+                    if (!newval || newval === '') {
+                        button.hide();
+                    } else {
+                        button.show();
+                    }
+                }
+            }
+        };
     }
+
 
 });
 
