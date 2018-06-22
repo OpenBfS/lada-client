@@ -142,11 +142,12 @@ Ext.define('Lada.controller.Query', {
                         query.erase({
                             callback: function(record, operation, success) {
                                 var combobox = qp.down('combobox[name=selectedQuery]');
-                                qp.store.reload();
-                                combobox.setStore(qp.store);
-                                combobox.select(null);
-                                me.changeCurrentQuery(combobox);
-                                qp.down('fieldset[name=querydetails]').collapse();
+                                qp.store.load({callback: function() {
+                                    combobox.setStore(qp.store);
+                                    combobox.setValue(qp.store.getAt(0));
+                                    me.changeCurrentQuery(combobox);
+                                    qp.down('fieldset[name=querydetails]').collapse();
+                                }});
                             }
                         });
                     }
