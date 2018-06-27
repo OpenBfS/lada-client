@@ -41,9 +41,6 @@ Ext.define('Lada.controller.Query', {
             'querypanel button[action=newquery]': {
                 click: me.cloneQuery
             },
-            'querypanel button[action=editquery]': {
-                click: me.expandDetails
-            },
             'querypanel button[action=delquery]': {
                 click: me.deleteQuery
             },
@@ -163,7 +160,6 @@ Ext.define('Lada.controller.Query', {
             qp.getForm().reset(true);
             this.loadGridColumnStore(combobox);
             qp.down('button[action=newquery]').setDisabled(true);
-            qp.down('button[action=editquery]').setDisabled(true);
             qp.down('button[action=delquery]').setDisabled(true);
             qp.down('button[action=save]').setDisabled(true);
         } else {
@@ -172,7 +168,6 @@ Ext.define('Lada.controller.Query', {
             qp.getForm().loadRecord(newquery);
             this.loadGridColumnStore(combobox);
 
-            qp.down('button[action=editquery]').setDisabled(false);
             var newMst = newquery.get('messStellesIds');
 
             /* if (this.isQueryReadonly(newquery) === false) {
@@ -205,6 +200,7 @@ Ext.define('Lada.controller.Query', {
 
     saveQuery: function(button) {
         var me = this;
+        var i18n = Lada.getApplication().bundle;
         var qp = button.up('querypanel');
         var record = qp.getForm().getRecord();
         var values = qp.getForm().getFieldValues(true);
@@ -247,7 +243,7 @@ Ext.define('Lada.controller.Query', {
                 }});
             },
             failure: function(rec, response) {
-                //TODO error handling
+                Ext.Msg.alert(i18n.getMsg('query.error.save.title'), i18n.getMsg('query.error.save.message'))
             }
         });
     },
@@ -270,6 +266,7 @@ Ext.define('Lada.controller.Query', {
     },
 
     search: function(button) {
+        var i18n = Lada.getApplication().bundle;
         var qp = button.up('querypanel');
         var gcs = qp.gridColumnValueStore;
         var jsonData = {columns: []};
@@ -355,8 +352,9 @@ Ext.define('Lada.controller.Query', {
                                 resultGrid.down('map')
                             );
                         }
+                    } else {
+                        Ext.Msg.alert(i18n.getMsg('query.error.search.title'), i18n.getMsg('query.error.search.message'))
                     }
-                    //TODO error handling if search fails
                 }
             });
         }

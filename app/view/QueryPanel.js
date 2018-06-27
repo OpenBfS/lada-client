@@ -95,10 +95,6 @@ Ext.define('Lada.view.QueryPanel', {
             text: 'query.new',
             flex: 1
         },{
-            action: 'editquery',
-            text: 'query.edit',
-            flex: 1
-        },{
             action: 'delquery',
             text: 'delete',
             flex: 1,
@@ -242,7 +238,6 @@ Ext.define('Lada.view.QueryPanel', {
         this.down('checkbox[name=ownqueries]').boxLabel = i18n.getMsg('query.showown');
         this.down('fieldset[name=querydetails]').setTitle(i18n.getMsg('query.details'));
         this.down('button[action=newquery]').text = i18n.getMsg('query.new');
-        this.down('button[action=editquery]').text= i18n.getMsg('query.edit');
         this.down('button[action=delquery]').text = i18n.getMsg('delete');
         this.down('textfield[name=name]').fieldLabel = i18n.getMsg('query.name');
         this.down('textarea[name=description]').fieldLabel = i18n.getMsg('query.comment');
