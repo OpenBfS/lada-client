@@ -205,10 +205,15 @@ Ext.define('Lada.controller.Query', {
         var record = qp.getForm().getRecord();
         var values = qp.getForm().getFieldValues(true);
         var fv = Object.keys(values);
+
+        var queryUserFields = Ext.create('Lada.model.Query').fields;
         for (var i=0; i< fv.length; i++) {
-            if (fv[i] !== 'selectedQuery' && fv[i] !== 'activefilters') {
-                record.set(fv[i], values[fv[i]]);
-            }
+            //If field is in query model, append key and value to record
+            queryUserFields.forEach(function(element) {
+                if (element.getName() === fv[i]) {
+                    record.set(fv[i], values[fv[i]]);
+                }
+            });
         }
         record.set('messStellesIds', qp.down('cbox[name=messStellesIds]').getValue());
         if (record.phantom) {
@@ -244,6 +249,7 @@ Ext.define('Lada.controller.Query', {
             },
             failure: function(rec, response) {
                 Ext.Msg.alert(i18n.getMsg('query.error.save.title'), i18n.getMsg('query.error.save.message'))
+                button.setDisabled(false);
             }
         });
     },
