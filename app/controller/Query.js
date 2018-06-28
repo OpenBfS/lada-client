@@ -48,7 +48,7 @@ Ext.define('Lada.controller.Query', {
                 select: me.changeCurrentQuery
             },
             'querypanel button[action=save]': {
-                click: me.saveQuery
+                click: me.handleSaveClicked
             },
             'querypanel button[action=reset]': {
                 click: me.reset
@@ -113,11 +113,33 @@ Ext.define('Lada.controller.Query', {
             clonedFrom: cquery.get('id')
         });
         panel.store.add(newrecord);
+        var columnChooser = panel.down('columnchoser');
+        var columnValues = columnChooser.store.getData();
+        //Clone columns after query is saved
+        saveCallback = function(savedQuery) {
+            columnValues.each(function(item){
+                var clonedModel = Ext.create('Lada.model.GridColumn', {
+                    columnIndex: item.get('columnIndex'),
+                    gridColumnId: item.get('gridColumnId'),
+                    visible: item.get('visible'),
+                    sort: item.get('sort'),
+                    sortIndex: item.get('sortIndex'),
+                    filterActive: item.get('filterActive'),
+                    filterValue: item.get('filterValue')
+                })
+                clonedModel.set('id', null);
+                clonedModel.set('queryUserId', savedQuery.get('id'));
+                clonedModel.set('userId', null)
+                clonedModel.phantom = true;
+                clonedModel.save()
+            })
+        }
+
         cbox.setStore(panel.store);
         cbox.select(newrecord);
         this.changeCurrentQuery(cbox);
         panel.down('fieldset[name=querydetails]').setCollapsed(false);
-        this.saveQuery(button);
+        this.saveQuery(button, saveCallback);
     },
 
     expandDetails: function(button) {
@@ -141,6 +163,10 @@ Ext.define('Lada.controller.Query', {
                                 var combobox = qp.down('combobox[name=selectedQuery]');
                                 qp.store.load({callback: function() {
                                     combobox.setStore(qp.store);
+                                    if (combobox.store.getData().count() == 0) {
+                                        var checkbox = qp.down('checkbox[name=ownqueries]');
+                                        checkbox.setValue(false);
+                                    }
                                     combobox.setValue(qp.store.getAt(0));
                                     me.changeCurrentQuery(combobox);
                                     qp.down('fieldset[name=querydetails]').collapse();
@@ -198,7 +224,11 @@ Ext.define('Lada.controller.Query', {
         }
     },
 
-    saveQuery: function(button) {
+    handleSaveClicked: function(button) {
+        this.saveQuery(button);
+    },
+
+    saveQuery: function(button, callback) {
         var me = this;
         var i18n = Lada.getApplication().bundle;
         var qp = button.up('querypanel');
@@ -223,22 +253,17 @@ Ext.define('Lada.controller.Query', {
         button.setDisabled(true);
         record.save({
             success: function(rec, response) {
+                if (callback) {
+                    callback(rec);
+                }
+
                 var json = Ext.decode(response.getResponse().responseText);
                 var newId = json.data.id;
                 qp.getForm().loadRecord(rec);
                 var columns = qp.gridColumnValueStore.getData().items;
                 qp.gridColumnValueStore.proxy.extraParams = {};
                 for (var i=0; i < columns.length; i++) {
-                    columns[i].set('queryUserId', newId);
-                    if (columns[i].phantom) {
-                        // hack to avoid duplicate 'null' ids
-                        var tmpid = columns[i].get('id');
-                        columns[i].set('id', null);
-                        columns[i].save();
-                        columns[i].set('id', tmpid);
-                    } else {
-                        columns[i].save();
-                    }
+                    columns[i].save();
                 }
                 qp.store.load({callback: function() {
                     qp.down('combobox[name=selectedQuery]').setStore(qp.store);

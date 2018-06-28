@@ -192,6 +192,8 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
     },
 
     setStore: function(store, fixedcolumnstore) {
+        this.store = store;
+        this.fixedcolumnstore = fixedcolumnstore;
         var tstore = new Ext.data.Store({model: 'Lada.model.GridColumn'});
         var sstore = new Ext.data.Store({model: 'Lada.model.GridColumn'});
         if (store && fixedcolumnstore) {
@@ -213,6 +215,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                         name: fixeddata[i].get('name'),
                         dataIndex: fixeddata[i].get('dataIndex')
                     });
+                    store.add(col);
                     sstore.add(col);
                 }
             }
