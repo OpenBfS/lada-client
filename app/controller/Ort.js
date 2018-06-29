@@ -29,7 +29,7 @@ Ext.define('Lada.controller.Ort', {
     },
 
     activateDraw: function(button) {
-        var map = button.up('ortpanel').down('map');
+        var map = button.up('dynamicgrid').down('map');
         var record = Ext.create('Lada.model.Ort');
         map.activateDraw(record);
     },

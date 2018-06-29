@@ -193,8 +193,12 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     /**
      * Toggles the generic buttons in the toolbar
      **/
-    activateButtons: function(rowModel) {
+    activateButtons: function(rowModel, record) {
         var grid = rowModel.view.up('grid');
+        var map = Ext.ComponentQuery.query('map')[0];
+        if (map) {
+            map.fireEvent('selectfeature', record);
+        }
         this.buttonToggle(true, grid);
     },
 

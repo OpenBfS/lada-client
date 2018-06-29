@@ -43,6 +43,12 @@ Ext.define('Lada.view.panel.Map', {
      */
     initComponent: function() {
         this.initData();
+        this.on({
+            selectfeature: {
+                fn: this.selectFeature,
+                scope: this
+            }
+        })
         this.callParent(arguments);
     },
 
@@ -56,7 +62,7 @@ Ext.define('Lada.view.panel.Map', {
     /**
      * Select a feature by record (a Lada.model.Ort) and zoom to this Ort
      */
-    selectFeature: function(model, record) {
+    selectFeature: function(record) {
         if (!record || !record.get('id') || record.get('id') === '') {
             return;
         }
@@ -80,10 +86,7 @@ Ext.define('Lada.view.panel.Map', {
         this.map.getView().setCenter([feature.getGeometry().getCoordinates()[0],
             feature.getGeometry().getCoordinates()[1]]);
         this.map.getView().setZoom(12);
-        var ozw = this.up('ortszuordnungwindow');
-        if (ozw) {
-            ozw.down('ortszuordnungform').setOrt(null, record);
-        }
+
         //TODO: hideable main layer/make all except selected invisible
     },
 
@@ -108,7 +111,9 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     featureAdded: function(event) {
+        //Forward event
         var me = Ext.ComponentQuery.query('map')[0];
+        me.fireEvent('featureadded', event)
         me.map.removeInteraction(me.drawInteraction);
         event.feature.set('bez', 'neuer Ort');
         var clone = event.feature.clone();

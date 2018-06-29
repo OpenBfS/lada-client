@@ -12,6 +12,7 @@
 Ext.define('Lada.view.widget.DynamicGrid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.dynamicgrid',
+    id: 'dynamicgridid',
     requires: [
         'Lada.view.window.Map',
         'Ext.grid.column.Widget',
@@ -174,6 +175,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 title: this.i18n.getMsg('map.title'),
                 externalOrteStore: false
             });
+            map.on({
+                featureselected :{
+                    fn: this.selectRowByFeature,
+                    scope: this
+                },
+                featureadded: {
+                    fn: this.addOrt,
+                    scope: this
+                }
+            });
             this.addDocked(map);
         }
         var cbox = Ext.create('Lada.view.widget.PagingSize');
@@ -182,6 +193,28 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         this.down('pagingtoolbar').down('#refresh').hide();
         // this.on('select') zoom to map and select
         // });
+    },
+
+    selectRowByFeature: function(map, feature) {
+        var id = feature.get('id');
+        var record = this.store.getById(id);
+        this.getSelectionModel().select(record);
+    },
+
+    addOrt: function(event) {
+        var clone = event.feature.clone();
+        clone.getGeometry().transform('EPSG:3857', 'EPSG:4326');
+        var koord_x = Math.round(clone.getGeometry().getCoordinates()[0] * 100000)/100000;
+        var koord_y = Math.round(clone.getGeometry().getCoordinates()[1] * 100000)/100000;
+        Ext.create('Lada.view.window.Ort', {
+            record: Ext.create('Lada.model.Ort',{
+                //netzbetreiberId: nId,
+                koordXExtern: koord_x,
+                koordYExtern: koord_y,
+                kdaId: 4,
+                ortTyp: 1
+            })
+        }).show();
     },
 
     /**

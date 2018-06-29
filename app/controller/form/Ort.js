@@ -72,16 +72,9 @@ Ext.define('Lada.controller.form.Ort', {
                     formpanel.clearMessages();
                     formpanel.setMessages(json.errors, json.warnings);
                 }
-                if (ozw.ortstore) {
-                    ozw.ortstore.reload({
-                        callback: function() {
-                            var osg = ozw.down('ortstammdatengrid');
-                            osg.setStore(ozw.ortstore);
-                            ozw.down('map').addLocations(ozw.ortstore);
-                            me.afterSave(formpanel, json);
-                        }
-                    });
-                }
+                var dynamicgrid = Ext.getCmp('dynamicgridid');
+                dynamicgrid.store.add(newrecord);
+                dynamicgrid.getView().refresh();
             },
             failure: function(record, response) {
                 var i18n = Lada.getApplication().bundle;
