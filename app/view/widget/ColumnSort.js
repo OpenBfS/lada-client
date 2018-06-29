@@ -17,7 +17,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
         align: 'stretchmax'
     },
     requires: ['Lada.view.widget.Sort',
-        'Lada.store.GridColumn'
+        'Lada.store.GridColumnValue'
     ],
     margin: '20,0,0,10',
     title: null,
@@ -29,7 +29,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
         var cboxmodel = Ext.create('Ext.data.Model', {
             fields: [{name: 'name'}, {name: 'value'}]
         });
-        this.store = Ext.create('Lada.store.GridColumn');
+        this.store = Ext.create('Lada.store.GridColumnValue');
         var comboboxstore = Ext.create('Ext.data.Store', {
             model: cboxmodel,
             data: [{

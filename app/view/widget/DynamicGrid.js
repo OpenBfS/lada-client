@@ -187,7 +187,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     /**
      * Setup columns of the Grid dynamically.
      * @param data The result of a search request //TODO
-     * @param columnstore: store with currently available Lada.model.Column
+     * @param columnstore: store with currently available Lada.model.GridColumn
      * definitions
      * The function is called from the {@link Lada.controller.Query#search
      * search event}

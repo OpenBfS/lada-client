@@ -77,10 +77,10 @@ Ext.application({
         'Lada.model.MessstelleLabor',
         'Lada.model.Messstelle',
         'Lada.model.GenericResults',
-        'Lada.model.Column',
+        'Lada.model.GridColumn',
         'Lada.model.QueryGroup',
         'Lada.model.Query',
-        'Lada.store.Column',
+        'Lada.store.GridColumn',
         'Lada.store.Query'
     ],
     bundle: {
@@ -203,7 +203,7 @@ Ext.application({
         Ext.create('Lada.store.Messmethoden', {
             storeId: 'messmethoden'
         });
-        Ext.create('Lada.store.Column', {
+        Ext.create('Lada.store.GridColumn', {
             storeId: 'columnstore',
             autoLoad: true
         });

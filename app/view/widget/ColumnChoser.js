@@ -198,13 +198,13 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
         this.store = store;
         this.fixedcolumnstore = fixedcolumnstore;
         var tstore = new Ext.data.Store({
-            model: 'Lada.model.GridColumn',
+            model: 'Lada.model.GridColumnValue',
             proxy: {
                 type: 'memory',
                 reader: 'array'
             }
         });
-        var sstore = new Ext.data.Store({model: 'Lada.model.GridColumn'});
+        var sstore = new Ext.data.Store({model: 'Lada.model.GridColumnValue'});
         if (store && fixedcolumnstore) {
             // var data = store.getData().items;
             var fixeddata = fixedcolumnstore.getData().items;
@@ -217,7 +217,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                         sstore.add(col);
                     }
                 } else {
-                    col = Ext.create('Lada.model.GridColumn', {
+                    col = Ext.create('Lada.model.GridColumnValue', {
                         gridColumnId: fixeddata[i].get('id'),
                         visible: false,
                         filterActive: false,
@@ -231,6 +231,15 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
         }
         tstore.sort('columnIndex', 'ASC');
         tstore.getSorters().clear();
+        this.getComponent('targetGrid').onAfter({
+            reconfigure: {
+                fn: function() {
+                    this.fireEvent('loadend');
+                },
+                scope: this,
+                single: true
+            }
+        })
         this.getComponent('targetGrid').setStore(tstore);
         this.getComponent('sourceGrid').setStore(sstore);
         this.sortvisibles();

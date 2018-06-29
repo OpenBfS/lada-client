@@ -14,7 +14,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     alias: 'widget.genpfm',
 
     requires: [
-        'Lada.store.GridColumn'
+        'Lada.store.GridColumnValue'
     ],
 
     collapsible: true,
@@ -234,7 +234,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             property: 'baseQuery',
             value: '1',
             exactMatch: true});
-        var gcs = Ext.create('Lada.store.GridColumn');
+        var gcs = Ext.create('Lada.store.GridColumnValue');
 
         //TODO basequery needed for this to work
         var columns = ['idAlt', 'mstId', 'datenbasisId', 'baId', 'probenartId',
@@ -243,7 +243,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         for (var i=0; i < columns.length; i++) {
             var col = columnstore.findRecord('dataIndex', columns[i], false,
                 false, false, true);
-            gcs.add( new Ext.create('Lada.model.GridColumn',{
+            gcs.add( new Ext.create('Lada.model.GridColumnValue',{
                 columnIndex: i,
                 filterActive: false,
                 qid: 0, //TODO: hardcoded value based on example data

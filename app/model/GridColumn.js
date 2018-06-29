@@ -7,50 +7,36 @@
  */
 
 /**
- * Model for customized Column configuration
+ * Model for fixed Column configuration. Columns are set in the database, and
+ * are readonly to the client.
  */
 Ext.define('Lada.model.GridColumn', {
     extend: 'Ext.data.Model',
     fields: [{
         name: 'id'
-    },{
-        name: 'columnIndex'
-    },{
-        name: 'filterActive'
-    },{
-        name: 'filterValue'
-    },{
-        name: 'sort'
-    },{
-        name: 'sortIndex'
-    },{
-        name: 'userId'
-    },{
-        name: 'qid'
-    },{
-        name: 'visible'
-    },{
-        name: 'width'
-    },{
-        name: 'gridColumnId'
     }, {
-        name: 'dataIndex',
-        persist: false
+        name: 'dataIndex'
     }, {
-        name: 'name',
-        persist: false
+        name: 'dataType'
+    }, {
+        name: 'filter'
+        // Object with: id, name, parameter, sql, filterType.id,
+        // filterType.multiselect, filterType.type
+    }, {
+        name: 'name'
+    }, {
+        name: 'position'
+    }, {
+        name: 'baseQuery'
     }],
+    idProperty: 'id',
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/columnvalue',
+        url: 'lada-server/rest/column',
         reader: {
             type: 'json',
             totalProperty: 'totalCount',
             rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true
         }
     }
 });

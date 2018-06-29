@@ -17,7 +17,7 @@ Ext.define('Lada.view.QueryPanel', {
     requires: [
         'Lada.view.widget.ColumnChoser',
         'Lada.view.widget.ColumnSort',
-        'Lada.store.GridColumn'
+        'Lada.store.GridColumnValue'
     ],
     gridColumnValueStore: null,
     store: null,
@@ -162,7 +162,7 @@ Ext.define('Lada.view.QueryPanel', {
             name: 'activefilters',
             labelWidth: 125,
             store: Ext.create('Ext.data.Store',{
-                model: 'Lada.model.Column'
+                model: 'Lada.model.GridColumn'
             }),
             multiSelect: true,
             valueField: 'dataIndex',
@@ -299,7 +299,7 @@ Ext.define('Lada.view.QueryPanel', {
     setGridColumnStore: function(userQueryId, baseQueryId) {
         var me = this;
         if (baseQueryId !== undefined && userQueryId !== undefined) {
-            this.gridColumnValueStore = Ext.create('Lada.store.GridColumn');
+            this.gridColumnValueStore = Ext.create('Lada.store.GridColumnValue');
             this.gridColumnValueStore.proxy.extraParams = {
                 qid: userQueryId};
             var cs = Ext.data.StoreManager.get('columnstore');

@@ -7,9 +7,15 @@
  */
 
 /**
- * Store for user defined columns
+ * Store for fixed database Column definitions
  */
 Ext.define('Lada.store.GridColumn', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.GridColumn'
+    model: 'Lada.model.GridColumn',
+    autoLoad: true,
+    sorters: [{
+        property: 'dataIndex',
+        direction: 'ASC'
+    }],
+    sortOnLoad: true
 });

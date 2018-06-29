@@ -10,7 +10,7 @@ Ext.define('Lada.controller.Query', {
     extend: 'Ext.app.Controller',
     requires: [
         'Lada.view.widget.base.DateRange',
-        'Lada.store.GridColumn',
+        'Lada.store.GridColumnValue',
         'Lada.store.GenericResults',
         'Lada.view.widget.Messstelle',
         'Lada.view.widget.Umwelt',
@@ -115,10 +115,24 @@ Ext.define('Lada.controller.Query', {
         panel.store.add(newrecord);
         var columnChooser = panel.down('columnchoser');
         var columnValues = columnChooser.store.getData();
+        var fieldset = panel.down('fieldset[name=querydetails]')
+        var loadingMask = Ext.create('Ext.LoadMask', {
+            target: fieldset
+        });
+        loadingMask.show();
+        columnChooser.on({
+            loadend: {
+                fn: function() {
+                    loadingMask.hide();
+                },
+                single: true
+            }
+        });
         //Clone columns after query is saved
         saveCallback = function(savedQuery) {
+            var saved = 0;
             columnValues.each(function(item){
-                var clonedModel = Ext.create('Lada.model.GridColumn', {
+                var clonedModel = Ext.create('Lada.model.GridColumnValue', {
                     columnIndex: item.get('columnIndex'),
                     gridColumnId: item.get('gridColumnId'),
                     visible: item.get('visible'),
@@ -131,7 +145,7 @@ Ext.define('Lada.controller.Query', {
                 clonedModel.set('queryUserId', savedQuery.get('id'));
                 clonedModel.set('userId', null)
                 clonedModel.phantom = true;
-                clonedModel.save()
+                clonedModel.save();
             })
         }
 
@@ -561,7 +575,7 @@ Ext.define('Lada.controller.Query', {
             if (!nrec) {
                 var fixrecord = cs.findRecord('dataIndex', newvalue[j],
                     false, false, false, true);
-                var col = Ext.create('Lada.model.GridColumn', {
+                var col = Ext.create('Lada.model.GridColumnValue', {
                     gridColumnId: fixrecord.get('id'),
                     visible: false,
                     filterActive: true,
@@ -598,7 +612,7 @@ Ext.define('Lada.controller.Query', {
 
     loadGridColumnStore: function(element) {
         var panel = element.up('querypanel');
-        var gcs = Ext.create('Lada.store.GridColumn');
+        var gcs = Ext.create('Lada.store.GridColumnValue');
         if (panel.getForm().getRecord() === undefined) {
             panel.down('columnchoser').setStore(null);
             panel.down('columnsort').setStore(null);
