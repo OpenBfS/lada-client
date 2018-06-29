@@ -19,6 +19,7 @@ Ext.define('Lada.view.panel.Map', {
     record: null,
     locationRecord: null,
     externalOrteStore: false,
+
     /*
      * if externalOrteStore is true, the mappanel will not load the orte
      * store on it's own; it expects an already loaded store instead
@@ -47,6 +48,10 @@ Ext.define('Lada.view.panel.Map', {
             selectfeature: {
                 fn: this.selectFeature,
                 scope: this
+            },
+            deselectfeature: {
+                fn: this.deselectFeature,
+                scope: this
             }
         })
         this.callParent(arguments);
@@ -60,7 +65,8 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     /**
-     * Select a feature by record (a Lada.model.Ort) and zoom to this Ort
+     * Select a feature by record (a Lada.model.Ort)
+     * @param record Record
      */
     selectFeature: function(record) {
         if (!record || !record.get('id') || record.get('id') === '') {
@@ -71,23 +77,26 @@ Ext.define('Lada.view.panel.Map', {
         if (!feature) {
             return;
         }
-        if (this.selectedFeatureLayer) {
-            if (this.tempFeature) {
-                this.selectedFeatureLayer.getSource().removeFeature(
-                    this.tempFeature);
-                this.tempFeature = null;
-            }
-            this.featureLayer.getSource().addFeatures(
-                this.selectedFeatureLayer.getSource().getFeatures());
-            this.selectedFeatureLayer.getSource().clear();
-            this.featureLayer.getSource().removeFeature(feature);
-            this.selectedFeatureLayer.getSource().addFeature(feature);
-        }
-        this.map.getView().setCenter([feature.getGeometry().getCoordinates()[0],
-            feature.getGeometry().getCoordinates()[1]]);
-        this.map.getView().setZoom(12);
-
+        this.featureLayer.getSource().removeFeature(feature);
+        this.selectedFeatureLayer.getSource().addFeature(feature);
         //TODO: hideable main layer/make all except selected invisible
+    },
+
+    /**
+     * Deselects the feature of a given record on the map
+     * @param record Record
+     */
+    deselectFeature: function(record) {
+        if (!record || !record.get('id') || record.get('id') === '') {
+            return;
+        }
+        var features = this.selectedFeatureLayer.getSource();
+        var feature = features.getFeatureById(record.get('id'));
+        if (!feature) {
+            return;
+        }
+        this.selectedFeatureLayer.getSource().removeFeature(feature);
+        this.featureLayer.getSource().addFeature(feature);
     },
 
     activateDraw: function() {

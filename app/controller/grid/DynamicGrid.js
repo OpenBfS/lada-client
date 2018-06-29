@@ -20,8 +20,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         this.control({
             'dynamicgrid': {
                 itemdblclick: this.openItem,
-                select: this.activateButtons,
-                deselect: this.deactivateButtons
+                select: this.handleSelect,
+                deselect: this.handleDeselect
             },
             'dynamicgrid pagingtoolbar': {
                 change: this.pageChange
@@ -193,7 +193,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     /**
      * Toggles the generic buttons in the toolbar
      **/
-    activateButtons: function(rowModel, record) {
+    handleSelect: function(rowModel, record) {
         var grid = rowModel.view.up('grid');
         var map = Ext.ComponentQuery.query('map')[0];
         if (map) {
@@ -205,11 +205,16 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     /**
      * Toggles the generic buttons in the toolbar
      **/
-    deactivateButtons: function(rowModel) {
+    handleDeselect: function(rowModel, record) {
         var grid = rowModel.view.up('grid');
         // Only disable buttons when nothing is selected
         if (rowModel.selected.items.length === 0) {
             this.buttonToggle(false, grid);
+        }
+        var grid = rowModel.view.up('grid');
+        var map = Ext.ComponentQuery.query('map')[0];
+        if (map) {
+            map.fireEvent('deselectfeature', record);
         }
     },
 
