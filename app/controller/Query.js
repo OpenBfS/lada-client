@@ -139,7 +139,7 @@ Ext.define('Lada.controller.Query', {
         cbox.select(newrecord);
         this.changeCurrentQuery(cbox);
         panel.down('fieldset[name=querydetails]').setCollapsed(false);
-        this.saveQuery(button, saveCallback);
+        this.saveQuery(button, saveCallback, false);
     },
 
     expandDetails: function(button) {
@@ -225,10 +225,17 @@ Ext.define('Lada.controller.Query', {
     },
 
     handleSaveClicked: function(button) {
-        this.saveQuery(button);
+        this.saveQuery(button, null);
     },
 
-    saveQuery: function(button, callback) {
+    /**
+     * Saves the current query object and attached columns
+     * @param button UI el inside the querypanel
+     * @param callback Function to call after successfull save
+     * @param columns True to save attached GridColumnValues, too. Defaults to true
+     */
+    saveQuery: function(button, callback, columns) {
+        var saveColumns = columns != undefined ? columns: true;
         var me = this;
         var i18n = Lada.getApplication().bundle;
         var qp = button.up('querypanel');
@@ -260,17 +267,19 @@ Ext.define('Lada.controller.Query', {
                 var json = Ext.decode(response.getResponse().responseText);
                 var newId = json.data.id;
                 qp.getForm().loadRecord(rec);
-                var columns = qp.gridColumnValueStore.getData().items;
-                qp.gridColumnValueStore.proxy.extraParams = {};
-                for (var i=0; i < columns.length; i++) {
-                    columns[i].save();
+                if (saveColumns) {
+                    var columns = qp.gridColumnValueStore.getData().items;
+                    qp.gridColumnValueStore.proxy.extraParams = {};
+                    for (var i=0; i < columns.length; i++) {
+                        columns[i].save();
+                    }
                 }
-                qp.store.load({callback: function() {
+                //qp.store.load({callback: function() {
                     qp.down('combobox[name=selectedQuery]').setStore(qp.store);
                     qp.down('combobox[name=selectedQuery]').select(newId);
                     me.loadGridColumnStore(button);
                     button.setDisabled(false);
-                }});
+                //}});
             },
             failure: function(rec, response) {
                 Ext.Msg.alert(i18n.getMsg('query.error.save.title'), i18n.getMsg('query.error.save.message'))

@@ -69,7 +69,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             },
             items: [{
                 action: 'moveR',
-                text: '>',
+                iconCls: 'x-fa fa-angle-right',
                 listeners: {
                     click: function() {
                         me.moveData('sourceGrid', 'targetGrid', true);
@@ -77,7 +77,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 }
             }, {
                 action: 'moveRR',
-                text: '>>',
+                iconCls: 'x-fa fa-angle-double-right',
                 listeners: {
                     click: function() {
                         me.moveData('sourceGrid', 'targetGrid', false);
@@ -85,7 +85,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 }
             }, {
                 action: 'moveL',
-                text: '<',
+                iconCls: 'x-fa fa-angle-left',
                 listeners: {
                     click: function() {
                         me.moveData('targetGrid', 'sourceGrid', true);
@@ -93,7 +93,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 }
             }, {
                 action: 'moveLL',
-                text: '<<',
+                iconCls: 'x-fa fa-angle-double-left',
                 listeners: {
                     click: function() {
                         me.moveData('targetGrid', 'sourceGrid', false);
@@ -145,20 +145,23 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
     },
 
     setVisible: function(data, visible) {
-        var gcv_store = this.up('querypanel').gridColumnValueStore;
-        for (var i=0; i < data.length; i++) {
-            data[i].set('visible', visible);
-            var origindata = gcv_store.getById(data[i].get('id'));
-            if (!origindata) {
-                gcv_store.add(data[i]);
-                origindata = gcv_store.getById(data[i].get('id'));
-            } else {
-                origindata.set('visible', visible);
+        //If visibility changes, apply new value
+        if (data[0].get('visible') != visible) {
+            var gcv_store = this.up('querypanel').gridColumnValueStore;
+            for (var i=0; i < data.length; i++) {
+                data[i].set('visible', visible);
+                var origindata = gcv_store.getById(data[i].get('id'));
+                if (!origindata) {
+                    gcv_store.add(data[i]);
+                    origindata = gcv_store.getById(data[i].get('id'));
+                } else {
+                    origindata.set('visible', visible);
 
-            }
-            if (visible === false) {
-                origindata.set('columnIndex', null);
-                data[i].set('columnIndex', null);
+                }
+                if (visible === false) {
+                    origindata.set('columnIndex', null);
+                    data[i].set('columnIndex', null);
+                }
             }
         }
         this.sortvisibles();
@@ -194,7 +197,13 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
     setStore: function(store, fixedcolumnstore) {
         this.store = store;
         this.fixedcolumnstore = fixedcolumnstore;
-        var tstore = new Ext.data.Store({model: 'Lada.model.GridColumn'});
+        var tstore = new Ext.data.Store({
+            model: 'Lada.model.GridColumn',
+            proxy: {
+                type: 'memory',
+                reader: 'array'
+            }
+        });
         var sstore = new Ext.data.Store({model: 'Lada.model.GridColumn'});
         if (store && fixedcolumnstore) {
             // var data = store.getData().items;
@@ -221,6 +230,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             }
         }
         tstore.sort('columnIndex', 'ASC');
+        tstore.getSorters().clear();
         this.getComponent('targetGrid').setStore(tstore);
         this.getComponent('sourceGrid').setStore(sstore);
         this.sortvisibles();
