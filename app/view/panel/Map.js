@@ -68,7 +68,7 @@ Ext.define('Lada.view.panel.Map', {
      * Select a feature by record (a Lada.model.Ort)
      * @param record Record
      */
-    selectFeature: function(record) {
+    selectFeature: function(model,record) {
         if (!record || !record.get('id') || record.get('id') === '') {
             return;
         }
@@ -224,7 +224,11 @@ Ext.define('Lada.view.panel.Map', {
         } else {
             target = this.getTargetEl();
         }
-        this.mapOptions.target = target.dom.childNodes[0].childNodes[0];
+        if (target.dom.childNodes[0]) {
+            this.mapOptions.target = target.dom.childNodes[0].childNodes[0];
+        } else {
+            this.mapOptions.target = target.dom;
+        }
         this.mapOptions.view = new ol.View({
             center: [1160000,6694000],
             zoom: 6,

@@ -12,7 +12,6 @@
 Ext.define('Lada.view.widget.DynamicGrid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.dynamicgrid',
-    id: 'dynamicgridid',
     requires: [
         'Lada.view.window.Map',
         'Ext.grid.column.Widget',

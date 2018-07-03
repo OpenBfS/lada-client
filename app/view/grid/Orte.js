@@ -10,7 +10,7 @@
  * Grid to list Orte Stammdaten
  */
 Ext.define('Lada.view.grid.Orte', {
-    extend: 'Lada.view.widget.DynamicGrid',
+    extend: 'Ext.grid.Panel',
     alias: 'widget.ortstammdatengrid',
 
     requires: [

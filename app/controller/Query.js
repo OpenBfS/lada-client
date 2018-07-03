@@ -378,6 +378,7 @@ Ext.define('Lada.controller.Query', {
                             'panel[name=contentpanel]');
                         contentPanel.removeAll();
                         var resultGrid = Ext.create('Lada.view.widget.DynamicGrid', {
+                            id: 'dynamicgridid',
                             basequery: qp.getForm().getRecord().get('baseQuery'),
                             selModel: Ext.create('Ext.selection.CheckboxModel', {
                                 checkOnly: true,
