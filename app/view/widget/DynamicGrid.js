@@ -480,11 +480,22 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 Lada.model.Probe.load(messungRecord.get('probeId'), {
                                     scope: this,
                                     callback: function(precord, poperation, psuccess) {
-                                        var win = Ext.create('Lada.view.window.MessungEdit', {
-                                            probe: precord,
-                                            record: record,
-                                            style: 'z-index: -1;'
-                                        });
+                                        var probeWin = Ext.create(
+                                            'Lada.view.window.ProbeEdit', {
+                                                record: precord,
+                                                style: 'z-index: -1;'
+                                            });
+                                        probeWin.setPosition(30);
+                                        probeWin.show();
+                                        probeWin.initData();
+
+                                        var win = Ext.create(
+                                            'Lada.view.window.MessungEdit', {
+                                                parentWindow: probeWin,
+                                                probe: precord,
+                                                record: record,
+                                                style: 'z-index: -1;'
+                                            });
                                         win.initData();
                                         win.show();
                                     }

@@ -517,28 +517,28 @@ Ext.define('Lada.controller.Query', {
                     break;
                 case 'geom':// TODO: how/if to implement
                     break;
-                case 'egem':// TODO not yet in db
+                case 'egem':
                     field = Ext.create('Lada.view.widget.Verwaltungseinheit',
                         options);
                     break;
-                case 'datenbasis':// TODO not yet in db
+                case 'datenbasis':
                     field = Ext.create('Lada.view.widget.Datenbasis', options);
                     break;
-                case 'netzbetr':// TODO not yet in db
+                case 'netzbetr':
                     field = Ext.create('Lada.view.widget.Netzbetreiber',
                         options);
                     break;
-                case 'probenart':// TODO not yet in db
+                case 'probenart':
                     field = Ext.create('Lada.view.widget.Probenart', options);
                     break;
-                case 'staat':// TODO not yet in db
+                case 'staat':
                     field = Ext.create('Lada.view.widget.Staat', options);
                     break;
                 case 'betrart':// TODO not yet in db
                     field = Ext.create('Lada.view.widget.Betriebsart',
                         options);
                     break;
-                case 'statusstfe':// TODO not yet in db
+                case 'statusstfe':
                 default:
                     field = Ext.create('Lada.view.widget.base.TextField',
                         options);
