@@ -165,6 +165,7 @@ Ext.define('Lada.view.QueryPanel', {
                 model: 'Lada.model.GridColumn'
             }),
             multiSelect: true,
+            queryMode: 'local',
             valueField: 'dataIndex',
             displayField: 'name',
             fieldLabel: 'query.filters.visible',
@@ -291,7 +292,7 @@ Ext.define('Lada.view.QueryPanel', {
                             mst_name:records[i].get('beschreibung')
                         })
                     )
-                }        
+                }
             }
         })
     },
