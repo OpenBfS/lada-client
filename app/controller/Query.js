@@ -501,7 +501,7 @@ Ext.define('Lada.controller.Query', {
                         options);
 
                     break;
-                case 'messsstelle':
+                case 'messstelle':
                     options.store = Ext.data.StoreManager.get('messstellen');
                     field = Ext.create('Lada.view.widget.Messstelle', options);
                     break;
