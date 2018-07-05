@@ -379,6 +379,7 @@ Ext.define('Lada.controller.Query', {
                         contentPanel.removeAll();
                         var resultGrid = Ext.create('Lada.view.widget.DynamicGrid', {
                             id: 'dynamicgridid',
+                            emptyText: 'query.nodata',
                             basequery: qp.getForm().getRecord().get('baseQuery'),
                             selModel: Ext.create('Ext.selection.CheckboxModel', {
                                 checkOnly: true,
@@ -397,11 +398,6 @@ Ext.define('Lada.controller.Query', {
                                     autoLoad: true,
                                     remoteFilter: false
                                 });
-                        //     resultGrid.store.addListener('datachanged',
-                        //     function(store){
-                        //         var items = store.getData().items;
-                        //         for (var i=0; i< items.length; i++){
-                        //             var id = items[i].get(rowtarget.dataIndex);
                             resultGrid.ortstore.addListener('load',
                                 resultGrid.down('map').addLocations,
                                 resultGrid.down('map')

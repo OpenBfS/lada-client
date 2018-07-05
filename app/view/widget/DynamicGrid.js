@@ -72,72 +72,31 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         if (this.title) {
             this.title = this.i18n.getMsg(this.title);
         }
-        tbcontent.push('->');
+
+        // fill the toolbar in the appropiate order of buttons
+        this.genericAddButton();
+        this.genericDeleteButton();
+        this.toolbarbuttons.push('->');
+        switch (this.rowtarget.dataType) {
+            case 'mpId':
+                this.addMessprogrammButtons();
+                break;
+            case 'probeId':
+                this.addProbeButtons();
+                break;
+            case 'messungId':
+                this.addMessungButtons();
+                break;
+            case 'ortId':
+                this.addOrtButtons();
+        }
+        this.addExportButton();
+        this.addPrintButton();
+
         if (this.toolbarbuttons && this.toolbarbuttons.length) {
             for (var i= 0; i < this.toolbarbuttons.length; i++) {
                 tbcontent.push(this.toolbarbuttons[i]);
             }
-        }
-        if (this.rowtarget.dataType === 'ortId'
-            && Ext.Array.contains(Lada.funktionen, 4)
-        ) {
-            tbcontent.push({
-                text: this.i18n.getMsg('orte.new'),
-                icon: 'resources/img/svn-commit.png',
-                action: 'addMap',
-                needsSelection: false,
-                disabled: false
-            });
-        }
-        if (this.printable) {
-            tbcontent.push({
-                text: this.i18n.getMsg('button.print'),
-                icon: 'resources/img/printer.png',
-                action: 'print',
-                needsSelection: true,
-                disabled: true
-            });
-        }
-        if (this.exportable) {
-            tbcontent.push({
-                text: this.i18n.getMsg('export.button'),
-                icon: 'resources/img/svn-update.png',
-                action: 'gridexport',
-                needsSelection: true,
-                disabled: true
-            });
-        }
-
-        //generic "add" button
-        if (
-            this.rowtarget.dataType === 'probeId' ||
-            ( ['mpId', 'pnehmer', 'dsatzerz', 'mprkat', 'ortId'].indexOf(
-                this.rowtarget.dataType) >= 0
-                && Ext.Array.contains(Lada.funktionen, 4)
-            )) {
-            tbcontent.push({
-                text: this.i18n.getMsg('add'),
-                icon: 'resources/img/svn-update.png',
-                action: 'genericadd',
-                needsSelection: false,
-                disabled: false
-            });
-        }
-        // generic 'delete' button
-        if (
-            ['messungId', 'probeId'].indexOf(this.rowtarget.dataType) >= 0 ||
-            ( ['mpId', 'pnehmer', 'dsatzerz', 'mprkat'].indexOf(
-                this.rowtarget.dataType) >= 0
-                && Ext.Array.contains(Lada.funktionen, 4)
-            )) {
-
-            tbcontent.push({
-                text: this.i18n.getMsg('button.deleteseleted'),
-                icon: 'resources/img/svn-update.png',
-                action: 'genericdelete',
-                needsSelection: true,
-                disabled: true
-            });
         }
         this.addDocked({
             xtype: 'toolbar',
@@ -145,7 +104,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             items: tbcontent
         });
     },
-
 
     /**
      * This sets the Store of the DynamicGrid
@@ -396,20 +354,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     generateProbeColumn: function(colImg, col) {
-        this.toolbarbuttons.push({
-            text: this.i18n.getMsg('button.import'),
-            icon: 'resources/img/svn-commit.png',
-            action: 'importprobe',
-            needsSelection: false,
-            disabled: false
-        });
-        this.toolbarbuttons.push({
-            text: this.i18n.getMsg('button.printsheet'),
-            icon: 'resources/img/printer.png',
-            action: 'printSheet',
-            needsSelection: true,
-            disabled: true
-        });
         colImg = Ext.getResourcePath(this.openIconPath, null, null);
         col.xtype = 'widgetcolumn';
         col.widget = {
@@ -450,13 +394,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
     },
     generateMessungColumns: function(colImg, col) {
-        this.toolbarbuttons.push({
-            text: this.i18n.getMsg('statusSetzen'),
-            icon: 'resources/img/mail-mark-notjunk.png',
-            action: 'setstatus',
-            needsSelection: true,
-            disabled: true
-        });
         colImg = Ext.getResourcePath(this.openIconPath, null, null);
         col.xtype = 'widgetcolumn';
         col.widget = {
@@ -515,15 +452,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     generateMessprogrammColumns: function(colImg, col) {
-        if ( Ext.Array.contains(Lada.funktionen, 4)) {
-            this.toolbarbuttons.push({
-                text: this.i18n.getMsg('button.generateProben'),
-                icon: 'resources/img/view-time-schedule-insert.png',
-                action: 'genProbenFromMessprogramm',
-                needsSelection: true,
-                disabled: true
-            });
-        }
         colImg = Ext.getResourcePath(this.openIconPath, null, null);
         col.xtype = 'widgetcolumn';
         col.widget = {
@@ -922,8 +850,138 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 }
             }
         };
+    },
+    addProbeButtons: function() {
+        if (!this.tbuttonExists('importprobe')) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('button.import'),
+                icon: 'resources/img/svn-commit.png',
+                action: 'importprobe',
+                needsSelection: false,
+                disabled: false
+            });
+        }
+        if (!this.tbuttonExists('printSheet')) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('button.printsheet'),
+                icon: 'resources/img/printer.png',
+                action: 'printSheet',
+                needsSelection: true,
+                disabled: true
+            });
+        }
+    },
+
+    addMessungButtons: function() {
+        if (!this.tbuttonExists('setstatus')) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('statusSetzen'),
+                icon: 'resources/img/mail-mark-notjunk.png',
+                action: 'setstatus',
+                needsSelection: true,
+                disabled: true
+            });
+        }
+    },
+
+    addMessprogrammButtons: function() {
+        if ( Ext.Array.contains(Lada.funktionen, 4) && !this.tbuttonExists(
+            'genProbenFromMessprogramm')
+        ) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('button.generateProben'),
+                icon: 'resources/img/view-time-schedule-insert.png',
+                action: 'genProbenFromMessprogramm',
+                needsSelection: true,
+                disabled: true
+            });
+        }
+    },
+
+    addOrtButtons: function() {
+        if (Ext.Array.contains(Lada.funktionen, 4) && !this.tbuttonExists(
+            'addMap')
+        ) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('orte.new'),
+                icon: 'resources/img/svn-commit.png',
+                action: 'addMap',
+                needsSelection: false,
+                disabled: false
+            });
+        }
+    },
+
+    genericAddButton: function() {
+        if (
+            this.rowtarget.dataType === 'probeId' ||
+            ( ['mpId', 'pnehmer', 'dsatzerz', 'mprkat', 'ortId'].indexOf(
+                this.rowtarget.dataType) >= 0
+                && Ext.Array.contains(Lada.funktionen, 4)
+            )
+        ) {
+            if (!this.tbuttonExists('genericadd')) {
+                this.toolbarbuttons.push({
+                    text: this.i18n.getMsg('add'),
+                    icon: 'resources/img/svn-update.png',
+                    action: 'genericadd',
+                    needsSelection: false,
+                    disabled: false
+                });
+            }
+        }
+    },
+
+    genericDeleteButton: function() {
+        if (
+            ['messungId', 'probeId'].indexOf(this.rowtarget.dataType) >= 0 ||
+            ( ['mpId', 'pnehmer', 'dsatzerz', 'mprkat'].indexOf(
+                this.rowtarget.dataType) >= 0
+                && Ext.Array.contains(Lada.funktionen, 4)
+            )
+        ) {
+            if (!this.tbuttonExists('genericdelete')) {
+                this.toolbarbuttons.push({
+                    text: this.i18n.getMsg('button.deleteseleted'),
+                    icon: 'resources/img/svn-update.png',
+                    action: 'genericdelete',
+                    needsSelection: true,
+                    disabled: true
+                });
+            }
+        }
+    },
+    addPrintButton: function() {
+        if (this.printable && !this.tbuttonExists('print')) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('button.print'),
+                icon: 'resources/img/printer.png',
+                action: 'print',
+                needsSelection: true,
+                disabled: true
+            });
+        }
+    },
+
+    addExportButton: function() {
+        if (this.exportable && !this.tbuttonExists('gridexport')) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('export.button'),
+                icon: 'resources/img/svn-update.png',
+                action: 'gridexport',
+                needsSelection: true,
+                disabled: true
+            });
+        }
+    },
+
+    tbuttonExists: function(action) {
+        for (var i=0; i< this.toolbarbuttons.length; i++) {
+            if (this.toolbarbuttons[i].action === action) {
+                return true;
+            }
+        }
+        return false;
     }
-
-
 });
 
