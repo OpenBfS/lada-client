@@ -156,6 +156,10 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 url = 'lada-server/rest/probe/';
                 datatype = 'Probe ';
                 break;
+            case 'messungId':
+                url = 'lada-server/rest/messung/';
+                datatype = 'Messung ';
+                break;
             case 'mpId':
                 url = 'lada-server/rest/messprogramm/';
                 datatype = 'Messprogramm ';
