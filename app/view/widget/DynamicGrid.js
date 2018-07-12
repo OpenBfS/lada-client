@@ -17,7 +17,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         'Ext.grid.column.Widget',
         'Lada.view.grid.Messung',
         'Lada.view.grid.Messwert',
-        'Lada.view.plugin.GridRowExpander',
         'Lada.view.window.Probenehmer',
         'Lada.view.window.DatensatzErzeuger',
         'Lada.view.window.MessprogrammKategorie',
@@ -188,27 +187,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         this.columns = caf[0];
         var fields = caf[1];
         this.store.setFields(fields);
-        if (this.rowtarget.dataType === 'probeId') {
-            this.addPlugin({
-                ptype: 'gridrowexpander',
-                gridType: 'Lada.view.grid.Messung',
-                idRow: this.rowtarget.dataIndex,
-                expandOnDblClick: false,
-                gridConfig: {
-                    bottomBar: false
-                }
-            });
-        } else if (this.rowtarget.dataType === 'messungId') {
-            this.addPlugin({
-                ptype: 'gridrowexpander',
-                gridType: 'Lada.view.grid.Messwert',
-                idRow: this.rowtarget.dataIndex,
-                expandOnDblClick: false,
-                gridConfig: {
-                    bottomBar: false
-                }
-            });
-        }
         this.reconfigure(this.store, this.columns);
         this.setToolbar();
     },

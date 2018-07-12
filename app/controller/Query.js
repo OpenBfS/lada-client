@@ -23,7 +23,8 @@ Ext.define('Lada.controller.Query', {
         'Lada.view.widget.base.NumberField',
         'Lada.view.widget.Netzbetreiber',
         'Lada.view.widget.Datenbasis',
-        'Lada.view.widget.Betriebsart'
+        'Lada.view.widget.Betriebsart',
+        'Lada.view.plugin.GridRowExpander'
 
     ],
 
@@ -370,6 +371,27 @@ Ext.define('Lada.controller.Query', {
             }
             this.resultStore.setProxyPayload(jsonData);
             this.resultStore.setPageSize(Lada.pagingSize);
+
+            var plugin = null;
+            if (rowtarget.dataType === 'probeId') {
+                plugin = Ext.create('Lada.view.plugin.GridRowExpander', {
+                    gridType: 'Lada.view.grid.Messung',
+                    idRow: rowtarget.dataIndex,
+                    expandOnDblClick: false,
+                    gridConfig: {
+                        bottomBar: false
+                    }
+                });
+            } else if (rowtarget.dataType === 'messungId') {
+                plugin = Ext.create('Lada.view.plugin.GridRowExpander', {
+                    gridType: 'Lada.view.grid.Messwert',
+                    idRow: rowtarget.dataIndex,
+                    expandOnDblClick: false,
+                    gridConfig: {
+                        bottomBar: false
+                    }
+                });
+            }
             this.resultStore.loadPage(1,{
                 scope: this,
                 callback: function(responseData, operation, success) {
@@ -385,6 +407,7 @@ Ext.define('Lada.controller.Query', {
                                 checkOnly: true,
                                 injectCheckbox: 1
                             }),
+                            plugins: plugin || null,
                             rowtarget: rowtarget
                         });
                         resultGrid.setup(gcs, fixColumnStore);
