@@ -243,12 +243,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         // leave the ortstore empty at begin.
         // TODO check when changing filter method to remote/local
         this.ortstore.removeAll();
-        var ortId;
-        if (this.messprogramm) {
-            ortId = this.record.get('ort');
-        } else {
-            ortId = this.record.get('ortId');
-        }
+        var ortId = this.record.get('ortId');
         if (ortId || ortId === 0) {
             Lada.model.Ort.load(ortId, {
                 success: function(rec) {
