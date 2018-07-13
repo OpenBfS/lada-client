@@ -421,6 +421,9 @@ Ext.define('Lada.controller.Query', {
                                     autoLoad: true,
                                     remoteFilter: false
                                 });
+                            resultGrid.ortstore.getProxy().setExtraParams({
+                                "query": "all"
+                            })
                             resultGrid.ortstore.addListener('load',
                                 resultGrid.down('map').addLocations,
                                 resultGrid.down('map')
