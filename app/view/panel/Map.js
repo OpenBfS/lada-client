@@ -47,7 +47,10 @@ Ext.define('Lada.view.panel.Map', {
         this.on({
             selectfeature: {
                 fn: this.selectFeature,
-                scope: this
+                scope: this,
+                options: {
+                    args: [true]
+                }
             },
             deselectfeature: {
                 fn: this.deselectFeature,
@@ -68,7 +71,11 @@ Ext.define('Lada.view.panel.Map', {
      * Select a feature by record (a Lada.model.Ort)
      * @param record Record
      */
-    selectFeature: function(model,record) {
+    selectFeature: function(model,record, opts) {
+        var multiselect = false;
+        if (opts.options) {
+            multiselect = opts.options.args[0];
+        }
         if (!record || !record.get('id') || record.get('id') === '') {
             return;
         }
@@ -77,8 +84,16 @@ Ext.define('Lada.view.panel.Map', {
         if (!feature) {
             return;
         }
+
+        if (!multiselect) {
+            this.featureLayer.getSource().addFeatures(
+                this.selectedFeatureLayer.getSource().getFeatures());
+            this.selectedFeatureLayer.getSource().clear();
+        }
+
         this.featureLayer.getSource().removeFeature(feature);
         this.selectedFeatureLayer.getSource().addFeature(feature);
+        this.fireEvent('featureselected', this, record)
         //TODO: hideable main layer/make all except selected invisible
     },
 
@@ -308,6 +323,7 @@ Ext.define('Lada.view.panel.Map', {
      * Forward OpenlayersEvent to EXT
      */
     selectedFeature: function(selection) {
+        debugger;
         var feature = selection.selected.length ? selection.selected[0] : null;
         if (feature) {
             var me = Ext.ComponentQuery.query('map')[0];
