@@ -116,7 +116,7 @@ Ext.define('Lada.controller.Query', {
         panel.store.add(newrecord);
         var columnChooser = panel.down('columnchoser');
         var columnValues = columnChooser.store.getData();
-        var fieldset = panel.down('fieldset[name=querydetails]')
+        var fieldset = panel.down('fieldset[name=querydetails]');
         var loadingMask = Ext.create('Ext.LoadMask', {
             target: fieldset
         });
@@ -130,9 +130,8 @@ Ext.define('Lada.controller.Query', {
             }
         });
         //Clone columns after query is saved
-        saveCallback = function(savedQuery) {
-            var saved = 0;
-            columnValues.each(function(item){
+        var saveCallback = function(savedQuery) {
+            columnValues.each(function(item) {
                 var clonedModel = Ext.create('Lada.model.GridColumnValue', {
                     columnIndex: item.get('columnIndex'),
                     gridColumnId: item.get('gridColumnId'),
@@ -141,14 +140,14 @@ Ext.define('Lada.controller.Query', {
                     sortIndex: item.get('sortIndex'),
                     filterActive: item.get('filterActive'),
                     filterValue: item.get('filterValue')
-                })
+                });
                 clonedModel.set('id', null);
                 clonedModel.set('queryUserId', savedQuery.get('id'));
-                clonedModel.set('userId', null)
+                clonedModel.set('userId', null);
                 clonedModel.phantom = true;
                 clonedModel.save();
-            })
-        }
+            });
+        };
 
         cbox.setStore(panel.store);
         cbox.select(newrecord);
@@ -178,7 +177,7 @@ Ext.define('Lada.controller.Query', {
                                 var combobox = qp.down('combobox[name=selectedQuery]');
                                 qp.store.load({callback: function() {
                                     combobox.setStore(qp.store);
-                                    if (combobox.store.getData().count() == 0) {
+                                    if (combobox.store.getData().count() === 0) {
                                         var checkbox = qp.down('checkbox[name=ownqueries]');
                                         checkbox.setValue(false);
                                     }
@@ -250,7 +249,7 @@ Ext.define('Lada.controller.Query', {
      * @param columns True to save attached GridColumnValues, too. Defaults to true
      */
     saveQuery: function(button, callback, columns) {
-        var saveColumns = columns != undefined ? columns: true;
+        var saveColumns = columns !== undefined ? columns: true;
         var me = this;
         var i18n = Lada.getApplication().bundle;
         var qp = button.up('querypanel');
@@ -297,7 +296,8 @@ Ext.define('Lada.controller.Query', {
                 //}});
             },
             failure: function(rec, response) {
-                Ext.Msg.alert(i18n.getMsg('query.error.save.title'), i18n.getMsg('query.error.save.message'))
+                Ext.Msg.alert(i18n.getMsg('query.error.save.title'),
+                    i18n.getMsg('query.error.save.message'));
                 button.setDisabled(false);
             }
         });
@@ -427,7 +427,8 @@ Ext.define('Lada.controller.Query', {
                             );
                         }
                     } else {
-                        Ext.Msg.alert(i18n.getMsg('query.error.search.title'), i18n.getMsg('query.error.search.message'))
+                        Ext.Msg.alert(i18n.getMsg('query.error.search.title'),
+                            i18n.getMsg('query.error.search.message'));
                     }
                 }
             });
@@ -460,6 +461,7 @@ Ext.define('Lada.controller.Query', {
                 fieldLabel: fixcolumn.get('name'),
                 value: recs[i].get('filterValue') || null,
                 width: '100%',
+                editable: true,
                 triggers: {
                     clear: {
                         extraCls: 'x-form-clear-trigger',
@@ -514,6 +516,7 @@ Ext.define('Lada.controller.Query', {
                         options);
                     break;
                 case 'land':
+                    options.multiSelect = true;
                     options.store = Ext.data.StoreManager.get(
                         'messprogrammkategorie');
                     field = Ext.create('Lada.view.widget.MessprogrammLand',
@@ -521,6 +524,7 @@ Ext.define('Lada.controller.Query', {
 
                     break;
                 case 'messstelle':
+                    options.multiSelect = true;
                     options.store = Ext.data.StoreManager.get('messstellen');
                     field = Ext.create('Lada.view.widget.Messstelle', options);
                     break;
@@ -528,33 +532,41 @@ Ext.define('Lada.controller.Query', {
                     field = Ext.create('Lada.view.widget.BoolFilter', options);
                     break;
                 case 'umwbereich':
+                    options.multiSelect = true;
                     options.store = Ext.data.StoreManager.get('umwelt');
                     field = Ext.create('Lada.view.widget.Umwelt' , options);
                     break;
                 case 'status':
+                    options.multiSelect = true;
                     options.store = Ext.data.StoreManager.get('statuswerte');
                     field = Ext.create('Lada.view.widget.Status', options);
                     break;
                 case 'geom':// TODO: how/if to implement
                     break;
                 case 'egem':
+                    options.multiSelect = true;
                     field = Ext.create('Lada.view.widget.Verwaltungseinheit',
                         options);
                     break;
                 case 'datenbasis':
+                    options.multiSelect = true;
                     field = Ext.create('Lada.view.widget.Datenbasis', options);
                     break;
                 case 'netzbetr':
+                    options.multiSelect = true;
                     field = Ext.create('Lada.view.widget.Netzbetreiber',
                         options);
                     break;
                 case 'probenart':
+                    options.multiSelect = true;
                     field = Ext.create('Lada.view.widget.Probenart', options);
                     break;
                 case 'staat':
+                    options.multiSelect = true;
                     field = Ext.create('Lada.view.widget.Staat', options);
                     break;
                 case 'betrart':// TODO not yet in db
+                    options.multiSelect = true;
                     field = Ext.create('Lada.view.widget.Betriebsart',
                         options);
                     break;
@@ -618,6 +630,9 @@ Ext.define('Lada.controller.Query', {
             var name = box.name;
             var rec = store.findRecord('dataIndex', name, false, false, false,
                 true);
+            if (newvalue && Array.isArray(newvalue)) {
+                newvalue = newvalue.join(',');
+            }
             rec.set('filterValue', newvalue);
         }
     },
