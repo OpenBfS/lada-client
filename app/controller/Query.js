@@ -422,8 +422,8 @@ Ext.define('Lada.controller.Query', {
                                     remoteFilter: false
                                 });
                             resultGrid.ortstore.getProxy().setExtraParams({
-                                "query": "all"
-                            })
+                                'query': 'all'
+                            });
                             resultGrid.ortstore.addListener('load',
                                 resultGrid.down('map').addLocations,
                                 resultGrid.down('map')
@@ -462,7 +462,6 @@ Ext.define('Lada.controller.Query', {
                 name: fixcolumn.get('dataIndex'),
                 labelWidth: 125,
                 fieldLabel: fixcolumn.get('name'),
-                value: recs[i].get('filterValue') || null,
                 width: '100%',
                 editable: true,
                 triggers: {
@@ -487,6 +486,7 @@ Ext.define('Lada.controller.Query', {
                             }
                         }
                     };
+                    options.value = recs[i].get('filterValue') || null;
                     field = Ext.create('Ext.form.field.Text', options);
                     break;
                 case 'date':
@@ -515,11 +515,14 @@ Ext.define('Lada.controller.Query', {
                     options.hideTrigger = true;
                     options.keyNavEnabled = false;
                     options.mouseWheelEnabled = false;
+                    options.value = recs[i].get('filterValue') || null;
                     field = Ext.create('Lada.view.widget.base.NumberField',
                         options);
                     break;
                 case 'land':
                     options.multiSelect = true;
+                    options.editable = true;
+                    options.value = this.getFilterValueMulti(recs[i]);
                     options.store = Ext.data.StoreManager.get(
                         'messprogrammkategorie');
                     field = Ext.create('Lada.view.widget.MessprogrammLand',
@@ -528,6 +531,8 @@ Ext.define('Lada.controller.Query', {
                     break;
                 case 'messstelle':
                     options.multiSelect = true;
+                    options.editable = true;
+                    options.value = this.getFilterValueMulti(recs[i]);
                     options.store = Ext.data.StoreManager.get('messstellen');
                     field = Ext.create('Lada.view.widget.Messstelle', options);
                     break;
@@ -537,10 +542,13 @@ Ext.define('Lada.controller.Query', {
                 case 'umwbereich':
                     options.multiSelect = true;
                     options.store = Ext.data.StoreManager.get('umwelt');
+                    options.value = recs[i].get('filterValue');
                     field = Ext.create('Lada.view.widget.Umwelt' , options);
                     break;
                 case 'status':
                     options.multiSelect = true;
+                    options.editable = true;
+                    options.value = this.getFilterValueMulti(recs[i]);
                     options.store = Ext.data.StoreManager.get('statuswerte');
                     field = Ext.create('Lada.view.widget.Status', options);
                     break;
@@ -548,33 +556,46 @@ Ext.define('Lada.controller.Query', {
                     break;
                 case 'egem':
                     options.multiSelect = true;
+                    options.editable = true;
+                    options.value = this.getFilterValueMulti(recs[i]);
                     field = Ext.create('Lada.view.widget.Verwaltungseinheit',
                         options);
                     break;
                 case 'datenbasis':
                     options.multiSelect = true;
+                    options.editable = true;
+                    options.value = this.getFilterValueMulti(recs[i]);
                     field = Ext.create('Lada.view.widget.Datenbasis', options);
                     break;
                 case 'netzbetr':
                     options.multiSelect = true;
+                    options.editable = true;
+                    options.value = this.getFilterValueMulti(recs[i]);
                     field = Ext.create('Lada.view.widget.Netzbetreiber',
                         options);
                     break;
                 case 'probenart':
                     options.multiSelect = true;
+                    options.editable = true;
+                    options.value = this.getFilterValueMulti(recs[i]);
                     field = Ext.create('Lada.view.widget.Probenart', options);
                     break;
                 case 'staat':
                     options.multiSelect = true;
+                    options.editable = true;
+                    options.value = this.getFilterValueMulti(recs[i]);
                     field = Ext.create('Lada.view.widget.Staat', options);
                     break;
                 case 'betrart':// TODO not yet in db
                     options.multiSelect = true;
+                    options.editable = true;
+                    options.value = this.getFilterValueMulti(recs[i]);
                     field = Ext.create('Lada.view.widget.Betriebsart',
                         options);
                     break;
                 case 'statusstfe':
                 default:
+                    options.value = recs[i].get('filterValue');
                     field = Ext.create('Lada.view.widget.base.TextField',
                         options);
                     break;
@@ -776,6 +797,18 @@ Ext.define('Lada.controller.Query', {
                 me.changeCurrentQuery(cb);
             }
         });
+    },
+
+    getFilterValueMulti: function(record) {
+        var filterValue = record.get('filterValue');
+        if (!filterValue) {
+            return null;
+        } else {
+            if (filterValue.indexOf(',') >= 0) {
+                return filterValue.split(',');
+            }
+            return filterValue;
+        }
     }
 
 });
