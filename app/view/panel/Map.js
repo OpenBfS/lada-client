@@ -56,7 +56,7 @@ Ext.define('Lada.view.panel.Map', {
                 fn: this.deselectFeature,
                 scope: this
             }
-        })
+        });
         this.callParent(arguments);
     },
 
@@ -73,7 +73,7 @@ Ext.define('Lada.view.panel.Map', {
      */
     selectFeature: function(model,record, opts) {
         var multiselect = false;
-        if (opts.options) {
+        if (opts && opts.options) {
             multiselect = opts.options.args[0];
         }
         if (!record || !record.get('id') || record.get('id') === '') {
@@ -93,7 +93,7 @@ Ext.define('Lada.view.panel.Map', {
 
         this.featureLayer.getSource().removeFeature(feature);
         this.selectedFeatureLayer.getSource().addFeature(feature);
-        this.fireEvent('featureselected', this, record)
+        this.fireEvent('featureselected', this, record);
         //TODO: hideable main layer/make all except selected invisible
     },
 
@@ -137,7 +137,7 @@ Ext.define('Lada.view.panel.Map', {
     featureAdded: function(event) {
         //Forward event
         var me = Ext.ComponentQuery.query('map')[0];
-        me.fireEvent('featureadded', event)
+        me.fireEvent('featureadded', event);
         me.map.removeInteraction(me.drawInteraction);
         event.feature.set('bez', 'neuer Ort');
         var clone = event.feature.clone();
@@ -323,7 +323,6 @@ Ext.define('Lada.view.panel.Map', {
      * Forward OpenlayersEvent to EXT
      */
     selectedFeature: function(selection) {
-        debugger;
         var feature = selection.selected.length ? selection.selected[0] : null;
         if (feature) {
             var me = Ext.ComponentQuery.query('map')[0];
