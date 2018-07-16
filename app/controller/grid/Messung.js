@@ -40,7 +40,8 @@ Ext.define('Lada.controller.grid.Messung', {
      */
     editItem: function(grid, record) {
         // we have a window with a probe record!
-        if (grid.up('window')) {
+        grid.getEl().swallowEvent(['click', 'dblclick'], true);
+        if (grid.up('probenedit')) {
             var probe = grid.up('window').record;
             var win = Ext.create('Lada.view.window.MessungEdit', {
                 parentWindow: grid.up('window'),
