@@ -46,7 +46,6 @@ Ext.define('Lada.controller.form.Ort', {
     },
 
     save: function(button) {
-        var me = this;
         var formpanel = button.up('ortform');
         var form = formpanel.getForm();
         var record = form.getRecord();
@@ -66,15 +65,24 @@ Ext.define('Lada.controller.form.Ort', {
                 button.setDisabled(true);
                 formpanel.down('button[action=revert]').setDisabled(true);
                 button.setDisabled(true);
-                var ozw = formpanel.up('panel').parentWindow;
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     formpanel.clearMessages();
                     formpanel.setMessages(json.errors, json.warnings);
                 }
                 var dynamicgrid = Ext.getCmp('dynamicgridid');
-                dynamicgrid.store.add(newrecord);
-                dynamicgrid.getView().refresh();
+                if (dynamicgrid) {
+                    dynamicgrid.store.add(newrecord);
+                    dynamicgrid.getView().refresh();
+                }
+                var ozw = formpanel.up('panel').parentWindow;
+                if (ozw) {
+                    var ortgrid= ozw.down('tabpanel').down('ortstammdatengrid');
+                    if (ortgrid) {
+                        ortgrid.store.add(newrecord);
+                        ortgrid.store.reload();
+                    }
+                }
             },
             failure: function(record, response) {
                 var i18n = Lada.getApplication().bundle;
