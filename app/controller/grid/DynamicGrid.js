@@ -197,7 +197,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         var grid = rowModel.view.up('grid');
         var map = Ext.ComponentQuery.query('map')[0];
         if (map) {
-            map.fireEvent('selectfeature', null, record, {options: { args: [true]}});
+            map.fireEvent('selectfeature', null, record);
         }
         this.buttonToggle(true, grid);
     },

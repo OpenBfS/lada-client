@@ -72,10 +72,6 @@ Ext.define('Lada.view.panel.Map', {
      * @param record Record
      */
     selectFeature: function(model,record, opts) {
-        var multiselect = false;
-        if (opts && opts.options) {
-            multiselect = opts.options.args[0];
-        }
         if (!record || !record.get('id') || record.get('id') === '') {
             return;
         }
@@ -84,17 +80,36 @@ Ext.define('Lada.view.panel.Map', {
         if (!feature) {
             return;
         }
-        if (!multiselect) {
+        if (!this.multiSelect) {
             this.featureLayer.getSource().addFeatures(
                 this.selectedFeatureLayer.getSource().getFeatures());
             this.selectedFeatureLayer.getSource().clear();
         }
-        var currentFeatures = multiselect ?
+        var currentFeatures = this.multiSelect ?
             this.selectedFeatureLayer.getSource().getFeatures() : [];
         this.featureLayer.getSource().removeFeature(feature);
         this.selectedFeatureLayer.getSource().addFeature(feature);
         currentFeatures.push(feature);
         this.fireEvent('featureselected', this, currentFeatures);
+        var zoomFeats = this.selectedFeatureLayer.getSource().getFeatures();
+        if (zoomFeats.length > 1) {
+            var zf_geoms = [];
+            for (var i=0; i < zoomFeats.length;i++) {
+                zf_geoms.push(zoomFeats[i].getGeometry().getCoordinates());
+            }
+            var ext = ol.extent.boundingExtent(zf_geoms);
+            this.map.getView().fit(ext, {
+                duration: 1000,
+                constrainResolution: true,
+                maxZoom: 12
+            });
+        } else if (zoomFeats.length === 1) {
+            this.map.getView().animate(
+                { center: zoomFeats[0].getGeometry().getCoordinates(),
+                    duration: 1000},
+                { zoom: 10,
+                    duration: 1000});
+        }
         //TODO: hideable main layer/make all except selected invisible
     },
 
@@ -324,17 +339,10 @@ Ext.define('Lada.view.panel.Map', {
      * Forward OpenlayersEvent to EXT
      */
     selectedFeature: function(selection) {
-        var feature = selection.selected.length ? selection.selected[0] : null;
+        var feature = selection.selected;
         if (feature) {
             var me = Ext.ComponentQuery.query('map')[0];
-            me.fireEvent('featureselected', me, feature, arguments);
-            if (me.selectedFeatureLayer) {
-                me.featureLayer.getSource().addFeatures(
-                    me.selectedFeatureLayer.getSource().getFeatures());
-                me.selectedFeatureLayer.getSource().clear();
-                me.featureLayer.getSource().removeFeature(feature);
-                me.selectedFeatureLayer.getSource().addFeature(feature);
-            }
+            me.fireEvent('featureselected', me, feature, arguments, true);
         }
     },
 
@@ -400,9 +408,10 @@ Ext.define('Lada.view.panel.Map', {
         this.map.addLayer(this.featureLayer);
         this.selectControl = new ol.interaction.Select({
             condition: ol.events.condition.click,
-            style: this.selectStyle,
+            style: me.selectStyle,
             multi: false,
-            layers: [me.featureLayer]
+            layers: [me.featureLayer],
+            hitTolerance: 20
         });
         this.selectControl.on('select', me.selectedFeature);
         this.map.addInteraction(this.selectControl);

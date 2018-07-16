@@ -126,6 +126,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             this.i18n = Lada.getApplication().bundle;
             var map = Ext.create('Lada.view.panel.Map', {
                 collapsible: true,
+                multiSelect: true,
                 minWidth: 400,
                 dock: 'right',
                 title: this.i18n.getMsg('map.title'),
