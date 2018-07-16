@@ -84,16 +84,17 @@ Ext.define('Lada.view.panel.Map', {
         if (!feature) {
             return;
         }
-
         if (!multiselect) {
             this.featureLayer.getSource().addFeatures(
                 this.selectedFeatureLayer.getSource().getFeatures());
             this.selectedFeatureLayer.getSource().clear();
         }
-
+        var currentFeatures = multiselect ?
+            this.selectedFeatureLayer.getSource().getFeatures() : [];
         this.featureLayer.getSource().removeFeature(feature);
         this.selectedFeatureLayer.getSource().addFeature(feature);
-        this.fireEvent('featureselected', this, record);
+        currentFeatures.push(feature);
+        this.fireEvent('featureselected', this, currentFeatures);
         //TODO: hideable main layer/make all except selected invisible
     },
 

@@ -371,7 +371,8 @@ Ext.define('Lada.view.grid.Orte', {
      */
     selectOrt: function(map, feature) {
         if (feature) {
-            var id = feature.get('id');
+            var id = Array.isArray(feature) ?
+                feature[0].get('id'): feature.get('id');
             var record = this.store.getById(id);
             if (record) {
                 //TODO paging: jump to page

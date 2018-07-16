@@ -132,7 +132,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 externalOrteStore: false
             });
             map.on({
-                featureselected :{
+                featureselected: {
                     fn: this.selectRowByFeature,
                     scope: this
                 },
@@ -151,10 +151,18 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         // });
     },
 
-    selectRowByFeature: function(map, feature) {
-        var id = feature.get('id');
-        var record = this.store.getById(id);
-        this.getSelectionModel().select(record);
+    selectRowByFeature: function(map, features) {
+        if (!Array.isArray(features)) {
+            features = [features];
+        }
+        var records = [];
+        for (var i=0; i < features.length;i++) {
+            var id = features[i].get ? features[i].get('id') : features[i];
+            if (id !== undefined) {
+                records.push(this.store.getById(id));
+            }
+        }
+        this.getSelectionModel().select(records);
     },
 
     addOrt: function(event) {
