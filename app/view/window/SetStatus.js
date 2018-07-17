@@ -33,9 +33,14 @@ Ext.define('Lada.view.window.SetStatus', {
         var me = this;
         var statusWerteStore = Ext.create('Lada.store.StatusWerte');
         if ( this.selection) {
+            var selectionIds = [];
+            for (var i=0; i< this.selection.length; i++) {
+                selectionIds.push(this.selection[i].get(
+                    this.grid.rowtarget.dataIndex));
+            }
             statusWerteStore.load({
                 params: {
-                    messungsId: Ext.Array.pluck(this.selection, 'id').toString()
+                    messungsId: selectionIds.join(',')
                 }
             });
         } else {
