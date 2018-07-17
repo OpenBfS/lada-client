@@ -27,11 +27,8 @@ Ext.define('Lada.controller.grid.ProbeList', {
             'dynamicgrid toolbar button[action=importprobe]': {
                 click: this.uploadFile
             },
-            'dynamigrid toolbar button[action=printSheet]': {
-                click: {
-                    fn: this.printSelection,
-                    mode: 'printsheet'
-                }
+            'dynamicgrid toolbar button[action=printSheet]': {
+                click: this.printSelection
             }
         });
         this.callParent(arguments);
@@ -186,13 +183,11 @@ Ext.define('Lada.controller.grid.ProbeList', {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection();
         var i18n = Lada.getApplication().bundle;
-        var me = this;
         var ids = [];
 
         for (item in selection) {
-            ids.push(selection[item].data['id']);
+            ids.push(selection[item].get(grid.rowtarget.dataIndex));
         }
-
         //basically, thats the same as the downloadFile
         // code does.
         var data = '{ "proben": ['+ids.toString()+'] }';
