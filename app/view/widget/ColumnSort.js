@@ -101,7 +101,9 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                                 rec.set('sort', newval);
                                 var origindata = this.up('querypanel')
                                     .gridColumnValueStore.getById(rec.get('id'));
-                                origindata.set('sort', newval);
+                                if (origindata) {
+                                    origindata.set('sort', newval);
+                                }
                             }
                         }
                     },
