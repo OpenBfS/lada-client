@@ -922,7 +922,7 @@ Ext.define('Lada.view.window.GridExport', {
             this.countDown();
             return;
         }
-        var id = item.get('id');
+        var id = item.get(this.grid.rowtarget.dataIndex);
         switch (this.rowexp.type) {
             case 'Lada.view.grid.Messung':
                 Ext.Ajax.request({
