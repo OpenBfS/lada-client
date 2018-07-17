@@ -127,7 +127,11 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
      */
     refresh: function() {
         if (this.parentGrid) {
-            this.parentGrid.store.reload();
+            var qp = Ext.ComponentQuery.query('querypanel')[0];
+            var qp_button = Ext.ComponentQuery.query('button', qp)[0];
+            var queryController = Lada.app.getController(
+                'Lada.controller.Query');
+            queryController.search(qp_button);
         }
     },
 
