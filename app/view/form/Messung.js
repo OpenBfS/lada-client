@@ -82,7 +82,7 @@ Ext.define('Lada.view.form.Messung', {
                     }]
                 }],
                 items: [{
-                    xtype: 'displayfield',
+                    xtype: 'selectabledisplayfield',
                     name: 'idAlt',
                     maxLength: 4,
                     margin: '0, 10, 5, 0',

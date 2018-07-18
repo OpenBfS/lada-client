@@ -24,7 +24,7 @@ Ext.define('Lada.view.form.OrtInfo', {
             flex: 1,
             border: 0,
             defaults: {
-                xtype: 'displayfield',
+                xtype: 'selectabledisplayfield',
                 labelWidth: 125,
                 submitValue: false
             },
@@ -78,8 +78,7 @@ Ext.define('Lada.view.form.OrtInfoRow',{
     firstitem: '',
     secondtitem: '',
     defaults: {
-        submitValue: false,
-        xtype: 'displayfield'
+        xtype: 'selectabledisplayfield'
     },
     initComponent: function() {
         this.items = [{
