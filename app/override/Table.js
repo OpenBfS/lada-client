@@ -8,7 +8,10 @@
 
 Ext.define('Lada.override.Table', {
     override: 'Ext.view.Table',
-
+    enableTextSelection: true,
+    getRowClass: function() {
+        return this.enableTextSelection ? 'x-selectable' : '';
+    },
     doStripeRows: function(startRow, endRow) {
         var me = this;
         var rows;
