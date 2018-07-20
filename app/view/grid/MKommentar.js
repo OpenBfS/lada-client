@@ -14,7 +14,6 @@ Ext.define('Lada.view.grid.MKommentar', {
     alias: 'widget.mkommentargrid',
 
     maxHeight: 350,
-    emptyText: 'Keine Kommentare gefunden.',
     minHeight: 110,
     viewConfig: {
         deferEmptyText: false
@@ -25,6 +24,8 @@ Ext.define('Lada.view.grid.MKommentar', {
     allowDeselect: true,
 
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.kommetare');
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false,
@@ -38,7 +39,7 @@ Ext.define('Lada.view.grid.MKommentar', {
                 beforeedit: function(e, o) {
                     var readonlywin = o.grid.up('window').record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
-                    if (readonlywin == true || readonlygrid == true || this.disabled) {
+                    if (readonlywin === true || readonlygrid == true || this.disabled) {
                         return false;
                     }
                     return true;
@@ -50,11 +51,11 @@ Ext.define('Lada.view.grid.MKommentar', {
             xtype: 'toolbar',
             dock: 'bottom',
             items: ['->', {
-                text: 'Hinzufügen',
+                text: i18n.getMsg('add'),
                 icon: 'resources/img/list-add.png',
                 action: 'add'
             }, {
-                text: 'Löschen',
+                text: i18n.getMsg('delete'),
                 icon: 'resources/img/list-remove.png',
                 action: 'delete'
             }]

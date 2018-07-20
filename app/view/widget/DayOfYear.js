@@ -22,7 +22,7 @@ Ext.define('Lada.view.widget.DayOfYear', {
 
     initComponent: function() {
         var me = this;
-
+        var i18n = Lada.getApplication().bundle;
         var monthsStore = Ext.create('Ext.data.Store', {
             fields: ['id', 'name'],
             data: [{
@@ -96,7 +96,7 @@ Ext.define('Lada.view.widget.DayOfYear', {
             allowBlank: this.allowBlank,
             minValue: 1,
             maxValue: 31,
-            emptyText: 'Tag',
+            emptyText: i18n.getMsg('day'),
             listeners: {
                 /* we have to listen on change because checkMaxDay() might
                  * change the value. UI events like blur do not track this. */
@@ -112,7 +112,7 @@ Ext.define('Lada.view.widget.DayOfYear', {
             forceSelection: true,
             valueField: 'id',
             displayField: 'name',
-            emptyText: 'Monat',
+            emptyText: i18n.getMsg('month'),
             queryMode: 'local',
             listeners: {
                 collapse: { fn: me.setDOY },

@@ -17,7 +17,6 @@ Ext.define('Lada.view.widget.Messstelle', {
     valueField: 'id',
     editable: this.editable || false,
     forceSelection: true,
-    emptyText: 'Wählen Sie eine Messstelle',
     // Enable filtering of comboboxes
     autoSelect: true,
     queryMode: 'local',
@@ -28,6 +27,8 @@ Ext.define('Lada.view.widget.Messstelle', {
 
 
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.messstelle');
         this.store = Ext.data.StoreManager.get('messstellen');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Messstellen');

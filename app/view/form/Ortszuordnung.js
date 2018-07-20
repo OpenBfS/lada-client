@@ -64,7 +64,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                         disabled: true
                     }, {
                         text: i18n.getMsg('discard'),
-                        qtip: 'Änderungen verwerfen',
+                        qtip: i18n.getMsg('discard.qtip'),
                         icon: 'resources/img/dialog-cancel.png',
                         action: 'revert',
                         disabled: true

@@ -85,20 +85,25 @@ Ext.define('Lada.store.LocalPagingStore', {
     },
 
     changeToolbar: function() {
+        var i18n= Lada.getApplication().bundle;
         var tbs = Ext.ComponentQuery.query('pagingtoolbar');
         for (var i= 0; i< tbs.length; i++) {
             var grid = tbs[i].up('grid');
             if (!grid || !grid.store.model ||
-                grid.store.model != this.model ) {
+                grid.store.model !== this.model ) {
                 continue;
             }
             var count = this.getCount();
-            tbs[i].afterPageText = 'von ' + Math.ceil(count / this.pageSize);
+            tbs[i].afterPageText = i18n.getMsg('pagingtoolbar.of')
+                + Math.ceil(count / this.pageSize);
             var low = (this.currentPage - 1) * this.pageSize + 1;
             var high = Math.min(low - 1 + this.pageSize, count);
-            tbs[i].displayMsg = 'Zeige Eintrag ' + low
-                                + ' - ' + high
-                                + ' von ' + count;
+            tbs[i].displayMsg = i18n.getMsg('pagingtoolbar.text')
+                                + low
+                                + i18n.getMsg('pagingtoolbar.to')
+                                + high
+                                + ' ' + i18n.getMsg('pagingtoolbar.of')
+                                + count;
             tbs[i].onLoad();
             break;
         }

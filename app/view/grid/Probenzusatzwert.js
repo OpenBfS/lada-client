@@ -18,7 +18,6 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
     ],
 
     maxHeight: 350,
-    emptyText: 'Keine Zusatzwerte gefunden.',
     minHeight: 110,
     viewConfig: {
         deferEmptyText: false
@@ -31,6 +30,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.zusatzwerte');
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false,
@@ -56,22 +56,22 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             xtype: 'toolbar',
             dock: 'bottom',
             items: ['->', {
-                text: 'Hinzufügen',
+                text: i18n.getMsg('add'),
                 icon: 'resources/img/list-add.png',
                 action: 'add',
                 probeId: this.probeId
             }, {
-                text: 'Löschen',
+                text: i18n.getMsg('delete'),
                 icon: 'resources/img/list-remove.png',
                 action: 'delete'
             }]
         }];
         this.columns = [{
-            header: 'PZW-ID',
+            header: i18n.getMsg('pzs_id'),
             dataIndex: 'pzsId',
             flex: 1
         }, {
-            header: 'PZW-Größe',
+            header: i18n.getMsg('pzw'),
             dataIndex: 'pzsId',
             flex: 3,
             renderer: function(value) {
@@ -94,7 +94,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 disableKeyFilter: false
             }
         }, {
-            header: 'Messwert',
+            header: i18n.getMsg('messwert'),
             dataIndex: 'messwertPzs',
             flex: 1,
             editor: {
@@ -114,7 +114,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                     + Math.abs(exponent).toString();
             }
         }, {
-            header: '< NWG',
+            header: i18n.getMsg('messwertNwg'),
             flex: 1,
             renderer: function(value, meta, record) {
                 var nwg = record.get('nwgZuMesswert');
@@ -145,7 +145,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                     + Math.abs(exponent).toString();
             }
         }, {
-            header: i18n.getMsg('meh_id'),
+            header: i18n.getMsg('mehId'),
             dataIndex: 'pzsId',
             flex: 1,
             renderer: function(value) {

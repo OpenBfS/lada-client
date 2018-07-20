@@ -13,7 +13,7 @@ Ext.define('Lada.view.grid.MessungList', {
     extend: 'Lada.view.widget.DynamicGrid',
     alias: 'widget.messunglistgrid',
     title: 'messung.gridTitle',
-    emptyText: 'messung.emptyGrid',
+    emptyText: 'emptygrid.messungen',
     toolbarbuttons: [{
         text: 'statusSetzen',
         icon: 'resources/img/mail-mark-notjunk.png',

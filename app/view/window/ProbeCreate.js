@@ -31,9 +31,9 @@ Ext.define('Lada.view.window.ProbeCreate', {
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        this.title = i18n.getMsg('probe.new');
+        this.title = i18n.getMsg('probe.new.title');
         this.buttons = [{
-            text: 'Schließen',
+            text: i18n.getMsg('close'),
             scope: this,
             handler: this.handleBeforeClose
         }];

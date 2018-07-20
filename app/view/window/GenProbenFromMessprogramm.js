@@ -73,7 +73,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 this.add({
                     xtype: 'panel',
                     border: 0,
-                    margin: 5,
                     layout: 'fit',
                     autoScroll: true,
                     margin: '5, 5, 0, 5',
@@ -82,7 +81,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     html: ''
                 }, {
                     xtype: 'progressbar',
-                    text: 'Fortschritt',
+                    text: i18n.getMsg('progress'),
                     height: 25,
                     width: 340,
                     margin: '5, 5, 5, 5'
@@ -356,7 +355,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 dataIndex: 'mediaDesk'
             }, {
                 //TODO: load description
-                header: i18n.getMsg('umw_id'),
+                header: i18n.getMsg('umwId'),
                 dataIndex: 'umwId',
                 renderer: function(value, metadata) {
                     if (!value) {
@@ -371,7 +370,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     }
                 }
             }, {
-                header: 'Messungen',
+                header: i18n.getMsg('messungen'),
                 renderer: function(value, metadata, rec) {
                     var mprId = rec.get('mprId');
                     mmtStore.clearFilter();
@@ -408,7 +407,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     return '';
                 }
             }, {
-                header: i18n.getMsg('probe_nehmer_id'),
+                header: i18n.getMsg('probenehmerId'),
                 dataIndex: 'probeNehmerId'
             }]
         });

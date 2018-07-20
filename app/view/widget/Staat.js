@@ -15,7 +15,6 @@ Ext.define('Lada.view.widget.Staat', {
     store: 'staatenwidget',
     displayField: 'staat',
     valueField: 'id',
-    emptyText: 'Wählen Sie einen Staat',
     // Enable filtering of comboboxes
     autoSelect: false,
     queryMode: 'local',
@@ -27,6 +26,8 @@ Ext.define('Lada.view.widget.Staat', {
     initComponent: function() {
         // This widget requires a separate store to not change the grid during typing
         this.store = Ext.data.StoreManager.get('staatenwidget');
+        var i18n= Lada.getApplication().bundle;
+        this.emptyText= i18n.getMsg('emptytext.staat');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Staaten');
         }

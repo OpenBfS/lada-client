@@ -96,7 +96,7 @@ Ext.define('Lada.view.window.Messprogramm', {
             }, {
                 xtype: 'fset',
                 name: 'orte',
-                title: 'Ortsangaben',
+                title: i18n.getMsg('title.ortsangabe'),
                 padding: '5, 5',
                 margin: 5,
                 items: [{

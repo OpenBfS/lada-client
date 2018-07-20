@@ -28,10 +28,11 @@ Ext.define('Lada.view.widget.Statuskombi', {
     },
 
     changebutton: function() {
+        var i18n = Lada.getApplication().bundle;
         var btn = Ext.create('Ext.Button', {
             margin: '0 5',
-            text: 'Status ändern',
-            tooltip: 'neuen Status vergeben',
+            text: i18n.getMsg('button.changestatus'),
+            tooltip: i18n.getMsg('button.changestatus.qtip'),
             action: 'newstatus',
             disabled: true,
             listeners: this.buttonListener
@@ -40,10 +41,11 @@ Ext.define('Lada.view.widget.Statuskombi', {
     },
 
     resetbutton: function() {
+        var i18n = Lada.getApplication().bundle;
         var btn = Ext.create('Ext.Button', {
             margin: '0 5',
-            text: 'Zurücksetzen',
-            tooltip: 'letzte Statusänderung zurücknehmen',
+            text: i18n.getMsg('button.resetstatus'),
+            tooltip: i18n.getMsg('button.resetstatus.qtip'),
             action: 'resetstatus',
             disabled: true,
             listeners: this.buttonListener

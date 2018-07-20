@@ -46,9 +46,8 @@ Ext.define('Lada.view.grid.Orte', {
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        this.emptyText = i18n.getMsg('orte.emptyGrid');
+        this.emptyText = i18n.getMsg('emptytext.ortegrid');
 
-        var me = this;
         this.columns = [{
             xtype: 'actioncolumn',
             text: 'RW',
@@ -63,7 +62,7 @@ Ext.define('Lada.view.grid.Orte', {
             },
             handler: function(grid, rowIndex, colIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
-                if (rec.get('readonly') == false) {
+                if (rec.get('readonly') === false) {
                     Lada.model.Ort.load(rec.get('id'), {
                         success: function(record) {
                             Ext.create('Lada.view.window.Ort',{

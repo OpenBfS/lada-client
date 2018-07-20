@@ -28,9 +28,10 @@ Ext.define('Lada.view.widget.Nwg', {
     queryMode: 'local',
     displayField: 'nwg',
     valueField: 'nwgId',
-    emptyText: 'Messwert kleiner als Nachweisgrenze?',
 
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.nwg');
         this.callParent(arguments);
     }
 });

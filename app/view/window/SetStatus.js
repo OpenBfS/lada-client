@@ -68,7 +68,7 @@ Ext.define('Lada.view.window.SetStatus', {
                     editable: false,
                     width: 300,
                     labelWidth: 100,
-                    emptyText: 'Wählen Sie einen Erzeuger aus.',
+                    emptyText: i18n.getMsg('emptytext.erzeuger'),
                     fieldLabel: i18n.getMsg('statusgrid.header.erzeuger')
                 }, {
                     xtype: 'statuswert',
@@ -95,7 +95,7 @@ Ext.define('Lada.view.window.SetStatus', {
                     height: 100,
                     labelWidth: 100,
                     fieldLabel: i18n.getMsg('statusgrid.header.text'),
-                    emptyText: 'Geben Sie einen Kommentar ein.'
+                    emptyText: i18n.getMsg('emptytext.kommentar.widget')
                 }]
             }],
             buttons: [{
@@ -120,7 +120,7 @@ Ext.define('Lada.view.window.SetStatus', {
             xtype: 'progressbar',
             margin: '5, 5, 5, 5',
             hidden: true,
-            text: 'Verarbeite Statusänderungen'
+            text: i18n.getMsg('statusprogress')
         }];
         this.buttons = [{
             text: i18n.getMsg('close'),

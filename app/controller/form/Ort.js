@@ -116,6 +116,7 @@ Ext.define('Lada.controller.form.Ort', {
      * Callbacks after a Ort has been saved
      */
     afterSave: function(form, json) {
+        var i18n = Lada.getApplication().bundle;
         var ozw = form.up('panel').parentWindow;
         var osg = ozw.down('ortstammdatengrid');
         var id = json.data.id;
@@ -129,15 +130,15 @@ Ext.define('Lada.controller.form.Ort', {
         }
         var resulttext;
         if (json) {
-            if (json.message == '201') {
-                resulttext = 'Dieser Ort existiert bereits!';
+            if (json.message === '201') {
+                resulttext = i18n.getMsg('orte.new.notunique');
             }
-            if (json.message == '200') {
-                resulttext = 'Ort erfolgreich angelegt!';
+            if (json.message === '200') {
+                resulttext = i18n.getMsg('orte.new.success');
             }
         }
         Ext.Msg.show({
-            title: Lada.getApplication().bundle.getMsg('success'),
+            title: i18n.getMsg('success'),
             autoScroll: true,
             msg: resulttext,
             buttons: Ext.Msg.OK

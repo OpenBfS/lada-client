@@ -82,12 +82,12 @@ Ext.define('Lada.view.window.FileUpload', {
                 layout: 'hbox',
                 items: [{
                     xtype: 'button',
-                    text: 'Speichern',
+                    text: i18n.getMsg('save'),
                     margin: '3, 3, 3, 3',
                     handler: this.readFile
                 }, {
                     xtype: 'button',
-                    text: 'Abbrechen',
+                    text: i18n.getMsg('cancel'),
                     margin: '3, 3, 3, 3',
                     handler: this.abort
                 }]
@@ -160,12 +160,13 @@ Ext.define('Lada.view.window.FileUpload', {
      */
     uploadSuccess: function(response, opts) {
         this.close();
+        var i18n= Lada.getApplication().bundle;
         var win = Ext.create('Lada.view.window.ImportResponse', {
             responseData: response.responseText,
             message: '', //TODO:response.message,
             modal: true,
             fileName: this.file.name,
-            title: 'Importergebnis'
+            title: i18n.getMsg('title.importresult')
         });
         win.show();
         var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
@@ -179,12 +180,13 @@ Ext.define('Lada.view.window.FileUpload', {
      */
     uploadFailure: function(response, opts) {
         // TODO handle Errors correctly, especially AuthenticationTimeouts
+        var i18n= Lada.getApplication().bundle;
         this.close();
         var win = Ext.create('Lada.view.window.ImportResponse', {
             responseData: response.responseText,
             message: '',//TODO:response.responseText.message,
             fileName: this.file.name,
-            title: 'Importergebnis'
+            title: i18n.getMsg('title.importresult')
         });
         win.show();
     }

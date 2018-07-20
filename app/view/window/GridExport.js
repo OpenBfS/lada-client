@@ -39,12 +39,10 @@ Ext.define('Lada.view.window.GridExport', {
         },
         items: [{
             xtype: 'button',
-            action: 'export',
-            text: 'Exportieren'
+            action: 'export'
         },{
             xtype: 'button',
-            action: 'close',
-            text: 'Schließen'
+            action: 'close'
         }]
     }],
 
@@ -85,6 +83,7 @@ Ext.define('Lada.view.window.GridExport', {
     initComponent: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
+        this.down('button[action=export]').text= i18n.getMsg('export.button');
         this.callParent(arguments);
         this.title = i18n.getMsg('export.title');
         var columns = this.grid.getColumns();
@@ -281,7 +280,7 @@ Ext.define('Lada.view.window.GridExport', {
                 xtype: 'combobox',
                 name: 'decsep',
                 store: me.csv_decSepStore,
-                fieldLabel: 'Dezimaltrenner:',
+                fieldLabel: i18n.getMsg('decimalsepearator'),
                 value: ','
             }]
         }, {
@@ -297,6 +296,8 @@ Ext.define('Lada.view.window.GridExport', {
         this.down('button[action=export]').on({
             click: me.doExport
         });
+        this.down('button[action=close]').text = i18n.getMsg('close');
+        this.down('button[action=close]').text = i18n.getMsg('export.button');
         this.down('button[action=close]').on({
             click: function(button) {
                 button.up('window').close();
@@ -1010,7 +1011,7 @@ Ext.define('Lada.view.window.GridExport', {
 
                         var oldChar;
                         var newChar;
-                        if (textsep === '"') {
+                        if (this.textsep === '"') {
                             value.replace(/\"/g, '\'');
                             oldChar = '"';
                             newChar = '\'';
@@ -1032,7 +1033,7 @@ Ext.define('Lada.view.window.GridExport', {
                                 }, {
                                     xtype: 'button',
                                     margin: '5 5 5 5',
-                                    text: 'OK',
+                                    text: i18n.getMsg('ok'),
                                     handler: function(button) {
                                         button.up().close();
                                     }

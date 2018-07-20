@@ -49,7 +49,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
             margin: '5, 5, 5, 5'
         }, {
             xtype: 'progressbar',
-            text: 'Fortschritt',
+            text: i18n.getMsg('progress'),
             height: 25,
             width: 340,
             hidden: false,
@@ -206,7 +206,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                         me.down('progressbar').hide();
                         me.add({
                             xtype: 'button',
-                            text: 'Schließen',
+                            text: i18n.getMsg('close'),
                             handler: function() {
                                 me.close();
                             }
@@ -227,7 +227,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                         me.down('progressbar').hide();
                         me.add({
                             xtype: 'button',
-                            text: 'Schließen',
+                            text: i18n.getMsg('close'),
                             handler: function() {
                                 me.close();
                             }

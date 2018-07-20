@@ -22,7 +22,7 @@ Ext.define('Lada.view.Viewport', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.items = [{
-            title: '<center>Labordatenerfassung</center>',
+            title: i18n.getMsg('title.viewport'),
             layout: 'border',
             name: 'main',
             tools: [{
@@ -79,7 +79,7 @@ Ext.define('Lada.view.Viewport', {
                     dock: 'top',
                     items: [{
                         xtype: 'splitbutton',
-                        text: 'Info',
+                        text: i18n.getMsg('info'),
                         menu: {
                             items: [{
                                 text: i18n.getMsg('about.button.title'),
@@ -89,7 +89,7 @@ Ext.define('Lada.view.Viewport', {
                     }, '->', {
                         xtype: 'tbtext',
                         id: 'userinfo',
-                        text: 'User: ' + Lada.username
+                        text: i18n.getMsg('userinfo.user') + ' ' + Lada.username
                     }]
                 }],
                 items: [{

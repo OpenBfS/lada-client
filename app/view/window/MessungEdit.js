@@ -36,6 +36,7 @@ Ext.define('Lada.view.window.MessungEdit', {
      * This function initialises the Window
      */
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
         if (this.record === null) {
             Ext.Msg.alert('Keine valide Messung ausgewählt!');
             this.callParent(arguments);
@@ -48,7 +49,7 @@ Ext.define('Lada.view.window.MessungEdit', {
         }
 
         this.buttons = [{
-            text: 'Schließen',
+            text: i18n.getMsg('close'),
             scope: this,
             handler: this.handleBeforeClose
         }];
@@ -82,7 +83,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             }, {
                 xtype: 'fset',
                 name: 'messwerte',
-                title: 'Messwerte',
+                title: i18n.getMsg('title.messwerte'),
                 padding: '5, 5',
                 margin: 5,
                 items: [{
@@ -95,7 +96,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             }, {
                 xtype: 'fset',
                 name: 'messungstatus',
-                title: 'Status',
+                title: i18n.getMsg('title.status'),
                 padding: '5, 5',
                 margin: 5,
                 items: [{
@@ -105,7 +106,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             }, {
                 xtype: 'fset',
                 name: 'messungskommentare',
-                title: 'Kommentare',
+                title: i18n.getMsg('title.kommentare'),
                 padding: '5, 5',
                 margin: 5,
                 items: [{
@@ -154,12 +155,10 @@ Ext.define('Lada.view.window.MessungEdit', {
             success: function(record, response) {
                 var me = this;
                 if (this.parentWindow && this.parentWindow.record.get('treeModified') < record.get('parentModified')) {
+                    var i18n = Lada.getApplication().bundle;
                     Ext.Msg.show({
-                        title: 'Probe nicht aktuell!',
-                        msg: 'Die zugehörige Probe wurde verändert.\n' +
-                            'Möchten Sie zu der Probe zurückkehren und neu laden?\n' +
-                            'Ohne das erneute Laden der Probe wird das Speichern' +
-                            ' der Messung nicht möglich sein.',
+                        title: i18n.getMsg('probe.outdated.title'),
+                        msg: i18n.getMsg('probe.outdated.msg'),
                         buttons: Ext.Msg.OKCANCEL,
                         icon: Ext.Msg.WARNING,
                         closable: false,

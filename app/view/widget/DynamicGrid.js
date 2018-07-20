@@ -532,7 +532,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     button.geom = newval;
                     button.text = '';
                     button.tooltip = newval;
-                    if (!newval || newval == '') {
+                    if (!newval || newval === '') {
                         button.hide();
                     } else {
                         button.show();

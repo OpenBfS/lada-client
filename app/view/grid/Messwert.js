@@ -19,13 +19,11 @@ Ext.define('Lada.view.grid.Messwert', {
         'Lada.view.widget.Messeinheit'
     ],
 
-    emptyText: 'Keine Messwerte gefunden.',
     minHeight: 44,
     viewConfig: {
         deferEmptyText: false
     },
     margin: '0, 5, 15, 5',
-
     recordId: null,
     umwId: null,
     defaultMehId: null,
@@ -36,6 +34,7 @@ Ext.define('Lada.view.grid.Messwert', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        this.emptyText= i18n.getMsg('emptytext.messwerte');
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             errorSummary: false,
@@ -76,19 +75,19 @@ Ext.define('Lada.view.grid.Messwert', {
             xtype: 'toolbar',
             dock: 'bottom',
             items: ['->', {
-                text: 'Hinzufügen',
+                text: i18n.getMsg('add'),
                 icon: 'resources/img/list-add.png',
                 action: 'add',
                 probeId: this.probeId,
                 parentId: this.parentId
             }, {
-                text: 'Löschen',
+                text: i18n.getMsg('delete'),
                 icon: 'resources/img/list-remove.png',
                 action: 'delete'
             }]
         }];
         this.columns = [{
-            header: 'Messgröße',
+            header: i18n.getMsg('messgroesse'),
             dataIndex: 'messgroesseId',
             width: 80,
             renderer: function(value) {
@@ -118,7 +117,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 triggerAction: 'all'
             }
         }, {
-            header: '&lt;NWG',
+            header: i18n.getMsg('messwertNwg'),
             width: 60,
             dataIndex: 'messwertNwg',
             editor: {
@@ -127,7 +126,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 inputValue: '<'
             }
         }, {
-            header: 'Messwert',
+            header: i18n.getMsg('messwert'),
             dataIndex: 'messwert',
             width: 80,
             editor: {
@@ -148,7 +147,7 @@ Ext.define('Lada.view.grid.Messwert', {
                     + Math.abs(exponent).toString();
             }
         }, {
-            header: i18n.getMsg('meh_id'),
+            header: i18n.getMsg('mehId'),
             dataIndex: 'mehId',
             width: 90,
             renderer: function(value) {
@@ -178,7 +177,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 triggerAction: 'all'
             }
         }, {
-            header: 'Messfehler',
+            header: i18n.getMsg('messfehler'),
             dataIndex: 'messfehler',
             xtype: 'numbercolumn',
             format: '0000.0',

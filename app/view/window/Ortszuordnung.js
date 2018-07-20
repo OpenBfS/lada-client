@@ -176,13 +176,13 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 height: 240,
                 items: [{
                     xtype: 'ortstammdatengrid',
-                    title: 'Orte', //TODO i18n.getMsg
+                    title: i18n.getMsg('title.orte'),
                     isMessprogramm: this.messprogramm? true: false
                 }, {
                     xtype: 'verwaltungseinheitengrid',
-                    title: 'Verwaltungseinheiten'
+                    title: i18n.getMsg('title.verwaltungseinheiten')
                 }, {
-                    title: 'Staaten',
+                    title: i18n.getMsg('title.staaten'),
                     xtype: 'staatengrid'
                 }],
                 dockedItems: [{
@@ -194,7 +194,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                         icon: 'resources/img/Find.png',
                         width: '150px',
                         enableKeyEvents: true,
-                        emptyText: 'Ortssuche',
+                        emptyText: i18n.getMsg('emptytext.ortssuche'),
                         emptyCls: 'empty-text-field',
                         fieldLabel: ''
                     }, '->', {

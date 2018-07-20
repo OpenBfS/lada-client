@@ -182,7 +182,6 @@ Ext.define('Lada.view.QueryPanel', {
         name: 'filtervariables',
         margin: '10 15 10 15',
         minHeight: 20,
-        title: 'Filter',
         layout: {
             type: 'hbox',
             align: 'stretchmax'
@@ -231,7 +230,8 @@ Ext.define('Lada.view.QueryPanel', {
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('query.title');
         this.callParent(arguments);
-
+        this.down('fieldset [name=filtervariables]').title = i18n.getMsg(
+            'title.filter');
         this.down('button[action=search]').text = i18n.getMsg('query.search');
         this.down('button[name=search2]').text = i18n.getMsg('query.search');
         this.down('button[action=save]').text = i18n.getMsg('save');

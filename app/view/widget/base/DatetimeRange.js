@@ -33,7 +33,7 @@ Ext.define('Lada.view.widget.base.DatetimeRange', {
             Ext.create('Lada.view.widget.base.DateTimeField', {
                 format: this.format || 'd.m.Y H:i',
                 emptyText: i18n.getMsg('datetimepicker.chosetime'),
-                fieldLabel: i18n.getMsg('datetimepicker.start'),
+                fieldLabel: i18n.getMsg('from'),
                 labelWidth: 30,
                 // flex: 1,
                 margin: '0,5,0,5',
@@ -52,7 +52,7 @@ Ext.define('Lada.view.widget.base.DatetimeRange', {
             Ext.create('Lada.view.widget.base.DateTimeField', {
                 format: this.format || 'd.m.Y H:i',
                 emptyText: i18n.getMsg('datetimepicker.chosetime'),
-                fieldLabel: i18n.getMsg('datetimepicker.stop'),
+                fieldLabel: i18n.getMsg('to'),
                 labelWidth: 30,
                 // flex: 1,
                 margin: '0,5,0,5',

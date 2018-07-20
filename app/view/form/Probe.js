@@ -49,7 +49,7 @@ Ext.define('Lada.view.form.Probe', {
         var i18n = Lada.getApplication().bundle;
         this.items = [{
             xtype: 'fieldset',
-            title: 'Allgemein',
+            title: i18n.getMsg('title.general'),
             items: [{
                 border: 0,
                 margin: '0, 0, 10, 0',
@@ -69,14 +69,14 @@ Ext.define('Lada.view.form.Probe', {
                         action: 'audit',
                         disabled: this.recordId === null
                     }, {
-                        text: 'Speichern',
-                        qtip: 'Daten speichern',
+                        text: i18n.getMsg('save'),
+                        qtip: i18n.getMsg('save.qtip'),
                         icon: 'resources/img/dialog-ok-apply.png',
                         action: 'save',
                         disabled: true
                     }, {
-                        text: 'Verwerfen',
-                        qtip: 'Änderungen verwerfen',
+                        text: i18n.getMsg('discard'),
+                        qtip: i18n.getMsg('discard.qtip'),
                         icon: 'resources/img/dialog-cancel.png',
                         action: 'discard',
                         disabled: true
@@ -351,7 +351,7 @@ Ext.define('Lada.view.form.Probe', {
                 }, {
                     // Zeit
                     xtype: 'fieldset',
-                    title: 'Zeit',
+                    title: i18n.getMsg('title.time'),
                     layout: {
                         type: 'vbox',
                         align: 'stretch'
@@ -368,7 +368,7 @@ Ext.define('Lada.view.form.Probe', {
                         items: [{
                             xtype: 'datefield',
                             emptyText: ' ',
-                            fieldLabel: 'Sollzeitraum von',
+                            fieldLabel: i18n.getMsg('sollVon'),
                             labelWidth: 130,
                             margin: '0, 5, 5, 5',
                             name: 'solldatumBeginn',
@@ -378,7 +378,7 @@ Ext.define('Lada.view.form.Probe', {
                         }, {
                             xtype: 'datefield',
                             emptyText: ' ',
-                            fieldLabel: 'bis',
+                            fieldLabel: i18n.getMsg('sollBis'),
                             labelWidth: 17,
                             margin: '0, 5, 5, 5',
                             name: 'solldatumEnde',
@@ -416,7 +416,7 @@ Ext.define('Lada.view.form.Probe', {
                 }, {
                     // Medium
                     xtype: 'fieldset',
-                    title: 'Medium',
+                    title: i18n.getMsg('title.media'),
                     width: '100%',
                     items: [{
                         border: 0,
@@ -473,7 +473,7 @@ Ext.define('Lada.view.form.Probe', {
                             }]
                         }, {
                             xtype: 'fieldset',
-                            title: 'Details Deskriptoren',
+                            title: i18n.getMsg('title.deskriptordetails'),
                             collapsible: true,
                             collapsed: true,
                             layout: {

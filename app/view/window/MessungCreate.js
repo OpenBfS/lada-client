@@ -32,6 +32,7 @@ Ext.define('Lada.view.window.MessungCreate', {
      * This function initialises the Window
      */
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
         this.probe = this.record;
         if (this.probe === null) {
             Ext.Msg.alert('Zu der Messung existiert keine Probe!');
@@ -42,13 +43,14 @@ Ext.define('Lada.view.window.MessungCreate', {
         var messstelle = Ext.data.StoreManager.get('messstellen')
             .getById(this.probe.get('mstId'));
 
-        this.title = 'Neue Messung zu Probe - Hauptprobennr.: '
+        this.title = i18n.getMsg('messung.new.title1')
             + this.probe.get('hauptprobenNr')
-            + ' Mst: ' + messstelle.get('messStelle')
-            + ' hinzufügen.';
+            + i18n.getMsg('messung.new.title2')
+            + messstelle.get('messStelle')
+            + i18n.getMsg('messung.new.title3');
 
         this.buttons = [{
-            text: 'Schließen',
+            text: i18n.getMsg('close'),
             scope: this,
             handler: this.handleBeforeClose
         }];

@@ -238,7 +238,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                 }, {
                     xtype: 'messprogrammland',
                     name: 'mplId',
-                    fieldLabel: 'Messprogramm-Land',
+                    fieldLabel: i18n.getMsg('mpl_id'),
                     margin: '0, 5, 5, 5',
                     //width: '100%',
                     anchor: '100%',

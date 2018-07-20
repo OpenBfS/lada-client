@@ -33,13 +33,14 @@ Ext.define('Lada.view.window.ProbeEdit', {
      * This function initialises the Window
      */
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
         if (this.record === null) {
             Ext.Msg.alert('Keine valide Probe ausgewählt!');
             this.callParent(arguments);
             return;
         }
         this.buttons = [{
-            text: 'Schließen',
+            text: i18n.getMsg('close'),
             scope: this,
             handler: this.handleBeforeClose
         }];
@@ -72,7 +73,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }, {
                 xtype: 'fset',
                 name: 'orte',
-                title: 'Ortsangaben',
+                title: i18n.getMsg('title.ortsangabe'),
                 padding: '5, 5',
                 margin: 5,
                 items: [{
@@ -82,7 +83,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }, {
                 xtype: 'fset',
                 name: 'messungen',
-                title: 'Messungen',
+                title: i18n.getMsg('title.messungen'),
                 padding: '5, 5',
                 margin: 5,
                 collapsible: false,
@@ -94,7 +95,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }, {
                 xtype: 'fset',
                 name: 'probenzusatzwerte',
-                title: 'Zusatzwerte',
+                title: i18n.getMsg('title.zusatzwerte'),
                 padding: '5, 5',
                 margin: 5,
                 collapsible: true,
@@ -106,7 +107,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }, {
                 xtype: 'fset',
                 name: 'pkommentare',
-                title: 'Kommentare',
+                title: i18n.getMsg('title.kommentare'),
                 padding: '5, 5',
                 margin: 5,
                 collapsible: true,

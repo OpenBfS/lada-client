@@ -14,7 +14,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     alias: 'widget.ortszuordnunggrid',
 
     maxHeight: 350,
-    emptyText: 'Keine Orte gefunden.',
     // minHeight and deferEmptyText are needed to be able to show the
     // emptyText message.
     minHeight: 110,
@@ -35,17 +34,17 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     initComponent: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
-
+        this.emptyText = i18n.getMsg('emptytext.Ortszuordnung');
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
             items: ['->', {
-                text: 'Hinzufügen',
+                text: i18n.getMsg('add'),
                 icon: 'resources/img/list-add.png',
                 action: 'add',
                 probeId: this.probeId
             }, {
-                text: 'Löschen',
+                text: i18n.getMsg('delete'),
                 icon: 'resources/img/list-remove.png',
                 action: 'delete'
             }]

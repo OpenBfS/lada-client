@@ -27,7 +27,7 @@ Ext.define('Lada.view.widget.PagingSize', {
         disableKeyFilter: true,
         editable: false,
         onChange: function(newVal, oldVal) {
-            if (newVal == oldVal) {
+            if (newVal === oldVal) {
                 return;
             }
             Lada.getApplication().setPagingSize(parseInt(newVal));
@@ -41,8 +41,7 @@ Ext.define('Lada.view.widget.PagingSize', {
             }
         }
     }, {
-        xtype: 'tbtext',
-        text: ' Einträge pro Seite'
+        xtype: 'tbtext'
     }],
 
     refreshPagingSize: function() {
@@ -51,6 +50,8 @@ Ext.define('Lada.view.widget.PagingSize', {
 
     initComponent: function() {
         var me = this;
+        var i18n = Lada.getApplication().bundle;
+        this.down('tbtext').text = i18n.getMsg('grid.itemsperpage');
         Lada.getApplication().on('pagingSizeChanged', me.refreshPagingSize, this);
         me.store = Ext.StoreManager.get('pagingSizes');
         this.callParent(arguments);
