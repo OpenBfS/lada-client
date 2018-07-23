@@ -53,7 +53,7 @@ Ext.define('Lada.view.window.SetStatus', {
         this.items = [{
             xtype: 'form',
             name: 'valueselection',
-            border: 0,
+            border: false,
             items: [{
                 xtype: 'fieldset',
                 title: '',

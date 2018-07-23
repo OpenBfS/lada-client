@@ -20,7 +20,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
     model: 'Lada.model.DatensatzErzeuger',
     minWidth: 550,
     margin: 5,
-    border: 0,
+    border: false,
 
     recordId: null,
 
@@ -29,7 +29,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.items = [{
-            border: 0,
+            border: false,
             margin: '0, 0, 10, 0',
             dockedItems: [{
                 xtype: 'toolbar',
@@ -56,10 +56,10 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
             }],
             items: [{
                 layout: 'vbox',
-                border: 0,
+                border: false,
                 items: [{
                     layout: 'hbox',
-                    border: 0,
+                    border: false,
                     margin: '0 5 5 5',
                     items: [{
                         xtype: 'netzbetreiber',
@@ -88,7 +88,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                     }]
                 }, {
                     layout: 'hbox',
-                    border: 0,
+                    border: false,
                     margin: '0 5 5 5',
                     items: [{
                         xtype: 'tfield',

@@ -25,7 +25,7 @@ Ext.define('Lada.view.form.Messung', {
     model: 'Lada.model.Messung',
     minWidth: 650,
     margin: 5,
-    border: 0,
+    border: false,
 
     recordId: null,
 
@@ -46,7 +46,7 @@ Ext.define('Lada.view.form.Messung', {
             xtype: 'fieldset',
             title: i18n.getMsg('title.general'),
             items: [{
-                border: 0,
+                border: false,
                 margin: '0, 0, 10, 0',
                 layout: {
                     type: 'table',

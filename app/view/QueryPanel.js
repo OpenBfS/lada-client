@@ -38,7 +38,7 @@ Ext.define('Lada.view.QueryPanel', {
                 layout: 'hbox',
                 width: '100%',
                 align: 'stretch',
-                border: 0,
+                border: false,
                 margin: 0,
                 items: [{
                     xtype: 'combobox',

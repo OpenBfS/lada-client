@@ -155,7 +155,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         this.items = [{
             layout: 'border',
             bodyStyle: {background: '#fff'},
-            border: 0,
+            border: false,
             items: [{
                 xtype: 'map',
                 region: 'center',
@@ -171,7 +171,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 xtype: 'tabpanel',
                 tabBarPosition: 'top',
                 region: 'south',
-                border: 0,
+                border: false,
                 layout: 'fit',
                 height: 240,
                 items: [{

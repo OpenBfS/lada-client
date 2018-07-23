@@ -23,7 +23,7 @@ Ext.define('Lada.view.window.Ort', {
 
     shadow: false,
 
-    border: 0,
+    border: false,
 
     bodyStyle: {background: '#fff'},
 

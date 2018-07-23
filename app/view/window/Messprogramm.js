@@ -88,7 +88,7 @@ Ext.define('Lada.view.window.Messprogramm', {
         // creation of this window. We need to pass it throuh to the form as
         // we need the "Id" param to load the correct item.
         this.items = [{
-            border: 0,
+            border: false,
             autoScroll: true,
             items: [{
                 xtype: 'messprogrammform',

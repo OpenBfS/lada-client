@@ -74,7 +74,7 @@ Ext.define('Lada.view.window.MessungEdit', {
         mStore.load();
 
         this.items = [{
-            border: 0,
+            border: false,
             autoScroll: true,
             items: [{
                 xtype: 'messungform',

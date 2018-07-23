@@ -57,7 +57,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
         // we need the "modelId" param to load the correct item.
 
         this.items = [{
-            border: 0,
+            border: false,
             autoScroll: true,
             items: [{
                 xtype: 'probeform'
