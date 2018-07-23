@@ -280,7 +280,7 @@ Ext.define('Lada.view.window.GridExport', {
                 xtype: 'combobox',
                 name: 'decsep',
                 store: me.csv_decSepStore,
-                fieldLabel: i18n.getMsg('decimalsepearator'),
+                fieldLabel: i18n.getMsg('decimalseparator'),
                 value: ','
             }]
         }, {

@@ -405,7 +405,7 @@ Ext.define('Lada.view.form.Probe', {
                             period: 'start'
                         }, {
                             xtype: 'datetime',
-                            fieldLabel: 'bis',
+                            fieldLabel: i18n.getMsg('sollBis'),
                             labelWidth: 17,
                             margin: '0, 5, 5, 5',
                             name: 'probeentnahmeEnde',
