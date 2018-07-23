@@ -65,7 +65,7 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
             var oldVal = combo.getValue();
             combo.clearValue();
             combo.fireEvent('change', combo, '', oldVal);
-        }
+        };
     },
 
     /**
@@ -94,7 +94,7 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
         }
         if (this.getValue() == null || this.getValue() == '') {
             this.showWarnings(
-                    i18n.getMsg('warn.msg.reiprogpunktgruppe.empty'));
+                i18n.getMsg('warn.msg.reiprogpunktgruppe.empty'));
             cons = false;
         }
 

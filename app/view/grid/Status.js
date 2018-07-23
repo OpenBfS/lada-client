@@ -30,7 +30,7 @@ Ext.define('Lada.view.grid.Status', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        this.emptyText = i18n.getMsg('statusgrid.emptyText');
+        this.emptyText = i18n.getMsg('emptytext.statusgrid');
 
         this.statusWerteStore = Ext.create('Lada.store.StatusWerte');
         this.statusWerteStore.load({

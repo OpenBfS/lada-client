@@ -116,7 +116,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         }
         this.tools = [{
             type: 'help',
-            tooltip: 'Hilfe',
+            tooltip: i18n.getMsg('help.qtip'),
             titlePosition: 0,
             callback: function() {
                 var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
@@ -155,7 +155,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         this.items = [{
             layout: 'border',
             bodyStyle: {background: '#fff'},
-            border: 0,
+            border: false,
             items: [{
                 xtype: 'map',
                 region: 'center',
@@ -171,18 +171,18 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 xtype: 'tabpanel',
                 tabBarPosition: 'top',
                 region: 'south',
-                border: 0,
+                border: false,
                 layout: 'fit',
                 height: 240,
                 items: [{
                     xtype: 'ortstammdatengrid',
-                    title: 'Orte', //TODO i18n.getMsg
+                    title: i18n.getMsg('title.orte'),
                     isMessprogramm: this.messprogramm? true: false
                 }, {
                     xtype: 'verwaltungseinheitengrid',
-                    title: 'Verwaltungseinheiten'
+                    title: i18n.getMsg('title.verwaltungseinheiten')
                 }, {
-                    title: 'Staaten',
+                    title: i18n.getMsg('title.staaten'),
                     xtype: 'staatengrid'
                 }],
                 dockedItems: [{
@@ -194,7 +194,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                         icon: 'resources/img/Find.png',
                         width: '150px',
                         enableKeyEvents: true,
-                        emptyText: 'Ortssuche',
+                        emptyText: i18n.getMsg('emptytext.ortssuche'),
                         emptyCls: 'empty-text-field',
                         fieldLabel: ''
                     }, '->', {
@@ -243,12 +243,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         // leave the ortstore empty at begin.
         // TODO check when changing filter method to remote/local
         this.ortstore.removeAll();
-        var ortId;
-        if (this.messprogramm) {
-            ortId = this.record.get('ort');
-        } else {
-            ortId = this.record.get('ortId');
-        }
+        var ortId = this.record.get('ortId');
         if (ortId || ortId === 0) {
             Lada.model.Ort.load(ortId, {
                 success: function(rec) {

@@ -38,11 +38,11 @@ Ext.define('Lada.view.window.About', {
             handler: this.close
         }];
         this.items = [{
-            border: 0,
+            border: false,
             autoscroll: 'true',
             items: [{
                 xtype: 'panel',
-                border: 0,
+                border: false,
                 layout: 'fit',
                 bodyPadding: 20,
                 html: '<p>'

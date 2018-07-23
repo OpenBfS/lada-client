@@ -9,16 +9,15 @@
 /**
  * Window to show a confirmation dialog to delete a Probe and a progress bar after confirmation
  */
-Ext.define('Lada.view.window.DeleteMultipleProbe', {
+Ext.define('Lada.view.window.DeleteMultipleItems', {
     extend: 'Ext.window.Window',
-    alias: 'widget.deleteMultipleProbe',
+    alias: 'widget.deleteMultipleItems',
 
     collapsible: true,
     maximizable: true,
     autoShow: true,
     layout: 'vbox',
     constrain: true,
-
     selection: null,
     parentWindow: null,
     confWin: null,
@@ -40,24 +39,7 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
                 this.getEl().addCls('window-inactive');
             }
         });
-
-        //this.height = 180;
-        //this.width = 350;
-
-        var me = this;
-        // add listeners to change the window appearence when it becomes inactive
-        this.on({
-            activate: function() {
-                this.getEl().removeCls('window-inactive');
-            },
-            deactivate: function() {
-                this.getEl().addCls('window-inactive');
-            },
-            close: function() {
-                this.parentWindow.probenWindow = null;
-            }
-        });
-        me.items = [{
+        this.items = [{
             xtype: 'panel',
             height: 150,
             width: 340,
@@ -67,25 +49,54 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
             margin: '5, 5, 5, 5'
         }, {
             xtype: 'progressbar',
-            text: 'Fortschritt',
+            text: i18n.getMsg('progress'),
             height: 25,
             width: 340,
             hidden: false,
             margin: '5, 5, 5, 5'
         }];
+        var title = '';
+        var dialog1 = '';
+        var dialog2 = i18n.getMsg('delete.multiple.warning');
+
+        switch (this.parentGrid.rowtarget.dataType) {
+            case 'probeId':
+                title = i18n.getMsg('delete.multiple_probe.window.title');
+                dialog1 = i18n.getMsg('delete.multiple_probe');
+                break;
+            case 'mpId':
+                title = i18n.getMsg('delete.multiple_mpr.window.title');
+                dialog1 = i18n.getMsg('delete.multiple_mpr');
+                break;
+            case 'pnehmer':
+                title = i18n.getMsg('delete.multiple_probenehmer.window.title');
+                dialog1 = i18n.getMsg('delete.multiple_probenehmer');
+                break;
+            case 'dsatzerz':
+                title = i18n.getMsg('delete.multiple_datensatzerzeuger.window.title');
+                dialog1 = i18n.getMsg('delete.multiple_datensatzerzeuger');
+                break;
+            case 'mprkat':
+                title = i18n.getMsg('delete.multiple_mpr_kat.window.title');
+                dialog1 = i18n.getMsg('delete.multiple_mpr_kat');
+                break;
+
+
+        }
+        var me = this;
         this.confWin = Ext.create('Ext.window.Window', {
-            title: i18n.getMsg('delete.multiple_probe.window.title'),
+            title: title,
             zIndex: 1,
             items: [{
                 xtype: 'panel',
-                border: 0,
+                border: false,
                 margin: 5,
                 layout: 'fit',
                 html: '<p>'
-                    + i18n.getMsg('delete.multiple_probe')
+                    + dialog1
                     + '<br/>'
                     + '<br/>'
-                    + i18n.getMsg('delete.multiple_probe.warning')
+                    + dialog2
                     + '</p>'
             }, {
                 xtype: 'panel',
@@ -112,29 +123,15 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
     },
 
     /**
-     * Inititalise Data
-     */
-    initData: function() {
-        var i18n = Lada.getApplication().bundle;
-        me = this;
-    },
-
-    /**
-     * Refreshes probe grid
+     * Refreshes Dynamic grid
      */
     refresh: function() {
-        var parentGrid = Ext.ComponentQuery.query('probelistgrid');
-        if (parentGrid.length == 1) {
-            parentGrid[0].store.reload();
-        }
-    },
-
-    /**
-     * Reload the Application
-     */
-    reload: function(btn) {
-        if (btn === 'yes') {
-            location.reload();
+        if (this.parentGrid) {
+            var qp = Ext.ComponentQuery.query('querypanel')[0];
+            var qp_button = Ext.ComponentQuery.query('button', qp)[0];
+            var queryController = Lada.app.getController(
+                'Lada.controller.Query');
+            queryController.search(qp_button);
         }
     },
 
@@ -148,52 +145,73 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
     },
 
     /**
-     * Initiates deletion of all selected probe items
+     * Initiates deletion of all selected items
      */
     startDelete: function(btn) {
         var me = this;
         var i18n = Lada.getApplication().bundle;
         me.maxSteps = me.selection.length;
         me.down('progressbar').show();
-        var nameIdMap = new Ext.util.HashMap();
+        var url = '';
+        var datatype = '';
+
+        switch (me.parentGrid.rowtarget.dataType) {
+            case 'probeId':
+                url = 'lada-server/rest/probe/';
+                datatype = 'Probe ';
+                break;
+            case 'messungId':
+                url = 'lada-server/rest/messung/';
+                datatype = 'Messung ';
+                break;
+            case 'mpId':
+                url = 'lada-server/rest/messprogramm/';
+                datatype = 'Messprogramm ';
+                break;
+            case 'pnehmer':
+                url = 'lada-server/rest/probenehmer/';
+                datatype = 'Probenehmer ';
+                break;
+            case 'dsatzerz':
+                url = 'lada-server/rest/datensatzerzeuger/';
+                datatype = 'Datensatzerzeuger ';
+                break;
+            case 'mprkat':
+                url = 'lada-server/rest/messprogrammkategorie/';
+                datatype = 'Messprogrammkategorie ';
+                break;
+        }
         for (var i = 0; i< me.selection.length; i++) {
-            var id = me.selection[i].get('id');
-            var name = me.selection[i].get('probeId');
-            if (name == undefined || name == null) {
-                name = '';
-            }
-            nameIdMap.add(id, name);
+            var id = me.selection[i].get(me.parentGrid.rowtarget.dataIndex);
             Ext.Ajax.request({
-                url: 'lada-server/rest/probe/' + id,
+                url: url + id,
                 method: 'DELETE',
                 success: function(resp, opts) {
                     var json = Ext.JSON.decode(resp.responseText);
                     var urlArr = resp.request.url.split('/');
                     var delId = urlArr[urlArr.length - 1];
                     var html = me.down('panel').html;
-
                     if (json.success && json.message === '200') {
-                        html = html + 'Probe ' + nameIdMap.get(delId) + ' gelöscht<br>';
+                        html = html + datatype + delId + ' gelöscht<br>';
                         me.down('panel').setHtml(html);
                     } else {
-                        html = html + 'Probe ' + nameIdMap.get(delId) + ' konnte nicht gelöscht werden:<br>'
-                                 + i18n.getMsg(json.message) + '<br>';
+                        html = html + datatype + delId + ' konnte nicht gelöscht werden:<br>'
+                        + i18n.getMsg(json.message) + '<br>';
                         me.down('panel').setHtml(html);
                     }
                     me.currentProgress += 1;
                     me.down('progressbar').updateProgress(me.currentProgress/me.maxSteps);
-                    if (me.currentProgress == me.maxSteps) {
+                    if (me.currentProgress === me.maxSteps) {
                         me.refresh();
                         me.down('progressbar').hide();
                         me.add({
                             xtype: 'button',
-                            text: 'Schließen',
+                            text: i18n.getMsg('close'),
                             handler: function() {
                                 me.close();
                             }
                         });
                     }
-
                 },
                 failure: function(resp, opts) {
                     var json = Ext.JSON.decode(resp.responseText);
@@ -203,13 +221,13 @@ Ext.define('Lada.view.window.DeleteMultipleProbe', {
                     me.down('panel').setHtml(html);
                     me.currentProgress += 1;
                     me.down('progressbar').updateProgress(me.currentProgress/me.maxSteps);
-                    html = html + 'Probe ' + nameIdMap.get(delId) + 'konnte nicht gelöscht werden<br>';
+                    html = html + datatype + delId + 'konnte nicht gelöscht werden<br>';
                     me.down('panel').setHtml(html);
-                    if (me.currentProgress == me.maxSteps) {
+                    if (me.currentProgress === me.maxSteps) {
                         me.down('progressbar').hide();
                         me.add({
                             xtype: 'button',
-                            text: 'Schließen',
+                            text: i18n.getMsg('close'),
                             handler: function() {
                                 me.close();
                             }

@@ -7,18 +7,9 @@
  */
 
 /**
- * Store for Queries
+ * Store for user defined columns
  */
-Ext.define('Lada.store.ProbeQueries', {
+Ext.define('Lada.store.GridColumnValue', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Query',
-    //    autoLoad: true,
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/query/probe',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
+    model: 'Lada.model.GridColumnValue'
 });

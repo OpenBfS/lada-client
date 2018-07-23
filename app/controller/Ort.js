@@ -11,12 +11,10 @@ Ext.define('Lada.controller.Ort', {
     init: function() {
         var me = this;
         this.control({
-            'ortpanel button[action=addMap]': {
+            'dynamicgrid button[action=addMap]': {
                 click: me.activateDraw
             },
-            'ortpanel button[action=add]': {
-                click: me.addRecord
-            },
+
             'ortpanel button[action=delete]': {
                 click: me.deleteItem
             },
@@ -31,7 +29,7 @@ Ext.define('Lada.controller.Ort', {
     },
 
     activateDraw: function(button) {
-        var map = button.up('ortpanel').down('map');
+        var map = button.up('dynamicgrid').down('map');
         var record = Ext.create('Lada.model.Ort');
         map.activateDraw(record);
     },
@@ -39,20 +37,21 @@ Ext.define('Lada.controller.Ort', {
     addRecord: function(button) {
         Ext.create('Lada.view.window.Ort',{
             record: Ext.create('Lada.model.Ort', {ortTyp: 1}),
-            parentWindow: button.up('ortpanel')
+            parentWindow: button.up('dynamicgrid')
         }).show();
     },
 
     editRecord: function(grid, record) {
-        if (record.get('readonly') === false)
-        Lada.model.Ort.load(record.get('id'), {
-            success: function(record) {
-                Ext.create('Lada.view.window.Ort',{
-                    record: record,
-                    parentWindow: grid.up('panel')
-                }).show();
-            }
-        });
+        if (record.get('readonly') === false) {
+            Lada.model.Ort.load(record.get('id'), {
+                success: function(record) {
+                    Ext.create('Lada.view.window.Ort',{
+                        record: record,
+                        parentWindow: grid.up('panel')
+                    }).show();
+                }
+            });
+        }
     },
 
     deleteItem: function(button) {

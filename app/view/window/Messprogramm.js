@@ -49,7 +49,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                 if (! this.probenWindow) {
                     var winname = 'Lada.view.window.GenProbenFromMessprogramm';
                     var win = Ext.create(winname, {
-                        records: [this.record],
+                        ids: [this.record.get('id')],
                         parentWindow: this
                     });
                     win.show();
@@ -72,7 +72,7 @@ Ext.define('Lada.view.window.Messprogramm', {
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
-           activate: function() {
+            activate: function() {
                 this.getEl().removeCls('window-inactive');
             },
             deactivate: function() {
@@ -88,7 +88,7 @@ Ext.define('Lada.view.window.Messprogramm', {
         // creation of this window. We need to pass it throuh to the form as
         // we need the "Id" param to load the correct item.
         this.items = [{
-            border: 0,
+            border: false,
             autoScroll: true,
             items: [{
                 xtype: 'messprogrammform',
@@ -96,7 +96,7 @@ Ext.define('Lada.view.window.Messprogramm', {
             }, {
                 xtype: 'fset',
                 name: 'orte',
-                title: 'Ortsangaben',
+                title: i18n.getMsg('title.ortsangabe'),
                 padding: '5, 5',
                 margin: 5,
                 items: [{
@@ -122,7 +122,7 @@ Ext.define('Lada.view.window.Messprogramm', {
         }];
         this.tools = [{
             type: 'help',
-            tooltip: 'Hilfe',
+            tooltip: i18n.getMsg('help.qtip'),
             titlePosition: 0,
             callback: function() {
                 var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
@@ -203,19 +203,19 @@ Ext.define('Lada.view.window.Messprogramm', {
             var mstLaborStore = Ext.data.StoreManager.get('messstellelabor');
             var items = mstLaborStore.queryBy(function(record) {
                 if ( (Lada.mst.indexOf(record.get('messStelle')) > -1) &&
-                   (Lada.mst.indexOf(record.get('laborMst')) > -1)){
+                   (Lada.mst.indexOf(record.get('laborMst')) > -1)) {
                     return true;
                 }
             });
             record.set('owner', true);
             record.set('id', null);
             defaultentry = items.items[0];
-            if (defaultentry){
-              record.set('mstId', defaultentry.get('messStelle'));
-              record.set('laborMstId', defaultentry.get('laborMst'));
-              var mstStore = Ext.data.StoreManager.get('messstellen');
-              var netzbetreiber = mstStore.getById(defaultentry.get('messStelle')).get('netzbetreiberId');
-              this.down('messprogrammform').down('netzbetreiber').setValue(netzbetreiber);
+            if (defaultentry) {
+                record.set('mstId', defaultentry.get('messStelle'));
+                record.set('laborMstId', defaultentry.get('laborMst'));
+                var mstStore = Ext.data.StoreManager.get('messstellen');
+                var netzbetreiber = mstStore.getById(defaultentry.get('messStelle')).get('netzbetreiberId');
+                this.down('messprogrammform').down('netzbetreiber').setValue(netzbetreiber);
             }
             this.down('messprogrammform').setRecord(record);
             this.down('messprogrammform').setMediaDesk(record);

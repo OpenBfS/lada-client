@@ -19,7 +19,6 @@ Ext.define('Lada.view.grid.PKommentar', {
     ],
 
     maxHeight: 350,
-    emptyText: 'Keine Kommentare gefunden.',
     minHeight: 110,
     viewConfig: {
         deferEmptyText: false
@@ -30,6 +29,8 @@ Ext.define('Lada.view.grid.PKommentar', {
     allowDeselect: true,
 
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.kommentare');
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             autoCancel: false,
@@ -55,12 +56,12 @@ Ext.define('Lada.view.grid.PKommentar', {
             xtype: 'toolbar',
             dock: 'bottom',
             items: ['->', {
-                text: 'Hinzufügen',
+                text: i18n.getMsg('add'),
                 icon: 'resources/img/list-add.png',
                 action: 'add',
                 probeId: this.probeId
             }, {
-                text: 'Löschen',
+                text: i18n.getMsg('delete'),
                 icon: 'resources/img/list-remove.png',
                 action: 'delete'
             }]

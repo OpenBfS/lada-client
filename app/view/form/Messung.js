@@ -25,7 +25,7 @@ Ext.define('Lada.view.form.Messung', {
     model: 'Lada.model.Messung',
     minWidth: 650,
     margin: 5,
-    border: 0,
+    border: false,
 
     recordId: null,
 
@@ -44,9 +44,9 @@ Ext.define('Lada.view.form.Messung', {
         var i18n = Lada.getApplication().bundle;
         this.items = [{
             xtype: 'fieldset',
-            title: 'Allgemein',
+            title: i18n.getMsg('title.general'),
             items: [{
-                border: 0,
+                border: false,
                 margin: '0, 0, 10, 0',
                 layout: {
                     type: 'table',
@@ -68,20 +68,28 @@ Ext.define('Lada.view.form.Messung', {
                         action: 'audit',
                         disabled: this.recordId === null
                     }, {
-                        text: 'Speichern',
-                        qtip: 'Daten speichern',
+                        text: i18n.getMsg('save'),
+                        qtip: i18n.getMsg('save.qtip'),
                         icon: 'resources/img/dialog-ok-apply.png',
                         action: 'save',
                         disabled: true
                     }, {
-                        text: 'Verwerfen',
-                        qtip: 'Änderungen verwerfen',
+                        text: i18n.getMsg('discard'),
+                        qtip: i18n.getMsg('discard.qtip'),
                         icon: 'resources/img/dialog-cancel.png',
                         action: 'discard',
                         disabled: true
                     }]
                 }],
                 items: [{
+                    xtype: 'selectabledisplayfield',
+                    name: 'idAlt',
+                    maxLength: 4,
+                    margin: '0, 10, 5, 0',
+                    fieldLabel: i18n.getMsg('messungsId'),
+                    width: 300,
+                    labelWidth: 100
+                }, {
                     xtype: 'tfield',
                     name: 'nebenprobenNr',
                     maxLength: 4,
@@ -93,7 +101,7 @@ Ext.define('Lada.view.form.Messung', {
                     xtype: 'messmethode',
                     name: 'mmtId',
                     margin: '0, 10, 5, 0',
-                    fieldLabel: 'Messmethode',
+                    fieldLabel: i18n.getMsg('mmt_id'),
                     allowBlank: false,
                     width: 300,
                     labelWidth: 100
@@ -101,7 +109,7 @@ Ext.define('Lada.view.form.Messung', {
                     xtype: 'datetime',
                     name: 'messzeitpunkt',
                     margin: '0, 10, 5, 0',
-                    fieldLabel: 'Messzeitpunkt',
+                    fieldLabel: i18n.getMsg('messzeitpunkt'),
                     width: 300,
                     labelWidth: 100
                 }, {
@@ -113,14 +121,14 @@ Ext.define('Lada.view.form.Messung', {
                     minValue: 0,
                     name: 'messdauer',
                     margin: '0, 10, 5, 0',
-                    fieldLabel: 'Messdauer',
+                    fieldLabel: i18n.getMsg('messdauer'),
                     width: 300,
                     labelWidth: 100
                 }, {
                     xtype: 'chkbox',
                     name: 'fertig',
                     margin: '0, 10, 5, 0',
-                    fieldLabel: 'Fertig',
+                    fieldLabel: i18n.getMsg('fertig'),
                     width: 300,
                     labelWidth: 100
                 }, {
@@ -128,11 +136,11 @@ Ext.define('Lada.view.form.Messung', {
                     name: 'geplant',
                     readOnly: true,
                     margin: '0, 10, 5, 0',
-                    fieldLabel: 'Geplant',
+                    fieldLabel: i18n.getMsg('geplant'),
                     width: 300,
                     labelWidth: 100
                 }, {
-                    xtype:'statuskombi',
+                    xtype: 'statuskombi',
                     name: 'statuskombi',
                     readOnly: true,
                     isFormField: false,
@@ -144,11 +152,12 @@ Ext.define('Lada.view.form.Messung', {
                             fn: function() {
                                 if ((this.probedatenbasis === 'REI-E'
                                             || this.probedatenbasis === 'REI-I')
-                                    && (this.probe.get('reiprogpunktgruppe') == null
+                                    && (this.probe.get('reiprogpunktgruppe') === null
                                             ||this.probe.get('reiprogpunktgruppe') === '')
-                                    && (this.probe.get('ktagruppe') == null
+                                    && (this.probe.get('ktagruppe') === null
                                             ||this.probe.get('ktagruppe') === '')) {
-                                    Ext.Msg.alert('Statusvergabe nicht möglich', i18n.getMsg('err.msg.status.consistency'));
+                                    Ext.Msg.alert(i18n.getMsg('err.msg.status.title'),
+                                        i18n.getMsg('err.msg.status.consistency'));
                                     return false;
                                 }
                             },
@@ -201,7 +210,7 @@ Ext.define('Lada.view.form.Messung', {
     updateStatusText: function() {
         this.record.load({
             scope: this,
-            success: function() { 
+            success: function() {
                 this.down('statuskombi').setValue(this.record.get('status'));
             }
         });

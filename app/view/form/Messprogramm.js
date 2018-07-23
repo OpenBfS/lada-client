@@ -34,7 +34,7 @@ Ext.define('Lada.view.form.Messprogramm', {
     model: 'Lada.model.Messprogramm',
     minWidth: 650,
     margin: 5,
-    border: 0,
+    border: false,
 
     recordId: null,
 
@@ -47,7 +47,7 @@ Ext.define('Lada.view.form.Messprogramm', {
             xtype: 'fieldset',
             title: i18n.getMsg('messprogramm.form.fieldset.title'),
             items: [{
-                border: 0,
+                border: false,
                 margin: '0, 0, 10, 0',
                 dockedItems: [{
                     xtype: 'toolbar',
@@ -73,7 +73,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     }]
                 }],
                 items: [{
-                    border: 0,
+                    border: false,
                     minWidth: 290,
                     layout: {
                         type: 'vbox',
@@ -85,7 +85,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         items: [{
                             xtype: 'displayfield',
                             name: 'id',
@@ -109,7 +109,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         items: [{
                             xtype: 'messstellelabor',
                             name: 'mstlabor',
@@ -176,7 +176,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         items: [{
                             xtype: 'probenart',
                             editable: false,
@@ -227,7 +227,10 @@ Ext.define('Lada.view.form.Messprogramm', {
                                             record.get('netzbetreiberId')) > -1;
                                     });
                                 } else {
-                                    store.filter('netzbetreiberId', nId);
+                                    store.filter({
+                                        property: 'netzbetreiberId',
+                                        value: nId,
+                                        exactMatch: true});
                                 }
                             }
                         });
@@ -235,7 +238,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                 }, {
                     xtype: 'messprogrammland',
                     name: 'mplId',
-                    fieldLabel: 'Messprogramm-Land',
+                    fieldLabel: i18n.getMsg('mpl_id'),
                     margin: '0, 5, 5, 5',
                     //width: '100%',
                     anchor: '100%',
@@ -255,7 +258,11 @@ Ext.define('Lada.view.form.Messprogramm', {
                                             record.get('netzbetreiberId')) > -1;
                                     });
                                 } else {
-                                    store.filter('netzbetreiberId', nId);
+                                    store.filter({
+                                        property:'netzbetreiberId',
+                                        value: nId,
+                                        exactMatch: true
+                                    });
                                 }
                             }
                         });
@@ -291,7 +298,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     title: i18n.getMsg('medium'),
                     width: '100%',
                     items: [{
-                        border: 0,
+                        border: false,
                         layout: {
                             type: 'vbox',
                             align: 'stretch'
@@ -310,7 +317,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 }
                             }
                         }, {
-                            border: 0,
+                            border: false,
                             layout: {
                                 type: 'hbox',
                                 align: 'stretch'
@@ -371,7 +378,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                 }, {
                     // Zeit
                     xtype: 'fieldset',
-                    title: i18n.getMsg('probenintervall'),
+                    title: i18n.getMsg('probenintervallFieldset'),
                     layout: {
                         type: 'vbox',
                         align: 'stretch'
@@ -383,7 +390,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         margin: '0, 0, 0, 0',
                         items: [{
                             xtype: 'probenintervall',
@@ -437,7 +444,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         items: [{
                             xtype: 'dayofyear',
                             allowBlank: false,
@@ -626,7 +633,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         var current = this.down('deskriptor[layer=' + ndx + ']');
         var cbox = current.down('combobox');
         cbox.store.proxy.extraParams = {
-           'layer': ndx
+            'layer': ndx
         };
         if (ndx >= 1) {
             var parents = current.getParents(cbox);
@@ -634,7 +641,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                 return;
             }
             cbox.store.proxy.extraParams.parents = parents;
-        };
+        }
         cbox.store.load(function(records, op, success) {
             if (!success) {
                 return;
@@ -714,7 +721,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('cbox[name=baId]').setReadOnly(value);
         this.down('chkbox[name=test]').setReadOnly(value);
         this.down('cbox[name=probenartId]').setReadOnly(value);
-//         this.down('netzbetreiber').setReadOnly(value);
+        //         this.down('netzbetreiber').setReadOnly(value);
         this.down('cbox[name=probenintervall]').setReadOnly(value);
         this.down('numfield[name=teilintervallVon]').setReadOnly(value);
         this.down('numfield[name=teilintervallBis]').setReadOnly(value);

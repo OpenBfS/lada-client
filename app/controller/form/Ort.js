@@ -46,7 +46,6 @@ Ext.define('Lada.controller.form.Ort', {
     },
 
     save: function(button) {
-        var me = this;
         var formpanel = button.up('ortform');
         var form = formpanel.getForm();
         var record = form.getRecord();
@@ -66,21 +65,23 @@ Ext.define('Lada.controller.form.Ort', {
                 button.setDisabled(true);
                 formpanel.down('button[action=revert]').setDisabled(true);
                 button.setDisabled(true);
-                var ozw = formpanel.up('panel').parentWindow;
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     formpanel.clearMessages();
                     formpanel.setMessages(json.errors, json.warnings);
                 }
-                if (ozw.ortstore) {
-                    ozw.ortstore.reload({
-                        callback: function() {
-                            var osg = ozw.down('ortstammdatengrid');
-                            osg.setStore(ozw.ortstore);
-                            ozw.down('map').addLocations(ozw.ortstore);
-                            me.afterSave(formpanel, json);
-                        }
-                    });
+                var dynamicgrid = Ext.getCmp('dynamicgridid');
+                if (dynamicgrid) {
+                    dynamicgrid.store.add(newrecord);
+                    dynamicgrid.getView().refresh();
+                }
+                var ozw = formpanel.up('panel').parentWindow;
+                if (ozw) {
+                    var ortgrid= ozw.down('tabpanel').down('ortstammdatengrid');
+                    if (ortgrid) {
+                        ortgrid.store.add(newrecord);
+                        ortgrid.store.reload();
+                    }
                 }
             },
             failure: function(record, response) {
@@ -115,6 +116,7 @@ Ext.define('Lada.controller.form.Ort', {
      * Callbacks after a Ort has been saved
      */
     afterSave: function(form, json) {
+        var i18n = Lada.getApplication().bundle;
         var ozw = form.up('panel').parentWindow;
         var osg = ozw.down('ortstammdatengrid');
         var id = json.data.id;
@@ -128,15 +130,15 @@ Ext.define('Lada.controller.form.Ort', {
         }
         var resulttext;
         if (json) {
-            if (json.message == '201') {
-                resulttext = 'Dieser Ort existiert bereits!';
+            if (json.message === '201') {
+                resulttext = i18n.getMsg('orte.new.notunique');
             }
-            if (json.message == '200') {
-                resulttext = 'Ort erfolgreich angelegt!';
+            if (json.message === '200') {
+                resulttext = i18n.getMsg('orte.new.success');
             }
         }
         Ext.Msg.show({
-            title: Lada.getApplication().bundle.getMsg('success'),
+            title: i18n.getMsg('success'),
             autoScroll: true,
             msg: resulttext,
             buttons: Ext.Msg.OK

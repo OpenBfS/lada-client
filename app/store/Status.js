@@ -18,5 +18,5 @@ Ext.define('Lada.store.Status', {
             property: 'datum',
             direction: 'DESC'
         }],
-        sortOnLoad: true
+    sortOnLoad: true
 });

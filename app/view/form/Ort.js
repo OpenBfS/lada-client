@@ -20,7 +20,7 @@ Ext.define('Lada.view.form.Ort', {
 
     margin: 5,
 
-    border: 0,
+    border: false,
 
     record: null,
 
@@ -33,7 +33,7 @@ Ext.define('Lada.view.form.Ort', {
             xtype: 'netzbetreiber',
             name: 'netzbetreiberId',
             submitValue: true,
-            border: 0,
+            border: false,
             fieldLabel: i18n.getMsg('netzbetreiberId'),
             labelWidth: 125,
             value: this.record.get('netzbetreiberId')
@@ -88,7 +88,7 @@ Ext.define('Lada.view.form.Ort', {
             collapsible: true,
             collapsed: true,
             title: i18n.getMsg('orte.prop'),
-            items :[{
+            items: [{
                 xtype: 'tfield',
                 labelWidth: 125,
                 maxLength: 70,
@@ -183,12 +183,12 @@ Ext.define('Lada.view.form.Ort', {
             items: ['->', {
                 text: i18n.getMsg('save'),
                 action: 'save',
-                qtip: 'Daten speichern',
+                qtip: i18n.getMsg('save.qtip'),
                 icon: 'resources/img/dialog-ok-apply.png',
                 disabled: true
             }, {
                 text: i18n.getMsg('discard'),
-                qtip: 'Änderungen verwerfen',
+                qtip: i18n.getMsg('discard.qtip'),
                 icon: 'resources/img/dialog-cancel.png',
                 action: 'revert',
                 disabled: true
@@ -196,7 +196,7 @@ Ext.define('Lada.view.form.Ort', {
         }];
         this.callParent(arguments);
         this.getForm().loadRecord(this.record);
-        if (this.record.get('ortTyp') == 3) {
+        if (this.record.get('ortTyp') === 3) {
             this.down('fieldset').expand();
         }
         if (this.record.get('netzbetreiberId') &&

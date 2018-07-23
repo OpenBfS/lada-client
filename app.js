@@ -36,6 +36,7 @@ Ext.application({
         'Lada.view.plugin.GridRowExpander',
         'Ext.i18n.Bundle',
         'Ext.layout.container.Column',
+        'Lada.query.QueryProxy',
         'Lada.store.LocalPagingStore',
         'Lada.store.Deskriptoren',
         'Lada.store.Ortszuordnung',
@@ -66,14 +67,22 @@ Ext.application({
         'Lada.store.StatusKombi',
         'Lada.store.Probenehmer',
         'Lada.store.DatensatzErzeuger',
+        'Lada.store.GenericResults',
         'Lada.store.MessprogrammKategorie',
-        'Lada.store.MessungQueries',
         'Lada.store.Ktas',
         'Lada.store.OrtsZusatz',
         'Lada.store.OrtszuordnungTyp',
         'Lada.store.OrtTyp',
         'Lada.store.KoordinatenArt',
-        'Lada.model.MessstelleLabor'
+        'Lada.model.MessstelleLabor',
+        'Lada.model.Messstelle',
+        'Lada.model.GenericResults',
+        'Lada.model.GridColumn',
+        'Lada.model.QueryGroup',
+        'Lada.model.Query',
+        'Lada.store.GridColumn',
+        'Lada.store.Query',
+        'Lada.view.widget.base.SelectableDisplayField'
     ],
     bundle: {
         bundle: 'Lada',
@@ -97,7 +106,7 @@ Ext.application({
         Lada.logintime = '';
         Lada.mst = [];
         Lada.netzbetreiber = [];
-        Lada.clientVersion = '3.1.1';
+        Lada.clientVersion = '3.2-SNAPSHOT';
         Lada.serverVersion = '';
         // paging sizes available for the client
         Lada.availablePagingSizes = [
@@ -112,10 +121,6 @@ Ext.application({
         //initial default paging size, may be changed by user
         Lada.pagingSize = 50;
 
-        var queryString = document.location.href.split('?')[1];
-        if (queryString) {
-            Lada.openIDParams = queryString;
-        }
         Ext.Ajax.request({
             url: 'lada-server/rest/user',
             method: 'GET',
@@ -132,23 +137,25 @@ Ext.application({
             evt.returnValue = confirmMessage;
             return confirmMessage;
         });
+        Ext.create('Lada.store.GenericResults');
     },
 
     onLoginFailure: function(response) {
+        var i18n = Lada.getApplication().bundle;
         try {
             var json = Ext.decode(response.responseText);
             if (json) {
                 if (json.message === '699') {
                     /* This is the unauthorized message with the authentication
                      * redirect in the data */
-                    Ext.MessageBox.alert('Es konnte kein Benutzername gefunden werden!',
-                            json.data);
+                    Ext.MessageBox.alert(i18n.getMsg('err.init.noname'),
+                        json.data);
                     return;
                 }
                 if (json.message === '698') {
                     /* This is general authentication error */
-                    Ext.MessageBox.alert('Kommunikation mit dem Login Server fehlgeschlagen',
-                            json.data);
+                    Ext.MessageBox.alert(i18n.getMsg('err.init.nologin'),
+                        json.data);
                     return;
                 }
             }
@@ -156,14 +163,15 @@ Ext.application({
         catch (e) {
             // This is likely a 404 or some unknown error. Show general error then.
         }
-        Ext.MessageBox.alert('Kommunikation mit dem Lada Server fehlgeschlagen',
-                'Es konnte keine erfolgreiche Verbindung zum lada server aufgebaut werden.');
+        Ext.MessageBox.alert(i18n.getMsg('err.init.generic.title'),
+            i18n.getMsg('err.init.generic.msg'));
     },
 
     onLoginSuccess: function(response) {
         /* Parse Username and Timestamp */
         var json = Ext.decode(response.responseText);
         Lada.username = json.data.username;
+        Lada.userId = json.data.userId;
         Lada.userroles = json.data.roles;
         Lada.logintime = json.data.servertime;
         Lada.mst = []; //Store Messstellen this user may select
@@ -196,6 +204,10 @@ Ext.application({
         });
         Ext.create('Lada.store.Messmethoden', {
             storeId: 'messmethoden'
+        });
+        Ext.create('Lada.store.GridColumn', {
+            storeId: 'columnstore',
+            autoLoad: true
         });
         Ext.create('Lada.store.Messstellen', {
             storeId: 'messstellen',
@@ -328,22 +340,6 @@ Ext.application({
             storeId: 'statuskombi',
             autoLoad: 'true'
         });
-        Ext.create('Lada.store.ProbeQueries', {
-            storeId: 'probequeries',
-            autoLoad: 'true'
-        });
-        Ext.create('Lada.store.MessungQueries', {
-            storeId: 'messungqueries',
-            autoLoad: 'true'
-        });
-        Ext.create('Lada.store.MessprogrammQueries', {
-            storeId: 'messprogrammqueries',
-            autoLoad: 'true'
-        });
-        Ext.create('Lada.store.StammdatenQueries', {
-            storeId: 'stammdatenqueries',
-            autoLoad: 'true'
-        });
         Ext.create('Lada.store.Ktas', {
             storeId: 'ktas',
             autoLoad: 'true'
@@ -363,6 +359,14 @@ Ext.application({
         Ext.create('Lada.store.KoordinatenArt', {
             storeId: 'koordinatenart',
             autoLoad: 'true'
+        });
+        Ext.create('Lada.store.GenericResults', {
+            storeId: 'genericresults',
+            autoLoad: false
+        });
+        Ext.create('Lada.store.MmtMessprogramm', {
+            soreId: 'mmtstore',
+            autoLoad: true
         });
 
         //A Store containing all MST a User is allowed to set.
@@ -394,6 +398,9 @@ Ext.application({
             }),
             data: Lada.availablePagingSizes
         });
+        Ext.create('Lada.store.Query', {
+            storeId: 'querystore'
+        });
         Ext.create('Lada.view.Viewport');
     },
 
@@ -404,9 +411,7 @@ Ext.application({
         Ext.Ajax.request({
             url: 'lada-server/rest/version',
             method: 'GET',
-            headers: {
-                'X-OPENID-PARAMS': Lada.openIDParams
-            },
+            headers: {},
             success: function(response) {
                 var json = Ext.decode(response.responseText);
                 Lada.serverVersion = json.data;
@@ -431,14 +436,12 @@ Ext.application({
     // Define the controllers of the application. They will be initialized
     // first before the application "launch" function is called.
     controllers: [
-        'Lada.controller.Filter',
-        'Lada.controller.ModeSwitcher',
         'Lada.controller.Ort',
         'Lada.controller.grid.ProbeList',
-        'Lada.controller.grid.MessungList',
         'Lada.controller.grid.MessprogrammeList',
-        'Lada.controller.grid.Datensatzerzeuger',
-        'Lada.controller.grid.Probenehmer',
+        'Lada.controller.grid.MessungList',
+        'Lada.controller.form.DatensatzErzeuger',
+        'Lada.controller.form.Probenehmer',
         'Lada.controller.form.Probe',
         'Lada.controller.form.Messung',
         'Lada.controller.form.Ort',
@@ -450,8 +453,11 @@ Ext.application({
         'Lada.controller.grid.Ortszuordnung',
         'Lada.controller.form.Ortszuordnung',
         'Lada.controller.form.Messprogramm',
-        'Lada.controller.grid.MessprogrammKategorie',
+        'Lada.controller.form.MessprogrammKategorie',
         'Lada.controller.grid.Messmethode',
-        'Lada.controller.FilterManagement'
-        ]
+        'Lada.controller.GridExport',
+        'Lada.controller.grid.DynamicGrid',
+        'Lada.controller.Query',
+        'Lada.controller.Global'
+    ]
 });

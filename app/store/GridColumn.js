@@ -7,18 +7,15 @@
  */
 
 /**
- * Store for Queries
+ * Store for fixed database Column definitions
  */
-Ext.define('Lada.store.MessprogrammQueries', {
+Ext.define('Lada.store.GridColumn', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Query',
+    model: 'Lada.model.GridColumn',
     autoLoad: true,
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/query/messprogramm',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
+    sorters: [{
+        property: 'dataIndex',
+        direction: 'ASC'
+    }],
+    sortOnLoad: true
 });

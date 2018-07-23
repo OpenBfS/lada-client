@@ -7,26 +7,38 @@
  */
 
 /**
- * Model class for SQL-Querys
+ * Model class for Queries
  */
 Ext.define('Lada.model.Query', {
     extend: 'Ext.data.Model',
-
+    autoLoad: true,
+    proxy: {
+        type: 'rest',
+        url: 'lada-server/rest/query',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
+        }
+    },
     fields: [{
         name: 'id'
     }, {
         name: 'name'
     }, {
+        name: 'userId'
+    }, {
         name: 'description'
     }, {
-        name: 'favorite'
+        name: 'baseQuery'
+        // the linked stamm.query in the database.
     }, {
-        name: 'sql'
+        name: 'messStellesIds'
     }, {
-        name: 'results'
-    }, {
-        name: 'filters'
-    }, {
-        name: 'type'
+        name: 'clonedFrom',
+        persist: false
     }]
 });

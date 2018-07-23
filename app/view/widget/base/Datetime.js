@@ -18,7 +18,7 @@ Ext.define('Lada.view.widget.base.Datetime', {
 
     layout: 'hbox',
     tooltip: null,
-    border: 0,
+    border: false,
 
     margin: '0, 0, 5, 0',
 
@@ -122,11 +122,11 @@ Ext.define('Lada.view.widget.base.Datetime', {
         this.down('image[name=warnImg]').hide();
         cb = this.down('datetimefield');
         if (cb.inputWrap && cb.inputEl) {
-            cb.inputWrap.removeCls('x-lada-warning-field')
-            cb.inputWrap.removeCls('x-lada-error-field')
+            cb.inputWrap.removeCls('x-lada-warning-field');
+            cb.inputWrap.removeCls('x-lada-error-field');
             cb.inputEl.removeCls('x-lada-warning-field');
             cb.inputEl.removeCls('x-lada-error-field');
-        }  else {
+        } else {
             cb.onAfter({
                 render: {
                     fn: function(el) {

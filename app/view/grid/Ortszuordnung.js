@@ -14,7 +14,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     alias: 'widget.ortszuordnunggrid',
 
     maxHeight: 350,
-    emptyText: 'Keine Orte gefunden.',
     // minHeight and deferEmptyText are needed to be able to show the
     // emptyText message.
     minHeight: 110,
@@ -35,17 +34,17 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     initComponent: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
-
+        this.emptyText = i18n.getMsg('emptytext.Ortszuordnung');
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
             items: ['->', {
-                text: 'Hinzufügen',
+                text: i18n.getMsg('add'),
                 icon: 'resources/img/list-add.png',
                 action: 'add',
                 probeId: this.probeId
             }, {
-                text: 'Löschen',
+                text: i18n.getMsg('delete'),
                 icon: 'resources/img/list-remove.png',
                 action: 'delete'
             }]
@@ -200,7 +199,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 params: {
                     probeId: this.recordId
                 },
-                callback: function(){
+                callback: function() {
                     me.reiHandling();
                 }
             });
@@ -256,28 +255,27 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }
     },
 
-    reiHandling: function(value){
-        if (!this.isMessprogramm){
+    reiHandling: function(value) {
+        if (!this.isMessprogramm) {
             var readonly = this.up('probenedit').record.get('readonly');
             var dbId = this.up('probenedit').record.get('datenbasisId');
-            var dbStore = Ext.data.StoreManager.get('datenbasis')
+            var dbStore = Ext.data.StoreManager.get('datenbasis');
             var datenbasis = null;
             if (dbStore && dbId) {
-                datenbasis =  dbStore.getById(dbId).get('datenbasis');
+                datenbasis = dbStore.getById(dbId).get('datenbasis');
             }
-            if (datenbasis && (datenbasis == 'REI-I' || datenbasis == 'REI-E')){
-                if (this.store.getCount() === 0 && !readonly){
+            if (datenbasis && (datenbasis == 'REI-I' || datenbasis == 'REI-E')) {
+                if (this.store.getCount() === 0 && !readonly) {
                     this.down('button[action=add]').enable();
                     this.down('button[action=delete]').disable();
                 }
-                if (this.store.getCount() > 0 && !readonly){
+                if (this.store.getCount() > 0 && !readonly) {
                     this.down('button[action=add]').disable();
                     this.down('button[action=delete]').enable();
                     //TODO error handling/Warning)
                 }
-            }
-            else {
-                if (readonly){
+            } else {
+                if (readonly) {
                     this.down('button[action=add]').disable();
                     this.down('button[action=delete]').disable();
                 } else {

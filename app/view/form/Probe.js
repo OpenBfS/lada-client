@@ -38,7 +38,7 @@ Ext.define('Lada.view.form.Probe', {
     model: 'Lada.model.Probe',
     minWidth: 650,
     margin: 5,
-    border: 0,
+    border: false,
 
     recordId: null,
 
@@ -49,9 +49,9 @@ Ext.define('Lada.view.form.Probe', {
         var i18n = Lada.getApplication().bundle;
         this.items = [{
             xtype: 'fieldset',
-            title: 'Allgemein',
+            title: i18n.getMsg('title.general'),
             items: [{
-                border: 0,
+                border: false,
                 margin: '0, 0, 10, 0',
                 dockedItems: [{
                     xtype: 'toolbar',
@@ -69,14 +69,14 @@ Ext.define('Lada.view.form.Probe', {
                         action: 'audit',
                         disabled: this.recordId === null
                     }, {
-                        text: 'Speichern',
-                        qtip: 'Daten speichern',
+                        text: i18n.getMsg('save'),
+                        qtip: i18n.getMsg('save.qtip'),
                         icon: 'resources/img/dialog-ok-apply.png',
                         action: 'save',
                         disabled: true
                     }, {
-                        text: 'Verwerfen',
-                        qtip: 'Änderungen verwerfen',
+                        text: i18n.getMsg('discard'),
+                        qtip: i18n.getMsg('discard.qtip'),
                         icon: 'resources/img/dialog-cancel.png',
                         action: 'discard',
                         disabled: true
@@ -84,16 +84,16 @@ Ext.define('Lada.view.form.Probe', {
                 }],
                 items: [{
                     layout: 'vbox',
-                    border: 0,
+                    border: false,
                     items: [{
                         layout: {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         width: '100%',
                         items: [{
-                            xtype: 'displayfield',
+                            xtype: 'selectabledisplayfield',
                             name: 'idAlt',
                             fieldLabel: i18n.getMsg('probeId'),
                             margin: '0, 5, 5, 5',
@@ -113,7 +113,7 @@ Ext.define('Lada.view.form.Probe', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         width: '100%',
                         items: [{
 
@@ -183,7 +183,7 @@ Ext.define('Lada.view.form.Probe', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         width: '100%',
                         items: [{
                             xtype: 'tfield',
@@ -216,7 +216,7 @@ Ext.define('Lada.view.form.Probe', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         width: '100%',
                         items: [{
                             xtype: 'probenehmer',
@@ -228,26 +228,30 @@ Ext.define('Lada.view.form.Probe', {
                             anchor: '100%',
                             labelWidth: 95,
                             editable: true,
-                            extraParams: function(){
-                              this.down('combobox').on({
-                                focus: {
-                                    fn: function(combo) {
-                                        var store = Ext.StoreManager.get('probenehmer');
-                                        store.clearFilter();
-                                        var nId = combo.up('fieldset')
-                                            .down('netzbetreiber[name=netzbetreiber]')
-                                            .getValue();
-                                        if (!nId || nId.length === 0) {
-                                            store.filterBy(function(record) {
-                                                return Lada.netzbetreiber.indexOf(
-                                                    record.get('netzbetreiberId')) > -1;
-                                            });
-                                        } else {
-                                            store.filter('netzbetreiberId', nId);
+                            extraParams: function() {
+                                this.down('combobox').on({
+                                    focus: {
+                                        fn: function(combo) {
+                                            var store = Ext.StoreManager.get('probenehmer');
+                                            store.clearFilter();
+                                            var nId = combo.up('fieldset')
+                                                .down('netzbetreiber[name=netzbetreiber]')
+                                                .getValue();
+                                            if (!nId || nId.length === 0) {
+                                                store.filterBy(function(record) {
+                                                    return Lada.netzbetreiber.indexOf(
+                                                        record.get('netzbetreiberId')) > -1;
+                                                });
+                                            } else {
+                                                store.filter({
+                                                    property: 'netzbetreiberId',
+                                                    value: nId,
+                                                    exactMatch: true
+                                                });
+                                            }
                                         }
                                     }
-                                }
-                              });
+                                });
                             }
                         }, {
                             xtype: 'datensatzerzeuger',
@@ -258,26 +262,30 @@ Ext.define('Lada.view.form.Probe', {
                             anchor: '100%',
                             editable: true,
                             labelWidth: 110,
-                            extraParams: function(){
-                              this.down('combobox').on({
-                                focus: {
-                                  fn: function(combo) {
-                                        var store = Ext.StoreManager.get('datensatzerzeuger');
-                                        store.clearFilter();
-                                        var nId = combo.up('fieldset')
-                                            .down('netzbetreiber[name=netzbetreiber]')
-                                            .getValue();
-                                        if (!nId || nId.length === 0) {
-                                            store.filterBy(function(record) {
-                                                return Lada.netzbetreiber.indexOf(
-                                                    record.get('netzbetreiberId')) > -1;
-                                            });
-                                        } else {
-                                            store.filter('netzbetreiberId', nId);
+                            extraParams: function() {
+                                this.down('combobox').on({
+                                    focus: {
+                                        fn: function(combo) {
+                                            var store = Ext.StoreManager.get('datensatzerzeuger');
+                                            store.clearFilter();
+                                            var nId = combo.up('fieldset')
+                                                .down('netzbetreiber[name=netzbetreiber]')
+                                                .getValue();
+                                            if (!nId || nId.length === 0) {
+                                                store.filterBy(function(record) {
+                                                    return Lada.netzbetreiber.indexOf(
+                                                        record.get('netzbetreiberId')) > -1;
+                                                });
+                                            } else {
+                                                store.filter({
+                                                    property: 'netzbetreiberId',
+                                                    value: nId,
+                                                    exactMatch: true
+                                                });
+                                            }
                                         }
                                     }
-                                }
-                              });
+                                });
                             }
                         }]
                     },{
@@ -289,26 +297,30 @@ Ext.define('Lada.view.form.Probe', {
                         anchor: '100%',
                         labelWidth: 110,
                         editable: true,
-                        extraParams: function(){
-                          this.down('combobox').on({
-                            focus: {
-                                fn: function(combo) {
-                                    var store = Ext.StoreManager.get('messprogrammkategorie');
-                                    store.clearFilter();
-                                    var nId = combo.up('fieldset')
-                                        .down('netzbetreiber[name=netzbetreiber]')
-                                        .getValue();
-                                    if (!nId || nId.length === 0) {
-                                        store.filterBy(function(record) {
-                                            return Lada.netzbetreiber.indexOf(
-                                                record.get('netzbetreiberId')) > -1;
-                                        });
-                                    } else {
-                                        store.filter('netzbetreiberId', nId);
+                        extraParams: function() {
+                            this.down('combobox').on({
+                                focus: {
+                                    fn: function(combo) {
+                                        var store = Ext.StoreManager.get('messprogrammkategorie');
+                                        store.clearFilter();
+                                        var nId = combo.up('fieldset')
+                                            .down('netzbetreiber[name=netzbetreiber]')
+                                            .getValue();
+                                        if (!nId || nId.length === 0) {
+                                            store.filterBy(function(record) {
+                                                return Lada.netzbetreiber.indexOf(
+                                                    record.get('netzbetreiberId')) > -1;
+                                            });
+                                        } else {
+                                            store.filter({
+                                                property: 'netzbetreiberId',
+                                                value: nId,
+                                                exactMatch: true
+                                            });
+                                        }
                                     }
                                 }
-                            }
-                          });
+                            });
                         }
                     }, {
                         xtype: 'container',
@@ -339,7 +351,7 @@ Ext.define('Lada.view.form.Probe', {
                 }, {
                     // Zeit
                     xtype: 'fieldset',
-                    title: 'Zeit',
+                    title: i18n.getMsg('title.time'),
                     layout: {
                         type: 'vbox',
                         align: 'stretch'
@@ -348,7 +360,7 @@ Ext.define('Lada.view.form.Probe', {
                         xtype: 'fset',
                         name: 'sollzeitPeriod',
                         width: '100%',
-                        border: 0,
+                        border: false,
                         margin: 0,
                         layout: {
                             type: 'hbox'
@@ -356,7 +368,7 @@ Ext.define('Lada.view.form.Probe', {
                         items: [{
                             xtype: 'datefield',
                             emptyText: ' ',
-                            fieldLabel: 'Sollzeitraum von',
+                            fieldLabel: i18n.getMsg('sollVon'),
                             labelWidth: 130,
                             margin: '0, 5, 5, 5',
                             name: 'solldatumBeginn',
@@ -366,7 +378,7 @@ Ext.define('Lada.view.form.Probe', {
                         }, {
                             xtype: 'datefield',
                             emptyText: ' ',
-                            fieldLabel: 'bis',
+                            fieldLabel: i18n.getMsg('sollBis'),
                             labelWidth: 17,
                             margin: '0, 5, 5, 5',
                             name: 'solldatumEnde',
@@ -378,7 +390,7 @@ Ext.define('Lada.view.form.Probe', {
                         xtype: 'fset',
                         name: 'entnahmePeriod',
                         width: '100%',
-                        border: 0,
+                        border: false,
                         margin: 0,
                         layout: {
                             type: 'hbox'
@@ -404,10 +416,10 @@ Ext.define('Lada.view.form.Probe', {
                 }, {
                     // Medium
                     xtype: 'fieldset',
-                    title: 'Medium',
+                    title: i18n.getMsg('title.media'),
                     width: '100%',
                     items: [{
-                        border: 0,
+                        border: false,
                         layout: {
                             type: 'vbox',
                             align: 'stretch'
@@ -427,7 +439,7 @@ Ext.define('Lada.view.form.Probe', {
                                 }
                             }
                         }, {
-                            border: 0,
+                            border: false,
                             layout: {
                                 type: 'hbox',
                                 align: 'stretch'
@@ -461,7 +473,7 @@ Ext.define('Lada.view.form.Probe', {
                             }]
                         }, {
                             xtype: 'fieldset',
-                            title: 'Details Deskriptoren',
+                            title: i18n.getMsg('title.deskriptordetails'),
                             collapsible: true,
                             collapsed: true,
                             layout: {
@@ -542,9 +554,9 @@ Ext.define('Lada.view.form.Probe', {
         var current = this.down('deskriptor[layer=' + ndx + ']');
         var cbox = current.down('combobox');
         cbox.store.proxy.extraParams = {
-                'layer': ndx
+            'layer': ndx
         };
-        if (ndx >= 1){
+        if (ndx >= 1) {
             var parents = current.getParents(cbox);
             if (parents.length === 0) {
                 return;

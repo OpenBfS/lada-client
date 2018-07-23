@@ -33,23 +33,27 @@ Ext.define('Lada.view.window.SetStatus', {
         var me = this;
         var statusWerteStore = Ext.create('Lada.store.StatusWerte');
         if ( this.selection) {
+            var selectionIds = [];
+            for (var i=0; i< this.selection.length; i++) {
+                selectionIds.push(this.selection[i].get(
+                    this.grid.rowtarget.dataIndex));
+            }
             statusWerteStore.load({
                 params: {
-                    messungsId: Ext.Array.pluck(this.selection, 'id').toString()
+                    messungsId: selectionIds.join(',')
                 }
             });
-        }
-        else {
-          statusWerteStore.load({
-              params: {
-                  messungsId: this.record.get('id')
-              }
+        } else {
+            statusWerteStore.load({
+                params: {
+                    messungsId: this.record.get('id')
+                }
             });
         }
         this.items = [{
             xtype: 'form',
             name: 'valueselection',
-            border: 0,
+            border: false,
             items: [{
                 xtype: 'fieldset',
                 title: '',
@@ -64,7 +68,7 @@ Ext.define('Lada.view.window.SetStatus', {
                     editable: false,
                     width: 300,
                     labelWidth: 100,
-                    emptyText: 'Wählen Sie einen Erzeuger aus.',
+                    emptyText: i18n.getMsg('emptytext.erzeuger'),
                     fieldLabel: i18n.getMsg('statusgrid.header.erzeuger')
                 }, {
                     xtype: 'statuswert',
@@ -91,7 +95,7 @@ Ext.define('Lada.view.window.SetStatus', {
                     height: 100,
                     labelWidth: 100,
                     fieldLabel: i18n.getMsg('statusgrid.header.text'),
-                    emptyText: 'Geben Sie einen Kommentar ein.'
+                    emptyText: i18n.getMsg('emptytext.kommentar.widget')
                 }]
             }],
             buttons: [{
@@ -116,7 +120,7 @@ Ext.define('Lada.view.window.SetStatus', {
             xtype: 'progressbar',
             margin: '5, 5, 5, 5',
             hidden: true,
-            text: 'Verarbeite Statusänderungen'
+            text: i18n.getMsg('statusprogress')
         }];
         this.buttons = [{
             text: i18n.getMsg('close'),
@@ -127,20 +131,19 @@ Ext.define('Lada.view.window.SetStatus', {
 
         var title = '';
         if (this.record) {
-          var probenform = Ext.ComponentQuery.query('probeform');
-          if (probenform){
-            var hauptprobennummer = probenform[0].getRecord().get('hauptprobenNr');
-            if (hauptprobennummer){
-              title = 'Status für Messung ' + hauptprobennummer +
+            var probenform = Ext.ComponentQuery.query('probeform');
+            if (probenform) {
+                var hauptprobennummer = probenform[0].getRecord().get('hauptprobenNr');
+                if (hauptprobennummer) {
+                    title = 'Status für Messung ' + hauptprobennummer +
                 ' - ' + me.record.get('nebenprobenNr') + ' setzen';
+                }
             }
-          }
-        }
-        else {
+        } else {
             title = 'Status für ' + this.selection.length + ' Messung(en) setzen';
         }
         this.callParent(arguments);
-        this.down('fieldset').setTitle(title)
+        this.down('fieldset').setTitle(title);
 
         // Initially validate to indicate mandatory fields clearly.
         this.down('form').isValid();
@@ -189,7 +192,7 @@ Ext.define('Lada.view.window.SetStatus', {
             me.down('button[name=close]').show();
             return;
         }
-        if (this.selection){
+        if (this.selection) {
             for (var i = 0; i < this.selection.length; i++) {
                 var data = {
                     messungsId: this.selection[i].get('id'),
@@ -233,7 +236,7 @@ Ext.define('Lada.view.window.SetStatus', {
                 });
             }
         } else {
-            if (this.record){
+            if (this.record) {
                 var me = this;
                 var data = {
                     messungsId: this.record.get('id'),
@@ -250,9 +253,9 @@ Ext.define('Lada.view.window.SetStatus', {
                         var json = Ext.JSON.decode(response.responseText);
                         var probenform = Ext.ComponentQuery.query('probeform');
                         var hauptprobennummer = probenform[0].getRecord().get('hauptprobenNr');
-                        me.resultMessage += '<strong>' + i18n.getMsg('messung') + ': '
-                        me.resultMessage +=  hauptprobennummer || '';
-                        me.resultMessage +=  ' - '  + me.record.get('nebenprobenNr') +
+                        me.resultMessage += '<strong>' + i18n.getMsg('messung') + ': ';
+                        me.resultMessage += hauptprobennummer || '';
+                        me.resultMessage += ' - ' + me.record.get('nebenprobenNr') +
                           '</strong><br><dd>' +
                           i18n.getMsg('status-' + json.message) + '</dd><br>';
                         progress.updateProgress(1, progressText + ' (' + 1 + ')');
@@ -265,13 +268,13 @@ Ext.define('Lada.view.window.SetStatus', {
                         result.setSize(values.getWidth(), values.getHeight());
                         result.show();
                         var grids = Ext.ComponentQuery.query('statusgrid');
-                        if (grids.length){
-                          grids[0].store.reload();
+                        if (grids.length) {
+                            grids[0].store.reload();
                         }
                         me.fireEvent('statussetend');
                     },
                     failure: function(response) {
-                      // TODO
+                        // TODO
                     }
                 });
             }

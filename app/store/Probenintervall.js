@@ -17,7 +17,7 @@ Ext.define('Lada.store.Probenintervall', {
         {
             name: 'piTexti18nId',
             convert: function(v) {
-                if (!v.startsWith('pi.')) {
+                if (v.indexOf('pi.') !== 0) {
                     return v;
                 }
                 var i18n = Lada.getApplication().bundle;

@@ -16,20 +16,18 @@
 Ext.define('Lada.view.Viewport', {
     extend: 'Ext.container.Viewport',
     requires: [
-        'Lada.view.ModeSwitcher',
-        'Lada.view.FilterPanel',
-        'Lada.view.panel.FilterDetails'
+        'Lada.view.QueryPanel'
     ],
     layout: 'fit',
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.items = [{
-            title: '<center>Labordatenerfassung</center>',
+            title: i18n.getMsg('title.viewport'),
             layout: 'border',
             name: 'main',
             tools: [{
                 type: 'help',
-                tooltip: 'Hilfe',
+                tooltip: i18n.getMsg('help.qtip'),
                 callback: function() {
                     var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
                     if (!imprintWin) {
@@ -53,7 +51,7 @@ Ext.define('Lada.view.Viewport', {
                 },
                 tools: [{
                     type: 'help',
-                    tooltip: 'Hilfe',
+                    tooltip: i18n.getMsg('help.qtip'),
                     callback: function() {
                         var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
                         if (!imprintWin) {
@@ -73,13 +71,15 @@ Ext.define('Lada.view.Viewport', {
                 split: true,
                 flex: 1,
                 collapsible: true,
+                minWidth: 500,
                 collapsed: false,
+                scrollable: 'y',
                 dockedItems: [{
                     xtype: 'toolbar',
                     dock: 'top',
                     items: [{
                         xtype: 'splitbutton',
-                        text: 'Info',
+                        text: i18n.getMsg('info'),
                         menu: {
                             items: [{
                                 text: i18n.getMsg('about.button.title'),
@@ -89,25 +89,14 @@ Ext.define('Lada.view.Viewport', {
                     }, '->', {
                         xtype: 'tbtext',
                         id: 'userinfo',
-                        text: 'User: ' + Lada.username
+                        text: i18n.getMsg('userinfo.user') + ' ' + Lada.username
                     }]
                 }],
                 items: [{
-                    xtype: 'modeswitcher',
-                    margin: '0, 10, 0, 10'
-                }, {
-                    // Auswahl einer Abfrage.
-                    xtype: 'filterpanel',
-                    margin: '0, 10, 0, 10'
-                }, {
-                // Variables settings for the current selected sql statement.
-                    xtype: 'filterdetails',
-                    name: 'filterdetails',
-                    title: i18n.getMsg('filterdetails.title'),
-                    hidden: true,
-                    margin: '0, 10, 0, 10'
+                    xtype: 'querypanel',
+                    margin: 0
                 }]
-            }, {
+            },{
                 xtype: 'panel',
                 layout: 'fit',
                 name: 'contentpanel',

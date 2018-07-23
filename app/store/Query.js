@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 by Bundesamt fuer Strahlenschutz
+/* Copyright (C) 2018 by Bundesamt fuer Strahlenschutz
  * Software engineering by Intevation GmbH
  *
  * This file is Free Software under the GNU GPL (v>=3)
@@ -9,16 +9,9 @@
 /**
  * Store for Queries
  */
-Ext.define('Lada.store.MessungQueries', {
+Ext.define('Lada.store.Query', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Query',
-    autoLoad: true,
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/query/messung',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
+
+    autoLoad: true
 });

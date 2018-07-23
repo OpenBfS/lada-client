@@ -60,7 +60,7 @@ Ext.define('Lada.store.ReiProgpunktGruppe', {
                                 this.add(record);
                                 reicombo.select(record);
                                 reicombo.up('reiprogpunktgruppe')
-                                        .setUmweltWarningVisible(true);
+                                    .setUmweltWarningVisible(true);
                                 umweltcombo.up('umwelt').setReiWarningVisible(true);
 
                                 this.onAfter({
@@ -69,7 +69,7 @@ Ext.define('Lada.store.ReiProgpunktGruppe', {
                                             store.add(record);
                                             reicombo.select(record);
                                             reicombo.up('reiprogpunktgruppe')
-                                                    .setUmweltWarningVisible(true);
+                                                .setUmweltWarningVisible(true);
                                             umweltcombo.up('umwelt').setReiWarningVisible(true);
                                         },
                                         single: true,

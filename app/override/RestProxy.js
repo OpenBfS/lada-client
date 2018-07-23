@@ -8,12 +8,7 @@
 
 Ext.define('Lada.override.RestProxy', {
     override: 'Ext.data.proxy.Rest',
-    /*
-    buildRequest: function (operation) {
-        this.headers = { 'X-OPENID-PARAMS': Lada.openIDParams };
-        return this.callParent(arguments);
-    },
-*/
+
     processResponse: function(success, operation, request, response, callback, scope) {
         /*
            SSO will send a 302 if the Client is not authenticated

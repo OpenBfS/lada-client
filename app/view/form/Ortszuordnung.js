@@ -23,7 +23,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
     layout: 'fit',
     margin: '5, 5, 0, 5',
-    border: 0,
+    border: false,
 
     /**
      * @cfg: the type of the record to be passed. Should be either 'probe' or 'mpr'.
@@ -45,7 +45,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
             layout: 'fit',
             items: [{
                 overflowY: 'auto',
-                border: 0,
+                border: false,
                 margin: '0, 0, 10, 0',
                 dockedItems: [{
                     xtype: 'toolbar',
@@ -64,7 +64,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                         disabled: true
                     }, {
                         text: i18n.getMsg('discard'),
-                        qtip: 'Änderungen verwerfen',
+                        qtip: i18n.getMsg('discard.qtip'),
                         icon: 'resources/img/dialog-cancel.png',
                         action: 'revert',
                         disabled: true
@@ -72,15 +72,15 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                 }],
                 items: [{
                     layout: 'hbox',
-                    border: 0,
+                    border: false,
                     margin: '0, 0, 5, 0',
                     items: [{
                         layout: 'vbox',
-                        border: 0,
+                        border: false,
                         flex: 1,
                         items: [{
                             layout: 'vbox',
-                            border: 0,
+                            border: false,
                             margin: '0, 20, 0, 0',
                             items: [{
                                 xtype: 'ortszuordnungtyp',

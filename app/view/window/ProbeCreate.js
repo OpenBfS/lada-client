@@ -30,9 +30,10 @@ Ext.define('Lada.view.window.ProbeCreate', {
      * This function initialises the Window
      */
     initComponent: function() {
-        this.title = '§3-Probe';
+        var i18n = Lada.getApplication().bundle;
+        this.title = i18n.getMsg('probe.new.title');
         this.buttons = [{
-            text: 'Schließen',
+            text: i18n.getMsg('close'),
             scope: this,
             handler: this.handleBeforeClose
         }];
@@ -56,7 +57,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
         // we need the "modelId" param to load the correct item.
 
         this.items = [{
-            border: 0,
+            border: false,
             autoScroll: true,
             items: [{
                 xtype: 'probeform'
@@ -64,7 +65,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
         }];
         this.tools = [{
             type: 'help',
-            tooltip: 'Hilfe',
+            tooltip: i18n.getMsg('help.qtip'),
             titlePosition: 0,
             callback: function() {
                 var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];

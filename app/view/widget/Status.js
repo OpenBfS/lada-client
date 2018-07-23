@@ -15,7 +15,6 @@ Ext.define('Lada.view.widget.Status', {
     store: Ext.data.StoreManager.get('statuswerte'),
     displayField: 'wert',
     valueField: 'id',
-    emptyText: 'Wählen Sie einen Status',
     // Enable filtering of comboboxes
     autoSelect: false,
     queryMode: 'local',
@@ -24,6 +23,8 @@ Ext.define('Lada.view.widget.Status', {
     minChars: 0,
 
     initComponent: function() {
+        var i18n= Lada.getApplication().bundle;
+        this.emptyText= i18n.getMsg('emptytext.status');
         this.callParent(arguments);
     }
 });

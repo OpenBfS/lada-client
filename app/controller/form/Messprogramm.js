@@ -51,7 +51,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
             },
             'messprogrammform umwelt combobox': {
                 change: this.umweltChanged
-             },
+            },
             'messprogrammform container[name="reiComboContainer"] reiprogpunktgruppe combobox': {
                 change: this.reiProgpunktGruppeChanged
             },
@@ -188,9 +188,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     button.setDisabled(true);
                     button.up('toolbar').down('button[action=discard]')
                         .setDisabled(true);
-                    var parentGrid = Ext.ComponentQuery.query(
-                        'messprogrammelistgrid');
-                    if (parentGrid.length == 1) {
+                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                    if (parentGrid.length === 1) {
                         parentGrid[0].store.reload();
                     }
                     formPanel.clearMessages();
@@ -260,9 +259,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
             success: function(record, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
-                    var parentGrid = Ext.ComponentQuery.query(
-                        'messprogrammelistgrid');
-                    if (parentGrid.length == 1) {
+                    var parentGrid = Ext.ComponentQuery.query('dynamicGrid');
+                    if (parentGrid.length === 1) {
                         parentGrid[0].store.reload();
                     }
                 }
@@ -431,7 +429,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
      */
     reiProgpunktGruppeChanged: function(combo, newVal, oldVal, opts) {
         // avoids endless loop
-         if (combo.name !== 'reiProgpunktGrpId'){
+        if (combo.name !== 'reiProgpunktGrpId') {
             return true;
         }
         //Check if reiprogpunktgruppe widget is contained in a messprogrammform
@@ -441,7 +439,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
 
         var umweltCombo = formPanel.down('fieldset[title=Medium]').down('umwelt').down('combobox');
-        if (!umweltCombo){
+        if (!umweltCombo) {
             return true;
         }
         var umweltStore = umweltCombo.store;
@@ -458,7 +456,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
      */
     umweltChanged: function(combo, newVal, oldVal, opts) {
         // avoids endless loop
-        if (combo.name !== 'umwId'){
+        if (combo.name !== 'umwId') {
             return true;
         }
         //Check if umwelt widget is contained in a messprogrammform

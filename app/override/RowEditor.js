@@ -24,7 +24,7 @@ Ext.define('Lada.override.RowEditor', {
         if (column.getEditor) {
             // Get a default display field if necessary
             field = column.getEditor(null, {
-                xtype: 'displayfield',
+                xtype: 'selectabledisplayfield',
                 // Override Field's implementation so that the default display fields will not return values. This is done because
                 // the display field will pick up column renderers from the grid.
                 getModelData: function() {
@@ -40,7 +40,7 @@ Ext.define('Lada.override.RowEditor', {
             }
 
             if (me.isVisible() && me.context) {
-                if (field.is('displayfield')) {
+                if (field.is('selectabledisplayfield')) {
                     me.renderColumnData(field, me.context.record, column);
                 } else {
                     field.suspendEvents();

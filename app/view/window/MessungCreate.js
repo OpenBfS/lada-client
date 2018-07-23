@@ -32,9 +32,10 @@ Ext.define('Lada.view.window.MessungCreate', {
      * This function initialises the Window
      */
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
         this.probe = this.record;
         if (this.probe === null) {
-            Ext.Msg.alert('Zu der Messung existiert keine Probe!');
+            Ext.Msg.alert(i18n.getMsg('err.msg.messung.noprobe'));
             this.callParent(arguments);
             return;
         }
@@ -42,13 +43,14 @@ Ext.define('Lada.view.window.MessungCreate', {
         var messstelle = Ext.data.StoreManager.get('messstellen')
             .getById(this.probe.get('mstId'));
 
-        this.title = 'Neue Messung zu Probe - Hauptprobennr.: '
+        this.title = i18n.getMsg('messung.new.title1')
             + this.probe.get('hauptprobenNr')
-            + ' Mst: ' + messstelle.get('messStelle')
-            + ' hinzufügen.';
+            + i18n.getMsg('messung.new.title2')
+            + messstelle.get('messStelle')
+            + i18n.getMsg('messung.new.title3');
 
         this.buttons = [{
-            text: 'Schließen',
+            text: i18n.getMsg('close'),
             scope: this,
             handler: this.handleBeforeClose
         }];
@@ -68,7 +70,7 @@ Ext.define('Lada.view.window.MessungCreate', {
         });
 
         this.items = [{
-            border: 0,
+            border: false,
             autoScroll: true,
             items: [{
                 xtype: 'messungform'
@@ -76,7 +78,7 @@ Ext.define('Lada.view.window.MessungCreate', {
         }];
         this.tools = [{
             type: 'help',
-            tooltip: 'Hilfe',
+            tooltip: i18n.getMsg('help.qtip'),
             callback: function() {
                 var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
                 if (!imprintWin) {

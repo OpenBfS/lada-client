@@ -19,7 +19,7 @@ Ext.define('Lada.view.widget.base.DateField', {
 
     layout: 'hbox',
 
-    border: 0,
+    border: false,
 
     margin: '0, 0, 5, 0',
 

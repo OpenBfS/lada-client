@@ -1,7 +1,7 @@
 {
-  "private": true,
-  "name": "Lada",
-  "version": "2.7.0",
+  "private": false,
+  "name": "@openbfs/lada",
+  "version": "3.1.0-SNAPSHOT",
   "description": "IMIS3 LADA",
   "scripts": {
     "pretest": "npm run lint",
@@ -20,10 +20,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/OpenBfS/lada-client"
+    "url": "git+https://github.com/OpenBfS/lada-client.git"
   },
   "author": "German Federal Office for Radiation protection",
-  "license": "gpl-3",
+  "license": "GPL-3.0",
   "devDependencies": {
     "eslint": "4.1.1",
     "expect.js": "0.3.1",
@@ -47,5 +47,10 @@
     "rimraf": "2.6.1",
     "serve-static": "1.12.3",
     "sinon": "2.3.5"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/OpenBfS/lada-client/issues"
+  },
+  "homepage": "https://github.com/OpenBfS/lada-client#readme",
+  "main": "app.js"
 }

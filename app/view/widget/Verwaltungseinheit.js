@@ -15,7 +15,6 @@ Ext.define('Lada.view.widget.Verwaltungseinheit', {
     store: 'verwaltungseinheitenwidget',
     displayField: 'bezeichnung',
     valueField: 'id',
-    emptyText: 'Wählen Sie eine Verwaltungseinheit',
     hideTrigger: true,
     // Enable filtering of comboboxes
     autoSelect: false,
@@ -26,6 +25,8 @@ Ext.define('Lada.view.widget.Verwaltungseinheit', {
     forceSelection: this.forceSelection || false,
 
     initComponent: function() {
+        var i18n= Lada.getApplication().bundle;
+        this.emptyText= i18n.getMsg('emptytext.verwaltungseinheit');
         // This widget requires a separate store to not change the grid during typing
         this.store = Ext.data.StoreManager.get('verwaltungseinheitenwidget');
         if (!this.store) {

@@ -15,7 +15,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
 
     layout: 'hbox',
 
-    border: 0,
+    border: false,
 
     margin: '0, 0, 5, 0',
 
@@ -157,11 +157,11 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         this.down('image[name=warnImg]').hide();
         cb = this.down('combobox');
         if (cb.inputWrap && cb.inputEl) {
-            cb.inputWrap.removeCls('x-lada-warning-field')
-            cb.inputWrap.removeCls('x-lada-error-field')
+            cb.inputWrap.removeCls('x-lada-warning-field');
+            cb.inputWrap.removeCls('x-lada-error-field');
             cb.inputEl.removeCls('x-lada-warning-field');
             cb.inputEl.removeCls('x-lada-error-field');
-        }  else {
+        } else {
             cb.onAfter({
                 render: {
                     fn: function(el) {

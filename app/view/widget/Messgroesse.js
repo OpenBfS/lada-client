@@ -15,7 +15,6 @@ Ext.define('Lada.view.widget.Messgroesse', {
     store: 'Messgroessen',
     displayField: 'messgroesse',
     valueField: 'id',
-    emptyText: 'Wählen Sie eine Messgröße',
     // Enable filtering of comboboxes
     autoSelect: false,
     queryMode: 'local',
@@ -24,6 +23,8 @@ Ext.define('Lada.view.widget.Messgroesse', {
     minChars: 0,
 
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.messgroesse');
         this.store = Ext.data.StoreManager.get('messgroessen');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Messgroessen');

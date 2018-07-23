@@ -88,6 +88,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * or ortzuordnungMp
      */
     open: function(grid, record) {
+        grid.getEl().swallowEvent(['click', 'dblclick'], true);
         var parent = grid.up('window').record;
         // parent is either probe or messprogramm.
         var parentisMp = false;
@@ -119,7 +120,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             probe: parentisMp ? null: parent,
             messprogramm: parentisMp ? parent: null,
             record: null,
-            grid: button.up('ortszuordnung')
+            grid: button.up('ortszuordnunggrid')
         });
         win.show();
         win.initData();
@@ -143,7 +144,6 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                             grid.store.reload();
                         },
                         failure: function(request, response) {
-                            var i18n = Lada.getApplication().bundle;
                             if (response.error) {
                             //TODO: check content of error.status (html error code)
                                 Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),

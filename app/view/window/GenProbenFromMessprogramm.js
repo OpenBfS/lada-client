@@ -14,7 +14,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     alias: 'widget.genpfm',
 
     requires: [
-        'Lada.store.Proben'
+        'Lada.store.GridColumnValue'
     ],
 
     collapsible: true,
@@ -24,8 +24,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     layout: 'vbox',
     constrain: true,
 
-    records: null,
     parentWindow: null,
+    ids: null,
 
     /**
      * This function initialises the Window
@@ -72,8 +72,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 });
                 this.add({
                     xtype: 'panel',
-                    border: 0,
-                    margin: 5,
+                    border: false,
                     layout: 'fit',
                     autoScroll: true,
                     margin: '5, 5, 0, 5',
@@ -82,15 +81,15 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     html: ''
                 }, {
                     xtype: 'progressbar',
-                    text: 'Fortschritt',
+                    text: i18n.getMsg('progress'),
                     height: 25,
                     width: 340,
                     margin: '5, 5, 5, 5'
                 });
                 var finished = 0;
-                for (r in me.records) {
+                for (var r=0; r < me.ids.length; r++) {
                     var reqJsondata = {
-                        id: me.records[r].id,
+                        id: me.ids[r],
                         start: startUTC,
                         end: endUTC
                     };
@@ -101,7 +100,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         jsonData: reqJsondata,
                         success: function(response) {
                             finished++;
-                            me.down('progressbar').updateProgress(finished/me.records.length);
+                            me.down('progressbar').updateProgress(finished/me.ids.length);
                             results.push(response);
                             var panel = me.down('panel');
                             var json = Ext.JSON.decode(response.responseText);
@@ -109,27 +108,27 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             if (json.success) {
                                 panel.setHtml(panel.html + '<br>'
                                         + i18n.getMsg('gpfm.generated.success',
-                                        json.data.length, id));
+                                            json.data.length, id));
                             } else {
                                 panel.setHtml(panel.html + '<br>'
                                         + i18n.getMsg('gpfm.generated.error',
-                                        id, i18n.getMsg(json.message)));
+                                            id, i18n.getMsg(json.message)));
                             }
-                            if (finished == me.records.length) {
+                            if (finished == me.ids.length) {
                                 me.down('toolbar').down('button').setDisabled(false);
                                 me.onSuccess(results);
                             }
                         },
                         failure: function(response) {
                             finished++;
-                            me.down('progressbar').updateProgress(finished/me.records.length);
+                            me.down('progressbar').updateProgress(finished/me.ids.length);
                             var panel = me.down('panel');
                             var error = response.statusText;
                             var id = response.request.options.jsonData.id;
                             panel.setHtml(panel.html + '<br>'
                                     + i18n.getMsg('gpfm.generated.error', id, error));
                             me.onFailure(response);
-                            if (finished == me.records.length) {
+                            if (finished == me.ids.length) {
                                 me.down('toolbar').down('button').setDisabled(false);
                             }
                         }
@@ -137,8 +136,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 }
             }
         }];
-        //this.width = 350;
-        //this.height = 250;
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
@@ -159,14 +156,14 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         // creation of this window. We need to pass it throuh to the form as
         // we need the "Id" param to load the correct item.
         this.items = [{
-            border: 0,
+            border: false,
             width: 340,
             height: 165,
             margin: '5, 5, 5, 5',
             autoScroll: true,
             items: [{
                 xtype: 'panel',
-                border: 0,
+                border: false,
                 margin: 5,
                 layout: 'fit',
                 html: '<p>'
@@ -174,7 +171,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     + '</p>'
             }, {
                 xtype: 'panel',
-                border: 0,
+                border: false,
                 margin: 5,
                 layout: 'fit',
                 html: '<p>' + i18n.getMsg('messprogtimeperiod') + '</p>'
@@ -208,249 +205,223 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
      */
     onSuccess: function(results) {
         var i18n = Lada.getApplication().bundle;
-
+        var me = this;
         var data = [];
-
-        //Concatenate result json data
-        for (r in results) {
-            var json = Ext.JSON.decode(results[r].responseText);
-            if (json.data == null) {
-                continue;
-            }
-            data = data.concat(json.data);
-        }
-        if (data.length == 0) {
-            return;
-        }
-
-        //var radio = Ext.ComponentQuery.query('modeswitcher')[0]
-        //    .down('radiofield[inputValue=proben]');
-        //radio.setValue(true);
-
-        var loadedStores = 0;
-
-        //Create and load neccessary stores
         var umwStore = Ext.create('Lada.store.Umwelt', {
-                asynchronousLoad: false
+            asynchronousLoad: false
         });
 
         var mmtStore = Ext.create('Lada.store.MmtMessprogramm', {
             asynchronousLoad: false,
             autoLoad: true
         });
-
         var mpStore = Ext.create('Lada.store.MessprogrammeList');
-        var stores = [umwStore, mpStore];
-        storeJson = {
-            umweltStore: umwStore,
-            mpStore: mpStore,
-            mmtStore: mmtStore
-        };
+        //Concatenate result json data
+        for (r in results) {
+            var json = Ext.JSON.decode(results[r].responseText);
+            if (json.data === null) {
+                continue;
+            }
+            data = data.concat(json.data);
+        }
+        if (data.length === 0) {
+            return;
+        }
+        var columnstore = Ext.data.StoreManager.get('columnstore');
+        columnstore.clearFilter();
+        columnstore.filter({
+            property: 'baseQuery',
+            value: '1',
+            exactMatch: true});
+        var gcs = Ext.create('Lada.store.GridColumnValue');
 
-        for (var i = 0; i < stores.length; i++) {
-            stores[i].load({
-                scope: this,
-                callback: function() {
-                    loadedStores++;
-                    if (loadedStores == stores.length) {
-                        this.createGrid(data, storeJson);
+        //TODO basequery needed for this to work
+        var columns = ['idAlt', 'mstId', 'datenbasisId', 'baId', 'probenartId',
+            'solldatumBeginn', 'solldatumEnde', 'mprId', 'mediaDesk', 'umwId',
+            'probeNehmerId'];
+        for (var i=0; i < columns.length; i++) {
+            var col = columnstore.findRecord('dataIndex', columns[i], false,
+                false, false, true);
+            gcs.add( new Ext.create('Lada.model.GridColumnValue',{
+                columnIndex: i,
+                filterActive: false,
+                qid: 0, //TODO: hardcoded value based on example data
+                dataIndex: columns[i],
+                visible: true,
+                gridColumnId: i
+            }));
+        }
+
+        var newStore = Ext.create('Lada.store.Proben', {data:data});
+
+        var frgrid = Ext.create('Lada.view.widget.DynamicGrid', {
+            rowtarget: { dataType: 'probeId', dataIndex: "id"},
+            store:newStore,
+            columns: [{
+                dataIndex: "id",
+                hidden: true
+            }, {
+                header: i18n.getMsg('probeId'),
+                dataIndex: 'idAlt'
+            }, {
+                header: i18n.getMsg('mstId'),
+                dataIndex: 'mstId',
+                renderer: function(value) {
+                    var r = '';
+                    if (!value || value === '') {
+                        r = 'Error';
+                    }
+                    var store = Ext.data.StoreManager.get('messstellen');
+                    var record = store.getById(value);
+                    if (record) {
+                        r = record.get('messStelle');
+                    }
+                    return r;
+                }
+            }, {
+                header: i18n.getMsg('datenbasisId'),
+                dataIndex: 'datenbasisId',
+                renderer: function(value) {
+                    var r = '';
+                    if (!value || value === '') {
+                        r = value;
+                    }
+                    var store = Ext.data.StoreManager.get('datenbasis');
+                    var record = store.getById(value);
+                    if (record) {
+                        r = record.get('datenbasis');
+                    }
+                    return r;
+                }
+            }, {
+                header: i18n.getMsg('baId'),
+                dataIndex: 'baId',
+                renderer: function(value) {
+                    var r = '';
+                    var store = Ext.create('Ext.data.Store', {
+                        fields: ['id', 'betriebsart'],
+                        data: [{
+                            'id': 1,
+                            'betriebsart': 'Normal-/Routinebetrieb'
+                        }, {
+                            'id': 2,
+                            'betriebsart': 'Störfall/Intensivbetrieb'
+                        }]
+                    });
+                    var record = store.getById(value);
+                    if (record) {
+                        r = record.get('betriebsart');
+                    }
+                    return r;
+                }
+            }, {
+                header: i18n.getMsg('probenartId'),
+                dataIndex: 'probenartId',
+                renderer: function(value) {
+                    var r = '';
+                    if (!value || value === '') {
+                        r = value;
+                    }
+                    var store = Ext.data.StoreManager.get('probenarten');
+                    var record = store.getById(value);
+                    if (record) {
+                        r = record.get('probenart');
+                    }
+                    return r;
+                }
+            }, {
+                header: i18n.getMsg('sollVon'),
+                dataIndex: 'solldatumBeginn',
+                renderer: function(value) {
+                    if (!value) {
+                        return '';
+                    }
+                    return Ext.Date.format(value, 'd.m.Y');
+                }
+            }, {
+                header: i18n.getMsg('sollBis'),
+                dataIndex: 'solldatumEnde',
+                renderer: function(value) {
+                    if (!value) {
+                        return '';
+                    }
+                    return Ext.Date.format(value, 'd.m.Y');
+                }
+            }, {
+                header: i18n.getMsg('messprogramm.form.fieldset.title'),
+                dataIndex: 'mprId'
+            }, {
+                header: i18n.getMsg('mediaDesk'),
+                dataIndex: 'mediaDesk'
+            }, {
+                //TODO: load description
+                header: i18n.getMsg('umwId'),
+                dataIndex: 'umwId',
+                renderer: function(value, metadata) {
+                    if (!value) {
+                        return '';
+                    }
+                    var store = umwStore;
+                    var model = store.getById(value);
+                    if (model) {
+                        return value + ' - ' + model.get('umweltBereich');
+                    } else {
+                        return value;
                     }
                 }
-            });
-        }
-    },
-
-    createGrid: function(data, storeJson) {
-        var umwStore = storeJson.umweltStore;
-        var mpStore = storeJson.mpStore;
-        var mmtStore = storeJson.mmtStore;
-
-        var i18n = Lada.getApplication().bundle;
-        var gridstore = Ext.create('Lada.store.Proben', {
-        });
-        var frgrid = Ext.create('Lada.view.grid.ProbeList', {
-            hideCreate: true,
-            hideImport: true,
-            hidePrintSheet: true,
-            hidePrint: true,
-            plugins: [{
-                ptype: 'gridrowexpander',
-                gridType: 'Lada.view.grid.Messung',
-                expandOnDblClick: false,
-                gridConfig: {
-                    bottomBar: false
+            }, {
+                header: i18n.getMsg('messungen'),
+                renderer: function(value, metadata, rec) {
+                    var mprId = rec.get('mprId');
+                    mmtStore.clearFilter();
+                    mmtStore.filter('messprogrammId', mprId);
+                    var count = mmtStore.getCount();
+                    if (!count){
+                        return '(0)';
+                    }
+                    var mgrtext = '';
+                    var mmth = mmtStore.getAt(0).get('mmtId');
+                    if (mmth){
+                        mgrtext = mmth;
+                    }
+                    for (var i = 1; i < count; i ++ ){
+                        var mmth = mmtStore.getAt(i).get('mmtId');
+                        if (mmth){
+                            mgrtext += ', ' + mmth;
+                        }
+                    }
+                    mgrtext += '(' + count + ')';
+                    return mgrtext;
                 }
+            }, {
+                header: i18n.getMsg('entnahmeOrt'),
+                renderer: function(value, metadata, rec) {
+                    var mprModel = mpStore.getById(rec.get('mprId'));
+                    if (mprModel) {
+                        var eGemId = mprModel.get('eGemId')
+                        var eGem = mprModel.get('eGem');
+                        if (eGemId != null && eGem != null) {
+                            return eGemId  + ' - ' + eGem;
+                        }
+                    }
+                    return '';
+                }
+            }, {
+                header: i18n.getMsg('probenehmerId'),
+                dataIndex: 'probeNehmerId'
             }]
         });
+        frgrid.setToolbar();
 
-        var columns = [{
-            header: i18n.getMsg('prnId'),
-            dataIndex: 'idAlt'
-        }, {
-            header: i18n.getMsg('mstId'),
-            dataIndex: 'mstId',
-            renderer: function(value) {
-                var r = '';
-                if (!value || value === '') {
-                    r = 'Error';
-                }
-                var store = Ext.data.StoreManager.get('messstellen');
-                var record = store.getById(value);
-                if (record) {
-                    r = record.get('messStelle');
-                }
-                return r;
-            }
-        }, {
-            header: i18n.getMsg('datenbasisId'),
-            dataIndex: 'datenbasisId',
-            renderer: function(value) {
-                var r = '';
-                if (!value || value === '') {
-                    r = value;
-                }
-                var store = Ext.data.StoreManager.get('datenbasis');
-                var record = store.getById(value);
-                if (record) {
-                    r = record.get('datenbasis');
-                }
-                return r;
-            }
-        }, {
-            header: i18n.getMsg('baId'),
-            dataIndex: 'baId',
-            renderer: function(value) {
-                var r = '';
-                var store = Ext.create('Ext.data.Store', {
-                    fields: ['id', 'betriebsart'],
-                    data: [{
-                        'id': 1,
-                        'betriebsart': 'Normal-/Routinebetrieb'
-                    }, {
-                        'id': 2,
-                        'betriebsart': 'Störfall/Intensivbetrieb'
-                    }]
-                });
-                var record = store.getById(value);
-                if (record) {
-                    r = record.get('betriebsart');
-                }
-                return r;
-            }
-        }, {
-            header: i18n.getMsg('probenartId'),
-            dataIndex: 'probenartId',
-            renderer: function(value) {
-                var r = '';
-                if (!value || value === '') {
-                    r = value;
-                }
-                var store = Ext.data.StoreManager.get('probenarten');
-                var record = store.getById(value);
-                if (record) {
-                    r = record.get('probenart');
-                }
-                return r;
-            }
-        }, {
-            header: i18n.getMsg('sollVon'),
-            dataIndex: 'solldatumBeginn',
-            renderer: function(value) {
-                if (!value) {
-                    return '';
-                }
-                return Ext.Date.format(value, 'd.m.Y');
-            }
-        }, {
-            header: i18n.getMsg('sollBis'),
-            dataIndex: 'solldatumEnde',
-            renderer: function(value) {
-                if (!value) {
-                    return '';
-                }
-                return Ext.Date.format(value, 'd.m.Y');
-            }
-        }, {
-            header: i18n.getMsg('messprogramm.form.fieldset.title'),
-            dataIndex: 'mprId'
-        }, {
-            //TODO: load description
-            header: i18n.getMsg('umw_id'),
-            dataIndex: 'umwId',
-            renderer: function(value, metadata) {
-                if (!value) {
-                    return '';
-                }
-                var store = umwStore;
-                var model = store.getById(value);
-                if (model) {
-                    return value + ' - ' + model.get('umweltBereich');
-                } else {
-                    return value;
-                }
-            }
-        }, {
-            header: 'Messungen',
-            renderer: function(value, metadata, rec) {
-                var mprId = rec.get('mprId');
-                mmtStore.clearFilter();
-                mmtStore.filter('messprogrammId', mprId);
-                var count = mmtStore.getCount();
-                if (!count){
-                    return '(0)';
-                }
-                var mgrtext = '';
-                var mmth = mmtStore.getAt(0).get('mmtId');
-                if (mmth){
-                    mgrtext = mmth;
-                }
-                for (var i = 1; i < count; i ++ ){
-                    var mmth = mmtStore.getAt(i).get('mmtId');
-                    if (mmth){
-                        mgrtext += ', ' + mmth;
-                    }
-                }
-                mgrtext += '(' + count + ')';
-                return mgrtext;
-            }
-        }, {
-            header: i18n.getMsg('entnahmeOrt'),
-            renderer: function(value, metadata, rec) {
-                var mprModel = mpStore.getById(rec.get('mprId'));
-                if (mprModel) {
-                    var eGemId = mprModel.get('eGemId')
-                    var eGem = mprModel.get('eGem');
-                    if (eGemId != null && eGem != null) {
-                        return eGemId  + ' - ' + eGem;
-                    }
-                }
-                return '';
-            }
-        }, {
-            header: i18n.getMsg('probe_nehmer_id'),
-            dataIndex: 'probeNehmerId'
-        }];
-        frgrid.reconfigure(gridstore, columns);
-
-        gridstore.loadData(data);
-        gridstore.getFilters().add(function(item) {
-            for (var i = 0; i < data.length; i++) {
-                if (item.data.id == data[i].id) {
-                    return true;
-                }
-            }
-            return false;
-        });
         var win = Ext.create('Ext.window.Window', {
             layout: 'fit',
             width: 800,
             minHeight: 500,
-            maxHeight: 750,
+            maxHeight: 600,
             items: [frgrid]
         });
         me.hide();
         win.show();
-        //contentPanel.add(frgrid);
         me.down('panel').setHtml(me.down('panel').html + '<br><br>'
                 + me.evalResponseData(data));
     },
@@ -459,7 +430,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
      * Callback on failure of request (HTTP status != 200)
      */
     onFailure: function(response) {
-        me.setLoading(false);
+        this.setLoading(false);
 
         var i18n = Lada.getApplication().bundle;
 
@@ -477,7 +448,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
               We assume that a 302 was send when the follwing statement
               is true.
             */
-            if (response.status == 0 && response.getResponse().responseText === '') {
+            if (response.status === 0 && response.getResponse().responseText === '') {
                 Ext.MessageBox.confirm(
                     'Erneutes Login erforderlich',
                     'Ihre Session ist abgelaufen.<br/>'
@@ -494,15 +465,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                 i18n.getMsg('err.msg.response.body'));
         }
-    },
-
-
-    /**
-     * Initiatlise the Data
-     */
-    initData: function() {
-        var i18n = Lada.getApplication().bundle;
-        me = this;
     },
 
     evalResponseData: function(data) {
@@ -524,14 +486,5 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         r += ' ' + i18n.getMsg('probecreated');
         r += '<br/>';
         return r;
-    },
-
-    /**
-     * Reload the Application
-     */
-    reload: function(btn) {
-        if (btn === 'yes') {
-            location.reload();
-        }
     }
 });

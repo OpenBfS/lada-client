@@ -6,6 +6,7 @@ Ext.define('Lada.view.plugin.GridRowExpander', {
     loadingMessage: '<div class="x-grid-rowbody-loading">Loading...</div>',
     type: null,
     gridConfig: null,
+    idRow: null,
 
     constructor: function(config) {
         var me = this;
@@ -99,8 +100,9 @@ Ext.define('Lada.view.plugin.GridRowExpander', {
         var me = this;
 
         var gridConfig = config.gridConfig;
+
         Ext.apply(gridConfig, {
-            recordId: record.get('id'),
+            recordId: record.get(me.idRow),
             cls: 'row-expander-grid'
         });
         var grid = Ext.create(me.type, gridConfig);
@@ -136,7 +138,7 @@ Ext.define('Lada.view.plugin.GridRowExpander', {
     collapseCmp: function(row, record) {
         var me = this;
         var cmps = me.cmps;
-        var id = record.getObservableId();
+        var id = record.get(me.idRow);
         var idx = cmps.findIndex('recordId', id);
         var cmp = cmps.getAt(idx);
 

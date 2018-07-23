@@ -10,7 +10,7 @@
  * Grid to list Orte Stammdaten
  */
 Ext.define('Lada.view.grid.Orte', {
-    extend: 'Lada.view.widget.DynamicGrid',
+    extend: 'Ext.grid.Panel',
     alias: 'widget.ortstammdatengrid',
 
     requires: [
@@ -41,11 +41,13 @@ Ext.define('Lada.view.grid.Orte', {
     allowDeselect: true,
     plugins: 'gridfilters',
 
+    /**
+     * TODO: currently does not use DynamicGrid behaviour, although it is defined as Dynamig Grid
+     */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        this.emptyText = i18n.getMsg('orte.emptyGrid');
+        this.emptyText = i18n.getMsg('emptytext.ortegrid');
 
-        var me = this;
         this.columns = [{
             xtype: 'actioncolumn',
             text: 'RW',
@@ -60,7 +62,7 @@ Ext.define('Lada.view.grid.Orte', {
             },
             handler: function(grid, rowIndex, colIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
-                if (rec.get('readonly') == false){
+                if (rec.get('readonly') === false) {
                     Lada.model.Ort.load(rec.get('id'), {
                         success: function(record) {
                             Ext.create('Lada.view.window.Ort',{
@@ -260,9 +262,11 @@ Ext.define('Lada.view.grid.Orte', {
                 type: 'string'
             },
             renderer: function(value) {
-                if (value === true)
-                   { return 'ja';}
-                else { return 'nein';}
+                if (value === true) {
+                    return 'ja';
+                } else {
+                    return 'nein';
+                }
             },
             dataIndex: 'unscharf'
         }, {
@@ -334,7 +338,8 @@ Ext.define('Lada.view.grid.Orte', {
     },
 
     /**
-     * This sets the Store of this Grid
+     * This sets the Store of this Grid.
+     * TODO: check against dynamicGrid changes 2/2018
      */
     setStore: function(store) {
         var i18n = Lada.getApplication().bundle;
@@ -365,7 +370,8 @@ Ext.define('Lada.view.grid.Orte', {
      */
     selectOrt: function(map, feature) {
         if (feature) {
-            var id = feature.get('id');
+            var id = Array.isArray(feature) ?
+                feature[0].get('id'): feature.get('id');
             var record = this.store.getById(id);
             if (record) {
                 //TODO paging: jump to page

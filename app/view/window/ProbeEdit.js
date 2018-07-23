@@ -33,13 +33,14 @@ Ext.define('Lada.view.window.ProbeEdit', {
      * This function initialises the Window
      */
     initComponent: function() {
+        var i18n = Lada.getApplication().bundle;
         if (this.record === null) {
-            Ext.Msg.alert('Keine valide Probe ausgewählt!');
+            Ext.Msg.alert(i18n.getMsg('err.msg.invalidprobe'));
             this.callParent(arguments);
             return;
         }
         this.buttons = [{
-            text: 'Schließen',
+            text: i18n.getMsg('close'),
             scope: this,
             handler: this.handleBeforeClose
         }];
@@ -64,7 +65,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         // creation of this window. We need to pass it throuh to the form as
         // we need the "modelId" param to load the correct item.
         this.items = [{
-            border: 0,
+            border: false,
             autoScroll: true,
             items: [{
                 xtype: 'probeform',
@@ -72,7 +73,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }, {
                 xtype: 'fset',
                 name: 'orte',
-                title: 'Ortsangaben',
+                title: i18n.getMsg('title.ortsangabe'),
                 padding: '5, 5',
                 margin: 5,
                 items: [{
@@ -82,7 +83,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }, {
                 xtype: 'fset',
                 name: 'messungen',
-                title: 'Messungen',
+                title: i18n.getMsg('title.messungen'),
                 padding: '5, 5',
                 margin: 5,
                 collapsible: false,
@@ -94,7 +95,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }, {
                 xtype: 'fset',
                 name: 'probenzusatzwerte',
-                title: 'Zusatzwerte',
+                title: i18n.getMsg('title.zusatzwerte'),
                 padding: '5, 5',
                 margin: 5,
                 collapsible: true,
@@ -106,7 +107,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }, {
                 xtype: 'fset',
                 name: 'pkommentare',
-                title: 'Kommentare',
+                title: i18n.getMsg('title.kommentare'),
                 padding: '5, 5',
                 margin: 5,
                 collapsible: true,
@@ -119,7 +120,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         }];
         this.tools = [{
             type: 'help',
-            tooltip: 'Hilfe',
+            tooltip: i18n.getMsg('help.qtip'),
             titlePosition: 0,
             callback: function() {
                 var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
@@ -177,8 +178,23 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
                 var messstelle = Ext.data.StoreManager.get('messstellen')
                     .getById(this.record.get('mstId'));
-                this.setTitle('§3 Probe - Hauptprobennr.: ' + this.record.get('hauptprobenNr')
-                                     + ' Mst: ' + messstelle.get('messStelle'));
+                var datenbasis = Ext.data.StoreManager.get('datenbasis')
+                    .getById(this.record.get('datenbasisId'));
+                var title = '';
+                if (datenbasis) {
+                    title += datenbasis.get('datenbasis');
+                    title += ' ';
+                }
+                title += 'Probe'
+                if (this.record.get('hauptprobenNr')) {
+                    title += ' - Hauptprobennr.: ';
+                    title += this.record.get('hauptprobenNr');
+                }
+                if (messstelle) {
+                    title += ' Mst: ';
+                    title += messstelle.get('messStelle');
+                }
+                this.setTitle(title);
 
                 if (owner) {
                     //Always allow to Add Messungen.

@@ -11,17 +11,43 @@
  */
 Ext.define('Lada.view.widget.DynamicGrid', {
     extend: 'Ext.grid.Panel',
-
+    alias: 'widget.dynamicgrid',
     requires: [
         'Lada.view.window.Map',
-        'Ext.grid.column.Widget'
+        'Ext.grid.column.Widget',
+        'Lada.view.grid.Messung',
+        'Lada.view.grid.Messwert',
+        'Lada.view.window.Probenehmer',
+        'Lada.view.window.DatensatzErzeuger',
+        'Lada.view.window.MessprogrammKategorie',
+        'Lada.view.panel.Map'
+
     ],
 
     store: null,
 
+    /** toggle for the button and option "print grid"*/
+    printable: true,
+
+    /** toggle for the button and option "export data"*/
+    exportable: true,
+
+    /** additional non-generic buttons */
+    toolbarbuttons: [],
+
+    /** path to an icon used for 'open' buttons */
+    openIconPath: 'img/document-open.png',
+
+    /** The untranslated i18n-Message for a grid title*/
+    title: null,
+
     border: false,
     multiSelect: true,
     allowDeselect: true,
+    sortable: false,
+
+    // the dataType to be used on generic doubleclik/add/delete buttons.
+    rowtarget: null,
 
     isDynamic: true,
 
@@ -30,16 +56,61 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     initComponent: function() {
-        var i18n = Lada.getApplication().bundle;
+        this.i18n = Lada.getApplication().bundle;
+        this.emptyText = this.i18n.getMsg(this.emptyText);
+        this.selModel = Ext.create('Ext.selection.CheckboxModel', {
+            checkOnly: true,
+            injectCheckbox: 1
+        });
         this.callParent(arguments);
+    },
+
+    setToolbar: function() {
+        this.i18n = Lada.getApplication().bundle;
+        var tbcontent = [];
+        if (this.title) {
+            this.title = this.i18n.getMsg(this.title);
+        }
+
+        // fill the toolbar in the appropiate order of buttons
+        this.genericAddButton();
+        this.genericDeleteButton();
+        this.toolbarbuttons.push('->');
+        switch (this.rowtarget.dataType) {
+            case 'mpId':
+                this.addMessprogrammButtons();
+                break;
+            case 'probeId':
+                this.addProbeButtons();
+                break;
+            case 'messungId':
+                this.addMessungButtons();
+                break;
+            case 'ortId':
+                this.addOrtButtons();
+        }
+        this.addExportButton();
+        this.addPrintButton();
+
+        if (this.toolbarbuttons && this.toolbarbuttons.length) {
+            for (var i= 0; i < this.toolbarbuttons.length; i++) {
+                tbcontent.push(this.toolbarbuttons[i]);
+            }
+        }
+        this.addDocked({
+            xtype: 'toolbar',
+            dock: 'top',
+            items: tbcontent
+        });
     },
 
     /**
      * This sets the Store of the DynamicGrid
      */
     setStore: function(store) {
-        var i18n = Lada.getApplication().bundle;
-        this.reconfigure(store);
+        if (store) {
+            this.reconfigure(store);
+        }
         var ptbar = this.down('pagingtoolbar');
         if (ptbar) {
             this.removeDocked(ptbar);
@@ -51,25 +122,82 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             store: store,
             displayInfo: true
         }]);
+        if (this.rowtarget.dataType === 'ortId') {
+            this.i18n = Lada.getApplication().bundle;
+            var map = Ext.create('Lada.view.panel.Map', {
+                collapsible: true,
+                multiSelect: true,
+                minWidth: 400,
+                dock: 'right',
+                title: this.i18n.getMsg('map.title'),
+                externalOrteStore: false
+            });
+            map.on({
+                featureselected: {
+                    fn: this.selectRowByFeature,
+                    scope: this
+                },
+                featureadded: {
+                    fn: this.addOrt,
+                    scope: this
+                }
+            });
+            this.addDocked(map);
+        }
         var cbox = Ext.create('Lada.view.widget.PagingSize');
         this.down('pagingtoolbar').add('-');
         this.down('pagingtoolbar').add(cbox);
+        this.down('pagingtoolbar').down('#refresh').hide();
+        // this.on('select') zoom to map and select
+        // });
+    },
 
+    selectRowByFeature: function(map, features) {
+        if (!Array.isArray(features)) {
+            features = [features];
+        }
+        var records = [];
+        for (var i=0; i < features.length;i++) {
+            var id = features[i].get ? features[i].get('id') : features[i];
+            if (id !== undefined) {
+                records.push(this.store.getById(id));
+            }
+        }
+        this.getSelectionModel().select(records);
+    },
 
+    addOrt: function(event) {
+        var clone = event.feature.clone();
+        clone.getGeometry().transform('EPSG:3857', 'EPSG:4326');
+        var koord_x = Math.round(clone.getGeometry().getCoordinates()[0] * 100000)/100000;
+        var koord_y = Math.round(clone.getGeometry().getCoordinates()[1] * 100000)/100000;
+        Ext.create('Lada.view.window.Ort', {
+            record: Ext.create('Lada.model.Ort',{
+                //netzbetreiberId: nId,
+                koordXExtern: koord_x,
+                koordYExtern: koord_y,
+                kdaId: 4,
+                ortTyp: 1
+            })
+        }).show();
     },
 
     /**
-     * Setup columns of the Grid dynamically based on a list of given cols.
-     * The function is called from the {@link Lada.controller.Filter#search
+     * Setup columns of the Grid dynamically.
+     * @param data The result of a search request //TODO
+     * @param columnstore: store with currently available Lada.model.GridColumn
+     * definitions
+     * The function is called from the {@link Lada.controller.Query#search
      * search event}
      * The Images for the Read-Write Icon are defined in CSS
      */
-    setupColumns: function(cols) {
-        var caf = this.generateColumnsAndFields(cols);
-        var columns = caf[0];
+    setup: function(data, columnstore) {
+        var caf = this.generateColumnsAndFields(data, columnstore);
+        this.columns = caf[0];
         var fields = caf[1];
         this.store.setFields(fields);
-        this.reconfigure(this.store, columns);
+        this.reconfigure(this.store, this.columns);
+        this.setToolbar();
     },
 
     /**
@@ -78,61 +206,20 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      * @return an array of two arrays: [0] is an array of colums [1] an array
      *   of fields
      **/
-    generateColumnsAndFields: function(cols) {
+    generateColumnsAndFields: function(current_columns, fixedColumnStore) {
+        this.toolbarbuttons = [];
         var resultColumns = [];
         var fields = [];
-        var i18n = Lada.getApplication().bundle;
-        var getClassFunc = function(val, meta, rec) {
-            if (rec.get('readonly') === false &&
-                ( rec.get('owner') === undefined ||
-                    rec.get('owner') === true ||
-                    rec.get('owner') === '') &&
-                !rec.get('statusEdit')) {
-                return 'edit';
-            } else if (rec.get('readonly') === false &&
-                rec.get('owner') === true &&
-                rec.get('statusEdit')) {
-                return 'editstatus';
-            } else if (rec.get('readonly') === true &&
-                rec.get('statusEdit')) {
-                return 'noeditstatus';
-            }
-            return 'noedit';
-        };
-        var handlerFunc =  function(grid, rowIndex, colIndex) {
-            var rec = grid.getStore().getAt(rowIndex);
-            grid.fireEvent('itemdblclick', grid, rec);
-        };
-        switch (this.xtype) {
-            case 'probelistgrid':
-                var tooltiptext = i18n.getMsg('probe')+' '+i18n.getMsg('open');
-                break;
-            case 'messunglistgrid':
-                var tooltiptext = i18n.getMsg('messung')+' '+i18n.getMsg('open');
-                break;
-            case 'messprogrammelistgrid':
-                var tooltiptext = i18n.getMsg('messprogramm')+' '+i18n.getMsg('open');
-        }
-
-        fields.push(new Ext.data.Field({
-            name: 'owner'
-        }));
+        this.i18n = Lada.getApplication().bundle;
         fields.push(new Ext.data.Field({
             name: 'readonly'
         }));
-        fields.push(new Ext.data.Field({
-            name: 'statusEdit'
-        }));
-        fields.push(new Ext.data.Field({
-            name: 'id'
-        }));
-
         resultColumns.push({
             xtype: 'actioncolumn',
             text: 'RW',
             dataIndex: 'readonly',
+            hideable: false,
             sortable: false,
-            tooltip: tooltiptext,
             width: 30,
             getClass: function(val, meta, rec) {
                 if (rec.get('readonly') === false &&
@@ -151,235 +238,737 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 }
                 return 'noedit';
             },
-            handler: function(grid, rowIndex, colIndex) {
+            handler: function(grid, rowIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
                 grid.fireEvent('itemdblclick', grid, rec);
             }
         });
 
-        for (var i = cols.length - 1; i >= 0; i--) {
-            //Change id field to a valid ExtJS6 id
-            cols[i].id = 'col-' + cols[i].id;
+        current_columns.sort('columnIndex', 'ASC');
+        var cc = current_columns.getData().items;
 
-            //Check column type and set to string if unknown
-            if (!cols[i].dataType.name) {
-                cols[i].dataType = 'string';
-            }
-
-            var curField = {
-                name: cols[i].dataIndex
-            };
-            if (cols[i] === 'id' || cols[i].dataIndex === 'probeId') {
+        for (var i = 0; i < cc.length; i++) {
+            if (cc[i].get('visible') !== true) {
                 continue;
             }
+            var col = {};
+            var orig_column = fixedColumnStore.findRecord(
+                'id', cc[i].get('gridColumnId'), false, false, false, true);
 
-            var openIconPath = 'img/document-open.png';
-            //TODO: Use proper icons
-            switch (cols[i].dataType.name) {
+            col.dataIndex = orig_column.get('dataIndex');
+            col.text = orig_column.get('name');
+            col.maxWidth = orig_column.get('width');
+            col.sortable = false;
+            //Check column type and set to string if unknown
+            var datatype = orig_column.get('dataType');
+            if (!datatype) {
+                datatype = {name: 'text'};
+            }
+            var curField = {
+                dataIndex: orig_column.get('dataIndex'),
+                name: orig_column.get('name')
+            };
+            var colImg = null;
+            switch (datatype.name) {
                 case 'probeId':
-                    colImg = Ext.getResourcePath(openIconPath, null, null);
-                    cols[i].xtype =  'widgetcolumn';
-                    cols[i].widget = {
-                        xtype: 'button',
-                        icon: colImg,
-                        width: '16px',
-                        height: '16px',
-                        userCls: 'widget-column-button',
-                        tooltip: i18n.getMsg('typedgrid.tooltip.probeid'),
-                        hidden: true,
-                        listeners: {
-                            click: function(button) {
-                                var id = Number(button.text);
-                                Lada.model.Probe.load(id, {
-                                    scope: this,
-                                    callback: function(record, operation, success) {
-                                        if (success) {
-                                            var win = Ext.create('Lada.view.window.ProbeEdit', {
-                                                record: record,
-                                                style: 'z-index: -1;'
-                                            });
-                                            win.setPosition(30);
-                                            win.show();
-                                            win.initData();
-                                        }
-                                    }
-                                });
-                            },
-                            textchange: function(button, oldval, newval) {
-                                if (!newval || newval == '') {
-                                    button.hide();
-                                } else {
-                                    button.show();
-                                }
-                            }
-                        }
-                    }
+                    this.generateProbeColumn(colImg, col);
                     break;
                 case 'messungId':
-                    colImg = Ext.getResourcePath(openIconPath, null, null);
-                    cols[i].xtype =  'widgetcolumn';
-                    cols[i].widget = {
-                        xtype: 'button',
-                        icon: colImg,
-                        width: '16px',
-                        height: '16px',
-                        userCls: 'widget-column-button',
-                        tooltip: i18n.getMsg('typedgrid.tooltip.messungid'),
-                        hidden: true,
-                        listeners: {
-                            click: function(button) {
-                                var id = Number(button.text);
-                                Lada.model.Messung.load(id, {
-                                    scope: this,
-                                    callback: function(record, operation, success) {
-                                        if (success) {
-                                            var messungRecord = record;
-                                            Lada.model.Probe.load(messungRecord.get('probeid'), {
-                                                scope: this,
-                                                callback: function(precord, poperation, psuccess) {
-                                                    var win = Ext.create('Lada.view.window.MessungEdit', {
-                                                        probe: precord,
-                                                        record: record,
-                                                        style: 'z-index: -1;'
-                                                    });
-                                                    win.show();
-                                                }
-                                            });
-                                        }
-                                    }
-                                });
-                            },
-                            textchange: function(button, oldval, newval) {
-                                if (!newval || newval == '') {
-                                    button.hide();
-                                } else {
-                                    button.show();
-                                }
-                            }
-                        }
-                    }
+                    this.generateMessungColumns(colImg, col);
                     break;
-
+                case 'mpId':
+                    this.generateMessprogrammColumns(colImg, col);
+                    break;
                 case 'ortId':
-                    colImg = Ext.getResourcePath(openIconPath, null, null);
-                    cols[i].xtype =  'widgetcolumn';
-                    cols[i].widget = {
-                        xtype: 'button',
-                        icon: colImg,
-                        width: '16px',
-                        height: '16px',
-                        userCls: 'widget-column-button',
-                        tooltip: i18n.getMsg('typedgrid.tooltip.ortid'),
-                        hidden: true,
-                        listeners: {
-                            click: function(button) {
-                                var id = button.getText();
-                                Lada.model.Ort.load(id, {
-                                    success: function(record) {
-                                        var win = Ext.create('Lada.view.window.Ort', {
-                                            record: record
-                                        });
-                                        win.show();
-                                    }
-                                });
-                            },
-                            textchange: function(button, oldval, newval) {
-                                if (!newval || newval == '') {
-                                    button.hide();
-                                } else {
-                                    button.show();
-                                }
-                            }
-                        }
-                    }
+                    this.generateOrtColumns(colImg, col);
                     break;
                 case 'geom':
-                    colImg = Ext.getResourcePath('img/document-open.png', null, null);
-                    cols[i].xtype =  'widgetcolumn';
-                    cols[i].widget = {
-                        xtype: 'button',
-                        icon: colImg,
-                        width: '16px',
-                        height: '16px',
-                        userCls: 'widget-column-button',
-                        tooltip: i18n.getMsg('typedgrid.tooltip.geometry'),
-                        hidden: true,
-                        listeners: {
-                            click: function(button) {
-                                var geom = button.geom;
-                                var mapWin = Ext.create('Lada.view.window.Map', {
-                                    geom: geom
-                                });
-                                mapWin.show();
-                            },
-                            textchange: function(button, oldval, newval) {
-                                button.geom = newval;
-                                button.text = '';
-                                button.tooltip = newval;
-                                if (!newval || newval == '') {
-                                    button.hide();
-                                } else {
-                                    button.show();
-                                }
-                            }
-                        }
-                    }
-                break;
+                    this.generateGeomColumns(colImg, col);
+                    break;
                 case 'date':
-                    curField.depends = cols[i].dataIndex;
-
-                    cols[i].xtype = 'datecolumn';
-                    cols[i].format = cols[i].dataType.format;
-                    cols[i].renderer = function(value, cell){
-                        if (!value || value == '') {
-                            return '';
-                        }
-                        var format = cell.column.format;
-                        var dt =  Ext.Date.format(new Date(value), format);
-                        return dt;
-                    };
-
-                break;
+                    this.generateDateColumns(curField, orig_column, col);
+                    break;
                 case 'number':
-                cols[i].xtype = 'numbercolumn';
-                cols[i].format = cols[i].dataType.format;
-                cols[i].renderer = function(value, cell) {
-                    if (!value) {
-                        return '';
-                    }
-                    var format = cell.column.format;
-                    if (format === 'e') {
-                        return value.toExponential();
-                    } else {
-                        return Ext.util.Format.number(value, format);
-                    }
-                }
-                break;
+                    this.generateNumberColumns(orig_column, col);
+                    break;
+                case 'boolean':
+                    this.generateBooleanColumns(col);
+                    break;
+                case 'statusstfe':
+                    this.generateStatusStufeColumns(col);
+                    break;
+                case 'umwbereich':
+                    this.generateUmweltbereichColumns(col);
+                    break;
+                case 'status':
+                    this.generateStatusColumns(col);
+                    break;
+                case 'egem':
+                    this.generateEgemColumns(col);
+                    break;
+                case 'netzbetr':
+                    this.generateNetzbetreiberColumns(col);
+                    break;
+                case 'datenbasis':
+                    this.generateDatenbasisColumns(col);
+                    break;
+                case 'probenart':
+                    this.generateProbenartColumns(col);
+                    break;
+                case 'staat':
+                    this.generateStaatColumns(col);
+                    break;
+                case 'pnehmer':
+                case 'dsatzerz':
+                case 'mprkat':
+                    this.generateStammColumn(colImg, col, datatype);
+                    break;
                 default:
-                    switch (cols[i].dataIndex) {
-                        case 'dBasis':
-                        case 'pArt':
-                        case 'statusSt':
-                        case 'statusW':
-                        case 'baId':
-                        case 'mstLaborId':
-                        case 'messRegime':
-                        case 'intervall':
-                        case 'mstId':
-                        case 'netzId':
-                            cols[i].filter = {type: 'list'};
-                            break;
-                        default:
-                            cols[i].filter = {type: 'string'};
-                    }
+                    col.xtype = 'gridcolumn';
+                    col.renderer = function(value) {
+                        return value || '';
+                    };
             }
             fields.push(curField);
-            resultColumns.push(cols[i]);
+            col.hideable = false;
+            col.draggable = false;
+            resultColumns.push(col);
         }
         var caf = new Array();
         caf[0] = resultColumns;
         caf[1] = fields;
         return caf;
+    },
+
+    generateProbeColumn: function(colImg, col) {
+        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+        col.xtype = 'widgetcolumn';
+        col.widget = {
+            xtype: 'button',
+            icon: colImg,
+            width: '16px',
+            height: '16px',
+            userCls: 'widget-column-button',
+            tooltip: this.i18n.getMsg('typedgrid.tooltip.probeid'),
+            hidden: true,
+            listeners: {
+                click: function(button) {
+                    var id = Number(button.text);
+                    button.getEl().swallowEvent(['click', 'dblclick'], true);
+                    Lada.model.Probe.load(id, {
+                        scope: this,
+                        callback: function(record, operation, success) {
+                            if (success) {
+                                var win = Ext.create('Lada.view.window.ProbeEdit', {
+                                    record: record,
+                                    style: 'z-index: -1;'
+                                });
+                                win.setPosition(30);
+                                win.show();
+                                win.initData();
+                            }
+                        }
+                    });
+                },
+                textchange: function(button, oldval, newval) {
+                    if (!newval || newval === '') {
+                        button.hide();
+                    } else {
+                        button.show();
+                    }
+                }
+            }
+        };
+    },
+    generateMessungColumns: function(colImg, col) {
+        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+        col.xtype = 'widgetcolumn';
+        col.widget = {
+            xtype: 'button',
+            icon: colImg,
+            width: '16px',
+            height: '16px',
+            userCls: 'widget-column-button',
+            tooltip: this.i18n.getMsg('typedgrid.tooltip.messungid'),
+            hidden: true,
+            listeners: {
+                click: function(button) {
+                    var id = Number(button.text);
+                    button.getEl().swallowEvent(['click', 'dblclick'], true);
+                    Lada.model.Messung.load(id, {
+                        scope: this,
+                        callback: function(record, operation, success) {
+                            if (success) {
+                                var messungRecord = record;
+                                Lada.model.Probe.load(messungRecord.get('probeId'), {
+                                    scope: this,
+                                    callback: function(precord, poperation, psuccess) {
+                                        var probeWin = Ext.create(
+                                            'Lada.view.window.ProbeEdit', {
+                                                record: precord,
+                                                style: 'z-index: -1;'
+                                            });
+                                        probeWin.setPosition(30);
+                                        probeWin.show();
+                                        probeWin.initData();
+
+                                        var win = Ext.create(
+                                            'Lada.view.window.MessungEdit', {
+                                                parentWindow: probeWin,
+                                                probe: precord,
+                                                record: record,
+                                                style: 'z-index: -1;'
+                                            });
+                                        win.initData();
+                                        win.show();
+                                    }
+                                });
+                            }
+                        }
+                    });
+                },
+                textchange: function(button, oldval, newval) {
+                    if (!newval || newval == '') {
+                        button.hide();
+                    } else {
+                        button.show();
+                    }
+                }
+            }
+        };
+    },
+
+    generateMessprogrammColumns: function(colImg, col) {
+        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+        col.xtype = 'widgetcolumn';
+        col.widget = {
+            xtype: 'button',
+            icon: colImg,
+            width: '16px',
+            height: '16px',
+            userCls: 'widget-column-button',
+            tooltip: this.i18n.getMsg('typedgrid.tooltip.mprid'),
+            hidden: true,
+            listeners: {
+                click: function(button) {
+                    var id = button.getText();
+                    button.getEl().swallowEvent(['click', 'dblclick'], true);
+                    Lada.model.Messprogramm.load(id, {
+                        success: function(record) {
+                            var win = Ext.create(
+                                'Lada.view.window.Messprogramm', {
+                                    record: record});
+                            win.show();
+                        }
+                    });
+                },
+                textchange: function(button, oldval, newval) {
+                    if (!newval || newval === '') {
+                        button.hide();
+                    } else {
+                        button.show();
+                    }
+                }
+            }
+        };
+    },
+
+    generateOrtColumns: function(colImg, col) {
+        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+        col.xtype = 'widgetcolumn';
+        col.widget = {
+            xtype: 'button',
+            icon: colImg,
+            width: '16px',
+            height: '16px',
+            userCls: 'widget-column-button',
+            tooltip: this.i18n.getMsg('typedgrid.tooltip.ortid'),
+            hidden: true,
+            listeners: {
+                click: function(button) {
+                    var id = button.getText();
+                    button.getEl().swallowEvent(['click', 'dblclick'], true);
+                    Lada.model.Ort.load(id, {
+                        success: function(record) {
+                            var win = Ext.create('Lada.view.window.Ort', {
+                                record: record
+                            });
+                            win.show();
+                        }
+                    });
+                },
+                textchange: function(button, oldval, newval) {
+                    if (!newval || newval === '') {
+                        button.hide();
+                    } else {
+                        button.show();
+                    }
+                }
+            }
+        };
+    },
+
+    generateGeomColumns: function(colImg, col) {
+        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+        col.xtype = 'widgetcolumn';
+        col.widget = {
+            xtype: 'button',
+            icon: colImg,
+            width: '16px',
+            height: '16px',
+            userCls: 'widget-column-button',
+            tooltip: this.i18n.getMsg('typedgrid.tooltip.geometry'),
+            hidden: true,
+            listeners: {
+                click: function(button) {
+                    button.getEl().swallowEvent(['click', 'dblclick'], true);
+                    var geom = button.geom;
+                    var mapWin = Ext.create('Lada.view.window.Map', {
+                        geom: geom
+                    });
+                    mapWin.show();
+                },
+                textchange: function(button, oldval, newval) {
+                    button.geom = newval;
+                    button.text = '';
+                    button.tooltip = newval;
+                    if (!newval || newval === '') {
+                        button.hide();
+                    } else {
+                        button.show();
+                    }
+                }
+            }
+        };
+    },
+
+    generateDateColumns: function(curField, orig_column, col) {
+        curField.depends = orig_column.dataIndex;
+
+        col.xtype = 'datecolumn';
+        col.format = orig_column.get('dataType').format;
+        col.renderer = function(value, cell) {
+            if (!value || value === '') {
+                return '';
+            }
+            var format = cell.column.format;
+            var dt='';
+            if (!isNaN(value)) {
+                dt = Ext.Date.format(new Date(value), format);
+            }
+            return dt;
+        };
+    },
+
+    generateNumberColumns: function(orig_column, col) {
+        col.xtype = 'numbercolumn';
+        col.format = orig_column.get('dataType').format;
+        col.renderer = function(value, cell) {
+            if (!value) {
+                return '';
+            }
+            var format = cell.column.format;
+            if (isNaN (value)) {
+                if (value[0] === '<' ) {
+                    if (format === 'e') {
+                        return '< ' + String(parseInt(
+                            value.substring(1),10).toExponential());
+                    } else {
+                        return '< ' + String(
+                            Ext.util.Format.number(value, format));
+                    }
+                } else {
+                    return value;
+                }
+            }
+            if (format === 'e') {
+                return parseFloat(value).toExponential();
+            } else {
+                return Ext.util.Format.number(value, format);
+            }
+        };
+    },
+    generateBooleanColumns: function(col) {
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (value === true) {
+                return this.i18n.getMsg('true');
+            } else if (value === false) {
+                return this.i18n.getMsg('false');
+            } else {
+                return '';
+            }
+        };
+    },
+    generateStatusStufeColumns: function(col){
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get('statusstufe');
+            var rec = st.findRecord('id', value, false,false,
+                false,true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('stufe') !== undefined) {
+                return rec.get('stufe');
+            }
+            return '';
+        };
+    },
+    generateUmweltbereichColumns: function(col) {
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get('umwelt');
+            var rec = st.findRecord('id', value, false,false,
+                false,true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('umweltBereich') !== undefined) {
+                return rec.get('umweltBereich');
+            }
+            return '';
+        };
+    },
+    generateStatusColumns: function(col) {
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get('statuswerte');
+            var rec = st.findRecord('id', value, false,false,
+                false,true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('wert') !== undefined) {
+                return rec.get('wert');
+            }
+            return '';
+        };
+    },
+
+    generateEgemColumns: function(col) {
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get(
+                'verwaltungseinheitenwidget');
+            var rec = st.findRecord('id', value, false, false,
+                false, true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('bezeichnung') !== undefined) {
+                return rec.get('bezeichnung');
+            }
+            return '';
+        };
+    },
+
+    generateNetzbetreiberColumns: function(col) {
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get('netzbetreiber');
+            var rec = st.findRecord('id', value, false,false,
+                false,true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('netzbetreiber') !== undefined) {
+                return rec.get('netzbetreiber');
+            }
+            return '';
+        };
+    },
+
+    generateDatenbasisColumns: function(col) {
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get('datenbasis');
+            var rec = st.findRecord('id', value, false,false,
+                false,true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('datenbasis') !== undefined) {
+                return rec.get('datenbasis');
+            }
+            return '';
+        };
+    },
+
+    generateProbenartColumns: function(col) {
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get('probenarten');
+            var rec = st.findRecord('id', value, false,false,
+                false,true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('datenbasis') !== undefined) {
+                return rec.get('datenbasis');
+            }
+            return '';
+        };
+    },
+
+    generateStaatColumns: function(col) {
+        col.xtype='gridcolumn';
+
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get('staaten');
+            var rec = st.findRecord('id', value, false,false,
+                false,true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('staatIso') !== undefined) {
+                return rec.get('staatIso');
+            }
+            return '';
+        };
+    },
+
+    generateStammColumn: function(colImg, col, datatype) {
+        var clicklistener = null;
+        var tooltip = '';
+
+        if (datatype.name === 'pnehmer') {
+            tooltip = this.i18n.getMsg('typedgrid.tooltip.pnehmer');
+            clicklistener = function(button) {
+                var id = Number(button.text);
+                button.getEl().swallowEvent(['click', 'dblclick'], true);
+                Lada.model.Probenehmer.load(id, {
+                    scope: this,
+                    callback: function(record, operation, success) {
+                        if (success) {
+                            var win = Ext.create('Lada.view.window.Probenehmer', {
+                                record: record,
+                                style: 'z-index: -1;'
+                            });
+                            win.setPosition(30);
+                            win.show();
+                            win.initData();
+                        }
+                    }
+                });
+            };
+        } else if (datatype.name === 'dsatzerz') {
+            tooltip = this.i18n.getMsg('typedgrid.tooltip.dsatzerz');
+            clicklistener = function(button) {
+                var id = Number(button.text);
+                button.getEl().swallowEvent(['click', 'dblclick'], true);
+                Lada.model.DatensatzErzeuger.load(id, {
+                    scope: this,
+                    callback: function(record, operation, success) {
+                        if (success) {
+                            var win = Ext.create('Lada.view.window.DatensatzErzeuger', {
+                                record: record,
+                                style: 'z-index: -1;'
+                            });
+                            win.setPosition(30);
+                            win.show();
+                            win.initData();
+                        }
+                    }
+                });
+            };
+        } else if (datatype.name === 'mprkat') {
+            tooltip = this.i18n.getMsg('typedgrid.tooltip.mprkat');
+            clicklistener = function(button) {
+                var id = Number(button.text);
+                button.getEl().swallowEvent(['click', 'dblclick'], true);
+                Lada.model.MessprogrammKategorie.load(id, {
+                    scope: this,
+                    callback: function(record, operation, success) {
+                        if (success) {
+                            var win = Ext.create('Lada.view.window.MessprogrammKategorie', {
+                                record: record,
+                                style: 'z-index: -1;'
+                            });
+                            win.setPosition(30);
+                            win.show();
+                            win.initData();
+                        }
+                    }
+                });
+            };
+        }
+        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+        col.xtype = 'widgetcolumn';
+        col.widget = {
+            xtype: 'button',
+            icon: colImg,
+            width: '16px',
+            height: '16px',
+            userCls: 'widget-column-button',
+            tooltip: tooltip,
+            listeners: {
+                click: clicklistener,
+                textchange: function(button, oldval, newval) {
+                    if (!newval || newval === '') {
+                        button.hide();
+                    } else {
+                        button.show();
+                    }
+                }
+            }
+        };
+    },
+    addProbeButtons: function() {
+        if (!this.tbuttonExists('importprobe')) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('button.import'),
+                icon: 'resources/img/svn-commit.png',
+                action: 'importprobe',
+                needsSelection: false,
+                disabled: false
+            });
+        }
+        if (!this.tbuttonExists('printSheet')) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('button.printsheet'),
+                icon: 'resources/img/printer.png',
+                action: 'printSheet',
+                needsSelection: true,
+                disabled: true
+            });
+        }
+    },
+
+    addMessungButtons: function() {
+        if (!this.tbuttonExists('setstatus')) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('statusSetzen'),
+                icon: 'resources/img/mail-mark-notjunk.png',
+                action: 'setstatus',
+                needsSelection: true,
+                disabled: true
+            });
+        }
+    },
+
+    addMessprogrammButtons: function() {
+        if ( Ext.Array.contains(Lada.funktionen, 4) && !this.tbuttonExists(
+            'genProbenFromMessprogramm')
+        ) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('button.generateProben'),
+                icon: 'resources/img/view-time-schedule-insert.png',
+                action: 'genProbenFromMessprogramm',
+                needsSelection: true,
+                disabled: true
+            });
+        }
+    },
+
+    addOrtButtons: function() {
+        if (Ext.Array.contains(Lada.funktionen, 4) && !this.tbuttonExists(
+            'addMap')
+        ) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('orte.new'),
+                icon: 'resources/img/svn-commit.png',
+                action: 'addMap',
+                needsSelection: false,
+                disabled: false
+            });
+        }
+    },
+
+    genericAddButton: function() {
+        if (
+            this.rowtarget.dataType === 'probeId' ||
+            ( ['mpId', 'pnehmer', 'dsatzerz', 'mprkat', 'ortId'].indexOf(
+                this.rowtarget.dataType) >= 0
+                && Ext.Array.contains(Lada.funktionen, 4)
+            )
+        ) {
+            if (!this.tbuttonExists('genericadd')) {
+                this.toolbarbuttons.push({
+                    text: this.i18n.getMsg('add'),
+                    icon: 'resources/img/svn-update.png',
+                    action: 'genericadd',
+                    needsSelection: false,
+                    disabled: false
+                });
+            }
+        }
+    },
+
+    genericDeleteButton: function() {
+        if (
+            ['probeId'].indexOf(this.rowtarget.dataType) >= 0 ||
+            ( ['pnehmer', 'dsatzerz', 'mprkat'].indexOf(
+                this.rowtarget.dataType) >= 0
+                && Ext.Array.contains(Lada.funktionen, 4)
+            )
+        ) {
+            if (!this.tbuttonExists('genericdelete')) {
+                this.toolbarbuttons.push({
+                    text: this.i18n.getMsg('button.deleteseleted'),
+                    icon: 'resources/img/svn-update.png',
+                    action: 'genericdelete',
+                    needsSelection: true,
+                    disabled: true
+                });
+            }
+        }
+    },
+    addPrintButton: function() {
+        if (this.printable && !this.tbuttonExists('print')) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('button.print'),
+                icon: 'resources/img/printer.png',
+                action: 'print',
+                needsSelection: true,
+                disabled: true
+            });
+        }
+    },
+
+    addExportButton: function() {
+        if (this.exportable && !this.tbuttonExists('gridexport')) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('export.button'),
+                icon: 'resources/img/svn-update.png',
+                action: 'gridexport',
+                needsSelection: true,
+                disabled: true
+            });
+        }
+    },
+
+    tbuttonExists: function(action) {
+        for (var i=0; i< this.toolbarbuttons.length; i++) {
+            if (this.toolbarbuttons[i].action === action) {
+                return true;
+            }
+        }
+        return false;
     }
 });
 

@@ -15,7 +15,6 @@ Ext.define('Lada.view.widget.Probenzusatzwert', {
     store: 'Probenzusaetze',
     displayField: 'beschreibung',
     valueField: 'id',
-    emptyText: 'Wählen Sie einen Zusatzwert',
     // Enable filtering of comboboxes
     autoSelect: false,
     queryMode: 'local',
@@ -25,6 +24,8 @@ Ext.define('Lada.view.widget.Probenzusatzwert', {
 
     initComponent: function() {
         this.store = Ext.data.StoreManager.get('probenzusaetze');
+        var i18n= Lada.getApplication().bundle;
+        this.emptyText= i18n.getMsg('emptytext.pzw.widget');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Probenzusaetze');
         }

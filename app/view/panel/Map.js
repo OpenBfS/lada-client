@@ -19,6 +19,7 @@ Ext.define('Lada.view.panel.Map', {
     record: null,
     locationRecord: null,
     externalOrteStore: false,
+
     /*
      * if externalOrteStore is true, the mappanel will not load the orte
      * store on it's own; it expects an already loaded store instead
@@ -43,6 +44,19 @@ Ext.define('Lada.view.panel.Map', {
      */
     initComponent: function() {
         this.initData();
+        this.on({
+            selectfeature: {
+                fn: this.selectFeature,
+                scope: this,
+                options: {
+                    args: [true]
+                }
+            },
+            deselectfeature: {
+                fn: this.deselectFeature,
+                scope: this
+            }
+        });
         this.callParent(arguments);
     },
 
@@ -54,9 +68,10 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     /**
-     * Select a feature by record (a Lada.model.Ort) and zoom to this Ort
+     * Select a feature by record (a Lada.model.Ort)
+     * @param record Record
      */
-    selectFeature: function(model, record) {
+    selectFeature: function(model,record, opts) {
         if (!record || !record.get('id') || record.get('id') === '') {
             return;
         }
@@ -65,26 +80,54 @@ Ext.define('Lada.view.panel.Map', {
         if (!feature) {
             return;
         }
-        if (this.selectedFeatureLayer) {
-            if (this.tempFeature) {
-                this.selectedFeatureLayer.getSource().removeFeature(
-                    this.tempFeature);
-                this.tempFeature = null;
-            }
+        if (!this.multiSelect) {
             this.featureLayer.getSource().addFeatures(
                 this.selectedFeatureLayer.getSource().getFeatures());
             this.selectedFeatureLayer.getSource().clear();
-            this.featureLayer.getSource().removeFeature(feature);
-            this.selectedFeatureLayer.getSource().addFeature(feature);
         }
-        this.map.getView().setCenter([feature.getGeometry().getCoordinates()[0],
-            feature.getGeometry().getCoordinates()[1]]);
-        this.map.getView().setZoom(12);
-        var ozw = this.up('ortszuordnungwindow');
-        if (ozw) {
-            ozw.down('ortszuordnungform').setOrt(null, record);
+        var currentFeatures = this.multiSelect ?
+            this.selectedFeatureLayer.getSource().getFeatures() : [];
+        this.featureLayer.getSource().removeFeature(feature);
+        this.selectedFeatureLayer.getSource().addFeature(feature);
+        currentFeatures.push(feature);
+        this.fireEvent('featureselected', this, currentFeatures);
+        var zoomFeats = this.selectedFeatureLayer.getSource().getFeatures();
+        if (zoomFeats.length > 1) {
+            var zf_geoms = [];
+            for (var i=0; i < zoomFeats.length;i++) {
+                zf_geoms.push(zoomFeats[i].getGeometry().getCoordinates());
+            }
+            var ext = ol.extent.boundingExtent(zf_geoms);
+            this.map.getView().fit(ext, {
+                duration: 1000,
+                constrainResolution: true,
+                maxZoom: 12
+            });
+        } else if (zoomFeats.length === 1) {
+            this.map.getView().animate(
+                { center: zoomFeats[0].getGeometry().getCoordinates(),
+                    duration: 1000},
+                { zoom: 10,
+                    duration: 1000});
         }
         //TODO: hideable main layer/make all except selected invisible
+    },
+
+    /**
+     * Deselects the feature of a given record on the map
+     * @param record Record
+     */
+    deselectFeature: function(record) {
+        if (!record || !record.get('id') || record.get('id') === '') {
+            return;
+        }
+        var features = this.selectedFeatureLayer.getSource();
+        var feature = features.getFeatureById(record.get('id'));
+        if (!feature) {
+            return;
+        }
+        this.selectedFeatureLayer.getSource().removeFeature(feature);
+        this.featureLayer.getSource().addFeature(feature);
     },
 
     activateDraw: function() {
@@ -108,36 +151,36 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     featureAdded: function(event) {
+        //Forward event
         var me = Ext.ComponentQuery.query('map')[0];
+        me.fireEvent('featureadded', event);
         me.map.removeInteraction(me.drawInteraction);
         event.feature.set('bez', 'neuer Ort');
-        clone = event.feature.clone();
+        var clone = event.feature.clone();
         clone.getGeometry().transform('EPSG:3857', 'EPSG:4326');
-        var parent = me.up('ortszuordnungwindow') || me.up('ortpanel');
-        var nId = '';
-        if (parent.probe) {
+        var parent = me.up('ortszuordnungwindow'); //TODO changed queryui
+        if (parent && parent.probe) {
             var mstId = parent.probe.get('mstId');
             var mst = Ext.data.StoreManager.get('messstellen');
             var ndx = mst.findExact('id', mstId);
-            nId = mst.getAt(ndx).get('netzbetreiberId');
+            var nId = mst.getAt(ndx).get('netzbetreiberId');
+            var koord_x = Math.round(clone.getGeometry().getCoordinates()[0] * 100000)/100000;
+            var koord_y = Math.round(clone.getGeometry().getCoordinates()[1] * 100000)/100000;
+            Ext.create('Lada.view.window.Ort', {
+                record: Ext.create('Lada.model.Ort',{
+                    netzbetreiberId: nId,
+                    koordXExtern: koord_x,
+                    koordYExtern: koord_y,
+                    kdaId: 4,
+                    ortTyp: 1
+                }),
+                parentWindow: parent
+            }).show();
+            me.map.removeLayer(me.temporaryLayer);
         }
-        var koord_x = Math.round(clone.getGeometry().getCoordinates()[0] * 100000)/100000;
-        var koord_y = Math.round(clone.getGeometry().getCoordinates()[1] * 100000)/100000;
-        Ext.create('Lada.view.window.Ort', {
-            record: Ext.create('Lada.model.Ort',{
-                netzbetreiberId: nId,
-                koordXExtern: koord_x,
-                koordYExtern: koord_y,
-                kdaId: 4,
-                ortTyp: 1
-            }),
-            parentWindow: parent
-        }).show();
-        me.map.removeLayer(me.temporaryLayer);
     },
 
     addLocations: function(locationStore) {
-        var me = this;
         if (!this.featureLayer) {
             this.initFeatureLayer();
         }
@@ -205,9 +248,18 @@ Ext.define('Lada.view.panel.Map', {
             }),
             maxZoom: 18
         });
-
-        var target = this.getTargetEl()? this.getTargetEl() : this.element;
-        this.mapOptions.target= target.dom.id;
+        var target = null;
+        var parent = this.up('ortszuordnungwindow');
+        if (parent) {
+            target = this.getTargetEl()? this.getTargetEl() : this.element;
+        } else {
+            target = this.getTargetEl();
+        }
+        if (target.dom.childNodes[0]) {
+            this.mapOptions.target = target.dom.childNodes[0].childNodes[0];
+        } else {
+            this.mapOptions.target = target.dom;
+        }
         this.mapOptions.view = new ol.View({
             center: [1160000,6694000],
             zoom: 6,
@@ -287,17 +339,10 @@ Ext.define('Lada.view.panel.Map', {
      * Forward OpenlayersEvent to EXT
      */
     selectedFeature: function(selection) {
-        var feature = selection.selected.length ? selection.selected[0] : null;
+        var feature = selection.selected;
         if (feature) {
             var me = Ext.ComponentQuery.query('map')[0];
-            me.fireEvent('featureselected', me, feature, arguments);
-            if (me.selectedFeatureLayer) {
-                me.featureLayer.getSource().addFeatures(
-                    me.selectedFeatureLayer.getSource().getFeatures());
-                me.selectedFeatureLayer.getSource().clear();
-                me.featureLayer.getSource().removeFeature(feature);
-                me.selectedFeatureLayer.getSource().addFeature(feature);
-            }
+            me.fireEvent('featureselected', me, feature, arguments, true);
         }
     },
 
@@ -363,9 +408,10 @@ Ext.define('Lada.view.panel.Map', {
         this.map.addLayer(this.featureLayer);
         this.selectControl = new ol.interaction.Select({
             condition: ol.events.condition.click,
-            style: this.selectStyle,
+            style: me.selectStyle,
             multi: false,
-            layers: [me.featureLayer]
+            layers: [me.featureLayer],
+            hitTolerance: 20
         });
         this.selectControl.on('select', me.selectedFeature);
         this.map.addInteraction(this.selectControl);

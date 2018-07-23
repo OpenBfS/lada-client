@@ -40,7 +40,8 @@ Ext.define('Lada.controller.grid.Messung', {
      */
     editItem: function(grid, record) {
         // we have a window with a probe record!
-        if (grid.up('window')) {
+        grid.getEl().swallowEvent(['click', 'dblclick'], true);
+        if (grid.up('probenedit')) {
             var probe = grid.up('window').record;
             var win = Ext.create('Lada.view.window.MessungEdit', {
                 parentWindow: grid.up('window'),
@@ -83,7 +84,7 @@ Ext.define('Lada.controller.grid.Messung', {
                     grid: grid
                 });
                 messungWin.show();
-                messungWin.setPosition(window.innerWidth - 30 - win.width);
+                messungWin.setPosition(window.innerWidth - 30 - probeWin.width);
                 messungWin.initData();
             }
         });
@@ -123,8 +124,8 @@ Ext.define('Lada.controller.grid.Messung', {
                         success: function() {
                             button.up('window').initData();
                             var parentGrid = Ext.ComponentQuery.query(
-                                'messunglistgrid');
-                            if (parentGrid.length == 1) {
+                                'dynamicgrid');
+                            if (parentGrid.length === 1) {
                                 parentGrid[0].store.reload();
                             }
                         },

@@ -7,7 +7,8 @@
  */
 
 /**
- * Store for Messprogramme, it is used in the {@link Lada.view.grid.MessprogrammeList}
+ * Store for Messprogramme, it is still used in the
+ * {@link Lada.view.window.GenProbenFromMessprogramm} (broken there? TODO)
  */
 Ext.define('Lada.store.MessprogrammeList', {
     extend: 'Ext.data.Store',

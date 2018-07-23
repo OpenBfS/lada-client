@@ -35,7 +35,7 @@ Ext.define('Lada.controller.form.Messung', {
                 click: this.addStatus
             },
             'messungform statuskombi button[action=resetstatus]': {
-              click: this.resetStatus
+                click: this.resetStatus
             }
         });
     },
@@ -68,11 +68,11 @@ Ext.define('Lada.controller.form.Messung', {
                     formPanel.setMessages(json.errors, json.warnings);
                     formPanel.up('window').initData();
                     formPanel.up('window').grid.store.reload();
-                    var messwertgrid  = formPanel.up('window').down('messwertgrid');
+                    var messwertgrid = formPanel.up('window').down('messwertgrid');
                     var parentWin = button.up('window').parentWindow;
                     parentWin.initData();
-                    var parentGrid = Ext.ComponentQuery.query('messunglistgrid');
-                    if (parentGrid.length == 1) {
+                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                    if (parentGrid.length === 1) {
                         parentGrid[0].store.reload();
                     }
                     if (messwertgrid) {
@@ -148,8 +148,8 @@ Ext.define('Lada.controller.form.Messung', {
             success: function(record, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
-                    var parentGrid = Ext.ComponentQuery.query('messunglistgrid');
-                    if (parentGrid.length == 1) {
+                    var parentGrid = Ext.ComponentQuery.query('dynamicGrid');
+                    if (parentGrid.length === 1) {
                         parentGrid[0].store.reload();
                     }
                 }
@@ -223,7 +223,7 @@ Ext.define('Lada.controller.form.Messung', {
         });
     },
 
-    addStatus: function(button){
+    addStatus: function(button) {
         var me = this;
         var i18n = Lada.getApplication().bundle;
         var win = Ext.create('Lada.view.window.SetStatus', {
@@ -232,13 +232,13 @@ Ext.define('Lada.controller.form.Messung', {
             modal: true
         });
         var view = button.up().up().up().up();
-        win.on('statussetend', function(){
+        win.on('statussetend', function() {
             view.updateStatusText();
         });
         win.show();
     },
 
-    resetStatus: function(button){
+    resetStatus: function(button) {
         var me = this;
         var i18n = Lada.getApplication().bundle;
         Ext.MessageBox.confirm(
@@ -248,10 +248,10 @@ Ext.define('Lada.controller.form.Messung', {
                 if (btn === 'yes') {
                     me.doResetStatus(button);
                 }
-        });
+            });
     },
 
-    doResetStatus: function(button){
+    doResetStatus: function(button) {
         var i18n = Lada.getApplication().bundle;
         button.setDisabled(true);
         var record = button.up('window').down('messungform').getRecord();
@@ -269,11 +269,11 @@ Ext.define('Lada.controller.form.Messung', {
                 && rec.get('statusWert').id === 8;
         });
         var data = {
-          messungsId: record.get('id'),
-           mstId: Lada.mst[0], // TODO check if this is the correct one
-           datum: new Date(),
-           statusKombi: kombis.getAt(kombiNdx).get('id'),
-           text: i18n.getMsg('statusgrid.resetText')
+            messungsId: record.get('id'),
+            mstId: Lada.mst[0], // TODO check if this is the correct one
+            datum: new Date(),
+            statusKombi: kombis.getAt(kombiNdx).get('id'),
+            text: i18n.getMsg('statusgrid.resetText')
         };
 
         Ext.Ajax.request({
@@ -299,8 +299,8 @@ Ext.define('Lada.controller.form.Messung', {
                 var win = button.up('window');
                 win.initData();
                 win.down('statusgrid').initData();
-                if (response.data){
-                  button.up('statuskombi').setValue(response.data.status);
+                if (response.data) {
+                    button.up('statuskombi').setValue(response.data.status);
                 }
                 try {
                     win.parentWindow.initData();
