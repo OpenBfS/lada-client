@@ -20,7 +20,7 @@ Ext.define('Lada.view.form.Ort', {
 
     margin: 5,
 
-    border: 0,
+    border: false,
 
     record: null,
 
@@ -33,7 +33,7 @@ Ext.define('Lada.view.form.Ort', {
             xtype: 'netzbetreiber',
             name: 'netzbetreiberId',
             submitValue: true,
-            border: 0,
+            border: false,
             fieldLabel: i18n.getMsg('netzbetreiberId'),
             labelWidth: 125,
             value: this.record.get('netzbetreiberId')

@@ -50,11 +50,11 @@ Ext.define('Lada.view.window.AuditTrail', {
             handler: me.close
         }];
         me.items = [{
-            border: 0,
+            border: false,
             //autoscroll: true,
             overflowY: 'auto',
             items: [{
-                border: 0,
+                border: false,
                 name: 'auditcontainer'
             }]
         }];

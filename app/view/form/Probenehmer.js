@@ -20,7 +20,7 @@ Ext.define('Lada.view.form.Probenehmer', {
     model: 'Lada.model.Probenehmer',
     minWidth: 550,
     margin: 5,
-    border: 0,
+    border: false,
 
     record: null,
 
@@ -29,7 +29,7 @@ Ext.define('Lada.view.form.Probenehmer', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.items = [{
-            border: 0,
+            border: false,
             margin: '0, 0, 10, 0',
             dockedItems: [{
                 xtype: 'toolbar',
@@ -56,10 +56,10 @@ Ext.define('Lada.view.form.Probenehmer', {
             }],
             items: [{
                 layout: 'vbox',
-                border: 0,
+                border: false,
                 items: [{
                     layout: 'hbox',
-                    border: 0,
+                    border: false,
                     margin: '0 5 5 5',
                     items: [{
                         xtype: 'tfield',
@@ -99,7 +99,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                     maxLength: 60
                 }, {
                     layout: 'hbox',
-                    border: 0,
+                    border: false,
                     margin: '0 5 5 5',
                     items: [{
                         xtype: 'tfield',
@@ -121,7 +121,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                 }, {
                     layout: 'hbox',
                     margin: '0 5 5 5',
-                    border: 0,
+                    border: false,
                     items: [{
                         xtype: 'tfield',
                         name: 'ort',

@@ -20,7 +20,7 @@ Ext.define('Lada.view.widget.base.DateRange', {
         type: 'hbox',
         align: 'stretchmax'
     },
-    border: 0,
+    border: false,
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.items = [

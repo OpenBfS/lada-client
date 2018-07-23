@@ -18,7 +18,7 @@ Ext.define('Lada.view.widget.base.Datetime', {
 
     layout: 'hbox',
     tooltip: null,
-    border: 0,
+    border: false,
 
     margin: '0, 0, 5, 0',
 

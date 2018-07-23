@@ -89,7 +89,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
             zIndex: 1,
             items: [{
                 xtype: 'panel',
-                border: 0,
+                border: false,
                 margin: 5,
                 layout: 'fit',
                 html: '<p>'

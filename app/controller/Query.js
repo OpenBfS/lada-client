@@ -464,6 +464,7 @@ Ext.define('Lada.controller.Query', {
                 fieldLabel: fixcolumn.get('name'),
                 width: '100%',
                 editable: true,
+                border: false,
                 triggers: {
                     clear: {
                         extraCls: 'x-form-clear-trigger',

@@ -13,7 +13,7 @@ Ext.define('Lada.view.form.OrtInfo', {
     extend: 'Ext.form.Panel',
     alias: 'widget.ortinfo',
     model: 'Lada.model.Ort',
-    border: 0,
+    border: false,
     flex: 1,
     margin: '0, 10, 0, 0',
     record: null,
@@ -22,7 +22,7 @@ Ext.define('Lada.view.form.OrtInfo', {
         this.items = [{
             layout: 'vbox',
             flex: 1,
-            border: 0,
+            border: false,
             defaults: {
                 xtype: 'selectabledisplayfield',
                 labelWidth: 125,
@@ -71,7 +71,7 @@ Ext.define('Lada.view.form.OrtInfoRow',{
     extend: 'Ext.form.FieldSet',
     alias: 'widget.ortinforow',
     padding: 0,
-    border: 0,
+    border: false,
     flex: 1,
     layout: 'hbox',
     label: '',

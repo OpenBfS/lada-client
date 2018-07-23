@@ -15,7 +15,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
 
     layout: 'hbox',
 
-    border: 0,
+    border: false,
 
     margin: '0, 0, 5, 0',
 

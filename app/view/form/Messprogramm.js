@@ -34,7 +34,7 @@ Ext.define('Lada.view.form.Messprogramm', {
     model: 'Lada.model.Messprogramm',
     minWidth: 650,
     margin: 5,
-    border: 0,
+    border: false,
 
     recordId: null,
 
@@ -47,7 +47,7 @@ Ext.define('Lada.view.form.Messprogramm', {
             xtype: 'fieldset',
             title: i18n.getMsg('messprogramm.form.fieldset.title'),
             items: [{
-                border: 0,
+                border: false,
                 margin: '0, 0, 10, 0',
                 dockedItems: [{
                     xtype: 'toolbar',
@@ -73,7 +73,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     }]
                 }],
                 items: [{
-                    border: 0,
+                    border: false,
                     minWidth: 290,
                     layout: {
                         type: 'vbox',
@@ -85,7 +85,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         items: [{
                             xtype: 'displayfield',
                             name: 'id',
@@ -109,7 +109,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         items: [{
                             xtype: 'messstellelabor',
                             name: 'mstlabor',
@@ -176,7 +176,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         items: [{
                             xtype: 'probenart',
                             editable: false,
@@ -298,7 +298,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     title: i18n.getMsg('medium'),
                     width: '100%',
                     items: [{
-                        border: 0,
+                        border: false,
                         layout: {
                             type: 'vbox',
                             align: 'stretch'
@@ -317,7 +317,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 }
                             }
                         }, {
-                            border: 0,
+                            border: false,
                             layout: {
                                 type: 'hbox',
                                 align: 'stretch'
@@ -390,7 +390,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         margin: '0, 0, 0, 0',
                         items: [{
                             xtype: 'probenintervall',
@@ -444,7 +444,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         items: [{
                             xtype: 'dayofyear',
                             allowBlank: false,

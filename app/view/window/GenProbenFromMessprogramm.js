@@ -72,7 +72,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 });
                 this.add({
                     xtype: 'panel',
-                    border: 0,
+                    border: false,
                     layout: 'fit',
                     autoScroll: true,
                     margin: '5, 5, 0, 5',
@@ -156,14 +156,14 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         // creation of this window. We need to pass it throuh to the form as
         // we need the "Id" param to load the correct item.
         this.items = [{
-            border: 0,
+            border: false,
             width: 340,
             height: 165,
             margin: '5, 5, 5, 5',
             autoScroll: true,
             items: [{
                 xtype: 'panel',
-                border: 0,
+                border: false,
                 margin: 5,
                 layout: 'fit',
                 html: '<p>'
@@ -171,7 +171,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     + '</p>'
             }, {
                 xtype: 'panel',
-                border: 0,
+                border: false,
                 margin: 5,
                 layout: 'fit',
                 html: '<p>' + i18n.getMsg('messprogtimeperiod') + '</p>'

@@ -20,7 +20,7 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
     model: 'Lada.model.MessporgrammKategorie',
     minWidth: 550,
     margin: 5,
-    border: 0,
+    border: false,
 
     record: null,
 
@@ -29,7 +29,7 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.items = [{
-            border: 0,
+            border: false,
             margin: '0, 0, 10, 0',
             dockedItems: [{
                 xtype: 'toolbar',
@@ -56,7 +56,7 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
             }],
             items: [{
                 layout: 'vbox',
-                border: 0,
+                border: false,
                 items: [{
                     xtype: 'netzbetreiber',
                     name: 'netzbetreiberId',
