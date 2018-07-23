@@ -105,6 +105,7 @@ span.x-grid-checkcolumn {
     background-color: transparent !important;
     background-image: none !important;
     border-style: none !important;
+}
 
 /* EmptyText styling for Statuskombi textfield */
 .status-empty .x-form-empty-field { /* IE that does not support placeholder */
