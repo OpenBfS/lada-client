@@ -17,7 +17,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
         align: 'stretchmax'
     },
     store: null,
-    margin: '20,0,0,10',
+    margin: '15 0 10 0',
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -38,6 +38,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             itemId: 'sourceGrid',
             flex: 1,
             xtype: 'grid',
+            border: true,
             store: null,
             multiSelect: true,
             stripeRows: true,
@@ -106,6 +107,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             store: null,
             flex: 1,
             xtype: 'grid',
+            border: true,
             multiSelect: true,
             viewConfig: {
                 plugins: {

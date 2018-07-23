@@ -181,6 +181,7 @@ Ext.define('Lada.view.QueryPanel', {
         xtype: 'fieldset',
         name: 'filtervariables',
         margin: '10 15 10 15',
+        padding: '5 5 0 5',
         minHeight: 20,
         layout: {
             type: 'hbox',

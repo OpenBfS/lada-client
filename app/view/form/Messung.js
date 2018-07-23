@@ -40,76 +40,62 @@ Ext.define('Lada.view.form.Messung', {
     currentStatus: null,
 
     initComponent: function() {
-        var me = this;
         var i18n = Lada.getApplication().bundle;
         this.items = [{
             xtype: 'fieldset',
             title: i18n.getMsg('title.general'),
-            items: [{
-                border: false,
-                margin: '0, 0, 10, 0',
-                layout: {
-                    type: 'table',
-                    columns: 2
+            margin: '0, 0, 10, 0',
+            layout: {
+                type: 'hbox',
+                border: false
+            },
+            dockedItems: [{
+                xtype: 'toolbar',
+                dock: 'bottom',
+                border: '0, 1, 1, 1',
+                style: {
+                    borderBottom: '1px solid #b5b8c8 !important',
+                    borderLeft: '1px solid #b5b8c8 !important',
+                    borderRight: '1px solid #b5b8c8 !important'
                 },
-                dockedItems: [{
-                    xtype: 'toolbar',
-                    dock: 'bottom',
-                    border: '0, 1, 1, 1',
-                    style: {
-                        borderBottom: '1px solid #b5b8c8 !important',
-                        borderLeft: '1px solid #b5b8c8 !important',
-                        borderRight: '1px solid #b5b8c8 !important'
-                    },
-                    items: ['->', {
-                        text: i18n.getMsg('audittrail'),
-                        qtip: i18n.getMsg('qtip.audit'),
-                        icon: 'resources/img/distribute-vertical-center.png',
-                        action: 'audit',
-                        disabled: this.recordId === null
-                    }, {
-                        text: i18n.getMsg('save'),
-                        qtip: i18n.getMsg('save.qtip'),
-                        icon: 'resources/img/dialog-ok-apply.png',
-                        action: 'save',
-                        disabled: true
-                    }, {
-                        text: i18n.getMsg('discard'),
-                        qtip: i18n.getMsg('discard.qtip'),
-                        icon: 'resources/img/dialog-cancel.png',
-                        action: 'discard',
-                        disabled: true
-                    }]
-                }],
+                items: ['->', {
+                    text: i18n.getMsg('audittrail'),
+                    qtip: i18n.getMsg('qtip.audit'),
+                    icon: 'resources/img/distribute-vertical-center.png',
+                    action: 'audit',
+                    disabled: this.recordId === null
+                }, {
+                    text: i18n.getMsg('save'),
+                    qtip: i18n.getMsg('save.qtip'),
+                    icon: 'resources/img/dialog-ok-apply.png',
+                    action: 'save',
+                    disabled: true
+                }, {
+                    text: i18n.getMsg('discard'),
+                    qtip: i18n.getMsg('discard.qtip'),
+                    icon: 'resources/img/dialog-cancel.png',
+                    action: 'discard',
+                    disabled: true
+                }]
+            }],
+            items: [{
+                layout: 'vbox',
+                border: false,
+                defaults: {
+                    margin: '0 10 5 0'
+                },
                 items: [{
                     xtype: 'selectabledisplayfield',
                     name: 'idAlt',
                     maxLength: 4,
-                    margin: '0, 10, 5, 0',
                     fieldLabel: i18n.getMsg('messungsId'),
-                    width: 300,
-                    labelWidth: 100
-                }, {
-                    xtype: 'tfield',
-                    name: 'nebenprobenNr',
-                    maxLength: 4,
-                    margin: '0, 10, 5, 0',
-                    fieldLabel: i18n.getMsg('nebenprobenNr'),
                     width: 300,
                     labelWidth: 100
                 }, {
                     xtype: 'messmethode',
                     name: 'mmtId',
-                    margin: '0, 10, 5, 0',
                     fieldLabel: i18n.getMsg('mmt_id'),
                     allowBlank: false,
-                    width: 300,
-                    labelWidth: 100
-                }, {
-                    xtype: 'datetime',
-                    name: 'messzeitpunkt',
-                    margin: '0, 10, 5, 0',
-                    fieldLabel: i18n.getMsg('messzeitpunkt'),
                     width: 300,
                     labelWidth: 100
                 }, {
@@ -120,23 +106,40 @@ Ext.define('Lada.view.form.Messung', {
                     maxLength: 10,
                     minValue: 0,
                     name: 'messdauer',
-                    margin: '0, 10, 5, 0',
                     fieldLabel: i18n.getMsg('messdauer'),
-                    width: 300,
-                    labelWidth: 100
-                }, {
-                    xtype: 'chkbox',
-                    name: 'fertig',
-                    margin: '0, 10, 5, 0',
-                    fieldLabel: i18n.getMsg('fertig'),
                     width: 300,
                     labelWidth: 100
                 }, {
                     xtype: 'chkbox',
                     name: 'geplant',
                     readOnly: true,
-                    margin: '0, 10, 5, 0',
                     fieldLabel: i18n.getMsg('geplant'),
+                    width: 300,
+                    labelWidth: 100
+                }]
+            }, {
+                layout: 'vbox',
+                border: false,
+                defaults: {
+                    margin: '0 10 5 0'
+                },
+                items: [{
+                    xtype: 'tfield',
+                    name: 'nebenprobenNr',
+                    maxLength: 4,
+                    fieldLabel: i18n.getMsg('nebenprobenNr'),
+                    width: 300,
+                    labelWidth: 100
+                }, {
+                    xtype: 'datetime',
+                    name: 'messzeitpunkt',
+                    fieldLabel: i18n.getMsg('messzeitpunkt'),
+                    width: 300,
+                    labelWidth: 100
+                }, {
+                    xtype: 'chkbox',
+                    name: 'fertig',
+                    fieldLabel: i18n.getMsg('fertig'),
                     width: 300,
                     labelWidth: 100
                 }, {
@@ -145,8 +148,6 @@ Ext.define('Lada.view.form.Messung', {
                     readOnly: true,
                     isFormField: false,
                     fieldLabel: 'Stufe/Status',
-                    margin: '0, 10, 5, 0',
-                    colspan: 2,
                     buttonListener: {
                         click: {
                             fn: function() {

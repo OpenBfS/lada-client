@@ -19,7 +19,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
     requires: ['Lada.view.widget.Sort',
         'Lada.store.GridColumnValue'
     ],
-    margin: '20,0,0,10',
+    margin: '20 0 20 0',
     title: null,
     store: null,
 
@@ -52,6 +52,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                 name: 'sortGrid',
                 flex: 1,
                 xtype: 'grid',
+                border: true,
                 store: this.store,
                 scrollable: true,
                 maxHeight: 150,
