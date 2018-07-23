@@ -98,11 +98,11 @@ Ext.define('Lada.store.LocalPagingStore', {
                 + Math.ceil(count / this.pageSize);
             var low = (this.currentPage - 1) * this.pageSize + 1;
             var high = Math.min(low - 1 + this.pageSize, count);
-            tbs[i].displayMsg = i18n.getMsg('pagingtoolbar.text')
-                                + low
-                                + i18n.getMsg('pagingtoolbar.to')
-                                + high
-                                + ' ' + i18n.getMsg('pagingtoolbar.of')
+            tbs[i].displayMsg = i18n.getMsg('pagingtoolbar.text') + ' '
+                                + low + ' '
+                                + i18n.getMsg('pagingtoolbar.to') + ' '
+                                + high + ' '
+                                + i18n.getMsg('pagingtoolbar.of') + ' '
                                 + count;
             tbs[i].onLoad();
             break;
