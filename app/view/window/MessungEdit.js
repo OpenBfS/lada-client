@@ -38,12 +38,12 @@ Ext.define('Lada.view.window.MessungEdit', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         if (this.record === null) {
-            Ext.Msg.alert('Keine valide Messung ausgewählt!');
+            Ext.Msg.alert(i18n.getMsg('err.msg.messung.noselect'));
             this.callParent(arguments);
             return;
         }
         if (this.probe === null) {
-            Ext.Msg.alert('Zu der Messung existiert keine Probe!');
+            Ext.Msg.alert(i18n.getMsg('err.msg.messung.noprobe'));
             this.callParent(arguments);
             return;
         }
@@ -117,7 +117,7 @@ Ext.define('Lada.view.window.MessungEdit', {
         }];
         this.tools = [{
             type: 'help',
-            tooltip: 'Hilfe',
+            tooltip: i18n.getMsg('help.qtip'),
             titlePosition: 0,
             callback: function() {
                 var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];

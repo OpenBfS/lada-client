@@ -116,7 +116,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         }
         this.tools = [{
             type: 'help',
-            tooltip: 'Hilfe',
+            tooltip: i18n.getMsg('help.qtip'),
             titlePosition: 0,
             callback: function() {
                 var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];

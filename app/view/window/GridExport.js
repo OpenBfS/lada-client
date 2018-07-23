@@ -83,8 +83,8 @@ Ext.define('Lada.view.window.GridExport', {
     initComponent: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
-        this.down('button[action=export]').text= i18n.getMsg('export.button');
         this.callParent(arguments);
+        this.down('button[action=export]').text= i18n.getMsg('export.button');
         this.title = i18n.getMsg('export.title');
         var columns = this.grid.getColumns();
 
@@ -297,7 +297,7 @@ Ext.define('Lada.view.window.GridExport', {
             click: me.doExport
         });
         this.down('button[action=close]').text = i18n.getMsg('close');
-        this.down('button[action=close]').text = i18n.getMsg('export.button');
+        this.down('button[action=export]').text = i18n.getMsg('export.button');
         this.down('button[action=close]').on({
             click: function(button) {
                 button.up('window').close();

@@ -51,10 +51,10 @@ Ext.define('Lada.view.widget.PagingSize', {
     initComponent: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
-        this.down('tbtext').text = i18n.getMsg('grid.itemsperpage');
         Lada.getApplication().on('pagingSizeChanged', me.refreshPagingSize, this);
         me.store = Ext.StoreManager.get('pagingSizes');
         this.callParent(arguments);
+        this.down('tbtext').text = i18n.getMsg('grid.itemsperpage');
         this.down('combobox').getTriggers().clear.hidden = true;
         this.down('combobox').setStore(this.store);
         this.down('combobox').select(Lada.pagingSize);

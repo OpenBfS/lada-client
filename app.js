@@ -141,20 +141,21 @@ Ext.application({
     },
 
     onLoginFailure: function(response) {
+        var i18n = Lada.getApplication().bundle;
         try {
             var json = Ext.decode(response.responseText);
             if (json) {
                 if (json.message === '699') {
                     /* This is the unauthorized message with the authentication
                      * redirect in the data */
-                    Ext.MessageBox.alert('Es konnte kein Benutzername gefunden werden!',
-                            json.data);
+                    Ext.MessageBox.alert(i18n.getMsg('err.init.noname'),
+                        json.data);
                     return;
                 }
                 if (json.message === '698') {
                     /* This is general authentication error */
-                    Ext.MessageBox.alert('Kommunikation mit dem Login Server fehlgeschlagen',
-                            json.data);
+                    Ext.MessageBox.alert(i18n.getMsg('err.init.nologin'),
+                        json.data);
                     return;
                 }
             }
@@ -162,8 +163,8 @@ Ext.application({
         catch (e) {
             // This is likely a 404 or some unknown error. Show general error then.
         }
-        Ext.MessageBox.alert('Kommunikation mit dem Lada Server fehlgeschlagen',
-                'Es konnte keine erfolgreiche Verbindung zum lada server aufgebaut werden.');
+        Ext.MessageBox.alert(i18n.getMsg('err.init.generic.title'),
+            i18n.getMsg('err.init.generic.msg'));
     },
 
     onLoginSuccess: function(response) {

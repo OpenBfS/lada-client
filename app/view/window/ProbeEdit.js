@@ -35,7 +35,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         if (this.record === null) {
-            Ext.Msg.alert('Keine valide Probe ausgewählt!');
+            Ext.Msg.alert(i18n.getMsg('err.msg.invalidprobe'));
             this.callParent(arguments);
             return;
         }
@@ -120,7 +120,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         }];
         this.tools = [{
             type: 'help',
-            tooltip: 'Hilfe',
+            tooltip: i18n.getMsg('help.qtip'),
             titlePosition: 0,
             callback: function() {
                 var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];

@@ -152,11 +152,12 @@ Ext.define('Lada.view.form.Messung', {
                             fn: function() {
                                 if ((this.probedatenbasis === 'REI-E'
                                             || this.probedatenbasis === 'REI-I')
-                                    && (this.probe.get('reiprogpunktgruppe') == null
+                                    && (this.probe.get('reiprogpunktgruppe') === null
                                             ||this.probe.get('reiprogpunktgruppe') === '')
-                                    && (this.probe.get('ktagruppe') == null
+                                    && (this.probe.get('ktagruppe') === null
                                             ||this.probe.get('ktagruppe') === '')) {
-                                    Ext.Msg.alert('Statusvergabe nicht möglich', i18n.getMsg('err.msg.status.consistency'));
+                                    Ext.Msg.alert(i18n.getMsg('err.msg.status.title'),
+                                        i18n.getMsg('err.msg.status.consistency'));
                                     return false;
                                 }
                             },

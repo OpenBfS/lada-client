@@ -27,7 +27,7 @@ Ext.define('Lada.view.Viewport', {
             name: 'main',
             tools: [{
                 type: 'help',
-                tooltip: 'Hilfe',
+                tooltip: i18n.getMsg('help.qtip'),
                 callback: function() {
                     var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
                     if (!imprintWin) {
@@ -51,7 +51,7 @@ Ext.define('Lada.view.Viewport', {
                 },
                 tools: [{
                     type: 'help',
-                    tooltip: 'Hilfe',
+                    tooltip: i18n.getMsg('help.qtip'),
                     callback: function() {
                         var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
                         if (!imprintWin) {

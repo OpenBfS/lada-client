@@ -35,7 +35,7 @@ Ext.define('Lada.view.window.MessungCreate', {
         var i18n = Lada.getApplication().bundle;
         this.probe = this.record;
         if (this.probe === null) {
-            Ext.Msg.alert('Zu der Messung existiert keine Probe!');
+            Ext.Msg.alert(i18n.getMsg('err.msg.messung.noprobe'));
             this.callParent(arguments);
             return;
         }
@@ -78,7 +78,7 @@ Ext.define('Lada.view.window.MessungCreate', {
         }];
         this.tools = [{
             type: 'help',
-            tooltip: 'Hilfe',
+            tooltip: i18n.getMsg('help.qtip'),
             callback: function() {
                 var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
                 if (!imprintWin) {
