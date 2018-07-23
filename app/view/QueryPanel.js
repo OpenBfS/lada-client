@@ -57,8 +57,8 @@ Ext.define('Lada.view.QueryPanel', {
                     xtype: 'button',
                     name: 'queryreload',
                     action: 'reload',
-                    maxWidth: 65,
-                    minWidth: 65,
+                    maxWidth: 80,
+                    minWidth: 80,
                     text: 'query.button.reload',
                     margin: '5 0 0 2.5', //TODO layout pending
                     submitValue: false
