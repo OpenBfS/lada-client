@@ -38,7 +38,7 @@ Ext.define('Lada.view.form.Probe', {
     model: 'Lada.model.Probe',
     minWidth: 650,
     margin: 5,
-    border: 0,
+    border: false,
 
     recordId: null,
 
@@ -51,7 +51,7 @@ Ext.define('Lada.view.form.Probe', {
             xtype: 'fieldset',
             title: i18n.getMsg('title.general'),
             items: [{
-                border: 0,
+                border: false,
                 margin: '0, 0, 10, 0',
                 dockedItems: [{
                     xtype: 'toolbar',
@@ -84,13 +84,13 @@ Ext.define('Lada.view.form.Probe', {
                 }],
                 items: [{
                     layout: 'vbox',
-                    border: 0,
+                    border: false,
                     items: [{
                         layout: {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         width: '100%',
                         items: [{
                             xtype: 'selectabledisplayfield',
@@ -113,7 +113,7 @@ Ext.define('Lada.view.form.Probe', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         width: '100%',
                         items: [{
 
@@ -183,7 +183,7 @@ Ext.define('Lada.view.form.Probe', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         width: '100%',
                         items: [{
                             xtype: 'tfield',
@@ -216,7 +216,7 @@ Ext.define('Lada.view.form.Probe', {
                             type: 'hbox',
                             align: 'stretch'
                         },
-                        border: 0,
+                        border: false,
                         width: '100%',
                         items: [{
                             xtype: 'probenehmer',
@@ -360,7 +360,7 @@ Ext.define('Lada.view.form.Probe', {
                         xtype: 'fset',
                         name: 'sollzeitPeriod',
                         width: '100%',
-                        border: 0,
+                        border: false,
                         margin: 0,
                         layout: {
                             type: 'hbox'
@@ -390,7 +390,7 @@ Ext.define('Lada.view.form.Probe', {
                         xtype: 'fset',
                         name: 'entnahmePeriod',
                         width: '100%',
-                        border: 0,
+                        border: false,
                         margin: 0,
                         layout: {
                             type: 'hbox'
@@ -419,7 +419,7 @@ Ext.define('Lada.view.form.Probe', {
                     title: i18n.getMsg('title.media'),
                     width: '100%',
                     items: [{
-                        border: 0,
+                        border: false,
                         layout: {
                             type: 'vbox',
                             align: 'stretch'
@@ -439,7 +439,7 @@ Ext.define('Lada.view.form.Probe', {
                                 }
                             }
                         }, {
-                            border: 0,
+                            border: false,
                             layout: {
                                 type: 'hbox',
                                 align: 'stretch'
