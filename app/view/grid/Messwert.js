@@ -87,7 +87,7 @@ Ext.define('Lada.view.grid.Messwert', {
             }]
         }];
         this.columns = [{
-            header: i18n.getMsg('messgroesse'),
+            header: i18n.getMsg('messgroesseId'),
             dataIndex: 'messgroesseId',
             width: 80,
             renderer: function(value) {
