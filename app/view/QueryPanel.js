@@ -57,10 +57,10 @@ Ext.define('Lada.view.QueryPanel', {
                     xtype: 'button',
                     name: 'queryreload',
                     action: 'reload',
-                    maxWidth: 80,
-                    minWidth: 80,
+                    maxWidth: 100,
+                    minWidth: 100,
                     text: 'query.button.reload',
-                    margin: '5 0 0 2.5', //TODO layout pending
+                    margin: '5 5 0 3',
                     submitValue: false
                 }]
             }, {

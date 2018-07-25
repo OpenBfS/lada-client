@@ -274,6 +274,8 @@
             "path": "${build.out.css.path}",
             "bundle": true,
             "exclude": ["fashion"]
+        }, {
+            "path": "resources/css/lada.css"
         }
     ],
 

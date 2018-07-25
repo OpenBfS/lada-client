@@ -129,3 +129,15 @@ span.x-grid-checkcolumn {
 .status-empty :-ms-input-placeholder { /* IE that supports placeholder */
     color: black;
 }
+
+.x-column-header-inner {
+    padding: 7px 3px;
+}
+
+.x-form-trigger-wrap-default {
+    border-width: 2px;
+}
+
+.x-toolbar-default {
+    background-color: #9fb2c7;
+}
