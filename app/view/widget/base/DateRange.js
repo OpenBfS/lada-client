@@ -26,7 +26,6 @@ Ext.define('Lada.view.widget.base.DateRange', {
         this.items = [
             {
                 xtype: 'label',
-                margin: 5,
                 text: this.fieldLabel,
                 width: this.labelWidth - 30
             },
@@ -94,6 +93,9 @@ Ext.define('Lada.view.widget.base.DateRange', {
             val1 = '';
         } else {
             val1 = val1.valueOf();
+        }
+        if (val0 === '' && val1 === '') {
+            return '';
         }
         return '' + val0 + ',' + val1;
     },
