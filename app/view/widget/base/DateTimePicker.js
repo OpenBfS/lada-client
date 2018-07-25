@@ -50,7 +50,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         '<table cellspacing="0">',
         '<colgroup><col width="70"><col width="40"><col width="40"></colgroup>',
         '<tr>',
-        '<td>',
+        '<td style="vertical-align:center;">',
         '<div id="{id}-timeLabelEl" role="presentation">{%this.renderTimeLabel(values, out)%}</div>',
         '</td><td>',
         '<div id="{id}-timeHourEl" role="presentation">{%this.renderTimeHour(values, out)%}</div>',
@@ -59,7 +59,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         '</td>',
         '</tr>',
         '</table>',
-        '<table cellspacing="0">',
+        '<table cellspacing="0" style="margin-top:5px;margin-left:10px;">',
         '<colgroup width="75"></colgroup>',
         '<tr>',
         '<td>',
@@ -111,7 +111,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         me.hourField = new Ext.form.field.Number({
             ownerCt: me,
             ownerLayout: me.getComponentLayout(),
-            width: 40,
+            width: 60,
             value: 0,
             valueToRaw: function(value) {
                 return (value < 10 ? '0' : '') + value; // add leading Zero
@@ -145,7 +145,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         me.minuteField = new Ext.form.field.Number({
             ownerCt: me,
             ownerLayout: me.getComponentLayout(),
-            width: 40,
+            width: 60,
             value: 0,
             maxValue: 59,
             valueToRaw: function(value) {
