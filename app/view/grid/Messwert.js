@@ -192,7 +192,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 enforceMaxLength: true
             }
         }, {
-            header: 'Nachweisgrenze',
+            header: i18n.getMsg('messwert_nwg'),
             dataIndex: 'nwgZuMesswert',
             width: 80,
             editor: {
@@ -212,7 +212,7 @@ Ext.define('Lada.view.grid.Messwert', {
                     + Math.abs(exponent).toString();
             }
         }, {
-            header: 'Grenzwertüberschreitung',
+            header: i18n.getMsg('grenzwertueberschreitung'),
             dataIndex: 'grenzwertueberschreitung',
             flex: 1,
             renderer: function(value) {

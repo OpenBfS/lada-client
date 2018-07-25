@@ -28,12 +28,11 @@ Ext.define('Lada.view.grid.Verwaltungseinheiten', {
         this.store = Ext.data.StoreManager.lookup('verwaltungseinheiten');
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('grid.emptyGrid');
-        var me = this;
         this.columns = [{
-            header: 'Code', // i18n.getMsg(TODO)
+            header: i18n.getMsg('code'),
             dataIndex: 'id'
         }, {
-            header: 'Name', //i18n.getMsg(TODO)
+            header: i18n.getMsg('name'),
             dataIndex: 'bezeichnung',
             flex: 1
         }];

@@ -42,14 +42,14 @@ Ext.define('Lada.view.grid.Status', {
         this.statusStufeStore.load();
 
         this.columns = [{
-            header: i18n.getMsg('statusgrid.header.datum'),
+            header: i18n.getMsg('header.datum'),
             dataIndex: 'datum',
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
             width: 110,
             sortable: true
         }, {
-            header: i18n.getMsg('statusgrid.header.erzeuger'),
+            header: i18n.getMsg('erzeuger'),
             dataIndex: 'mstId',
             renderer: function(value) {
                 var r = '';
@@ -65,7 +65,7 @@ Ext.define('Lada.view.grid.Status', {
             },
             sortable: false
         }, {
-            header: i18n.getMsg('statusgrid.header.statusStufe'),
+            header: i18n.getMsg('header.statusstufe'),
             dataIndex: 'statusKombi',
             renderer: function(value) {
                 var kombi = Ext.data.StoreManager.get('statuskombi');
@@ -78,7 +78,7 @@ Ext.define('Lada.view.grid.Status', {
             },
             sortable: false
         }, {
-            header: i18n.getMsg('statusgrid.header.statusWert'),
+            header: i18n.getMsg('header.statuswert'),
             dataIndex: 'statusKombi',
             renderer: function(value) {
                 var kombi = Ext.data.StoreManager.get('statuskombi');

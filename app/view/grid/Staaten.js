@@ -29,9 +29,8 @@ Ext.define('Lada.view.grid.Staaten', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('grid.emptyGrid');
-        var me = this;
         this.columns = [{
-            header: 'ISO-Code', // i18n.getMsg(TODO)
+            header: i18n.getMsg('isocode'),
             renderer: function(value) {
                 if (!value || value === '') {
                     return '--';
@@ -40,11 +39,11 @@ Ext.define('Lada.view.grid.Staaten', {
             },
             dataIndex: 'staatIso'
         }, {
-            header: 'Name (Kurzform)', //i18n.getMsg(TODO)
+            header: i18n.getMsg('shortname'),
             width: 100,
             dataIndex: 'StaatKurz'
         }, {
-            header: 'Name', //i18n.getMsg(TODO)
+            header: i18n.getMsg('name'),
             dataIndex: 'staat',
             flex: 1,
             align: 'start'
