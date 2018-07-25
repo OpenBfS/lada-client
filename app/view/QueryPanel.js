@@ -181,7 +181,6 @@ Ext.define('Lada.view.QueryPanel', {
         xtype: 'fieldset',
         name: 'filtervariables',
         margin: '10 15 10 15',
-        padding: '5 5 0 5',
         minHeight: 20,
         layout: {
             type: 'hbox',
@@ -190,11 +189,15 @@ Ext.define('Lada.view.QueryPanel', {
 
         items: [{
             xtype: 'panel',
+            margin: '5',
             border: false,
             layout: 'vbox',
             name: 'filtervalues',
             items: [],
-            flex: 1
+            flex: 1,
+            defaults: {
+                margin: '5, 0, 5, 0'
+            }
         }]
     }, {
         xtype: 'container',
@@ -202,7 +205,7 @@ Ext.define('Lada.view.QueryPanel', {
             type: 'hbox',
             align: 'stretchmax'
         },
-        margin: '0 10 0 10',
+        margin: '5 10 0 10',
         items: [{
             xtype: 'button',
             action: 'save',
