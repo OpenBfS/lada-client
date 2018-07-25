@@ -18,8 +18,26 @@ the documentation coming with IMIS-Labordaten-Application for details.
     <script type="text/javascript" src="resources/lib/ol/ol.js"></script>
     <script type="text/javascript" src="resources/lib/FileSaver/FileSaver.js"></script>
     <script type="text/javascript" src="resources/lib/Blob/Blob.js"></script>
-
+    <!--Check for browser language.
+    TODO: Only use for production builds-->
+    <script type="text/javascript">
+        var Ext = Ext || {};
+        Ext.beforeLoad = function (tags) {
+            var locales = navigator.languages;
+            var locale = 'de';
+            for (var i = 0; i < locales.length; i++) {
+                var lang = locales[i];
+                if (lang === 'de' || lang === 'en') {
+                    locale = lang;
+                    break;
+                }
+            }
+            Ext.manifest = 'lada-' + locale;
+        };
+    </script>
+    
     <script id="microloader" data-app="0762108d-8dd2-426d-b4c7-8d443c5a52de" type="text/javascript" src="bootstrap.js"></script>
+
 
 </head>
 <body></body>
