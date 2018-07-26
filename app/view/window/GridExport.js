@@ -885,7 +885,7 @@ Ext.define('Lada.view.window.GridExport', {
                 break;
             case 'Lada.view.grid.Messwert':
                 Ext.Ajax.request({
-                    url: 'lada-server/rest/messwert?messungId=' + id,
+                    url: 'lada-server/rest/messwert?messungId=' + idx,
                     timeout: 5 * 1000,
                     success: function(response) {
                         var content = JSON.parse(response.responseText);
@@ -951,7 +951,7 @@ Ext.define('Lada.view.window.GridExport', {
                 break;
             case 'Lada.view.grid.Messwert':
                 Ext.Ajax.request({
-                    url: 'lada-server/rest/messwert?messungId=' + id,
+                    url: 'lada-server/rest/messwert?messungsId=' + id,
                     timeout: 5 * 1000,
                     success: function(response) {
                         var content = JSON.parse(response.responseText);
