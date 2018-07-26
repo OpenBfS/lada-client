@@ -402,7 +402,7 @@ Ext.define('Lada.view.window.GridExport', {
                         iresult[c.text] = value;
                     }
                 }
-                var entryId = data[i].get('id');
+                var entryId = data[i].get(this.grid.rowtarget.dataIndex);
                 this.resultobject[entryId] = iresult;
                 if (this.rowexp) {
                     this.setSecondaryJson(data[i], 'json', entryId, expcolumns);
@@ -458,10 +458,11 @@ Ext.define('Lada.view.window.GridExport', {
                         }
                     }
                 }
-                resultset.features.push(iresult);
+                this.resultobject.features.push(iresult);
                 if (this.rowexp) {
                     this.setSecondaryJson(data[i],
-                        this.resultobject.features[i].properties, 'geojson', i,
+                        this.resultobject.features[i].properties, 'geojson',
+                        data[i].get(this.grid.rowtarget.dataIndex),
                         expcolumns);
                 } else {
                     this.countDown();
@@ -755,10 +756,10 @@ Ext.define('Lada.view.window.GridExport', {
             formatted dataTypes. Some fields may be thought of as to be
             exported as displayed, as real data.
             TODO: check for obsoleteness. Mar 2018*/
-            if (column.dataIndex == 'messzeitpunkt' && !column.dataType) {
+            if (column.dataIndex === 'messzeitpunkt' && !column.dataType) {
                 return new Date(value);
             }
-            if (column.dataIndex == 'probenartId') {
+            if (column.dataIndex === 'probenartId') {
                 var store = Ext.data.StoreManager.get('probenarten');
                 var record = store.getById(value);
                 if (record) {
