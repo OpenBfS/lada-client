@@ -257,10 +257,11 @@ Ext.define('Lada.view.grid.Messung', {
     updateColumn: function(store, record, success, operation, opts) {
         var value;
         if (success) {
-            if (store.getTotalCount() === 0) {
+            var amount = store.getData().items.length;
+            if ( amount === 0 ) {
                 value = '0';
             } else {
-                value = store.getTotalCount();
+                value = amount;
             }
         } else {
             value = '-';

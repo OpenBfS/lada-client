@@ -375,22 +375,22 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     var mprId = rec.get('mprId');
                     mmtStore.clearFilter();
                     mmtStore.filter('messprogrammId', mprId);
-                    var count = mmtStore.getCount();
-                    if (!count){
+                    var items = mmtStore.getData().items;
+                    if (!items || !items.length) {
                         return '(0)';
                     }
                     var mgrtext = '';
-                    var mmth = mmtStore.getAt(0).get('mmtId');
-                    if (mmth){
-                        mgrtext = mmth;
-                    }
-                    for (var i = 1; i < count; i ++ ){
-                        var mmth = mmtStore.getAt(i).get('mmtId');
-                        if (mmth){
-                            mgrtext += ', ' + mmth;
+                    for (var item=0; item < items.length; item++) {
+                        var mmth = items[item].get('mmtId');
+                        if (mmth) {
+                            mgrtext = mmth;
+                        }
+                        if (item !== items.length -1) {
+                            mgrtext += ', ';
+                        } else {
+                            mgrtext += '(' + items.length + ')';
                         }
                     }
-                    mgrtext += '(' + count + ')';
                     return mgrtext;
                 }
             }, {
@@ -398,10 +398,10 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 renderer: function(value, metadata, rec) {
                     var mprModel = mpStore.getById(rec.get('mprId'));
                     if (mprModel) {
-                        var eGemId = mprModel.get('eGemId')
+                        var eGemId = mprModel.get('eGemId');
                         var eGem = mprModel.get('eGem');
-                        if (eGemId != null && eGem != null) {
-                            return eGemId  + ' - ' + eGem;
+                        if (eGemId !== null && eGem !== null) {
+                            return eGemId + ' - ' + eGem;
                         }
                     }
                     return '';
