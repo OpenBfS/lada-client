@@ -107,8 +107,8 @@ Ext.define('Lada.view.window.GridExport', {
                 name: '"',
                 value: '"'
             }, {
-                name: "'",
-                value: "'"
+                name: '\'',
+                value: '\''
             }]
         });
 
@@ -819,7 +819,7 @@ Ext.define('Lada.view.window.GridExport', {
             return false;
         } else {
             if (fname.length > defaultend.length && // fname may be shorter than ending
-                fname.toLowerCase().indexOf(defaultend.toLowerCase()) ==
+                fname.toLowerCase().indexOf(defaultend.toLowerCase()) ===
                     fname.length - defaultend.length) {
                 this.filename = fname;
                 return true;
@@ -848,17 +848,21 @@ Ext.define('Lada.view.window.GridExport', {
         var me = this;
         var fillData = function(content) {
             var results = [];
-            Object.keys(content).forEach(function(key,index) {
-                var result = {};
-                for (var i=0; i< columns.length; i++) {
-                    var di = columns[i].dataIndex;
-                    if (di) {
-                        result[di] = content[key][di];
+            if (content) {
+                Object.keys(content).forEach(function(key) {
+                    var result = {};
+                    for (var i=0; i< columns.length; i++) {
+                        var di = columns[i].dataIndex;
+                        if (di) {
+                            result[di] = content[key][di];
+                        }
                     }
-                }
-                results.push(result);
-            });
-            return results;
+                    results.push(result);
+                });
+                return results;
+            } else {
+                return [];
+            }
         };
         switch (this.rowexp.type) {
             case 'Lada.view.grid.Messung':
@@ -925,23 +929,31 @@ Ext.define('Lada.view.window.GridExport', {
             return;
         }
         var id = item.get(this.grid.rowtarget.dataIndex);
+        var successCallback = function(response) {
+            var content = JSON.parse(response.responseText);
+            var line = '';
+            if (content.data) {
+                Object.keys(content.data).forEach(function(key) {
+                    line += primaryRow
+                    + me.addline(content.data[key], columns)
+                    + me.csv.linesep;
+                });
+            } else {
+                line += primaryRow;
+                for (var col=0; col < columns.length - 1; col++) {
+                    line += me.csv.colsep;
+                }
+                line += me.csv.linesep;
+            }
+            me.resultobject += line;
+            me.countDown();
+        };
         switch (this.rowexp.type) {
             case 'Lada.view.grid.Messung':
                 Ext.Ajax.request({
                     url: 'lada-server/rest/messung?probeId=' + id,
                     timeout: 5 * 1000,
-                    success: function(response) {
-                        var content = JSON.parse(response.responseText);
-                        var line = '';
-                        Object.keys(content.data).forEach(function(key,index) {
-                            line += primaryRow
-                                + me.addline(content.data[key], columns)
-                                + me.csv.linesep;
-                        });
-                        me.resultobject += line;
-
-                        me.countDown();
-                    },
+                    success: successCallback,
                     failure: function() {
                         me.countDown();
                         //TODO error handling.
@@ -953,17 +965,7 @@ Ext.define('Lada.view.window.GridExport', {
                 Ext.Ajax.request({
                     url: 'lada-server/rest/messwert?messungsId=' + id,
                     timeout: 5 * 1000,
-                    success: function(response) {
-                        var content = JSON.parse(response.responseText);
-                        var line = '';
-                        Object.keys(content.data).forEach(function(key,index) {
-                            line += primaryRow
-                                + me.addline(content.data[key], columns)
-                                + me.csv.linesep;
-                        });
-                        me.resultobject += line;
-                        me.countDown();
-                    },
+                    success: successCallback,
                     failure: function() {
                         //TODO error handling.
                         me.countDown();
