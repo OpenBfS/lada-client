@@ -67,13 +67,13 @@ Ext.define('Lada.view.grid.PKommentar', {
             }]
         }];
         this.columns = [{
-            header: 'erstellt',
+            header: i18n.getMsg('header.datum'),
             dataIndex: 'datum',
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
             width: 110
         }, {
-            header: 'Erzeuger',
+            header: i18n.getMsg('erzeuger'),
             dataIndex: 'mstId',
             width: 140,
             renderer: function(value) {
@@ -96,7 +96,7 @@ Ext.define('Lada.view.grid.PKommentar', {
                 allowBlank: false
             }
         }, {
-            header: 'Text',
+            header: i18n.getMsg('text'),
             dataIndex: 'text',
             flex: 1,
             renderer: function(value) {

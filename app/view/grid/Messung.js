@@ -62,28 +62,28 @@ Ext.define('Lada.view.grid.Messung', {
                 grid.fireEvent('itemdblclick', grid, rec);
             }
         }, {
-            header: 'extMID',
+            header: i18n.getMsg('messungsId'),
             dataIndex: 'idAlt',
             flex: 1,
             editor: {
                 allowBlank: false
             }
         }, {
-            header: 'Nebenproben-Nr.',
+            header: i18n.getMsg('nebenprobenNr'),
             dataIndex: 'nebenprobenNr',
             flex: 1,
             editor: {
                 allowBlank: false
             }
         }, {
-            header: 'MMT',
+            header: i18n.getMsg('mmt_id'),
             dataIndex: 'mmtId',
             flex: 1,
             editor: {
                 allowBlank: false
             }
         }, {
-            header: 'Messzeit',
+            header: i18n.getMsg('messzeitpunkt'),
             dataIndex: 'messzeitpunkt',
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
@@ -97,7 +97,7 @@ Ext.define('Lada.view.grid.Messung', {
                 maxValue: Ext.Date.format(new Date(), 'd.m.Y H:i')
             }
         }, {
-            header: 'Status',
+            header: i18n.getMsg('status'),
             flex: 1,
             dataIndex: 'statusKombi',
             renderer: function(value, meta, record, rNdx, cNdx) {
@@ -116,7 +116,7 @@ Ext.define('Lada.view.grid.Messung', {
                 return st;
             }
         }, {
-            header: 'Stufe',
+            header: i18n.getMsg('header.statusstufe'),
             flex: 1,
             dataIndex: 'statusKombi',
             renderer: function(value, meta, record, rNdx, cNdx) {
@@ -135,7 +135,7 @@ Ext.define('Lada.view.grid.Messung', {
                 return st;
             }
         }, {
-            header: 'OK-Flag',
+            header: i18n.getMsg('header.ok'),
             dataIndex: 'fertig',
             flex: 1,
             renderer: function(value) {
@@ -149,7 +149,7 @@ Ext.define('Lada.view.grid.Messung', {
                 allowBlank: false
             }
         }, {
-            header: 'Anzahl Nuklide',
+            header: i18n.getMsg('number_of_nuclides'),
             // Gibt die Anzahl der Messwerte wieder,
             // NICHT die Anzahl der verschiedenen Nukleide
             // Eventuell ist die Bezeichnug daher irreführend
@@ -164,7 +164,7 @@ Ext.define('Lada.view.grid.Messung', {
                 return value;
             }
         }, {
-            header: 'Anzahl Kommentare',
+            header: i18n.getMsg('number_of_comments'),
             flex: 1,
             dataIndex: 'kommentarCount',
             renderer: function(value, meta, record) {
@@ -257,10 +257,11 @@ Ext.define('Lada.view.grid.Messung', {
     updateColumn: function(store, record, success, operation, opts) {
         var value;
         if (success) {
-            if (store.getTotalCount() === 0) {
+            var amount = store.getData().items.length;
+            if ( amount === 0 ) {
                 value = '0';
             } else {
-                value = store.getTotalCount();
+                value = amount;
             }
         } else {
             value = '-';

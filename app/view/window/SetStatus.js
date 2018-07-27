@@ -69,14 +69,14 @@ Ext.define('Lada.view.window.SetStatus', {
                     width: 300,
                     labelWidth: 100,
                     emptyText: i18n.getMsg('emptytext.erzeuger'),
-                    fieldLabel: i18n.getMsg('statusgrid.header.erzeuger')
+                    fieldLabel: i18n.getMsg('erzeuger')
                 }, {
                     xtype: 'statuswert',
                     store: statusWerteStore,
                     allowBlank: false,
                     width: 300,
                     labelWidth: 100,
-                    fieldLabel: i18n.getMsg('statusgrid.header.statusWert')
+                    fieldLabel: i18n.getMsg('header.statuswert')
                 }, {
                     xtype: 'combobox',
                     name: 'statusstufe',
@@ -88,13 +88,13 @@ Ext.define('Lada.view.window.SetStatus', {
                     forceSelection: true,
                     width: 300,
                     labelWidth: 100,
-                    fieldLabel: i18n.getMsg('statusgrid.header.statusStufe')
+                    fieldLabel: i18n.getMsg('header.statusstufe')
                 }, {
                     xtype: 'textarea',
                     width: 300,
                     height: 100,
                     labelWidth: 100,
-                    fieldLabel: i18n.getMsg('statusgrid.header.text'),
+                    fieldLabel: i18n.getMsg('text'),
                     emptyText: i18n.getMsg('emptytext.kommentar.widget')
                 }]
             }],

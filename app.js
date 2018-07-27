@@ -100,6 +100,7 @@ Ext.application({
         Ext.JSON.encodeDate = function(o) {
             return '"' + Ext.Date.format(o, 'c') + '"';
         };
+        Ext.util.Format.decimalSeparator = ',';
 
         Lada.username = '';
         Lada.userroles = '';

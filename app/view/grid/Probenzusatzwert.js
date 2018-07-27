@@ -125,7 +125,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 return '';
             }
         }, {
-            header: 'Nachweisgrenze',
+            header: i18n.getMsg('messwert_nwg'),
             dataIndex: 'nwgZuMesswert',
             flex: 1,
             editor: {
@@ -162,7 +162,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 return record.get('einheit');
             }
         }, {
-            header: 'rel. Unsich.[%]',
+            header: i18n.getMsg('relmessfehler'),
             dataIndex: 'messfehler',
             xtype: 'numbercolumn',
             format: '0',

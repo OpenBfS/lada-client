@@ -66,7 +66,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 grid.fireEvent('itemdblclick', grid, rec);
             }
         }, {
-            header: 'Typ',
+            header: i18n.getMsg('typ'),
             dataIndex: 'ortszuordnungTyp',
             flex: 1,
             editor: {
