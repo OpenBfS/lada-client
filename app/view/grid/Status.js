@@ -91,7 +91,7 @@ Ext.define('Lada.view.grid.Status', {
             },
             sortable: false
         }, {
-            header: i18n.getMsg('statusgrid.header.text'),
+            header: i18n.getMsg('text'),
             dataIndex: 'text',
             flex: 1,
             sortable: false

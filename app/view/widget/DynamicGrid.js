@@ -128,7 +128,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 collapsible: true,
                 multiSelect: true,
                 minWidth: 400,
+                maxWidth: 900,
+                width: 400,
+                resizable: true,
                 dock: 'right',
+                collapseDirection: 'right',
                 title: this.i18n.getMsg('map.title'),
                 externalOrteStore: false
             });
