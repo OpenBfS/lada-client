@@ -67,13 +67,18 @@ Ext.define('Lada.controller.form.Messung', {
                     formPanel.setRecord(record);
                     formPanel.setMessages(json.errors, json.warnings);
                     formPanel.up('window').initData();
-                    formPanel.up('window').grid.store.reload();
-                    var messwertgrid = formPanel.up('window').down('messwertgrid');
+
                     var parentWin = button.up('window').parentWindow;
-                    parentWin.initData();
+                    if (parentWin) {
+                        parentWin.initData();
+                        var messwertgrid = parentWin.down('messwertgrid');
+                        if (messwertgrid) {
+                            messwertgrid.getStore().reload();
+                        }
+                    }
                     var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                     if (parentGrid.length === 1) {
-                        parentGrid[0].store.reload();
+                        parentGrid[0].reload();
                     }
                     if (messwertgrid) {
                         messwertgrid.store.reload();
@@ -150,7 +155,7 @@ Ext.define('Lada.controller.form.Messung', {
                 if (json) {
                     var parentGrid = Ext.ComponentQuery.query('dynamicGrid');
                     if (parentGrid.length === 1) {
-                        parentGrid[0].store.reload();
+                        parentGrid[0].reload();
                     }
                 }
             },

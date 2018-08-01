@@ -128,7 +128,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 collapsible: true,
                 multiSelect: true,
                 minWidth: 400,
+                maxWidth: 900,
+                width: 400,
+                resizable: true,
                 dock: 'right',
+                collapseDirection: 'right',
                 title: this.i18n.getMsg('map.title'),
                 externalOrteStore: false
             });
@@ -969,6 +973,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
         }
         return false;
+    },
+
+    reload: function() {
+        var store = this.getStore();
+        var options = store.lastOptions;
+        options.scope = this;
+        options.callback = function() {
+            this.setStore(store);
+        };
+        store.load(options);
     }
 });
 

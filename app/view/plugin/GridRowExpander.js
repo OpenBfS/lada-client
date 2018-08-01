@@ -29,7 +29,7 @@ Ext.define('Lada.view.plugin.GridRowExpander', {
     init: function(grid) {
         var me = this;
         var view = grid.getView();
-        view.processUIEvent = me.createProcessUIEvent(view.processUIEvent);
+        view.processEvent = me.createProcessUIEvent(view.processEvent);
 
         me.callParent(arguments);
     },

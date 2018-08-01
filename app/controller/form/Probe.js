@@ -195,8 +195,8 @@ Ext.define('Lada.controller.form.Probe', {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                    if (parentGrid.length == 1) {
-                        parentGrid[0].store.reload();
+                    if (parentGrid.length === 1) {
+                        parentGrid[0].reload();
                     }
                 }
             },
@@ -254,8 +254,8 @@ Ext.define('Lada.controller.form.Probe', {
                     button.up('toolbar').down('button[action=discard]')
                         .setDisabled(true);
                     var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                    if (parentGrid.length == 1) {
-                        parentGrid[0].store.reload();
+                    if (parentGrid.length === 1) {
+                        parentGrid[0].reload();
                     }
                     formPanel.clearMessages();
                     formPanel.setRecord(record);

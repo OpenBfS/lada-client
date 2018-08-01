@@ -42,8 +42,8 @@ Ext.define('Lada.controller.form.Probenehmer', {
                 button.up('toolbar').down('button[action=discard]')
                     .setDisabled(true);
                 var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                if (parentGrid.length == 1) {
-                    parentGrid[0].store.reload();
+                if (parentGrid.length === 1) {
+                    parentGrid[0].reload();
                 }
                 var rec = formPanel.getForm().getRecord();
                 rec.dirty = false;
