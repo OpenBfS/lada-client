@@ -190,7 +190,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         .setDisabled(true);
                     var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                     if (parentGrid.length === 1) {
-                        parentGrid[0].store.reload();
+                        parentGrid[0].reload();
                     }
                     formPanel.clearMessages();
                     formPanel.setRecord(record);
@@ -261,7 +261,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 if (json) {
                     var parentGrid = Ext.ComponentQuery.query('dynamicGrid');
                     if (parentGrid.length === 1) {
-                        parentGrid[0].store.reload();
+                        parentGrid[0].reload();
                     }
                 }
             },

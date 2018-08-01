@@ -973,6 +973,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
         }
         return false;
+    },
+
+    reload: function() {
+        var store = this.getStore();
+        var options = store.lastOptions;
+        options.scope = this;
+        options.callback = function() {
+            this.setStore(store);
+        };
+        store.load(options);
     }
 });
 
