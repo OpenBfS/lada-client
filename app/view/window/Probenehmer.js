@@ -62,7 +62,7 @@ Ext.define('Lada.view.window.Probenehmer', {
                     imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
                     imprintWin.on('afterlayout', function() {
                         var imprintWinController = this.getController();
-                        imprintWinController.setTopic('probe');
+                        imprintWinController.setTopic('probenehmer');
                     }, imprintWin, {single: true});
                 } else {
                     // BasiGX.util.Animate.shake(imprintWin);
