@@ -16,8 +16,7 @@ Ext.define('Lada.view.widget.DayOfYear', {
 
     layout: {
         type: 'hbox',
-        pack: 'end',
-        defaultMargins: '3'
+        pack: 'end'
     },
 
     initComponent: function() {
@@ -89,6 +88,7 @@ Ext.define('Lada.view.widget.DayOfYear', {
             fieldLabel: this.fieldLabel,
             labelWidth: this.labelWidth,
             width: 50 + this.labelWidth,
+            margin: '0 6 0 0',
             msgTarget: 'none',
             allowDecimals: false,
             maxLength: 2,
@@ -105,7 +105,7 @@ Ext.define('Lada.view.widget.DayOfYear', {
         }, {
             xtype: 'combobox',
             isFormField: false,
-            width: 100,
+            width: 120,
             msgTarget: 'none',
             store: monthsStore,
             allowBlank: this.allowBlank,
@@ -133,8 +133,8 @@ Ext.define('Lada.view.widget.DayOfYear', {
             height: 14,
             hidden: true
         }, DOYField];
-
         this.callParent(arguments);
+        this.down('combobox').getTriggers().clear.hidden = true;
     },
 
     /*

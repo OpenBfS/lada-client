@@ -25,6 +25,7 @@ Ext.define('Lada.view.window.Messprogramm', {
     layout: 'fit',
     constrain: true,
     probenWindow: null,
+    width: 700,
 
     record: null,
 
@@ -68,7 +69,6 @@ Ext.define('Lada.view.window.Messprogramm', {
             scope: this,
             handler: this.handleBeforeClose
         }];
-        this.width = 700;
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({

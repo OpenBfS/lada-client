@@ -32,7 +32,6 @@ Ext.define('Lada.view.form.Messprogramm', {
     ],
 
     model: 'Lada.model.Messprogramm',
-    minWidth: 650,
     margin: 5,
     border: false,
 
@@ -72,14 +71,16 @@ Ext.define('Lada.view.form.Messprogramm', {
                         disabled: true
                     }]
                 }],
+                defaults: {
+                    margin: '0, 10, 0, 0',
+                    border: false
+                },
                 items: [{
                     border: false,
-                    minWidth: 290,
                     layout: {
                         type: 'vbox',
                         align: 'stretch'
                     },
-                    margin: '0, 10, 0, 0',
                     items: [{
                         layout: {
                             type: 'hbox',
@@ -98,7 +99,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                             xtype: 'chkbox',
                             name: 'test',
                             fieldLabel: i18n.getMsg('test'),
-                            anchor: '100%',
                             margin: '0, 5, 5, 5',
                             width: '20%',
                             labelWidth: 30,
@@ -116,7 +116,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             fieldLabel: i18n.getMsg('labor_mst_id'),
                             margin: '0, 5, 5, 5',
                             width: '35%',
-                            labelWidth: 95,
+                            labelWidth: 100,
                             allowBlank: false,
                             editable: true,
                             listenersJson: {
@@ -134,22 +134,19 @@ Ext.define('Lada.view.form.Messprogramm', {
                             xtype: 'messstelle',
                             name: 'mstId',
                             fieldLabel: i18n.getMsg('mst_id'),
-                            margin: '0, 5, 5, 5',
-                            width: '35%',
-                            labelWidth: 95,
                             allowBlank: false,
                             editable: true,
-                            hidden: true
+                            hidden: true,
+                            width: '0%'
                         }, {
                             xtype: 'messstelle',
                             name: 'laborMstId',
                             fieldLabel: i18n.getMsg('labor_mst_id'),
-                            margin: '0, 5, 5, 5',
-                            width: '35%',
-                            labelWidth: 95,
+                            labelWidth: 100,
                             allowBlank: false,
                             editable: true,
-                            hidden: true
+                            hidden: true,
+                            width: '0%'
                         }, {
                             xtype: 'netzbetreiber',
                             name: 'netzbetreiber',
@@ -159,7 +156,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             submitValue: false,
                             fieldLabel: i18n.getMsg('netzbetreiberId'),
                             margin: '0, 5, 5, 5',
-                            width: '45%',
+                            width: '40%',
                             labelWidth: 80
                         }, {
                             xtype: 'datenbasis',
@@ -168,7 +165,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             name: 'datenbasisId',
                             fieldLabel: i18n.getMsg('datenbasisId'),
                             margin: '0, 5, 5, 5',
-                            width: '23%',
+                            width: '25%',
                             labelWidth: 65
                         }]
                     }, {
@@ -184,15 +181,14 @@ Ext.define('Lada.view.form.Messprogramm', {
                             fieldLabel: i18n.getMsg('probenartId'),
                             margin: '0, 5, 5, 5',
                             width: '35%',
-                            labelWidth: 95,
+                            labelWidth: 100,
                             allowBlank: false
                         }, {
                             xtype: 'betriebsart',
                             name: 'baId',
-                            margin: '0, 5, 5, 5',
+                            margin: '0, 0, 5, 5',
                             fieldLabel: i18n.getMsg('baId'),
-                            //anchor: '100%',
-                            width: '45%',
+                            width: '65%',
                             labelWidth: 80
                         }]
                     }, {
@@ -200,17 +196,15 @@ Ext.define('Lada.view.form.Messprogramm', {
                         name: 'kommentar',
                         fieldLabel: i18n.getMsg('kommentar'),
                         width: '100%',
-                        margin: '0, 5, 5, 5',
+                        margin: '0, 0, 5, 5',
                         labelWidth: 95
                     }]
                 }, {
                     xtype: 'probenehmer',
                     name: 'probeNehmerId',
                     fieldLabel: i18n.getMsg('probenehmerId'),
-                    margin: '0, 5, 5, 5',
-                    //width: '100%',
+                    margin: '0, 10, 5, 5',
                     minValue: 0,
-                    anchor: '100%',
                     editable: true,
                     labelWidth: 95,
                     extraParams: function() {
@@ -239,9 +233,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     xtype: 'messprogrammland',
                     name: 'mplId',
                     fieldLabel: i18n.getMsg('mpl_id'),
-                    margin: '0, 5, 5, 5',
-                    //width: '100%',
-                    anchor: '100%',
+                    margin: '0, 10, 5, 5',
                     labelWidth: 115,
                     editable: true,
                     extraParams: function() {
@@ -296,7 +288,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                     // Medium
                     xtype: 'fieldset',
                     title: i18n.getMsg('medium'),
-                    width: '100%',
+                    border: true,
+                    margin: '10, 10, 5, 5',
                     items: [{
                         border: false,
                         layout: {
@@ -342,7 +335,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             }, {
                                 xtype: 'textfield',
                                 name: 'media',
-                                margin: '0, 10, 5, 10',
+                                margin: '0, 0, 5, 10',
                                 width: '42%',
                                 enforceMaxLength: true,
                                 editable: false,
@@ -368,20 +361,28 @@ Ext.define('Lada.view.form.Messprogramm', {
                         }]
                     }]
                 }, {
-                    xtype: 'textarea',
-                    name: 'probeKommentar',
-                    labelAlign: 'top',
-                    fieldLabel: i18n.getMsg('probeKommentar'),
-                    width: '100%',
-                    labelwidth: 135,
-                    anchor: '100%'
+                    layout: 'fit',
+                    margin: '0, 10, 0, 5',
+                    items: [{
+                        xtype: 'textarea',
+                        name: 'probeKommentar',
+                        labelAlign: 'top',
+                        fieldLabel: i18n.getMsg('probeKommentar'),
+                        width: '100%',
+                        labelwidth: 135
+                    }]
                 }, {
                     // Zeit
                     xtype: 'fieldset',
                     title: i18n.getMsg('probenintervallFieldset'),
+                    margin: '10, 10, 5, 5',
+                    border: true,
                     layout: {
                         type: 'vbox',
                         align: 'stretch'
+                    },
+                    defaults: {
+                        margin: '5,5,5,5'
                     },
                     items: [{
                         xtype: 'fset',
@@ -391,7 +392,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             align: 'stretch'
                         },
                         border: false,
-                        margin: '0, 0, 0, 0',
+                        margin: 0,
                         items: [{
                             xtype: 'probenintervall',
                             allowBlank: false,
@@ -406,7 +407,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             allowBlank: false,
                             fieldLabel: i18n.getMsg('teilintervallVon'),
                             margin: '0, 10, 5, 10',
-                            labelWidth: 90,
+                            labelWidth: 100,
                             width: '28%',
                             name: 'teilintervallVon',
                             period: 'start'
@@ -432,8 +433,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     }, {
                         xtype: 'probenintervallslider',
                         pack: 'center',
-                        width: '70%',
-                        margin: '0, 40, 10, 40',
+                        margin: '5, 40, 10, 40',
                         values: [0, 0]
                         //this will be overridden
                         // by setRecord
@@ -501,7 +501,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         }
 
         // subintervall is redundant to validity for yearly samples
-        if (intervall == 'J') {
+        if (intervall === 'J') {
             svalUpper = this.getForm().findField('gueltigBis').getValue();
             svalLower = this.getForm().findField('gueltigVon').getValue();
             b.setReadOnly(true);
