@@ -32,7 +32,10 @@ Ext.define('Lada.view.widget.base.NumberField', {
             labelWidth: this.labelWidth,
             readOnly: this.readOnly || false,
             period: this.period,
-            listeners: this.listeners
+            listeners: this.listeners,
+            hideTrigger: this.hideTrigger || false,
+            keyNavEnabled: this.keyNavEnabled || false,
+            mouseWheelEnabled: this.mouseWheelEnabled || false
         }, {
             xtype: 'image',
             name: 'warnImg',
