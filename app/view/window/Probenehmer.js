@@ -39,14 +39,13 @@ Ext.define('Lada.view.window.Probenehmer', {
             }
         });
 
-        this.width = 600;
         // InitialConfig is the config object passed to the constructor on
         // creation of this window. We need to pass it throuh to the form as
         // we need the "modelId" param to load the correct item.
 
         this.items = [{
             border: false,
-            autoScroll: true,
+            layout: 'fit',
             items: [{
                 xtype: 'probenehmerform',
                 record: this.record

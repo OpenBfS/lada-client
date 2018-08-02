@@ -18,8 +18,8 @@ Ext.define('Lada.view.form.Probenehmer', {
     ],
 
     model: 'Lada.model.Probenehmer',
-    minWidth: 550,
-    margin: 5,
+    minWidth: 400,
+    margin: 0,
     border: false,
 
     record: null,
@@ -28,46 +28,55 @@ Ext.define('Lada.view.form.Probenehmer', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            dock: 'bottom',
+            border: '0, 1, 1, 1',
+            style: {
+                borderBottom: '1px solid #b5b8c8 !important',
+                borderLeft: '1px solid #b5b8c8 !important',
+                borderRight: '1px solid #b5b8c8 !important'
+            },
+            items: ['->', {
+                text: i18n.getMsg('save'),
+                qtip: i18n.getMsg('save.qtip'),
+                icon: 'resources/img/dialog-ok-apply.png',
+                action: 'save',
+                disabled: true
+            }, {
+                text: i18n.getMsg('discard'),
+                qtip: i18n.getMsg('discard.qtip'),
+                icon: 'resources/img/dialog-cancel.png',
+                action: 'discard',
+                disabled: true
+            }]
+        }];
         this.items = [{
             border: false,
-            margin: '0, 0, 10, 0',
-            dockedItems: [{
-                xtype: 'toolbar',
-                dock: 'bottom',
-                border: '0, 1, 1, 1',
-                style: {
-                    borderBottom: '1px solid #b5b8c8 !important',
-                    borderLeft: '1px solid #b5b8c8 !important',
-                    borderRight: '1px solid #b5b8c8 !important'
-                },
-                items: ['->', {
-                    text: i18n.getMsg('save'),
-                    qtip: i18n.getMsg('save.qtip'),
-                    icon: 'resources/img/dialog-ok-apply.png',
-                    action: 'save',
-                    disabled: true
-                }, {
-                    text: i18n.getMsg('discard'),
-                    qtip: i18n.getMsg('discard.qtip'),
-                    icon: 'resources/img/dialog-cancel.png',
-                    action: 'discard',
-                    disabled: true
-                }]
-            }],
+            align: 'stretch',
+            layout: 'vbox',
+            margin: '5, 5, 5, 5',
+            defaults: {
+                border: false
+            },
             items: [{
                 layout: 'vbox',
-                border: false,
+                defaults: {
+                    border: false,
+                    margin: '5 5 5 5'
+                },
                 items: [{
                     layout: 'hbox',
                     border: false,
-                    margin: '0 5 5 5',
+                    width: '100%',
                     items: [{
                         xtype: 'tfield',
                         name: 'prnId',
+                        margin: '0 5 0 0',
                         fieldLabel: i18n.getMsg('probenehmerId'),
-                        margin: '0, 5, 5, 0',
-                        width: '35%',
-                        labelWidth: 80,
+                        labelWidth: 110,
+                        readOnly: true,
+                        width: '50%',
                         maxLength: 9
                     }, {
                         xtype: 'netzbetreiber',
@@ -76,105 +85,124 @@ Ext.define('Lada.view.form.Probenehmer', {
                         readOnly: true,
                         isFormField: false,
                         emptyValue: '',
+                        width: '50%',
                         fieldLabel: i18n.getMsg('netzbetreiberId'),
-                        margin: '0, 5, 5, 5',
-                        width: '35%',
-                        labelWidth: 80
+                        margin: '0 0 0 5',
+                        labelWidth: 110
                     }]
                 }, {
-                    xtype: 'tfield',
-                    name: 'bearbeiter',
-                    fieldLabel: i18n.getMsg('bearbeiter'),
-                    margin: '0, 5, 5, 5',
-                    width: '35%',
-                    labelWidth: 80,
-                    maxLength: 25
+                    layout: 'hbox',
+                    width: '100%',
+                    items: [{
+                        xtype: 'tfield',
+                        name: 'kurzBezeichnung',
+                        fieldLabel: i18n.getMsg('kurzBezeichnung'),
+                        labelWidth: 110,
+                        readOnly: true,
+                        width: '50%',
+                        margin: '0 5 0 0',
+                        maxLength: 10
+                    }, {
+                        xtype: 'tfield',
+                        name: 'bearbeiter',
+                        margin: '0 0 0 5',
+                        fieldLabel: i18n.getMsg('bearbeiter'),
+                        labelWidth: 110,
+                        readOnly: true,
+                        width: '50%',
+                        maxLength: 25
+                    }]
                 }, {
                     xtype: 'tfield',
                     name: 'bemerkung',
                     fieldLabel: i18n.getMsg('bemerkung'),
-                    margin: '0, 5, 5, 5',
-                    width: '35%',
-                    labelWidth: 80,
-                    maxLength: 60
+                    margin: '5 5 0 5',
+                    labelWidth: 110,
+                    readOnly: true,
+                    maxLength: 60,
+                    width: '100%'
+                }, {
+                    xtype: 'tarea',
+                    name: 'bezeichnung',
+                    fieldLabel: i18n.getMsg('bezeichnung'),
+                    margin: '5 5 0 5',
+                    width: '100%',
+                    readOnly: true,
+                    labelWidth: 110,
+                    maxLength: 80
                 }, {
                     layout: 'hbox',
+                    margin: '5 5 0 5',
                     border: false,
-                    margin: '0 5 5 5',
+                    width: '100%',
                     items: [{
                         xtype: 'tfield',
-                        name: 'bezeichnung',
-                        fieldLabel: i18n.getMsg('bezeichnung'),
-                        margin: '0, 5, 5, 0',
-                        width: '35%',
-                        labelWidth: 80,
-                        maxLength: 80
+                        name: 'tp',
+                        fieldLabel: i18n.getMsg('tp'),
+                        margin: '0 5 0 0',
+                        width: '50%',
+                        readOnly: true,
+                        labelWidth: 110,
+                        maxLength: 3
                     }, {
                         xtype: 'tfield',
-                        name: 'kurzBezeichnung',
-                        fieldLabel: i18n.getMsg('kurzBezeichnung'),
-                        margin: '0, 5, 5, 5',
-                        width: '35%',
-                        labelWidth: 80,
-                        maxLength: 10
+                        name: 'typ',
+                        fieldLabel: i18n.getMsg('typ'),
+                        margin: '0, 0, 0, 5',
+                        width: '50%',
+                        readOnly: true,
+                        labelWidth: 110,
+                        maxLength: 1
                     }]
                 }, {
-                    layout: 'hbox',
-                    margin: '0 5 5 5',
-                    border: false,
+                    xtype: 'fieldset',
+                    title: i18n.getMsg('address'),
+                    border: true,
+                    layout: 'vbox',
                     items: [{
                         xtype: 'tfield',
-                        name: 'ort',
-                        fieldLabel: i18n.getMsg('ort'),
-                        margin: '0, 5, 5, 0',
-                        width: '35%',
-                        labelWidth: 80,
+                        name: 'strasse',
+                        fieldLabel: i18n.getMsg('strasse'),
+                        labelWidth: 100,
+                        margin: '5 10 5 10',
+                        readOnly: true,
+                        width: '100%',
+                        maxLength: 30
+                    }, {
+                        layout: 'hbox',
+                        border: false,
+                        margin: '5 10 5 10',
+                        items: [{
+                            xtype: 'numfield',
+                            name: 'plz',
+                            fieldLabel: i18n.getMsg('plz'),
+                            allowDecimals: false,
+                            maxLength: 5,
+                            readOnly: true,
+                            hideTrigger: true,
+                            keyNavEnabled: false,
+                            mouseWheelEnabled: false,
+                            width: '30%',
+                            labelWidth: 100
+                        }, {
+                            xtype: 'tfield',
+                            name: 'ort',
+                            margin: '0 0 0 10',
+                            fieldLabel: i18n.getMsg('ort'),
+                            width: '70%',
+                            readOnly: true,
+                            labelWidth: 100,
+                            maxLength: 20
+                        }]
+                    }, {
+                        xtype: 'tfield',
+                        name: 'telefon',
+                        margin: '5 10 5 10',
+                        fieldLabel: i18n.getMsg('telefon'),
+                        labelWidth: 100,
+                        readOnly: true,
                         maxLength: 20
-                    }, {
-                        xtype: 'numfield',
-                        name: 'plz',
-                        fieldLabel: i18n.getMsg('plz'),
-                        margin: '0, 5, 5, 5',
-                        width: '75',
-                        allowDecimals: false,
-                        maxLength: 5,
-                        hideTrigger: true,
-                        keyNavEnabled: false,
-                        mouseWheelEnabled: false,
-                        labelWidth: 80
                     }]
-                }, {
-                    xtype: 'tfield',
-                    name: 'strasse',
-                    fieldLabel: i18n.getMsg('strasse'),
-                    margin: '0, 5, 5, 5',
-                    width: '35%',
-                    labelWidth: 80,
-                    maxLength: 30
-                }, {
-                    xtype: 'tfield',
-                    name: 'telefon',
-                    fieldLabel: i18n.getMsg('telefon'),
-                    margin: '0, 5, 5, 5',
-                    width: '35%',
-                    labelWidth: 80,
-                    maxLength: 20
-                }, {
-                    xtype: 'tfield',
-                    name: 'tp',
-                    fieldLabel: i18n.getMsg('tp'),
-                    margin: '0, 5, 5, 5',
-                    width: '35%',
-                    labelWidth: 80,
-                    maxLength: 3
-                }, {
-                    xtype: 'tfield',
-                    name: 'typ',
-                    fieldLabel: i18n.getMsg('typ'),
-                    margin: '0, 5, 5, 5',
-                    width: '35%',
-                    labelWidth: 80,
-                    maxLength: 1
                 }]
             }]
         }];
@@ -232,7 +260,7 @@ Ext.define('Lada.view.form.Probenehmer', {
         this.down('netzbetreiber').clearWarningOrError();
         this.down('tfield[name=bearbeiter]').clearWarningOrError();
         this.down('tfield[name=bemerkung]').clearWarningOrError();
-        this.down('tfield[name=bezeichnung]').clearWarningOrError();
+        this.down('tarea[name=bezeichnung]').clearWarningOrError();
         this.down('tfield[name=kurzBezeichnung]').clearWarningOrError();
         this.down('tfield[name=ort]').clearWarningOrError();
         this.down('numfield[name=plz]').clearWarningOrError();
@@ -247,7 +275,7 @@ Ext.define('Lada.view.form.Probenehmer', {
         this.down('netzbetreiber').readOnly = value;
         this.down('tfield[name=bearbeiter]').setReadOnly(value);
         this.down('tfield[name=bemerkung]').setReadOnly(value);
-        this.down('tfield[name=bezeichnung]').setReadOnly(value);
+        this.down('tarea[name=bezeichnung]').setReadOnly(value);
         this.down('tfield[name=kurzBezeichnung]').setReadOnly(value);
         this.down('tfield[name=ort]').setReadOnly(value);
         this.down('numfield[name=plz]').setReadOnly(value);

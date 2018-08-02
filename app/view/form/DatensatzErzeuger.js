@@ -18,8 +18,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
     ],
 
     model: 'Lada.model.DatensatzErzeuger',
-    minWidth: 550,
-    margin: 5,
+    margin: 0,
     border: false,
 
     recordId: null,
@@ -30,7 +29,8 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
         var i18n = Lada.getApplication().bundle;
         this.items = [{
             border: false,
-            margin: '0, 0, 10, 0',
+            margin: 0,
+            layout: 'fit',
             dockedItems: [{
                 xtype: 'toolbar',
                 dock: 'bottom',
@@ -57,56 +57,43 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
             items: [{
                 layout: 'vbox',
                 border: false,
+                align: 'stretch',
+                margin: 5,
+                defaults: {
+                    labelWidth: 120,
+                    margin: '0 0 5 0',
+                    minWidth: 350
+                },
                 items: [{
-                    layout: 'hbox',
-                    border: false,
-                    margin: '0 5 5 5',
-                    items: [{
-                        xtype: 'netzbetreiber',
-                        name: 'netzbetreiberId',
-                        editable: false,
-                        readOnly: true,
-                        isFormField: false,
-                        submitValue: false,
-                        fieldLabel: i18n.getMsg('netzbetreiberId'),
-                        labelWidth: 120,
-                        margin: '0, 5, 5, 5',
-                        width: '35%'
-                    }, {
-                        xtype: 'combobox',
-                        store: Ext.data.StoreManager.get('messstellenFiltered'),
-                        displayField: 'messStelle',
-                        valueField: 'id',
-                        allowBlank: false,
-                        queryMode: 'local',
-                        editable: false,
-                        width: 300,
-                        labelWidth: 80,
-                        name: 'mstId',
-                        fieldLabel: i18n.getMsg('mst_id'),
-                        margin: '0, 5, 5, 5'
-                    }]
+                    xtype: 'netzbetreiber',
+                    name: 'netzbetreiberId',
+                    editable: false,
+                    readOnly: true,
+                    isFormField: false,
+                    submitValue: false,
+                    fieldLabel: i18n.getMsg('netzbetreiberId')
                 }, {
-                    layout: 'hbox',
-                    border: false,
-                    margin: '0 5 5 5',
-                    items: [{
-                        xtype: 'tfield',
-                        name: 'datensatzerzeugerId',
-                        fieldLabel: i18n.getMsg('daErzeugerId'),
-                        margin: '0, 5, 5, 5',
-                        width: '35%',
-                        labelWidth: 120
-
-                    }, {
-                        xtype: 'tfield',
-                        name: 'bezeichnung',
-                        fieldLabel: i18n.getMsg('bezeichnung'),
-                        margin: '0, 5, 5, 5',
-                        width: '35%',
-                        labelWidth: 80,
-                        maxLength: 120
-                    }]
+                    xtype: 'combobox',
+                    store: Ext.data.StoreManager.get('messstellenFiltered'),
+                    displayField: 'messStelle',
+                    readOnly: true,
+                    valueField: 'id',
+                    allowBlank: false,
+                    queryMode: 'local',
+                    editable: false,
+                    name: 'mstId',
+                    fieldLabel: i18n.getMsg('mst_id')
+                }, {
+                    xtype: 'tfield',
+                    name: 'datensatzerzeugerId',
+                    readOnly: true,
+                    fieldLabel: i18n.getMsg('daErzeugerId')
+                }, {
+                    xtype: 'tarea',
+                    name: 'bezeichnung',
+                    readOnly: true,
+                    fieldLabel: i18n.getMsg('bezeichnung'),
+                    maxLength: 120
                 }]
             }]
         }];
@@ -161,7 +148,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
 
     clearMessages: function() {
         this.down('netzbetreiber').clearWarningOrError();
-        this.down('tfield[name=bezeichnung]').clearWarningOrError();
+        this.down('tarea[name=bezeichnung]').clearWarningOrError();
         this.down('tfield[name=datensatzerzeugerId]').clearWarningOrError();
         //TODO: is not a function
         //this.down('combobox[name=mstId]').clearWarningOrError();
@@ -169,7 +156,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
 
     setReadOnly: function(value) {
         this.down('netzbetreiber').readOnly = value;
-        this.down('tfield[name=bezeichnung]').setReadOnly(value);
+        this.down('tarea[name=bezeichnung]').setReadOnly(value);
         this.down('tfield[name=datensatzerzeugerId]').setReadOnly(value);
         this.down('combobox[name=mstId]').setReadOnly(value);
     }
