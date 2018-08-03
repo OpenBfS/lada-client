@@ -30,7 +30,7 @@ Ext.define('Lada.view.widget.PagingSize', {
             if (newVal === oldVal) {
                 return;
             }
-            Lada.getApplication().setPagingSize(parseInt(newVal));
+            Lada.getApplication().setPagingSize(parseInt(newVal, 10));
             var tb = this.up('pagingtoolbar');
             if (tb) {
                 var pageStore = tb.getStore();
@@ -41,7 +41,8 @@ Ext.define('Lada.view.widget.PagingSize', {
             }
         }
     }, {
-        xtype: 'tbtext'
+        xtype: 'tbtext',
+        margin: '5,5,5,5'
     }],
 
     refreshPagingSize: function() {
