@@ -318,6 +318,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                             'Lada.view.window.Messprogramm', {
                                 record: record});
                         win.show();
+                        win.initData();
                     }
                 });
                 break;
