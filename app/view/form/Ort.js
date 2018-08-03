@@ -28,7 +28,6 @@ Ext.define('Lada.view.form.Ort', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        var me = this;
         this.items = [{
             xtype: 'netzbetreiber',
             name: 'netzbetreiberId',

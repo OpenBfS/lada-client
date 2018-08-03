@@ -59,8 +59,8 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
         for (var i = 0; i < value.length; i++) {
             var item = value[i];
             var found = this.store.queryBy(function(rec) {
-                if (rec.get('id') == item ||
-                    rec.get('netzbetreiber') == item) {
+                if (rec.get('id') === item ||
+                    rec.get('netzbetreiber') === item) {
                     return true;
                 }
             });

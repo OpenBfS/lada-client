@@ -36,7 +36,7 @@ Ext.define('Lada.view.window.Messprogramm', {
         var i18n = Lada.getApplication().bundle;
         var me = this;
 
-        if (this.record == null) {
+        if (this.record === null) {
             this.title = i18n.getMsg('messprogramm.window.create.title');
         } else {
             this.title = i18n.getMsg('messprogramm.window.edit.title');
@@ -154,9 +154,8 @@ Ext.define('Lada.view.window.Messprogramm', {
      * which are associated to the Messprogramm
      */
     initData: function() {
-        var i18n = Lada.getApplication().bundle;
         this.clearMessages();
-        me = this;
+        var me = this;
 
         // If a record was passed to this window,
         // create a Edit window
@@ -192,9 +191,8 @@ Ext.define('Lada.view.window.Messprogramm', {
                 },
                 scope: this
             });
-        }
-        // Create a Create Window
-        else {
+        } else {
+            // Create a Create Window
             var record = Ext.create('Lada.model.Messprogramm',{
                 gueltigVon: 1,
                 gueltigBis: 365});
@@ -209,7 +207,7 @@ Ext.define('Lada.view.window.Messprogramm', {
             });
             record.set('owner', true);
             record.set('id', null);
-            defaultentry = items.items[0];
+            var defaultentry = items.items[0];
             if (defaultentry) {
                 record.set('mstId', defaultentry.get('messStelle'));
                 record.set('laborMstId', defaultentry.get('laborMst'));
@@ -230,7 +228,7 @@ Ext.define('Lada.view.window.Messprogramm', {
     customizeToolbar: function() {
         var tools = this.tools;
         for (var i = 0; i < tools.length; i++) {
-            if (tools[i].type == 'close') {
+            if (tools[i].type === 'close') {
                 var closeButton = tools[i];
                 closeButton.handler = null;
                 closeButton.callback = this.handleBeforeClose;

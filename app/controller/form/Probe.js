@@ -162,7 +162,7 @@ Ext.define('Lada.controller.form.Probe', {
         var netzbetreiber = combo.up().up('form')
             .down('netzbetreiber').down('combobox');
         var nbId = records.get('netzbetreiberId');
-        if (nbId != null) {
+        if (nbId !== null) {
             //select the NB in the NB-Combobox
             netzbetreiber.select(nbId);
         }
@@ -383,7 +383,7 @@ Ext.define('Lada.controller.form.Probe', {
         }
 
         // Clear Warnings or Errors if none Are Present
-        if (w == 0 && e == 0) {
+        if (w === 0 && e === 0) {
             field.up().clearWarningOrError();
         }
     },
@@ -398,7 +398,6 @@ Ext.define('Lada.controller.form.Probe', {
                 if (i === 0) {
                     current.push('D:');
                 } else if (i === desk.layer + 1) {
-                    var value;
                     if (records.get('sn') < 10) {
                         value = '0' + records.get('sn');
                     } else {
@@ -429,7 +428,7 @@ Ext.define('Lada.controller.form.Probe', {
         }
         media.setValue(current.join(' ').trim());
 
-        if (current[0].length == 0) {
+        if (current[0].length === 0) {
             current.splice(0,1);
         }
         var mediatext = field.up('probeform').down('textfield[name="media"]');

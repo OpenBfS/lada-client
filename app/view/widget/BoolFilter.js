@@ -27,7 +27,7 @@ var boolStore = Ext.create('Ext.data.Store', {
 Ext.define('Lada.view.widget.BoolFilter', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.boolfilter',
-    store: 'boolStore',
+    store: boolStore,
     queryMode: 'local',
     triggerAction: 'all',
     typeAhead: false,

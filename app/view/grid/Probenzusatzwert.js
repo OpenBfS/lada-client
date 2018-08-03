@@ -44,7 +44,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 beforeedit: function(e, o) {
                     var readonlywin = o.grid.up('window').record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
-                    if (readonlywin == true || readonlygrid == true || this.disabled) {
+                    if (readonlywin === true || readonlygrid === true || this.disabled) {
                         return false;
                     }
                     return true;
@@ -107,7 +107,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 var strValue = value.toExponential(2).toString()
                     .replace('.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
-                var exponent = parseInt(splitted[1]);
+                var exponent = parseInt(splitted[1], 10);
                 return splitted[0] + 'e'
                     + ((exponent < 0) ? '-' : '+')
                     + ((Math.abs(exponent) < 10) ? '0' : '')
@@ -138,7 +138,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 var strValue = value.toExponential(2).toString()
                     .replace('.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
-                var exponent = parseInt(splitted[1]);
+                var exponent = parseInt(splitted[1], 10);
                 return splitted[0] + 'e'
                     + ((exponent < 0) ? '-' : '+')
                     + ((Math.abs(exponent) < 10) ? '0' : '')

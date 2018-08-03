@@ -9,8 +9,6 @@ Ext.define('Lada.view.widget.ProbenintervallSlider', {
     //editable: this.editable || false,
 
     initComponent: function() {
-        var i18n = Lada.getApplication().bundle;
-
         this.callParent(arguments);
     }
 });

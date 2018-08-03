@@ -56,14 +56,6 @@
   background-color: transparent;
 }
 
-.x-grid-favcolumn-checked {
-  background-image: url(../img/favorites.png);
-}
-
-.x-grid-favcolumn-unchecked {
-  background-image: url(../img/favorites_off.png);
-}
-
 /* do not display clear-button (x) in IE10+ Input fields */
 ::-ms-clear {
    display: none;

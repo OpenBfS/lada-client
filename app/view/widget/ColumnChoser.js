@@ -148,7 +148,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
 
     setVisible: function(data, visible) {
         //If visibility changes, apply new value
-        if (data[0].get('visible') != visible) {
+        if (data[0].get('visible') !== visible) {
             var gcv_store = this.up('querypanel').gridColumnValueStore;
             for (var i=0; i < data.length; i++) {
                 data[i].set('visible', visible);
@@ -241,7 +241,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 scope: this,
                 single: true
             }
-        })
+        });
         this.getComponent('targetGrid').setStore(tstore);
         this.getComponent('sourceGrid').setStore(sstore);
         this.sortvisibles();

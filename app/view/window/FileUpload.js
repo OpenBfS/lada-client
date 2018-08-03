@@ -30,7 +30,6 @@ Ext.define('Lada.view.window.FileUpload', {
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        var me = this;
         this.items = [
             Ext.create('Ext.form.field.File', {
                 fieldLabel: i18n.getMsg('selectfile'),
@@ -115,7 +114,6 @@ Ext.define('Lada.view.window.FileUpload', {
      * A handler for the Upload-Button, reading the file specified in the form field
      */
     readFile: function(button) {
-        var me = this;
         var win = button.up('window');
         var fileInput = win.down('filefield');
         var file = fileInput.fileInputEl.dom.files[0];

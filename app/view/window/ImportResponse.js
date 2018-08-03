@@ -101,9 +101,8 @@ Ext.define('Lada.view.window.ImportResponse', {
                 if (warnings.Parser) {
                     out.push('Bei ' + (numWarnings - 1) + ' Probe(n) traten Warnungen auf. ');
                     out.push('<br/>');
-                    out.push('Es traten Warnungen beim Parsen auf.')
-                }
-                else {
+                    out.push('Es traten Warnungen beim Parsen auf.');
+                } else {
                     out.push('Bei ' + numWarnings + ' Probe(n) traten Warnungen auf. ');
                 }
                 out.push('<br/>');
@@ -162,7 +161,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                         out.push('<li>Probe: ' + key);
                     }
                     out.push('<ol>');
-                    validation = [];
+                    var validation = [];
                     validation.push('Validierungsfehler: ');
                     for (var i = msgs.length - 1; i >= 0; i--) {
                         if (msgs[i].key === 'validation') {
@@ -209,10 +208,9 @@ Ext.define('Lada.view.window.ImportResponse', {
                     out.push('</ol>');
                 }
                 for (key in warnings) {
-                    if (key != 'Parser') {
+                    if (key !== 'Parser') {
                         out.push('<li>Probe: ' + key);
-                    }
-                    else {
+                    } else {
                         continue;
                     }
                     msgs = warnings[key];
@@ -240,7 +238,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                         out.push('</li>');
                     }
                     out.push('</ol>');
-                    if (key != 'Parser') {
+                    if (key !== 'Parser') {
                         out.push('</li>');
                     }
                 }

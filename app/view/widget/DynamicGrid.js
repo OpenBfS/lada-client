@@ -432,7 +432,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     });
                 },
                 textchange: function(button, oldval, newval) {
-                    if (!newval || newval == '') {
+                    if (!newval || newval === '') {
                         button.hide();
                     } else {
                         button.show();
@@ -604,7 +604,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
         };
     },
-    generateStatusStufeColumns: function(col){
+    generateStatusStufeColumns: function(col) {
         col.xtype='gridcolumn';
         col.renderer = function(value) {
             if (!value) {

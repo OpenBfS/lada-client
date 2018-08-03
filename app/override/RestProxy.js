@@ -16,7 +16,7 @@ Ext.define('Lada.override.RestProxy', {
            We assume that a 302 was send when the follwing statement
            is true.
         */
-        if (!success && response.status == 0 && response.responseText === '') {
+        if (!success && response.status === 0 && response.responseText === '') {
             Ext.MessageBox.confirm('Erneutes Login erforderlich',
                 'Ihre Session ist abgelaufen.<br/>'+
                 'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
@@ -39,7 +39,7 @@ Ext.define('Lada.override.RestProxy', {
                 var filterJson = Ext.decode(params[filterParam]);
                 if (filterJson) {
                     for (var i = 0; i < filterJson.length; i++) {
-                        if (filterJson[i].name == 'ortStringSearch') {
+                        if (filterJson[i].name === 'ortStringSearch') {
                             params[filterParam] = filterJson[i].value;
                         }
                     }

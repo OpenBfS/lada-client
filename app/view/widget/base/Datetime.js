@@ -120,7 +120,7 @@ Ext.define('Lada.view.widget.base.Datetime', {
         this.down('datetimefield').clearInvalid();
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
-        cb = this.down('datetimefield');
+        var cb = this.down('datetimefield');
         if (cb.inputWrap && cb.inputEl) {
             cb.inputWrap.removeCls('x-lada-warning-field');
             cb.inputWrap.removeCls('x-lada-error-field');

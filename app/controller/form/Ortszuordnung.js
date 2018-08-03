@@ -41,11 +41,9 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         //try to disable ortPickerButton:
         try {
             formPanel.down('button[action=setOrt]').toggle(false);
-        } catch (e) {
-        }
+        } catch (e) {}
         var data = formPanel.getForm().getFieldValues(false);
         var record = formPanel.getForm().getRecord();
-        var i18n = Lada.getApplication().bundle;
         record.set('ortId', data.ortId[0]);
         record.set('ortszuordnungTyp', data.ortszuordnungTyp);
         record.set('ortszusatztext', data.ortszusatztext);
@@ -133,7 +131,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             }
             var map = button.up('window').down('map');
             if (map.previousOrtLayer) {
-                prevOrt = map.previousOrtLayer.getSource().getFeatures()[0];
+                var prevOrt = map.previousOrtLayer.getSource().getFeatures()[0];
                 if (prevOrt) {
                     var geom = prevOrt.getGeometry();
                     map.map.getView().setCenter([geom.getCoordinates()[0],
@@ -154,7 +152,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
     validityChange: function(form, valid) {
         // the simple form.isDirty() check seems to fail for a lot of cases
         var ortIdIsDirty = true;
-        if (form.getRecord().data.ortId == form.findField('ortId').getValue()) {
+        if (form.getRecord().data.ortId === form.findField('ortId').getValue()) {
             ortIdIsDirty = false;
         }
         if (form.getRecord().get('readonly') === true) {

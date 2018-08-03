@@ -155,7 +155,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         }
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
-        cb = this.down('combobox');
+        var cb = this.down('combobox');
         if (cb.inputWrap && cb.inputEl) {
             cb.inputWrap.removeCls('x-lada-warning-field');
             cb.inputWrap.removeCls('x-lada-error-field');

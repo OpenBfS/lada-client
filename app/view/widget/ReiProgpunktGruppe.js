@@ -92,7 +92,7 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
             this.clearWarningOrError();
             return true;
         }
-        if (this.getValue() == null || this.getValue() == '') {
+        if (this.getValue() === null || this.getValue() === '') {
             this.showWarnings(
                 i18n.getMsg('warn.msg.reiprogpunktgruppe.empty'));
             cons = false;

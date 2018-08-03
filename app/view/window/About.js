@@ -30,7 +30,6 @@ Ext.define('Lada.view.window.About', {
             }
         });
 
-        var me = this;
         this.title = i18n.getMsg('about.window.title');
         this.buttons = [{
             text: i18n.getMsg('close'),

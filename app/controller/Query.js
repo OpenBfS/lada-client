@@ -288,12 +288,10 @@ Ext.define('Lada.controller.Query', {
                         columns[i].save();
                     }
                 }
-                //qp.store.load({callback: function() {
-                    qp.down('combobox[name=selectedQuery]').setStore(qp.store);
-                    qp.down('combobox[name=selectedQuery]').select(newId);
-                    me.loadGridColumnStore(button);
-                    button.setDisabled(false);
-                //}});
+                qp.down('combobox[name=selectedQuery]').setStore(qp.store);
+                qp.down('combobox[name=selectedQuery]').select(newId);
+                me.loadGridColumnStore(button);
+                button.setDisabled(false);
             },
             failure: function(rec, response) {
                 Ext.Msg.alert(i18n.getMsg('query.error.save.title'),

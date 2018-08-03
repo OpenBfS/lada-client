@@ -64,7 +64,7 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
                 readOnly: true,
                 isFormField: false,
                 submitValue: false,
-                fieldLabel: i18n.getMsg('netzbetreiberId'),
+                fieldLabel: i18n.getMsg('netzbetreiberId')
             }, {
                 xtype: 'tfield',
                 name: 'code',

@@ -21,7 +21,7 @@ Ext.define('Lada.view.panel.Ort', {
         var i18n = Lada.getApplication().bundle;
 
         // Different Layout of toolbar depending on the bars position.
-        if (this.toolbarPos == 'top') {
+        if (this.toolbarPos === 'top') {
             this.dockedItems = [{
                 xtype: 'toolbar',
                 dock: 'top',

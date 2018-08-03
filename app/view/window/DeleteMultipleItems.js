@@ -215,7 +215,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 },
                 failure: function(resp, opts) {
                     var json = Ext.JSON.decode(resp.responseText);
-                    urlArr = resp.request.url.split('/');
+                    var urlArr = resp.request.url.split('/');
                     var delId = urlArr[urlArr.length - 1];
                     var html = me.down('panel').html;
                     me.down('panel').setHtml(html);

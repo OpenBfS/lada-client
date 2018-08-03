@@ -24,7 +24,7 @@ var betriebsartStore = Ext.create('Ext.data.Store', {
 Ext.define('Lada.view.widget.Betriebsart', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.betriebsart',
-    store: 'betriebsartStore',
+    store: betriebsartStore,
     queryMode: 'local',
     triggerAction: 'all',
     typeAhead: false,

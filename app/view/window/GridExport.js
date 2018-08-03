@@ -483,7 +483,7 @@ Ext.define('Lada.view.window.GridExport', {
         if (data) {
             var lineseptype = this.down('combobox[name=linesep]').getValue();
             this.csv.linesep = '\r\n';
-            if (lineseptype == 'linux') {
+            if (lineseptype === 'linux') {
                 this.csv.linesep = '\n';
             }
             this.csv.colsep = this.down('combobox[name=colsep]').getValue();
@@ -605,7 +605,7 @@ Ext.define('Lada.view.window.GridExport', {
                 We assume that a 302 was send when the follwing statement
                 is true.
                 */
-                if (response.status == 0 &&
+                if (response.status === 0 &&
                   response.getResponse().responseText === '') {
                     Ext.MessageBox.confirm('Erneutes Login erforderlich',
                         'Ihre Session ist abgelaufen.<br/>'+
@@ -707,7 +707,6 @@ Ext.define('Lada.view.window.GridExport', {
     },
 
     showError: function(message) {
-        var me = this;
         var i18n = Lada.getApplication().bundle;
         var text = '';
         if (!message) {

@@ -86,7 +86,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     Lada.model.Ort.load(value, {
                         success: function(rec) {
                             record.beginEdit();
-                            for (key in rec.getData()) {
+                            for (var key in rec.getData()) {
                                 record.set(key, rec.getData()[key]);
                             }
                             record.endEdit();
@@ -108,7 +108,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     return '';
                 }
                 var stId = ortRecord.get('staatId');
-                if (stId == undefined || stId == null || stId === '') {
+                if (stId === undefined || stId === null || stId === '') {
                     return '';
                 }
                 var record = staaten.getById(stId);
@@ -139,7 +139,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     return '';
                 }
                 var gemid = record.get('gemId');
-                if (gemid == undefined || gemid == null || gemid === '') {
+                if (gemid === undefined || gemid === null || gemid === '') {
                     return '';
                 }
                 var record2 = gemeinden.getById(gemid);
@@ -156,7 +156,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     return '';
                 }
                 var ktaId = record.get('anlageId');
-                if (ktaId == undefined || ktaId == null || ktaId === '') {
+                if (ktaId === undefined || ktaId === null || ktaId === '') {
                     return '';
                 }
                 var ktas = Ext.data.StoreManager.get('ktas');
@@ -224,8 +224,8 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
      */
     setReadOnly: function(b) {
         this.readOnly = b;
-        addButton = this.down('button[action=add]');
-        if (b == true) {
+        var addButton = this.down('button[action=add]');
+        if (b === true) {
             addButton.disable();
             this.deactivateRemoveButton(null, null);
         } else {
@@ -264,7 +264,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             if (dbStore && dbId) {
                 datenbasis = dbStore.getById(dbId).get('datenbasis');
             }
-            if (datenbasis && (datenbasis == 'REI-I' || datenbasis == 'REI-E')) {
+            if (datenbasis && (datenbasis === 'REI-I' || datenbasis === 'REI-E')) {
                 if (this.store.getCount() === 0 && !readonly) {
                     this.down('button[action=add]').enable();
                     this.down('button[action=delete]').disable();

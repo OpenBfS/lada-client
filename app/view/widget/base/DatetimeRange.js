@@ -89,7 +89,7 @@ Ext.define('Lada.view.widget.base.DatetimeRange', {
     },
 
     setValue: function(value) {
-        if (value && value.length == 2 ) {
+        if (value && value.length === 2 ) {
             this.down('datetimefield[name=dateFrom]').setValue(value[0]);
             this.down('datetimefield[name=dateTo]').setValue(value[1]);
         }

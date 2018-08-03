@@ -112,8 +112,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                     dataIndex: 'sort',
                     sortable: false
                 }],
-                title: i18n.getMsg('query.sorting'),
-                minHeight: 40
+                title: i18n.getMsg('query.sorting')
             }, {
                 xtype: 'container',
                 layout: 'vbox',

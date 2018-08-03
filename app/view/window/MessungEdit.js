@@ -217,7 +217,7 @@ Ext.define('Lada.view.window.MessungEdit', {
     customizeToolbar: function() {
         var tools = this.tools;
         for (var i = 0; i < tools.length; i++) {
-            if (tools[i].type == 'close') {
+            if (tools[i].type === 'close') {
                 var closeButton = tools[i];
                 closeButton.handler = null;
                 closeButton.callback = this.handleBeforeClose;

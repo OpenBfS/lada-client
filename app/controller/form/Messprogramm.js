@@ -87,7 +87,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var netzbetreiber = combo.up().up('form')
             .down('netzbetreiber').down('combobox');
         var nbId = records.get('netzbetreiberId');
-        if (nbId != null) {
+        if (nbId !== null) {
             //select the NB in the NB-Combobox
             netzbetreiber.select(nbId);
         }
@@ -103,7 +103,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
      * and the numberfield.
      */
     updateIntervalls: function(field, newval, oldval) {
-        if (newval == oldval) {
+        if (newval === oldval) {
             return false;
         }
         var form = field.up('messprogrammform');
@@ -119,8 +119,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var form = field.up('messprogrammform');
         var intervall = form.down('probenintervall').down('combobox')
             .getValue();
-        if (intervall == 'J') {
-            if (field.getName() == 'gueltigVon') {
+        if (intervall === 'J') {
+            if (field.getName() === 'gueltigVon') {
                 form.down('[name=teilintervallVon]')
                     .setValue(field.getValue());
             } else {
@@ -136,11 +136,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
      */
     synchronizeFields: function(slider, newValue, thumb) {
         var formPanel = slider.up('form');
-        if (thumb.index == 0) {
+        if (thumb.index === 0) {
             formPanel.getForm()
                 .findField('teilintervallVon')
                 .setValue(newValue);
-        } else if (thumb.index == 1) {
+        } else if (thumb.index === 1) {
             formPanel.getForm()
                 .findField('teilintervallBis')
                 .setValue(newValue);
@@ -154,10 +154,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
      */
     synchronizeSlider: function(field, newValue, oldValue) {
         var formPanel = field.up('form');
-        if (field.name == 'teilintervallVon') {
+        if (field.name === 'teilintervallVon') {
             formPanel.down('probenintervallslider')
                 .setValue(0, newValue, false);
-        } else if (field.name == 'teilintervallBis') {
+        } else if (field.name === 'teilintervallBis') {
             formPanel.down('probenintervallslider')
                 .setValue(1, newValue, false);
         }
@@ -356,7 +356,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 if (i === 0) {
                     current.push('D:');
                 } else if (i === desk.layer + 1) {
-                    var value;
                     if (records.get('sn') < 10) {
                         value = '0' + records.get('sn');
                     } else {
@@ -387,7 +386,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
         media.setValue(current.join(' ').trim());
 
-        if (current[0].length == 0) {
+        if (current[0].length === 0) {
             current.splice(0,1);
         }
         var mediatext = field.up('messprogrammform').down('textfield[name="media"]');

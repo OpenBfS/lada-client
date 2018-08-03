@@ -120,7 +120,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
             maxLength: 2,
             enforceMaxLength: true,
             onSpinUp: function() {
-                var value = parseInt(this.getValue());
+                var value = parseInt(this.getValue(), 10);
                 if (value === 23) {
                     return;
                 }
@@ -128,7 +128,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
                 this.setValue(newValue);
             },
             onSpinDown: function() {
-                var value = parseInt(this.getValue());
+                var value = parseInt(this.getValue(), 10);
                 if (value === 0) {
                     return;
                 }
@@ -154,7 +154,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
             maxLength: 2,
             enforceMaxLength: true,
             onSpinUp: function() {
-                var value = parseInt(this.getValue());
+                var value = parseInt(this.getValue(), 10);
                 if (value === 59) {
                     return;
                 }
@@ -162,7 +162,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
                 this.setValue(newValue);
             },
             onSpinDown: function() {
-                var value = parseInt(this.getValue());
+                var value = parseInt(this.getValue(), 10);
                 if (value === 0) {
                     return;
                 }
@@ -225,11 +225,11 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
     },
 
     changeTimeValue: function(field, nValue) {
-        var value = parseInt(nValue);
+        var value = parseInt(nValue, 10);
         if (value > field.maxValue) {
             field.setValue(field.maxValue);
         }
-        if (value == null || value == '' || isNaN(value)) {
+        if (value === null || value === '' || isNaN(value)) {
             field.setValue('0');
         }
     },
@@ -311,7 +311,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         for (c = 0; c < cLen; c++) {
             cell = Ext.fly(cellItems[c]);
 
-            if (cell.dom.firstChild.dateValue == t) {
+            if (cell.dom.firstChild.dateValue === t) {
                 me.fireEvent('highlightitem', me, cell);
                 cell.addCls(cls);
 

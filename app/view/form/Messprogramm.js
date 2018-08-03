@@ -251,7 +251,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                     });
                                 } else {
                                     store.filter({
-                                        property:'netzbetreiberId',
+                                        property: 'netzbetreiberId',
                                         value: nId,
                                         exactMatch: true
                                     });
@@ -553,7 +553,7 @@ Ext.define('Lada.view.form.Messprogramm', {
     setRecord: function(messRecord) {
         this.clearMessages();
         this.getForm().loadRecord(messRecord);
-        if (!messRecord.data || messRecord.data.id == null) {
+        if (!messRecord.data || messRecord.data.id === null) {
             return;
         }
         //Set the intervall numberfields and the slider.
@@ -579,6 +579,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                 laborMstId = '';
             }
             var id = this.down('messstellelabor').store.count() + 1;
+            var displayCombi;
             if ( messRecord.get('mstId') === messRecord.get('laborMstId') ) {
                 displayCombi = mstId.get('messStelle');
             } else {

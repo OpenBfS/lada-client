@@ -47,7 +47,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 beforeedit: function(e, o) {
                     var readonlywin = o.grid.up('window').record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
-                    if (readonlywin == true || readonlygrid == true || this.disabled) {
+                    if (readonlywin === true || readonlygrid === true || this.disabled) {
                         return false;
                     }
                     return true;
@@ -124,7 +124,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
                     store = Ext.create('Lada.store.Messgroessen', {
                         storeId: 'messgroessenunfiltered'});
                 }
-                returnvalues = '';
+                var returnvalues = '';
                 for (var i = 0; i < value.length; i++) {
                     if (i) {
                         returnvalues = returnvalues + ', ';
@@ -159,7 +159,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
         }
     },
     setReadOnly: function(b) {
-        if (b == true) {
+        if (b === true) {
             //Readonly
             if (this.getPlugin('rowedit')) {
                 this.getPlugin('rowedit').disable();
@@ -178,7 +178,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
 
     /* changes the nuklide store to reflect available nuklide for the method selected*/
     setNuklide: function(cbox, newVal, oldVal) {
-        if (oldVal && oldVal == newVal) {
+        if (oldVal && oldVal === newVal) {
             return;
         }
         var grid = cbox.up('messmethodengrid');
