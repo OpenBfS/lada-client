@@ -397,7 +397,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             xtype: 'probenintervall',
                             allowBlank: false,
                             fieldLabel: i18n.getMsg('probenintervall'),
-                            margin: '0, 10, 5, 5',
+                            margin: '0 10 5 0',
                             labelWidth: 50,
                             width: '40%',
                             name: 'probenintervall'
@@ -406,7 +406,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             allowDecimals: false,
                             allowBlank: false,
                             fieldLabel: i18n.getMsg('teilintervallVon'),
-                            margin: '0, 10, 5, 10',
+                            margin: '0 5 5 5',
                             labelWidth: 100,
                             width: '28%',
                             name: 'teilintervallVon',
@@ -416,17 +416,17 @@ Ext.define('Lada.view.form.Messprogramm', {
                             allowDecimals: false,
                             allowBlank: false,
                             fieldLabel: i18n.getMsg('teilintervallBis'),
-                            margin: '0, 15, 5, 5',
+                            margin: '0 15 5 5',
                             labelWidth: 18,
-                            width: '15%',
+                            width: '14%',
                             name: 'teilintervallBis',
                             period: 'end'
                         }, {
                             xtype: 'numfield',
                             allowDecimals: false,
-                            margin: '0, 10, 5, 5',
+                            margin: '0 5 5 5',
                             fieldLabel: i18n.getMsg('offset'),
-                            labelWidth: 45,
+                            labelWidth: 40,
                             width: '17%',
                             name: 'intervallOffset'
                         }]
