@@ -135,12 +135,13 @@ Ext.define('Lada.view.window.SetStatus', {
             if (probenform) {
                 var hauptprobennummer = probenform[0].getRecord().get('hauptprobenNr');
                 if (hauptprobennummer) {
-                    title = 'Status für Messung ' + hauptprobennummer +
-                ' - ' + me.record.get('nebenprobenNr') + ' setzen';
+                    title = i18n.getMsg('setStatus.hprnr',
+                        hauptprobennummer,
+                        me.record.get('nebenprobenNr'));
                 }
             }
         } else {
-            title = 'Status für ' + this.selection.length + ' Messung(en) setzen';
+            title = i18n.getMsg('setStatus.count', this.selection.length);
         }
         this.callParent(arguments);
         this.down('fieldset').setTitle(title);
@@ -188,7 +189,7 @@ Ext.define('Lada.view.window.SetStatus', {
         });
         if (kombiIdx < 0) {
             Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                'Unerlaubte Kombination aus Status und Stufe');
+                i18n.getMsg('setStatus.wrongstatusstufe'));
             me.down('button[name=close]').show();
             return;
         }
@@ -209,7 +210,7 @@ Ext.define('Lada.view.window.SetStatus', {
                         var json = Ext.JSON.decode(response.responseText);
                         me.resultMessage += '<strong>' + i18n.getMsg('messung') + ': ';
                         var sel = me.selection[count];
-                        me.resultMessage += sel.get('hauptprobenNr') + ' - ' + sel.get('nebenprobenNr') + '</strong><br><dd>';
+                        me.resultMessage += sel.get('hpNr') + ' - ' + sel.get('npNr') + '</strong><br><dd>';
                         me.resultMessage += i18n.getMsg('status-' + json.message) + '</dd><br>';
                         count++;
                         progress.updateProgress(count / me.selection.length, progressText + ' (' + count + ')');

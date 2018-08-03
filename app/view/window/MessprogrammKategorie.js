@@ -61,7 +61,7 @@ Ext.define('Lada.view.window.MessprogrammKategorie', {
                     imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
                     imprintWin.on('afterlayout', function() {
                         var imprintWinController = this.getController();
-                        imprintWinController.setTopic('probe');
+                        imprintWinController.setTopic('messprogrammkategorie');
                     }, imprintWin, {single: true});
                 } else {
                     // BasiGX.util.Animate.shake(imprintWin);
