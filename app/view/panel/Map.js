@@ -276,7 +276,7 @@ Ext.define('Lada.view.panel.Map', {
         this.bodyStyle = {background: '#fff'};
 
         // style definitions for markers
-        var stroke = new ol.style.Stroke({color: '#FFF', width: '0.5px'});
+        var stroke = new ol.style.Stroke({color: '#FFF', width: 1});
 
         this.standardStyle = function(feature, resolution) {
             return new ol.style.Style({
@@ -285,8 +285,7 @@ Ext.define('Lada.view.panel.Map', {
                 }),
                 text: new ol.style.Text({
                     text: feature.get('bez') || '...',
-                    font: 'bold 14px',
-                    scale: 1.2,
+                    font: 'bold 12px Arial',
                     offsetX: 38,
                     offsetY: 5,
                     fill: new ol.style.Fill({
@@ -303,10 +302,9 @@ Ext.define('Lada.view.panel.Map', {
                 }),
                 text: new ol.style.Text({
                     text: feature.get('bez') || '...',
-                    font: 'bold 14px',
-                    scale: 1.2,
+                    font: 'bold 12px Arial',
                     offsetX: 38,
-                    offsetY: 5,
+                    offsetY: 10,
                     fill: new ol.style.Fill({
                         color: '#000099'
                     }),
@@ -321,8 +319,7 @@ Ext.define('Lada.view.panel.Map', {
                 }),
                 text: new ol.style.Text({
                     text: 'neu ...',
-                    font: 'bold 14px',
-                    scale: 1.2,
+                    font: '12px Arial',
                     offsetX: 38,
                     offsetY: 5,
                     fill: new ol.style.Fill({

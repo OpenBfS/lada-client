@@ -152,8 +152,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         this.down('pagingtoolbar').add('-');
         this.down('pagingtoolbar').add(cbox);
         this.down('pagingtoolbar').down('#refresh').hide();
-        // this.on('select') zoom to map and select
-        // });
     },
 
     selectRowByFeature: function(map, features) {
