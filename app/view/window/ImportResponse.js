@@ -19,16 +19,16 @@ Ext.define('Lada.view.window.ImportResponse', {
         var html;
         var download;
         var i18n = Lada.getApplication().bundle;
+        var data = null;
         try {
-            var data = Ext.decode(me.responseData);
+            data = Ext.decode(me.responseData);
         } catch (e) {
-            var data = null;
+            data = null;
         }
         if (data) {
             html = me.parseShortResponse(data);
         } else {
-            html = 'Der Import der Datei ' + this.fileName +
-                    ' war nicht erfolgreich.';
+            html = i18n.getMsg('importResponse.failure', this.fileName);
         }
         this.bodyStyle = {background: '#fff'};
         me.items = [{
@@ -63,6 +63,7 @@ Ext.define('Lada.view.window.ImportResponse', {
      * @param data
      */
     parseShortResponse: function(data) {
+        var i18n = Lada.getApplication().bundle;
         var errors = data.data.errors;
         var warnings = data.data.warnings;
         var out = [];
@@ -82,37 +83,37 @@ Ext.define('Lada.view.window.ImportResponse', {
             numWarnings = Object.keys(warnings).length;
         }
         if (!data.success) {
-            out.push('Der Import der Datei ' + this.fileName +
-                    ' war nicht erfolgreich. Der Importvorgang konnte ' +
-                    'aufgrund eines Fehlers im Server nicht beendet werden.');
+            out.push(i18n.getMsg('importResponse.failure.server',
+                this.fileName));
         } else {
             if (numErrors > 0) {
                 if (errors.parser) {
-                    out.push('Die Probe(n) konnten nicht erfolgreich ' +
-                             'importiert werden.');
+                    out.push(i18n.getMsg('importResponse.failure.generic'));
                 } else {
-                    out.push(numErrors + ' Probe(n) konnten nicht ' +
-                             'erfolgreich importiert werden.');
+                    out.push(i18n.getMsg(
+                        'importReesponse.failure.generic.partial', numErrors));
                 }
                 out.push('<br/>');
                 out.push('<br/>');
             }
             if (numWarnings > 0) {
                 if (warnings.Parser) {
-                    out.push('Bei ' + (numWarnings - 1) + ' Probe(n) traten Warnungen auf. ');
+                    out.push(i18n.getMsg('importResponse.numWarnings',
+                        numWarnings - 1));
                     out.push('<br/>');
-                    out.push('Es traten Warnungen beim Parsen auf.');
+                    out.push(i18n.getMsg('importResponse.warnings'));
                 } else {
-                    out.push('Bei ' + numWarnings + ' Probe(n) traten Warnungen auf. ');
+                    out.push(i18n.getMsg('importResponse.numWarnings',
+                        numWarnings));
                 }
                 out.push('<br/>');
                 out.push('<br/>');
             }
             if (numErrors > 0 || numWarnings > 0) {
-                out.push('Der ausführliche Bericht steht als Download bereit.');
+                out.push(i18n.getMsg('importResponse.failure.details'));
                 out.push('<br/>');
             } else {
-                out.push('Die Proben wurden importiert.');
+                out.push(i18n.getMsg('importResponse.success.confirmed'));
                 out.push('<br/>');
             }
         }
@@ -144,25 +145,26 @@ Ext.define('Lada.view.window.ImportResponse', {
             numWarnings = Object.keys(warnings).length;
         }
         if (!data.success) {
-            out.push('Der Import der Datei ' + this.fileName +
-                    ' war nicht erfolgreich. Der Importvorgang konnte ' +
-                    'aufgrund eines Fehlers im Server nicht beendet werden.');
+            out.push(i18n.getMsg(
+                'importResponse.failure.server', this.fileName));
         } else {
             out.push('<!DOCTYPE html>' +
                 '<head><meta charset="utf-8"></head><body>');
             if (numErrors > 0) {
-                out.push('Folgende Fehler traten beim Import auf:');
+                out.push(i18n.getMsg('importResponse.failure.errorlist'));
                 out.push('<br/>');
                 out.push('<ol>');
                 var msgs;
                 for (var key in errors) {
                     msgs = errors[key];
                     if (key !== 'parser') {
-                        out.push('<li>Probe: ' + key);
+                        out.push(i18n.getMsg(
+                            'importResponse.list.probe', key));
                     }
                     out.push('<ol>');
                     var validation = [];
-                    validation.push('Validierungsfehler: ');
+                    validation.push(
+                        i18n.getMsg('importResponse.failure.validations'));
                     for (var i = msgs.length - 1; i >= 0; i--) {
                         if (msgs[i].key === 'validation') {
                             validation.push('<ol>');
@@ -193,11 +195,11 @@ Ext.define('Lada.view.window.ImportResponse', {
             }
             if (numWarnings > 0) {
                 out.push('<br/>');
-                out.push('Folgende Warnungen traten beim Import auf:');
+                out.push(i18n.getMsg('importResponse.warnings.warninglist'));
                 out.push('<br/>');
                 out.push('<ol>');
                 if (warnings.Parser) {
-                    out.push('Parser');
+                    out.push(i18n.getMsg('importResponse.parser'));
                     out.push('<ol>');
                     msgs = warnings.Parser;
                     for (var i = msgs.length - 1; i >= 0; i--) {
@@ -209,14 +211,15 @@ Ext.define('Lada.view.window.ImportResponse', {
                 }
                 for (key in warnings) {
                     if (key !== 'Parser') {
-                        out.push('<li>Probe: ' + key);
+                        out.push(i18n.getMsg('importResponse.list.probe', key));
                     } else {
                         continue;
                     }
                     msgs = warnings[key];
                     out.push('<ol>');
                     validation = [];
-                    validation.push('Validierungswarnungen: ');
+                    validation.push(i18n.getMsg(
+                        'importResponse.warnings.validations'));
                     for (var i = msgs.length - 1; i >= 0; i--) {
                         if (msgs[i].key === 'validation') {
                             validation.push('<ol>');
