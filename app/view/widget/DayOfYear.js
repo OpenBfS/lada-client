@@ -87,7 +87,7 @@ Ext.define('Lada.view.widget.DayOfYear', {
             isFormField: false,
             fieldLabel: this.fieldLabel,
             labelWidth: this.labelWidth,
-            width: 50 + this.labelWidth,
+            width: 60 + this.labelWidth,
             margin: '0 6 0 0',
             msgTarget: 'none',
             allowDecimals: false,

@@ -25,7 +25,7 @@ Ext.define('Lada.view.window.Messprogramm', {
     layout: 'fit',
     constrain: true,
     probenWindow: null,
-    width: 700,
+    width: 750,
 
     record: null,
 
