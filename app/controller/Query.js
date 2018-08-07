@@ -436,8 +436,8 @@ Ext.define('Lada.controller.Query', {
         }
     },
 
-    showFilter: function(combo) {
-        var panel = combo.up('querypanel');
+    showFilter: function(element) {
+        var panel = element.up('querypanel');
         var fixColumnStore = Ext.data.StoreManager.get('columnstore');
         fixColumnStore.clearFilter();
         fixColumnStore.filter({
@@ -448,6 +448,7 @@ Ext.define('Lada.controller.Query', {
         var fvpanel = panel.down('panel[name=filtervalues]');
         fvpanel.removeAll();
         var recs = panel.gridColumnValueStore.getData().items;
+        var filters = [];
         for (var i= 0; i < recs.length; i++) {
             if (recs[i].get('filterActive') !== true) {
                 continue;
@@ -458,6 +459,7 @@ Ext.define('Lada.controller.Query', {
             var field = null;
             var options = {
                 name: fixcolumn.get('dataIndex'),
+                columnIndex: recs[i].get('columnIndex'),
                 labelWidth: 125,
                 fieldLabel: fixcolumn.get('name'),
                 width: '100%',
@@ -600,9 +602,25 @@ Ext.define('Lada.controller.Query', {
                     break;
             }
             if (field) {
-                fvpanel.add(field);
+                filters.push(field);
             }
         }
+        filters.sort(function(item0, item1) {
+            var a = item0.columnIndex;
+            var b = item1.columnIndex;
+            if (a === -1 || a === null) {
+                if (b === -1 || b === null) {
+                    // both no columns; sort alphabetically by dataIndex?
+                    return (item0.name).localeCompare(item1.name);
+                }
+                return -1;
+            } else if (b === -1 || b === null) {
+                return 1;
+            } else {
+                return a - b;
+            }
+        });
+        fvpanel.add(filters);
     },
 
     activeFiltersChanged: function(box, newvalue, oldvalue) {

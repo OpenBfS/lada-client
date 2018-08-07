@@ -196,6 +196,8 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 gcv_items[i].set('columnIndex', -1);
             }
         }
+        var ctrl = Lada.app.getController('Lada.controller.Query');
+        ctrl.showFilter(this);
     },
 
     setStore: function(store, fixedcolumnstore) {
