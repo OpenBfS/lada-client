@@ -62,6 +62,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                 multiSelect: true,
                 stripeRows: true,
                 viewConfig: {
+                    enableTextSelection: false,
                     plugins: {
                         ptype: 'gridviewdragdrop',
                         containerScroll: true

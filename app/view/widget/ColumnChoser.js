@@ -43,6 +43,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             multiSelect: true,
             stripeRows: true,
             viewConfig: {
+                enableTextSelection: false,
                 plugins: {
                     ptype: 'gridviewdragdrop',
                     containerScroll: true
@@ -110,6 +111,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             border: true,
             multiSelect: true,
             viewConfig: {
+                enableTextSelection: false,
                 plugins: {
                     ptype: 'gridviewdragdrop',
                     containerScroll: true
