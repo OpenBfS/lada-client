@@ -29,6 +29,7 @@ Ext.application({
         'Lada.view.Viewport',
         'Lada.override.Table',
         'Lada.override.RestProxy',
+        'Lada.override.Toolbar',
         'Lada.override.RowEditor',
         'Lada.override.i18n.DE',
         'Lada.override.RowExpander',
