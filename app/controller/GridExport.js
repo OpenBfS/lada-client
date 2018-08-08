@@ -71,6 +71,8 @@ Ext.define('Lada.controller.GridExport', {
                 options.hasMessung = grid.rowtarget.dataIndex;
             } else if (grid.rowtarget.dataType === 'probeId') {
                 options.hasProbe = grid.rowtarget.dataIndex;
+            } else if (grid.rowtarget.dataType === 'ortId') {
+                options.hasGeojson = grid.rowtarget.dataIndex;
             }
             Ext.create('Lada.view.window.GridExport', options).show();
         }

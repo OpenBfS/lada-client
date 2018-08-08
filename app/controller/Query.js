@@ -24,7 +24,9 @@ Ext.define('Lada.controller.Query', {
         'Lada.view.widget.Netzbetreiber',
         'Lada.view.widget.Datenbasis',
         'Lada.view.widget.Betriebsart',
-        'Lada.view.plugin.GridRowExpander'
+        'Lada.view.plugin.GridRowExpander',
+        'Lada.view.widget.DynamicGrid'
+
 
     ],
 
@@ -412,20 +414,8 @@ Ext.define('Lada.controller.Query', {
                         resultGrid.setStore(this.resultStore);
                         contentPanel.add(resultGrid);
                         contentPanel.show();
-
                         if (rowtarget.dataType === 'ortId') {
-                            resultGrid.ortstore = Ext.create(
-                                'Lada.store.Orte', {
-                                    autoLoad: true,
-                                    remoteFilter: false
-                                });
-                            resultGrid.ortstore.getProxy().setExtraParams({
-                                'query': 'all'
-                            });
-                            resultGrid.ortstore.addListener('load',
-                                resultGrid.down('map').addLocations,
-                                resultGrid.down('map')
-                            );
+                            this.setMapOrte(resultGrid);
                         }
                     } else {
                         Ext.Msg.alert(i18n.getMsg('query.error.search.title'),
@@ -826,6 +816,40 @@ Ext.define('Lada.controller.Query', {
             }
             return filterValue;
         }
-    }
+    },
 
+    setMapOrte: function(grid) {
+        grid.ortstore = Ext.create(
+            'Lada.store.Orte', {
+                autoLoad: false,
+                remoteFilter: true
+            });
+        grid.getStore().addListener('load', function(store) {
+            var dgrid = Ext.getCmp('dynamicgridid');
+            if (dgrid && dgrid.ortstore) {
+                var data = dgrid.getStore().getData().items;
+                var request = [];
+                for (var i=0; i< data.length; i++) {
+                    request.push(data[i].get(dgrid.rowtarget.dataIndex));
+                }
+                Ext.Ajax.request({
+                    url: 'lada-server/rest/ort/getbyids',
+                    jsonData: JSON.stringify(request),
+                    method: 'POST',
+                    success: function(response) {
+                        var json = Ext.JSON.decode(response.responseText);
+                        if (json.data) {
+                            grid.ortstore.setData(json.data);
+                        }
+                    }
+                });
+            }
+        });
+        grid.ortstore.addListener('datachanged',function(store) {
+            var dgrid = Ext.getCmp('dynamicgridid');
+            dgrid.down('map').addLocations(dgrid.ortstore);
+        });
+        grid.getStore().fireEvent('load');
+    }
 });
+
