@@ -64,11 +64,16 @@ Ext.define('Lada.controller.GridExport', {
                 }]
             }).show();
         } else {
-            // special handling of probe+messung grids not yet containing their ids
-            // TODO might become obsolete soon (Jan 2018)
-            Ext.create('Lada.view.window.GridExport', {
-                grid: grid
-            }).show();
+
+            var options = {grid: grid};
+            if (grid.rowtarget.dataType === 'messungId') {
+                options.hasMessung = grid.rowtarget.dataIndex;
+            } else if (grid.rowtarget.dataType === 'probeId') {
+                options.hasProbe = grid.rowtarget.dataIndex;
+            } else if (grid.rowtarget.dataType === 'ortId') {
+                options.hasGeojson = grid.rowtarget.dataIndex;
+            }
+            Ext.create('Lada.view.window.GridExport', options).show();
         }
     }
 });
