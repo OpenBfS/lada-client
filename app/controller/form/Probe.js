@@ -311,7 +311,7 @@ Ext.define('Lada.controller.form.Probe', {
       */
     discard: function(button) {
         var formPanel = button.up('form');
-
+        formPanel.getForm().reset();
         formPanel.down('fset[name=entnahmePeriod]').clearMessages();
         formPanel.down('fset[name=sollzeitPeriod]').clearMessages();
         formPanel.down('datetime[name=probeentnahmeBeginn]').clearWarningOrError();

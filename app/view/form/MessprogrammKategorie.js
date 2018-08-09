@@ -60,10 +60,9 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
             items: [{
                 xtype: 'netzbetreiber',
                 name: 'netzbetreiberId',
-                editable: false,
+                editable: true,
                 readOnly: true,
-                isFormField: false,
-                submitValue: false,
+                allowBlank: false,
                 fieldLabel: i18n.getMsg('netzbetreiberId')
             }, {
                 xtype: 'tfield',

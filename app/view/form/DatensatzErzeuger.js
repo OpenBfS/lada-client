@@ -67,10 +67,8 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                 items: [{
                     xtype: 'netzbetreiber',
                     name: 'netzbetreiberId',
-                    editable: false,
                     readOnly: true,
-                    isFormField: false,
-                    submitValue: false,
+                    allowBlank: false,
                     fieldLabel: i18n.getMsg('netzbetreiberId')
                 }, {
                     xtype: 'combobox',
@@ -80,12 +78,11 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                     valueField: 'id',
                     allowBlank: false,
                     queryMode: 'local',
-                    editable: false,
                     name: 'mstId',
                     fieldLabel: i18n.getMsg('mst_id')
                 }, {
                     xtype: 'tfield',
-                    name: 'datensatzerzeugerId',
+                    name: 'datensatzErzeugerId',
                     readOnly: true,
                     fieldLabel: i18n.getMsg('daErzeugerId')
                 }, {
@@ -149,15 +146,15 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
     clearMessages: function() {
         this.down('netzbetreiber').clearWarningOrError();
         this.down('tarea[name=bezeichnung]').clearWarningOrError();
-        this.down('tfield[name=datensatzerzeugerId]').clearWarningOrError();
+        this.down('tfield[name=datensatzErzeugerId]').clearWarningOrError();
         //TODO: is not a function
         //this.down('combobox[name=mstId]').clearWarningOrError();
     },
 
     setReadOnly: function(value) {
-        this.down('netzbetreiber').readOnly = value;
+        this.down('netzbetreiber').setReadOnly(value);
         this.down('tarea[name=bezeichnung]').setReadOnly(value);
-        this.down('tfield[name=datensatzerzeugerId]').setReadOnly(value);
+        this.down('tfield[name=datensatzErzeugerId]').setReadOnly(value);
         this.down('combobox[name=mstId]').setReadOnly(value);
     }
 });

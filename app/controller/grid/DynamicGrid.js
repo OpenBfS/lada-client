@@ -401,19 +401,24 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     break;
                 case 'dsatzerz':
                     var win = Ext.create('Lada.view.window.DatensatzErzeuger', {
-                        record: Ext.create('Lada.model.DatensatzErzeuger')
+                        record: Ext.create('Lada.model.DatensatzErzeuger',
+                            {readonly: false})
                     });
                     win.show();
                     break;
                 case 'mprkat':
                     var win = Ext.create('Lada.view.window.MessprogrammKategorie', {
-                        record: Ext.create('Lada.model.MessprogrammKategorie')
+                        record: Ext.create('Lada.model.MessprogrammKategorie',
+                            {readonly: false})
                     });
                     win.show();
                     break;
                 case 'ortId':
                     Ext.create('Lada.view.window.Ort',{
-                        record: Ext.create('Lada.model.Ort', {ortTyp: 1}),
+                        record: Ext.create('Lada.model.Ort', {
+                            ortTyp: 1,
+                            readonly: false
+                        }),
                         parentWindow: grid
                     }).show();
                     break;

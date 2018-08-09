@@ -192,7 +192,7 @@ Ext.define('Lada.controller.form.Messung', {
       */
     discard: function(button) {
         var formPanel = button.up('form');
-        formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
+        formPanel.getForm().reset();
     },
 
     /**
