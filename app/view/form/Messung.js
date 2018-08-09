@@ -42,14 +42,9 @@ Ext.define('Lada.view.form.Messung', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.items = [{
-            xtype: 'fieldset',
-            title: i18n.getMsg('title.general'),
+            layout: 'fit',
+            border: false,
             margin: '0, 0, 10, 0',
-            layout: {
-                type: 'vbox',
-                border: false,
-                align: 'stretch'
-            },
             dockedItems: [{
                 xtype: 'toolbar',
                 dock: 'bottom',
@@ -75,105 +70,115 @@ Ext.define('Lada.view.form.Messung', {
                 }]
             }],
             items: [{
-                layout: 'hbox',
-                border: false,
-                align: 'stretchmax',
-                defaults: {
+                xtype: 'fieldset',
+                title: i18n.getMsg('title.general'),
+                margin: '0, 0, 0, 0',
+                layout: {
+                    type: 'vbox',
                     border: false,
-                    width: '50%',
-                    layout: 'vbox'
+                    align: 'stretch'
                 },
-
                 items: [{
+                    layout: 'hbox',
+                    border: false,
+                    align: 'stretchmax',
                     defaults: {
-                        margin: '0 5 5 0'
+                        border: false,
+                        width: '50%',
+                        layout: 'vbox'
                     },
+
                     items: [{
-                        xtype: 'selectabledisplayfield',
-                        name: 'idAlt',
-                        maxLength: 4,
-                        fieldLabel: i18n.getMsg('messungsId'),
-                        width: 300,
-                        labelWidth: 100
+                        defaults: {
+                            margin: '0 5 5 0'
+                        },
+                        items: [{
+                            xtype: 'selectabledisplayfield',
+                            name: 'idAlt',
+                            maxLength: 4,
+                            fieldLabel: i18n.getMsg('messungsId'),
+                            width: 300,
+                            labelWidth: 100
+                        }, {
+                            xtype: 'messmethode',
+                            name: 'mmtId',
+                            fieldLabel: i18n.getMsg('mmt_id'),
+                            allowBlank: false,
+                            width: 300,
+                            labelWidth: 100
+                        }, {
+                            xtype: 'numberfield',
+                            allowDecimals: false,
+                            allowExponential: false,
+                            enforceMaxLength: true,
+                            maxLength: 10,
+                            minValue: 0,
+                            name: 'messdauer',
+                            fieldLabel: i18n.getMsg('messdauer'),
+                            width: 300,
+                            labelWidth: 100
+                        }, {
+                            xtype: 'chkbox',
+                            name: 'geplant',
+                            readOnly: true,
+                            fieldLabel: i18n.getMsg('geplant'),
+                            width: 300,
+                            labelWidth: 100
+                        }]
                     }, {
-                        xtype: 'messmethode',
-                        name: 'mmtId',
-                        fieldLabel: i18n.getMsg('mmt_id'),
-                        allowBlank: false,
-                        width: 300,
-                        labelWidth: 100
-                    }, {
-                        xtype: 'numberfield',
-                        allowDecimals: false,
-                        allowExponential: false,
-                        enforceMaxLength: true,
-                        maxLength: 10,
-                        minValue: 0,
-                        name: 'messdauer',
-                        fieldLabel: i18n.getMsg('messdauer'),
-                        width: 300,
-                        labelWidth: 100
-                    }, {
-                        xtype: 'chkbox',
-                        name: 'geplant',
-                        readOnly: true,
-                        fieldLabel: i18n.getMsg('geplant'),
-                        width: 300,
-                        labelWidth: 100
+                        defaults: {
+                            margin: '0 0 5 10'
+                        },
+                        items: [{
+                            xtype: 'tfield',
+                            name: 'nebenprobenNr',
+                            maxLength: 4,
+                            fieldLabel: i18n.getMsg('nebenprobenNr'),
+                            width: 300,
+                            labelWidth: 100
+                        }, {
+                            xtype: 'datetime',
+                            name: 'messzeitpunkt',
+                            fieldLabel: i18n.getMsg('messzeitpunkt'),
+                            width: 300,
+                            labelWidth: 100
+                        }, {
+                            xtype: 'chkbox',
+                            name: 'fertig',
+                            fieldLabel: i18n.getMsg('fertig'),
+                            width: 300,
+                            labelWidth: 100
+                        }]
                     }]
                 }, {
-                    defaults: {
-                        margin: '0 0 5 10'
-                    },
-                    items: [{
-                        xtype: 'tfield',
-                        name: 'nebenprobenNr',
-                        maxLength: 4,
-                        fieldLabel: i18n.getMsg('nebenprobenNr'),
-                        width: 300,
-                        labelWidth: 100
-                    }, {
-                        xtype: 'datetime',
-                        name: 'messzeitpunkt',
-                        fieldLabel: i18n.getMsg('messzeitpunkt'),
-                        width: 300,
-                        labelWidth: 100
-                    }, {
-                        xtype: 'chkbox',
-                        name: 'fertig',
-                        fieldLabel: i18n.getMsg('fertig'),
-                        width: 300,
-                        labelWidth: 100
-                    }]
-                }]
-            }, {
-                xtype: 'statuskombi',
-                name: 'statuskombi',
-                width: '100%',
-                padding: '0,5,0,5',
-                readOnly: true,
-                isFormField: false,
-                fieldLabel: 'Stufe/Status',
-                buttonListener: {
-                    click: {
-                        fn: function() {
-                            if ((this.probedatenbasis === 'REI-E'
-                                        || this.probedatenbasis === 'REI-I')
-                                && (this.probe.get('reiprogpunktgruppe') === null
-                                        ||this.probe.get('reiprogpunktgruppe') === '')
-                                && (this.probe.get('ktagruppe') === null
-                                        ||this.probe.get('ktagruppe') === '')) {
-                                Ext.Msg.alert(i18n.getMsg('err.msg.status.title'),
-                                    i18n.getMsg('err.msg.status.consistency'));
-                                return false;
+                    xtype: 'statuskombi',
+                    name: 'statuskombi',
+                    width: '100%',
+                    padding: '0,5,0,5',
+                    readOnly: true,
+                    isFormField: false,
+                    fieldLabel: 'Stufe/Status',
+                    buttonListener: {
+                        click: {
+                            fn: function() {
+                                if ((this.probedatenbasis === 'REI-E'
+                                            || this.probedatenbasis === 'REI-I')
+                                    && (this.probe.get('reiprogpunktgruppe') === null
+                                            ||this.probe.get('reiprogpunktgruppe') === '')
+                                    && (this.probe.get('ktagruppe') === null
+                                            ||this.probe.get('ktagruppe') === '')) {
+                                    Ext.Msg.alert(i18n.getMsg('err.msg.status.title'),
+                                        i18n.getMsg('err.msg.status.consistency'));
+                                    return false;
+                                }
+                            },
+                            scope: this,
+                            options: {
+                                priority: 999
                             }
-                        },
-                        scope: this,
-                        options: {
-                            priority: 999
                         }
                     }
-                }
+                }]
             }]
         }];
         this.callParent(arguments);
