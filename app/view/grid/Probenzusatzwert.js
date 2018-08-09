@@ -18,7 +18,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
     ],
 
     maxHeight: 350,
-    minHeight: 110,
+    minHeight: 125,
     viewConfig: {
         deferEmptyText: false
     },
