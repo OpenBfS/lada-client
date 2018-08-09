@@ -243,7 +243,10 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     pageChange: function(toolbar) {
         var grid = toolbar.up('grid');
         var store = grid.getStore();
-        var rowExpander = grid.plugins[0];
+        var rowExpander = null;
+        if (grid.plugins && grid.plugins.length) {
+            rowExpander = grid.plugins[0];
+        }
         if (rowExpander && rowExpander.ptype === 'gridrowexpander') {
             var nodes = rowExpander.view.getNodes();
             for (var i = 0; i < nodes.length; i++) {
