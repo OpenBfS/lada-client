@@ -892,7 +892,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             'addMap')
         ) {
             this.toolbarbuttons.push({
-                text: this.i18n.getMsg('orte.new'),
+                text: this.i18n.getMsg('orte.frommap'),
                 icon: 'resources/img/svn-commit.png',
                 action: 'addMap',
                 needsSelection: false,
