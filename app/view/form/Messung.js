@@ -66,7 +66,7 @@ Ext.define('Lada.view.form.Messung', {
                         qtip: i18n.getMsg('qtip.audit'),
                         icon: 'resources/img/distribute-vertical-center.png',
                         action: 'audit',
-                        disabled: this.recordId === null
+                        hidden: this.recordId === null
                     }, {
                         text: i18n.getMsg('save'),
                         qtip: i18n.getMsg('save.qtip'),
