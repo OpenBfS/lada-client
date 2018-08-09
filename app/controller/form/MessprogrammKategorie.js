@@ -34,12 +34,13 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
         for (var key in data) {
             record.set(key, data[key]);
         }
+        record.set('netzbetreiberId',
+            formPanel.down('netzbetreiber').getValue()[0]);
         if (!record.get('letzteAenderung')) {
             record.set('letzteAenderung', new Date());
         }
         if (record.phantom) {
             record.set('id',null);
-            record.set('mstId', Lada.mst[0]);
         }
         record.save({
             success: function(record, response) {
@@ -96,9 +97,10 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
 
     checkCommitEnabled: function(callingEl) {
         var form = callingEl.owner;
+        var netzbetr = form.down('netzbetreiber').getValue();
         if (Ext.Array.contains(Lada.funktionen, 4)
         && form.getRecord().get('readonly') === false
-        && form.isDirty() === true) {
+        && form.isDirty() === true && netzbetr) {
             if (form.isValid()) {
                 form.down('button[action=save]').enable();
             } else {

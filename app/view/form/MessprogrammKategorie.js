@@ -62,7 +62,6 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
                 name: 'netzbetreiberId',
                 editable: true,
                 readOnly: true,
-                allowBlank: false,
                 fieldLabel: i18n.getMsg('netzbetreiberId')
             }, {
                 xtype: 'tfield',
@@ -80,6 +79,9 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
         this.clearMessages();
         this.loadRecord(this.record);
         this.setReadOnly(this.record.get('readonly'));
+        this.down('netzbetreiber').store.filter(function(item) {
+            return Lada.netzbetreiber.indexOf(item.get('id')) >= 0;
+        });
     },
 
     setMessages: function(errors, warnings) {

@@ -209,6 +209,9 @@ Ext.define('Lada.view.form.Probenehmer', {
         this.clearMessages();
         this.loadRecord(this.record);
         this.setReadOnly(this.record.get('readonly'));
+        this.down('netzbetreiber').store.filter(function(item) {
+            return Lada.netzbetreiber.indexOf(item.get('id')) >= 0;
+        });
     },
 
     setMessages: function(errors, warnings) {

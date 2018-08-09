@@ -33,6 +33,8 @@ Ext.define('Lada.controller.form.Probenehmer', {
         for (var key in data) {
             record.set(key, data[key]);
         }
+        record.set('netzbetreiberId',
+            formPanel.down('netzbetreiber').getValue()[0]);
         if (!record.get('letzteAenderung')) {
             record.set('letzteAenderung', new Date());
         }
@@ -93,11 +95,12 @@ Ext.define('Lada.controller.form.Probenehmer', {
     },
     checkCommitEnabled: function(callingEl) {
         var form = callingEl.owner;
+        var netzbetr = form.down('netzbetreiber').getValue();
         if (Ext.Array.contains(Lada.funktionen, 4)
         && form.getRecord().get('readonly') === false
         && form.isDirty() === true) {
             form.down('button[action=discard]').enable();
-            if (form.isValid()) {
+            if (form.isValid() && netzbetr) {
                 form.down('button[action=save]').enable();
             } else {
                 form.down('button[action=save]').setDisabled(true);
