@@ -467,6 +467,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 'Lada.view.window.Messprogramm', {
                                     record: record});
                             win.show();
+                            win.initData();
                         }
                     });
                 },
