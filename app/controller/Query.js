@@ -146,7 +146,6 @@ Ext.define('Lada.controller.Query', {
                 clonedModel.set('id', null);
                 clonedModel.set('queryUserId', savedQuery.get('id'));
                 clonedModel.set('userId', null);
-                clonedModel.phantom = true;
                 clonedModel.save();
             });
         };
@@ -198,6 +197,7 @@ Ext.define('Lada.controller.Query', {
     changeCurrentQuery: function(combobox) {
         var qp = combobox.up('querypanel');
         var newquery = qp.store.getById(combobox.getValue());
+        combobox.resetOriginalValue();
         if (!newquery) {
             var emptyentry = Ext.create('Lada.model.Query',{
                 baseQuery: null,
@@ -207,7 +207,6 @@ Ext.define('Lada.controller.Query', {
                 messStellesIds: null,
                 clonedFrom: 'empty'
             });
-            emptyentry.phantom = false;
             qp.getForm().loadRecord(emptyentry);
             this.loadGridColumnStore(combobox);
             qp.down('button[action=newquery]').setDisabled(true);
@@ -221,21 +220,6 @@ Ext.define('Lada.controller.Query', {
 
             var newMst = newquery.get('messStellesIds');
 
-            /* if (this.isQueryReadonly(newquery) === false) {
-                for (var j =0; j < Lada.mst.length; j++) {
-                    if (groupstore.findRecord('messStelle', Lada.mst[j], false,
-                        false, false, true) === null) {
-                        var mst = mst_store.getById(Lada.mst[j]);
-                        var mst_name = mst ? mst.get('messStelle') : Lada.mst[j];
-                        groupstore.add(
-                            Ext.create('Lada.model.QueryGroup', {
-                                messStellesId: Lada.mst[j],
-                                name: mst_name
-                            })
-                        );
-                    }
-                }
-            }*/
             if (newMst) {
                 qp.down('cbox[name=messStellesIds]').setValue(newMst);
             } else {
@@ -321,12 +305,14 @@ Ext.define('Lada.controller.Query', {
         } else {
             qid = rec.get('id');
         }
-        panel.down('combobox[name=selectedQuery]').select(qid);
-        if (rec.phantom) {
-            panel.store.remove(rec);
+        if (qid !== 'empty') {
+            panel.down('combobox[name=selectedQuery]').select(qid);
+            if (rec.phantom) {
+                panel.store.remove(rec);
+            }
+            panel.down('button[action=newquery]').setDisabled(false);
+            this.loadGridColumnStore(button);
         }
-        panel.down('button[action=newquery]').setDisabled(false);
-        this.loadGridColumnStore(button);
     },
 
     search: function(button) {
@@ -741,6 +727,10 @@ Ext.define('Lada.controller.Query', {
 
     //checks checks if a query is editable by the current user
     isQueryReadonly: function(query) {
+
+        if (query.phantom && (query.get('clonedFrom') === 'empty')) {
+            return true;
+        }
         if (Lada.userId === query.get('userId') || query.phantom) {
             return false;
         }
