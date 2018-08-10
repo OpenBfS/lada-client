@@ -199,7 +199,16 @@ Ext.define('Lada.controller.Query', {
         var qp = combobox.up('querypanel');
         var newquery = qp.store.getById(combobox.getValue());
         if (!newquery) {
-            qp.getForm().reset(true);
+            var emptyentry = Ext.create('Lada.model.Query',{
+                baseQuery: null,
+                name: null,
+                userId: null,
+                description: null,
+                messStellesIds: null,
+                clonedFrom: 'empty'
+            });
+            emptyentry.phantom = false;
+            qp.getForm().loadRecord(emptyentry);
             this.loadGridColumnStore(combobox);
             qp.down('button[action=newquery]').setDisabled(true);
             qp.down('button[action=delquery]').setDisabled(true);
@@ -290,12 +299,10 @@ Ext.define('Lada.controller.Query', {
                         columns[i].save();
                     }
                 }
-                //qp.store.load({callback: function() {
-                    qp.down('combobox[name=selectedQuery]').setStore(qp.store);
-                    qp.down('combobox[name=selectedQuery]').select(newId);
-                    me.loadGridColumnStore(button);
-                    button.setDisabled(false);
-                //}});
+                qp.down('combobox[name=selectedQuery]').setStore(qp.store);
+                qp.down('combobox[name=selectedQuery]').select(newId);
+                me.loadGridColumnStore(button);
+                button.setDisabled(false);
             },
             failure: function(rec, response) {
                 Ext.Msg.alert(i18n.getMsg('query.error.save.title'),
@@ -681,13 +688,16 @@ Ext.define('Lada.controller.Query', {
     loadGridColumnStore: function(element) {
         var panel = element.up('querypanel');
         var gcs = Ext.create('Lada.store.GridColumnValue');
-        if (panel.getForm().getRecord() === undefined) {
-            panel.down('columnchoser').setStore(null);
-            panel.down('columnsort').setStore(null);
-            panel.down('cbox[name=activefilters]').store.removeAll();
-            panel.down('cbox[name=activefilters]').setValue('');
-            panel.down('cbox[name=messStellesIds]').setValue('');
-            gcs.removeAll();
+        if (panel.getForm().getRecord() === undefined ||
+            panel.getForm().getRecord().get('clonedFrom') === 'empty') {
+                var ccstore = panel.down('columnchoser').store;
+                ccstore.removeAll();
+                panel.down('columnchoser').setStore(ccstore);
+                panel.down('columnsort').setStore(null);
+                panel.down('cbox[name=activefilters]').store.removeAll();
+                panel.down('cbox[name=activefilters]').setValue('');
+                panel.down('cbox[name=messStellesIds]').setValue('');
+                gcs.removeAll();
         } else {
             var qid = null;
             if (panel.getForm().getRecord().phantom) {
