@@ -99,6 +99,11 @@ span.x-grid-checkcolumn {
     border-style: none !important;
 }
 
+.widget-column-button .x-btn-inner-default-small  {
+    color: #000;
+    font: normal 13px/15px helvetica, arial, verdana, sans-serif;
+}
+
 /* EmptyText styling for Statuskombi textfield */
 .status-empty .x-form-empty-field { /* IE that does not support placeholder */
     color: black !important;
