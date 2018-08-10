@@ -46,6 +46,8 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 enableTextSelection: false,
                 plugins: {
                     ptype: 'gridviewdragdrop',
+                    dragGroup: 'cChooserDdGroup',
+                    dropGroup: 'cChooserDdGroup',
                     containerScroll: true
                 },
                 listeners: {
@@ -114,6 +116,8 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 enableTextSelection: false,
                 plugins: {
                     ptype: 'gridviewdragdrop',
+                    dragGroup: 'cChooserDdGroup',
+                    dropGroup: 'cChooserDdGroup',
                     containerScroll: true
                 },
                 listeners: {
