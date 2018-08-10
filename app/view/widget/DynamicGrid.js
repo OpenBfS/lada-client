@@ -34,6 +34,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     /** additional non-generic buttons */
     toolbarbuttons: [],
+    hidebuttons: [],
 
     /** path to an icon used for 'open' buttons */
     openIconPath: 'img/document-open.png',
@@ -94,7 +95,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
         if (this.toolbarbuttons && this.toolbarbuttons.length) {
             for (var i= 0; i < this.toolbarbuttons.length; i++) {
-                tbcontent.push(this.toolbarbuttons[i]);
+                if (this.hidebuttons.indexOf(
+                    this.toolbarbuttons[i].action) < 0) {
+                    tbcontent.push(this.toolbarbuttons[i]);
+                }
             }
         }
         this.addDocked({

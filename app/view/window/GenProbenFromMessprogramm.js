@@ -255,10 +255,11 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         var newStore = Ext.create('Lada.store.Proben', {data:data});
 
         var frgrid = Ext.create('Lada.view.widget.DynamicGrid', {
-            rowtarget: { dataType: 'probeId', dataIndex: "id"},
-            store:newStore,
+            hidebuttons: ['importprobe', 'genericadd'],
+            rowtarget: { dataType: 'probeId', dataIndex: 'id'},
+            store: newStore,
             columns: [{
-                dataIndex: "id",
+                dataIndex: 'id',
                 hidden: true
             }, {
                 header: i18n.getMsg('probeId'),
