@@ -307,6 +307,9 @@ Ext.define('Lada.view.window.GridExport', {
 
         // get rowexpander and their columns
         var toggled = false;
+        if (!this.grid.plugins) {
+            return;
+        }
         for (var i=0; i < this.grid.plugins.length; i++) {
             if (this.grid.plugins[i].ptype === 'gridrowexpander') {
                 this.rowexp = this.grid.plugins[i];
