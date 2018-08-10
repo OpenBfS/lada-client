@@ -13,7 +13,7 @@ Ext.define('Lada.view.form.ExpNumberField', {
     extend: 'Ext.form.field.Number',
     alias: 'widget.expnumberfield',
 
-    baseChars: '0123456789eE',
+    baseChars: '0123456789eE.,',
 
     hideTrigger: true,
     keyNavEnabled: false,
@@ -28,7 +28,8 @@ Ext.define('Lada.view.form.ExpNumberField', {
         // the server! Thus, toExponential(2) would lead to incorrectly
         // rounded numbers at this point.
         value = parseFloat(value).toExponential()
-            .toString().replace('.', this.decimalSeparator);
+            .toString().replace('.', this.decimalSeparator)
+            .replace(',', this.decimalSeparator);
 
         return value;
     },
