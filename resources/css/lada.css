@@ -133,3 +133,7 @@ span.x-grid-checkcolumn {
 .x-toolbar-default {
     background-color: #cfe0ec;
 }
+
+.x-form-text-default {
+    padding: 0px 6px 2px 6px;
+}
