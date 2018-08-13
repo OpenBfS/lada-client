@@ -46,7 +46,7 @@ Zur Installation von Sencha Cmd wird Java benötigt.
 * Extjs6 nach ext/ kopieren/entpacken
 * Externe Libraries installieren: install-dependencies.sh
 * sencha app install --framework=ext
-* sencha app build development
+* sencha app build
 * Einstiegspunkt für Webbrowser: index.html
 
 ### Kompilieren und Minifizieren der Anwendung
