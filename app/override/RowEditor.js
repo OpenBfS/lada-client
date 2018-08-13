@@ -13,9 +13,14 @@ Ext.define('Lada.override.RowEditor', {
         this.callParent(arguments);
         var button = this.down('button[ui=default-toolbar]');
         while (button) {
+            console.log(button);
             button.setUI('default');
             button = this.down('button[ui=default-toolbar]');
         }
+        this.down('button[itemId=update]').setIcon(
+            'resources/img/dialog-ok-apply.png');
+        this.down('button[itemId=cancel]').setIcon(
+            'resources/img/dialog-cancel.png');
     },
 
     addFieldsForColumn: function(column, initial) {
