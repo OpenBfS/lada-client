@@ -238,7 +238,6 @@ Ext.define('Lada.view.window.SetStatus', {
             }
         } else {
             if (this.record) {
-                var me = this;
                 var data = {
                     messungsId: this.record.get('id'),
                     mstId: this.down('combobox').getValue(),

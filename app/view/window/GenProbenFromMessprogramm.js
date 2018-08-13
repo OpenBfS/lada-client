@@ -114,7 +114,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                                         + i18n.getMsg('gpfm.generated.error',
                                             id, i18n.getMsg(json.message)));
                             }
-                            if (finished == me.ids.length) {
+                            if (finished === me.ids.length) {
                                 me.down('toolbar').down('button').setDisabled(false);
                                 me.onSuccess(results);
                             }
@@ -128,7 +128,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             panel.setHtml(panel.html + '<br>'
                                     + i18n.getMsg('gpfm.generated.error', id, error));
                             me.onFailure(response);
-                            if (finished == me.ids.length) {
+                            if (finished === me.ids.length) {
                                 me.down('toolbar').down('button').setDisabled(false);
                             }
                         }
@@ -217,7 +217,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         });
         var mpStore = Ext.create('Lada.store.MessprogrammeList');
         //Concatenate result json data
-        for (r in results) {
+        for (var r in results) {
             var json = Ext.JSON.decode(results[r].responseText);
             if (json.data === null) {
                 continue;
@@ -241,7 +241,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             'probeNehmerId'];
         for (var i=0; i < columns.length; i++) {
             var col = columnstore.findRecord('dataIndex', columns[i], false,
-                false, false, true);
+                false, false, true); // TODO col is unused here?
             gcs.add( new Ext.create('Lada.model.GridColumnValue',{
                 columnIndex: i,
                 filterActive: false,
@@ -252,7 +252,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             }));
         }
 
-        var newStore = Ext.create('Lada.store.Proben', {data:data});
+        var newStore = Ext.create('Lada.store.Proben', {data: data});
 
         var frgrid = Ext.create('Lada.view.widget.DynamicGrid', {
             hidebuttons: ['importprobe', 'genericadd'],

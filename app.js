@@ -29,6 +29,7 @@ Ext.application({
         'Lada.view.Viewport',
         'Lada.override.Table',
         'Lada.override.RestProxy',
+        'Lada.override.Toolbar',
         'Lada.override.RowEditor',
         'Lada.override.i18n.DE',
         'Lada.override.RowExpander',
@@ -86,7 +87,18 @@ Ext.application({
     ],
     bundle: {
         bundle: 'Lada',
-        language: 'de-DE',
+        language: function() {
+        //Set Language according to build profile
+            switch (Ext.manifest.profile) {
+                case "lada-en":
+                    return 'en-US';
+                    break;
+                case "lada-de":
+                    return 'de-DE';
+                    break;
+                default: return 'de-DE';
+            }
+        }(),
         path: 'resources/i18n',
         noCache: true
     },
@@ -100,7 +112,6 @@ Ext.application({
         Ext.JSON.encodeDate = function(o) {
             return '"' + Ext.Date.format(o, 'c') + '"';
         };
-        Ext.util.Format.decimalSeparator = ',';
 
         Lada.username = '';
         Lada.userroles = '';

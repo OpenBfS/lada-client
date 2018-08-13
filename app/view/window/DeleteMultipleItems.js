@@ -166,19 +166,19 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 break;
             case 'mpId':
                 url = 'lada-server/rest/messprogramm/';
-                datatype = 'Messprogramm ';
+                datatype = i18n.getMsg('messprogramm');
                 break;
             case 'pnehmer':
                 url = 'lada-server/rest/probenehmer/';
-                datatype = 'Probenehmer ';
+                datatype = i18n.getMsg('probenehmer');
                 break;
             case 'dsatzerz':
                 url = 'lada-server/rest/datensatzerzeuger/';
-                datatype = 'Datensatzerzeuger ';
+                datatype = i18n.getMsg('datensatzerzeuger');
                 break;
             case 'mprkat':
                 url = 'lada-server/rest/messprogrammkategorie/';
-                datatype = 'Messprogrammkategorie ';
+                datatype = i18n.getMsg('messprogrammkategorie');
                 break;
         }
         for (var i = 0; i< me.selection.length; i++) {
@@ -192,11 +192,13 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                     var delId = urlArr[urlArr.length - 1];
                     var html = me.down('panel').html;
                     if (json.success && json.message === '200') {
-                        html = html + datatype + delId + ' gelöscht<br>';
+                        html = html + i18n.getMsg(
+                            'deleteItems.callback.success',datatype, delId);
                         me.down('panel').setHtml(html);
                     } else {
-                        html = html + datatype + delId + ' konnte nicht gelöscht werden:<br>'
-                        + i18n.getMsg(json.message) + '<br>';
+                        html = html + i18n.getMsg(
+                            'deleteItems.callback.failure', datatype, delId)
+                            + i18n.getMsg(json.message) + '<br>';
                         me.down('panel').setHtml(html);
                     }
                     me.currentProgress += 1;
@@ -215,13 +217,14 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 },
                 failure: function(resp, opts) {
                     var json = Ext.JSON.decode(resp.responseText);
-                    urlArr = resp.request.url.split('/');
+                    var urlArr = resp.request.url.split('/');
                     var delId = urlArr[urlArr.length - 1];
                     var html = me.down('panel').html;
                     me.down('panel').setHtml(html);
                     me.currentProgress += 1;
                     me.down('progressbar').updateProgress(me.currentProgress/me.maxSteps);
-                    html = html + datatype + delId + 'konnte nicht gelöscht werden<br>';
+                    html = html + i18n.getMsg(
+                        'deleteItems.callback.failure', datatype, delId);
                     me.down('panel').setHtml(html);
                     if (me.currentProgress === me.maxSteps) {
                         me.down('progressbar').hide();

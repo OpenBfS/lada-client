@@ -57,10 +57,10 @@ Ext.define('Lada.view.QueryPanel', {
                     xtype: 'button',
                     name: 'queryreload',
                     action: 'reload',
-                    maxWidth: 65,
-                    minWidth: 65,
+                    maxWidth: 100,
+                    minWidth: 100,
                     text: 'query.button.reload',
-                    margin: '5 0 0 2.5', //TODO layout pending
+                    margin: '5 5 0 3',
                     submitValue: false
                 }]
             }, {
@@ -189,11 +189,16 @@ Ext.define('Lada.view.QueryPanel', {
 
         items: [{
             xtype: 'panel',
+            margin: '5',
             border: false,
             layout: 'vbox',
             name: 'filtervalues',
             items: [],
-            flex: 1
+            flex: 1,
+            padding: '5, 0, 5, 0',
+            defaults: {
+                margin: '5, 0, 5, 0'
+            }
         }]
     }, {
         xtype: 'container',
@@ -201,7 +206,7 @@ Ext.define('Lada.view.QueryPanel', {
             type: 'hbox',
             align: 'stretchmax'
         },
-        margin: '0 10 0 10',
+        margin: '5 10 0 10',
         items: [{
             xtype: 'button',
             action: 'save',
@@ -281,20 +286,20 @@ Ext.define('Lada.view.QueryPanel', {
         var mst_store = Ext.data.StoreManager.get('messstellen');
         mst_store.load({
             scope: this,
-            callback: function(records){
+            callback: function(records) {
                 var qp = this;
                 var groupstore = qp.down('cbox[name=messStellesIds]').down(
                     'tagfield').getStore();
-                for ( var i = 0; i < records.length; i++){
+                for ( var i = 0; i < records.length; i++) {
                     groupstore.add(
                         Ext.create('Lada.model.QueryGroup', {
                             messStellesIds: records[i].get('id'),
-                            mst_name:records[i].get('beschreibung')
+                            mst_name: records[i].get('beschreibung')
                         })
-                    )
+                    );
                 }
             }
-        })
+        });
     },
 
     setGridColumnStore: function(userQueryId, baseQueryId) {

@@ -147,7 +147,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
     customizeToolbar: function() {
         var tools = this.tools;
         for (var i = 0; i < tools.length; i++) {
-            if (tools[i].type == 'close') {
+            if (tools[i].type === 'close') {
                 var closeButton = tools[i];
                 closeButton.handler = null;
                 closeButton.callback = this.handleBeforeClose;
@@ -161,7 +161,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
     initData: function() {
         this.setLoading(true);
         this.clearMessages();
-        me = this;
+        var me = this;
         Ext.ClassManager.get('Lada.model.Probe').load(this.record.get('id'), {
             failure: function(record, action) {
                 me.setLoading(false);
@@ -185,7 +185,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                     title += datenbasis.get('datenbasis');
                     title += ' ';
                 }
-                title += 'Probe'
+                title += 'Probe';
                 if (this.record.get('hauptprobenNr')) {
                     title += ' - Hauptprobennr.: ';
                     title += this.record.get('hauptprobenNr');

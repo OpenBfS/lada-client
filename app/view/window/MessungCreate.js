@@ -43,12 +43,9 @@ Ext.define('Lada.view.window.MessungCreate', {
         var messstelle = Ext.data.StoreManager.get('messstellen')
             .getById(this.probe.get('mstId'));
 
-        this.title = i18n.getMsg('messung.new.title1') + ' '
-            + this.probe.get('hauptprobenNr') + ' '
-            + i18n.getMsg('messung.new.title2') + ' '
-            + messstelle.get('messStelle') + ' '
-            + i18n.getMsg('messung.new.title3');
-
+        this.title = i18n.getMsg('messung.new.title',
+            this.probe.get('hauptprobenNr'),
+            messstelle.get('messStelle'));
         this.buttons = [{
             text: i18n.getMsg('close'),
             scope: this,
@@ -103,7 +100,7 @@ Ext.define('Lada.view.window.MessungCreate', {
     customizeToolbar: function() {
         var tools = this.tools;
         for (var i = 0; i < tools.length; i++) {
-            if (tools[i].type == 'close') {
+            if (tools[i].type === 'close') {
                 var closeButton = tools[i];
                 closeButton.handler = null;
                 closeButton.callback = this.handleBeforeClose;

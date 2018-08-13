@@ -14,11 +14,14 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
 
     init: function() {
         this.control({
-            'datezsatzerzeugerform button[action=save]': {
+            'datensatzerzeugerform button[action=save]': {
                 click: this.save
             },
             'datensatzerzeugerform button[action=discard]': {
                 click: this.discard
+            },
+            'datensatzerzeugerform': {
+                dirtychange: this.checkCommitEnabled
             }
         });
     },
@@ -30,6 +33,8 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
         for (var key in data) {
             record.set(key, data[key]);
         }
+        record.set('netzbetreiberId',
+            formPanel.down('netzbetreiber').getValue()[0]);
         if (!record.get('letzteAenderung')) {
             record.set('letzteAenderung', new Date());
         }
@@ -62,9 +67,7 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                     button.setDisabled(true);
                     button.up('toolbar').down('button[action=discard]')
                         .setDisabled(true);
-                    var rec = formPanel.getForm().getRecord();
-                    rec.dirty = false;
-                    formPanel.getForm().loadRecord(record);
+                    formPanel.getForm().reset();
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
                         if (json.message) {
@@ -88,6 +91,24 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
 
     discard: function(button) {
         var formPanel = button.up('form');
-        formPanel.setRecord(formPanel.getForm().getRecord());
+        formPanel.getForm().reset();
+    },
+
+    checkCommitEnabled: function(callingEl) {
+        var form = callingEl.owner;
+        var netzbetr = form.down('netzbetreiber').getValue();
+        if (Ext.Array.contains(Lada.funktionen, 4)
+        && !form.getRecord().get('readonly')
+        && form.isDirty() && netzbetr) {
+            form.down('button[action=discard]').enable();
+            if (form.isValid()) {
+                form.down('button[action=save]').enable();
+            } else {
+                form.down('button[action=save]').disable();
+            }
+        } else {
+            form.down('button[action=discard]').disable();
+            form.down('button[action=save]').disable();
+        }
     }
 });

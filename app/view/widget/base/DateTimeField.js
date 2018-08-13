@@ -45,7 +45,7 @@ Ext.define('Lada.view.widget.base.DateTimeField', {
             disabledDatesRE: me.disabledDatesRE,
             disabledDatesText: me.disabledDatesText,
             disabledDays: me.disabledDays,
-            disabledDatesText: me.disabledDaysText,
+            disabledDaysText: me.disabledDaysText,
             format: me.format,
             startDay: me.startDay,
             minText: Ext.String.format(me.minText, me.formatDate(me.minValue)),

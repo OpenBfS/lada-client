@@ -342,7 +342,6 @@ Ext.define('Lada.view.grid.Orte', {
      * TODO: check against dynamicGrid changes 2/2018
      */
     setStore: function(store) {
-        var i18n = Lada.getApplication().bundle;
         var me = this;
 
         if (store) {

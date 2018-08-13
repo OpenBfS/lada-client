@@ -9,6 +9,15 @@
 Ext.define('Lada.override.RowEditor', {
     override: 'Ext.grid.RowEditor',
 
+    initComponent: function() {
+        this.callParent(arguments);
+        var button = this.down('button[ui=default-toolbar]');
+        while (button) {
+            button.setUI('default');
+            button = this.down('button[ui=default-toolbar]');
+        }
+    },
+
     addFieldsForColumn: function(column, initial) {
         var me = this,
             i,

@@ -46,7 +46,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
                         html: errorText
                     });
                 } else {
-                    tooltip.html = errorText;
+                    this.tooltip.html = errorText;
                 }
             }
             return;
@@ -62,7 +62,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
                         html: warningText
                     });
                 } else {
-                    tooltip.html = warningText;
+                    this.tooltip.html = warningText;
                 }
             }
             return;

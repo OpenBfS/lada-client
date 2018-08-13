@@ -88,7 +88,7 @@ Ext.define('Lada.model.Probe', {
             return new Date(v);
         },
         serialize: function(v, record) {
-            if (v === '' || v == null) {
+            if (v === '' || v === null) {
                 return null;
             }
             var formatted = Ext.Date.format(v, 'Y-m-d\\TH:i:sP');

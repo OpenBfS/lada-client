@@ -17,7 +17,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
         align: 'stretchmax'
     },
     store: null,
-    margin: '20,0,0,10',
+    margin: '15 0 10 0',
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -38,12 +38,16 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             itemId: 'sourceGrid',
             flex: 1,
             xtype: 'grid',
+            border: true,
             store: null,
             multiSelect: true,
             stripeRows: true,
             viewConfig: {
+                enableTextSelection: false,
                 plugins: {
                     ptype: 'gridviewdragdrop',
+                    dragGroup: 'cChooserDdGroup',
+                    dropGroup: 'cChooserDdGroup',
                     containerScroll: true
                 },
                 listeners: {
@@ -106,10 +110,14 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             store: null,
             flex: 1,
             xtype: 'grid',
+            border: true,
             multiSelect: true,
             viewConfig: {
+                enableTextSelection: false,
                 plugins: {
                     ptype: 'gridviewdragdrop',
+                    dragGroup: 'cChooserDdGroup',
+                    dropGroup: 'cChooserDdGroup',
                     containerScroll: true
                 },
                 listeners: {
@@ -146,7 +154,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
 
     setVisible: function(data, visible) {
         //If visibility changes, apply new value
-        if (data[0].get('visible') != visible) {
+        if (data[0].get('visible') !== visible) {
             var gcv_store = this.up('querypanel').gridColumnValueStore;
             for (var i=0; i < data.length; i++) {
                 data[i].set('visible', visible);
@@ -241,7 +249,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 scope: this,
                 single: true
             }
-        })
+        });
         this.getComponent('targetGrid').setStore(tstore);
         this.getComponent('sourceGrid').setStore(sstore);
         this.sortvisibles();

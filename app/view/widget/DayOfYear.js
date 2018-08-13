@@ -16,8 +16,7 @@ Ext.define('Lada.view.widget.DayOfYear', {
 
     layout: {
         type: 'hbox',
-        pack: 'end',
-        defaultMargins: '3'
+        pack: 'end'
     },
 
     initComponent: function() {
@@ -88,7 +87,8 @@ Ext.define('Lada.view.widget.DayOfYear', {
             isFormField: false,
             fieldLabel: this.fieldLabel,
             labelWidth: this.labelWidth,
-            width: 50 + this.labelWidth,
+            width: 60 + this.labelWidth,
+            margin: '0 6 0 0',
             msgTarget: 'none',
             allowDecimals: false,
             maxLength: 2,
@@ -105,7 +105,7 @@ Ext.define('Lada.view.widget.DayOfYear', {
         }, {
             xtype: 'combobox',
             isFormField: false,
-            width: 100,
+            width: 120,
             msgTarget: 'none',
             store: monthsStore,
             allowBlank: this.allowBlank,
@@ -133,8 +133,8 @@ Ext.define('Lada.view.widget.DayOfYear', {
             height: 14,
             hidden: true
         }, DOYField];
-
         this.callParent(arguments);
+        this.down('combobox').getTriggers().clear.hidden = true;
     },
 
     /*
@@ -147,7 +147,7 @@ Ext.define('Lada.view.widget.DayOfYear', {
         // create a date object with arbitrary non-leap year
         var doy = panel.down('numberfield[hidden]').getValue();
 
-        if (doy != null) {
+        if (doy !== null) {
             // day of year is 0-based in ExtJS, but 1-based in the model
             doy -= 1;
             var date = Ext.Date.subtract(
@@ -170,7 +170,7 @@ Ext.define('Lada.view.widget.DayOfYear', {
         var maxDay = panel.down('numberfield[hidden=false]').maxValue;
         var doy = null;
 
-        if (month != null && day != null && day <= maxDay) {
+        if (month !== null && day !== null && day <= maxDay) {
             // create a date object with arbitrary non-leap year
             var date = new Date(1970, month, day);
 

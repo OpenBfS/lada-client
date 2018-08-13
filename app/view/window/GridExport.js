@@ -93,10 +93,10 @@ Ext.define('Lada.view.window.GridExport', {
         this.csv_linesepstore = Ext.create('Ext.data.Store', {
             fields: ['name', 'value'],
             data: [{
-                name: 'Windows',
+                name: i18n.getMsg('lineseparator.windows'),
                 value: 'windows'
             },{
-                name: 'Linux',
+                name: i18n.getMsg('lineseparator.linux'),
                 value: 'linux'
             }]
         });
@@ -104,10 +104,10 @@ Ext.define('Lada.view.window.GridExport', {
         this.csv_textlimstore = Ext.create('Ext.data.Store', {
             fields: ['name', 'value'],
             data: [{
-                name: '"',
+                name: i18n.getMsg('doublequotes'),
                 value: '"'
             }, {
-                name: '\'',
+                name: i18n.getMsg('singlequotes'),
                 value: '\''
             }]
         });
@@ -115,16 +115,16 @@ Ext.define('Lada.view.window.GridExport', {
         this.csv_colsepstore = Ext.create('Ext.data.Store', {
             fields: ['name', 'value'],
             data: [{
-                name: 'Semikolon',
+                name: i18n.getMsg('semicolon'),
                 value: ';'
             }, {
-                name: 'Komma',
+                name: i18n.getMsg('comma'),
                 value: ','
             },{
-                name: 'Leerzeichen',
+                name: i18n.getMsg('whitespace'),
                 value: ' '
             }, {
-                name: 'Punkt',
+                name: i18n.getMsg('dot'),
                 value: '.'
             }]
         });
@@ -132,10 +132,10 @@ Ext.define('Lada.view.window.GridExport', {
         this.csv_decSepStore = Ext.create('Ext.data.Store', {
             fields: ['name', 'value'],
             data: [{
-                name: 'Komma',
+                name: i18n.getMsg('comma'),
                 value: ','
             },{
-                name: 'Punkt',
+                name: i18n.getMsg('dot'),
                 value: '.'
             }]
         });
@@ -159,10 +159,10 @@ Ext.define('Lada.view.window.GridExport', {
                         this.hasGeojson = columns[i];
                         break;
                     case 'messungId':
-                        this.hasMessung = columns[i];
+                        this.hasMessung = columns[i].dataIndex;
                         break;
                     case 'probeId':
-                        this.hasProbe = columns[i];
+                        this.hasProbe = columns[i].dataIndex;
                         break;
                 }
             }
@@ -180,17 +180,17 @@ Ext.define('Lada.view.window.GridExport', {
         // add export formats
 
         var formatdata = [
-            {name: 'CSV', value: 'csv'},
-            {name: 'JSON', value: 'json'}];
+            {name: i18n.getMsg('export.csv'), value: 'csv'},
+            {name: i18n.getMsg('export.json'), value: 'json'}];
         if (this.hasGeojson) {
             formatdata.push({
-                name: 'geoJSON',
+                name: i18n.getMsg('export.gjson'),
                 value: 'geojson'
             });
         }
         if (this.hasProbe || this.hasMessung) {
             formatdata.push({
-                name: 'LAF-Export',
+                name: i18n.getMsg('export.laf'),
                 value: 'laf'
             });
         }
@@ -486,7 +486,7 @@ Ext.define('Lada.view.window.GridExport', {
         if (data) {
             var lineseptype = this.down('combobox[name=linesep]').getValue();
             this.csv.linesep = '\r\n';
-            if (lineseptype == 'linux') {
+            if (lineseptype === 'linux') {
                 this.csv.linesep = '\n';
             }
             this.csv.colsep = this.down('combobox[name=colsep]').getValue();
@@ -565,7 +565,7 @@ Ext.define('Lada.view.window.GridExport', {
         if (this.hasMessung) {
             jsondata.messungen = [];
             for (var i = 0; i < dataset.length; i++) {
-                var mid = dataset[i].get(this.hasMessung.dataIndex);
+                var mid = dataset[i].get(this.hasMessung);
                 if (Array.isArray(mid)) {
                     for (var j=0; j < mid.length; j++) {
                         jsondata.messungen.push(mid[j]);
@@ -581,7 +581,7 @@ Ext.define('Lada.view.window.GridExport', {
         } else if (this.hasProbe) {
             jsondata.proben = [];
             for (var i= 0; i < dataset.length; i++) {
-                var pid = dataset[i].get(this.hasProbe.dataIndex);
+                var pid = dataset[i].get(this.hasProbe);
                 jsondata.proben.push(pid);
             }
             if (!jsondata.proben.length) {
@@ -608,7 +608,7 @@ Ext.define('Lada.view.window.GridExport', {
                 We assume that a 302 was send when the follwing statement
                 is true.
                 */
-                if (response.status == 0 &&
+                if (response.status === 0 &&
                   response.getResponse().responseText === '') {
                     Ext.MessageBox.confirm('Erneutes Login erforderlich',
                         'Ihre Session ist abgelaufen.<br/>'+
@@ -710,7 +710,6 @@ Ext.define('Lada.view.window.GridExport', {
     },
 
     showError: function(message) {
-        var me = this;
         var i18n = Lada.getApplication().bundle;
         var text = '';
         if (!message) {

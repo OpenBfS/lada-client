@@ -373,6 +373,7 @@ Ext.define('Lada.view.form.Probe', {
                             margin: '0, 5, 5, 5',
                             name: 'solldatumBeginn',
                             format: 'd.m.Y',
+                            width: '50%',
                             period: 'start',
                             readOnly: true
                         }, {
@@ -383,6 +384,7 @@ Ext.define('Lada.view.form.Probe', {
                             margin: '0, 5, 5, 5',
                             name: 'solldatumEnde',
                             format: 'd.m.Y',
+                            width: '50%',
                             period: 'end',
                             readOnly: true
                         }]
@@ -402,6 +404,7 @@ Ext.define('Lada.view.form.Probe', {
                             margin: '0, 5, 5, 5',
                             name: 'probeentnahmeBeginn',
                             format: 'd.m.Y H:i',
+                            width: '50%',
                             period: 'start'
                         }, {
                             xtype: 'datetime',
@@ -410,6 +413,7 @@ Ext.define('Lada.view.form.Probe', {
                             margin: '0, 5, 5, 5',
                             name: 'probeentnahmeEnde',
                             format: 'd.m.Y H:i',
+                            width: '50%',
                             period: 'end'
                         }]
                     }]
@@ -451,9 +455,9 @@ Ext.define('Lada.view.form.Probe', {
                                 enforceMaxLength: true,
                                 name: 'mediaDesk',
                                 width: '58%',
-                                minWidth: 290,
+                                margin: '0 5 0 0',
                                 labelWidth: 100,
-                                fieldLabel: 'Deskriptoren',
+                                fieldLabel: i18n.getMsg('mediaDesk'),
                                 editable: false,
                                 readOnly: true,
                                 listeners: {
@@ -464,8 +468,8 @@ Ext.define('Lada.view.form.Probe', {
                                 }
                             }, {
                                 xtype: 'textfield',
+                                margin: '0 0 0 5',
                                 name: 'media',
-                                margin: '0, 10, 5, 10',
                                 width: '42%',
                                 enforceMaxLength: true,
                                 editable: false,
@@ -493,7 +497,7 @@ Ext.define('Lada.view.form.Probe', {
     setRecord: function(probeRecord) {
         this.clearMessages();
         this.getForm().loadRecord(probeRecord);
-        if (!probeRecord.data || probeRecord.data.id == null) {
+        if (!probeRecord.data || probeRecord.data.id === null) {
             return;
         }
         var mstStore = Ext.data.StoreManager.get('messstellen');

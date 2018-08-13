@@ -16,7 +16,6 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
     collapsible: true,
     maximizable: true,
     autoShow: true,
-    autoScroll: true,
     layout: 'fit',
     constrain: true,
 
@@ -39,14 +38,12 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
             }
         });
 
-        this.width = 600;
         // InitialConfig is the config object passed to the constructor on
         // creation of this window. We need to pass it throuh to the form as
         // we need the "modelId" param to load the correct item.
 
         this.items = [{
             border: false,
-            autoScroll: true,
             items: [{
                 xtype: 'datensatzerzeugerform',
                 record: this.record

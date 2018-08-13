@@ -27,7 +27,7 @@ var sortStore = Ext.create('Ext.data.Store', {
 Ext.define('Lada.view.widget.Sort', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.sort',
-    store: 'sortstore',
+    store: sortStore,
     queryMode: 'local',
     triggerAction: 'all',
     typeAhead: false,

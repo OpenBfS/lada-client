@@ -19,7 +19,7 @@ Ext.define('Lada.view.grid.PKommentar', {
     ],
 
     maxHeight: 350,
-    minHeight: 110,
+    minHeight: 125,
     viewConfig: {
         deferEmptyText: false
     },
@@ -44,7 +44,7 @@ Ext.define('Lada.view.grid.PKommentar', {
                 beforeedit: function(e, o) {
                     var readonlywin = o.grid.up('window').record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
-                    if (readonlywin == true || readonlygrid == true || this.disabled) {
+                    if (readonlywin === true || readonlygrid === true || this.disabled) {
                         return false;
                     }
                     return true;

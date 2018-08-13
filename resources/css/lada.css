@@ -56,14 +56,6 @@
   background-color: transparent;
 }
 
-.x-grid-favcolumn-checked {
-  background-image: url(../img/favorites.png);
-}
-
-.x-grid-favcolumn-unchecked {
-  background-image: url(../img/favorites_off.png);
-}
-
 /* do not display clear-button (x) in IE10+ Input fields */
 ::-ms-clear {
    display: none;
@@ -105,6 +97,12 @@ span.x-grid-checkcolumn {
     background-color: transparent !important;
     background-image: none !important;
     border-style: none !important;
+}
+
+.widget-column-button .x-btn-inner-default-small  {
+    color: #000;
+    font: normal 13px/15px helvetica, arial, verdana, sans-serif;
+}
 
 /* EmptyText styling for Statuskombi textfield */
 .status-empty .x-form-empty-field { /* IE that does not support placeholder */
@@ -127,4 +125,20 @@ span.x-grid-checkcolumn {
 
 .status-empty :-ms-input-placeholder { /* IE that supports placeholder */
     color: black;
+}
+
+.x-column-header-inner {
+    padding: 7px 3px;
+}
+
+.x-form-trigger-wrap-default {
+    border-width: 2px;
+}
+
+.x-toolbar-default {
+    background-color: #cfe0ec;
+}
+
+.x-form-text-default {
+    padding: 0px 6px 2px 6px;
 }

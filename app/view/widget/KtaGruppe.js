@@ -82,7 +82,7 @@ Ext.define('Lada.view.widget.KtaGruppe', {
             return true;
         }
 
-        if (this.getValue() == null || this.getValue() == '') {
+        if (this.getValue() === null || this.getValue() === '') {
             this.showWarnings(i18n.getMsg('warn.msg.ktagruppe.empty'));
             cons = false;
         }

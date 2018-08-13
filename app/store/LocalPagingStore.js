@@ -63,7 +63,7 @@ Ext.define('Lada.store.LocalPagingStore', {
         }
         for (var i= 0; i< tbs.length; i++) {
             var grid = tbs[i].up('grid');
-            if (!grid || !grid.store.model || grid.store.model != this.model ) {
+            if (!grid || !grid.store.model || grid.store.model !== this.model ) {
                 continue;
             }
             //this.totalCount = this.getCount();

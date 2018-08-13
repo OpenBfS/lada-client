@@ -66,7 +66,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
     printSelection: function(button, e, eOpts) {
         // The Data is loaded from the server again, so we need
         // to be a little bit asynchronous here...
-        callback = function(response) {
+        var callback = function(response) {
             var data = response.responseText;
             data = this.prepareData(data); // Wraps all messstellen and deskriptoren objects into an array
             var printData = '{"layout": "A4 portrait", "outputFormat": "pdf",'
@@ -81,12 +81,12 @@ Ext.define('Lada.controller.grid.ProbeList', {
 
     prepareData: function(data) {
         // Copy data
-        prep = JSON.parse(data);
+        var prep = JSON.parse(data);
         data = JSON.parse(data);
         // ensure data and prep are equal, not sure
         // if json.parse changes order of things
 
-        emptyMessstelle = {
+        var emptyMessstelle = {
             'id': null,
             'amtskennung': null,
             'beschreibung': null,
@@ -95,7 +95,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
             'netzbetreiberId': null
         };
 
-        emptyDeskriptor = {
+        var emptyDeskriptor = {
             's0': null,
             's1': null,
             's2': null,
@@ -111,14 +111,14 @@ Ext.define('Lada.controller.grid.ProbeList', {
         };
 
         for (var i in data) {
-            probe = data[i];
-            deskriptoren = probe.deskriptoren;
-            messstelle = probe.messstelle;
-            labormessstelle = probe.labormessstelle;
-            ortszuordnung = probe.ortszuordnung;
-            zusatzwerte = probe.zusatzwerte;
+            var probe = data[i];
+            var deskriptoren = probe.deskriptoren;
+            var messstelle = probe.messstelle;
+            var labormessstelle = probe.labormessstelle;
+            var ortszuordnung = probe.ortszuordnung;
+            var zusatzwerte = probe.zusatzwerte;
 
-            if (messstelle != null) {
+            if (messstelle !== null) {
                 prep[i].messstelle = [];
                 prep[i].messstelle[0] = messstelle;
                 prep[i]['messstelle.messStelle'] = messstelle.messStelle;
@@ -128,13 +128,13 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 prep[i]['messstelle.messStelle'] = '';
             }
 
-            if (labormessstelle != null) {
+            if (labormessstelle !== null) {
                 prep[i]['labormessstelle.messStelle'] = labormessstelle.messStelle;
             } else {
                 prep[i]['labormessstelle.messStelle'] = '';
             }
 
-            if (deskriptoren != null) {
+            if (deskriptoren !== null) {
                 prep[i].deskriptoren = [];
                 prep[i].deskriptoren[0] = deskriptoren;
             } else {
@@ -144,7 +144,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
 
             // See: app/view/grid/Probenzusatzwert.js
             // Calculate NWG < symbol , as this is NOT done by the server
-            for (z in zusatzwerte) {
+            for (var z in zusatzwerte) {
                 var nwg = zusatzwerte[z]['nwgZuMesswert'];
                 var mw = zusatzwerte[z]['messwertPzs'];
                 if ( mw < nwg) {
@@ -156,7 +156,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
 
             // Flatten the Ortszuodnung Array
             for (var o in ortszuordnung) {
-                oz = ortszuordnung[o];
+                var oz = ortszuordnung[o];
                 for (var e in oz.ort) {
                     prep[i].ortszuordnung[o]['ort']=null;
                     prep[i].ortszuordnung[o]['ort.'+e]=oz.ort[e];
@@ -186,7 +186,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
         var i18n = Lada.getApplication().bundle;
         var ids = [];
 
-        for (item in selection) {
+        for (var item in selection) {
             ids.push(selection[item].get(grid.rowtarget.dataIndex));
         }
         //basically, thats the same as the downloadFile

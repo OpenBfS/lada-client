@@ -32,7 +32,6 @@ Ext.define('Lada.view.widget.NuklidTagfield' ,{
         '<tpl for=".">{messgroesse}</tpl>'),
 
     initComponent: function() {
-        var i18n = Lada.getApplication().bundle;
         this.callParent(arguments);
     }
 });

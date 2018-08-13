@@ -6,7 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
- /**
+/**
   * A Proxy override using POST requests with JSON data to get universal query results
   */
 Ext.define('Lada.query.QueryProxy', {

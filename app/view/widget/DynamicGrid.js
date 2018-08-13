@@ -156,8 +156,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         this.down('pagingtoolbar').add('-');
         this.down('pagingtoolbar').add(cbox);
         this.down('pagingtoolbar').down('#refresh').hide();
-        // this.on('select') zoom to map and select
-        // });
     },
 
     selectRowByFeature: function(map, features) {
@@ -436,7 +434,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     });
                 },
                 textchange: function(button, oldval, newval) {
-                    if (!newval || newval == '') {
+                    if (!newval || newval === '') {
                         button.hide();
                     } else {
                         button.show();
@@ -609,7 +607,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
         };
     },
-    generateStatusStufeColumns: function(col){
+    generateStatusStufeColumns: function(col) {
         col.xtype='gridcolumn';
         col.renderer = function(value) {
             if (!value) {
@@ -899,7 +897,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             'addMap')
         ) {
             this.toolbarbuttons.push({
-                text: this.i18n.getMsg('orte.new'),
+                text: this.i18n.getMsg('orte.frommap'),
                 icon: 'resources/img/svn-commit.png',
                 action: 'addMap',
                 needsSelection: false,

@@ -56,7 +56,7 @@ Ext.define('Lada.view.grid.Messwert', {
                         // edit.
                         var readonlywin = o.grid.up('window').record.get('readonly');
                         var readonlygrid = o.record.get('readonly');
-                        if (readonlywin == true || readonlygrid == true || this.disabled) {
+                        if (readonlywin === true || readonlygrid === true || this.disabled) {
                             return false;
                         }
                         //Preselect Messeinheit
@@ -140,7 +140,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 var strValue = value.toExponential(2).toString()
                     .replace('.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
-                var exponent = parseInt(splitted[1]);
+                var exponent = parseInt(splitted[1], 10);
                 return splitted[0] + 'e'
                     + ((exponent < 0) ? '-' : '+')
                     + ((Math.abs(exponent) < 10) ? '0' : '')
@@ -205,7 +205,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 var strValue = value.toExponential(2).toString()
                     .replace('.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
-                var exponent = parseInt(splitted[1]);
+                var exponent = parseInt(splitted[1], 10);
                 return splitted[0] + 'e'
                     + ((exponent < 0) ? '-' : '+')
                     + ((Math.abs(exponent) < 10) ? '0' : '')
@@ -252,7 +252,7 @@ Ext.define('Lada.view.grid.Messwert', {
 
         if (this.umwId) {
             var umwStore = Ext.create('Lada.store.Umwelt');
-            var umwModel = umwStore.getModel().load(this.umwId, {
+            umwStore.getModel().load(this.umwId, {
                 scope: this,
                 success: function(rec, op) {
                     this.defaultMehId = rec.get('mehId');
@@ -267,7 +267,7 @@ Ext.define('Lada.view.grid.Messwert', {
     },
 
     setReadOnly: function(b) {
-        if (b == true) {
+        if (b === true) {
             //Readonly
             if (this.getPlugin('rowedit')) {
                 this.getPlugin('rowedit').disable();

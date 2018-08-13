@@ -18,10 +18,9 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
     ],
 
     model: 'Lada.model.MessporgrammKategorie',
-    minWidth: 550,
-    margin: 5,
     border: false,
-
+    align: 'stretchmax',
+    layout: 'vbox',
     record: null,
 
     trackResetOnLoad: true,
@@ -30,7 +29,6 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
         var i18n = Lada.getApplication().bundle;
         this.items = [{
             border: false,
-            margin: '0, 0, 10, 0',
             dockedItems: [{
                 xtype: 'toolbar',
                 dock: 'bottom',
@@ -54,43 +52,36 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
                     disabled: true
                 }]
             }],
+            defaults: {
+                margin: '5,5,5,5',
+                labelWidth: 80,
+                minWidth: 350
+            },
             items: [{
-                layout: 'vbox',
-                border: false,
-                items: [{
-                    xtype: 'netzbetreiber',
-                    name: 'netzbetreiberId',
-                    editable: false,
-                    readOnly: true,
-                    isFormField: false,
-                    submitValue: false,
-                    fieldLabel: i18n.getMsg('netzbetreiberId'),
-                    margin: '0, 5, 5, 5',
-                    width: '35%',
-                    labelWidth: 80
-                }, {
-                    xtype: 'tfield',
-                    name: 'code',
-                    fieldLabel: i18n.getMsg('code'),
-                    margin: '0, 5, 5, 5',
-                    width: '35%',
-                    labelWidth: 80,
-                    maxLength: 120
-                }, {
-                    xtype: 'tfield',
-                    name: 'bezeichnung',
-                    fieldLabel: i18n.getMsg('bezeichnung'),
-                    margin: '0, 5, 5, 5',
-                    width: '35%',
-                    labelWidth: 80,
-                    maxLength: 120
-                }]
+                xtype: 'netzbetreiber',
+                name: 'netzbetreiberId',
+                editable: true,
+                readOnly: true,
+                fieldLabel: i18n.getMsg('netzbetreiberId')
+            }, {
+                xtype: 'tfield',
+                name: 'code',
+                fieldLabel: i18n.getMsg('code'),
+                maxLength: 120
+            }, {
+                xtype: 'tarea',
+                name: 'bezeichnung',
+                fieldLabel: i18n.getMsg('bezeichnung'),
+                maxLength: 120
             }]
         }];
         this.callParent(arguments);
         this.clearMessages();
         this.loadRecord(this.record);
         this.setReadOnly(this.record.get('readonly'));
+        this.down('netzbetreiber').store.filter(function(item) {
+            return Lada.netzbetreiber.indexOf(item.get('id')) >= 0;
+        });
     },
 
     setMessages: function(errors, warnings) {
@@ -138,13 +129,13 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
 
     clearMessages: function() {
         this.down('netzbetreiber').clearWarningOrError();
-        this.down('tfield[name=bezeichnung]').clearWarningOrError();
+        this.down('tarea[name=bezeichnung]').clearWarningOrError();
         this.down('tfield[name=code]').clearWarningOrError();
     },
 
     setReadOnly: function(value) {
         this.down('netzbetreiber').setReadOnly(value);
-        this.down('tfield[name=bezeichnung]').setReadOnly(value);
+        this.down('tarea[name=bezeichnung]').setReadOnly(value);
         this.down('tfield[name=code]').setReadOnly(value);
     }
 });

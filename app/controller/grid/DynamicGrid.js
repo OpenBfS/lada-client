@@ -59,9 +59,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
 
         // Write the columns to an array
         try {
-            for (key in selection[0].data) {
+            for (var key in selection[0].data) {
                 // Do not write owner or readonly or id
-                if (['owner', 'readonly', 'id', 'probeId'].indexOf(key) == -1) {
+                if (['owner', 'readonly', 'id', 'probeId'].indexOf(key) === -1) {
                     columns.push(key);
                 }
             }
@@ -72,7 +72,6 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         //Retrieve visible columns' id's and names.
         // and set displayName
         try {
-            var grid = button.up('grid');
             var cman = grid.columnManager;
             var cols = cman.getColumns();
 
@@ -89,17 +88,17 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
 
         // Retrieve Data from selection
         try {
-            for (item in selection) {
+            for (var item in selection) {
                 var row = selection[item].data;
                 var out = [];
                 //Lookup every column and write to data array.
                 for (key in columns) {
                     var attr = columns[key];
                     //Only write data to output when the column is not hidden.
-                    if (row[attr] != null &&
-                        visibleColumns[attr] != null) {
+                    if (row[attr] !== null &&
+                        visibleColumns[attr] !== null) {
                         out.push(row[attr].toString());
-                    } else if (visibleColumns[attr] != null) {
+                    } else if (visibleColumns[attr] !== null) {
                         out.push('');
                     }
                 }
@@ -111,14 +110,11 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
 
         //Retrieve the names of the columns.
         try {
-            var grid = button.up('grid');
-            var cman = grid.columnManager;
-            var cols = cman.getColumns();
             //Iterate columns and find column names for the key...
             // This WILL run into bad behaviour when column-keys exist twice.
             for (key in columns) {
-                for (k in cols) {
-                    if (cols[k].dataIndex == columns[key]) {
+                for (var k in cols) {
+                    if (cols[k].dataIndex === columns[key]) {
                         columnNames.push(cols[k].text);
                         break;
                     }
@@ -172,6 +168,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 if (json) {
                     if (json.errors.totalCount > 0 || json.warnings.totalCount > 0) {
                         formPanel.setMessages(json.errors, json.warnings);
+                        // TODO: Dead code? formpanel is undefined here
                     }
                     if (json.message) {
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
@@ -211,7 +208,6 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         if (rowModel.selected.items.length === 0) {
             this.buttonToggle(false, grid);
         }
-        var grid = rowModel.view.up('grid');
         var map = Ext.ComponentQuery.query('map')[0];
         if (map) {
             map.fireEvent('deselectfeature', record);
@@ -408,19 +404,24 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     break;
                 case 'dsatzerz':
                     var win = Ext.create('Lada.view.window.DatensatzErzeuger', {
-                        record: Ext.create('Lada.model.DatensatzErzeuger')
+                        record: Ext.create('Lada.model.DatensatzErzeuger',
+                            {readonly: false})
                     });
                     win.show();
                     break;
                 case 'mprkat':
                     var win = Ext.create('Lada.view.window.MessprogrammKategorie', {
-                        record: Ext.create('Lada.model.MessprogrammKategorie')
+                        record: Ext.create('Lada.model.MessprogrammKategorie',
+                            {readonly: false})
                     });
                     win.show();
                     break;
                 case 'ortId':
                     Ext.create('Lada.view.window.Ort',{
-                        record: Ext.create('Lada.model.Ort', {ortTyp: 1}),
+                        record: Ext.create('Lada.model.Ort', {
+                            ortTyp: 1,
+                            readonly: false
+                        }),
                         parentWindow: grid
                     }).show();
                     break;

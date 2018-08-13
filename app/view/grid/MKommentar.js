@@ -14,7 +14,7 @@ Ext.define('Lada.view.grid.MKommentar', {
     alias: 'widget.mkommentargrid',
 
     maxHeight: 350,
-    minHeight: 110,
+    minHeight: 125,
     viewConfig: {
         deferEmptyText: false
     },
@@ -39,7 +39,7 @@ Ext.define('Lada.view.grid.MKommentar', {
                 beforeedit: function(e, o) {
                     var readonlywin = o.grid.up('window').record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
-                    if (readonlywin === true || readonlygrid == true || this.disabled) {
+                    if (readonlywin === true || readonlygrid === true || this.disabled) {
                         return false;
                     }
                     return true;
@@ -133,7 +133,7 @@ Ext.define('Lada.view.grid.MKommentar', {
     },
 
     setReadOnly: function(b) {
-        if (b == true) {
+        if (b === true) {
             //Readonly
             if (this.getPlugin('rowedit')) {
                 this.getPlugin('rowedit').disable();

@@ -39,6 +39,7 @@ Ext.define('Lada.controller.grid.Messung', {
      * Window.
      */
     editItem: function(grid, record) {
+        var me = this;
         // we have a window with a probe record!
         grid.getEl().swallowEvent(['click', 'dblclick'], true);
         if (grid.up('probenedit')) {
@@ -58,7 +59,6 @@ Ext.define('Lada.controller.grid.Messung', {
         probeRecord.setId(record.get('probeId'));
         probeRecord.set('owner', record.get('owner'));
         probeRecord.set('readonly', record.get('readonly'));
-
         var probeWin = Ext.create('Lada.view.window.ProbeEdit', {
             record: probeRecord,
             style: 'z-index: -1;' //Fixes an Issue where windows could not be created in IE8

@@ -192,7 +192,7 @@ Ext.define('Lada.controller.form.Messung', {
       */
     discard: function(button) {
         var formPanel = button.up('form');
-        formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
+        formPanel.getForm().reset();
     },
 
     /**
@@ -229,7 +229,6 @@ Ext.define('Lada.controller.form.Messung', {
     },
 
     addStatus: function(button) {
-        var me = this;
         var i18n = Lada.getApplication().bundle;
         var win = Ext.create('Lada.view.window.SetStatus', {
             title: i18n.getMsg('statusSetzen.win.title'),

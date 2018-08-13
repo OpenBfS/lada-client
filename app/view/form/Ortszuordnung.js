@@ -254,7 +254,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
      * sets the ortzuordnung.
      */
     chooseLocation: function() {
-        var i18n = Lada.getApplication().bundle;
         var win = this.up('ortszuordnungwindow');
         var osg = win.down('ortstammdatengrid');
         var oForm = win.down('ortszuordnungform');
@@ -265,11 +264,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                 map.initFeatureLayer();
             }
             map.featureLayer.setVisibility(true);
-            var mstId = oForm.up('window').probe ? oForm.up('window').probe.get('mstId') :
-                oForm.up('window').messprogramm.get('mstId');
-            var mst = Ext.data.StoreManager.get('messstellen');
-            var ndx = mst.findExact('id', mstId);
-            var nId = mst.getAt(ndx).get('netzbetreiberId');
             osg.addListener('select',oForm.setOrt, oForm);
         } else {
             osg.removeListener('select',oForm.setOrt, oForm);

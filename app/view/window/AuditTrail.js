@@ -152,7 +152,7 @@ Ext.define('Lada.view.window.AuditTrail', {
 
     createHtmlChangedFields: function(audit) {
         var i18n = Lada.getApplication().bundle;
-        html = '<br>' + i18n.getMsg(audit.action)
+        var html = '<br>' + i18n.getMsg(audit.action)
             + '<br><div style="margin-left:2em;">';
 
         for (var key in audit.changedFields) {
@@ -177,7 +177,7 @@ Ext.define('Lada.view.window.AuditTrail', {
                 var strValue = value.toExponential(2).toString()
                     .replace('.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
-                var exponent = parseInt(splitted[1]);
+                var exponent = parseInt(splitted[1],10);
                 value = splitted[0] + 'e'
                     + ((exponent < 0) ? '-' : '+')
                     + ((Math.abs(exponent) < 10) ? '0' : '')

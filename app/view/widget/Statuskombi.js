@@ -14,6 +14,7 @@ Ext.define('Lada.view.widget.Statuskombi', {
     readOnly: true,
     editable: false,
     alias: 'widget.statuskombi',
+    layout: 'hbox',
     store: Ext.data.StoreManager.get('status'),
     trackResetOnLoad: true,
     buttonListener: null,
@@ -30,10 +31,10 @@ Ext.define('Lada.view.widget.Statuskombi', {
     changebutton: function() {
         var i18n = Lada.getApplication().bundle;
         var btn = Ext.create('Ext.Button', {
-            margin: '0 5',
             text: i18n.getMsg('button.changestatus'),
             tooltip: i18n.getMsg('button.changestatus.qtip'),
             action: 'newstatus',
+            margin: '0 5 0 5',
             disabled: true,
             listeners: this.buttonListener
         });
@@ -43,7 +44,7 @@ Ext.define('Lada.view.widget.Statuskombi', {
     resetbutton: function() {
         var i18n = Lada.getApplication().bundle;
         var btn = Ext.create('Ext.Button', {
-            margin: '0 5',
+            margin: '0 5 0 5',
             text: i18n.getMsg('button.resetstatus'),
             tooltip: i18n.getMsg('button.resetstatus.qtip'),
             action: 'resetstatus',

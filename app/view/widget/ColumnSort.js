@@ -19,7 +19,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
     requires: ['Lada.view.widget.Sort',
         'Lada.store.GridColumnValue'
     ],
-    margin: '20,0,0,10',
+    margin: '20 0 20 0',
     title: null,
     store: null,
 
@@ -52,6 +52,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                 name: 'sortGrid',
                 flex: 1,
                 xtype: 'grid',
+                border: true,
                 store: this.store,
                 scrollable: true,
                 maxHeight: 150,
@@ -61,6 +62,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                 multiSelect: true,
                 stripeRows: true,
                 viewConfig: {
+                    enableTextSelection: false,
                     plugins: {
                         ptype: 'gridviewdragdrop',
                         containerScroll: true
@@ -111,8 +113,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                     dataIndex: 'sort',
                     sortable: false
                 }],
-                title: i18n.getMsg('query.sorting'),
-                minHeight: 40
+                title: i18n.getMsg('query.sorting')
             }, {
                 xtype: 'container',
                 layout: 'vbox',

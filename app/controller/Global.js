@@ -13,7 +13,6 @@ Ext.define('Lada.controller.Global', {
     extend: 'Ext.app.Controller',
 
     init: function() {
-        var me = this;
         this.control({
             'menuitem[action=about]': {
                 click: this.about
