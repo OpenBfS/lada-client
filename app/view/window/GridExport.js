@@ -19,32 +19,6 @@ Ext.define('Lada.view.window.GridExport', {
     layout: 'vbox',
     align: 'stretch',
     grid: null,
-    items: [{
-        xtype: 'container',
-        name: 'form',
-        layout: 'vbox',
-        align: 'stretch',
-        defaults: {
-            displayField: 'name',
-            valueField: 'value',
-            labelWidth: 200,
-            width: 400
-        }
-    } ,
-    {
-        xtype: 'container',
-        layout: 'hbox',
-        defaults: {
-            margin: '5,5,5,5'
-        },
-        items: [{
-            xtype: 'button',
-            action: 'export'
-        },{
-            xtype: 'button',
-            action: 'close'
-        }]
-    }],
 
     /**
      * CSV options (separators etc), set by dialogue. TODO: write config here
@@ -83,8 +57,6 @@ Ext.define('Lada.view.window.GridExport', {
     initComponent: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
-        this.callParent(arguments);
-        this.down('button[action=export]').text= i18n.getMsg('export.button');
         this.title = i18n.getMsg('export.title');
         var columns = this.grid.getColumns();
 
@@ -201,115 +173,172 @@ Ext.define('Lada.view.window.GridExport', {
 
         // create comboboxes and checkboxes
 
-        this.down('container[name=form]').add([{
-            xtype: 'combobox',
-            fieldLabel: i18n.getMsg('export.format'),
-            name: 'formatselection',
-            store: me.formatStore,
-            value: 'csv',
-            listeners: {
-                change: me.changeFormat
-            }
-        }, {
-            xtype: 'checkbox',
-            name: 'allcolumns',
-            fieldLabel: i18n.getMsg('export.allcolumns'),
-            checked: true,
-            listeners: {
-                change: me.exportalltoggle
-            }
-        }, {
-            xtype: 'checkbox',
-            name: 'secondarycolumns',
-            fieldLabel: i18n.getMsg('export.secondarycolumns'),
-            checked: this.grid.export_rowexp ? true: false,
-            listeners: {
-                change: me.exportsecondarytoggle
-            }
-        }, {
-            xtype: 'tagfield',
-            name: 'exportcolumns',
-            labelWidth: 100,
-            fieldLabel: i18n.getMsg('export.columns'),
-            store: me.columnListStore,
-            hidden: true,
-            value: preselected,
-            multiSelect: true
-        }, {
-            xtype: 'tagfield',
-            name: 'exportexpcolumns',
-            labelWidth: 100,
-            fieldLabel: i18n.getMsg('export.expcolumns'),
-            store: me.expcolumnList,
-            hidden: true,
-            value: null,
-            multiSelect: true
-        }, {
-            xtype: 'fieldset',
-            title: i18n.getMsg('export.csvdetails'),
-            collapsible: true,
-            collapsed: true,
-            name: 'csvoptions',
-            visible: false,
-            margins: '5,5,5,5',
-            align: 'end',
+        this.items = [{
+            xtype: 'container',
+            name: 'form',
+            layout: 'vbox',
+            align: 'stretch',
             defaults: {
                 displayField: 'name',
                 valueField: 'value',
-                labelWidth: 120
+                labelWidth: 200,
+                width: 400
             },
             items: [{
                 xtype: 'combobox',
-                name: 'linesep',
-                store: me.csv_linesepstore,
-                fieldLabel: i18n.getMsg('export.linesep'),
-                value: 'windows'
+                fieldLabel: i18n.getMsg('export.format'),
+                name: 'formatselection',
+                store: me.formatStore,
+                value: 'csv',
+                listeners: {
+                    change: me.changeFormat
+                }
+            }, {
+                xtype: 'checkbox',
+                name: 'allcolumns',
+                fieldLabel: i18n.getMsg('export.allcolumns'),
+                checked: true,
+                listeners: {
+                    change: me.exportalltoggle
+                }
+            }, {
+                xtype: 'checkbox',
+                name: 'secondarycolumns',
+                fieldLabel: i18n.getMsg('export.secondarycolumns'),
+                checked: this.grid.export_rowexp ? true: false,
+                listeners: {
+                    change: me.exportsecondarytoggle
+                }
+            }, {
+                xtype: 'tagfield',
+                name: 'exportcolumns',
+                labelWidth: 100,
+                fieldLabel: i18n.getMsg('export.columns'),
+                store: me.columnListStore,
+                hidden: true,
+                value: preselected,
+                multiSelect: true
+            }, {
+                xtype: 'tagfield',
+                name: 'exportexpcolumns',
+                labelWidth: 100,
+                fieldLabel: i18n.getMsg('export.expcolumns'),
+                store: me.expcolumnList,
+                hidden: true,
+                value: null,
+                multiSelect: true
             }, {
                 xtype: 'combobox',
-                name: 'textlim',
-                fieldLabel: i18n.getMsg('export.textsep'),
-                store: me.csv_textlimstore,
-                value: '"'
+                fieldLabel: i18n.getMsg('encoding'),
+                allowBlank: false,
+                displayField: 'name',
+                valueField: 'value',
+                name: 'encoding',
+                valueNotFoundText: i18n.getMsg('notfound'),
+                margin: '3, 3, 3, 3',
+                hidden: true,
+                store: Ext.create('Ext.data.Store', {
+                    fields: ['name', 'value'],
+                    data: [{
+                        name: 'ISO-8859-15',
+                        value: 'iso-8859-15'
+                    }, {
+                        name: 'UTF-8',
+                        value: 'utf-8'
+                    }, {
+                        name: 'IBM437',
+                        value: 'ibm437'
+                    }]
+                })
             }, {
-                xtype: 'combobox',
-                name: 'colsep',
-                fieldLabel: i18n.getMsg('export.columnlim'),
-                store: me.csv_colsepstore,
-                value: ';'
+                xtype: 'fieldset',
+                title: i18n.getMsg('export.csvdetails'),
+                collapsible: true,
+                collapsed: true,
+                name: 'csvoptions',
+                visible: false,
+                margins: '5,5,5,5',
+                align: 'end',
+                defaults: {
+                    displayField: 'name',
+                    valueField: 'value',
+                    labelWidth: 120
+                },
+                items: [{
+                    xtype: 'combobox',
+                    name: 'linesep',
+                    store: me.csv_linesepstore,
+                    fieldLabel: i18n.getMsg('export.linesep'),
+                    value: 'windows'
+                }, {
+                    xtype: 'combobox',
+                    name: 'textlim',
+                    fieldLabel: i18n.getMsg('export.textsep'),
+                    store: me.csv_textlimstore,
+                    value: '"'
+                }, {
+                    xtype: 'combobox',
+                    name: 'colsep',
+                    fieldLabel: i18n.getMsg('export.columnlim'),
+                    store: me.csv_colsepstore,
+                    value: ';'
+                }, {
+                    xtype: 'combobox',
+                    name: 'decsep',
+                    store: me.csv_decSepStore,
+                    fieldLabel: i18n.getMsg('decimalseparator'),
+                    value: ','
+                }]
             }, {
-                xtype: 'combobox',
-                name: 'decsep',
-                store: me.csv_decSepStore,
-                fieldLabel: i18n.getMsg('decimalseparator'),
-                value: ','
+                xtype: 'textfield',
+                name: 'filename',
+                margin: '3, 3, 3, 3',
+                fieldLabel: i18n.getMsg('export.filename'),
+                allowBlank: true,
+                editable: true
             }]
         }, {
-            xtype: 'textfield',
-            name: 'filename',
-            fieldLabel: i18n.getMsg('export.filename'),
-            allowBlank: true,
-            editable: true
-        }
-        ]);
+            xtype: 'container',
+            layout: 'hbox',
+            defaults: {
+                margin: '5,5,5,5'
+            },
+            items: [{
+                xtype: 'button',
+                action: 'export',
+                text: i18n.getMsg('export.button'),
+                listeners: {
+                    click: me.doExport
+                }
+            },{
+                xtype: 'button',
+                action: 'close',
+                text: i18n.getMsg('close'),
+                listeners: {
+                    click: me.close
+                }
+            }]
+        }];
 
         // listeners
-        this.down('button[action=export]').on({
-            click: me.doExport
-        });
-        this.down('button[action=close]').text = i18n.getMsg('close');
-        this.down('button[action=export]').text = i18n.getMsg('export.button');
-        this.down('button[action=close]').on({
-            click: function(button) {
-                button.up('window').close();
-                return;
-            }
-        });
+        // this.down('button[action=export]').on({
+        //     click: me.doExport
+        // });
+        // this.down('button[action=close]').text = i18n.getMsg('close');
+        // this.down('button[action=export]').text = i18n.getMsg('export.button');
+        // this.down('button[action=close]').on({
+        //     click: function(button) {
+        //         button.up('window').close();
+        //         return;
+        //     }
+        // });
 
         // get rowexpander and their columns
         var toggled = false;
         if (!this.grid.plugins) {
             return;
         }
+        var preselectedEx = [];
         for (var i=0; i < this.grid.plugins.length; i++) {
             if (this.grid.plugins[i].ptype === 'gridrowexpander') {
                 this.rowexp = this.grid.plugins[i];
@@ -320,7 +349,6 @@ Ext.define('Lada.view.window.GridExport', {
                     toggled = true;
                 }
                 this.expcolumns = this.rowexp.cmps.items[0].getColumns();
-                var preselectedEx = [];
                 for (var i =0; i < this.expcolumns.length; i++) {
                     if (this.expcolumns[i].dataIndex &&
                       columns[i].dataIndex !== 'readonly' &&
@@ -335,10 +363,17 @@ Ext.define('Lada.view.window.GridExport', {
                 if (toggled) {
                     this.rowexp.toggleRow(0);
                 }
-                this.down('tagfield[name=exportexpcolumns]').select(preselectedEx);
                 break;
             }
         }
+        this.callParent(arguments);
+        this.down('button[action=export]').text= i18n.getMsg('export.button');
+        this.down('tagfield[name=exportexpcolumns]').select(preselectedEx);
+        var encoding = document.characterSet;
+        if (!encoding) {
+            encoding = document.defaultCharset;
+        }
+        this.down('combobox[name=encoding]').setValue(encoding.toLowerCase());
     },
 
     /**
@@ -373,8 +408,9 @@ Ext.define('Lada.view.window.GridExport', {
             case 'laf':
                 namecheck = win.validateFilename('laf');
                 if (namecheck) {
+                    var encoding = win.down('combobox[name=encoding]').getValue();
                     win.down('button[action=close]').setDisabled(true);
-                    win.exportLAF(filename);
+                    win.exportLAF(encoding);
                 }
                 break;
             default:
@@ -559,7 +595,7 @@ Ext.define('Lada.view.window.GridExport', {
     /**
      * Exports as probe-LAF, or, if available, as messung-LAF
      */
-    exportLAF: function() {
+    exportLAF: function(encoding) {
         var dataset = this.getDataSets();
         var jsondata = {};
         if (this.hasMessung) {
@@ -596,6 +632,9 @@ Ext.define('Lada.view.window.GridExport', {
         Ext.Ajax.request({
             url: 'lada-server/data/export/laf',
             jsonData: jsondata,
+            headers: {
+                'X-FILE-ENCODING': encoding
+            },
             timeout: 2 * 60 * 1000,
             success: function(response) {
                 var content = response.responseText;
@@ -629,6 +668,9 @@ Ext.define('Lada.view.window.GridExport', {
     changeFormat: function(box, newValue, oldValue) {
         box.up('window').down('fieldset[name=csvoptions]').setVisible(
             newValue === 'csv' ? true: false
+        );
+        box.up('window').down('combobox[name=encoding]').setVisible(
+            newValue === 'laf' ? true: false
         );
         var ecolVisible = true;
         if (box.up('window').down('checkbox[name=allcolumns]').getValue()) {
