@@ -81,9 +81,6 @@ Ext.define('Lada.controller.form.Messung', {
                     if (parentGrid.length === 1) {
                         parentGrid[0].reload();
                     }
-                    if (messwertgrid) {
-                        messwertgrid.store.reload();
-                    }
                     if (response.action === 'create' && json.success) {
                         var oldWin = button.up('window');
                         var probe = oldWin.record;
