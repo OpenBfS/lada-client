@@ -288,6 +288,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                             });
                                         win.initData();
                                         win.show();
+                                        win.setPosition(35 + probeWin.width);
                                     }
                                 });
                         }

@@ -71,9 +71,10 @@ Ext.define('Lada.controller.form.Messung', {
                     var parentWin = button.up('window').parentWindow;
                     if (parentWin) {
                         parentWin.initData();
-                        var messwertgrid = parentWin.down('messwertgrid');
-                        if (messwertgrid) {
-                            messwertgrid.getStore().reload();
+                        var messunggrid = parentWin.down('messunggrid');
+
+                        if (messunggrid) {
+                            messunggrid.getStore().reload();
                         }
                     }
                     var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
