@@ -198,6 +198,9 @@ Ext.define('Lada.controller.Query', {
         var qp = combobox.up('querypanel');
         var newquery = qp.store.getById(combobox.getValue());
         combobox.resetOriginalValue();
+        var contentPanel = qp.up('panel[name=main]').down(
+            'panel[name=contentpanel]');
+        contentPanel.removeAll();
         if (!newquery) {
             var emptyentry = Ext.create('Lada.model.Query',{
                 baseQuery: null,
