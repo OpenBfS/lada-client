@@ -13,7 +13,6 @@ Ext.define('Lada.override.RowEditor', {
         this.callParent(arguments);
         var button = this.down('button[ui=default-toolbar]');
         while (button) {
-            console.log(button);
             button.setUI('default');
             button = this.down('button[ui=default-toolbar]');
         }
