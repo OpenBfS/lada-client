@@ -82,6 +82,10 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
         this.down('netzbetreiber').store.filter(function(item) {
             return Lada.netzbetreiber.indexOf(item.get('id')) >= 0;
         });
+        if (!this.record.phantom) {
+            this.down('netzbetreiber').setValue(
+                this.record.get('netzbetreiberId'));
+        }
     },
 
     setMessages: function(errors, warnings) {
