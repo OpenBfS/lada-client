@@ -79,12 +79,16 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
         this.clearMessages();
         this.loadRecord(this.record);
         this.setReadOnly(this.record.get('readonly'));
-        this.down('netzbetreiber').store.filter(function(item) {
+        var netzstore = this.down('netzbetreiber').store;
+        netzstore.clearFilter();
+        netzstore.filter(function(item) {
             return Lada.netzbetreiber.indexOf(item.get('id')) >= 0;
         });
         if (!this.record.phantom) {
-            this.down('netzbetreiber').setValue(
-                this.record.get('netzbetreiberId'));
+            var current = netzstore.getById(this.record.get('netzbetreiberId'));
+            if (current) {
+                this.down('netzbetreiber').setValue(current);
+            }
         }
     },
 
