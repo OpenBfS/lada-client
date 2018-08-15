@@ -50,7 +50,8 @@ Ext.define('Lada.model.Probenehmer', {
         }
     }, {
         name: 'readonly',
-        type: 'boolean'
+        type: 'boolean',
+        persist: false
     }],
 
     idProperty: 'id',
@@ -62,6 +63,10 @@ Ext.define('Lada.model.Probenehmer', {
             type: 'json',
             totalProperty: 'totalCount',
             rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });
