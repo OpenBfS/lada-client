@@ -98,7 +98,7 @@ Ext.define('Lada.controller.form.Probenehmer', {
         var netzbetr = form.down('netzbetreiber').getValue();
         if (Ext.Array.contains(Lada.funktionen, 4)
         && form.getRecord().get('readonly') === false
-        && form.isDirty() === true) {
+        && netzbetr) {
             form.down('button[action=discard]').enable();
             if (form.isValid() && netzbetr) {
                 form.down('button[action=save]').enable();

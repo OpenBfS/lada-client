@@ -100,7 +100,7 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
         var netzbetr = form.down('netzbetreiber').getValue();
         if (Ext.Array.contains(Lada.funktionen, 4)
         && form.getRecord().get('readonly') === false
-        && form.isDirty() === true && netzbetr) {
+        && netzbetr) {
             if (form.isValid()) {
                 form.down('button[action=save]').enable();
             } else {

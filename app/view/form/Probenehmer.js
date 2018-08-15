@@ -218,6 +218,7 @@ Ext.define('Lada.view.form.Probenehmer', {
             var current = netzstore.getById(this.record.get('netzbetreiberId'));
             if (current) {
                 this.down('netzbetreiber').setValue(current);
+                this.down('netzbetreiber').setReadOnly(true);
             }
         }
     },

@@ -107,6 +107,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
             var current = netzstore.getById(this.record.get('netzbetreiberId'));
             if (current) {
                 this.down('netzbetreiber').setValue(current);
+                this.down('netzbetreiber').setReadOnly(true);
             }
         }
     },

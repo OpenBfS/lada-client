@@ -99,7 +99,7 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
         var netzbetr = form.down('netzbetreiber').getValue();
         if (Ext.Array.contains(Lada.funktionen, 4)
         && !form.getRecord().get('readonly')
-        && form.isDirty() && netzbetr) {
+        && netzbetr) {
             form.down('button[action=discard]').enable();
             if (form.isValid()) {
                 form.down('button[action=save]').enable();
