@@ -97,12 +97,12 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
         formPanel.down('button[action=save]').setDisabled(true);
     },
 
-    checkCommitEnabled: function(callingEl) {
+    checkCommitEnabled: function(callingEl, dirty) {
         var form = callingEl.owner;
         var netzbetr = form.down('netzbetreiber').getValue();
         if (Ext.Array.contains(Lada.funktionen, 4)
         && form.getRecord().get('readonly') === false
-        && netzbetr) {
+        && netzbetr && dirty) {
             if (form.isValid()) {
                 form.down('button[action=save]').enable();
             } else {

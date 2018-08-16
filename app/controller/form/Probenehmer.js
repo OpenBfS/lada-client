@@ -96,12 +96,12 @@ Ext.define('Lada.controller.form.Probenehmer', {
         formPanel.down('button[action=save]').setDisabled(true);
     },
 
-    checkCommitEnabled: function(callingEl) {
+    checkCommitEnabled: function(callingEl, dirty) {
         var form = callingEl.owner;
         var netzbetr = form.down('netzbetreiber').getValue();
         if (Ext.Array.contains(Lada.funktionen, 4)
         && form.getRecord().get('readonly') === false
-        && netzbetr) {
+        && netzbetr && dirty) {
             form.down('button[action=discard]').enable();
             if (form.isValid() && netzbetr) {
                 form.down('button[action=save]').enable();

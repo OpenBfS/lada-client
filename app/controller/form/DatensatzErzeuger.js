@@ -55,7 +55,7 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                 formPanel.setRecord(record);
                 formPanel.setMessages(json.errors, json.warnings);
                 button.setDisabled(true);
-                button.up('toolbar').down('button[action=discard]')
+                button.up('datensatzerzeugeredit').down('button[action=discard]')
                     .setDisabled(true);
             },
             failure: function(record, response) {
@@ -82,8 +82,8 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                             i18n.getMsg('err.msg.response.body'));
                     }
                     button.setDisabled(true);
-                    button.up('toolbar').down('button[action=discard]')
-                        .setDisabled(true);
+                    button.up('datensatzerzeugeredit').down(
+                        'button[action=discard]').setDisabled(true);
                 }
             }
         });
@@ -92,16 +92,18 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
-        formPanel.down('button[action=discard]').setDisabled(true);
-        formPanel.down('button[action=save]').setDisabled(true);
+        formPanel.up('datensatzerzeugeredit').down(
+            'button[action=discard]').setDisabled(true);
+        formPanel.up('datensatzerzeugeredit').down(
+            'button[action=save]').setDisabled(true);
     },
 
-    checkCommitEnabled: function(callingEl) {
+    checkCommitEnabled: function(callingEl, dirty) {
         var form = callingEl.owner;
         var netzbetr = form.down('netzbetreiber').getValue();
         if (Ext.Array.contains(Lada.funktionen, 4)
         && !form.getRecord().get('readonly')
-        && netzbetr) {
+        && netzbetr && dirty) {
             form.down('button[action=discard]').enable();
             if (form.isValid()) {
                 form.down('button[action=save]').enable();
