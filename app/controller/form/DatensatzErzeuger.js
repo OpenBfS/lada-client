@@ -43,9 +43,6 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
         }
         record.save({
             success: function(record, response) {
-                button.setDisabled(true);
-                button.up('toolbar').down('button[action=discard]')
-                    .setDisabled(true);
                 var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                 if (parentGrid.length === 1) {
                     parentGrid[0].reload();
@@ -57,6 +54,9 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                 formPanel.clearMessages();
                 formPanel.setRecord(record);
                 formPanel.setMessages(json.errors, json.warnings);
+                button.setDisabled(true);
+                button.up('toolbar').down('button[action=discard]')
+                    .setDisabled(true);
             },
             failure: function(record, response) {
                 var i18n = Lada.getApplication().bundle;
@@ -64,9 +64,6 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                         i18n.getMsg('err.msg.generic.body'));
                 } else {
-                    button.setDisabled(true);
-                    button.up('toolbar').down('button[action=discard]')
-                        .setDisabled(true);
                     formPanel.getForm().reset();
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
@@ -84,6 +81,9 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                             i18n.getMsg('err.msg.response.body'));
                     }
+                    button.setDisabled(true);
+                    button.up('toolbar').down('button[action=discard]')
+                        .setDisabled(true);
                 }
             }
         });
@@ -92,6 +92,8 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
+        formPanel.down('button[action=discard]').setDisabled(true);
+        formPanel.down('button[action=save]').setDisabled(true);
     },
 
     checkCommitEnabled: function(callingEl) {
