@@ -24,6 +24,8 @@ Ext.define('Lada.view.widget.Umwelt' ,{
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
+    labelTpl: Ext.create('Ext.XTemplate',
+        '<tpl for=".">{id} - {umweltBereich}</tpl>'),
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
             '{id} - {umweltBereich}</div></tpl>'),

@@ -68,6 +68,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             value: this.value,
             tpl: this.tpl,
             displayTpl: this.displayTpl,
+            labelTpl: this.labelTpl,
             // disable filtering of entries if disableKeyFilter is true
             disableKeyFilter: dkf,
             triggerAction: ta,
