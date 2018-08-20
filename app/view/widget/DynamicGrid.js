@@ -613,16 +613,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (!value) {
                 return '';
             }
-            var st = Ext.data.StoreManager.get('statusstufe');
-            var rec = st.findRecord('id', value, false,false,
-                false,true);
-            if (!rec) {
-                return value;
-            }
-            if (rec.get('stufe') !== undefined) {
-                return rec.get('stufe');
-            }
-            return '';
+            // var st = Ext.data.StoreManager.get('statusstufe');
+            // var rec = st.findRecord('id', value, false,false,
+            //     false,true);
+            // if (!rec) {
+            return value;
+            // }
+            // if (rec.get('stufe') !== undefined) {
+            //     return rec.get('stufe');
+            // }
+            // return '';
         };
     },
     generateUmweltbereichColumns: function(col) {
@@ -630,17 +630,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         col.renderer = function(value) {
             if (!value) {
                 return '';
-            }
-            var st = Ext.data.StoreManager.get('umwelt');
-            var rec = st.findRecord('id', value, false,false,
-                false,true);
-            if (!rec) {
+            } else {
                 return value;
             }
-            if (rec.get('umweltBereich') !== undefined) {
-                return rec.get('umweltBereich');
-            }
-            return '';
         };
     },
     generateStatusColumns: function(col) {
@@ -649,16 +641,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (!value) {
                 return '';
             }
-            var st = Ext.data.StoreManager.get('statuswerte');
-            var rec = st.findRecord('id', value, false,false,
-                false,true);
-            if (!rec) {
-                return value;
-            }
-            if (rec.get('wert') !== undefined) {
-                return rec.get('wert');
-            }
-            return '';
+            // var st = Ext.data.StoreManager.get('statuswerte');
+            // var rec = st.findRecord('id', value, false,false,
+            //     false,true);
+            // if (!rec) {
+            return value;
+            // }
+            // if (rec.get('wert') !== undefined) {
+            //     return rec.get('wert');
+            // }
+            // return '';
         };
     },
 
@@ -667,18 +659,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         col.renderer = function(value) {
             if (!value) {
                 return '';
-            }
-            var st = Ext.data.StoreManager.get(
-                'verwaltungseinheitenwidget');
-            var rec = st.findRecord('id', value, false, false,
-                false, true);
-            if (!rec) {
+            } else {
                 return value;
             }
-            if (rec.get('bezeichnung') !== undefined) {
-                return rec.get('bezeichnung');
-            }
-            return '';
         };
     },
 
@@ -687,17 +670,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         col.renderer = function(value) {
             if (!value) {
                 return '';
-            }
-            var st = Ext.data.StoreManager.get('netzbetreiber');
-            var rec = st.findRecord('id', value, false,false,
-                false,true);
-            if (!rec) {
+            } else {
                 return value;
             }
-            if (rec.get('netzbetreiber') !== undefined) {
-                return rec.get('netzbetreiber');
-            }
-            return '';
         };
     },
 
@@ -707,16 +682,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (!value) {
                 return '';
             }
-            var st = Ext.data.StoreManager.get('datenbasis');
-            var rec = st.findRecord('id', value, false,false,
-                false,true);
-            if (!rec) {
-                return value;
-            }
-            if (rec.get('datenbasis') !== undefined) {
-                return rec.get('datenbasis');
-            }
-            return '';
+            // var st = Ext.data.StoreManager.get('datenbasis');
+            // var rec = st.findRecord('id', value, false,false,
+            //     false,true);
+            // if (!rec) {
+            return value;
+            // }
+            // if (rec.get('datenbasis') !== undefined) {
+            //     return rec.get('datenbasis');
+            // }
+            // return '';
         };
     },
 
@@ -726,16 +701,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (!value) {
                 return '';
             }
-            var st = Ext.data.StoreManager.get('probenarten');
-            var rec = st.findRecord('id', value, false,false,
-                false,true);
-            if (!rec) {
-                return value;
-            }
-            if (rec.get('datenbasis') !== undefined) {
-                return rec.get('datenbasis');
-            }
-            return '';
+            // var st = Ext.data.StoreManager.get('probenarten');
+            // var rec = st.findRecord('id', value, false,false,
+            //     false,true);
+            // if (!rec) {
+            return value;
+            // }
+            // if (rec.get('datenbasis') !== undefined) {
+            //     return rec.get('datenbasis');
+            // }
+            // return '';
         };
     },
 
@@ -746,16 +721,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (!value) {
                 return '';
             }
-            var st = Ext.data.StoreManager.get('staaten');
-            var rec = st.findRecord('id', value, false,false,
-                false,true);
-            if (!rec) {
-                return value;
-            }
-            if (rec.get('staatIso') !== undefined) {
-                return rec.get('staatIso');
-            }
-            return '';
+            // var st = Ext.data.StoreManager.get('staaten');
+            //var rec = st.findRecord('id', value, false,false,
+            //    false,true);
+            // if (!rec) {
+            return value;
+            // }
+            // if (rec.get('staatIso') !== undefined) {
+            //     return rec.get('staatIso');
+            // }
+            // return '';
         };
     },
 
