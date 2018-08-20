@@ -315,7 +315,9 @@ Ext.define('Lada.view.window.GridExport', {
                 action: 'close',
                 text: i18n.getMsg('close'),
                 listeners: {
-                    click: me.close
+                    click: function(button) {
+                        button.up('window').close();
+                    }
                 }
             }]
         }];
