@@ -211,16 +211,14 @@ Ext.define('Lada.view.panel.Map', {
             return;
         }
         var style = new ol.style.Style({
-            stroke: new ol.style.Stroke({
-                color: 'blue',
-                lineDash: [4],
-                width: 4
-            }),
-            fill: new ol.style.Fill({
-                color: 'rgba(0, 0, 255, 0.1)'
+            image: new ol.style.Icon({
+                src: 'resources/img/marker-blue.png'
             })
         });
-        var format = new ol.format.GeoJSON();
+        var format = new ol.format.GeoJSON({
+            dataProjection: 'EPSG:4326',
+            featureProjection: 'EPSG:3857'
+        });
         var features = format.readFeatures(json);
         var vectorSource = new ol.source.Vector({
             features: features
@@ -233,8 +231,7 @@ Ext.define('Lada.view.panel.Map', {
             visible: true
         });
         this.map.addLayer(vectorLayer);
-
-        this.map.getView().fit(extent, {duration: 1000});
+        this.map.getView().fit(extent, {maxZoom: 12});
     },
 
     /**
