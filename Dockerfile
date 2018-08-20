@@ -26,22 +26,39 @@ RUN apt-get update -y && apt-get install -y \
     curl unzip openjdk-7-jre && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-ADD . /usr/local/apache2/htdocs
-WORKDIR /usr/local/apache2/htdocs
-
-#
-# Install dependencies and build application
-#
-RUN ./install-sencha2opt.sh
-RUN ./install-dependencies.sh
-RUN ./docker-build-app.sh
-
-#
-# httpd setup
-#
-RUN sed -i -e "/^#LoadModule proxy_module/s/#//;/^#LoadModule proxy_http_module/s/#//;/^#Include conf.*httpd-vhosts.conf/s/#//" $HTTPD_PREFIX/conf/httpd.conf
-RUN ln -sf $PWD/custom-vhosts.conf $HTTPD_PREFIX/conf/extra/httpd-vhosts.conf
-
 EXPOSE 80 81 82 83 84
 
 CMD ["httpd-foreground"]
+#
+# httpd setup
+#
+ADD custom-vhosts.conf $HTTPD_PREFIX/conf/extra/httpd-vhosts.conf
+RUN sed -i -e "/^#LoadModule proxy_module/s/#//;/^#LoadModule proxy_http_module/s/#//;/^#Include conf.*httpd-vhosts.conf/s/#//" $HTTPD_PREFIX/conf/httpd.conf
+
+RUN mkdir /usr/local/lada
+RUN rm -rf /usr/local/apache2/htdocs && ln -s /usr/local/lada/ /usr/local/apache2/htdocs
+WORKDIR /usr/local/lada
+
+ADD *.sh /usr/local/lada/
+
+#
+# Install dependencies 
+#
+RUN ./install-sencha2opt.sh
+RUN ./install-dependencies.sh
+
+ADD overrides /usr/local/lada/overrides
+ADD resources /usr/local/lada/resources
+ADD sass /usr/local/lada/sass
+
+ADD index.html /usr/local/lada/
+
+ADD *.js *.json /usr/local/lada/
+ADD app /usr/local/lada/app
+
+#
+# build application
+#
+
+RUN ./docker-build-app.sh
+
