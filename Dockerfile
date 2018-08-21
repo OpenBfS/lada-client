@@ -23,7 +23,7 @@ ENV DEBIAN_FRONTEND noninteractive
 #
 
 RUN apt-get update -y && apt-get install -y \
-    curl unzip openjdk-7-jre && \
+    curl unzip openjdk-7-jre git && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 80 81 82 83 84
@@ -55,10 +55,13 @@ ADD index.html /usr/local/lada/
 
 ADD *.js *.json /usr/local/lada/
 ADD app /usr/local/lada/app
+ADD .git /usr/local/lada/.git
+
+RUN GITINFO=" $(git name-rev --name-only HEAD 2>/dev/null) $(git rev-parse --short HEAD 2>/dev/null)" &&\
+    sed -i -e "/Lada.clientVersion/s/';/$GITINFO';/" app.js
 
 #
 # build application
 #
 
-RUN ./docker-build-app.sh
-
+RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh
