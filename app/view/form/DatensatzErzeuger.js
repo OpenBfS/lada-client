@@ -69,6 +69,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                     name: 'netzbetreiberId',
                     readOnly: true,
                     allowBlank: false,
+                    filteredStore: true,
                     fieldLabel: i18n.getMsg('netzbetreiberId')
                 }, {
                     xtype: 'combobox',
@@ -99,10 +100,6 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
         this.loadRecord(this.record);
         this.setReadOnly(this.record.get('readonly'));
         var netzstore = this.down('netzbetreiber').store;
-        netzstore.clearFilter();
-        netzstore.filter(function(item) {
-            return Lada.netzbetreiber.indexOf(item.get('id')) >= 0;
-        });
         if (!this.record.phantom) {
             var current = netzstore.getById(this.record.get('netzbetreiberId'));
             if (current) {

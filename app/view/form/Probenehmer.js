@@ -85,6 +85,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                         readOnly: true,
                         allowBlank: false,
                         width: '50%',
+                        filteredStore: true,
                         fieldLabel: i18n.getMsg('netzbetreiberId'),
                         margin: '0 0 0 5',
                         labelWidth: 110
@@ -210,10 +211,6 @@ Ext.define('Lada.view.form.Probenehmer', {
         this.loadRecord(this.record);
         this.setReadOnly(this.record.get('readonly'));
         var netzstore = this.down('netzbetreiber').store;
-        netzstore.clearFilter();
-        netzstore.filter(function(item) {
-            return Lada.netzbetreiber.indexOf(item.get('id')) >= 0;
-        });
         if (!this.record.phantom) {
             var current = netzstore.getById(this.record.get('netzbetreiberId'));
             if (current) {

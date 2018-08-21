@@ -15,6 +15,7 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
     store: 'StaNetzbetreiber',
     displayField: 'netzbetreiber',
     valueField: 'id',
+    filteredStore: false,
     editable: this.editable || false,
     readOnly: this.readOnly,
     isFormField: this.isFormField,
@@ -34,7 +35,6 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.netzbetreiber');
-
         this.store = Ext.data.StoreManager.get('netzbetreiber');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Netzbetreiber');
@@ -44,6 +44,16 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
         this.callParent(arguments);
         this.down('combobox').isFormField = false;
         this.down('combobox').submitValue = false;
+        var me = this;
+        this.down('combobox').on('focus', function(combobox) {
+            var netzstore = combobox.getStore();
+            netzstore.clearFilter();
+            if (me.filteredStore) {
+                netzstore.filter(function(item) {
+                    return Lada.netzbetreiber.indexOf(item.get('id')) >= 0;
+                });
+            }
+        });
     },
 
     getValue: function() {
