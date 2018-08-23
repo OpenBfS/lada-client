@@ -596,6 +596,7 @@ Ext.define('Lada.view.form.Messprogramm', {
             });
             this.down('messstellelabor').setStore(newStore);
             this.down('messstellelabor').down('combobox').setValue(id);
+            this.down('messstellelabor').down('combobox').resetOriginalValue();
         } else {
             var mstLaborStore = Ext.data.StoreManager.get('messstellelabor');
             var availableitems = mstLaborStore.queryBy(function(record) {
@@ -609,8 +610,11 @@ Ext.define('Lada.view.form.Messprogramm', {
                 data: availableitems.items});
             this.down('messstellelabor').setStore(newStore);
             this.down('messstellelabor').setValue(messRecord.get('messstellelabor'));
+            this.down('messstellelabor').resetOriginalValue();
         }
         this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
+        this.down('netzbetreiber').down('combobox').resetOriginalValue();
+
     },
 
     setMediaDesk: function(record) {
