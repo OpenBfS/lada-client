@@ -43,8 +43,10 @@ Ext.define('Lada.view.window.Messprogramm', {
         }
         this.buttons = [{
             text: i18n.getMsg('generateproben'),
+            action: 'generateproben',
             scope: this,
-            disabled: this.record? false : true, //disable button if no record is set.
+            disabled: this.record? false : true, // disable button if no record is set.
+            // further disabling/enabling logic in the controller
             handler: function() {
                 //Make the Window a "singleton"
                 if (! this.probenWindow) {
