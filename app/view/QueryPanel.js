@@ -254,6 +254,15 @@ Ext.define('Lada.view.QueryPanel', {
 
         var selquery = this.down('combobox[name=selectedQuery]');
         selquery.fieldLabel = i18n.getMsg('query.query');
+        this.down('cbox[name=activefilters]').down('tagfield').on('focus',
+            function(tagfield) {
+                tagfield.getStore().filter(function(item) {
+                    if (item.get('filter')) {
+                        return true;
+                    }
+                    return false;
+                });
+            });
 
         this.store = Ext.data.StoreManager.get('querystore');
 
