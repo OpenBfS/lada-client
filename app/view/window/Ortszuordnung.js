@@ -221,6 +221,8 @@ Ext.define('Lada.view.window.Ortszuordnung', {
      */
     initData: function() {
         var me = this;
+        this.down('verwaltungseinheitengrid').getStore().clearFilter();
+        this.down('staatengrid').getStore().clearFilter();
         if (!this.record) {
             if (this.probe) {
                 this.record = Ext.create('Lada.model.Ortszuordnung');

@@ -203,12 +203,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var field = Ext.ComponentQuery.query('textfield[name=search]')[0];
         var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
-        var messpunkte = Ext.data.StoreManager.get('orte');
 
         if (evt.getKey() === 27) {
             verwaltungseinheiten.clearFilter(true);
             staaten.clearFilter(true);
-            messpunkte.clearFilter(true);
         }
         this.searchField = field;
         if ((evt.getKey() === 13 || evt.getKey() === 8)
@@ -220,7 +218,6 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         if (field.getValue().length === 0) {
             verwaltungseinheiten.clearFilter(true);
             staaten.clearFilter(true);
-            messpunkte.clearFilter(true);
             return;
         }
         if (field.getValue().length < 3) {
@@ -235,10 +232,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      */
     execSearch: function(requestingCmp, filter) {
         // Filter stores
-        var messpunkte = Ext.data.StoreManager.get('orte');
         var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
-        messpunkte.clearFilter(true);
         staaten.clearFilter(true);
         var ozw = requestingCmp.up('ortszuordnungwindow');
         this.doOrtFilter(ozw, filter);
@@ -335,18 +330,6 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * @param filterstring (optional): The string to filter
      */
     doOrtFilter: function(ozw, filterstring) {
-        var localfilter = false;
-        if (!ozw) {
-            return;
-        }
-        if (filterstring && this.ortefilter) {
-            if (filterstring.toLowerCase() === this.ortfilter) {
-                return;
-            }
-            if (!filterstring.toLowerCase().indexOf(this.ortfilter) > -1) {
-                localfilter = true;
-            }
-        }
         var ortgrid= ozw.down('ortstammdatengrid');
         ozw.ortstore.clearFilter();
         var netzfilter = null;
@@ -357,28 +340,30 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         } else if (ozw.messprogramm) {
             netzfilter = ozw.messprogramm.get('laborMstId');
         }
+        var extraParams = {};
         if (netzfilter !== null) {
             var item_mst = mst_store.findRecord(
                 'id', netzfilter, false, false, false, true);
             var nid = item_mst.get('netzbetreiberId');
             if (nid !== null) {
-                ozw.ortstore.proxy.extraParams = {
-                    netzbetreiberId: nid};
+                extraParams.netzbetreiberId = nid;
             }
         }
         if (filterstring) {
-            ozw.ortstore.proxy.extraParams.search = filterstring;
+            extraParams.search = filterstring;
         }
-        var toolbar = ozw.down('tabpanel').down('ortstammdatengrid').down('pagingtoolbar');
-        if (localfilter) {
-            ozw.onStoreChanged();
-            toolbar.doRefresh();
-        } else {
-            this.ortefilter = filterstring || null;
-            ortgrid.setStore(ozw.ortstore);
-            ozw.onStoreChanged();
-            toolbar.doRefresh();
-        }
+        ozw.ortstore.proxy.extraParams = extraParams;
+        ozw.ortstore.load({
+            scope: this,
+            callback: function(records, op, success) {
+                var toolbar = ozw.down('tabpanel').down(
+                    'ortstammdatengrid').down('pagingtoolbar');
+                this.ortefilter = filterstring || null;
+                ortgrid.setStore(ozw.ortstore);
+                ozw.onStoreChanged();
+                toolbar.doRefresh();
+            }
+        });
     },
 
     /**
