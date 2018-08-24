@@ -106,7 +106,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     },
 
     /**
-     * This function adds a new row to add an Ort
+     * This function opens the Ortszuordnungwindow with a new Ortszuordnung
      */
     add: function(button) {
         var parent = button.up('window').record;
@@ -349,9 +349,25 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         }
         var ortgrid= ozw.down('ortstammdatengrid');
         ozw.ortstore.clearFilter();
-        ozw.ortstore.proxy.extraParams = {netzbetreiberId: ozw.netzbetreiberId};
+        var netzfilter = null;
+        var mst_store = Ext.data.StoreManager.get('messstellen');
+        if (ozw.probe) {
+            netzfilter = ozw.probe.get('laborMstId');
+
+        } else if (ozw.messprogramm) {
+            netzfilter = ozw.messprogramm.get('laborMstId');
+        }
+        if (netzfilter !== null) {
+            var item_mst = mst_store.findRecord(
+                'id', netzfilter, false, false, false, true);
+            var nid = item_mst.get('netzbetreiberId');
+            if (nid !== null) {
+                ozw.ortstore.proxy.extraParams = {
+                    netzbetreiberId: nid};
+            }
+        }
         if (filterstring) {
-            ozw.ortstore.proxy.extraParams = {'search': filterstring};
+            ozw.ortstore.proxy.extraParams.search = filterstring;
         }
         var toolbar = ozw.down('tabpanel').down('ortstammdatengrid').down('pagingtoolbar');
         if (localfilter) {
