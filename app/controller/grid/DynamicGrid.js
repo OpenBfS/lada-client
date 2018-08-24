@@ -46,7 +46,6 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
 
         //disable Button and setLoading...
         button.disable();
-        button.setLoading(true);
 
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection();
@@ -71,57 +70,40 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
 
         //Retrieve visible columns' id's and names.
         // and set displayName
-        try {
-            var cman = grid.columnManager;
-            var cols = cman.getColumns();
-
-            displayName = grid.down('tbtext').text;
-
-            for (key in cols) {
-                if (cols[key].dataIndex) {
-                    visibleColumns[cols[key].dataIndex] = cols[key].text;
-                }
+        var cols = grid.visibleColumnManager.columns;
+        displayName = 'DUMMY'; //TODO
+        for (key in cols) {
+            if (cols[key].dataIndex) {
+                visibleColumns[cols[key].dataIndex] = cols[key].text;
             }
-        } catch (e) {
-            console.log(e);
         }
 
         // Retrieve Data from selection
-        try {
-            for (var item in selection) {
-                var row = selection[item].data;
-                var out = [];
-                //Lookup every column and write to data array.
-                for (key in columns) {
-                    var attr = columns[key];
-                    //Only write data to output when the column is not hidden.
-                    if (row[attr] !== null &&
-                        visibleColumns[attr] !== null) {
-                        out.push(row[attr].toString());
-                    } else if (visibleColumns[attr] !== null) {
-                        out.push('');
-                    }
+        for (var item in selection) {
+            var row = selection[item].data;
+            var out = [];
+            //Lookup every column and write to data array.
+            for (key in columns) {
+                var attr = columns[key];
+                //Only write data to output when the column is not hidden.
+                if (row[attr] !== null &&
+                    visibleColumns[attr] !== null) {
+                    out.push(row[attr].toString());
+                } else if (visibleColumns[attr] !== null) {
+                    out.push('');
                 }
-                data.push(out);
             }
-        } catch (e) {
-            console.log(e);
+            data.push(out);
         }
 
         //Retrieve the names of the columns.
-        try {
-            //Iterate columns and find column names for the key...
-            // This WILL run into bad behaviour when column-keys exist twice.
-            for (key in columns) {
-                for (var k in cols) {
-                    if (cols[k].dataIndex === columns[key]) {
-                        columnNames.push(cols[k].text);
-                        break;
-                    }
+        for (key in columns) {
+            for (var k in cols) {
+                if (cols[k].dataIndex === columns[key]) {
+                    columnNames.push(cols[k].text);
+                    break;
                 }
             }
-        } catch (e) {
-            console.log(e);
         }
 
         var printData = {

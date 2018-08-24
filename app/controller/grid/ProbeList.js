@@ -177,8 +177,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
     createSheetData: function(button, printFunctionCallback, cbscope) {
         //disable Button and setLoading...
         button.disable();
-        button.setLoading(true);
-
 
         // get Selected Items.
         var grid = button.up('grid');
@@ -249,13 +247,13 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 var blob = new Blob([content],{type: filetype});
                 saveAs(blob, filename);
                 button.enable();
-                button.setLoading(false);
+
             },
             failure: function(response) {
                 var i18n = Lada.getApplication().bundle;
                 // Error handling
                 button.enable();
-                button.setLoading(false);
+
                 if (response.responseText) {
                     try {
                         var json = Ext.JSON.decode(response.responseText);
