@@ -82,6 +82,11 @@ Ext.define('Lada.view.window.Messprogramm', {
             },
             afterRender: function() {
                 this.customizeToolbar();
+                if (this.record === null ||
+                    this.record.get('readonly') === true) {
+                    this.down('button[action=generateproben]').setDisabled(
+                        true);
+                }
             }
         });
 

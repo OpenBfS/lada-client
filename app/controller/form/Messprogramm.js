@@ -320,7 +320,9 @@ Ext.define('Lada.controller.form.Messprogramm', {
             form.owner.down('button[action=save]').setDisabled(true);
             form.owner.down('button[action=discard]').setDisabled(true);
         }
-        if (form.getRecord().phantom || dirty) {
+        if (form.getRecord().phantom || dirty ||
+            form.getRecord().get('readonly') === true) {
+
             form.owner.up('messprogramm').down(
                 'button[action=generateproben]').setDisabled(true);
         } else {
