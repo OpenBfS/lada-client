@@ -82,11 +82,8 @@ Ext.define('Lada.view.window.Messprogramm', {
             },
             afterRender: function() {
                 this.customizeToolbar();
-                if (this.record === null ||
-                    this.record.get('readonly') === true) {
-                    this.down('button[action=generateproben]').setDisabled(
-                        true);
-                }
+                this.toggleGenProben();
+
             }
         });
 
@@ -319,5 +316,21 @@ Ext.define('Lada.view.window.Messprogramm', {
      */
     clearMessages: function() {
         this.down('messprogrammform').clearMessages();
+    },
+    toggleGenProben: function() {
+        var button = this.down('button[action=generateproben]');
+        if (this.record === null || this.record.phantom
+            || this.record.get('readonly') === true) {
+            button.setDisabled(true);
+            return;
+        }
+        var mmtgrid = this.down('messmethodengrid');
+        if (mmtgrid && mmtgrid.rowEditing && mmtgrid.rowEditing.editing === true) {
+            button.setDisabled(true);
+            return;
+        }
+
+        button.setDisabled(false);
+        return;
     }
 });

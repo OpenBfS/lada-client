@@ -184,7 +184,6 @@ Ext.define('Lada.view.grid.Messmethoden', {
         var grid = cbox.up('messmethodengrid');
         if (grid) {
             var nuklidfield = grid.columns[1].getEditor();
-            console.log(nuklidfield);
             var params = newVal ? {mmtId: newVal} : {};
             nuklidfield.getStore().proxy.extraParams = params;
             nuklidfield.getStore().load();

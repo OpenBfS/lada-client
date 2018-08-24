@@ -46,6 +46,10 @@ Ext.define('Lada.controller.grid.Messmethode', {
             success: function() {
                 context.grid.initData();
                 context.grid.up('window').initData();
+                var mp_win = context.grid.up('messprogramm');
+                if (mp_win) {
+                    mp_win.toggleGenProben();
+                }
             },
             failure: function(request, response) {
                 var i18n = Lada.getApplication().bundle;
@@ -81,6 +85,10 @@ Ext.define('Lada.controller.grid.Messmethode', {
         if (context.record.phantom) {
             editor.getCmp().store.remove(context.record);
         }
+        var mp_win = context.grid.up('messprogramm');
+        if (mp_win) {
+            mp_win.toggleGenProben();
+        }
     },
 
 
@@ -92,9 +100,15 @@ Ext.define('Lada.controller.grid.Messmethode', {
         if (!record.get('letzteAenderung')) {
             record.data.letzteAenderung = new Date();
         }
-        record.set('messprogrammId', button.up('messmethodengrid').recordId);
-        button.up('messmethodengrid').store.insert(0, record);
-        button.up('messmethodengrid').rowEditing.startEdit(0,0);
+        var grid = button.up('messmethodengrid');
+        record.set('messprogrammId', grid.recordId);
+        grid.store.insert(0, record);
+        grid.rowEditing.startEdit(0,0);
+        var mp_win = grid.up('messprogramm');
+        if (mp_win) {
+            mp_win.toggleGenProben();
+        }
+
     },
 
     /**
