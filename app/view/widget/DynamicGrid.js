@@ -855,16 +855,40 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     addMessprogrammButtons: function() {
-        if ( Ext.Array.contains(Lada.funktionen, 4) && !this.tbuttonExists(
-            'genProbenFromMessprogramm')
-        ) {
-            this.toolbarbuttons.push({
-                text: this.i18n.getMsg('button.generateProben'),
-                icon: 'resources/img/view-time-schedule-insert.png',
-                action: 'genProbenFromMessprogramm',
-                needsSelection: true,
-                disabled: true
-            });
+        if ( Ext.Array.contains(Lada.funktionen, 4)) {
+            if (!this.tbuttonExists('setActive')) {
+                var me = this;
+                this.toolbarbuttons.push({
+                    xtype: 'splitbutton',
+                    icon: 'resources/img/dialog-ok-apply.png',
+                    action: 'setActive',
+                    text: this.i18n.getMsg('button.setActive'),
+                    menu: new Ext.menu.Menu({
+                        items: [{
+                            text: me.i18n.getMsg('button.active'),
+                            handler: function() {
+                                alert('TODO - aktiv');
+                            }
+                        },{
+                            text: me.i18n.getMsg('button.notActive'),
+                            handler: function() {
+                                alert('TODO - inaktiv');
+                            }
+                        }]
+                    }),
+                    needsSelection: true,
+                    disabled: true
+                });
+            }
+            if (!this.tbuttonExists('genProbenFromMessprogramm')) {
+                this.toolbarbuttons.push({
+                    text: this.i18n.getMsg('button.generateProben'),
+                    icon: 'resources/img/view-time-schedule-insert.png',
+                    action: 'genProbenFromMessprogramm',
+                    needsSelection: true,
+                    disabled: true
+                });
+            }
         }
     },
 
