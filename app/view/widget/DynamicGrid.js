@@ -917,7 +917,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (!this.tbuttonExists('genericadd')) {
                 this.toolbarbuttons.push({
                     text: this.i18n.getMsg('add'),
-                    icon: 'resources/img/svn-update.png',
+                    icon: 'resources/img/list-add.png',
                     action: 'genericadd',
                     needsSelection: false,
                     disabled: false
