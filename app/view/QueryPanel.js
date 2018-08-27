@@ -254,15 +254,19 @@ Ext.define('Lada.view.QueryPanel', {
 
         var selquery = this.down('combobox[name=selectedQuery]');
         selquery.fieldLabel = i18n.getMsg('query.query');
-        this.down('cbox[name=activefilters]').down('tagfield').on('focus',
-            function(tagfield) {
-                tagfield.getStore().filter(function(item) {
-                    if (item.get('filter')) {
-                        return true;
-                    }
-                    return false;
-                });
+
+        var activefilterFilter = function(tagfield) {
+            tagfield.getStore().filter(function(item) {
+                if (item.get('filter')) {
+                    return true;
+                }
+                return false;
             });
+        };
+        this.down('cbox[name=activefilters]').down('tagfield').on('focus',
+            activefilterFilter);
+        this.down('cbox[name=activefilters]').down('tagfield').on('select',
+            activefilterFilter);
 
         this.store = Ext.data.StoreManager.get('querystore');
 
@@ -337,7 +341,14 @@ Ext.define('Lada.view.QueryPanel', {
                     }
                     me.down('columnchoser').setStore(me.gridColumnValueStore, cs);
                     me.down('columnsort').setStore(me.gridColumnValueStore);
-                    me.down('cbox[name=activefilters]').setStore(cs);
+                    var filterwidget = me.down('cbox[name=activefilters]');
+                    filterwidget.setStore(cs);
+                    filterwidget.store.filter(function(item) {
+                        if (item.get('filter')) {
+                            return true;
+                        }
+                        return false;
+                    });
                 }
             });
         }
