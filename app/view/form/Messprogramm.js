@@ -92,15 +92,23 @@ Ext.define('Lada.view.form.Messprogramm', {
                             name: 'id',
                             fieldLabel: i18n.getMsg('mprId'),
                             margin: '0, 5, 5, 5',
-                            width: '80%',
+                            width: '70%',
                             labelWidth: 95,
                             maxLength: 20
+                        }, {
+                            xtype: 'chkbox',
+                            name: 'aktiv',
+                            fieldLabel: i18n.getMsg('messprogramm.aktiv'),
+                            margin: '0, 5, 5, 5',
+                            width: '15%',
+                            labelWidth: 30,
+                            allowBlank: false
                         }, {
                             xtype: 'chkbox',
                             name: 'test',
                             fieldLabel: i18n.getMsg('test'),
                             margin: '0, 5, 5, 5',
-                            width: '20%',
+                            width: '15%',
                             labelWidth: 30,
                             allowBlank: false
                         }]
@@ -706,6 +714,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('cbox[name=datenbasisId]').clearWarningOrError();
         this.down('cbox[name=baId]').clearWarningOrError();
         this.down('chkbox[name=test]').clearWarningOrError();
+        this.down('chkbox[name=aktiv]').clearWarningOrError();
         this.down('cbox[name=probenartId]').clearWarningOrError();
         this.down('netzbetreiber').clearWarningOrError();
         // clear messages in intervall definition
@@ -725,6 +734,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('cbox[name=datenbasisId]').setReadOnly(value);
         this.down('cbox[name=baId]').setReadOnly(value);
         this.down('chkbox[name=test]').setReadOnly(value);
+        this.down('chkbox[name=aktiv]').setReadOnly(value);
         this.down('cbox[name=probenartId]').setReadOnly(value);
         //         this.down('netzbetreiber').setReadOnly(value);
         this.down('cbox[name=probenintervall]').setReadOnly(value);

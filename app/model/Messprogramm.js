@@ -28,7 +28,10 @@ Ext.define('Lada.model.Messprogramm', {
         name: 'datenbasisId'
     }, {
         name: 'mplId'
-    },{
+    }, {
+        name: 'aktiv',
+        type: 'boolean'
+    }, {
         name: 'baId'
     }, {
         name: 'mediaDesk',
