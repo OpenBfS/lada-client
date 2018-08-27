@@ -194,6 +194,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     }
                     formPanel.clearMessages();
                     formPanel.setRecord(record);
+                    button.up('window').record = record;
                     formPanel.setMessages(json.errors, json.warnings);
                     if (response.action === 'create' && json.success) {
                         button.up('window').close();

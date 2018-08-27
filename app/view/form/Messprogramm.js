@@ -610,7 +610,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                 data: availableitems.items});
             this.down('messstellelabor').setStore(newStore);
             this.down('messstellelabor').setValue(messRecord.get('messstellelabor'));
-            this.down('messstellelabor').resetOriginalValue();
+            this.down('messstellelabor').down('combobox').resetOriginalValue();
         }
         this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
         this.down('netzbetreiber').down('combobox').resetOriginalValue();
