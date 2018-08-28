@@ -17,6 +17,7 @@ Ext.define('Lada.controller.Query', {
         'Lada.view.widget.Staat',
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.Status',
+        'Lada.view.widget.StatuskombiSelect',
         'Lada.view.widget.StatusStufe',
         'Lada.view.widget.MessprogrammLand',
         'Lada.view.widget.Verwaltungseinheit',
@@ -585,6 +586,14 @@ Ext.define('Lada.controller.Query', {
                     options.value = this.getFilterValueMulti(recs[i]);
                     options.store = Ext.data.StoreManager.get('statusstufe');
                     field = Ext.create('Lada.view.widget.StatusStufe', options);
+                    break;
+                case 'statuskomb': //TODO: Name (Statuskombi)
+                    options.multiSelect = true;
+                    options.editable = true;
+                    options.value = this.getFilterValueMulti(recs[i]);
+                    options.store = Ext.data.StoreManager.get('statuskombi');
+                    field = Ext.create('Lada.view.widget.StatuskombiSelect',
+                        options);
                     break;
                 default:
                     options.value = recs[i].get('filterValue');
