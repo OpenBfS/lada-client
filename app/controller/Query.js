@@ -21,7 +21,7 @@ Ext.define('Lada.controller.Query', {
         'Lada.view.widget.MessprogrammLand',
         'Lada.view.widget.Verwaltungseinheit',
         'Lada.view.widget.BoolFilter',
-        'Lada.view.widget.base.NumberField',
+        'Lada.view.widget.base.NumberRange',
         'Lada.view.widget.Netzbetreiber',
         'Lada.view.widget.Datenbasis',
         'Lada.view.widget.Betriebsart',
@@ -497,20 +497,12 @@ Ext.define('Lada.controller.Query', {
                     field.setValue(recs[i].get('filterValue'));
                     break;
                 case 'number':
-                    options.triggers = {
-                        clear: {
-                            extraCls: 'x-form-clear-trigger',
-                            handler: function() {
-                                this.clearValue();
-                            }
-                        }
-                    };
                     options.allowDecimals = true;
-                    options.hideTrigger = true;
+                    options.hideTrigger = false;
                     options.keyNavEnabled = false;
                     options.mouseWheelEnabled = false;
                     options.value = recs[i].get('filterValue') || null;
-                    field = Ext.create('Lada.view.widget.base.NumberField',
+                    field = Ext.create('Lada.view.widget.base.NumberRange',
                         options);
                     break;
                 case 'land':
