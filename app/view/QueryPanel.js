@@ -266,7 +266,10 @@ Ext.define('Lada.view.QueryPanel', {
         var filtertags = this.down('cbox[name=activefilters]').down('tagfield');
         filtertags.on('focus',activefilterFilter);
         filtertags.on('select',activefilterFilter);
-        filtertags.triggers.clear.handler = activefilterFilter;
+        filtertags.triggers.clear.handler = function() {
+            filtertags.clearValue();
+            activefilterFilter(filtertags);
+        };
         this.store = Ext.data.StoreManager.get('querystore');
 
         this.store.load({
