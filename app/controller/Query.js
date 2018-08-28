@@ -17,6 +17,7 @@ Ext.define('Lada.controller.Query', {
         'Lada.view.widget.Staat',
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.Status',
+        'Lada.view.widget.StatusStufe',
         'Lada.view.widget.MessprogrammLand',
         'Lada.view.widget.Verwaltungseinheit',
         'Lada.view.widget.BoolFilter',
@@ -587,6 +588,12 @@ Ext.define('Lada.controller.Query', {
                         options);
                     break;
                 case 'statusstfe':
+                    options.multiSelect = true;
+                    options.editable = true;
+                    options.value = this.getFilterValueMulti(recs[i]);
+                    options.store = Ext.data.StoreManager.get('statusstufe');
+                    field = Ext.create('Lada.view.widget.StatusStufe', options);
+                    break;
                 default:
                     options.value = recs[i].get('filterValue');
                     field = Ext.create('Lada.view.widget.base.TextField',
