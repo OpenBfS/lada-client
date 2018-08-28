@@ -295,7 +295,7 @@ Ext.define('Lada.view.form.Probe', {
                         margin: '0, 5, 5, 5',
                         width: '100%',
                         anchor: '100%',
-                        labelWidth: 110,
+                        labelWidth: 140,
                         editable: true,
                         extraParams: function() {
                             this.down('combobox').on({

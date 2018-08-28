@@ -236,7 +236,6 @@ Ext.define('Lada.view.window.GridExport', {
                 name: 'encoding',
                 valueNotFoundText: i18n.getMsg('notfound'),
                 margin: '3, 3, 3, 3',
-                hidden: true,
                 store: Ext.create('Ext.data.Store', {
                     fields: ['name', 'value'],
                     data: [{
@@ -245,9 +244,6 @@ Ext.define('Lada.view.window.GridExport', {
                     }, {
                         name: 'UTF-8',
                         value: 'utf-8'
-                    }, {
-                        name: 'IBM437',
-                        value: 'ibm437'
                     }]
                 })
             }, {
@@ -385,32 +381,32 @@ Ext.define('Lada.view.window.GridExport', {
         var win = button.up('window');
         win.exportformat = win.down('combobox[name=formatselection]').getValue();
         var filename = '';
+        var encoding = win.down('combobox[name=encoding]').getValue();
         switch (win.exportformat) {
             case 'json':
                 var namecheck = win.validateFilename('json');
                 if (namecheck) {
                     win.down('button[action=close]').setDisabled(true);
-                    win.exportJson();
+                    win.exportJson(encoding);
                 }
                 break;
             case 'geojson':
                 var namecheck = win.validateFilename('geojson');
                 if (namecheck) {
                     win.down('button[action=close]').setDisabled(true);
-                    win.exportGeoJson();
+                    win.exportGeoJson(encoding);
                 }
                 break;
             case 'csv':
                 var namecheck = win.validateFilename('csv');
                 if (namecheck) {
                     win.down('button[action=close]').setDisabled(true);
-                    win.exportCSV();
+                    win.exportCSV(encoding);
                 }
                 break;
             case 'laf':
                 namecheck = win.validateFilename('laf');
                 if (namecheck) {
-                    var encoding = win.down('combobox[name=encoding]').getValue();
                     win.down('button[action=close]').setDisabled(true);
                     win.exportLAF(encoding);
                 }
@@ -423,7 +419,7 @@ Ext.define('Lada.view.window.GridExport', {
     /**
     * Exports the table data as json objects
     */
-    exportJson: function() {
+    exportJson: function(encoding) {
         var data = this.getDataSets();
         if (data) {
             var columns = this.getColumns();
@@ -448,7 +444,7 @@ Ext.define('Lada.view.window.GridExport', {
                 if (this.rowexp) {
                     this.setSecondaryJson(data[i], 'json', entryId, expcolumns);
                 } else {
-                    this.countDown();
+                    this.countDown('utf-8');
                 }
             }
             return true;
@@ -506,7 +502,7 @@ Ext.define('Lada.view.window.GridExport', {
                         data[i].get(this.grid.rowtarget.dataIndex),
                         expcolumns);
                 } else {
-                    this.countDown();
+                    this.countDown('utf-8');
                 }
             }
             return true;
@@ -519,7 +515,7 @@ Ext.define('Lada.view.window.GridExport', {
     /**
      * Exports the table data as csv files, with header.
      */
-    exportCSV: function() {
+    exportCSV: function(encoding) {
         var data = this.getDataSets();
         if (data) {
             var lineseptype = this.down('combobox[name=linesep]').getValue();
@@ -581,7 +577,7 @@ Ext.define('Lada.view.window.GridExport', {
                     me.setSecondaryCsv(data[entry], expcolumns, entryline);
                 } else {
                     this.resultobject += entryline + this.csv.linesep;
-                    this.countDown();
+                    this.countDown(encoding);
                 }
 
             }
@@ -637,10 +633,12 @@ Ext.define('Lada.view.window.GridExport', {
             headers: {
                 'X-FILE-ENCODING': encoding
             },
+            responseType: 'arraybuffer',
+            binary: true,
             timeout: 2 * 60 * 1000,
             success: function(response) {
-                var content = response.responseText;
-                me.exportFile(content);
+                var data = response.responseBytes;
+                me.exportFile(data, {type: 'text/plain;charset=' + encoding});
                 return true;
             },
             failure: function(response) {
@@ -672,7 +670,7 @@ Ext.define('Lada.view.window.GridExport', {
             newValue === 'csv' ? true: false
         );
         box.up('window').down('combobox[name=encoding]').setVisible(
-            newValue === 'laf' ? true: false
+            newValue === 'csv' || newValue === 'laf' ? true: false
         );
         var ecolVisible = true;
         if (box.up('window').down('checkbox[name=allcolumns]').getValue()) {
@@ -708,9 +706,9 @@ Ext.define('Lada.view.window.GridExport', {
     /**
      * Saves the resulting data
      */
-    exportFile: function(data) {
-        var blob = new Blob([data]);
-        saveAs(blob, this.filename);
+    exportFile: function(data, encoding) {
+        var blob = new Blob([data], encoding);
+        saveAs(blob, this.filename, true);
         this.close();
     },
 
@@ -1125,20 +1123,32 @@ Ext.define('Lada.view.window.GridExport', {
     * to file upon completion. Is not yet used by LAF export (as there are no
     * multiple queries at the same time.
     */
-    countDown: function() {
+    countDown: function(encoding) {
         this.parsedEntries += 1;
         if (this.parsedEntries < this.totalentries) {
             return;
         }
+        var data = '';
         switch (this.exportformat) {
             case 'json':
-                this.exportFile(JSON.stringify(this.resultobject));
+                data = JSON.stringify(this.resultobject);
+                this.exportFile(data, {type: 'text/json;charset=' + encoding});
                 break;
             case 'geojson':
-                this.exportFile(JSON.stringify(this.resultobject));
+                data = JSON.stringify(this.resultobject);
+                this.exportFile(data, {type: 'text/json;charset=' + encoding});
                 break;
             case 'csv':
-                this.exportFile(this.resultobject);
+                data = this.resultobject;
+                if (encoding !== 'utf-8') {
+                    var rawLength = data.length;
+                    var array = new Uint8Array(new ArrayBuffer(rawLength));
+                    for(var i = 0; i < rawLength; i++) {
+                        array[i] = data.charCodeAt(i);
+                    }
+                    this.exportFile(array, {type: 'text/csv;charset=' + encoding});
+                }
+                this.exportFile(data, {type: 'text/csv;charset=' + encoding});
                 break;
         }
     }
