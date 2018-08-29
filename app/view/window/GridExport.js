@@ -1143,12 +1143,13 @@ Ext.define('Lada.view.window.GridExport', {
                 if (encoding !== 'utf-8') {
                     var rawLength = data.length;
                     var array = new Uint8Array(new ArrayBuffer(rawLength));
-                    for(var i = 0; i < rawLength; i++) {
+                    for (var i = 0; i < rawLength; i++) {
                         array[i] = data.charCodeAt(i);
                     }
                     this.exportFile(array, {type: 'text/csv;charset=' + encoding});
+                } else {
+                    this.exportFile(data, {type: 'text/csv;charset=' + encoding});
                 }
-                this.exportFile(data, {type: 'text/csv;charset=' + encoding});
                 break;
         }
     }
