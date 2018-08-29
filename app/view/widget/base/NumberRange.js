@@ -76,12 +76,11 @@ Ext.define('Lada.view.widget.base.NumberRange', {
 
     getValue: function() {
         var val0 = this.down('[name=' + this.name + 'From]').getValue();
-
-        if (!val0) {
+        if (isNaN(val0)) {
             val0 = '';
         }
         var val1 = this.down('[name='+ this.name + 'To]').getValue();
-        if (!val1) {
+        if (isNaN(val1)) {
             val1 = '';
         }
         if (val0 === '' && val1 === '') {

@@ -499,6 +499,8 @@ Ext.define('Lada.controller.Query', {
                     options.hideTrigger = false;
                     options.keyNavEnabled = false;
                     options.mouseWheelEnabled = false;
+                    options.allowDecimalls = true;
+                    options.decimalPrecision = 10;
                     options.value = recs[i].get('filterValue') || null;
                     field = Ext.create('Lada.view.widget.base.NumberRange',
                         options);
