@@ -673,7 +673,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (rec.get('statusStufe') !== undefined
                 && rec.get('statusWert') !== undefined
             ) {
-                return rec.get('statusStufe') + ' - ' + rec.get('statusWert');
+                return rec.get('statusStufe').stufe + ' - '
+                    + rec.get('statusWert').wert;
             }
             return '';
         };
