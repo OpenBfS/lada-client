@@ -310,6 +310,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 case 'statuswert':
                     this.generateStatusWertColumns(col);
                     break;
+                case 'statuskombi':
+                    this.generateStatusKombiColumns(col);
+                    break;
                 case 'egem':
                     this.generateEgemColumns(col);
                     break;
@@ -652,6 +655,27 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             //     return rec.get('wert');
             // }
             // return '';
+        };
+    },
+
+    generateStatusKombiColumns: function(col) {
+        col.xtype='gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
+            }
+            var st = Ext.data.StoreManager.get('statuskombi');
+            var rec = st.findRecord('id', value, false,false,
+                false,true);
+            if (!rec) {
+                return value;
+            }
+            if (rec.get('statusStufe') !== undefined
+                && rec.get('statusWert') !== undefined
+            ) {
+                return rec.get('statusStufe') + ' - ' + rec.get('statusWert');
+            }
+            return '';
         };
     },
 

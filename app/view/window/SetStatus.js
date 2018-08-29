@@ -14,9 +14,10 @@ Ext.define('Lada.view.window.SetStatus', {
     alias: 'setstatuswindow',
 
     requires: [
-        'Lada.view.widget.Status'
+        'Lada.view.widget.StatuskombiSelect',
+        'Lada.store.StatusKombi'
     ],
-
+    store: Ext.create('Lada.store.StatusKombi'),
     grid: null,
     selection: null,
     record: null,
@@ -31,24 +32,16 @@ Ext.define('Lada.view.window.SetStatus', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
-        var statusWerteStore = Ext.create('Lada.store.StatusWerte');
+        var possibleStatusStore;
         if ( this.selection) {
             var selectionIds = [];
             for (var i=0; i< this.selection.length; i++) {
                 selectionIds.push(this.selection[i].get(
                     this.grid.rowtarget.dataIndex));
             }
-            statusWerteStore.load({
-                params: {
-                    messungsId: selectionIds.join(',')
-                }
-            });
+            this.getPossibleStatus(selectionIds);
         } else {
-            statusWerteStore.load({
-                params: {
-                    messungsId: this.record.get('id')
-                }
-            });
+            this.getPossibleStatus([this.record.get('id')]);
         }
         this.items = [{
             xtype: 'form',
@@ -71,24 +64,12 @@ Ext.define('Lada.view.window.SetStatus', {
                     emptyText: i18n.getMsg('emptytext.erzeuger'),
                     fieldLabel: i18n.getMsg('erzeuger')
                 }, {
-                    xtype: 'statuswert',
-                    store: statusWerteStore,
+                    xtype: 'statuskombiselect',
+                    store: possibleStatusStore,
                     allowBlank: false,
                     width: 300,
                     labelWidth: 100,
-                    fieldLabel: i18n.getMsg('header.statuswert')
-                }, {
-                    xtype: 'combobox',
-                    name: 'statusstufe',
-                    store: Ext.data.StoreManager.get('statusstufe'),
-                    displayField: 'stufe',
-                    valueField: 'id',
-                    allowBlank: false,
-                    editable: false,
-                    forceSelection: true,
-                    width: 300,
-                    labelWidth: 100,
-                    fieldLabel: i18n.getMsg('header.statusstufe')
+                    fieldLabel: i18n.getMsg('header.statuskombi')
                 }, {
                     xtype: 'textarea',
                     width: 300,
@@ -179,15 +160,8 @@ Ext.define('Lada.view.window.SetStatus', {
         var progress = me.down('progressbar');
         var progressText = progress.getText();
         var count = 0;
-
-        var wert = me.down('statuswert').getValue();
-        var stufe = me.down('[name=statusstufe]').getValue();
-        var kombis = Ext.data.StoreManager.get('statuskombi');
-        var kombiIdx = kombis.findBy(function(record) {
-            return record.get('statusStufe').id === stufe
-                && record.get('statusWert').id === wert;
-        });
-        if (kombiIdx < 0) {
+        var kombi = me.down('statuskombiselect').getValue();
+        if (kombi < 0) {
             Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
                 i18n.getMsg('setStatus.wrongstatusstufe'));
             me.down('button[name=close]').show();
@@ -199,7 +173,7 @@ Ext.define('Lada.view.window.SetStatus', {
                     messungsId: this.selection[i].get('id'),
                     mstId: this.down('combobox').getValue(),
                     datum: new Date(),
-                    statusKombi: kombis.getAt(kombiIdx).get('id'),
+                    statusKombi: kombi.get('id'),
                     text: this.down('textarea').getValue()
                 };
                 Ext.Ajax.request({
@@ -242,7 +216,7 @@ Ext.define('Lada.view.window.SetStatus', {
                     messungsId: this.record.get('id'),
                     mstId: this.down('combobox').getValue(),
                     datum: new Date(),
-                    statusKombi: kombis.getAt(kombiIdx).get('id'),
+                    statusKombi: kombi,
                     text: this.down('textarea').getValue()
                 };
                 Ext.Ajax.request({ //TODO not checked yet
@@ -279,6 +253,23 @@ Ext.define('Lada.view.window.SetStatus', {
                 });
             }
         }
+    },
+
+    getPossibleStatus: function(ids) {
+        var me = this;
+        Ext.Ajax.request({
+            url: 'lada-server/rest/statuskombi/getbyids',
+            jsonData: JSON.stringify(ids),
+            method: 'POST',
+            success: function(response) {
+                var json = Ext.JSON.decode(response.responseText);
+                if (json.data) {
+                    me.store.setData(json.data);
+                    me.down('statuskombiselect').down(
+                        'combobox').getStore().setData(json.data);
+                }
+            }
+        });
     }
 });
 

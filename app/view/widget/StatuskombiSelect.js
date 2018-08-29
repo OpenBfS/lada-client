@@ -12,13 +12,13 @@
 Ext.define('Lada.view.widget.StatuskombiSelect', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.statuskombiselect',
-    store: Ext.data.StoreManager.get('statuskombi'),
+    store: null,
     displayField: 'stufe',
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-        '{statusStufe} - {statusWert}</div></tpl>'),
+        '{statusStufe.stufe} - {statusWert.wert}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{statusStufe} - {statusWert}</tpl>'),
+        '<tpl for=".">{statusStufe.stufe} - {statusWert.wert}</tpl>'),
     valueField: 'id',
     autoSelect: false,
     queryMode: 'local',
@@ -29,6 +29,7 @@ Ext.define('Lada.view.widget.StatuskombiSelect', {
     initComponent: function() {
         var i18n= Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.statuskombi');
+        this.store = Ext.create('Lada.store.StatusKombi');
         this.callParent(arguments);
     }
 });
