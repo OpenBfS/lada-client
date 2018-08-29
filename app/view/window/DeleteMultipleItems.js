@@ -68,7 +68,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 title = i18n.getMsg('delete.multiple_mpr.window.title');
                 dialog1 = i18n.getMsg('delete.multiple_mpr');
                 break;
-            case 'pnehmer':
+            case 'probenehmer':
                 title = i18n.getMsg('delete.multiple_probenehmer.window.title');
                 dialog1 = i18n.getMsg('delete.multiple_probenehmer');
                 break;
@@ -168,7 +168,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 url = 'lada-server/rest/messprogramm/';
                 datatype = i18n.getMsg('messprogramm');
                 break;
-            case 'pnehmer':
+            case 'probenehmer':
                 url = 'lada-server/rest/probenehmer/';
                 datatype = i18n.getMsg('probenehmer');
                 break;

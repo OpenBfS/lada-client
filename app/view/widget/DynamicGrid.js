@@ -301,14 +301,14 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 case 'boolean':
                     this.generateBooleanColumns(col);
                     break;
-                case 'statusstfe':
+                case 'statusstufe':
                     this.generateStatusStufeColumns(col);
                     break;
                 case 'umwbereich':
                     this.generateUmweltbereichColumns(col);
                     break;
-                case 'status':
-                    this.generateStatusColumns(col);
+                case 'statuswert':
+                    this.generateStatusWertColumns(col);
                     break;
                 case 'egem':
                     this.generateEgemColumns(col);
@@ -325,7 +325,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 case 'staat':
                     this.generateStaatColumns(col);
                     break;
-                case 'pnehmer':
+                case 'probenehmer':
                 case 'dsatzerz':
                 case 'mprkat':
                     this.generateStammColumn(colImg, col, datatype);
@@ -636,7 +636,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
         };
     },
-    generateStatusColumns: function(col) {
+    generateStatusWertColumns: function(col) {
         col.xtype='gridcolumn';
         col.renderer = function(value) {
             if (!value) {
@@ -739,8 +739,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         var clicklistener = null;
         var tooltip = '';
 
-        if (datatype.name === 'pnehmer') {
-            tooltip = this.i18n.getMsg('typedgrid.tooltip.pnehmer');
+        if (datatype.name === 'probenehmer') {
+            tooltip = this.i18n.getMsg('typedgrid.tooltip.probenehmer');
             clicklistener = function(button) {
                 var id = Number(button.text);
                 button.getEl().swallowEvent(['click', 'dblclick'], true);
@@ -909,7 +909,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     genericAddButton: function() {
         if (
             this.rowtarget.dataType === 'probeId' ||
-            ( ['mpId', 'pnehmer', 'dsatzerz', 'mprkat', 'ortId'].indexOf(
+            ( ['mpId', 'probenehmer', 'dsatzerz', 'mprkat', 'ortId'].indexOf(
                 this.rowtarget.dataType) >= 0
                 && Ext.Array.contains(Lada.funktionen, 4)
             )
@@ -929,7 +929,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     genericDeleteButton: function() {
         if (
             ['probeId'].indexOf(this.rowtarget.dataType) >= 0 ||
-            ( ['pnehmer', 'dsatzerz', 'mprkat'].indexOf(
+            ( ['probenehmer', 'dsatzerz', 'mprkat'].indexOf(
                 this.rowtarget.dataType) >= 0
                 && Ext.Array.contains(Lada.funktionen, 4)
             )

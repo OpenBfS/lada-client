@@ -314,7 +314,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     }
                 });
                 break;
-            case 'pnehmer':
+            case 'probenehmer':
                 Lada.model.Probenehmer.load(id, {
                     success: function(record) {
                         var win = Ext.create(
@@ -379,7 +379,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     win.show();
                     win.initData();
                     break;
-                case 'pnehmer':
+                case 'probenehmer':
                     var win = Ext.create('Lada.view.window.Probenehmer', {
                         record: Ext.create('Lada.model.Probenehmer')
                     });

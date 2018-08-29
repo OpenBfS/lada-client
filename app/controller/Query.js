@@ -531,7 +531,7 @@ Ext.define('Lada.controller.Query', {
                     options.value = recs[i].get('filterValue');
                     field = Ext.create('Lada.view.widget.Umwelt' , options);
                     break;
-                case 'status':
+                case 'statuswert':
                     options.multiSelect = true;
                     options.editable = true;
                     options.value = this.getFilterValueMulti(recs[i]);
@@ -579,14 +579,14 @@ Ext.define('Lada.controller.Query', {
                     field = Ext.create('Lada.view.widget.Betriebsart',
                         options);
                     break;
-                case 'statusstfe':
+                case 'statusstufe':
                     options.multiSelect = true;
                     options.editable = true;
                     options.value = this.getFilterValueMulti(recs[i]);
                     options.store = Ext.data.StoreManager.get('statusstufe');
                     field = Ext.create('Lada.view.widget.StatusStufe', options);
                     break;
-                case 'statuskomb': //TODO: Name (Statuskombi)
+                case 'statuskombi':
                     options.multiSelect = true;
                     options.editable = true;
                     options.value = this.getFilterValueMulti(recs[i]);
@@ -765,7 +765,7 @@ Ext.define('Lada.controller.Query', {
     },
 
     setrowtarget: function(querypanel) {
-        var rowHierarchy = ['messungId', 'probeId', 'mpId', 'ortId', 'pnehmer',
+        var rowHierarchy = ['messungId', 'probeId', 'mpId', 'ortId', 'probenehmer',
             'dsatzerz', 'mprkat'];
         var result = {
             dataType: null,
