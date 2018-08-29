@@ -52,7 +52,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         var i18n = Lada.getApplication().bundle;
         var columns = [];
         var columnNames = [];
-        var visibleColumns = [];
+        var visibleColumns = {};
         var displayName = '';
         var data = [];
 
@@ -71,10 +71,15 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         //Retrieve visible columns' id's and names.
         // and set displayName
         var cols = grid.visibleColumnManager.columns;
-        displayName = 'DUMMY'; //TODO
+        displayName = i18n.getMsg('rowtarget.title.'+ grid.rowtarget.dataType);
         for (key in cols) {
             if (cols[key].dataIndex) {
-                visibleColumns[cols[key].dataIndex] = cols[key].text;
+                var d_i = cols[key].dataIndex;
+                visibleColumns[d_i] = {text: cols[key].text};
+                if (cols[key].dataType) {
+                    visibleColumns[d_i].dataType = cols[key].dataType.name;
+                    visibleColumns[d_i].format = cols[key].dataType.format;
+                }
             }
         }
 
@@ -86,10 +91,18 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             for (key in columns) {
                 var attr = columns[key];
                 //Only write data to output when the column is not hidden.
-                if (row[attr] !== null &&
-                    visibleColumns[attr] !== null) {
-                    out.push(row[attr].toString());
-                } else if (visibleColumns[attr] !== null) {
+                if (row[attr] !== null && visibleColumns[attr].text !== null) {
+                    if (visibleColumns[attr].dataType === 'date') {
+                        out.push(
+                            Ext.Date.format(
+                                new Date(row[attr]),
+                                visibleColumns[attr].format
+                            )
+                        );
+                    } else {
+                        out.push(row[attr].toString());
+                    }
+                } else if (visibleColumns[attr].text !== null) {
                     out.push('');
                 }
             }
@@ -148,10 +161,6 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     }
                 }
                 if (json) {
-                    if (json.errors.totalCount > 0 || json.warnings.totalCount > 0) {
-                        formPanel.setMessages(json.errors, json.warnings);
-                        // TODO: Dead code? formpanel is undefined here
-                    }
                     if (json.message) {
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
                             +' #'+json.message,
