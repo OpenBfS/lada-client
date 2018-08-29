@@ -14,7 +14,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     alias: 'widget.genpfm',
 
     requires: [
-        'Lada.store.GridColumnValue'
+        'Lada.store.GridColumnValue',
+        'Lada.store.Proben'
     ],
 
     collapsible: true,
@@ -254,175 +255,180 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
 
         var newStore = Ext.create('Lada.store.Proben', {data: data});
 
-        var frgrid = Ext.create('Lada.view.widget.DynamicGrid', {
-            hidebuttons: ['importprobe', 'genericadd'],
-            rowtarget: { dataType: 'probeId', dataIndex: 'id'},
-            store: newStore,
-            columns: [{
-                dataIndex: 'id',
-                hidden: true
-            }, {
-                header: i18n.getMsg('probeId'),
-                dataIndex: 'idAlt'
-            }, {
-                header: i18n.getMsg('mstId'),
-                dataIndex: 'mstId',
-                renderer: function(value) {
-                    var r = '';
-                    if (!value || value === '') {
-                        r = 'Error';
-                    }
-                    var store = Ext.data.StoreManager.get('messstellen');
-                    var record = store.getById(value);
-                    if (record) {
-                        r = record.get('messStelle');
-                    }
-                    return r;
-                }
-            }, {
-                header: i18n.getMsg('datenbasisId'),
-                dataIndex: 'datenbasisId',
-                renderer: function(value) {
-                    var r = '';
-                    if (!value || value === '') {
-                        r = value;
-                    }
-                    var store = Ext.data.StoreManager.get('datenbasis');
-                    var record = store.getById(value);
-                    if (record) {
-                        r = record.get('datenbasis');
-                    }
-                    return r;
-                }
-            }, {
-                header: i18n.getMsg('baId'),
-                dataIndex: 'baId',
-                renderer: function(value) {
-                    var r = '';
-                    var store = Ext.create('Ext.data.Store', {
-                        fields: ['id', 'betriebsart'],
-                        data: [{
-                            'id': 1,
-                            'betriebsart': 'Normal-/Routinebetrieb'
-                        }, {
-                            'id': 2,
-                            'betriebsart': 'Störfall/Intensivbetrieb'
-                        }]
-                    });
-                    var record = store.getById(value);
-                    if (record) {
-                        r = record.get('betriebsart');
-                    }
-                    return r;
-                }
-            }, {
-                header: i18n.getMsg('probenartId'),
-                dataIndex: 'probenartId',
-                renderer: function(value) {
-                    var r = '';
-                    if (!value || value === '') {
-                        r = value;
-                    }
-                    var store = Ext.data.StoreManager.get('probenarten');
-                    var record = store.getById(value);
-                    if (record) {
-                        r = record.get('probenart');
-                    }
-                    return r;
-                }
-            }, {
-                header: i18n.getMsg('sollVon'),
-                dataIndex: 'solldatumBeginn',
-                renderer: function(value) {
-                    if (!value) {
-                        return '';
-                    }
-                    return Ext.Date.format(value, 'd.m.Y');
-                }
-            }, {
-                header: i18n.getMsg('sollBis'),
-                dataIndex: 'solldatumEnde',
-                renderer: function(value) {
-                    if (!value) {
-                        return '';
-                    }
-                    return Ext.Date.format(value, 'd.m.Y');
-                }
-            }, {
-                header: i18n.getMsg('messprogramm.form.fieldset.title'),
-                dataIndex: 'mprId'
-            }, {
-                header: i18n.getMsg('mediaDesk'),
-                dataIndex: 'mediaDesk'
-            }, {
-                //TODO: load description
-                header: i18n.getMsg('umwId'),
-                dataIndex: 'umwId',
-                renderer: function(value, metadata) {
-                    if (!value) {
-                        return '';
-                    }
-                    var store = umwStore;
-                    var model = store.getById(value);
-                    if (model) {
-                        return value + ' - ' + model.get('umweltBereich');
-                    } else {
-                        return value;
-                    }
-                }
-            }, {
-                header: i18n.getMsg('messungen'),
-                renderer: function(value, metadata, rec) {
-                    var mprId = rec.get('mprId');
-                    mmtStore.clearFilter();
-                    mmtStore.filter('messprogrammId', mprId);
-                    var items = mmtStore.getData().items;
-                    if (!items || !items.length) {
-                        return '(0)';
-                    }
-                    var mgrtext = '';
-                    for (var item=0; item < items.length; item++) {
-                        var mmth = items[item].get('mmtId');
-                        if (mmth) {
-                            mgrtext = mmth;
-                        }
-                        if (item !== items.length -1) {
-                            mgrtext += ', ';
-                        } else {
-                            mgrtext += '(' + items.length + ')';
-                        }
-                    }
-                    return mgrtext;
-                }
-            }, {
-                header: i18n.getMsg('entnahmeOrt'),
-                renderer: function(value, metadata, rec) {
-                    var mprModel = mpStore.getById(rec.get('mprId'));
-                    if (mprModel) {
-                        var eGemId = mprModel.get('eGemId');
-                        var eGem = mprModel.get('eGem');
-                        if (eGemId !== null && eGem !== null) {
-                            return eGemId + ' - ' + eGem;
-                        }
-                    }
-                    return '';
-                }
-            }, {
-                header: i18n.getMsg('probenehmerId'),
-                dataIndex: 'probeNehmerId'
-            }]
-        });
-        frgrid.setToolbar();
-
         var win = Ext.create('Ext.window.Window', {
             layout: 'fit',
             width: 800,
             minHeight: 500,
             maxHeight: 600,
-            items: [frgrid]
+            items: [{
+                xtype: 'dynamicgrid',
+                hidebuttons: ['importprobe', 'genericadd'],
+                rowtarget: { dataType: 'probeId', dataIndex: 'id'},
+                store: newStore,
+                columns: [{
+                    dataIndex: 'id',
+                    hidden: true
+                }, {
+                    header: i18n.getMsg('probeId'),
+                    dataIndex: 'idAlt'
+                }, {
+                    header: i18n.getMsg('mstId'),
+                    dataIndex: 'mstId',
+                    renderer: function(value) {
+                        var r = '';
+                        if (!value || value === '') {
+                            r = 'Error';
+                        }
+                        var store = Ext.data.StoreManager.get('messstellen');
+                        var record = store.getById(value);
+                        if (record) {
+                            r = record.get('messStelle');
+                        }
+                        return r;
+                    }
+                }, {
+                    header: i18n.getMsg('datenbasisId'),
+                    dataIndex: 'datenbasisId',
+                    renderer: function(value) {
+                        var r = '';
+                        if (!value || value === '') {
+                            r = value;
+                        }
+                        var store = Ext.data.StoreManager.get('datenbasis');
+                        var record = store.getById(value);
+                        if (record) {
+                            r = record.get('datenbasis');
+                        }
+                        return r;
+                    }
+                }, {
+                    header: i18n.getMsg('baId'),
+                    dataIndex: 'baId',
+                    renderer: function(value) {
+                        var r = '';
+                        var store = Ext.create('Ext.data.Store', {
+                            fields: ['id', 'betriebsart'],
+                            data: [{
+                                'id': 1,
+                                'betriebsart': 'Normal-/Routinebetrieb'
+                            }, {
+                                'id': 2,
+                                'betriebsart': 'Störfall/Intensivbetrieb'
+                            }]
+                        });
+                        var record = store.getById(value);
+                        if (record) {
+                            r = record.get('betriebsart');
+                        }
+                        return r;
+                    }
+                }, {
+                    header: i18n.getMsg('probenartId'),
+                    dataIndex: 'probenartId',
+                    renderer: function(value) {
+                        var r = '';
+                        if (!value || value === '') {
+                            r = value;
+                        }
+                        var store = Ext.data.StoreManager.get('probenarten');
+                        var record = store.getById(value);
+                        if (record) {
+                            r = record.get('probenart');
+                        }
+                        return r;
+                    }
+                }, {
+                    header: i18n.getMsg('sollVon'),
+                    dataIndex: 'solldatumBeginn',
+                    renderer: function(value) {
+                        if (!value) {
+                            return '';
+                        }
+                        return Ext.Date.format(value, 'd.m.Y');
+                    }
+                }, {
+                    header: i18n.getMsg('sollBis'),
+                    dataIndex: 'solldatumEnde',
+                    renderer: function(value) {
+                        if (!value) {
+                            return '';
+                        }
+                        return Ext.Date.format(value, 'd.m.Y');
+                    }
+                }, {
+                    header: i18n.getMsg('messprogramm.form.fieldset.title'),
+                    dataIndex: 'mprId'
+                }, {
+                    header: i18n.getMsg('mediaDesk'),
+                    dataIndex: 'mediaDesk'
+                }, {
+                    //TODO: load description
+                    header: i18n.getMsg('umwId'),
+                    dataIndex: 'umwId',
+                    renderer: function(value, metadata) {
+                        if (!value) {
+                            return '';
+                        }
+                        var store = umwStore;
+                        var model = store.getById(value);
+                        if (model) {
+                            return value + ' - ' + model.get('umweltBereich');
+                        } else {
+                            return value;
+                        }
+                    }
+                }, {
+                    header: i18n.getMsg('messungen'),
+                    renderer: function(value, metadata, rec) {
+                        var mprId = rec.get('mprId');
+                        mmtStore.clearFilter();
+                        mmtStore.filter('messprogrammId', mprId);
+                        var items = mmtStore.getData().items;
+                        if (!items || !items.length) {
+                            return '(0)';
+                        }
+                        var mgrtext = '';
+                        for (var item=0; item < items.length; item++) {
+                            var mmth = items[item].get('mmtId');
+                            if (mmth) {
+                                mgrtext = mmth;
+                            }
+                            if (item !== items.length -1) {
+                                mgrtext += ', ';
+                            } else {
+                                mgrtext += '(' + items.length + ')';
+                            }
+                        }
+                        return mgrtext;
+                    }
+                }, {
+                    header: i18n.getMsg('entnahmeOrt'),
+                    renderer: function(value, metadata, rec) {
+                        var mprModel = mpStore.getById(rec.get('mprId'));
+                        if (mprModel) {
+                            var eGemId = mprModel.get('eGemId');
+                            var eGem = mprModel.get('eGem');
+                            if (eGemId !== null && eGem !== null) {
+                                return eGemId + ' - ' + eGem;
+                            }
+                        }
+                        return '';
+                    }
+                }, {
+                    header: i18n.getMsg('probenehmerId'),
+                    dataIndex: 'probeNehmerId'
+                }]
+            }],
+            buttons: [{
+                text: i18n.getMsg('close'),
+                handler: function(button) {
+                    button.up('window').close();
+                }
+            }]
         });
         me.hide();
         win.show();
+        win.down('dynamicgrid').setToolbar();
         me.down('panel').setHtml(me.down('panel').html + '<br><br>'
                 + me.evalResponseData(data));
     },

@@ -72,7 +72,6 @@ Ext.define('Lada.view.window.GridExport', {
                 value: 'linux'
             }]
         });
-
         this.csv_textlimstore = Ext.create('Ext.data.Store', {
             fields: ['name', 'value'],
             data: [{
@@ -150,7 +149,6 @@ Ext.define('Lada.view.window.GridExport', {
         });
 
         // add export formats
-
         var formatdata = [
             {name: i18n.getMsg('export.csv'), value: 'csv'},
             {name: i18n.getMsg('export.json'), value: 'json'}];
@@ -172,7 +170,6 @@ Ext.define('Lada.view.window.GridExport', {
         });
 
         // create comboboxes and checkboxes
-
         this.items = [{
             xtype: 'container',
             name: 'form',
@@ -302,34 +299,27 @@ Ext.define('Lada.view.window.GridExport', {
             items: [{
                 xtype: 'button',
                 action: 'export',
-                text: i18n.getMsg('export.button'),
-                listeners: {
-                    click: me.doExport
-                }
+                text: i18n.getMsg('export.button')
             },{
                 xtype: 'button',
                 action: 'close',
-                text: i18n.getMsg('close'),
-                listeners: {
-                    click: function(button) {
-                        button.up('window').close();
-                    }
-                }
+                text: i18n.getMsg('close')
             }]
         }];
+        this.callParent(arguments);
 
-        // listeners
-        // this.down('button[action=export]').on({
-        //     click: me.doExport
-        // });
-        // this.down('button[action=close]').text = i18n.getMsg('close');
-        // this.down('button[action=export]').text = i18n.getMsg('export.button');
-        // this.down('button[action=close]').on({
-        //     click: function(button) {
-        //         button.up('window').close();
-        //         return;
-        //     }
-        // });
+        // listeners. Can not be listener at button definition because of scope
+        this.down('button[action=export]').on({
+            click: me.doExport
+        });
+        this.down('button[action=close]').text = i18n.getMsg('close');
+        this.down('button[action=export]').text = i18n.getMsg('export.button');
+        this.down('button[action=close]').on({
+            click: function(button) {
+                button.up('window').close();
+                return;
+            }
+        });
 
         // get rowexpander and their columns
         var toggled = false;
@@ -364,7 +354,7 @@ Ext.define('Lada.view.window.GridExport', {
                 break;
             }
         }
-        this.callParent(arguments);
+
         this.down('button[action=export]').text= i18n.getMsg('export.button');
         this.down('tagfield[name=exportexpcolumns]').select(preselectedEx);
         var encoding = document.characterSet;
