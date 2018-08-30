@@ -19,6 +19,7 @@ Ext.define('Lada.store.ReiProgpunktGruppe', {
         }],
     autoLoad: true,
     sortOnLoad: true,
+    sorters: 'reiProgPunktGruppe',
     proxy: {
         type: 'rest',
         url: 'lada-server/rest/reiprogpunktgruppe',
