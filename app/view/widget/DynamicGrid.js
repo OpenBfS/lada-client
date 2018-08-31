@@ -891,14 +891,12 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     menu: new Ext.menu.Menu({
                         items: [{
                             text: me.i18n.getMsg('button.active'),
-                            handler: function() {
-                                alert('TODO - aktiv');
-                            }
+                            action: 'setActiveYes',
+                            needsSelection: true
                         },{
                             text: me.i18n.getMsg('button.notActive'),
-                            handler: function() {
-                                alert('TODO - inaktiv');
-                            }
+                            action: 'setActiveNo',
+                            needsSelection: true
                         }]
                     }),
                     needsSelection: true,
