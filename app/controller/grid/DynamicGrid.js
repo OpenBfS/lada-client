@@ -21,7 +21,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             'dynamicgrid': {
                 itemdblclick: this.openItem,
                 select: this.handleSelect,
-                deselect: this.handleDeselect
+                deselect: this.handleDeselect,
+                selectionchange: this.selectionChanged
             },
             'dynamicgrid pagingtoolbar': {
                 change: this.pageChange
@@ -418,6 +419,15 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     }).show();
                     break;
             }
+        }
+    },
+
+    selectionChanged: function(selModel, selected) {
+        var grid = selModel.view.up('grid');
+        if (selected.length) {
+            this.buttonToggle(true, grid);
+        } else {
+            this.buttonToggle(false, grid);
         }
     }
 });
