@@ -242,7 +242,9 @@ Ext.define('Lada.view.form.Messprogramm', {
                     name: 'mplId',
                     fieldLabel: i18n.getMsg('mpl_id'),
                     margin: '0, 10, 5, 5',
-                    labelWidth: 115,
+                    labelWidth: 140,
+                    width: '100%',
+                    anchor: '100%',
                     editable: true,
                     extraParams: function() {
                         this.down('combobox').on({ // this = widget
@@ -278,6 +280,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                     items: [{
                         xtype: 'reiprogpunktgruppe',
                         name: 'reiProgpunktGrpId',
+                        width: '50%',
+                        labelWidth: 140,
                         fieldLabel: i18n.getMsg('reiprogpunktgruppe'),
                         margin: '0 5 5 5',
                         allowBlank: true,
@@ -286,6 +290,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                     }, {
                         xtype: 'ktagruppe',
                         name: 'ktaGruppeId',
+                        width: '50%',
+                        labelWidth: 140,
                         fieldLabel: i18n.getMsg('ktagruppe'),
                         margin: '0 5 5 5',
                         hidden: true,

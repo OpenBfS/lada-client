@@ -97,9 +97,17 @@ Ext.define('Lada.view.form.Probe', {
                             name: 'idAlt',
                             fieldLabel: i18n.getMsg('probeId'),
                             margin: '0, 5, 5, 5',
-                            labelWidth: 95,
+                            labelWidth: 92,
                             maxLength: 20,
-                            width: '70%'
+                            width: '35%'
+                        }, {
+                            xtype: 'selectabledisplayfield',
+                            name: 'mprId',
+                            fieldLabel: i18n.getMsg('mprId'),
+                            margin: '0, 5, 5, 5',
+                            labelWidth: 80,
+                            maxLength: 20,
+                            width: '35%'
                         }, {
                             xtype: 'chkbox',
                             name: 'test',
@@ -291,7 +299,7 @@ Ext.define('Lada.view.form.Probe', {
                     },{
                         xtype: 'messprogrammland',
                         name: 'mplId',
-                        fieldLabel: 'Messprogramm-Land',
+                        fieldLabel: i18n.getMsg('mpl_id'),
                         margin: '0, 5, 5, 5',
                         width: '100%',
                         anchor: '100%',
