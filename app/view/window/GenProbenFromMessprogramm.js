@@ -24,7 +24,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     autoScroll: true,
     layout: 'vbox',
     constrain: true,
-
+    alwaysOnTop: true,
     parentWindow: null,
     ids: null,
 
@@ -426,7 +426,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 }
             }]
         });
-        me.hide();
         win.show();
         win.down('dynamicgrid').setToolbar();
         me.down('panel').setHtml(me.down('panel').html + '<br><br>'
