@@ -173,7 +173,7 @@ Ext.define('Lada.view.window.SetStatus', {
                     messungsId: this.selection[i].get('id'),
                     mstId: this.down('combobox').getValue(),
                     datum: new Date(),
-                    statusKombi: kombi.get('id'),
+                    statusKombi: kombi,
                     text: this.down('textarea').getValue()
                 };
                 Ext.Ajax.request({
