@@ -593,6 +593,7 @@ Ext.define('Lada.controller.Query', {
                     options.store = Ext.data.StoreManager.get('statuskombi');
                     field = Ext.create('Lada.view.widget.StatuskombiSelect',
                         options);
+                    field.store.load();
                     break;
                 default:
                     options.value = recs[i].get('filterValue');
