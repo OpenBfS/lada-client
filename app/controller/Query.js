@@ -849,17 +849,19 @@ Ext.define('Lada.controller.Query', {
                 for (var i=0; i< data.length; i++) {
                     request.push(data[i].get(dgrid.rowtarget.dataIndex));
                 }
-                Ext.Ajax.request({
-                    url: 'lada-server/rest/ort/getbyids',
-                    jsonData: JSON.stringify(request),
-                    method: 'POST',
-                    success: function(response) {
-                        var json = Ext.JSON.decode(response.responseText);
-                        if (json.data) {
-                            grid.ortstore.setData(json.data);
+                if (request.length) {
+                    Ext.Ajax.request({
+                        url: 'lada-server/rest/ort/getbyids',
+                        jsonData: JSON.stringify(request),
+                        method: 'POST',
+                        success: function(response) {
+                            var json = Ext.JSON.decode(response.responseText);
+                            if (json.data && grid.ortstore) {
+                                grid.ortstore.setData(json.data);
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         });
         grid.ortstore.addListener('datachanged',function(store) {
