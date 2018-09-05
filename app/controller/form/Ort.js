@@ -62,9 +62,7 @@ Ext.define('Lada.controller.form.Ort', {
                 form.loadRecord(newrecord);
                 formpanel.down('verwaltungseinheit').store.clearFilter();
                 formpanel.down('staat').store.clearFilter();
-                button.setDisabled(true);
-                formpanel.down('button[action=revert]').setDisabled(true);
-                button.setDisabled(true);
+
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     formpanel.clearMessages();
@@ -72,8 +70,7 @@ Ext.define('Lada.controller.form.Ort', {
                 }
                 var dynamicgrid = Ext.getCmp('dynamicgridid');
                 if (dynamicgrid) {
-                    dynamicgrid.store.add(newrecord);
-                    dynamicgrid.getView().refresh();
+                    dynamicgrid.reload();
                 }
                 var ozw = formpanel.up('panel').parentWindow;
                 if (ozw) {
@@ -83,6 +80,8 @@ Ext.define('Lada.controller.form.Ort', {
                         ortgrid.store.reload();
                     }
                 }
+                formpanel.down('button[action=revert]').setDisabled(true);
+                formpanel.down('button[action=save]').setDisabled(true);
             },
             failure: function(record, response) {
                 var i18n = Lada.getApplication().bundle;
