@@ -139,7 +139,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             handler: this.close
         }];
         this.width = 900;
-        this.height = 800;
+        this.height = Ext.getBody().getViewSize().height - 100;
         this.bodyStyle = {background: '#fff'};
 
         // add listeners to change the window appearence when it becomes inactive
@@ -173,7 +173,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 region: 'south',
                 border: false,
                 layout: 'fit',
-                height: 240,
+                height: 340,
                 items: [{
                     xtype: 'ortstammdatengrid',
                     title: i18n.getMsg('title.orte'),

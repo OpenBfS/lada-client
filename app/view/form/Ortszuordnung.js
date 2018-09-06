@@ -93,7 +93,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                             },{
                                 // empty conttainer for vertical separation
                                 xtype: 'container',
-                                minHeight: 30
+                                minHeight: 20
                             }, {
                                 // this field is hidden because the user doesn't
                                 // need to know the internal ortID
