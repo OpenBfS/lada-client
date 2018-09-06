@@ -323,6 +323,10 @@ Ext.define('Lada.controller.Query', {
         var gcs = qp.gridColumnValueStore;
         var jsonData = {columns: []};
         var csdata = gcs.getData().items;
+        var loadingMask = Ext.create('Ext.LoadMask', {
+            target: qp
+        });
+        loadingMask.show();
         if (csdata.length === 0) {
             //TODO warning: no data requested
             return;
@@ -392,6 +396,7 @@ Ext.define('Lada.controller.Query', {
             this.resultStore.loadPage(1,{
                 scope: this,
                 callback: function(responseData, operation, success) {
+                    loadingMask.hide();
                     if (success && responseData) {
                         var contentPanel = button.up('panel[name=main]').down(
                             'panel[name=contentpanel]');
@@ -419,8 +424,13 @@ Ext.define('Lada.controller.Query', {
                             this.setMapOrte(resultGrid);
                         }
                     } else {
-                        Ext.Msg.alert(i18n.getMsg('query.error.search.title'),
-                            i18n.getMsg('query.error.search.message'));
+                        if (operation.error.status === 0) {
+                            Ext.Msg.alert(i18n.getMsg('query.error.search.title'),
+                                i18n.getMsg('query.error.search.querytimeout.message'));
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('query.error.search.title'),
+                                i18n.getMsg('query.error.search.message'));
+                        }
                     }
                 }
             });

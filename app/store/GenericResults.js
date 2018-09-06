@@ -16,6 +16,7 @@ Ext.define('Lada.store.GenericResults', {
     require: ['Lada.query.QueryProxy'],
     proxy: {
         type: 'query',
+        timeout:30000,
         url: 'lada-server/rest/universal',
         actionMethods: {
             read: 'POST'
