@@ -15,7 +15,7 @@ Ext.define('Lada.view.widget.KtaGruppe', {
     store: 'Lada.store.KtaGruppe',
     displayField: 'beschreibung',
     valueField: 'id',
-    editable: this.editable || false,
+    //editable: this.editable || false,
     disableKeyFilter: true,
     searchValueField: 'ktaGruppe',
     tpl: Ext.create('Ext.XTemplate',
@@ -23,14 +23,15 @@ Ext.define('Lada.view.widget.KtaGruppe', {
             '{ktaGruppe} - {beschreibung}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">{ktaGruppe}</tpl>'),
-    forceSelection: true,
+    //forceSelection: true,
+    forceSelection: this.forceSelection || false,
     // Enable filtering of comboboxes
     autoSelect: false,
     queryMode: 'local',
-    triggerAction: 'all',
+    triggerAction: 'type',
     listConfig: {maxWidth: 500},
     typeAhead: false,
-    minChars: 0,
+    minChars: 2,
     allowBlank: true,
 
     initComponent: function() {

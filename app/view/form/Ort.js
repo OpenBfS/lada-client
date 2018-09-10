@@ -95,7 +95,7 @@ Ext.define('Lada.view.form.Ort', {
                 fieldLabel: i18n.getMsg('orte.berichtstext'),
                 name: 'berichtstext'
             }, {
-                xtype: 'kta',
+                xtype: 'ktagruppe',
                 labelWidth: 125,
                 maxLength: 100,
                 name: 'ktaGruppeId',

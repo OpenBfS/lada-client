@@ -29,7 +29,13 @@ Ext.define('Lada.model.Ort', {
     }, {
         name: 'nutsCode'
     }, {
-        name: 'anlageId'
+        name: 'ktaGruppeId',
+            convert: function(v) {
+                    if (v === '') {
+                        return null;
+                    }
+                    return v;
+                }
     }, {
         name: 'netzbetreiberId'
     }, {

@@ -357,6 +357,10 @@ Ext.application({
             storeId: 'ktas',
             autoLoad: 'true'
         });
+        Ext.create('Lada.store.KtaGruppe', {
+            storeId: 'ktaGruppe',
+            autoLoad: 'true'
+        });
         Ext.create('Lada.store.OrtsZusatz', {
             storeId: 'ortszusatz',
             autoLoad: 'true'

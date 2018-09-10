@@ -155,13 +155,13 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 if (!record) {
                     return '';
                 }
-                var ktaId = record.get('anlageId');
-                if (ktaId === undefined || ktaId === null || ktaId === '') {
+                var ktaGruppeId = record.get('ktaGruppeId');
+                if (ktaGruppeId === undefined || ktaGruppeId === null || ktaGruppeId === '') {
                     return '';
                 }
-                var ktas = Ext.data.StoreManager.get('ktas');
-                var kta = ktas.getById(record.get('anlageId'));
-                return kta.get('code');
+                var ktaGruppen = Ext.data.StoreManager.get('ktaGruppe');
+                var ktaGruppe = ktaGruppen.getById(record.get('ktaGruppeId'));
+                return ktaGruppe.get('ktaGruppe');
             }
         }];
         this.listeners = {

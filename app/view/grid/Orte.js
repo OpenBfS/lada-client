@@ -218,14 +218,14 @@ Ext.define('Lada.view.grid.Orte', {
                 ) {
                     return '';
                 }
-                var store = Ext.data.StoreManager.get('ktas');
+                var store = Ext.data.StoreManager.get('ktaGruppe');
                 var record = store.getById(value);
                 if (!record) {
                     return value;
                 }
-                return record.get('code');
+                return record.get('ktaGruppe');
             },
-            dataIndex: 'anlageId'
+            dataIndex: 'ktaGruppeId'
         }, {
             header: i18n.getMsg('orte.mpArt'),
             filter: {
