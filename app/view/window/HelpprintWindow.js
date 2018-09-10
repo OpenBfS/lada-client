@@ -34,8 +34,8 @@ Ext.define('Lada.view.window.HelpprintWindow', {
         title: 'Lada Hilfe'
     },
     constrainHeader: true,
-    width: 1050,
-    height: 622,
+    width: 1500,
+    height: 700,
     layout: 'border',
     minWidth: 500,
     minHeight: 300,
@@ -47,7 +47,7 @@ Ext.define('Lada.view.window.HelpprintWindow', {
         xtype: 'panel',
         region: 'west',
         scrollable: 'vertical',
-        width: 180,
+        width: 300,
         split: true,
         layout: {
             type: 'vbox'
@@ -64,7 +64,7 @@ Ext.define('Lada.view.window.HelpprintWindow', {
         xtype: 'panel',
         reference: 'helpprintPanel',
         region: 'center',
-        scrollable: 'vertical',
+        scrollable: true,
         bodyPadding: 10,
         bind: {
             html: '{selectionHtml}'

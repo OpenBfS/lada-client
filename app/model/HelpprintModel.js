@@ -42,33 +42,58 @@ Ext.define('Lada.model.HelpprintModel', {
             root: {
                 children: [{
                     id: 'intro',
-                    text: 'Einführung',
+                    text: 'Einleitung',
                     content: 'resources/ladaHelp/intro.html',
                     leaf: true
                 }, {
+                    id: 'quickStart',
+                    text: 'Schnellübersicht',
+                    content: 'resources/ladaHelp/quickStart.html',
+                    leaf: true
+                }, {
+                    id: 'generalHints',
+                    text: 'Allgemeine Hinweise + Einstellungen',
+                    content: 'resources/ladaHelp/generalHints.html',
+                    leaf: true
+                }, {
                     id: 'query',
-                    text: 'Query',
+                    text: 'Abfrage, Abfragedetails und Filter',
                     content: 'resources/ladaHelp/query.html',
                     leaf: true
                 }, {
                     id: 'probe',
-                    text: 'Proben-Fenster',
+                    text: 'Ergebnisliste - Proben',
                     content: 'resources/ladaHelp/probe.html',
                     leaf: true
                 }, {
                     id: 'messung',
-                    text: 'Messungs-Fenster',
+                    text: 'Ergebnisliste - Messungen',
                     content: 'resources/ladaHelp/messung.html',
                     leaf: true
                 }, {
+                    id: 'messprogramm',
+                    text: 'Ergebnisliste - Messprogramme',
+                    content: 'resources/ladaHelp/messprogramm.html',
+                    leaf: true
+                }, {
+                    id: 'datensatzerzeuger',
+                    text: 'Ergebnisliste - Datensatzerzeuger',
+                    content: 'resources/ladaHelp/datensatzerzeuger.html',
+                    leaf: true
+                }, {
+                    id: 'messprogrammkategorie',
+                    text: 'Ergebnisliste - Messprogrammkategorie',
+                    content: 'resources/ladaHelp/messprogrammkategorie.html',
+                    leaf: true
+                }, {
                     id: 'ort',
-                    text: 'Orte-Fenster',
+                    text: 'Ergebnisliste - Orte',
                     content: 'resources/ladaHelp/ort.html',
                     leaf: true
                 }, {
-                    id: 'messprogramm',
-                    text: 'Messprogramm-Fenster',
-                    content: 'resources/ladaHelp/messprogramm.html',
+                    id: 'probenehmer',
+                    text: 'Ergebnisliste - Probenehmer',
+                    content: 'resources/ladaHelp/probenehmer.html',
                     leaf: true
                 }, {
                     id: 'glossar',
