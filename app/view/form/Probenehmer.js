@@ -161,6 +161,15 @@ Ext.define('Lada.view.form.Probenehmer', {
                     layout: 'vbox',
                     items: [{
                         xtype: 'tfield',
+                        name: 'betrieb',
+                        fieldLabel: i18n.getMsg('betrieb'),
+                        labelWidth: 100,
+                        margin: '5 10 5 10',
+                        readOnly: true,
+                        width: '100%',
+                        maxLength: 80
+                    }, {
+                        xtype: 'tfield',
                         name: 'strasse',
                         fieldLabel: i18n.getMsg('strasse'),
                         labelWidth: 100,
@@ -220,6 +229,11 @@ Ext.define('Lada.view.form.Probenehmer', {
         }
     },
 
+    setRecord: function(probenehmerRecord) {
+        this.clearMessages();
+        this.getForm().loadRecord(probenehmerRecord);
+    },
+
     setMessages: function(errors, warnings) {
         var key;
         var element;
@@ -271,6 +285,7 @@ Ext.define('Lada.view.form.Probenehmer', {
         this.down('tarea[name=bezeichnung]').clearWarningOrError();
         this.down('tfield[name=kurzBezeichnung]').clearWarningOrError();
         this.down('tfield[name=ort]').clearWarningOrError();
+        this.down('tfield[name=betrieb]').clearWarningOrError();
         this.down('numfield[name=plz]').clearWarningOrError();
         this.down('tfield[name=strasse]').clearWarningOrError();
         this.down('tfield[name=telefon]').clearWarningOrError();
@@ -285,6 +300,7 @@ Ext.define('Lada.view.form.Probenehmer', {
         this.down('tfield[name=bemerkung]').setReadOnly(value);
         this.down('tarea[name=bezeichnung]').setReadOnly(value);
         this.down('tfield[name=kurzBezeichnung]').setReadOnly(value);
+        this.down('tfield[name=betrieb]').setReadOnly(value);
         this.down('tfield[name=ort]').setReadOnly(value);
         this.down('numfield[name=plz]').setReadOnly(value);
         this.down('tfield[name=strasse]').setReadOnly(value);

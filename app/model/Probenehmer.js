@@ -31,6 +31,8 @@ Ext.define('Lada.model.Probenehmer', {
     }, {
         name: 'plz'
     }, {
+        name: 'betrieb'
+    }, {
         name: 'strasse'
     }, {
         name: 'telefon'
