@@ -312,13 +312,16 @@ Ext.define('Lada.view.panel.Map', {
         this.newFeatureStyle= function(feature, resolution) {
             return new ol.style.Style({
                 image: new ol.style.Icon({
-                    src: 'resources/img/marker-blue.png'
+                    src: 'resources/img/marker-blue.png',
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
+                    anchor: [0.5, 1]
                 }),
                 text: new ol.style.Text({
                     text: 'neu ...',
                     font: '12px Arial',
                     offsetX: 38,
-                    offsetY: 5,
+                    offsetY: 0,
                     fill: new ol.style.Fill({
                         color: '#000099'
                     }),

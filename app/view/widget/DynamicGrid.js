@@ -126,6 +126,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             store: store,
             displayInfo: true
         }]);
+        if (this.down('map') != null) {
+            this.removeDocked(this.down('map'));
+        }
         if (this.rowtarget.dataType === 'ortId') {
             this.i18n = Lada.getApplication().bundle;
             var map = Ext.create('Lada.view.panel.Map', {
