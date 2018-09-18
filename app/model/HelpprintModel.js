@@ -57,7 +57,7 @@ Ext.define('Lada.model.HelpprintModel', {
                     leaf: true
                 }, {
                     id: 'query',
-                    text: 'Abfrage, Abfragedetails und Filter',
+                    text: 'Selektion, Details zur Selektion und Filter',
                     content: 'resources/ladaHelp/query.html',
                     leaf: true
                 }, {
