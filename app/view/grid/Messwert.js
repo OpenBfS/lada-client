@@ -117,13 +117,22 @@ Ext.define('Lada.view.grid.Messwert', {
                 triggerAction: 'all'
             }
         }, {
-            header: i18n.getMsg('messwertNwg'),
+            header: i18n.getMsg('messwertEG'),
             width: 60,
             dataIndex: 'messwertNwg',
             editor: {
                 xtype: 'checkbox',
                 uncheckedValue: false,
-                inputValue: '<'
+                inputValue: '<',
+                listeners: {
+                    change: function(value) {
+                        if (value.getValue() === true){
+                            this.up().down('component[name=messwert]').setValue('0');
+                        } else {
+                            this.up().down('component[name=messwert]').setValue('');
+                        }
+                    }
+                },
             }
         }, {
             header: i18n.getMsg('messwert'),
@@ -131,7 +140,6 @@ Ext.define('Lada.view.grid.Messwert', {
             width: 80,
             editor: {
                 xtype: 'expnumberfield',
-                allowBlank: false
             },
             renderer: function(value) {
                 if (!value || value === '') {
@@ -177,8 +185,9 @@ Ext.define('Lada.view.grid.Messwert', {
                 triggerAction: 'all'
             }
         }, {
-            header: i18n.getMsg('messfehler'),
+            header: i18n.getMsg('relMessunsicherheit'),
             dataIndex: 'messfehler',
+            flex: 1,
             xtype: 'numbercolumn',
             format: '0000.0',
             width: 80,
@@ -194,9 +203,10 @@ Ext.define('Lada.view.grid.Messwert', {
         }, {
             header: i18n.getMsg('messwert_nwg'),
             dataIndex: 'nwgZuMesswert',
-            width: 80,
+            flex: 1,
             editor: {
-                xtype: 'expnumberfield'
+                xtype: 'expnumberfield',
+                allowBlank: false
             },
             renderer: function(value) {
                 if (!value || value === '') {
@@ -210,19 +220,6 @@ Ext.define('Lada.view.grid.Messwert', {
                     + ((exponent < 0) ? '-' : '+')
                     + ((Math.abs(exponent) < 10) ? '0' : '')
                     + Math.abs(exponent).toString();
-            }
-        }, {
-            header: i18n.getMsg('grenzwertueberschreitung'),
-            dataIndex: 'grenzwertueberschreitung',
-            flex: 1,
-            renderer: function(value) {
-                if (value === true) {
-                    return 'Ja';
-                }
-                return 'Nein';
-            },
-            editor: {
-                xtype: 'checkbox'
             }
         }];
         this.listeners = {

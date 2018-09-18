@@ -43,9 +43,6 @@ Ext.define('Lada.model.Messwert', {
     }, {
         name: 'mehId'
     }, {
-        name: 'grenzwertueberschreitung',
-        type: 'boolean'
-    }, {
         name: 'letzteAenderung',
         type: 'date',
         dateFormat: 'time',
