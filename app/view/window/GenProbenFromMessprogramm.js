@@ -205,19 +205,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
      * Handle results of Probe creation from Messprogramm
      */
     onSuccess: function(results) {
-        var i18n = Lada.getApplication().bundle;
-        var me = this;
         var data = [];
-        var umwStore = Ext.create('Lada.store.Umwelt', {
-            asynchronousLoad: false
-        });
-
-        var mmtStore = Ext.create('Lada.store.MmtMessprogramm', {
-            asynchronousLoad: false,
-            autoLoad: true
-        });
-        var mpStore = Ext.create('Lada.store.MessprogrammeList');
-        //Concatenate result json data
         for (var r in results) {
             var json = Ext.JSON.decode(results[r].responseText);
             if (json.data === null) {
@@ -228,6 +216,19 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         if (data.length === 0) {
             return;
         }
+        var umwStore = Ext.create('Lada.store.Umwelt', {
+            asynchronousLoad: false
+        });
+        var me = this;
+        umwStore.load({callback: function(){
+            me.genResultWindow(umwStore, data)
+        }});
+    },
+
+    genResultWindow: function(umwStore, data){
+        var i18n = Lada.getApplication().bundle;
+        var me = this;
+
         var columnstore = Ext.data.StoreManager.get('columnstore');
         columnstore.clearFilter();
         columnstore.filter({
@@ -235,7 +236,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             value: '1',
             exactMatch: true});
         var gcs = Ext.create('Lada.store.GridColumnValue');
-
         //TODO basequery needed for this to work
         var columns = ['idAlt', 'mstId', 'datenbasisId', 'baId', 'probenartId',
             'solldatumBeginn', 'solldatumEnde', 'mprId', 'mediaDesk', 'umwId',
@@ -380,37 +380,20 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 }, {
                     header: i18n.getMsg('messungen'),
                     renderer: function(value, metadata, rec) {
-                        var mprId = rec.get('mprId');
-                        mmtStore.clearFilter();
-                        mmtStore.filter('messprogrammId', mprId);
-                        var items = mmtStore.getData().items;
-                        if (!items || !items.length) {
-                            return '(0)';
+                        var mmth = rec.get('mmt');
+                        if (mmth) {
+                            return mmth;
                         }
-                        var mgrtext = '';
-                        for (var item=0; item < items.length; item++) {
-                            var mmth = items[item].get('mmtId');
-                            if (mmth) {
-                                mgrtext = mmth;
-                            }
-                            if (item !== items.length -1) {
-                                mgrtext += ', ';
-                            } else {
-                                mgrtext += '(' + items.length + ')';
-                            }
+                        else {
+                            return '-';
                         }
-                        return mgrtext;
                     }
                 }, {
                     header: i18n.getMsg('entnahmeOrt'),
                     renderer: function(value, metadata, rec) {
-                        var mprModel = mpStore.getById(rec.get('mprId'));
-                        if (mprModel) {
-                            var eGemId = mprModel.get('eGemId');
-                            var eGem = mprModel.get('eGem');
-                            if (eGemId !== null && eGem !== null) {
-                                return eGemId + ' - ' + eGem;
-                            }
+                        var id = rec.get('gemId');
+                        if (id){
+                            return id;
                         }
                         return '';
                     }
