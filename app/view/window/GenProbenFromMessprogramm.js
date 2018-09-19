@@ -239,7 +239,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         //TODO basequery needed for this to work
         var columns = ['idAlt', 'mstId', 'datenbasisId', 'baId', 'probenartId',
             'solldatumBeginn', 'solldatumEnde', 'mprId', 'mediaDesk', 'umwId',
-            'probeNehmerId'];
+            'probeNehmerId', 'mmt', 'gemId'];
         for (var i=0; i < columns.length; i++) {
             var col = columnstore.findRecord('dataIndex', columns[i], false,
                 false, false, true); // TODO col is unused here?
@@ -379,6 +379,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     }
                 }, {
                     header: i18n.getMsg('messungen'),
+                    dataIndex: 'mmt',
                     renderer: function(value, metadata, rec) {
                         var mmth = rec.get('mmt');
                         if (mmth) {
@@ -390,6 +391,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     }
                 }, {
                     header: i18n.getMsg('entnahmeOrt'),
+                    dataIndex: 'gemId',
                     renderer: function(value, metadata, rec) {
                         var id = rec.get('gemId');
                         if (id){
@@ -400,7 +402,15 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 }, {
                     header: i18n.getMsg('probenehmerId'),
                     dataIndex: 'probeNehmerId'
-                }]
+                }],
+                plugins: Ext.create('Lada.view.plugin.GridRowExpander', {
+                    gridType: 'Lada.view.grid.Messung',
+                    idRow: 'id',
+                    expandOnDblClick: false,
+                    gridConfig: {
+                        bottomBar: false
+                    }
+                })
             }],
             buttons: [{
                 text: i18n.getMsg('close'),
