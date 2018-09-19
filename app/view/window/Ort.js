@@ -31,6 +31,11 @@ Ext.define('Lada.view.window.Ort', {
 
     title: null,
 
+    /** If set to true, he newly created Ort will be set as selected
+     * Ortszuordnung
+     */
+    setOzOnComplete: false,
+
     /**
      * The record for the new Ort. Should be a {@link Lada.model.Ort}
      */

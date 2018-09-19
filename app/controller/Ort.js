@@ -37,7 +37,8 @@ Ext.define('Lada.controller.Ort', {
     addRecord: function(button) {
         Ext.create('Lada.view.window.Ort',{
             record: Ext.create('Lada.model.Ort', {ortTyp: 1}),
-            parentWindow: button.up('dynamicgrid')
+            parentWindow: button.up('dynamicgrid'),
+            setOzOnComplete: true
         }).show();
     },
 

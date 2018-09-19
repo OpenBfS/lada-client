@@ -61,7 +61,12 @@ Ext.define('Lada.controller.form.Ort', {
                 form.loadRecord(newrecord);
                 formpanel.down('verwaltungseinheit').store.clearFilter();
                 formpanel.down('staat').store.clearFilter();
-
+                if (formpanel.up('window').setOzOnComplete === true ){
+                    var ozf = Ext.ComponentQuery.query('ortszuordnungform')[0];
+                    if (ozf){
+                        ozf.setOrt(null, newrecord);
+                    }
+                }
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     formpanel.clearMessages();

@@ -174,7 +174,8 @@ Ext.define('Lada.view.panel.Map', {
                     kdaId: 4,
                     ortTyp: 1
                 }),
-                parentWindow: parent
+                parentWindow: parent,
+                setOzOnComplete: true
             }).show();
             me.map.removeLayer(me.temporaryLayer);
         }

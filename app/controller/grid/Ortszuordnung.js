@@ -282,7 +282,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 berichtstext: record.get('bezeichnung'),
                 ortTyp: 4
             }),
-            parentWindow: win
+            parentWindow: win,
+            setOzOnComplete: true
         }).show();
         var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
@@ -302,7 +303,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 berichtstext: record.get('staat'),
                 ortTyp: 5
             }),
-            parentWindow: win
+            parentWindow: win,
+            setOzOnComplete: true
         }).show();
         var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
