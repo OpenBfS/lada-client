@@ -16,7 +16,6 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
     displayField: 'netzbetreiber',
     valueField: 'id',
     filteredStore: false,
-    editable: this.editable || false,
     readOnly: this.readOnly,
     isFormField: this.isFormField,
     submitValue: this.submitValue,
