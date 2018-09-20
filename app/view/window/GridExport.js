@@ -426,7 +426,7 @@ Ext.define('Lada.view.window.GridExport', {
                     if (c && data[i].get(c.dataIndex) !== undefined ) {
                         var value = this.formatValue(
                             data[i].get(c.dataIndex), c, true);
-                        iresult[c.text] = value;
+                        iresult[c.dataIndex] = value;
                     }
                 }
                 var entryId = data[i].get(this.grid.rowtarget.dataIndex);
@@ -480,7 +480,7 @@ Ext.define('Lada.view.window.GridExport', {
                             var value = this.formatValue(
                                 data[i].get(c.dataIndex), c, true);
                             if (value !== undefined) {
-                                iresult.properties[c.text] = value;
+                                iresult.properties[c.dataIndex] = value;
                             }
                         }
                     }
