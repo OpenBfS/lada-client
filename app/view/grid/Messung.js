@@ -149,7 +149,7 @@ Ext.define('Lada.view.grid.Messung', {
                 allowBlank: false
             }
         }, {
-            header: i18n.getMsg('number_of_nuclides'),
+            header: i18n.getMsg('number_of_nuclids'),
             // Gibt die Anzahl der Messwerte wieder,
             // NICHT die Anzahl der verschiedenen Nukleide
             // Eventuell ist die Bezeichnug daher irreführend

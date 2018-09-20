@@ -339,11 +339,11 @@ Ext.define('Lada.view.window.GridExport', {
                 this.expcolumns = this.rowexp.cmps.items[0].getColumns();
                 for (var i =0; i < this.expcolumns.length; i++) {
                     if (this.expcolumns[i].dataIndex &&
-                      columns[i].dataIndex !== 'readonly' &&
-                      this.expcolumns[i].text.length) {
+                      this.expcolumns[i].dataIndex !== 'readonly') {
+
                         this.expcolumnList.add({
                             value: this.expcolumns[i].dataIndex,
-                            name: this.expcolumns[i].text
+                            name: this.expcolumns[i].text || this.expcolumns[i].dataIndex
                         });
                         preselectedEx.push(this.expcolumns[i].dataIndex);
                     }
@@ -426,7 +426,7 @@ Ext.define('Lada.view.window.GridExport', {
                     if (c && data[i].get(c.dataIndex) !== undefined ) {
                         var value = this.formatValue(
                             data[i].get(c.dataIndex), c, true);
-                        iresult[c.text] = value;
+                        iresult[c.dataIndex] = value;
                     }
                 }
                 var entryId = data[i].get(this.grid.rowtarget.dataIndex);
@@ -480,7 +480,7 @@ Ext.define('Lada.view.window.GridExport', {
                             var value = this.formatValue(
                                 data[i].get(c.dataIndex), c, true);
                             if (value !== undefined) {
-                                iresult.properties[c.text] = value;
+                                iresult.properties[c.dataIndex] = value;
                             }
                         }
                     }
@@ -969,6 +969,7 @@ Ext.define('Lada.view.window.GridExport', {
             if (content.data) {
                 Object.keys(content.data).forEach(function(key) {
                     line += primaryRow
+                    + me.csv.colsep
                     + me.addline(content.data[key], columns)
                     + me.csv.linesep;
                 });
