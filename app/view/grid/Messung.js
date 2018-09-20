@@ -62,7 +62,7 @@ Ext.define('Lada.view.grid.Messung', {
                 grid.fireEvent('itemdblclick', grid, rec);
             }
         }, {
-            header: i18n.getMsg('messungsId'),
+            header: i18n.getMsg('extMessungsId'),
             dataIndex: 'idAlt',
             flex: 1,
             editor: {
