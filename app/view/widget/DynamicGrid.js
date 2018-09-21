@@ -182,7 +182,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         var koord_y = Math.round(clone.getGeometry().getCoordinates()[1] * 100000)/100000;
         Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Ort',{
-                //netzbetreiberId: nId,
                 koordXExtern: koord_x,
                 koordYExtern: koord_y,
                 kdaId: 4,

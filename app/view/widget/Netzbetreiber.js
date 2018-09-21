@@ -12,7 +12,7 @@
 Ext.define('Lada.view.widget.Netzbetreiber', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.netzbetreiber',
-    store: 'StaNetzbetreiber',
+    store: 'netzbetreiber',
     displayField: 'netzbetreiber',
     valueField: 'id',
     filteredStore: false,
@@ -41,8 +41,8 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
             this.store.clearFilter();
         }
         this.callParent(arguments);
-        this.down('combobox').isFormField = false;
-        this.down('combobox').submitValue = false;
+        this.down('combobox').isFormField = this.isFormField;
+        this.down('combobox').submitValue = this.submitValue;
         var me = this;
         this.down('combobox').on('focus', function(combobox) {
             var netzstore = combobox.getStore();
