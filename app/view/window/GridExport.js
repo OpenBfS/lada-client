@@ -564,7 +564,7 @@ Ext.define('Lada.view.window.GridExport', {
                 var entryline = me.addline(data[entry], columns);
 
                 if (expcolumns.length) {
-                    me.setSecondaryCsv(data[entry], expcolumns, entryline);
+                    me.setSecondaryCsv(data[entry], expcolumns, entryline, encoding);
                 } else {
                     this.resultobject += entryline + this.csv.linesep;
                     this.countDown(encoding);
@@ -876,7 +876,7 @@ Ext.define('Lada.view.window.GridExport', {
      */
     setSecondaryJson: function(entry, type, idx, columns) {
         if (!this.rowexp || !this.down('checkbox[name=secondarycolumns]').value) {
-            this.countDown();
+            this.countDown('utf-8');
             return;
         }
         var me = this;
@@ -912,11 +912,11 @@ Ext.define('Lada.view.window.GridExport', {
                             me.resultobject.features[idx].Messungen =
                                 fillData(content.data);
                         }
-                        me.countDown();
+                        me.countDown('utf-8');
                     },
                     failure: function() {
                         //TODO error handling.
-                        me.countDown();
+                        me.countDown('utf-8');
                         return null;
                     }
                 });
@@ -934,17 +934,17 @@ Ext.define('Lada.view.window.GridExport', {
                             me.resultobject.features[idx].Messwerte =
                                 fillData(content.data);
                         }
-                        me.countDown();
+                        me.countDown('utf-8');
                     },
                     failure: function() {
                         //TODO error handling.
-                        me.countDown();
+                        me.countDown('utf-8');
                         return null;
                     }
                 });
                 break;
             default:
-                me.countDown();
+                me.countDown('utf-8');
                 return null;
         }
     },
@@ -954,12 +954,13 @@ Ext.define('Lada.view.window.GridExport', {
      * @param item the original item of the grid
      * @param columns the columns to be added
      * @param primaryRow The prepared part of the csv which adds (redundant)
+     * @param encoding The resulting file encoding
      * information for all subitems
      */
-    setSecondaryCsv: function(item, columns, primaryRow) {
+    setSecondaryCsv: function(item, columns, primaryRow, encoding) {
         var me = this;
         if (!this.rowexp || !this.down('checkbox[name=secondarycolumns]').value ) {
-            this.countDown();
+            this.countDown(encoding);
             return;
         }
         var id = item.get(this.grid.rowtarget.dataIndex);
@@ -981,7 +982,7 @@ Ext.define('Lada.view.window.GridExport', {
                 line += me.csv.linesep;
             }
             me.resultobject += line;
-            me.countDown();
+            me.countDown(encoding);
         };
         switch (this.rowexp.type) {
             case 'Lada.view.grid.Messung':
@@ -990,7 +991,7 @@ Ext.define('Lada.view.window.GridExport', {
                     timeout: 5 * 1000,
                     success: successCallback,
                     failure: function() {
-                        me.countDown();
+                        me.countDown(encoding);
                         //TODO error handling.
                         return null;
                     }
@@ -1003,13 +1004,13 @@ Ext.define('Lada.view.window.GridExport', {
                     success: successCallback,
                     failure: function() {
                         //TODO error handling.
-                        me.countDown();
+                        me.countDown(encoding);
                         return null;
                     }
                 });
                 break;
             default:
-                me.countDown();
+                me.countDown(encoding);
                 return null;
         }
     },
