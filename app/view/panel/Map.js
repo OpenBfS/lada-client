@@ -159,8 +159,11 @@ Ext.define('Lada.view.panel.Map', {
         var clone = event.feature.clone();
         clone.getGeometry().transform('EPSG:3857', 'EPSG:4326');
         var parent = me.up('ortszuordnungwindow'); //TODO changed queryui
-        if (parent && parent.probe) {
-            var mstId = parent.probe.get('mstId');
+
+        //Use probe or messprogramm to get the mstId
+        if (parent && (parent.probe || parent.messprogramm)) {
+            var parentRecord = parent.probe ? parent.probe : parent.messprogramm;
+            var mstId = parentRecord.get('mstId');
             var mst = Ext.data.StoreManager.get('messstellen');
             var ndx = mst.findExact('id', mstId);
             var nId = mst.getAt(ndx).get('netzbetreiberId');

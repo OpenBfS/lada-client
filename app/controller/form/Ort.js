@@ -80,6 +80,9 @@ Ext.define('Lada.controller.form.Ort', {
                 if (ozw) {
                     var ortgrid= ozw.down('tabpanel').down('ortstammdatengrid');
                     if (ortgrid) {
+                        if (ortgrid.store.storeId === 'ext-empty-store') {
+                            ortgrid.store = Ext.create('Lada.store.Orte');
+                        }
                         ortgrid.store.add(newrecord);
                         ortgrid.store.reload();
                     }
