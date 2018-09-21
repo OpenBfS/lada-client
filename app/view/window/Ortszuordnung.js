@@ -45,6 +45,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        var me = this;
         this.title = i18n.getMsg('ortszuordnung.window.title');
         var recordtype;
         var reiRecord = false;
@@ -149,6 +150,17 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             },
             deactivate: function() {
                 this.getEl().addCls('window-inactive');
+            },
+            close: function() {
+                var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
+                var staaten = Ext.data.StoreManager.get('staaten');
+                if (verwaltungseinheiten) {
+                    verwaltungseinheiten.clearFilter(true);
+                }
+                if (staaten) {
+                    staaten.clearFilter(true);
+                }
+
             }
         });
 
