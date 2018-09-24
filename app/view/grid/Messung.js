@@ -63,7 +63,7 @@ Ext.define('Lada.view.grid.Messung', {
             }
         }, {
             header: i18n.getMsg('extMessungsId'),
-            dataIndex: 'idAlt',
+            dataIndex: 'externeMessungsId',
             flex: 1,
             editor: {
                 allowBlank: false

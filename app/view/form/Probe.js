@@ -94,7 +94,7 @@ Ext.define('Lada.view.form.Probe', {
                         width: '100%',
                         items: [{
                             xtype: 'selectabledisplayfield',
-                            name: 'idAlt',
+                            name: 'externeProbeId',
                             fieldLabel: i18n.getMsg('extProbeId'),
                             margin: '0, 5, 5, 5',
                             labelWidth: 92,

@@ -237,7 +237,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             exactMatch: true});
         var gcs = Ext.create('Lada.store.GridColumnValue');
         //TODO basequery needed for this to work
-        var columns = ['idAlt', 'mstId', 'datenbasisId', 'baId', 'probenartId',
+        var columns = ['externeProbeId', 'mstId', 'datenbasisId', 'baId', 'probenartId',
             'solldatumBeginn', 'solldatumEnde', 'mprId', 'mediaDesk', 'umwId',
             'probeNehmerId', 'mmt', 'gemId'];
         for (var i=0; i < columns.length; i++) {
@@ -270,7 +270,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     hidden: true
                 }, {
                     header: i18n.getMsg('extProbeId'),
-                    dataIndex: 'idAlt'
+                    dataIndex: 'idAlexterneProbeId'
                 }, {
                     header: i18n.getMsg('mstId'),
                     dataIndex: 'mstId',

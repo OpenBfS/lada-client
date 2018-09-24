@@ -93,7 +93,7 @@ Ext.define('Lada.view.form.Messung', {
                         },
                         items: [{
                             xtype: 'selectabledisplayfield',
-                            name: 'idAlt',
+                            name: 'externeMessungsId',
                             maxLength: 4,
                             fieldLabel: i18n.getMsg('extMessungsId'),
                             width: 300,

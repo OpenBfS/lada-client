@@ -22,7 +22,7 @@ Ext.define('Lada.model.Probe', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'idAlt',
+        name: 'externeProbeId',
         serialize: function(value) {
             if (value === '') {
                 return null;
