@@ -270,7 +270,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     hidden: true
                 }, {
                     header: i18n.getMsg('extProbeId'),
-                    dataIndex: 'idAlexterneProbeId'
+                    dataIndex: 'externeProbeId'
                 }, {
                     header: i18n.getMsg('mstId'),
                     dataIndex: 'mstId',
