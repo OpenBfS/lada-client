@@ -57,7 +57,7 @@ ADD *.js *.json /usr/local/lada/
 ADD app /usr/local/lada/app
 ADD .git /usr/local/lada/.git
 
-RUN GITINFO="$(git name-rev --name-only HEAD 2>/dev/null) $(git rev-parse --short HEAD 2>/dev/null)" &&\
+RUN GITINFO=" $(git name-rev --name-only HEAD 2>/dev/null) $(git rev-parse --short HEAD 2>/dev/null)" &&\
     echo ${GITINFO} &&\
     sed -i -e "/Lada.clientVersion/s/';/${GITINFO}';/" app.js
 
