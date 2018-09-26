@@ -266,6 +266,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 rowtarget: { dataType: 'probeId', dataIndex: 'id'},
                 store: newStore,
                 columns: [{
+                    header: 'probe_id',
                     dataIndex: 'id',
                     hidden: true
                 }, {
