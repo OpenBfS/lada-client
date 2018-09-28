@@ -485,6 +485,9 @@ Ext.define('Lada.view.window.GridExport', {
                         }
                     }
                 }
+                if (Ext.Object.isEmpty(iresult.geometry)) {
+                    iresult.geometry = null;
+                }
                 this.resultobject.features.push(iresult);
                 if (this.rowexp) {
                     this.setSecondaryJson(data[i],
