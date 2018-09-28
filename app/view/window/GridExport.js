@@ -202,7 +202,7 @@ Ext.define('Lada.view.window.GridExport', {
                 xtype: 'checkbox',
                 name: 'secondarycolumns',
                 fieldLabel: i18n.getMsg('export.secondarycolumns'),
-                checked: this.grid.export_rowexp ? true: false,
+                checked: this.grid.exportRowexp ? true: false,
                 listeners: {
                     change: me.exportsecondarytoggle
                 }

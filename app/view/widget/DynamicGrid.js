@@ -42,6 +42,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     /** The untranslated i18n-Message for a grid title*/
     title: null,
 
+    /** If true, the export row expander option will be checked by default, defaults to false */
+    exportRowexp: false,
+
     border: false,
     multiSelect: true,
     allowDeselect: true,

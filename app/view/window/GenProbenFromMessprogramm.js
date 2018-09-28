@@ -264,6 +264,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 xtype: 'dynamicgrid',
                 hidebuttons: ['importprobe', 'genericadd'],
                 rowtarget: { dataType: 'probeId', dataIndex: 'id'},
+                exportRowexp: true,
                 store: newStore,
                 columns: [{
                     header: 'probe_id',
