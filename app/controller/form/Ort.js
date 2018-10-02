@@ -53,6 +53,9 @@ Ext.define('Lada.controller.form.Ort', {
         for (var key in data) {
             record.set(key, data[key]);
         }
+        record.set('netzbetreiberId',
+            formpanel.down('netzbetreiber').getValue()[0]);
+
         if (record.phantom) {
             record.set('id', null);
         }
@@ -77,7 +80,7 @@ Ext.define('Lada.controller.form.Ort', {
                     dynamicgrid.reload();
                 }
                 var ozw = formpanel.up('panel').parentWindow;
-                if (ozw) {
+                if (ozw && ozw.down('tabpanel')) {
                     var ortgrid= ozw.down('tabpanel').down('ortstammdatengrid');
                     if (ortgrid) {
                         if (ortgrid.store.storeId === 'ext-empty-store') {
