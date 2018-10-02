@@ -330,6 +330,12 @@ Ext.define('Lada.view.QueryPanel', {
                 value: baseQueryId,
                 exactMatch: true
             });
+            var filterWidgetColumnStore = Ext.create('Lada.store.GridColumn');
+            filterWidgetColumnStore.filter({
+                property: 'baseQuery',
+                value: baseQueryId,
+                exactMatch: true
+            });
             this.gridColumnValueStore.load({
                 callback: function() {
                     var items = me.gridColumnValueStore.getData().items;
@@ -344,7 +350,7 @@ Ext.define('Lada.view.QueryPanel', {
                     me.down('columnchoser').setStore(me.gridColumnValueStore, cs);
                     me.down('columnsort').setStore(me.gridColumnValueStore);
                     var filterwidget = me.down('cbox[name=activefilters]');
-                    filterwidget.setStore(cs);
+                    filterwidget.setStore(filterWidgetColumnStore);
                     filterwidget.store.filter(function(item) {
                         if (item.get('filter')) {
                             return true;
