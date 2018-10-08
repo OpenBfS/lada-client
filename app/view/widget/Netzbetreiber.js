@@ -25,6 +25,7 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
+    forceSelection: this.forceSelection || false,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
         '{id} - {netzbetreiber}</div></tpl>'),

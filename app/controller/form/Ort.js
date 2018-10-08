@@ -29,6 +29,9 @@ Ext.define('Lada.controller.form.Ort', {
             'ortform verwaltungseinheit combobox': {
                 change: this.checkCommitEnabled
             },
+            'ortform netzbetreiber combobox': {
+                change: this.checkCommitEnabled
+            },
             'ortform koordinatenart combobox': {
                 change: this.checkCommitEnabled
             },
@@ -156,6 +159,7 @@ Ext.define('Lada.controller.form.Ort', {
 
     discard: function(button) {
         button.up('panel').getForm().reset();
+        button.up('panel').down('netzbetreiber').down('combobox').reset();
     },
 
     /**
@@ -171,13 +175,12 @@ Ext.define('Lada.controller.form.Ort', {
         }
         var savebutton = panel.down('button[action=save]');
         var form = panel.getForm();
-        if (form.isDirty()) {
+        if ( (form.isDirty()) || (panel.down('netzbetreiber[name=netzbetreiberId]').getValue().length !== 0) ) {
             panel.down('button[action=revert]').setDisabled(false);
         } else {
             panel.down('button[action=revert]').setDisabled(true);
-            panel.down('button[action=save]').setDisabled(true);
         }
-        if (form.isValid()) {
+        if ( (form.isValid()) && (panel.down('netzbetreiber[name=netzbetreiberId]').getValue().length !== 0) ) {
             //one of three conditions must apply, the first one depending
             // on three fields
             if (

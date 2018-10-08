@@ -36,6 +36,7 @@ Ext.define('Lada.view.form.Ort', {
             fieldLabel: i18n.getMsg('netzbetreiberId'),
             labelWidth: 125,
             filteredStore: true,
+            forceSelection: true,
             value: this.record.get('netzbetreiberId')
         }, {
             xtype: 'staat',
