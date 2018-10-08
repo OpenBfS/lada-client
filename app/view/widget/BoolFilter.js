@@ -15,9 +15,6 @@ var boolStore = Ext.create('Ext.data.Store', {
     }, {
         'id': 'false',
         'value': 'Nein'
-    },{
-        'id': '',
-        'value': 'ungefiltert'
     }]
 });
 
