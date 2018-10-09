@@ -31,21 +31,18 @@ the documentation coming with IMIS-Labordaten-Application for details.
                     "en": "en(-[A-Za-z]{2})?$",
                     "de": "de(-[A-Za-z]{2})?$"
                 }
-                var locales = navigator.languages;
-                for (var i = 0; i < locales.length; i++) {
-                    var locale = locales[i];
-                    for (key in languages) {
-                        if (locale.match(languages[key])) {
-                            Ext.manifest = 'lada-' + key;
-                            return;
-                        }
+                var locale = navigator.language;
+                for (key in languages) {
+                    if (locale.match(languages[key])) {
+                        Ext.manifest = 'lada-' + key;
+                        return;
                     }
                 }
                 Ext.manifest = 'lada-de';
             }
         };
     </script>
-    
+
     <script id="microloader" data-app="0762108d-8dd2-426d-b4c7-8d443c5a52de" type="text/javascript" src="bootstrap.js"></script>
 
 </head>
