@@ -160,8 +160,11 @@ Ext.define('Lada.view.window.FileUpload', {
     uploadSuccess: function(response, opts) {
         this.close();
         var i18n= Lada.getApplication().bundle;
+        var responseText = response.responseBytes ?
+                String.fromCharCode.apply(null, response.responseBytes):
+                response.responseText;
         var win = Ext.create('Lada.view.window.ImportResponse', {
-            responseData: response.responseText,
+            responseData: responseText,
             message: '', //TODO:response.message,
             modal: true,
             fileName: this.file.name,
