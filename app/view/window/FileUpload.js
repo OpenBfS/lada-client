@@ -127,7 +127,7 @@ Ext.define('Lada.view.window.FileUpload', {
             var binData = reader.result;
             win.uploadFile(button, binData);
         };
-        reader.readAsBinaryString(file);
+        reader.readAsArrayBuffer(file);
     },
 
     /**
@@ -147,7 +147,8 @@ Ext.define('Lada.view.window.FileUpload', {
                 'X-LADA-MST': mstSelector
             },
             scope: win,
-            rawData: binData,
+            binary: true,
+            binaryData: binData,
             success: win.uploadSuccess,
             failure: win.uploadFailure
         });

@@ -132,14 +132,14 @@ Ext.define('Lada.view.grid.Messwert', {
                             this.up().down('component[name=messwert]').setValue('');
                         }
                     }
-                },
+                }
             }
         }, {
             header: i18n.getMsg('messwert'),
             dataIndex: 'messwert',
             width: 80,
             editor: {
-                xtype: 'expnumberfield',
+                xtype: 'expnumberfield'
             },
             renderer: function(value) {
                 if (!value || value === '') {
