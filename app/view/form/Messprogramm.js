@@ -353,7 +353,10 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 width: '42%',
                                 enforceMaxLength: true,
                                 editable: false,
-                                readOnly: true
+                                readOnly: true,
+                                isDirty: function() {
+                                    return false;
+                                }
                             }]
                         }, {
                             xtype: 'fieldset',
