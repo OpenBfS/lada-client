@@ -23,7 +23,7 @@ Ext.define('Lada.view.widget.PagingSize', {
         valueField: 'value',
         submitValue: false,
         queryMode: 'local',
-        width: 60,
+        width: 70,
         disableKeyFilter: true,
         editable: false,
         onChange: function(newVal, oldVal) {
