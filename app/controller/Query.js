@@ -515,7 +515,7 @@ Ext.define('Lada.controller.Query', {
                     field = Ext.create('Lada.view.widget.base.NumberRange',
                         options);
                     break;
-                case 'land':
+                case 'land': // TODO: Wird nicht benötigt, könnte gelöscht werden
                     options.multiSelect = true;
                     options.editable = true;
                     options.value = this.getFilterValueMulti(recs[i]);
@@ -582,7 +582,7 @@ Ext.define('Lada.controller.Query', {
                     options.value = this.getFilterValueMulti(recs[i]);
                     field = Ext.create('Lada.view.widget.Staat', options);
                     break;
-                case 'betrart':// TODO not yet in db
+                case 'messRegime':
                     options.multiSelect = true;
                     options.editable = true;
                     options.value = this.getFilterValueMulti(recs[i]);
@@ -604,6 +604,27 @@ Ext.define('Lada.controller.Query', {
                     field = Ext.create('Lada.view.widget.StatuskombiSelect',
                         options);
                     field.store.load();
+                    break;
+                case 'anlage':
+                    options.multiSelect = true;
+                    options.store = Ext.data.StoreManager.get('ktaGruppe');
+                    options.value = recs[i].get('filterValue');
+                    field = Ext.create('Lada.view.widget.KtaGruppe',
+                        options);
+                    break;
+                case 'reiproggrp':
+                    options.multiSelect = true;
+                    options.editable = true;
+                    options.value = recs[i].get('filterValue');
+                    field = Ext.create('Lada.view.widget.ReiProgpunktGruppe',
+                        options);
+                    break;
+                case 'mpl':
+                    options.multiSelect = true;
+                    options.editable = true;
+                    options.value = recs[i].get('filterValue');
+                    field = Ext.create('Lada.view.widget.MessprogrammLand',
+                        options);
                     break;
                 default:
                     options.value = recs[i].get('filterValue');
