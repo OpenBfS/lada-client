@@ -22,6 +22,13 @@ Ext.define('Lada.view.widget.Verwaltungseinheit', {
     triggerAction: 'type',
     typeAhead: false,
     minChars: 2,
+    labelTpl: Ext.create('Ext.XTemplate',
+        '<tpl for=".">{id} - {bezeichnung}</tpl>'),
+    tpl: Ext.create('Ext.XTemplate',
+        '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
+            '{id} - {bezeichnung}</div></tpl>'),
+    displayTpl: Ext.create('Ext.XTemplate',
+        '<tpl for=".">{id} - {bezeichnung}</tpl>'),
     forceSelection: this.forceSelection || false,
 
     initComponent: function() {
