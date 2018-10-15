@@ -533,6 +533,8 @@ Ext.define('Lada.controller.Query', {
                     field = Ext.create('Lada.view.widget.Messstelle', options);
                     break;
                 case 'boolean':
+                    options.multiSelect = false;
+                    options.value = this.getFilterValueMulti(recs[i]);
                     field = Ext.create('Lada.view.widget.BoolFilter', options);
                     break;
                 case 'umwbereich':
