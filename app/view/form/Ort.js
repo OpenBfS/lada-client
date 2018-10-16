@@ -39,32 +39,11 @@ Ext.define('Lada.view.form.Ort', {
             forceSelection: true,
             value: this.record.get('netzbetreiberId')
         }, {
-            xtype: 'staat',
-            labelWidth: 125,
-            fieldLabel: i18n.getMsg('staat'),
-            name: 'staatId',
-            forceSelection: true
-        }, {
-            xtype: 'verwaltungseinheit',
-            labelWidth: 125,
-            fieldLabel: i18n.getMsg('orte.verwaltungseinheit'),
-            forceSelection: true,
-            name: 'gemId'
-        }, {
             xtype: 'tfield',
+            name: 'ortId',
+            maxLength: 12,
             labelWidth: 125,
-            maxLength: 15,
-            name: 'kurztext',
-            fieldLabel: i18n.getMsg('orte.kurztext')
-        }, {
-            xtype: 'tfield',
-            labelWidth: 125,
-            maxLength: 100,
-            fieldLabel: i18n.getMsg('orte.langtext'),
-            name: 'langtext'
-        }, {
-            xtype: 'box',
-            autoEl: {tag: 'hr'}
+            fieldLabel: i18n.getMsg('orte.ortId')
         }, {
             xtype: 'ortszusatz',
             labelWidth: 125,
@@ -80,10 +59,28 @@ Ext.define('Lada.view.form.Ort', {
             fieldLabel: i18n.getMsg('orte.ortTyp')
         }, {
             xtype: 'tfield',
-            name: 'ortId',
-            maxLength: 10,
             labelWidth: 125,
-            fieldLabel: i18n.getMsg('orte.ortId')
+            maxLength: 15,
+            name: 'kurztext',
+            fieldLabel: i18n.getMsg('orte.kurztext')
+        }, {
+            xtype: 'tfield',
+            labelWidth: 125,
+            maxLength: 100,
+            fieldLabel: i18n.getMsg('orte.langtext'),
+            name: 'langtext'
+        }, {
+            xtype: 'staat',
+            labelWidth: 125,
+            fieldLabel: i18n.getMsg('staat'),
+            name: 'staatId',
+            forceSelection: true
+        }, {
+            xtype: 'verwaltungseinheit',
+            labelWidth: 125,
+            fieldLabel: i18n.getMsg('orte.verwaltungseinheit'),
+            forceSelection: true,
+            name: 'gemId'
         }, {
             xtype: 'fieldset',
             collapsible: true,
