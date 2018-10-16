@@ -91,8 +91,10 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             //Lookup every column and write to data array.
             for (key in columns) {
                 var attr = columns[key];
+                var visibleColumn = visibleColumns[attr];
+
                 //Only write data to output when the column is not hidden.
-                if (row[attr] !== null && visibleColumns[attr].text !== null) {
+                if (row[attr] !== null && visibleColumn && visibleColumn.text !== null) {
                     if (visibleColumns[attr].dataType === 'date') {
                         out.push(
                             Ext.Date.format(
@@ -103,7 +105,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     } else {
                         out.push(row[attr].toString());
                     }
-                } else if (visibleColumns[attr].text !== null) {
+                } else if (visibleColumn && visibleColumn.text !== null) {
                     out.push('');
                 }
             }
