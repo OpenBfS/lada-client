@@ -59,6 +59,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         deferEmptyText: false
     },
 
+    /**List of userids that can set a messung's status */
+    statusUser: [1,2,3],
+
     initComponent: function() {
         this.i18n = Lada.getApplication().bundle;
         this.emptyText = this.i18n.getMsg(this.emptyText);
@@ -874,11 +877,18 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     addMessungButtons: function() {
         if (!this.tbuttonExists('setstatus')) {
+            //Disable status button if user has no status role
+            var needsSelection = false;
+            for (var i = 0; i < Lada.funktionen.length; i++ ) {
+               if (Ext.Array.contains(this.statusUser, Lada.funktionen[i])) {
+                   needsSelection = true;
+               }
+            }
             this.toolbarbuttons.push({
                 text: this.i18n.getMsg('statusSetzen'),
                 icon: 'resources/img/mail-mark-notjunk.png',
                 action: 'setstatus',
-                needsSelection: true,
+                needsSelection: needsSelection,
                 disabled: true
             });
         }
