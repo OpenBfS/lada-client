@@ -22,6 +22,15 @@ Ext.define('Lada.view.widget.Statuskombi', {
         statusStufe: null,
         statusWert: null
     },
+    /** True if widget has just been reset */
+    reset: false,
+    /** True if status editing is allowed */
+    statusEdit: false,
+    /**An array of statusKombi states for which the reset button is disabled */
+    unresetableStates: [{
+        statusWert: 0,
+        statusStufe: 1
+    }],
 
     initComponent: function() {
         this.textFieldCls = 'status-empty';
@@ -54,7 +63,15 @@ Ext.define('Lada.view.widget.Statuskombi', {
         return btn;
     },
 
-    setValue: function(value) {
+    /**
+     * Sets the widget value, adds buttons if needed and checks if reset button is activated
+     * @param value The new value
+     * @param reset True if widget was reset, defaults to false
+     * @param statusEdit True if it is allowed to set the status, defaults to false
+     */
+    setValue: function(value, reset, statusEdit) {
+        this.reset = reset != undefined ? reset: false;
+        this.statusEdit = statusEdit != undefined ? statusEdit: false;
         var me = this;
         Ext.ClassManager.get('Lada.model.Status').load(value, {
             success: function(record, response) {
@@ -62,7 +79,7 @@ Ext.define('Lada.view.widget.Statuskombi', {
                 var kombi = statuskombistore.getById(record.data.statusKombi);
                 var text = kombi.get('statusStufe').stufe + ' - ' +
                         kombi.get('statusWert').wert;
-                //me.down('textfield').setValue(text);
+
                 me.currentValue = {
                     statusStufe: kombi.get('statusStufe'),
                     statusWert: kombi.get('statusWert')
@@ -71,6 +88,7 @@ Ext.define('Lada.view.widget.Statuskombi', {
                 if (textfield) {
                     textfield.setEmptyText(text);
                 }
+                me.checkResetable();
             }
         });
         // instead of overwriting/appending initComponent, add the button at loading of values
@@ -84,6 +102,32 @@ Ext.define('Lada.view.widget.Statuskombi', {
         }
     },
 
+    /**
+     * Checks if this widget is resetable and (de)activates the button accordingly
+     */
+    checkResetable: function() {
+        if (this.statusEdit &&
+            this.checkResetableState()
+        ) {
+            this.setResetable(true);
+        } else {
+            this.setResetable(false);
+        }
+    },
+
+    /**Checks if the current value is unresetable
+     * @return True if state is resetable, else false
+     */
+    checkResetableState: function() {
+        for (var i = 0; i < this.unresetableStates.length; i++) {
+            var state = this.unresetableStates[i];
+            if (this.currentValue.statusStufe.id == state.statusStufe &&
+                    this.currentValue.statusWert.id == state.statusWert) {
+                return false;
+            }
+        }
+        return true;
+    },
 
     setReadOnly: function(readonly) {
         var button = this.down('button[action=newstatus]');

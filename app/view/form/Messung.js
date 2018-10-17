@@ -189,7 +189,8 @@ Ext.define('Lada.view.form.Messung', {
         var form = me.getForm();
         form.loadRecord(record);
         if (record.getId()) {
-            me.down('statuskombi').setValue(record.get('status'));
+            me.down('statuskombi').setValue(
+                    record.get('status'),false, record.get('statusEdit'));
         } else {
             //remove the Statuskombi field from the form
             me.down('statuskombi').hide();
@@ -217,11 +218,12 @@ Ext.define('Lada.view.form.Messung', {
         });
     },
 
-    updateStatusText: function() {
+
+    updateStatusText: function(reset) {
         this.record.load({
             scope: this,
             success: function() {
-                this.down('statuskombi').setValue(this.record.get('status'));
+                this.down('statuskombi').setValue(this.record.get('status'), reset, this.record.get('statusEdit'));
             }
         });
     },

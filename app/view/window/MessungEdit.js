@@ -205,7 +205,6 @@ Ext.define('Lada.view.window.MessungEdit', {
                 } else {
                     this.disableStatusEdit();
                 }
-                //Check if it is allowed to reset Status: done in Messungform
             },
             scope: this
         });
@@ -251,8 +250,8 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.down('fset[name=messwerte]').down('messwertgrid').readOnly = true;
         this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(true);
         this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = true;
-        this.disableStatusEdit();
-        this.disableStatusReset();
+        //this.disableStatusEdit();
+        //this.disableStatusReset();
     },
 
     /**
@@ -263,8 +262,8 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.down('fset[name=messwerte]').down('messwertgrid').readOnly = false;
         this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(false);
         this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = false;
-        this.enableStatusEdit();
-        this.enableStatusReset();
+        //this.enableStatusEdit();
+        //this.enableStatusReset();
     },
 
     /**

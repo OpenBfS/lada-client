@@ -235,7 +235,7 @@ Ext.define('Lada.controller.form.Messung', {
         });
         var view = button.up().up().up().up();
         win.on('statussetend', function() {
-            view.updateStatusText();
+            view.updateStatusText(false);
         });
         win.show();
     },
@@ -302,7 +302,7 @@ Ext.define('Lada.controller.form.Messung', {
                 win.initData();
                 win.down('statusgrid').initData();
                 if (response.data) {
-                    button.up('statuskombi').setValue(response.data.status);
+                    button.up('statuskombi').setValue(response.data.status, true);
                 }
                 try {
                     win.parentWindow.initData();
