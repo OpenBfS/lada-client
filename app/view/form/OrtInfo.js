@@ -31,8 +31,10 @@ Ext.define('Lada.view.form.OrtInfo', {
             items: [{
                 fieldLabel: i18n.getMsg('orte.ortId'),
                 name: 'ortId'
-            },
-            {
+            }, {
+                fieldLabel: i18n.getMsg('orte.ozId'),
+                name: 'ozId'
+            }, {
                 fieldLabel: i18n.getMsg('orte.kurztext'),
                 name: 'kurztext'
             }, {
