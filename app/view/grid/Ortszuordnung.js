@@ -75,7 +75,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('orte.ortId'),
             dataIndex: 'ortId',
-            flex: 2,
+            width: 120,
             renderer: function(value, meta, zuordnung) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
@@ -117,7 +117,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('orte.gemId'),
             dataIndex: 'ortId',
-            flex: 3,
+            flex: 2,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
@@ -129,7 +129,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('orte.verwaltungseinheit'),
             dataIndex: 'ortId',
-            flex: 4,
+            flex: 3,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var gemeinden =
@@ -144,6 +144,22 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 }
                 var record2 = gemeinden.getById(gemid);
                 return record2.get('bezeichnung');
+            }
+        }, {
+            header: i18n.getMsg('orte.ozId'),
+            dataIndex: 'ortId',
+            flex: 3,
+            renderer: function(value) {
+                var store = Ext.data.StoreManager.get('orte');
+                var record = store.getById(value);
+                if (!record) {
+                    return '';
+                }
+                var ozid = record.get('ozId');
+                if (ozid === undefined || ozid === null || ozid === '') {
+                    return '';
+                }
+                return ozid;
             }
         }, {
             header: i18n.getMsg('orte.anlageId'),
