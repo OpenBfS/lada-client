@@ -51,36 +51,26 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection();
         var i18n = Lada.getApplication().bundle;
-        var columns = [];
         var columnNames = [];
-        var visibleColumns = {};
-        var displayName = '';
+        var displayName = i18n.getMsg('rowtarget.title.'+ grid.rowtarget.dataType);
+        if (!displayName) {
+            displayName = '';
+        }
         var data = [];
 
-        // Write the columns to an array
-        try {
-            for (var key in selection[0].data) {
-                // Do not write owner or readonly or id
-                if (['owner', 'readonly', 'id', 'probeId'].indexOf(key) === -1) {
-                    columns.push(key);
-                }
-            }
-        } catch (e) {
-            console.log(e);
-        }
+        // create array of column definitions from visible columns
+        // columns in the array 'ignored' will not be printed
+        var ignored = ['owner', 'readonly', 'id', 'probeId'];
 
-        //Retrieve visible columns' id's and names.
-        // and set displayName
-        var cols = grid.visibleColumnManager.columns;
-        displayName = i18n.getMsg('rowtarget.title.'+ grid.rowtarget.dataType);
-        for (key in cols) {
-            if (cols[key].dataIndex) {
-                var d_i = cols[key].dataIndex;
-                visibleColumns[d_i] = {text: cols[key].text};
-                if (cols[key].dataType) {
-                    visibleColumns[d_i].dataType = cols[key].dataType.name;
-                    visibleColumns[d_i].format = cols[key].dataType.format;
-                }
+        var visibleColumns =[];
+        var cols = grid.getVisibleColumns();
+        for (var i=0; i <cols.length; i++) {
+            if (cols[i].dataIndex && cols[i].text && (ignored.indexOf(cols[i].dataIndex) === -1)) {
+                visibleColumns.push({
+                    dataIndex: cols[i].dataIndex,
+                    renderer: (cols[i].renderer.$name === 'defaultRenderer') ? null: cols[i].renderer
+                });
+                columnNames.push(cols[i].text);
             }
         }
 
@@ -88,45 +78,24 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         for (var item in selection) {
             var row = selection[item].data;
             var out = [];
-            //Lookup every column and write to data array.
-            for (key in columns) {
-                var attr = columns[key];
-                var visibleColumn = visibleColumns[attr];
 
-                //Only write data to output when the column is not hidden.
-                if (row[attr] !== null && visibleColumn && visibleColumn.text !== null) {
-                    if (visibleColumns[attr].dataType === 'date') {
-                        out.push(
-                            Ext.Date.format(
-                                new Date(row[attr]),
-                                visibleColumns[attr].format
-                            )
-                        );
-                    } else {
-                        out.push(row[attr].toString());
-                    }
-                } else if (visibleColumn && visibleColumn.text !== null) {
-                    out.push('');
+            //Lookup every column and write to data array;
+            for (i = 0; i < visibleColumns.length; i++) {
+                var rawData = row[visibleColumns[i].dataIndex];
+                if (visibleColumns[i].renderer) {
+                    out.push(visibleColumns[i].renderer(rawData));
+                } else {
+                    out.push(rawData);
                 }
             }
             data.push(out);
-        }
-
-        //Retrieve the names of the columns.
-        for (key in columns) {
-            for (var k in cols) {
-                if (cols[k].dataIndex === columns[key]) {
-                    columnNames.push(cols[k].text);
-                    break;
-                }
-            }
         }
 
         var printData = {
             'layout': 'A4 landscape',
             'outputFormat': 'pdf',
             'attributes': {
-                'title': 'Auszug aus LADA',
+                'title': i18n.getMsg('print.tableTitle'),
                 'displayName': displayName,
                 'table': {
                     'columns': columnNames,

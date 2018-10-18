@@ -566,11 +566,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
         col.xtype = 'datecolumn';
         col.format = orig_column.get('dataType').format;
-        col.renderer = function(value, cell) {
+        col.renderer = function(value) {
             if (!value || value === '') {
                 return '';
             }
-            var format = cell.column.format;
+            var format = col.format;
             var dt='';
             if (!isNaN(value)) {
                 dt = Ext.Date.format(new Date(value), format);
@@ -582,11 +582,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     generateNumberColumns: function(orig_column, col) {
         col.xtype = 'numbercolumn';
         col.format = orig_column.get('dataType').format;
-        col.renderer = function(value, cell) {
+        col.renderer = function(value) {
             if (!value) {
                 return '';
             }
-            var format = cell.column.format;
+            var format = col.format;
             if (isNaN (value)) {
                 if (value[0] === '<' ) {
                     if (format === 'e') {
