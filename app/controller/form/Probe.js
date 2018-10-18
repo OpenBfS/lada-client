@@ -389,6 +389,7 @@ Ext.define('Lada.controller.form.Probe', {
     },
 
     deskriptorSelect: function(field, records) {
+        field.up('probeform').down('umwelt[name="umwId"]').clearValue();
         var desk = field.up('deskriptor');
         var media = field.up('probeform').down('textfield[name="mediaDesk"]');
         var current = media.getValue().split(' ');
