@@ -89,7 +89,7 @@ Ext.define('Lada.view.grid.Messwert', {
         this.columns = [{
             header: i18n.getMsg('messgroesseId'),
             dataIndex: 'messgroesseId',
-            width: 80,
+            width: 118,
             renderer: function(value) {
                 if (!value || value === '') {
                     return '';
@@ -118,21 +118,12 @@ Ext.define('Lada.view.grid.Messwert', {
             }
         }, {
             header: i18n.getMsg('messwertEG'),
-            width: 60,
+            width: 40,
             dataIndex: 'messwertNwg',
             editor: {
                 xtype: 'checkbox',
                 uncheckedValue: false,
-                inputValue: '<',
-                listeners: {
-                    change: function(value) {
-                        if (value.getValue() === true){
-                            this.up().down('component[name=messwert]').setValue('0');
-                        } else {
-                            this.up().down('component[name=messwert]').setValue('');
-                        }
-                    }
-                }
+                inputValue: '<'
             }
         }, {
             header: i18n.getMsg('messwert'),
@@ -155,9 +146,30 @@ Ext.define('Lada.view.grid.Messwert', {
                     + Math.abs(exponent).toString();
             }
         }, {
+            header: i18n.getMsg('messwert_nwg'),
+            dataIndex: 'nwgZuMesswert',
+            width: 120,
+            editor: {
+                xtype: 'expnumberfield',
+                allowBlank: false
+            },
+            renderer: function(value) {
+                if (!value || value === '') {
+                    return value;
+                }
+                var strValue = value.toExponential(2).toString()
+                    .replace('.', Ext.util.Format.decimalSeparator);
+                var splitted = strValue.split('e');
+                var exponent = parseInt(splitted[1], 10);
+                return splitted[0] + 'e'
+                    + ((exponent < 0) ? '-' : '+')
+                    + ((Math.abs(exponent) < 10) ? '0' : '')
+                    + Math.abs(exponent).toString();
+            }
+        }, {
             header: i18n.getMsg('mehId'),
             dataIndex: 'mehId',
-            width: 90,
+            flex: 1,
             renderer: function(value) {
                 if (!value || value === '') {
                     return '';
@@ -187,39 +199,19 @@ Ext.define('Lada.view.grid.Messwert', {
         }, {
             header: i18n.getMsg('relMessunsicherheit'),
             dataIndex: 'messfehler',
-            flex: 1,
             xtype: 'numbercolumn',
             format: '0000.0',
-            width: 80,
+            width: 150,
             editor: {
                 xtype: 'numberfield',
                 allowBlank: false,
                 maxLength: 10,
+                minValue: 0,
                 decimalPrecision: 1,
                 allowDecimals: true,
                 allowExponential: false,
-                enforceMaxLength: true
-            }
-        }, {
-            header: i18n.getMsg('messwert_nwg'),
-            dataIndex: 'nwgZuMesswert',
-            flex: 1,
-            editor: {
-                xtype: 'expnumberfield',
-                allowBlank: false
-            },
-            renderer: function(value) {
-                if (!value || value === '') {
-                    return value;
-                }
-                var strValue = value.toExponential(2).toString()
-                    .replace('.', Ext.util.Format.decimalSeparator);
-                var splitted = strValue.split('e');
-                var exponent = parseInt(splitted[1], 10);
-                return splitted[0] + 'e'
-                    + ((exponent < 0) ? '-' : '+')
-                    + ((Math.abs(exponent) < 10) ? '0' : '')
-                    + Math.abs(exponent).toString();
+                enforceMaxLength: true,
+                hideTrigger: true
             }
         }];
         this.listeners = {
