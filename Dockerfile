@@ -23,7 +23,7 @@ ENV DEBIAN_FRONTEND noninteractive
 #
 
 RUN apt-get update -y && apt-get install -y \
-    curl unzip openjdk-7-jre git && \
+    curl unzip openjdk-8-jre git && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 80 81 82 83 84
