@@ -383,6 +383,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     header: i18n.getMsg('messungen'),
                     dataIndex: 'mmt',
                     renderer: function(value, metadata, rec) {
+                        if (!rec) {
+                            return value;
+                        }
                         var mmth = rec.get('mmt');
                         if (mmth) {
                             return mmth;
@@ -395,6 +398,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     header: i18n.getMsg('entnahmeOrt'),
                     dataIndex: 'gemId',
                     renderer: function(value, metadata, rec) {
+                        if (!rec) {
+                            return value;
+                        }
                         var id = rec.get('gemId');
                         if (id){
                             return id;
