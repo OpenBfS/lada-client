@@ -216,15 +216,15 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                     }
                 },
                 failure: function(resp, opts) {
-                    var json = Ext.JSON.decode(resp.responseText);
                     var urlArr = resp.request.url.split('/');
                     var delId = urlArr[urlArr.length - 1];
                     var html = me.down('panel').html;
-                    me.down('panel').setHtml(html);
                     me.currentProgress += 1;
-                    me.down('progressbar').updateProgress(me.currentProgress/me.maxSteps);
-                    html = html + i18n.getMsg(
-                        'deleteItems.callback.failure', datatype, delId);
+                    me.down('progressbar').updateProgress(
+                        me.currentProgress/me.maxSteps);
+                    html += i18n.getMsg(
+                        'deleteItems.callback.failure', datatype, delId)
+                        + i18n.getMsg('200') + '<br>';
                     me.down('panel').setHtml(html);
                     if (me.currentProgress === me.maxSteps) {
                         me.down('progressbar').hide();
