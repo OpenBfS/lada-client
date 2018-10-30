@@ -22,7 +22,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Install required packages
 #
 
-RUN apt-get update -y && apt-get install -y \
+RUN mkdir -p /usr/share/man/man1/ && apt-get update -y && apt-get install -y \
     curl unzip openjdk-8-jre git && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
