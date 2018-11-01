@@ -145,6 +145,22 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
     },
 
     /**
+     * Finish deletion of all selected items
+     */
+    finishDelete: function() {
+        var me = this;
+        me.refresh();
+        me.down('progressbar').hide();
+        me.add({
+            xtype: 'button',
+            text: Lada.getApplication().bundle.getMsg('close'),
+            handler: function() {
+                me.close();
+            }
+        });
+    },
+
+    /**
      * Initiates deletion of all selected items
      */
     startDelete: function(btn) {
@@ -204,15 +220,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                     me.currentProgress += 1;
                     me.down('progressbar').updateProgress(me.currentProgress/me.maxSteps);
                     if (me.currentProgress === me.maxSteps) {
-                        me.refresh();
-                        me.down('progressbar').hide();
-                        me.add({
-                            xtype: 'button',
-                            text: i18n.getMsg('close'),
-                            handler: function() {
-                                me.close();
-                            }
-                        });
+                        me.finishDelete();
                     }
                 },
                 failure: function(resp, opts) {
@@ -227,14 +235,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                         + i18n.getMsg('200') + '<br>';
                     me.down('panel').setHtml(html);
                     if (me.currentProgress === me.maxSteps) {
-                        me.down('progressbar').hide();
-                        me.add({
-                            xtype: 'button',
-                            text: i18n.getMsg('close'),
-                            handler: function() {
-                                me.close();
-                            }
-                        });
+                        me.finishDelete();
                     }
                 }
             });
