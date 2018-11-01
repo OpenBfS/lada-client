@@ -9,6 +9,7 @@ extjs
 *.rej
 */.*
 *.swp
+*.tgz
 ext
 ext-*/
 resources/lib/
