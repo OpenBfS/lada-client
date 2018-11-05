@@ -243,8 +243,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                     fieldLabel: i18n.getMsg('mpl_id'),
                     margin: '0, 10, 5, 5',
                     labelWidth: 140,
-                    width: '100%',
-                    anchor: '100%',
                     editable: true,
                     extraParams: function() {
                         this.down('combobox').on({ // this = widget
@@ -312,17 +310,33 @@ Ext.define('Lada.view.form.Messprogramm', {
                         },
                         width: '100%',
                         items: [{
-                            xtype: 'umwelt',
-                            name: 'umwId',
-                            fieldLabel: i18n.getMsg('umwId'),
-                            labelWidth: 100,
-                            editable: true,
-                            listeners: {
-                                dirtychange: {
-                                    fn: this.updateOnChange,
-                                    scope: me
+                            border: false,
+                            layout: {
+                                type: 'hbox',
+                                align: 'stretch'
+                            },
+                            items: [{
+                                xtype: 'umwelt',
+                                name: 'umwId',
+                                fieldLabel: i18n.getMsg('umwId'),
+                                labelWidth: 100,
+                                width: '58%',
+                                editable: true,
+                                listeners: {
+                                    dirtychange: {
+                                        fn: this.updateOnChange,
+                                        scope: me
+                                    }
                                 }
-                            }
+                            }, {
+                                xtype: 'messeinheit',
+                                name: 'mehId',
+                                fieldLabel: i18n.getMsg('mehId'),
+                                labelWidth: 75,
+                                width: '42%',
+                                margin: '0, 0, 5, 5',
+                                editable: true
+                            }]
                         }, {
                             border: false,
                             layout: {
@@ -753,6 +767,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('dayofyear[name=gueltigVon]').setReadOnly(value);
         this.down('dayofyear[name=gueltigBis]').setReadOnly(value);
         this.down('cbox[name=umwId]').setReadOnly(value);
+        this.down('cbox[name=mehId]').setReadOnly(value);
         this.down('cbox[name=probeNehmerId]').setReadOnly(value);
         this.down('messprogrammland[name=mplId]').setReadOnly(value);
         this.down('probenintervallslider').setReadOnly(value);
