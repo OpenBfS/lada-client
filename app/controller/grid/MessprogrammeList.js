@@ -95,7 +95,7 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
                                 + i18n.getMsg('messprogramm') + ': '
                                 + json.data[i].id
                                 + '</strong><br><dd>'
-                                + i18n.getMsg('status-' + json.data.success)
+                                + i18n.getMsg(json.data[i].success)
                                 + '</dd><br>';
                         }
                     }
@@ -104,6 +104,9 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
                             title: i18n.getMsg('setActiveMp.failure.title'),
                             modal: true,
                             layout: 'vbox',
+                            width: 340,
+                            height: 165,
+                            autoScroll: true,
                             items: [{
                                 xtype: 'container',
                                 html: resultMessage,

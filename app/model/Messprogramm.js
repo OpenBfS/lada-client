@@ -44,7 +44,6 @@ Ext.define('Lada.model.Messprogramm', {
     }, {
         name: 'umwId',
         serialize: function(value) {
-            alert('serialize');
             if (value === '') {
                 return null;
             }

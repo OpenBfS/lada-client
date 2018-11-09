@@ -109,6 +109,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var form = field.up('messprogrammform');
         var record = form.getRecord();
         form.populateIntervall(record, field.getValue());
+        form.down('probenintervallslider').on(
+            'change',
+            Lada.app.getController('Lada.controller.form.Messprogramm')
+            .synchronizeFields
+        );
     },
 
     /**
@@ -323,7 +328,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
         if (form.getRecord().phantom || dirty ||
             form.getRecord().get('readonly') === true) {
-
             form.owner.up('messprogramm').down(
                 'button[action=generateproben]').setDisabled(true);
         } else {

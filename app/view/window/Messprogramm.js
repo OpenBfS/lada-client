@@ -190,6 +190,10 @@ Ext.define('Lada.view.window.Messprogramm', {
                     } else {
                         this.down('messprogrammform').setReadOnly(false);
                         this.enableChildren();
+                        if (record.get('probenintervall') === 'J') {
+                            this.down('messprogrammform').down('dayofyear[name=gueltigBis]').setReadOnly(true);
+                            this.down('messprogrammform').down('dayofyear[name=gueltigVon]').setReadOnly(true);
+                        }
                     }
                     me.setLoading(false);
                 },
@@ -319,8 +323,7 @@ Ext.define('Lada.view.window.Messprogramm', {
     },
     toggleGenProben: function() {
         var button = this.down('button[action=generateproben]');
-        if (this.record === null || this.record.phantom
-            || this.record.get('readonly') === true) {
+        if (this.record === null || this.record.phantom) {
             button.setDisabled(true);
             return;
         }

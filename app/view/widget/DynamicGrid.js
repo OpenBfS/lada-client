@@ -918,15 +918,15 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     disabled: true
                 });
             }
-            if (!this.tbuttonExists('genProbenFromMessprogramm')) {
-                this.toolbarbuttons.push({
-                    text: this.i18n.getMsg('button.generateProben'),
-                    icon: 'resources/img/view-time-schedule-insert.png',
-                    action: 'genProbenFromMessprogramm',
-                    needsSelection: true,
-                    disabled: true
-                });
-            }
+        }
+        if (!this.tbuttonExists('genProbenFromMessprogramm')) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('button.generateProben'),
+                icon: 'resources/img/view-time-schedule-insert.png',
+                action: 'genProbenFromMessprogramm',
+                needsSelection: true,
+                disabled: true
+            });
         }
     },
 

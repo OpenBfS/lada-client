@@ -533,15 +533,15 @@ Ext.define('Lada.view.form.Messprogramm', {
 
         // subintervall is redundant to validity for yearly samples
         if (intervall === 'J') {
-            svalUpper = this.getForm().findField('gueltigBis').getValue();
-            svalLower = this.getForm().findField('gueltigVon').getValue();
-            b.setReadOnly(true);
-            v.setReadOnly(true);
-            s.setDisabled(true);
+            svalUpper = record.get('teilintervallBis');
+            svalLower = record.get('teilintervallVon');
+            this.down('dayofyear[name=gueltigBis]').setReadOnly(true);
+            this.down('dayofyear[name=gueltigVon]').setReadOnly(true);
         } else {
             b.setReadOnly(false);
             v.setReadOnly(false);
-            s.setDisabled(false);
+            this.down('dayofyear[name=gueltigBis]').setReadOnly(false);
+            this.down('dayofyear[name=gueltigVon]').setReadOnly(false);
         }
 
         var intrec = intervallstore
@@ -750,6 +750,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         //no clear for probeNehmerId
         // Deskriptoren are missing
         this.down('cbox[name=umwId]').clearWarningOrError();
+        this.down('cbox[name=mehId]').clearWarningOrError();
     },
 
     setReadOnly: function(value) {
