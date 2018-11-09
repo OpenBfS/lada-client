@@ -256,6 +256,7 @@ Ext.define('Lada.view.grid.Messwert', {
     },
 
     setReadOnly: function(b) {
+        this.readOnly = b;
         if (b === true) {
             //Readonly
             if (this.getPlugin('rowedit')) {

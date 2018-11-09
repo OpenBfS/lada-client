@@ -233,9 +233,10 @@ Ext.define('Lada.controller.form.Messung', {
             record: button.up('window').down('messungform').getForm().getRecord(),
             modal: true
         });
-        var view = button.up().up().up().up();
+        var view = button.up('messungform');
         win.on('statussetend', function() {
             view.updateStatusText(false);
+            view.up('messungedit').down('messwertgrid').setReadOnly(true);
         });
         win.show();
     },
@@ -298,9 +299,10 @@ Ext.define('Lada.controller.form.Messung', {
                         }
                     }
                 }
-                var win = button.up('window');
+                var win = button.up('messungform');
                 win.initData();
                 win.down('statusgrid').initData();
+                win.down('messwertgrid').setReadOnly(true);
                 if (response.data) {
                     button.up('statuskombi').setValue(response.data.status, true);
                 }
@@ -308,6 +310,7 @@ Ext.define('Lada.controller.form.Messung', {
                     win.parentWindow.initData();
                     win.parentWindow.down('messunggrid').store.reload();
                 } catch (e) {}
+
             },
             failure: function(response) {
                 // TODO sophisticated error handling, with understandable Texts
