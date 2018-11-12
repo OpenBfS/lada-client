@@ -208,6 +208,17 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                     var delId = urlArr[urlArr.length - 1];
                     var html = me.down('panel').html;
                     if (json.success && json.message === '200') {
+                        /* Remove successfully deleted items from store
+                         * (and thus from grid) to avoid obsolete items in
+                         * grid, if not refreshed immediately */
+                        var store = me.parentGrid.getStore();
+                        var delIdx = store.find(
+                            me.parentGrid.rowtarget.dataIndex,
+                            delId, 0, false, true, true);
+                        if (delIdx > -1) {
+                            store.removeAt(delIdx);
+                        }
+
                         html = html + i18n.getMsg(
                             'deleteItems.callback.success',datatype, delId);
                         me.down('panel').setHtml(html);
