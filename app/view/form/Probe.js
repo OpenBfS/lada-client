@@ -26,6 +26,7 @@ Ext.define('Lada.view.form.Probe', {
         'Lada.view.widget.KtaGruppe',
         'Lada.view.widget.Umwelt',
         'Lada.view.widget.Deskriptor',
+        'Lada.view.widget.Tag',
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.base.Datetime',
         'Lada.view.widget.base.FieldSet',
@@ -39,6 +40,8 @@ Ext.define('Lada.view.form.Probe', {
     minWidth: 650,
     margin: 5,
     border: false,
+
+    readOnly: false,
 
     recordId: null,
     readOnly: false,
@@ -513,6 +516,13 @@ Ext.define('Lada.view.form.Probe', {
                             items: this.buildDescriptors()
                         }]
                     }]
+                }, {
+                    xtype: 'fieldset',
+                    title: i18n.getMsg('title.tagfieldset'),
+                    layout: 'hbox',
+                    items: [{
+                        xtype: 'tagwidget'
+                    }]
                 }]
             }]
         }];
@@ -569,6 +579,7 @@ Ext.define('Lada.view.form.Probe', {
             this.down('messstellelabor').setValue(items.getAt(0));
         }
         this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
+        this.down('tagwidget').setProbe(probeRecord.data.id);
     },
 
     setMediaDesk: function(record) {
@@ -687,6 +698,7 @@ Ext.define('Lada.view.form.Probe', {
     },
 
     setReadOnly: function(value) {
+        this.readOnly = value;
         this.down('cbox[name=mstlabor]').setReadOnly(value);
         this.down('tfield[name=hauptprobenNr]').setReadOnly(value);
         this.down('cbox[name=reiProgpunktGrpId]').setReadOnly(value);

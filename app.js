@@ -91,7 +91,8 @@ Ext.application({
         'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.window.TrackedWindow',
         'Lada.util.FunctionScheduler',
-        'Lada.util.WindowTracker'
+        'Lada.util.WindowTracker',
+        'Lada.store.Tag'
     ],
     statics: {
         applicationUpdateTitle: 'Anwendungsupdate',
