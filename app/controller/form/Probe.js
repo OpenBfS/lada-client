@@ -16,6 +16,10 @@ Ext.define('Lada.controller.form.Probe', {
         'Lada.view.window.AuditTrail'
     ],
 
+    dirtyTags: false,
+
+    dirtyProbeForm: false,
+
     /**
      * Initialize the Controller
      * It has 4 listeners
@@ -33,6 +37,7 @@ Ext.define('Lada.controller.form.Probe', {
             },
             'probeform': {
                 dirtychange: this.dirtyForm,
+                tagdirtychange: this.dirtyTags,
                 save: this.saveHeadless
             },
             'probeform umwelt combobox': {
@@ -235,74 +240,81 @@ Ext.define('Lada.controller.form.Probe', {
      */
     save: function(button) {
         var formPanel = button.up('form');
-        var data = formPanel.getForm().getFieldValues(false);
-        var record = formPanel.getForm().getRecord();
-        for (var key in data) {
-            record.set(key, data[key]);
-        }
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
-        }
-        if (record.phantom) {
-            record.set('id',null);
-        }
-        record.save({
-            success: function(record, response) {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    button.setDisabled(true);
-                    button.up('toolbar').down('button[action=discard]')
-                        .setDisabled(true);
-                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
-                    formPanel.clearMessages();
-                    formPanel.setRecord(record);
-                    formPanel.setMessages(json.errors, json.warnings);
-                    if (response.action === 'create' && json.success) {
-                        button.up('window').close();
-                        var win = Ext.create('Lada.view.window.ProbeEdit', {
-                            record: record
-                        });
-                        win.setPosition(30);
-                        win.show();
-                        win.initData();
-                    }
-                }
-            },
-            failure: function(record, response) {
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    button.setDisabled(true);
-                    button.up('toolbar').down('button[action=discard]')
-                        .setDisabled(true);
-                    var rec = formPanel.getForm().getRecord();
-                    rec.dirty = false;
-                    formPanel.getForm().loadRecord(record);
+        formPanel.down('tagwidget').applyChanges();
+
+        //If form data is read only, exit after saving tags
+        if (formPanel.readOnly) {
+            return;
+        } else {
+            var data = formPanel.getForm().getFieldValues(false);
+            var record = formPanel.getForm().getRecord();
+            for (var key in data) {
+                record.set(key, data[key]);
+            }
+            if (!record.get('letzteAenderung')) {
+                record.set('letzteAenderung', new Date());
+            }
+            if (record.phantom) {
+                record.set('id',null);
+            }
+            record.save({
+                success: function(record, response) {
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                +' #'+json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
+                        button.setDisabled(true);
+                        button.up('toolbar').down('button[action=discard]')
+                            .setDisabled(true);
+                        var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                        if (parentGrid.length === 1) {
+                            parentGrid[0].reload();
                         }
                         formPanel.clearMessages();
+                        formPanel.setRecord(record);
                         formPanel.setMessages(json.errors, json.warnings);
-                    } else {
+                        if (response.action === 'create' && json.success) {
+                            button.up('window').close();
+                            var win = Ext.create('Lada.view.window.ProbeEdit', {
+                                record: record
+                            });
+                            win.setPosition(30);
+                            win.show();
+                            win.initData();
+                        }
+                    }
+                },
+                failure: function(record, response) {
+                    var i18n = Lada.getApplication().bundle;
+                    if (response.error) {
+                        //TODO: check content of error.status (html error code)
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
+                            i18n.getMsg('err.msg.generic.body'));
+                    } else {
+                        button.setDisabled(true);
+                        button.up('toolbar').down('button[action=discard]')
+                            .setDisabled(true);
+                        var rec = formPanel.getForm().getRecord();
+                        rec.dirty = false;
+                        formPanel.getForm().loadRecord(record);
+                        var json = Ext.decode(response.getResponse().responseText);
+                        if (json) {
+                            if (json.message) {
+                                Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                                    +' #'+json.message,
+                                i18n.getMsg(json.message));
+                            } else {
+                                Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                    i18n.getMsg('err.msg.generic.body'));
+                            }
+                            formPanel.clearMessages();
+                            formPanel.setMessages(json.errors, json.warnings);
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                i18n.getMsg('err.msg.response.body'));
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     },
 
     /**
@@ -326,20 +338,45 @@ Ext.define('Lada.controller.form.Probe', {
       * button which are present in the toolbar of the form.
       * The Buttons are only active if the content of the form was altered
       * (the form is dirty).
+      * The buttons are only deactivated if the tags are not dirty, too.
       * In Additon it calls the disableChildren() function of the window
       * embedding the form. Likewise it calls the embedding windows
       * enableChilren() function
       */
     dirtyForm: function(form, dirty) {
+        console.log('dirtyForm');
+        this.dirtyProbeForm = dirty;
         if (dirty) {
-            form.owner.down('button[action=save]').setDisabled(false);
-            form.owner.down('button[action=discard]').setDisabled(false);
-            form.owner.up('window').disableChildren();
-        } else {
-            form.owner.down('button[action=save]').setDisabled(true);
-            form.owner.down('button[action=discard]').setDisabled(true);
-            form.owner.up('window').enableChildren(); // todo this might not be true in all cases
+            this.enableButtons(form);
+        } else if (this.dirtyTags == false) {
+            this.disableButtons(form);
         }
+    },
+
+    /**
+     * Enables/disabled the save/reset buttons if tags hast been altered.
+     * Only disables buttons if form is not dirty, too.
+     */
+    dirtyTags: function(form, dirty) {
+        debugger
+        this.dirtyTags = dirty;
+        if (dirty) {
+            this.enableButtons(form);
+        } else if(this.dirtyProbeForm == false) {
+            this.disableButtons(form);
+        }
+    },
+
+    enableButtons: function(form) {
+        form.owner.down('button[action=save]').setDisabled(false);
+        form.owner.down('button[action=discard]').setDisabled(false);
+        form.owner.up('window').disableChildren();
+    },
+
+    disableButtons: function(form) {
+        form.owner.down('button[action=save]').setDisabled(true);
+        form.owner.down('button[action=discard]').setDisabled(true);
+        form.owner.up('window').enableChildren(); // todo this might not be true in all cases
     },
 
     /**

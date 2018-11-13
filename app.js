@@ -84,6 +84,7 @@ Ext.application({
         'Lada.model.Query',
         'Lada.store.GridColumn',
         'Lada.store.Query',
+        'Lada.store.Tag',
         'Lada.view.widget.base.SelectableDisplayField'
     ],
     bundle: {
