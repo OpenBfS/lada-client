@@ -663,7 +663,6 @@ Ext.define('Lada.controller.form.Probe', {
       * enableChilren() function
       */
     dirtyForm: function(form, dirty) {
-        console.log('dirtyForm');
         this.dirtyProbeForm = dirty;
         if (dirty) {
             this.enableButtons(form);
@@ -681,7 +680,6 @@ Ext.define('Lada.controller.form.Probe', {
      * Only disables buttons if form is not dirty, too.
      */
     dirtyTags: function(form, dirty) {
-        debugger
         this.dirtyTags = dirty;
         if (dirty) {
             this.enableButtons(form);
