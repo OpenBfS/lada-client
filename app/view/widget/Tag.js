@@ -12,7 +12,7 @@
 Ext.define('Lada.view.widget.Tag', {
     extend: 'Ext.form.field.Tag',
     alias: 'widget.tagwidget',
-    store: Ext.create('Lada.store.Tag'),
+    store: null,
     displayField: 'tag',
     valueField: 'id',
     // Enable filtering of comboboxes
@@ -36,6 +36,7 @@ Ext.define('Lada.view.widget.Tag', {
     initComponent: function() {
         var i18n= Lada.getApplication().bundle;
         this.emptyText= i18n.getMsg('emptytext.tag');
+        this.store = Ext.create('Lada.store.Tag');
         this.on('change', this.handleChanges);
         this.callParent(arguments);
     },
@@ -63,9 +64,11 @@ Ext.define('Lada.view.widget.Tag', {
      * Unsaved changes will be reapplied.
      */
     preselectTags: function() {
+        var me = this;
         this.setLoading(true);
-        this.store.loadAssignedTags(this, function(records) {
+        this.store.loadAssignedTags(me, function(records) {
             var ids = [];
+            this.suspendEvents();
 
             //Set tags, received from the server
             for (var i = 0; i < records.length; i++) {
@@ -78,19 +81,21 @@ Ext.define('Lada.view.widget.Tag', {
                 var tagId = keys[i];
                 if (this.changes[tagId] === 'create') {
                     ids.push(tagId);
+                    unsavedChanges = true;
                 } else if (this.changes[tagId] === 'delete'){
                     var indexOfTagId = ids.indexOf(tagId);
                     ids.splice(indexOfTagId, 1);
+                    unsavedChanges = true;
                 }
             }
 
             //If there are no unsaved changes, prevent activation of save button
             if (!unsavedChanges) {
-                this.suspendEvents();
                 this.setValue(ids);
                 this.resetOriginalValue();
                 this.resumeEvents();
             } else {
+                this.resumeEvents();
                 this.setValue(ids);
             }
             this.setLoading(false);

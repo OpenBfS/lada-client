@@ -507,20 +507,31 @@ Ext.define('Lada.view.form.Probe', {
                     //Tag widget
                     xtype: 'fieldset',
                     title: i18n.getMsg('title.tagfieldset'),
-                    layout: 'hbox',
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretchmax'
+                    },
                     items: [{
+                        flex: 1,
                         xtype: 'tagwidget',
                         margin: '5 5 5 5'
                     }, {
+                        width: 25,
+                        height: 25,
                         xtype: 'button',
-                        margin: '5 0 0 0',
+                        margin: '5 5 5 0',
                         action: 'createtag',
                         icon: 'resources/img/list-add.png',
                         tooltip: i18n.getMsg('button.createtag.tooltip'),
-                        handler: function() {
+                        handler: function(button) {
                             var win = Ext.create('Lada.view.window.TagCreate', {
-                                tagWidget: me.down('tagwidget')
+                                tagWidget: me.down('tagwidget'),
+                                probe: button.up('probeform').getForm().getRecord().get('hauptprobenNr')
                             });
+                            //Close window if parent window is closed
+                            button.up('probenedit').on('close', function() {
+                                win.close();
+                            })
                             win.show();
                         }
                     }]
