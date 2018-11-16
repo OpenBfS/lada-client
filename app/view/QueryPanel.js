@@ -19,7 +19,7 @@ Ext.define('Lada.view.QueryPanel', {
         'Lada.view.widget.ColumnSort',
         'Lada.store.GridColumnValue'
     ],
-    gridColumnValueStore: null,
+    gridColumnValueStore: Ext.create('Lada.store.GridColumnValue'),
     store: null,
     layout: {
         type: 'vbox',
@@ -164,7 +164,8 @@ Ext.define('Lada.view.QueryPanel', {
             name: 'activefilters',
             labelWidth: 125,
             store: Ext.create('Ext.data.Store',{
-                model: 'Lada.model.GridColumn'
+                model: 'Lada.model.GridColumn',
+                autoLoad: true
             }),
             multiSelect: true,
             queryMode: 'local',
@@ -214,7 +215,8 @@ Ext.define('Lada.view.QueryPanel', {
             action: 'save',
             flex: 1,
             margin: '5,0,5,0',
-            text: 'save'
+            text: 'save',
+            disabled: true
         }, {
             xtype: 'button',
             action: 'reset',
@@ -320,48 +322,91 @@ Ext.define('Lada.view.QueryPanel', {
         });
     },
 
-    setGridColumnStore: function(userQueryId, baseQueryId) {
-        var me = this;
-        if (baseQueryId !== undefined && userQueryId !== undefined) {
-            this.gridColumnValueStore = Ext.create('Lada.store.GridColumnValue');
+    loadGridColumnStore: function() {
+        var columnstore = Ext.data.StoreManager.get('columnstore');
+        var record = this.getForm().getRecord();
+        if (record === undefined || record.get('clonedFrom') === 'empty') {
+            var ccstore = this.down('columnchoser').store;
+            ccstore.removeAll();
+            this.down('columnchoser').setStore(ccstore);
+            this.down('columnsort').setStore(null);
+            this.down('cbox[name=activefilters]').store.filter(function(item) {
+                // don't show any items, as there is no baseQuery
+                return false;
+            });
+            this.down('cbox[name=activefilters]').setValue('');
+            this.down('cbox[name=messStellesIds]').setValue('');
+            this.gridColumnValueStore.removeAll();
+        } else {
+            var qid = null;
+            if (record.phantom) {
+                qid = record.get('clonedFrom');
+            } else {
+                qid = record.get('id');
+            }
             this.gridColumnValueStore.proxy.extraParams = {
-                qid: userQueryId};
-            var cs = Ext.data.StoreManager.get('columnstore');
-            cs.clearFilter();
-            cs.filter({
-                property: 'baseQuery',
-                value: baseQueryId,
-                exactMatch: true
-            });
-            var filterWidgetColumnStore = Ext.create('Lada.store.GridColumn');
-            filterWidgetColumnStore.filter({
-                property: 'baseQuery',
-                value: baseQueryId,
-                exactMatch: true
-            });
-            this.gridColumnValueStore.load({
-                callback: function() {
-                    var items = me.gridColumnValueStore.getData().items;
-                    if (items.length) {
-                        for (var i=0; i < items.length; i++) {
-                            var gc = cs.findRecord('id',
-                                items[i].get('gridColumnId'),0,false, false, true);
-                            items[i].set('dataIndex', gc.get('dataIndex'));
-                            items[i].set('name', gc.get('name'));
+                'qid': qid
+            };
+        }
+        var me = this;
+        this.gridColumnValueStore.load({
+            callback: function() {
+                columnstore.clearFilter();
+                columnstore.filter({
+                    property: 'baseQuery',
+                    value: record.get('baseQuery'),
+                    exactMatch: true
+                });
+                var items = me.gridColumnValueStore.getData().items;
+                var activeFilters = [];
+                if (items.length) {
+                    for (var i=0; i < items.length; i++) {
+                        var gridColumn = columnstore.findRecord('id',
+                            items[i].get('gridColumnId'),0,false, false, true);
+                        items[i].set('dataIndex', gridColumn.get('dataIndex'));
+                        items[i].set('name', gridColumn.get('name'));
+                        if (items[i].get('filterActive')) {
+                            activeFilters.push(gridColumn.get('dataIndex'));
                         }
                     }
-                    me.down('columnchoser').setStore(me.gridColumnValueStore, cs);
-                    me.down('columnsort').setStore(me.gridColumnValueStore);
-                    var filterwidget = me.down('cbox[name=activefilters]');
-                    filterwidget.setStore(filterWidgetColumnStore);
-                    filterwidget.store.filter(function(item) {
-                        if (item.get('filter')) {
-                            return true;
-                        }
-                        return false;
-                    });
                 }
-            });
+                me.down('columnchoser').setStore(me.gridColumnValueStore,
+                    columnstore);
+                me.down('columnsort').setStore(me.gridColumnValueStore);
+
+                var filterwidget = me.down('cbox[name=activefilters]');
+                filterwidget.store.clearFilter();
+                filterwidget.store.filter({
+                    property: 'baseQuery',
+                    value: record.get('baseQuery'),
+                    exactMatch: true
+                });
+                filterwidget.store.filter(function(item) {
+                    if (item.get('filter')) {
+                        return true;
+                    }
+                    return false;
+                });
+                filterwidget.setValue(activeFilters.join(','));
+
+                me.down('cbox[name=messStellesIds]').setValue(record.get('messStellesIds'));
+
+                me.down('button[action=save]').setDisabled(!record.phantom);
+                me.down('button[name=search1]').setDisabled(false);
+                me.down('button[name=search2]').setDisabled(false);
+            }
+        });
+    },
+
+    //checks checks if a query is editable by the current user
+    isQueryReadonly: function() {
+        var query = this.getForm().getRecord();
+        if (query.phantom && (query.get('clonedFrom') === 'empty')) {
+            return true;
         }
+        if (Lada.userId === query.get('userId') || query.phantom) {
+            return false;
+        }
+        return true;
     }
 });
