@@ -32,6 +32,7 @@ Ext.define('Lada.view.form.Probe', {
         'Lada.view.widget.base.FieldSet',
         'Lada.view.widget.base.DateField',
         'Lada.view.window.MessungCreate',
+        'Lada.view.window.TagCreate',
         'Lada.model.Probe',
         'Lada.model.MessstelleLabor'
     ],
@@ -517,11 +518,25 @@ Ext.define('Lada.view.form.Probe', {
                         }]
                     }]
                 }, {
+                    //Tag widget
                     xtype: 'fieldset',
                     title: i18n.getMsg('title.tagfieldset'),
                     layout: 'hbox',
                     items: [{
-                        xtype: 'tagwidget'
+                        xtype: 'tagwidget',
+                        margin: '5 5 5 5'
+                    }, {
+                        xtype: 'button',
+                        margin: '5 0 0 0',
+                        action: 'createtag',
+                        icon: 'resources/img/list-add.png',
+                        tooltip: i18n.getMsg('button.createtag.tooltip'),
+                        handler: function() {
+                            var win = Ext.create('Lada.view.window.TagCreate', {
+                                tagWidget: me.down('tagwidget')
+                            });
+                            win.show();
+                        }
                     }]
                 }]
             }]

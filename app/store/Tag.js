@@ -41,6 +41,9 @@ Ext.define('Lada.store.Tag', {
         };
     },
 
+    /**
+     * Loads the store holding the tags, assigned to the current probe
+     */
     loadAssignedTags: function(scope, callback) {
         this.assignedTagsStore.load({
             scope: scope,
@@ -48,10 +51,25 @@ Ext.define('Lada.store.Tag', {
         });
     },
 
+    /**
+     * Creates a new tag for the current probe using a POST request
+     */
     createTag: function(tag, callback) {
-        //TODO: implement
+        var zuordnung = {
+            probeId: this.pId,
+            tag: tag
+        };
+        Ext.Ajax.request({
+            url: this.proxy.url,
+            method: 'POST',
+            jsonData: zuordnung,
+            callback: callback
+        });
     },
 
+    /**
+     * Creates a new reference from the current probe to the given tag using a POST request
+     */
     createZuordnung: function(tag, callback) {
         var zuordnung = {
             probeId: this.pId,
@@ -62,10 +80,12 @@ Ext.define('Lada.store.Tag', {
             method: 'POST',
             jsonData: zuordnung,
             callback: callback
-        })
-
+        });
     },
 
+    /**
+     * Deletes a reference from the given tag to the current probe, using a DELETE request
+     */
     deleteZuordnung: function(tag, callback) {
         Ext.Ajax.request({
             url: this.proxy.url,
