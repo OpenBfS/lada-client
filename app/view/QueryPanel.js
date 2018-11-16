@@ -103,9 +103,11 @@ Ext.define('Lada.view.QueryPanel', {
     }, {
         xtype: 'button',
         action: 'search',
+        name: 'search1',
         icon: 'resources/img/Find.png',
         text: 'query.search',
         margin: '0 15 0 15',
+        disabled: true,
         flex: 1
     }, {
         xtype: 'fieldset',
@@ -227,6 +229,7 @@ Ext.define('Lada.view.QueryPanel', {
         icon: 'resources/img/Find.png',
         text: 'query.search',
         margin: '5 15 5 15',
+        disabled: true,
         flex: 1
     }],
 

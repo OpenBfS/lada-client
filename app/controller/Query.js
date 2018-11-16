@@ -197,6 +197,7 @@ Ext.define('Lada.controller.Query', {
         var qp = combobox.up('querypanel');
         var newquery = qp.store.getById(combobox.getValue());
         combobox.resetOriginalValue();
+
         var contentPanel = qp.up('panel[name=main]').down(
             'panel[name=contentpanel]');
         contentPanel.removeAll();
@@ -230,8 +231,7 @@ Ext.define('Lada.controller.Query', {
             qp.down('button[action=newquery]').setDisabled(newquery.phantom);
             qp.down('button[action=delquery]').setDisabled(
                 this.isQueryReadonly(newquery));
-            qp.down('button[action=save]').setDisabled(
-                this.isQueryReadonly(newquery));
+            qp.down('button[action=save]').setDisabled(true);
         }
     },
 
@@ -725,14 +725,14 @@ Ext.define('Lada.controller.Query', {
         var gcs = Ext.create('Lada.store.GridColumnValue');
         if (panel.getForm().getRecord() === undefined ||
             panel.getForm().getRecord().get('clonedFrom') === 'empty') {
-                var ccstore = panel.down('columnchoser').store;
-                ccstore.removeAll();
-                panel.down('columnchoser').setStore(ccstore);
-                panel.down('columnsort').setStore(null);
-                panel.down('cbox[name=activefilters]').store.removeAll();
-                panel.down('cbox[name=activefilters]').setValue('');
-                panel.down('cbox[name=messStellesIds]').setValue('');
-                gcs.removeAll();
+            var ccstore = panel.down('columnchoser').store;
+            ccstore.removeAll();
+            panel.down('columnchoser').setStore(ccstore);
+            panel.down('columnsort').setStore(null);
+            panel.down('cbox[name=activefilters]').store.removeAll();
+            panel.down('cbox[name=activefilters]').setValue('');
+            panel.down('cbox[name=messStellesIds]').setValue('');
+            gcs.removeAll();
         } else {
             var qid = null;
             if (panel.getForm().getRecord().phantom) {
@@ -769,6 +769,8 @@ Ext.define('Lada.controller.Query', {
                         activefilters.join(','));
                     panel.down('cbox[name=messStellesIds]').setValue(
                         panel.getForm().getRecord().get('messStellesIds'));
+                    panel.down('button[name=search1]').setDisabled(false);
+                    panel.down('button[name=search2]').setDisabled(false);
                 }
             });
         }
