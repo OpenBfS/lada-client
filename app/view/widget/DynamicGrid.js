@@ -864,6 +864,17 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 disabled: false
             });
         }
+
+        if (!this.tbuttonExists('assigntags')) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('tag.toolbarbutton.assigntags'),
+                iconCls: 'x-fa fa-tag',
+                action: 'assigntags',
+                needsSelection: true,
+                disabled: true
+            })
+        }
+
         if (!this.tbuttonExists('printSheet')) {
             this.toolbarbuttons.push({
                 text: this.i18n.getMsg('button.printsheet'),
