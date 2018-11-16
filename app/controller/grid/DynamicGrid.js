@@ -30,6 +30,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             'button[action=print]': {
                 click: this.printSelection
             },
+            'button[action=assigntags]': {
+                click: this.assignTags
+            },
             'button[action=genericdelete]': {
                 click: this.deleteData
             },
@@ -397,6 +400,22 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     break;
             }
         }
+    },
+
+    /**
+     * Gets the selected probe items and opens the tag assign window
+     */
+    assignTags: function(button) {
+        var grid = button.up('grid');
+        var selection = grid.getView().getSelectionModel().getSelection();
+        var i18n = Lada.getApplication().bundle;
+        var count = selection.length;
+        var win = Ext.create('Lada.view.window.TagAssign', {
+            title: i18n.getMsg('tag.assignwindow.title', count),
+            selection: selection
+        });
+        win.show();
+
     },
 
     selectionChanged: function(selModel, selected) {

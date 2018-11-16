@@ -142,7 +142,12 @@ Ext.define('Lada.view.widget.Tag', {
                 dirty = true;
             }
         }
-        me.up('probeform').fireEventArgs('tagdirtychange', [{owner: me.up('probeform')}, dirty])
+
+        //If this widget is embedded in a probeform: fire dirty change event
+        var probeform = me.up('probeform');
+        if (probeform) {
+            probeform.fireEventArgs('tagdirtychange', [{owner: me.up('probeform')}, dirty]);
+        }
 
     },
 
