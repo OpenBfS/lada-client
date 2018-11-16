@@ -48,22 +48,70 @@ Ext.define('Lada.view.widget.Tag', {
         this.preselectTags();
     },
 
+    /** Reloads the current store */
+    reload: function() {
+        var me = this;
+        this.store.load({
+            callback: function() {
+                me.preselectTags();
+            }
+        });
+    },
+
     /**
-     * Loads tags assigned to the current probe and preselects the tags
+     * Loads tags, assigned to the current probe and preselects the tags.
+     * Unsaved changes will be reapplied.
      */
     preselectTags: function() {
         this.setLoading(true);
         this.store.loadAssignedTags(this, function(records) {
-            this.suspendEvents();
             var ids = [];
+
+            //Set tags, received from the server
             for (var i = 0; i < records.length; i++) {
                 ids.push(records[i].id);
             }
-            this.setValue(ids);
-            this.resetOriginalValue();
-            this.resumeEvents();
+            //Reapply unsaved changes
+            var keys = Object.keys(this.changes);
+            var unsavedChanges = false;
+            for (var i = 0; i < keys.length; i++ ) {
+                var tagId = keys[i];
+                if (this.changes[tagId] === 'create') {
+                    ids.push(tagId);
+                } else if (this.changes[tagId] === 'delete'){
+                    var indexOfTagId = ids.indexOf(tagId);
+                    ids.splice(indexOfTagId, 1);
+                }
+            }
+
+            //If there are no unsaved changes, prevent activation of save button
+            if (!unsavedChanges) {
+                this.suspendEvents();
+                this.setValue(ids);
+                this.resetOriginalValue();
+                this.resumeEvents();
+            } else {
+                this.setValue(ids);
+            }
             this.setLoading(false);
-        })
+        });
+    },
+
+    /**
+     * Creates a tag object and hands it to the store for saving.
+     */
+    createTag: function(tagName) {
+        var me = this;
+        //TODO: Which mst?
+        var mstId = Lada.mst[0];
+        var tag = {
+            tag: tagName,
+            mstId: mstId
+        };
+        var callback = function(response) {
+            me.reload();
+        };
+        this.store.createTag(tag, callback);
     },
 
     /**
@@ -130,10 +178,22 @@ Ext.define('Lada.view.widget.Tag', {
     },
 
     /**
+     * Returns true if a tag with the given name exists
+     */
+    tagExists: function(tagName) {
+        //Find record: case sensitive and exact match
+        if (this.store.find('tag', tagName, 0, false, true,true) != -1) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    /**
      * Reset the tag widget
      */
     resetChanges: function() {
-
+        //TODO: Implement
     },
 
     /**
