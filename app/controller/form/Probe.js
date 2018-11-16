@@ -561,7 +561,10 @@ Ext.define('Lada.controller.form.Probe', {
             var data = formPanel.getForm().getFieldValues(false);
             var record = formPanel.getForm().getRecord();
             for (var key in data) {
-                record.set(key, data[key]);
+                //Only set existing fields, avoids sending the tag widget
+                if (record.get(key) != undefined) {
+                    record.set(key, data[key]);
+                }
             }
             if (!record.get('letzteAenderung')) {
                 record.set('letzteAenderung', new Date());

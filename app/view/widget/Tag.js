@@ -153,6 +153,7 @@ Ext.define('Lada.view.widget.Tag', {
                         success = false;
                     }
                     requests++;
+                    me.changes[tag] = null;
                     if (requests == keys.length) {
                         if (success == false) {
                             //TODO: Handle failure

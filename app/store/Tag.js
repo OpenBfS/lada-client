@@ -68,10 +68,14 @@ Ext.define('Lada.store.Tag', {
 
     deleteZuordnung: function(tag, callback) {
         Ext.Ajax.request({
-            url: this.proxy.url + '/' + tag,
+            url: this.proxy.url,
             method: 'DELETE',
+            jsonData: {
+                probeId: this.pId,
+                tagId: tag
+            },
             callback: callback
-        })
+        });
     },
 
     sync: function() {
