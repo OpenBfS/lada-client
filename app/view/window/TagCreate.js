@@ -14,8 +14,10 @@ Ext.define('Lada.view.window.TagCreate', {
     alias: 'tagcreatewindow',
 
     layout: 'vbox',
-
+    width: 300,
     tagWidget: null,
+    //A Probe's hauptprobenummer, used in the window title
+    probe: null,
 
     /**
      * This function initialises the Window
@@ -23,9 +25,10 @@ Ext.define('Lada.view.window.TagCreate', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
-        this.title = i18n.getMsg('title.tagcreatewindow');
+        this.title = i18n.getMsg('title.tagcreatewindow', this.probe);
         this.items = [{
             xtype: 'textfield',
+            width: '100%',
             margin: '5 5 5 5',
             msgTarget: 'under',
             //validate that text is not empty and the name does not already exists
