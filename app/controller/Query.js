@@ -144,7 +144,8 @@ Ext.define('Lada.controller.Query', {
                     sort: item.get('sort'),
                     sortIndex: item.get('sortIndex'),
                     filterActive: item.get('filterActive'),
-                    filterValue: item.get('filterValue')
+                    filterValue: item.get('filterValue'),
+                    width: item.get('width')
                 });
                 clonedModel.set('id', null);
                 clonedModel.set('queryUserId', savedQuery.get('id'));
@@ -157,7 +158,7 @@ Ext.define('Lada.controller.Query', {
         cbox.select(newrecord);
         this.changeCurrentQuery(cbox);
         panel.down('fieldset[name=querydetails]').setCollapsed(false);
-        this.saveQuery(button, saveCallback, false);
+        this.saveQuery(button, saveCallback);
     },
 
     expandDetails: function(button) {
@@ -244,11 +245,8 @@ Ext.define('Lada.controller.Query', {
      * Saves the current query object and attached columns
      * @param button UI el inside the querypanel
      * @param callback Function to call after successfull save
-     * @param columns True to save attached GridColumnValues, too. Defaults to true
      */
-    saveQuery: function(button, callback, columns) {
-        var saveColumns = columns !== undefined ? columns: true;
-        var me = this;
+    saveQuery: function(button, callback) {
         var i18n = Lada.getApplication().bundle;
         var qp = button.up('querypanel');
 
@@ -271,21 +269,19 @@ Ext.define('Lada.controller.Query', {
             record.set('userId', Lada.userId);
         }
         button.setDisabled(true);
+        var me = this;
         record.save({
             success: function(rec, response) {
                 if (callback) {
                     callback(rec);
                 }
-
                 var json = Ext.decode(response.getResponse().responseText);
                 var newId = json.data.id;
+                me.persistColumnsWidth(rec);
                 qp.getForm().loadRecord(rec);
-                if (saveColumns) {
-                    var columns = qp.gridColumnValueStore.getData().items;
-                    qp.gridColumnValueStore.proxy.extraParams = {};
-                    for (var i=0; i < columns.length; i++) {
-                        columns[i].save();
-                    }
+                var columns = qp.gridColumnValueStore.getData().items;
+                for (var i=0; i < columns.length; i++) {
+                    columns[i].save();
                 }
                 qp.down('combobox[name=selectedQuery]').setStore(qp.store);
                 qp.down('combobox[name=selectedQuery]').select(newId);
@@ -847,6 +843,33 @@ Ext.define('Lada.controller.Query', {
         var qp = Ext.ComponentQuery.query('querypanel')[0];
         if (!qp.isQueryReadonly()) {
             qp.down('button[action=save]').setDisabled(false);
+        }
+    },
+
+    /**
+     * tries to persist visible columns' width
+     */
+    persistColumnsWidth: function(record) {
+        if (!record.phantom) {
+            var dgs = Ext.ComponentQuery.query('dynamicgrid');
+            var dynamicgrid = null;
+            if (dgs) {
+                dynamicgrid = dgs[0];
+            }
+            if (dynamicgrid) {
+                var dcColumns = dynamicgrid.getVisibleColumns();
+                var qp = Ext.ComponentQuery.query('querypanel')[0];
+                var gcsColumns = qp.gridColumnValueStore.getData().items;
+                dcColumns.forEach(function(dcCol) {
+                    var gridColumn = gcsColumns.find(function(col) {
+                        return (col.get('dataIndex') === dcCol.dataIndex);
+                    });
+                    if (gridColumn) {
+                        gridColumn.set('width', dcCol.width);
+                        gridColumn.save();
+                    }
+                });
+            }
         }
     }
 });
