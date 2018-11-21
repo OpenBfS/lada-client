@@ -78,6 +78,21 @@ Ext.define('Lada.controller.Query', {
             },
             'dynamicgrid': {
                 columnresize: me.dataChanged
+            },
+            'querypanel textarea[name=description]': {
+                change: me.dataChanged
+            },
+            'querypanel textfield[name=name]': {
+                change: me.dataChanged
+            },
+            'querypanel combobox[name=messStellesIds]': {
+                change: me.dataChanged
+            },
+            'querypanel columnchoser': {
+                change: me.dataChanged
+            },
+            'querypanel columnsort': {
+                change: me.dataChanged
             }
 
         });
