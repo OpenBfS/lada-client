@@ -29,6 +29,37 @@ Ext.define('Lada.view.widget.Tag', {
      */
     changes: null,
 
+    //Templates to render global tags differently
+    //Dropdown
+    tpl: Ext.create('Ext.XTemplate',
+        '<ul class="x-list-plain"><tpl for=".">',
+            '<tpl if="this.isGlobal(mstId)">',
+                '<li role="option" class="x-boundlist-item"><b>*{tag}</b></li>',
+            '<tpl else>',
+                '<li role="option" class="x-boundlist-item">{tag}</li>',
+            '</tpl>',
+        '</tpl></ul>',
+        {
+            isGlobal: function(mstId) {
+                return mstId == null || mstId == "";
+            }
+        }
+    ),
+    //Tagfield
+    labelTpl: Ext.create('Ext.XTemplate',
+            '<tpl if="this.isGlobal(mstId)">',
+                '*{tag}',
+            '<tpl else>',
+                '{tag}',
+            '</tpl>',
+        {
+            isGlobal: function(mstId) {
+                return mstId == null || mstId == "";
+            }
+        }
+
+    ),
+
     isDirty: function() {
         return false;
     },
@@ -230,6 +261,7 @@ Ext.define('Lada.view.widget.Tag', {
                     if (requests == keys.length) {
                         if (success == false) {
                             //TODO: Handle failure
+                            Ext.Msg.alert("Failure")
                         }
                         me.up('probeform').fireEventArgs('tagdirtychange', [{owner: me.up('probeform')}, false]);
                     }
