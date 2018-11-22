@@ -23,17 +23,18 @@ Ext.define('Lada.view.widget.Tag', {
     minChars: 0,
     submitValue: false,
 
-    isDirty: function() {
-        return false;
-    },
-
     /**
      * Object storing item changes for later syncing.
      * Format: tagId: ['create'|'delete']
      */
-    changes: {},
+    changes: null,
+
+    isDirty: function() {
+        return false;
+    },
 
     initComponent: function() {
+        this.changes = {};
         var i18n= Lada.getApplication().bundle;
         this.emptyText= i18n.getMsg('emptytext.tag');
         this.store = Ext.create('Lada.store.Tag');
@@ -75,17 +76,19 @@ Ext.define('Lada.view.widget.Tag', {
                 ids.push(records[i].id);
             }
             //Reapply unsaved changes
-            var keys = Object.keys(this.changes);
             var unsavedChanges = false;
-            for (var i = 0; i < keys.length; i++ ) {
-                var tagId = keys[i];
-                if (this.changes[tagId] === 'create') {
-                    ids.push(tagId);
-                    unsavedChanges = true;
-                } else if (this.changes[tagId] === 'delete'){
-                    var indexOfTagId = ids.indexOf(tagId);
-                    ids.splice(indexOfTagId, 1);
-                    unsavedChanges = true;
+            if (this.changes) {
+                var keys = Object.keys(this.changes);
+                for (var i = 0; i < keys.length; i++ ) {
+                    var tagId = keys[i];
+                    if (this.changes[tagId] === 'create') {
+                        ids.push(tagId);
+                        unsavedChanges = true;
+                    } else if (this.changes[tagId] === 'delete'){
+                        var indexOfTagId = ids.indexOf(tagId);
+                        ids.splice(indexOfTagId, 1);
+                        unsavedChanges = true;
+                    }
                 }
             }
 

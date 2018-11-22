@@ -67,12 +67,18 @@ Ext.define('Lada.view.window.TagAssign', {
         me.down('progressbar').updateProgress(0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
         me.down('progressbar').show();
         me.down('container[name=buttoncontainer]').hide();
+        me.down('tagwidget').disable();
+
         for (var i = 0; i < me.selection.length; i++) {
             var probeId = me.selection[i].data.probeId;
             store.pId = probeId;
             for (var j = 0; j < tags.length; j++) {
                 var tag = tags[j];
-                store.createZuordnung(tag, function(response) {
+                store.createZuordnung(tag, function(request, success, response) {
+                    var responseJson = Ext.decode(response.responseText);
+                    if (success == false) {
+                        console.log('500 on tag set');
+                    }
                     tagsSet++;
                     var ratio = tagsSet/tagCount;
                     me.down('progressbar').updateProgress(
