@@ -33,6 +33,9 @@ Ext.define('Lada.view.window.TagCreate', {
             msgTarget: 'under',
             //validate that text is not empty and the name does not already exists
             validator: function (val) {
+                if (val.trim().length == 0) {
+                    return i18n.getMsg('tag.createwindow.err.invalidtagname');
+                }
                 if (val.length == 0) {
                     return i18n.getMsg('tag.createwindow.err.emptytagname');
                 }
@@ -61,6 +64,7 @@ Ext.define('Lada.view.window.TagCreate', {
         if (textfield.validate()) {
             me.tagWidget.createTag(text);
             textfield.reset();
+            Ext.getCmp('dynamicgridid').reload();
         }
     }
 });

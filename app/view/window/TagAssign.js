@@ -83,6 +83,9 @@ Ext.define('Lada.view.window.TagAssign', {
                     var ratio = tagsSet/tagCount;
                     me.down('progressbar').updateProgress(
                             ratio, i18n.getMsg('tag.assignwindow.progress', tagsSet, tagCount, false));
+                    if (ratio == 1) {
+                        Ext.getCmp('dynamicgridid').reload();
+                    }
                 });
             }
         }

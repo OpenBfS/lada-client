@@ -556,6 +556,8 @@ Ext.define('Lada.controller.form.Probe', {
 
         //If form data is read only, exit after saving tags
         if (formPanel.readOnly) {
+            //Reload the grid to display tag changes
+            Ext.getCmp('dynamicgridid').reload();
             return;
         } else {
             var data = formPanel.getForm().getFieldValues(false);
