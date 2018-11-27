@@ -652,7 +652,7 @@ Ext.define('Lada.controller.form.Probe', {
         formPanel.down('fset[name=sollzeitPeriod]').clearMessages();
         formPanel.down('datetime[name=probeentnahmeBeginn]').clearWarningOrError();
         formPanel.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
-
+        formPanel.down('tagwidget').reload(false);
         formPanel.down('umwelt').store.clearFilter();
         formPanel.setRecord(formPanel.getForm().getRecord());
     },

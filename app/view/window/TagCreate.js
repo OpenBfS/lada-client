@@ -65,6 +65,10 @@ Ext.define('Lada.view.window.TagCreate', {
             me.tagWidget.createTag(text);
             textfield.reset();
             Ext.getCmp('dynamicgridid').reload();
+            var tagFilterWidget = Ext.getCmp('tagfilterwidget');
+            if (tagFilterWidget) {
+                tagFilterWidget.reload(true);
+            }
         }
     }
 });
