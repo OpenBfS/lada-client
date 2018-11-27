@@ -628,6 +628,15 @@ Ext.define('Lada.controller.Query', {
                     field = Ext.create('Lada.view.widget.MessprogrammLand',
                         options);
                     break;
+                case 'tag':
+                    options.multiSelect = true;
+                    options.editable = true;
+                    options.fieldLabel = 'TagsLabel';
+                    options.value = recs[i].get('filterValue');
+                    field = Ext.create('Lada.view.widget.Tag',
+                        options
+                    );
+                    break;
                 default:
                     options.value = recs[i].get('filterValue');
                     field = Ext.create('Lada.view.widget.base.TextField',
@@ -701,6 +710,17 @@ Ext.define('Lada.controller.Query', {
             this.multiValueChanged(box, newvalue, box.up('daterange'));
         } else if (box.xtype === 'numberfield' && box.up('numrangefield')) {
             this.multiValueChanged(box, newvalue, box.up('numrangefield'));
+        } else if (box.xtype === 'tagwidget') {
+            var store = box.up('querypanel').gridColumnValueStore;
+            var name = box.name;
+            var rec = store.findRecord('dataIndex', name, false, false, false,
+                true);
+            //Send tags to filter for as comma separated tag names
+            var tagNames = [];
+            for (var i = 0; i < newvalue.length; i++) {
+                    tagNames.push(box.store.getById(newvalue[i]).get('tag'));
+            }
+            rec.set('filterValue', tagNames.join(','));
         } else {
             var store = box.up('querypanel').gridColumnValueStore;
             var name = box.name;
