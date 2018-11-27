@@ -438,6 +438,7 @@ Ext.define('Lada.controller.Query', {
     },
 
     showFilter: function(element) {
+        var i18n = Lada.getApplication().bundle;
         var panel = element.up('querypanel');
         var fixColumnStore = Ext.data.StoreManager.get('columnstore');
         fixColumnStore.clearFilter();
@@ -631,7 +632,9 @@ Ext.define('Lada.controller.Query', {
                 case 'tag':
                     options.multiSelect = true;
                     options.editable = true;
-                    options.fieldLabel = 'TagsLabel';
+                    options.fieldLabel = i18n.getMsg('tag.filterwidget.label');
+                    options.emptyText = "";
+                    options.monitorChanges = false;
                     options.value = recs[i].get('filterValue');
                     field = Ext.create('Lada.view.widget.Tag',
                         options
@@ -710,7 +713,7 @@ Ext.define('Lada.controller.Query', {
             this.multiValueChanged(box, newvalue, box.up('daterange'));
         } else if (box.xtype === 'numberfield' && box.up('numrangefield')) {
             this.multiValueChanged(box, newvalue, box.up('numrangefield'));
-        } else if (box.xtype === 'tagwidget') {
+        /*} else if (box.xtype === 'tagwidget') {
             var store = box.up('querypanel').gridColumnValueStore;
             var name = box.name;
             var rec = store.findRecord('dataIndex', name, false, false, false,
@@ -720,7 +723,7 @@ Ext.define('Lada.controller.Query', {
             for (var i = 0; i < newvalue.length; i++) {
                     tagNames.push(box.store.getById(newvalue[i]).get('tag'));
             }
-            rec.set('filterValue', tagNames.join(','));
+            rec.set('filterValue', tagNames.join(',')); */
         } else {
             var store = box.up('querypanel').gridColumnValueStore;
             var name = box.name;

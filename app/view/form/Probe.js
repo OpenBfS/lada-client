@@ -514,6 +514,7 @@ Ext.define('Lada.view.form.Probe', {
                     items: [{
                         flex: 1,
                         xtype: 'tagwidget',
+                        emptyText: i18n.getMsg('emptytext.tag'),
                         margin: '5 5 5 5'
                     }, {
                         width: 25,
