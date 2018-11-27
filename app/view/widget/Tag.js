@@ -22,6 +22,7 @@ Ext.define('Lada.view.widget.Tag', {
     typeAhead: false,
     minChars: 0,
     submitValue: false,
+    monitorChanges: true,
 
     /**
      * Object storing item changes for later syncing.
@@ -66,10 +67,10 @@ Ext.define('Lada.view.widget.Tag', {
 
     initComponent: function() {
         this.changes = {};
-        var i18n= Lada.getApplication().bundle;
-        this.emptyText= i18n.getMsg('emptytext.tag');
         this.store = Ext.create('Lada.store.Tag');
-        this.on('change', this.handleChanges);
+        if (this.monitorChanges == true) {
+            this.on('change', this.handleChanges);
+        }
         this.callParent(arguments);
     },
 
