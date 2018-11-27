@@ -632,6 +632,7 @@ Ext.define('Lada.controller.Query', {
                 case 'tag':
                     options.multiSelect = true;
                     options.editable = true;
+                    options.id = 'tagfilterwidget';
                     options.fieldLabel = i18n.getMsg('tag.filterwidget.label');
                     options.emptyText = "";
                     options.monitorChanges = false;

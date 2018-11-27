@@ -15,6 +15,7 @@ Ext.define('Lada.store.Tag', {
     autoLoad: true,
     //Probe id used for filtering for selected tags
     pId: null,
+    sorters: ['tag'],
 
     //A second store instance used for filtering
     assignedTagsStore: null,

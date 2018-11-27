@@ -82,12 +82,19 @@ Ext.define('Lada.view.widget.Tag', {
         this.preselectTags();
     },
 
-    /** Reloads the current store */
-    reload: function() {
+    /**
+     *  Reloads the current store.
+     *  If silent is true, neither tags are preselected nor the dirty status changed.
+     */
+    reload: function(silent) {
         var me = this;
         this.store.load({
             callback: function() {
-                me.preselectTags();
+                if (!silent || silent == false) {
+                    me.preselectTags();
+                    me.up('probeform').fireEventArgs('tagdirtychange', [{owner: me.up('probeform')}, false]);
+                }
+                me.changes = {};
             }
         });
     },
@@ -125,10 +132,11 @@ Ext.define('Lada.view.widget.Tag', {
             }
 
             //If there are no unsaved changes, prevent activation of save button
-            if (!unsavedChanges) {
+            if (unsavedChanges == false) {
                 this.setValue(ids);
                 this.resetOriginalValue();
                 this.resumeEvents();
+                this.up('probeform').fireEventArgs('tagdirtychange', [{owner: this.up('probeform')}, false]);
             } else {
                 this.resumeEvents();
                 this.setValue(ids);
@@ -183,7 +191,6 @@ Ext.define('Lada.view.widget.Tag', {
         if (probeform) {
             probeform.fireEventArgs('tagdirtychange', [{owner: me.up('probeform')}, dirty]);
         }
-
     },
 
     /**
@@ -193,14 +200,10 @@ Ext.define('Lada.view.widget.Tag', {
      * else: throw exception
      */
     handleCreateChange: function(item) {
-        if (!this.changes[item]) {
+        if (!this.changes[item] || this.changes[item] == null) {
             this.changes[item] = 'create'
-        } else {
-            if (this.changes[item] === 'delete') {
+        } else if (this.changes[item] === 'delete') {
                 this.changes[item] = null;
-            } else {
-                //TODO: Exception
-            }
         }
     },
 
@@ -211,14 +214,10 @@ Ext.define('Lada.view.widget.Tag', {
      * else: Throw exception
      */
     handleDeleteChange: function(item) {
-        if (!this.changes[item]) {
+        if (!this.changes[item] || this.changes[item] == null) {
             this.changes[item] = 'delete';
-        } else {
-            if (this.changes[item] == 'create') {
+        } else if (this.changes[item] == 'create') {
                 this.changes[item] = null;
-            } else {
-                //TODO: Exception
-            }
         }
     },
 
@@ -246,45 +245,63 @@ Ext.define('Lada.view.widget.Tag', {
      */
     applyChanges: function() {
         var me = this;
+        var i18n = Lada.getApplication().bundle;
         var keys = Object.keys(this.changes);
         var requests = 0;
         var success = true;
+        var errorHtml = "";
         for (var i = 0; i < keys.length; i++ ) {
             var tag = keys[i];
             if (this.changes[tag] === 'create') {
                 this.store.createZuordnung(tag, function(options, suc, responseObj) {
                     var response = Ext.decode(responseObj.responseText);
+                    var tagId = responseObj.request.jsonData.tagId;
                     if (response.success == false) {
                         success = false;
+                        var msg = i18n.getMsg('tag.widget.err.genericsave');
+                        if (response.message === '699') {
+                            msg = i18n.getMsg('tag.widget.err.globaltagnotallowed');
+                        }
+                        errorHtml += me.store.getById(tagId).get('tag') + " - " + msg + "<br />";
+                    } else {
+                        me.changes[tagId] = null;
                     }
                     requests++;
-                    me.changes[tag] = null;
                     if (requests == keys.length) {
                         if (success == false) {
                             //TODO: Handle failure
-                            Ext.Msg.alert("Failure")
+                            Ext.Msg.alert(i18n.getMsg('tag.widget.err.genericsavetitle'), errorHtml);
+                        } else {
+                            me.up('probeform').fireEventArgs('tagdirtychange', [{owner: me.up('probeform')}, false]);
                         }
-                        me.up('probeform').fireEventArgs('tagdirtychange', [{owner: me.up('probeform')}, false]);
                     }
                 });
             }
             if (this.changes[tag] === 'delete') {
                 this.store.deleteZuordnung(tag, function(options, suc, responseObj) {
                     var response = Ext.decode(responseObj.responseText);
+                    var tagId = responseObj.request.jsonData.tagId;
                     if (response.success == false) {
                         success = false;
+                        var msg = i18n.getMsg('tag.widget.err.genericsave');
+                        if (response.message === '699') {
+                            msg = i18n.getMsg('tag.widget.err.globaltagnotallowed');
+                        }
+                        errorHtml += me.store.getById(tagId).get('tag') + " - " + msg + "<br />";
+                    } else {
+                        me.changes[tagId] = null;
                     }
                     requests++;
                     if (requests == keys.length) {
                         if (success == false) {
                             //TODO: Handle failure
+                            Ext.Msg.alert(i18n.getMsg('tag.widget.err.genericsavetitle'), errorHtml);
+                        } else {
+                            me.up('probeform').fireEventArgs('tagdirtychange', [{owner: me.up('probeform')}, false]);
                         }
-                        me.up('probeform').fireEventArgs('tagdirtychange', [{owner: me.up('probeform')}, false]);
                     }
                 });
             }
         }
-        this.changes = {};
     }
-
 });
