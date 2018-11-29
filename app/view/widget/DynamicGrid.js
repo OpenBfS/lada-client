@@ -272,7 +272,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             col.dataIndex = orig_column.get('dataIndex');
             col.dataType = orig_column.get('dataType');
             col.text = orig_column.get('name');
-            col.maxWidth = orig_column.get('width');
+            col.width = cc[i].get('width');
             col.sortable = false;
             //Check column type and set to string if unknown
             var datatype = orig_column.get('dataType');
