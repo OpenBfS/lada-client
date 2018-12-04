@@ -187,24 +187,17 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
         var gcv_items = gcv_store.getData().items;
         var tarstore = this.getComponent('targetGrid').getStore();
         var taritems = tarstore.getData().items;
-        for (var i=0; i< gcv_items.length; i++) {
-            var targetgridrecord = tarstore.findRecord('gridColumnId',
-                gcv_items[i].get('gridColumnId'), false, false, false,
-                true);
-            if ( gcv_items[i].get('visible') === true) {
-                var pos = -1;
-                for (var j=0; j < taritems.length; j++) {
-                    if (taritems[j].get('gridColumnId') === gcv_items[i].get(
-                        'gridColumnId')
-                    ) {
-                        pos = j;
-                        break;
-                    }
-                }
-                targetgridrecord.set('columnIndex', pos);
-                gcv_items[i].set('columnIndex', pos);
-            } else {
-                gcv_items[i].set('columnIndex', -1);
+        for ( var j = 0; j < taritems.length; j++) {
+            var item = taritems[j];
+            if (item.get('visible') == true) {
+                var targetgridrecord = tarstore.findRecord('gridColumnId',
+                    item.get('gridColumnId'), false, false, false,
+                    true);
+                targetgridrecord.set('columnIndex', j);
+                gcv_store.findRecord('gridColumnId',
+                    item.get('gridColumnId'), false, false, false, true)
+                        .set('columnIndex', j);
+
             }
         }
         var ctrl = Lada.app.getController('Lada.controller.Query');
