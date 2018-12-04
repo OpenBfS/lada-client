@@ -13,5 +13,9 @@ Ext.define('Lada.store.Query', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Query',
 
+    sorters: [{
+        property: 'name',
+        direction: 'ASC'
+    }],
     autoLoad: true
 });

@@ -70,6 +70,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                     listeners: {
                         drop: function(node, data, overModel) {
                             me.saveColumnOrder();
+                            me.fireEvent('change');
                         }
                     },
                     markDirty: false
@@ -106,6 +107,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                                 if (origindata) {
                                     origindata.set('sort', newval);
                                 }
+                                me.fireEvent('change');
                             }
                         }
                     },
@@ -125,6 +127,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                     margin: '5 0 0 0',
                     handler: function() {
                         me.moveSelectedRows('first');
+                        me.fireEvent('change');
                     }
                 }, {
                     xtype: 'button',
@@ -132,6 +135,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                     margin: '5 0 0 0',
                     handler: function() {
                         me.moveSelectedRows('up');
+                        me.fireEvent('change');
                     }
                 }, {
                     xtype: 'button',
@@ -139,6 +143,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                     margin: '5 0 0 0',
                     handler: function() {
                         me.moveSelectedRows('down');
+                        me.fireEvent('change');
                     }
                 }, {
                     xtype: 'button',
@@ -146,6 +151,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                     margin: '5 0 0 0',
                     handler: function() {
                         me.moveSelectedRows('last');
+                        me.fireEvent('change');
                     }
                 }]
             }]

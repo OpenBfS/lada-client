@@ -53,6 +53,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 listeners: {
                     drop: function(node, data) {
                         me.setVisible(data.records, false);
+                        me.fireEvent('change');
                     }
                 }
             },
@@ -77,6 +78,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 listeners: {
                     click: function() {
                         me.moveData('sourceGrid', 'targetGrid', true);
+                        me.fireEvent('change');
                     }
                 }
             }, {
@@ -85,6 +87,8 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 listeners: {
                     click: function() {
                         me.moveData('sourceGrid', 'targetGrid', false);
+                        me.fireEvent('change');
+
                     }
                 }
             }, {
@@ -93,6 +97,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 listeners: {
                     click: function() {
                         me.moveData('targetGrid', 'sourceGrid', true);
+                        me.fireEvent('change');
                     }
                 }
             }, {
@@ -101,6 +106,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 listeners: {
                     click: function() {
                         me.moveData('targetGrid', 'sourceGrid', false);
+                        me.fireEvent('change');
                     }
                 }
             }]
@@ -123,6 +129,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 listeners: {
                     drop: function(node, data) {
                         me.setVisible(data.records, true);
+                        me.fireEvent('change');
                     }
                 }
             },

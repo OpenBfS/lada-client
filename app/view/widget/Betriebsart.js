@@ -15,6 +15,87 @@ var betriebsartStore = Ext.create('Ext.data.Store', {
     }, {
         'betriebsartId': 2,
         'betriebsart': 'Störfall/Intensivbetrieb'
+    }, {
+        'betriebsartId': 3,
+        'betriebsart': 'Übung zum Störfall'
+    }, {
+        'betriebsartId': 65,
+        'betriebsart': 'Landesmessprogramm -A-'
+    }, {
+        'betriebsartId': 66,
+        'betriebsart': 'Landesmessprogramm -B-'
+    }, {
+        'betriebsartId': 67,
+        'betriebsart': 'Landesmessprogramm -C-'
+    }, {
+        'betriebsartId': 68,
+        'betriebsart': 'Landesmessprogramm -D-'
+    }, {
+        'betriebsartId': 69,
+        'betriebsart': 'Landesmessprogramm -E-'
+    }, {
+        'betriebsartId': 70,
+        'betriebsart': 'Landesmessprogramm -F-'
+    }, {
+        'betriebsartId': 71,
+        'betriebsart': 'Landesmessprogramm -G-'
+    }, {
+        'betriebsartId': 72,
+        'betriebsart': 'Landesmessprogramm -H-'
+    }, {
+        'betriebsartId': 73,
+        'betriebsart': 'Landesmessprogramm -I-'
+    }, {
+        'betriebsartId': 74,
+        'betriebsart': 'Landesmessprogramm -J-'
+    }, {
+        'betriebsartId': 75,
+        'betriebsart': 'Landesmessprogramm -K-'
+    }, {
+        'betriebsartId': 76,
+        'betriebsart': 'Landesmessprogramm -L-'
+    }, {
+        'betriebsartId': 77,
+        'betriebsart': 'Landesmessprogramm -M-'
+    }, {
+        'betriebsartId': 78,
+        'betriebsart': 'Landesmessprogramm -N-'
+    }, {
+        'betriebsartId': 79,
+        'betriebsart': 'Landesmessprogramm -O-'
+    }, {
+        'betriebsartId': 80,
+        'betriebsart': 'Landesmessprogramm -P-'
+    }, {
+        'betriebsartId': 81,
+        'betriebsart': 'Landesmessprogramm -Q-'
+    }, {
+        'betriebsartId': 82,
+        'betriebsart': 'Landesmessprogramm -R-'
+    }, {
+        'betriebsartId': 83,
+        'betriebsart': 'Landesmessprogramm -S-'
+    }, {
+        'betriebsartId': 84,
+        'betriebsart': 'Landesmessprogramm -T-'
+    }, {
+        'betriebsartId': 85,
+        'betriebsart': 'Landesmessprogramm -U-'
+    }, {
+        'betriebsartId': 86,
+        'betriebsart': 'Landesmessprogramm -V-'
+    }, {
+        'betriebsartId': 87,
+        'betriebsart': 'Landesmessprogramm -W-'
+    }, {
+        'betriebsartId': 88,
+        'betriebsart': 'Landesmessprogramm -X-'
+    }, {
+        'betriebsartId': 89,
+        'betriebsart': 'Landesmessprogramm -Y-'
+    }, {
+        'betriebsartId': 90,
+        'betriebsart': 'Landesmessprogramm -Z-'
     }]
 });
 
