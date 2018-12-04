@@ -28,7 +28,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 dirtychange: this.dirtyForm,
                 save: this.saveHeadless
             },
-            'messprogrammform messstellelabor combobox': {
+            'messprogrammform messstellelaborkombi combobox': {
                 select: this.setNetzbetreiber
             },
             'messprogrammform numfield numberfield': {
@@ -93,9 +93,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
         var mst = records.get('messStelle');
         var labor = records.get('laborMst');
+        var netzbetreiber = records.get('netzbetreiberId');
         combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
         combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
         combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
+        combo.up('fieldset').down('netzbetreiber[name=netzbetreiber]').setValue(netzbetreiber);
     },
 
     /**
@@ -308,6 +310,31 @@ Ext.define('Lada.controller.form.Messprogramm', {
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
+        formPanel.getForm().getRecord();
+        var mstStore = Ext.data.StoreManager.get('messstellen');
+        var mstId = mstStore.getById(formPanel.getForm().getRecord().get('mstId'));
+        if (mstId !== null) {
+            var laborMstId = mstStore.getById(formPanel.getForm().getRecord().get('laborMstId'));
+            var netzbetreiber = formPanel.getForm().getRecord().get('netzbetreiber');
+            if (laborMstId) {
+                laborMstId = laborMstId.get('messStelle');
+            } else {
+                laborMstId = '';
+            }
+            var displayCombi;
+            if ( formPanel.getForm().getRecord().get('mstId') === formPanel.getForm().getRecord().get('laborMstId') ) {
+                displayCombi = mstId.get('messStelle');
+            } else {
+                displayCombi = mstId.get('messStelle') + '/' + laborMstId;
+            }
+            var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
+            var recordIndex = mstLaborKombiStore.findExact('displayCombi', displayCombi);
+            formPanel.down('messstellelaborkombi').setValue(recordIndex);
+            formPanel.down('netzbetreiber').setValue(mstLaborKombiStore.getById(recordIndex).get('netzbetreiberId'));
+        } else {
+            formPanel.down('messstellelaborkombi').clearValue();
+            formPanel.down('netzbetreiber').clearValue();
+        }
         formPanel.getForm().owner.populateIntervall(
             formPanel.getForm().getRecord());
     },

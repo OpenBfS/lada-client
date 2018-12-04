@@ -92,7 +92,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             name: 'id',
                             fieldLabel: i18n.getMsg('mprId'),
                             margin: '0, 5, 5, 5',
-                            width: '70%',
+                            width: '48%',
                             labelWidth: 95,
                             maxLength: 20
                         }, {
@@ -100,7 +100,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             name: 'aktiv',
                             fieldLabel: i18n.getMsg('messprogramm.aktiv'),
                             margin: '0, 5, 5, 5',
-                            width: '15%',
+                            width: '10%',
                             labelWidth: 30,
                             allowBlank: false
                         }, {
@@ -108,10 +108,19 @@ Ext.define('Lada.view.form.Messprogramm', {
                             name: 'test',
                             fieldLabel: i18n.getMsg('test'),
                             margin: '0, 5, 5, 5',
-                            width: '15%',
+                            width: '10%',
                             labelWidth: 30,
                             allowBlank: false
-                        }]
+                        }, {
+                            xtype: 'datenbasis',
+                            editable: false,
+                            allowBlank: false,
+                            name: 'datenbasisId',
+                            fieldLabel: i18n.getMsg('datenbasisId'),
+                            margin: '0, 5, 5, 5',
+                            width: '32%',
+                            labelWidth: 65
+                        }                        ]
                     }, {
                         layout: {
                             type: 'hbox',
@@ -119,11 +128,11 @@ Ext.define('Lada.view.form.Messprogramm', {
                         },
                         border: false,
                         items: [{
-                            xtype: 'messstellelabor',
+                            xtype: 'messstellelaborkombi',
                             name: 'mstlabor',
                             fieldLabel: i18n.getMsg('labor_mst_id'),
                             margin: '0, 5, 5, 5',
-                            width: '35%',
+                            width: '50%',
                             labelWidth: 100,
                             allowBlank: false,
                             editable: true,
@@ -164,17 +173,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                             submitValue: false,
                             fieldLabel: i18n.getMsg('netzbetreiberId'),
                             margin: '0, 5, 5, 5',
-                            width: '40%',
+                            width: '50%',
                             labelWidth: 80
-                        }, {
-                            xtype: 'datenbasis',
-                            editable: false,
-                            allowBlank: false,
-                            name: 'datenbasisId',
-                            fieldLabel: i18n.getMsg('datenbasisId'),
-                            margin: '0, 5, 5, 5',
-                            width: '25%',
-                            labelWidth: 65
                         }]
                     }, {
                         layout: {
@@ -188,7 +188,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             name: 'probenartId',
                             fieldLabel: i18n.getMsg('probenartId'),
                             margin: '0, 5, 5, 5',
-                            width: '35%',
+                            width: '50%',
                             labelWidth: 100,
                             allowBlank: false
                         }, {
@@ -196,7 +196,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             name: 'baId',
                             margin: '0, 0, 5, 5',
                             fieldLabel: i18n.getMsg('baId'),
-                            width: '65%',
+                            width: '50%',
                             labelWidth: 80
                         }]
                     }, {
@@ -205,7 +205,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         fieldLabel: i18n.getMsg('kommentar'),
                         width: '100%',
                         margin: '0, 0, 5, 5',
-                        labelWidth: 95
+                        labelWidth: 100
                     }]
                 }, {
                     xtype: 'probenehmer',
@@ -214,7 +214,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     margin: '0, 10, 5, 5',
                     minValue: 0,
                     editable: true,
-                    labelWidth: 95,
+                    labelWidth: 100,
                     extraParams: function() {
                         this.down('combobox').on({ // this = widget
                             focus: function(combo) {
@@ -602,6 +602,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         );
         var mstStore = Ext.data.StoreManager.get('messstellen');
         var mstId = mstStore.getById(messRecord.get('mstId'));
+        var netzId = mstId.get('netzbetreiberId');
         if (!messRecord.get('owner')) {
             var laborMstId = mstStore.getById(messRecord.get('laborMstId'));
             if (laborMstId) {
@@ -609,28 +610,44 @@ Ext.define('Lada.view.form.Messprogramm', {
             } else {
                 laborMstId = '';
             }
-            var id = this.down('messstellelabor').store.count() + 1;
             var displayCombi;
             if ( messRecord.get('mstId') === messRecord.get('laborMstId') ) {
                 displayCombi = mstId.get('messStelle');
             } else {
                 displayCombi = mstId.get('messStelle') + '/' + laborMstId;
             }
-            var newStore = Ext.create('Ext.data.Store', {
-                model: 'Lada.model.MessstelleLabor',
-                data: [{
-                    id: id,
-                    laborMst: messRecord.get('laborMstId'),
-                    messStelle: messRecord.get('mstId'),
-                    displayCombi: displayCombi
-                }]
+
+            var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
+            mstLaborKombiStore.clearFilter(true);
+            var recordIndex = mstLaborKombiStore.findExact('displayCombi', displayCombi);
+
+            mstLaborKombiStore.filter({
+                property: 'netzbetreiberId',
+                anyMatch: true,
+                value: netzId,
+                caseSensitive: false
             });
-            this.down('messstellelabor').setStore(newStore);
-            this.down('messstellelabor').down('combobox').setValue(id);
-            this.down('messstellelabor').down('combobox').resetOriginalValue();
+            if (recordIndex === -1) {
+                var newStore = Ext.create('Ext.data.Store', {
+                    model: 'Lada.model.MessstelleLabor',
+                    data: [{
+                        id: 1,
+                        laborMst: messRecord.get('laborMstId'),
+                        messStelle: messRecord.get('mstId'),
+                        displayCombi: displayCombi
+                    }]
+                });
+                this.down('messstellelaborkombi').setStore(newStore);
+                this.down('messstellelaborkombi').down('combobox').setValue(1);
+                this.down('messstellelaborkombi').down('combobox').resetOriginalValue();
+            } else {
+                this.down('messstellelaborkombi').setStore(mstLaborKombiStore);
+                this.down('messstellelaborkombi').down('combobox').setValue(recordIndex);
+                this.down('messstellelaborkombi').down('combobox').resetOriginalValue();
+            }
         } else {
-            var mstLaborStore = Ext.data.StoreManager.get('messstellelabor');
-            var availableitems = mstLaborStore.queryBy(function(record) {
+            var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
+            var availableitems = mstLaborKombiStore.queryBy(function(record) {
                 if (record.get('messStelle') === messRecord.get('mstId') &&
                     record.get('laborMst') === messRecord.get('laborMstId')) {
                     return true;
@@ -639,9 +656,9 @@ Ext.define('Lada.view.form.Messprogramm', {
             var newStore = Ext.create('Ext.data.Store', {
                 model: 'Lada.model.MessstelleLabor',
                 data: availableitems.items});
-            this.down('messstellelabor').setStore(newStore);
-            this.down('messstellelabor').setValue(messRecord.get('messstellelabor'));
-            this.down('messstellelabor').down('combobox').resetOriginalValue();
+            this.down('messstellelaborkombi').setStore(newStore);
+            this.down('messstellelaborkombi').setValue(messRecord.get('messstellelabor'));
+            this.down('messstellelaborkombi').down('combobox').resetOriginalValue();
         }
         this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
         this.down('netzbetreiber').down('combobox').resetOriginalValue();
@@ -735,6 +752,8 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('cbox[name=mstlabor]').clearWarningOrError();
         //no clearmsg for probeKommentar
         this.down('cbox[name=datenbasisId]').clearWarningOrError();
+        this.down('cbox[name=reiProgpunktGrpId]').clearWarningOrError();
+        this.down('cbox[name=ktaGruppeId]').clearWarningOrError();
         this.down('cbox[name=baId]').clearWarningOrError();
         this.down('chkbox[name=test]').clearWarningOrError();
         this.down('chkbox[name=aktiv]').clearWarningOrError();
@@ -756,6 +775,8 @@ Ext.define('Lada.view.form.Messprogramm', {
     setReadOnly: function(value) {
         this.down('cbox[name=mstlabor]').setReadOnly(value);
         this.down('cbox[name=datenbasisId]').setReadOnly(value);
+        this.down('cbox[name=reiProgpunktGrpId]').setReadOnly(value);
+        this.down('cbox[name=ktaGruppeId]').setReadOnly(value);
         this.down('cbox[name=baId]').setReadOnly(value);
         this.down('chkbox[name=test]').setReadOnly(value);
         this.down('chkbox[name=aktiv]').setReadOnly(value);

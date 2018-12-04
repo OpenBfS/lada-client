@@ -54,6 +54,7 @@ Ext.application({
         'Lada.store.Messgroessen',
         'Lada.store.Messmethoden',
         'Lada.store.Messstellen',
+        'Lada.store.MessstellenKombi',
         'Lada.store.Netzbetreiber',
         'Lada.store.Orte',
         'Lada.store.Pflichtmessgroessen',
@@ -201,7 +202,10 @@ Ext.application({
             storeId: 'messstellelabor',
             model: 'Lada.model.MessstelleLabor'
         });
-
+        var mstLaborKombiStore = Ext.create('Ext.data.Store', {
+            storeId: 'messstellelaborkombi',
+            model: 'Lada.model.MessstelleLabor'
+        });
         Ext.create('Lada.store.Datenbasis', {
             storeId: 'datenbasis'
         });
@@ -402,6 +406,45 @@ Ext.application({
                     return true;
                 }
                 return false;
+            }
+        });
+        Ext.create('Lada.store.MessstellenKombi', {
+            storeId: 'messstellenkombi',
+            autoLoad: true,
+            listeners: {
+                beforeload:function(store,operation) {
+                    operation.setParams(Ext.apply(operation.getParams()||{},{
+                        netzbetreiberId: Lada.netzbetreiber.toString()
+                    }));
+                },
+                load: {
+                    fn: function(store, records) {
+                        var z = 0;
+                        for (var i = 0; i < store.getCount(); i++) {
+                            var item = Ext.data.StoreManager.get('messstellen').getById(store.getAt(i).getData().mstId);
+                            var itemLabor = Ext.data.StoreManager.get('messstellen').getById(store.getAt(i).getData().laborMstId);
+                            if (!itemLabor) {
+                                continue;
+                            }
+                            if ( item.get('messStelle') === itemLabor.get('messStelle') ) {
+                                displayCombi = item.get('messStelle');
+                            } else {
+                                displayCombi = item.get('messStelle') + '/' + itemLabor.get('messStelle')
+                            }
+                            var recordIndex = mstLaborKombiStore.findExact('displayCombi', displayCombi);
+                            if (recordIndex == -1) {
+                                mstLaborKombiStore.add({
+                                    id: z,
+                                    messStelle: store.getAt(i).getData().mstId,
+                                    netzbetreiberId: item.get('netzbetreiberId'),
+                                    laborMst: store.getAt(i).getData().laborMstId,
+                                    displayCombi: displayCombi
+                                });
+                                z++;
+                            }
+                        }
+                    }
+                }
             }
         });
         Ext.create('Ext.data.Store', {
