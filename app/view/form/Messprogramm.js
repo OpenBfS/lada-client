@@ -395,6 +395,17 @@ Ext.define('Lada.view.form.Messprogramm', {
                     layout: 'fit',
                     margin: '0, 10, 0, 5',
                     items: [{
+                        xtype: 'textfield',
+                        name: 'probenahmeMenge',
+                        labelAlign: 'top',
+                        fieldLabel: i18n.getMsg('probenahmeMenge'),
+                        width: '100%',
+                        labelwidth: 135
+                    }]
+                }, {
+                    layout: 'fit',
+                    margin: '0, 10, 0, 5',
+                    items: [{
                         xtype: 'textarea',
                         name: 'probeKommentar',
                         labelAlign: 'top',

@@ -72,6 +72,8 @@ Ext.define('Lada.model.Messprogramm', {
     }, {
         name: 'probeKommentar'
     }, {
+        name: 'probenahmeMenge'
+    }, {
         name: 'letzteAenderung',
         type: 'date',
         dateFormat: 'time',
