@@ -37,7 +37,19 @@ Ext.define('Lada.model.Messwert', {
         }
     }, {
         name: 'messfehler',
-        type: 'float'
+        type: 'float',
+        convert: function(v) {
+            if (!v) {
+                return null;
+            }
+            return v;
+        },
+        serialize: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
         name: 'nwgZuMesswert'
     }, {

@@ -204,7 +204,7 @@ Ext.define('Lada.view.grid.Messwert', {
             width: 150,
             editor: {
                 xtype: 'numberfield',
-                allowBlank: false,
+                allowBlank: true,
                 maxLength: 10,
                 minValue: 0,
                 decimalPrecision: 1,
