@@ -111,6 +111,10 @@ Ext.application({
 
     // Start the application.
     launch: function() {
+        var loadmask = Ext.get('loadmask');
+            if (loadmask) {
+                loadmask.destroy();
+        }
         Ext.JSON.encodeDate = function(o) {
             return '"' + Ext.Date.format(o, 'c') + '"';
         };
