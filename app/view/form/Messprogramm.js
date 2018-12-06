@@ -588,7 +588,19 @@ Ext.define('Lada.view.form.Messprogramm', {
 
         //Set IntervallOffset
         i.setMinValue(0);
-        i.setMaxValue(max-1);
+        switch (intervall) {
+            case 'H':
+                i.setMaxValue(150);
+                break;
+            case 'Q':
+                i.setMaxValue(88);
+                break;
+            case 'M':
+                i.setMaxValue(27);
+                break;
+            default:
+                return i.setMaxValue(max-1);
+        }
     },
 
 
