@@ -234,7 +234,7 @@ Ext.define('Lada.view.window.AuditTrail', {
                 (Ext.Date.format(new Date(audit[i].timestamp), 'd.m.Y H:i')) + '</b>';
                 if (audit[i].type !== 'messprogramm') {
                     html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
-                    html += audit[i].id;
+                    html += audit[i].identifier;
                 }
                 html += this.createHtmlChangedFields(audit[i]);
             }
