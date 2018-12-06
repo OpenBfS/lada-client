@@ -118,16 +118,19 @@ Ext.define('Lada.view.window.AuditTrail', {
             container.update(html);
         } else {
             var title;
-            if (this.type === 'probe') {
-                html = this.createHtmlProbe(json);
-                container.update(html);
-                title = i18n.getMsg('audit.title') + ' '
-                    + i18n.getMsg('probe') + ': ' + this.titleText;
-                this.setTitle(title);
-            } else if (this.type === 'messung') {
-                container.update(this.createHtmlMessung(json));
-                title = i18n.getMsg('audit.title') + ' ' + this.titleText;
-                this.setTitle(title);
+            switch (this.type) {
+                case 'probe':
+                    container.update(this.createHtmlProbe(json));
+                    title = i18n.getMsg('audit.title') + ' '
+                            + i18n.getMsg('probe') + ': ' + this.titleText;
+                    this.setTitle(title);
+                    break;
+                case 'messung':
+                    container.update(this.createHtmlMessung(json));
+                    title = i18n.getMsg('audit.title') + ' ' + this.titleText;
+                    this.setTitle(title);
+                case 'messprogramm':
+                    container.update(this.createHtmlMessprogramm(json));
             }
         }
     },
@@ -207,6 +210,31 @@ Ext.define('Lada.view.window.AuditTrail', {
                     html += audit[i].identifier === '(deleted)' ?
                         i18n.getMsg('deleted') :
                         audit[i].identifier;
+                }
+                html += this.createHtmlChangedFields(audit[i]);
+            }
+        }
+        return html;
+    },
+
+    createHtmlMessprogramm: function(json) {
+        var i18n = Lada.getApplication().bundle;
+        var html = '<p><strong>Messprogramm: ' + json.data.id + '</strong><br></p>';
+        var audit = json.data.audit;
+        if (audit.length === 0) {
+            html += '<p>Keine Änderungen</p>';
+        } else {
+            if (audit.length > 1) {
+                audit.sort(function(a, b) {
+                    return b.timestamp - a.timestamp;
+                });
+            }
+            for (var i = 0; i < audit.length; i++) {
+                html += '<p style="margin-bottom:0"><b>' + i18n.getMsg('date') + ': ' +
+                (Ext.Date.format(new Date(audit[i].timestamp), 'd.m.Y H:i')) + '</b>';
+                if (audit[i].type !== 'messprogramm') {
+                    html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
+                    html += audit[i].id;
                 }
                 html += this.createHtmlChangedFields(audit[i]);
             }

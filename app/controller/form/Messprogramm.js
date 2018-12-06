@@ -30,6 +30,12 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 dirtychange: this.dirtyForm,
                 save: this.saveHeadless
             },
+            'messprogrammform button[action=audit]': {
+                click: this.showAuditTrail
+            },
+            'messprogrammform messstellelabor combobox': {
+                select: this.setNetzbetreiber
+            },
             'messprogrammform numfield numberfield': {
                 change: this.checkPeriod
             },
@@ -655,5 +661,14 @@ Ext.define('Lada.controller.form.Messprogramm', {
         } else {
             callback();
         }
+    },
+    showAuditTrail: function(button) {
+        Ext.create('Lada.view.window.AuditTrail', {
+            autoShow: true,
+            closeAction: 'destroy',
+            type: 'messprogramm',
+            objectId: button.up('form').recordId
+        });
     }
+
 });
