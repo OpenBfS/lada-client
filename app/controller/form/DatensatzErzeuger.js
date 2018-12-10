@@ -57,6 +57,7 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                 button.setDisabled(true);
                 button.up('datensatzerzeugeredit').down('button[action=discard]')
                     .setDisabled(true);
+                Ext.data.StoreManager.get('datensatzerzeuger').reload();
             },
             failure: function(record, response) {
                 var i18n = Lada.getApplication().bundle;

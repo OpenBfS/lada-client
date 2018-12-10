@@ -109,6 +109,11 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
         }
     },
 
+    setRecord: function(datensatzerzeugerRecord) {
+        this.clearMessages();
+        this.getForm().loadRecord(datensatzerzeugerRecord);
+    },
+
     setMessages: function(errors, warnings) {
         var key;
         var element;
