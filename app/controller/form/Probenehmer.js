@@ -57,6 +57,7 @@ Ext.define('Lada.controller.form.Probenehmer', {
                 button.setDisabled(true);
                 button.up('toolbar').down('button[action=discard]')
                     .setDisabled(true);
+                Ext.data.StoreManager.get('probenehmer').reload();
             },
             failure: function(record, response) {
                 var i18n = Lada.getApplication().bundle;
