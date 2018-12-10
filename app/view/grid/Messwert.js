@@ -118,7 +118,7 @@ Ext.define('Lada.view.grid.Messwert', {
             }
         }, {
             header: i18n.getMsg('messwertEG'),
-            width: 40,
+            width: 50,
             dataIndex: 'messwertNwg',
             editor: {
                 xtype: 'checkbox',
@@ -148,7 +148,7 @@ Ext.define('Lada.view.grid.Messwert', {
         }, {
             header: i18n.getMsg('messwert_nwg'),
             dataIndex: 'nwgZuMesswert',
-            width: 120,
+            width: 140,
             editor: {
                 xtype: 'expnumberfield',
                 allowBlank: false
@@ -169,7 +169,7 @@ Ext.define('Lada.view.grid.Messwert', {
         }, {
             header: i18n.getMsg('mehId'),
             dataIndex: 'mehId',
-            flex: 1,
+            width: 120,
             renderer: function(value) {
                 if (!value || value === '') {
                     return '';
@@ -201,7 +201,7 @@ Ext.define('Lada.view.grid.Messwert', {
             dataIndex: 'messfehler',
             xtype: 'numbercolumn',
             format: '0000.0',
-            width: 150,
+            flex: 1,
             editor: {
                 xtype: 'numberfield',
                 allowBlank: true,
