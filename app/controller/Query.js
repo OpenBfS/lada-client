@@ -96,7 +96,7 @@ Ext.define('Lada.controller.Query', {
             }
 
         });
-        this.resultStore = Ext.StoreManager.get('GenericResults');
+        this.resultStore = Ext.StoreManager.get('genericresults');
 
     },
 
@@ -435,7 +435,7 @@ Ext.define('Lada.controller.Query', {
                             this.setMapOrte(resultGrid);
                         }
                     } else {
-                        if (operation.error.status === 0) {
+                        if (!success && operation.getRequest()._timeout) {
                             Ext.Msg.alert(i18n.getMsg('query.error.search.title'),
                                 i18n.getMsg('query.error.search.querytimeout.message'));
                         } else {
