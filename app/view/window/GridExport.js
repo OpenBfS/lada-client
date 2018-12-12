@@ -642,11 +642,9 @@ Ext.define('Lada.view.window.GridExport', {
                 */
                 if (response.status === 0 &&
                   response.getResponse().responseText === '') {
-                    Ext.MessageBox.confirm('Erneutes Login erforderlich',
-                        'Ihre Session ist abgelaufen.<br/>'+
-                        'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
-                        'Alle ungesicherten Daten gehen dabei verloren.<br/>' +
-                        'Soll die Anwendung jetzt neu geladen werden?', this.reload);
+                    var i18n = Lada.getApplication().bundle;
+                    Ext.MessageBox.confirm(i18n.getMsg('err.msg.sso.expired.title'),
+                        i18n.getMsg('err.msg.sso.expired.body'), this.reload);
                 } else {
                     me.showError();
                     return false;
@@ -747,13 +745,19 @@ Ext.define('Lada.view.window.GridExport', {
     showError: function(message) {
         var i18n = Lada.getApplication().bundle;
         var text = '';
+        var title = i18n.getMsg('export.failed');
         if (!message) {
             text = i18n.getMsg('export.failednoreason');
         } else {
             text = i18n.getMsg(message);
         }
+
+        var window = Ext.ComponentQuery.query('window[title='+ title+ ']');
+        if (window.length) {
+            return;
+        }
         Ext.create('Ext.window.Window', {
-            title: i18n.getMsg('export.failed'),
+            title: title,
             modal: true,
             layout: 'vbox',
             items: [{
@@ -905,7 +909,7 @@ Ext.define('Lada.view.window.GridExport', {
             case 'Lada.view.grid.Messung':
                 Ext.Ajax.request({
                     url: 'lada-server/rest/messung?probeId=' + idx,
-                    timeout: 5 * 1000,
+                    timeout: 30 * 1000,
                     success: function(response) {
                         var content = JSON.parse(response.responseText);
                         if (type === 'json') {
@@ -918,8 +922,8 @@ Ext.define('Lada.view.window.GridExport', {
                         me.countDown('utf-8');
                     },
                     failure: function() {
-                        //TODO error handling.
-                        me.countDown('utf-8');
+                        me.showError('export.datatimeout');
+                        me.countDown('utf-8', true);
                         return null;
                     }
                 });
@@ -927,7 +931,7 @@ Ext.define('Lada.view.window.GridExport', {
             case 'Lada.view.grid.Messwert':
                 Ext.Ajax.request({
                     url: 'lada-server/rest/messwert?messungId=' + idx,
-                    timeout: 5 * 1000,
+                    timeout: 30 * 1000,
                     success: function(response) {
                         var content = JSON.parse(response.responseText);
                         if (type === 'json') {
@@ -940,8 +944,8 @@ Ext.define('Lada.view.window.GridExport', {
                         me.countDown('utf-8');
                     },
                     failure: function() {
-                        //TODO error handling.
-                        me.countDown('utf-8');
+                        me.showError('export.datatimeout');
+                        me.countDown('utf-8', true);
                         return null;
                     }
                 });
@@ -991,11 +995,11 @@ Ext.define('Lada.view.window.GridExport', {
             case 'Lada.view.grid.Messung':
                 Ext.Ajax.request({
                     url: 'lada-server/rest/messung?probeId=' + id,
-                    timeout: 5 * 1000,
+                    timeout: 30 * 1000,
                     success: successCallback,
                     failure: function() {
-                        me.countDown(encoding);
-                        //TODO error handling.
+                        me.showError('export.datatimeout');
+                        me.countDown(encoding, true);
                         return null;
                     }
                 });
@@ -1003,11 +1007,11 @@ Ext.define('Lada.view.window.GridExport', {
             case 'Lada.view.grid.Messwert':
                 Ext.Ajax.request({
                     url: 'lada-server/rest/messwert?messungsId=' + id,
-                    timeout: 5 * 1000,
+                    timeout: 30 * 1000,
                     success: successCallback,
                     failure: function() {
-                        //TODO error handling.
-                        me.countDown(encoding);
+                        me.showError('export.datatimeout');
+                        me.countDown(encoding, true);
                         return null;
                     }
                 });
@@ -1117,10 +1121,16 @@ Ext.define('Lada.view.window.GridExport', {
     * Keeps track of how many data still needs to be parsed, and saves the data
     * to file upon completion. Is not yet used by LAF export (as there are no
     * multiple queries at the same time.
+    * @param {string} encoding: The encoding to use
+    * @param {boolean} (optional) error: Indicating that an error has ocurred
+    * that should causes the export to be stopped
     */
-    countDown: function(encoding) {
+    countDown: function(encoding, error) {
         this.parsedEntries += 1;
         if (this.parsedEntries < this.totalentries) {
+            return;
+        }
+        if (error === true) {
             return;
         }
         var data = '';
