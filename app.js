@@ -87,6 +87,10 @@ Ext.application({
         'Lada.store.Query',
         'Lada.view.widget.base.SelectableDisplayField'
     ],
+    statics: {
+        applicationUpdateTitle: 'Anwendungsupdate',
+        applicationUpdateText: 'Für diese Anwendung steht ein Update zur Verfügung. Jetzt neu laden?'
+    },        
     bundle: {
         bundle: 'Lada',
         language: function() {
@@ -155,6 +159,22 @@ Ext.application({
             return confirmMessage;
         });
         Ext.create('Lada.store.GenericResults');
+    },
+
+    /*
+     * Gets called if the appCache signals an app update. It shows a confirm
+     * dialog which reloads the page on confirmation. xxx
+     */
+    onAppUpdate: function() {
+        //FIXME i18n does not work on Firefox on early load of appUpdate uses statics
+        Ext.Msg.confirm(Lada.$application.applicationUpdateTitle,
+            Lada.$application.applicationUpdateText,
+            function(choice) {
+                if (choice === 'yes') {
+                    window.location.reload();
+                }
+            }
+        );
     },
 
     onLoginFailure: function(response) {
