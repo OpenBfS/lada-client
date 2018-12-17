@@ -46,9 +46,9 @@ Ext.define('Lada.view.window.About', {
                 bodyPadding: 20,
                 html: '<p>'
                     + i18n.getMsg('about.window.text.login')
-                    + '<br />'
+                    + '<br /><b>'
                     + Lada.username
-                    + '</p>'
+                    + '</b></p>'
                     + '<p>'
                     + i18n.getMsg('about.window.text.roles')
                     + this.rolesToHtml()

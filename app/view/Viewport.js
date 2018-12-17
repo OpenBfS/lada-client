@@ -78,14 +78,9 @@ Ext.define('Lada.view.Viewport', {
                     xtype: 'toolbar',
                     dock: 'top',
                     items: [{
-                        xtype: 'splitbutton',
+                        xtype: 'button',
                         text: i18n.getMsg('info'),
-                        menu: {
-                            items: [{
-                                text: i18n.getMsg('about.button.title'),
-                                action: 'about'
-                            }]
-                        }
+                        action: 'about'
                     }, '->', {
                         xtype: 'tbtext',
                         id: 'userinfo',
