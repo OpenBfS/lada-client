@@ -127,7 +127,7 @@ Ext.define('Lada.view.form.Probe', {
 
                             xtype: 'messstellelabor',
                             name: 'mstlabor',
-                            fieldLabel: 'Messstelle/Labor',
+                            fieldLabel: i18n.getMsg('labor_mst_id'),
                             margin: '0, 5, 5, 5',
                             width: '35%',
                             labelWidth: 95,
@@ -148,7 +148,7 @@ Ext.define('Lada.view.form.Probe', {
                         }, {
                             xtype: 'messstelle',
                             name: 'mstId',
-                            fieldLabel: 'Messstelle/Labor',
+                            fieldLabel: i18n.getMsg('labor_mst_id'),
                             margin: '0, 5, 5, 5',
                             width: '35%',
                             labelWidth: 95,
@@ -158,7 +158,7 @@ Ext.define('Lada.view.form.Probe', {
                         }, {
                             xtype: 'messstelle',
                             name: 'laborMstId',
-                            fieldLabel: 'Messstelle/Labor',
+                            fieldLabel: i18n.getMsg('labor_mst_id'),
                             margin: '0, 5, 5, 5',
                             width: '35%',
                             labelWidth: 95,
