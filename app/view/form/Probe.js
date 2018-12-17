@@ -97,24 +97,33 @@ Ext.define('Lada.view.form.Probe', {
                             name: 'externeProbeId',
                             fieldLabel: i18n.getMsg('extProbeId'),
                             margin: '0, 5, 5, 5',
-                            labelWidth: 92,
-                            maxLength: 20,
-                            width: '35%'
+                            labelWidth: 45,
+                            maxLength: 16,
+                            width: '32%'
                         }, {
                             xtype: 'selectabledisplayfield',
                             name: 'mprId',
                             fieldLabel: i18n.getMsg('mprId'),
                             margin: '0, 5, 5, 5',
-                            labelWidth: 80,
+                            labelWidth: 55,
                             maxLength: 20,
-                            width: '35%'
+                            width: '22%'
                         }, {
                             xtype: 'chkbox',
                             name: 'test',
                             fieldLabel: 'Test',
                             margin: '0, 5, 5, 5',
-                            width: '30%',
+                            width: '16%',
                             labelWidth: 30
+                        }, {
+                            xtype: 'datenbasis',
+                            editable: false,
+                            allowBlank: false,
+                            name: 'datenbasisId',
+                            fieldLabel: 'Datenbasis',
+                            margin: '0, 5, 5, 5',
+                            width: '30%',
+                            labelWidth: 65
                         }]
                     }, {
                         layout: {
@@ -124,13 +133,12 @@ Ext.define('Lada.view.form.Probe', {
                         border: false,
                         width: '100%',
                         items: [{
-
                             xtype: 'messstellelabor',
                             name: 'mstlabor',
                             fieldLabel: i18n.getMsg('labor_mst_id'),
                             margin: '0, 5, 5, 5',
-                            width: '35%',
-                            labelWidth: 95,
+                            width: '50%',
+                            labelWidth: 100,
                             allowBlank: false,
                             editable: true,
                             listenersJson: {
@@ -174,17 +182,8 @@ Ext.define('Lada.view.form.Probe', {
                             submitValue: false,
                             fieldLabel: i18n.getMsg('netzbetreiberId'),
                             margin: '0, 5, 5, 5',
-                            width: '35%',
+                            width: '50%',
                             labelWidth: 80
-                        }, {
-                            xtype: 'datenbasis',
-                            editable: false,
-                            allowBlank: false,
-                            name: 'datenbasisId',
-                            fieldLabel: 'Datenbasis',
-                            margin: '0, 5, 5, 5',
-                            width: '30%',
-                            labelWidth: 65
                         }]
                     }, {
                         layout: {
