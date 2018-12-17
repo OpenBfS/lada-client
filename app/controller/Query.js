@@ -639,6 +639,20 @@ Ext.define('Lada.controller.Query', {
                     field = Ext.create('Lada.view.widget.MessprogrammLand',
                         options);
                     break;
+                case 'prnId':
+                    options.multiSelect = true;
+                    options.editable = true;
+                    options.value = recs[i].get('filterValue');
+                    field = Ext.create('Lada.view.widget.Probenehmer',
+                        options);
+                    break;
+                case 'mmtId':
+                    options.multiSelect = true;
+                    options.editable = true;
+                    options.value = recs[i].get('filterValue');
+                    field = Ext.create('Lada.view.widget.Messmethode',
+                        options);
+                    break;
                 default:
                     options.value = recs[i].get('filterValue');
                     field = Ext.create('Lada.view.widget.base.TextField',
