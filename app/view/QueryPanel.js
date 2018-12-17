@@ -113,11 +113,8 @@ Ext.define('Lada.view.QueryPanel', {
         xtype: 'fieldset',
         name: 'querydetails',
         title: 'query.details',
+        style: {'border': '2px solid grey;'},
         margin: 15,
-        border: {
-            style: 'dotted',
-            width: 1
-        },
         collapsible: true,
         collapsed: true,
         layout: {
@@ -183,6 +180,7 @@ Ext.define('Lada.view.QueryPanel', {
     }, {
         xtype: 'fieldset',
         name: 'filtervariables',
+        style: {'border': '2px solid grey;'},
         margin: '10 15 10 15',
         minHeight: 20,
         layout: {
