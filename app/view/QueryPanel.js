@@ -21,6 +21,7 @@ Ext.define('Lada.view.QueryPanel', {
     ],
     gridColumnValueStore: Ext.create('Lada.store.GridColumnValue'),
     store: null,
+    scrollable:true,
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -100,16 +101,7 @@ Ext.define('Lada.view.QueryPanel', {
             flex: 1,
             disabled: true
         }]
-    }, {
-        xtype: 'button',
-        action: 'search',
-        name: 'search1',
-        icon: 'resources/img/Find.png',
-        text: 'query.search',
-        margin: '0 15 0 15',
-        disabled: true,
-        flex: 1
-    }, {
+    },  {
         xtype: 'fieldset',
         name: 'querydetails',
         title: 'query.details',
@@ -222,15 +214,6 @@ Ext.define('Lada.view.QueryPanel', {
             flex: 1,
             text: 'reset'
         }]
-    },{
-        xtype: 'button',
-        name: 'search2',
-        action: 'search',
-        icon: 'resources/img/Find.png',
-        text: 'query.search',
-        margin: '5 15 5 15',
-        disabled: true,
-        flex: 1
     }],
 
     initComponent: function() {
@@ -241,7 +224,6 @@ Ext.define('Lada.view.QueryPanel', {
         this.down('fieldset[name=filtervariables]').title = i18n.getMsg(
             'title.filter');
         this.down('button[action=search]').text = i18n.getMsg('query.search');
-        this.down('button[name=search2]').text = i18n.getMsg('query.search');
         this.down('button[action=save]').text = i18n.getMsg('save');
         this.down('button[action=reset]').text =i18n.getMsg('reset');
         this.down('checkbox[name=ownqueries]').boxLabel = i18n.getMsg('query.showown');
@@ -390,8 +372,7 @@ Ext.define('Lada.view.QueryPanel', {
                 me.down('cbox[name=messStellesIds]').setValue(record.get('messStellesIds'));
 
                 me.down('button[action=save]').setDisabled(!record.phantom);
-                me.down('button[name=search1]').setDisabled(false);
-                me.down('button[name=search2]').setDisabled(false);
+                me.down('button[name=search]').setDisabled(false);
             }
         });
     },

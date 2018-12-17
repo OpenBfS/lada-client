@@ -73,7 +73,7 @@ Ext.define('Lada.view.Viewport', {
                 collapsible: true,
                 minWidth: 500,
                 collapsed: false,
-                scrollable: 'y',
+                layout: 'fit',
                 dockedItems: [{
                     xtype: 'toolbar',
                     dock: 'top',
@@ -89,7 +89,20 @@ Ext.define('Lada.view.Viewport', {
                 }],
                 items: [{
                     xtype: 'querypanel',
-                    margin: 0
+                    margin: 0,
+                    dockedItems: [{
+                        xtype: 'toolbar',
+                        dock: 'bottom',
+                        items: [{
+                            xtype: 'button',
+                            action: 'search',
+                            name: 'search',
+                            icon: 'resources/img/Find.png',
+                            margin: '0 15 0 15',
+                            disabled: true,
+                            flex: 1
+                        }]
+                    }]
                 }]
             },{
                 xtype: 'panel',
