@@ -438,6 +438,11 @@ Ext.define('Lada.controller.Query', {
                         if (!success && operation.getRequest()._timeout) {
                             Ext.Msg.alert(i18n.getMsg('query.error.search.title'),
                                 i18n.getMsg('query.error.search.querytimeout.message'));
+                        } else if (operation.getResponse().status === 0
+                            && operation.getResponse().responseText === ''
+                        ) {
+                            Ext.MessageBox.confirm(i18n.getMsg('err.msg.sso.expired.title'),
+                                i18n.getMsg('err.msg.sso.expired.body'), this.reload);
                         } else {
                             Ext.Msg.alert(i18n.getMsg('query.error.search.title'),
                                 i18n.getMsg('query.error.search.message'));
