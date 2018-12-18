@@ -13,8 +13,7 @@ Ext.define('Lada.model.MKommentar', {
     extend: 'Ext.data.Model',
 
     fields: [{
-        name: 'id',
-        persist: false
+        name: 'id'
     }, {
         name: 'owner',
         type: 'boolean'
@@ -48,6 +47,10 @@ Ext.define('Lada.model.MKommentar', {
         reader: {
             type: 'json',
             rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });

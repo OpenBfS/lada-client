@@ -47,6 +47,10 @@ Ext.define('Lada.model.PKommentar', {
         reader: {
             type: 'json',
             rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
     }
 });
