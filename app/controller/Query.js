@@ -435,15 +435,13 @@ Ext.define('Lada.controller.Query', {
                             this.setMapOrte(resultGrid);
                         }
                     } else {
-                        if (!success && operation.getRequest()._timeout) {
+                        if (operation.error.response.timedout) {
                             Ext.Msg.alert(i18n.getMsg('query.error.search.title'),
                                 i18n.getMsg('query.error.search.querytimeout.message'));
-                        } else if (operation.getResponse().status === 0
-                            && operation.getResponse().responseText === ''
-                        ) {
-                            Ext.MessageBox.confirm(i18n.getMsg('err.msg.sso.expired.title'),
-                                i18n.getMsg('err.msg.sso.expired.body'), this.reload);
-                        } else {
+                        } else if (operation.error.status != 0) {
+                            /* Server response has HTTP error code.
+                               If it's 0, we probably got a 302 from SSO,
+                               which is handled elsewhere. */
                             Ext.Msg.alert(i18n.getMsg('query.error.search.title'),
                                 i18n.getMsg('query.error.search.message'));
                         }
