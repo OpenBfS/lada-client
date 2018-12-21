@@ -53,7 +53,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             text: i18n.getMsg('generateproben'),
             scope: this,
             handler: function() {
-                //me.setLoading(true);
                 var me = this;
                 var startDate = new Date(me.down('datefield[name=start]').getValue());
                 var startUTC = Date.UTC(
@@ -117,7 +116,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             }
                             if (finished === me.ids.length) {
                                 me.down('toolbar').down('button').setDisabled(false);
-                                me.onSuccess(results);
+                                me.processResults(results);
                             }
                         },
                         failure: function(response) {
@@ -128,9 +127,10 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             var id = response.request.options.jsonData.id;
                             panel.setHtml(panel.html + '<br>'
                                     + i18n.getMsg('gpfm.generated.error', id, error));
-                            me.onFailure(response);
+
                             if (finished === me.ids.length) {
                                 me.down('toolbar').down('button').setDisabled(false);
+                                me.processResults(results);
                             }
                         }
                     });
@@ -204,7 +204,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     /**
      * Handle results of Probe creation from Messprogramm
      */
-    onSuccess: function(results) {
+    processResults: function(results) {
         var data = [];
         for (var r in results) {
             var json = Ext.JSON.decode(results[r].responseText);
@@ -431,47 +431,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         win.down('dynamicgrid').setToolbar();
         me.down('panel').setHtml(me.down('panel').html + '<br><br>'
                 + me.evalResponseData(data));
-    },
-
-    /**
-     * Callback on failure of request (HTTP status != 200)
-     */
-    onFailure: function(response) {
-        this.setLoading(false);
-
-        var i18n = Lada.getApplication().bundle;
-
-        var json = null;
-        try {
-            json = Ext.JSON.decode(response.getResponse().responseText);
-        } catch (err) {
-            Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                i18n.getMsg('err.msg.response.body'));
-        }
-        if (json) {
-            /*
-              SSO will send a 302 if the Client is not authenticated
-              unfortunately this seems to be filtered by the browser.
-              We assume that a 302 was send when the follwing statement
-              is true.
-            */
-            if (response.status === 0 && response.getResponse().responseText === '') {
-                Ext.MessageBox.confirm(
-                    'Erneutes Login erforderlich',
-                    'Ihre Session ist abgelaufen.<br/>'
-                    + 'Für ein erneutes Login muss die Anwendung '
-                    + 'neu geladen werden.<br/>'
-                    + 'Alle ungesicherten Daten gehen dabei verloren.<br/>'
-                    + 'Soll die Anwendung jetzt neu geladen werden?',
-                    this.reload);
-            }
-            // further error handling
-            Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                i18n.getMsg('err.msg.generic.body'));
-        } else {
-            Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                i18n.getMsg('err.msg.response.body'));
-        }
     },
 
     evalResponseData: function(data) {
