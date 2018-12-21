@@ -17,11 +17,12 @@ Ext.define('Lada.override.RestProxy', {
            is true.
         */
         if (!success && response.status === 0 && response.responseText === '') {
-            Ext.MessageBox.confirm('Erneutes Login erforderlich',
-                'Ihre Session ist abgelaufen.<br/>'+
-                'Für ein erneutes Login muss die Anwendung neu geladen werden.<br/>' +
-                'Alle ungesicherten Daten gehen dabei verloren.<br/>' +
-                'Soll die Anwendung jetzt neu geladen werden?', this.reload);
+            var i18n = Lada.getApplication().bundle;
+            Ext.MessageBox.confirm(
+                i18n.getMsg('err.msg.sso.expired.title'),
+                i18n.getMsg('err.msg.sso.expired.body'),
+                this.reload
+            );
         }
         this.callParent(arguments);
     },
