@@ -32,17 +32,19 @@ CMD ["httpd-foreground"]
 #
 # httpd setup
 #
-ADD custom-vhosts.conf $HTTPD_PREFIX/conf/extra/httpd-vhosts.conf
 RUN sed -i -e "/^#LoadModule proxy_module/s/#//;/^#LoadModule proxy_http_module/s/#//;/^#Include conf.*httpd-vhosts.conf/s/#//" $HTTPD_PREFIX/conf/httpd.conf
 
 RUN mkdir /usr/local/lada
 RUN rm -rf /usr/local/apache2/htdocs && ln -s /usr/local/lada/ /usr/local/apache2/htdocs
 WORKDIR /usr/local/lada
 
+ADD custom-vhosts.conf ./
+RUN ln -sf $PWD/custom-vhosts.conf $HTTPD_PREFIX/conf/extra/httpd-vhosts.conf
+
 ADD *.sh /usr/local/lada/
 
 #
-# Install dependencies 
+# Install dependencies
 #
 RUN ./install-sencha2opt.sh
 RUN ./install-dependencies.sh
