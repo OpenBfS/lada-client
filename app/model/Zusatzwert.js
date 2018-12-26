@@ -27,7 +27,7 @@ Ext.define('Lada.model.Zusatzwert', {
     }, {
         name: 'pzsId'
     }, {
-        name: 'nwgZuMesswert'
+        name: 'kleinerAls'
     }, {
         name: 'messwertPzs'
     }, {

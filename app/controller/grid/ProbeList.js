@@ -142,18 +142,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
                 prep[i].deskriptoren[0] = emptyDeskriptor;
             }
 
-            // See: app/view/grid/Probenzusatzwert.js
-            // Calculate NWG < symbol , as this is NOT done by the server
-            for (var z in zusatzwerte) {
-                var nwg = zusatzwerte[z]['nwgZuMesswert'];
-                var mw = zusatzwerte[z]['messwertPzs'];
-                if ( mw < nwg) {
-                    prep[i].zusatzwerte[z]['messwertNwg'] = '<';
-                } else {
-                    prep[i].zusatzwerte[z]['messwertNwg'] = null;
-                }
-            }
-
             // Flatten the Ortszuodnung Array
             for (var o in ortszuordnung) {
                 var oz = ortszuordnung[o];

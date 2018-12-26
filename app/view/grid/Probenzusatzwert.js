@@ -94,39 +94,17 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 disableKeyFilter: false
             }
         }, {
+            header: i18n.getMsg('pzwKleinerALs'),
+            width: 50,
+            dataIndex: 'kleinerAls',
+            editor: {
+                xtype: 'checkbox',
+                uncheckedValue: false,
+                inputValue: '<'
+            }
+        }, {
             header: i18n.getMsg('messwert'),
             dataIndex: 'messwertPzs',
-            flex: 1,
-            editor: {
-                xtype: 'expnumberfield'
-            },
-            renderer: function(value) {
-                if (!value || value === '') {
-                    return value;
-                }
-                var strValue = value.toExponential(2).toString()
-                    .replace('.', Ext.util.Format.decimalSeparator);
-                var splitted = strValue.split('e');
-                var exponent = parseInt(splitted[1], 10);
-                return splitted[0] + 'e'
-                    + ((exponent < 0) ? '-' : '+')
-                    + ((Math.abs(exponent) < 10) ? '0' : '')
-                    + Math.abs(exponent).toString();
-            }
-        }, {
-            header: i18n.getMsg('messwertNwg'),
-            flex: 1,
-            renderer: function(value, meta, record) {
-                var nwg = record.get('nwgZuMesswert');
-                var mw = record.get('messwertPzs');
-                if ( mw < nwg) {
-                    return '<';
-                }
-                return '';
-            }
-        }, {
-            header: i18n.getMsg('messwert_nwg'),
-            dataIndex: 'nwgZuMesswert',
             flex: 1,
             editor: {
                 xtype: 'expnumberfield'
