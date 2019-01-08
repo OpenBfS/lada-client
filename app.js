@@ -122,6 +122,23 @@ Ext.application({
         Ext.JSON.encodeDate = function(o) {
             return '"' + Ext.Date.format(o, 'c') + '"';
         };
+        var i18n = Lada.getApplication().bundle;
+
+        //Set up an event handler to handle session timeouts
+        Ext.Ajax.on('requestexception', function(conn, response, options, e) {
+            if (response.status === 0 && response.responseText === '') {
+                var i18n = Lada.getApplication().bundle;
+                Ext.MessageBox.confirm(
+                    i18n.getMsg('err.msg.sso.expired.title'),
+                    i18n.getMsg('err.msg.sso.expired.body'),
+                    function(btn) {
+                        if (btn === 'yes') {
+                            window.location.reload();
+                        }
+                    }
+                );
+            }
+        });
 
         Lada.username = '';
         Lada.userroles = '';
@@ -149,7 +166,6 @@ Ext.application({
             success: this.onLoginSuccess,
             failure: this.onLoginFailure
         });
-        var i18n = Lada.getApplication().bundle;
         // ask before closing/refreshing the window.
         // Not all browsers will respect this, depending on settings
         window.addEventListener('beforeunload', function (evt){
