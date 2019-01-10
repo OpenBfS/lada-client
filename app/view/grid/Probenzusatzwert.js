@@ -14,6 +14,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
     alias: 'widget.probenzusatzwertgrid',
     requires: [
         'Lada.view.form.ExpNumberField',
+        'Lada.view.form.FormatNumberField',
         'Lada.view.widget.Probenzusatzwert'
     ],
 
@@ -143,15 +144,19 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             header: i18n.getMsg('relmessfehler'),
             dataIndex: 'messfehler',
             xtype: 'numbercolumn',
-            format: '0',
+            format: '0000.0',
             flex: 1,
             editor: {
-                xtype: 'numberfield',
-                allowBlank: false,
-                maxLength: 3,
-                enforceMaxLength: true,
+                xtype: 'formatnumberfield',
+                allowBlank: true,
+                maxLength: 8,
+                minValue: 0,
+                maxValue: 1000,
+                decimalPrecision: 1,
+                allowDecimals: true,
                 allowExponential: false,
-                allowDecimal: false
+                enforceMaxLength: true,
+                hideTrigger: true
             }
         }];
         this.listeners = {

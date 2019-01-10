@@ -27,12 +27,30 @@ Ext.define('Lada.model.Zusatzwert', {
     }, {
         name: 'pzsId'
     }, {
-        name: 'kleinerAls'
+        name: 'kleinerAls',
+        convert: function(v) {
+            if (!v) {
+                return null;
+            }
+            return '<';
+        }
     }, {
         name: 'messwertPzs'
     }, {
         name: 'messfehler',
-        type: 'float'
+        type: 'float',
+        convert: function(v) {
+            if (!v) {
+                return null;
+            }
+            return v;
+        },
+        serialize: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
         name: 'letzteAenderung',
         type: 'date',

@@ -15,6 +15,7 @@ Ext.define('Lada.view.grid.Messwert', {
 
     requires: [
         'Lada.view.form.ExpNumberField',
+        'Lada.view.form.FormatNumberField',
         'Lada.view.widget.Messgroesse',
         'Lada.view.widget.Messeinheit'
     ],
@@ -203,10 +204,11 @@ Ext.define('Lada.view.grid.Messwert', {
             format: '0000.0',
             flex: 1,
             editor: {
-                xtype: 'numberfield',
+                xtype: 'formatnumberfield',
                 allowBlank: true,
-                maxLength: 10,
+                maxLength: 8,
                 minValue: 0,
+                maxValue: 1000,
                 decimalPrecision: 1,
                 allowDecimals: true,
                 allowExponential: false,
