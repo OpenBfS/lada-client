@@ -357,11 +357,8 @@ Ext.define('Lada.view.window.GridExport', {
 
         this.down('button[action=export]').text= i18n.getMsg('export.button');
         this.down('tagfield[name=exportexpcolumns]').select(preselectedEx);
-        var encoding = document.characterSet;
-        if (!encoding) {
-            encoding = document.defaultCharset;
-        }
-        this.down('combobox[name=encoding]').setValue(encoding.toLowerCase());
+        // Set this value because most systems work still with 'ISO-8859-15'
+        this.down('combobox[name=encoding]').setValue('iso-8859-15');
     },
 
     /**

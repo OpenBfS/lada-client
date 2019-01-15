@@ -93,11 +93,7 @@ Ext.define('Lada.view.window.FileUpload', {
             })
         ];
         this.callParent(arguments);
-        var encoding = document.characterSet;
-        if (!encoding) {
-            encoding = document.defaultCharset;
-        }
-        this.down('combobox[name=encoding]').setValue(encoding.toLowerCase());
+        this.down('combobox[name=encoding]').setValue('iso-8859-15');
     },
 
     /**
