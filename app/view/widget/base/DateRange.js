@@ -101,7 +101,7 @@ Ext.define('Lada.view.widget.base.DateRange', {
     },
 
     setValue: function(value) {
-        if (value && value.indexOf(',') <= 0) {
+        if (value && (value.indexOf(',') >= 0) ) {
             var val0 = parseInt(value.split(',')[0], 10);
             var val1 = parseInt(value.split(',')[1], 10);
             if (!isNaN(val0)) {

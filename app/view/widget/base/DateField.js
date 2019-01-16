@@ -100,7 +100,11 @@ Ext.define('Lada.view.widget.base.DateField', {
     },
 
     setValue: function(value) {
-        this.down('datefield').setValue(value);
+        if (value !== null) {
+            this.down('datefield').setValue(new Date(value));
+        } else {
+            this.down('datefield').setValue(null);
+        }
     },
 
     clearValue: function() {
