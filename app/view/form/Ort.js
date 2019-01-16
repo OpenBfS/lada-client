@@ -41,7 +41,7 @@ Ext.define('Lada.view.form.Ort', {
         }, {
             xtype: 'tfield',
             name: 'ortId',
-            maxLength: 12,
+            maxLength: 13,
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.ortId')
         }, {
