@@ -87,6 +87,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 xtype: 'combobox',
                 store: Ext.data.StoreManager.get('probenzusaetze'),
                 displayField: 'beschreibung',
+                name: 'beschreibung',
                 valueField: 'id',
                 allowBlank: false,
                 editable: true,

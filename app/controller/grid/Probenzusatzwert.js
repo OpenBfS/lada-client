@@ -14,7 +14,7 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
 
     /**
      * Initialize the Controller with
-     * 3 Listeners
+     * 4 Listeners
      */
     init: function() {
         this.control({
@@ -27,6 +27,9 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
             },
             'probenzusatzwertgrid button[action=delete]': {
                 click: this.remove
+            },
+            'probenzusatzwertgrid combobox[name=beschreibung]': {
+                select: this.select
             }
         });
     },
@@ -126,5 +129,15 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
             }
         });
         grid.down('button[action=delete]').disable();
+    },
+
+    select: function(editor, record) {
+        editor.up().down('selectabledisplayfield').setValue(record.get('id'));
+        var mehid = Ext.data.StoreManager.get('messeinheiten').findRecord('id',record.get('messEinheitId'), 0, false, false, true);
+        if (!mehid) {
+            editor.up().getRefItems()[4].setValue('');
+        } else {
+            editor.up().getRefItems()[4].setValue(mehid.get('einheit'));
+        }
     }
 });
