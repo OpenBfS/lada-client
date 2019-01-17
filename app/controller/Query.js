@@ -173,7 +173,7 @@ Ext.define('Lada.controller.Query', {
         cbox.select(newrecord);
         this.changeCurrentQuery(cbox);
         panel.down('fieldset[name=querydetails]').setCollapsed(false);
-        this.saveQuery(button, saveCallback);
+        this.saveQuery(button, saveCallback, true);
     },
 
     expandDetails: function(button) {
@@ -260,8 +260,9 @@ Ext.define('Lada.controller.Query', {
      * Saves the current query object and attached columns
      * @param button UI el inside the querypanel
      * @param callback Function to call after successfull save
+     * @param skipColumns boolean, if true, columns wont be saved
      */
-    saveQuery: function(button, callback) {
+    saveQuery: function(button, callback, skipColumns) {
         var i18n = Lada.getApplication().bundle;
         var qp = button.up('querypanel');
 
@@ -294,9 +295,11 @@ Ext.define('Lada.controller.Query', {
                 var newId = json.data.id;
                 me.persistColumnsWidth(rec);
                 qp.getForm().loadRecord(rec);
-                var columns = qp.gridColumnValueStore.getData().items;
-                for (var i=0; i < columns.length; i++) {
-                    columns[i].save();
+                if (!skipColumns) {
+                    var columns = qp.gridColumnValueStore.getData().items;
+                    for (var i=0; i < columns.length; i++) {
+                            columns[i].save();
+                    }
                 }
                 qp.down('combobox[name=selectedQuery]').setStore(qp.store);
                 qp.down('combobox[name=selectedQuery]').select(newId);
