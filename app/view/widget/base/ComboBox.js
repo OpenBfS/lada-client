@@ -107,7 +107,6 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         });
         this.warning = tt;
         var cb = this.down('combobox');
-        cb.markInvalid('');
         if (cb.inputWrap && cb.inputEl) {
             cb.inputWrap.addCls('x-lada-warning-field');
             cb.inputEl.addCls('x-lada-warning-field');

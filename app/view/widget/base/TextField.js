@@ -70,7 +70,6 @@ Ext.define('Lada.view.widget.base.TextField', {
         });
         img.show();
         var tf = this.down('textfield');
-        tf.markInvalid('');
         if (tf.inputWrap) {
             tf.inputWrap.addCls('x-lada-warning-field');
             tf.inputEl.addCls('x-lada-warning-field');
