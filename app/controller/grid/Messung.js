@@ -39,55 +39,34 @@ Ext.define('Lada.controller.grid.Messung', {
      * Window.
      */
     editItem: function(grid, record) {
-        var me = this;
-        // we have a window with a probe record!
         grid.getEl().swallowEvent(['click', 'dblclick'], true);
-        if (grid.up('probenedit')) {
-            var probe = grid.up('window').record;
+        var probeLoadCallBack = function(probeWindow, probeRecord, messungRecord) {
             var win = Ext.create('Lada.view.window.MessungEdit', {
-                parentWindow: grid.up('window'),
-                probe: probe,
-                record: record,
-                grid: grid
+                parentWindow: probeWindow,
+                probe: probeRecord,
+                record: messungRecord
             });
             win.show();
             win.setPosition(window.innerWidth - 30 -win.width);
             win.initData();
             return;
+        };
+        if (grid.up('probenedit')) {
+            probeLoadCallBack(grid.up('probenedit'), grid.up('probenedit').record, record);
+        } else {
+            Lada.model.Probe.load(record.get('probeId'), {
+                success: function(precord) {
+                    var probeWin = Ext.create('Lada.view.window.ProbeEdit', {
+                        record: precord,
+                        style: 'z-index: -1;'
+                    });
+                    probeWin.setPosition(30);
+                    probeWin.show();
+                    probeWin.initData();
+                    probeLoadCallBack(probeWin, precord, record);
+                }
+            });
         }
-        var probeRecord = Ext.create('Lada.model.ProbeList');
-        probeRecord.setId(record.get('probeId'));
-        probeRecord.set('owner', record.get('owner'));
-        probeRecord.set('readonly', record.get('readonly'));
-        var probeWin = Ext.create('Lada.view.window.ProbeEdit', {
-            record: probeRecord,
-            style: 'z-index: -1;' //Fixes an Issue where windows could not be created in IE8
-        });
-
-        probeWin.setPosition(30);
-        probeWin.show();
-        probeWin.initData();
-
-        Ext.ClassManager.get('Lada.model.Probe').load(record.get('probeId'), {
-            failure: function(record, action) {
-                me.setLoading(false);
-                // TODO
-                console.log('An unhandled Failure occured. See following Response and Record');
-                console.log(action);
-                console.log(record);
-            },
-            success: function(precord, response) {
-                var messungWin = Ext.create('Lada.view.window.MessungEdit', {
-                    parentWindow: probeWin,
-                    probe: precord,
-                    record: record,
-                    grid: grid
-                });
-                messungWin.show();
-                messungWin.setPosition(window.innerWidth - 30 - probeWin.width);
-                messungWin.initData();
-            }
-        });
     },
 
     /**
