@@ -31,6 +31,7 @@ Ext.define('Lada.view.window.MessungEdit', {
     parentWindow: null,
     record: null,
     grid: null,
+    mStore: Ext.create('Lada.store.Messmethoden'),
 
     /**
      * This function initialises the Window
@@ -70,8 +71,7 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.width = 700;
         this.height = Ext.getBody().getViewSize().height - 30;
 
-        var mStore = Ext.data.StoreManager.get('messgroessen');
-        mStore.load();
+        this.mStore.load();
 
         this.items = [{
             border: false,
@@ -91,7 +91,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                     minHeight: '125',
                     recordId: this.record.get('id'),
                     umwId: this.probe.get('umwId'),
-                    messgroesseStore: mStore
+                    messgroesseStore: this.mStore
                 }]
             }, {
                 xtype: 'fset',
@@ -154,6 +154,9 @@ Ext.define('Lada.view.window.MessungEdit', {
             },
             success: function(record, response) {
                 var me = this;
+                this.mStore.proxy.extraParams = {mmtId: record.get('mmtId')};
+                this.mStore.load();
+                this.down('messwertgrid').messgroesseStore = this.mstore;
                 if (this.parentWindow && this.parentWindow.record.get('treeModified') < record.get('parentModified')) {
                     var i18n = Lada.getApplication().bundle;
                     Ext.Msg.show({
@@ -173,9 +176,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                         }
                     });
                 }
-                var mStore = Ext.data.StoreManager.get('messgroessen');
-                mStore.proxy.extraParams = {mmtId: record.get('mmtId')};
-                mStore.load();
+                this.down('messwertgrid').messgroesseStore = this.mStore;
                 this.down('messungform').setRecord(record);
                 this.record = record;
 
