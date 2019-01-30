@@ -31,7 +31,7 @@ Ext.define('Lada.view.window.MessungEdit', {
     parentWindow: null,
     record: null,
     grid: null,
-    mStore: Ext.create('Lada.store.Messmethoden'),
+    mStore: Ext.create('Lada.store.Messgroessen'),
 
     /**
      * This function initialises the Window
@@ -48,6 +48,9 @@ Ext.define('Lada.view.window.MessungEdit', {
             this.callParent(arguments);
             return;
         }
+
+        this.mStore.proxy.extraParams = {mmtId: this.record.get('mmtId')};
+        this.mStore.load();
 
         this.buttons = [{
             text: i18n.getMsg('close'),
@@ -70,8 +73,6 @@ Ext.define('Lada.view.window.MessungEdit', {
 
         this.width = 700;
         this.height = Ext.getBody().getViewSize().height - 30;
-
-        this.mStore.load();
 
         this.items = [{
             border: false,
