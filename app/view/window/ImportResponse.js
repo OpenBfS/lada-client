@@ -10,6 +10,8 @@ Ext.define('Lada.view.window.ImportResponse', {
     fileName: '',
 
     layout: 'fit',
+    resizable: false,
+
     /**
      * @private
      * Initialize the view.
@@ -55,6 +57,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         this.callParent(arguments);
         if (data) {
             download = me.parseResponse(data);
+            this.down('panel').html = html + me.parseResponse(data, true);
         }
     },
 
@@ -91,7 +94,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                     out.push(i18n.getMsg('importResponse.failure.generic'));
                 } else {
                     out.push(i18n.getMsg(
-                        'importReesponse.failure.generic.partial', numErrors));
+                        'importResponse.failure.generic.partial', numErrors));
                 }
                 out.push('<br/>');
                 out.push('<br/>');
@@ -123,8 +126,10 @@ Ext.define('Lada.view.window.ImportResponse', {
     /**
      * Parse the Response
      * @param data the payload of the response
+     * @param divHtml (optional boolaen) indicate that the data are to be
+     * rendered inline (without header)
      */
-    parseResponse: function(data) {
+    parseResponse: function(data, divHtml) {
         var i18n = Lada.getApplication().bundle;
         var errors = data.data.errors;
         var warnings = data.data.warnings;
@@ -132,6 +137,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         // There is a entry for each imported proben in the errors dict (might be
         // empty)
 
+        var divStyle = '<DIV style="max-height:300px;overflow-y:auto;">';
         var numErrors;
         var numWarnings;
         if (!Ext.isObject(errors)) {
@@ -144,12 +150,22 @@ Ext.define('Lada.view.window.ImportResponse', {
         } else {
             numWarnings = Object.keys(warnings).length;
         }
+
         if (!data.success) {
-            out.push(i18n.getMsg(
-                'importResponse.failure.server', this.fileName));
+            if (divHtml) {
+                out.push(divStyle + i18n.getMsg(
+                    'importResponse.failure.server', this.fileName) + '</DIV>');
+            } else {
+                out.push(i18n.getMsg(
+                    'importResponse.failure.server', this.fileName));
+            }
         } else {
-            out.push('<!DOCTYPE html>' +
-                '<head><meta charset="utf-8"></head><body>');
+            if (!divHtml) {
+                out.push('<!DOCTYPE html>' +
+                    '<head><meta charset="utf-8"></head><body>');
+            } else {
+                out.push(divStyle);
+            }
             if (numErrors > 0) {
                 out.push(i18n.getMsg('importResponse.failure.errorlist'));
                 out.push('<br/>');
@@ -248,7 +264,11 @@ Ext.define('Lada.view.window.ImportResponse', {
                 out.push('</ol>');
             }
             out.push('<br/>');
-            out.push('</body></html>');
+            if (!divHtml) {
+                out.push('</body></html>');
+            } else {
+                out.push('</DIV>');
+            }
             if (numWarnings > 0 || numErrors > 0) {
                 this.down('button[name=download]').enable();
             }
