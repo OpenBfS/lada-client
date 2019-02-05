@@ -13,33 +13,35 @@
 # The LADA-application will be available under http://yourdockerhost:8182
 #
 
-FROM httpd:2.4
+FROM centos:centos6
 MAINTAINER mlechner@bfs.de
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV HTTPD_PREFIX=/etc/httpd \
+    JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk \
+    INSTALL4J_JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
+
+#Workaround for cap_set_file bug: Use centos 6 and add repo manually
+ADD shibboleth/shibboleth.repo /etc/etc/yum.repos.d/
 
 #
 # Install required packages
 #
+RUN yum clean expire-cache && yum install -y which unzip java-1.8.0-openjdk-devel git httpd shibboleth.x86_64
 
-RUN mkdir -p /usr/share/man/man1/ && apt-get update -y && apt-get install -y \
-    curl unzip openjdk-8-jre git && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+EXPOSE 80 81 82 83 84 85
 
-EXPOSE 80 81 82 83 84
-
-CMD ["httpd-foreground"]
-#
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+#CMD tail -f /dev/null
 # httpd setup
-#
+
 RUN sed -i -e "/^#LoadModule proxy_module/s/#//;/^#LoadModule proxy_http_module/s/#//;/^#Include conf.*httpd-vhosts.conf/s/#//" $HTTPD_PREFIX/conf/httpd.conf
 
 RUN mkdir /usr/local/lada
-RUN rm -rf /usr/local/apache2/htdocs && ln -s /usr/local/lada/ /usr/local/apache2/htdocs
+RUN ln -s /usr/local/lada/ /var/www/html/
 WORKDIR /usr/local/lada
 
 ADD custom-vhosts.conf ./
-RUN ln -sf $PWD/custom-vhosts.conf $HTTPD_PREFIX/conf/extra/httpd-vhosts.conf
+RUN ln -sf $PWD/custom-vhosts.conf $HTTPD_PREFIX/conf.d/httpd-vhosts.conf
 
 ADD *.sh /usr/local/lada/
 
@@ -63,7 +65,7 @@ RUN GITINFO=" $(git name-rev --name-only HEAD 2>/dev/null) $(git rev-parse --sho
     echo ${GITINFO} &&\
     sed -i -e "/Lada.clientVersion/s/';/${GITINFO}';/" app.js
 
-#
+
 # build application
 #
 
