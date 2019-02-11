@@ -961,6 +961,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     disabled: false
                 });
             }
+            this.addRowExpanderButton();
         }
     },
 
@@ -1024,6 +1025,31 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             this.setStore(store);
         };
         store.load(options);
+    },
+
+    addRowExpanderButton: function() {
+        var expander = this.getRowExpander();
+        if (expander && !this.tbuttonExists('expand')) {
+            this.toolbarbuttons.push({
+                xtype: 'button',
+                action: 'expand',
+                text: this.i18n.getMsg('grid.expandDetails'),
+                handler: function() {
+                    expander.toggleAllRows(true);
+                }
+            });
+        }
+    },
+
+    getRowExpander: function() {
+        if (!this.plugins) {
+            return;
+        }
+        for (var i=0; i < this.plugins.length; i++) {
+            if (this.plugins[i].ptype === 'gridrowexpander') {
+                return this.plugins[i];
+            }
+        }
     }
 });
 
