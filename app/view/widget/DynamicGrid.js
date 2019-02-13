@@ -961,6 +961,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     disabled: false
                 });
             }
+        }
+        if (this.rowtarget.dataType === 'probeId' || this.rowtarget.dataType === 'messungId') {
             this.addRowExpanderButton();
         }
     },
@@ -1029,13 +1031,19 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     addRowExpanderButton: function() {
         var expander = this.getRowExpander();
+        var me = this;
         if (expander && !this.tbuttonExists('expand')) {
             this.toolbarbuttons.push({
                 xtype: 'button',
                 action: 'expand',
                 text: this.i18n.getMsg('grid.expandDetails'),
-                handler: function() {
-                    expander.toggleAllRows(true);
+                handler: function(button) {
+                    var newStatus = expander.toggleAllRows();
+                    if (!newStatus) {
+                        button.setText(me.i18n.getMsg('grid.expandDetails'));
+                    } else {
+                        button.setText(me.i18n.getMsg('grid.unexpandDetails'));
+                    }
                 }
             });
         }

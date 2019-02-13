@@ -214,6 +214,12 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     rowExpander.toggleRow(i, store.getAt(i));
                 }
             }
+            rowExpander.expandedAll = false;
+            var tbar = grid.getDockedItems('toolbar[dock="top"]');
+            if (tbar && tbar[0].down('button[action=expand]')) {
+                tbar[0].down('button[action=expand]').setText(
+                    grid.i18n.getMsg('grid.expandDetails'));
+            }
         }
     },
 
