@@ -523,7 +523,7 @@ Ext.define('Lada.controller.Query', {
                     break;
                 case 'number':
                     options.allowDecimals = true;
-                    options.hideTrigger = false;
+                    options.hideTrigger = true;
                     options.keyNavEnabled = false;
                     options.mouseWheelEnabled = false;
                     options.allowDecimalls = true;
@@ -531,6 +531,7 @@ Ext.define('Lada.controller.Query', {
                     options.value = recs[i].get('filterValue') || null;
                     field = Ext.create('Lada.view.widget.base.NumberRange',
                         options);
+                    field.setValue(recs[i].get('filterValue'));
                     break;
                 case 'land': // TODO: Wird nicht benötigt, könnte gelöscht werden
                     options.multiSelect = true;
@@ -738,7 +739,7 @@ Ext.define('Lada.controller.Query', {
     filterValueChanged: function(box, newvalue, oldvalue) {
         if (box.xtype === 'datefield' && box.up('daterange')) {
             this.multiValueChanged(box, newvalue, box.up('daterange'));
-        } else if (box.xtype === 'numberfield' && box.up('numrangefield')) {
+        } else if (box.xtype === 'expnumberfield' && box.up('numrangefield')) {
             this.multiValueChanged(box, newvalue, box.up('numrangefield'));
         } else {
             var store = box.up('querypanel').gridColumnValueStore;
