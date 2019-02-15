@@ -127,7 +127,7 @@ Ext.define('Lada.controller.Query', {
         var cquery = cbox.getStore().getById(cbox.getValue());
         var newrecord = Ext.create('Lada.model.Query',{
             baseQuery: cquery.get('baseQuery'),
-            name: cquery.get('name') + ' (Kopie)',
+            name: cquery.get('name') + ' ('+Lada.username+')',
             userId: Lada.userId,
             description: cquery.get('description'),
             messStellesIds: this.getMessStellenUnique(),
