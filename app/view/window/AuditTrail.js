@@ -14,8 +14,8 @@ Ext.define('Lada.view.window.AuditTrail', {
 
     layout: 'fit',
 
-    width: 300,
-    height: 300,
+    width: 350,
+    height: 350,
 
     type: null,
 
@@ -40,6 +40,7 @@ Ext.define('Lada.view.window.AuditTrail', {
         me.on({
             show: function() {
                 me.initData();
+                me.removeCls('x-unselectable');
             }
         });
 

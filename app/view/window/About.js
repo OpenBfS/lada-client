@@ -27,6 +27,9 @@ Ext.define('Lada.view.window.About', {
             },
             deactivate: function() {
                 this.getEl().addCls('window-inactive');
+            },
+            show: function() {
+                this.removeCls("x-unselectable");
             }
         });
 
