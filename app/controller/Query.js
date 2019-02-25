@@ -130,7 +130,7 @@ Ext.define('Lada.controller.Query', {
             name: cquery.get('name') + ' ('+Lada.username+')',
             userId: Lada.userId,
             description: cquery.get('description'),
-            messStellesIds: this.getMessStellenUnique(),
+            messStellesIds: '',
             clonedFrom: cquery.get('id')
         });
         panel.store.add(newrecord);
@@ -763,17 +763,6 @@ Ext.define('Lada.controller.Query', {
 
     },
 
-    getMessStellenUnique: function() {
-        var mst = [];
-        if (Lada.mst) {
-            for (var j = 0; j < Lada.mst.length; j++) {
-                if (mst.indexOf(Lada.mst[j]) < 0) {
-                    mst.push(Lada.mst[j]);
-                }
-            }
-        }
-        return mst;
-    },
 
     setrowtarget: function(querypanel) {
         var rowHierarchy = ['messungId', 'probeId', 'mpId', 'ortId', 'probenehmer',
