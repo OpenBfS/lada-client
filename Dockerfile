@@ -65,6 +65,7 @@ ADD .git /usr/local/lada/.git
 ADD shibboleth /usr/local/lada/shibboleth
 RUN rm /etc/shibboleth/shibboleth2.xml && ln -s /usr/local/lada/shibboleth/shibboleth2.xml /etc/shibboleth/shibboleth2.xml \
     && ln -s /usr/local/lada/shibboleth/partner-metadata.xml /etc/shibboleth/partner-metadata.xml
+RUN cp /usr/local/lada/shibboleth/etc/*.pem /etc/shibboleth
 
 
 RUN GITINFO=" $(git name-rev --name-only HEAD 2>/dev/null) $(git rev-parse --short HEAD 2>/dev/null)" &&\
@@ -77,4 +78,4 @@ RUN GITINFO=" $(git name-rev --name-only HEAD 2>/dev/null) $(git rev-parse --sho
 RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh
 
 #Start shibboleth sp
-RUN /usr/sbin/shibd
+#RUN /usr/sbin/shibd
