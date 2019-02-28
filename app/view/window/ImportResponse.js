@@ -30,7 +30,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         if (data) {
             html = me.parseShortResponse(data);
         } else {
-            html = i18n.getMsg('importResponse.failure', this.fileName);
+            html = i18n.getMsg('importResponse.warnings', this.fileName);
         }
         this.bodyStyle = {background: '#fff'};
         me.items = [{
@@ -90,8 +90,8 @@ Ext.define('Lada.view.window.ImportResponse', {
                 this.fileName));
         } else {
             if (numErrors > 0) {
-                if (errors.parser) {
-                    out.push(i18n.getMsg('importResponse.failure.generic'));
+                if (errors.Parser) {
+                    out.push(i18n.getMsg('importResponse.failure', this.fileName));
                 } else {
                     out.push(i18n.getMsg(
                         'importResponse.failure.generic.partial', numErrors));
@@ -114,11 +114,11 @@ Ext.define('Lada.view.window.ImportResponse', {
             }
             if (numErrors > 0 || numWarnings > 0) {
                 out.push(i18n.getMsg('importResponse.failure.details'));
-                out.push('<br/>');
+                out.push('<hr>');
             } else {
-                out.push(i18n.getMsg('importResponse.success.confirmed'));
-                out.push('<br/>');
+                out.push(i18n.getMsg('importResponse.success', this.fileName));
             }
+            out.push('<br/>');
         }
         return out.join('');
     },
