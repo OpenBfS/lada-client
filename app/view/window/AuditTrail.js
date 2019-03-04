@@ -175,8 +175,7 @@ Ext.define('Lada.view.window.AuditTrail', {
                 value = i18n.getMsg('true');
             } else if (value === false) {
                 value = i18n.getMsg('false');
-            }
-            if (key === 'messwert' ||
+            } else if (key === 'messwert' ||
                 key === 'messwert_pzs' ||
                 key === 'nwg_zu_messwert'
             ) {
