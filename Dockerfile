@@ -30,7 +30,7 @@ RUN yum clean expire-cache && yum install -y which unzip java-1.8.0-openjdk-deve
 
 EXPOSE 80 81 82 83 84 85
 
-CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+
 
 # httpd setup
 
@@ -79,3 +79,4 @@ RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -
 
 #Start shibboleth sp
 #RUN /usr/sbin/shibd
+CMD /usr/sbin/shibd && /usr/sbin/httpd -DFOREGROUND
