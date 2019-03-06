@@ -180,7 +180,6 @@ Ext.define('Lada.view.window.AuditTrail', {
                 key === 'nwg_zu_messwert'
             ) {
                 var strValue = value.toExponential(2).toString()
-                    .replace('.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
                 var exponent = parseInt(splitted[1],10);
                 value = splitted[0] + 'e'
