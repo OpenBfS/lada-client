@@ -30,7 +30,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         if (data) {
             html = me.parseShortResponse(data);
         } else {
-            html = i18n.getMsg('importResponse.warnings', this.fileName);
+            html = i18n.getMsg('importResponse.failure.server', this.fileName);
         }
         this.bodyStyle = {background: '#fff'};
         me.items = [{
