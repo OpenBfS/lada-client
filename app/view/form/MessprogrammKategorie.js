@@ -68,7 +68,7 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
                 xtype: 'tfield',
                 name: 'code',
                 fieldLabel: i18n.getMsg('code'),
-                maxLength: 120
+                maxLength: 3
             }, {
                 xtype: 'tarea',
                 name: 'bezeichnung',

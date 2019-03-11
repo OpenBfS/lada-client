@@ -45,10 +45,10 @@ Ext.define('Lada.model.MessprogrammKategorie', {
             type: 'json',
             totalProperty: 'totalCount',
             rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
         }
-    },
-    writer: {
-        type: 'json',
-        writeAllFields: true
     }
 });
