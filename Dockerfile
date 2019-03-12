@@ -64,7 +64,9 @@ ADD .git /usr/local/lada/.git
 # Add shibboleth config
 ADD shibboleth /usr/local/lada/shibboleth
 RUN rm /etc/shibboleth/shibboleth2.xml && ln -s /usr/local/lada/shibboleth/shibboleth2.xml /etc/shibboleth/shibboleth2.xml \
-    && ln -s /usr/local/lada/shibboleth/partner-metadata.xml /etc/shibboleth/partner-metadata.xml
+    && ln -s /usr/local/lada/shibboleth/partner-metadata.xml /etc/shibboleth/partner-metadata.xml \
+    && rm /etc/shibboleth/attribute-map.xml \
+    && ln -s /usr/local/lada/shibboleth/attribute-map.xml /etc/shibboleth/attribute-map.xml
 RUN cp /usr/local/lada/shibboleth/etc/*.pem /etc/shibboleth
 
 
