@@ -85,7 +85,8 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                     xtype: 'tfield',
                     name: 'datensatzErzeugerId',
                     readOnly: true,
-                    fieldLabel: i18n.getMsg('daErzeugerId')
+                    fieldLabel: i18n.getMsg('daErzeugerId'),
+                    maxLength: 2
                 }, {
                     xtype: 'tarea',
                     name: 'bezeichnung',
