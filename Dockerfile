@@ -20,13 +20,19 @@ ENV HTTPD_PREFIX=/etc/httpd \
     JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk \
     INSTALL4J_JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
 
-#Workaround for cap_set_file bug: Use centos 6 and add repo manually
-ADD shibboleth/shibboleth.repo /etc/yum.repos.d/
-
 #
 # Install required packages
 #
-RUN yum clean expire-cache && yum install -y which unzip java-1.8.0-openjdk-devel git httpd shibboleth.x86_64
+RUN yum clean expire-cache && \
+    yum install -y yum-plugin-ovl && \
+    yum install -y which curl gzip unzip tar java-1.8.0-openjdk-devel git \
+                   httpd ca-certificates
+
+#Workaround for cap_set_file bug: Use centos 6 and add repo manually
+ADD shibboleth/shibboleth.repo /etc/yum.repos.d/
+
+RUN yum install -y shibboleth.x86_64
+
 
 EXPOSE 80 81 82 83 84 85
 
