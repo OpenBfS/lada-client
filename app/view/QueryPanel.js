@@ -69,27 +69,27 @@ Ext.define('Lada.view.QueryPanel', {
                     submitValue: false
                 }]
             }, {
-                xtype: 'radiofield',
-                margin: '0 5 0 135',
-                name: 'filterqueries',
-                id: 'own',
+                xtype: 'checkbox',
+                margin: '0 5 0 160',
+                name: 'filterQueriesGlobal',
+                submitValue: false,
+                boxLabel: 'query.showglobal',
+                flex: 1
+            }, {
+                xtype: 'checkbox',
+                margin: '0 5 0 160',
+                name: 'filterQueriesAvail',
+                submitValue: false,
+                boxLabel: 'query.showavail',
+                flex: 1
+            }, {
+                xtype: 'checkbox',
+                margin: '0 5 0 160',
+                name: 'filterQueriesOwn',
                 submitValue: false,
                 boxLabel: 'query.showown',
-                checked: true
-            }, {
-                xtype: 'radiofield',
-                margin: '0 5 0 135',
-                name: 'filterqueries',
-                id: 'global',
-                submitValue: false,
-                boxLabel: 'query.showglobal'
-            }, {
-                xtype: 'radiofield',
-                margin: '0 5 0 135',
-                name: 'filterqueries',
-                id: 'all',
-                submitValue: false,
-                boxLabel: 'query.showall'
+                checked: true,
+                flex: 1
             }, {
                 xtype: 'textarea',
                 name: 'description',
@@ -244,9 +244,9 @@ Ext.define('Lada.view.QueryPanel', {
         this.down('button[action=search]').text = i18n.getMsg('query.search');
         this.down('button[action=save]').text = i18n.getMsg('save');
         this.down('button[action=reset]').text =i18n.getMsg('reset');
-        this.down('radiofield[id=own]').boxLabel = i18n.getMsg('query.showown');
-        this.down('radiofield[id=all]').boxLabel = i18n.getMsg('query.showall');
-        this.down('radiofield[id=global]').boxLabel = i18n.getMsg('query.showglobal');
+        this.down('checkbox[name=filterQueriesAvail]').boxLabel = i18n.getMsg('query.showavailable');
+        this.down('checkbox[name=filterQueriesOwn]').boxLabel = i18n.getMsg('query.showown');
+        this.down('checkbox[name=filterQueriesGlobal]').boxLabel = i18n.getMsg('query.showglobal');
         this.down('fieldset[name=querydetails]').setTitle(i18n.getMsg('query.details'));
         this.down('button[action=newquery]').text = i18n.getMsg('query.new');
         this.down('button[action=delquery]').text = i18n.getMsg('delete');
@@ -281,24 +281,14 @@ Ext.define('Lada.view.QueryPanel', {
             scope: this,
             callback: function() {
                 this.store.clearFilter();
-                if (this.down('radiofield[id=own]').getValue() === true) {
-                    this.store.filter({
-                        property: 'userId',
-                        value: Lada.userId,
-                        exactMatch: true
-                    });
-                } else if (this.down('radiofield[id=global]').getValue() === true) {
-                    this.store.filter({
-                        property: 'userId',
-                        value: 0,
-                        exactMatch: true
-                    });
-                }
+                var fq = this.down('checkbox[name=filterQueriesOwn]');
+                fq.fireEvent('change', fq);
                 var record0 = this.store.getAt(0);
                 if (!record0) {
-                    this.down('radiofield[id=global]').setValue(true);
                     this.down('button[action=delquery]').setDisabled(true);
-                    this.store.clearFilter();
+                    var globalCB = this.down('checkbox[name=filterQueriesGlobal]');
+                    globalCB.setData(true);
+                    globalCB.fireEvent('change', globalCB);
                     record0 = this.store.getAt(0);
                 } else {
                     this.down('button[action=delquery]').setDisabled(false);

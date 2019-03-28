@@ -40,13 +40,13 @@ Ext.define('Lada.controller.Query', {
     init: function() {
         var me = this;
         this.control({
-            'querypanel radiofield[id=own]': {
+            'querypanel checkbox[name=filterQueriesGlobal]': {
                 change: me.changeListedQueries
             },
-            'querypanel radiofield[id=all]': {
+            'querypanel checkbox[name=filterQueriesAvail]': {
                 change: me.changeListedQueries
             },
-            'querypanel radiofield[id=global]': {
+            'querypanel checkbox[name=filterQueriesOwn]': {
                 change: me.changeListedQueries
             },
             'querypanel button[action=newquery]': {
@@ -106,29 +106,26 @@ Ext.define('Lada.controller.Query', {
 
     },
 
-    changeListedQueries: function(radiobutton) {
-        var qp = radiobutton.up('querypanel');
-        var bOwn = qp.down('radiofield[id=own]');
-        var bGlobal = qp.down('radiofield[id=global]');
-        var bAll = qp.down('radiofield[id=all]');
-        var combobox = qp.down('combobox[name=selectedQuery]');
-
+    changeListedQueries: function(checkbox) {
+        var qp = checkbox.up('querypanel');
+        var cbGlobal = qp.down('checkbox[name=filterQueriesGlobal]').getValue();
+        var cbOwn = qp.down('checkbox[name=filterQueriesOwn]').getValue();
+        var cbAvail = qp.down('checkbox[name=filterQueriesAvail]').getValue();
+        var queryBox = qp.down('combobox[name=selectedQuery]');
         qp.store.clearFilter();
-        if (bOwn.getValue() === true) {
-            qp.store.filter({
-                property: 'userId',
-                value: Lada.userId,
-                exactMatch: true
-            });
-        } else if (bGlobal.getValue() === true) {
-            qp.store.filter({
-                property: 'userId',
-                value: 0,
-                exactMatch: true
-            });
-        }
-        combobox.setStore(qp.store);
-        this.changeCurrentQuery(combobox);
+        var filterFn = function(item) {
+            if (cbOwn && item.get('userId') === Lada.userId) {
+                return true;
+            } else if ( cbGlobal && item.get('userId') === 0) {
+                return true;
+            } else if (cbAvail && item.get('userId') !== Lada.userId && item.get('userId') !== 0) {
+                return true;
+            }
+            return false;
+        };
+        qp.store.filter(filterFn);
+        queryBox.setStore(qp.store);
+        this.changeCurrentQuery(queryBox);
     },
 
     cloneQuery: function(button) {
@@ -207,8 +204,9 @@ Ext.define('Lada.controller.Query', {
                                 qp.store.load({callback: function() {
                                     combobox.setStore(qp.store);
                                     if (combobox.store.getData().count() === 0) {
-                                        var checkbox = qp.down('radiofield[id=all]');
-                                        checkbox.setValue(true);
+                                        var globalCheckbox = qp.down('checkbox[name=filterQueriesGlobal]');
+                                        globalCheckbox.setValue(true);
+                                        globalCheckbox.fireEvent('change',globalCheckbox);
                                     }
                                     combobox.setValue(qp.store.getAt(0));
                                     me.changeCurrentQuery(combobox);
@@ -228,6 +226,9 @@ Ext.define('Lada.controller.Query', {
         var newquery = qp.store.findRecord('id', combobox.getValue(), false, false, false,
             true);
         combobox.resetOriginalValue();
+        qp.down('checkbox[name=filterQueriesAvail]').resetOriginalValue();
+        qp.down('checkbox[name=filterQueriesGlobal]').resetOriginalValue();
+        qp.down('checkbox[name=filterQueriesOwn]').resetOriginalValue();
         var contentPanel = qp.up('panel[name=main]').down(
             'panel[name=contentpanel]');
         contentPanel.removeAll();
@@ -887,7 +888,8 @@ Ext.define('Lada.controller.Query', {
 
     dataChanged: function() {
         var qp = Ext.ComponentQuery.query('querypanel')[0];
-        qp.down('button[action=save]').setDisabled(qp.isQueryReadonly());
+        var savedisabled = qp.isQueryReadonly() || !qp.getForm().getRecord().dirty;
+        qp.down('button[action=save]').setDisabled(savedisabled);
     },
 
     /**
