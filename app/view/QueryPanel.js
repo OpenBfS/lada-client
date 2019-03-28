@@ -287,7 +287,7 @@ Ext.define('Lada.view.QueryPanel', {
                 if (!record0) {
                     this.down('button[action=delquery]').setDisabled(true);
                     var globalCB = this.down('checkbox[name=filterQueriesGlobal]');
-                    globalCB.setData(true);
+                    globalCB.setValue(true);
                     globalCB.fireEvent('change', globalCB);
                     record0 = this.store.getAt(0);
                 } else {

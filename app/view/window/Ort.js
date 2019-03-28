@@ -99,7 +99,7 @@ Ext.define('Lada.view.window.Ort', {
         this.callParent(arguments);
     },
 
-    setMode(mode) {
+    setMode: function(mode) {
         var i18n = Lada.getApplication().bundle;
         this.mode = mode;
         if (this.mode) {
