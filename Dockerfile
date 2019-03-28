@@ -26,7 +26,7 @@ ENV HTTPD_PREFIX=/etc/httpd \
 RUN yum clean expire-cache && \
     yum install -y yum-plugin-ovl && \
     yum install -y which curl gzip unzip tar java-1.8.0-openjdk-devel git \
-                   httpd ca-certificates
+                   libsemanage httpd ca-certificates
 
 #Workaround for cap_set_file bug: Use centos 6 and add repo manually
 ADD shibboleth/shibboleth.repo /etc/yum.repos.d/
@@ -85,6 +85,4 @@ RUN GITINFO=" $(git name-rev --name-only HEAD 2>/dev/null) $(git rev-parse --sho
 #
 RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh
 
-#Start shibboleth sp
-#RUN /usr/sbin/shibd
-CMD /usr/sbin/shibd && /usr/sbin/httpd -DFOREGROUND
+CMD export LANG=en_US.UTF-8 && /usr/sbin/httpd && /usr/sbin/shibd -F
