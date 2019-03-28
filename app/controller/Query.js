@@ -178,6 +178,7 @@ Ext.define('Lada.controller.Query', {
 
         cbox.setStore(panel.store);
         cbox.select(newrecord);
+        this.changeCurrentQuery(cbox);
         panel.down('fieldset[name=querydetails]').setCollapsed(false);
         this.saveQuery(button, saveCallback, true);
     },
@@ -888,7 +889,7 @@ Ext.define('Lada.controller.Query', {
 
     dataChanged: function() {
         var qp = Ext.ComponentQuery.query('querypanel')[0];
-        var savedisabled = qp.isQueryReadonly() || !qp.getForm().getRecord().dirty;
+        var savedisabled = qp.isQueryReadonly();
         qp.down('button[action=save]').setDisabled(savedisabled);
     },
 
