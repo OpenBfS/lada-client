@@ -132,10 +132,11 @@ Ext.define('Lada.view.widget.base.ComboBox', {
     },
 
     showErrors: function(errors) {
+        this.clearWarningOrError();
         var img = this.down('image[name=errorImg]');
         var warnImg = this.down('image[name=warnImg]');
         warnImg.hide();
-        Ext.create('Ext.tip.ToolTip', {
+        this.error = Ext.create('Ext.tip.ToolTip', {
             target: img.getEl(),
             html: errors
         });
@@ -152,6 +153,9 @@ Ext.define('Lada.view.widget.base.ComboBox', {
     clearWarningOrError: function() {
         if (this.warning) {
             this.warning.destroy();
+        }
+        if (this.error) {
+            this.error.destroy();
         }
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
