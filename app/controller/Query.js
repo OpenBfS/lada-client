@@ -125,7 +125,6 @@ Ext.define('Lada.controller.Query', {
         };
         qp.store.filter(filterFn);
         queryBox.setStore(qp.store);
-        this.changeCurrentQuery(queryBox);
     },
 
     cloneQuery: function(button) {

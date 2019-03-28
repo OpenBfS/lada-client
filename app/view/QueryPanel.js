@@ -47,6 +47,7 @@ Ext.define('Lada.view.QueryPanel', {
                     fieldLabel: 'query.query',
                     name: 'selectedQuery',
                     displayField: 'name',
+                    queryMode: 'local',
                     valueField: 'id',
                     tpl: Ext.create('Ext.XTemplate',
                         '<tpl for="."><div class="x-combo-list-item x-boundlist-item" >' +
