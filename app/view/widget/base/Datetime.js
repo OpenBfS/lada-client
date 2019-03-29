@@ -140,10 +140,6 @@ Ext.define('Lada.view.widget.base.Datetime', {
             });
         }
         cb.clearInvalid();
-        if (this.tooltip) {
-            this.tooltip.destroy();
-        }
-
     },
 
     getName: function() {

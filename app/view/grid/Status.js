@@ -94,7 +94,11 @@ Ext.define('Lada.view.grid.Status', {
             header: i18n.getMsg('text'),
             dataIndex: 'text',
             flex: 1,
-            sortable: false
+            sortable: false,
+            renderer: function(value) {
+                return '<div style="white-space: normal !important;">' +
+                value + '</div>';
+            }
         }];
         this.initData();
         this.callParent(arguments);

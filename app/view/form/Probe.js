@@ -216,7 +216,7 @@ Ext.define('Lada.view.form.Probe', {
                             margin: '0, 5, 5, 5',
                             width: '30%',
                             labelWidth: 65,
-                            allowBlank: false
+                            allowBlank: true
                         }]
                     }, {
                         layout: {
@@ -521,13 +521,18 @@ Ext.define('Lada.view.form.Probe', {
                 laborMstId = '';
             }
             var id = this.down('messstellelabor').store.count() + 1;
+
+            if ( mstId.get('messStelle') === laborMstId ) {
+                displayCombi = mstId.get('messStelle');
+            } else {
+                displayCombi = mstId.get('messStelle') + '/' + laborMstId
+            }
+
             var rec = Ext.create('Lada.model.MessstelleLabor', {
                 id: id,
                 laborMst: probeRecord.get('laborMstId'),
                 messStelle: probeRecord.get('mstId'),
-                displayCombi: mstId.get('messStelle') +
-                    '/' + laborMstId
-
+                displayCombi: displayCombi
             });
             var newStore = Ext.create('Ext.data.Store', {
                 model: 'Lada.model.MessstelleLabor',

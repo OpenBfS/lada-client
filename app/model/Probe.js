@@ -67,6 +67,7 @@ Ext.define('Lada.model.Probe', {
     }, {
         name: 'probeentnahmeBeginn',
         type: 'date',
+        allowNull: true,
         convert: function(v, record) {
             if (!v) {
                 return v;
@@ -74,6 +75,9 @@ Ext.define('Lada.model.Probe', {
             return new Date(v);
         },
         serialize: function(v, record) {
+            if (v === '' || v === null) {
+                return null;
+            }
             var formatted = Ext.Date.format(v, 'Y-m-d\\TH:i:sP');
             return formatted;
         }

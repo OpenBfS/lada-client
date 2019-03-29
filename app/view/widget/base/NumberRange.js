@@ -44,12 +44,12 @@ Ext.define('Lada.view.widget.base.NumberRange', {
                 }
             }
         };
-        var fromField = Ext.create('Ext.form.field.Number',numberOptions);
+        var fromField = Ext.create('Lada.view.form.ExpNumberField',numberOptions);
 
         numberOptions.name = this.name + 'To';
         numberOptions.fieldLabel = i18n.getMsg('to');
         numberOptions.margin = '5 0 5 5';
-        var toField = Ext.create('Ext.form.field.Number',numberOptions);
+        var toField = Ext.create('Lada.view.form.ExpNumberField',numberOptions);
 
         this.items = [
             {
@@ -62,10 +62,10 @@ Ext.define('Lada.view.widget.base.NumberRange', {
         ];
         this.callParent(arguments);
         if (this.regex) {
-            Ext.apply(this.down('numberfield'), {regex: this.regex});
+            Ext.apply(this.down('expnumberfield'), {regex: this.regex});
         }
         if (this.allowBlank === false) {
-            Ext.apply(this.down('numberfield'), {allowBlank: this.allowBlank});
+            Ext.apply(this.down('expnumberfield'), {allowBlank: this.allowBlank});
         }
     },
 
@@ -76,36 +76,36 @@ Ext.define('Lada.view.widget.base.NumberRange', {
 
     getValue: function() {
         var val0 = this.down('[name=' + this.name + 'From]').getValue();
-        if (isNaN(val0)) {
+        if (val0 === null) {
             val0 = '';
         }
         var val1 = this.down('[name='+ this.name + 'To]').getValue();
-        if (isNaN(val1)) {
+        if (val0 === null) {
             val1 = '';
         }
         if (val0 === '' && val1 === '') {
             return '';
         }
-        return '' + val0 + ',' + val1;
+        return val0 + ',' + val1;
     },
 
     setValue: function(value) {
-        if (value && value.indexOf(',') <= 0) {
-            var val0 = parseInt(value.split(',')[0], 10);
-            var val1 = parseInt(value.split(',')[1], 10);
+        if (value && value.indexOf(',') >= 0) {
+            var val0 = parseFloat(value.split(',')[0], 10);
+            var val1 = parseFloat(value.split(',')[1], 10);
             if (!isNaN(val0)) {
                 this.down('[name=' + this.name + 'From]').setValue(val0);
             } else {
-                this.down('[name='+ this.name + 'From]').setValue(null);
+                this.down('[name='+ this.name + 'From]').setValue();
             }
             if (!isNaN(val1)) {
                 this.down('[name='+ this.name + 'To]').setValue(val1);
             } else {
-                this.down('[name='+ this.name + 'To]').setValue(null);
+                this.down('[name='+ this.name + 'To]').setValue();
             }
         } else {
-            this.down('[name=' + this.name + 'From]').setValue(null);
-            this.down('[name=' + this.name + 'To]').setValue(null);
+            this.down('[name=' + this.name + 'From]').setValue();
+            this.down('[name=' + this.name + 'To]').setValue();
         }
     }
 });

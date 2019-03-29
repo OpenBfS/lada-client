@@ -13,9 +13,9 @@ Ext.define('Lada.view.window.AuditTrail', {
     extend: 'Ext.window.Window',
 
     layout: 'fit',
-
-    width: 300,
-    height: 300,
+    padding: '10 5 3 10',
+    width: 400,
+    height: 500,
 
     type: null,
 
@@ -40,6 +40,7 @@ Ext.define('Lada.view.window.AuditTrail', {
         me.on({
             show: function() {
                 me.initData();
+                me.removeCls('x-unselectable');
             }
         });
 
@@ -158,8 +159,13 @@ Ext.define('Lada.view.window.AuditTrail', {
         for (var key in audit.changedFields) {
             var value = '';
             if (Ext.Array.contains(this.dateItems, key)) {
-                value = Ext.Date.format(new Date(audit.changedFields[key]),
-                    'd.m.Y H:i');
+                if (key === 'solldatum_beginn' || key === 'solldatum_ende') {
+                    value = Ext.Date.format(new Date(audit.changedFields[key]),
+                        'd.m.Y');
+                } else {
+                    value = Ext.Date.format(new Date(audit.changedFields[key]),
+                        'd.m.Y H:i');
+                }
             } else {
                 value = audit.changedFields[key];
             }
@@ -169,13 +175,11 @@ Ext.define('Lada.view.window.AuditTrail', {
                 value = i18n.getMsg('true');
             } else if (value === false) {
                 value = i18n.getMsg('false');
-            }
-            if (key === 'messwert' ||
+            } else if (key === 'messwert' ||
                 key === 'messwert_pzs' ||
                 key === 'nwg_zu_messwert'
             ) {
                 var strValue = value.toExponential(2).toString()
-                    .replace('.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
                 var exponent = parseInt(splitted[1],10);
                 value = splitted[0] + 'e'
@@ -183,8 +187,21 @@ Ext.define('Lada.view.window.AuditTrail', {
                     + ((Math.abs(exponent) < 10) ? '0' : '')
                     + Math.abs(exponent).toString();
             }
-            html += '' + i18n.getMsg(key) + ': ' +
-                value + '<br>';
+            if (key === 'ext_id') {
+                switch (audit.type) {
+                    case 'probe':
+                        html += '' + i18n.getMsg('extProbeId') + ': ' +
+                            value + '<br>';
+                        break;
+                    case 'messung':
+                        html += '' + i18n.getMsg('extMessungsId') + ': ' +
+                            value + '<br>';
+                        break;
+                }
+            } else {
+                html += '' + i18n.getMsg(key) + ': ' +
+                    value + '<br>';
+            }
         }
         html += '</div>';
         html += '</p>';

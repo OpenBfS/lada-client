@@ -127,10 +127,10 @@ Ext.define('Lada.controller.Query', {
         var cquery = cbox.getStore().getById(cbox.getValue());
         var newrecord = Ext.create('Lada.model.Query',{
             baseQuery: cquery.get('baseQuery'),
-            name: cquery.get('name') + ' (Kopie)',
+            name: cquery.get('name') + ' ('+Lada.username+')',
             userId: Lada.userId,
             description: cquery.get('description'),
-            messStellesIds: this.getMessStellenUnique(),
+            messStellesIds: '',
             clonedFrom: cquery.get('id')
         });
         panel.store.add(newrecord);
@@ -523,7 +523,7 @@ Ext.define('Lada.controller.Query', {
                     break;
                 case 'number':
                     options.allowDecimals = true;
-                    options.hideTrigger = false;
+                    options.hideTrigger = true;
                     options.keyNavEnabled = false;
                     options.mouseWheelEnabled = false;
                     options.allowDecimalls = true;
@@ -531,6 +531,7 @@ Ext.define('Lada.controller.Query', {
                     options.value = recs[i].get('filterValue') || null;
                     field = Ext.create('Lada.view.widget.base.NumberRange',
                         options);
+                    field.setValue(recs[i].get('filterValue'));
                     break;
                 case 'land': // TODO: Wird nicht benötigt, könnte gelöscht werden
                     options.multiSelect = true;
@@ -738,7 +739,7 @@ Ext.define('Lada.controller.Query', {
     filterValueChanged: function(box, newvalue, oldvalue) {
         if (box.xtype === 'datefield' && box.up('daterange')) {
             this.multiValueChanged(box, newvalue, box.up('daterange'));
-        } else if (box.xtype === 'numberfield' && box.up('numrangefield')) {
+        } else if (box.xtype === 'expnumberfield' && box.up('numrangefield')) {
             this.multiValueChanged(box, newvalue, box.up('numrangefield'));
         } else {
             var store = box.up('querypanel').gridColumnValueStore;
@@ -762,17 +763,6 @@ Ext.define('Lada.controller.Query', {
 
     },
 
-    getMessStellenUnique: function() {
-        var mst = [];
-        if (Lada.mst) {
-            for (var j = 0; j < Lada.mst.length; j++) {
-                if (mst.indexOf(Lada.mst[j]) < 0) {
-                    mst.push(Lada.mst[j]);
-                }
-            }
-        }
-        return mst;
-    },
 
     setrowtarget: function(querypanel) {
         var rowHierarchy = ['messungId', 'probeId', 'mpId', 'ortId', 'probenehmer',

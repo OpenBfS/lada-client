@@ -601,7 +601,14 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 }
             }
             if (format === 'e') {
-                return parseFloat(value).toExponential();
+                var strValue = value.toExponential(2).toString().replace('.', Ext.util.Format.decimalSeparator);
+                    var splitted = strValue.split('e');
+                    var exponent = parseInt(splitted[1], 10);
+                    return splitted[0] + 'e'
+                        + ((exponent < 0) ? '-' : '+')
+                        + ((Math.abs(exponent) < 10) ? '0' : '')
+                        + Math.abs(exponent).toString();
+
             } else {
                 return Ext.util.Format.number(value, format);
             }
@@ -962,6 +969,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 });
             }
         }
+        if (this.rowtarget.dataType === 'probeId' || this.rowtarget.dataType === 'messungId') {
+            this.addRowExpanderButton();
+        }
     },
 
     genericDeleteButton: function() {
@@ -1024,6 +1034,37 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             this.setStore(store);
         };
         store.load(options);
+    },
+
+    addRowExpanderButton: function() {
+        var expander = this.getRowExpander();
+        var me = this;
+        if (expander && !this.tbuttonExists('expand')) {
+            this.toolbarbuttons.push({
+                xtype: 'button',
+                action: 'expand',
+                text: this.i18n.getMsg('grid.expandDetails'),
+                handler: function(button) {
+                    var newStatus = expander.toggleAllRows();
+                    if (!newStatus) {
+                        button.setText(me.i18n.getMsg('grid.expandDetails'));
+                    } else {
+                        button.setText(me.i18n.getMsg('grid.unexpandDetails'));
+                    }
+                }
+            });
+        }
+    },
+
+    getRowExpander: function() {
+        if (!this.plugins) {
+            return;
+        }
+        for (var i=0; i < this.plugins.length; i++) {
+            if (this.plugins[i].ptype === 'gridrowexpander') {
+                return this.plugins[i];
+            }
+        }
     }
 });
 

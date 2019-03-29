@@ -141,9 +141,9 @@ Ext.define('Lada.view.QueryPanel', {
             displayField: 'messStellesIds',
             tpl: Ext.create('Ext.XTemplate',
                 '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-                '{messStellesIds}</div></tpl>'),
+                '{messStellesIds} - {mst_name}</div></tpl>'),
             displayTpl: Ext.create('Ext.XTemplate',
-                '<tpl for=".">{messStellesIds}</tpl>')
+                '<tpl for=".">{messStellesIds} - {mst_name}</tpl>')
         }, {
             xtype: 'columnchoser'
         }, {
@@ -294,7 +294,7 @@ Ext.define('Lada.view.QueryPanel', {
                     groupstore.add(
                         Ext.create('Lada.model.QueryGroup', {
                             messStellesIds: records[i].get('id'),
-                            mst_name: records[i].get('beschreibung')
+                            mst_name: records[i].get('messStelle')
                         })
                     );
                 }
