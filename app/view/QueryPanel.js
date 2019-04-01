@@ -191,6 +191,7 @@ Ext.define('Lada.view.QueryPanel', {
     }, {
         xtype: 'fieldset',
         name: 'filtervariables',
+        title: 'query.filters.visible',
         style: {'border': '2px solid grey;'},
         margin: '10 15 10 15',
         minHeight: 20,
@@ -240,8 +241,7 @@ Ext.define('Lada.view.QueryPanel', {
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('query.title');
         this.callParent(arguments);
-        this.down('fieldset[name=filtervariables]').title = i18n.getMsg(
-            'title.filter');
+        this.down('fieldset[name=filtervariables]').setTitle(i18n.getMsg('query.filters.visible'));
         this.down('button[action=search]').text = i18n.getMsg('query.search');
         this.down('button[action=save]').text = i18n.getMsg('save');
         this.down('button[action=reset]').text =i18n.getMsg('reset');
