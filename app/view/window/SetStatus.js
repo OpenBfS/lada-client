@@ -32,6 +32,11 @@ Ext.define('Lada.view.window.SetStatus', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
+        this.on({
+            show: function() {
+                this.removeCls("x-unselectable");
+            }
+        });
         var possibleStatusStore;
         if ( this.selection) {
             var selectionIds = [];
@@ -93,13 +98,15 @@ Ext.define('Lada.view.window.SetStatus', {
             }]
         }, {
             xtype: 'panel',
+            layout: 'fit',
             hidden: true,
             margin: '5, 5, 5, 5',
-            overflow: 'auto',
+            scrollable: true,
             name: 'result'
         }, {
             xtype: 'progressbar',
             margin: '5, 5, 5, 5',
+            height: 25,
             hidden: true,
             text: i18n.getMsg('statusprogress')
         }];
@@ -194,7 +201,7 @@ Ext.define('Lada.view.window.SetStatus', {
                             me.down('button[name=start]').hide();
                             me.down('button[name=abort]').hide();
                             me.down('button[name=close]').show();
-                            result.setSize(values.getWidth(), values.getHeight());
+                            result.setMaxHeight('400');
                             result.setHtml(me.resultMessage);
                             result.show();
                             values.hide();
