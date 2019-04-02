@@ -50,18 +50,6 @@ Ext.define('Lada.view.widget.Statuskombi', {
         return btn;
     },
 
-    resetbutton: function() {
-        var i18n = Lada.getApplication().bundle;
-        var btn = Ext.create('Ext.Button', {
-            margin: '0 5 0 5',
-            text: i18n.getMsg('button.resetstatus'),
-            tooltip: i18n.getMsg('button.resetstatus.qtip'),
-            action: 'resetstatus',
-            disabled: true,
-            listeners: this.buttonListener
-        });
-        return btn;
-    },
 
     /**
      * Sets the widget value, adds buttons if needed and checks if reset button is activated
@@ -88,7 +76,6 @@ Ext.define('Lada.view.widget.Statuskombi', {
                 if (textfield) {
                     textfield.setEmptyText(text);
                 }
-                me.checkResetable();
             }
         });
         // instead of overwriting/appending initComponent, add the button at loading of values
@@ -96,24 +83,8 @@ Ext.define('Lada.view.widget.Statuskombi', {
         if (!button) {
             this.add(this.changebutton());
         }
-        button = this.down('button[action=resetstatus]');
-        if (!button) {
-            this.add(this.resetbutton());
-        }
     },
 
-    /**
-     * Checks if this widget is resetable and (de)activates the button accordingly
-     */
-    checkResetable: function() {
-        if (this.statusEdit &&
-            this.checkResetableState()
-        ) {
-            this.setResetable(true);
-        } else {
-            this.setResetable(false);
-        }
-    },
 
     /**Checks if the current value is unresetable
      * @return True if state is resetable, else false
