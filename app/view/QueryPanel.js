@@ -70,34 +70,38 @@ Ext.define('Lada.view.QueryPanel', {
                     submitValue: false
                 }]
             }, {
-                xtype: 'checkbox',
-                margin: '0 5 0 160',
-                name: 'filterQueriesGlobal',
-                submitValue: false,
-                boxLabel: 'query.showglobal',
-                flex: 1
-            }, {
-                xtype: 'checkbox',
-                margin: '0 5 0 160',
-                name: 'filterQueriesAvail',
-                submitValue: false,
-                boxLabel: 'query.showavail',
-                flex: 1
-            }, {
-                xtype: 'checkbox',
-                margin: '0 5 0 160',
-                name: 'filterQueriesOwn',
-                submitValue: false,
-                boxLabel: 'query.showown',
-                checked: true,
-                flex: 1
-            }, {
-                xtype: 'textarea',
-                name: 'description',
+                layout: 'hbox',
                 width: '100%',
-                fieldLabel: 'query.comment',
-                labelWidth: 125,
-                margin: '15 5 5 5'
+                align: 'stretch',
+                margin: '10 0 10 15',
+                border: false,
+                items: [{
+                    xtype: 'checkbox',
+                    name: 'filterQueriesGlobal',
+                    submitValue: false,
+                    boxLabel: 'query.showglobal',
+                    flex: 0.3
+                }, {
+                    xtype: 'checkbox',
+                    name: 'filterQueriesAvail',
+                    submitValue: false,
+                    boxLabel: 'query.showavail',
+                    flex: 0.3
+                }, {
+                    xtype: 'checkbox',
+                    name: 'filterQueriesOwn',
+                    submitValue: false,
+                    boxLabel: 'query.showown',
+                    checked: true,
+                    flex: 0.3
+                }]
+            }, {
+                    xtype: 'textarea',
+                    name: 'description',
+                    width: '100%',
+                    fieldLabel: 'query.comment',
+                    labelWidth: 125,
+                    margin: '15 5 5 5'
             }]
     }, {
         xtype: 'container',
