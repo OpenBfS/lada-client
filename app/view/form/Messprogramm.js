@@ -210,7 +210,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                 }, {
                     xtype: 'probenehmer',
                     name: 'probeNehmerId',
-                    fieldLabel: i18n.getMsg('probenehmerId'),
+                    fieldLabel: i18n.getMsg('probenehmer'),
                     margin: '0, 10, 5, 5',
                     minValue: 0,
                     editable: true,

@@ -228,7 +228,7 @@ Ext.define('Lada.view.form.Probe', {
                         items: [{
                             xtype: 'probenehmer',
                             name: 'probeNehmerId',
-                            fieldLabel: 'Probennehmer',
+                            fieldLabel: i18n.getMsg('probenehmer'),
                             margin: '0, 5, 5, 5',
                             width: '50%',
                             minValue: 0,
