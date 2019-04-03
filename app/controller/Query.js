@@ -125,6 +125,11 @@ Ext.define('Lada.controller.Query', {
         };
         qp.store.filter(filterFn);
         queryBox.setStore(qp.store);
+        var newquery = qp.store.findRecord('id', queryBox.getValue(), false,
+            false, false, true);
+        if (!newquery) {
+            this.changeCurrentQuery(queryBox);
+        }
     },
 
     cloneQuery: function(button) {
@@ -234,7 +239,7 @@ Ext.define('Lada.controller.Query', {
         contentPanel.removeAll();
         if (!newquery) {
             combobox.clearValue();
-            combobox.setDisplayField('');
+            combobox.resetOriginalValue();
             var emptyentry = Ext.create('Lada.model.Query',{
                 baseQuery: null,
                 name: null,
