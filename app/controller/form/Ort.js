@@ -237,23 +237,31 @@ Ext.define('Lada.controller.form.Ort', {
         var original = panel.original;
         var valid = true;
         var errors = {ozId: []};
-        if (formValues['koordXExtern'] == original.get('koordXExtern')
-                && formValues['koordYExtern'] == original.get('koordYExtern')
-                && formValues['ozId'] == original.get('ozId')) {
+        //Helper function to compare form values and record values.
+        //As empty form values are saved as "" and empty record values as null,
+        //the == operator will fail to compare them
+        var equals = function (first, second) {
+            first = first === "" ? null: first;
+            second = second === "" ? null: second;
+            return first === second;
+        }
+        if (equals(formValues['koordXExtern'], original.get('koordXExtern'))
+                && equals(formValues['koordYExtern'], original.get('koordYExtern'))
+                && equals(formValues['ozId'], original.get('ozId'))) {
             valid = false;
             errors['koordXExtern'] = ['err.orte.copy.duplicatecoordinates'];
             errors['koordYExtern'] = ['err.orte.copy.duplicatecoordinates'];
             errors['ozId'].push('err.orte.copy.duplicatecoordinates');
         }
-        if ( formValues['gemId'] == original.get('gemId')
-                && formValues['ozId'] == original.get('ozId')) {
+        if ( equals(formValues['gemId'], original.get('gemId'))
+                && equals(formValues['ozId'], original.get('ozId'))) {
             errors['gemId'] = ['err.orte.copy.duplicategemeinde'];
             errors['ozId'].push('err.orte.copy.duplicategemeinde');
             valid = false;
         }
-        if (formValues['staatId'] == original.get('staatId')
-                && formValues['ortTyp'] == original.get('ortTyp')
-                && formValues['ozId'] == original.get('ozId')) {
+        if (equals(formValues['staatId'], original.get('staatId'))
+                && equals(formValues['ortTyp'], original.get('ortTyp'))
+                && equals(formValues['ozId'], original.get('ozId'))) {
             valid = false;
             errors['staatId'] = ['err.orte.copy.duplicatestaat'];
             errors['ortTyp'] = ['err.orte.copy.duplicatestaat'];
