@@ -62,7 +62,13 @@ Ext.define('Lada.view.form.Probe', {
                         borderLeft: '1px solid #b5b8c8 !important',
                         borderRight: '1px solid #b5b8c8 !important'
                     },
-                    items: ['->', {
+                    items: [{
+                        text: i18n.getMsg('copy'),
+                        action: 'copy',
+                        qtip: i18n.getMsg('copy.qtip', i18n.getMsg('ort')),
+                        icon: 'resources/img/dialog-ok-apply.png',
+                        disabled: true
+                    },'->', {
                         text: i18n.getMsg('audittrail'),
                         qtip: i18n.getMsg('qtip.audit'),
                         icon: 'resources/img/distribute-vertical-center.png',
@@ -511,6 +517,7 @@ Ext.define('Lada.view.form.Probe', {
         if (!probeRecord.data || probeRecord.data.id === null) {
             return;
         }
+        this.down('button[action=copy]').setDisabled(probeRecord.phantom && record.get('readOnly'));
         var mstStore = Ext.data.StoreManager.get('messstellen');
         var mstId = mstStore.getById(probeRecord.get('mstId'));
         if (!probeRecord.get('owner')) {
