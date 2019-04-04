@@ -182,6 +182,8 @@ Ext.define('Lada.controller.Query', {
 
         cbox.setStore(panel.store);
         cbox.select(newrecord);
+        //Before changing query, set "own filter" to ensure that the new query can be shown
+        cbox.up('querypanel').down('checkbox[name=filterQueriesOwn]').setValue(true);
         this.changeCurrentQuery(cbox);
         panel.down('fieldset[name=querydetails]').setCollapsed(false);
         this.saveQuery(button, saveCallback, true);
