@@ -64,13 +64,16 @@ Ext.define('Lada.controller.form.Probe', {
      */
     copy: function(button) {
         var record = button.up('probeform').getRecord();
+        var pos = button.up('probeform').up().getPosition();
+        pos[0] += 10;
+        pos[1] += 10;
         this.copyProbe(record, function(probe) {
             var probeWin = Ext.create(
                 'Lada.view.window.ProbeEdit', {
                     record: probe,
                     style: 'z-index: -1;'
                 });
-            probeWin.setPosition(30);
+            probeWin.setPosition(pos);
             probeWin.show();
             probeWin.initData();
         });
@@ -529,7 +532,7 @@ Ext.define('Lada.controller.form.Probe', {
         } else {
             form.owner.down('button[action=save]').setDisabled(true);
             form.owner.down('button[action=discard]').setDisabled(true);
-            form.owner.down('button[action=copy]').setDisabled(true);
+            form.owner.down('button[action=copy]').setDisabled(false);
             form.owner.up('window').enableChildren(); // todo this might not be true in all cases
         }
     },

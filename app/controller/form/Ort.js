@@ -55,11 +55,16 @@ Ext.define('Lada.controller.form.Ort', {
         var record = button.up('ortform').getForm().getRecord();
         var copy = record.copy(null);
         record.set('ortId', null);
-        Ext.create('Lada.view.window.Ort',{
+        var win = Ext.create('Lada.view.window.Ort',{
             record: copy,
             mode: 'copy',
             original: record
-        }).show();
+        });
+        var pos = button.up('ortform').up().getPosition();
+        pos[0] += 10;
+        pos[1] += 10;
+        win.setPosition(pos);
+        win.show();
     },
 
     save: function(button) {
