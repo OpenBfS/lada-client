@@ -174,7 +174,6 @@ Ext.define('Lada.view.form.Ort', {
             name: 'nutsCode',
             fieldLabel: i18n.getMsg('orte.nutsCode')
         }];
-
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -189,7 +188,7 @@ Ext.define('Lada.view.form.Ort', {
                 action: 'copy',
                 qtip: i18n.getMsg('copy.qtip', i18n.getMsg('ort')),
                 icon: 'resources/img/dialog-ok-apply.png',
-                disabled: this.record.phantom ? true: false
+                disabled: !this.record.phantom && !this.record.get('readonly') ? false: true
             },
             '->',
             {

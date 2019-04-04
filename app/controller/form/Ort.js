@@ -151,8 +151,10 @@ Ext.define('Lada.controller.form.Ort', {
             panel = callingEl.owner;
         }
 
+        var record = callingEl.getRecord();
+
         var copybutton = panel.down('button[action=copy]');
-        if (dirty && !callingEl.getRecord().phantom) {
+        if (dirty && !record.phantom || record.get('readOnly')) {
             copybutton.setDisabled(true);
         } else {
             copybutton.setDisabled(false);

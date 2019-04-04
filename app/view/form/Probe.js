@@ -41,6 +41,7 @@ Ext.define('Lada.view.form.Probe', {
     border: false,
 
     recordId: null,
+    readOnly: false,
 
     trackResetOnLoad: true,
 
@@ -55,6 +56,7 @@ Ext.define('Lada.view.form.Probe', {
                 margin: '0, 0, 10, 0',
                 dockedItems: [{
                     xtype: 'toolbar',
+                    name: 'generaltoolbar',
                     dock: 'bottom',
                     border: '0, 1, 1, 1',
                     style: {
@@ -683,6 +685,8 @@ Ext.define('Lada.view.form.Probe', {
         this.down('datetime[name=probeentnahmeEnde]').setReadOnly(value);
         this.down('cbox[name=probeNehmerId]').setReadOnly(value);
         this.down('cbox[name=mplId]').setReadOnly(value);
+        this.down('button[action=copy]').setDisabled(value);
+        this.readOnly = value;
 
         //Deskriptoren
         for (var i = 0; i < 12; i++) {

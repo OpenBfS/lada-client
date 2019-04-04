@@ -63,6 +63,7 @@ Ext.define('Lada.controller.form.Probe', {
      * Copy the probe record of the form. Opens an edit window afterwards.
      */
     copy: function(button) {
+        button.up('toolbar[name=generaltoolbar]').setLoading(true);
         var record = button.up('probeform').getRecord();
         var pos = button.up('probeform').up().getPosition();
         pos[0] += 10;
@@ -76,6 +77,11 @@ Ext.define('Lada.controller.form.Probe', {
             probeWin.setPosition(pos);
             probeWin.show();
             probeWin.initData();
+            var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+            if (parentGrid.length === 1) {
+                parentGrid[0].reload();
+            }
+            button.up('toolbar[name=generaltoolbar]').setLoading(false);
         });
     },
 
@@ -527,13 +533,15 @@ Ext.define('Lada.controller.form.Probe', {
         if (dirty) {
             form.owner.down('button[action=save]').setDisabled(false);
             form.owner.down('button[action=discard]').setDisabled(false);
-            form.owner.down('button[action=copy]').setDisabled(true);
             form.owner.up('window').disableChildren();
+            form.owner.down('button[action=copy]').setDisabled(true);
         } else {
             form.owner.down('button[action=save]').setDisabled(true);
             form.owner.down('button[action=discard]').setDisabled(true);
-            form.owner.down('button[action=copy]').setDisabled(false);
             form.owner.up('window').enableChildren(); // todo this might not be true in all cases
+            if (!form.readOnly) {
+                form.owner.down('button[action=copy]').setDisabled(false);
+            }
         }
     },
 
