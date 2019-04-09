@@ -93,6 +93,7 @@ Ext.define('Lada.controller.form.Probe', {
      */
     copyProbe: function(probe, callback) {
         var probeId = probe.get('id');
+        var i18n = Lada.getApplication().bundle;
         var me = this;
         //Copy probe and reset fields not to be copied
         var fieldsToReset = [
@@ -108,7 +109,8 @@ Ext.define('Lada.controller.form.Probe', {
                 if (success) {
                     me.copyOrtszuordnung(probe, copy, callback);
                 } else {
-                    Ext.Msg.alert('Probe copy failed', 'Unaible to save copy of probe ' + probeId);
+                    var responseObj = Ext.decode(op.getResponse().responseText);
+                    Ext.Msg.alert(i18n.getMsg('err.probe.copy'), i18n.getMsg(responseObj.message));
                 }
             }
         });
@@ -133,7 +135,10 @@ Ext.define('Lada.controller.form.Probe', {
                 fetchedOrtszuordnungen = ortszuordnungArr.length;
                 var ortszuordnungCopyArr = [];
                 var ortszuordnungRecArr = [];
-
+                if (fetchedOrtszuordnungen == 0) {
+                    me.copyMessungen(probe, probeCopy, callback);
+                    return;
+                }
                 for (var i = 0; i < ortszuordnungArr.length; i++) {
                     var copy = Ext.create('Lada.model.Ortszuordnung', ortszuordnungArr[i]);
                     copy.set('id', null)
@@ -193,6 +198,11 @@ Ext.define('Lada.controller.form.Probe', {
                 var messungCopyArr = [];
                 //Array of original records
                 var messungRecArr = []
+
+                if (fetchedMessungen == 0) {
+                    callback(probeCopy);
+                    return;
+                }
                 //Reset fields and create records for the copys
                 for (var i = 0; i < messungArr.length; i++) {
                     var messung = messungArr[i];
@@ -249,6 +259,11 @@ Ext.define('Lada.controller.form.Probe', {
         //Maps containing the numbers of messwert objects to copy and objects already copied;
         var numMesswert = new Ext.util.HashMap();
         var messwertFinished = new Ext.util.HashMap();
+
+        if (numMessungen == 0) {
+            finishedCallback(probeCopy);
+            return;
+        };
 
         for (var i = 0; i < messungen.length; i++) {
             var messung = messungen[i];

@@ -32,6 +32,9 @@ Ext.define('Lada.model.MmtMessprogramm', {
             }
             return new Date(v);
         }
+    }, {
+        name: 'copyOf',
+        persist: false
     }],
 
     idProperty: 'id',
