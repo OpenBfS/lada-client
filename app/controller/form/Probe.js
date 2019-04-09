@@ -106,10 +106,58 @@ Ext.define('Lada.controller.form.Probe', {
         copy.save({
             callback: function(record, operation, success) {
                 if (success) {
-                    me.copyMessungen(probe, copy, callback);
+                    me.copyOrtszuordnung(probe, copy, callback);
                 } else {
                     Ext.Msg.alert('Probe copy failed', 'Unaible to save copy of probe ' + probeId);
                 }
+            }
+        });
+    },
+
+    copyOrtszuordnung: function(probe, probeCopy, callback) {
+        var me = this;
+        var savedOrtszuordnungen = 0;
+        var fetchedOrtszuordnungen = 0;
+        var saveErrors = null;
+
+        Ext.Ajax.request({
+            url: 'lada-server/rest/ortszuordnung',
+            params: {
+                probeId: probe.get('id')
+            },
+            method: 'GET',
+            success: function(response) {
+                var responseObj = Ext.decode(response.responseText);
+                //All messung objects as json object
+                var ortszuordnungArr = responseObj.data;
+                fetchedOrtszuordnungen = ortszuordnungArr.length;
+                var ortszuordnungCopyArr = [];
+                var ortszuordnungRecArr = [];
+
+                for (var i = 0; i < ortszuordnungArr.length; i++) {
+                    var copy = Ext.create('Lada.model.Ortszuordnung', ortszuordnungArr[i]);
+                    copy.set('id', null)
+                    copy.set('probeId', probeCopy.get('id'));
+                    copy.phantom = true;
+                    copy.save({
+                        callback: function(rec, op, success) {
+                            savedOrtszuordnungen++;
+                            if (!success) {
+                                saveErrors = saveErrors ? saveErrors + rec.get('id') + ' failed. ':
+                                        '' + rec.get('id') + ' failed. ';
+                            }
+                            if (savedOrtszuordnungen == fetchedOrtszuordnungen) {
+                                if (saveErrors) {
+                                    Ext.Msg.alert('Ortszuordnung copy failed!', saveErrors);
+                                } else {
+                                    me.copyMessungen(probe, probeCopy, callback);
+                                }
+                            }
+                        }
+                    });
+                }
+            },
+            failure: function(response) {
             }
         });
     },
@@ -162,19 +210,16 @@ Ext.define('Lada.controller.form.Probe', {
                     //Save new models
                     cpy.save({
                         callback: function(rec, op, success) {
-                            if (success) {
-                                savedMessungenCopies++;
-                                if (savedMessungenCopies == fetchedMessungen) {
-                                    if (saveErrors) {
-                                        Ext.Msg.alert('Messung copy failure!', saveErrors);
-                                    }
-                                        me.copyMesswerte(probeCopy, messungRecArr, messungCopyArr, callback);
-                                }
-                            } else {
+                            savedMessungenCopies++;
+                            if (!success) {
                                 saveErrors = saveErrors ? saveErrors + rec.get('id') + ' failed. ':
                                         '' + rec.get('id') + ' failed. ';
-                                if (savedMessungenCopies == fetchedMessungen) {
-                                    Ext.Msg.alert('Messung copy failure', saveErrors);
+                            }
+                            if (savedMessungenCopies == fetchedMessungen) {
+                                if (saveErrors) {
+                                    Ext.Msg.alert('Messung copy failure!', saveErrors);
+                                } else {
+                                    me.copyMesswerte(probeCopy, messungRecArr, messungCopyArr, callback);
                                 }
                             }
                         }

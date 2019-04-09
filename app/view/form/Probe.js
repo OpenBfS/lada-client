@@ -67,7 +67,7 @@ Ext.define('Lada.view.form.Probe', {
                     items: [{
                         text: i18n.getMsg('copy'),
                         action: 'copy',
-                        qtip: i18n.getMsg('copy.qtip', i18n.getMsg('ort')),
+                        qtip: i18n.getMsg('copy.qtip', i18n.getMsg('probe')),
                         icon: 'resources/img/dialog-ok-apply.png',
                         disabled: true
                     },'->', {
