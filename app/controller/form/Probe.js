@@ -148,15 +148,17 @@ Ext.define('Lada.controller.form.Probe', {
                         callback: function(rec, op, success) {
                             savedOrtszuordnungen++;
                             if (!success) {
-                                saveErrors = saveErrors ? saveErrors + rec.get('id') + ' failed. ':
-                                        '' + rec.get('id') + ' failed. ';
+                                var responseObj = Ext.decode(op.getResponse().responseText);
+                                var errString = i18n.getMsg('err.ortszuordnung.copy.text', rec.get('copyOf'),
+                                        i18n.getMsg(responseObj.message));
+                                saveErrors = saveErrors ? saveErrors + errString:
+                                        errString;
                             }
                             if (savedOrtszuordnungen == fetchedOrtszuordnungen) {
                                 if (saveErrors) {
-                                    Ext.Msg.alert('Ortszuordnung copy failed!', saveErrors);
-                                } else {
-                                    me.copyMessungen(probe, probeCopy, callback);
+                                    Ext.Msg.alert(i18n.getMsg('err.ortszuordnung.tile'), saveErrors);
                                 }
+                                me.copyMessungen(probe, probeCopy, callback);
                             }
                         }
                     });
