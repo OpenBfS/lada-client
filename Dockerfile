@@ -1,17 +1,4 @@
-#
-# Build and run LADA-client
-#
-# Build with e.g. `docker build --force-rm=true -t bfs/lada_client .'
-# Run from the repository root-dir with e.g.
-# `docker run --name lada_client
-#             --link lada_wildfly:lada-server
-#             -p 8180-8184:80-84 -d bfs/lada_client'
-#
-# The linked container may be created from the Dockerfile in the lada-server
-# repository.
-#
-# The LADA-application will be available under http://yourdockerhost:8182
-#
+# See README.markdown in the LADA server repository for usage hints
 
 FROM centos:centos6
 MAINTAINER mlechner@bfs.de
