@@ -815,11 +815,6 @@ Ext.define('Lada.view.window.GridExport', {
                 if (!value && value !== 0) {
                     return null;
                 }
-                if (value.indexOf('<') === 0) {
-                    // TODO better handling of '<'. it really is a 0 with
-                    // additional info, but it is a string, not a number
-                    return value;
-                }
                 return Number.parseFloat(value);
             case 'date':
                 if (column.dataType.format && !json) {
