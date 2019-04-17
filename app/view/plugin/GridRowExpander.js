@@ -160,9 +160,11 @@ Ext.define('Lada.view.plugin.GridRowExpander', {
         var cmps = me.cmps;
         var id = record.get(me.idRow);
         var idx = cmps.findIndex('recordId', id);
-        var cmp = cmps.getAt(idx);
 
-        cmps.remove(cmp);
-        cmp.destroy();
+        if (idx > -1) {
+            var cmp = cmps.getAt(idx);
+            cmps.remove(cmp);
+            cmp.destroy();
+        }
     }
 });
