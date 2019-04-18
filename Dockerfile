@@ -72,4 +72,4 @@ RUN GITINFO=" $(git name-rev --name-only HEAD 2>/dev/null) $(git rev-parse --sho
 #
 RUN echo build $(grep Lada.clientVersion app.js | cut -d '=' -f 2 | cut -d "'" -f 2) && ./docker-build-app.sh
 
-CMD export LANG=en_US.UTF-8 && /usr/sbin/httpd && /usr/sbin/shibd -F
+CMD export LANG=en_US.UTF-8 && /usr/sbin/httpd && /usr/sbin/shibd -f -F
