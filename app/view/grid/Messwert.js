@@ -60,6 +60,30 @@ Ext.define('Lada.view.grid.Messwert', {
                         if (readonlywin === true || readonlygrid === true || this.disabled) {
                             return false;
                         }
+                        if (o.record.phantom === true) {
+                            e.editor.down('expnumberfield[dataIndex=messwert]').allowBlank = false;
+                            e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').allowBlank = false;
+                            e.editor.down('formatnumberfield').allowBlank = false;
+                            e.editor.down('expnumberfield[dataIndex=messwert]').setReadOnly(false);
+                            e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').setReadOnly(false);
+                            e.editor.down('formatnumberfield').setReadOnly(false);
+                            if (e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').inputWrap) {
+                                e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').inputWrap.removeCls('x-lada-warning-field');
+                                e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').inputEl.removeCls('x-lada-warning-field');
+                            }
+                        } else {
+                            if (e.editor.down('checkbox').getValue() === true) {
+                                e.editor.down('expnumberfield[dataIndex=messwert]').allowBlank = true;
+                                e.editor.down('expnumberfield[dataIndex=messwert]').setReadOnly(true);
+                                e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').allowBlank = false;
+                                e.editor.down('formatnumberfield').allowBlank = true;
+                                e.editor.down('formatnumberfield').setReadOnly(true);
+                            } else {
+                                e.editor.down('expnumberfield[dataIndex=messwert]').allowBlank = false;
+                                e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').allowBlank = true;
+                                e.editor.down('formatnumberfield').allowBlank = false;
+                            }
+                        }
                         //Preselect Messeinheit
                         if (this.defaultMehId) {
                             o.record.set('mehId', this.defaultMehId);
@@ -103,7 +127,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 store: me.messgroesseStore,
                 displayField: 'messgroesse',
                 valueField: 'id',
-                allowBlank: true,
+                allowBlank: false,
                 editable: true,
                 forceSelection: true,
                 autoSelect: true,
@@ -131,7 +155,8 @@ Ext.define('Lada.view.grid.Messwert', {
             dataIndex: 'messwert',
             width: 80,
             editor: {
-                xtype: 'expnumberfield'
+                xtype: 'expnumberfield',
+                allowBlank: false
             },
             renderer: function(value) {
                 if (!value || value === '') {
@@ -183,7 +208,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 store: Ext.data.StoreManager.get('messeinheiten'),
                 displayField: 'einheit',
                 valueField: 'id',
-                allowBlank: true,
+                allowBlank: false,
                 editable: true,
                 forceSelection: true,
                 autoSelect: true,
@@ -205,7 +230,7 @@ Ext.define('Lada.view.grid.Messwert', {
             flex: 1,
             editor: {
                 xtype: 'formatnumberfield',
-                allowBlank: true,
+                allowBlank: false,
                 maxLength: 8,
                 minValue: 0,
                 maxValue: 1000,

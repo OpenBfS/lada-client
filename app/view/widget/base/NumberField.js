@@ -18,6 +18,10 @@ Ext.define('Lada.view.widget.base.NumberField', {
     border: false,
     margin: '0, 0, 5, 0',
 
+    warning: null,
+
+    error: null,
+
     initComponent: function() {
         this.items = [{
             xtype: 'numberfield',
@@ -61,8 +65,9 @@ Ext.define('Lada.view.widget.base.NumberField', {
     },
 
     showWarnings: function(warnings) {
+        this.clearWarningOrError();
         var img = this.down('image[name=warnImg]');
-        Ext.create('Ext.tip.ToolTip', {
+        this.warning = Ext.create('Ext.tip.ToolTip', {
             target: img.getEl(),
             html: warnings
         });
@@ -78,10 +83,11 @@ Ext.define('Lada.view.widget.base.NumberField', {
     },
 
     showErrors: function(errors) {
+        this.clearWarningOrError();
         var img = this.down('image[name=errorImg]');
         var warnImg = this.down('image[name=warnImg]');
         warnImg.hide();
-        Ext.create('Ext.tip.ToolTip', {
+        this.error = Ext.create('Ext.tip.ToolTip', {
             target: img.getEl(),
             html: errors
         });
@@ -105,6 +111,12 @@ Ext.define('Lada.view.widget.base.NumberField', {
     },
 
     clearWarningOrError: function() {
+        if (this.warning) {
+            this.warning.destroy();
+        }
+        if (this.error) {
+            this.error.destroy();
+        }
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
         this.down('numberfield').clearInvalid();

@@ -24,6 +24,9 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform button[action=discard]': {
                 click: this.discard
             },
+            'messprogrammform button[action=copy]': {
+                click: this.copy
+            },
             'messprogrammform': {
                 dirtychange: this.dirtyForm,
                 save: this.saveHeadless
@@ -59,6 +62,147 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 change: this.datenbasisChanged
             }
 
+        });
+    },
+
+    /**
+     * Start to copy the content of the messprogramm form
+     */
+    copy: function(button) {
+        var me = this;
+        var origRecord = button.up('messprogrammform').getRecord();
+        var pos = button.up('messprogrammform').up().getPosition();
+        pos[0] += 10;
+        pos[1] += 10;
+
+        var copy = origRecord.copy(null);
+        copy.set('id', null);
+        copy.save({
+            callback: function(rec, operation, success) {
+                if (success) {
+                    me.copyOrtszuordnung(origRecord, copy, function(copiedRecord) {
+                        var win = Ext.create('Lada.view.window.Messprogramm',{
+                            record: copiedRecord
+                        });
+                        win.setPosition(pos);
+                        win.show();
+                        win.initData();
+                    });
+                } else {
+                    var responseObj = Ext.decode(op.getResponse().responseText);
+                    Ext.Msg.alert(i18n.getMsg('err.messprogramm.copy'), i18n.getMsg(responseObj.message));
+                }
+            }
+        });
+    },
+
+    copyOrtszuordnung: function(mp, mpCopy, finishedCallback) {
+        var me = this;
+        var savedOrtszuordnungen = 0;
+        var fetchedOrtszuordnungen = 0;
+        var saveErrors = null;
+        var i18n = Lada.getApplication().bundle;
+
+        Ext.Ajax.request({
+            url: 'lada-server/rest/ortszuordnungmp',
+            params: {
+                messprogrammId: mp.get('id')
+            },
+            method: 'GET',
+            success: function(response) {
+                var responseObj = Ext.decode(response.responseText);
+                //All messung objects as json object
+                var ortszuordnungArr = responseObj.data;
+                fetchedOrtszuordnungen = ortszuordnungArr.length;
+                var ortszuordnungCopyArr = [];
+                var ortszuordnungRecArr = [];
+
+                if (fetchedOrtszuordnungen == 0) {
+                    finishedCallback(mpCopy);
+                }
+
+                for (var i = 0; i < ortszuordnungArr.length; i++) {
+                    var copy = Ext.create('Lada.model.OrtszuordnungMp', ortszuordnungArr[i]);
+                    copy.set('copyOf', copy.get('id'));
+                    copy.set('id', null)
+                    copy.set('messprogrammId', mpCopy.get('id'));
+                    copy.phantom = true;
+                    copy.save({
+                        callback: function(rec, op, success) {
+                            savedOrtszuordnungen++;
+                            if (!success) {
+                                var responseObj = Ext.decode(op.getResponse().responseText);
+                                var errString = i18n.getMsg('err.ortszuordnung.copy.text', rec.get('copyOf'),
+                                        i18n.getMsg(responseObj.message));
+                                saveErrors = saveErrors ? saveErrors + errString:
+                                        errString;
+                            }
+                            if (savedOrtszuordnungen == fetchedOrtszuordnungen) {
+                                if (saveErrors) {
+                                    Ext.Msg.alert(i18n.getMsg('err.ortszuordnung.tile'), saveErrors);
+                                }
+                                me.copyMessmethoden(mp, mpCopy, finishedCallback);
+                            }
+                        }
+                    });
+                }
+            },
+            failure: function(response) {
+            }
+        });
+    },
+
+    copyMessmethoden: function(mp, mpCopy, finishedCallback) {
+        var me = this;
+        var savedMmt = 0;
+        var fetchedMmt = 0;
+        var saveErrors = null;
+        var i18n = Lada.getApplication().bundle;
+
+        Ext.Ajax.request({
+            url: 'lada-server/rest/messprogrammmmt',
+            params: {
+                messprogrammId: mp.get('id')
+            },
+            method: 'GET',
+            success: function(response) {
+                var responseObj = Ext.decode(response.responseText);
+                //All messung objects as json object
+                var mmtArr = responseObj.data;
+                fetchedMmt = mmtArr.length;
+
+                if (fetchedMmt == 0) {
+                    finishedCallback(mpCopy);
+                }
+
+                for (var i = 0; i < mmtArr.length; i++) {
+                    var copy = Ext.create('Lada.model.MmtMessprogramm', mmtArr[i]);
+                    copy.set('copyOf', copy.get('id'));
+                    copy.set('id', null)
+                    copy.set('messprogrammId', mpCopy.get('id'));
+                    copy.phantom = true;
+                    copy.save({
+                        callback: function(rec, op, success) {
+                            savedMmt++;
+                            if (!success) {
+                                var responseObj = Ext.decode(op.getResponse().responseText);
+                                var errString = i18n.getMsg('err.mmt.copy.text', rec.get('copyOf'),
+                                        i18n.getMsg(responseObj.message));
+                                saveErrors = saveErrors ? saveErrors + errString:
+                                        errString;
+                            }
+                            if (savedMmt == fetchedMmt) {
+                                if (saveErrors) {
+                                    Ext.Msg.alert(i18n.getMsg('err.mmt.tile'), saveErrors);
+                                }
+                                finishedCallback(mpCopy);
+                            }
+                        }
+                    });
+                }
+            },
+            failure: function(response) {
+            }
         });
     },
 
@@ -357,9 +501,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
             form.getRecord().get('readonly') === true) {
             form.owner.up('messprogramm').down(
                 'button[action=generateproben]').setDisabled(true);
+                form.owner.down('button[action=copy]').setDisabled(true);
         } else {
             form.owner.up('messprogramm').down(
                 'button[action=generateproben]').setDisabled(false);
+                form.owner.down('button[action=copy]').setDisabled(false);
         }
     },
 

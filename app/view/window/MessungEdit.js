@@ -252,8 +252,7 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.down('fset[name=messwerte]').down('messwertgrid').readOnly = true;
         this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(true);
         this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = true;
-        //this.disableStatusEdit();
-        //this.disableStatusReset();
+        this.disableStatusEdit();
     },
 
     /**
@@ -264,23 +263,10 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.down('fset[name=messwerte]').down('messwertgrid').readOnly = false;
         this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(false);
         this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = false;
-        //this.enableStatusEdit();
-        //this.enableStatusReset();
+        this.enableStatusEdit();
     },
 
-    /**
-     * Enable to reset the statusgrid
-     */
-    enableStatusReset: function() {
-        this.down('statuskombi').setResetable(true);
-    },
 
-    /**
-     * Disable to reset the statusgrid
-     */
-    disableStatusReset: function() {
-        this.down('statuskombi').setResetable(false);
-    },
     /**
      * Enable to edit the statusgrid
      */

@@ -21,7 +21,7 @@ Ext.define('Lada.view.QueryPanel', {
     ],
     gridColumnValueStore: Ext.create('Lada.store.GridColumnValue'),
     store: null,
-    scrollable:true,
+    scrollable: true,
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -47,7 +47,12 @@ Ext.define('Lada.view.QueryPanel', {
                     fieldLabel: 'query.query',
                     name: 'selectedQuery',
                     displayField: 'name',
+                    queryMode: 'local',
                     valueField: 'id',
+                    tpl: Ext.create('Ext.XTemplate',
+                        '<tpl for="."><div class="x-combo-list-item x-boundlist-item" >' +
+                        '{name}</div></tpl>'),
+                    displayTpl: Ext.create('Ext.XTemplate', '<tpl for=".">{name}</tpl>'),
                     flex: 1,
                     labelWidth: 125,
                     submitValue: false,
@@ -65,20 +70,38 @@ Ext.define('Lada.view.QueryPanel', {
                     submitValue: false
                 }]
             }, {
-                xtype: 'checkbox',
-                margin: '5 5 5 135',
-                name: 'ownqueries',
-                submitValue: false,
-                boxLabel: 'query.showown',
-                checked: true,
-                flex: 1
-            }, {
-                xtype: 'textarea',
-                name: 'description',
+                layout: 'hbox',
                 width: '100%',
-                fieldLabel: 'query.comment',
-                labelWidth: 125,
-                margin: '15 5 5 5'
+                align: 'stretch',
+                margin: '10 0 10 15',
+                border: false,
+                items: [{
+                    xtype: 'checkbox',
+                    name: 'filterQueriesGlobal',
+                    submitValue: false,
+                    boxLabel: 'query.showglobal',
+                    flex: 0.3
+                }, {
+                    xtype: 'checkbox',
+                    name: 'filterQueriesAvail',
+                    submitValue: false,
+                    boxLabel: 'query.showavail',
+                    flex: 0.3
+                }, {
+                    xtype: 'checkbox',
+                    name: 'filterQueriesOwn',
+                    submitValue: false,
+                    boxLabel: 'query.showown',
+                    checked: true,
+                    flex: 0.3
+                }]
+            }, {
+                    xtype: 'textarea',
+                    name: 'description',
+                    width: '100%',
+                    fieldLabel: 'query.comment',
+                    labelWidth: 125,
+                    margin: '15 5 5 5'
             }]
     }, {
         xtype: 'container',
@@ -172,6 +195,7 @@ Ext.define('Lada.view.QueryPanel', {
     }, {
         xtype: 'fieldset',
         name: 'filtervariables',
+        title: 'query.filters.visible',
         style: {'border': '2px solid grey;'},
         margin: '10 15 10 15',
         minHeight: 20,
@@ -221,12 +245,13 @@ Ext.define('Lada.view.QueryPanel', {
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('query.title');
         this.callParent(arguments);
-        this.down('fieldset[name=filtervariables]').title = i18n.getMsg(
-            'title.filter');
+        this.down('fieldset[name=filtervariables]').setTitle(i18n.getMsg('query.filters.visible'));
         this.down('button[action=search]').text = i18n.getMsg('query.search');
         this.down('button[action=save]').text = i18n.getMsg('save');
         this.down('button[action=reset]').text =i18n.getMsg('reset');
-        this.down('checkbox[name=ownqueries]').boxLabel = i18n.getMsg('query.showown');
+        this.down('checkbox[name=filterQueriesAvail]').boxLabel = i18n.getMsg('query.showavailable');
+        this.down('checkbox[name=filterQueriesOwn]').boxLabel = i18n.getMsg('query.showown');
+        this.down('checkbox[name=filterQueriesGlobal]').boxLabel = i18n.getMsg('query.showglobal');
         this.down('fieldset[name=querydetails]').setTitle(i18n.getMsg('query.details'));
         this.down('button[action=newquery]').text = i18n.getMsg('query.new');
         this.down('button[action=delquery]').text = i18n.getMsg('delete');
@@ -261,23 +286,19 @@ Ext.define('Lada.view.QueryPanel', {
             scope: this,
             callback: function() {
                 this.store.clearFilter();
-                if (this.down('checkbox[name=ownqueries]').getValue() === true) {
-                    this.store.filter({
-                        property: 'userId',
-                        value: Lada.userId,
-                        exactMatch: true
-                    });
-                }
-                selquery.setStore(this.store);
+                var fq = this.down('checkbox[name=filterQueriesOwn]');
+                fq.fireEvent('change', fq);
                 var record0 = this.store.getAt(0);
                 if (!record0) {
-                    this.down('checkbox[name=ownqueries]').setValue(false);
                     this.down('button[action=delquery]').setDisabled(true);
-                    this.store.clearFilter();
+                    var globalCB = this.down('checkbox[name=filterQueriesGlobal]');
+                    globalCB.setValue(true);
+                    globalCB.fireEvent('change', globalCB);
                     record0 = this.store.getAt(0);
                 } else {
                     this.down('button[action=delquery]').setDisabled(false);
                 }
+                selquery.setStore(this.store);
                 selquery.select(record0);
                 selquery.fireEvent('select', selquery);
             }
@@ -307,8 +328,10 @@ Ext.define('Lada.view.QueryPanel', {
         var record = this.getForm().getRecord();
         if (record === undefined || record.get('clonedFrom') === 'empty') {
             var ccstore = this.down('columnchoser').store;
-            ccstore.removeAll();
-            this.down('columnchoser').setStore(ccstore);
+            if (ccstore) {
+                ccstore.removeAll();
+                this.down('columnchoser').setStore(ccstore);
+            }
             this.down('columnsort').setStore(null);
             this.down('cbox[name=activefilters]').store.filter(function(item) {
                 // don't show any items, as there is no baseQuery
@@ -327,54 +350,56 @@ Ext.define('Lada.view.QueryPanel', {
             this.gridColumnValueStore.proxy.extraParams = {
                 'qid': qid
             };
-        }
-        var me = this;
-        this.gridColumnValueStore.load({
-            callback: function() {
-                columnstore.clearFilter();
-                columnstore.filter({
-                    property: 'baseQuery',
-                    value: record.get('baseQuery'),
-                    exactMatch: true
-                });
-                var items = me.gridColumnValueStore.getData().items;
-                var activeFilters = [];
-                if (items.length) {
-                    for (var i=0; i < items.length; i++) {
-                        var gridColumn = columnstore.findRecord('id',
-                            items[i].get('gridColumnId'),0,false, false, true);
-                        items[i].set('dataIndex', gridColumn.get('dataIndex'));
-                        items[i].set('name', gridColumn.get('name'));
-                        if (items[i].get('filterActive')) {
-                            activeFilters.push(gridColumn.get('dataIndex'));
+            var me = this;
+            this.gridColumnValueStore.load({
+                callback: function() {
+                    columnstore.clearFilter();
+                    columnstore.filter({
+                        property: 'baseQuery',
+                        value: record.get('baseQuery'),
+                        exactMatch: true
+                    });
+                    var items = me.gridColumnValueStore.getData().items;
+                    var activeFilters = [];
+                    if (items.length) {
+                        for (var i=0; i < items.length; i++) {
+                            var gridColumn = columnstore.findRecord('id',
+                                items[i].get('gridColumnId'),0,false, false, true);
+                            items[i].set('dataIndex', gridColumn.get('dataIndex'));
+                            items[i].set('name', gridColumn.get('name'));
+                            if (items[i].get('filterActive')) {
+                                activeFilters.push(gridColumn.get('dataIndex'));
+                            }
                         }
                     }
-                }
-                me.down('columnchoser').setStore(me.gridColumnValueStore,
-                    columnstore);
-                me.down('columnsort').setStore(me.gridColumnValueStore);
+                    me.down('columnchoser').setStore(me.gridColumnValueStore,
+                        columnstore);
+                    me.down('columnsort').setStore(me.gridColumnValueStore);
+                    var filterwidget = me.down('cbox[name=activefilters]');
+                    filterwidget.store.clearFilter();
+                    filterwidget.store.filter({
+                        property: 'baseQuery',
+                        value: record.get('baseQuery'),
+                        exactMatch: true
+                    });
+                    filterwidget.store.filter(function(item) {
+                        if (item.get('filter')) {
+                            return true;
+                        }
+                        return false;
+                    });
+                    filterwidget.setValue(activeFilters.join(','));
 
-                var filterwidget = me.down('cbox[name=activefilters]');
-                filterwidget.store.clearFilter();
-                filterwidget.store.filter({
-                    property: 'baseQuery',
-                    value: record.get('baseQuery'),
-                    exactMatch: true
-                });
-                filterwidget.store.filter(function(item) {
-                    if (item.get('filter')) {
-                        return true;
+                    me.down('cbox[name=messStellesIds]').setValue(record.get('messStellesIds'));
+
+                    me.down('button[action=save]').setDisabled(me.isQueryReadonly());
+
+                    if (record.get('clonedFrom') !== 'empty' || !record.phantom) {
+                        me.down('button[name=search]').setDisabled(false);
                     }
-                    return false;
-                });
-                filterwidget.setValue(activeFilters.join(','));
-
-                me.down('cbox[name=messStellesIds]').setValue(record.get('messStellesIds'));
-
-                me.down('button[action=save]').setDisabled(!record.phantom);
-                me.down('button[name=search]').setDisabled(false);
-            }
-        });
+                }
+            });
+        }
     },
 
     //checks checks if a query is editable by the current user

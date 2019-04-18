@@ -40,8 +40,14 @@ Ext.define('Lada.controller.Query', {
     init: function() {
         var me = this;
         this.control({
-            'querypanel checkbox[name=ownqueries]': {
-                change: me.listAllQueries
+            'querypanel checkbox[name=filterQueriesGlobal]': {
+                change: me.changeListedQueries
+            },
+            'querypanel checkbox[name=filterQueriesAvail]': {
+                change: me.changeListedQueries
+            },
+            'querypanel checkbox[name=filterQueriesOwn]': {
+                change: me.changeListedQueries
             },
             'querypanel button[action=newquery]': {
                 click: me.cloneQuery
@@ -100,24 +106,29 @@ Ext.define('Lada.controller.Query', {
 
     },
 
-    listAllQueries: function(checkbox, newval) {
+    changeListedQueries: function(checkbox) {
         var qp = checkbox.up('querypanel');
+        var cbGlobal = qp.down('checkbox[name=filterQueriesGlobal]').getValue();
+        var cbOwn = qp.down('checkbox[name=filterQueriesOwn]').getValue();
+        var cbAvail = qp.down('checkbox[name=filterQueriesAvail]').getValue();
+        var queryBox = qp.down('combobox[name=selectedQuery]');
         qp.store.clearFilter();
-        if (newval === true) {
-            qp.store.filter({
-                property: 'userId',
-                value: Lada.userId,
-                exactMatch: true
-            });
-            var newrec = qp.store.findRecord('id',
-                qp.down('combobox[name=selectedQuery]').getValue(), false, false,false, true);
-            if (newrec) {
-                checkbox.resetOriginalValue();
-            } else {
-                qp.down('combobox[name=selectedQuery]').clearValue();
-                qp.down('combobox[name=selectedQuery]').resetOriginalValue();
-                this.changeCurrentQuery(checkbox);
+        var filterFn = function(item) {
+            if (cbOwn && item.get('userId') === Lada.userId) {
+                return true;
+            } else if ( cbGlobal && item.get('userId') === 0) {
+                return true;
+            } else if (cbAvail && item.get('userId') !== Lada.userId && item.get('userId') !== 0) {
+                return true;
             }
+            return false;
+        };
+        qp.store.filter(filterFn);
+        queryBox.setStore(qp.store);
+        var newquery = qp.store.findRecord('id', queryBox.getValue(), false,
+            false, false, true);
+        if (!newquery) {
+            this.changeCurrentQuery(queryBox);
         }
     },
 
@@ -171,6 +182,8 @@ Ext.define('Lada.controller.Query', {
 
         cbox.setStore(panel.store);
         cbox.select(newrecord);
+        //Before changing query, set "own filter" to ensure that the new query can be shown
+        cbox.up('querypanel').down('checkbox[name=filterQueriesOwn]').setValue(true);
         this.changeCurrentQuery(cbox);
         panel.down('fieldset[name=querydetails]').setCollapsed(false);
         this.saveQuery(button, saveCallback, true);
@@ -198,8 +211,9 @@ Ext.define('Lada.controller.Query', {
                                 qp.store.load({callback: function() {
                                     combobox.setStore(qp.store);
                                     if (combobox.store.getData().count() === 0) {
-                                        var checkbox = qp.down('checkbox[name=ownqueries]');
-                                        checkbox.setValue(false);
+                                        var globalCheckbox = qp.down('checkbox[name=filterQueriesGlobal]');
+                                        globalCheckbox.setValue(true);
+                                        globalCheckbox.fireEvent('change',globalCheckbox);
                                     }
                                     combobox.setValue(qp.store.getAt(0));
                                     me.changeCurrentQuery(combobox);
@@ -215,13 +229,19 @@ Ext.define('Lada.controller.Query', {
 
     changeCurrentQuery: function(combobox) {
         var qp = combobox.up('querypanel');
-        var newquery = qp.store.getById(combobox.getValue());
+        qp.down('button[name=search]').setDisabled(true);
+        var newquery = qp.store.findRecord('id', combobox.getValue(), false, false, false,
+            true);
         combobox.resetOriginalValue();
-
+        qp.down('checkbox[name=filterQueriesAvail]').resetOriginalValue();
+        qp.down('checkbox[name=filterQueriesGlobal]').resetOriginalValue();
+        qp.down('checkbox[name=filterQueriesOwn]').resetOriginalValue();
         var contentPanel = qp.up('panel[name=main]').down(
             'panel[name=contentpanel]');
         contentPanel.removeAll();
         if (!newquery) {
+            combobox.clearValue();
+            combobox.resetOriginalValue();
             var emptyentry = Ext.create('Lada.model.Query',{
                 baseQuery: null,
                 name: null,
@@ -473,208 +493,210 @@ Ext.define('Lada.controller.Query', {
             }
             var fixcolumn = fixColumnStore.findRecord('id',
                 recs[i].get('gridColumnId'), false, false, false, true);
-            var dt = fixcolumn.get('dataType');
-            var field = null;
-            var options = {
-                name: fixcolumn.get('dataIndex'),
-                columnIndex: recs[i].get('columnIndex'),
-                labelWidth: 125,
-                fieldLabel: fixcolumn.get('name'),
-                width: '100%',
-                editable: true,
-                border: false,
-                triggers: {
-                    clear: {
-                        extraCls: 'x-form-clear-trigger',
-                        handler: function() {
-                            this.clearValue();
+            if (fixcolumn) {
+                var dt = fixcolumn.get('dataType');
+                var field = null;
+                var options = {
+                    name: fixcolumn.get('dataIndex'),
+                    columnIndex: recs[i].get('columnIndex'),
+                    labelWidth: 125,
+                    fieldLabel: fixcolumn.get('name'),
+                    width: '100%',
+                    editable: true,
+                    border: false,
+                    triggers: {
+                        clear: {
+                            extraCls: 'x-form-clear-trigger',
+                            handler: function() {
+                                this.clearValue();
+                            }
                         }
                     }
-                }
-            };
-            switch (dt.name) {
-                case 'text':
-                case 'probeId':
-                case 'messungId':
-                case 'ortId':
-                    options.triggers = {
-                        clear: {
-                            extraCls: 'x-form-clear-trigger',
-                            handler: function() {
-                                this.setValue('');
+                };
+                switch (dt.name) {
+                    case 'text':
+                    case 'probeId':
+                    case 'messungId':
+                    case 'ortId':
+                        options.triggers = {
+                            clear: {
+                                extraCls: 'x-form-clear-trigger',
+                                handler: function() {
+                                    this.setValue('');
+                                }
                             }
-                        }
-                    };
-                    options.value = recs[i].get('filterValue') || null;
-                    field = Ext.create('Ext.form.field.Text', options);
-                    break;
-                case 'date':
-                    options.triggers = {
-                        clear: {
-                            extraCls: 'x-form-clear-trigger',
-                            handler: function() {
-                                this.setValue(',');
+                        };
+                        options.value = recs[i].get('filterValue') || null;
+                        field = Ext.create('Ext.form.field.Text', options);
+                        break;
+                    case 'date':
+                        options.triggers = {
+                            clear: {
+                                extraCls: 'x-form-clear-trigger',
+                                handler: function() {
+                                    this.setValue(',');
+                                }
                             }
-                        }
-                    };
-                    field = Ext.create('Lada.view.widget.base.DateRange',
-                        options);
-                    field.setValue(recs[i].get('filterValue'));
-                    break;
-                case 'number':
-                    options.allowDecimals = true;
-                    options.hideTrigger = true;
-                    options.keyNavEnabled = false;
-                    options.mouseWheelEnabled = false;
-                    options.allowDecimalls = true;
-                    options.decimalPrecision = 10;
-                    options.value = recs[i].get('filterValue') || null;
-                    field = Ext.create('Lada.view.widget.base.NumberRange',
-                        options);
-                    field.setValue(recs[i].get('filterValue'));
-                    break;
-                case 'land': // TODO: Wird nicht benötigt, könnte gelöscht werden
-                    options.multiSelect = true;
-                    options.editable = true;
-                    options.value = this.getFilterValueMulti(recs[i]);
-                    options.store = Ext.data.StoreManager.get(
-                        'messprogrammkategorie');
-                    field = Ext.create('Lada.view.widget.MessprogrammLand',
-                        options);
+                        };
+                        field = Ext.create('Lada.view.widget.base.DateRange',
+                            options);
+                        field.setValue(recs[i].get('filterValue'));
+                        break;
+                    case 'number':
+                        options.allowDecimals = true;
+                        options.hideTrigger = true;
+                        options.keyNavEnabled = false;
+                        options.mouseWheelEnabled = false;
+                        options.allowDecimalls = true;
+                        options.decimalPrecision = 10;
+                        options.value = recs[i].get('filterValue') || null;
+                        field = Ext.create('Lada.view.widget.base.NumberRange',
+                            options);
+                        field.setValue(recs[i].get('filterValue'));
+                        break;
+                    case 'land': // TODO: Wird nicht benötigt, könnte gelöscht werden
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        options.store = Ext.data.StoreManager.get(
+                            'messprogrammkategorie');
+                        field = Ext.create('Lada.view.widget.MessprogrammLand',
+                            options);
 
-                    break;
-                case 'messstelle':
-                    options.multiSelect = true;
-                    options.editable = true;
-                    options.value = this.getFilterValueMulti(recs[i]);
-                    options.store = Ext.data.StoreManager.get('messstellen');
-                    field = Ext.create('Lada.view.widget.Messstelle', options);
-                    break;
-                case 'boolean':
-                    options.multiSelect = false;
-                    options.value = this.getFilterValueMulti(recs[i]);
-                    field = Ext.create('Lada.view.widget.BoolFilter', options);
-                    break;
-                case 'umwbereich':
-                    options.multiSelect = true;
-                    options.store = Ext.data.StoreManager.get('umwelt');
-                    options.value = recs[i].get('filterValue');
-                    field = Ext.create('Lada.view.widget.Umwelt' , options);
-                    break;
-                case 'statuswert':
-                    options.multiSelect = true;
-                    options.editable = true;
-                    options.value = this.getFilterValueMulti(recs[i]);
-                    options.store = Ext.data.StoreManager.get('statuswerte');
-                    field = Ext.create('Lada.view.widget.Status', options);
-                    break;
-                case 'geom':// TODO: how/if to implement
-                    break;
-                case 'egem':
-                    options.multiSelect = true;
-                    options.editable = true;
-                    options.value = this.getFilterValueMulti(recs[i]);
-                    field = Ext.create('Lada.view.widget.Verwaltungseinheit',
-                        options);
-                    break;
-                case 'datenbasis':
-                    options.multiSelect = true;
-                    options.editable = true;
-                    options.value = this.getFilterValueMulti(recs[i]);
-                    field = Ext.create('Lada.view.widget.Datenbasis', options);
-                    break;
-                case 'netzbetr':
-                    options.multiSelect = true;
-                    options.editable = true;
-                    options.value = this.getFilterValueMulti(recs[i]);
-                    field = Ext.create('Lada.view.widget.Netzbetreiber',
-                        options);
-                    break;
-                case 'probenart':
-                    options.multiSelect = true;
-                    options.editable = true;
-                    options.value = this.getFilterValueMulti(recs[i]);
-                    field = Ext.create('Lada.view.widget.Probenart', options);
-                    break;
-                case 'staat':
-                    options.multiSelect = true;
-                    options.editable = true;
-                    options.value = this.getFilterValueMulti(recs[i]);
-                    field = Ext.create('Lada.view.widget.Staat', options);
-                    break;
-                case 'messRegime':
-                    options.multiSelect = true;
-                    options.editable = true;
-                    options.value = this.getFilterValueMulti(recs[i]);
-                    field = Ext.create('Lada.view.widget.Betriebsart',
-                        options);
-                    break;
-                case 'statusstufe':
-                    options.multiSelect = true;
-                    options.editable = true;
-                    options.value = this.getFilterValueMulti(recs[i]);
-                    options.store = Ext.data.StoreManager.get('statusstufe');
-                    field = Ext.create('Lada.view.widget.StatusStufe', options);
-                    break;
-                case 'statuskombi':
-                    options.multiSelect = true;
-                    options.editable = true;
-                    options.value = this.getFilterValueMulti(recs[i]);
-                    options.store = Ext.data.StoreManager.get('statuskombi');
-                    field = Ext.create('Lada.view.widget.StatuskombiSelect',
-                        options);
-                    field.store.load();
-                    break;
-                case 'anlage':
-                    options.multiSelect = true;
-                    options.store = Ext.data.StoreManager.get('ktaGruppe');
-                    options.value = recs[i].get('filterValue');
-                    field = Ext.create('Lada.view.widget.KtaGruppe',
-                        options);
-                    break;
-                case 'reiproggrp':
-                    options.multiSelect = true;
-                    options.editable = true;
-                    options.value = recs[i].get('filterValue');
-                    field = Ext.create('Lada.view.widget.ReiProgpunktGruppe',
-                        options);
-                    break;
-                case 'mpl':
-                    options.multiSelect = true;
-                    options.editable = true;
-                    options.value = recs[i].get('filterValue');
-                    field = Ext.create('Lada.view.widget.MessprogrammLand',
-                        options);
-                    break;
-                case 'prnId':
-                    options.multiSelect = true;
-                    options.editable = true;
-                    options.value = recs[i].get('filterValue');
-                    field = Ext.create('Lada.view.widget.Probenehmer',
-                        options);
-                    break;
-                case 'mmtId':
-                    options.multiSelect = true;
-                    options.editable = true;
-                    options.value = recs[i].get('filterValue');
-                    field = Ext.create('Lada.view.widget.Messmethode',
-                        options);
-                    break;
-                case 'messgroesse':
-                    options.multiSelect = true;
-                    options.editable = true;
-                    options.value = recs[i].get('filterValue');
-                    field = Ext.create('Lada.view.widget.Messgroesse',
-                        options);
-                    break;
-                default:
-                    options.value = recs[i].get('filterValue');
-                    field = Ext.create('Lada.view.widget.base.TextField',
-                        options);
-                    break;
-            }
-            if (field) {
-                filters.push(field);
+                        break;
+                    case 'messstelle':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        options.store = Ext.data.StoreManager.get('messstellen');
+                        field = Ext.create('Lada.view.widget.Messstelle', options);
+                        break;
+                    case 'boolean':
+                        options.multiSelect = false;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        field = Ext.create('Lada.view.widget.BoolFilter', options);
+                        break;
+                    case 'umwbereich':
+                        options.multiSelect = true;
+                        options.store = Ext.data.StoreManager.get('umwelt');
+                        options.value = recs[i].get('filterValue');
+                        field = Ext.create('Lada.view.widget.Umwelt' , options);
+                        break;
+                    case 'statuswert':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        options.store = Ext.data.StoreManager.get('statuswerte');
+                        field = Ext.create('Lada.view.widget.Status', options);
+                        break;
+                    case 'geom':// TODO: how/if to implement
+                        break;
+                    case 'egem':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        field = Ext.create('Lada.view.widget.Verwaltungseinheit',
+                            options);
+                        break;
+                    case 'datenbasis':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        field = Ext.create('Lada.view.widget.Datenbasis', options);
+                        break;
+                    case 'netzbetr':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        field = Ext.create('Lada.view.widget.Netzbetreiber',
+                            options);
+                        break;
+                    case 'probenart':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        field = Ext.create('Lada.view.widget.Probenart', options);
+                        break;
+                    case 'staat':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        field = Ext.create('Lada.view.widget.Staat', options);
+                        break;
+                    case 'messRegime':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        field = Ext.create('Lada.view.widget.Betriebsart',
+                            options);
+                        break;
+                    case 'statusstufe':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        options.store = Ext.data.StoreManager.get('statusstufe');
+                        field = Ext.create('Lada.view.widget.StatusStufe', options);
+                        break;
+                    case 'statuskombi':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        options.store = Ext.data.StoreManager.get('statuskombi');
+                        field = Ext.create('Lada.view.widget.StatuskombiSelect',
+                            options);
+                        field.store.load();
+                        break;
+                    case 'anlage':
+                        options.multiSelect = true;
+                        options.store = Ext.data.StoreManager.get('ktaGruppe');
+                        options.value = recs[i].get('filterValue');
+                        field = Ext.create('Lada.view.widget.KtaGruppe',
+                            options);
+                        break;
+                    case 'reiproggrp':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = recs[i].get('filterValue');
+                        field = Ext.create('Lada.view.widget.ReiProgpunktGruppe',
+                            options);
+                        break;
+                    case 'mpl':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = recs[i].get('filterValue');
+                        field = Ext.create('Lada.view.widget.MessprogrammLand',
+                            options);
+                        break;
+                    case 'prnId':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = recs[i].get('filterValue');
+                        field = Ext.create('Lada.view.widget.Probenehmer',
+                            options);
+                        break;
+                    case 'mmtId':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = recs[i].get('filterValue');
+                        field = Ext.create('Lada.view.widget.Messmethode',
+                            options);
+                        break;
+                    case 'messgroesse':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = recs[i].get('filterValue');
+                        field = Ext.create('Lada.view.widget.Messgroesse',
+                            options);
+                        break;
+                    default:
+                        options.value = recs[i].get('filterValue');
+                        field = Ext.create('Lada.view.widget.base.TextField',
+                            options);
+                        break;
+                }
+                if (field) {
+                    filters.push(field);
+                }
             }
         }
         filters.sort(function(item0, item1) {
@@ -873,9 +895,8 @@ Ext.define('Lada.controller.Query', {
 
     dataChanged: function() {
         var qp = Ext.ComponentQuery.query('querypanel')[0];
-        if (!qp.isQueryReadonly()) {
-            qp.down('button[action=save]').setDisabled(false);
-        }
+        var savedisabled = qp.isQueryReadonly();
+        qp.down('button[action=save]').setDisabled(savedisabled);
     },
 
     /**

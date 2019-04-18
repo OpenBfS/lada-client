@@ -170,12 +170,13 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
         for (var i = selectedRows.length - 1; i >= 0 ; i--) {
             var row = selectedRows[i];
             var index = this.store.indexOf(row);
+            var maxIdx = this.store.count() - 1;
 
             switch (direction) {
                 case 'first': index = 0; break;
-                case 'up': index--; break;
-                case 'down': index++; break;
-                case 'last': index = this.store.count() -1; break;
+                case 'up': index > 0 ? index-- : 0; break;
+                case 'down': index < maxIdx ? index++ : maxIdx; break;
+                case 'last': index = maxIdx; break;
             }
 
             this.store.remove(row);

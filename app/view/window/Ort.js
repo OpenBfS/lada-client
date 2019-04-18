@@ -29,6 +29,8 @@ Ext.define('Lada.view.window.Ort', {
 
     layout: 'fit',
 
+    mode: null,
+
     title: null,
 
     /** If set to true, he newly created Ort will be set as selected
@@ -41,6 +43,11 @@ Ext.define('Lada.view.window.Ort', {
      */
     record: null,
 
+    /**
+     * Original record if record is a copy. Will only be set if the copy is created.
+     */
+    original: null,
+
     parentWindow: null,
 
     initComponent: function() {
@@ -49,10 +56,16 @@ Ext.define('Lada.view.window.Ort', {
         if (this.record === null) {
             this.record = Ext.create('Lada.model.Ort');
         }
-        this.title = this.record.phantom? i18n.getMsg('orte.new'): i18n.getMsg('orte.edit');
+        if (this.mode) {
+            this.title = i18n.getMsg('orte.' + this.mode);
+        } else {
+            this.title = this.record.phantom? i18n.getMsg('orte.new'): i18n.getMsg('orte.edit');
+        }
         this.items = [
             Ext.create('Lada.view.form.Ort', {
                 record: me.record,
+                original: me.original,
+                mode: this.mode,
                 listeners: {
                     destroy: {fn: function() {
                         me.close();
@@ -84,5 +97,15 @@ Ext.define('Lada.view.window.Ort', {
             handler: this.close
         }];
         this.callParent(arguments);
+    },
+
+    setMode: function(mode) {
+        var i18n = Lada.getApplication().bundle;
+        this.mode = mode;
+        if (this.mode) {
+            this.title = i18n.getMsg('orte.' + this.mode);
+        } else {
+            this.title = this.record.phantom? i18n.getMsg('orte.new'): i18n.getMsg('orte.edit');
+        }
     }
 });

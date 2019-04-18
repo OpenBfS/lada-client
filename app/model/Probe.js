@@ -13,6 +13,11 @@
 Ext.define('Lada.model.Probe', {
     extend: 'Ext.data.Model',
 
+    /**
+     * Save original record if probe is a copy of another
+     */
+    copiedFrom: null,
+
     fields: [{
         name: 'id',
         allowNull: true

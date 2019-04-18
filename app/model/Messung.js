@@ -92,6 +92,9 @@ Ext.define('Lada.model.Messung', {
     }, {
         name: 'kommentarCount',
         persist: false
+    }, {
+        name: 'copyOfMessungId',
+        persist: false
     }],
 
     idProperty: 'id',

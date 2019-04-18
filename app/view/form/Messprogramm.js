@@ -57,7 +57,13 @@ Ext.define('Lada.view.form.Messprogramm', {
                         borderLeft: '1px solid #b5b8c8 !important',
                         borderRight: '1px solid #b5b8c8 !important'
                     },
-                    items: ['->', {
+                    items: [{
+                        text: i18n.getMsg('copy'),
+                        action: 'copy',
+                        qtip: i18n.getMsg('copy.qtip', i18n.getMsg('messprogramm')),
+                        icon: 'resources/img/dialog-ok-apply.png',
+                        disabled: true
+                    },'->', {
                         text: i18n.getMsg('save'),
                         qtip: i18n.getMsg('save.qtip'),
                         icon: 'resources/img/dialog-ok-apply.png',
@@ -210,7 +216,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                 }, {
                     xtype: 'probenehmer',
                     name: 'probeNehmerId',
-                    fieldLabel: i18n.getMsg('probenehmerId'),
+                    fieldLabel: i18n.getMsg('probenehmer'),
                     margin: '0, 10, 5, 5',
                     minValue: 0,
                     editable: true,
@@ -605,6 +611,7 @@ Ext.define('Lada.view.form.Messprogramm', {
 
 
     setRecord: function(messRecord) {
+        this.down('button[action=copy]').setDisabled(messRecord.get('readonly'));
         this.clearMessages();
         this.getForm().loadRecord(messRecord);
         if (!messRecord.data || messRecord.data.id === null) {
