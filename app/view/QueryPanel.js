@@ -54,7 +54,7 @@ Ext.define('Lada.view.QueryPanel', {
                         '{name}</div></tpl>'),
                     displayTpl: Ext.create('Ext.XTemplate', '<tpl for=".">{name}</tpl>'),
                     flex: 1,
-                    labelWidth: 125,
+                    labelWidth: 90,
                     submitValue: false,
                     triggers: {
                         clear: { hidden: true}
@@ -100,7 +100,7 @@ Ext.define('Lada.view.QueryPanel', {
                     name: 'description',
                     width: '100%',
                     fieldLabel: 'query.comment',
-                    labelWidth: 125,
+                    labelWidth: 90,
                     margin: '15 5 5 5'
             }]
     }, {
