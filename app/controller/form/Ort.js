@@ -249,23 +249,23 @@ Ext.define('Lada.controller.form.Ort', {
                 && equals(formValues['koordYExtern'], original.get('koordYExtern'))
                 && equals(formValues['ozId'], original.get('ozId'))) {
             valid = false;
-            errors['koordXExtern'] = ['err.orte.copy.duplicatecoordinates'];
-            errors['koordYExtern'] = ['err.orte.copy.duplicatecoordinates'];
-            errors['ozId'].push('err.orte.copy.duplicatecoordinates');
+            errors['koordXExtern'] = ['err.orte.form.copy.duplicatecoordinates'];
+            errors['koordYExtern'] = ['err.orte.form.copy.duplicatecoordinates'];
+            errors['ozId'].push('err.orte.form.copy.duplicatecoordinates');
         }
         if ( equals(formValues['gemId'], original.get('gemId'))
                 && equals(formValues['ozId'], original.get('ozId'))) {
-            errors['gemId'] = ['err.orte.copy.duplicategemeinde'];
-            errors['ozId'].push('err.orte.copy.duplicategemeinde');
+            errors['gemId'] = ['err.orte.form.copy.duplicategemeinde'];
+            errors['ozId'].push('err.orte.form.copy.duplicategemeinde');
             valid = false;
         }
         if (equals(formValues['staatId'], original.get('staatId'))
                 && equals(formValues['ortTyp'], original.get('ortTyp'))
                 && equals(formValues['ozId'], original.get('ozId'))) {
             valid = false;
-            errors['staatId'] = ['err.orte.copy.duplicatestaat'];
-            errors['ortTyp'] = ['err.orte.copy.duplicatestaat'];
-            errors['ozId'].push('err.orte.copy.duplicatestaat');
+            errors['staatId'] = ['err.orte.form.copy.duplicatestaat'];
+            errors['ortTyp'] = ['err.orte.form.copy.duplicatestaat'];
+            errors['ozId'].push('err.orte.form.copy.duplicatestaat');
         }
 
         var revertbutton = panel.down('button[action=revert]');
