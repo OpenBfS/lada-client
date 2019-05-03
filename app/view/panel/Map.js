@@ -172,8 +172,8 @@ Ext.define('Lada.view.panel.Map', {
             Ext.create('Lada.view.window.Ort', {
                 record: Ext.create('Lada.model.Ort',{
                     netzbetreiberId: nId,
-                    koordXExtern: koord_x,
-                    koordYExtern: koord_y,
+                    koordXExtern: koord_x.toString(),
+                    koordYExtern: koord_y.toString(),
                     kdaId: 4,
                     ortTyp: 1
                 }),
