@@ -135,10 +135,19 @@ Ext.define('Lada.view.form.Ort', {
                 fieldLabel: i18n.getMsg('orte.aktiv')
             }]
         }, {
-            xtype: 'koordinatenart',
-            labelWidth: 125,
-            fieldLabel: i18n.getMsg('orte.kda'),
-            name: 'kdaId'
+            xtype: 'container',
+            layout: 'hbox',
+            items: [{
+                xtype: 'koordinatenart',
+                labelWidth: 125,
+                fieldLabel: i18n.getMsg('orte.kda'),
+                name: 'kdaId'
+            }, {
+                xtype: 'button',
+                action: 'changeKDA',
+                disabled: true,
+                text: i18n.getMsg('orte.kda.change')
+            }]
         }, {
             xtype: 'tfield',
             labelWidth: 125,

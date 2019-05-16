@@ -11,6 +11,7 @@
  */
 Ext.define('Lada.controller.form.Ort', {
     extend: 'Ext.app.Controller',
+    requires: ['Lada.view.window.ChangeKDA'],
 
     /**
      * Initialize the Controller
@@ -47,6 +48,15 @@ Ext.define('Lada.controller.form.Ort', {
             'ortform': {
                 validitychange: this.checkCommitEnabled,
                 dirtychange: this.handleDirtyChange
+            },
+            'ortform button[action=changeKDA]': {
+                click: this.openChangeKDA
+            },
+            'changeKDA button[action=apply]': {
+                click: this.onKDAApply
+            },
+            'changeKDA koordinatenart[name=newKDA] combobox': {
+                change: this.onKDARecalculation
             }
         });
     },
@@ -212,6 +222,7 @@ Ext.define('Lada.controller.form.Ort', {
         } else {
             panel = callingEl; //called by the formpanel itself
         }
+        this.checkKDAchangeEnabled(panel);
         if (panel.mode && panel.mode === 'copy') {
             this.checkCommitOnCopyPanel(panel);
         } else {
@@ -327,5 +338,136 @@ Ext.define('Lada.controller.form.Ort', {
         } else { //form invalid
             savebutton.setDisabled(true);
         }
+    },
+
+    /**
+     * Checks if the KDA change diaog can be used from a form with coordinate
+     * fields (some coordinates set; form is not readonly)
+     * @param panel the panel around the form to check
+     */
+    checkKDAchangeEnabled: function(panel) {
+        var form = panel.getForm();
+        if (form.getRecord().get('readonly')) {
+            panel.down('button[action=changeKDA]').setDisabled(true);
+            return;
+        }
+        if (panel.down('koordinatenart').getValue()
+            && panel.down('tfield[name=koordXExtern]').getValue()
+            && panel.down('tfield[name=koordYExtern]').getValue()
+        ) {
+            panel.down('button[action=changeKDA]').setDisabled(false);
+        } else {
+            panel.down('button[action=changeKDA]').setDisabled(true);
+        }
+    },
+
+    /**
+     * Activates and opens the changeKDA window
+     * @param button any element from inside an ort form, currently the change
+     * kda button
+     */
+    openChangeKDA: function(button) {
+        var panel = button.up('panel');
+        var i18n = Lada.getApplication().bundle;
+        // von Koordinatenart: form.get()
+        // dropdownBox: Koordinatenarten:
+        var win = Ext.create('Lada.view.window.ChangeKDA',{
+            parentWindow: panel,
+            title: i18n.getMsg('changeKDA.title')
+        });
+        win.show();
+        win.down('koordinatenart[name=originalKDA]').setValue(
+            panel.down('koordinatenart').getValue());
+        win.down('koordinatenart[name=newKDA]').setValue(
+            panel.down('koordinatenart').getValue());
+        win.down('selectabledisplayfield[name=originalX]').setValue(
+            panel.down('tfield[name=koordXExtern]').getValue());
+        win.down('selectabledisplayfield[name=originalY]').setValue(
+            panel.down('tfield[name=koordYExtern]').getValue());
+    },
+
+    /**
+     * Triggers a recalculation of the coordinates with a new koordinatenart.
+     * This calculation is done server side. After this calculation has been
+     * completed, the 'newKDA'... fields will be set, and the apply button
+     * activated.
+     * @param button any element from inside the kda change window
+     */
+    onKDARecalculation: function(button) {
+        var win = button.up('window');
+        win.down('button[action=apply]').setDisabled(true);
+        if (
+            win.down('koordinatenart[name=newKDA]').getValue() === win.down(
+                'koordinatenart[name=originalKDA]').getValue()
+        ||
+            !win.down('koordinatenart[name=newKDA]').getValue()
+        ) {
+            // reset to original if the value is as in the original
+            win.down('selectabledisplayfield[name=newX]').setValue(
+                win.down('selectabledisplayfield[name=originalX]').getValue()
+            );
+            win.down('selectabledisplayfield[name=newY]').setValue(
+                win.down('selectabledisplayfield[name=originalY]').getValue()
+            );
+            return;
+        } else {
+            win.setLoading(true);
+            win.down('koordinatenart[name=newKDA]').setReadOnly(true);
+            Ext.Ajax.request({
+                url: 'lada-server/rest/koordinatenart',
+                method: 'POST',
+                jsonData: {
+                    "from": win.down('koordinatenart[name=originalKDA]').getValue(),
+                    "to": win.down('koordinatenart[name=newKDA]').getValue(),
+                    "x": win.down('selectabledisplayfield[name=originalX]').getValue(),
+                    "y": win.down('selectabledisplayfield[name=originalY]').getValue()
+                },
+                success: function(response) {
+                    win.setLoading(false);
+                    if (response && response.responseText) {
+                        var json = Ext.decode(response.responseText);
+                        if (json.data) {
+                            var coords = Ext.decode(json.data);
+                            win.down('koordinatenart[name=newKDA]').setReadOnly(false);
+                            win.down('selectabledisplayfield[name=newX]').setValue(coords.x);
+                            win.down('selectabledisplayfield[name=newY]').setValue(coords.y);
+                            win.down('button[action=apply]').setDisabled(false);
+                        } else {
+                            // TODO error handling: calculation not successful. For now, just resets
+                            win.down('koordinatenart[name=newKDA]').setValue(
+                                win.down('koordinatenart[name=originalKDA]').getValue());
+                            win.down('koordinatenart[name=newKDA]').setReadOnly(false);
+                        }
+                    }
+                },
+                failure: function() {
+                    win.down('button[action=apply]').setDisabled(true);
+                    win.down('koordinatenart[name=newKDA]').setValue(
+                        win.down('koordinatenart[name=originalKDA]').getValue());
+                    win.down('koordinatenart[name=newKDA]').setReadOnly(false);
+                }
+            });
+        }
+    },
+
+    /**
+     * Applies the new values from the KDA change window to the parent's
+     * coordinates and closes the KDA change window. It does not submit the new
+     * coordinates for the model.
+     * @param button any element from the original window, currently the 'apply'
+     * button
+     */
+    onKDAApply: function(button) {
+        var win = button.up('window');
+        win.parentWindow.down('koordinatenart').setValue(
+            win.down('koordinatenart[name=newKDA]').getValue()
+        );
+        win.parentWindow.down('tfield[name=koordXExtern]').setValue(
+            win.down('selectabledisplayfield[name=newX]').getValue()
+        );
+        win.parentWindow.down('tfield[name=koordYExtern]').setValue(
+            win.down('selectabledisplayfield[name=newY]').getValue()
+        );
+        win.close();
     }
 });
