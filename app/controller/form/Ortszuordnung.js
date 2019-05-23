@@ -23,6 +23,9 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             'ortszuordnungform button[action=revert]': {
                 click: this.revert
             },
+            'ortszuordnungform button[action=showort]': {
+                click: this.showort
+            },
             'ortszuordnungform': {
                 validitychange: this.validityChange,
                 dirtychange: this.validityChange
@@ -173,6 +176,20 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             //not dirty
             form.owner.down('button[action=save]').setDisabled(true);
             form.owner.down('button[action=revert]').setDisabled(true);
+        }
+    },
+
+    /**
+     * Opens the orte form with the currently set Ort
+     */
+    showort: function(button) {
+        var win = button.up('ortszuordnungwindow');
+        var currentOrt = win.down('ortszuordnungform').currentOrt;
+        if (currentOrt) {
+            Ext.create('Lada.view.window.Ort',{
+                record: currentOrt,
+                parentWindow: win
+            }).show();
         }
     }
 });
