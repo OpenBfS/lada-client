@@ -155,7 +155,7 @@ Ext.application({
         Lada.logintime = '';
         Lada.mst = [];
         Lada.netzbetreiber = [];
-        Lada.clientVersion = '3.3.9';
+        Lada.clientVersion = '3.3.10';
         Lada.serverVersion = '';
         // paging sizes available for the client
         Lada.availablePagingSizes = [
