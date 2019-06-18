@@ -199,7 +199,7 @@ Ext.define('Lada.controller.form.Probe', {
                 //Array of copied models
                 var messungCopyArr = [];
                 //Array of original records
-                var messungRecArr = []
+                var messungRecArr = [];
 
                 if (fetchedMessungen == 0) {
                     callback(probeCopy);
@@ -208,10 +208,12 @@ Ext.define('Lada.controller.form.Probe', {
                 //Reset fields and create records for the copys
                 for (var i = 0; i < messungArr.length; i++) {
                     var messung = messungArr[i];
+                    var messungRec = Ext.create('Lada.model.Messung', messung);
                     messung.nebenprobenNr = null;
                     messung.fertig = false;
                     messung.geplant = false;
-                    var messungRec = Ext.create('Lada.model.Messung', messung)
+                    messung.messzeitpunkt = null;
+                    messung.messdauer = null;
                     var cpy = Ext.create('Lada.model.Messung', messung);
                     cpy.set('probeId', probeCopy.get('id'));
                     cpy.set('copyOfMessungId', messung.id);
@@ -257,7 +259,8 @@ Ext.define('Lada.controller.form.Probe', {
     copyMesswerte: function(probeCopy, messungen, messungenCopy, finishedCallback) {
         //Number of messung objects to copy and objects already copied
         var numMessungen = messungen.length;
-        var messungenFinished = 0;
+        messungenFinished = 0;
+        currentFinishedMesswerte = 0;
         //Maps containing the numbers of messwert objects to copy and objects already copied;
         var numMesswert = new Ext.util.HashMap();
         var messwertFinished = new Ext.util.HashMap();
@@ -266,47 +269,70 @@ Ext.define('Lada.controller.form.Probe', {
             finishedCallback(probeCopy);
             return;
         };
-
+        messungsIDNew = new Ext.util.HashMap();
+        for (var i = 0; i < messungen.length; i++) {
+            messungsIDNew.add(messungen[i].get('copyOfMessungId'), messungen[i].get('id'));
+        }
         for (var i = 0; i < messungen.length; i++) {
             var messung = messungen[i];
+            var messungsId = messung.get('copyOfMessungId');
             Ext.Ajax.request({
                 url: 'lada-server/rest/messwert',
                 params: {
-                    messungsId: messung.get('id')
+                    messungsId: messung.get('copyOfMessungId')
                 },
                 method: 'GET',
                 success: function(response) {
                     var responseObj = Ext.decode(response.responseText);
                     var messwertArr = responseObj.data;
+                    fetchedMesswerte = messwertArr.length;
                     var messwertCopyArr = [];
+                    var messwertRecArr = [];
+                    var messwertRec = Ext.create('Lada.model.Messwert', messwert);
                     var messungsId = messwertArr.length >= 1 ? messwertArr[0].messungsId : null;
                     if (!messungsId) {
                         messungenFinished++;
                         if (messungenFinished == numMessungen && finishedCallback) {
                             finishedCallback(probeCopy);
                         }
+                        numMesswert.add(messungsIDNew.get(messungsId), messwertArr.length);
+                        //messwertFinished steht die Anzahl der Messwerte, die schon gespeichert wurden
+                        messwertFinished.add(messungsIDNew.get(messungsId), 0);
                         return;
                     }
-                    numMesswert.push(messungsId, messwertArr.length);
-                    messwertFinished.push(messungsId, 0);
+                    if (fetchedMesswerte == 0) {
+                            callback(probeCopy);
+                        return;
+                    }
+                    numMesswert.add(messungsIDNew.get(messungsId), messwertArr.length);
+                    //messwertFinished steht die Anzahl der Messwerte, die schon gespeichert wurden
+                    messwertFinished.add(messungsIDNew.get(messungsId), 0);
                     for (var j = 0; j < messwertArr.length; j++) {
                         var messwert = messwertArr[j];
                         messwert.id = null;
                         messwert.messwert = null;
-                        messwert.messungsId = messungsId;
+                        messwert.nwgZuMesswert = null;
+                        messwert.messwertNwg = null;
+                        messwert.messfehler = null;
+                        messwert.messungsId = messungsIDNew.get(messwertArr[j].messungsId);
+
                         var cpy = Ext.create('Lada.model.Messwert', messwert);
+                        cpy.data['id']= null;
+                        cpy.phantom = true;
+                        messwertCopyArr.push(cpy);
+                        messwertRecArr.push(messwertRec);
                         cpy.save({
                             callback: function(rec, op, success) {
                                 if (success) {
-                                    var currentMessungsID = rec.get('messungsId');
-                                    var currentFinishedMesswerts = messwertFinished.get(currentMessungsID);
-                                    var currentNumMesswerts = numMesswert.get(currentMessungsID);
-                                    currentFinishedMesswerts++;
-                                    messwertFinished.push(currentMessungsID, currentFinishedMesswerts);
-                                    if(currentFinishedMesswerts == currentNumMesswerts) {
+                                    var currentMessungsIDNew = rec.get('messungsId');
+                                    var currentFinishedMesswerte = messwertFinished.get(currentMessungsIDNew);
+                                    var currentNumMesswerte = numMesswert.get(currentMessungsIDNew);
+                                    currentFinishedMesswerte++;
+                                    messwertFinished.add(currentMessungsIDNew, currentFinishedMesswerte);
+                                    if(currentFinishedMesswerte == currentNumMesswerte) {
                                         messungenFinished++;
                                     }
-                                    if (messungenFinished == numMessungen && finishedCallback) {
+                                    if (numMesswert.length == messungenFinished && finishedCallback) {
                                         finishedCallback(probeCopy);
                                     }
                                 }
