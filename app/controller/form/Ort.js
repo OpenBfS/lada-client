@@ -64,7 +64,7 @@ Ext.define('Lada.controller.form.Ort', {
     copyOrt: function(button) {
         var record = button.up('ortform').getForm().getRecord();
         var copy = record.copy(null);
-        record.set('ortId', null);
+        copy.set('ortId', null);
         var win = Ext.create('Lada.view.window.Ort',{
             record: copy,
             mode: 'copy',
@@ -222,6 +222,11 @@ Ext.define('Lada.controller.form.Ort', {
         } else {
             panel = callingEl; //called by the formpanel itself
         }
+        if ( ((callingEl.name === 'koordXExtern') || (callingEl.name === 'koordXExtern')) && (panel.mode === 'copy') && panel.original && panel.form.isDirty()
+            && panel.getForm().getValues()['koordXExtern'] !== "" && panel.getForm().getValues()['koordYExtern'] !== "")
+        {
+            panel.down('verwaltungseinheit[name=gemId]').clearValue();
+        }
         this.checkKDAchangeEnabled(panel);
         if (panel.mode && panel.mode === 'copy') {
             this.checkCommitOnCopyPanel(panel);
@@ -247,7 +252,7 @@ Ext.define('Lada.controller.form.Ort', {
         var formValues = form.getValues();
         var original = panel.original;
         var valid = true;
-        var errors = {ozId: []};
+        var errors = {};
         //Helper function to compare form values and record values.
         //As empty form values are saved as "" and empty record values as null,
         //the == operator will fail to compare them
@@ -257,26 +262,10 @@ Ext.define('Lada.controller.form.Ort', {
             return first === second;
         }
         if (equals(formValues['koordXExtern'], original.get('koordXExtern'))
-                && equals(formValues['koordYExtern'], original.get('koordYExtern'))
-                && equals(formValues['ozId'], original.get('ozId'))) {
+                && equals(formValues['koordYExtern'], original.get('koordYExtern'))) {
             valid = false;
             errors['koordXExtern'] = ['err.orte.form.copy.duplicatecoordinates'];
             errors['koordYExtern'] = ['err.orte.form.copy.duplicatecoordinates'];
-            errors['ozId'].push('err.orte.form.copy.duplicatecoordinates');
-        }
-        if ( equals(formValues['gemId'], original.get('gemId'))
-                && equals(formValues['ozId'], original.get('ozId'))) {
-            errors['gemId'] = ['err.orte.form.copy.duplicategemeinde'];
-            errors['ozId'].push('err.orte.form.copy.duplicategemeinde');
-            valid = false;
-        }
-        if (equals(formValues['staatId'], original.get('staatId'))
-                && equals(formValues['ortTyp'], original.get('ortTyp'))
-                && equals(formValues['ozId'], original.get('ozId'))) {
-            valid = false;
-            errors['staatId'] = ['err.orte.form.copy.duplicatestaat'];
-            errors['ortTyp'] = ['err.orte.form.copy.duplicatestaat'];
-            errors['ozId'].push('err.orte.form.copy.duplicatestaat');
         }
 
         var revertbutton = panel.down('button[action=revert]');
