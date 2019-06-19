@@ -454,7 +454,13 @@ Ext.application({
         });
         Ext.create('Lada.store.KoordinatenArt', {
             storeId: 'koordinatenart',
-            autoLoad: 'true'
+            autoLoad: 'true',
+            filters: function(item) {
+                if (item.get('koordinatenart').includes('MGRS')) {
+                    return false;
+                }
+                    return true;
+                }
         });
         Ext.create('Lada.store.GenericResults', {
             storeId: 'genericresults',
