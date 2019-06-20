@@ -348,10 +348,16 @@ Ext.define('Lada.view.window.MessungEdit', {
             scope: this,
             jsonData: {},
             callback: function(opts, success, response) {
-                if (success == true) {
-                    button.up('messungedit').down('messwertgrid').store.reload();
+                var i18n = Lada.getApplication().bundle;
+                if (success && response) {
+                    var json = Ext.decode(response.getResponse().responseText);
+                    if (json.success === true) {
+                        button.up('messungedit').down('messwertgrid').store.reload();
+                    } else {
+                        Ext.Msg.alert('', i18n.getMsg('err.normalize'));
+                    }
                 } else {
-                    Ext.Msg.alert('', 'Fehler beim Normalisieren');
+                    Ext.Msg.alert('', i18n.getMsg('err.normalize'));
                 }
             }
         });

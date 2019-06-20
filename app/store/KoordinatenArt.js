@@ -7,16 +7,9 @@
  */
 
 /**
- * Store for Kta
+ * Store for Koordinatenart
  */
 Ext.define('Lada.store.KoordinatenArt', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.KoordinatenArt',
-    sorters: [
-        {
-            property: 'id',
-            direction: 'ASC'
-        }],
-    autoLoad: true,
-    sortOnLoad: true
+    model: 'Lada.model.KoordinatenArt'
 });
