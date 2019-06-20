@@ -25,9 +25,6 @@ Ext.define('Lada.controller.grid.Messung', {
             'messunggrid': {
                 itemdblclick: this.editItem
             },
-            'messungsgrid actioncolumn[name=open]': {
-                click: this.editItem
-            },
             'messunggrid button[action=add]': {
                 click: this.add
             },

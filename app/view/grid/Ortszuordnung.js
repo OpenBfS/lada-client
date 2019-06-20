@@ -51,7 +51,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }];
         this.columns = [{
             xtype: 'actioncolumn',
-            name: 'open',
             text: '',
             dataIndex: 'readonly',
             sortable: false,
@@ -61,6 +60,10 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     return 'edit';
                 }
                 return 'noedit';
+            },
+            handler: function(grid, rowIndex, colIndex) {
+                var rec = grid.getStore().getAt(rowIndex);
+                grid.fireEvent('itemdblclick', grid, rec);
             }
         }, {
             header: i18n.getMsg('typ'),
