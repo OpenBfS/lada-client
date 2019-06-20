@@ -48,6 +48,7 @@ Ext.define('Lada.view.grid.Messung', {
         this.columns = [{
             xtype: 'actioncolumn',
             text: '',
+            name: 'open',
             dataIndex: 'readonly',
             sortable: false,
             width: 30,
@@ -56,10 +57,6 @@ Ext.define('Lada.view.grid.Messung', {
                     return 'edit';
                 }
                 return 'noedit';
-            },
-            handler: function(grid, rowIndex, colIndex) {
-                var rec = grid.getStore().getAt(rowIndex);
-                grid.fireEvent('itemdblclick', grid, rec);
             }
         }, {
             header: i18n.getMsg('extMessungsId'),

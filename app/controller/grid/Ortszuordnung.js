@@ -36,6 +36,9 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             'ortszuordnunggrid button[action=delete]': {
                 click: this.remove
             },
+            'ortszuordnunggrid actioncolumn [name=open]': {
+                click: this.open
+            },
             'ortszuordnungwindow toolbar button[action=createort]': {
                 click: this.createort
             },
