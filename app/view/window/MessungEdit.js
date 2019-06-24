@@ -350,7 +350,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             callback: function(opts, success, response) {
                 var i18n = Lada.getApplication().bundle;
                 if (success && response) {
-                    var json = Ext.decode(response.getResponse().responseText);
+                    var json = Ext.decode(response.responseText);
                     if (json.success === true) {
                         button.up('messungedit').down('messwertgrid').store.reload();
                     } else {
