@@ -88,6 +88,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      */
     open: function(grid, record) {
         grid.getEl().swallowEvent(['click', 'dblclick'], true);
+        grid.suspendEvents();
+        setTimeout(function() {
+            grid.resumeEvents();
+        }, 500);
         var parent = grid.up('window').record;
         // parent is either probe or messprogramm.
         var parentisMp = false;
