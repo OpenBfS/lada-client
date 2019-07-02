@@ -34,6 +34,7 @@ Ext.define('Lada.controller.Global', {
     logout: function() {
         var i18n = Lada.getApplication().bundle;
         Ext.Ajax.setUseDefaultXhrHeader(false);
+        Ext.Ajax.setWithCredentials(true);
         Ext.Ajax.request({
             url: '/Shibboleth.sso/Logout',
             success: function (response) {
