@@ -456,11 +456,11 @@ Ext.application({
             storeId: 'koordinatenart',
             autoLoad: 'true',
             filters: function(item) {
-                if (item.get('koordinatenart').includes('MGRS')) {
+                if (item.get('koordinatenart') === 'UTM-MGRS (WGS84)' || item.get('koordinatenart') === 'UTM-MGRS (Hayford)') {
                     return false;
                 }
-                    return true;
-                }
+                return true;
+            }
         });
         Ext.create('Lada.store.GenericResults', {
             storeId: 'genericresults',
