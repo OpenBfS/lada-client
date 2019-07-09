@@ -38,6 +38,7 @@ Ext.define('Lada.controller.Global', {
         Ext.Ajax.request({
             url: '/Shibboleth.sso/Logout',
             success: function (response) {
+                window.removeEventListener('beforeunload', Lada.getApplication().beforeCloseHandler);
                 window.location.reload();
             },
             failure: function (response) {

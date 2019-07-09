@@ -109,6 +109,13 @@ Ext.application({
         noCache: true
     },
 
+    beforeCloseHandler: function (evt){
+        // match different handling from different browsers
+        var confirmMessage = i18n.getMsg('window.confirmclose');
+        evt.returnValue = confirmMessage;
+        return confirmMessage;
+    },
+
     // Setting this variable to true triggers loading the Viewport.js
     // file which sets ob the viewport.
     //autoCreateViewport: true,
@@ -168,12 +175,7 @@ Ext.application({
         });
         // ask before closing/refreshing the window.
         // Not all browsers will respect this, depending on settings
-        window.addEventListener('beforeunload', function (evt){
-            // match different handling from different browsers
-            var confirmMessage = i18n.getMsg('window.confirmclose');
-            evt.returnValue = confirmMessage;
-            return confirmMessage;
-        });
+        window.addEventListener('beforeunload', this.beforeCloseHandler);
         Ext.create('Lada.store.GenericResults');
     },
 
