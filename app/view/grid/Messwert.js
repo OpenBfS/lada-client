@@ -111,6 +111,12 @@ Ext.define('Lada.view.grid.Messwert', {
                 text: i18n.getMsg('delete'),
                 icon: 'resources/img/list-remove.png',
                 action: 'delete'
+            }, {
+                buttonAlign: 'right',
+                margin: 5,
+                action: 'normalize',
+                handler: this.normalize,
+                text: i18n.getMsg('button.normalize')
             }]
         }];
         this.columns = [{
@@ -308,6 +314,31 @@ Ext.define('Lada.view.grid.Messwert', {
             this.down('button[action=add]').enable();
         }
     },
+
+    normalize: function(button) {
+        var record = button.up('messungedit').record;
+        var messungId = record.get('id');
+        Ext.Ajax.request({
+            url: 'lada-server/rest/messwert/normalize?messungsId=' + messungId,
+            method: 'PUT',
+            scope: this,
+            jsonData: {},
+            callback: function(opts, success, response) {
+                var i18n = Lada.getApplication().bundle;
+                if (success && response) {
+                    var json = Ext.decode(response.responseText);
+                    if (json.success === true) {
+                        button.up('messungedit').down('messwertgrid').store.reload();
+                    } else {
+                        Ext.Msg.alert('', i18n.getMsg('err.normalize'));
+                    }
+                } else {
+                    Ext.Msg.alert('', i18n.getMsg('err.normalize'));
+                }
+            }
+        });
+    },
+
     /**
      * Activate the Remove Button
      */

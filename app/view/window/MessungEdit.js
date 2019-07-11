@@ -93,18 +93,6 @@ Ext.define('Lada.view.window.MessungEdit', {
                     recordId: this.record.get('id'),
                     umwId: this.probe.get('umwId'),
                     messgroesseStore: this.mStore
-                }, {
-                    xtype: 'toolbar',
-                    dock: 'bottom',
-                    border: false,
-                    items: [
-                    '->',{
-                        buttonAlign: 'right',
-                        margin: 5,
-                        action: 'normalize',
-                        handler: this.normalize,
-                        text: i18n.getMsg('button.normalize')
-                    }]
                 }]
             }, {
                 xtype: 'fset',
@@ -336,31 +324,6 @@ Ext.define('Lada.view.window.MessungEdit', {
         } else {
             me.close();
         }
-    },
-
-
-    normalize: function(button) {
-        var record = button.up('messungedit').record;
-        var messungId = record.get('id');
-        Ext.Ajax.request({
-            url: 'lada-server/rest/messwert/normalize?messungsId=' + messungId,
-            method: 'PUT',
-            scope: this,
-            jsonData: {},
-            callback: function(opts, success, response) {
-                var i18n = Lada.getApplication().bundle;
-                if (success && response) {
-                    var json = Ext.decode(response.responseText);
-                    if (json.success === true) {
-                        button.up('messungedit').down('messwertgrid').store.reload();
-                    } else {
-                        Ext.Msg.alert('', i18n.getMsg('err.normalize'));
-                    }
-                } else {
-                    Ext.Msg.alert('', i18n.getMsg('err.normalize'));
-                }
-            }
-        });
     },
 
     /**
