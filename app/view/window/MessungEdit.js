@@ -157,7 +157,6 @@ Ext.define('Lada.view.window.MessungEdit', {
                 var me = this;
                 this.mStore.proxy.extraParams = {mmtId: record.get('mmtId')};
                 this.mStore.load();
-                this.down('messwertgrid').messgroesseStore = this.mstore;
                 if (this.parentWindow && this.parentWindow.record.get('treeModified') < record.get('parentModified')) {
                     var i18n = Lada.getApplication().bundle;
                     Ext.Msg.show({
