@@ -72,7 +72,7 @@ Ext.define('Lada.view.grid.Messwert', {
                                 e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').inputEl.removeCls('x-lada-warning-field');
                             }
                         } else {
-                            if (e.editor.down('checkbox').getValue() === true) {
+                            if  (o.record.get('messwertNwg') === '<') {
                                 e.editor.down('expnumberfield[dataIndex=messwert]').allowBlank = true;
                                 e.editor.down('expnumberfield[dataIndex=messwert]').setReadOnly(true);
                                 e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').allowBlank = false;
