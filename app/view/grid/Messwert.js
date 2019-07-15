@@ -288,6 +288,8 @@ Ext.define('Lada.view.grid.Messwert', {
                     })
                 }
             });
+        } else {
+            this.mehComboStore = Ext.data.StoreManager.get('messeinheiten');
         }
         this.store.load({
             params: {
