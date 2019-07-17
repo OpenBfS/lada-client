@@ -108,17 +108,13 @@ Ext.define('Lada.model.Probe', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
+        dateFormat: 'time',
         convert: function(v) {
             if (!v) {
                 return v;
             }
             return new Date(v);
-        },
-        serialize: function(v, record) {
-            var formatted = Ext.Date.format(v, 'Y-m-d\\TH:i:sP');
-            return formatted;
         }
-
     }, {
         name: 'erzeugerId'
     }, {
