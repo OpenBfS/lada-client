@@ -91,6 +91,8 @@ Ext.define('Lada.controller.form.Messung', {
                         win.show();
                         win.setPosition(35 + parentWin.width);
                         win.initData();
+                    } else {
+                        button.up('window').down('messwertgrid').getStore().reload();
                     }
                 }
                 formPanel.setLoading(false);
