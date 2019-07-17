@@ -209,6 +209,9 @@ Ext.define('Lada.view.grid.Messwert', {
                     return '';
                 }
                 var store = me.mehComboStore;
+                if (store.count() == 0) {
+                    store = Ext.data.StoreManager.get('messeinheiten');
+                }
                 return store.findRecord('id', value, 0, false, false, true).get('einheit');
             },
             editor: {
