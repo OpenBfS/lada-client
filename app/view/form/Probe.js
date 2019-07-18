@@ -45,7 +45,14 @@ Ext.define('Lada.view.form.Probe', {
 
     trackResetOnLoad: true,
 
+    statics: {
+        mediaSnScheduler: null
+    },
+
     initComponent: function() {
+        if (Lada.view.form.Probe.mediaSnScheduler == null) {
+            Lada.view.form.Probe.mediaSnScheduler = Ext.create('Lada.util.FunctionScheduler');
+        }
         var me = this;
         var i18n = Lada.getApplication().bundle;
         this.items = [{
@@ -568,16 +575,19 @@ Ext.define('Lada.view.form.Probe', {
         var media = record.get('mediaDesk');
         if (media) {
             var mediaParts = media.split(' ');
-            this.setMediaSN(0, mediaParts);
+            Lada.view.form.Probe.mediaSnScheduler.enqueue(
+                this.setMediaSN, [0, mediaParts], this);
         } else {
-            this.setMediaSN(0, '0');
+            Lada.view.form.Probe.mediaSnScheduler.enqueue(
+                this.setMediaSN, [0, '0'], this);
         }
-
+        Lada.view.form.Probe.mediaSnScheduler.next();
     },
 
     setMediaSN: function(ndx, media, beschreibung) {
         var mediabeschreibung = this.getForm().findField('media');
         if (ndx >= 12) {
+            Lada.view.form.Probe.mediaSnScheduler.finished();
             mediabeschreibung.setValue(beschreibung);
             return;
         }
@@ -590,12 +600,14 @@ Ext.define('Lada.view.form.Probe', {
         if (ndx >= 1) {
             var parents = current.getParents(cbox);
             if (parents.length === 0) {
+                Lada.view.form.Probe.mediaSnScheduler.finished();
                 return;
             }
             cbox.store.proxy.extraParams.parents = parents;
         }
         cbox.store.load(function(records, op, success) {
             if (!success) {
+                Lada.view.form.Probe.mediaSnScheduler.finished();
                 return;
             }
             cbox.select(cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
@@ -607,7 +619,9 @@ Ext.define('Lada.view.form.Probe', {
                     beschreibung = mediatext.data.beschreibung;
                 }
             }
-            me.setMediaSN(++ndx, media, beschreibung);
+            var nextNdx = ++ndx;
+            Lada.view.form.Probe.mediaSnScheduler.enqueue(me.setMediaSN, [nextNdx, media, beschreibung], me);
+            Lada.view.form.Probe.mediaSnScheduler.finished();
         });
     },
 
