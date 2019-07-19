@@ -170,7 +170,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 if (!value || value === '') {
                     return value;
                 }
-                var strValue = value.toExponential(2).toString()
+                var strValue = parseFloat(value).toExponential(2).toString()
                     .replace('.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
                 var exponent = parseInt(splitted[1], 10);
