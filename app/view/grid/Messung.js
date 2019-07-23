@@ -28,6 +28,8 @@ Ext.define('Lada.view.grid.Messung', {
     bottomBar: true,
     allowDeselect: true,
 
+    ignoreNextDblClick: false,
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.messungen');
@@ -57,9 +59,23 @@ Ext.define('Lada.view.grid.Messung', {
                 }
                 return 'noedit';
             },
-            handler: function(grid, rowIndex, colIndex) {
+            handler: function(grid, rowIndex, colIndex, item, event) {
+                var eventInst = event.browserEvent;
                 var rec = grid.getStore().getAt(rowIndex);
-                grid.fireEvent('itemdblclick', grid, rec);
+                //Ensure event is a mouse event
+                if (eventInst instanceof MouseEvent) {
+                    //Check if its not the second click of a doubleclick
+                    if (event.browserEvent.detail == 1) {
+                        grid.fireEvent('itemdblclick', grid, rec);
+                    } else if (event.browserEvent.detail) {
+                        //else tell the grid to ignore the next doubleclick as the edit window should already be open
+                        grid.ignoreNextDblClick = true;
+                    }
+                } else if (eventInst instanceof PointerEvent) {
+                    //We are using IE11
+                    //TODO: Fix multiple window openings for IE11
+                    grid.fireEvent('itemdblclick', grid, rec);
+                }
             }
         }, {
             header: i18n.getMsg('extMessungsId'),

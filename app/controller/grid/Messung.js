@@ -39,11 +39,10 @@ Ext.define('Lada.controller.grid.Messung', {
      * Window.
      */
     editItem: function(grid, record) {
-        grid.getEl().swallowEvent(['click', 'dblclick'], true);
-        grid.suspendEvents();
-        setTimeout(function() {
-            grid.resumeEvents();
-        }, 500);
+        if (grid.ignoreNextDblClick == true) {
+            grid.ignoreNextDblClick = false;
+            return;
+        }
         var probeLoadCallBack = function(probeWindow, probeRecord, messungRecord) {
             var win = Ext.create('Lada.view.window.MessungEdit', {
                 parentWindow: probeWindow,

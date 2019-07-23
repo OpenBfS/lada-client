@@ -21,6 +21,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     searchTimer: null,
     searchTimeout: 500,
 
+    ignoreNextDblClick: false,
+
     /**
      * Initialize the controller
      * It has 10 listeners
@@ -87,11 +89,11 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * or ortzuordnungMp
      */
     open: function(grid, record) {
-        grid.getEl().swallowEvent(['click', 'dblclick'], true);
-        grid.suspendEvents();
-        setTimeout(function() {
-            grid.resumeEvents();
-        }, 500);
+        if (grid.ignoreNextDblClick == true) {
+            grid.ignoreNextDblClick = false;
+            return;
+        }
+
         var parent = grid.up('window').record;
         // parent is either probe or messprogramm.
         var parentisMp = false;
