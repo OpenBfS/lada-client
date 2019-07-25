@@ -88,11 +88,13 @@ Ext.application({
         'Lada.model.Query',
         'Lada.store.GridColumn',
         'Lada.store.Query',
-        'Lada.view.widget.base.SelectableDisplayField'
+        'Lada.view.widget.base.SelectableDisplayField',
+        'Lada.util.FunctionScheduler'
     ],
     statics: {
         applicationUpdateTitle: 'Anwendungsupdate',
-        applicationUpdateText: 'Für diese Anwendung steht ein Update zur Verfügung. Jetzt neu laden?'
+        applicationUpdateText: 'Für diese Anwendung steht ein Update zur Verfügung. Jetzt neu laden?',
+        dblClickTimeout: 500
     },        
     bundle: {
         bundle: 'Lada',

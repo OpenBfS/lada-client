@@ -31,6 +31,10 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     readOnly: true,
     allowDeselect: true,
 
+    ignoreNextDblClick: false,
+
+    lastClickTime: 0,
+
     initComponent: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
@@ -64,8 +68,18 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             handler: function(grid, rowIndex, colIndex, item, event) {
                 var eventInst = event.browserEvent;
                 var rec = grid.getStore().getAt(rowIndex);
-                //Ensure event is a mouse event
-                if (eventInst instanceof MouseEvent) {
+                //Check if event is a pointer event
+                if (eventInst instanceof PointerEvent) {
+                    //We are using IE11
+                    var lastTimeStamp = me.lastClickTime;
+                    me.lastClickTime = eventInst.timeStamp;
+                    if (eventInst.timeStamp - lastTimeStamp > Lada.$application.dblClickTimeout) {
+                        grid.fireEvent('itemdblclick', grid, rec);
+                    } else {
+                        grid.ignoreNextDblClick = true;
+                    }
+                } else if (eventInst instanceof MouseEvent) {
+                    //We are in chrome/firefox etc.
                     //Check if its not the second click of a doubleclick
                     if (event.browserEvent.detail == 1) {
                         grid.fireEvent('itemdblclick', grid, rec);
@@ -73,10 +87,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                         //else tell the grid to ignore the next doubleclick as the edit window should already be open
                         grid.ignoreNextDblClick = true;
                     }
-                } else if (eventInst instanceof PointerEvent) {
-                    //We are using IE11
-                    //TODO: Fix multiple window openings for IE11
-                    grid.fireEvent('itemdblclick', grid, rec);
                 }
             }
         }, {
