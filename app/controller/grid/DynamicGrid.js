@@ -27,9 +27,6 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             'dynamicgrid pagingtoolbar': {
                 change: this.pageChange
             },
-            'button[action=print]': {
-                click: this.printSelection
-            },
             'button[action=genericdelete]': {
                 click: this.deleteData
             },
@@ -38,115 +35,6 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             }
         });
         this.callParent(arguments);
-    },
-
-    /**
-     * Send the selection to a Printservice
-     */
-    printSelection: function(button) {
-
-        //disable Button and setLoading...
-        button.disable();
-
-        var grid = button.up('grid');
-        var selection = grid.getView().getSelectionModel().getSelection();
-        var i18n = Lada.getApplication().bundle;
-        var columnNames = [];
-        var displayName = i18n.getMsg('rowtarget.title.'+ grid.rowtarget.dataType);
-        if (!displayName) {
-            displayName = '';
-        }
-        var data = [];
-
-        // create array of column definitions from visible columns
-        // columns in the array 'ignored' will not be printed
-        var ignored = ['owner', 'readonly', 'id', 'probeId'];
-
-        var visibleColumns =[];
-        var cols = grid.getVisibleColumns();
-        for (var i=0; i <cols.length; i++) {
-            if (cols[i].dataIndex && cols[i].text && (ignored.indexOf(cols[i].dataIndex) === -1)) {
-                visibleColumns.push({
-                    dataIndex: cols[i].dataIndex,
-                    renderer: (cols[i].renderer.$name === 'defaultRenderer') ? null: cols[i].renderer
-                });
-                columnNames.push(cols[i].text);
-            }
-        }
-
-        // Retrieve Data from selection
-        for (var item in selection) {
-            var row = selection[item].data;
-            var out = [];
-
-            //Lookup every column and write to data array;
-            for (i = 0; i < visibleColumns.length; i++) {
-                var rawData = row[visibleColumns[i].dataIndex];
-                if (visibleColumns[i].renderer) {
-                    out.push(visibleColumns[i].renderer(rawData));
-                } else {
-                    out.push(rawData);
-                }
-            }
-            data.push(out);
-        }
-
-        var printData = {
-            'layout': 'A4 landscape',
-            'outputFormat': 'pdf',
-            'attributes': {
-                'title': i18n.getMsg('print.tableTitle'),
-                'displayName': displayName,
-                'table': {
-                    'columns': columnNames,
-                    'data': data
-                }
-            }
-        };
-
-        Ext.Ajax.request({
-            url: 'lada-printer/print/lada_print/buildreport.pdf',
-            //configure a proxy in apache conf!
-            jsonData: printData,
-            binary: true,
-            success: function(response) {
-                var content = response.responseBytes;
-                var filetype = response.getResponseHeader('Content-Type');
-                var blob = new Blob([content],{type: filetype});
-                saveAs(blob, 'lada-print.pdf');
-                button.enable();
-                button.setLoading(false);
-            },
-            failure: function(response) {
-                button.enable();
-                button.setLoading(false);
-                if (!response.getResponse) {
-                    Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                        i18n.getMsg('err.msg.print.noContact'));
-                    return;
-                }
-                if (response.getResponse().responseText) {
-                    try {
-                        var json = Ext.JSON.decode(response.getResponse().responseText);
-                    } catch (e) {
-                        console.log(e);
-                    }
-                }
-                if (json) {
-                    if (json.message) {
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.generic.title')
-                            +' #'+json.message,
-                        Lada.getApplication().bundle.getMsg(json.message));
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                            i18n.getMsg('err.msg.print.noContact'));
-                    }
-                } else {
-                    Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
-                        i18n.getMsg('err.msg.print.noContact'));
-                }
-            }
-        });
     },
 
 

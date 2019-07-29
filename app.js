@@ -95,7 +95,7 @@ Ext.application({
         applicationUpdateTitle: 'Anwendungsupdate',
         applicationUpdateText: 'Für diese Anwendung steht ein Update zur Verfügung. Jetzt neu laden?',
         dblClickTimeout: 500
-    },        
+    },
     bundle: {
         bundle: 'Lada',
         language: function() {
@@ -601,6 +601,7 @@ Ext.application({
         'Lada.controller.GridExport',
         'Lada.controller.grid.DynamicGrid',
         'Lada.controller.Query',
-        'Lada.controller.Global'
+        'Lada.controller.Global',
+        'Lada.controller.Print'
     ]
 });

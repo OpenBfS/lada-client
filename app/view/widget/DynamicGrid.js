@@ -872,15 +872,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 disabled: false
             });
         }
-        if (!this.tbuttonExists('printSheet')) {
-            this.toolbarbuttons.push({
-                text: this.i18n.getMsg('button.printsheet'),
-                icon: 'resources/img/printer.png',
-                action: 'printSheet',
-                needsSelection: true,
-                disabled: true
-            });
-        }
     },
 
     addMessungButtons: function() {
