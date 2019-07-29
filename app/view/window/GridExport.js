@@ -815,7 +815,7 @@ Ext.define('Lada.view.window.GridExport', {
                 if (!value && value !== 0) {
                     return null;
                 }
-                return Number.parseFloat(value);
+                return parseFloat(value);
             case 'date':
                 if (column.dataType.format && !json) {
                     return Ext.Date.format(new Date(value),
