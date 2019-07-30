@@ -59,6 +59,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         deferEmptyText: false
     },
 
+    currentParams: null,
+
     /**List of userids that can set a messung's status */
     statusUser: [1,2,3],
 
@@ -222,6 +224,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      *   of fields
      **/
     generateColumnsAndFields: function(current_columns, fixedColumnStore) {
+        this.currentParams = {
+            sorting: [],
+            filters: []
+        };
         this.toolbarbuttons = [];
         var resultColumns = [];
         var fields = [];
@@ -269,8 +275,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             var col = {};
             var orig_column = fixedColumnStore.findRecord(
                 'id', cc[i].get('gridColumnId'), false, false, false, true);
-
-            col.dataIndex = orig_column.get('dataIndex');
+            var dataIndex = orig_column.get('dataIndex');
+            col.dataIndex = dataIndex;
             col.dataType = orig_column.get('dataType');
             col.text = orig_column.get('name');
             col.width = cc[i].get('width');
@@ -281,7 +287,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 datatype = {name: 'text'};
             }
             var curField = {
-                dataIndex: orig_column.get('dataIndex'),
+                dataIndex: dataIndex,
                 name: orig_column.get('name')
             };
             var colImg = null;
@@ -349,6 +355,19 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     };
             }
             fields.push(curField);
+
+            if (cc[i].get('filterActive')) {
+                this.currentParams.filters.push({
+                    name: dataIndex,
+                    filter: cc[i].get('filterValue')
+                });
+            }
+            if (cc[i].sort) {
+                this.currentParams.sorting.push({
+                    name: dataIndex,
+                    sort: cc[i].get('sort')
+                });
+            }
             col.hideable = false;
             col.draggable = false;
             resultColumns.push(col);

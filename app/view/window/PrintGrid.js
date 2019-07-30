@@ -22,9 +22,7 @@ Ext.define('Lada.view.window.PrintGrid', {
     // store containing all available templates for the currently selected data
     templateStore: Ext.create('Ext.data.Store', {
         model: Ext.create('Ext.data.Model',{
-            fields: [
-                { name: 'name', type: 'string' } // TODO ensure uniqueness
-            ]
+            fields: [{ name: 'name', type: 'string' }]
         })
     }),
     // the grid with the current query and the items to be printed
@@ -48,7 +46,6 @@ Ext.define('Lada.view.window.PrintGrid', {
             name: 'variant',
             id: 'radio_printtemplate'
         }, {
-            //TODO check if all needed
             xtype: 'combobox',
             name: 'template',
             fieldLabel: i18n.getMsg('print.window.template'),

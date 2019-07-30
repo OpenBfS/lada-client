@@ -55,7 +55,7 @@ Ext.define('Lada.controller.Print', {
 
     /**
      * enables/disables part of the form
-     * (assumies being part of a change event)
+     * (assumes being part of a change event)
      * @param {*} radiobutton the calling radio button
      * @param {*} newValue the new value of the radio button set
      * TODO: may become obsolete if "table printing" is implemented another way
@@ -100,7 +100,6 @@ Ext.define('Lada.controller.Print', {
                 }
             },
             failure: function(response) {
-                // TODO which callback here?
                 me.handleError(response);
             }
         });
@@ -126,7 +125,6 @@ Ext.define('Lada.controller.Print', {
             }
             var layout = capabilities.layouts[0];
             // TODO ensure there is always one or allow selecting several layouts
-
             var i18n = Lada.getApplication().bundle;
             var items = [];
             items.push({
@@ -165,22 +163,45 @@ Ext.define('Lada.controller.Print', {
     },
 
     /**
-     * Fills a template with one entry of the data selection
-     * @param {Object} capabilities the capabilities.json
-     * @param {*} dataSource one data entry
+     * Fills a template with one entry of the data selection. It takes the
+     * template definition fields and supplies all fields with a matching name
+     * with data taken from either the incoming modelEntry or a preset value
+     * (if present)
+     *
+     * @param {object} attributes the part of a capability.json to be met.
+     * Typically it is the 'attributes' property of a layout or of clientParams
+     *   (if nested)
+     * @param {*} modelEntry one data entry from an ExtJS store. The data
+     * model's field names are assumed to match the template's definition names.
+     * @param {Object} window the print dialog window which may provide default
+     * values in textfields named according to the attributes. These values
+     * will be used for empty/non set entries.
      */
-    fillTemplate: function( capabilities, data) {
+    fillTemplate: function( attributes, modelEntry, window) {
         var resultData = {};
-        var attribs = capabilities.layouts[0].attributes;
-        for (var i=0; i < attribs.length; i ++) {
-            if (attribs[i].type === 'string') {
-                if (data.get(attribs[i].name)) {
-                    resultData[attribs[i].name] = data.get(attribs[i].name);
+        for (var i=0; i < attributes.length; i ++) {
+            if (attributes[i].type === 'string') {
+                if (modelEntry.get(attributes[i].name)) {
+                    resultData[attributes[i].name] = modelEntry.get(attributes[i].name);
                 } else {
-                    // TODO resultData[attribs[i].name] = printDialog.getDefaultForName();
+                    var fieldselector = 'textfield[name=' + attributes[i].name + ']';
+                    var field = window.down('fieldset[name=dynamicfields]').down(fieldselector);
+                    if (field) {
+                        resultData[attributes[i].name] = field.getValue();
+                    }
                 }
-            } else if (attribs[i].type === 'DataSourceAttributeValue') {
-                // recursion!
+            } else if (attributes[i].type === 'DataSourceAttributeValue') {
+                resultData[attributes[i].name] = [];
+                var subitems = modelEntry.items;
+                // TODO: testing! data.items or data.get(attributes[i].name)
+                // currently, we have no 'subitems' which are also models.
+                if (subitems && subitems.length) {
+                    for (var j=0;j< subitems.length; j++) {
+                        resultData[attributes[i].name].push(
+                            this.fillTemplate(attributes[i].clientParams, subitems[i], window)
+                        );
+                    }
+                }
             }
         }
         return resultData;
@@ -190,7 +211,6 @@ Ext.define('Lada.controller.Print', {
      * print the selection as data table
      */
     printTable: function(grid, callbackFn, filename) {
-        var sortingFilters = this.fetchSortingAndFilters(); // TODO include in request to print service
         var selection = grid.view.getSelectionModel().getSelection();
         var i18n = Lada.getApplication().bundle;
         var columnNames = [];
@@ -229,7 +249,6 @@ Ext.define('Lada.controller.Print', {
             }
             data.push(out);
         }
-        var sortingFilters = this.fetchSortingAndFilters(); // TODO include in request to print service
         var printData = {
             'layout': 'A4 landscape',
             'outputFormat': 'pdf',
@@ -239,7 +258,10 @@ Ext.define('Lada.controller.Print', {
                 'table': {
                     'columns': columnNames,
                     'data': data
-                }
+                },
+                //TODO: check these (sorting/filters):
+                'filterParams': grid.currentParams.filters,
+                'sortingParams': grid.currentParams.sorting
             }
         };
         this.sendRequest(printData, 'lada_print', filename, callbackFn);
@@ -277,21 +299,30 @@ Ext.define('Lada.controller.Print', {
 
         if (window.down('radio[id=radio_printtable]').getValue() ||
             template === 'lada-print') {
-            // TODO how do we mark "tables" here? hardcoded may be obsolete!
+            // TODO how do we mark "tables" here? hardcoded 'lada-print' may be obsolete!
             this.printTable(grid, callbackFn, filename);
         } else if (template === 'lada_erfassungsbogen') {
-            // TODO: temporary implementation of old "erfassungsbogen" printing
+            // TODO: this is the old implementation of "erfassungsbogen" printing
+            // see printSelection, prepareData, createSheetData (moved without major adaption)
             this.printSelection(grid, filename, callbackFn);
         } else {
             var selection = grid.getView().getSelectionModel().getSelection();
-            var data = [];
-            for (var i = 0; i< selection.length; i++) {
-                data.push(this.fillTemplate(capabilities ,selection[i]));
-            }
-            this.fetchSortingAndFilters(); // TODO still a dummy! add to data!
-            this.sendRequest(data, template, filename, callbackFn);
+            var data = this.fillTemplate(
+                capabilities.layouts[0].attributes,
+                selection,
+                window);
+            var printData = {
+                layout: capabilities.layouts[0].name,
+                outputFormat: 'pdf', // TODO assuming 'pdf only' for now
+                attributes: data
+            };
+            printData.attributes.filterParams = grid.currentParams.filters;
+            printData.attributes.filterParams = grid.currentParams.sorting;
+
+            this.sendRequest(JSON.stringify(printData), template, filename, callbackFn);
         }
     },
+
 
     /**
      * Send a prepared request to the print server, saves the answer as
@@ -324,13 +355,6 @@ Ext.define('Lada.controller.Print', {
         });
     },
 
-    /**
-     * returns the last loaded search configuration for the data
-     */
-    fetchSortingAndFilters: function() {
-        return Ext.StoreManager.get('genericresults').lastProxyPayload || null;
-    },
-
     // TODO outdated; from "Erfassungsbogen" ?
     /**
      * Send the selection to a Printservice
@@ -350,7 +374,7 @@ Ext.define('Lada.controller.Print', {
         this.createSheetData(grid, callback, this);
     },
 
-    //TODO moved from "Erfassunsbogen", might be obsolete
+    //TODO moved from "Erfassunsbogen"
     prepareData: function(data) {
         // Copy data
         var prep = JSON.parse(data);
@@ -469,6 +493,7 @@ Ext.define('Lada.controller.Print', {
                 var data = [];
                 if (response.responseText) {
                     var json = Ext.decode(response.responseText);
+                    // TODO filter by availableTemplates for this query
                     if (Array.isArray(json)) {
                         for (var i=0; i < json.length; i++) {
                             data.push({name: json[i]});

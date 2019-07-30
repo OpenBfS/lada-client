@@ -404,7 +404,7 @@ Ext.define('Lada.controller.Query', {
             if (!this.resultStore) {
                 this.resultStore = Ext.StoreManager.get('genericresults');
             }
-            this.resultStore.setProxyPayload(jsonData);
+            this.resultStore.getProxy().setPayload(jsonData);
             this.resultStore.setPageSize(Lada.pagingSize);
 
             var plugin = null;
