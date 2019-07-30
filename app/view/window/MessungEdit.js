@@ -31,7 +31,7 @@ Ext.define('Lada.view.window.MessungEdit', {
     parentWindow: null,
     record: null,
     grid: null,
-    mStore: Ext.create('Lada.store.Messgroessen'),
+    mStore: null,
 
     /**
      * This function initialises the Window
@@ -48,6 +48,13 @@ Ext.define('Lada.view.window.MessungEdit', {
             this.callParent(arguments);
             return;
         }
+
+        //Clone proxy instance as it seems to be shared between store instances
+        var store = Ext.create('Lada.store.Messgroessen');
+        var proxy = Ext.clone(store.getProxy());
+        proxy.extraParams = {};
+        store.setProxy(proxy);
+        this.mStore = store;
 
         this.mStore.proxy.extraParams = {mmtId: this.record.get('mmtId')};
         this.mStore.load();
