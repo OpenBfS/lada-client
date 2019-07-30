@@ -36,6 +36,9 @@ Ext.define('Lada.view.window.Probenehmer', {
             },
             deactivate: function() {
                 this.getEl().addCls('window-inactive');
+            },
+            afterRender: function() {
+                this.customizeToolbar();
             }
         });
 
@@ -77,6 +80,7 @@ Ext.define('Lada.view.window.Probenehmer', {
             handler: this.handleBeforeClose
         }];
         this.callParent(arguments);
+        this.setMessages();
     },
 
     /**
@@ -95,13 +99,24 @@ Ext.define('Lada.view.window.Probenehmer', {
         this.down('probenehmerform').clearMessages();
     },
 
+    customizeToolbar: function() {
+        var tools = this.tools;
+        for (var i = 0; i < tools.length; i++) {
+            if (tools[i].type === 'close') {
+                var closeButton = tools[i];
+                closeButton.handler = null;
+                closeButton.callback = this.handleBeforeClose;
+            }
+        }
+    },
+
     /**
      * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
     handleBeforeClose: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
         var item = me.down('form');
-        if (item.isDirty()) {
+        if (item.isDirty() && item.isValid()) {
             var confWin = Ext.create('Ext.window.Window', {
                 title: i18n.getMsg('form.saveonclosetitle'),
                 modal: true,

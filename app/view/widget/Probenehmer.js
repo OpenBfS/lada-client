@@ -7,7 +7,7 @@
  */
 
 /**
- * Combobox for Umweltbereich
+ * Combobox for Probenehmer
  */
 Ext.define('Lada.view.widget.Probenehmer' ,{
     extend: 'Lada.view.widget.base.ComboBox',
