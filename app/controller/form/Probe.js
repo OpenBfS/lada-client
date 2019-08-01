@@ -335,7 +335,20 @@ Ext.define('Lada.controller.form.Probe', {
                                     if (numMesswert.length == messungenFinished && finishedCallback) {
                                         finishedCallback(probeCopy);
                                     }
-                                }
+                                } else{
+                                   //TODO Messwerte liefern immer einen Fehler durch die Konsistenzprüfung
+                                    var currentMessungsIDNew = rec.get('messungsId');
+                                    var currentFinishedMesswerte = messwertFinished.get(currentMessungsIDNew);
+                                    var currentNumMesswerte = numMesswert.get(currentMessungsIDNew);
+                                    currentFinishedMesswerte++;
+                                    messwertFinished.add(currentMessungsIDNew, currentFinishedMesswerte);
+                                    if(currentFinishedMesswerte == currentNumMesswerte) {
+                                        messungenFinished++;
+                                    }
+                                    if (numMesswert.length == messungenFinished && finishedCallback) {
+                                        finishedCallback(probeCopy);
+                                    }
+                               }
                             }
                         });
                     }
