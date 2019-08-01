@@ -209,10 +209,11 @@ Ext.define('Lada.view.grid.Messwert', {
                     return '';
                 }
                 var store = me.mehComboStore;
-                if (store.count() == 0) {
-                    store = Ext.data.StoreManager.get('messeinheiten');
+                if (store.findRecord('id', value, 0, false, false, true) === null) {
+                    return Ext.data.StoreManager.get('messeinheiten').findRecord('id', value, 0, false, false, true).get('einheit');
+                } else {
+                    return store.findRecord('id', value, 0, false, false, true).get('einheit');
                 }
-                return store.findRecord('id', value, 0, false, false, true).get('einheit');
             },
             editor: {
                 xtype: 'combobox',
@@ -276,7 +277,6 @@ Ext.define('Lada.view.grid.Messwert', {
         } else {
             this.store = Ext.create('Lada.store.Messwerte');
         }
-
         if (this.umwId) {
             var umwStore = Ext.create('Lada.store.Umwelt');
             umwStore.getModel().load(this.umwId, {
