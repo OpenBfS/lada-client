@@ -1035,7 +1035,7 @@ Ext.define('Lada.view.window.GridExport', {
                 case 'number':
                     value = value.toString();
                     if (this.csv.decsep === ',' && value.indexOf('.') > -1) {
-                        value.replace(/'.'/g, ',');
+                        value = value.replace(/\./g, ',');
                     }
                     line += value;
                     break;
