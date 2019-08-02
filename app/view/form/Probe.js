@@ -254,7 +254,7 @@ Ext.define('Lada.view.form.Probe', {
                                 this.down('combobox').on({
                                     focus: {
                                         fn: function(combo) {
-                                            var store = Ext.StoreManager.get('probenehmer');
+                                            var store = combo.getStore();
                                             store.clearFilter();
                                             var nId = combo.up('fieldset')
                                                 .down('netzbetreiber[name=netzbetreiber]')
@@ -288,7 +288,7 @@ Ext.define('Lada.view.form.Probe', {
                                 this.down('combobox').on({
                                     focus: {
                                         fn: function(combo) {
-                                            var store = Ext.StoreManager.get('datensatzerzeuger');
+                                            var store = combo.getStore();
                                             store.clearFilter();
                                             var nId = combo.up('fieldset')
                                                 .down('netzbetreiber[name=netzbetreiber]')
@@ -323,7 +323,7 @@ Ext.define('Lada.view.form.Probe', {
                             this.down('combobox').on({
                                 focus: {
                                     fn: function(combo) {
-                                        var store = Ext.StoreManager.get('messprogrammkategorie');
+                                        var store = combo.getStore();
                                         store.clearFilter();
                                         var nId = combo.up('fieldset')
                                             .down('netzbetreiber[name=netzbetreiber]')

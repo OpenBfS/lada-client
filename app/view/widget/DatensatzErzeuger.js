@@ -35,15 +35,13 @@ Ext.define('Lada.view.widget.DatensatzErzeuger' ,{
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.datensatzerzeuger');
+        this.store = Ext.create('Lada.store.DatensatzErzeuger');
 
-        this.store = Ext.data.StoreManager.get('datensatzerzeuger');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.DatensatzErzeuger');
-        }
         this.store.sort();
         this.callParent(arguments);
         if (this.extraParams) {
             this.extraParams();
         }
+        this.store.load();
     }
 });
