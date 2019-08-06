@@ -13,7 +13,23 @@ Ext.define('Lada.view.window.ImportResponse', {
     downloadPrefix: '',
     downloadPostfix: '',
 
+    //Downloadable report content
     download: '',
+
+    /**
+     * Imported file encoding
+     */
+    encoding: null,
+
+    /**
+     * Preselected mst
+     */
+    mstId: null,
+
+    /**
+     * String containg mst and encoding
+     */
+    mstEncoding: null,
 
     layout: 'fit',
     resizable: true,
@@ -35,6 +51,10 @@ Ext.define('Lada.view.window.ImportResponse', {
         this.downloadPrefix = '<!DOCTYPE html>' +
                 '<head><meta charset="utf-8"></head><body>';
         this.downloadPostfix = '</body></html>'
+
+        me.mstEncoding = i18n.getMsg('encoding') + ' ' + this.encoding + '<br/>'
+                + i18n.getMsg('mstId') + ': ' + this.mst + '<br/>'
+                + i18n.getMsg('import.messages') + ':<br/><br/>';
 
         this.bodyStyle = {background: '#fff'};
         me.items = [{
@@ -83,7 +103,8 @@ Ext.define('Lada.view.window.ImportResponse', {
         this.finished++;
         this.down('progressbar').updateProgress(this.finished/this.fileCount);
         var filename = this.fileNames[fileIndex];
-        var response = '</br><b>' + filename + ':</b> </br>' ;
+        var response = '<br/><b>' + filename + ':</b> <br/>' ;
+        response += this.mstEncoding;
         response += this.parseResponse(data, true);
         this.download += response;
         this.down('panel').setHtml(this.down('panel').html + response);
@@ -104,8 +125,9 @@ Ext.define('Lada.view.window.ImportResponse', {
         this.finished++;
         this.down('progressbar').updateProgress(this.finished/this.fileCount);
         var filename = this.fileNames[fileIndex];
-        var response = '</br><b>' + filename + ':</b> </br>' ;
-        response+= i18n.getMsg('err.msg.import.failed') + ' ' + status + ' - ' + statusText + '</br>';
+        var response = '<br/><b>' + filename + ':</b> <br/>' ;
+        response += this.mstEncoding;
+        response+= i18n.getMsg('err.msg.import.failed') + ' ' + status + ' - ' + statusText + '<br/>';
         this.down('panel').setHtml(this.down('panel').html + response);
         this.download += response;
         if (this.finished == this.fileCount) {
@@ -316,7 +338,6 @@ Ext.define('Lada.view.window.ImportResponse', {
                 }
                 out.push('</ol>');
             }
-            out.push('<br/>');
             if (!divHtml) {
                 out.push('</body></html>');
             } else {

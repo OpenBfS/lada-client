@@ -64,7 +64,7 @@ Ext.define('Lada.view.window.FileUpload', {
                 }
             }),
             Ext.create('Ext.form.field.ComboBox', {
-                fieldLabel: i18n.getMsg('encoding'),
+                fieldLabel: i18n.getMsg('fileEncoding'),
                 allowBlank: false,
                 displayField: 'name',
                 valueField: 'value',
@@ -219,6 +219,8 @@ Ext.define('Lada.view.window.FileUpload', {
                 modal: true,
                 fileCount: this.fileCount,
                 fileNames: this.fileNames,
+                encoding: this.down('combobox[name=encoding]').getValue(),
+                mst: this.down('combobox[name=mst]').getValue(),
                 width: 350,
                 height: 250,
                 title: i18n.getMsg('title.importresult'),
@@ -256,6 +258,8 @@ Ext.define('Lada.view.window.FileUpload', {
                 modal: true,
                 fileCount: this.fileCount,
                 fileNames: this.fileNames,
+                encoding: this.down('combobox[name=encoding]').getValue(),
+                mst: this.down('combobox[name=mst]').getValue(),
                 width: 350,
                 height: 250,
                 title: i18n.getMsg('title.importresult'),
