@@ -92,14 +92,22 @@ Ext.define('Lada.view.window.ImportResponse', {
         }
     },
 
+    /**
+     * Update the result window after an error has occured during the upload.
+     * Updates the result text and the progress bar.
+     * @param status HTTP status code
+     * @param statusText Status text
+     * @param fileIndex Index of the file in the name array
+     */
     updateOnError: function (status, statusText, fileIndex) {
         var i18n = Lada.getApplication().bundle;
         this.finished++;
         this.down('progressbar').updateProgress(this.finished/this.fileCount);
         var filename = this.fileNames[fileIndex];
         var response = '</br><b>' + filename + ':</b> </br>' ;
-        response+= i18n.getMsg('err.msg.import.failed') + status + ' - ' + statusText;
+        response+= i18n.getMsg('err.msg.import.failed') + ' ' + status + ' - ' + statusText + '</br>';
         this.down('panel').setHtml(this.down('panel').html + response);
+        this.download += response;
         if (this.finished == this.fileCount) {
             this.down('button[name=download]').enable();
         }
