@@ -217,7 +217,7 @@ Ext.define('Lada.controller.form.Messung', {
 
     showAuditTrail: function(button) {
         Ext.create('Lada.view.window.AuditTrail', {
-            autoShow: true,
+            autoshow: false,
             closeAction: 'destroy',
             type: 'messung',
             objectId: button.up('form').recordId

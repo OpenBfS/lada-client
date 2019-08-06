@@ -23,7 +23,7 @@ Ext.define('Lada.view.window.ChangeKDA', {
         labelWidth: 140,
         margin: '5,0,5,0'
     },
-    autoShow: true,
+    autoshow: false,
     constrain: true,
     parentWindow: null,
 

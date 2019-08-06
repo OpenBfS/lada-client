@@ -15,7 +15,7 @@ Ext.define('Lada.view.window.GridExport', {
 
     collapsible: true,
     maximizable: true,
-    autoShow: true,
+    autoshow: false,
     layout: 'vbox',
     align: 'stretch',
     grid: null,

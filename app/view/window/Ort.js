@@ -10,7 +10,7 @@
  * Window for new Ort, wraps around a {@link Lada.view.form.Ort}
  */
 Ext.define('Lada.view.window.Ort', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.TrackedWindow',
     alias: 'window.ort',
     requires: [
         'Lada.model.Ort',
@@ -42,6 +42,8 @@ Ext.define('Lada.view.window.Ort', {
      * The record for the new Ort. Should be a {@link Lada.model.Ort}
      */
     record: null,
+
+    recordType: 'ort',
 
     /**
      * Original record if record is a copy. Will only be set if the copy is created.

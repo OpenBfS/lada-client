@@ -10,16 +10,17 @@
  * Window to create/edit a Datensatzerzeuger
  */
 Ext.define('Lada.view.window.DatensatzErzeuger', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.TrackedWindow',
     alias: 'widget.datensatzerzeugeredit',
 
     collapsible: true,
     maximizable: true,
-    autoShow: true,
+    autoshow: false,
     layout: 'fit',
     constrain: true,
 
     record: null,
+    recordType: 'datensatzerzeuger',
 
     /**
      * This function initialises the Window

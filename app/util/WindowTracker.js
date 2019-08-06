@@ -19,7 +19,9 @@ Ext.define('Lada.util.WindowTracker', {
         /**
          * Known record types
          */
-        recordTypes: ['messung', 'probe'],
+        recordTypes: ['datensatzerzeuger', 'messprogramm',
+                'messprogrammkategorie', 'messung', 'ort', 'ortszuordnung',
+                'probe', 'probenehmer'],
 
         /**
          * Map of (type, map)

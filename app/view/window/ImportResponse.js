@@ -12,6 +12,12 @@ Ext.define('Lada.view.window.ImportResponse', {
     layout: 'fit',
     resizable: false,
 
+    fileCount: -1,
+
+    finished: 0,
+
+    finishedHandler: null,
+
     /**
      * @private
      * Initialize the view.
@@ -38,6 +44,8 @@ Ext.define('Lada.view.window.ImportResponse', {
             html: html,
             margin: 10,
             border: false
+        }, {
+            xtype: 'progressbar'
         }];
 
         me.buttons = [{
@@ -59,6 +67,10 @@ Ext.define('Lada.view.window.ImportResponse', {
             download = me.parseResponse(data);
             this.down('panel').html = html + me.parseResponse(data, true);
         }
+    },
+
+    update: function(responseData) {
+
     },
 
     /**

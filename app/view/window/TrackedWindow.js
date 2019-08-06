@@ -15,19 +15,24 @@
 Ext.define('Lada.view.window.TrackedWindow', {
     extend: 'Ext.window.Window',
 
+    record: null,
+
     recordType: null,
 
     /**
      * Checks if a window for the current record is already open.
      * If so, the already exisiting window will be focus, else
      * this window will be shown.
+     * @return True if window will be shown, else false
      */
     show: function() {
         if (Lada.util.WindowTracker.isOpen(this.recordType, this.record.get('id'))) {
             Lada.util.WindowTracker.focus(this.recordType, this.record.get('id'));
+            return false;
         } else {
             Lada.util.WindowTracker.open(this.recordType, this.record.get('id'), this);
             this.callParent();
+            return true;
         }
     },
 

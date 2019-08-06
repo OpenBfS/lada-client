@@ -11,7 +11,7 @@
  */
 
 Ext.define('Lada.view.window.Ortszuordnung', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.TrackedWindow',
     alias: 'widget.ortszuordnungwindow',
 
     requires: [
@@ -27,7 +27,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
 
     collapsible: true,
     maximizable: true,
-    autoshow: true,
+    autoshow: false,
     layout: 'fit',
     constrain: true,
 
@@ -36,6 +36,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
 
     parentWindow: null,
     record: null,
+    recordType: 'ortszuordnung',
     grid: null,
 
     datenbasis: null,

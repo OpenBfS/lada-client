@@ -10,7 +10,7 @@
  * Window to edit a Probe
  */
 Ext.define('Lada.view.window.ProbeEdit', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.TrackedWindow',
     alias: 'widget.probenedit',
 
     requires: [
@@ -23,10 +23,10 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
     collapsible: true,
     maximizable: true,
-    autoShow: true,
+    autoShow: false,
     layout: 'fit',
     constrain: true,
-
+    recordType: 'probe',
     record: null,
 
     /**

@@ -10,7 +10,7 @@
  * Window to edit a Messung
  */
 Ext.define('Lada.view.window.MessungEdit', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.TrackedWindow',
     alias: 'widget.messungedit',
 
     requires: [
@@ -22,7 +22,7 @@ Ext.define('Lada.view.window.MessungEdit', {
 
     collapsible: true,
     maximizable: true,
-    autoshow: true,
+    autoshow: false,
     autoscroll: true,
     layout: 'fit',
     constrain: true,
@@ -30,6 +30,7 @@ Ext.define('Lada.view.window.MessungEdit', {
     probe: null,
     parentWindow: null,
     record: null,
+    recordType: 'messung',
     grid: null,
     mStore: null,
 

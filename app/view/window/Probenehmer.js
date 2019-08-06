@@ -10,17 +10,18 @@
  * Window to create/edit a Probenehmer
  */
 Ext.define('Lada.view.window.Probenehmer', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.TrackedWindow',
     alias: 'widget.probenehmeredit',
 
     collapsible: true,
     maximizable: true,
-    autoShow: true,
+    autoshow: false,
     autoScroll: true,
     layout: 'fit',
     constrain: true,
 
     record: null,
+    recordType: 'probenehmer',
 
     /**
      * This function initialises the Window

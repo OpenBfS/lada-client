@@ -10,7 +10,7 @@
  * Window to edit a Messprogramm
  */
 Ext.define('Lada.view.window.Messprogramm', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.TrackedWindow',
     alias: 'widget.messprogramm',
 
     requires: [
@@ -20,7 +20,7 @@ Ext.define('Lada.view.window.Messprogramm', {
 
     collapsible: true,
     maximizable: true,
-    autoShow: true,
+    autoshow: false,
     autoScroll: true,
     layout: 'fit',
     constrain: true,
@@ -28,6 +28,7 @@ Ext.define('Lada.view.window.Messprogramm', {
     width: 750,
 
     record: null,
+    recordType: 'messprogramm',
 
     /**
      * This function initialises the Window
