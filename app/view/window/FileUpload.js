@@ -18,13 +18,19 @@ Ext.define('Lada.view.window.FileUpload', {
 
     layout: 'vbox',
 
-    file: null,
+    files: null,
+    fileNames: null,
+
+    filesUploaded: 0,
+
+    resultWin: null,
 
     defaults: {
         maxWidth: 240,
         width: 240,
         labelAlign: 'top'
     },
+
     /**
      * This function initialises the Window
      */
@@ -35,7 +41,25 @@ Ext.define('Lada.view.window.FileUpload', {
                 fieldLabel: i18n.getMsg('selectfile'),
                 allowBlank: false,
                 buttonText: i18n.getMsg('search'),
-                margin: '3 3 3 3'
+                margin: '3 3 3 3',
+                listeners: {
+                    afterRender: function(cmp) {
+                        cmp.fileInputEl.dom.setAttribute('multiple', 'multiple');
+                    },
+                    //Remove 'C:\Fakepath' part of filenames to increase readability
+                    change: function(field, value) {
+                        var node = Ext.DomQuery.selectNode('input[id='+ field.getInputId() + ']');
+                        var files = field.fileInputEl.dom.files;
+                        var fileNames = '';
+                        for (var i = 0; i < files.length; i++) {
+                            fileNames += files[i].name.replace("C:\\fakepath\\", "");
+                            if (i < files.length - 1) {
+                                fileNames += ', ';
+                            }
+                        }
+                        node.value = fileNames;
+                    }
+                }
             }),
             Ext.create('Ext.form.field.ComboBox', {
                 fieldLabel: i18n.getMsg('encoding'),
@@ -83,7 +107,7 @@ Ext.define('Lada.view.window.FileUpload', {
                     xtype: 'button',
                     text: i18n.getMsg('save'),
                     margin: '3, 3, 3, 3',
-                    handler: this.readFile
+                    handler: this.readFiles
                 }, {
                     xtype: 'button',
                     text: i18n.getMsg('cancel'),
@@ -109,28 +133,48 @@ Ext.define('Lada.view.window.FileUpload', {
      * @private
      * A handler for the Upload-Button, reading the file specified in the form field
      */
-    readFile: function(button) {
+    readFiles: function(button) {
         var win = button.up('window');
         var fileInput = win.down('filefield');
-        var file = fileInput.fileInputEl.dom.files[0];
-        if (!file) {
+        var files = fileInput.fileInputEl.dom.files;
+        if (!files) {
             //TODO error handling
             return;
         }
-        win.file = file;
-        var reader = new FileReader();
-        reader.onload = function() {
-            var binData = reader.result;
-            win.uploadFile(button, binData);
-        };
-        reader.readAsArrayBuffer(file);
+        win.files = files;
+        win.fileNames = [];
+        var binFiles = [];
+        var filesRead = 0;
+        win.fileCount = files.length;
+        for (var i = 0; i < files.length; i++) {
+            win.fileNames[i] = files[i].name;
+            var file = files[i];
+            var reader = new FileReader();
+            reader.onload = function() {
+                var binData = reader.result;
+                console.log(binData);
+                binFiles.push(binData);
+                filesRead++;
+                if (filesRead == files.length) {
+                    win.uploadFiles(button, binFiles);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+    },
+
+    uploadFiles: function(button, binFiles) {
+        var win = button.up('window');
+        for (var i = 0; i < binFiles.length; i++) {
+            win.uploadFile(button, binFiles[i], i);
+        }
     },
 
     /**
      * @private
      * A handler uploading a file, given as binary string
      */
-    uploadFile: function(button, binData) {
+    uploadFile: function(button, binData, fileIndex) {
         var win = button.up('window');
         var cb = win.down('combobox[name=encoding]');
         var contentType = 'text/plain; charset=' + cb.getValue();
@@ -138,41 +182,59 @@ Ext.define('Lada.view.window.FileUpload', {
         var x = new Uint8Array(binData.slice(0,3));
         if (cb.getValue() === "utf-8" && x[0] == 0xEF && x[1] == 0xBB && x[2] == 0xBF)
             binData = binData.slice(3);
-        Ext.Ajax.request({
-            url: 'lada-server/data/import/laf',
-            method: 'POST',
-            headers: {
-                'Content-Type': contentType,
-                'X-LADA-MST': mstSelector
-            },
-            scope: win,
-            binary: true,
-            binaryData: binData,
-            success: win.uploadSuccess,
-            failure: win.uploadFailure
-        });
+            Ext.Ajax.request({
+                url: 'lada-server/data/import/laf',
+                method: 'POST',
+                headers: {
+                    'Content-Type': contentType,
+                    'X-LADA-MST': mstSelector
+                },
+                scope: win,
+                binary: true,
+                binaryData: binData,
+                success: function(response, opts) {
+                    win.uploadSuccess(response, opts, fileIndex);
+                },
+                failure: function(response, opts, fileIndex) {
+                    win.uploadFailure(response, opts, fileIndex);
+                }
+            });
     },
 
     /**
      * @private
      */
-    uploadSuccess: function(response, opts) {
-        this.close();
+    uploadSuccess: function(response, opts, fileIndex) {
+        this.filesUploaded++;
         var i18n= Lada.getApplication().bundle;
         var responseText = response.responseBytes ?
                 String.fromCharCode.apply(null, response.responseBytes):
                 response.responseText;
-        var win = Ext.create('Lada.view.window.ImportResponse', {
-            responseData: responseText,
-            message: '', //TODO:response.message,
-            modal: true,
-            fileName: this.file.name,
-            title: i18n.getMsg('title.importresult')
-        });
-        win.show();
-        var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-        if (parentGrid.length === 1) {
-            parentGrid[0].reload();
+
+        if (!this.resultWin) {
+            this.resultWin = Ext.create('Lada.view.window.ImportResponse', {
+                message: {}, //TODO:response.message,
+                modal: true,
+                fileCount: this.fileCount,
+                fileNames: this.fileNames,
+                width: 350,
+                height: 250,
+                title: i18n.getMsg('title.importresult'),
+                finishedHandler: function() {
+                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                    if (parentGrid.length === 1) {
+                        parentGrid[0].reload();
+                    }
+                }
+            });
+            this.resultWin.show();
+        }
+
+        this.resultWin.update(responseText, fileIndex);
+
+        if (this.filesUploaded == this.files.length) {
+            this.resultWin.finishedHandler();
+            this.close();
         }
     },
 
@@ -182,7 +244,10 @@ Ext.define('Lada.view.window.FileUpload', {
     uploadFailure: function(response, opts) {
         // TODO handle Errors correctly, especially AuthenticationTimeouts
         var i18n= Lada.getApplication().bundle;
-        this.close();
+        this.filesUploaded++;
+        if (this.filesUploaded == this.files.length) {
+            this.close();
+        }
         var win = Ext.create('Lada.view.window.ImportResponse', {
             responseData: response.responseText,
             message: '',//TODO:response.responseText.message,

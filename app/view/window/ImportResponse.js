@@ -8,9 +8,15 @@ Ext.define('Lada.view.window.ImportResponse', {
     responseData: '',
     message: '',
     fileName: '',
+    fileNames: [],
+
+    downloadPrefix: '',
+    downloadPostfix: '',
+
+    download: '',
 
     layout: 'fit',
-    resizable: false,
+    resizable: true,
 
     fileCount: -1,
 
@@ -24,24 +30,19 @@ Ext.define('Lada.view.window.ImportResponse', {
      */
     initComponent: function() {
         var me = this;
-        var html;
-        var download;
         var i18n = Lada.getApplication().bundle;
-        var data = null;
-        try {
-            data = Ext.decode(me.responseData);
-        } catch (e) {
-            data = null;
-        }
-        if (data) {
-            html = me.parseShortResponse(data);
-        } else {
-            html = i18n.getMsg('importResponse.failure.server', this.fileName);
-        }
+
+        this.downloadPrefix = '<!DOCTYPE html>' +
+                '<head><meta charset="utf-8"></head><body>';
+        this.downloadPostfix = '</body></html>'
+
         this.bodyStyle = {background: '#fff'};
         me.items = [{
             xtype: 'panel',
-            html: html,
+            html: '',
+            width: '100%',
+            height: '100%',
+            scrollable: true,
             margin: 10,
             border: false
         }, {
@@ -58,19 +59,31 @@ Ext.define('Lada.view.window.ImportResponse', {
             name: 'download',
             disabled: true,
             handler: function() {
-                var blob = new Blob([download],{type: 'text/html'});
+                var downloadJoin = me.downloadPrefix + me.download + me.downloadPostfix;
+                var blob = new Blob([downloadJoin],{type: 'text/html'});
                 saveAs(blob, 'report.html');
             }
         }];
         this.callParent(arguments);
-        if (data) {
-            download = me.parseResponse(data);
-            this.down('panel').html = html + me.parseResponse(data, true);
-        }
     },
 
-    update: function(responseData) {
-
+    update: function(responseData, fileIndex) {
+        var data;
+        try {
+            data = Ext.decode(responseData);
+        } catch (e) {
+            data = null;
+        }
+        this.finished++;
+        this.down('progressbar').updateProgress(this.finished/this.fileCount);
+        var filename = this.fileNames[fileIndex];
+        var response = '</br><b>' + filename + ':</b> </br>' ;
+        response += this.parseResponse(data, true);;
+        this.download += response;
+        this.down('panel').setHtml(this.down('panel').html + response);
+        if (this.finished == this.fileCount) {
+            this.down('button[name=download]').enable();
+        }
     },
 
     /**
@@ -149,7 +162,8 @@ Ext.define('Lada.view.window.ImportResponse', {
         // There is a entry for each imported proben in the errors dict (might be
         // empty)
 
-        var divStyle = '<DIV style="max-height:300px;overflow-y:auto;">';
+        //TODO. overflow is now neccessary
+        var divStyle = '<DIV>';//'<DIV style="max-height:300px;overflow-y:auto;">';
         var numErrors;
         var numWarnings;
         if (!Ext.isObject(errors)) {
@@ -280,9 +294,6 @@ Ext.define('Lada.view.window.ImportResponse', {
                 out.push('</body></html>');
             } else {
                 out.push('</DIV>');
-            }
-            if (numWarnings > 0 || numErrors > 0) {
-                this.down('button[name=download]').enable();
             }
         }
         return out.join('');
