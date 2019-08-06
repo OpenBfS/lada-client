@@ -27,10 +27,10 @@ Ext.define('Lada.controller.Print', {
                 click: this.doPrint
             },
             'printgrid combobox[name=template]': {
-                change: this.generateTemplateFields
+                change: this.changeTemplate
             },
-            'printgrid radio[name=variant]': {
-                change: this.changeVariant
+            'printgrid combobox[name=layout]': {
+                change: this.changeLayout
             }
         });
     },
@@ -53,31 +53,6 @@ Ext.define('Lada.controller.Print', {
         win.show();
     },
 
-    /**
-     * enables/disables part of the form
-     * (assumes being part of a change event)
-     * @param {*} radiobutton the calling radio button
-     * @param {*} newValue the new value of the radio button set
-     * TODO: may become obsolete if "table printing" is implemented another way
-     */
-    changeVariant: function(radiobutton, newValue) {
-        var win = radiobutton.up('printgrid');
-        if (
-            (radiobutton.id === 'radio_printtable' && newValue) ||
-            (radiobutton.id !== 'radio_printtable' && !newValue)) {
-            win.down('combobox[name=template]').setDisabled(true);
-            win.down('fieldset[name=dynamicfields]').setHidden(true);
-            win.down('button[action=doPrint]').setDisabled(false);
-        } else {
-            win.down('combobox[name=template]').setDisabled(false);
-            win.down('fieldset[name=dynamicfields]').setHidden(false);
-            if (win.down('combobox[name=template]').getValue()) {
-                win.down('button[action=doPrint]').setDisabled(false);
-            } else {
-                win.down('button[action=doPrint]').setDisabled(true);
-            }
-        }
-    },
 
     /**
      * Retrieves the capabilities object of a template
@@ -105,118 +80,162 @@ Ext.define('Lada.controller.Print', {
         });
     },
 
-    /**
-     * Fetches the capabilities of a mapfish print template and fills the
-     * dialog with fields that may have 'default' values to be printed if no
-     * value is given by the actual data
-     * @param combobox assuming this function is called by a change event
-     * @param newValue the new value of the combobox
-     */
-    generateTemplateFields: function( combobox, newValue ) {
-        var printButton = combobox.up('printgrid').down('button[action=doPrint]');
+    changeLayout: function(combobox, newValue) {
+        var win = combobox.up('printgrid');
+        var printButton = win.down('button[action=doPrint]');
+        var fieldset = win.down('fieldset[name=dynamicfields]');
+        fieldset.removeAll();
+        var availableColumns = win.parentGrid.getColumns();
+        printButton.setDisabled(true);
+        if (! win.currentCapabilities.layouts || !win.currentCapabilities.layouts.length) {
+            return;
+        }
+        var capabilitiesForLayout = win.currentCapabilities.layouts[newValue];
+        if (!capabilitiesForLayout) {
+            return;
+        }
+        var recursiveFields = function(attributes) {
+            var listOfItems = [];
+            for (var i = 0; i < attributes.length; i++) {
+                switch (attributes[i].type){
+                    case 'DataSourceAttributeValue':
+                        var subfields = recursiveFields(attributes[i].clientParams.attributes);
+                        if (subfields) {
+                            listOfItems = listOfItems.concat(subfields);
+                        }
+                        break;
+                    case 'TableAttributeValue':
+                        break;
+                    case 'String':
+                        var matchingColumn = availableColumns.some( function(el) {
+                            el.dataIndex === attributes[i].name
+                        });
+                        if (!matchingColumn) {
+                            listOfItems.push({
+                                xtype: 'textfield',
+                                fieldLabel: attributes[i].name,
+                                margin: '0, 5 ,5 ,5',
+                                value: attributes[i].default
+                            });
+                        }
+                        break;
+                    default:
+
+                }
+            }
+            return listOfItems.length > 0 ? listOfItems : null;
+        };
+        var fields = recursiveFields(capabilitiesForLayout.attributes);
+        if (fields) {
+            fieldset.add(fields);
+            fieldset.setVisible(true);
+        } else {
+            fieldset.setVisible(false);
+        }
+        printButton.setDisabled(false);
+    },
+
+    changeTemplate: function( combobox, newValue ) {
+        var win = combobox.up('printgrid');
+        var printButton = win.down('button[action=doPrint]');
+        var layoutBox = win.down('combobox[name=layout]');
         printButton.setDisabled(true);
         var capabilityCallbackFn = function(capabilities) {
-            combobox.up('printgrid').currentCapabilities = capabilities;
-            var fieldset = combobox.up('printgrid').down(
-                'fieldset[name=dynamicfields]');
-            fieldset.removeAll();
-            if (!capabilities) {
+            win.currentCapabilities = capabilities;
+            var layoutData = [];
+            if ( !capabilities.layouts || !capabilities.layouts.length ) {
+                layoutBox.setDisabled(true);
+                printButton.setDisabled(true);
                 return;
             }
-            var layout = capabilities.layouts[0];
-            // TODO ensure there is always one or allow selecting several layouts
-            var i18n = Lada.getApplication().bundle;
-            var items = [];
-            items.push({
-                xtype: 'displayfield',
-                fieldLabel: i18n.getMsg('print.layout'),
-                margin: '0, 5, 5, 5',
-                labelWidth: 95,
-                value: layout.name
-            });
-            var recursiveFields = function(attributes, indent) {
-                var addToIndent = 5;
-                var listofItems = [];
-                for (var i = 0; i < attributes.length; i++) {
-                    var item = {
-                        xtype: attributes[i].type === 'DataSourceAttributeValue' ? 'displayfield' : 'textfield',
-                        name: attributes[i].name,
-                        margin: '0, ' + (indent + 5).toString() + ',5 ,5',
-                        value: attributes[i].type === 'DataSourceAttributeValue' ? attributes[i].name : attributes[i].default
-                    };
-                    if (item.xtype !== 'displayfield') {
-                        item.fieldLabel = attributes[i].name;
-                        listofItems.push(item);
-                    } else {
-                        listofItems.push(item);
-                        // TODO check if a clientParams always has attributes
-                        listofItems = listofItems.concat(recursiveFields(attributes[i].clientParams.attributes, addToIndent + indent));
-                    }
-                }
-                return listofItems;
-            };
-            fieldset.add(items.concat(
-                recursiveFields(layout.attributes, 0)));
-            printButton.setDisabled(false);
+            for (var i=0; i < capabilities.layouts.length; i++) {
+                layoutData.push({
+                    id: i,
+                    name: capabilities.layouts[i].name
+                });
+            }
+            win.layoutStore.removeAll();
+            win.layoutStore.add(layoutData);
+            if (layoutData.length > 0) {
+                layoutBox.setDisabled(false);
+            } else {
+                layoutBox.setDisabled(true);
+                printButton.setDisabled(true);
+            }
+            layoutBox.fireEvent('change', layoutBox, 0);
         };
         this.getTemplateParams(newValue, capabilityCallbackFn);
     },
 
-    /**
-     * Fills a template with one entry of the data selection. It takes the
-     * template definition fields and supplies all fields with a matching name
-     * with data taken from either the incoming modelEntry or a preset value
-     * (if present)
-     *
-     * @param {object} attributes the part of a capability.json to be met.
-     * Typically it is the 'attributes' property of a layout or of clientParams
-     *   (if nested)
-     * @param {*} modelEntry one data entry from an ExtJS store. The data
-     * model's field names are assumed to match the template's definition names.
-     * @param {Object} window the print dialog window which may provide default
-     * values in textfields named according to the attributes. These values
-     * will be used for empty/non set entries.
-     */
-    fillTemplate: function( attributes, modelEntry, window) {
+    fillTemplate: function(attributes, selection, window) {
+        // TODO ensure there is no "table" further down the hierarchy
         var resultData = {};
-        for (var i=0; i < attributes.length; i ++) {
-            if (attributes[i].type === 'string') {
-                if (modelEntry.get(attributes[i].name)) {
-                    resultData[attributes[i].name] = modelEntry.get(attributes[i].name);
-                } else {
+        for (var i=0; i < attributes.length; i++) {
+            switch (attributes[i].type) {
+                case 'String':
                     var fieldselector = 'textfield[name=' + attributes[i].name + ']';
                     var field = window.down('fieldset[name=dynamicfields]').down(fieldselector);
                     if (field) {
-                        resultData[attributes[i].name] = field.getValue();
+                        resultData[attributes[i].name] = field.getValue() || '';
+                    } else {
+                        resultData[attributes[i].name] = '';
                     }
-                }
-            } else if (attributes[i].type === 'DataSourceAttributeValue') {
-                resultData[attributes[i].name] = [];
-                var subitems = modelEntry.items;
-                // TODO: testing! data.items or data.get(attributes[i].name)
-                // currently, we have no 'subitems' which are also models.
-                if (subitems && subitems.length) {
-                    for (var j=0;j< subitems.length; j++) {
-                        resultData[attributes[i].name].push(
-                            this.fillTemplate(attributes[i].clientParams, subitems[i], window)
+                    break;
+                case 'TableAttributeValue':
+                    resultData[attributes[i].name] = this.printTable(window.parentGrid);
+                    break;
+                case 'DataSourceAttributeValue':
+                    resultData[attributes[i].name] = [];
+                    for (var sel = 0; sel < selection.length; sel++ ){
+                        resultData.push(this.fillTemplateItem(
+                            attributes[i].clientParams.attributes,
+                            selection[sel],
+                            window)
                         );
                     }
-                }
+                    break;
+            }
+        }
+        return resultData;
+    },
+
+    fillTemplateItem: function( attributes, modelEntry, window) {
+        var resultData = {};
+        for (var i=0; i < attributes.length; i ++) {
+            switch (attributes[i].type) {
+                case 'String':
+                    if (modelEntry.get(attributes[i].name)) {
+                        resultData[attributes[i].name] = modelEntry.get(attributes[i].name);
+                    } else {
+                        var fieldselector = 'textfield[name=' + attributes[i].name + ']';
+                        var field = window.down('fieldset[name=dynamicfields]').down(fieldselector);
+                        if (field) {
+                            resultData[attributes[i].name] = field.getValue() || '';
+                        }
+                    }
+                    break;
+                case 'DataSourceAttributeValue':
+                    resultData[attributes[i].name] = [];
+                    var subitems = modelEntry.items;
+                    if (subitems && subitems.length) {
+                        for (var j=0;j< subitems.length; j++) {
+                            resultData[attributes[i].name].push(
+                                this.fillTemplate(attributes[i].clientParams, subitems[i], window)
+                            );
+                        }
+                    }
+                    break;
             }
         }
         return resultData;
     },
 
     /**
-     * print the selection as data table
+     * return a the selection as data table
      */
-    printTable: function(grid, callbackFn, filename) {
+    printTable: function(grid) {
         var selection = grid.view.getSelectionModel().getSelection();
-        var i18n = Lada.getApplication().bundle;
         var columnNames = [];
-        var displayName = grid.rowtarget.dataType ?
-            i18n.getMsg('rowtarget.title.'+ grid.rowtarget.dataType)
-            : '';
         var data = [];
         // create array of column definitions from visible columns
         // columns in the array 'ignored' will not be printed
@@ -249,22 +268,10 @@ Ext.define('Lada.controller.Print', {
             }
             data.push(out);
         }
-        var printData = {
-            'layout': 'A4 landscape',
-            'outputFormat': 'pdf',
-            'attributes': {
-                'title': i18n.getMsg('print.tableTitle'),
-                'displayName': displayName,
-                'table': {
-                    'columns': columnNames,
-                    'data': data
-                },
-                //TODO: check these (sorting/filters):
-                'filterParams': grid.currentParams.filters,
-                'sortingParams': grid.currentParams.sorting
-            }
+        return {
+            columns: columnNames,
+            data: data
         };
-        this.sendRequest(printData, 'lada_print', filename, callbackFn);
     },
 
     /**
@@ -281,6 +288,7 @@ Ext.define('Lada.controller.Print', {
             return;
         }
         var template = window.down('combobox[name=template]').getValue();
+        var layout = window.down('combobox[name=layout]').getValue();
         var filename = window.down('textfield[name=filename]').getValue() || 'lada-export';
         var capabilities = window.currentCapabilities;
 
@@ -289,35 +297,29 @@ Ext.define('Lada.controller.Print', {
         }
 
         var callbackFn = function(success) {
-
             var i18n = Lada.getApplication().bundle;
             var result = success? i18n.getMsg('print.success') : i18n.getMsg('print.fail');
             window.down('label[name=results]').setText(result);
             window.down('label[name=results]').setHidden(false);
             button.setDisabled(false);
         };
-
-        if (window.down('radio[id=radio_printtable]').getValue() ||
-            template === 'lada-print') {
-            // TODO how do we mark "tables" here? hardcoded 'lada-print' may be obsolete!
-            this.printTable(grid, callbackFn, filename);
-        } else if (template === 'lada_erfassungsbogen') {
+        if (template === 'lada_erfassungsbogen') {
             // TODO: this is the old implementation of "erfassungsbogen" printing
             // see printSelection, prepareData, createSheetData (moved without major adaption)
             this.printSelection(grid, filename, callbackFn);
         } else {
             var selection = grid.getView().getSelectionModel().getSelection();
             var data = this.fillTemplate(
-                capabilities.layouts[0].attributes,
+                capabilities.layouts[layout].attributes,
                 selection,
                 window);
             var printData = {
-                layout: capabilities.layouts[0].name,
+                layout: capabilities.layouts[layout].name,
                 outputFormat: 'pdf', // TODO assuming 'pdf only' for now
                 attributes: data
             };
-            printData.attributes.filterParams = grid.currentParams.filters;
-            printData.attributes.filterParams = grid.currentParams.sorting;
+            // printData.attributes.filterParams = grid.currentParams.filters;
+            // printData.attributes.sortParams = grid.currentParams.sorting;
 
             this.sendRequest(JSON.stringify(printData), template, filename, callbackFn);
         }

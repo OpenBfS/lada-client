@@ -25,6 +25,17 @@ Ext.define('Lada.view.window.PrintGrid', {
             fields: [{ name: 'name', type: 'string' }]
         })
     }),
+
+    // store containing all the layouts for the currently selected template
+    layoutStore: Ext.create('Ext.data.Store', {
+        model: Ext.create('Ext.data.Model',{
+            fields: [
+                { name: 'id', type: 'number' },
+                { name: 'name', type: 'string' }
+            ]
+        })
+    }),
+
     // the grid with the current query and the items to be printed
     parentGrid: null,
 
@@ -34,18 +45,7 @@ Ext.define('Lada.view.window.PrintGrid', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('print.window.title');
-        this.items = [ {
-            xtype: 'radio',
-            boxLabel: i18n.getMsg('print.table'),
-            name: 'variant',
-            id: 'radio_printtable',
-            value: true
-        }, {
-            xtype: 'radio',
-            boxLabel: i18n.getMsg('print.template'),
-            name: 'variant',
-            id: 'radio_printtemplate'
-        }, {
+        this.items = [{
             xtype: 'combobox',
             name: 'template',
             fieldLabel: i18n.getMsg('print.window.template'),
@@ -61,9 +61,25 @@ Ext.define('Lada.view.window.PrintGrid', {
             typeAhead: false,
             disabled: true,
             triggerAction: 'all'
-        } , {
+        }, {
+            xtype: 'combobox',
+            name: 'layout',
+            fieldLabel: i18n.getMsg('print.layout'),
+            store: this.layoutStore,
+            valueField: 'id',
+            displayField: 'name',
+            allowBlank: false,
+            editable: true,
+            disableKeyFilter: false,
+            forceSelection: true,
+            queryMode: 'local',
+            minChars: 0,
+            typeAhead: false,
+            disabled: true,
+            triggerAction: 'all'
+        }, {
             xtype: 'fieldset',
-            title: i18n.getMsg('print.presets'), // TODO better name
+            title: i18n.getMsg('print.presets'),
             collapsible: true,
             collapsed: true,
             scrollable: true,
@@ -97,8 +113,10 @@ Ext.define('Lada.view.window.PrintGrid', {
     setTemplateData: function(data) {
         if (data) {
             this.templateStore.setData(data);
+            this.down('combobox[name=template]').setDisabled(false);
         } else {
             this.templateStore.removeAll();
+            this.down('combobox[name=template]').setDisabled(true);
         }
     }
 });
