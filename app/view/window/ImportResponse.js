@@ -67,6 +67,12 @@ Ext.define('Lada.view.window.ImportResponse', {
         this.callParent(arguments);
     },
 
+    /**
+     * Update the result window after a file has been uploaded.
+     * Updates the result text and the progress bar.
+     * @param responseData Responsedata of the upload
+     * @param fileIndex Index of the file in the name array
+     */
     update: function(responseData, fileIndex) {
         var data;
         try {
@@ -78,7 +84,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         this.down('progressbar').updateProgress(this.finished/this.fileCount);
         var filename = this.fileNames[fileIndex];
         var response = '</br><b>' + filename + ':</b> </br>' ;
-        response += this.parseResponse(data, true);;
+        response += this.parseResponse(data, true);
         this.download += response;
         this.down('panel').setHtml(this.down('panel').html + response);
         if (this.finished == this.fileCount) {

@@ -43,10 +43,12 @@ Ext.define('Lada.view.window.FileUpload', {
                 buttonText: i18n.getMsg('search'),
                 margin: '3 3 3 3',
                 listeners: {
+                    //Allow multiple files
                     afterRender: function(cmp) {
                         cmp.fileInputEl.dom.setAttribute('multiple', 'multiple');
                     },
-                    //Remove 'C:\Fakepath' part of filenames to increase readability
+                    //Remove 'C:\Fakepath' part of filenames and show a comma
+                    //separated list to increase readability
                     change: function(field, value) {
                         var node = Ext.DomQuery.selectNode('input[id='+ field.getInputId() + ']');
                         var files = field.fileInputEl.dom.files;
@@ -137,6 +139,7 @@ Ext.define('Lada.view.window.FileUpload', {
         var win = button.up('window');
         var fileInput = win.down('filefield');
         var files = fileInput.fileInputEl.dom.files;
+        var readers = new Array(files.length);
         if (!files) {
             //TODO error handling
             return;
@@ -149,17 +152,16 @@ Ext.define('Lada.view.window.FileUpload', {
         for (var i = 0; i < files.length; i++) {
             win.fileNames[i] = files[i].name;
             var file = files[i];
-            var reader = new FileReader();
-            reader.onload = function() {
-                var binData = reader.result;
-                console.log(binData);
+            readers[i] = new FileReader();
+            readers[i].onload = function(evt) {
+                var binData = evt.target.result;
                 binFiles.push(binData);
                 filesRead++;
                 if (filesRead == files.length) {
                     win.uploadFiles(button, binFiles);
                 }
             };
-            reader.readAsArrayBuffer(file);
+            readers[i].readAsArrayBuffer(file);
         }
     },
 
