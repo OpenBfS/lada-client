@@ -68,12 +68,12 @@ Ext.define('Lada.view.window.ImportResponse', {
     },
 
     /**
-     * Update the result window after a file has been uploaded.
+     * Update the result window after a file has been successfully uploaded.
      * Updates the result text and the progress bar.
      * @param responseData Responsedata of the upload
      * @param fileIndex Index of the file in the name array
      */
-    update: function(responseData, fileIndex) {
+    updateOnSuccess: function(responseData, fileIndex) {
         var data;
         try {
             data = Ext.decode(responseData);
@@ -86,6 +86,19 @@ Ext.define('Lada.view.window.ImportResponse', {
         var response = '</br><b>' + filename + ':</b> </br>' ;
         response += this.parseResponse(data, true);
         this.download += response;
+        this.down('panel').setHtml(this.down('panel').html + response);
+        if (this.finished == this.fileCount) {
+            this.down('button[name=download]').enable();
+        }
+    },
+
+    updateOnError: function (status, statusText, fileIndex) {
+        var i18n = Lada.getApplication().bundle;
+        this.finished++;
+        this.down('progressbar').updateProgress(this.finished/this.fileCount);
+        var filename = this.fileNames[fileIndex];
+        var response = '</br><b>' + filename + ':</b> </br>' ;
+        response+= i18n.getMsg('err.msg.import.failed') + status + ' - ' + statusText;
         this.down('panel').setHtml(this.down('panel').html + response);
         if (this.finished == this.fileCount) {
             this.down('button[name=download]').enable();

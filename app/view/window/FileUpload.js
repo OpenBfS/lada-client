@@ -197,7 +197,7 @@ Ext.define('Lada.view.window.FileUpload', {
                 success: function(response, opts) {
                     win.uploadSuccess(response, opts, fileIndex);
                 },
-                failure: function(response, opts, fileIndex) {
+                failure: function(response, opts) {
                     win.uploadFailure(response, opts, fileIndex);
                 }
             });
@@ -232,7 +232,7 @@ Ext.define('Lada.view.window.FileUpload', {
             this.resultWin.show();
         }
 
-        this.resultWin.update(responseText, fileIndex);
+        this.resultWin.updateOnSuccess(responseText, fileIndex);
 
         if (this.filesUploaded == this.files.length) {
             this.resultWin.finishedHandler();
@@ -243,19 +243,37 @@ Ext.define('Lada.view.window.FileUpload', {
     /**
      * @private
      */
-    uploadFailure: function(response, opts) {
+    uploadFailure: function(response, opts, fileIndex) {
         // TODO handle Errors correctly, especially AuthenticationTimeouts
         var i18n= Lada.getApplication().bundle;
         this.filesUploaded++;
         if (this.filesUploaded == this.files.length) {
             this.close();
         }
-        var win = Ext.create('Lada.view.window.ImportResponse', {
-            responseData: response.responseText,
-            message: '',//TODO:response.responseText.message,
-            fileName: this.file.name,
-            title: i18n.getMsg('title.importresult')
-        });
-        win.show();
+        if (!this.resultWin) {
+            this.resultWin = Ext.create('Lada.view.window.ImportResponse', {
+                message: {}, //TODO:response.message,
+                modal: true,
+                fileCount: this.fileCount,
+                fileNames: this.fileNames,
+                width: 350,
+                height: 250,
+                title: i18n.getMsg('title.importresult'),
+                finishedHandler: function() {
+                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                    if (parentGrid.length === 1) {
+                        parentGrid[0].reload();
+                    }
+                }
+            });
+            this.resultWin.show();
+        }
+
+        this.resultWin.updateOnError(response.status, response.statusText, fileIndex);
+
+        if (this.filesUploaded == this.files.length) {
+            this.resultWin.finishedHandler();
+            this.close();
+        }
     }
 });
