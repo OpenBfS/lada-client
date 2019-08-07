@@ -139,10 +139,12 @@ Ext.define('Lada.controller.Print', {
         var win = combobox.up('printgrid');
         var printButton = win.down('button[action=doPrint]');
         var layoutBox = win.down('combobox[name=layout]');
+        var filetypeBox = win.down('combobox[name=filetype]');
         printButton.setDisabled(true);
         var capabilityCallbackFn = function(capabilities) {
             win.currentCapabilities = capabilities;
             var layoutData = [];
+            var formatData = [];
             if ( !capabilities.layouts || !capabilities.layouts.length ) {
                 layoutBox.setDisabled(true);
                 printButton.setDisabled(true);
@@ -153,6 +155,19 @@ Ext.define('Lada.controller.Print', {
                     id: i,
                     name: capabilities.layouts[i].name
                 });
+            }
+            for (var f=0; f < capabilities.formats.length; f++ ) {
+                formatData.push({name: capabilities.formats[f]});
+            }
+            win.formatStore.removeAll();
+            win.formatStore.add(formatData);
+            if (formatData.length > 1) {
+                filetypeBox.setDisabled(false);
+                if (('pdf').indexOf(capabilities.formats) >= 0) {
+                    filetypeBox.select('pdf');
+                }
+            } else {
+                filetypeBox.setDisabled(true);
             }
             win.layoutStore.removeAll();
             win.layoutStore.add(layoutData);
@@ -290,12 +305,13 @@ Ext.define('Lada.controller.Print', {
         var template = window.down('combobox[name=template]').getValue();
         var layout = window.down('combobox[name=layout]').getValue();
         var filename = window.down('textfield[name=filename]').getValue() || 'lada-export';
+        var format = window.down('combobox[name=filetype]').getValue();
         var capabilities = window.currentCapabilities;
-
-        if (filename.lastIndexOf('.pdf') !== filename.length - 4) {
-            filename += '.pdf';
+        filename = this.validateFilename(filename);
+        if (!filename) {
+            window.down('textfield[name=filename]').reset();
+            return;
         }
-
         var callbackFn = function(success) {
             var i18n = Lada.getApplication().bundle;
             var result = success? i18n.getMsg('print.success') : i18n.getMsg('print.fail');
@@ -306,7 +322,7 @@ Ext.define('Lada.controller.Print', {
         if (template === 'lada_erfassungsbogen') {
             // TODO: this is the old implementation of "erfassungsbogen" printing
             // see printSelection, prepareData, createSheetData (moved without major adaption)
-            this.printSelection(grid, filename, callbackFn);
+            this.printSelection(grid, filename, format, callbackFn);
         } else {
             var selection = grid.getView().getSelectionModel().getSelection();
             var data = this.fillTemplate(
@@ -315,7 +331,7 @@ Ext.define('Lada.controller.Print', {
                 window);
             var printData = {
                 layout: capabilities.layouts[layout].name,
-                outputFormat: 'pdf', // TODO assuming 'pdf only' for now
+                outputFormat: format,
                 attributes: data
             };
             // printData.attributes.filterParams = grid.currentParams.filters;
@@ -330,7 +346,7 @@ Ext.define('Lada.controller.Print', {
      * Send a prepared request to the print server, saves the answer as
      * @param jsonData the prepared data matching the capabilities description of the server
      * @param templateName name/identifier of the template as part of the url
-     * @param fileName a filename (including pdf ending)
+     * @param fileName a filename (including filetype typical ending)
      */
     sendRequest: function(jsonData, templateName, filename, callbackFn) {
         var me = this;
@@ -357,20 +373,25 @@ Ext.define('Lada.controller.Print', {
         });
     },
 
-    // TODO outdated; from "Erfassungsbogen" ?
+    // TODO partly outdated; from "Erfassungsbogen"
     /**
      * Send the selection to a Printservice
      */
-    printSelection: function(grid, filename, callbackFn) {
+    printSelection: function(grid, filename, format, callbackFn) {
         // The Data is loaded from the server again, so we need
         // to be a little bit asynchronous here...
         var callback = function(response) {
             var data = response.responseText;
             data = this.prepareData(data); // Wraps all messstellen and deskriptoren objects into an array
-            var printData = '{"layout": "A4 portrait", "outputFormat": "pdf",'
-                    + '"attributes": { "proben": ' + data
-                    + '}}';
-            this.sendRequest(printData, 'lada_erfassungsbogen', filename, callbackFn);
+            var printData = {
+                layout: 'A4 portrait',
+                outputFormat: format,
+                attributes: { proben: data }};
+            this.sendRequest(
+                JSON.stringify(printData),
+                'lada_erfassungsbogen',
+                filename,
+                callbackFn);
         };
 
         this.createSheetData(grid, callback, this);
@@ -516,10 +537,12 @@ Ext.define('Lada.controller.Print', {
      * details on the error
      * @param response the raw response as given by the server
      */
-    handleError: function(response) {
+    handleError: function(response, message) {
         var i18n = Lada.getApplication().bundle;
         var errormsg = i18n.getMsg('err.msg.print.noContact');
-        if (response.status && response.status === 404) {
+        if (message !== undefined) {
+            errormsg = i18n.getMsg(message);
+        } else if (response.status && response.status === 404) {
             errormsg = i18n.getMsg('err.msg.print.404');
         } else if (response.responseText) {
             try {
@@ -532,5 +555,28 @@ Ext.define('Lada.controller.Print', {
             }
         }
         Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'), errormsg);
+    },
+
+    /**
+     * taken from gridexport controller. refactoring potential here
+     * @param name the filename
+     * @param format and file 'type' typical ending
+     * @returns the filename with the proper extension if valid, or null
+     * (and invokes "handleError" with a custom message indicating wrong filename)
+     */
+    validateFilename: function(name, format) {
+        //TODO better regex: this is quite basic
+        var pattern = new RegExp(/^(\w|[äöüß])+(\w|\.|\s|[äüöß])*[^\W\.]$/i);
+        if (!pattern.test(name)) {
+            this.handleError(null, 'export.invalidfilename');
+            return null;
+        } else {
+            if (name.length > format.length + 1 && name.toLowerCase().indexOf(
+                format.toLowerCase()) === name.length - format.length) {
+                return name;
+            } else {
+                return name + '.' + format;
+            }
+        }
     }
 });

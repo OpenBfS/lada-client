@@ -36,6 +36,12 @@ Ext.define('Lada.view.window.PrintGrid', {
         })
     }),
 
+    formatStore: Ext.create('Ext.data.Store', {
+        model: Ext.create('Ext.data.Model',{
+            fields: [{ name: 'name', type: 'string' }]
+        })
+    }),
+
     // the grid with the current query and the items to be printed
     parentGrid: null,
 
@@ -91,14 +97,29 @@ Ext.define('Lada.view.window.PrintGrid', {
             xtype: 'textfield',
             name: 'filename',
             fieldLabel: i18n.getMsg('export.filename'),
-            value: 'lada-export.pdf'
+            value: 'lada-export'
+        }, {
+            xtype: 'combobox',
+            name: 'filetype',
+            fieldLabel: i18n.getMsg('export.filetype'),
+            store: this.formatStore,
+            valueField: 'name',
+            displayField: 'name',
+            allowBlank: false,
+            editable: true,
+            disableKeyFilter: false,
+            forceSelection: true,
+            queryMode: 'local',
+            minChars: 0,
+            typeAhead: false,
+            disabled: true,
+            triggerAction: 'all',
+            value: 'pdf'
         }, {
             xtype: 'label',
             name: 'results',
             hidden: true
-        }
-
-        ];
+        }];
         this.buttons = [{
             text: i18n.getMsg('close'),
             scope: this,
