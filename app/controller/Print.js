@@ -177,6 +177,7 @@ Ext.define('Lada.controller.Print', {
                 layoutBox.setDisabled(true);
                 printButton.setDisabled(true);
             }
+            layoutBox.setValue(0);
             layoutBox.fireEvent('change', layoutBox, 0);
         };
         this.getTemplateParams(newValue, capabilityCallbackFn);
