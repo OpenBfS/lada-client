@@ -111,16 +111,28 @@ Ext.define('Lada.controller.Print', {
                             el.dataIndex === attributes[i].name
                         });
                         if (!matchingColumn) {
+
+                            /* hardcoded workaround to not lose the previously
+                            automatic displayName presets for lada_print*/
+                            var value = attributes[i].default;
+                            if (win.currentCapabilities.app === 'lada_print'
+                            && attributes[i].name === 'displayName'
+                            && win.parentGrid.rowtarget) {
+                                value = Lada.getApplication().bundle.getMsg(
+                                    'rowtarget.title.'
+                                    + win.parentGrid.rowtarget.dataType);
+                            }
+
                             listOfItems.push({
                                 xtype: 'textfield',
                                 fieldLabel: attributes[i].name,
-                                margin: '0, 5 ,5 ,5',
-                                value: attributes[i].default
+                                margin: '5, 5 ,5 ,5',
+                                value: value
                             });
                         }
                         break;
                     default:
-
+                        break;
                 }
             }
             return listOfItems.length > 0 ? listOfItems : null;
@@ -201,13 +213,27 @@ Ext.define('Lada.controller.Print', {
                     resultData[attributes[i].name] = this.printTable(window.parentGrid);
                     break;
                 case 'DataSourceAttributeValue':
-                    resultData[attributes[i].name] = [];
-                    for (var sel = 0; sel < selection.length; sel++ ){
-                        resultData.push(this.fillTemplateItem(
-                            attributes[i].clientParams.attributes,
-                            selection[sel],
-                            window)
-                        );
+                    // the attributes filterParams and sortParams are assumed
+                    // to be a query for the sorting and filter settings; they
+                    // will be submitted as at the time of grid generation,
+                    // see widget/DynamicGrid.js:generateColumnsAndFields
+                    if (attributes[i].name === 'filterParams') {
+                        resultData[attributes[i].name] =
+                            window.parentGrid.currentParams.filters;
+                        // { name: String, sort: 'asc'|'desc' }[]
+                    } else if (attributes[i].name === 'sortingParams') {
+                        resultData[attributes[i].name] =
+                            window.parentGrid.currentParams.sorting;
+                        // { name: String, filterValue: String }[]
+                    } else {
+                        resultData[attributes[i].name] = [];
+                        for (var sel = 0; sel < selection.length; sel++ ) {
+                            resultData.push(this.fillTemplateItem(
+                                attributes[i].clientParams.attributes,
+                                selection[sel],
+                                window)
+                            );
+                        }
                     }
                     break;
             }
@@ -335,9 +361,6 @@ Ext.define('Lada.controller.Print', {
                 outputFormat: format,
                 attributes: data
             };
-            // printData.attributes.filterParams = grid.currentParams.filters;
-            // printData.attributes.sortParams = grid.currentParams.sorting;
-
             this.sendRequest(JSON.stringify(printData), template, filename, callbackFn);
         }
     },
