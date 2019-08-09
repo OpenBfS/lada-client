@@ -362,8 +362,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 case 'mpId':
                     var win = Ext.create(
                         'Lada.view.window.Messprogramm', {record: null});
-                    win.show();
                     win.initData();
+                    win.show();
                     break;
                 case 'probeId':
                     var win = Ext.create('Lada.view.window.ProbeCreate');

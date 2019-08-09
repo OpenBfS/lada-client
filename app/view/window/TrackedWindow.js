@@ -26,6 +26,11 @@ Ext.define('Lada.view.window.TrackedWindow', {
      * @return True if window will be shown, else false
      */
     show: function() {
+        if (!this.record.get('id')) {
+            //This is a new record
+            this.callParent();
+            return true;
+        }
         if (Lada.util.WindowTracker.isOpen(this.recordType, this.record.get('id'))) {
             Lada.util.WindowTracker.focus(this.recordType, this.record.get('id'));
             return false;
