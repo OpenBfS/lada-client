@@ -15,7 +15,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
 
     collapsible: true,
     maximizable: true,
-    autoshow: false,
+    autoShow: true,
     layout: 'vbox',
     constrain: true,
     selection: null,

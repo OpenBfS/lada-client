@@ -27,7 +27,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
 
     collapsible: true,
     maximizable: true,
-    autoshow: false,
+    autoShow: false,
     layout: 'fit',
     constrain: true,
 

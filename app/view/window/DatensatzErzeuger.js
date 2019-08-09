@@ -15,7 +15,7 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
 
     collapsible: true,
     maximizable: true,
-    autoshow: false,
+    autoShow: false,
     layout: 'fit',
     constrain: true,
 

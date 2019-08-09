@@ -22,7 +22,7 @@ Ext.define('Lada.view.window.MessungEdit', {
 
     collapsible: true,
     maximizable: true,
-    autoshow: false,
+    autoShow: false,
     autoscroll: true,
     layout: 'fit',
     constrain: true,

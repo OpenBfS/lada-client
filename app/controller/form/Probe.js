@@ -772,7 +772,7 @@ Ext.define('Lada.controller.form.Probe', {
 
     showAuditTrail: function(button) {
         Ext.create('Lada.view.window.AuditTrail', {
-            autoshow: false,
+            autoShow: true,
             closeAction: 'destroy',
             type: 'probe',
             objectId: button.up('form').recordId

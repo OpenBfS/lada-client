@@ -15,7 +15,7 @@ Ext.define('Lada.view.window.MessprogrammKategorie', {
 
     collapsible: true,
     maximizable: true,
-    autoshow: false,
+    autoShow: false,
     autoScroll: true,
     layout: 'fit',
     constrain: true,

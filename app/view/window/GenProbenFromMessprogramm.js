@@ -20,7 +20,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
 
     collapsible: true,
     maximizable: true,
-    autoshow: false,
+    autoShow: true,
     autoScroll: true,
     layout: 'vbox',
     constrain: true,

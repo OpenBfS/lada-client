@@ -19,7 +19,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
 
     collapsible: true,
     maximizable: true,
-    autoshow: true,
+    autoShow: true,
     autoScroll: true,
     layout: 'fit',
     constrain: true,
