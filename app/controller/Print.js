@@ -334,7 +334,7 @@ Ext.define('Lada.controller.Print', {
         var filename = window.down('textfield[name=filename]').getValue() || 'lada-export';
         var format = window.down('combobox[name=filetype]').getValue();
         var capabilities = window.currentCapabilities;
-        filename = this.validateFilename(filename);
+        filename = this.validateFilename(filename, format);
         if (!filename) {
             window.down('textfield[name=filename]').reset();
             return;
@@ -494,8 +494,7 @@ Ext.define('Lada.controller.Print', {
                 }
             }
         }
-
-        return JSON.stringify(prep);
+        return prep;
     },
 
     // TODO moved from "Erfassungsbogen", handles Erfassungsbogen
@@ -590,7 +589,7 @@ Ext.define('Lada.controller.Print', {
      */
     validateFilename: function(name, format) {
         //TODO better regex: this is quite basic
-        var pattern = new RegExp(/^(\w|[äöüß])+(\w|\.|\s|[äüöß])*[^\W\.]$/i);
+        var pattern = new RegExp(/^(\w|[äöüß])+(\w|\.|\s|[äüöß-]|)*[^\W\.]$/i);
         if (!pattern.test(name)) {
             this.handleError(null, 'export.invalidfilename');
             return null;
