@@ -126,6 +126,8 @@ Ext.define('Lada.controller.Print', {
                             listOfItems.push({
                                 xtype: 'textfield',
                                 fieldLabel: attributes[i].name,
+                                width: '100%',
+                                labelWidth: 125,
                                 margin: '5, 5 ,5 ,5',
                                 value: value
                             });

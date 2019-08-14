@@ -14,8 +14,10 @@ Ext.define('Lada.view.window.PrintGrid', {
     extend: 'Ext.window.Window',
 
     layout: 'vbox',
+    minWidth: 400,
     defaults: {
         margin: '5, 5, 5, 5',
+        width: '100%',
         border: false
     },
 
