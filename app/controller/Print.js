@@ -8,6 +8,24 @@
 
 /**
  * Controller for print functionalities
+ * This offers printing using mapfish print templates.
+ * Tod determine available templates, the mapfish print app.json is queried.
+ * To determine the data needed for a template, capabilities.json of mapfish
+ * print is parsed.
+ * Attribute fields that require "String" values will be matched against field
+ * names from the input data. If a match is found, these values are used.
+ * If not found, the user is offered text field where optional values can
+ * be inserted/edited prior to export.
+ * If the template requires one or more "TableAttributeValue", then the whole
+ * input table will be submitted into this field. This allows for printing out
+ * a table representation (currently offered by "lada_print").
+ * The field names "filterParams and "sortingParams" are treated as special
+ * values, and will be filled with information about sorting or filtering that
+ * was done for current grid (if the fields are requested by the template.
+ * (see widget/DynamicGrid.js:generateColumnsAndFields)
+ * sortingParams: { name: String, sort: 'asc'|'desc' }[]
+ * filterParams: { name: String, filterValue: String }[]
+ *
  */
 Ext.define('Lada.controller.Print', {
     extend: 'Ext.app.Controller',
@@ -215,10 +233,6 @@ Ext.define('Lada.controller.Print', {
                     resultData[attributes[i].name] = this.printTable(window.parentGrid);
                     break;
                 case 'DataSourceAttributeValue':
-                    // the attributes filterParams and sortParams are assumed
-                    // to be a query for the sorting and filter settings; they
-                    // will be submitted as at the time of grid generation,
-                    // see widget/DynamicGrid.js:generateColumnsAndFields
                     if (attributes[i].name === 'filterParams') {
                         resultData[attributes[i].name] =
                             window.parentGrid.currentParams.filters;
