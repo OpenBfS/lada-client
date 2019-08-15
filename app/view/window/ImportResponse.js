@@ -52,9 +52,10 @@ Ext.define('Lada.view.window.ImportResponse', {
                 '<head><meta charset="utf-8"></head><body>';
         this.downloadPostfix = '</body></html>'
 
-        me.mstEncoding = i18n.getMsg('encoding') + ' ' + this.encoding + '<br/>'
-                + i18n.getMsg('mstId') + ': ' + this.mst + '<br/>'
-                + i18n.getMsg('import.messages') + ':<br/><br/>';
+        me.mstEncoding = i18n.getMsg('encoding') + ' ' + this.encoding;
+        if (this.mst !== null) {
+            me.mstEncoding += '&emsp;' + i18n.getMsg('import.configMst') + ': ' +  this.mst;
+        }
 
         this.bodyStyle = {background: '#fff'};
         me.items = [{
@@ -94,6 +95,7 @@ Ext.define('Lada.view.window.ImportResponse', {
      * @param fileIndex Index of the file in the name array
      */
     updateOnSuccess: function(responseData, fileIndex) {
+        var i18n = Lada.getApplication().bundle;
         var data;
         try {
             data = Ext.decode(responseData);
@@ -103,8 +105,10 @@ Ext.define('Lada.view.window.ImportResponse', {
         this.finished++;
         this.down('progressbar').updateProgress(this.finished/this.fileCount);
         var filename = this.fileNames[fileIndex];
-        var response = '<br/><b>' + filename + ':</b> <br/>' ;
-        response += this.mstEncoding;
+        this.down('progressbar').updateProgress(this.finished/this.fileCount);
+        var filename = this.fileNames[fileIndex];
+        var response = '<br/><hr><b>' + filename + ':</b><br/><ol>&#40' + this.mstEncoding + '&#41</ol>';
+        response += i18n.getMsg('import.messages') + ':<br/><hr>';
         response += this.parseResponse(data, true);
         this.download += response;
         this.down('panel').setHtml(this.down('panel').html + response);
@@ -125,9 +129,9 @@ Ext.define('Lada.view.window.ImportResponse', {
         this.finished++;
         this.down('progressbar').updateProgress(this.finished/this.fileCount);
         var filename = this.fileNames[fileIndex];
-        var response = '<br/><b>' + filename + ':</b> <br/>' ;
-        response += this.mstEncoding;
-        response+= i18n.getMsg('err.msg.import.failed') + ' ' + status + ' - ' + statusText + '<br/>';
+        var response = '<br/><hr><b>' + filename + ':</b><br/><ol>&#40' + this.mstEncoding + '&#41</ol>';
+        response += i18n.getMsg('import.messages') + ':<br/><hr>';
+        response += this.parseResponse(data, true);
         this.down('panel').setHtml(this.down('panel').html + response);
         this.download += response;
         if (this.finished == this.fileCount) {

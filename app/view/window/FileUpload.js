@@ -221,8 +221,8 @@ Ext.define('Lada.view.window.FileUpload', {
                 fileNames: this.fileNames,
                 encoding: this.down('combobox[name=encoding]').getValue(),
                 mst: this.down('combobox[name=mst]').getValue(),
-                width: 350,
-                height: 250,
+                width: 500,
+                height: 350,
                 title: i18n.getMsg('title.importresult'),
                 finishedHandler: function() {
                     var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
@@ -260,8 +260,8 @@ Ext.define('Lada.view.window.FileUpload', {
                 fileNames: this.fileNames,
                 encoding: this.down('combobox[name=encoding]').getValue(),
                 mst: this.down('combobox[name=mst]').getValue(),
-                width: 350,
-                height: 250,
+                width: 600,
+                height: 400,
                 title: i18n.getMsg('title.importresult'),
                 finishedHandler: function() {
                     var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
