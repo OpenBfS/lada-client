@@ -53,16 +53,33 @@ Ext.define('Lada.view.window.FileUpload', {
                         var node = Ext.DomQuery.selectNode('input[id='+ field.getInputId() + ']');
                         var files = field.fileInputEl.dom.files;
                         var fileNames = '';
+                        var fset = field.up('window').down('fieldset');
+                        fset.removeAll();
                         for (var i = 0; i < files.length; i++) {
-                            fileNames += files[i].name.replace("C:\\fakepath\\", "");
+                            var fname = files[i].name.replace("C:\\fakepath\\", "");
+                            fset.add({
+                                xtype: 'textfield',
+                                width: '95%',
+                                value: fname,
+                                margin: '5,5,5,5'
+                            });
+                            fileNames += fname;
                             if (i < files.length - 1) {
                                 fileNames += ', ';
                             }
                         }
+                        fset.setTitle(i18n.getMsg('import.filesSelected', files.length));
                         node.value = fileNames;
                     }
                 }
             }),
+            {
+                xtype: 'fieldset',
+                name: 'uploadFiles',
+                collapsible: true,
+                title: i18n.getMsg('import.filesSelected', 0),
+                items: []
+            },
             Ext.create('Ext.form.field.ComboBox', {
                 fieldLabel: i18n.getMsg('fileEncoding'),
                 allowBlank: false,
