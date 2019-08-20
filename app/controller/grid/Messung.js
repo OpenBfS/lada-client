@@ -49,10 +49,10 @@ Ext.define('Lada.controller.grid.Messung', {
                 probe: probeRecord,
                 record: messungRecord
             });
+            win.initData();
             win.show();
             if (win.isVisible()) {
                 win.setPosition(window.innerWidth - 30 -win.width);
-                win.initData();
             }
 
             return;
@@ -85,9 +85,9 @@ Ext.define('Lada.controller.grid.Messung', {
             grid: button.up('messunggrid'),
             parentWindow: button.up('window')
         });
+        win.initData();
         win.show();
         win.setPosition(window.innerWidth - 30 -win.width);
-        win.initData();
     },
 
     /**

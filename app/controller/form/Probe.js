@@ -74,9 +74,9 @@ Ext.define('Lada.controller.form.Probe', {
                     record: probe,
                     style: 'z-index: -1;'
                 });
+            probeWin.initData();
             probeWin.show();
             probeWin.setPosition(pos);
-            probeWin.initData();
             var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
             if (parentGrid.length === 1) {
                 parentGrid[0].reload();
@@ -565,10 +565,9 @@ Ext.define('Lada.controller.form.Probe', {
                         var win = Ext.create('Lada.view.window.ProbeEdit', {
                             record: record
                         });
-                        // TODO: does not work with unique windows anymore
+                        win.initData();
                         win.show();
                         win.setPosition(30);
-                        win.initData();
                     }
                 }
             },

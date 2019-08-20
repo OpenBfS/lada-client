@@ -382,9 +382,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                     record: record,
                                     style: 'z-index: -1;'
                                 });
+                                win.initData();
                                 win.show();
                                 win.setPosition(30);
-                                win.initData();
                             }
                         }
                     });
@@ -477,8 +477,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                             var win = Ext.create(
                                 'Lada.view.window.Messprogramm', {
                                     record: record});
-                            win.show();
                             win.initData();
+                            win.show();
                         }
                     });
                 },
@@ -793,9 +793,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 record: record,
                                 style: 'z-index: -1;'
                             });
+                            win.initData();
                             win.show();
                             win.setPosition(30);
-                            win.initData();
                         }
                     }
                 });
@@ -813,9 +813,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 record: record,
                                 style: 'z-index: -1;'
                             });
+                            win.initData();
                             win.show();
                             win.setPosition(30);
-                            win.initData();
                         }
                     }
                 });
@@ -833,9 +833,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 record: record,
                                 style: 'z-index: -1;'
                             });
+                            win.initData();
                             win.show();
                             win.setPosition(30);
-                            win.initData();
                         }
                     }
                 });
