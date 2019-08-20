@@ -382,8 +382,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                     record: record,
                                     style: 'z-index: -1;'
                                 });
-                                win.setPosition(30);
                                 win.show();
+                                win.setPosition(30);
                                 win.initData();
                             }
                         }
@@ -427,8 +427,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                                 record: precord,
                                                 style: 'z-index: -1;'
                                             });
-                                        probeWin.setPosition(30);
                                         probeWin.show();
+                                        probeWin.setPosition(30);
                                         probeWin.initData();
 
                                         var win = Ext.create(
@@ -793,8 +793,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 record: record,
                                 style: 'z-index: -1;'
                             });
-                            win.setPosition(30);
                             win.show();
+                            win.setPosition(30);
                             win.initData();
                         }
                     }
@@ -813,8 +813,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 record: record,
                                 style: 'z-index: -1;'
                             });
-                            win.setPosition(30);
                             win.show();
+                            win.setPosition(30);
                             win.initData();
                         }
                     }
@@ -833,8 +833,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 record: record,
                                 style: 'z-index: -1;'
                             });
-                            win.setPosition(30);
                             win.show();
+                            win.setPosition(30);
                             win.initData();
                         }
                     }
