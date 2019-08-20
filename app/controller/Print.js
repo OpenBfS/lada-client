@@ -9,7 +9,7 @@
 /**
  * Controller for print functionalities
  * This offers printing using mapfish print templates.
- * Tod determine available templates, the mapfish print app.json is queried.
+ * To determine available templates, the mapfish print app.json is queried.
  * To determine the data needed for a template, capabilities.json of mapfish
  * print is parsed.
  * Attribute fields that require "String" values will be matched against field
@@ -117,6 +117,9 @@ Ext.define('Lada.controller.Print', {
             for (var i = 0; i < attributes.length; i++) {
                 switch (attributes[i].type){
                     case 'DataSourceAttributeValue':
+                        if (attributes[i].name === 'messungen') {
+                            break;
+                        }
                         var subfields = recursiveFields(attributes[i].clientParams.attributes);
                         if (subfields) {
                             listOfItems = listOfItems.concat(subfields);
@@ -157,7 +160,17 @@ Ext.define('Lada.controller.Print', {
             }
             return listOfItems.length > 0 ? listOfItems : null;
         };
-        var fields = recursiveFields(capabilitiesForLayout.attributes);
+        var fields = null;
+        try {
+            fields = recursiveFields(capabilitiesForLayout.attributes);
+        } catch (e) {
+            if (e === 'erfassungsbogen') {
+                fields = null;
+            } else {
+                throw new Error('unknown template');
+            }
+        }
+
         if (fields) {
             fieldset.add(fields);
             fieldset.setVisible(true);
@@ -275,12 +288,21 @@ Ext.define('Lada.controller.Print', {
                 case 'DataSourceAttributeValue':
                     resultData[attributes[i].name] = [];
                     var subitems = modelEntry.items;
+                    // considering the items of the model to be one or more models
+                    // currently, there is no known case for it
                     if (subitems && subitems.length) {
                         for (var j=0;j< subitems.length; j++) {
                             resultData[attributes[i].name].push(
                                 this.fillTemplate(attributes[i].clientParams, subitems[i], window)
                             );
                         }
+                    } else {
+                        // the nested object may be an array of length 1 with the
+                        // data already present in the 'main' model
+                        // (e.g. one query containing a probe and a messung)
+                        resultData[attributes[i].name].push(
+                            this.fillTemplate(attributes[i].clientParams, modelEntry, window)
+                        );
                     }
                     break;
             }
@@ -362,8 +384,13 @@ Ext.define('Lada.controller.Print', {
             window.down('label[name=results]').setHidden(false);
             button.setDisabled(false);
         };
-        if (template === 'lada_erfassungsbogen') {
-            // TODO: this is the old implementation of "erfassungsbogen" printing
+        if (
+            capabilities.layouts[layout].attributes.proben
+            && capabilities.layouts[layout].attributes.proben.clientParams.attributes.some(
+                function(p) {
+                    return p.name === 'messungen';
+                })
+        ) {
             // see printSelection, prepareData, createSheetData (moved without major adaption)
             this.printSelection(grid, filename, format, callbackFn);
         } else {
@@ -413,7 +440,7 @@ Ext.define('Lada.controller.Print', {
         });
     },
 
-    // TODO partly outdated; from "Erfassungsbogen"
+    // TODO from "Erfassungsbogen".
     /**
      * Send the selection to a Printservice
      */
@@ -513,7 +540,7 @@ Ext.define('Lada.controller.Print', {
         return prep;
     },
 
-    // TODO moved from "Erfassungsbogen", handles Erfassungsbogen
+    // TODO moved from "Erfassungsbogen"
     // Also check if getting json printing could be refactored with gridexport
     /**
      * Returns a Json-Object which contains the data which has
@@ -597,7 +624,7 @@ Ext.define('Lada.controller.Print', {
     },
 
     /**
-     * taken from gridexport controller. refactoring potential here
+     * TODO taken from gridexport controller. refactoring potential here
      * @param name the filename
      * @param format and file 'type' typical ending
      * @returns the filename with the proper extension if valid, or null
