@@ -151,7 +151,7 @@ Ext.define('Lada.view.grid.Messung', {
                 // in order to add the statuswert to the record,
                 // after the grid was rendered...
                 if (!value || value === '') {
-                    this.updateStatus(mId, statusId, record);
+                    // the loading happens in linked 'status' column
                     return 'Lade...';
                 }
                 var kombis = Ext.data.StoreManager.get('statuskombi');
