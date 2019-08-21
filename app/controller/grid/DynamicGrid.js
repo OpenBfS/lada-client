@@ -276,17 +276,11 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 win.setPosition(30);
                 break;
             case 'mpId':
-                Lada.model.Messprogramm.load(id, {
-                    success: function(record) {
-                        var win = Ext.create(
-                            'Lada.view.window.Messprogramm', {
-                                record: record});
-
-                        if (win.show()) {
-                            win.initData();
-                        }
-                    }
+                var win = Ext.create('Lada.view.window.Messprogramm', {
+                    record: Ext.create('Lada.model.Messprogramm', {id: id })
                 });
+                win.initData();
+                win.show();
                 break;
             case 'ortId':
                 Lada.model.Ort.load(id, {
