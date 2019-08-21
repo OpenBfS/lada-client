@@ -267,21 +267,13 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 });
                 break;
             case 'probeId':
-                Lada.model.Probe.load(id, {
-                    scope: row,
-                    callback: function(record, operation, success) {
-                        if (success) {
-                            var win = Ext.create('Lada.view.window.ProbeEdit', {
-                                record: record,
-                                style: 'z-index: -1;'
-                            });
-                            if (win.show()) {
-                                win.initData();
-                                win.setPosition(30);
-                            }
-                        }
-                    }
+                var win = Ext.create('Lada.view.window.ProbeEdit', {
+                    record: Ext.create('Lada.model.Probe', {id: id}),
+                    style: 'z-index: -1;'
                 });
+                win.initData();
+                win.show();
+                win.setPosition(30);
                 break;
             case 'mpId':
                 Lada.model.Messprogramm.load(id, {

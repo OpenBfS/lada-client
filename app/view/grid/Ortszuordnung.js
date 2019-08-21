@@ -244,19 +244,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 }
             });
         }
-        Ext.ClassManager.get(modelname).load(this.recordId, {
-            failure: function(record, action) {
-                // TODO
-            },
-            success: function(record, response) {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    this.warnings = json.warnings;
-                    this.errors = json.errors;
-                }
-            },
-            scope: this
-        });
     },
 
     /**
