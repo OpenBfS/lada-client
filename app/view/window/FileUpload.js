@@ -59,6 +59,7 @@ Ext.define('Lada.view.window.FileUpload', {
                             var fname = files[i].name.replace("C:\\fakepath\\", "");
                             fset.add({
                                 xtype: 'textfield',
+                                readOnly: true, 
                                 width: '95%',
                                 value: fname,
                                 margin: '5,5,5,5'
