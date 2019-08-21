@@ -35,10 +35,7 @@ Ext.define('Lada.view.widget.Verwaltungseinheit', {
         var i18n= Lada.getApplication().bundle;
         this.emptyText= i18n.getMsg('emptytext.verwaltungseinheit');
         // This widget requires a separate store to not change the grid during typing
-        this.store = Ext.data.StoreManager.get('verwaltungseinheitenwidget');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.Verwaltungseinheiten');
-        }
+        this.store = Ext.create('Lada.store.Verwaltungseinheiten');
         this.store.clearFilter();
         this.callParent(arguments);
     },

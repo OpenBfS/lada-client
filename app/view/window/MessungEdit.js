@@ -10,7 +10,7 @@
  * Window to edit a Messung
  */
 Ext.define('Lada.view.window.MessungEdit', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.TrackedWindow',
     alias: 'widget.messungedit',
 
     requires: [
@@ -22,7 +22,7 @@ Ext.define('Lada.view.window.MessungEdit', {
 
     collapsible: true,
     maximizable: true,
-    autoshow: true,
+    autoShow: false,
     autoscroll: true,
     layout: 'fit',
     constrain: true,
@@ -30,8 +30,9 @@ Ext.define('Lada.view.window.MessungEdit', {
     probe: null,
     parentWindow: null,
     record: null,
+    recordType: 'messung',
     grid: null,
-    mStore: Ext.create('Lada.store.Messgroessen'),
+    mStore: null,
 
     /**
      * This function initialises the Window
@@ -48,6 +49,13 @@ Ext.define('Lada.view.window.MessungEdit', {
             this.callParent(arguments);
             return;
         }
+
+        //Clone proxy instance as it seems to be shared between store instances
+        var store = Ext.create('Lada.store.Messgroessen');
+        var proxy = Ext.clone(store.getProxy());
+        proxy.extraParams = {};
+        store.setProxy(proxy);
+        this.mStore = store;
 
         this.mStore.proxy.extraParams = {mmtId: this.record.get('mmtId')};
         this.mStore.load();

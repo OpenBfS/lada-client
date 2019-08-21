@@ -88,9 +88,9 @@ Ext.define('Lada.controller.form.Messung', {
                             grid: oldWin.grid,
                             record: record
                         });
+                        win.initData();
                         win.show();
                         win.setPosition(35 + parentWin.width);
-                        win.initData();
                     } else {
                         button.up('window').down('messwertgrid').getStore().reload();
                     }

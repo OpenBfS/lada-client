@@ -40,6 +40,7 @@ Ext.define('Lada.view.widget.Umwelt' ,{
         this.emptyText = i18n.getMsg('emptytext.umweltbereich');
 
         this.store = Ext.create('Lada.store.Umwelt');
+        this.store.setProxy(Ext.clone(this.store.getProxy()));
         this.store.extraParams = {};
         this.store.load();
         this.store.sort();

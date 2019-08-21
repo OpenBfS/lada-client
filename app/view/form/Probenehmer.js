@@ -76,6 +76,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                         fieldLabel: i18n.getMsg('probenehmerId'),
                         labelWidth: 110,
                         readOnly: true,
+                        allowBlank: false,
                         width: '50%',
                         maxLength: 9
                     }, {
@@ -83,6 +84,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                         name: 'netzbetreiberId',
                         editable: true,
                         readOnly: true,
+                        //submitValue: true,
                         allowBlank: false,
                         width: '50%',
                         filteredStore: true,
@@ -100,6 +102,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                         labelWidth: 110,
                         readOnly: true,
                         width: '50%',
+                        allowBlank: false,
                         margin: '0 5 0 0',
                         maxLength: 10
                     }, {
@@ -127,6 +130,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                     fieldLabel: i18n.getMsg('bezeichnung'),
                     margin: '5 5 0 5',
                     width: '100%',
+                    allowBlank: false,
                     readOnly: true,
                     labelWidth: 110,
                     maxLength: 80
@@ -182,16 +186,13 @@ Ext.define('Lada.view.form.Probenehmer', {
                         border: false,
                         margin: '5 10 5 10',
                         items: [{
-                            xtype: 'numfield',
+                            xtype: 'tfield',
                             name: 'plz',
                             fieldLabel: i18n.getMsg('plz'),
-                            allowDecimals: false,
                             maxLength: 5,
                             readOnly: true,
-                            hideTrigger: true,
-                            keyNavEnabled: false,
-                            mouseWheelEnabled: false,
                             width: '30%',
+                            regex:/^[0-9]*$/,
                             labelWidth: 100
                         }, {
                             xtype: 'tfield',
@@ -286,7 +287,7 @@ Ext.define('Lada.view.form.Probenehmer', {
         this.down('tfield[name=kurzBezeichnung]').clearWarningOrError();
         this.down('tfield[name=ort]').clearWarningOrError();
         this.down('tfield[name=betrieb]').clearWarningOrError();
-        this.down('numfield[name=plz]').clearWarningOrError();
+        this.down('tfield[name=plz]').clearWarningOrError();
         this.down('tfield[name=strasse]').clearWarningOrError();
         this.down('tfield[name=telefon]').clearWarningOrError();
         this.down('tfield[name=tp]').clearWarningOrError();
@@ -302,7 +303,7 @@ Ext.define('Lada.view.form.Probenehmer', {
         this.down('tfield[name=kurzBezeichnung]').setReadOnly(value);
         this.down('tfield[name=betrieb]').setReadOnly(value);
         this.down('tfield[name=ort]').setReadOnly(value);
-        this.down('numfield[name=plz]').setReadOnly(value);
+        this.down('tfield[name=plz]').setReadOnly(value);
         this.down('tfield[name=strasse]').setReadOnly(value);
         this.down('tfield[name=telefon]').setReadOnly(value);
         this.down('tfield[name=tp]').setReadOnly(value);

@@ -7,7 +7,7 @@
  */
 
 /**
- * Combobox for Umweltbereich
+ * Combobox for Probenehmer
  */
 Ext.define('Lada.view.widget.Probenehmer' ,{
     extend: 'Lada.view.widget.base.ComboBox',
@@ -36,15 +36,12 @@ Ext.define('Lada.view.widget.Probenehmer' ,{
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.probenehmer');
-
-        this.store = Ext.data.StoreManager.get('probenehmer');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.Probenehmer');
-        }
+        this.store = Ext.create('Lada.store.Probenehmer');
         this.store.sort('kurzBezeichnung', 'ASC');
         this.callParent(arguments);
         if (this.extraParams) {
             this.extraParams();
         }
+        this.store.load();
     }
 });

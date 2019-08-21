@@ -49,9 +49,12 @@ Ext.define('Lada.controller.grid.Messung', {
                 probe: probeRecord,
                 record: messungRecord
             });
-            win.show();
-            win.setPosition(window.innerWidth - 30 -win.width);
             win.initData();
+            win.show();
+            if (win.isVisible()) {
+                win.setPosition(window.innerWidth - 30 -win.width);
+            }
+
             return;
         };
         if (grid.up('probenedit')) {
@@ -63,9 +66,9 @@ Ext.define('Lada.controller.grid.Messung', {
                         record: precord,
                         style: 'z-index: -1;'
                     });
-                    probeWin.setPosition(30);
-                    probeWin.show();
                     probeWin.initData();
+                    probeWin.show();
+                    probeWin.setPosition(30);
                     probeLoadCallBack(probeWin, precord, record);
                 }
             });
@@ -82,9 +85,9 @@ Ext.define('Lada.controller.grid.Messung', {
             grid: button.up('messunggrid'),
             parentWindow: button.up('window')
         });
+        win.initData();
         win.show();
         win.setPosition(window.innerWidth - 30 -win.width);
-        win.initData();
     },
 
     /**

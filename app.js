@@ -89,7 +89,9 @@ Ext.application({
         'Lada.store.GridColumn',
         'Lada.store.Query',
         'Lada.view.widget.base.SelectableDisplayField',
-        'Lada.util.FunctionScheduler'
+        'Lada.view.window.TrackedWindow',
+        'Lada.util.FunctionScheduler',
+        'Lada.util.WindowTracker'
     ],
     statics: {
         applicationUpdateTitle: 'Anwendungsupdate',

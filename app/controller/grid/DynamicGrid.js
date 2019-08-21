@@ -133,9 +133,10 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                                 record: precord,
                                                 style: 'z-index: -1;'
                                             });
-                                        probeWin.setPosition(30);
-                                        probeWin.show();
-                                        probeWin.initData();
+                                        if (probeWin.show()) {
+                                            probeWin.initData();
+                                            probeWin.setPosition(30);
+                                        }
                                         var win = Ext.create(
                                             'Lada.view.window.MessungEdit', {
                                                 parentWindow: probeWin,
@@ -143,9 +144,10 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                                 record: record,
                                                 style: 'z-index: -1;'
                                             });
-                                        win.initData();
-                                        win.show();
-                                        win.setPosition(35 + probeWin.width);
+                                        if (win.show()) {
+                                            win.initData();
+                                            win.setPosition(35 + probeWin.width);
+                                        }
                                     }
                                 });
                         }
@@ -161,9 +163,10 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                 record: record,
                                 style: 'z-index: -1;'
                             });
-                            win.setPosition(30);
-                            win.show();
-                            win.initData();
+                            if (win.show()) {
+                                win.initData();
+                                win.setPosition(30);
+                            }
                         }
                     }
                 });
@@ -174,8 +177,10 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                         var win = Ext.create(
                             'Lada.view.window.Messprogramm', {
                                 record: record});
-                        win.show();
-                        win.initData();
+
+                        if (win.show()) {
+                            win.initData();
+                        }
                     }
                 });
                 break;
@@ -245,14 +250,14 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 case 'mpId':
                     var win = Ext.create(
                         'Lada.view.window.Messprogramm', {record: null});
-                    win.show();
                     win.initData();
+                    win.show();
                     break;
                 case 'probeId':
                     var win = Ext.create('Lada.view.window.ProbeCreate');
-                    win.setPosition(30);
-                    win.show();
                     win.initData();
+                    win.show();
+                    win.setPosition(30);
                     break;
                 case 'probenehmer':
                     var win = Ext.create('Lada.view.window.Probenehmer', {

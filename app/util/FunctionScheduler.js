@@ -7,7 +7,7 @@
  */
 
 /*
- * Utility class to schedule and synchronize functions that may no be called simultaneously.
+ * Utility class to schedule and synchronize functions that may not be called simultaneously.
  * Use the enqueue function to schedule functions to call later.
  * Every function must call the finished function to signal it has finished.
  */

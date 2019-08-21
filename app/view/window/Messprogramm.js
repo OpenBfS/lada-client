@@ -10,7 +10,7 @@
  * Window to edit a Messprogramm
  */
 Ext.define('Lada.view.window.Messprogramm', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.TrackedWindow',
     alias: 'widget.messprogramm',
 
     requires: [
@@ -20,7 +20,7 @@ Ext.define('Lada.view.window.Messprogramm', {
 
     collapsible: true,
     maximizable: true,
-    autoShow: true,
+    autoShow: false,
     autoScroll: true,
     layout: 'fit',
     constrain: true,
@@ -28,6 +28,7 @@ Ext.define('Lada.view.window.Messprogramm', {
     width: 750,
 
     record: null,
+    recordType: 'messprogramm',
 
     /**
      * This function initialises the Window
@@ -55,8 +56,8 @@ Ext.define('Lada.view.window.Messprogramm', {
                         ids: [this.record.get('id')],
                         parentWindow: this
                     });
-                    win.show();
                     win.initData();
+                    win.show();
                     this.probenWindow = win;
                 } else {
                     this.probenWindow.focus();
@@ -206,6 +207,7 @@ Ext.define('Lada.view.window.Messprogramm', {
             var record = Ext.create('Lada.model.Messprogramm',{
                 gueltigVon: 1,
                 gueltigBis: 365});
+            this.record = record;
             this.down('messmethodengrid').setReadOnly(true);
             var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
             mstLaborKombiStore.clearFilter(true);

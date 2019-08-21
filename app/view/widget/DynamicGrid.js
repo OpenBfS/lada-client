@@ -401,9 +401,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                     record: record,
                                     style: 'z-index: -1;'
                                 });
-                                win.setPosition(30);
-                                win.show();
                                 win.initData();
+                                win.show();
+                                win.setPosition(30);
                             }
                         }
                     });
@@ -446,8 +446,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                                 record: precord,
                                                 style: 'z-index: -1;'
                                             });
-                                        probeWin.setPosition(30);
                                         probeWin.show();
+                                        probeWin.setPosition(30);
                                         probeWin.initData();
 
                                         var win = Ext.create(
@@ -496,8 +496,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                             var win = Ext.create(
                                 'Lada.view.window.Messprogramm', {
                                     record: record});
-                            win.show();
                             win.initData();
+                            win.show();
                         }
                     });
                 },
@@ -812,9 +812,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 record: record,
                                 style: 'z-index: -1;'
                             });
-                            win.setPosition(30);
-                            win.show();
                             win.initData();
+                            win.show();
+                            win.setPosition(30);
                         }
                     }
                 });
@@ -832,9 +832,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 record: record,
                                 style: 'z-index: -1;'
                             });
-                            win.setPosition(30);
-                            win.show();
                             win.initData();
+                            win.show();
+                            win.setPosition(30);
                         }
                     }
                 });
@@ -852,9 +852,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 record: record,
                                 style: 'z-index: -1;'
                             });
-                            win.setPosition(30);
-                            win.show();
                             win.initData();
+                            win.show();
+                            win.setPosition(30);
                         }
                     }
                 });

@@ -18,7 +18,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     ],
 
     searchField: null,
-    searchTimer: null,
+    /*
+     * Map of search timers using text field ids as keys
+     */
+    searchTimers: Ext.create('Ext.util.HashMap'),
     searchTimeout: 500,
 
     ignoreNextDblClick: false,
@@ -58,16 +61,18 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                         return;
                     }
                     var me = this;
-                    if (!me.searchTimer) {
-                        me.searchTimer = new Ext.util.DelayedTask(function() {
-                            me.search(evt, opts);
+                    var searchTimer = me.searchTimers.get(field.getId());
+                    if (!searchTimer) {
+                        searchTimer = new Ext.util.DelayedTask(function() {
+                            me.search(field, evt, opts);
                         });
+                        me.searchTimers.add(field.getId(), searchTimer);
                     }
                     try {
-                        me.searchTimer.cancel();
-                        me.searchTimer.delay(me.searchTimeout);
+                        searchTimer.cancel();
+                        searchTimer.delay(me.searchTimeout);
                     } catch (e) {
-                        me.search(evt, opts);
+                        me.search(field, evt, opts);
                     }
                 }
             },
@@ -107,8 +112,9 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             record: record,
             grid: grid
         });
-        win.show();
-        win.initData();
+        if (win.show()) {
+            win.initData();
+        }
     },
 
     /**
@@ -127,8 +133,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             record: null,
             grid: button.up('ortszuordnunggrid')
         });
-        win.show();
         win.initData();
+        win.show();
     },
 
     /**
@@ -205,8 +211,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     /**
      * Search triggered by textfield key event.
      */
-    search: function(evt, opts) {
-        var field = Ext.ComponentQuery.query('textfield[name=search]')[0];
+    search: function(field, evt, opts) {
         var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
 
@@ -237,14 +242,16 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * display the resultset.
      */
     execSearch: function(requestingCmp, filter) {
-        // Filter stores
-        var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
-        var staaten = Ext.data.StoreManager.get('staaten');
-        staaten.clearFilter(true);
         var ozw = requestingCmp.up('ortszuordnungwindow');
+        var verwgrid = ozw.down('verwaltungseinheitengrid');
+        var staatgrid= ozw.down('staatengrid');
+        // Filter stores
+        var verwaltungseinheiten = verwgrid.getStore();
+        var staaten = staatgrid.getStore();
+        staaten.clearFilter(true);
         this.doOrtFilter(ozw, filter);
 
-        var verwgrid = ozw.down('verwaltungseinheitengrid');
+
         verwaltungseinheiten.clearFilter(true);
         verwaltungseinheiten.filter({
             property: 'bezeichnung',
@@ -255,7 +262,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         verwgrid.setStore(verwaltungseinheiten);
         verwgrid.down('pagingtoolbar').doRefresh();
 
-        var staatgrid= ozw.down('staatengrid');
+
         staaten.filter({
             property: 'staat',
             anyMatch: true,

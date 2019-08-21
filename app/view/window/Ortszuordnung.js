@@ -11,7 +11,7 @@
  */
 
 Ext.define('Lada.view.window.Ortszuordnung', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.TrackedWindow',
     alias: 'widget.ortszuordnungwindow',
 
     requires: [
@@ -27,7 +27,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
 
     collapsible: true,
     maximizable: true,
-    autoshow: true,
+    autoShow: false,
     layout: 'fit',
     constrain: true,
 
@@ -36,6 +36,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
 
     parentWindow: null,
     record: null,
+    recordType: 'ortszuordnung',
     grid: null,
 
     datenbasis: null,
@@ -253,7 +254,8 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         var map = this.down('map');
         osg.setLoading(false);
         map.setLoading(false);
-        this.ortstore = Ext.data.StoreManager.get('orte');
+        this.ortstore = Ext.create('Lada.store.Orte');
+        this.ortstore.setProxy(Ext.clone(this.ortstore.getProxy()));
         // leave the ortstore empty at begin.
         // TODO check when changing filter method to remote/local
         this.ortstore.removeAll();

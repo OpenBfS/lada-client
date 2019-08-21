@@ -43,8 +43,8 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
      */
     addMessprogrammItem: function() {
         var win = Ext.create('Lada.view.window.Messprogramm');
-        win.show();
         win.initData();
+        win.show();
     },
 
     /**

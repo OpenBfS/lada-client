@@ -73,8 +73,8 @@ Ext.define('Lada.controller.form.Ort', {
         var pos = button.up('ortform').up().getPosition();
         pos[0] += 10;
         pos[1] += 10;
-        win.setPosition(pos);
         win.show();
+        win.setPosition(pos);
     },
 
     save: function(button) {

@@ -8,9 +8,37 @@ Ext.define('Lada.view.window.ImportResponse', {
     responseData: '',
     message: '',
     fileName: '',
+    fileNames: [],
+
+    downloadPrefix: '',
+    downloadPostfix: '',
+
+    //Downloadable report content
+    download: '',
+
+    /**
+     * Imported file encoding
+     */
+    encoding: null,
+
+    /**
+     * Preselected mst
+     */
+    mstId: null,
+
+    /**
+     * String containg mst and encoding
+     */
+    mstEncoding: null,
 
     layout: 'fit',
-    resizable: false,
+    resizable: true,
+
+    fileCount: -1,
+
+    finished: 0,
+
+    finishedHandler: null,
 
     /**
      * @private
@@ -18,26 +46,28 @@ Ext.define('Lada.view.window.ImportResponse', {
      */
     initComponent: function() {
         var me = this;
-        var html;
-        var download;
         var i18n = Lada.getApplication().bundle;
-        var data = null;
-        try {
-            data = Ext.decode(me.responseData);
-        } catch (e) {
-            data = null;
+
+        this.downloadPrefix = '<!DOCTYPE html>' +
+                '<head><meta charset="utf-8"></head><body>';
+        this.downloadPostfix = '</body></html>'
+
+        me.mstEncoding = i18n.getMsg('encoding') + ' ' + this.encoding;
+        if (this.mst !== null) {
+            me.mstEncoding += '&emsp;' + i18n.getMsg('import.configMst') + ': ' +  this.mst;
         }
-        if (data) {
-            html = me.parseShortResponse(data);
-        } else {
-            html = i18n.getMsg('importResponse.failure.server', this.fileName);
-        }
+
         this.bodyStyle = {background: '#fff'};
         me.items = [{
             xtype: 'panel',
-            html: html,
+            html: '',
+            width: '100%',
+            height: '100%',
+            scrollable: true,
             margin: 10,
             border: false
+        }, {
+            xtype: 'progressbar'
         }];
 
         me.buttons = [{
@@ -50,14 +80,62 @@ Ext.define('Lada.view.window.ImportResponse', {
             name: 'download',
             disabled: true,
             handler: function() {
-                var blob = new Blob([download],{type: 'text/html'});
+                var downloadJoin = me.downloadPrefix + me.download + me.downloadPostfix;
+                var blob = new Blob([downloadJoin],{type: 'text/html'});
                 saveAs(blob, 'report.html');
             }
         }];
         this.callParent(arguments);
-        if (data) {
-            download = me.parseResponse(data);
-            this.down('panel').html = html + me.parseResponse(data, true);
+    },
+
+    /**
+     * Update the result window after a file has been successfully uploaded.
+     * Updates the result text and the progress bar.
+     * @param responseData Responsedata of the upload
+     * @param fileIndex Index of the file in the name array
+     */
+    updateOnSuccess: function(responseData, fileIndex) {
+        var i18n = Lada.getApplication().bundle;
+        var data;
+        try {
+            data = Ext.decode(responseData);
+        } catch (e) {
+            data = null;
+        }
+        this.finished++;
+        this.down('progressbar').updateProgress(this.finished/this.fileCount);
+        var filename = this.fileNames[fileIndex];
+        this.down('progressbar').updateProgress(this.finished/this.fileCount);
+        var filename = this.fileNames[fileIndex];
+        var response = '<br/><hr><b>' + filename + ':</b><br/><ol>&#40' + this.mstEncoding + '&#41</ol>';
+        response += i18n.getMsg('import.messages') + ':<br/><hr>';
+        response += this.parseResponse(data, true);
+        this.download += response;
+        this.down('panel').setHtml(this.down('panel').html + response);
+        if (this.finished == this.fileCount) {
+            this.down('button[name=download]').enable();
+        }
+    },
+
+    /**
+     * Update the result window after an error has occured during the upload.
+     * Updates the result text and the progress bar.
+     * @param status HTTP status code
+     * @param statusText Status text
+     * @param fileIndex Index of the file in the name array
+     */
+    updateOnError: function (status, statusText, fileIndex) {
+        var i18n = Lada.getApplication().bundle;
+        this.finished++;
+        this.down('progressbar').updateProgress(this.finished/this.fileCount);
+        var filename = this.fileNames[fileIndex];
+        var response = '<br/><hr><b>' + filename + ':</b><br/><ol>&#40' + this.mstEncoding + '&#41</ol>';
+        response += i18n.getMsg('import.messages') + ':<br/><hr>';
+        response += this.parseResponse(data, true);
+        this.down('panel').setHtml(this.down('panel').html + response);
+        this.download += response;
+        if (this.finished == this.fileCount) {
+            this.down('button[name=download]').enable();
         }
     },
 
@@ -137,7 +215,8 @@ Ext.define('Lada.view.window.ImportResponse', {
         // There is a entry for each imported proben in the errors dict (might be
         // empty)
 
-        var divStyle = '<DIV style="max-height:300px;overflow-y:auto;">';
+        //TODO. overflow is now neccessary
+        var divStyle = '<DIV>';//'<DIV style="max-height:300px;overflow-y:auto;">';
         var numErrors;
         var numWarnings;
         if (!Ext.isObject(errors)) {
@@ -263,14 +342,10 @@ Ext.define('Lada.view.window.ImportResponse', {
                 }
                 out.push('</ol>');
             }
-            out.push('<br/>');
             if (!divHtml) {
                 out.push('</body></html>');
             } else {
                 out.push('</DIV>');
-            }
-            if (numWarnings > 0 || numErrors > 0) {
-                this.down('button[name=download]').enable();
             }
         }
         return out.join('');
