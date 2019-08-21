@@ -98,6 +98,7 @@ Ext.define('Lada.util.WindowTracker', {
             var map = this.maps.get(type);
             if (map) {
                     if (this.isOpen(type, id)) {
+                        map.get(id, window).setCollapsed(false);
                         map.get(id, window).focus();
                     } else {
                         //Raise error
