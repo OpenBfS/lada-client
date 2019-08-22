@@ -84,7 +84,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         var win = Ext.create('Lada.view.window.Messprogramm',{
                             record: copiedRecord
                         });
-                        win.initData();
+                        win.initData(copiedRecord);
                         win.show();
                         win.setPosition(pos);
                     });
@@ -352,7 +352,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         var win = Ext.create('Lada.view.window.Messprogramm', {
                             record: record
                         });
-                        win.initData();
+                        win.initData(record);
                         win.show();
                     }
                 }

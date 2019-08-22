@@ -74,7 +74,7 @@ Ext.define('Lada.controller.form.Probe', {
                     record: probe,
                     style: 'z-index: -1;'
                 });
-            probeWin.initData();
+            probeWin.initData(probe);
             probeWin.show();
             probeWin.setPosition(pos);
             var parentGrid = Ext.ComponentQuery.query('dynamicgrid');

@@ -63,7 +63,7 @@ Ext.define('Lada.controller.form.Messung', {
                     formPanel.clearMessages();
                     formPanel.setRecord(record);
                     formPanel.setMessages(json.errors, json.warnings);
-                    formPanel.up('window').initData();
+                    formPanel.up('window').initData(record);
 
                     var parentWin = button.up('window').parentWindow;
                     if (parentWin) {
@@ -88,7 +88,7 @@ Ext.define('Lada.controller.form.Messung', {
                             grid: oldWin.grid,
                             record: record
                         });
-                        win.initData();
+                        win.initData(record);
                         win.show();
                         win.setPosition(35 + parentWin.width);
                     } else {

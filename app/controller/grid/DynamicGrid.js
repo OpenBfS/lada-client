@@ -246,7 +246,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                                 style: 'z-index: -1;'
                                             });
                                         if (probeWin.show()) {
-                                            probeWin.initData();
+                                            probeWin.initData(precord);
                                             probeWin.setPosition(30);
                                         }
                                         var win = Ext.create(
@@ -256,10 +256,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                                 record: record,
                                                 style: 'z-index: -1;'
                                             });
-                                        if (win.show()) {
-                                            win.initData();
-                                            win.setPosition(35 + probeWin.width);
-                                        }
+                                        win.initData(record);
+                                        win.show();
+                                        win.setPosition(35 + probeWin.width);
                                     }
                                 });
                         }
@@ -267,20 +266,30 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 });
                 break;
             case 'probeId':
-                var win = Ext.create('Lada.view.window.ProbeEdit', {
-                    record: Ext.create('Lada.model.Probe', {id: id}),
-                    style: 'z-index: -1;'
+                Lada.model.Probe.load(id, {
+                    scope: row,
+                    callback: function(record, operation, success) {
+                        if (success) {
+                            var win = Ext.create('Lada.view.window.ProbeEdit', {
+                                record: record,
+                                style: 'z-index: -1;'
+                            });
+                            win.initData(record);
+                            win.show();
+                            win.setPosition(30);
+                        }
+                    }
                 });
-                win.initData();
-                win.show();
-                win.setPosition(30);
                 break;
             case 'mpId':
-                var win = Ext.create('Lada.view.window.Messprogramm', {
-                    record: Ext.create('Lada.model.Messprogramm', {id: id })
+                Lada.model.Messprogramm.load(id, {
+                    success: function(record) {
+                        var win = Ext.create(
+                            'Lada.view.window.Messprogramm', { record: record });
+                        win.initData(record);
+                        win.show();
+                    }
                 });
-                win.initData();
-                win.show();
                 break;
             case 'ortId':
                 Lada.model.Ort.load(id, {
