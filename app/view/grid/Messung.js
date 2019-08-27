@@ -32,6 +32,10 @@ Ext.define('Lada.view.grid.Messung', {
 
     lastClickTime: 0,
 
+    messwerteLoading: false,
+
+    mkommentareLoading: false,
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
@@ -181,10 +185,12 @@ Ext.define('Lada.view.grid.Messung', {
             dataIndex: 'messwerteCount',
             flex: 1,
             renderer: function(value, meta, record) {
-                if (!value || value === '') {
+                if ((!value || value === '') && this.messwerteLoading == false) {
                     var mId = record.get('id');
                     this.updateNuklide(mId, record);
                     return 'Lade...';
+                } else {
+                    this.messwerteLoading = false;
                 }
                 return value;
             }
@@ -193,10 +199,12 @@ Ext.define('Lada.view.grid.Messung', {
             flex: 1,
             dataIndex: 'kommentarCount',
             renderer: function(value, meta, record) {
-                if (!value || value === '') {
+                if ((!value || value === '') && this.mkommentareLoading == false) {
                     var mId = record.get('id');
                     this.updateKommentare(mId, record);
                     return 'Lade...';
+                } else {
+                    this.mkommentareLoading == false;
                 }
                 return value;
             }
@@ -239,7 +247,7 @@ Ext.define('Lada.view.grid.Messung', {
      */
     updateStatus: function(value, statusId, record) {
         var statusStore = Ext.create('Lada.store.Status');
-        statusStore.on({
+        statusStore.onAfter({
             load: {
                 fn: this.updateStatusColumn,
                 scope: this,
@@ -255,20 +263,26 @@ Ext.define('Lada.view.grid.Messung', {
 
     updateNuklide: function(id, record) {
         var messwerte = Ext.create('Lada.store.Messwerte');
-        messwerte.on('load',
+        var me = this;
+        me.messwerteLoading = true;
+        /*messwerte.onAfter('load',
             this.updateColumn,
             this,
-            {record: record, type: 'messwerteCount'});
+            {record: record, type: 'messwerteCount'});*/
         messwerte.load({
             params: {
                 messungsId: id
+            },
+            callback: function(records, operation, success) {
+                me.updateColumn(messwerte, record, success, operation, {record: record, type: 'messwerteCount'});
             }
         });
     },
 
     updateKommentare: function(id, record) {
         var kommentare = Ext.create('Lada.store.MKommentare');
-        kommentare.on('load',
+        this.mkommentareLoading = true;
+        kommentare.onAfter('load',
             this.updateColumn,
             this,
             {record: record, type: 'kommentarCount'});
@@ -282,7 +296,7 @@ Ext.define('Lada.view.grid.Messung', {
     updateColumn: function(store, record, success, operation, opts) {
         var value;
         if (success) {
-            var amount = store.getData().items.length;
+            var amount = store.count();
             if ( amount === 0 ) {
                 value = '0';
             } else {
