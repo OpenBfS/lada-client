@@ -44,6 +44,6 @@ Ext.define('Lada.controller.Global', {
             failure: function (response) {
                 Ext.Msg.alert(i18n.getMsg('err.msg.slo.failed.title'), i18n.getMsg('err.msg.slo.failed.body'));
             }
-        })
+        });
     }
 });

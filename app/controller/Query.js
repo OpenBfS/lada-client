@@ -458,7 +458,8 @@ Ext.define('Lada.controller.Query', {
                             this.setMapOrte(resultGrid);
                         }
                     } else {
-                        if (operation.error.response.timedout) {
+                        if (operation.error.response
+                                    && operation.error.response.timedout) {
                             Ext.Msg.alert(i18n.getMsg('query.error.search.title'),
                                 i18n.getMsg('query.error.search.querytimeout.message'));
                         } else if (operation.error.status != 0) {
