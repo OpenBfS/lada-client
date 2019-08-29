@@ -198,9 +198,9 @@ Ext.define('Lada.view.window.ProbeEdit', {
             if (json) {
                 me.setMessages(json.errors, json.warnings);
                 //if (!json.warnings.mediaDesk) { // TODO: not sure why this condition was present
-                me.down('probeform').setMediaDesk(record);
                 //}
             }
+            me.down('probeform').setMediaDesk(record);
             // If the Probe is ReadOnly, disable Inputfields and grids
             if (readonly === true || !owner) {
                 me.down('probeform').setReadOnly(true);

@@ -175,9 +175,10 @@ Ext.define('Lada.view.window.Messprogramm', {
                 var json = response ? Ext.decode(response.getResponse().responseText) : null;
                 if (json) {
                     this.setMessages(json.errors, json.warnings);
+                    /*
                     if (!json.warnings.mediaDesk) {
-                        this.down('messprogrammform').setMediaDesk(record);
                     }
+                    */
                 }
                 var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
                 var recordIndex = mstLaborKombiStore.findExact('messStelle', record.get('mstId'));
@@ -193,6 +194,8 @@ Ext.define('Lada.view.window.Messprogramm', {
                         me.down('messprogrammform').down('dayofyear[name=gueltigVon]').setReadOnly(true);
                     }
                 }
+
+                me.down('messprogrammform').setMediaDesk(record);
                 me.setLoading(false);
             };
             if (!loadedRecord) {
