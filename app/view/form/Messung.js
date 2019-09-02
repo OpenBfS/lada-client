@@ -219,11 +219,12 @@ Ext.define('Lada.view.form.Messung', {
     },
 
 
-    updateStatusText: function(reset) {
+    updateStatusTextAndFertigFlag: function() {
         this.record.load({
             scope: this,
             success: function() {
-                this.down('statuskombi').setValue(this.record.get('status'), reset, this.record.get('statusEdit'));
+                this.setRecord(this.record);
+                this.up('messungedit').down('messwertgrid').setReadOnly(this.record.get('readonly'));
             }
         });
     },

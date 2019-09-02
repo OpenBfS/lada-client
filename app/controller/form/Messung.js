@@ -233,8 +233,7 @@ Ext.define('Lada.controller.form.Messung', {
         });
         var view = button.up('messungform');
         win.on('statussetend', function() {
-            view.updateStatusText(false);
-            view.up('messungedit').down('messwertgrid').setReadOnly(true);
+            view.updateStatusTextAndFertigFlag();
         });
         win.show();
     }
