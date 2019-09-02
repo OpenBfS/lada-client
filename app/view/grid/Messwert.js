@@ -20,11 +20,11 @@ Ext.define('Lada.view.grid.Messwert', {
         'Lada.view.widget.Messeinheit'
     ],
 
-    minHeight: 44,
+    minHeight: 130,
     viewConfig: {
         deferEmptyText: false
     },
-    margin: '0, 5, 15, 5',
+    margin: '0, 5, 5, 5',
     recordId: null,
     umwId: null,
     defaultMehId: null,
@@ -113,7 +113,6 @@ Ext.define('Lada.view.grid.Messwert', {
                 action: 'delete'
             }, {
                 buttonAlign: 'right',
-                margin: 5,
                 action: 'normalize',
                 handler: this.normalize,
                 text: i18n.getMsg('button.normalize')
@@ -308,6 +307,7 @@ Ext.define('Lada.view.grid.Messwert', {
             }
             this.down('button[action=delete]').disable();
             this.down('button[action=add]').disable();
+            this.down('button[action=normalize]').disable();
         } else {
             //Writable
             if (this.getPlugin('rowedit')) {
@@ -315,6 +315,7 @@ Ext.define('Lada.view.grid.Messwert', {
             }
             //this.down('button[action=delete]').enable();
             this.down('button[action=add]').enable();
+            this.down('button[action=normalize]').enable();
         }
     },
 
