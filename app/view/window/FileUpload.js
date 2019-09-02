@@ -79,7 +79,9 @@ Ext.define('Lada.view.window.FileUpload', {
                 name: 'uploadFiles',
                 collapsible: true,
                 title: i18n.getMsg('import.filesSelected', 0),
-                items: []
+                items: [],
+                scrollable: true,
+                maxHeight: 200
             },
             Ext.create('Ext.form.field.ComboBox', {
                 fieldLabel: i18n.getMsg('fileEncoding'),
