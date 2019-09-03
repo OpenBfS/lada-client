@@ -46,6 +46,7 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
         }
         context.record.save({
             success: function() {
+                context.grid.getSelectionModel().clearSelections();
                 context.grid.store.reload();
                 context.grid.up('window').initData();
             },
