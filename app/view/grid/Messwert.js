@@ -20,7 +20,7 @@ Ext.define('Lada.view.grid.Messwert', {
         'Lada.view.widget.Messeinheit'
     ],
 
-    minHeight: 130,
+    minHeight: 44,
     viewConfig: {
         deferEmptyText: false
     },
