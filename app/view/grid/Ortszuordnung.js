@@ -92,14 +92,14 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('typ'),
             dataIndex: 'ortszuordnungTyp',
-            flex: 1,
+            width: 30,
             editor: {
                 allowBlank: false
             }
         }, {
             header: i18n.getMsg('orte.ortId'),
             dataIndex: 'ortId',
-            width: 120,
+            flex: 3,
             renderer: function(value, meta, zuordnung) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
@@ -123,7 +123,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('staat'),
             dataIndex: 'ortId',
-            flex: 1,
+            width: 40,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var staaten = Ext.data.StoreManager.get('staaten');
@@ -141,7 +141,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('orte.gemId'),
             dataIndex: 'ortId',
-            flex: 2,
+            flex: 3,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
@@ -172,7 +172,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('orte.ozId'),
             dataIndex: 'ortId',
-            flex: 3,
+            width: 80,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
@@ -188,7 +188,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('orte.anlageId'),
             dataIndex: 'ortId',
-            flex: 3,
+            width: 60,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
@@ -202,6 +202,23 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 var ktaGruppen = Ext.data.StoreManager.get('ktaGruppe');
                 var ktaGruppe = ktaGruppen.getById(record.get('ktaGruppeId'));
                 return ktaGruppe.get('ktaGruppe');
+            }
+        }, {
+            header: i18n.getMsg('orte.langtext'),
+            dataIndex: 'ortId',
+            flex: 4,
+            renderer: function(value) {
+                var store = Ext.data.StoreManager.get('orte');
+                var record = store.getById(value);
+                if (!record) {
+                    return '';
+                }
+                var langtext = record.get('langtext');
+                if (langtext === '' || langtext === undefined || langtext === null) {
+                    return '';
+                }
+                return '<div style="white-space: normal !important;">' +
+                                           langtext + '</div>';
             }
         }];
         this.listeners = {
