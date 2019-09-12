@@ -14,31 +14,47 @@ Ext.define('Lada.override.RestProxy', {
         var me = this;
         var parent = this.callParent;
         var contentType = response.getAllResponseHeaders()['content-type'];
-        if (contentType !== 'application/json') {
+        if (success == true && contentType !== 'application/json') {
             var i18n = Lada.getApplication().bundle;
-            try {
-                Ext.MessageBox.confirm(
-                    i18n.getMsg('err.msg.sso.expired.title'),
-                    i18n.getMsg('err.msg.sso.expired.body'),
-                    function(btn) {
-                        me.reload(btn, response, request).then(function(args) {
-                            var succ = args[1];
-                            var resp = args[2];
-                            me.processResponse(succ, operation, request, resp, callback, scope);
-                            Ext.MessageBox.alert({
-                                title: i18n.getMsg('shib.session.renewed.title'),
-                                message: i18n.getMsg('shib.session.renewed.text')
+
+            Ext.MessageBox.confirm(
+                i18n.getMsg('err.msg.sso.expired.title'),
+                i18n.getMsg('err.msg.sso.expired.body'),
+                function(btn) {
+                    try {
+                        //Renew session
+                        me.reload(btn, response, request).then(
+                            //Success handler
+                            function(args) {
+                                /* As any request json data will be dropped during the redirects while
+                                renewing the session, the original request must be send once again */
+                                var jsonData = request.getJsonData();
+                                var origUrl = request.getUrl();
+                                var method = request.getMethod();
+                                Ext.Ajax.request({
+                                    url: origUrl,
+                                    method: method,
+                                    jsonData: jsonData,
+                                    callback: function(opts, succ, resp) {
+                                        me.processResponse(succ, operation, request, resp, callback, scope);
+                                    }
+                                });
+                            },
+                            //Failure handler
+                            function() {
+                                Ext.MessageBox.alert({
+                                    title: i18n.getMsg('err.msg.sso.renew.failed.title'),
+                                    message: i18n.getMsg('err.msg.sso.renew.failed.body')
+                                });
                             });
+                    } catch (e) {
+                        Ext.MessageBox.alert({
+                            title: i18n.getMsg('err.msg.sso.renew.failed.title'),
+                            message: i18n.getMsg('err.msg.sso.renew.failed.body')
                         });
                     }
-                );
-            } catch (e) {
-                Ext.MessageBox.alert({
-                    title: i18n.getMsg('err.msg.sso.renew.failed.title'),
-                    message: i18n.getMsg('err.msg.sso.renew.failed.body')
-                });
-            }
-            
+                }
+            );
         } else {
             this.callParent(arguments);
         }
@@ -116,7 +132,8 @@ Ext.define('Lada.override.RestProxy', {
     },
 
     /**
-     * Renew an expired shibboleth sp session.
+     * Renew an expired shibboleth sp session using an Ext.Promise
+     * to synchronize the requests.
      */
     reload: function(btn, response, initialRequest) {
         var me = this;
@@ -130,61 +147,81 @@ Ext.define('Lada.override.RestProxy', {
                 var idpBaseUrl = me.getActionUrl(response).match(/^https:\/\/[^\/]+/i);
                 //Parse the first response form and send data back to idp
                 me.parseAuthenticationRequest(response, function(opts, success, idpresponse) {
-                        /* The response should be a form and scripts to save session
-                        information to the local storage */
-                        var idpresponseText = idpresponse.responseText;
-                        var parser = new DOMParser();
-                        var xmlDoc = parser.parseFromString(idpresponseText,"text/html");
-                        //Parameters can be found as value of hidden input fields
-                        var inputFields = xmlDoc.getElementsByTagName('input');
-                        var params = {};
-                        for (var i = 0; i < inputFields.length; i++) {
-                            var field = inputFields[i];
-                            var name = field.getAttribute('name');
-                            var value = field.getAttribute('value');
-                            if (name && name != "") {
-                                params[name] = value;
+                    if (success == true) {
+                        try {
+                            /* The response should be a form and scripts to save session
+                            information to the local storage */
+                            var idpresponseText = idpresponse.responseText;
+                            var parser = new DOMParser();
+                            var xmlDoc = parser.parseFromString(idpresponseText,"text/html");
+                            //Parameters can be found as value of hidden input fields
+                            var inputFields = xmlDoc.getElementsByTagName('input');
+                            var params = {};
+                            for (var i = 0; i < inputFields.length; i++) {
+                                var field = inputFields[i];
+                                var name = field.getAttribute('name');
+                                var value = field.getAttribute('value');
+                                if (name && name != "") {
+                                    params[name] = value;
+                                }
                             }
-                        }
-                        var execUrl = idpBaseUrl
-                                + xmlDoc.getElementsByTagName('form')[0].getAttribute('action');
-                        var scripts = xmlDoc.getElementsByTagName('script');
-                        var wrappingDiv = xmlDoc.getElementsByClassName('wrapper')[0];
-    
-                        var scripts = xmlDoc.getElementsByTagName('script');
-                        var infoScript;
-                        for (var j = 0; j < scripts.length; j++) {
-                            var tag = scripts[j]
-                            if (tag.parentElement.className === 'container') {
-                                infoScript = tag;
+                            var form = xmlDoc.getElementsByTagName('form').length > 0 ?
+                                    xmlDoc.getElementsByTagName('form')[0] : null;
+                            var execUrl = form ? idpBaseUrl + form.getAttribute('action') : null;
+                            var scripts = xmlDoc.getElementsByTagName('script');
+                            var wrappingDiv = xmlDoc.getElementsByClassName('wrapper').length > 0 ?
+                                    xmlDoc.getElementsByClassName('wrapper')[0] : null;
+
+                            var scripts = xmlDoc.getElementsByTagName('script');
+                            var infoScript;
+                            for (var j = 0; j < scripts.length; j++) {
+                                var tag = scripts[j]
+                                if (tag.parentElement.className === 'container') {
+                                    infoScript = tag;
+                                }
                             }
+                            if (!form || !execUrl || !scripts || !wrappingDiv || !scripts || !infoScript) {
+                                reject();
+                            }
+                            writeLocalStorage = function(key, value) {
+                                params = me.writeLocalStorage(key, value, params);
+                            }
+                            var funcText = infoScript.innerText;
+                            funcText = funcText.replace('<!--', '');
+                            funcText = funcText.replace('-->', '');
+                            funcText = funcText.replace('function doSave() {', '');
+                            funcText = funcText.replace('document.form1.submit()', '');
+                            funcText = funcText.replace('}', '');
+                            var doSave = new Function(funcText);
+                            doSave.call();
+                        } catch (e) {
+                            reject('Renewing session failed');
                         }
-                        writeLocalStorage = function(key, value) {
-                            params = me.writeLocalStorage(key, value, params);
-                        }
-                        var funcText = infoScript.innerText;
-                        funcText = funcText.replace('<!--', '');
-                        funcText = funcText.replace('-->', '');
-                        funcText = funcText.replace('function doSave() {', '');
-                        funcText = funcText.replace('document.form1.submit()', '');
-                        funcText = funcText.replace('}', '');
-                        var doSave = new Function(funcText);
-                        doSave.call();
                         //Issue the last request to the idp
                         Ext.Ajax.request({
                             url: execUrl,
                             method: 'POST',
                             params: params,
                             callback: function(opts, success, idpresponse) {
-                                /* Parse saml response parameters and send to sp.
-                                   This request should be redirected to the actual rest service */
-                                me.parseAuthenticationRequest(idpresponse, function() {
-                                    resolve(arguments);
-                                })
+                                if (success == true) {
+                                    /* Parse saml response parameters and send to sp.
+                                    This request should be redirected to the actual rest service */
+                                    try {
+                                        me.parseAuthenticationRequest(idpresponse, function() {
+                                            resolve(arguments);
+                                        });
+                                    } catch (e) {
+                                        reject('Renewing session failed');
+                                    }
+                                } else {
+                                    reject('Renewing session failed');
+                                }
                             }
                         });
+                    } else {
+                        reject('Renewing session failed');
                     }
-                );
+                });
             }
         });
     },
