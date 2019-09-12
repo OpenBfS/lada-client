@@ -79,6 +79,9 @@ Ext.define('Lada.controller.Query', {
             'querypanel panel[name=filtervalues] combobox': {
                 change: me.filterValueChanged
             },
+            'querypanel panel[name=filtervalues] checkbox': {
+                change: me.checkboxChanged
+            },
             'querypanel button[action=reload]': {
                 click: me.reloadQuery
             },
@@ -170,6 +173,8 @@ Ext.define('Lada.controller.Query', {
                     sort: item.get('sort'),
                     sortIndex: item.get('sortIndex'),
                     filterActive: item.get('filterActive'),
+                    filterNegate: item.get('filterNegate'),
+                    filterRegex: item.get('filterRegex'),
                     filterValue: item.get('filterValue'),
                     width: item.get('width')
                 });
@@ -367,29 +372,25 @@ Ext.define('Lada.controller.Query', {
         }
         var rowtarget = this.setrowtarget(qp);
         for (var i=0; i < csdata.length; i++ ) {
+            var columnObj = {
+                gridColumnId: csdata[i].get('gridColumnId'),
+                filterActive: csdata[i].get('filterActive'),
+                filterValue: csdata[i].get('filterValue') || '',
+                filterRegex: csdata[i].get('filterRegex') || false,
+                filterNegate: csdata[i].get('filterNegate') || false,
+                filterIsNull: csdata[i].get('filterIsNull') || false,
+                visible: csdata[i].get('visible'),
+                columnIndex: csdata[i].get('columnIndex'),
+                sortIndex: csdata[i].get('sortIndex'),
+                sort: csdata[i].get('sort')
+            };
             if (csdata[i].get('dataIndex') === rowtarget.dataIndex) {
-                jsonData.columns.push({
-                    gridColumnId: csdata[i].get('gridColumnId'),
-                    filterActive: csdata[i].get('filterActive'),
-                    filterValue: csdata[i].get('filterValue') || '',
-                    visible: csdata[i].get('visible'),
-                    columnIndex: csdata[i].get('columnIndex'),
-                    sortIndex: csdata[i].get('sortIndex'),
-                    sort: csdata[i].get('sort')
-                });
+                jsonData.columns.push(columnObj);
                 continue;
             }
             if (csdata[i].get('visible') === true ||
                 csdata[i].get('filterActive') === true ) {
-                jsonData.columns.push({
-                    gridColumnId: csdata[i].get('gridColumnId'),
-                    filterActive: csdata[i].get('filterActive'),
-                    filterValue: csdata[i].get('filterValue') || '',
-                    visible: csdata[i].get('visible'),
-                    columnIndex: csdata[i].get('columnIndex'),
-                    sortIndex: csdata[i].get('sortIndex'),
-                    sort: csdata[i].get('sort')
-                });
+                jsonData.columns.push(columnObj);
             }
         }
         if (!jsonData.columns.length) {
@@ -496,11 +497,16 @@ Ext.define('Lada.controller.Query', {
             if (fixcolumn) {
                 var dt = fixcolumn.get('dataType');
                 var field = null;
+                var negateCheckbox = false;
+                var regexCheckbox = false;
                 var options = {
                     name: fixcolumn.get('dataIndex'),
                     columnIndex: recs[i].get('columnIndex'),
                     labelWidth: 125,
                     fieldLabel: fixcolumn.get('name'),
+                    negateValue: recs[i].get('filterNegate'),
+                    regexValue: recs[i].get('filterRegex'),
+                    isNullValue: recs[i].get('filterIsNull'),
                     width: '100%',
                     editable: true,
                     border: false,
@@ -528,6 +534,8 @@ Ext.define('Lada.controller.Query', {
                         };
                         options.value = recs[i].get('filterValue') || null;
                         field = Ext.create('Ext.form.field.Text', options);
+                        negateCheckbox = true;
+                        regexCheckbox = true;
                         break;
                     case 'date':
                         options.triggers = {
@@ -540,6 +548,7 @@ Ext.define('Lada.controller.Query', {
                         };
                         field = Ext.create('Lada.view.widget.base.DateTimeRange',
                             options);
+                        negateCheckbox = true;
                         field.setValue(recs[i].get('filterValue'));
                         break;
                     case 'number':
@@ -552,6 +561,7 @@ Ext.define('Lada.controller.Query', {
                         options.value = recs[i].get('filterValue') || null;
                         field = Ext.create('Lada.view.widget.base.NumberRange',
                             options);
+                        negateCheckbox = true;
                         field.setValue(recs[i].get('filterValue'));
                         break;
                     case 'land': // TODO: Wird nicht benötigt, könnte gelöscht werden
@@ -562,7 +572,7 @@ Ext.define('Lada.controller.Query', {
                             'messprogrammkategorie');
                         field = Ext.create('Lada.view.widget.MessprogrammLand',
                             options);
-
+                        negateCheckbox = true;
                         break;
                     case 'messstelle':
                         options.multiSelect = true;
@@ -570,6 +580,7 @@ Ext.define('Lada.controller.Query', {
                         options.value = this.getFilterValueMulti(recs[i]);
                         options.store = Ext.data.StoreManager.get('messstellen');
                         field = Ext.create('Lada.view.widget.Messstelle', options);
+                        negateCheckbox = true;
                         break;
                     case 'boolean':
                         options.multiSelect = false;
@@ -581,6 +592,7 @@ Ext.define('Lada.controller.Query', {
                         options.store = Ext.data.StoreManager.get('umwelt');
                         options.value = recs[i].get('filterValue');
                         field = Ext.create('Lada.view.widget.Umwelt' , options);
+                        negateCheckbox = true;
                         break;
                     case 'statuswert':
                         options.multiSelect = true;
@@ -588,6 +600,7 @@ Ext.define('Lada.controller.Query', {
                         options.value = this.getFilterValueMulti(recs[i]);
                         options.store = Ext.data.StoreManager.get('statuswerte');
                         field = Ext.create('Lada.view.widget.Status', options);
+                        negateCheckbox = true;
                         break;
                     case 'geom':// TODO: how/if to implement
                         break;
@@ -597,12 +610,14 @@ Ext.define('Lada.controller.Query', {
                         options.value = this.getFilterValueMulti(recs[i]);
                         field = Ext.create('Lada.view.widget.Verwaltungseinheit',
                             options);
+                        negateCheckbox = true;
                         break;
                     case 'datenbasis':
                         options.multiSelect = true;
                         options.editable = true;
                         options.value = this.getFilterValueMulti(recs[i]);
                         field = Ext.create('Lada.view.widget.Datenbasis', options);
+                        negateCheckbox = true;
                         break;
                     case 'netzbetr':
                         options.multiSelect = true;
@@ -610,18 +625,21 @@ Ext.define('Lada.controller.Query', {
                         options.value = this.getFilterValueMulti(recs[i]);
                         field = Ext.create('Lada.view.widget.Netzbetreiber',
                             options);
+                        negateCheckbox = true;
                         break;
                     case 'probenart':
                         options.multiSelect = true;
                         options.editable = true;
                         options.value = this.getFilterValueMulti(recs[i]);
                         field = Ext.create('Lada.view.widget.Probenart', options);
+                        negateCheckbox = true;
                         break;
                     case 'staat':
                         options.multiSelect = true;
                         options.editable = true;
                         options.value = this.getFilterValueMulti(recs[i]);
                         field = Ext.create('Lada.view.widget.Staat', options);
+                        negateCheckbox = true;
                         break;
                     case 'messRegime':
                         options.multiSelect = true;
@@ -629,6 +647,7 @@ Ext.define('Lada.controller.Query', {
                         options.value = this.getFilterValueMulti(recs[i]);
                         field = Ext.create('Lada.view.widget.Betriebsart',
                             options);
+                            negateCheckbox = true;negateCheckbox = true;
                         break;
                     case 'statusstufe':
                         options.multiSelect = true;
@@ -636,6 +655,7 @@ Ext.define('Lada.controller.Query', {
                         options.value = this.getFilterValueMulti(recs[i]);
                         options.store = Ext.data.StoreManager.get('statusstufe');
                         field = Ext.create('Lada.view.widget.StatusStufe', options);
+                        negateCheckbox = true;
                         break;
                     case 'statuskombi':
                         options.multiSelect = true;
@@ -645,6 +665,7 @@ Ext.define('Lada.controller.Query', {
                         field = Ext.create('Lada.view.widget.StatuskombiSelect',
                             options);
                         field.store.load();
+                        negateCheckbox = true;
                         break;
                     case 'anlage':
                         options.multiSelect = true;
@@ -652,6 +673,7 @@ Ext.define('Lada.controller.Query', {
                         options.value = recs[i].get('filterValue');
                         field = Ext.create('Lada.view.widget.KtaGruppe',
                             options);
+                        negateCheckbox = true;
                         break;
                     case 'reiproggrp':
                         options.multiSelect = true;
@@ -659,6 +681,7 @@ Ext.define('Lada.controller.Query', {
                         options.value = recs[i].get('filterValue');
                         field = Ext.create('Lada.view.widget.ReiProgpunktGruppe',
                             options);
+                        negateCheckbox = true;
                         break;
                     case 'mpl':
                         options.multiSelect = true;
@@ -666,6 +689,7 @@ Ext.define('Lada.controller.Query', {
                         options.value = recs[i].get('filterValue');
                         field = Ext.create('Lada.view.widget.MessprogrammLand',
                             options);
+                        negateCheckbox = true;
                         break;
                     case 'prnId':
                         options.multiSelect = true;
@@ -673,6 +697,7 @@ Ext.define('Lada.controller.Query', {
                         options.value = recs[i].get('filterValue');
                         field = Ext.create('Lada.view.widget.Probenehmer',
                             options);
+                        negateCheckbox = true;
                         break;
                     case 'mmtId':
                         options.multiSelect = true;
@@ -680,6 +705,7 @@ Ext.define('Lada.controller.Query', {
                         options.value = recs[i].get('filterValue');
                         field = Ext.create('Lada.view.widget.Messmethode',
                             options);
+                        negateCheckbox = true;
                         break;
                     case 'messgroesse':
                         options.multiSelect = true;
@@ -687,6 +713,7 @@ Ext.define('Lada.controller.Query', {
                         options.value = recs[i].get('filterValue');
                         field = Ext.create('Lada.view.widget.Messgroesse',
                             options);
+                        negateCheckbox = true;
                         break;
                     case 'bundesland':
                         options.multiSelect = true;
@@ -694,6 +721,7 @@ Ext.define('Lada.controller.Query', {
                         options.value = this.getFilterValueMulti(recs[i]);
                         field = Ext.create('Lada.view.widget.Bundesland',
                             options);
+                        negateCheckbox = true;
                         break;
                     case 'landkreis':
                         options.multiSelect = true;
@@ -701,6 +729,7 @@ Ext.define('Lada.controller.Query', {
                         options.value = this.getFilterValueMulti(recs[i]);
                         field = Ext.create('Lada.view.widget.Landkreis',
                             options);
+                        negateCheckbox = true;
                         break;
                     case 'regbezirk':
                         options.multiSelect = true;
@@ -708,15 +737,19 @@ Ext.define('Lada.controller.Query', {
                         options.value = this.getFilterValueMulti(recs[i]);
                         field = Ext.create('Lada.view.widget.Regierungsbezirk',
                             options);
+                        negateCheckbox = true;
                         break;
                     default:
                         options.value = recs[i].get('filterValue');
                         field = Ext.create('Lada.view.widget.base.TextField',
                             options);
+                        negateCheckbox = true;
+                        regexCheckbox = true;
                         break;
                 }
                 if (field) {
-                    filters.push(field);
+                    filters.push(this.createFieldSet(field, options,
+                        negateCheckbox, regexCheckbox));
                 }
             }
         }
@@ -808,6 +841,33 @@ Ext.define('Lada.controller.Query', {
         rec.set('filterValue', widget.getValue());
         this.dataChanged();
 
+    },
+
+    /**
+     * Fired by query filter checkboxes that modify the information of a filter
+     * (currently:
+     * - filterNegate: reverse the filter
+     * - isNull: filter value is explicitly set to 'empty'
+     * - filterRegex: ask the server to treat the filter string as regular expression
+     */
+    checkboxChanged: function(checkbox) {
+        var store = checkbox.up('querypanel').gridColumnValueStore;
+        var dataIndex = checkbox.name.slice(0, checkbox.name.lastIndexOf('_'));
+        var model = checkbox.name.slice(checkbox.name.lastIndexOf('_') + 1 );
+        if (['filterNegate', 'filterRegex', 'filterIsNull'].indexOf(model) >= 0) {
+            if (model === 'filterIsNull' && checkbox.getValue() === true) {
+                var field = checkbox.up('querypanel').down('[name=' + dataIndex + ']');
+                if (field.clearValue) {
+                    field.clearValue();
+                } else {
+                    field.setValue(null);
+                }
+            }
+            var rec = store.findRecord('dataIndex', dataIndex, false, false,
+                false, true);
+            rec.set(model, checkbox.getValue());
+            this.dataChanged();
+        }
     },
 
 
@@ -954,6 +1014,58 @@ Ext.define('Lada.controller.Query', {
                 });
             }
         }
+    },
+
+
+    /**
+     * Creates a filedset for a filter field, adding the additional options
+     * @param {*} field the original Ext.form.Field
+     * @param {*} options the option containing the field creation parameter
+     *  (name, defaults...)
+     * @param {*} negateBox set to true if a "negate Filter"option is desired
+     * @param {*} regexBox set to true if a "regex" option is desired
+     */
+    createFieldSet: function (field, options, negateBox, regexBox) {
+        var i18n = Lada.getApplication().bundle;
+        var checkboxRow = Ext.create('Ext.container.Container',{
+            layout: {
+                type: 'hbox',
+                align: 'right'
+            },
+            defaults: {
+                flex: 1
+            }
+        });
+
+        if (negateBox) {
+            checkboxRow.add(
+                Ext.create('Ext.form.field.Checkbox', {
+
+                    name: options.name + '_filterNegate',
+                    boxLabel: i18n.getMsg('query.negate'),
+                    value: options.negateValue
+                })
+            );
+        }
+        if (regexBox) {
+            checkboxRow.add(
+                Ext.create('Ext.form.field.Checkbox', {
+                    name: options.name + '_filterRegex',
+                    boxLabel: i18n.getMsg('query.regex'),
+                    value: options.regexValue
+                })
+            );
+        }
+        checkboxRow.add(
+            Ext.create('Ext.form.field.Checkbox', {
+                name: options.name + '_filterIsNull',
+                boxLabel: i18n.getMsg('query.isNull'),
+                value: options.isNullValue
+            })
+        );
+        return Ext.create('Ext.form.FieldSet', {
+            width: '100%',
+            items: [field, checkboxRow]
+        });
     }
 });
-
