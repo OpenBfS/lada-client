@@ -141,3 +141,8 @@ span.x-grid-checkcolumn {
 .x-tab-bar-default {
     background-color: #cfe0ec;
 }
+
+.text-wrapper .x-form-display-field {
+    word-break: break-word;
+    word-wrap: break-word;
+}
