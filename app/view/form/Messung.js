@@ -224,7 +224,18 @@ Ext.define('Lada.view.form.Messung', {
             scope: this,
             success: function() {
                 this.setRecord(this.record);
-                this.up('messungedit').down('messwertgrid').setReadOnly(this.record.get('readonly'));
+                var parentWin = this.up('window').parentWindow;
+                if (parentWin) {
+                    parentWin.initData();
+                    var messunggrid = parentWin.down('messunggrid');
+                    if (messunggrid) {
+                        messunggrid.getStore().reload();
+                    }
+                    var ortszuordnunggrid = parentWin.down('ortszuordnunggrid');
+                    if (ortszuordnunggrid) {
+                        ortszuordnunggrid.getStore().reload();
+                    }
+                }
             }
         });
     },
