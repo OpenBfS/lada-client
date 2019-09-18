@@ -257,7 +257,7 @@ Ext.define('Lada.controller.Print', {
                     } else {
                         resultData[attributes[i].name] = [];
                         for (var sel = 0; sel < selection.length; sel++ ) {
-                            resultData.push(this.fillTemplateItem(
+                            resultData[attributes[i].name].push(this.fillTemplateItem(
                                 attributes[i].clientParams.attributes,
                                 selection[sel],
                                 window)
@@ -384,12 +384,21 @@ Ext.define('Lada.controller.Print', {
             window.down('label[name=results]').setHidden(false);
             button.setDisabled(false);
         };
+        //Check if layout attributes are proben and messungen
+        var attributes = capabilities.layouts[layout].attributes;
+        var probenAttribute = null;
+        for (var i = 0; i < attributes.length; i++) {
+            var attribute = attributes[i];
+            if (attribute.name === 'proben') {
+                probenAttribute = attribute;
+            }
+        }
         if (
-            capabilities.layouts[layout].attributes.proben
-            && capabilities.layouts[layout].attributes.proben.clientParams.attributes.some(
+            probenAttribute
+            && probenAttribute.clientParams.attributes.some(
                 function(p) {
                     return p.name === 'messungen';
-                })
+            })
         ) {
             // see printSelection, prepareData, createSheetData (moved without major adaption)
             this.printSelection(grid, filename, format, callbackFn);
