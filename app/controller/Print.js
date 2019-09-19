@@ -112,6 +112,7 @@ Ext.define('Lada.controller.Print', {
         if (!capabilitiesForLayout) {
             return;
         }
+        //Check for template fields not represented in the result grid
         var recursiveFields = function(attributes) {
             var listOfItems = [];
             for (var i = 0; i < attributes.length; i++) {
@@ -129,7 +130,7 @@ Ext.define('Lada.controller.Print', {
                         break;
                     case 'String':
                         var matchingColumn = availableColumns.some( function(el) {
-                            el.dataIndex === attributes[i].name
+                            return el.dataIndex === attributes[i].name
                         });
                         if (!matchingColumn) {
 
@@ -137,8 +138,8 @@ Ext.define('Lada.controller.Print', {
                             automatic displayName presets for lada_print*/
                             var value = attributes[i].default;
                             if (win.currentCapabilities.app === 'lada_print'
-                            && attributes[i].name === 'displayName'
-                            && win.parentGrid.rowtarget) {
+                                    && attributes[i].name === 'displayName'
+                                    && win.parentGrid.rowtarget) {
                                 value = Lada.getApplication().bundle.getMsg(
                                     'rowtarget.title.'
                                     + win.parentGrid.rowtarget.dataType);
@@ -147,6 +148,7 @@ Ext.define('Lada.controller.Print', {
                             listOfItems.push({
                                 xtype: 'textfield',
                                 fieldLabel: attributes[i].name,
+                                name: attributes[i].name,
                                 width: '100%',
                                 labelWidth: 125,
                                 margin: '5, 5 ,5 ,5',
@@ -386,6 +388,7 @@ Ext.define('Lada.controller.Print', {
         };
         //Check if layout attributes are proben and messungen
         var attributes = capabilities.layouts[layout].attributes;
+        var layoutName = capabilities.layouts[layout].name;
         var probenAttribute = null;
         for (var i = 0; i < attributes.length; i++) {
             var attribute = attributes[i];
@@ -393,15 +396,14 @@ Ext.define('Lada.controller.Print', {
                 probenAttribute = attribute;
             }
         }
-        if (
-            probenAttribute
+        if (probenAttribute
             && probenAttribute.clientParams.attributes.some(
                 function(p) {
                     return p.name === 'messungen';
             })
         ) {
             // see printSelection, prepareData, createSheetData (moved without major adaption)
-            this.printSelection(grid, filename, format, callbackFn);
+            this.printSelection(grid, filename, format, template, layoutName, callbackFn);
         } else {
             var selection = grid.getView().getSelectionModel().getSelection();
             var data = this.fillTemplate(
@@ -453,19 +455,19 @@ Ext.define('Lada.controller.Print', {
     /**
      * Send the selection to a Printservice
      */
-    printSelection: function(grid, filename, format, callbackFn) {
+    printSelection: function(grid, filename, format, template, layout, callbackFn) {
         // The Data is loaded from the server again, so we need
         // to be a little bit asynchronous here...
         var callback = function(response) {
             var data = response.responseText;
             data = this.prepareData(data); // Wraps all messstellen and deskriptoren objects into an array
             var printData = {
-                layout: 'A4 portrait',
+                layout: layout,
                 outputFormat: format,
                 attributes: { proben: data }};
             this.sendRequest(
                 JSON.stringify(printData),
-                'lada_erfassungsbogen',
+                template,
                 filename,
                 callbackFn);
         };
