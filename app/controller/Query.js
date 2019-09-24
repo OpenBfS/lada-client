@@ -503,6 +503,7 @@ Ext.define('Lada.controller.Query', {
                     name: fixcolumn.get('dataIndex'),
                     columnIndex: recs[i].get('columnIndex'),
                     labelWidth: 125,
+                    margin: '10,0,0,0',
                     fieldLabel: fixcolumn.get('name'),
                     negateValue: recs[i].get('filterNegate'),
                     regexValue: recs[i].get('filterRegex'),
@@ -831,6 +832,10 @@ Ext.define('Lada.controller.Query', {
             }
             rec.set('filterValue', newvalue);
         }
+        var noCheck = box.up('fieldset').down('checkbox[name=' + box.name + '_filterIsNull]');
+        if (noCheck) {
+            noCheck.setValue(false);
+        }
         this.dataChanged();
     },
 
@@ -839,8 +844,6 @@ Ext.define('Lada.controller.Query', {
         var rec = store.findRecord('dataIndex', widget.name, false, false,
             false, true);
         rec.set('filterValue', widget.getValue());
-        this.dataChanged();
-
     },
 
     /**
