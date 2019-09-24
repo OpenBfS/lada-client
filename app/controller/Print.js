@@ -67,6 +67,8 @@ Ext.define('Lada.controller.Print', {
                 }
             }
         });
+        win.addIrixCheckbox();
+        win.addIrixFieldset(); // TODO appCombo.on('select', me.addIrixFieldset, me);
         this.getAvailableTemplates(win);
         win.show();
     },
@@ -653,5 +655,117 @@ Ext.define('Lada.controller.Print', {
                 return name + '.' + format;
             }
         }
+    },
+
+    // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
+    //TODO not yet integrated
+    setUpIrixJson: function(mapfishPrint) {
+        var me = this;
+        var irixJson = {};
+        irixJson.irix = me.formItemToJson(me.down('k-form-irixfieldset'));
+        // the generic serialisation needs a little bit shuffeling
+        irixJson = me.adjustIrixSerialisation(irixJson);
+        // always add the printapp to the top-lvel for irix:
+        irixJson.printapp = me.down('[name="appCombo"]').getValue();
+        if (!this.config.chartPrint) {
+            irixJson['mapfish-print'] = mapfishPrint;
+        }
+        return irixJson;
+    },
+
+    // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
+    /**
+     * Certain fields must live inside the irix fieldset, as they only make
+     * sense for this type of "print"; yet their serialisation cannot live in
+     * dedicted irix-object, as it is e.g. expected on the top-level. Thus
+     * the "irixContext.json" represents the allocation how it shall look like inside
+     * the print window. This method will adjust a JSON (e.g. from formItemToJson),
+     * and shuffle certain key / value pairs around: currently only 'request-type'.
+     *
+     * @param {object} irixJson The JSON for the IRIX service, a representation
+     *     of the form.
+     * @return {object} The adjusted serialisation.
+     */
+    adjustIrixSerialisation: function(irixJson) {
+        var irix = irixJson.irix;
+        // move requestType or request-type out of irix object to top-level
+        var correctRequestTypeKey = 'request-type';
+        // For backwards compatibility, we iterate over two variants
+        var keysReqestType = ['requestType', correctRequestTypeKey];
+        if (irix) {
+            var reqType;
+            Ext.each(keysReqestType, function(keyRequestType) {
+                if (keyRequestType in irix) {
+                    // if both were present, the dashed version will win.
+                    reqType = irix[keyRequestType];
+                    // delete the one under key 'irix'
+                    delete irixJson.irix[keyRequestType];
+                    // set on top-level.
+                    irixJson[correctRequestTypeKey] = reqType;
+                }
+            });
+
+            //move "DokpoolContentType", "IsElan", "IsDoksys", "IsRodos", "IsRei"
+            //back to  "DokpoolMeta"
+            //and "ReportContext", "Confidentiality"
+            //back to "Identification"
+            //and "ElanScenarios"
+            //back to "DokpoolMeta"
+            irixJson.irix.Identification.ReportContext = irixJson.irix.ReportContext;
+            delete irixJson.irix.ReportContext;
+
+            irixJson.irix.Identification.Confidentiality = irixJson.irix.Confidentiality;
+            delete irixJson.irix.Confidentiality;
+
+            irixJson.irix.DokpoolMeta.DokpoolContentType = irixJson.irix.DokpoolContentType;
+            delete irixJson.irix.DokpoolContentType;
+
+            irixJson.irix.DokpoolMeta.IsElan = irixJson.irix.DokpoolBehaviour.IsElan;
+            irixJson.irix.DokpoolMeta.IsDoksys = irixJson.irix.DokpoolBehaviour.IsDoksys;
+            irixJson.irix.DokpoolMeta.IsRodos = irixJson.irix.DokpoolBehaviour.IsRodos;
+            irixJson.irix.DokpoolMeta.IsRei = irixJson.irix.DokpoolBehaviour.IsRei;
+            delete irixJson.irix.DokpoolBehaviour;
+
+            irixJson.irix.DokpoolMeta.Elan = {};
+            irixJson.irix.DokpoolMeta.Elan.Scenarios = irixJson.irix.Scenarios;
+            delete irixJson.irix.Scenarios;
+        }
+        if (this.config.chartPrint) {
+            irixJson['mapfish-print'] = undefined;
+            delete irixJson['mapfish-print'];
+            irixJson['img-print'] = [{
+                mimetype: 'image/png',
+                inputFormat: 'png',
+                metadata: [],
+                outputFormat: 'png',
+                value: this.config.chart
+            }];
+        }
+        return irixJson;
+    },
+
+    formItemToJson: function(formItem) {
+        var me = this;
+        var children = formItem.items.items;
+        var json = {};
+
+        Ext.each(children, function(child) {
+            if (child instanceof Ext.form.FieldSet ||
+                child instanceof Ext.form.FieldContainer) {
+
+                if (child.valueField && child.valueField.getValue()) {
+                    json[child.name] = child.valueField.getValue();
+                } else {
+                    json[child.name] = me.formItemToJson(child);
+                }
+
+            } else if (child instanceof Ext.Container) {
+                json[child.name] = child.down('textfield').getValue();
+            } else {
+                json[child.name] = child.getValue();
+            }
+        });
+
+        return json;
     }
 });
