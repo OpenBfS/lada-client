@@ -534,7 +534,7 @@ Ext.define('Lada.controller.Query', {
                             }
                         };
                         options.value = recs[i].get('filterValue') || null;
-                        field = Ext.create('Ext.form.field.Text', options);
+                        field = Ext.create('Lada.view.widget.base.TextField', options);
                         negateCheckbox = true;
                         regexCheckbox = true;
                         break;
