@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@openbfs/lada",
-  "version": "3.1.0-SNAPSHOT",
+  "version": "3.3.13",
   "description": "IMIS3 LADA",
   "scripts": {
     "pretest": "npm run lint",
