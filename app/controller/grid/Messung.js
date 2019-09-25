@@ -39,20 +39,22 @@ Ext.define('Lada.controller.grid.Messung', {
      * Window.
      */
     editItem: function(grid, record) {
-        grid.getEl().swallowEvent(['click', 'dblclick'], true);
-        grid.suspendEvents();
-        setTimeout(function() {
-            grid.resumeEvents();
-        }, 500);
+        if (grid.ignoreNextDblClick == true) {
+            grid.ignoreNextDblClick = false;
+            return;
+        }
         var probeLoadCallBack = function(probeWindow, probeRecord, messungRecord) {
             var win = Ext.create('Lada.view.window.MessungEdit', {
                 parentWindow: probeWindow,
                 probe: probeRecord,
                 record: messungRecord
             });
-            win.show();
-            win.setPosition(window.innerWidth - 30 -win.width);
             win.initData();
+            win.show();
+            if (win.isVisible()) {
+                win.setPosition(window.innerWidth - 30 -win.width);
+            }
+
             return;
         };
         if (grid.up('probenedit')) {
@@ -64,9 +66,9 @@ Ext.define('Lada.controller.grid.Messung', {
                         record: precord,
                         style: 'z-index: -1;'
                     });
-                    probeWin.setPosition(30);
-                    probeWin.show();
                     probeWin.initData();
+                    probeWin.show();
+                    probeWin.setPosition(30);
                     probeLoadCallBack(probeWin, precord, record);
                 }
             });
@@ -83,9 +85,9 @@ Ext.define('Lada.controller.grid.Messung', {
             grid: button.up('messunggrid'),
             parentWindow: button.up('window')
         });
+        win.initData();
         win.show();
         win.setPosition(window.innerWidth - 30 -win.width);
-        win.initData();
     },
 
     /**

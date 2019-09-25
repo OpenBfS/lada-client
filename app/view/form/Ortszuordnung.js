@@ -91,7 +91,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                             margin: '0, 20, 0, 0',
                             items: [{
                                 xtype: 'ortszuordnungtyp',
-                                labelWidth: 125,
+                                labelWidth: 120,
                                 allowBlank: false,
                                 editable: true,
                                 name: 'ortszuordnungTyp',
@@ -236,6 +236,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
     clearMessages: function() {
         this.down('tarea[name=ortszusatztext]').clearWarningOrError();
+        this.down('ortszuordnungtyp[name=ortszuordnungTyp]').clearWarningOrError();
     },
 
     setReadOnly: function(value) {

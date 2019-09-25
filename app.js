@@ -88,11 +88,15 @@ Ext.application({
         'Lada.model.Query',
         'Lada.store.GridColumn',
         'Lada.store.Query',
-        'Lada.view.widget.base.SelectableDisplayField'
+        'Lada.view.widget.base.SelectableDisplayField',
+        'Lada.view.window.TrackedWindow',
+        'Lada.util.FunctionScheduler',
+        'Lada.util.WindowTracker'
     ],
     statics: {
         applicationUpdateTitle: 'Anwendungsupdate',
-        applicationUpdateText: 'Für diese Anwendung steht ein Update zur Verfügung. Jetzt neu laden?'
+        applicationUpdateText: 'Für diese Anwendung steht ein Update zur Verfügung. Jetzt neu laden?',
+        dblClickTimeout: 500
     },        
     bundle: {
         bundle: 'Lada',
@@ -148,7 +152,7 @@ Ext.application({
         Lada.logintime = '';
         Lada.mst = [];
         Lada.netzbetreiber = [];
-        Lada.clientVersion = '3.3.11';
+        Lada.clientVersion = '3.3.13';
         Lada.serverVersion = '';
         // paging sizes available for the client
         Lada.availablePagingSizes = [

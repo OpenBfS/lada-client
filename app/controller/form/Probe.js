@@ -74,9 +74,9 @@ Ext.define('Lada.controller.form.Probe', {
                     record: probe,
                     style: 'z-index: -1;'
                 });
-            probeWin.setPosition(pos);
+            probeWin.initData(probe);
             probeWin.show();
-            probeWin.initData();
+            probeWin.setPosition(pos);
             var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
             if (parentGrid.length === 1) {
                 parentGrid[0].reload();
@@ -335,7 +335,20 @@ Ext.define('Lada.controller.form.Probe', {
                                     if (numMesswert.length == messungenFinished && finishedCallback) {
                                         finishedCallback(probeCopy);
                                     }
-                                }
+                                } else{
+                                   //TODO Messwerte liefern immer einen Fehler durch die Konsistenzprüfung
+                                    var currentMessungsIDNew = rec.get('messungsId');
+                                    var currentFinishedMesswerte = messwertFinished.get(currentMessungsIDNew);
+                                    var currentNumMesswerte = numMesswert.get(currentMessungsIDNew);
+                                    currentFinishedMesswerte++;
+                                    messwertFinished.add(currentMessungsIDNew, currentFinishedMesswerte);
+                                    if(currentFinishedMesswerte == currentNumMesswerte) {
+                                        messungenFinished++;
+                                    }
+                                    if (numMesswert.length == messungenFinished && finishedCallback) {
+                                        finishedCallback(probeCopy);
+                                    }
+                               }
                             }
                         });
                     }
@@ -552,9 +565,9 @@ Ext.define('Lada.controller.form.Probe', {
                         var win = Ext.create('Lada.view.window.ProbeEdit', {
                             record: record
                         });
-                        win.setPosition(30);
-                        win.show();
                         win.initData();
+                        win.show();
+                        win.setPosition(30);
                     }
                 }
             },

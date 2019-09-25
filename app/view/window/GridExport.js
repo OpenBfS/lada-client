@@ -423,7 +423,7 @@ Ext.define('Lada.view.window.GridExport', {
                     if (c && data[i].get(c.dataIndex) !== undefined ) {
                         var value = this.formatValue(
                             data[i].get(c.dataIndex), c, true);
-                        iresult[c.dataIndex] = value;
+                        iresult[c.text] = value;
                     }
                 }
                 var entryId = data[i].get(this.grid.rowtarget.dataIndex);
@@ -477,7 +477,7 @@ Ext.define('Lada.view.window.GridExport', {
                             var value = this.formatValue(
                                 data[i].get(c.dataIndex), c, true);
                             if (value !== undefined) {
-                                iresult.properties[c.dataIndex] = value;
+                                iresult.properties[c.text] = value;
                             }
                         }
                     }
@@ -815,7 +815,7 @@ Ext.define('Lada.view.window.GridExport', {
                 if (!value && value !== 0) {
                     return null;
                 }
-                return Number.parseFloat(value);
+                return parseFloat(value);
             case 'date':
                 if (column.dataType.format && !json) {
                     return Ext.Date.format(new Date(value),
@@ -1035,7 +1035,7 @@ Ext.define('Lada.view.window.GridExport', {
                 case 'number':
                     value = value.toString();
                     if (this.csv.decsep === ',' && value.indexOf('.') > -1) {
-                        value.replace(/'.'/g, ',');
+                        value = value.replace(/\./g, ',');
                     }
                     line += value;
                     break;

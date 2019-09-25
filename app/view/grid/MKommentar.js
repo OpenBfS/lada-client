@@ -14,7 +14,7 @@ Ext.define('Lada.view.grid.MKommentar', {
     alias: 'widget.mkommentargrid',
 
     maxHeight: 350,
-    minHeight: 125,
+    minHeight: 130,
     viewConfig: {
         deferEmptyText: false
     },

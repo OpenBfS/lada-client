@@ -21,7 +21,15 @@ Ext.define('Lada.controller.form.Probenehmer', {
                 click: this.discard
             },
             'probenehmerform': {
-                dirtychange: this.checkCommitEnabled
+                dirtychange: this.handleDirtyChange,
+                validitychange: this.checkCommitEnabled,
+                save: this.saveHeadless
+            },
+            'probenehmerform netzbetreiber combobox': {
+                change: this.checkCommitEnabled
+            },
+            'probenehmerform tfield [name=plz]': {
+                change: this.checkCommitEnabled
             }
         });
     },
@@ -97,21 +105,95 @@ Ext.define('Lada.controller.form.Probenehmer', {
         formPanel.down('button[action=save]').setDisabled(true);
     },
 
-    checkCommitEnabled: function(callingEl, dirty) {
-        var form = callingEl.owner;
-        var netzbetr = form.down('netzbetreiber').getValue();
-        if (Ext.Array.contains(Lada.funktionen, 4)
-        && form.getRecord().get('readonly') === false
-        && netzbetr && dirty) {
-            form.down('button[action=discard]').enable();
-            if (form.isValid() && netzbetr) {
-                form.down('button[action=save]').enable();
-            } else {
-                form.down('button[action=save]').setDisabled(true);
-            }
-        } else {
-            form.down('button[action=discard]').setDisabled(true);
-            form.down('button[action=save]').setDisabled(true);
+    saveHeadless: function(panel) {
+        var formPanel = panel;
+        var data = formPanel.getForm().getFieldValues(false);
+        var record = formPanel.getForm().getRecord();
+        for (var key in data) {
+            record.set(key, data[key]);
         }
+        if (!record.get('letzteAenderung')) {
+            record.set('letzteAenderung', new Date());
+        }
+        if (record.phantom) {
+            record.set('id',null);
+        }
+        record.save({
+            success: function(record, response) {
+                var json = Ext.decode(response.getResponse().responseText);
+                if (json) {
+                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                    if (parentGrid.length === 1) {
+                        parentGrid[0].reload();
+                    }
+                }
+            },
+            failure: function(record, response) {
+                var i18n = Lada.getApplication().bundle;
+                if (response.error) {
+                    //TODO: check content of error.status (html error code)
+                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                        i18n.getMsg('err.msg.generic.body'));
+                } else {
+                    var rec = formPanel.getForm().getRecord();
+                    rec.dirty = false;
+                    var json = Ext.decode(response.getResponse().responseText);
+                    if (json) {
+                        if (json.message) {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                                +' #'+json.message,
+                            i18n.getMsg(json.message));
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                i18n.getMsg('err.msg.generic.body'));
+                        }
+                    } else {
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.response.body'));
+                    }
+                }
+            }
+        });
+    },
+
+    checkCommitEnabled: function(callingEl) {
+        var form;
+        if (callingEl.up && callingEl.up('probenehmerform')) { //called by a field
+            form = callingEl.up('probenehmerform');
+        } else if (callingEl.owner) { //called by the form
+           form = callingEl.owner;
+        } else {
+            form = callingEl; //called by the formpanel itself
+        }
+        var savebutton = form.down('button[action=save]');
+        var revertbutton = form.down('button[action=discard]');
+        if (!form.getRecord().phantom && form.getRecord().get('readonly')) {
+            savebutton.setDisabled(true);
+            revertbutton.setDisabled(true);
+            return;
+        }
+        if ( form.isValid() && form.down('netzbetreiber[name=netzbetreiberId]').getValue().length !== 0 ) {
+            if (form.isDirty()) {
+                savebutton.enable();
+                revertbutton.enable();
+            } else {
+                savebutton.setDisabled(true);
+                revertbutton.setDisabled(true);
+            }
+        } else { //form invalid
+            if (form.isDirty()) {
+                savebutton.setDisabled(true);
+                revertbutton.enable();
+            } else {
+                savebutton.setDisabled(true);
+                revertbutton.setDisabled(true);
+            }
+        }
+    },
+
+    handleDirtyChange: function(callingEl) {
+        var form = callingEl.owner;
+        form.down('button[action=discard]').setDisabled(false);
+        this.checkCommitEnabled(callingEl, form.isValid());
     }
 });

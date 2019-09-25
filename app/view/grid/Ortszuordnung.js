@@ -31,6 +31,10 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     readOnly: true,
     allowDeselect: true,
 
+    ignoreNextDblClick: false,
+
+    lastClickTime: 0,
+
     initComponent: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
@@ -61,21 +65,41 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 }
                 return 'noedit';
             },
-            handler: function(grid, rowIndex, colIndex) {
+            handler: function(grid, rowIndex, colIndex, item, event) {
+                var eventInst = event.browserEvent;
                 var rec = grid.getStore().getAt(rowIndex);
-                grid.fireEvent('itemdblclick', grid, rec);
+                //Check if event is a pointer event
+                if (eventInst instanceof PointerEvent) {
+                    //We are using IE11
+                    var lastTimeStamp = me.lastClickTime;
+                    me.lastClickTime = eventInst.timeStamp;
+                    if (eventInst.timeStamp - lastTimeStamp > Lada.$application.dblClickTimeout) {
+                        grid.fireEvent('itemdblclick', grid, rec);
+                    } else {
+                        grid.ignoreNextDblClick = true;
+                    }
+                } else if (eventInst instanceof MouseEvent) {
+                    //We are in chrome/firefox etc.
+                    //Check if its not the second click of a doubleclick
+                    if (event.browserEvent.detail == 1) {
+                        grid.fireEvent('itemdblclick', grid, rec);
+                    } else if (event.browserEvent.detail) {
+                        //else tell the grid to ignore the next doubleclick as the edit window should already be open
+                        grid.ignoreNextDblClick = true;
+                    }
+                }
             }
         }, {
             header: i18n.getMsg('typ'),
             dataIndex: 'ortszuordnungTyp',
-            flex: 1,
+            width: 30,
             editor: {
                 allowBlank: false
             }
         }, {
             header: i18n.getMsg('orte.ortId'),
             dataIndex: 'ortId',
-            width: 120,
+            flex: 3,
             renderer: function(value, meta, zuordnung) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
@@ -99,7 +123,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('staat'),
             dataIndex: 'ortId',
-            flex: 1,
+            width: 40,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var staaten = Ext.data.StoreManager.get('staaten');
@@ -117,7 +141,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('orte.gemId'),
             dataIndex: 'ortId',
-            flex: 2,
+            flex: 3,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
@@ -148,7 +172,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('orte.ozId'),
             dataIndex: 'ortId',
-            flex: 3,
+            width: 80,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
@@ -164,7 +188,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('orte.anlageId'),
             dataIndex: 'ortId',
-            flex: 3,
+            width: 60,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
@@ -178,6 +202,23 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 var ktaGruppen = Ext.data.StoreManager.get('ktaGruppe');
                 var ktaGruppe = ktaGruppen.getById(record.get('ktaGruppeId'));
                 return ktaGruppe.get('ktaGruppe');
+            }
+        }, {
+            header: i18n.getMsg('orte.langtext'),
+            dataIndex: 'ortId',
+            flex: 4,
+            renderer: function(value) {
+                var store = Ext.data.StoreManager.get('orte');
+                var record = store.getById(value);
+                if (!record) {
+                    return '';
+                }
+                var langtext = record.get('langtext');
+                if (langtext === '' || langtext === undefined || langtext === null) {
+                    return '';
+                }
+                return '<div style="white-space: normal !important;">' +
+                                           langtext + '</div>';
             }
         }];
         this.listeners = {
@@ -220,19 +261,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 }
             });
         }
-        Ext.ClassManager.get(modelname).load(this.recordId, {
-            failure: function(record, action) {
-                // TODO
-            },
-            success: function(record, response) {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    this.warnings = json.warnings;
-                    this.errors = json.errors;
-                }
-            },
-            scope: this
-        });
     },
 
     /**

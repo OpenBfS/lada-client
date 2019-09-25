@@ -120,6 +120,11 @@ Ext.define('Lada.view.widget.base.DateTimeRange', {
         }
     },
 
+    clearValue: function() {
+        this.down('[name=' + this.name + 'From]').setValue(null);
+        this.down('[name=' + this.name + 'To]').setValue(null);
+    },
+
     clearWarningOrError: function() {
         // legacy - still called?
         this.down('datetimefield').clearInvalid();

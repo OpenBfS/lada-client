@@ -35,17 +35,14 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.messprogrammland');
+        this.store = Ext.create('Lada.store.MessprogrammKategorie');
+        this.store.clearFilter();
 
-        this.store = Ext.data.StoreManager.get('messprogrammkategorie');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.MessprogrammKategorie');
-        } else {
-            this.store.clearFilter();
-        }
         this.store.sort('bezeichnung', 'ASC');
         this.callParent(arguments);
         if (this.extraParams) {
             this.extraParams();
         }
+        this.store.load();
     }
 });

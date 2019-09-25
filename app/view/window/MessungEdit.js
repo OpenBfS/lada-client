@@ -10,7 +10,7 @@
  * Window to edit a Messung
  */
 Ext.define('Lada.view.window.MessungEdit', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.TrackedWindow',
     alias: 'widget.messungedit',
 
     requires: [
@@ -22,7 +22,7 @@ Ext.define('Lada.view.window.MessungEdit', {
 
     collapsible: true,
     maximizable: true,
-    autoshow: true,
+    autoShow: false,
     autoscroll: true,
     layout: 'fit',
     constrain: true,
@@ -30,8 +30,9 @@ Ext.define('Lada.view.window.MessungEdit', {
     probe: null,
     parentWindow: null,
     record: null,
+    recordType: 'messung',
     grid: null,
-    mStore: Ext.create('Lada.store.Messgroessen'),
+    mStore: null,
 
     /**
      * This function initialises the Window
@@ -48,6 +49,13 @@ Ext.define('Lada.view.window.MessungEdit', {
             this.callParent(arguments);
             return;
         }
+
+        //Clone proxy instance as it seems to be shared between store instances
+        var store = Ext.create('Lada.store.Messgroessen');
+        var proxy = Ext.clone(store.getProxy());
+        proxy.extraParams = {};
+        store.setProxy(proxy);
+        this.mStore = store;
 
         this.mStore.proxy.extraParams = {mmtId: this.record.get('mmtId')};
         this.mStore.load();
@@ -89,7 +97,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 margin: 5,
                 items: [{
                     xtype: 'messwertgrid',
-                    minHeight: '125',
+                    minHeight: 130,
                     recordId: this.record.get('id'),
                     umwId: this.probe.get('umwId'),
                     messgroesseStore: this.mStore
@@ -142,73 +150,78 @@ Ext.define('Lada.view.window.MessungEdit', {
 
     /**
      * Initialise the Data of this Window
+     * @param loadedRecord if given, it is assumed that this is a freshly
+     * loaded record, not requiring a reload from server
      */
-    initData: function() {
+    initData: function(loadedRecord) {
         this.clearMessages();
-        var that = this;
-        Ext.ClassManager.get('Lada.model.Messung').load(this.record.get('id'), {
-            failure: function(record, response) {
-                // TODO
-                console.log('An unhandled Failure occured. See following Response and Record');
-                console.log(response);
-                console.log(record);
-            },
-            success: function(record, response) {
-                var me = this;
-                this.mStore.proxy.extraParams = {mmtId: record.get('mmtId')};
-                this.mStore.load();
-                if (this.parentWindow && this.parentWindow.record.get('treeModified') < record.get('parentModified')) {
-                    var i18n = Lada.getApplication().bundle;
-                    Ext.Msg.show({
-                        title: i18n.getMsg('probe.outdated.title'),
-                        msg: i18n.getMsg('probe.outdated.msg'),
-                        buttons: Ext.Msg.OKCANCEL,
-                        icon: Ext.Msg.WARNING,
-                        closable: false,
-                        fn: function(button) {
-                            if (button === 'ok') {
-                                me.close();
-                                me.parentWindow.initData();
-                            } else {
-                                me.record.set('treeModified', me.probe.get('treeModified'));
-                                that.disableForm();
-                            }
+        var me = this;
+        var loadCallback = function(record, response) {
+            me.mStore.proxy.extraParams = {mmtId: record.get('mmtId')};
+            me.mStore.load();
+            if (me.parentWindow && me.parentWindow.record.get('treeModified') < record.get('parentModified')) {
+                var i18n = Lada.getApplication().bundle;
+                Ext.Msg.show({
+                    title: i18n.getMsg('probe.outdated.title'),
+                    msg: i18n.getMsg('probe.outdated.msg'),
+                    buttons: Ext.Msg.OKCANCEL,
+                    icon: Ext.Msg.WARNING,
+                    closable: false,
+                    fn: function(button) {
+                        if (button === 'ok') {
+                            me.close();
+                            me.parentWindow.initData();
+                        } else {
+                            me.record.set('treeModified', me.probe.get('treeModified'));
+                            that.disableForm();
                         }
-                    });
-                }
-                this.down('messwertgrid').messgroesseStore = this.mStore;
-                this.down('messungform').setRecord(record);
-                this.record = record;
-
-                var messstelle = Ext.data.StoreManager.get('messstellen')
-                    .getById(this.probe.get('mstId'));
-                this.setTitle('Messung: ' + this.record.get('nebenprobenNr')
-                              + '   zu Probe - Hauptprobennr.: ' + this.probe.get('hauptprobenNr')
-                              + ' Mst: ' + messstelle.get('messStelle')
-                              + ' editieren.');
-
-                var json = null;
-                try {
-                    json = Ext.decode(response.response.responseText);
-                } catch (e) {}
-                if (json) {
-                    this.setMessages(json.errors, json.warnings);
-                }
-                if (this.record.get('readonly') === true ||
-                    this.record.get('owner') === false) {
-                    this.disableForm();
-                } else {
-                    this.enableForm();
-                }
-                //Check if it is allowed to edit Status
-                if (this.record.get('statusEdit') === true) {
-                    this.enableStatusEdit();
-                } else {
-                    this.disableStatusEdit();
-                }
-            },
-            scope: this
-        });
+                    }
+                });
+            }
+            me.down('messwertgrid').messgroesseStore = me.mStore;
+            me.down('messungform').setRecord(record);
+            me.record = record;
+            var messstelle = Ext.data.StoreManager.get('messstellen')
+                .getById(me.probe.get('mstId'));
+            me.setTitle('Messung: ' + me.record.get('nebenprobenNr')
+                + '   zu Probe - Hauptprobennr.: ' + me.probe.get('hauptprobenNr')
+                + ' Mst: ' + messstelle.get('messStelle')
+                + ' editieren.');
+            var json = null;
+            try {
+                json = Ext.decode(response.response.responseText);
+            } catch (e) {}
+            if (json) {
+                me.setMessages(json.errors, json.warnings);
+            }
+            if (me.record.get('readonly') === true ||
+                me.record.get('owner') === false
+            ) {
+                me.disableForm();
+            } else {
+                me.enableForm();
+            }
+            //Check if it is allowed to edit Status
+            if (me.record.get('statusEdit') === true) {
+                me.enableStatusEdit();
+            } else {
+                me.disableStatusEdit();
+            }
+        };
+        if (!loadedRecord) {
+            Ext.ClassManager.get('Lada.model.Messung').load(this.record.get('id'), {
+                failure: function(record, response) {
+                    // TODO
+                    console.log('An unhandled Failure occured. See following Response and Record');
+                    console.log(response);
+                    console.log(record);
+                },
+                success: loadCallback,
+                scope: this
+            });
+        } else {
+            loadCallback(loadedRecord);
+        }
     },
 
     /**

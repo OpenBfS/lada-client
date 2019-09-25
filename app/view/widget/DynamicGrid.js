@@ -32,6 +32,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     /** toggle for the button and option "export data"*/
     exportable: true,
 
+    bufferedRenderer: false,
+
     /** additional non-generic buttons */
     toolbarbuttons: [],
     hidebuttons: [],
@@ -382,9 +384,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                     record: record,
                                     style: 'z-index: -1;'
                                 });
-                                win.setPosition(30);
-                                win.show();
                                 win.initData();
+                                win.show();
+                                win.setPosition(30);
                             }
                         }
                     });
@@ -427,8 +429,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                                 record: precord,
                                                 style: 'z-index: -1;'
                                             });
-                                        probeWin.setPosition(30);
                                         probeWin.show();
+                                        probeWin.setPosition(30);
                                         probeWin.initData();
 
                                         var win = Ext.create(
@@ -477,8 +479,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                             var win = Ext.create(
                                 'Lada.view.window.Messprogramm', {
                                     record: record});
-                            win.show();
                             win.initData();
+                            win.show();
                         }
                     });
                 },
@@ -793,9 +795,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 record: record,
                                 style: 'z-index: -1;'
                             });
-                            win.setPosition(30);
-                            win.show();
                             win.initData();
+                            win.show();
+                            win.setPosition(30);
                         }
                     }
                 });
@@ -813,9 +815,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 record: record,
                                 style: 'z-index: -1;'
                             });
-                            win.setPosition(30);
-                            win.show();
                             win.initData();
+                            win.show();
+                            win.setPosition(30);
                         }
                     }
                 });
@@ -833,9 +835,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 record: record,
                                 style: 'z-index: -1;'
                             });
-                            win.setPosition(30);
-                            win.show();
                             win.initData();
+                            win.show();
+                            win.setPosition(30);
                         }
                     }
                 });
@@ -1046,11 +1048,18 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 action: 'expand',
                 text: this.i18n.getMsg('grid.expandDetails'),
                 handler: function(button) {
-                    var newStatus = expander.toggleAllRows();
-                    if (!newStatus) {
-                        button.setText(me.i18n.getMsg('grid.expandDetails'));
+                    // for performance reasons, set a maximum for rowexpander instances
+                    // which to open simultaneously in one action
+                    var maxEntries = 100;
+                    if (me.store.data.length <= maxEntries) {
+                        var newStatus = expander.toggleAllRows();
+                        if (!newStatus) {
+                            button.setText(me.i18n.getMsg('grid.expandDetails'));
+                        } else {
+                            button.setText(me.i18n.getMsg('grid.unexpandDetails'));
+                        }
                     } else {
-                        button.setText(me.i18n.getMsg('grid.unexpandDetails'));
+                        Ext.Msg.alert(' ', me.i18n.getMsg('err.pagingsize', maxEntries));
                     }
                 }
             });

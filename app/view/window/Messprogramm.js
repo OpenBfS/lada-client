@@ -10,7 +10,7 @@
  * Window to edit a Messprogramm
  */
 Ext.define('Lada.view.window.Messprogramm', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.TrackedWindow',
     alias: 'widget.messprogramm',
 
     requires: [
@@ -20,7 +20,7 @@ Ext.define('Lada.view.window.Messprogramm', {
 
     collapsible: true,
     maximizable: true,
-    autoShow: true,
+    autoShow: false,
     autoScroll: true,
     layout: 'fit',
     constrain: true,
@@ -28,6 +28,7 @@ Ext.define('Lada.view.window.Messprogramm', {
     width: 750,
 
     record: null,
+    recordType: 'messprogramm',
 
     /**
      * This function initialises the Window
@@ -55,8 +56,8 @@ Ext.define('Lada.view.window.Messprogramm', {
                         ids: [this.record.get('id')],
                         parentWindow: this
                     });
-                    win.show();
                     win.initData();
+                    win.show();
                     this.probenWindow = win;
                 } else {
                     this.probenWindow.focus();
@@ -156,8 +157,11 @@ Ext.define('Lada.view.window.Messprogramm', {
      * it will load this record AND create a grid to
      * enable the editing of Messmethoden
      * which are associated to the Messprogramm
+     *
+     * @param loadedRecord if given, it is assumed that this is a freshly
+      * loaded record, not requiring a reload from server
      */
-    initData: function() {
+    initData: function(loadedRecord) {
         this.clearMessages();
         var me = this;
 
@@ -165,47 +169,56 @@ Ext.define('Lada.view.window.Messprogramm', {
         // create a Edit window
         if (this.record) {
             this.setLoading(true);
-            Ext.ClassManager.get('Lada.model.Messprogramm').load(this.record.get('id'), {
-                failure: function(record, action) {
-                    me.setLoading(false);
-                    // TODO
-                    console.log('An unhandled Failure occured. See following Response and Record');
-                    console.log(action);
-                    console.log(record);
-                },
-                success: function(record, response) {
-                    this.down('messprogrammform').setRecord(record);
-                    this.record = record;
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        this.setMessages(json.errors, json.warnings);
-                        if (!json.warnings.mediaDesk) {
-                            this.down('messprogrammform').setMediaDesk(record);
-                        }
+            var loadCallback = function(record, response) {
+                me.down('messprogrammform').setRecord(record);
+                me.record = record;
+                var json = response ? Ext.decode(response.getResponse().responseText) : null;
+                if (json) {
+                    this.setMessages(json.errors, json.warnings);
+                    /*
+                    if (!json.warnings.mediaDesk) {
                     }
-                    var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
-                    var recordIndex = mstLaborKombiStore.findExact('messStelle', record.get('mstId'));
-                    // If the Messprogramm is ReadOnly, disable Inputfields and grids
-                    if ( (this.record.get('readonly') === true) || (recordIndex === -1) ) {
-                        this.down('messprogrammform').setReadOnly(true);
-                        this.disableChildren();
-                    } else {
-                        this.down('messprogrammform').setReadOnly(false);
-                        this.enableChildren();
-                        if (record.get('probenintervall') === 'J') {
-                            this.down('messprogrammform').down('dayofyear[name=gueltigBis]').setReadOnly(true);
-                            this.down('messprogrammform').down('dayofyear[name=gueltigVon]').setReadOnly(true);
-                        }
+                    */
+                }
+                var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
+                var recordIndex = mstLaborKombiStore.findExact('messStelle', record.get('mstId'));
+                // If the Messprogramm is ReadOnly, disable Inputfields and grids
+                if ( (me.record.get('readonly') === true) || (recordIndex === -1) ) {
+                    me.down('messprogrammform').setReadOnly(true);
+                    me.disableChildren();
+                } else {
+                    me.down('messprogrammform').setReadOnly(false);
+                    me.enableChildren();
+                    if (record.get('probenintervall') === 'J') {
+                        me.down('messprogrammform').down('dayofyear[name=gueltigBis]').setReadOnly(true);
+                        me.down('messprogrammform').down('dayofyear[name=gueltigVon]').setReadOnly(true);
                     }
-                    me.setLoading(false);
-                },
-                scope: this
-            });
+                }
+
+                me.down('messprogrammform').setMediaDesk(record);
+                me.setLoading(false);
+            };
+            if (!loadedRecord) {
+                Ext.ClassManager.get('Lada.model.Messprogramm').load(this.record.get('id'), {
+                    failure: function(record, action) {
+                        me.setLoading(false);
+                        // TODO
+                        console.log('An unhandled Failure occured. See following Response and Record');
+                        console.log(action);
+                        console.log(record);
+                    },
+                    success: loadCallback,
+                    scope: this
+                });
+            } else {
+                loadCallback(loadedRecord);
+            }
         } else {
             // Create a Create Window
             var record = Ext.create('Lada.model.Messprogramm',{
                 gueltigVon: 1,
                 gueltigBis: 365});
+            this.record = record;
             this.down('messmethodengrid').setReadOnly(true);
             var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
             mstLaborKombiStore.clearFilter(true);

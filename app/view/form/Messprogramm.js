@@ -231,7 +231,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     extraParams: function() {
                         this.down('combobox').on({ // this = widget
                             focus: function(combo) {
-                                var store = Ext.StoreManager.get('probenehmer');
+                                var store = combo.getStore();
                                 store.clearFilter();
                                 var nId = combo.up('fieldset')
                                     .down('netzbetreiber[name=netzbetreiber]')
@@ -260,7 +260,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     extraParams: function() {
                         this.down('combobox').on({ // this = widget
                             focus: function(combo) {
-                                var store = Ext.StoreManager.get('messprogrammkategorie');
+                                var store = combo.getStore();
                                 store.clearFilter();
                                 var nId = combo.up('fieldset')
                                     .down('netzbetreiber[name=netzbetreiber]')

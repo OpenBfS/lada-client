@@ -219,11 +219,23 @@ Ext.define('Lada.view.form.Messung', {
     },
 
 
-    updateStatusText: function(reset) {
+    updateStatusTextAndFertigFlag: function() {
         this.record.load({
             scope: this,
             success: function() {
-                this.down('statuskombi').setValue(this.record.get('status'), reset, this.record.get('statusEdit'));
+                this.setRecord(this.record);
+                var parentWin = this.up('window').parentWindow;
+                if (parentWin) {
+                    parentWin.initData();
+                    var messunggrid = parentWin.down('messunggrid');
+                    if (messunggrid) {
+                        messunggrid.getStore().reload();
+                    }
+                    var ortszuordnunggrid = parentWin.down('ortszuordnunggrid');
+                    if (ortszuordnunggrid) {
+                        ortszuordnunggrid.getStore().reload();
+                    }
+                }
             }
         });
     },

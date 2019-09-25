@@ -10,7 +10,7 @@
  * Window to edit a Probe
  */
 Ext.define('Lada.view.window.ProbeEdit', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.TrackedWindow',
     alias: 'widget.probenedit',
 
     requires: [
@@ -23,10 +23,10 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
     collapsible: true,
     maximizable: true,
-    autoShow: true,
+    autoShow: false,
     layout: 'fit',
     constrain: true,
-
+    recordType: 'probe',
     record: null,
 
     /**
@@ -157,69 +157,75 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
     /**
       * Initialise the Data of this Window
+      * @param loadedRecord if given, it is assumed that this is a freshly
+      * loaded record, not requiring a reload from server
       */
-    initData: function() {
+    initData: function(loadedRecord) {
         this.setLoading(true);
         this.clearMessages();
         var me = this;
-        Ext.ClassManager.get('Lada.model.Probe').load(this.record.get('id'), {
-            failure: function(record, action) {
-                me.setLoading(false);
-                // TODO
-                console.log('An unhandled Failure occured. See following Response and Record');
-                console.log(action);
-                console.log(record);
-            },
-            success: function(record, response) {
-                this.down('probeform').setRecord(record);
-                this.record = record;
-                var owner = this.record.get('owner');
-                var readonly = this.record.get('readonly');
+        var loadCallBack = function(record, response) {
+            me.record = record;
+            me.down('probeform').setRecord(record);
+            var owner = record.get('owner');
+            var readonly = record.get('readonly');
+            var messstelle = Ext.data.StoreManager.get('messstellen')
+                .getById(record.get('mstId'));
+            var datenbasis = Ext.data.StoreManager.get('datenbasis')
+                .getById(record.get('datenbasisId'));
+            var title = '';
+            if (datenbasis) {
+                title += datenbasis.get('datenbasis');
+                title += ' ';
+            }
+            title += 'Probe';
+            if (record.get('hauptprobenNr')) {
+                title += ' - Hauptprobennr.: ';
+                title += record.get('hauptprobenNr');
+            }
+            if (messstelle) {
+                title += ' Mst: ';
+                title += messstelle.get('messStelle');
+            }
+            me.setTitle(title);
 
-                var messstelle = Ext.data.StoreManager.get('messstellen')
-                    .getById(this.record.get('mstId'));
-                var datenbasis = Ext.data.StoreManager.get('datenbasis')
-                    .getById(this.record.get('datenbasisId'));
-                var title = '';
-                if (datenbasis) {
-                    title += datenbasis.get('datenbasis');
-                    title += ' ';
-                }
-                title += 'Probe';
-                if (this.record.get('hauptprobenNr')) {
-                    title += ' - Hauptprobennr.: ';
-                    title += this.record.get('hauptprobenNr');
-                }
-                if (messstelle) {
-                    title += ' Mst: ';
-                    title += messstelle.get('messStelle');
-                }
-                this.setTitle(title);
+            if (owner) {
+                //Always allow to Add Messungen.
+                me.enableAddMessungen();
+            }
 
-                if (owner) {
-                    //Always allow to Add Messungen.
-                    me.enableAddMessungen();
-                }
-
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    this.setMessages(json.errors, json.warnings);
-                    //if (!json.warnings.mediaDesk) { // TODO: not sure why this condition was present
-                    this.down('probeform').setMediaDesk(record);
-                    //}
-                }
-                // If the Probe is ReadOnly, disable Inputfields and grids
-                if (readonly === true || !owner) {
-                    this.down('probeform').setReadOnly(true);
-                    this.disableChildren();
-                } else {
-                    this.down('probeform').setReadOnly(false);
-                    this.enableChildren();
-                }
-                me.setLoading(false);
-            },
-            scope: this
-        });
+            var json = response ? Ext.decode(response.getResponse().responseText) : null;
+            if (json) {
+                me.setMessages(json.errors, json.warnings);
+                //if (!json.warnings.mediaDesk) { // TODO: not sure why this condition was present
+                //}
+            }
+            me.down('probeform').setMediaDesk(record);
+            // If the Probe is ReadOnly, disable Inputfields and grids
+            if (readonly === true || !owner) {
+                me.down('probeform').setReadOnly(true);
+                me.disableChildren();
+            } else {
+                me.down('probeform').setReadOnly(false);
+                me.enableChildren();
+            }
+            me.setLoading(false);
+        };
+        if (!loadedRecord) {
+            Ext.ClassManager.get('Lada.model.Probe').load(this.record.get('id'), {
+                failure: function(record, action) {
+                    me.setLoading(false);
+                    // TODO
+                    console.log('An unhandled Failure occured. See following Response and Record');
+                    console.log(action);
+                    console.log(record);
+                },
+                success: loadCallBack,
+                // scope: this
+            });
+        } else {
+            loadCallBack(loadedRecord);
+        }
     },
 
     /**

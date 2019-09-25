@@ -10,7 +10,7 @@
  * Window for new Ort, wraps around a {@link Lada.view.form.Ort}
  */
 Ext.define('Lada.view.window.Ort', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.TrackedWindow',
     alias: 'window.ort',
     requires: [
         'Lada.model.Ort',
@@ -43,6 +43,8 @@ Ext.define('Lada.view.window.Ort', {
      */
     record: null,
 
+    recordType: 'ort',
+
     /**
      * Original record if record is a copy. Will only be set if the copy is created.
      */
@@ -55,6 +57,11 @@ Ext.define('Lada.view.window.Ort', {
         var me = this;
         if (this.record === null) {
             this.record = Ext.create('Lada.model.Ort');
+        }
+        if (this.parentWindow !== null) {
+            if (this.parentWindow.xtype === 'ortszuordnungwindow' || this.parentWindow.xtype === 'ortstammdatengrid') {
+                this.record.set('readonly', true);
+            }
         }
         if (this.mode) {
             this.title = i18n.getMsg('orte.' + this.mode);

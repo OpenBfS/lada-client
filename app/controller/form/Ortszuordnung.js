@@ -27,8 +27,10 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                 click: this.showort
             },
             'ortszuordnungform': {
-                validitychange: this.validityChange,
-                dirtychange: this.validityChange
+                validitychange: this.validityChange
+            },
+            'ortszuordnungform ortszuordnungtyp [name=ortszuordnungTyp]': {
+                change: this.dirtyChange
             }
         });
     },
@@ -79,6 +81,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             failure: function(record, response) {
                 var i18n = Lada.getApplication().bundle;
                 button.setDisabled(true);
+                button.up('ortszuordnungform').form.owner.down('button[action=revert]').setDisabled(true);
                 formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
                 if (response.error) {
                     //TODO: check content of error.status (html error code)
@@ -176,6 +179,15 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             //not dirty
             form.owner.down('button[action=save]').setDisabled(true);
             form.owner.down('button[action=revert]').setDisabled(true);
+        }
+    },
+
+    dirtyChange: function(combo, value) {
+        combo.up('ortszuordnungform').form.owner.down('button[action=revert]').setDisabled(false);
+        if (combo.up('ortszuordnungform').form.findField('ortId').getValue() !== '' && value !== null )
+        {
+            combo.up('ortszuordnungform').form.owner.down('button[action=save]').setDisabled(false);
+            combo.up('ortszuordnungform').clearMessages();
         }
     },
 

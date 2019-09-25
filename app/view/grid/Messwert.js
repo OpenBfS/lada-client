@@ -24,7 +24,7 @@ Ext.define('Lada.view.grid.Messwert', {
     viewConfig: {
         deferEmptyText: false
     },
-    margin: '0, 5, 15, 5',
+    margin: '0, 5, 5, 5',
     recordId: null,
     umwId: null,
     defaultMehId: null,
@@ -113,7 +113,6 @@ Ext.define('Lada.view.grid.Messwert', {
                 action: 'delete'
             }, {
                 buttonAlign: 'right',
-                margin: 5,
                 action: 'normalize',
                 handler: this.normalize,
                 text: i18n.getMsg('button.normalize')
@@ -209,10 +208,11 @@ Ext.define('Lada.view.grid.Messwert', {
                     return '';
                 }
                 var store = me.mehComboStore;
-                if (store.count() == 0) {
-                    store = Ext.data.StoreManager.get('messeinheiten');
+                if (store.findRecord('id', value, 0, false, false, true) === null) {
+                    return Ext.data.StoreManager.get('messeinheiten').findRecord('id', value, 0, false, false, true).get('einheit');
+                } else {
+                    return store.findRecord('id', value, 0, false, false, true).get('einheit');
                 }
-                return store.findRecord('id', value, 0, false, false, true).get('einheit');
             },
             editor: {
                 xtype: 'combobox',
@@ -276,7 +276,6 @@ Ext.define('Lada.view.grid.Messwert', {
         } else {
             this.store = Ext.create('Lada.store.Messwerte');
         }
-
         if (this.umwId) {
             var umwStore = Ext.create('Lada.store.Umwelt');
             umwStore.getModel().load(this.umwId, {
@@ -308,6 +307,7 @@ Ext.define('Lada.view.grid.Messwert', {
             }
             this.down('button[action=delete]').disable();
             this.down('button[action=add]').disable();
+            this.down('button[action=normalize]').disable();
         } else {
             //Writable
             if (this.getPlugin('rowedit')) {
@@ -315,6 +315,7 @@ Ext.define('Lada.view.grid.Messwert', {
             }
             //this.down('button[action=delete]').enable();
             this.down('button[action=add]').enable();
+            this.down('button[action=normalize]').enable();
         }
     },
 

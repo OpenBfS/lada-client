@@ -48,7 +48,7 @@ Ext.define('Lada.view.grid.Staaten', {
             flex: 1,
             align: 'start'
         }];
-        this.store = Ext.data.StoreManager.get('staaten');
+        this.store = Ext.create('Lada.store.Staaten');
         this.store.loadPage(1);
         this.setTitle('Staaten(' + this.store.getCount() + ')');
         var cbox = Ext.create('Lada.view.widget.PagingSize');

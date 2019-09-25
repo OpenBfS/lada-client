@@ -10,17 +10,18 @@
  * Window to create/edit a MessprogrammKategorie
  */
 Ext.define('Lada.view.window.MessprogrammKategorie', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.TrackedWindow',
     alias: 'widget.mprkatedit',
 
     collapsible: true,
     maximizable: true,
-    autoShow: true,
+    autoShow: false,
     autoScroll: true,
     layout: 'fit',
     constrain: true,
 
     record: null,
+    recordType: 'messprogrammkategorie',
 
     /**
      * This function initialises the Window
