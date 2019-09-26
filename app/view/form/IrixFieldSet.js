@@ -49,17 +49,21 @@ Ext.define('Koala.view.form.IrixFieldSet',{
 
     listeners: {
         show: function() {
-            var print = this.up('k-form-print');
-            var btn = print.down('button[name=createPrint]');
-            btn.setBind();
-            btn.setText('DokPool');
+            var print = this.up('printgrid');
+            var btn = print.down('button[action=doPrint]');
+            // btn.setBind();
+            btn.setText(
+                Lada.getApplication.bundle.getMsg('button.dokpool')
+            );
         },
         hide: function() {
-            var print = this.up('k-form-print');
-            var btn = print.down('button[name=createPrint]');
-            btn.setBind({
-                text: '{printFormat:uppercase} {printButtonSuffix}'
-            });
+            var print = this.up('printgrid');
+            var btn = print.down('button[action=doPrint]');
+            btn.setText(
+                Lada.getApplication.bundle.getMsg('button.print'));
+            // btn.setBind({
+            //     text: '{printFormat:uppercase} {printButtonSuffix}'
+            // });
         }
     },
 
@@ -187,7 +191,7 @@ Ext.define('Koala.view.form.IrixFieldSet',{
 
     createStringFieldContainer: function(config) {
         var me = this;
-        var formPrint = me.up('k-form-print');
+        var formPrint = me.up('printgrid');
         return Ext.create('Ext.Container', {
             xtype: 'container',
             layout: 'hbox',
@@ -204,7 +208,7 @@ Ext.define('Koala.view.form.IrixFieldSet',{
             }, {
                 xtype: 'button',
                 name: config.name + '_editbutton',
-                handler: formPrint.onTextFieldEditButtonClicked,
+                // TODO handler: formPrint.onTextFieldEditButtonClicked,
                 iconCls: 'fa fa-pencil'
             }]
         });

@@ -179,7 +179,7 @@ Ext.define('Lada.view.window.PrintGrid', {
                 flex: 2
             });
             me.add(irixFieldset);
-            me.resolveIrixFieldsetLoaded();
+            // me.resolveIrixFieldsetLoaded();
         } else {
             checkBox.setValue(false);
         }
