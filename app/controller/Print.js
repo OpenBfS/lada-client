@@ -421,7 +421,7 @@ Ext.define('Lada.controller.Print', {
                 outputFormat: format,
                 attributes: data
             };
-            this.sendRequest(JSON.stringify(printData), template, filename, callbackFn, isIrix);
+            this.sendRequest(printData, template, filename, callbackFn, isIrix);
         }
     },
 
@@ -452,7 +452,7 @@ Ext.define('Lada.controller.Print', {
             }
         };
         if (isIrix) {
-            requestData.jsonData = this.setUpIrixJson(jsonData, templateName);
+            requestData.jsonData = JSON.stringify(this.setUpIrixJson(jsonData, templateName));
             requestData.headers = {
                 'Content-Type': 'application/json'};
             requestData.url = 'TODO'; // TODO
@@ -463,7 +463,7 @@ Ext.define('Lada.controller.Print', {
         } else {
             requestData.url = me.printUrlPrefix + templateName + '/buildreport.pdf';
             requestData.binary = true;
-            requestData.jsonData = jsonData;
+            requestData.jsonData = JSON.stringify(jsonData);
         }
         Ext.Ajax.request(requestData);
     },
@@ -483,7 +483,7 @@ Ext.define('Lada.controller.Print', {
                 outputFormat: format,
                 attributes: { proben: data }};
             this.sendRequest(
-                JSON.stringify(printData),
+                printData,
                 'lada_erfassungsbogen',
                 filename,
                 callbackFn,
