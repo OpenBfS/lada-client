@@ -53,14 +53,14 @@ Ext.define('Koala.view.form.IrixFieldSet',{
             var btn = print.down('button[action=doPrint]');
             // btn.setBind();
             btn.setText(
-                Lada.getApplication.bundle.getMsg('button.dokpool')
+                Lada.getApplication().bundle.getMsg('button.dokpool')
             );
         },
         hide: function() {
             var print = this.up('printgrid');
             var btn = print.down('button[action=doPrint]');
             btn.setText(
-                Lada.getApplication.bundle.getMsg('button.print'));
+                Lada.getApplication().bundle.getMsg('button.print'));
             // btn.setBind({
             //     text: '{printFormat:uppercase} {printButtonSuffix}'
             // });

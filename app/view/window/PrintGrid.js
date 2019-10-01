@@ -151,10 +151,12 @@ Ext.define('Lada.view.window.PrintGrid', {
     addIrixCheckbox: function() {
         var me = this;
         var genericFieldset = me.down('fieldset[name=generic-fieldset]');
+        var printDisabled = this.down('combobox[name=template]').getValue() ? false: true ;
         var irixCheckbox = Ext.create('Ext.form.field.Checkbox', {
             name: 'irix-fieldset-checkbox',
             boxLabel: 'DokPool',
             checked: this.config.chartPrint,
+            disabled: printDisabled,
             handler: function(checkbox, checked) {
                 var irixFieldset = me.down('k-form-irixfieldset');
                 if (checked) {
@@ -166,6 +168,7 @@ Ext.define('Lada.view.window.PrintGrid', {
         });
 
         genericFieldset.add(irixCheckbox);
+
     },
 
     // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
@@ -182,6 +185,15 @@ Ext.define('Lada.view.window.PrintGrid', {
             // me.resolveIrixFieldsetLoaded();
         } else {
             checkBox.setValue(false);
+        }
+    },
+
+    setDisabled: function(newValue) {
+        this.down('button[action=doPrint]').setDisabled(newValue);
+        this.down('combobox[name=layout]').setDisabled(newValue);
+        var irixBox = this.down('checkbox[name=irix-fieldset-checkbox]');
+        if (irixBox) {
+            irixBox.setDisabled(newValue);
         }
     }
 
