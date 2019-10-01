@@ -115,7 +115,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 if (!value || value === '') {
                     return value;
                 }
-                var strValue = parseFloat(value).toExponential(2).toString()
+                var strValue = Lada.getApplication().toExponentialString(value, 2)
                     .replace('.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
                 var exponent = parseInt(splitted[1], 10);

@@ -179,7 +179,8 @@ Ext.define('Lada.view.window.AuditTrail', {
                 key === 'messwert_pzs' ||
                 key === 'nwg_zu_messwert'
             ) {
-                var strValue = parseFloat(value).toExponential(2).toString()
+                var strValue = Lada.getApplication().toExponentialString(value, 2)
+                    .replace('.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
                 var exponent = parseInt(splitted[1],10);
                 value = splitted[0] + 'e'

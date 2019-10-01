@@ -97,7 +97,7 @@ Ext.application({
         applicationUpdateTitle: 'Anwendungsupdate',
         applicationUpdateText: 'Für diese Anwendung steht ein Update zur Verfügung. Jetzt neu laden?',
         dblClickTimeout: 500
-    },        
+    },
     bundle: {
         bundle: 'Lada',
         language: function() {
@@ -575,6 +575,26 @@ Ext.application({
         if (newVal != Lada.pagingSize) {
             Lada.pagingSize = newVal;
             Lada.getApplication().fireEvent('pagingSizeChanged');
+        }
+    },
+
+    /**
+     * Fix for odd behavior of some browsers in the toExponential(digits) function
+     * (MS Edge falsely rounds down some least significant digits
+     * @param {Number} value the numerical value to parse
+     * @param {Number} digits the amount of digits as in the toExponential fucntion
+     * @returns {String}
+     */
+    toExponentialString: function(value, digits) {
+        var rawExp = value.toExponential();
+        if (digits === undefined) {
+            return rawExp;
+        }
+        var fixedExp = value.toExponential(digits);
+        if (fixedExp.length === rawExp.length && fixedExp !== rawExp) {
+            return rawExp;
+        } else {
+            return fixedExp;
         }
     },
 
