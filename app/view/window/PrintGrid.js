@@ -14,8 +14,6 @@ Ext.define('Lada.view.window.PrintGrid', {
     extend: 'Ext.window.Window',
     requires: ['Koala.view.form.IrixFieldSet'],
 
-    layout: 'vbox',
-    minWidth: 400,
     defaults: {
         margin: '5, 5, 5, 5',
         width: '100%',
@@ -55,76 +53,82 @@ Ext.define('Lada.view.window.PrintGrid', {
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('print.window.title');
         this.items = [{
-            xtype: 'combobox',
-            name: 'template',
-            fieldLabel: i18n.getMsg('print.window.template'),
-            store: this.templateStore,
-            valueField: 'name',
-            displayField: 'name',
-            allowBlank: false,
-            editable: true,
-            disableKeyFilter: false,
-            forceSelection: true,
-            queryMode: 'local',
-            minChars: 0,
-            typeAhead: false,
-            disabled: true,
-            triggerAction: 'all'
-        }, {
-            xtype: 'combobox',
-            name: 'layout',
-            fieldLabel: i18n.getMsg('print.layout'),
-            store: this.layoutStore,
-            valueField: 'id',
-            displayField: 'name',
-            allowBlank: false,
-            editable: true,
-            disableKeyFilter: false,
-            forceSelection: true,
-            queryMode: 'local',
-            minChars: 0,
-            typeAhead: false,
-            disabled: true,
-            triggerAction: 'all'
-        }, {
-            xtype: 'fieldset',
-            name: 'generic-fieldset'
-        }, {
-            xtype: 'fieldset',
-            title: i18n.getMsg('print.presets'),
-            collapsible: true,
-            collapsed: true,
+            layout: 'vbox',
+            border: false,
             scrollable: true,
-            height: 300,
-            name: 'dynamicfields',
-            items: [],
-            hidden: true
-        }, {
-            xtype: 'textfield',
-            name: 'filename',
-            fieldLabel: i18n.getMsg('export.filename'),
-            value: 'lada-export'
-        }, {
-            xtype: 'combobox',
-            name: 'filetype',
-            fieldLabel: i18n.getMsg('export.filetype'),
-            store: this.formatStore,
-            valueField: 'name',
-            displayField: 'name',
-            allowBlank: false,
-            editable: true,
-            disableKeyFilter: false,
-            forceSelection: true,
-            queryMode: 'local',
-            minChars: 0,
-            typeAhead: false,
-            disabled: true,
-            triggerAction: 'all',
-            value: 'pdf'
-        }, {
-            xtype: 'label',
-            name: 'results',
-            hidden: true
+            items: [{
+                xtype: 'combobox',
+                name: 'template',
+                fieldLabel: i18n.getMsg('print.window.template'),
+                store: this.templateStore,
+                valueField: 'name',
+                displayField: 'name',
+                allowBlank: false,
+                editable: true,
+                disableKeyFilter: false,
+                forceSelection: true,
+                queryMode: 'local',
+                minChars: 0,
+                typeAhead: false,
+                disabled: true,
+                triggerAction: 'all'
+            }, {
+                xtype: 'combobox',
+                name: 'layout',
+                fieldLabel: i18n.getMsg('print.layout'),
+                store: this.layoutStore,
+                valueField: 'id',
+                displayField: 'name',
+                allowBlank: false,
+                editable: true,
+                disableKeyFilter: false,
+                forceSelection: true,
+                queryMode: 'local',
+                minChars: 0,
+                typeAhead: false,
+                disabled: true,
+                triggerAction: 'all'
+            }, {
+                xtype: 'fieldset',
+                name: 'generic-fieldset'
+            }, {
+                xtype: 'fieldset',
+                title: i18n.getMsg('print.presets'),
+                collapsible: true,
+                collapsed: true,
+                scrollable: true,
+                height: 300,
+                maxWidth: '100%',
+                name: 'dynamicfields',
+                items: [],
+                hidden: true
+            }, {
+                xtype: 'textfield',
+                name: 'filename',
+                fieldLabel: i18n.getMsg('export.filename'),
+                value: 'lada-export'
+            }, {
+                xtype: 'combobox',
+                name: 'filetype',
+                fieldLabel: i18n.getMsg('export.filetype'),
+                store: this.formatStore,
+                valueField: 'name',
+                displayField: 'name',
+                allowBlank: false,
+                editable: true,
+                disableKeyFilter: false,
+                forceSelection: true,
+                queryMode: 'local',
+                minChars: 0,
+                typeAhead: false,
+                disabled: true,
+                triggerAction: 'all',
+                value: 'pdf'
+            }, {
+                xtype: 'label',
+                name: 'results',
+                hidden: true
+            }]
         }];
         this.buttons = [{
             text: i18n.getMsg('close'),
@@ -155,6 +159,7 @@ Ext.define('Lada.view.window.PrintGrid', {
         var irixCheckbox = Ext.create('Ext.form.field.Checkbox', {
             name: 'irix-fieldset-checkbox',
             boxLabel: 'DokPool',
+            border: false,
             checked: this.config.chartPrint,
             disabled: printDisabled,
             handler: function(checkbox, checked) {
@@ -173,15 +178,16 @@ Ext.define('Lada.view.window.PrintGrid', {
 
     // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
     addIrixFieldset: function() {
-        var me = this;
-        var fs = me.down('k-form-irixfieldset');
-        var checkBox = me.down('[name="irix-fieldset-checkbox"]');
+        var fs = this.down('k-form-irixfieldset');
+        var checkBox = this.down('[name="irix-fieldset-checkbox"]');
 
         if (!fs) {
-            var irixFieldset = Ext.create('Koala.view.form.IrixFieldSet',{
-                flex: 2
+            var irixFieldset = Ext.create('Koala.view.form.IrixFieldSet', {
+                dock: 'right',
+                scrollable: true,
+                margin: '5,5,5,5'
             });
-            me.add(irixFieldset);
+            this.addDocked(irixFieldset);
             // me.resolveIrixFieldsetLoaded();
         } else {
             checkBox.setValue(false);

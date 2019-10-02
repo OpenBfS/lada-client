@@ -153,9 +153,8 @@ Ext.define('Lada.controller.Print', {
                                 xtype: 'textfield',
                                 fieldLabel: attributes[i].name,
                                 name: attributes[i].name,
-                                width: '100%',
                                 labelWidth: 125,
-                                margin: '5, 5 ,5 ,5',
+                                margin: '5, 5, 5, 5',
                                 value: value
                             });
                         }
