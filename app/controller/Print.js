@@ -49,6 +49,9 @@ Ext.define('Lada.controller.Print', {
             },
             'printgrid combobox[name=layout]': {
                 change: this.changeLayout
+            },
+            'printgrid checkbox[name=irix-fieldset-checkbox]': {
+                select: this.toggleIrix
             }
         });
     },
@@ -67,6 +70,8 @@ Ext.define('Lada.controller.Print', {
                 }
             }
         });
+        win.addIrixCheckbox();
+        win.addIrixFieldset();
         this.getAvailableTemplates(win);
         win.show();
     },
@@ -100,11 +105,10 @@ Ext.define('Lada.controller.Print', {
 
     changeLayout: function(combobox, newValue) {
         var win = combobox.up('printgrid');
-        var printButton = win.down('button[action=doPrint]');
         var fieldset = win.down('fieldset[name=dynamicfields]');
         fieldset.removeAll();
         var availableColumns = win.parentGrid.getColumns();
-        printButton.setDisabled(true);
+        win.setDisabled(true);
         if (! win.currentCapabilities.layouts || !win.currentCapabilities.layouts.length) {
             return;
         }
@@ -179,22 +183,20 @@ Ext.define('Lada.controller.Print', {
         } else {
             fieldset.setVisible(false);
         }
-        printButton.setDisabled(false);
+        win.setDisabled(false);
     },
 
     changeTemplate: function( combobox, newValue ) {
         var win = combobox.up('printgrid');
-        var printButton = win.down('button[action=doPrint]');
         var layoutBox = win.down('combobox[name=layout]');
         var filetypeBox = win.down('combobox[name=filetype]');
-        printButton.setDisabled(true);
+        win.setDisabled(true);
         var capabilityCallbackFn = function(capabilities) {
             win.currentCapabilities = capabilities;
             var layoutData = [];
             var formatData = [];
             if ( !capabilities.layouts || !capabilities.layouts.length ) {
-                layoutBox.setDisabled(true);
-                printButton.setDisabled(true);
+                win.setDisabled(true);
                 return;
             }
             for (var i=0; i < capabilities.layouts.length; i++) {
@@ -221,13 +223,14 @@ Ext.define('Lada.controller.Print', {
             if (layoutData.length > 0) {
                 layoutBox.setDisabled(false);
             } else {
-                layoutBox.setDisabled(true);
-                printButton.setDisabled(true);
+                win.setDisabled(true);
             }
             layoutBox.setValue(0);
             layoutBox.fireEvent('change', layoutBox, 0);
         };
-        this.getTemplateParams(newValue, capabilityCallbackFn);
+        if (newValue !== null ) {
+            this.getTemplateParams(newValue, capabilityCallbackFn);
+        }
     },
 
     fillTemplate: function(attributes, selection, window) {
@@ -362,8 +365,13 @@ Ext.define('Lada.controller.Print', {
      * @param {*} button the calling 'print' button as part of the print dialog
      */
     doPrint: function(button) {
-        button.setDisabled(true);
         var window = button.up('printgrid');
+        window.setDisabled(true);
+        var isIrix = false;
+        var irixCheckbox = window.down('checkbox[name=irix-fieldset-checkbox]');
+        if (irixCheckbox && irixCheckbox.getValue() === true) {
+            isIrix = true;
+        }
         var grid = window.parentGrid;
         if (!grid) {
             this.handleError();
@@ -384,7 +392,7 @@ Ext.define('Lada.controller.Print', {
             var result = success? i18n.getMsg('print.success') : i18n.getMsg('print.fail');
             window.down('label[name=results]').setText(result);
             window.down('label[name=results]').setHidden(false);
-            button.setDisabled(false);
+            window.setDisabled(false);
         };
         //Check if layout attributes are proben and messungen
         var attributes = capabilities.layouts[layout].attributes;
@@ -402,8 +410,10 @@ Ext.define('Lada.controller.Print', {
                     return p.name === 'messungen';
             })
         ) {
+            //TODO: preset fields are ignored here as they are no longer needed
             // see printSelection, prepareData, createSheetData (moved without major adaption)
-            this.printSelection(grid, filename, format, template, layoutName, callbackFn);
+
+            this.printSelection(grid, filename, format, callbackFn, isIrix);
         } else {
             var selection = grid.getView().getSelectionModel().getSelection();
             var data = this.fillTemplate(
@@ -415,7 +425,7 @@ Ext.define('Lada.controller.Print', {
                 outputFormat: format,
                 attributes: data
             };
-            this.sendRequest(JSON.stringify(printData), template, filename, callbackFn);
+            this.sendRequest(printData, template, filename, callbackFn, isIrix);
         }
     },
 
@@ -426,13 +436,9 @@ Ext.define('Lada.controller.Print', {
      * @param templateName name/identifier of the template as part of the url
      * @param fileName a filename (including filetype typical ending)
      */
-    sendRequest: function(jsonData, templateName, filename, callbackFn) {
+    sendRequest: function(jsonData, templateName, filename, callbackFn, isIrix) {
         var me = this;
-        Ext.Ajax.request({
-            url: me.printUrlPrefix + templateName + '/buildreport.pdf',
-            //configure a proxy in apache conf!
-            jsonData: jsonData,
-            binary: true,
+        var requestData = {
             success: function(response) {
                 var content = response.responseBytes;
                 var filetype = response.getResponseHeader('Content-Type');
@@ -448,28 +454,45 @@ Ext.define('Lada.controller.Print', {
                     callbackFn(false);
                 }
             }
-        });
+        };
+        if (isIrix) {
+            requestData.jsonData = JSON.stringify(this.setUpIrixJson(jsonData, templateName));
+            requestData.headers = {
+                'Content-Type': 'application/json'};
+            requestData.url = 'TODO'; // TODO
+        // Koala.appContextUrl = window.location.protocol + "//" + window.location.hostname + "/gis_client_configs/appContext.json";
+        // var configuredIrixContext = Koala.util.Object.getPathStrOr(
+            //     appContext, 'data/merge/urls/irix-context', false
+            // );
+        } else {
+            requestData.url = me.printUrlPrefix + templateName + '/buildreport.pdf';
+            requestData.binary = true;
+            requestData.jsonData = JSON.stringify(jsonData);
+        }
+        Ext.Ajax.request(requestData);
     },
 
     // TODO from "Erfassungsbogen".
     /**
      * Send the selection to a Printservice
      */
-    printSelection: function(grid, filename, format, template, layout, callbackFn) {
+    printSelection: function(grid, filename, format, callbackFn, isIrix) {
+        var me = this;
         // The Data is loaded from the server again, so we need
         // to be a little bit asynchronous here...
         var callback = function(response) {
             var data = response.responseText;
             data = this.prepareData(data); // Wraps all messstellen and deskriptoren objects into an array
             var printData = {
-                layout: layout,
+                layout: 'A4 portrait',
                 outputFormat: format,
                 attributes: { proben: data }};
             this.sendRequest(
-                JSON.stringify(printData),
-                template,
+                printData,
+                'lada_erfassungsbogen',
                 filename,
-                callbackFn);
+                callbackFn,
+                isIrix);
         };
 
         this.createSheetData(grid, callback, this);
@@ -654,6 +677,124 @@ Ext.define('Lada.controller.Print', {
             } else {
                 return name + '.' + format;
             }
+        }
+    },
+
+    // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
+    setUpIrixJson: function(mapfishPrint, printapp) {
+
+        var printgrid = Ext.ComponentQuery.query('printgrid')[0];
+        var me = this;
+        var irixJson = {};
+        irixJson.irix = me.formItemToJson(printgrid.down('k-form-irixfieldset'));
+        // the generic serialisation needs a little bit shuffeling
+        irixJson = me.adjustIrixSerialisation(irixJson);
+        // always add the printapp to the top-lvel for irix:
+        irixJson.printapp = printapp;// me.down('[name="appCombo"]').getValue(); // TODO: same as template app name?
+        irixJson['mapfish-print'] = mapfishPrint;
+        return irixJson;
+    },
+
+    // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
+    /**
+     * Certain fields must live inside the irix fieldset, as they only make
+     * sense for this type of "print"; yet their serialisation cannot live in
+     * dedicted irix-object, as it is e.g. expected on the top-level. Thus
+     * the "irixContext.json" represents the allocation how it shall look like inside
+     * the print window. This method will adjust a JSON (e.g. from formItemToJson),
+     * and shuffle certain key / value pairs around: currently only 'request-type'.
+     *
+     * @param {object} irixJson The JSON for the IRIX service, a representation
+     *     of the form.
+     * @return {object} The adjusted serialisation.
+     */
+    adjustIrixSerialisation: function(irixJson) {
+        var irix = irixJson.irix;
+        // move requestType or request-type out of irix object to top-level
+        var correctRequestTypeKey = 'request-type';
+        // For backwards compatibility, we iterate over two variants
+        var keysReqestType = ['requestType', correctRequestTypeKey];
+        if (irix) {
+            var reqType;
+            Ext.each(keysReqestType, function(keyRequestType) {
+                if (keyRequestType in irix) {
+                    // if both were present, the dashed version will win.
+                    reqType = irix[keyRequestType];
+                    // delete the one under key 'irix'
+                    delete irixJson.irix[keyRequestType];
+                    // set on top-level.
+                    irixJson[correctRequestTypeKey] = reqType;
+                }
+            });
+
+            //move "DokpoolContentType", "IsElan", "IsDoksys", "IsRodos", "IsRei"
+            //back to  "DokpoolMeta"
+            //and "ReportContext", "Confidentiality"
+            //back to "Identification"
+            //and "ElanScenarios"
+            //back to "DokpoolMeta"
+            irixJson.irix.Identification.ReportContext = irixJson.irix.ReportContext;
+            delete irixJson.irix.ReportContext;
+
+            irixJson.irix.Identification.Confidentiality = irixJson.irix.Confidentiality;
+            delete irixJson.irix.Confidentiality;
+
+            irixJson.irix.DokpoolMeta.DokpoolContentType = irixJson.irix.DokpoolContentType;
+            delete irixJson.irix.DokpoolContentType;
+
+            irixJson.irix.DokpoolMeta.IsElan = irixJson.irix.DokpoolBehaviour.IsElan;
+            irixJson.irix.DokpoolMeta.IsDoksys = irixJson.irix.DokpoolBehaviour.IsDoksys;
+            irixJson.irix.DokpoolMeta.IsRodos = irixJson.irix.DokpoolBehaviour.IsRodos;
+            irixJson.irix.DokpoolMeta.IsRei = irixJson.irix.DokpoolBehaviour.IsRei;
+            delete irixJson.irix.DokpoolBehaviour;
+
+            irixJson.irix.DokpoolMeta.Elan = {};
+            irixJson.irix.DokpoolMeta.Elan.Scenarios = irixJson.irix.Scenarios;
+            delete irixJson.irix.Scenarios;
+        }
+        if (this.config.chartPrint) {
+            irixJson['mapfish-print'] = undefined;
+            delete irixJson['mapfish-print'];
+            irixJson['img-print'] = [{
+                mimetype: 'image/png',
+                inputFormat: 'png',
+                metadata: [],
+                outputFormat: 'png',
+                value: this.config.chart
+            }];
+        }
+        return irixJson;
+    },
+
+    formItemToJson: function(formItem) {
+        var me = this;
+        var children = formItem.items.items;
+        var json = {};
+
+        Ext.each(children, function(child) {
+            if (child instanceof Ext.form.FieldSet ||
+                child instanceof Ext.form.FieldContainer) {
+
+                if (child.valueField && child.valueField.getValue()) {
+                    json[child.name] = child.valueField.getValue();
+                } else {
+                    json[child.name] = me.formItemToJson(child);
+                }
+
+            } else if (child instanceof Ext.Container) {
+                json[child.name] = child.down('textfield').getValue();
+            } else {
+                json[child.name] = child.getValue();
+            }
+        });
+
+        return json;
+    },
+
+    toggleIrix: function(checkbox, newValue) {
+        var fieldset = checkbox.up('printgrid').down('k-form-irixfieldset');
+        if (fieldset) {
+            fieldset.setVisible(newValue);
         }
     }
 });

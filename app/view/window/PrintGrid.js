@@ -12,6 +12,7 @@
 Ext.define('Lada.view.window.PrintGrid', {
     alias: 'widget.printgrid',
     extend: 'Ext.window.Window',
+    requires: ['Koala.view.form.IrixFieldSet'],
 
     layout: 'vbox',
     minWidth: 400,
@@ -87,6 +88,9 @@ Ext.define('Lada.view.window.PrintGrid', {
             triggerAction: 'all'
         }, {
             xtype: 'fieldset',
+            name: 'generic-fieldset'
+        }, {
+            xtype: 'fieldset',
             title: i18n.getMsg('print.presets'),
             collapsible: true,
             collapsed: true,
@@ -141,5 +145,56 @@ Ext.define('Lada.view.window.PrintGrid', {
             this.templateStore.removeAll();
             this.down('combobox[name=template]').setDisabled(true);
         }
+    },
+
+    // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
+    addIrixCheckbox: function() {
+        var me = this;
+        var genericFieldset = me.down('fieldset[name=generic-fieldset]');
+        var printDisabled = this.down('combobox[name=template]').getValue() ? false: true ;
+        var irixCheckbox = Ext.create('Ext.form.field.Checkbox', {
+            name: 'irix-fieldset-checkbox',
+            boxLabel: 'DokPool',
+            checked: this.config.chartPrint,
+            disabled: printDisabled,
+            handler: function(checkbox, checked) {
+                var irixFieldset = me.down('k-form-irixfieldset');
+                if (checked) {
+                    irixFieldset.show();
+                } else {
+                    irixFieldset.hide();
+                }
+            }
+        });
+
+        genericFieldset.add(irixCheckbox);
+
+    },
+
+    // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
+    addIrixFieldset: function() {
+        var me = this;
+        var fs = me.down('k-form-irixfieldset');
+        var checkBox = me.down('[name="irix-fieldset-checkbox"]');
+
+        if (!fs) {
+            var irixFieldset = Ext.create('Koala.view.form.IrixFieldSet',{
+                flex: 2
+            });
+            me.add(irixFieldset);
+            // me.resolveIrixFieldsetLoaded();
+        } else {
+            checkBox.setValue(false);
+        }
+    },
+
+    setDisabled: function(newValue) {
+        this.down('button[action=doPrint]').setDisabled(newValue);
+        this.down('combobox[name=layout]').setDisabled(newValue);
+        var irixBox = this.down('checkbox[name=irix-fieldset-checkbox]');
+        if (irixBox) {
+            irixBox.setDisabled(newValue);
+        }
     }
+
 });
