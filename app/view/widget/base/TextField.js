@@ -39,7 +39,8 @@ Ext.define('Lada.view.widget.base.TextField', {
             readOnly: this.readOnly || false,
             listeners: this.listeners,
             type: this.type,
-            triggers: this.triggers || null
+            triggers: this.triggers || null,
+            value: this.value || null
         }, {
             xtype: 'image',
             name: 'warnImg',
