@@ -43,7 +43,7 @@ Ext.define('Koala.view.form.IrixFieldSet',{
     },
 
     config: {
-        // TODO to be overrideable (gis-client: via appContext.json: urls/irixcontext)
+        // TODO to be overrideable (see initComponent)
         irixContextUrl: 'resources/irixContext.json'
     },
 
@@ -51,7 +51,6 @@ Ext.define('Koala.view.form.IrixFieldSet',{
         show: function() {
             var print = this.up('printgrid');
             var btn = print.down('button[action=doPrint]');
-            // btn.setBind();
             btn.setText(
                 Lada.getApplication().bundle.getMsg('button.dokpool')
             );
@@ -61,13 +60,11 @@ Ext.define('Koala.view.form.IrixFieldSet',{
             var btn = print.down('button[action=doPrint]');
             btn.setText(
                 Lada.getApplication().bundle.getMsg('button.print'));
-            // btn.setBind({
-            //     text: '{printFormat:uppercase} {printButtonSuffix}'
-            // });
         }
     },
 
     // listeners: {
+    // TODO: add hooks here
     //     beforerender: function(){
     //         var DokpoolContentType = Ext.ComponentQuery.query('[name=DokpoolContentType]')[0];
     //         var dokpoolMetaFieldset = Ext.ComponentQuery.query('[name=DokpoolMeta]')[0];
@@ -77,22 +74,7 @@ Ext.define('Koala.view.form.IrixFieldSet',{
 
     initComponent: function() {
         var me = this;
-        // TODO adapt app context
-        // var appContext = BasiGX.view.component.Map.guess().appContext;
-        // if (appContext) {
-        //     var configuredIrixContext = Koala.util.Object.getPathStrOr(
-        //         appContext, 'data/merge/urls/irix-context', false
-        //     );
-        //     if (configuredIrixContext) {
-        //         me.setIrixContextUrl(configuredIrixContext);
-        //     }
-        // }
-        // // leave early, because irixContextUrl does not seem to be configured
-        // if (!me.getIrixContextUrl) {
-        //     me.callParent(arguments);
-        //     return;
-        // }
-
+        // TODO get this.config.irixContextUrl from appContext
         me.irixFieldsetLoaded = new Ext.Promise(function(resolve) {
             Ext.Ajax.request({
                 url: me.irixContextUrl,
@@ -102,8 +84,7 @@ Ext.define('Koala.view.form.IrixFieldSet',{
                     me.raw = json;
                     me.add(me.createFields(json.data.fields));
                     resolve();
-
-                    // Koala.util.Hooks.beforeRender(me);
+                    // Koala.util.Hooks.beforeRender(me); // TODO
                 },
 
                 failure: function(response) {
@@ -191,7 +172,7 @@ Ext.define('Koala.view.form.IrixFieldSet',{
 
     createStringFieldContainer: function(config) {
         var me = this;
-        var formPrint = me.up('printgrid');
+        // var formPrint = me.up('printgrid');
         return Ext.create('Ext.Container', {
             xtype: 'container',
             layout: 'hbox',
@@ -204,13 +185,17 @@ Ext.define('Koala.view.form.IrixFieldSet',{
                 fieldLabel: config.label,
                 value: config.defaultValue,
                 allowBlank: config.allowBlank,
-                editable: false
-            }, {
-                xtype: 'button',
-                name: config.name + '_editbutton',
-                // TODO handler: formPrint.onTextFieldEditButtonClicked,
-                iconCls: 'fa fa-pencil'
-            }]
+                editable: true
+            }
+            // commented, because the "edit formated text in separate window"
+            // currently is not a part of Lada (an extra popup makes no sense)
+            // , {
+            //     xtype: 'button',
+            //     name: config.name + '_editbutton',
+            //     handler: formPrint.onTextFieldEditButtonClicked,
+            //     iconCls: 'fa fa-pencil'
+            // }
+            ]
         });
     },
 
@@ -259,13 +244,9 @@ Ext.define('Koala.view.form.IrixFieldSet',{
         if (config.defaultValue) {
             value = new Date(config.defaultValue);
         }
-        //Koala.util.Date.getUtcMoment(config.defaultValue) || now;
-
+        // Koala.util.Date.getUtcMoment(config.defaultValue) || now;
         // TODO check differing gis-client/lada implementation of local time
-
         // value = Koala.util.Date.getTimeReferenceAwareMomentDate(value);
-        // * Returns a moment date object aware of the current application's
-        //  * time reference.
 
         var dateField = Ext.create('Ext.form.field.Date', {
             name: config.name,
@@ -324,9 +305,8 @@ Ext.define('Koala.view.form.IrixFieldSet',{
     },
 
     /**
-     * Called before a `attributefields`-object is added to the fieldset. This
-     * method will hide the legend_template and map_template fields, but also
-     * set their respective value according to a convention.
+     * Called before a `attributefields`-object is added to the fieldset.
+     * currently without function
      *
      * @param {BasiGX.view.form.Print} printForm The print form instance.
      * @param {Object} attributefields An `attributefields`-object, which often

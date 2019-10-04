@@ -35,6 +35,8 @@ Ext.define('Lada.controller.Print', {
     ],
 
     printUrlPrefix: 'lada-printer/print/',
+    irixServletURL: 'irix-servlet/', // TODO: appContext
+    dokPoolEnabled: true, // TODO: data.merge.tools in appContext
 
     init: function() {
         this.control({
@@ -70,8 +72,10 @@ Ext.define('Lada.controller.Print', {
                 }
             }
         });
-        win.addIrixCheckbox();
-        win.addIrixFieldset();
+        if (this.dokPoolEnabled) {
+            win.addIrixCheckbox();
+            win.addIrixFieldset();
+        }
         this.getAvailableTemplates(win);
         win.show();
     },
@@ -441,8 +445,17 @@ Ext.define('Lada.controller.Print', {
             success: function(response) {
                 var content = response.responseBytes;
                 var filetype = response.getResponseHeader('Content-Type');
-                var blob = new Blob([content],{type: filetype});
-                saveAs(blob, filename);
+                if (!isIrix) {
+                    var blob = new Blob([content],{type: filetype});
+                    saveAs(blob, filename);
+                } else {
+                    if (response.responseText) {
+                        window.open(
+                            'data:application/xml,' +
+                            encodeURIComponent(response.responseText)
+                        );
+                    }
+                }
                 if (callbackFn) {
                     callbackFn(true);
                 }
@@ -458,11 +471,7 @@ Ext.define('Lada.controller.Print', {
             requestData.jsonData = JSON.stringify(this.setUpIrixJson(jsonData, templateName));
             requestData.headers = {
                 'Content-Type': 'application/json'};
-            requestData.url = 'TODO'; // TODO
-        // Koala.appContextUrl = window.location.protocol + "//" + window.location.hostname + "/gis_client_configs/appContext.json";
-        // var configuredIrixContext = Koala.util.Object.getPathStrOr(
-            //     appContext, 'data/merge/urls/irix-context', false
-            // );
+            requestData.url = this.irixServletURL;
         } else {
             requestData.url = me.printUrlPrefix + templateName + '/buildreport.pdf';
             requestData.binary = true;
@@ -476,7 +485,6 @@ Ext.define('Lada.controller.Print', {
      * Send the selection to a Printservice
      */
     printSelection: function(grid, filename, format, callbackFn, isIrix) {
-        var me = this;
         // The Data is loaded from the server again, so we need
         // to be a little bit asynchronous here...
         var callback = function(response) {

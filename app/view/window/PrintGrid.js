@@ -188,7 +188,6 @@ Ext.define('Lada.view.window.PrintGrid', {
                 margin: '5,5,5,5'
             });
             this.addDocked(irixFieldset);
-            // me.resolveIrixFieldsetLoaded();
         } else {
             checkBox.setValue(false);
         }
