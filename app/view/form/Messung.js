@@ -156,7 +156,7 @@ Ext.define('Lada.view.form.Messung', {
                     padding: '0,5,0,5',
                     readOnly: true,
                     isFormField: false,
-                    fieldLabel: 'Stufe/Status',
+                    fieldLabel: i18n.getMsg('header.statuskombi'),
                     buttonListener: {
                         click: {
                             fn: function() {
