@@ -118,7 +118,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 var ortszuordnungRecArr = [];
 
                 if (fetchedOrtszuordnungen == 0) {
-                    finishedCallback(mpCopy);
+                    me.copyMessmethoden(mp, mpCopy, finishedCallback);
                 }
 
                 for (var i = 0; i < ortszuordnungArr.length; i++) {
