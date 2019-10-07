@@ -93,14 +93,14 @@ Ext.define('Lada.view.grid.Messung', {
         }, {
             header: i18n.getMsg('extMessungsId'),
             dataIndex: 'externeMessungsId',
-            flex: 1,
+            flex: 0.7,
             editor: {
                 allowBlank: false
             }
         }, {
             header: i18n.getMsg('nebenprobenNr'),
             dataIndex: 'nebenprobenNr',
-            flex: 1,
+            flex: 0.8,
             editor: {
                 allowBlank: false
             }
@@ -126,27 +126,8 @@ Ext.define('Lada.view.grid.Messung', {
                 maxValue: Ext.Date.format(new Date(), 'd.m.Y H:i')
             }
         }, {
-            header: i18n.getMsg('status'),
-            flex: 1,
-            dataIndex: 'statusKombi',
-            renderer: function(value, meta, record, rNdx, cNdx) {
-                var statusId = record.get('status');
-                var mId = record.get('id');
-                //also fwd the record to the asynchronous loading of statuswerte
-                // in order to add the statuswert to the record,
-                // after the grid was rendered...
-                if (!value || value === '') {
-                    this.updateStatus(mId, statusId, record);
-                    return 'Lade...';
-                }
-                var kombis = Ext.data.StoreManager.get('statuskombi');
-                var kombi = kombis.getById(value);
-                var st = kombi.data.statusWert.wert;
-                return st;
-            }
-        }, {
-            header: i18n.getMsg('header.statusstufe'),
-            flex: 1,
+            header: i18n.getMsg('header.statuskombi'),
+            flex: 2,
             dataIndex: 'statusKombi',
             renderer: function(value, meta, record, rNdx, cNdx) {
                 var statusId = record.get('status');
@@ -156,17 +137,19 @@ Ext.define('Lada.view.grid.Messung', {
                 // after the grid was rendered...
                 if (!value || value === '') {
                     // the loading happens in linked 'status' column
+                    this.updateStatus(mId, statusId, record);
                     return 'Lade...';
                 }
                 var kombis = Ext.data.StoreManager.get('statuskombi');
                 var kombi = kombis.getById(value);
-                var st = kombi.data.statusStufe.stufe;
+                var st = kombi.get('statusStufe').stufe + ' - '
+                            + kombi.get('statusWert').wert;
                 return st;
             }
         }, {
             header: i18n.getMsg('header.fertig'),
             dataIndex: 'fertig',
-            flex: 1,
+            flex: 0.8,
             renderer: function(value) {
                 if (value) {
                     return 'Ja';
