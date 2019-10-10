@@ -404,7 +404,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         var selection = grid.getView().getSelectionModel().getSelection();
         var i18n = Lada.getApplication().bundle;
         var count = selection.length;
-        var win = Ext.create('Lada.view.window.TagAssign', {
+        var win = Ext.create('Lada.view.window.TagEdit', {
             title: i18n.getMsg('tag.assignwindow.title', count),
             selection: selection
         });

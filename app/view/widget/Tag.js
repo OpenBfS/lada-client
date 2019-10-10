@@ -25,6 +25,13 @@ Ext.define('Lada.view.widget.Tag', {
     monitorChanges: true,
 
     /**
+     * Mode, can either be single if assigning tags for a single probe
+     * or 'bulk' if editing tags for a selection.
+     * Defaults to 'single'
+     */
+    mode: 'single',
+
+    /**
      * Object storing item changes for later syncing.
      * Format: tagId: ['create'|'delete']
      */
@@ -84,9 +91,10 @@ Ext.define('Lada.view.widget.Tag', {
 
     /**
      *  Reloads the current store.
-     *  If silent is true, neither tags are preselected nor the dirty status changed.
+     *  @param silent If true, neither tags are preselected nor the dirty status changed.
+     *  @param callback Callback function to call after reload
      */
-    reload: function(silent) {
+    reload: function(silent, callback) {
         var me = this;
         this.store.load({
             callback: function() {
@@ -95,6 +103,9 @@ Ext.define('Lada.view.widget.Tag', {
                     me.up('probeform').fireEventArgs('tagdirtychange', [{owner: me.up('probeform')}, false]);
                 }
                 me.changes = {};
+                if (callback) {
+                    callback.call();
+                }
             }
         });
     },

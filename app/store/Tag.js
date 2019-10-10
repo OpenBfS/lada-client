@@ -69,6 +69,30 @@ Ext.define('Lada.store.Tag', {
     },
 
     /**
+     * Creates a new to for a given probeId using a POST request
+     * @param tagName Tag name
+     * @param pId Probe id to create tag for
+     * @param callback Callback function to call after save
+     */
+    createTagForPid: function(tagName, pId, callback) {
+        var mstId = Lada.mst[0];
+        var tag = {
+            tag: tagName,
+            mstId: mstId
+        };
+        var zuordnung = {
+            probeId: pId,
+            tag: tag
+        };
+        Ext.Ajax.request({
+            url: this.proxy.url,
+            method: 'POST',
+            jsonData: zuordnung,
+            callback: callback
+        });
+    },
+
+    /**
      * Creates a new reference from the current probe to the given tag using a POST request
      */
     createZuordnung: function(tag, callback) {
