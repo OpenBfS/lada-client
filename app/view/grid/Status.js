@@ -96,6 +96,9 @@ Ext.define('Lada.view.grid.Status', {
             flex: 1,
             sortable: false,
             renderer: function(value) {
+                if (value === '' || value === undefined || value === null) {
+                    return '';
+                }
                 return '<div style="white-space: normal !important;">' +
                 value + '</div>';
             }
