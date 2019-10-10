@@ -34,8 +34,6 @@ Ext.define('Lada.view.grid.Messung', {
 
     messwerteLoading: false,
 
-    mkommentareLoading: false,
-
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
@@ -177,20 +175,6 @@ Ext.define('Lada.view.grid.Messung', {
                 }
                 return value;
             }
-        }, {
-            header: i18n.getMsg('number_of_comments'),
-            flex: 1,
-            dataIndex: 'kommentarCount',
-            renderer: function(value, meta, record) {
-                if ((!value || value === '') && this.mkommentareLoading == false) {
-                    var mId = record.get('id');
-                    this.updateKommentare(mId, record);
-                    return 'Lade...';
-                } else {
-                    this.mkommentareLoading == false;
-                }
-                return value;
-            }
         }];
         this.listeners = {
             select: {
@@ -258,20 +242,6 @@ Ext.define('Lada.view.grid.Messung', {
             },
             callback: function(records, operation, success) {
                 me.updateColumn(messwerte, record, success, operation, {record: record, type: 'messwerteCount'});
-            }
-        });
-    },
-
-    updateKommentare: function(id, record) {
-        var kommentare = Ext.create('Lada.store.MKommentare');
-        this.mkommentareLoading = true;
-        kommentare.onAfter('load',
-            this.updateColumn,
-            this,
-            {record: record, type: 'kommentarCount'});
-        kommentare.load({
-            params: {
-                messungsId: id
             }
         });
     },
