@@ -14,6 +14,8 @@ Ext.define('Lada.view.window.PrintGrid', {
     extend: 'Ext.window.Window',
     requires: ['Koala.view.form.IrixFieldSet'],
 
+    resizable: false,
+
     defaults: {
         margin: '5, 5, 5, 5',
         width: '100%',
@@ -89,8 +91,11 @@ Ext.define('Lada.view.window.PrintGrid', {
                 disabled: true,
                 triggerAction: 'all'
             }, {
-                xtype: 'fieldset',
-                name: 'generic-fieldset'
+                xtype: 'panel',
+                name: 'generic-fieldset',
+                border: false,
+                width: '100%',
+                margin: '0 155 0 0',
             }, {
                 xtype: 'fieldset',
                 title: i18n.getMsg('print.presets'),
@@ -154,11 +159,13 @@ Ext.define('Lada.view.window.PrintGrid', {
     // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
     addIrixCheckbox: function() {
         var me = this;
-        var genericFieldset = me.down('fieldset[name=generic-fieldset]');
+        var genericFieldset = me.down('panel[name=generic-fieldset]');
         var printDisabled = this.down('combobox[name=template]').getValue() ? false: true ;
         var irixCheckbox = Ext.create('Ext.form.field.Checkbox', {
             name: 'irix-fieldset-checkbox',
-            boxLabel: 'DokPool',
+            boxLabel: 'DokPool:',
+            boxLabelAlign: 'before',
+            width: '100%',
             border: false,
             checked: this.config.chartPrint,
             disabled: printDisabled,
@@ -173,7 +180,6 @@ Ext.define('Lada.view.window.PrintGrid', {
         });
 
         genericFieldset.add(irixCheckbox);
-
     },
 
     // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
