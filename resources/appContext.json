@@ -1,0 +1,14 @@
+{
+    "data": {
+        "merge": {
+            "urls": {
+                "print-servlet": "lada-printer/print/",
+                "irix-servlet": "irix-servlet",
+                "irix-context": "resources/irixContext.json"
+            },
+            "tools": ["irixPrintBtn"]
+        }
+    },
+    "success": true,
+    "debug": true
+}

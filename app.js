@@ -173,6 +173,19 @@ Ext.application({
             success: this.onLoginSuccess,
             failure: this.onLoginFailure
         });
+
+        Ext.Ajax.request({
+            url: 'resources/appContext.json',
+            method: 'GET',
+            scope: this,
+            success: function(response) {
+                var json = Ext.decode(response.responseText);
+                if (json.data) {
+                    Lada.appContext = json.data;
+                }
+            }
+        });
+
         // ask before closing/refreshing the window.
         // Not all browsers will respect this, depending on settings
         window.addEventListener('beforeunload', function (evt){

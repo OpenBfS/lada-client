@@ -34,9 +34,10 @@ Ext.define('Lada.controller.Print', {
         'Lada.view.window.PrintGrid'
     ],
 
+    // may be overwritten by any appContext settings
     printUrlPrefix: 'lada-printer/print/',
-    irixServletURL: 'irix-servlet/', // TODO: appContext
-    dokPoolEnabled: true, // TODO: data.merge.tools in appContext
+    irixServletURL: 'irix-servlet',
+    dokPoolEnabled: true,
 
     init: function() {
         this.control({
@@ -72,6 +73,18 @@ Ext.define('Lada.controller.Print', {
                 }
             }
         });
+        if (Lada.appContext) {
+            if (Lada.appContext.merge.tools.indexOf('irixPrintBtn') >= 0) {
+                this.dokPoolEnabled = true;
+            }
+            if (Lada.appContext.merge.urls['irix-servlet']) {
+                this.irixServletURL = Lada.appContext.merge.urls['irix-servlet'];
+            }
+            if (Lada.appContext.merge.urls['print-servlet']) {
+                this.printUrlPrefix = Lada.appContext.merge.urls['print-servlet'];
+            }
+        }
+
         if (this.dokPoolEnabled) {
             win.addIrixCheckbox();
             win.addIrixFieldset();

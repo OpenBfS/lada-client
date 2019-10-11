@@ -43,7 +43,6 @@ Ext.define('Koala.view.form.IrixFieldSet',{
     },
 
     config: {
-        // TODO to be overrideable (see initComponent)
         irixContextUrl: 'resources/irixContext.json'
     },
 
@@ -74,7 +73,9 @@ Ext.define('Koala.view.form.IrixFieldSet',{
 
     initComponent: function() {
         var me = this;
-        // TODO get this.config.irixContextUrl from appContext
+        if (Lada.appContext && Lada.appContext.merge.urls['irix-context']) {
+            this.config.irixContextUrl = Lada.appContext.merge.urls['irix-context'];
+        }
         me.irixFieldsetLoaded = new Ext.Promise(function(resolve) {
             Ext.Ajax.request({
                 url: me.irixContextUrl,
