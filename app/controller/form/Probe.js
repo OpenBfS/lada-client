@@ -681,6 +681,18 @@ Ext.define('Lada.controller.form.Probe', {
         }
     },
 
+    enableButtons: function(form) {
+        form.owner.down('button[action=save]').setDisabled(false);
+        form.owner.down('button[action=discard]').setDisabled(false);
+        form.owner.up('window').disableChildren();
+    },
+
+    disableButtons: function(form) {
+        form.owner.down('button[action=save]').setDisabled(true);
+        form.owner.down('button[action=discard]').setDisabled(true);
+        form.owner.up('window').enableChildren(); // todo this might not be true in all cases
+    },
+
     /**
      * Enables/disabled the save/reset buttons if tags hast been altered.
      * Only disables buttons if form is not dirty, too.
