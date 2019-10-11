@@ -476,7 +476,6 @@ Ext.define('Lada.controller.form.Probe', {
         combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
         combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
         combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
-
     },
 
     /**
@@ -564,7 +563,8 @@ Ext.define('Lada.controller.form.Probe', {
             var record = formPanel.getForm().getRecord();
             for (var key in data) {
                 //Only set existing fields, avoids sending the tag widget
-                if (record.get(key) != undefined) {
+                if (record.get(key) != undefined &&
+                            key != formPanel.down('tagwidget').getInputId()) {
                     record.set(key, data[key]);
                 }
             }
@@ -574,6 +574,7 @@ Ext.define('Lada.controller.form.Probe', {
             if (record.phantom) {
                 record.set('id',null);
             }
+            delete record.data[formPanel.down('tagwidget').getInputId()];
 
             record.save({
                 success: function(record, response) {

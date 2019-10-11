@@ -85,7 +85,7 @@ Ext.define('Lada.view.window.TagEdit', {
             xtype: 'progressbar',
             hidden: true,
             width: '100%',
-            margin: '5 10 10 10'
+            margin: '5 10 10 5'
         }];
         this.callParent(arguments);
     },
