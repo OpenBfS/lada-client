@@ -144,14 +144,14 @@ Ext.define('Lada.view.form.Ort', {
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.koordx'),
             name: 'koordXExtern',
-            regex: /^[noeswNOESW\d\.,]+$/,
+            regex: /^[noeswNOESW\d\.,-]+$/,
             maxLength: 22
         }, {
             xtype: 'tfield',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.koordy'),
             name: 'koordYExtern',
-            regex: /^[noeswNOESW\d\.,]+$/,
+            regex: /^[noeswNOESW\d\.,-]+$/,
             maxLength: 22
         }, {
             xtype: 'button',
