@@ -78,6 +78,7 @@ Ext.define('Lada.view.window.FileUpload', {
                 xtype: 'fieldset',
                 name: 'uploadFiles',
                 collapsible: true,
+                margin: '5 5 5 5',
                 title: i18n.getMsg('import.filesSelected', 0),
                 items: [],
                 scrollable: true,
@@ -269,9 +270,7 @@ Ext.define('Lada.view.window.FileUpload', {
         // TODO handle Errors correctly, especially AuthenticationTimeouts
         var i18n= Lada.getApplication().bundle;
         this.filesUploaded++;
-        if (this.filesUploaded == this.files.length) {
-            this.close();
-        }
+
         if (!this.resultWin) {
             this.resultWin = Ext.create('Lada.view.window.ImportResponse', {
                 message: {}, //TODO:response.message,

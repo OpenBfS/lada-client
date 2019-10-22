@@ -64,10 +64,11 @@ Ext.define('Lada.view.window.ImportResponse', {
             width: '100%',
             height: '100%',
             scrollable: true,
-            margin: 10,
+            margin: '10 0 15 10',
             border: false
         }, {
-            xtype: 'progressbar'
+            xtype: 'progressbar',
+            margin: '10 0 20 0'
         }];
 
         me.buttons = [{
@@ -131,7 +132,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         var filename = this.fileNames[fileIndex];
         var response = '<br/><hr><b>' + filename + ':</b><br/><ol>&#40' + this.mstEncoding + '&#41</ol>';
         response += i18n.getMsg('import.messages') + ':<br/><hr>';
-        response += this.parseResponse(data, true);
+        response += status + ' - ' + statusText;
         this.down('panel').setHtml(this.down('panel').html + response);
         this.download += response;
         if (this.finished == this.fileCount) {
