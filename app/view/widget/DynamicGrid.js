@@ -604,8 +604,12 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 }
             }
             if (format === 'e') {
-                var strValue = Lada.getApplication().toExpString(value, 2)
-                    .replace('.', Ext.util.Format.decimalSeparator);
+                //Check if value is already a string representation
+                var strValue = value;
+                if (value instanceof Number) {
+                    strValue = Lada.getApplication().toExponentialString(value, 2)
+                         .replace('.', Ext.util.Format.decimalSeparator);
+                }
                 var splitted = strValue.split('e');
                 var exponent = parseInt(splitted[1], 10);
                 return splitted[0] + 'e'
