@@ -53,10 +53,15 @@ Ext.define('Lada.view.window.TagEdit', {
                     //Close window if parent window is closed
                     me.on('close', function() {
                         win.close();
-                    })
+                    });
                     win.show();
                 }
             }]
+        }, {
+            xtype: 'progressbar',
+            width: '100%',
+            hidden: true,
+            margin: '5 10 10 5'
         }, {
             xtype: 'container',
             layout: 'hbox',
@@ -76,18 +81,32 @@ Ext.define('Lada.view.window.TagEdit', {
             },{
                 xtype: 'button',
                 text: i18n.getMsg('cancel'),
+                action: 'cancel',
                 margin: '5 5 5 5',
                 handler: function() {
                     me.close();
                 }
             }]
-        }, {
-            xtype: 'progressbar',
-            hidden: true,
-            width: '100%',
-            margin: '5 10 10 5'
         }];
         this.callParent(arguments);
+        this.down('progressbar').updateProgress(0, '');
+
+    },
+
+    disableButtons: function() {
+        this.down('button[action=createtag]').disable();
+        this.down('button[action=bulkaddtags]').disable();
+        this.down('button[action=bulkdeletetags]').disable();
+        this.down('button[action=cancel]').disable();
+        this.down('tagwidget').disable();
+    },
+
+    enableButtons: function()  {
+        this.down('button[action=createtag]').enable();
+        this.down('button[action=bulkaddtags]').enable();
+        this.down('button[action=bulkdeletetags]').enable();
+        this.down('button[action=cancel]').enable();
+        this.down('tagwidget').enable();
     },
 
     /**
@@ -104,11 +123,9 @@ Ext.define('Lada.view.window.TagEdit', {
         });
         var tagCount = tags.length * me.selection.length;
         var tagsSet = 0;
-        me.down('progressbar').updateProgress(0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
         me.down('progressbar').show();
-        me.down('container[name=buttoncontainer]').hide();
-        me.down('tagwidget').disable();
-        me.down('button[action=createtag]').disable();
+        me.down('progressbar').updateProgress(0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
+        me.disableButtons();
 
         for (var i = 0; i < me.selection.length; i++) {
             var probeId = me.selection[i].data.probeId;
@@ -123,6 +140,7 @@ Ext.define('Lada.view.window.TagEdit', {
                             ratio, i18n.getMsg('tag.assignwindow.progress', tagsSet, tagCount, false));
                     if (ratio == 1) {
                         Ext.getCmp('dynamicgridid').reload();
+                        me.enableButtons();
                     }
                 });
             }
@@ -143,11 +161,9 @@ Ext.define('Lada.view.window.TagEdit', {
         });
         var tagCount = tags.length * me.selection.length;
         var tagsSet = 0;
-        me.down('progressbar').updateProgress(0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
         me.down('progressbar').show();
-        me.down('container[name=buttoncontainer]').hide();
-        me.down('tagwidget').disable();
-        me.down('button[action=createtag]').disable();
+        me.down('progressbar').updateProgress(0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
+        me.disableButtons();
 
         for (var i = 0; i < me.selection.length; i++) {
             var probeId = me.selection[i].data.probeId;
@@ -165,6 +181,7 @@ Ext.define('Lada.view.window.TagEdit', {
                             ratio, i18n.getMsg('tag.assignwindow.progress', tagsSet, tagCount, false));
                     if (ratio == 1) {
                         Ext.getCmp('dynamicgridid').reload();
+                        me.enableButtons();
                     }
                 });
             }

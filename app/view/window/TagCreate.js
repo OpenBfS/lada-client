@@ -69,11 +69,22 @@ Ext.define('Lada.view.window.TagCreate', {
                 return true;
             }
         }, {
-            xtype: 'button',
-            text: i18n.getMsg('save'),
-            margin: '5 5 5 5',
-            handler: this.handleSaveClicked
-        }]
+            xtype: 'container',
+            layout: 'hbox',
+            items: [{
+                xtype: 'button',
+                text: i18n.getMsg('save'),
+                margin: '5 5 5 5',
+                handler: this.handleSaveClicked
+            }, {
+                xtype: 'button',
+                text: i18n.getMsg('cancel'),
+                margin: '5 5 5 5',
+                handler: function() {
+                    me.close();
+                }
+            }]
+        }];
         this.callParent(arguments);
     },
 
@@ -131,9 +142,9 @@ Ext.define('Lada.view.window.TagCreate', {
                 //Select new item in combobox and fire click event
                 me.tagWidget.clearValue();
                 me.tagWidget.select(newItem);
+                textfield.reset();
                 me.tagEdit.down('button[action=bulkaddtags]').click();
             });
-            me.close();
         });
     },
 
@@ -142,9 +153,8 @@ Ext.define('Lada.view.window.TagCreate', {
      * Validate textfield input, if valid call single or bulk create function
      */
     handleSaveClicked: function(button) {
-        var me = this.up();
+        var me = button.up('window');
         var textfield = me.down('textfield');
-        var text = textfield.getValue();
         if (textfield.validate()) {
             me.mode === 'single' ? me.saveSingleTag(textfield): me.saveBulkTag(textfield);
         }
