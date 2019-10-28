@@ -124,6 +124,8 @@ Ext.define('Lada.model.Ort', {
             return new Date(v);
         }
     }, {
+        name: 'referenceCount'
+    }, {
         name: 'readonly',
         type: 'boolean'
     }],
