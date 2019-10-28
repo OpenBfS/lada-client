@@ -606,7 +606,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (format === 'e') {
                 //Check if value is already a string representation
                 var strValue = value;
-                if (value instanceof Number) {
+                if (typeof(value) !== 'string') {
                     strValue = Lada.getApplication().toExponentialString(value, 2)
                          .replace('.', Ext.util.Format.decimalSeparator);
                 }
