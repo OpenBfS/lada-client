@@ -17,7 +17,7 @@ Ext.define('Lada.view.window.Ort', {
         'Lada.view.form.Ort'
     ],
 
-    minWidth: 350,
+    minWidth: 420,
 
     margin: 10,
 
