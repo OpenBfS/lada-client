@@ -162,10 +162,13 @@ Ext.define('Lada.view.window.ProbeCreate', {
             record.set('laborMstId', labRec.get('laborMst'));
         }
         var errors = [];
-        var warnings = {probeentnahmeBeginn: [631]};
+        var warnings = {  probeentnahmeBeginn: [631],
+                               hauptprobenNr : [631]
+                       };
         this.down('probeform').setRecord(record);
         this.down('probeform').setMediaDesk(record);
         this.down('probeform').setMessages(errors,warnings);
+        this.down('probeform').isValid();
     },
 
     /**

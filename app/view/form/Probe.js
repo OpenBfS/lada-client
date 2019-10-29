@@ -222,16 +222,17 @@ Ext.define('Lada.view.form.Probe', {
                             fieldLabel: 'Messregime',
                             margin: '0, 5, 5, 5',
                             width: '35%',
+                            allowBlank: false,
                             labelWidth: 80
                         }, {
                             xtype: 'probenart',
-                            editable: true,
+                            //editable: true,
                             name: 'probenartId',
                             fieldLabel: 'Probenart',
                             margin: '0, 5, 5, 5',
                             width: '30%',
-                            labelWidth: 65,
-                            allowBlank: true
+                            allowBlank: false,
+                            labelWidth: 65
                         }]
                     }, {
                         layout: {

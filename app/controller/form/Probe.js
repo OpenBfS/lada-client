@@ -35,17 +35,22 @@ Ext.define('Lada.controller.form.Probe', {
                 click: this.showAuditTrail
             },
             'probeform': {
-                dirtychange: this.dirtyForm,
+                validitychange: this.checkCommitEnabled,
+                dirtychange: this.handleDirtyChange,
                 save: this.saveHeadless
             },
             'probeform umwelt combobox': {
                 change: this.umweltChanged
             },
             'probeform datenbasis combobox': {
+                change: this.checkCommitEnabled,
                 change: this.datenbasisChanged
             },
             'probeform messstellelabor combobox': {
                 select: this.setNetzbetreiber
+            },
+            'probeform netzbetreiber combobox': {
+                change: this.checkCommitEnabled
             },
             'probeform container[name="reiComboContainer"] reiprogpunktgruppe combobox': {
                 change: this.reiProgpunktGruppeChanged
@@ -55,6 +60,12 @@ Ext.define('Lada.controller.form.Probe', {
             },
             'probeform panel[xtype="deskriptor"] combobox': {
                 select: this.deskriptorSelect
+            },
+            'probeform betriebsart combobox': {
+                change: this.checkCommitEnabled
+            },
+            'probeform probenart combobox': {
+                change: this.checkCommitEnabled
             }
         });
     },
@@ -612,13 +623,8 @@ Ext.define('Lada.controller.form.Probe', {
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
-        formPanel.down('fset[name=entnahmePeriod]').clearMessages();
-        formPanel.down('fset[name=sollzeitPeriod]').clearMessages();
-        formPanel.down('datetime[name=probeentnahmeBeginn]').clearWarningOrError();
-        formPanel.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
-
-        formPanel.down('umwelt').store.clearFilter();
-        formPanel.setRecord(formPanel.getForm().getRecord());
+        formPanel.getForm().isValid();
+        formPanel.down('button[action=discard]').setDisabled(true);
     },
 
     /**
@@ -630,18 +636,37 @@ Ext.define('Lada.controller.form.Probe', {
       * embedding the form. Likewise it calls the embedding windows
       * enableChilren() function
       */
-    dirtyForm: function(form, dirty) {
-        if (dirty) {
-            form.owner.down('button[action=save]').setDisabled(false);
-            form.owner.down('button[action=discard]').setDisabled(false);
-            form.owner.up('window').disableChildren();
-            form.owner.down('button[action=copy]').setDisabled(true);
+
+    checkCommitEnabled: function(callingEl) {
+        var panel;
+        if (callingEl.up) { //called by a field in the form
+            panel = callingEl.up('probeform');
+        } else { //called by the form
+            panel = callingEl.owner;
+        }
+        if (panel.getRecord().get('readonly')  )  {
+            panel.down('button[action=save]').setDisabled(true);
+            panel.down('button[action=discard]').setDisabled(true);
+            panel.down('button[action=copy]').setDisabled(false);
         } else {
-            form.owner.down('button[action=save]').setDisabled(true);
-            form.owner.down('button[action=discard]').setDisabled(true);
-            form.owner.up('window').enableChildren(); // todo this might not be true in all cases
-            if (!form.readOnly) {
-                form.owner.down('button[action=copy]').setDisabled(false);
+            if (panel.isValid()) {
+                if (panel.isDirty()) {
+                    panel.down('button[action=discard]').setDisabled(false);
+                    panel.down('button[action=save]').setDisabled(false);
+                    panel.down('button[action=copy]').setDisabled(true);
+                } else {
+                    panel.down('button[action=discard]').setDisabled(true);
+                    panel.down('button[action=copy]').setDisabled(false);
+                    panel.down('button[action=save]').setDisabled(true);
+                }
+            } else {
+                panel.down('button[action=save]').setDisabled(true);
+                panel.down('button[action=copy]').setDisabled(true);
+                if ( panel.getRecord().phantom === true && !panel.isDirty() ) {
+                    panel.down('button[action=discard]').setDisabled(true);
+                } else {
+                    panel.down('button[action=discard]').setDisabled(false);
+                }
             }
         }
     },
@@ -690,6 +715,39 @@ Ext.define('Lada.controller.form.Probe', {
         if (w === 0 && e === 0) {
             field.up().clearWarningOrError();
         }
+    },
+
+    handleDirtyChange: function(callingEl, dirty) {
+        var panel;
+        if (callingEl.up) { //called by a field in the form
+            panel = callingEl.up('probeform');
+        } else { //called by the form
+            panel = callingEl.owner;
+        }
+        if (panel.getRecord().get('readonly')  )  {
+            panel.down('button[action=save]').setDisabled(true);
+            panel.down('button[action=discard]').setDisabled(true);
+            panel.down('button[action=copy]').setDisabled(true);
+        } else {
+            if (panel.isValid()) {
+                if (panel.isDirty()) {
+                    panel.down('button[action=discard]').setDisabled(false);
+                    panel.down('button[action=save]').setDisabled(false);
+                    panel.down('button[action=copy]').setDisabled(true);
+                } else {
+                    // false keine Veränderung
+                    panel.down('button[action=discard]').setDisabled(true);
+                    panel.down('button[action=copy]').setDisabled(false);
+                    panel.down('button[action=save]').setDisabled(true);
+                }
+            } else {
+                console.log('dirty und NICHT valide');
+                panel.down('button[action=save]').setDisabled(true);
+                panel.down('button[action=copy]').setDisabled(true);
+                panel.down('button[action=discard]').setDisabled(false);
+            }
+        }
+        this.checkCommitEnabled(callingEl);
     },
 
     deskriptorSelect: function(field, records) {
