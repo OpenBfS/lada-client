@@ -189,7 +189,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 + ' editieren.');
             var json = null;
             try {
-                json = Ext.decode(response.response.responseText);
+                json = Ext.decode(response.getResponse().responseText);
             } catch (e) {}
             if (json) {
                 me.setMessages(json.errors, json.warnings);
