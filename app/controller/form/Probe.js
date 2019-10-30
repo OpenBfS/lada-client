@@ -120,7 +120,7 @@ Ext.define('Lada.controller.form.Probe', {
                 if (success) {
                     me.copyOrtszuordnung(probe, copy, callback);
                 } else {
-                    var responseObj = Ext.decode(op.getResponse().responseText);
+                    var responseObj = Ext.decode(operation.getResponse().responseText);
                     Ext.Msg.alert(i18n.getMsg('err.probe.copy'), i18n.getMsg(responseObj.message));
                 }
             }
