@@ -58,13 +58,13 @@ Ext.define('Lada.view.window.Ort', {
         if (this.record === null) {
             this.record = Ext.create('Lada.model.Ort');
         }
-        /*
+
         if (this.parentWindow !== null) {
             if (this.parentWindow.xtype === 'ortszuordnungwindow' || this.parentWindow.xtype === 'ortstammdatengrid') {
                 this.record.set('readonly', true);
             }
         }
-        */
+
         if (this.mode) {
             this.title = i18n.getMsg('orte.' + this.mode);
         } else {

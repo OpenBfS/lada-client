@@ -80,6 +80,10 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 title = i18n.getMsg('delete.multiple_mpr_kat.window.title');
                 dialog1 = i18n.getMsg('delete.multiple_mpr_kat');
                 break;
+            case 'ortId':
+                title = i18n.getMsg('delete.multiple_ort.window.title');
+                dialog1 = i18n.getMsg('delete.multiple_ort');
+                break;
 
 
         }
@@ -103,6 +107,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 layout: 'hbox',
                 items: [{
                     xtype: 'button',
+                    margin: '5, 5, 5, 5',
                     text: i18n.getMsg('cancel'),
                     scope: me,
                     handler: function() {
@@ -111,6 +116,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                     }
                 }, {
                     xtype: 'button',
+                    margin: '5, 5, 5, 5',
                     text: i18n.getMsg('delete'),
                     handler: function(btn) {
                         me.confWin.close();
@@ -153,6 +159,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
         me.down('progressbar').hide();
         me.add({
             xtype: 'button',
+            margin: '5, 5, 5, 5',
             text: Lada.getApplication().bundle.getMsg('close'),
             handler: function() {
                 me.close();
@@ -195,6 +202,10 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
             case 'mprkat':
                 url = 'lada-server/rest/messprogrammkategorie/';
                 datatype = i18n.getMsg('messprogrammkategorie');
+                break;
+            case 'ortId':
+                url = 'lada-server/rest/ort/';
+                datatype = 'Ort';
                 break;
         }
         for (var i = 0; i< me.selection.length; i++) {
