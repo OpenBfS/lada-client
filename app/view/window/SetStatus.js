@@ -64,7 +64,7 @@ Ext.define('Lada.view.window.SetStatus', {
                     allowBlank: false,
                     queryMode: 'local',
                     editable: false,
-                    width: 300,
+                    width: 350,
                     labelWidth: 100,
                     emptyText: i18n.getMsg('emptytext.erzeuger'),
                     fieldLabel: i18n.getMsg('erzeuger')
@@ -72,12 +72,12 @@ Ext.define('Lada.view.window.SetStatus', {
                     xtype: 'statuskombiselect',
                     store: possibleStatusStore,
                     allowBlank: false,
-                    width: 300,
+                    width: 350,
                     labelWidth: 100,
                     fieldLabel: i18n.getMsg('header.statuskombi')
                 }, {
                     xtype: 'textarea',
-                    width: 300,
+                    width: 350,
                     height: 100,
                     labelWidth: 100,
                     fieldLabel: i18n.getMsg('text'),
@@ -226,25 +226,50 @@ Ext.define('Lada.view.window.SetStatus', {
                     statusKombi: kombi,
                     text: this.down('textarea').getValue()
                 };
-                Ext.Ajax.request({ //TODO not checked yet
+                Ext.Ajax.request({
                     url: 'lada-server/rest/status',
                     method: 'POST',
                     jsonData: data,
                     success: function(response) {
+                        var i18n = Lada.getApplication().bundle;
                         var json = Ext.JSON.decode(response.responseText);
+
                         var probenform = Ext.ComponentQuery.query('probeform');
                         var hauptprobennummer = probenform[0].getRecord().get('hauptprobenNr');
-                        me.resultMessage += '<strong>' + i18n.getMsg('messung') + ': ';
-                        me.resultMessage += hauptprobennummer || '';
-                        me.resultMessage += ' - ' + me.record.get('nebenprobenNr') +
-                          '</strong><br><dd>' +
-                          i18n.getMsg('status-' + json.message) + '</dd><br>';
-                        progress.updateProgress(1, progressText + ' (' + 1 + ')');
+                            me.resultMessage += '<strong>' + i18n.getMsg('messung') + ': ';
+                            me.resultMessage += hauptprobennummer || '';
+                            me.resultMessage += ' - ' + me.record.get('nebenprobenNr') +
+                              '</strong><br><dd>' +
+                              i18n.getMsg('status-' + json.message) + '</dd><br>';
+                        var errors = json.errors;
+                        var out = [];
+                        var numErrors;
+                        if (!Ext.isObject(errors)) {
+                            numErrors = 0;
+                        } else {
+                            numErrors = Object.keys(errors).length;
+                        }
+                        if (numErrors > 0) {
+                            var msgs;
+                            out.push('<ul>');
+                            for (var key in errors) {
+                                console.log(key);
+                                msgs = errors[key];
+                                var validation = [];
+                                for (var i = msgs.length - 1; i >= 0; i--) {
+                                        validation.push('<li><b>' + i18n.getMsg(key) + ':</b> ' + i18n.getMsg(msgs[i].toString()) + '</li>');
+                                }
+                                out.push(validation.join(''));
+                            }
+                            out.push('</ul>');
+                            out.push('<br/>');
+                        }
                         var result = me.down('panel[name=result]');
                         var values = me.down('panel[name=valueselection]');
                         me.down('button[name=start]').hide();
                         me.down('button[name=abort]').hide();
                         me.down('button[name=close]').show();
+                        me.resultMessage += out.join('');
                         result.setHtml(me.resultMessage);
                         result.setSize(values.getWidth(), values.getHeight());
                         result.show();
@@ -255,7 +280,10 @@ Ext.define('Lada.view.window.SetStatus', {
                         me.fireEvent('statussetend');
                     },
                     failure: function(response) {
-                        // TODO
+                        console.log('ERROR');
+                        me.resultMessage += '<strong>Ein interner Fehler ist aufgetreten' ;
+                        var result = me.down('panel[name=result]');
+                        result.setHtml(me.resultMessage);
                     }
                 });
             }
