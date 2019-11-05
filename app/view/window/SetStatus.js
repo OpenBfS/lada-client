@@ -236,8 +236,6 @@ Ext.define('Lada.view.window.SetStatus', {
 
                         var probenform = Ext.ComponentQuery.query('probeform');
                         var hauptprobennummer = probenform[0].getRecord().get('hauptprobenNr');
-                        var extPID = probenform[0].getRecord().get('externeProbeId');
-                        var extMessungsId = Ext.ComponentQuery.query('messungform')[0].getRecord().get('externeMessungsId');
                         me.resultMessage += '<strong>' + i18n.getMsg('hauptprobenNr') + ' - ' + i18n.getMsg('nebenprobenNr') + ': ';
                         me.resultMessage += hauptprobennummer || '';
                         me.resultMessage += ' - ';
