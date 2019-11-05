@@ -150,39 +150,48 @@ Ext.define('Lada.controller.Query', {
         panel.store.add(newrecord);
         var columnChooser = panel.down('columnchoser');
         var columnValues = columnChooser.store.getData();
-        var fieldset = panel.down('fieldset[name=querydetails]');
+        var fieldset = Ext.getCmp('querypanelid');
         var loadingMask = Ext.create('Ext.LoadMask', {
             target: fieldset
         });
         loadingMask.show();
-        columnChooser.on({
-            loadend: {
-                fn: function() {
-                    loadingMask.hide();
-                },
-                single: true
-            }
-        });
+
         //Clone columns after query is saved
         var saveCallback = function(savedQuery) {
-            columnValues.each(function(item) {
-                var clonedModel = Ext.create('Lada.model.GridColumnValue', {
-                    columnIndex: item.get('columnIndex'),
-                    gridColumnId: item.get('gridColumnId'),
-                    visible: item.get('visible'),
-                    sort: item.get('sort'),
-                    sortIndex: item.get('sortIndex'),
-                    filterActive: item.get('filterActive'),
-                    filterNegate: item.get('filterNegate'),
-                    filterRegex: item.get('filterRegex'),
-                    filterValue: item.get('filterValue'),
-                    width: item.get('width')
+            new Ext.Promise(function(resolve, reject) {
+                var len = columnValues.length;
+                var cur = 1;
+                var success = true;
+                columnValues.each(function(item) {
+                    var clonedModel = Ext.create('Lada.model.GridColumnValue', {
+                        columnIndex: item.get('columnIndex'),
+                        gridColumnId: item.get('gridColumnId'),
+                        visible: item.get('visible'),
+                        sort: item.get('sort'),
+                        sortIndex: item.get('sortIndex'),
+                        filterActive: item.get('filterActive'),
+                        filterNegate: item.get('filterNegate'),
+                        filterRegex: item.get('filterRegex'),
+                        filterValue: item.get('filterValue'),
+                        width: item.get('width')
+                    });
+                    clonedModel.set('id', null);
+                    clonedModel.set('queryUserId', savedQuery.get('id'));
+                    clonedModel.set('userId', null);
+                    clonedModel.save({
+                        callback: function(rec, op, suc) {
+                            cur++;
+                            success = suc == false ? false: true;
+                            if (cur == len) {
+                                resolve(success);
+                            }
+                        }
+                    });
                 });
-                clonedModel.set('id', null);
-                clonedModel.set('queryUserId', savedQuery.get('id'));
-                clonedModel.set('userId', null);
-                clonedModel.save();
+            }).then(function(saveSuccess) {
+                loadingMask.hide();
             });
+
         };
 
         cbox.setStore(panel.store);
