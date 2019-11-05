@@ -236,11 +236,14 @@ Ext.define('Lada.view.window.SetStatus', {
 
                         var probenform = Ext.ComponentQuery.query('probeform');
                         var hauptprobennummer = probenform[0].getRecord().get('hauptprobenNr');
-                            me.resultMessage += '<strong>' + i18n.getMsg('messung') + ': ';
-                            me.resultMessage += hauptprobennummer || '';
-                            me.resultMessage += ' - ' + me.record.get('nebenprobenNr') +
-                              '</strong><br><dd>' +
-                              i18n.getMsg('status-' + json.message) + '</dd><br>';
+                        var extPID = probenform[0].getRecord().get('externeProbeId');
+                        var extMessungsId = Ext.ComponentQuery.query('messungform')[0].getRecord().get('externeMessungsId');
+                        me.resultMessage += '<strong>' + i18n.getMsg('hauptprobenNr') + ' - ' + i18n.getMsg('nebenprobenNr') + ': ';
+                        me.resultMessage += hauptprobennummer || '';
+                        me.resultMessage += ' - ';
+                        me.resultMessage +=  me.record.get('nebenprobenNr') || '';
+                        me.resultMessage += '</strong><br><dd>' + i18n.getMsg('status-' + json.message) + '</dd><br>';
+                        progress.updateProgress(1, progressText + ' (' + 1 + ')');
                         var errors = json.errors;
                         var out = [];
                         var numErrors;
@@ -253,7 +256,6 @@ Ext.define('Lada.view.window.SetStatus', {
                             var msgs;
                             out.push('<ul>');
                             for (var key in errors) {
-                                console.log(key);
                                 msgs = errors[key];
                                 var validation = [];
                                 for (var i = msgs.length - 1; i >= 0; i--) {
@@ -280,7 +282,6 @@ Ext.define('Lada.view.window.SetStatus', {
                         me.fireEvent('statussetend');
                     },
                     failure: function(response) {
-                        console.log('ERROR');
                         me.resultMessage += '<strong>Ein interner Fehler ist aufgetreten' ;
                         var result = me.down('panel[name=result]');
                         result.setHtml(me.resultMessage);

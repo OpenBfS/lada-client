@@ -288,6 +288,8 @@ Ext.define('Lada.view.window.ImportResponse', {
                 }
                 out.push('</ol>');
                 out.push('<br/>');
+            } else {
+                out.push('<br>Beim Import traten keine Fehler auf.</br>');
             }
             if (numWarnings > 0) {
                 out.push('<br/>');
@@ -342,6 +344,8 @@ Ext.define('Lada.view.window.ImportResponse', {
                     }
                 }
                 out.push('</ol>');
+            } else {
+                out.push('<br>Beim Import traten keine Warnungen auf.</br>');
             }
             if (!divHtml) {
                 out.push('</body></html>');
