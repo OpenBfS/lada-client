@@ -81,6 +81,10 @@ Ext.define('Lada.view.Viewport', {
                         xtype: 'button',
                         text: i18n.getMsg('info'),
                         action: 'about'
+                    }, {
+                        xtype: 'elanscenariobutton',
+                        action: 'elanscenarios',
+                        hidden: false
                     }, '->', {
                         xtype: 'tbtext',
                         id: 'userinfo',

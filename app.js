@@ -89,9 +89,12 @@ Ext.application({
         'Lada.store.GridColumn',
         'Lada.store.Query',
         'Lada.view.widget.base.SelectableDisplayField',
+        'Lada.view.window.ElanScenarioWindow',
         'Lada.view.window.TrackedWindow',
         'Lada.util.FunctionScheduler',
-        'Lada.util.WindowTracker'
+        'Lada.util.LocalStorage',
+        'Lada.util.WindowTracker',
+        'Koala.util.DokpoolRequest'
     ],
     statics: {
         applicationUpdateTitle: 'Anwendungsupdate',
@@ -547,9 +550,28 @@ Ext.application({
             storeId: 'querystore'
         });
         Ext.create('Lada.view.Viewport');
+        this.initElanScenarios();
     },
 
+    initElanScenarios: function() {
+        var dokpool = Koala.util.DokpoolRequest;
+        //Configure dokpool utility
+        dokpool.storageModule = Lada.util.LocalStorage;
+        //If scenario requests finished, fire event
+        dokpool.handleElanScenariosReceived = function(success) {
+            Ext.fireEvent('elanEventsReceived', success);
+        };
+        //If scenarios are update, fire event
+        dokpool.handleElanScenariosUpdated = function(scenarioId, routineMode) {
+            Ext.fireEvent('elanEventsUpdated', scenarioId, routineMode);
+        }
+        dokpool.updateActiveElanScenarios();
+        window.setInterval(function() {
+            dokpool.updateActiveElanScenarios();
+        }, 30000);
 
+
+    },
 
     getServerVersion: function() {
         var i18n = Lada.getApplication().bundle;
@@ -623,6 +645,7 @@ Ext.application({
         'Lada.controller.GridExport',
         'Lada.controller.grid.DynamicGrid',
         'Lada.controller.Query',
-        'Lada.controller.Global'
+        'Lada.controller.Global',
+        'Lada.controller.ElanScenario'
     ]
 });
