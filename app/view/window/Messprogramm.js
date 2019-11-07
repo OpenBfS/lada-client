@@ -219,7 +219,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                 gueltigVon: 1,
                 gueltigBis: 365});
             this.record = record;
-            this.down('messmethodengrid').setReadOnly(true);
+            this.disableChildren();
             var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
             mstLaborKombiStore.clearFilter(true);
             var items = mstLaborKombiStore.queryBy(function(record) {
