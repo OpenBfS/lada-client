@@ -56,7 +56,6 @@ Ext.define('Lada.view.window.Messprogramm', {
                         ids: [this.record.get('id')],
                         parentWindow: this
                     });
-                    win.initData();
                     win.show();
                     this.probenWindow = win;
                 } else {
