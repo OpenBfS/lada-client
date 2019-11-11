@@ -14,6 +14,14 @@
   border-color: #FF0000 !important;
 }
 
+.x-lada-warning-grid-field {
+    border: 2px solid #FFE25D;
+  }
+  
+  .x-lada-error-grid-field {
+    border: 2px solid #cf4c35;
+  }
+
 .x-lada-multiline-grid .x-grid-cell-inner{
     white-space: normal !important;
 }

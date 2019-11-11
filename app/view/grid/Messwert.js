@@ -122,7 +122,8 @@ Ext.define('Lada.view.grid.Messwert', {
             header: i18n.getMsg('messgroesseId'),
             dataIndex: 'messgroesseId',
             width: 118,
-            renderer: function(value) {
+            renderer: function(value, metaData, record) {
+                this.setValidationResults(metaData, record, 'messgroesseId');
                 if (!value || value === '') {
                     return '';
                 }
@@ -156,6 +157,10 @@ Ext.define('Lada.view.grid.Messwert', {
                 xtype: 'checkbox',
                 uncheckedValue: false,
                 inputValue: '<'
+            },
+            renderer: function(value, metaData, record) {
+                this.setValidationResults(metaData, record, 'messwertNwg');
+                return value;
             }
         }, {
             header: i18n.getMsg('messwert'),
@@ -165,7 +170,8 @@ Ext.define('Lada.view.grid.Messwert', {
                 xtype: 'expnumberfield',
                 allowBlank: false
             },
-            renderer: function(value) {
+            renderer: function(value, metaData, record) {
+                this.setValidationResults(metaData, record, 'messwert');
                 if (!value || value === '') {
                     return value;
                 }
@@ -187,7 +193,8 @@ Ext.define('Lada.view.grid.Messwert', {
                 xtype: 'expnumberfield',
                 allowBlank: false
             },
-            renderer: function(value) {
+            renderer: function(value, metaData, record) {
+                this.setValidationResults(metaData, record, 'nwgZuMesswert');
                 if (!value || value === '') {
                     return value;
                 }
@@ -204,7 +211,8 @@ Ext.define('Lada.view.grid.Messwert', {
             header: i18n.getMsg('mehId'),
             dataIndex: 'mehId',
             width: 120,
-            renderer: function(value) {
+            renderer: function(value, metaData, record) {
+                this.setValidationResults(metaData, record, 'mehId');
                 if (!value || value === '') {
                     return '';
                 }
@@ -251,6 +259,10 @@ Ext.define('Lada.view.grid.Messwert', {
                 allowExponential: false,
                 enforceMaxLength: true,
                 hideTrigger: true
+            },
+            renderer: function(value, metaData, record) {
+                this.setValidationResults(metaData, record, 'messfehler');
+                return value;
             }
         }];
         this.listeners = {
@@ -269,6 +281,26 @@ Ext.define('Lada.view.grid.Messwert', {
         if (!me.bottomBar) {
             this.down('toolbar[dock=bottom]').hide();
         }
+        this.on('edit', function(editor, context) {
+            var colIdx = context.colIdx;
+            var record = context.record;
+            var view = context.view;
+            var cell = view.getCell(record, colIdx);
+            var warnings = record.get('warnings');
+            var errors = record.get('errors');
+
+            //Remove warnings/errors from record as they should be resolved now
+            if (warnings) {
+                delete warnings[context.field];
+            }
+            if (errors) {
+                delete errors[context.field];
+            }
+            //Remove error/warning class from edited cell
+            view.getCell(record, colIdx).removeCls('x-lada-warning-grid-field');
+            view.getCell(record, colIdx).removeCls('x-lada-error-grid-field');
+            cell.dom.removeAttribute('data-qtip');
+        });
     },
 
     initData: function() {
@@ -293,8 +325,12 @@ Ext.define('Lada.view.grid.Messwert', {
             });
         }
         this.store.load({
+            scope: this,
             params: {
                 messungsId: this.recordId
+            },
+            callback: function(records, operation, success) {
+
             }
         });
     },
@@ -362,6 +398,34 @@ Ext.define('Lada.view.grid.Messwert', {
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {
             grid.down('button[action=delete]').disable();
+        }
+    },
+
+    /**
+     * @private
+     * Set validation results in the metadata of a grid column
+     * @param metaData Rendering metaData
+     * @param record Record
+     * @param dataIndex Column data index
+     */
+    setValidationResults: function(metaData, record, dataIndex) {
+        var i18n = Lada.getApplication().bundle;
+        var errors = record.get('errors');
+        var warnings = record.get('warnings');
+        var validationResult = '';
+        var validationResultCls = null;
+
+        if (warnings && warnings[dataIndex]) {
+            validationResult += i18n.getMsg(warnings[dataIndex]) + '<br>';
+            validationResultCls = 'x-lada-warning-grid-field';
+        }
+        if (errors && errors[dataIndex]) {
+            validationResult += i18n.getMsg(errors[dataIndex]) + '<br>';
+            validationResultCls = 'x-lada-error-grid-field';
+        }
+        if (validationResultCls) {
+            metaData.tdCls = validationResultCls;
+            metaData.tdAttr = 'data-qtip="' + validationResult + '"';
         }
     }
 });
