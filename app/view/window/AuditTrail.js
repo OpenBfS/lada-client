@@ -70,8 +70,8 @@ Ext.define('Lada.view.window.AuditTrail', {
             url: 'lada-server/rest/audit/' + this.type + '/' + this.objectId,
             method: 'GET',
             scope: this,
-            success: this.loadSuccess
-            // failure: this.loadFailure //TODO does not exist
+            success: this.loadSuccess,
+            failure: this.loadFailure
         });
     },
 
@@ -91,6 +91,14 @@ Ext.define('Lada.view.window.AuditTrail', {
                 container.update(this.createHtmlMessung(json));
             }
         }
+    },
+
+    loadFailure: function() {
+        var i18n = Lada.getApplication().bundle;
+        var container = this.down('panel[name=auditcontainer]');
+        var html = '<p><strong>' + i18n.getMsg('err.msg.generic.title')
+            + '</strong></p>' + i18n.getMsg('err.msg.generic.body');
+        container.update(html);
     },
 
     createHtmlProbe: function(json) {
