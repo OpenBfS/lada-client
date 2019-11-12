@@ -16,6 +16,7 @@ Ext.define('Lada.view.window.AuditTrail', {
     padding: '10 5 3 10',
     width: 400,
     height: 500,
+    constrain: true,
 
     type: null,
 

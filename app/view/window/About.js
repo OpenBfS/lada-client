@@ -13,6 +13,7 @@ Ext.define('Lada.view.window.About', {
     extend: 'Ext.window.Window',
 
     layout: 'fit',
+    constrain: true,
 
     /**
      * This function initialises the Window

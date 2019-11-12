@@ -260,6 +260,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             width: 800,
             minHeight: 500,
             maxHeight: 600,
+            constrain: true,
             items: [{
                 xtype: 'dynamicgrid',
                 hidebuttons: ['importprobe', 'genericadd'],
