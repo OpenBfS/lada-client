@@ -80,6 +80,12 @@ Ext.define('Lada.model.Messwert', {
             }
             return value;
         }
+    }, {
+        name: 'warnings',
+        persist: false
+    }, {
+        name: 'errors',
+        persist: false
     }],
 
     idProperty: 'id',
