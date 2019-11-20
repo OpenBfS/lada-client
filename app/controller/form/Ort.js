@@ -158,6 +158,7 @@ Ext.define('Lada.controller.form.Ort', {
         var plausibleRefs = record.get('plausibleReferenceCount');
         if (plausibleRefs > 0) {
             Ext.Msg.show({
+                title: 'Achtung',
                 icon: Ext.Msg.WARNING,
                 message: i18n.getMsg('warn.ort.editreferencedort.message', plausibleRefs),
                 buttons: Ext.Msg.YESNO,

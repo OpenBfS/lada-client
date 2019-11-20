@@ -68,7 +68,7 @@ Ext.define('Lada.view.window.Ort', {
         if (this.mode) {
             this.title = i18n.getMsg('orte.' + this.mode);
         } else {
-            this.title = this.record.phantom? i18n.getMsg('orte.new'): i18n.getMsg('orte.edit');
+            this.title = this.record.phantom? i18n.getMsg('orte.new'): i18n.getMsg('orte.edit')+' <i>(Referenzierte Proben '+this.record.get('referenceCount')+')</i>';
         }
         this.items = [
             Ext.create('Lada.view.form.Ort', {

@@ -88,14 +88,6 @@ Ext.define('Lada.view.form.Ort', {
             forceSelection: true,
             name: 'gemId'
         }, {
-            xtype: 'textfield',
-            labelWidth: 125,
-            fieldLabel: i18n.getMsg('orte.references'),
-            hidden: this.record.phantom,
-            submitValue: false,
-            editable: false,
-            name: 'referenceCount'
-        }, {
             xtype: 'fieldset',
             collapsible: true,
             collapsed: true,
