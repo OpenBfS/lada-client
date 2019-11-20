@@ -361,7 +361,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (cc[i].get('filterActive')) {
                 this.currentParams.filters.push({
                     name: dataIndex,
-                    filter: cc[i].get('filterValue')
+                    filter: cc[i].get('filterValue'),
+                    filterRegex: cc[i].get('filterRegex'),
+                    filterNegate: cc[i].get('filterNegate'),
+                    filterIsNull: cc[i].get('filterIsNull')
                 });
             }
             if (cc[i].sort) {

@@ -274,7 +274,13 @@ Ext.define('Lada.controller.Print', {
                     } else if (attributes[i].name === 'sortingParams') {
                         resultData[attributes[i].name] =
                             window.parentGrid.currentParams.sorting;
-                        // { name: String, filterValue: String }[]
+                        // {
+                        // name: String,
+                        // filterValue: String,
+                        // filterRegex: Boolean,
+                        // filterIsNull: Boolean,
+                        // filterNegate: Boolean
+                        // }[]
                     } else {
                         resultData[attributes[i].name] = [];
                         for (var sel = 0; sel < selection.length; sel++ ) {
