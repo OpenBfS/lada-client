@@ -56,8 +56,13 @@ Ext.define('Lada.view.window.PrintGrid', {
         this.title = i18n.getMsg('print.window.title');
         this.items = [{
             layout: 'vbox',
+            minWidth: 330,
             border: false,
             scrollable: true,
+            defaults: {
+                margin: '5 5 5 5',
+                width: '100%'
+            },
             items: [{
                 xtype: 'combobox',
                 name: 'template',
@@ -95,7 +100,7 @@ Ext.define('Lada.view.window.PrintGrid', {
                 name: 'generic-fieldset',
                 border: false,
                 width: '100%',
-                margin: '0 155 0 0',
+                margin: '0 135 0 0'
             }, {
                 xtype: 'fieldset',
                 title: i18n.getMsg('print.presets'),
