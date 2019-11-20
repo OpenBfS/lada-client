@@ -846,7 +846,7 @@ Ext.define('Lada.view.window.GridExport', {
             fname = 'export.' + defaultend;
         }
         //TODO better regex: this is quite basic
-        var pattern = new RegExp(/^(\w|[äöüß])+(\w|\.|\s|[äüöß])*[^\W\.]$/i);
+        var pattern = new RegExp(/^(\w|[-äöüß])+(\w|\.|\s|[äüöß])*[^\W\.]$/i);
         if (!pattern.test(fname)) {
             this.showError('export.invalidfilename');
             return false;
