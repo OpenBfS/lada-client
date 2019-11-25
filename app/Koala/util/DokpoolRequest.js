@@ -185,8 +185,7 @@ Ext.define('Koala.util.DokpoolRequest', {
 
             return new Ext.Promise(function(resolve) {
                 Ext.Ajax.request({
-                    //url: url,
-                    url: 'scenarios.json',
+                    url: url,
                     headers: headers,
                     method: 'GET',
                     success: function(response) {
