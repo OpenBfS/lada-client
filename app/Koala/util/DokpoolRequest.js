@@ -114,12 +114,6 @@ Ext.define('Koala.util.DokpoolRequest', {
                 } else {
                     Ext.each(activeElanScenarios, function(scenario) {
                         var url = scenario['@id'];
-                        //XXX: Only for debug:
-                        if (url === "https://entw-imis.lab.bfs.de/dokpool/bund/contentconfig/scen/routinemode") {
-                            url = "routine.json";
-                        } else {
-                            url = "uebung.json";
-                        }
                         new Ext.Promise(function(resolve, reject) {
                             Ext.Ajax.request({
                                 url: url,

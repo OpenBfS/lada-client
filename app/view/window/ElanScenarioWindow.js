@@ -24,17 +24,16 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
     closeAction: 'method-hide',
 
     events: null,
-
     /**
      * Html templates to be used for various entries.
      * The String $VALUE will be replaced by scenario content
      */
     displayTemplate: {
         //Used for title string
-        title: 'Ereignis:<br><h2>$VALUE</h2>',
+        title: "Ereignis:<p style='font-size: 2em; margin: 5px 0 10px 0;'> $VALUE</p>",
         //Use for string that marks the event as changed or unchanged
         change: {
-            changed: '<b>$VALUE<br></b>',
+            changed: "<div style='color:red; margin: 0;'>$VALUE<br></div>",
             unchanged: '$VALUE<br>'
         },
         //Used for event keys
