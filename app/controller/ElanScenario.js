@@ -25,24 +25,55 @@ Ext.define('Lada.controller.ElanScenario', {
         }
     },
 
+    /**
+     * Array saving changes until the window is shown
+     */
+    changes: [],
+
+    /**
+     * Handles the reception of elan events.
+     * @param {boolean} success True if request was successfull
+     */
     handleElanEventsReceived: function(success) {
         var button = Ext.ComponentQuery.query('elanscenariobutton')[0];
         if (!success) {
             button.setState(Lada.view.widget.ElanScenarioButton.states.EVENTS_NONE);
         } else {
-            button.setState(Lada.view.widget.ElanScenarioButton.states.EVENTS_OLD);
+            if (button.getState() !== Lada.view.widget.ElanScenarioButton.states.EVENTS_CHANGED) {
+                button.setState(Lada.view.widget.ElanScenarioButton.states.EVENTS_OLD);
+            }
         }
     },
 
+    /**
+     * Handles update of elan events
+     * @param {string} elanId Event id
+     * @param {boolean} routineMode True if its a routine event
+     */
     handleElanEventsUpdated: function(elanId, routineMode) {
         var button = Ext.ComponentQuery.query('elanscenariobutton')[0];
+        var window = Ext.getCmp('elanwindowid');
         if (routineMode) {
             button.setState(Lada.view.widget.ElanScenarioButton.states.EVENTS_NONE);
         } else {
             button.setState(Lada.view.widget.ElanScenarioButton.states.EVENTS_CHANGED);
+            //If window is shown
+            if (window) {
+                //Mark event as changed
+                window.eventChanged(elanId);
+                window.update();
+            } else {
+                // Save changes for the next window
+                if (!this.changes[elanId]) {
+                    this.changes.push(elanId);
+                }
+            }
         }
     },
 
+    /**
+     * Handles update of the local storage 
+     */
     handleLocalElanStorageUpdated: function() {
         var window = Ext.ComponentQuery.query('elanscenariowindow')[0];
         if (window) {
@@ -50,10 +81,16 @@ Ext.define('Lada.controller.ElanScenario', {
         }
     },
 
+    /**
+     * Button handler that show the event window
+     * @param {} button
+     */
     showElanScenarios: function(button) {
         var win = Ext.getCmp('elanwindowid');
         if (!win) {
-            win = Ext.create('Lada.view.window.ElanScenarioWindow');
+            win = Ext.create('Lada.view.window.ElanScenarioWindow', {
+                changes: this.changes
+            });
             win.show();
         } else {
             win.update();

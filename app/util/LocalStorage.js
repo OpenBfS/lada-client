@@ -13,6 +13,7 @@ Ext.define('Lada.util.LocalStorage', {
 
     statics: {
 
+        CURRENT_USER_KEY: 'koala-current-user',
         DOKPOOL_EVENT_KEY: 'koala-dokpool-events',
 
         /**
@@ -45,6 +46,20 @@ Ext.define('Lada.util.LocalStorage', {
                 }
             }
             return null;
+        },
+
+        /**
+         * Set the current user
+         * If user has changed the dookpool events are cleared to ensure they
+         * are shown as new to the new user.
+         * @param {String} user New username
+         */
+        setCurrentUser: function(user) {
+            var oldUser = this.getProperty(this.CURRENT_USER_KEY);
+            if (user !== oldUser) {
+                this.updateDokpoolEvents(null);
+                this.setProperty(this.CURRENT_USER_KEY, user);
+            }
         },
 
         /**

@@ -34,6 +34,21 @@ Ext.define('Lada.view.widget.ElanScenarioButton', {
     },
 
     /**
+     * Class used if new or updated events arrive
+     */
+    changedCls: 'x-lada-elan-button-new',
+
+    /**
+     * Icon used if new or updated events arrived
+     */
+    changedIcon: 'x-fa fa-exclamation-triangle',
+
+    /**
+     * Icon used if no new or updated events arrived
+     */
+    oldIcon: 'x-fa fa-check',
+
+    /**
      * {Lada.view.widget.ElanScenarioButton.states}
      * Current state
      */
@@ -54,6 +69,14 @@ Ext.define('Lada.view.widget.ElanScenarioButton', {
     },
 
     /**
+     * Get the current state
+     * @return The current state
+     */
+    getState: function() {
+        return this.state;
+    },
+
+    /**
      * Set the current state and change style accordingly.
      * If in invalid state is passed, the current state is set to EVENTS_NONE.
      * @param {Lada.view.widget.ElanScenarioButton.states} state The new state
@@ -63,13 +86,13 @@ Ext.define('Lada.view.widget.ElanScenarioButton', {
         switch (state) {
             case states.EVENTS_CHANGED:
                 this.show();
-                this.setIconCls('x-fa fa-exclamation-triangle');
-                this.addCls('x-lada-elan-button-new');
+                this.setIconCls(this.changedIcon);
+                this.addCls(this.changedCls);
                 break;
             case states.EVENTS_OLD:
                 this.show();
-                this.removeCls('x-lada-elan-button-new');
-                this.setIconCls('x-fa fa-check');
+                this.removeCls(this.changedCls);
+                this.setIconCls(this.oldIcon);
                 break;
             case states.EVENTS_NONE:
                 this.hide();

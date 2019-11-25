@@ -554,21 +554,16 @@ Ext.application({
     },
 
     initElanScenarios: function() {
+        Lada.util.LocalStorage.setCurrentUser(Lada.username);
         var dokpool = Koala.util.DokpoolRequest;
         //Configure dokpool utility
+        dokpool.elanScenarioUrl = "../elan-service/"
         dokpool.storageModule = Lada.util.LocalStorage;
-        //If scenario requests finished, fire event
-        dokpool.handleElanScenariosReceived = function(success) {
-            Ext.fireEvent('elanEventsReceived', success);
-        };
-        //If scenarios are update, fire event
-        dokpool.handleElanScenariosUpdated = function(scenarioId, routineMode) {
-            Ext.fireEvent('elanEventsUpdated', scenarioId, routineMode);
-        }
         dokpool.updateActiveElanScenarios();
         window.setInterval(function() {
+            console.log('update');
             dokpool.updateActiveElanScenarios();
-        }, 30000);
+        }, 3000);
 
 
     },
