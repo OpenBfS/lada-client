@@ -151,10 +151,12 @@ Ext.define('Lada.controller.Query', {
         var columnChooser = panel.down('columnchoser');
         var columnValues = columnChooser.store.getData();
         var fieldset = Ext.getCmp('querypanelid');
-        var loadingMask = Ext.create('Ext.LoadMask', {
-            target: fieldset
-        });
-        loadingMask.show();
+        if (!panel.loadingMask) {
+            panel.loadingMask = Ext.create('Ext.LoadMask', {
+                target: fieldset
+            });
+        }
+        panel.loadingMask.show();
 
         //Clone columns after query is saved
         var saveCallback = function(savedQuery) {
@@ -189,7 +191,6 @@ Ext.define('Lada.controller.Query', {
                     });
                 });
             }).then(function(saveSuccess) {
-                loadingMask.hide();
             });
 
         };
@@ -318,6 +319,14 @@ Ext.define('Lada.controller.Query', {
             record.set('id', null);
             record.set('userId', Lada.userId);
         }
+
+        if (!qp.loadingMask) {
+            var fieldset = Ext.getCmp('querypanelid');
+            qp.loadingMask = Ext.create('Ext.LoadMask', {
+                target: fieldset
+            });
+        }
+        qp.loadingMask.show();
         button.setDisabled(true);
         var me = this;
         record.save({
@@ -348,11 +357,13 @@ Ext.define('Lada.controller.Query', {
                         qp.down('combobox[name=selectedQuery]').setStore(qp.store);
                         qp.down('combobox[name=selectedQuery]').select(newId);
                         qp.loadGridColumnStore();
+                        qp.loadingMask.hide();
                     })
                 } else {
                     qp.down('combobox[name=selectedQuery]').setStore(qp.store);
                     qp.down('combobox[name=selectedQuery]').select(newId);
                     qp.loadGridColumnStore();
+                    qp.loadingMask.hide();
                 }
             },
             failure: function(rec, response) {
