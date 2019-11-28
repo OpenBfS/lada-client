@@ -133,8 +133,10 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                                 record: precord,
                                                 style: 'z-index: -1;'
                                             });
+                                        var pjson = poperation ? Ext.decode(poperation.getResponse().responseText) : null;
                                         if (probeWin.show()) {
                                             probeWin.initData(precord);
+                                            probeWin.setMessages(pjson.errors, pjson.warnings);
                                             probeWin.setPosition(30);
                                         }
                                         var win = Ext.create(
@@ -146,6 +148,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                             });
                                         win.initData(record);
                                         win.show();
+                                        var json = operation ? Ext.decode(operation.getResponse().responseText) : null;
+                                        win.setMessages(json.errors, json.warnings);
                                         win.setPosition(35 + probeWin.width);
                                     }
                                 });
@@ -164,6 +168,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                             });
                             win.initData(record);
                             win.show();
+                            var json = operation ? Ext.decode(operation.getResponse().responseText) : null;
+                            win.setMessages(json.errors, json.warnings);
                             win.setPosition(30);
                         }
                     }

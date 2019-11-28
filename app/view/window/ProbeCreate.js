@@ -163,8 +163,9 @@ Ext.define('Lada.view.window.ProbeCreate', {
         }
         var errors = [];
         var warnings = {  probeentnahmeBeginn: [631],
-                               hauptprobenNr : [631]
-                       };
+                               hauptprobenNr : [631],
+                                        umwId: [631]
+        };
         this.down('probeform').setRecord(record);
         this.down('probeform').setMediaDesk(record);
         this.down('probeform').setMessages(errors,warnings);

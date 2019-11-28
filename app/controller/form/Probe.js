@@ -39,6 +39,9 @@ Ext.define('Lada.controller.form.Probe', {
                 dirtychange: this.handleDirtyChange,
                 save: this.saveHeadless
             },
+            'probeform tfield [name=hauptprobenNr]': {
+                change: this.hauptprobenNrChanged
+            },
             'probeform umwelt combobox': {
                 change: this.umweltChanged
             },
@@ -748,6 +751,14 @@ Ext.define('Lada.controller.form.Probe', {
             }
         }
         this.checkCommitEnabled(callingEl);
+    },
+
+    hauptprobenNrChanged: function(field) {
+        if (field.getValue() !== "") {
+            field.up().clearWarningOrError();
+        } else {
+            field.up().showWarnings('631');
+        }
     },
 
     deskriptorSelect: function(field, records) {
