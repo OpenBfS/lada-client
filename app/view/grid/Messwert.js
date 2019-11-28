@@ -28,6 +28,7 @@ Ext.define('Lada.view.grid.Messwert', {
     recordId: null,
     umwId: null,
     defaultMehId: null,
+    secMehId: null,
     readOnly: true,
     allowDeselect: true,
     messgroesseStore: null,
@@ -226,6 +227,8 @@ Ext.define('Lada.view.grid.Messwert', {
             editor: {
                 xtype: 'combobox',
                 store: me.mehComboStore,
+                invalidCls: 'x-lada-warning-grid-field',
+                name: 'messeinheit',
                 displayField: 'einheit',
                 valueField: 'id',
                 allowBlank: false,
@@ -315,11 +318,16 @@ Ext.define('Lada.view.grid.Messwert', {
                 scope: this,
                 success: function(rec, op) {
                     this.defaultMehId = rec.get('mehId');
+                    this.secMehId = rec.get('secMehId');
+                    var params = {
+                        mehId: this.defaultMehId
+                    }
+                    if (this.secMehId) {
+                        params['secMehId'] = this.secMehId;
+                    }
                     //Filter messeinheiten comboboxes
                     this.mehComboStore.load({
-                        params: {
-                            mehId: this.defaultMehId
-                        }
+                        params: params
                     })
                 }
             });
@@ -414,7 +422,6 @@ Ext.define('Lada.view.grid.Messwert', {
         var warnings = record.get('warnings');
         var validationResult = '';
         var validationResultCls = null;
-
         if (warnings && warnings[dataIndex]) {
             validationResult += i18n.getMsg(warnings[dataIndex]) + '<br>';
             validationResultCls = 'x-lada-warning-grid-field';

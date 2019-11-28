@@ -33,6 +33,9 @@ Ext.define('Lada.controller.grid.Messwert', {
             },
             'messwertgrid expnumberfield[dataIndex=messwert]': {
                 change: this.changeValue
+            },
+            'messwertgrid combobox[name=messeinheit]': {
+                change: this.handleMehChanged
             }
         });
     },
@@ -194,5 +197,26 @@ Ext.define('Lada.controller.grid.Messwert', {
             }
         });
         grid.down('button[action=delete]').disable();
+    },
+
+    /**
+     * Handle changed values of messeinheit comboboxes.
+     * Checks if the new value is the secondary unit of the corresponding umweltbereich
+     * and adds a warning to the combobox.
+     * @param {Ext.form.field.Combobox} cbox Combobox that triggered the event
+     * @param {Number} newValue New mehId value
+     */
+    handleMehChanged: function(cbox, newValue) {
+        var grid = cbox.up('messwertgrid');
+        var i18n = Lada.getApplication().bundle;
+        var attributes = cbox.bodyEl.dom.attributes;
+        //If secondary unit is selected
+        if (grid.secMehId === newValue) {
+            cbox.bodyEl.addCls('x-lada-warning-grid-field');
+            attributes.addNamedItem('data-qtip', i18n.getMsg('636'));
+        } else {
+            cbox.bodyEl.removeCls('x-lada-warning-grid-field');
+            attributes.removeNamedItem('data-qtip');
+        }
     }
 });

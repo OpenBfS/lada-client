@@ -192,21 +192,44 @@ Ext.define('Lada.view.window.SetStatus', {
                         var json = Ext.JSON.decode(response.responseText);
                         var sel = me.selection[count];
                         var errors = json.errors;
+                        var warnings = json.warnings;
                         var out = [];
                         var numErrors;
+                        var numWarnings;
                         if (!Ext.isObject(errors)) {
                             numErrors = 0;
                         } else {
                             numErrors = Object.keys(errors).length;
                         }
+                        if (!Ext.isObject(warnings)) {
+                            numWarnings = 0;
+                        } else {
+                            numWarnings = Object.keys(warnings).length;
+                        }
                         if (numErrors > 0) {
                             var msgs;
+                            out.push('<dl><dd>' + i18n.getMsg('errors') + '</dd>');
                             out.push('<dd><ul>');
                             for (var key in errors) {
                                 msgs = errors[key];
                                 var validation = [];
                                 for (var j = msgs.length - 1; j >= 0; j--) {
-                                    validation.push('<li><b>' + i18n.getMsg(key) + ':</b> ' + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                    validation.push('<li><b>' + i18n.getMsg(key) +
+                                            ':</b> ' + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                }
+                                out.push(validation.join(''));
+                            }
+                            out.push('</ul></dd>');
+                        }
+                        if (numWarnings > 0) {
+                            out.push('<dl><dd>' + i18n.getMsg('warns') + '</dd>');
+                            out.push('<dd><ul>');
+                            for (var key in warnings) {
+                                msgs = warnings[key];
+                                var validation = [];
+                                for (var j = msgs.length - 1; j >= 0; j--) {
+                                    validation.push('<li><b>' + i18n.getMsg(key) + ':</b> '
+                                            + i18n.getMsg(msgs[j].toString()) + '</li>');
                                 }
                                 out.push(validation.join(''));
                             }
@@ -273,8 +296,30 @@ Ext.define('Lada.view.window.SetStatus', {
                         me.resultMessage += '<dl><dd>' + i18n.getMsg('status-' + json.message) + '</dd></dl>';
                         progress.updateProgress(1, progressText + ' (' + 1 + ')');
                         var errors = json.errors;
+                        var warnings = json.warnings;
                         var out = [];
                         var numErrors;
+                        var numWarnings = 0;
+                        //Check warnings
+                        if (Ext.isObject(warnings)) {
+                            numWarnings = Object.keys(warnings).length;
+                        }
+                        if (numWarnings > 0) {
+                            var msgs;
+                            out.push('<dl><dd>' + i18n.getMsg('warns') + '</dd>');
+                            out.push('<dd><ul>');
+                            for (var key in warnings) {
+                                msgs = warnings[key];
+                                var validation = [];
+                                for (var i = msgs.length - 1; i >= 0; i--) {
+                                        validation.push('<li><b>' + i18n.getMsg(key) + ':</b> ' + i18n.getMsg(msgs[i].toString()) + '</li>');
+                                }
+                                out.push(validation.join(''));
+                            }
+                            out.push('</ul></dd></dl>');
+                            out.push('<br/>');
+                        }
+                        //Check errors
                         if (!Ext.isObject(errors)) {
                             numErrors = 0;
                         } else {
@@ -282,7 +327,8 @@ Ext.define('Lada.view.window.SetStatus', {
                         }
                         if (numErrors > 0) {
                             var msgs;
-                            out.push('<ul>');
+                            out.push('<dl><dd>' + i18n.getMsg('errors') + '</dd>');
+                            out.push('<dd><ul>');
                             for (var key in errors) {
                                 msgs = errors[key];
                                 var validation = [];
@@ -291,7 +337,7 @@ Ext.define('Lada.view.window.SetStatus', {
                                 }
                                 out.push(validation.join(''));
                             }
-                            out.push('</ul>');
+                            out.push('</ul></dd></dl>');
                             out.push('<br/>');
                         }
                         var result = me.down('panel[name=result]');
