@@ -186,6 +186,8 @@ Ext.application({
             }
         });
 
+        Ext.tip.QuickTipManager.init();
+
         // ask before closing/refreshing the window.
         // Not all browsers will respect this, depending on settings
         window.addEventListener('beforeunload', function (evt){

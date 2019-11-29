@@ -210,13 +210,19 @@ Ext.define('Lada.controller.grid.Messwert', {
         var grid = cbox.up('messwertgrid');
         var i18n = Lada.getApplication().bundle;
         var attributes = cbox.bodyEl.dom.attributes;
+        var meh = cbox.getStore().getById(newValue);
         //If secondary unit is selected
-        if (grid.secMehId === newValue) {
+        if (meh.get('primary') == false) {
             cbox.bodyEl.addCls('x-lada-warning-grid-field');
-            attributes.addNamedItem('data-qtip', i18n.getMsg('636'));
+            Ext.tip.QuickTipManager.register({
+                text: i18n.getMsg('636'),
+                target: cbox.getId()
+            });
+            //attributes.setNamedItem('data-qtip', i18n.getMsg('636'));
         } else {
             cbox.bodyEl.removeCls('x-lada-warning-grid-field');
-            attributes.removeNamedItem('data-qtip');
+            Ext.tip.QuickTipManager.unregister(cbox.getId());
+            //attributes.removeNamedItem('data-qtip');
         }
     }
 });
