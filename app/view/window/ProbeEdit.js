@@ -221,7 +221,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                     console.log(action);
                     console.log(record);
                 },
-                success: loadCallBack,
+                success: loadCallBack
                 // scope: this
             });
         } else {

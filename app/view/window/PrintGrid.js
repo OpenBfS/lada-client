@@ -14,7 +14,7 @@ Ext.define('Lada.view.window.PrintGrid', {
     extend: 'Ext.window.Window',
     requires: ['Koala.view.form.IrixFieldSet'],
 
-    resizable: false,
+    constrain: true,
 
     defaults: {
         margin: '5, 5, 5, 5',
