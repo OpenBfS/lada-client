@@ -41,8 +41,8 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
         });
         this.items = [{
             xtype: 'panel',
-            height: 150,
-            width: 340,
+            height: 300,
+            width: 500,
             autoScroll: true,
             overflow: 'auto',
             html: '',
@@ -231,12 +231,12 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                         }
 
                         html = html + i18n.getMsg(
-                            'deleteItems.callback.success',datatype, delId);
+                            'deleteItems.callback.success',datatype, delId) + '<br>';
                         me.down('panel').setHtml(html);
                     } else {
                         html = html + i18n.getMsg(
                             'deleteItems.callback.failure', datatype, delId)
-                            + i18n.getMsg(json.message) + '<br>';
+                            + '<li>' + i18n.getMsg(json.message) + '</li><br>';
                         me.down('panel').setHtml(html);
                     }
                     me.currentProgress += 1;
