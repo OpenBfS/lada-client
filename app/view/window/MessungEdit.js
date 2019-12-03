@@ -345,6 +345,42 @@ Ext.define('Lada.view.window.MessungEdit', {
      */
     setMessages: function(errors, warnings) {
         this.down('messungform').setMessages(errors, warnings);
+        var errorMesswertText = '';
+        var errorMesswert = false;
+        var warningMesswertText = '';
+        var warningMesswert = false;
+        var key;
+        var content;
+        var i;
+        var keyText;
+        var i18n = Lada.getApplication().bundle;
+        for (key in errors) {
+            if (key && key.indexOf('messwert') > -1) {
+                errorMesswert = true;
+                content = errors[key];
+                keyText = i18n.getMsg(key);
+                for (i = 0; i < content.length; i++) {
+                    errorMesswertText += keyText + ': ' +
+                        i18n.getMsg(content[i].toString()) + '\n';
+                }
+            }
+        }
+        for (key in warnings) {
+            if (key && key.indexOf('messwert') > -1) {
+                warningMesswert = true;
+                content = warnings[key];
+                keyText = i18n.getMsg(key);
+                for (i = 0; i < content.length; i++) {
+                    warningMesswertText += keyText + ': ' +
+                        i18n.getMsg(content[i].toString()) + '\n';
+                }
+            }
+        }
+        this.down('fset[name=messwerte]').showWarningOrError(
+            warningMesswert,
+            warningMesswertText === '' ? null : warningMesswertText,
+            errorMesswert,
+            errorMesswertText === '' ? null : errorMesswertText);
     },
 
     /**
@@ -352,6 +388,7 @@ Ext.define('Lada.view.window.MessungEdit', {
      */
     clearMessages: function() {
         this.down('messungform').clearMessages();
+        this.down('fset[name=messwerte]').clearMessages();
     }
 
 });
