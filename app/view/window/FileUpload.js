@@ -114,6 +114,7 @@ Ext.define('Lada.view.window.FileUpload', {
                 valueField: 'id',
                 fieldLabel: i18n.getMsg('vorbelegung'),
                 allowBlank: true,
+                matchFieldWidth: false,
                 triggers: {
                     clear: {
                         cls: 'x-form-clear-trigger',
