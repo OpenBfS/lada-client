@@ -79,7 +79,8 @@ Ext.define('Lada.util.LocalStorage', {
          *                 used to check for changes later on
          */
         getDokpoolEvents: function() {
-            return this.getProperty(this.DOKPOOL_EVENT_KEY);
+            var events = this.getProperty(this.DOKPOOL_EVENT_KEY);
+            return events? events: {};
         }
     }
 });

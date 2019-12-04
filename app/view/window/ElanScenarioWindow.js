@@ -23,7 +23,10 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
 
     closeAction: 'method-hide',
 
-    events: null,
+    /**
+     * Object containing event html strings
+     */
+    eventStrings: {},
     /**
      * Html templates to be used for various entries.
      * The String $VALUE will be replaced by scenario content
@@ -81,7 +84,6 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
             }
         }];
         this.callParent(arguments);
-        this.update();
     },
 
     /**
@@ -90,6 +92,14 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
      */
     eventChanged: function(eventId) {
         this.changes.push(eventId);
+    },
+
+    /**
+     * Check if this window has pending changes that has not been shown
+     * @return true If changes are pending.
+     */
+    hasChanges: function() {
+        return this.changes.length > 0;
     },
 
     /**
@@ -138,10 +148,34 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
     },
 
     /**
+     * Updates the event list without updating its content.
+     * Can be used to remove a now inactive event without reseting
+     * change markers.
+     */
+    updateEventList: function() {
+        var me = this;
+        var content = '';
+        var newEvents = Lada.util.LocalStorage.getDokpoolEvents();
+        var newEventStrings = {};
+        if (!newEvents || newEvents === '') {
+            content = i18n.getMsg('window.elanscenario.emptytext');
+        }
+        Ext.Object.each(newEvents, function(key, value, object) {
+            newEventStrings[key] = me.eventStrings[key];
+        });
+        me.eventStrings = newEventStrings;
+        Ext.Object.each(me.eventStrings, function(key, value, object) {
+            content += value + '<br />';
+        });
+        this.down('panel').setHtml(content);
+    },
+
+    /**
      * Update the window content using the localStorage module.
      * Note: The event content itself is not refresh using the remote server
+     * @param {boolean} preserveChanges If true, changes are not cleared
      */
-    update: function() {
+    update: function(preserveChanges) {
         var me = this;
         var i18n = Lada.getApplication().bundle;
         var content = '';
@@ -151,10 +185,15 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
         }
         Ext.Object.each(newEvents, function(key, value, object) {
             var text = me.parseElanObject(value);
-            content += text + '</br>';
+            me.eventStrings[key] = text;
+        });
+        Ext.Object.each(me.eventStrings, function(key, value, object) {
+            content += value + '<br />';
         });
         this.down('panel').setHtml(content);
-        this.changes = [];
+        if (preserveChanges != true) {
+            this.changes = [];
+        }
     }
 
 });

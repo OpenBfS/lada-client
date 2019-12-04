@@ -47,10 +47,11 @@ Ext.define('Lada.controller.ElanScenario', {
 
     /**
      * Handles update of elan events
-     * @param {string} elanId Event id
-     * @param {boolean} routineMode True if its a routine event
+     * @param {[string]} elanIds Ids of changed events
+     * @param {boolean} routineMode True if there is only an event
      */
-    handleElanEventsUpdated: function(elanId, routineMode) {
+    handleElanEventsUpdated: function(elanIds, routineMode) {
+        var me = this;
         var button = Ext.ComponentQuery.query('elanscenariobutton')[0];
         var window = Ext.getCmp('elanwindowid');
         if (routineMode) {
@@ -60,13 +61,17 @@ Ext.define('Lada.controller.ElanScenario', {
             //If window is shown
             if (window) {
                 //Mark event as changed
-                window.eventChanged(elanId);
+                elanIds.forEach(function(elanId) {
+                    window.eventChanged(elanId);
+                });
                 window.update();
             } else {
                 // Save changes for the next window
-                if (!this.changes[elanId]) {
-                    this.changes.push(elanId);
-                }
+                elanIds.forEach(function(elanId) {
+                    if (!Ext.Array.contains(me.changes, elanId)) {
+                        me.changes.push(elanId);
+                    }
+                });
             }
         }
     },
@@ -75,9 +80,9 @@ Ext.define('Lada.controller.ElanScenario', {
      * Handles update of the local storage 
      */
     handleLocalElanStorageUpdated: function() {
-        var window = Ext.ComponentQuery.query('elanscenariowindow')[0];
-        if (window) {
-            window.update();
+        var win = Ext.getCmp('elanwindowid');
+        if (win) {
+            win.updateEventList();
         }
     },
 
@@ -93,8 +98,10 @@ Ext.define('Lada.controller.ElanScenario', {
             });
             win.show();
         } else {
-            win.update();
             win.isVisible() ? win.focus(): win.show();
+            if (win.hasChanges()) {
+                win.update();
+            }
         }
         button.setState(Lada.view.widget.ElanScenarioButton.states.EVENTS_OLD);
 
