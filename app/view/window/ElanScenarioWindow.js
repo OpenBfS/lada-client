@@ -19,14 +19,19 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
      */
     id: 'elanwindowid',
 
+    /**
+     * @private
+     * Array containing ids of changed events
+     */
     changes: [],
 
     closeAction: 'method-hide',
 
     /**
-     * Object containing event html strings
+     * Object containing event objects and display html strings
      */
-    eventStrings: {},
+    eventObjs: {},
+
     /**
      * Html templates to be used for various entries.
      * The String $VALUE will be replaced by scenario content
@@ -40,9 +45,17 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
             unchanged: '$VALUE<br>'
         },
         //Used for event keys
-        key: '<b>$VALUE</b>: ',
+        key: {
+            //Field was modified
+            unchanged: '<b>$VALUE</b>: ',
+            //Field is unmodified
+            changed: "<div style='color:red; margin: 0;'><b>$VALUE</b>: "
+        },
         //Used for event values
-        value: '$VALUE <br>'
+        value: {
+            unchanged: '$VALUE <br>',
+            changed: "$VALUE<br></div>"
+        }
     },
 
     /**
@@ -52,14 +65,14 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
             'Exercise', 'id', 'description', 'TimeOfEvent',
             'ScenarioPhase.title', 'ScenarioPhase.Location'],
 
+    height: 550,
+
+    layout: 'fit',
+
     /**
      * Key that contains the event title
      */
     titleProperty: 'title',
-
-    height: 550,
-
-    layout: 'fit',
 
     title: 'Dokpool-Messenger',
 
@@ -83,6 +96,8 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
                 me.close();
             }
         }];
+
+        this.eventObjs = Lada.util.LocalStorage.getDokpoolEvents();
         this.callParent(arguments);
     },
 
@@ -92,6 +107,26 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
      */
     eventChanged: function(eventId) {
         this.changes.push(eventId);
+    },
+
+    /**
+     * Get fields of an event that changed since last update
+     * @param {Object} event Event object
+     * @return {Array} Array containing the names of the changed fields
+     */
+    getChanges: function(event) {
+        var me = this;
+        var changes = [];
+        var id = event.id;
+        Ext.Object.each(event, function(key, value) {
+            //If event/value does not exist in storage or was changed: add to array
+            if (me.eventObjs[id] == null
+                || me.eventObjs[id][key] == null
+                || me.eventObjs[id][key] !== value) {
+                changes.push(key);
+            }
+        });
+        return changes;
     },
 
     /**
@@ -125,6 +160,10 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
         }
         scenarioString += changeTemplate.replace('$VALUE', changeString);
 
+        //Check for changes since last update
+        var changedFields = Ext.Array.contains(me.changes, scenario.id) ? 
+                me.getChanges(scenario): [];
+
         //Add display values
         Ext.Array.each(this.displayValues, function(key) {
             var value = scenario[key];
@@ -133,8 +172,20 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
             if (typeof value === 'boolean') {
                 value = value? i18n.getMsg('true'): i18n.getMsg('false');
             }
-            scenarioString += me.displayTemplate.key.replace('$VALUE', keyString);
-            scenarioString += me.displayTemplate.value.replace('$VALUE', value);
+
+            //Choose template
+            var keyTpl;
+            var valTpl;
+            if (Ext.Array.contains(me.changes, scenario.id)
+                && Ext.Array.contains(changedFields, key)) {
+                keyTpl = me.displayTemplate.key.changed;
+                valTpl = me.displayTemplate.value.changed;
+            } else {
+                keyTpl = me.displayTemplate.key.unchanged;
+                valTpl = me.displayTemplate.value.unchanged;
+            }
+            scenarioString += keyTpl.replace('$VALUE', keyString);
+            scenarioString += valTpl.replace('$VALUE', value);
         });
         return scenarioString;
     },
@@ -148,23 +199,48 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
     },
 
     /**
+     * Sort an object holding events by modified date
+     * @param {Object} newEvents Event object
+     * @return {Array} Array containing object ids, sorted by modified date, asc.
+     */
+    sortEventsByModifiedDate: function(newEvents) {
+        return Ext.Array.sort(Ext.Object.getKeys(newEvents),function(a, b) {
+            if (newEvents[a]['modified'] > newEvents[b]['modified']) {
+                return -1;
+            } else if (newEvents[a]['modified'] < newEvents[b]['modified']) {
+                return 1;
+            }
+            return 0;
+        });
+    },
+
+    /**
      * Updates the event list without updating its content.
      * Can be used to remove a now inactive event without reseting
      * change markers.
      */
     updateEventList: function() {
         var me = this;
+        var i18n = Lada.getApplication().bundle;
         var content = '';
-        var newEvents = Lada.util.LocalStorage.getDokpoolEvents();
-        var newEventStrings = {};
+        var newEvents = me.eventObjs;
+
+        //Check if an event has been removed
+        var eventKeys = Lada.util.LocalStorage.getDokpoolEventKeys();
+        Ext.Object.each(newEvents, function(key) {
+            if (!Ext.Array.contains(eventKeys, key)) {
+                delete newEvents[key];
+            }
+        });
+
+        //Sort events by modified date
+        var displayOrder = me.sortEventsByModifiedDate(newEvents);
+
         if (!newEvents || newEvents === '') {
             content = i18n.getMsg('window.elanscenario.emptytext');
         }
-        Ext.Object.each(newEvents, function(key, value, object) {
-            newEventStrings[key] = me.eventStrings[key];
-        });
-        me.eventStrings = newEventStrings;
-        Ext.Object.each(me.eventStrings, function(key, value, object) {
+        displayOrder.forEach(function(key, index, array) {
+            var value = me.eventObjs[key].displayText;
             content += value + '<br />';
         });
         this.down('panel').setHtml(content);
@@ -180,20 +256,25 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
         var i18n = Lada.getApplication().bundle;
         var content = '';
         var newEvents = Lada.util.LocalStorage.getDokpoolEvents();
+
+        //Sort events by modified date
+        var displayOrder = me.sortEventsByModifiedDate(newEvents);
+
         if (!newEvents || newEvents === '') {
             content = i18n.getMsg('window.elanscenario.emptytext');
         }
         Ext.Object.each(newEvents, function(key, value, object) {
             var text = me.parseElanObject(value);
-            me.eventStrings[key] = text;
+            newEvents[key].displayText = text;
         });
-        Ext.Object.each(me.eventStrings, function(key, value, object) {
+        displayOrder.forEach(function(key, index, array) {
+            var value = newEvents[key].displayText;
             content += value + '<br />';
         });
         this.down('panel').setHtml(content);
+        me.eventObjs = newEvents;
         if (preserveChanges != true) {
             this.changes = [];
         }
     }
-
 });

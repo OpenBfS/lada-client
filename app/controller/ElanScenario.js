@@ -16,6 +16,9 @@ Ext.define('Lada.controller.ElanScenario', {
         component: {
             'button[action=elanscenarios]': {
                 click: 'showElanScenarios'
+            },
+            'window[id=elanwindowid]': {
+                hide: 'handleElanWindowHidden'
             }
         },
         global: {
@@ -64,7 +67,9 @@ Ext.define('Lada.controller.ElanScenario', {
                 elanIds.forEach(function(elanId) {
                     window.eventChanged(elanId);
                 });
-                window.update();
+                if (window.isVisible()) {
+                    window.update();
+                }
             } else {
                 // Save changes for the next window
                 elanIds.forEach(function(elanId) {
@@ -104,6 +109,16 @@ Ext.define('Lada.controller.ElanScenario', {
             }
         }
         button.setState(Lada.view.widget.ElanScenarioButton.states.EVENTS_OLD);
+    },
 
+    /**
+     * Handles hidden event of elan windows.
+     * Reset button state as the window events has been read by the user
+     */
+    handleElanWindowHidden: function() {
+        var button = Ext.ComponentQuery.query('button[action=elanscenarios]')[0];
+        if (button) {
+            button.setState(Lada.view.widget.ElanScenarioButton.states.EVENTS_OLD);
+        }
     }
 });

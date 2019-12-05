@@ -560,6 +560,8 @@ Ext.application({
         dokpool.elanScenarioUrl = "../dokpool/"
         dokpool.storageModule = Lada.util.LocalStorage;
         dokpool.updateActiveElanScenarios();
+        //Create the display window
+        Ext.create('Lada.view.window.ElanScenarioWindow');
         window.setInterval(function() {
             dokpool.updateActiveElanScenarios();
         }, 3000);
