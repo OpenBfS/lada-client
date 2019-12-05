@@ -40,7 +40,7 @@ Ext.define('Lada.view.window.Messprogramm', {
         if (this.record === null) {
             this.title = i18n.getMsg('messprogramm.window.create.title');
         } else {
-            this.title = i18n.getMsg('messprogramm.window.edit.title');
+            this.title = i18n.getMsg('messprogramm.window.edit.title') +' <i>(Referenzierte Proben '+this.record.get('referenceCount')+')</i>';
         }
         this.buttons = [{
             text: i18n.getMsg('generateproben'),

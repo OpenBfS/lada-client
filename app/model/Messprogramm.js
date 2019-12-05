@@ -74,6 +74,14 @@ Ext.define('Lada.model.Messprogramm', {
     }, {
         name: 'probenahmeMenge'
     }, {
+        name: 'referenceCount',
+        convert: function(value) {
+            if (value === null) {
+                return 0;
+            }
+            return value;
+        }
+    }, {
         name: 'letzteAenderung',
         type: 'date',
         dateFormat: 'time',
