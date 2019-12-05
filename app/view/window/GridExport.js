@@ -312,6 +312,11 @@ Ext.define('Lada.view.window.GridExport', {
                 xtype: 'button',
                 action: 'close',
                 text: i18n.getMsg('close')
+            }, {
+                xtype: 'button',
+                action: 'drag',
+                text: i18n.getMsg('export.button.dragDrop.no'),
+                disabled: true
             }]
         }];
         this.callParent(arguments);
@@ -326,6 +331,11 @@ Ext.define('Lada.view.window.GridExport', {
             click: function(button) {
                 button.up('window').close();
                 return;
+            }
+        });
+        this.down('button[action=drag]').on({
+            afterrender: function(button) {
+                button.up('window').activateDragButton(true);
             }
         });
 
@@ -374,6 +384,49 @@ Ext.define('Lada.view.window.GridExport', {
         this.down('combobox[name=encoding]').setValue('iso-8859-15');
     },
 
+    activateDragButton: function(active) {
+        var button = this.down('[action=drag]');
+        var e = button.getEl();
+        var dom = e.dom;
+        var el = dom.firstChild;
+        var exportFormat = this.down('combobox[name=formatselection]').getValue();
+        if (!exportFormat || exportFormat === 'laf') {
+            active = false;
+        } else if (this.down('checkbox[name=secondarycolumns]').getValue() && !this.secondaryDataIsPrefetched) {
+            active = false;
+        }
+        var data, format;
+            switch (exportFormat) {
+                case 'json':
+                    format = 'text/json';
+                    data = this.getJson();
+                    break;
+                case 'geojson':
+                    format = 'text/json';
+                    data = this.getGeoJson();
+                    break;
+                case 'csv':
+                    format = 'text/csv';
+                    data = this.getCSV();
+                    break;
+            }
+        var handler = function(ev) {
+            ev.dataTransfer.setData(format, data);
+        };
+        var i18n = Lada.getApplication().bundle;
+        if (active && format && data) {
+            button.setDisabled(false);
+            el.draggable = true;
+            button.setText( i18n.getMsg('export.button.dragDrop'));
+            el.addEventListener('dragstart', handler);
+        } else {
+            el.draggable = false;
+            button.setDisabled(true);
+            button.setText( i18n.getMsg('export.button.dragDrop.no'));
+            el.removeEventListener('dragstart', handler);
+        }
+    },
+
     /**
      * Asynchronously retrieves secondary rowExpander data in the background
      * data will be written to the this.secondaryData array
@@ -418,6 +471,7 @@ Ext.define('Lada.view.window.GridExport', {
                     return acc.concat(val);
                 }, []);
                 me.secondaryDataIsPrefetched = true;
+                me.activateDragButton(true);
                 resolve();
             }, function(error){
                 reject(error);
@@ -725,22 +779,23 @@ Ext.define('Lada.view.window.GridExport', {
     /**
      * change the GUI as another export format is selected
      */
-    changeFormat: function(box, newValue, oldValue) {
-        box.up('window').down('fieldset[name=csvoptions]').setVisible(
+    changeFormat: function(box, newValue) {
+        var win = box.up('window');
+        win.down('fieldset[name=csvoptions]').setVisible(
             newValue === 'csv' ? true: false
         );
-        box.up('window').down('combobox[name=encoding]').setVisible(
+        win.down('combobox[name=encoding]').setVisible(
             newValue === 'csv' || newValue === 'laf' ? true: false
         );
         var ecolVisible = true;
-        if (box.up('window').down('checkbox[name=allcolumns]').getValue()) {
+        if (win.down('checkbox[name=allcolumns]').getValue()) {
             ecolVisible = false;
         }
         if (newValue === 'laf') {
             ecolVisible = false;
         }
-        box.up('window').down('tagfield[name=exportcolumns]').setVisible(
-            ecolVisible);
+        win.down('tagfield[name=exportcolumns]').setVisible(ecolVisible);
+        win.activateDragButton(true);
     },
 
     exportalltoggle: function(box, newValue) {
@@ -754,6 +809,7 @@ Ext.define('Lada.view.window.GridExport', {
 
     exportsecondarytoggle: function(box, newValue) {
         var me = box.up('window');
+        me.activateDragButton(true);
         if (!me.secondaryDataIsPrefetched) {
             me.getSecondaryData();
         }
