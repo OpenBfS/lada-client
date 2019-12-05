@@ -23,13 +23,9 @@ Ext.define('Koala.util.DokpoolRequest', {
     requires: [],
 
     statics: {
-        // elanScenarioSearch: '@search?portal_type=DPEvent',
-        // dpTypeActive: '&dp_type=active',
-        // dpTypeInactive: '&dp_type=inactive',
-
-        elanScenarioSearch: '',
-        dpTypeActive: '',
-        dpTypeInactive: '',
+        elanScenarioSearch: '@search?portal_type=DPEvent',
+        dpTypeActive: '&dp_type=active',
+        dpTypeInactive: '&dp_type=inactive',
 
         /**
          * Url to elan scenario service
