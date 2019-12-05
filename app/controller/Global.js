@@ -16,6 +16,9 @@ Ext.define('Lada.controller.Global', {
         this.control({
             'button[action=about]': {
                 click: this.about
+            },
+            'button[action=toggletimezone]': {
+                toggle: this.toggleTimezone
             }
         });
     },
@@ -26,5 +29,8 @@ Ext.define('Lada.controller.Global', {
     about: function() {
         var win = Ext.create('Lada.view.window.About');
         win.show();
+    },
+
+    toggleTimezone: function(button, pressed, opts) {
     }
 });
