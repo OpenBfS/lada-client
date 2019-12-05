@@ -205,7 +205,8 @@ Ext.define('Lada.view.window.GridExport', {
                 checked: this.grid.exportRowexp ? true: false,
                 listeners: {
                     change: me.exportsecondarytoggle
-                }
+                },
+                hidden: true
             }, {
                 xtype: 'tagfield',
                 name: 'exportcolumns',
@@ -329,6 +330,7 @@ Ext.define('Lada.view.window.GridExport', {
         var preselectedEx = [];
         for (var i=0; i < this.grid.plugins.length; i++) {
             if (this.grid.plugins[i].ptype === 'gridrowexpander') {
+                this.down('checkbox[name=secondarycolumns]').setHidden(false);
                 this.rowexp = this.grid.plugins[i];
                 var nodes = this.rowexp.view.getNodes();
                 var node = Ext.fly(nodes[0]);
