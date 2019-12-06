@@ -60,7 +60,7 @@ Ext.define('Lada.view.window.About', {
                     + '<p>'
                     + i18n.getMsg('about.window.text.logintime')
                     + '<br />'
-                    + Ext.Date.format(new Date(Lada.logintime), 'd.m.y h:i:s P')
+                    + Lada.util.Date.formatTimestamp(Lada.logintime, 'd.m.y h:i:s P', true)
                     + '</p>'
                     + '<p>'
                     + i18n.getMsg('about.window.text.serverversion')+ ' '

@@ -598,7 +598,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             var format = col.format;
             var dt='';
             if (!isNaN(value)) {
-                dt = Ext.Date.format(new Date(value), format);
+                dt = Lada.util.Date.formatTimestamp(value, format, true);
             }
             return dt;
         };

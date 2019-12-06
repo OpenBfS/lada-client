@@ -90,6 +90,7 @@ Ext.application({
         'Lada.store.Query',
         'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.window.TrackedWindow',
+        'Lada.util.Date',
         'Lada.util.FunctionScheduler',
         'Lada.util.WindowTracker'
     ],

@@ -31,6 +31,16 @@ Ext.define('Lada.controller.Global', {
         win.show();
     },
 
+    /**
+     * Button toggle handler.
+     * Toggles timezone
+     */
     toggleTimezone: function(button, pressed, opts) {
+        Lada.util.Date.setUTCDisplay(pressed);
+        //Reload grid to refresh times
+        var dynamicGrid = Ext.ComponentQuery.query('dynamicgrid');
+        if (dynamicGrid.length > 0) {
+            dynamicGrid[0].reload();
+        }
     }
 });
