@@ -386,44 +386,48 @@ Ext.define('Lada.view.window.GridExport', {
 
     activateDragButton: function(active) {
         var button = this.down('[action=drag]');
-        var e = button.getEl();
-        var dom = e.dom;
-        var el = dom.firstChild;
+        var el = button.getEl().dom.firstChild;
+        if (!this.dragEvents) {
+            this.dragEvents = [];
+        }
         var exportFormat = this.down('combobox[name=formatselection]').getValue();
         if (!exportFormat || exportFormat === 'laf') {
             active = false;
         } else if (this.down('checkbox[name=secondarycolumns]').getValue() && !this.secondaryDataIsPrefetched) {
             active = false;
         }
-        var data, format;
-            switch (exportFormat) {
-                case 'json':
-                    format = 'text/json';
-                    data = this.getJson();
-                    break;
-                case 'geojson':
-                    format = 'text/json';
-                    data = this.getGeoJson();
-                    break;
-                case 'csv':
-                    format = 'text/csv';
-                    data = this.getCSV();
-                    break;
-            }
+        var data = this.hasGeojson ? this.getGeoJson() : this.getJson();
+        var csvdata = this.getCSV();
         var handler = function(ev) {
-            ev.dataTransfer.setData(format, data);
+            ev.dataTransfer.setData('application/json', JSON.stringify(data));
+            ev.dataTransfer.setData('text/csv', csvdata);
+            // example for retrieving ddata in a drop zone
+            // var d = ev.dataTransfer.getData('application/json');
+            // console.log(JSON.parse(d));
+            // d = ev.dataTransfer.getData('text/csv');
+            // console.log(d);
         };
         var i18n = Lada.getApplication().bundle;
-        if (active && format && data) {
+        var clearDragEvents = function(scope, element) {
+            for (var l = 0; l < scope.dragEvents.length; l++ ) {
+                element.removeEventListener('dragstart',scope.dragEvents[l]);
+            }
+            scope.dragEvents = [];
+        };
+        if (active && data && csvdata) {
             button.setDisabled(false);
             el.draggable = true;
             button.setText( i18n.getMsg('export.button.dragDrop'));
-            el.addEventListener('dragstart', handler);
+            if (this.dragEvents.indexOf(handler) < 0 ) {
+                clearDragEvents(this, el);
+                el.addEventListener('dragstart', handler);
+                this.dragEvents.push(handler);
+            }
         } else {
             el.draggable = false;
+            clearDragEvents(this, el);
             button.setDisabled(true);
             button.setText( i18n.getMsg('export.button.dragDrop.no'));
-            el.removeEventListener('dragstart', handler);
         }
     },
 
