@@ -506,11 +506,11 @@ Ext.define('Lada.view.window.GridExport', {
             switch (exportFormat) {
                 case 'geojson':
                     content = JSON.stringify(win.getGeoJson());
-                    textType = 'text/json';
+                    textType = 'application/json';
                     break;
                 case 'json':
                     content = JSON.stringify(win.getJson());
-                    textType = 'text/json';
+                    textType = 'application/json';
                     break;
                 case 'csv':
                     content = win.getCSV();
@@ -581,7 +581,6 @@ Ext.define('Lada.view.window.GridExport', {
 
     /**
      * Fetches the data as geojson points with the row's data as properties
-     * TODO: is not a feature collection, but an array of features
      */
     getGeoJson: function() {
         var data = this.getDataSets();
@@ -631,7 +630,10 @@ Ext.define('Lada.view.window.GridExport', {
             }
             resultObj.push(iresult);
         }
-        return resultObj
+        return {
+            'type': 'FeatureCollection',
+            'features': resultObj
+        };
     },
 
     /**
