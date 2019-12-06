@@ -118,15 +118,35 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
         var me = this;
         var changes = [];
         var id = event.id;
-        Ext.Object.each(event, function(key, value) {
-            //If event/value does not exist in storage or was changed: add to array
+        me.displayValues.forEach(function(key) {
             if (me.eventObjs[id] == null
-                || me.eventObjs[id][key] == null
-                || me.eventObjs[id][key] !== value) {
+                || me.getPropertyByString(me.eventObjs[id], key) == null
+                || me.getPropertyByString(me.eventObjs[id], key) !==me.getPropertyByString(event, key)) {
                 changes.push(key);
             }
         });
         return changes;
+    },
+
+    /**
+     * Get object property by string
+     * @param {Object} o Object to get property from
+     * @param {String} s String path
+     * @return {} Property
+     */
+    getPropertyByString: function(o, s) {
+        s = s.replace(/\[(\w+)\]/g, '.$1');
+        s = s.replace(/^\./, '');
+        var a = s.split('.');
+        for (var i = 0, n = a.length; i < n; ++i) {
+            var k = a[i];
+            if (k in o) {
+                o = o[k];
+            } else {
+                return;
+            }
+        }
+        return o;
     },
 
     /**
@@ -166,7 +186,7 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
 
         //Add display values
         Ext.Array.each(this.displayValues, function(key) {
-            var value = scenario[key];
+            var value = me.getPropertyByString(scenario, key);//scenario[key];
             value = value != null ? value: '';
             var keyString = i18n.getMsg('elan.' + key);
             if (typeof value === 'boolean') {
