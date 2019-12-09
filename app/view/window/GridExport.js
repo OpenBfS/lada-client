@@ -395,8 +395,6 @@ Ext.define('Lada.view.window.GridExport', {
         }
         /* drag Event handler: fill the copy/paste data on dragstart */
         var handler = function(ev) {
-            console.log(data);
-            console.log(csvdata);
             ev.dataTransfer.setData('application/json', JSON.stringify(data));
             ev.dataTransfer.setData('text/csv', csvdata);
             // example for retrieving ddata in a drop zone
@@ -823,11 +821,17 @@ Ext.define('Lada.view.window.GridExport', {
     exportsecondarytoggle: function(box, newValue) {
         var me = box.up('window');
         me.activateDragButton(true);
+        var expButton = me.down('button[action=export]');
         me.down('checkbox[name=allcolumns]');
         if (newValue && !me.down('checkbox[name=allcolumns]').value) {
             me.down('tagfield[name=exportcolumns]').setVisible(true);
         } else {
             me.down('tagfield[name=exportcolumns]').setVisible(false);
+        }
+        if (!newValue) {
+            expButton.setText(
+                Lada.getApplication().bundle.getMsg('export.button'));
+            expButton.setDisabled(false);
         }
     },
 
