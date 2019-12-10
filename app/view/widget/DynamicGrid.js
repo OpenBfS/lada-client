@@ -74,6 +74,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             injectCheckbox: 1
         });
         this.callParent(arguments);
+        var me = this;
+        //If timezone is toggled, reload to update time strings
+        Ext.on('timezonetoggled', function(utc) {
+            me.reload();
+        });
     },
 
     setToolbar: function() {
