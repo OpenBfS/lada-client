@@ -35,12 +35,7 @@ Ext.define('Lada.model.Messung', {
         name: 'messdauer'
     }, {
         name: 'messzeitpunkt',
-        convert: function(v) {
-            if (!v) {
-                return null;
-            }
-            return new Date(v);
-        }
+        convert: Lada.util.Date.convertTimeFn
     }, {
         name: 'status'
     }, {
@@ -50,12 +45,7 @@ Ext.define('Lada.model.Messung', {
         name: 'letzteAenderung',
         type: 'date',
         dateFormat: 'time',
-        convert: function(v) {
-            if (!v) {
-                return new Date();
-            }
-            return new Date(v);
-        }
+        convert: Lada.util.Date.convertTimeFnDefaultNow
     }, {
         name: 'geplant',
         type: 'boolean'

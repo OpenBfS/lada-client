@@ -58,12 +58,7 @@ Ext.define('Lada.model.Messwert', {
         name: 'letzteAenderung',
         type: 'date',
         dateFormat: 'time',
-        convert: function(v) {
-            if (!v) {
-                return new Date();
-            }
-            return new Date(v);
-        }
+        convert: Lada.util.Date.convertTimeFnDefaultNow
     }, {
         name: 'treeModified',
         serialize: function(value) {

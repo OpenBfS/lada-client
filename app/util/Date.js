@@ -88,6 +88,35 @@ Ext.define('Lada.util.Date', {
          */
         getCurrentTimeZone: function() {
             return this.utc? 'UTC': moment.tz.guess();
+        },
+
+        /**
+         * centralized 'convert' function for time-based model entries
+         * @param {*} v
+         */
+        convertTimeFn: function(v) {
+            if (!v) {
+                return null;
+            }
+            v = new Date(v);
+            // TODO: account for locale settings
+            // if (Lada.util.Date.utc) {
+            //     return v;
+            // } else {
+            //     return new Date(v.valueOf() - v.getTimezoneOffset() * 60000 );
+            //     // TODO: momentjs function for that, test between browsers!
+            // }
+        },
+
+        /**
+         * centralized 'convert' function for time-based model entries with
+         * defaults set to 'now'
+         * @param {*} v
+         */
+        convertTimeFnDefaultNow: function(v) {
+            v = v ? new Date(v) : new Date();
+            // TODO: account for locale settings
+            return v;
         }
     }
 });
