@@ -33,7 +33,7 @@ Ext.define('Lada.view.window.About', {
         });
 
         var i18n = Lada.getApplication().bundle;
-        this.setTitle = i18n.getMsg('about.window.title');
+        this.title = i18n.getMsg('about.window.title');
         this.items = [{
             border: false,
             autoscroll: 'true',
@@ -54,14 +54,14 @@ Ext.define('Lada.view.window.About', {
         this.callParent(arguments);
         var me = this;
 
-        Ext.on('timezonetoggled', function(utc) {
+        Ext.on('timezonetoggled', function() {
             me.down('panel[name=aboutcontent]').setHtml(me.updateContent());
         });
     },
 
     updateContent: function() {
         var i18n = Lada.getApplication().bundle;
-        return  '<p>'
+        return '<p>'
                 + i18n.getMsg('about.window.text.login')
                 + '<br /><b>'
                 + Lada.username

@@ -56,12 +56,15 @@ Ext.define('Lada.util.Date', {
          * @return {String} Formatted time string
          */
         formatTimestamp: function(timestamp, format, extFormat) {
+            if (!moment || !moment.tz) {
+                console.error('dependencies moment.js and/or moment-timezone are not found');
+            }
             var me = this;
             var timezone = this.utc? 'UTC': moment.tz.guess();
             var date = moment(timestamp);
             if (extFormat) {
                 var converted = [];
-                format.split("").forEach(function(char) {
+                format.split('').forEach(function(char) {
                     converted.push(me.extFormatMap[char]? me.extFormatMap[char]: char);
                 });
                 format = converted.join('');

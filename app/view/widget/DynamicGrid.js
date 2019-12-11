@@ -74,11 +74,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             injectCheckbox: 1
         });
         this.callParent(arguments);
-        var me = this;
-        //If timezone is toggled, reload to update time strings
-        Ext.on('timezonetoggled', function(utc) {
-            me.reload();
-        });
     },
 
     setToolbar: function() {
@@ -174,6 +169,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         this.down('pagingtoolbar').add('-');
         this.down('pagingtoolbar').add(cbox);
         this.down('pagingtoolbar').down('#refresh').hide();
+        var me = this;
+        //If timezone is toggled, reload to update time strings
+        Ext.on('timezonetoggled', function() {
+            me.reload();
+        });
     },
 
     selectRowByFeature: function(map, features) {
