@@ -80,6 +80,14 @@ Ext.define('Lada.util.Date', {
             if (utc != null) {
                 this.utc = utc;
             }
+        },
+
+        /**
+         * Returns the timezone currently used as diaplay base
+         * (e.g. to be used used for print templates)
+         */
+        getCurrentTimeZone: function() {
+            return this.utc? 'UTC': moment.tz.guess();
         }
     }
 });

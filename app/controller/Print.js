@@ -154,7 +154,11 @@ Ext.define('Lada.controller.Print', {
                             return el.dataIndex === attributes[i].name
                         });
                         if (!matchingColumn) {
-
+                            if (attributes[i].name === 'timezone') {
+                                // TODO timezone should be filled automatically,
+                                // and not be seen in the client
+                                break;
+                            }
                             /* hardcoded workaround to not lose the previously
                             automatic displayName presets for lada_print*/
                             var value = attributes[i].default;
@@ -260,6 +264,9 @@ Ext.define('Lada.controller.Print', {
                     if (field) {
                         resultData[attributes[i].name] = field.getValue() || '';
                     } else {
+                        if (attributes[i].name === 'timezone') {
+                            resultData[attributes[i].name] = Lada.util.Date.getCurrentTimeZone();
+                        }
                         resultData[attributes[i].name] = '';
                     }
                     break;
@@ -306,9 +313,11 @@ Ext.define('Lada.controller.Print', {
                         resultData[attributes[i].name] = modelEntry.get(attributes[i].name);
                     } else {
                         var fieldselector = 'textfield[name=' + attributes[i].name + ']';
-                        var field = window.down('fieldset[name=dynamicfields]').down(fieldselector);
-                        if (field) {
-                            resultData[attributes[i].name] = field.getValue() || '';
+                        if (fieldselector) {
+                            var field = window.down('fieldset[name=dynamicfields]').down(fieldselector);
+                            if (field) {
+                                resultData[attributes[i].name] = field.getValue() || '';
+                            }
                         }
                     }
                     break;
