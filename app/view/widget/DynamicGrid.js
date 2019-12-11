@@ -169,10 +169,12 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         this.down('pagingtoolbar').add('-');
         this.down('pagingtoolbar').add(cbox);
         this.down('pagingtoolbar').down('#refresh').hide();
-        var me = this;
         //If timezone is toggled, reload to update time strings
         Ext.on('timezonetoggled', function() {
-            me.reload();
+            var grid = Ext.ComponentQuery.query('dynamicgrid');
+            if (grid.length === 1) {
+                grid[0].reload();
+            }
         });
     },
 
