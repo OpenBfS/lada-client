@@ -38,7 +38,7 @@ Ext.define('Lada.util.Date', {
             g: "h",
             G: "k",
             h: "hh",
-            H: "kk",
+            H: "HH",
             i: "mm",
             s: "ss",
             O: "ZZ",
@@ -99,13 +99,14 @@ Ext.define('Lada.util.Date', {
                 return null;
             }
             v = new Date(v);
-            // TODO: account for locale settings
-            // if (Lada.util.Date.utc) {
-            //     return v;
-            // } else {
-            //     return new Date(v.valueOf() - v.getTimezoneOffset() * 60000 );
-            //     // TODO: momentjs function for that, test between browsers!
-            // }
+            if (Lada.util.Date.utc) {
+                return new Date(v);
+            } else {
+                // return the 'real data'
+                return new Date(
+                    moment(v).tz(moment.tz.guess())
+                );
+            }
         },
 
         /**
