@@ -61,6 +61,7 @@ Ext.define('Lada.view.window.AuditTrail', {
             }]
         }];
         me.callParent(arguments);
+        Ext.on('timezonetoggled', this.initData, this);
     },
 
     initData: function() {
