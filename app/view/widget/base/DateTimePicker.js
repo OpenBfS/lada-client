@@ -298,7 +298,8 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         var me = this;
         var dateOnly = Ext.Date.clearTime(date, true);
         var t = dateOnly.getTime();
-        var currentDate = (me.pickerField && me.pickerField.getValue()) || Lada.util.shiftDateObject(new Date());
+        var currentDate = ( me.pickerField && me.pickerField.getValue())
+            || Lada.util.Date.shiftDateObject(new Date());
         var cells = me.cells;
         var cls = me.selectedCls;
         var cellItems = cells.elements;

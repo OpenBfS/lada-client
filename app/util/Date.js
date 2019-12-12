@@ -152,7 +152,7 @@ Ext.define('Lada.util.Date', {
                 // see shiftDateObject description
                 var momentzone = moment.tz.zone(moment.tz.guess());
                 var offset = momentzone.utcOffset(v) * 60000;
-                return new Date(v.valueOf() - offset);
+                return new Date(date.valueOf() - offset);
             }
         }
     }
