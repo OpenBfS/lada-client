@@ -56,6 +56,9 @@ Ext.define('Lada.util.Date', {
          * @return {String} Formatted time string
          */
         formatTimestamp: function(timestamp, format, extFormat) {
+            if (!timestamp) {
+                return null;
+            }
             if (!moment || !moment.tz) {
                 console.error('dependencies moment.js and/or moment-timezone are not found');
             }
@@ -82,6 +85,7 @@ Ext.define('Lada.util.Date', {
             }
         },
 
+
         /**
          * Returns the timezone currently used as diaplay base
          * (e.g. to be used used for print templates)
@@ -94,16 +98,25 @@ Ext.define('Lada.util.Date', {
          * "Shifts" a date. If the client is set to "UTC display", but the
          * dates used internally are in another timezone, the dates will be
          * shifted according to the utc offset.
-         * TODO: this is hackish and relies on ExtJS *always* using local time
          * @param {*} date
+         * @param reverse: set to true if the calculation has to be 'backwards'
+         *      (input date needs to be cleaned of offset, and then applied
+         *         another offset in opposite direction )
+         * TODO: this is hackish and relies on ExtJS *always* using local time
          */
-        shiftDateObject: function(date) {
-            if (!Lada.util.Date.utc) {
+        shiftDateObject: function(date, reverse) {
+            if (!Lada.util.Date.utc && !reverse) {
                 return date;
             } else {
                 var tz = moment.tz.guess();
                 var offset = moment.tz.zone(tz).utcOffset(date.valueOf());
-                return new Date(date.valueOf() + offset * 60000);
+                if (reverse) {
+                    if (!Lada.util.Date.utc) {
+                        return new Date(date.valueOf() - offset * 120000);
+                    }
+                } else {
+                    return new Date(date.valueOf() + offset * 60000);
+                }
             }
         },
 

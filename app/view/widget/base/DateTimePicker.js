@@ -236,7 +236,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
 
     setValue: function(value) {
         value.setSeconds(0);
-        this.value = new Date(value);
+        this.value = Lada.util.Date.shiftDateObject(new Date(value));
         return this.update(this.value);
     },
 
@@ -244,11 +244,11 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         var me = this;
         var btn = me.todayBtn;
         var handler = me.handler;
-        var auxDate = new Date();
-
+        var auxDate = Lada.util.Date.shiftDateObject(new Date());
+        auxDate.setSeconds(0);
         if (btn && !btn.disabled) {
-            me.pickerField.setValue(new Date(auxDate.setSeconds(0)));
-            me.setValue(new Date(auxDate.setSeconds(0)));
+            me.pickerField.setValue(auxDate);
+            me.setValue(auxDate);
             if (handler) {
                 handler.call(me.scope || me, me, me.value);
             }
@@ -298,7 +298,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         var me = this;
         var dateOnly = Ext.Date.clearTime(date, true);
         var t = dateOnly.getTime();
-        var currentDate = (me.pickerField && me.pickerField.getValue()) || new Date();
+        var currentDate = (me.pickerField && me.pickerField.getValue()) || Lada.util.shiftDateObject(new Date());
         var cells = me.cells;
         var cls = me.selectedCls;
         var cellItems = cells.elements;
