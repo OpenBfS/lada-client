@@ -91,7 +91,24 @@ Ext.define('Lada.util.Date', {
         },
 
         /**
-         * centralized 'convert' function for time-based model entries
+         * "Shifts" a date. If the client is set to "UTC display", but the
+         * dates used internally are in another timezone, the dates will be
+         * shifted according to the utc offset.
+         * TODO: this is hackish and relies on ExtJS *always* using local time
+         * @param {*} date
+         */
+        shiftDateObject: function(date) {
+            if (!Lada.util.Date.utc) {
+                return date;
+            } else {
+                var tz = moment.tz.guess();
+                var offset = moment.tz.zone(tz).utcOffset(date.valueOf());
+                return new Date(date.valueOf() + offset * 60000);
+            }
+        },
+
+        /**
+         * centralized 'convert' function for time-based model entries.
          * @param {*} v
          */
         convertTimeFn: function(v) {
@@ -99,13 +116,14 @@ Ext.define('Lada.util.Date', {
                 return null;
             }
             v = new Date(v);
-            if (Lada.util.Date.utc) {
+            if (!Lada.util.Date.utc) {
                 return new Date(v);
             } else {
-                // return the 'real data'
-                return new Date(
-                    moment(v).tz(moment.tz.guess())
-                );
+                // see shiftDateObject description
+                var momentzone = moment.tz.zone(moment.tz.guess());
+                var offset = momentzone.utcOffset(v) * 60000;
+                return new Date(v.valueOf() - offset);
+                // TODO check direction of shift
             }
         },
 
@@ -115,9 +133,16 @@ Ext.define('Lada.util.Date', {
          * @param {*} v
          */
         convertTimeFnDefaultNow: function(v) {
-            v = v ? new Date(v) : new Date();
-            // TODO: account for locale settings
-            return v;
+            var date = v ? new Date(v): new Date();
+            if (!Lada.util.Date.utc) {
+                return date;
+            } else {
+                // see shiftDateObject description
+                var momentzone = moment.tz.zone(moment.tz.guess());
+                var offset = momentzone.utcOffset(v) * 60000;
+                return new Date(v.valueOf() - offset);
+                // TODO check direction of shift
+            }
         }
     }
 });
