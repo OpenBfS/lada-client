@@ -123,7 +123,6 @@ Ext.define('Lada.util.Date', {
                 var momentzone = moment.tz.zone(moment.tz.guess());
                 var offset = momentzone.utcOffset(v) * 60000;
                 return new Date(v.valueOf() - offset);
-                // TODO check direction of shift
             }
         },
 
@@ -141,7 +140,6 @@ Ext.define('Lada.util.Date', {
                 var momentzone = moment.tz.zone(moment.tz.guess());
                 var offset = momentzone.utcOffset(v) * 60000;
                 return new Date(v.valueOf() - offset);
-                // TODO check direction of shift
             }
         }
     }
