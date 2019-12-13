@@ -155,8 +155,7 @@ Ext.define('Lada.controller.Print', {
                         });
                         if (!matchingColumn) {
                             if (attributes[i].name === 'timezone') {
-                                // TODO timezone should be filled automatically,
-                                // and not be seen in the client
+                            // timezone should be filled automatically, and not be seen in the client
                                 break;
                             }
                             /* hardcoded workaround to not lose the previously
@@ -266,8 +265,9 @@ Ext.define('Lada.controller.Print', {
                     } else {
                         if (attributes[i].name === 'timezone') {
                             resultData[attributes[i].name] = Lada.util.Date.getCurrentTimeZone();
+                        } else {
+                            resultData[attributes[i].name] = '';
                         }
-                        resultData[attributes[i].name] = '';
                     }
                     break;
                 case 'TableAttributeValue':
@@ -521,7 +521,13 @@ Ext.define('Lada.controller.Print', {
             var printData = {
                 layout: 'A4 portrait',
                 outputFormat: format,
-                attributes: { proben: data }};
+                attributes: {
+                    proben: data,
+                    // TODO: hard coded submission of time zone data. Not elegant,
+                    // but required because of separate Erfassungsbogen handling
+                    timezone: Lada.util.Date.getCurrentTimeZone()
+                }};
+
             this.sendRequest(
                 printData,
                 'lada_erfassungsbogen',
