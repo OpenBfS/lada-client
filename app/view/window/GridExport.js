@@ -390,12 +390,14 @@ Ext.define('Lada.view.window.GridExport', {
             // deactivate the drag/drop button if expanded detail data failed to load or is not ready
             active = false;
         } else {
-            data = this.hasGeojson ? this.getGeoJson() : this.getJson();
+            data = this.hasGeojson ? JSON.stringify(this.getGeoJson()) : JSON.stringify(this.getJson());
             csvdata = this.getCSV();
+            window.localStorage.setItem('gis-transfer-data', data);
+            window.localStorage.setItem('gis-transfer-data-transfer-date', new Date().valueOf());
         }
         /* drag Event handler: fill the copy/paste data on dragstart */
         var handler = function(ev) {
-            ev.dataTransfer.setData('application/json', JSON.stringify(data));
+            ev.dataTransfer.setData('application/json', data);
             ev.dataTransfer.setData('text/csv', csvdata);
             // example for retrieving ddata in a drop zone
             // var d = ev.dataTransfer.getData('application/json');
