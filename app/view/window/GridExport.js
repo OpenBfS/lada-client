@@ -217,7 +217,12 @@ Ext.define('Lada.view.window.GridExport', {
                 store: me.columnListStore,
                 hidden: true,
                 value: preselected,
-                multiSelect: true
+                multiSelect: true,
+                listeners: {
+                    change: function() {
+                        me.resetCopyButton(me);
+                    }
+                }
             }, {
                 xtype: 'tagfield',
                 name: 'exportexpcolumns',
@@ -226,7 +231,12 @@ Ext.define('Lada.view.window.GridExport', {
                 store: me.expcolumnList,
                 hidden: true,
                 value: null,
-                multiSelect: true
+                multiSelect: true,
+                listeners: {
+                    change: function() {
+                        me.resetCopyButton(me);
+                    }
+                }
             }, {
                 xtype: 'combobox',
                 fieldLabel: i18n.getMsg('encoding'),
@@ -309,9 +319,9 @@ Ext.define('Lada.view.window.GridExport', {
                 text: i18n.getMsg('close')
             }, {
                 xtype: 'button',
-                action: 'drag',
-                text: i18n.getMsg('export.button.dragDrop'),
-                disabled: true
+                action: 'copyGeoJson',
+                text: i18n.getMsg('export.button.copy'),
+                hidden: true
             }]
         }];
         this.callParent(arguments);
@@ -328,10 +338,8 @@ Ext.define('Lada.view.window.GridExport', {
                 return;
             }
         });
-        this.down('button[action=drag]').on({
-            afterrender: function(button) {
-                button.up('window').activateDragButton(true);
-            }
+        this.down('button[action=copyGeoJson]').on({
+            click: me.doCopy
         });
 
         // get rowexpander and their columns
@@ -377,56 +385,26 @@ Ext.define('Lada.view.window.GridExport', {
         this.down('combobox[name=encoding]').setValue('iso-8859-15');
     },
 
-    activateDragButton: function(active) {
-        var button = this.down('[action=drag]');
-        var el = button.getEl().dom.firstChild;
-        if (!this.dragEvents) {
-            this.dragEvents = [];
-        }
-        var data, csvdata;
-        if (
-            this.down('checkbox[name=secondarycolumns]').getValue() && !this.secondaryDataIsPrefetched
-        ) {
-            // deactivate the drag/drop button if expanded detail data failed to load or is not ready
-            active = false;
-        } else {
-            data = this.hasGeojson ? JSON.stringify(this.getGeoJson()) : JSON.stringify(this.getJson());
-            csvdata = this.getCSV();
+    doCopy: function(button) {
+        var i18n = Lada.getApplication().bundle;
+        button.setDisabled(true);
+        button.setText(i18n.getMsg('export.button.loading'));
+        var me = button.up('window');
+        var prefetchCallBack = function() {
+            var data = JSON.stringify(me.getGeoJson());
             window.localStorage.setItem('gis-transfer-data', data);
             window.localStorage.setItem('gis-transfer-data-transfer-date', new Date().valueOf());
-        }
-        /* drag Event handler: fill the copy/paste data on dragstart */
-        var handler = function(ev) {
-            ev.dataTransfer.setData('application/json', data);
-            ev.dataTransfer.setData('text/csv', csvdata);
-            // example for retrieving ddata in a drop zone
-            // var d = ev.dataTransfer.getData('application/json');
-            // console.log(JSON.parse(d));
-            // d = ev.dataTransfer.getData('text/csv');
-            // console.log(d);
+            button.setText(i18n.getMsg('export.button.copy.success'));
         };
-        var i18n = Lada.getApplication().bundle;
-        /* Clearing up dragstart events if the handler changes, to avoid multiple events firing*/
-        var clearDragEvents = function(scope, element) {
-            for (var l = 0; l < scope.dragEvents.length; l++ ) {
-                element.removeEventListener('dragstart',scope.dragEvents[l]);
-            }
-            scope.dragEvents = [];
-        };
-        if (active && data && csvdata) {
-            button.setDisabled(false);
-            el.draggable = true;
-            button.setText( i18n.getMsg('export.button.dragDrop'));
-            if (this.dragEvents.indexOf(handler) < 0 ) {
-                clearDragEvents(this, el);
-                el.addEventListener('dragstart', handler);
-                this.dragEvents.push(handler);
-            }
+        if (me.down('checkbox[name=secondarycolumns]').getValue() && !me.secondaryDataIsPrefetched) {
+            me.secondaryDataIsPrefetching.then(
+                prefetchCallBack,
+                function(error) {
+                    me.showError('export.preloadfailed');
+                }
+            );
         } else {
-            el.draggable = false;
-            clearDragEvents(this, el);
-            button.setDisabled(true);
-            button.setText( i18n.getMsg('export.button.dragDrop.loading'));
+            prefetchCallBack();
         }
     },
 
@@ -476,7 +454,6 @@ Ext.define('Lada.view.window.GridExport', {
                     return acc.concat(val);
                 }, []);
                 me.secondaryDataIsPrefetched = true;
-                me.activateDragButton(true);
                 resolve();
             }, function(error) {
                 reject(error);
@@ -534,7 +511,7 @@ Ext.define('Lada.view.window.GridExport', {
         };
         if (win.down('checkbox[name=secondarycolumns]').getValue()) {
             button.setText(Lada.getApplication().bundle.getMsg(
-                'export.button.dragDrop.loading'));
+                'export.button.loading'));
             button.setDisabled(true);
             win.secondaryDataIsPrefetching.then(
                 prefetchCallBack,
@@ -797,6 +774,14 @@ Ext.define('Lada.view.window.GridExport', {
         win.down('fieldset[name=csvoptions]').setVisible(
             newValue === 'csv' ? true: false
         );
+        win.resetCopyButton(win);
+        if (newValue === 'geojson') {
+            win.down('button[action=copyGeoJson]').setVisible(true);
+            win.down('button[action=copyGeoJson]').setText(
+                Lada.getApplication().bundle.getMsg('export.button.copy'));
+        } else {
+            win.down('button[action=copyGeoJson]').setVisible(false);
+        }
         win.down('combobox[name=encoding]').setVisible(
             newValue === 'csv' || newValue === 'laf' ? true: false
         );
@@ -808,7 +793,6 @@ Ext.define('Lada.view.window.GridExport', {
             ecolVisible = false;
         }
         win.down('tagfield[name=exportcolumns]').setVisible(ecolVisible);
-        win.activateDragButton(true);
     },
 
     exportalltoggle: function(box, newValue) {
@@ -818,11 +802,11 @@ Ext.define('Lada.view.window.GridExport', {
         if (me.rowexp && me.down('checkbox[name=secondarycolumns]').value) {
             me.down('tagfield[name=exportexpcolumns]').setVisible(!newValue);
         }
+        me.resetCopyButton(me);
     },
 
     exportsecondarytoggle: function(box, newValue) {
         var me = box.up('window');
-        me.activateDragButton(true);
         var expButton = me.down('button[action=export]');
         me.down('checkbox[name=allcolumns]');
         if (newValue && !me.down('checkbox[name=allcolumns]').value) {
@@ -835,6 +819,7 @@ Ext.define('Lada.view.window.GridExport', {
                 Lada.getApplication().bundle.getMsg('export.button'));
             expButton.setDisabled(false);
         }
+        me.resetCopyButton(me);
     },
 
 
@@ -1182,5 +1167,17 @@ Ext.define('Lada.view.window.GridExport', {
             }
         }
         return line;
+    },
+
+    resetCopyButton: function(scope) {
+        var button = scope.down('button[action=copyGeoJson]');
+        if (scope.down('combobox[name=formatselection]').getValue() === 'geojson') {
+            button.setVisible(true);
+            button.setText(
+                Lada.getApplication().bundle.getMsg('export.button.copy'));
+            button.setDisabled(false);
+        } else {
+            button.setVisible(false);
+        }
     }
 });
