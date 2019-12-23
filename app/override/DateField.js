@@ -9,36 +9,6 @@
 Ext.define('Lada.override.Date', {
     override: 'Ext.form.field.Date',
 
-    /**
-     * Overrides internal parsing of dates to account for the desired time zone
-     * display according to Lada.util.Date
-     * @param {*} value
-     */
-    parseDate: function(value) {
-        if (!value) {
-            return value;
-        }
-        if (Ext.isDate(value)) {
-            return Lada.util.Date.shiftDateObject(value);
-        }
-        var me = this,
-            val = me.safeParse(value, me.format),
-            altFormats = me.altFormats,
-            altFormatsArray = me.altFormatsArray,
-            i = 0,
-            len;
-
-        if (!val && altFormats) {
-            altFormatsArray = altFormatsArray || altFormats.split('|');
-            len = altFormatsArray.length;
-            for (; i < len && !val; ++i) {
-                val = me.safeParse(value, altFormatsArray[i]);
-            }
-        }
-        val = Lada.util.Date.shiftDateObject(val);
-        return val;
-    },
-
     // TODO: not yet fully tested
     formatDate: function(date, format) {
         if (Ext.isDate(date)) {
@@ -48,5 +18,11 @@ Ext.define('Lada.override.Date', {
             return Lada.util.Date.formatTimestamp(date.valueOf(), format, true);
         }
         return date;
+    },
+    valueToRaw: function(val) {
+        if (!val) {
+            return '';
+        }
+        return Lada.util.Date.formatTimestamp(val.valueOf(), this.format, true);
     }
 });

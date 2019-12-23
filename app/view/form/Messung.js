@@ -139,7 +139,6 @@ Ext.define('Lada.view.form.Messung', {
                             xtype: 'datetime',
                             name: 'messzeitpunkt',
                             fieldLabel: i18n.getMsg('messzeitpunkt'),
-                            format: 'd.m.Y H:i',
                             width: 300,
                             labelWidth: 100
                         }, {

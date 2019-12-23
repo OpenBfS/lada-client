@@ -56,9 +56,6 @@ Ext.define('Lada.util.Date', {
          * @return {String} Formatted time string
          */
         formatTimestamp: function(timestamp, format, extFormat) {
-            if (!timestamp) {
-                return null;
-            }
             if (!moment || !moment.tz) {
                 console.error('dependencies moment.js and/or moment-timezone are not found');
             }
@@ -85,7 +82,6 @@ Ext.define('Lada.util.Date', {
             }
         },
 
-
         /**
          * Returns the timezone currently used as diaplay base
          * (e.g. to be used used for print templates)
@@ -98,25 +94,16 @@ Ext.define('Lada.util.Date', {
          * "Shifts" a date. If the client is set to "UTC display", but the
          * dates used internally are in another timezone, the dates will be
          * shifted according to the utc offset.
-         * @param {*} date
-         * @param reverse: set to true if the calculation has to be 'backwards'
-         *      (input date needs to be cleaned of offset, and then applied
-         *         another offset in opposite direction )
          * TODO: this is hackish and relies on ExtJS *always* using local time
+         * @param {*} date
          */
-        shiftDateObject: function(date, reverse) {
-            if (!Lada.util.Date.utc && !reverse) {
+        shiftDateObject: function(date) {
+            if (!Lada.util.Date.utc) {
                 return date;
             } else {
                 var tz = moment.tz.guess();
                 var offset = moment.tz.zone(tz).utcOffset(date.valueOf());
-                if (reverse) {
-                    if (!Lada.util.Date.utc) {
-                        return new Date(date.valueOf() - offset * 120000);
-                    }
-                } else {
-                    return new Date(date.valueOf() + offset * 60000);
-                }
+                return new Date(date.valueOf() - offset * 60000);
             }
         },
 
@@ -128,15 +115,7 @@ Ext.define('Lada.util.Date', {
             if (!v) {
                 return null;
             }
-            v = new Date(v);
-            if (!Lada.util.Date.utc) {
-                return new Date(v);
-            } else {
-                // see shiftDateObject description
-                var momentzone = moment.tz.zone(moment.tz.guess());
-                var offset = momentzone.utcOffset(v) * 60000;
-                return new Date(v.valueOf() - offset);
-            }
+            return new Date(v);
         },
 
         /**
@@ -145,15 +124,7 @@ Ext.define('Lada.util.Date', {
          * @param {*} v
          */
         convertTimeFnDefaultNow: function(v) {
-            var date = v ? new Date(v): new Date();
-            if (!Lada.util.Date.utc) {
-                return date;
-            } else {
-                // see shiftDateObject description
-                var momentzone = moment.tz.zone(moment.tz.guess());
-                var offset = momentzone.utcOffset(v) * 60000;
-                return new Date(date.valueOf() - offset);
-            }
+            return v ? new Date(v): new Date();
         }
     }
 });

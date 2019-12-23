@@ -52,26 +52,6 @@ Ext.define('Lada.view.widget.base.Datetime', {
             hidden: true
         }];
         this.callParent(arguments);
-        Ext.on('timezonetoggled', function() {
-            // helper to 'dynamically' toggle the display
-            var val = this.getValue();
-            if (!val) {
-                return;
-            }
-            if (!Lada.util.Date.utc) {
-                this.setRawValue(
-                    Ext.Date.format(
-                        Lada.util.Date.shiftDateObject(val, true),
-                        this.format)
-                );
-            } else {
-                this.setRawValue(
-                    Lada.util.Date.formatTimestamp(
-                        val.valueOf(), this.format, true
-                    )
-                );
-            }
-        }, this);
     },
 
     showWarnings: function(warnings) {
@@ -134,10 +114,6 @@ Ext.define('Lada.view.widget.base.Datetime', {
 
     setValue: function(value) {
         this.down('datetimefield').setValue(value);
-    },
-
-    setRawValue: function(value) {
-        this.down('datetimefield').setRawValue(value);
     },
 
     clearWarningOrError: function() {

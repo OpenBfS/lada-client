@@ -236,7 +236,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
 
     setValue: function(value) {
         value.setSeconds(0);
-        this.value = Lada.util.Date.shiftDateObject(new Date(value));
+        this.value = new Date(value);
         return this.update(this.value);
     },
 
@@ -244,11 +244,11 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         var me = this;
         var btn = me.todayBtn;
         var handler = me.handler;
-        var auxDate = Lada.util.Date.shiftDateObject(new Date());
-        auxDate.setSeconds(0);
+        var auxDate = new Date();
+
         if (btn && !btn.disabled) {
-            me.pickerField.setValue(auxDate);
-            me.setValue(auxDate);
+            me.pickerField.setValue(new Date(auxDate.setSeconds(0)));
+            me.setValue(new Date(auxDate.setSeconds(0)));
             if (handler) {
                 handler.call(me.scope || me, me, me.value);
             }
@@ -264,6 +264,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         var currentDate = me.value;
         currentDate.setHours(hourSet);
         currentDate.setMinutes(minuteSet);
+        currentDate = Lada.util.Date.shiftDateObject(currentDate);
         me.setValue(currentDate);
         me.fireEvent('select', me, currentDate);
     },
@@ -281,7 +282,8 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         ) {
             me.doCancelFocus = me.focusOnSelect === false;
             auxDate.setHours(hourSet, minuteSet, 0);
-            me.setValue(new Date(auxDate));
+            me.setValue(
+                Lada.util.Date.shiftDateObject(auxDate));
             delete me.doCancelFocus;
             if (handler) {
                 handler.call(me.scope || me, me, me.value);
@@ -298,8 +300,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         var me = this;
         var dateOnly = Ext.Date.clearTime(date, true);
         var t = dateOnly.getTime();
-        var currentDate = ( me.pickerField && me.pickerField.getValue())
-            || Lada.util.Date.shiftDateObject(new Date());
+        var currentDate = (me.pickerField && me.pickerField.getValue()) || new Date();
         var cells = me.cells;
         var cls = me.selectedCls;
         var cellItems = cells.elements;
@@ -324,7 +325,9 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
             }
         }
         if (currentDate) {
-            me.hourField.setValue(currentDate.getHours());
+            me.hourField.setValue(
+                parseInt(
+                    Lada.util.Date.formatTimestamp(currentDate, 'H', true), 10));
             me.minuteField.setValue(currentDate.getMinutes());
         }
     }
