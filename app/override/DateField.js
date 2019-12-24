@@ -9,7 +9,6 @@
 Ext.define('Lada.override.Date', {
     override: 'Ext.form.field.Date',
 
-    // TODO: not yet fully tested
     formatDate: function(date, format) {
         if (Ext.isDate(date)) {
             if (!format) {
@@ -24,5 +23,12 @@ Ext.define('Lada.override.Date', {
             return '';
         }
         return Lada.util.Date.formatTimestamp(val.valueOf(), this.format, true);
+    },
+    rawToValue: function(raw) {
+        var val = this.parseDate(raw);
+        if (!val) {
+            return val;
+        }
+        return Lada.util.Date.shiftDateObject(val);
     }
 });
