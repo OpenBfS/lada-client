@@ -237,6 +237,10 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
     setValue: function(value) {
         value.setSeconds(0);
         this.value = new Date(value);
+        this.hourField.setValue(
+            parseInt(
+                Lada.util.Date.formatTimestamp(value.valueOf(), 'H', true), 10));
+        this.minuteField.setValue(value.getMinutes());
         return this.update(this.value);
     },
 
