@@ -16,6 +16,9 @@ Ext.define('Lada.controller.Global', {
         this.control({
             'button[action=about]': {
                 click: this.about
+            },
+            'button[action=toggletimezone]': {
+                toggle: this.toggleTimezone
             }
         });
     },
@@ -26,5 +29,18 @@ Ext.define('Lada.controller.Global', {
     about: function() {
         var win = Ext.create('Lada.view.window.About');
         win.show();
+    },
+
+    /**
+     * Button toggle handler.
+     * Toggles timezone
+     */
+    toggleTimezone: function(button, utc, opts) {
+        Lada.util.Date.setUTCDisplay(utc);
+        var i18n = Lada.getApplication().bundle;
+        var tztext = utc ? i18n.getMsg('timezone.text.utc') : i18n.getMsg('timezone.text.local');
+        button.setText( i18n.getMsg('timezone.button.text') + tztext );
+        //Fire event to notify components
+        Ext.fireEvent('timezonetoggled', utc);
     }
 });

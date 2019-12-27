@@ -61,6 +61,7 @@ Ext.define('Lada.view.window.AuditTrail', {
             }]
         }];
         me.callParent(arguments);
+        Ext.on('timezonetoggled', this.initData, this);
     },
 
     initData: function() {
@@ -116,7 +117,8 @@ Ext.define('Lada.view.window.AuditTrail', {
             }
             for (var i = 0; i < audit.length; i++) {
                 html += '<p style="margin-bottom:0"><b>' + i18n.getMsg('date') + ': ' +
-                (Ext.Date.format(new Date(audit[i].timestamp), 'd.m.Y H:i')) + '</b>';
+                    Lada.util.Date.formatTimestamp(audit[i].timestamp, 'd.m.Y H:i', true) +
+                    '</b>';
                 if (!Ext.isObject(audit[i].identifier)) {
                     if (audit[i].type !== 'probe') {
                         html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
@@ -149,7 +151,8 @@ Ext.define('Lada.view.window.AuditTrail', {
             }
             for (var i = 0; i < audit.length; i++) {
                 html += '<p style="margin-bottom:0"><b>' + i18n.getMsg('date') + ': ' +
-                (Ext.Date.format(new Date(audit[i].timestamp), 'd.m.Y H:i')) + '</b>';
+                    Lada.util.Date.formatTimestamp(audit[i].timestamp, 'd.m.Y H:i', true) +
+                    '</b>';
                 if (audit[i].type !== 'messung') {
                     html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
                     html += audit[i].identifier;
@@ -169,11 +172,11 @@ Ext.define('Lada.view.window.AuditTrail', {
             var value = '';
             if (Ext.Array.contains(this.dateItems, key)) {
                 if (key === 'solldatum_beginn' || key === 'solldatum_ende') {
-                    value = Ext.Date.format(new Date(audit.changedFields[key]),
-                        'd.m.Y');
+                    value = Lada.util.Date.formatTimestamp(
+                        audit.changedFields[key], 'd.m.Y', true);
                 } else {
-                    value = Ext.Date.format(new Date(audit.changedFields[key]),
-                        'd.m.Y H:i');
+                    value = Lada.util.Date.formatTimestamp(
+                        audit.changedFields[key], 'd.m.Y H:i', true);
                 }
             } else {
                 value = audit.changedFields[key];

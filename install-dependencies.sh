@@ -34,4 +34,7 @@ curl -L https://github.com/openlayers/openlayers/releases/download/v${OL_VERSION
 unzip -n OpenLayers-${OL_VERSION}.zip
 mv v${OL_VERSION}-dist ol/
 
+curl -L https://momentjs.com/downloads/moment.js -o moment.js
+curl -L https://momentjs.com/downloads/moment-timezone-with-data.js -o moment-timezone.js
+
 cd $CUR_DIR

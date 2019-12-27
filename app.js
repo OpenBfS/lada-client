@@ -35,6 +35,7 @@ Ext.application({
         'Lada.override.i18n.DE',
         'Lada.override.RowExpander',
         'Lada.override.FilteredComboBox',
+        'Lada.override.Date',
         'Lada.view.plugin.GridRowExpander',
         'Ext.i18n.Bundle',
         'Ext.layout.container.Column',
@@ -90,6 +91,7 @@ Ext.application({
         'Lada.store.Query',
         'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.window.TrackedWindow',
+        'Lada.util.Date',
         'Lada.util.FunctionScheduler',
         'Lada.util.WindowTracker'
     ],

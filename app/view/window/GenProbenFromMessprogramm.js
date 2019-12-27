@@ -347,7 +347,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         if (!value) {
                             return '';
                         }
-                        return Ext.Date.format(value, 'd.m.Y');
+                        return Lada.util.Date.formatTimestamp(
+                            value, 'd.m.Y', true
+                        );
                     }
                 }, {
                     header: i18n.getMsg('sollBis'),
@@ -356,7 +358,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         if (!value) {
                             return '';
                         }
-                        return Ext.Date.format(value, 'd.m.Y');
+                        return Lada.util.Date.formatTimestamp(
+                            value, 'd.m.Y', true
+                        );
                     }
                 }, {
                     header: i18n.getMsg('messprogramm.form.fieldset.title'),

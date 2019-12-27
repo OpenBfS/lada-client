@@ -680,15 +680,15 @@ Ext.define('Lada.controller.form.Probe', {
      *  - Is the date in the future
      *  - Does the date belong to a time period and the end is before start
      * In both cases it adds a warning to the field which was checked.
+     * TODO: also trigers for 'subfields' (hour/minute picker)
      */
     checkDate: function(field) {
-        var now = Date.now();
+        var now = new Date().valueOf();
         var w = 0; //amount of warnings
         var e = 0; //errors
         var emsg = '';
         var wmsg = '';
-
-        if (field.getValue() > now) {
+        if (field.getValue().valueOf() > now) {
             wmsg += Lada.getApplication().bundle.getMsg('661');
             w++;
         }
@@ -706,16 +706,15 @@ Ext.define('Lada.controller.form.Probe', {
                 field.up('fieldset').clearMessages();
             }
         }
-
-        if (w) {
+        if (w && field.up().showWarnings) {
             field.up().showWarnings(wmsg);
         }
-        if (e) {
+        if (e && field.up().showErrors) {
             field.up().showErrors(emsg);
         }
 
         // Clear Warnings or Errors if none Are Present
-        if (w === 0 && e === 0) {
+        if (w === 0 && e === 0 && field.up().clearWarningOrError) {
             field.up().clearWarningOrError();
         }
     },

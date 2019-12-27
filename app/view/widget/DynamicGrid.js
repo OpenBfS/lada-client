@@ -169,6 +169,13 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         this.down('pagingtoolbar').add('-');
         this.down('pagingtoolbar').add(cbox);
         this.down('pagingtoolbar').down('#refresh').hide();
+        //If timezone is toggled, reload to update time strings
+        Ext.on('timezonetoggled', function() {
+            var grid = Ext.ComponentQuery.query('dynamicgrid');
+            if (grid.length === 1) {
+                grid[0].reload();
+            }
+        });
     },
 
     selectRowByFeature: function(map, features) {
@@ -598,7 +605,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             var format = col.format;
             var dt='';
             if (!isNaN(value)) {
-                dt = Ext.Date.format(new Date(value), format);
+                dt = Lada.util.Date.formatTimestamp(value, format, true);
             }
             return dt;
         };

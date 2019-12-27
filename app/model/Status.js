@@ -54,12 +54,7 @@ Ext.define('Lada.model.Status', {
         name: 'datum',
         type: 'date',
         dateFormat: 'time',
-        convert: function(v) {
-            if (!v) {
-                return v;
-            }
-            return new Date(v);
-        }
+        convert: Lada.util.Date.convertTimeFn
     }, {
         name: 'text'
     }],
