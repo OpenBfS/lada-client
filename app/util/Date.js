@@ -64,9 +64,14 @@ Ext.define('Lada.util.Date', {
             var date = moment(timestamp);
             if (extFormat) {
                 var converted = [];
-                format.split('').forEach(function(char) {
-                    converted.push(me.extFormatMap[char]? me.extFormatMap[char]: char);
-                });
+                var chars = format.split('');
+                for (var i=0; i < chars.length; i++ ) {
+                    if (me.extFormatMap[chars[i]]) {
+                        converted.push(me.extFormatMap[chars[i]]);
+                    } else {
+                        converted.push(chars[i]);
+                    }
+                }
                 format = converted.join('');
             }
             return date.tz(timezone).format(format);
