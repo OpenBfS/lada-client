@@ -72,6 +72,9 @@ Ext.define('Lada.view.widget.base.DateTimeRange', {
             })
         ];
         this.setValue(this.value);
+        Ext.on('timezonetoggled', function() {
+            this.setValue(this.getValue());
+        }, this);
         this.callParent(arguments);
     },
     showWarnings: function(warnings) {
