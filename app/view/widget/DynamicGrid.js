@@ -278,93 +278,100 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         var cc = current_columns.getData().items;
 
         for (var i = 0; i < cc.length; i++) {
-            if (cc[i].get('visible') !== true) {
-                continue;
-            }
-            var col = {};
             var orig_column = fixedColumnStore.findRecord(
                 'id', cc[i].get('gridColumnId'), false, false, false, true);
             var dataIndex = orig_column.get('dataIndex');
-            col.dataIndex = dataIndex;
-            col.dataType = orig_column.get('dataType');
-            col.text = orig_column.get('name');
-            col.width = cc[i].get('width');
-            col.sortable = false;
-            //Check column type and set to string if unknown
-            var datatype = orig_column.get('dataType');
-            if (!datatype) {
-                datatype = {name: 'text'};
+            if (cc[i].get('visible') === true) {
+                var col = {};
+                col.dataIndex = dataIndex;
+                col.dataType = orig_column.get('dataType');
+                col.text = orig_column.get('name');
+                col.width = cc[i].get('width');
+                col.sortable = false;
+                //Check column type and set to string if unknown
+                var datatype = orig_column.get('dataType');
+                if (!datatype) {
+                    datatype = {name: 'text'};
+                }
+                var curField = {
+                    dataIndex: dataIndex,
+                    name: orig_column.get('name')
+                };
+                var colImg = null;
+                switch (datatype.name) {
+                    case 'probeId':
+                        this.generateProbeColumn(colImg, col);
+                        break;
+                    case 'messungId':
+                        this.generateMessungColumns(colImg, col);
+                        break;
+                    case 'mpId':
+                        this.generateMessprogrammColumns(colImg, col);
+                        break;
+                    case 'ortId':
+                        this.generateOrtColumns(colImg, col);
+                        break;
+                    case 'geom':
+                        this.generateGeomColumns(colImg, col);
+                        break;
+                    case 'date':
+                        this.generateDateColumns(curField, orig_column, col);
+                        break;
+                    case 'number':
+                        this.generateNumberColumns(orig_column, col);
+                        break;
+                    case 'boolean':
+                        this.generateBooleanColumns(col);
+                        break;
+                    case 'statusstufe':
+                        this.generateStatusStufeColumns(col);
+                        break;
+                    case 'umwbereich':
+                        this.generateUmweltbereichColumns(col);
+                        break;
+                    case 'statuswert':
+                        this.generateStatusWertColumns(col);
+                        break;
+                    case 'statuskombi':
+                        this.generateStatusKombiColumns(col);
+                        break;
+                    case 'egem':
+                        this.generateEgemColumns(col);
+                        break;
+                    case 'netzbetr':
+                        this.generateNetzbetreiberColumns(col);
+                        break;
+                    case 'datenbasis':
+                        this.generateDatenbasisColumns(col);
+                        break;
+                    case 'probenart':
+                        this.generateProbenartColumns(col);
+                        break;
+                    case 'staat':
+                        this.generateStaatColumns(col);
+                        break;
+                    case 'probenehmer':
+                    case 'dsatzerz':
+                    case 'mprkat':
+                        this.generateStammColumn(colImg, col, datatype);
+                        break;
+                    default:
+                        col.xtype = 'gridcolumn';
+                        col.renderer = function(value) {
+                            return value || '';
+                        };
+                }
+                fields.push(curField);
+                if (cc[i].sort) {
+                    this.currentParams.sorting.push({
+                        name: dataIndex,
+                        sort: cc[i].get('sort')
+                    });
+                }
+                col.hideable = false;
+                col.draggable = false;
+                resultColumns.push(col);
             }
-            var curField = {
-                dataIndex: dataIndex,
-                name: orig_column.get('name')
-            };
-            var colImg = null;
-            switch (datatype.name) {
-                case 'probeId':
-                    this.generateProbeColumn(colImg, col);
-                    break;
-                case 'messungId':
-                    this.generateMessungColumns(colImg, col);
-                    break;
-                case 'mpId':
-                    this.generateMessprogrammColumns(colImg, col);
-                    break;
-                case 'ortId':
-                    this.generateOrtColumns(colImg, col);
-                    break;
-                case 'geom':
-                    this.generateGeomColumns(colImg, col);
-                    break;
-                case 'date':
-                    this.generateDateColumns(curField, orig_column, col);
-                    break;
-                case 'number':
-                    this.generateNumberColumns(orig_column, col);
-                    break;
-                case 'boolean':
-                    this.generateBooleanColumns(col);
-                    break;
-                case 'statusstufe':
-                    this.generateStatusStufeColumns(col);
-                    break;
-                case 'umwbereich':
-                    this.generateUmweltbereichColumns(col);
-                    break;
-                case 'statuswert':
-                    this.generateStatusWertColumns(col);
-                    break;
-                case 'statuskombi':
-                    this.generateStatusKombiColumns(col);
-                    break;
-                case 'egem':
-                    this.generateEgemColumns(col);
-                    break;
-                case 'netzbetr':
-                    this.generateNetzbetreiberColumns(col);
-                    break;
-                case 'datenbasis':
-                    this.generateDatenbasisColumns(col);
-                    break;
-                case 'probenart':
-                    this.generateProbenartColumns(col);
-                    break;
-                case 'staat':
-                    this.generateStaatColumns(col);
-                    break;
-                case 'probenehmer':
-                case 'dsatzerz':
-                case 'mprkat':
-                    this.generateStammColumn(colImg, col, datatype);
-                    break;
-                default:
-                    col.xtype = 'gridcolumn';
-                    col.renderer = function(value) {
-                        return value || '';
-                    };
-            }
-            fields.push(curField);
-
             if (cc[i].get('filterActive')) {
                 this.currentParams.filters.push({
                     name: dataIndex,
@@ -374,15 +381,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     filterIsNull: cc[i].get('filterIsNull')
                 });
             }
-            if (cc[i].sort) {
-                this.currentParams.sorting.push({
-                    name: dataIndex,
-                    sort: cc[i].get('sort')
-                });
-            }
-            col.hideable = false;
-            col.draggable = false;
-            resultColumns.push(col);
         }
         var caf = new Array();
         caf[0] = resultColumns;
