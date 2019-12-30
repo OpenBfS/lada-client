@@ -144,14 +144,14 @@ Ext.define('Lada.view.form.Ort', {
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.koordx'),
             name: 'koordXExtern',
-            regex: /^[noeswNOESW\d\.,]+$/,
+            regex: /^[noeswNOESW\d\.,-]+$/,
             maxLength: 22
         }, {
             xtype: 'tfield',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.koordy'),
             name: 'koordYExtern',
-            regex: /^[noeswNOESW\d\.,]+$/,
+            regex: /^[noeswNOESW\d\.,-]+$/,
             maxLength: 22
         }, {
             xtype: 'button',
@@ -214,6 +214,12 @@ Ext.define('Lada.view.form.Ort', {
         this.getForm().loadRecord(this.record);
 
         this.readOnly = this.record.readOnly;
+
+        //If plausible probe instances reference this ort, disable coordinate fields
+        if (this.record.get('plausibleReferenceCount') > 0) {
+            this.down('tfield[name=koordXExtern]').setReadOnly(true);
+            this.down('tfield[name=koordYExtern]').setReadOnly(true);
+        }
 
         if (this.record.get('ortTyp') === 3) {
             this.down('fieldset').expand();

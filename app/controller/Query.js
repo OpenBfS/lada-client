@@ -150,39 +150,49 @@ Ext.define('Lada.controller.Query', {
         panel.store.add(newrecord);
         var columnChooser = panel.down('columnchoser');
         var columnValues = columnChooser.store.getData();
-        var fieldset = panel.down('fieldset[name=querydetails]');
-        var loadingMask = Ext.create('Ext.LoadMask', {
-            target: fieldset
-        });
-        loadingMask.show();
-        columnChooser.on({
-            loadend: {
-                fn: function() {
-                    loadingMask.hide();
-                },
-                single: true
-            }
-        });
+        var fieldset = Ext.getCmp('querypanelid');
+        if (!panel.loadingMask) {
+            panel.loadingMask = Ext.create('Ext.LoadMask', {
+                target: fieldset
+            });
+        }
+        panel.loadingMask.show();
+
         //Clone columns after query is saved
         var saveCallback = function(savedQuery) {
-            columnValues.each(function(item) {
-                var clonedModel = Ext.create('Lada.model.GridColumnValue', {
-                    columnIndex: item.get('columnIndex'),
-                    gridColumnId: item.get('gridColumnId'),
-                    visible: item.get('visible'),
-                    sort: item.get('sort'),
-                    sortIndex: item.get('sortIndex'),
-                    filterActive: item.get('filterActive'),
-                    filterNegate: item.get('filterNegate'),
-                    filterRegex: item.get('filterRegex'),
-                    filterValue: item.get('filterValue'),
-                    width: item.get('width')
+            new Ext.Promise(function(resolve, reject) {
+                var len = columnValues.length;
+                var cur = 0;
+                var success = true;
+                columnValues.each(function(item) {
+                    var clonedModel = Ext.create('Lada.model.GridColumnValue', {
+                        columnIndex: item.get('columnIndex'),
+                        gridColumnId: item.get('gridColumnId'),
+                        visible: item.get('visible'),
+                        sort: item.get('sort'),
+                        sortIndex: item.get('sortIndex'),
+                        filterActive: item.get('filterActive'),
+                        filterNegate: item.get('filterNegate'),
+                        filterRegex: item.get('filterRegex'),
+                        filterValue: item.get('filterValue'),
+                        width: item.get('width')
+                    });
+                    clonedModel.set('id', null);
+                    clonedModel.set('queryUserId', savedQuery.get('id'));
+                    clonedModel.set('userId', null);
+                    clonedModel.save({
+                        callback: function(rec, op, suc) {
+                            cur++;
+                            success = suc == false ? false: true;
+                            if (cur == len) {
+                                resolve(success);
+                            }
+                        }
+                    });
                 });
-                clonedModel.set('id', null);
-                clonedModel.set('queryUserId', savedQuery.get('id'));
-                clonedModel.set('userId', null);
-                clonedModel.save();
+            }).then(function(saveSuccess) {
             });
+
         };
 
         cbox.setStore(panel.store);
@@ -309,6 +319,14 @@ Ext.define('Lada.controller.Query', {
             record.set('id', null);
             record.set('userId', Lada.userId);
         }
+
+        if (!qp.loadingMask) {
+            var fieldset = Ext.getCmp('querypanelid');
+            qp.loadingMask = Ext.create('Ext.LoadMask', {
+                target: fieldset
+            });
+        }
+        qp.loadingMask.show();
         button.setDisabled(true);
         var me = this;
         record.save({
@@ -322,13 +340,31 @@ Ext.define('Lada.controller.Query', {
                 qp.getForm().loadRecord(rec);
                 if (!skipColumns) {
                     var columns = qp.gridColumnValueStore.getData().items;
-                    for (var i=0; i < columns.length; i++) {
-                            columns[i].save();
-                    }
+                    var count = columns.length;
+                    var saved = 0;
+                    new Ext.Promise(function(resolve, reject) {
+                        for (var i=0; i < columns.length; i++) {
+                            columns[i].save({
+                                callback: function(record, operation, success) {
+                                    saved++;
+                                    if (saved == columns.length) {
+                                        resolve();
+                                    }
+                                }
+                            });
+                        }
+                    }).then(function() {
+                        qp.down('combobox[name=selectedQuery]').setStore(qp.store);
+                        qp.down('combobox[name=selectedQuery]').select(newId);
+                        qp.loadGridColumnStore();
+                        qp.loadingMask.hide();
+                    })
+                } else {
+                    qp.down('combobox[name=selectedQuery]').setStore(qp.store);
+                    qp.down('combobox[name=selectedQuery]').select(newId);
+                    qp.loadGridColumnStore();
+                    qp.loadingMask.hide();
                 }
-                qp.down('combobox[name=selectedQuery]').setStore(qp.store);
-                qp.down('combobox[name=selectedQuery]').select(newId);
-                qp.loadGridColumnStore();
             },
             failure: function(rec, response) {
                 Ext.Msg.alert(i18n.getMsg('query.error.save.title'),
@@ -405,7 +441,7 @@ Ext.define('Lada.controller.Query', {
             if (!this.resultStore) {
                 this.resultStore = Ext.StoreManager.get('genericresults');
             }
-            this.resultStore.setProxyPayload(jsonData);
+            this.resultStore.getProxy().setPayload(jsonData);
             this.resultStore.setPageSize(Lada.pagingSize);
 
             var plugin = null;

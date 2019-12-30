@@ -121,7 +121,8 @@ Ext.define('Lada.view.grid.Messung', {
                 format: 'd.m.Y H:i',
                 // minValue: '01.01.2001', //todo: gibt es das?
                 // minText: 'Das Datum der Messung darf nicht vor dem 01.01.2001 liegen.',
-                maxValue: Ext.Date.format(new Date(), 'd.m.Y H:i')
+                maxValue: Lada.util.Date.formatTimestamp(new Date(), 'd.m.Y H:i', true)
+                // TODO should change if zeitbasis changes, also check 'translation' to UTC
             }
         }, {
             header: i18n.getMsg('header.statuskombi'),

@@ -350,10 +350,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var netzfilter = null;
         var mst_store = Ext.data.StoreManager.get('messstellen');
         if (ozw.probe) {
-            netzfilter = ozw.probe.get('laborMstId');
+            netzfilter = ozw.probe.get('mstId');
 
         } else if (ozw.messprogramm) {
-            netzfilter = ozw.messprogramm.get('laborMstId');
+            netzfilter = ozw.messprogramm.get('mstId');
         }
         var extraParams = {};
         if (netzfilter !== null) {

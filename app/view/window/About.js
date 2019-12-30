@@ -13,13 +13,12 @@ Ext.define('Lada.view.window.About', {
     extend: 'Ext.window.Window',
 
     layout: 'fit',
+    constrain: true,
 
     /**
      * This function initialises the Window
      */
     initComponent: function() {
-        var i18n = Lada.getApplication().bundle;
-
         // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
@@ -33,46 +32,57 @@ Ext.define('Lada.view.window.About', {
             }
         });
 
+        var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('about.window.title');
-        this.buttons = [{
-            text: i18n.getMsg('close'),
-            scope: this,
-            handler: this.close
-        }];
         this.items = [{
             border: false,
             autoscroll: 'true',
             items: [{
                 xtype: 'panel',
+                name: 'aboutcontent',
                 border: false,
                 layout: 'fit',
                 bodyPadding: 20,
-                html: '<p>'
-                    + i18n.getMsg('about.window.text.login')
-                    + '<br /><b>'
-                    + Lada.username
-                    + '</b></p>'
-                    + '<p>'
-                    + i18n.getMsg('about.window.text.roles')
-                    + this.rolesToHtml()
-                    + '</p>'
-                    + '<p>'
-                    + i18n.getMsg('about.window.text.logintime')
-                    + '<br />'
-                    + Ext.Date.format(new Date(Lada.logintime), 'd.m.y h:i:s P')
-                    + '</p>'
-                    + '<p>'
-                    + i18n.getMsg('about.window.text.serverversion')+ ' '
-                    + Lada.serverVersion
-                    + '</p>'
-                    + '<p>'
-                    + i18n.getMsg('about.window.text.clientversion')+' '
-                    + Lada.clientVersion
-                    + '</p>'
+                html: this.updateContent()
             }]
         }];
-
+        this.buttons = [{
+            text: i18n.getMsg('close'),
+            scope: this,
+            handler: this.close
+        }];
         this.callParent(arguments);
+        var me = this;
+
+        Ext.on('timezonetoggled', function() {
+            me.down('panel[name=aboutcontent]').setHtml(me.updateContent());
+        });
+    },
+
+    updateContent: function() {
+        var i18n = Lada.getApplication().bundle;
+        return '<p>'
+                + i18n.getMsg('about.window.text.login')
+                + '<br /><b>'
+                + Lada.username
+                + '</b></p>'
+                + '<p>'
+                + i18n.getMsg('about.window.text.roles')
+                + this.rolesToHtml()
+                + '</p>'
+                + '<p>'
+                + i18n.getMsg('about.window.text.logintime')
+                + '<br />'
+                + Lada.util.Date.formatTimestamp(Lada.logintime, 'd.m.y h:i:s P', true)
+                + '</p>'
+                + '<p>'
+                + i18n.getMsg('about.window.text.serverversion')+ ' '
+                + Lada.serverVersion
+                + '</p>'
+                + '<p>'
+                + i18n.getMsg('about.window.text.clientversion')+' '
+                + Lada.clientVersion
+                + '</p>';
     },
 
     /**

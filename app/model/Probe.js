@@ -73,12 +73,7 @@ Ext.define('Lada.model.Probe', {
         name: 'probeentnahmeBeginn',
         type: 'date',
         allowNull: true,
-        convert: function(v, record) {
-            if (!v) {
-                return v;
-            }
-            return new Date(v);
-        },
+        convert: Lada.util.Date.convertTimeFn,
         serialize: function(v, record) {
             if (v === '' || v === null) {
                 return null;
@@ -90,12 +85,7 @@ Ext.define('Lada.model.Probe', {
         name: 'probeentnahmeEnde',
         type: 'date',
         allowNull: true,
-        convert: function(v) {
-            if (!v) {
-                return v;
-            }
-            return new Date(v);
-        },
+        convert: Lada.util.Date.convertTimeFn,
         serialize: function(v, record) {
             if (v === '' || v === null) {
                 return null;
@@ -109,12 +99,7 @@ Ext.define('Lada.model.Probe', {
         name: 'letzteAenderung',
         type: 'date',
         dateFormat: 'time',
-        convert: function(v) {
-            if (!v) {
-                return v;
-            }
-            return new Date(v);
-        }
+        convert: Lada.util.Date.convertTimeFn
     }, {
         name: 'erzeugerId'
     }, {
@@ -130,12 +115,7 @@ Ext.define('Lada.model.Probe', {
     }, {
         name: 'solldatumBeginn',
         type: 'date',
-        convert: function(v) {
-            if (!v) {
-                return v;
-            }
-            return new Date(v);
-        },
+        convert: Lada.util.Date.convertTimeFn,
         serialize: function(value) {
             if (value === '') {
                 return null;
@@ -145,12 +125,7 @@ Ext.define('Lada.model.Probe', {
     }, {
         name: 'solldatumEnde',
         type: 'date',
-        convert: function(v) {
-            if (!v) {
-                return v;
-            }
-            return new Date(v);
-        },
+        convert: Lada.util.Date.convertTimeFn,
         serialize: function(value) {
             if (value === '') {
                 return null;

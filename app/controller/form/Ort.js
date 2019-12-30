@@ -65,6 +65,8 @@ Ext.define('Lada.controller.form.Ort', {
         var record = button.up('ortform').getForm().getRecord();
         var copy = record.copy(null);
         copy.set('ortId', null);
+        copy.set('referenceCount', 0);
+        copy.set('plausibleReferenceCount', 0);
         var win = Ext.create('Lada.view.window.Ort',{
             record: copy,
             mode: 'copy',
@@ -78,6 +80,7 @@ Ext.define('Lada.controller.form.Ort', {
     },
 
     save: function(button) {
+        var i18n = Lada.getApplication().bundle;
         var formpanel = button.up('ortform');
         var form = formpanel.getForm();
         var record = form.getRecord();
@@ -91,67 +94,85 @@ Ext.define('Lada.controller.form.Ort', {
         if (record.phantom) {
             record.set('id', null);
         }
-        record.save({
-            success: function(newrecord, response) {
-                form.loadRecord(newrecord);
-                formpanel.down('verwaltungseinheit').store.clearFilter();
-                formpanel.down('staat').store.clearFilter();
-                if (formpanel.up('window').setOzOnComplete === true ){
-                    var ozf = Ext.ComponentQuery.query('ortszuordnungform')[0];
-                    if (ozf){
-                        ozf.setOrt(null, newrecord);
-                    }
-                }
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    formpanel.clearMessages();
-                    formpanel.setMessages(json.errors, json.warnings);
-                }
-                var dynamicgrid = Ext.getCmp('dynamicgridid');
-                if (dynamicgrid) {
-                    dynamicgrid.reload();
-                }
-                var ozw = formpanel.up('panel').parentWindow;
-                if (ozw && ozw.down('tabpanel')) {
-                    var ortgrid= ozw.down('tabpanel').down('ortstammdatengrid');
-                    if (ortgrid) {
-                        if (ortgrid.store.storeId === 'ext-empty-store') {
-                            ortgrid.store = Ext.create('Lada.store.Orte');
+
+        var doSave = function() {
+            record.save({
+                success: function(newrecord, response) {
+                    form.loadRecord(newrecord);
+                    formpanel.down('verwaltungseinheit').store.clearFilter();
+                    formpanel.down('staat').store.clearFilter();
+                    if (formpanel.up('window').setOzOnComplete === true ){
+                        var ozf = Ext.ComponentQuery.query('ortszuordnungform')[0];
+                        if (ozf){
+                            ozf.setOrt(null, newrecord);
                         }
-                        ortgrid.store.add(newrecord);
-                        ortgrid.store.reload();
                     }
-                }
-                formpanel.down('button[action=revert]').setDisabled(true);
-                formpanel.down('button[action=save]').setDisabled(true);
-                formpanel.up('window').setMode('edit');
-            },
-            failure: function(record, response) {
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                            +' #'+ json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
                         formpanel.clearMessages();
                         formpanel.setMessages(json.errors, json.warnings);
-                    } else {
+                    }
+                    var dynamicgrid = Ext.getCmp('dynamicgridid');
+                    if (dynamicgrid) {
+                        dynamicgrid.reload();
+                    }
+                    var ozw = formpanel.up('panel').parentWindow;
+                    if (ozw && ozw.down('tabpanel')) {
+                        var ortgrid= ozw.down('tabpanel').down('ortstammdatengrid');
+                        if (ortgrid) {
+                            if (ortgrid.store.storeId === 'ext-empty-store') {
+                                ortgrid.store = Ext.create('Lada.store.Orte');
+                            }
+                            ortgrid.store.add(newrecord);
+                            ortgrid.store.reload();
+                        }
+                    }
+                    formpanel.down('button[action=revert]').setDisabled(true);
+                    formpanel.down('button[action=save]').setDisabled(true);
+                    formpanel.up('window').setMode('edit');
+                },
+                failure: function(record, response) {
+                    if (response.error) {
+                        //TODO: check content of error.status (html error code)
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
+                            i18n.getMsg('err.msg.generic.body'));
+                    } else {
+                        var json = Ext.decode(response.getResponse().responseText);
+                        if (json) {
+                            if (json.message) {
+                                Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                                +' #'+ json.message,
+                                i18n.getMsg(json.message));
+                            } else {
+                                Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                    i18n.getMsg('err.msg.generic.body'));
+                            }
+                            formpanel.clearMessages();
+                            formpanel.setMessages(json.errors, json.warnings);
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                i18n.getMsg('err.msg.response.body'));
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
+        var plausibleRefs = record.get('plausibleReferenceCount');
+        if (plausibleRefs > 0) {
+            Ext.Msg.show({
+                title: 'Achtung',
+                icon: Ext.Msg.WARNING,
+                message: i18n.getMsg('warn.ort.editreferencedort.message', plausibleRefs),
+                buttons: Ext.Msg.YESNO,
+                fn: function(button) {
+                    if (button === 'yes') {
+                        doSave();
+                    }
+                }
+            });
+        } else {
+            doSave();
+        }
     },
     handleDirtyChange: function(callingEl, dirty) {
         var panel;

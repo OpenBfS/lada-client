@@ -39,9 +39,13 @@ Ext.define('Lada.controller.form.Probe', {
                 click: this.showAuditTrail
             },
             'probeform': {
-                dirtychange: this.dirtyForm,
                 tagdirtychange: this.dirtyTags,
+                validitychange: this.checkCommitEnabled,
+                dirtychange: this.handleDirtyChange,
                 save: this.saveHeadless
+            },
+            'probeform tfield [name=hauptprobenNr]': {
+                change: this.hauptprobenNrChanged
             },
             'probeform umwelt combobox': {
                 change: this.umweltChanged
@@ -52,6 +56,9 @@ Ext.define('Lada.controller.form.Probe', {
             'probeform messstellelabor combobox': {
                 select: this.setNetzbetreiber
             },
+            'probeform netzbetreiber combobox': {
+                change: this.checkCommitEnabled
+            },
             'probeform container[name="reiComboContainer"] reiprogpunktgruppe combobox': {
                 change: this.reiProgpunktGruppeChanged
             },
@@ -60,6 +67,12 @@ Ext.define('Lada.controller.form.Probe', {
             },
             'probeform panel[xtype="deskriptor"] combobox': {
                 select: this.deskriptorSelect
+            },
+            'probeform betriebsart combobox': {
+                change: this.checkCommitEnabled
+            },
+            'probeform probenart combobox': {
+                change: this.checkCommitEnabled
             }
         });
     },
@@ -114,7 +127,7 @@ Ext.define('Lada.controller.form.Probe', {
                 if (success) {
                     me.copyOrtszuordnung(probe, copy, callback);
                 } else {
-                    var responseObj = Ext.decode(op.getResponse().responseText);
+                    var responseObj = Ext.decode(operation.getResponse().responseText);
                     Ext.Msg.alert(i18n.getMsg('err.probe.copy'), i18n.getMsg(responseObj.message));
                 }
             }
@@ -435,6 +448,7 @@ Ext.define('Lada.controller.form.Probe', {
             ktaCombo.hide();
             ktaCombo.setValue(null);
         }
+        this.checkCommitEnabled(combo);
     },
 
 
@@ -649,34 +663,40 @@ Ext.define('Lada.controller.form.Probe', {
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
-        formPanel.down('fset[name=entnahmePeriod]').clearMessages();
-        formPanel.down('fset[name=sollzeitPeriod]').clearMessages();
-        formPanel.down('datetime[name=probeentnahmeBeginn]').clearWarningOrError();
-        formPanel.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
-        formPanel.down('tagwidget').reload(false);
-        formPanel.down('umwelt').store.clearFilter();
-        formPanel.setRecord(formPanel.getForm().getRecord());
+        formPanel.getForm().isValid();
+        formPanel.down('button[action=discard]').setDisabled(true);
     },
 
-    /**
-      * The dirtyForm function enables or disables the save and discard
-      * button which are present in the toolbar of the form.
-      * The Buttons are only active if the content of the form was altered
-      * (the form is dirty).
-      * The buttons are only deactivated if the tags are not dirty, too.
-      * In Additon it calls the disableChildren() function of the window
-      * embedding the form. Likewise it calls the embedding windows
-      * enableChilren() function
-      */
-    dirtyForm: function(form, dirty) {
-        this.dirtyProbeForm = dirty;
-        if (dirty) {
-            this.enableButtons(form);
-            form.owner.down('button[action=copy]').setDisabled(true);
-        } else if (this.dirtyTags == false) {
-            this.disableButtons(form);
-            if (!form.readOnly) {
-                form.owner.down('button[action=copy]').setDisabled(false);
+    checkCommitEnabled: function(callingEl) {
+        var panel;
+        if (callingEl.up) { //called by a field in the form
+            panel = callingEl.up('probeform');
+        } else { //called by the form
+            panel = callingEl.owner;
+        }
+        if (panel.getRecord().get('readonly')  )  {
+            panel.down('button[action=save]').setDisabled(true);
+            panel.down('button[action=discard]').setDisabled(true);
+            panel.down('button[action=copy]').setDisabled(false);
+        } else {
+            if (panel.isValid()) {
+                if (panel.isDirty()) {
+                    panel.down('button[action=discard]').setDisabled(false);
+                    panel.down('button[action=save]').setDisabled(false);
+                    panel.down('button[action=copy]').setDisabled(true);
+                } else {
+                    panel.down('button[action=discard]').setDisabled(true);
+                    panel.down('button[action=copy]').setDisabled(false);
+                    panel.down('button[action=save]').setDisabled(true);
+                }
+            } else {
+                panel.down('button[action=save]').setDisabled(true);
+                panel.down('button[action=copy]').setDisabled(true);
+                if ( panel.getRecord().phantom === true && !panel.isDirty() ) {
+                    panel.down('button[action=discard]').setDisabled(true);
+                } else {
+                    panel.down('button[action=discard]').setDisabled(false);
+                }
             }
         }
     },
@@ -724,15 +744,15 @@ Ext.define('Lada.controller.form.Probe', {
      *  - Is the date in the future
      *  - Does the date belong to a time period and the end is before start
      * In both cases it adds a warning to the field which was checked.
+     * TODO: also trigers for 'subfields' (hour/minute picker)
      */
     checkDate: function(field) {
-        var now = Date.now();
+        var now = new Date().valueOf();
         var w = 0; //amount of warnings
         var e = 0; //errors
         var emsg = '';
         var wmsg = '';
-
-        if (field.getValue() > now) {
+        if (field.getValue().valueOf() > now) {
             wmsg += Lada.getApplication().bundle.getMsg('661');
             w++;
         }
@@ -750,17 +770,58 @@ Ext.define('Lada.controller.form.Probe', {
                 field.up('fieldset').clearMessages();
             }
         }
-
-        if (w) {
+        if (w && field.up().showWarnings) {
             field.up().showWarnings(wmsg);
         }
-        if (e) {
+        if (e && field.up().showErrors) {
             field.up().showErrors(emsg);
         }
 
         // Clear Warnings or Errors if none Are Present
-        if (w === 0 && e === 0) {
+        if (w === 0 && e === 0 && field.up().clearWarningOrError) {
             field.up().clearWarningOrError();
+        }
+    },
+
+    handleDirtyChange: function(callingEl, dirty) {
+        this.dirtyProbeForm = dirty;
+        var panel;
+        if (callingEl.up) { //called by a field in the form
+            panel = callingEl.up('probeform');
+        } else { //called by the form
+            panel = callingEl.owner;
+        }
+        if (panel.getRecord().get('readonly')  )  {
+            panel.down('button[action=save]').setDisabled(true);
+            panel.down('button[action=discard]').setDisabled(true);
+            panel.down('button[action=copy]').setDisabled(true);
+        } else {
+            if (panel.isValid()) {
+                if (panel.isDirty() || this.dirtyTags) {
+                    panel.down('button[action=discard]').setDisabled(false);
+                    panel.down('button[action=save]').setDisabled(false);
+                    panel.down('button[action=copy]').setDisabled(true);
+                } else {
+                    // false keine Veränderung
+                    panel.down('button[action=discard]').setDisabled(true);
+                    panel.down('button[action=copy]').setDisabled(false);
+                    panel.down('button[action=save]').setDisabled(true);
+                }
+            } else {
+                console.log('dirty und NICHT valide');
+                panel.down('button[action=save]').setDisabled(true);
+                panel.down('button[action=copy]').setDisabled(true);
+                panel.down('button[action=discard]').setDisabled(false);
+            }
+        }
+        this.checkCommitEnabled(callingEl);
+    },
+
+    hauptprobenNrChanged: function(field) {
+        if (field.getValue() !== "") {
+            field.up().clearWarningOrError();
+        } else {
+            field.up().showWarnings('631');
         }
     },
 

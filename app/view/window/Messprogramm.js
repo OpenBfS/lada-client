@@ -40,7 +40,7 @@ Ext.define('Lada.view.window.Messprogramm', {
         if (this.record === null) {
             this.title = i18n.getMsg('messprogramm.window.create.title');
         } else {
-            this.title = i18n.getMsg('messprogramm.window.edit.title');
+            this.title = i18n.getMsg('messprogramm.window.edit.title') +' <i>(Referenzierte Proben '+this.record.get('referenceCount')+')</i>';
         }
         this.buttons = [{
             text: i18n.getMsg('generateproben'),
@@ -56,7 +56,6 @@ Ext.define('Lada.view.window.Messprogramm', {
                         ids: [this.record.get('id')],
                         parentWindow: this
                     });
-                    win.initData();
                     win.show();
                     this.probenWindow = win;
                 } else {
@@ -219,7 +218,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                 gueltigVon: 1,
                 gueltigBis: 365});
             this.record = record;
-            this.down('messmethodengrid').setReadOnly(true);
+            this.disableChildren();
             var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
             mstLaborKombiStore.clearFilter(true);
             var items = mstLaborKombiStore.queryBy(function(record) {

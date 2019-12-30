@@ -35,6 +35,7 @@ Ext.application({
         'Lada.override.i18n.DE',
         'Lada.override.RowExpander',
         'Lada.override.FilteredComboBox',
+        'Lada.override.Date',
         'Lada.view.plugin.GridRowExpander',
         'Ext.i18n.Bundle',
         'Ext.layout.container.Column',
@@ -90,6 +91,7 @@ Ext.application({
         'Lada.store.Query',
         'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.window.TrackedWindow',
+        'Lada.util.Date',
         'Lada.util.FunctionScheduler',
         'Lada.util.WindowTracker',
         'Lada.store.Tag'
@@ -153,7 +155,7 @@ Ext.application({
         Lada.logintime = '';
         Lada.mst = [];
         Lada.netzbetreiber = [];
-        Lada.clientVersion = '3.3.13-SNAPSHOT';
+        Lada.clientVersion = '3.3.15-SNAPSHOT';
         Lada.serverVersion = '';
         // paging sizes available for the client
         Lada.availablePagingSizes = [
@@ -174,6 +176,21 @@ Ext.application({
             success: this.onLoginSuccess,
             failure: this.onLoginFailure
         });
+
+        Ext.Ajax.request({
+            url: 'resources/appContext.json',
+            method: 'GET',
+            scope: this,
+            success: function(response) {
+                var json = Ext.decode(response.responseText);
+                if (json.data) {
+                    Lada.appContext = json.data;
+                }
+            }
+        });
+
+        Ext.tip.QuickTipManager.init();
+
         // ask before closing/refreshing the window.
         // Not all browsers will respect this, depending on settings
         window.addEventListener('beforeunload', function (evt){
@@ -624,6 +641,7 @@ Ext.application({
         'Lada.controller.GridExport',
         'Lada.controller.grid.DynamicGrid',
         'Lada.controller.Query',
-        'Lada.controller.Global'
+        'Lada.controller.Global',
+        'Lada.controller.Print'
     ]
 });

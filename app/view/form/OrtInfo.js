@@ -96,7 +96,7 @@ Ext.define('Lada.view.form.OrtInfoRow',{
             padding: '4, 0, 5, 0'
         },{
             name: this.firstitem,
-            width: 80,
+            width: 80
         },{
             name: this.seconditem,
             width: 115,

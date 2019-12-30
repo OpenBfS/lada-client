@@ -19,6 +19,7 @@ Ext.define('Lada.model.Messeinheit', {
      *  - einheit: The unit.
      *  - eudfMesseinheitId:
      *  - umrechnungsFaktorEudf:
+     *  - primary: True if messeinheit is the primary messeinheit
      */
     fields: [{
         name: 'id'
@@ -30,6 +31,9 @@ Ext.define('Lada.model.Messeinheit', {
         name: 'eudfMesseinheitId'
     }, {
         name: 'umrechnungsFaktorEudf'
+    }, {
+        name: 'primary',
+        persist: false
     }],
 
     idProperty: 'id',

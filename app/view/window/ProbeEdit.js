@@ -210,6 +210,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 me.enableChildren();
             }
             me.setLoading(false);
+            me.down('probeform').isValid();
         };
         if (!loadedRecord) {
             Ext.ClassManager.get('Lada.model.Probe').load(this.record.get('id'), {
@@ -220,7 +221,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                     console.log(action);
                     console.log(record);
                 },
-                success: loadCallBack,
+                success: loadCallBack
                 // scope: this
             });
         } else {

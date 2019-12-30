@@ -237,6 +237,10 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
     setValue: function(value) {
         value.setSeconds(0);
         this.value = new Date(value);
+        this.hourField.setValue(
+            parseInt(
+                Lada.util.Date.formatTimestamp(value.valueOf(), 'H', true), 10));
+        this.minuteField.setValue(value.getMinutes());
         return this.update(this.value);
     },
 
@@ -264,6 +268,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         var currentDate = me.value;
         currentDate.setHours(hourSet);
         currentDate.setMinutes(minuteSet);
+        currentDate = Lada.util.Date.shiftDateObject(currentDate);
         me.setValue(currentDate);
         me.fireEvent('select', me, currentDate);
     },
@@ -281,7 +286,8 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         ) {
             me.doCancelFocus = me.focusOnSelect === false;
             auxDate.setHours(hourSet, minuteSet, 0);
-            me.setValue(new Date(auxDate));
+            me.setValue(
+                Lada.util.Date.shiftDateObject(auxDate));
             delete me.doCancelFocus;
             if (handler) {
                 handler.call(me.scope || me, me, me.value);
@@ -323,7 +329,9 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
             }
         }
         if (currentDate) {
-            me.hourField.setValue(currentDate.getHours());
+            me.hourField.setValue(
+                parseInt(
+                    Lada.util.Date.formatTimestamp(currentDate, 'H', true), 10));
             me.minuteField.setValue(currentDate.getMinutes());
         }
     }

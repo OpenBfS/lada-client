@@ -224,6 +224,10 @@ Ext.define('Lada.view.form.Messung', {
             scope: this,
             success: function() {
                 this.setRecord(this.record);
+                this.setReadOnly(this.record.get('readonly'));
+                this.up('messungedit').down('messwertgrid').setReadOnly(this.record.get('readonly'));
+                this.up('messungedit').down('mkommentargrid').setReadOnly(this.record.get('readonly'));
+
                 var parentWin = this.up('window').parentWindow;
                 if (parentWin) {
                     parentWin.initData();

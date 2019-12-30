@@ -52,6 +52,17 @@ Ext.define('Lada.view.widget.base.Datetime', {
             hidden: true
         }];
         this.callParent(arguments);
+        Ext.on('timezonetoggled', function() {
+            // trigger a 'refresh' of the displayed rawValue (bypassing the
+            // isDirty change detection)
+            var val = this.getValue();
+            if (!val) {
+                return;
+            }
+            this.down('datetimefield').setRawValue(
+                Lada.util.Date.formatTimestamp(val.valueOf(), this.format, true)
+            );
+        }, this);
     },
 
     showWarnings: function(warnings) {

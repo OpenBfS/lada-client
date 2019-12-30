@@ -41,8 +41,8 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
         });
         this.items = [{
             xtype: 'panel',
-            height: 150,
-            width: 340,
+            height: 300,
+            width: 500,
             autoScroll: true,
             overflow: 'auto',
             html: '',
@@ -80,6 +80,10 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 title = i18n.getMsg('delete.multiple_mpr_kat.window.title');
                 dialog1 = i18n.getMsg('delete.multiple_mpr_kat');
                 break;
+            case 'ortId':
+                title = i18n.getMsg('delete.multiple_ort.window.title');
+                dialog1 = i18n.getMsg('delete.multiple_ort');
+                break;
 
 
         }
@@ -103,6 +107,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 layout: 'hbox',
                 items: [{
                     xtype: 'button',
+                    margin: '5, 5, 5, 5',
                     text: i18n.getMsg('cancel'),
                     scope: me,
                     handler: function() {
@@ -111,6 +116,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                     }
                 }, {
                     xtype: 'button',
+                    margin: '5, 5, 5, 5',
                     text: i18n.getMsg('delete'),
                     handler: function(btn) {
                         me.confWin.close();
@@ -153,6 +159,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
         me.down('progressbar').hide();
         me.add({
             xtype: 'button',
+            margin: '5, 5, 5, 5',
             text: Lada.getApplication().bundle.getMsg('close'),
             handler: function() {
                 me.close();
@@ -196,6 +203,10 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 url = 'lada-server/rest/messprogrammkategorie/';
                 datatype = i18n.getMsg('messprogrammkategorie');
                 break;
+            case 'ortId':
+                url = 'lada-server/rest/ort/';
+                datatype = 'Ort';
+                break;
         }
         for (var i = 0; i< me.selection.length; i++) {
             var id = me.selection[i].get(me.parentGrid.rowtarget.dataIndex);
@@ -220,12 +231,12 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                         }
 
                         html = html + i18n.getMsg(
-                            'deleteItems.callback.success',datatype, delId);
+                            'deleteItems.callback.success',datatype, delId) + '<br>';
                         me.down('panel').setHtml(html);
                     } else {
                         html = html + i18n.getMsg(
                             'deleteItems.callback.failure', datatype, delId)
-                            + i18n.getMsg(json.message) + '<br>';
+                            + '<li>' + i18n.getMsg(json.message) + '</li><br>';
                         me.down('panel').setHtml(html);
                     }
                     me.currentProgress += 1;

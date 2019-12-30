@@ -26,6 +26,8 @@ Ext.define('Lada.model.Umwelt', {
     }, {
         name: 'mehId'
     }, {
+        name: 'secMehId'
+    }, {
         name: 'umweltBereich'
     }],
 
