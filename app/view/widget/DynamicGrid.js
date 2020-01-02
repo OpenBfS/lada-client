@@ -934,6 +934,15 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 disabled: true
             });
         }
+        if (!this.tbuttonExists('assigntags')) {
+            this.toolbarbuttons.push({
+                text: this.i18n.getMsg('tag.toolbarbutton.assigntags'),
+                iconCls: 'x-fa fa-tag',
+                action: 'assigntags',
+                needsSelection: true,
+                disabled: true
+            })
+        }
     },
 
     addMessprogrammButtons: function() {

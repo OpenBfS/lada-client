@@ -25,6 +25,12 @@ Ext.define('Lada.view.window.TagCreate', {
      * Tag edit window associated with this create window
      */
     tagEdit: null,
+
+    /**
+     * Messung isntance set if creating a tag for a single messung
+     */
+    messung: null,
+
     /**
      * Probe instance set if creating a tag for a single probe
      */
@@ -48,8 +54,8 @@ Ext.define('Lada.view.window.TagCreate', {
         var i18n = Lada.getApplication().bundle;
         var me = this;
         this.title = this.mode === 'single' ?
-                i18n.getMsg('title.tagcreatewindowprobe', this.probe):
-                i18n.getMsg('title.tagcreatewindowbulk', this.selection.length);
+                i18n.getMsg('title.tagcreatewindow.' + this.recordType, this.probe):
+                i18n.getMsg('title.tagcreatewindowbulk.' + this.recordType, this.selection.length);
         this.items = [{
             xtype: 'textfield',
             width: '100%',
@@ -102,13 +108,74 @@ Ext.define('Lada.view.window.TagCreate', {
         }
     },
 
+    saveBulkTag: function(textfield) {
+        var me = textfield.up('window');
+        switch (me.recordType) {
+            case "messung":
+                me.saveBulkTagMessung(textfield);
+                break;
+            case "probe":
+                me.saveBulkTagProbe(textfield);
+                break;
+            default:
+                Ext.raise('Unkown record type: ' + me.recordType);
+        }
+    },
+
+    /**
+     * Creates and saves a tag for a selection of messung instances.
+     * As tags are only created if they are associated with a messung,
+     * the first step is to create a tag for the first selected messung.
+     * Then it is chosen in the tag widget combobox and saved via the TagEdit window.
+     */
+    saveBulkTagMessung: function(textfield) {
+        var me = this;
+        if (!this.selection || this.selection.length == 0) {
+            return;
+        }
+        //Get the first messungId
+        var firstMid = this.selection[0].data.id;
+        if (!firstMid) {
+            return;
+        }
+        var text = textfield.getValue();
+
+        //Save tag for first probe. Should trigger itemadd event on tag widget.
+        this.tagWidget.store.createTagForMid(text, firstMid, function(response) {
+            var oldItems = Ext.clone(me.tagWidget.store.getData().items);
+            //Wait for the reload to finish
+            me.tagWidget.reload(true, function() {
+                var newItems = Ext.clone(me.tagWidget.store.getData().items);
+                //Look for the new item
+                var newItem = null;
+                for (var i = 0; i < newItems.length; i++) {
+                    var id = newItems[i].id;
+                    if (!Ext.Array.findBy(oldItems,
+                            function(item, index) {
+                                return id == item.id;
+                            })
+                    ) {
+                        newItem = newItems[i];
+                        break;
+                    }
+                }
+                //Select new item in combobox and fire click event
+                me.tagWidget.clearValue();
+                me.tagWidget.select(newItem);
+                textfield.reset();
+                me.tagEdit.down('button[action=bulkaddtags]').click();
+            });
+        });
+    },
+
+
     /**
      * Creates and saves a tag for a selection of probe instances.
      * As tags are only created if they are associated with a probe,
      * the first step is to create a tag for the first selected probe.
      * Then it is chosen in the tag widget combobox and saved via the TagEdit window.
      */
-    saveBulkTag: function(textfield) {
+    saveBulkTagProbe: function(textfield) {
         var me = this;
         if (!this.selection || this.selection.length == 0) {
             return;

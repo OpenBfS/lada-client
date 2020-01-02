@@ -15,6 +15,9 @@ Ext.define('Lada.store.Tag', {
     autoLoad: true,
     //Probe id used for filtering for selected tags
     pId: null,
+    //Probe id used for filtering for selected tags
+    mId: null,
+
     sorters: ['tag'],
 
     //A second store instance used for filtering
@@ -37,8 +40,20 @@ Ext.define('Lada.store.Tag', {
             this.assignedTagsStore = Ext.create('Lada.store.Tag');
         }
         this.pId = pId;
+        this.mId = null;
         this.assignedTagsStore.proxy.extraParams = {
             pid: pId
+        };
+    },
+
+    setMessung: function(mId) {
+        if (!this.assignedTagsStore) {
+            this.assignedTagsStore = Ext.create('Lada.store.Tag');
+        }
+        this.pId = null;
+        this.mId = mId;
+        this.assignedTagsStore.proxy.extraParams = {
+            mid: mId
         };
     },
 
@@ -58,6 +73,31 @@ Ext.define('Lada.store.Tag', {
     createTag: function(tag, callback) {
         var zuordnung = {
             probeId: this.pId,
+            messungId: this.mId,
+            tag: tag
+        };
+        Ext.Ajax.request({
+            url: this.proxy.url,
+            method: 'POST',
+            jsonData: zuordnung,
+            callback: callback
+        });
+    },
+
+    /**
+     * Creates a new to for a given probeId using a POST request
+     * @param tagName Tag name
+     * @param mId Probe id to create tag for
+     * @param callback Callback function to call after save
+     */
+    createTagForMid: function(tagName, mId, callback) {
+        var mstId = Lada.mst[0];
+        var tag = {
+            tag: tagName,
+            mstId: mstId
+        };
+        var zuordnung = {
+            messungId: mId,
             tag: tag
         };
         Ext.Ajax.request({
@@ -98,6 +138,7 @@ Ext.define('Lada.store.Tag', {
     createZuordnung: function(tag, callback) {
         var zuordnung = {
             probeId: this.pId,
+            messungId: this.mId,
             tagId: tag
         };
         Ext.Ajax.request({
@@ -117,6 +158,7 @@ Ext.define('Lada.store.Tag', {
             method: 'DELETE',
             jsonData: {
                 probeId: this.pId,
+                messungId: this.mId,
                 tagId: tag
             },
             callback: callback

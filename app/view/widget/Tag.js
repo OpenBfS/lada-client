@@ -81,6 +81,11 @@ Ext.define('Lada.view.widget.Tag', {
         this.callParent(arguments);
     },
 
+    setMessung: function(mId) {
+        this.store.setMessung(mId);
+        this.preselectTags();
+    },
+
     /**
      * Sets the current probe and triggers the preselection
      */
@@ -100,7 +105,7 @@ Ext.define('Lada.view.widget.Tag', {
             callback: function() {
                 if (!silent || silent == false) {
                     me.preselectTags();
-                    me.up('probeform').fireEventArgs('tagdirtychange', [{owner: me.up('probeform')}, false]);
+                    me.fireTagDirtyEvent(false);
                 }
                 me.changes = {};
                 if (callback) {
@@ -147,7 +152,7 @@ Ext.define('Lada.view.widget.Tag', {
                 this.setValue(ids);
                 this.resetOriginalValue();
                 this.resumeEvents();
-                this.up('probeform').fireEventArgs('tagdirtychange', [{owner: this.up('probeform')}, false]);
+                this.fireTagDirtyEvent(false);
             } else {
                 this.resumeEvents();
                 this.setValue(ids);
@@ -171,6 +176,29 @@ Ext.define('Lada.view.widget.Tag', {
             me.reload();
         };
         this.store.createTag(tag, callback);
+    },
+
+    /**
+     * Fires dirty change event for tag field
+     * @param {Boolean} dirty True if tagfield is dirty, else false
+     */
+    fireTagDirtyEvent: function(dirty) {
+        if (this.up('probeform')) {
+            this.up('probeform').fireEventArgs('tagdirtychange', [{owner: this.up('probeform')}, dirty]);
+        }
+        if (this.up('messungform')) {
+            this.up('messungform').fireEventArgs('tagdirtychange', [{owner: this.up('messungform')}, dirty]);
+        }
+    },
+
+    getRecordType: function() {
+        if (this.up('probeform')) {
+            return 'probe';
+        }
+        if (this.up('messungform')) {
+            return 'messung';
+        }
+        return undefined;
     },
 
     /**
@@ -198,10 +226,7 @@ Ext.define('Lada.view.widget.Tag', {
         }
 
         //If this widget is embedded in a probeform: fire dirty change event
-        var probeform = me.up('probeform');
-        if (probeform) {
-            probeform.fireEventArgs('tagdirtychange', [{owner: me.up('probeform')}, dirty]);
-        }
+        this.fireTagDirtyEvent(dirty);
     },
 
     /**
@@ -271,7 +296,7 @@ Ext.define('Lada.view.widget.Tag', {
                         success = false;
                         var msg = i18n.getMsg('tag.widget.err.genericsave');
                         if (response.message === '699') {
-                            msg = i18n.getMsg('tag.widget.err.globaltagnotallowed');
+                            msg = i18n.getMsg('tag.widget.err.globaltagnotallowed.' + me.getRecordType());
                         }
                         errorHtml += me.store.getById(tagId).get('tag') + " - " + msg + "<br />";
                     } else {
@@ -283,7 +308,7 @@ Ext.define('Lada.view.widget.Tag', {
                             //TODO: Handle failure
                             Ext.Msg.alert(i18n.getMsg('tag.widget.err.genericsavetitle'), errorHtml);
                         } else {
-                            me.up('probeform').fireEventArgs('tagdirtychange', [{owner: me.up('probeform')}, false]);
+                            me.fireTagDirtyEvent(false);
                         }
                     }
                 });
@@ -296,7 +321,7 @@ Ext.define('Lada.view.widget.Tag', {
                         success = false;
                         var msg = i18n.getMsg('tag.widget.err.genericsave');
                         if (response.message === '699') {
-                            msg = i18n.getMsg('tag.widget.err.globaltagnotallowed');
+                            msg = i18n.getMsg('tag.widget.err.globaltagnotallowed.' + me.getRecordType());
                         }
                         errorHtml += me.store.getById(tagId).get('tag') + " - " + msg + "<br />";
                     } else {
@@ -308,7 +333,7 @@ Ext.define('Lada.view.widget.Tag', {
                             //TODO: Handle failure
                             Ext.Msg.alert(i18n.getMsg('tag.widget.err.genericsavetitle'), errorHtml);
                         } else {
-                            me.up('probeform').fireEventArgs('tagdirtychange', [{owner: me.up('probeform')}, false]);
+                            me.fireTagDirtyEvent(false);
                         }
                     }
                 });

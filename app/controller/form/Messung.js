@@ -12,6 +12,11 @@
 Ext.define('Lada.controller.form.Messung', {
     extend: 'Ext.app.Controller',
     requires: ['Lada.view.window.SetStatus'],
+
+    dirtyTags: false,
+
+    dirtyMessungForm: false,
+
     /**
      * Initialize the Controller
      * It has 3 listeners
@@ -28,6 +33,7 @@ Ext.define('Lada.controller.form.Messung', {
                 click: this.showAuditTrail
             },
             'messungform': {
+                tagdirtychange: this.dirtyTags,
                 dirtychange: this.dirtyForm,
                 save: this.saveHeadless
             },
@@ -52,6 +58,15 @@ Ext.define('Lada.controller.form.Messung', {
         }
         if (record.phantom) {
             record.set('id', null);
+        }
+        delete record.data[formPanel.down('tagwidget').getInputId()];
+        formPanel.down('tagwidget').applyChanges();
+        //If form data is read only, exit after saving tags
+        if (formPanel.readOnly) {
+            //Reload the grid to display tag changes
+            Ext.getCmp('dynamicgridid').reload();
+            formPanel.setLoading(false);
+            return;
         }
         formPanel.getForm().getRecord().save({
             success: function(record, response) {
@@ -133,6 +148,32 @@ Ext.define('Lada.controller.form.Messung', {
     },
 
     /**
+     * Enables/disabled the save/reset buttons if tags hast been altered.
+     * Only disables buttons if form is not dirty, too.
+     */
+    dirtyTags: function(form, dirty) {
+        this.dirtyTags = dirty;
+        if (dirty) {
+            this.enableButtons(form);
+        } else if(this.dirtyMessungForm == false) {
+            this.disableButtons(form);
+        }
+    },
+
+    enableButtons: function(form) {
+        form.owner.down('button[action=save]').setDisabled(false);
+        form.owner.down('button[action=discard]').setDisabled(false);
+        form.owner.up('window').disableChildren();
+    },
+
+    disableButtons: function(form) {
+        form.owner.down('button[action=save]').setDisabled(true);
+        form.owner.down('button[action=discard]').setDisabled(true);
+        form.owner.up('window').enableChildren(); // todo this might not be true in all cases
+    },
+
+
+    /**
      * Saves the current form without manipulating the gui
      */
     saveHeadless: function(panel) {
@@ -145,6 +186,7 @@ Ext.define('Lada.controller.form.Messung', {
         if (record.phantom) {
             record.set('id', null);
         }
+        delete record.data[formPanel.down('tagwidget').getInputId()];
         formPanel.getForm().getRecord().save({
             success: function(record, response) {
                 var json = Ext.decode(response.getResponse().responseText);

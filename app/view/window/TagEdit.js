@@ -7,13 +7,16 @@
  */
 
 /**
- * Window for assigning tags to multiple probe items.
+ * Window for assigning tags to multiple record items.
  */
 Ext.define('Lada.view.window.TagEdit', {
     extend: 'Ext.window.Window',
     alias: 'widget.tageditwindow',
 
     layout: 'vbox',
+
+    recordType: null,
+
     width: 400,
     selection: null,
 
@@ -45,6 +48,7 @@ Ext.define('Lada.view.window.TagEdit', {
                 handler: function(button) {
                     var win = Ext.create('Lada.view.window.TagCreate', {
                         tagWidget: me.down('tagwidget'),
+                        recordType: me.recordType,
                         mode: 'bulk',
                         tagEdit: me,
                         selection: me.selection,
@@ -128,8 +132,18 @@ Ext.define('Lada.view.window.TagEdit', {
         me.disableButtons();
 
         for (var i = 0; i < me.selection.length; i++) {
-            var probeId = me.selection[i].data.probeId;
-            store.pId = probeId;
+            switch (me.recordType) {
+                case "messung":
+                    var messungId = me.selection[i].data.id;
+                    store.setMessung(messungId);
+                    break;
+                case "probe":
+                    var probeId = me.selection[i].data.probeId;
+                    store.setProbe(probeId);
+                    break;
+                default:
+                    Ext.raise('Unkown record type: ' + me.recordType);
+            }
             for (var j = 0; j < tags.length; j++) {
                 var tag = tags[j];
                 store.deleteZuordnung(tag, function(request, success, response) {
@@ -166,8 +180,18 @@ Ext.define('Lada.view.window.TagEdit', {
         me.disableButtons();
 
         for (var i = 0; i < me.selection.length; i++) {
-            var probeId = me.selection[i].data.probeId;
-            store.pId = probeId;
+            switch (me.recordType) {
+                case "messung":
+                    var messungId = me.selection[i].data.id;
+                    store.setMessung(messungId);
+                    break;
+                case "probe":
+                    var probeId = me.selection[i].data.probeId;
+                    store.setProbe(probeId);
+                    break;
+                default:
+                    Ext.raise('Unkown record type: ' + me.recordType);
+            }
             for (var j = 0; j < tags.length; j++) {
                 var tag = tags[j];
                 store.createZuordnung(tag, function(request, success, response) {
@@ -186,5 +210,5 @@ Ext.define('Lada.view.window.TagEdit', {
                 });
             }
         }
-    }
+    },
 });
