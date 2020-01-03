@@ -542,7 +542,8 @@ Ext.define('Lada.view.form.Probe', {
                         handler: function(button) {
                             var win = Ext.create('Lada.view.window.TagCreate', {
                                 tagWidget: me.down('tagwidget'),
-                                probe: button.up('probeform').getForm().getRecord().get('hauptprobenNr')
+                                probe: button.up('probeform').getForm().getRecord().get('hauptprobenNr'),
+                                recordType: "probe"
                             });
                             //Close window if parent window is closed
                             button.up('probenedit').on('close', function() {

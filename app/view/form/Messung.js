@@ -202,7 +202,8 @@ Ext.define('Lada.view.form.Messung', {
                         handler: function(button) {
                             var win = Ext.create('Lada.view.window.TagCreate', {
                                 tagWidget: me.down('tagwidget'),
-                                messung: button.up('messungform').getForm().getRecord().get('id')
+                                messung: button.up('messungform').getForm().getRecord().get('id'),
+                                recordType: "messung"
                             });
                             //Close window if parent window is closed
                             button.up('messungedit').on('close', function() {

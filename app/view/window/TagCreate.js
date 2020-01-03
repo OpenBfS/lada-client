@@ -53,8 +53,14 @@ Ext.define('Lada.view.window.TagCreate', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
+        var recordName;
+        switch (this.recordType) {
+            case "probe": recordName = this.probe; break;
+            case "messung": recordName = this.messung; break;
+            default: Ext.raise('Unkown record type: ' + this.recordType);
+        }
         this.title = this.mode === 'single' ?
-                i18n.getMsg('title.tagcreatewindow.' + this.recordType, this.probe):
+                i18n.getMsg('title.tagcreatewindow.' + this.recordType, recordName):
                 i18n.getMsg('title.tagcreatewindowbulk.' + this.recordType, this.selection.length);
         this.items = [{
             xtype: 'textfield',
