@@ -1128,6 +1128,7 @@ Ext.define('Lada.controller.Query', {
         );
         return Ext.create('Ext.form.FieldSet', {
             width: '100%',
+            dataIndex: options.name,
             items: [field, checkboxRow]
         });
     }

@@ -59,6 +59,9 @@ Ext.define('Lada.util.Date', {
             if (!moment || !moment.tz) {
                 console.error('dependencies moment.js and/or moment-timezone are not found');
             }
+            if (!timestamp) {
+                return null;
+            }
             var me = this;
             var timezone = this.utc? 'UTC': moment.tz.guess();
             var date = moment(timestamp);

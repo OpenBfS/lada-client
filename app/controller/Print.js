@@ -275,8 +275,16 @@ Ext.define('Lada.controller.Print', {
                     break;
                 case 'DataSourceAttributeValue':
                     if (attributes[i].name === 'filterParams') {
-                        resultData[attributes[i].name] =
-                            window.parentGrid.currentParams.filters;
+                        var filters = window.parentGrid.currentParams.filters;
+                        var setFilters = [];
+                        //Remove blank filters
+                        Ext.Array.each(filters, function(value, index) {
+                            if (value.filter || value.filter !== '') {
+                                setFilters.push(value);
+                            }
+                        });
+                        resultData[attributes[i].name] = setFilters;
+
                         // { name: String, sort: 'asc'|'desc' }[]
                     } else if (attributes[i].name === 'sortingParams') {
                         resultData[attributes[i].name] =

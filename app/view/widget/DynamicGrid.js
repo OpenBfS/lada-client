@@ -277,6 +277,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         current_columns.sort('columnIndex', 'ASC');
         var cc = current_columns.getData().items;
 
+        var filterMap = this.getFilterValues();
+
         for (var i = 0; i < cc.length; i++) {
             var orig_column = fixedColumnStore.findRecord(
                 'id', cc[i].get('gridColumnId'), false, false, false, true);
@@ -374,8 +376,14 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
             if (cc[i].get('filterActive')) {
                 this.currentParams.filters.push({
+                    //dataindex
                     name: dataIndex,
+                    //Readable name
+                    displayName: cc[i].get('name'),
+                    //Filter value
                     filter: cc[i].get('filterValue'),
+                    //Readable filter value
+                    filterDisplay: filterMap.get(dataIndex)? filterMap.get(dataIndex): cc[i].get('filterValue'),
                     filterRegex: cc[i].get('filterRegex'),
                     filterNegate: cc[i].get('filterNegate'),
                     filterIsNull: cc[i].get('filterIsNull')
@@ -1116,6 +1124,57 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 return this.plugins[i];
             }
         }
+    },
+
+    /**
+     * Get filter values as readable strings in a map.
+     * @return {Ext.util.HashMap} A map containg the filter values using the respective dataindex as key
+     */
+    getFilterValues: function() {
+        i18n = Lada.getApplication().bundle;
+        var filterMap = Ext.create('Ext.util.HashMap');
+        //Get fieldsets containing the filter widgets
+        var filters = Ext.ComponentQuery.query('panel[name=filtervalues]')[0].items.items;
+        if (!filters) {
+            return filterMap;
+        }
+        Ext.Array.each(filters, function(item) {
+            var widget = item.down('component[name=' + item.dataIndex + ']');
+            //Get readable value depending on the widget type
+            switch (Ext.getClassName(widget)) {
+                case 'Lada.view.widget.base.DateField':
+                    var datefield = widget.down('datefield');
+                    var value = datefield.getValue();
+                    filterMap.add(item.dataIndex, value);
+                    break;
+                case 'Lada.view.widget.base.Datetime':
+                    var datefield = widget.down('datetime');
+                    var value = datefield.getValue();
+                    filterMap.add(item.dataIndex, value);
+                    break;
+                case 'Lada.view.widget.base.DateTimeRange':
+                    var fromField = widget.down('component[name=' + item.dataIndex + 'From]');
+                    var toField = widget.down('component[name=' + item.dataIndex + 'To]');
+                    var fromValue = Lada.util.Date.formatTimestamp(fromField.getValue(), 'DD.MM.YYYY HH:mm');
+                    var toValue = Lada.util.Date.formatTimestamp(toField.getValue(), 'DD.MM.YYYY HH:mm');
+                    if (toValue != null) {
+                        filterMap.add(item.dataIndex, i18n.getMsg('print.daterange', fromValue, toValue));
+                    } else {
+                        filterMap.add(item.dataIndex, fromValue);
+                    }
+                    break;
+                default:
+                    //Widget can be a textfield or a combobx
+                    var displayValue;
+                    if (widget.down('combobox')) {
+                        displayValue = widget.down('combobox').getDisplayValue();
+                    } else if (widget.down('textfield')) {
+                        displayValue = widget.down('textfield').getValue();
+                    }
+                    filterMap.add(item.dataIndex, displayValue);
+            }
+        });
+        return filterMap;
     }
 });
 
