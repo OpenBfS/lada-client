@@ -228,6 +228,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     genResultWindow: function(umwStore, data){
         var i18n = Lada.getApplication().bundle;
         var me = this;
+        var probeIds = [];
 
         var columnstore = Ext.data.StoreManager.get('columnstore');
         columnstore.clearFilter();
@@ -252,6 +253,10 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 gridColumnId: i
             }));
         }
+
+        Ext.Array.each(data, function(probe) {
+            probeIds.push(probe.id);
+        });
 
         var newStore = Ext.create('Lada.store.Proben', {data: data});
 
@@ -431,6 +436,34 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     button.up('window').close();
                 }
             }]
+        });
+        //Let the server generate the tag and set result grid title when finished
+        new Ext.Promise(function(resolve, reject) {
+            Ext.Ajax.request({
+                url: 'lada-server/rest/tag/generated',
+                method: 'POST',
+                jsonData: {
+                    probeIds: probeIds,
+                    mstId: Lada.mst[0]
+                },
+                success: function(response) {
+                    var responseJson = Ext.JSON.decode(response.responseText);
+                    if (responseJson.success) {
+                        var tagName = '';
+                        if (responseJson.data.length > 0) {
+                            tagName = responseJson.data[0].tag.tag;
+                        }
+                        resolve(tagName);
+                    } else {
+                        reject();
+                    }
+                },
+                failure: function(response) {
+                    reject();
+                }
+            })
+        }).then(function(genTagName) {
+            win.setTitle(i18n.getMsg('gpfm.generated.grid.title', genTagName));
         });
         win.show();
         win.down('dynamicgrid').setToolbar();
