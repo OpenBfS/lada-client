@@ -42,6 +42,12 @@ Ext.define('Lada.view.window.ImportResponse', {
 
     /**
      * @private
+     * List of ids of imported probe records
+     */
+    importedProbeIds: [],
+
+    /**
+     * @private
      * Initialize the view.
      */
     initComponent: function() {
@@ -97,12 +103,16 @@ Ext.define('Lada.view.window.ImportResponse', {
      */
     updateOnSuccess: function(responseData, fileIndex) {
         var i18n = Lada.getApplication().bundle;
+        var me = this;
         var data;
         try {
             data = Ext.decode(responseData);
         } catch (e) {
             data = null;
         }
+        Ext.Array.each(data.data.probeIds, function(item) {
+            me.importedProbeIds.push(item);
+        });
         this.finished++;
         this.down('progressbar').updateProgress(this.finished/this.fileCount);
         var filename = this.fileNames[fileIndex];
@@ -114,7 +124,15 @@ Ext.define('Lada.view.window.ImportResponse', {
         this.download += response;
         this.down('panel').setHtml(this.down('panel').html + response);
         if (this.finished == this.fileCount) {
-            this.down('button[name=download]').enable();
+            if (me.importedProbeIds.length > 0) {
+            //Let the server generate the tag and set result window title when finished
+                me.getGeneratedTags().then(function(genTagName) {
+                    me.setTitle(i18n.getMsg('title.importresult', genTagName));
+                    me.down('button[name=download]').enable();
+                });
+            } else {
+                me.down('button[name=download]').enable();
+            }
         }
     },
 
@@ -354,5 +372,34 @@ Ext.define('Lada.view.window.ImportResponse', {
             }
         }
         return out.join('');
+    },
+
+    getGeneratedTags: function() {
+        var me = this;
+        return new Ext.Promise(function(resolve, reject) {
+            Ext.Ajax.request({
+                url: 'lada-server/rest/tag/imported',
+                method: 'POST',
+                jsonData: {
+                    probeIds: me.importedProbeIds,
+                    mstId: Lada.mst[0]
+                },
+                success: function(response) {
+                    var responseJson = Ext.JSON.decode(response.responseText);
+                    if (responseJson.success) {
+                        var tagName = '';
+                        if (responseJson.data.length > 0) {
+                            tagName = responseJson.data[0].tag.tag;
+                        }
+                        resolve(tagName);
+                    } else {
+                        reject();
+                    }
+                },
+                failure: function(response) {
+                    reject();
+                }
+            })
+        });
     }
 });
