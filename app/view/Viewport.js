@@ -33,14 +33,12 @@ Ext.define('Lada.view.Viewport', {
                     action: 'about',
                 }, {
                     xtype: 'button',
-                    titlePosition:1,
                     text: i18n.getMsg('timezone.button.text') + i18n.getMsg('timezone.text.local'),
                     tooltip: i18n.getMsg('timezone.button.tooltip'),
                     enableToggle: true,
                     action: 'toggletimezone'
                 }, {
                     xtype: 'tbtext',
-                    titlePosition:1,
                     id: 'userinfo',
                     text: i18n.getMsg('userinfo.user') + ' ' + Lada.username
                 }],
