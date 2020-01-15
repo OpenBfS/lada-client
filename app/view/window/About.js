@@ -55,7 +55,9 @@ Ext.define('Lada.view.window.About', {
         var me = this;
 
         Ext.on('timezonetoggled', function() {
-            me.down('panel[name=aboutcontent]').setHtml(me.updateContent());
+           if (me.isVisible()) {
+                me.down('panel[name=aboutcontent]').setHtml(me.updateContent());
+           }
         });
     },
 
