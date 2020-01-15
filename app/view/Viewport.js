@@ -25,6 +25,26 @@ Ext.define('Lada.view.Viewport', {
             title: i18n.getMsg('title.viewport'),
             layout: 'border',
             name: 'main',
+            header:{
+                titlePosition:3,
+                items: [{
+                    xtype: 'button',
+                    text: i18n.getMsg('info'),
+                    action: 'about',
+                }, {
+                    xtype: 'button',
+                    titlePosition:1,
+                    text: i18n.getMsg('timezone.button.text') + i18n.getMsg('timezone.text.local'),
+                    tooltip: i18n.getMsg('timezone.button.tooltip'),
+                    enableToggle: true,
+                    action: 'toggletimezone'
+                }, {
+                    xtype: 'tbtext',
+                    titlePosition:1,
+                    id: 'userinfo',
+                    text: i18n.getMsg('userinfo.user') + ' ' + Lada.username
+                }],
+            },
             tools: [{
                 type: 'help',
                 tooltip: i18n.getMsg('help.qtip'),
@@ -74,25 +94,6 @@ Ext.define('Lada.view.Viewport', {
                 minWidth: 540,
                 collapsed: false,
                 layout: 'fit',
-                dockedItems: [{
-                    xtype: 'toolbar',
-                    dock: 'top',
-                    items: [{
-                        xtype: 'button',
-                        text: i18n.getMsg('info'),
-                        action: 'about'
-                    }, {
-                        xtype: 'button',
-                        text: i18n.getMsg('timezone.button.text') + i18n.getMsg('timezone.text.local'),
-                        tooltip: i18n.getMsg('timezone.button.tooltip'),
-                        enableToggle: true,
-                        action: 'toggletimezone'
-                    }, '->', {
-                        xtype: 'tbtext',
-                        id: 'userinfo',
-                        text: i18n.getMsg('userinfo.user') + ' ' + Lada.username
-                    }]
-                }],
                 items: [{
                     xtype: 'querypanel',
                     margin: 0,
