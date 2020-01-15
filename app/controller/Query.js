@@ -785,9 +785,8 @@ Ext.define('Lada.controller.Query', {
                         options.monitorChanges = false;
                         options.value = recs[i].get('filterValue');
                         field = Ext.create('Lada.view.widget.Tag',
-                            options
-                        );
-                        negateCheckbox = true;
+                            options);
+                        negateCheckbox = false;
                         break;
                     default:
                         options.value = recs[i].get('filterValue');
