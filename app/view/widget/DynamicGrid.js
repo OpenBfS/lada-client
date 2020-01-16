@@ -1163,6 +1163,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         filterMap.add(item.dataIndex, fromValue);
                     }
                     break;
+                case 'Lada.view.widget.Tag':
+                    var value = widget.getDisplayValue();
+                    filterMap.add(item.dataIndex, value);
+                    break;
                 default:
                     //Widget can be a textfield or a combobx
                     var displayValue;
