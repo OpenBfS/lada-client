@@ -30,7 +30,7 @@ Ext.define('Lada.view.Viewport', {
                 items: [{
                     xtype: 'button',
                     text: i18n.getMsg('info'),
-                    action: 'about',
+                    action: 'about'
                 }, {
                     xtype: 'button',
                     text: i18n.getMsg('timezone.button.text') + i18n.getMsg('timezone.text.local'),
@@ -41,7 +41,7 @@ Ext.define('Lada.view.Viewport', {
                     xtype: 'tbtext',
                     id: 'userinfo',
                     text: i18n.getMsg('userinfo.user') + ' ' + Lada.username
-                }],
+                }]
             },
             tools: [{
                 type: 'help',
