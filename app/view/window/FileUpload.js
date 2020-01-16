@@ -168,16 +168,19 @@ Ext.define('Lada.view.window.FileUpload', {
         }
         win.files = files;
         win.fileNames = [];
-        var binFiles = [];
+        var binFiles = {};
         var filesRead = 0;
         win.fileCount = files.length;
         for (var i = 0; i < files.length; i++) {
             win.fileNames[i] = files[i].name;
             var file = files[i];
             readers[i] = new FileReader();
+            readers[i].fileName = files[i].name;
             readers[i].onload = function(evt) {
                 var binData = evt.target.result;
-                binFiles.push(binData);
+                //Remove mime type and save to array
+                binFiles[evt.target.fileName] = binData;
+                console.log(binFiles[evt.target.fileName]);
                 filesRead++;
                 if (filesRead == files.length) {
                     win.uploadFiles(button, binFiles);
@@ -187,11 +190,49 @@ Ext.define('Lada.view.window.FileUpload', {
         }
     },
 
+    /**
+     * Upload a list of files to the import service
+     * @param {Ext.button.Button} button Button that triggered the upload event
+     * @param {Object} binFiles Object containing file name as keys and file content as value
+     */
     uploadFiles: function(button, binFiles) {
         var win = button.up('window');
-        for (var i = 0; i < binFiles.length; i++) {
-            win.uploadFile(button, binFiles[i], i);
+        var cb = win.down('combobox[name=encoding]');
+        var mstSelector = win.down('combobox[name=mst]').getValue();
+
+        if (cb.getValue() === "utf-8") {
+            Ext.Object.each(binFiles, function(fileName, fileContent) {
+                var x = new Uint8Array(fileContent.slice(0,3));
+                if (x[0] == 0xEF && x[1] == 0xBB && x[2] == 0xBF) {
+                    fileContent = fileContent.slice(3);
+                }
+            });
         }
+        Ext.Ajax.request({
+            url: 'lada-server/data/import/laf/list',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-LADA-MST': mstSelector
+            },
+            scope: win,
+            rawData: {
+                files: binFiles,
+                encoding: cb.getValue()
+            },
+            success: function(response, opts) {
+                debugger;
+            },
+            failure: function(response, opts) {
+                //If request fails show an alert
+                var i18n = Lada.getApplication().bundle;
+                Ext.Msg.show({
+                    message: i18n.getMsg('importResponse.failure.server.multi'),
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.Msg.ERROR,
+                });
+            }
+        });
     },
 
     /**
@@ -204,25 +245,26 @@ Ext.define('Lada.view.window.FileUpload', {
         var contentType = 'text/plain; charset=' + cb.getValue();
         var mstSelector = win.down('combobox[name=mst]').getValue();
         var x = new Uint8Array(binData.slice(0,3));
-        if (cb.getValue() === "utf-8" && x[0] == 0xEF && x[1] == 0xBB && x[2] == 0xBF)
+        if (cb.getValue() === "utf-8" && x[0] == 0xEF && x[1] == 0xBB && x[2] == 0xBF) {
             binData = binData.slice(3);
-            Ext.Ajax.request({
-                url: 'lada-server/data/import/laf',
-                method: 'POST',
-                headers: {
-                    'Content-Type': contentType,
-                    'X-LADA-MST': mstSelector
-                },
-                scope: win,
-                binary: true,
-                binaryData: binData,
-                success: function(response, opts) {
-                    win.uploadSuccess(response, opts, fileIndex);
-                },
-                failure: function(response, opts) {
-                    win.uploadFailure(response, opts, fileIndex);
-                }
-            });
+        }
+        Ext.Ajax.request({
+            url: 'lada-server/data/import/laf',
+            method: 'POST',
+            headers: {
+                'Content-Type': contentType,
+                'X-LADA-MST': mstSelector
+            },
+            scope: win,
+            binary: true,
+            binaryData: binData,
+            success: function(response, opts) {
+                win.uploadSuccess(response, opts, fileIndex);
+            },
+            failure: function(response, opts) {
+                win.uploadFailure(response, opts, fileIndex);
+            }
+        });
     },
 
     /**
@@ -266,6 +308,7 @@ Ext.define('Lada.view.window.FileUpload', {
 
     /**
      * @private
+     * Handler if an import request failed
      */
     uploadFailure: function(response, opts, fileIndex) {
         // TODO handle Errors correctly, especially AuthenticationTimeouts
