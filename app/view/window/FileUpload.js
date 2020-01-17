@@ -179,14 +179,13 @@ Ext.define('Lada.view.window.FileUpload', {
             readers[i].onload = function(evt) {
                 var binData = evt.target.result;
                 //Remove mime type and save to array
-                binFiles[evt.target.fileName] = binData;
-                console.log(binFiles[evt.target.fileName]);
+                binFiles[evt.target.fileName] = binData.split(',')[1];
                 filesRead++;
                 if (filesRead == files.length) {
                     win.uploadFiles(button, binFiles);
                 }
             };
-            readers[i].readAsArrayBuffer(file);
+            readers[i].readAsDataURL(file);
         }
     },
 
@@ -216,12 +215,12 @@ Ext.define('Lada.view.window.FileUpload', {
                 'X-LADA-MST': mstSelector
             },
             scope: win,
-            rawData: {
+            jsonData: {
                 files: binFiles,
                 encoding: cb.getValue()
             },
             success: function(response, opts) {
-                debugger;
+                win.uploadSuccess(response, opts);
             },
             failure: function(response, opts) {
                 //If request fails show an alert
@@ -269,6 +268,7 @@ Ext.define('Lada.view.window.FileUpload', {
 
     /**
      * @private
+     * Show result window after successfull uploaded
      */
     uploadSuccess: function(response, opts, fileIndex) {
         this.filesUploaded++;
@@ -276,32 +276,32 @@ Ext.define('Lada.view.window.FileUpload', {
         var responseText = response.responseBytes ?
                 String.fromCharCode.apply(null, response.responseBytes):
                 response.responseText;
-
+        var responseJson = Ext.JSON.decode(responseText);
+        var tag = '';
+        //Get the generated tag name
+        if (Object.keys(responseJson.data).length > 0) {
+            var firstImport = Object.keys(responseJson.data)[0];
+            tag = responseJson.data[firstImport].tag;
+        }
         if (!this.resultWin) {
             this.resultWin = Ext.create('Lada.view.window.ImportResponse', {
                 message: {}, //TODO:response.message,
                 modal: true,
                 fileCount: this.fileCount,
                 fileNames: this.fileNames,
+                response: responseJson,
                 encoding: this.down('combobox[name=encoding]').getValue(),
                 mst: this.down('combobox[name=mst]').getValue(),
                 width: 500,
                 height: 350,
-                title: i18n.getMsg('title.importresult'),
-                finishedHandler: function() {
-                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
-                }
+                title: i18n.getMsg('title.importresult', tag)
             });
+            //Show result, reload grid, close this window
             this.resultWin.show();
-        }
-
-        this.resultWin.updateOnSuccess(responseText, fileIndex);
-
-        if (this.filesUploaded == this.files.length) {
-            this.resultWin.finishedHandler();
+            var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+            if (parentGrid.length === 1) {
+                parentGrid[0].reload();
+            }
             this.close();
         }
     },
