@@ -139,14 +139,6 @@ Ext.define('Lada.controller.Print', {
             for (var i = 0; i < attributes.length; i++) {
                 switch (attributes[i].type){
                     case 'DataSourceAttributeValue':
-                        if (attributes[i].name === 'messungen') {
-                            break;
-                        }
-                        var subfields = recursiveFields(attributes[i].clientParams.attributes);
-                        if (subfields) {
-                            listOfItems = listOfItems.concat(subfields);
-                        }
-                        break;
                     case 'TableAttributeValue':
                         break;
                     case 'String':
@@ -154,8 +146,9 @@ Ext.define('Lada.controller.Print', {
                             return el.dataIndex === attributes[i].name
                         });
                         if (!matchingColumn) {
-                            if (attributes[i].name === 'timezone') {
-                            // timezone should be filled automatically, and not be seen in the client
+                            if (attributes[i].name === 'timezone' ||
+                                attributes[i].name === 'doc_creator') {
+                            // timezone and doc creator should be filled automatically, and not be seen in the client
                                 break;
                             }
                             /* hardcoded workaround to not lose the previously
@@ -263,8 +256,13 @@ Ext.define('Lada.controller.Print', {
                     if (field) {
                         resultData[attributes[i].name] = field.getValue() || '';
                     } else {
+                        //Auto filled fields
                         if (attributes[i].name === 'timezone') {
+                            //timezone
                             resultData[attributes[i].name] = Lada.util.Date.getCurrentTimeZone();
+                        } else if (attributes[i].name === 'doc_creator') {
+                            //username
+                            resultData[attributes[i].name] = Lada.username;
                         } else {
                             resultData[attributes[i].name] = '';
                         }
