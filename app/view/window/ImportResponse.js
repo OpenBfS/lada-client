@@ -118,22 +118,13 @@ Ext.define('Lada.view.window.ImportResponse', {
         var filename = this.fileNames[fileIndex];
         this.down('progressbar').updateProgress(this.finished/this.fileCount);
         var filename = this.fileNames[fileIndex];
-        var response = '<br/><hr><b>' + filename + ':</b><br/><ol>&#40' + this.mstEncoding + '&#41</ol>';
+        var tag = data.data.tag ? '<ol>Tag: ' + data.data.tag + '</ol>': '';
+        var response = '<br/><hr><b>' + filename + ':</b><br/>' + tag + '<ol>&#40' + this.mstEncoding + '&#41</ol>';
         response += i18n.getMsg('import.messages') + ':<br/><hr>';
         response += this.parseResponse(data, true);
         this.download += response;
         this.down('panel').setHtml(this.down('panel').html + response);
-        if (this.finished == this.fileCount) {
-            if (me.importedProbeIds.length > 0) {
-            //Let the server generate the tag and set result window title when finished
-                me.getGeneratedTags().then(function(genTagName) {
-                    me.setTitle(i18n.getMsg('title.importresult', genTagName));
-                    me.down('button[name=download]').enable();
-                });
-            } else {
-                me.down('button[name=download]').enable();
-            }
-        }
+        me.down('button[name=download]').enable();
     },
 
     /**
