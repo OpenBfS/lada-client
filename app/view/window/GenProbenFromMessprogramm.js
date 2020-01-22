@@ -79,62 +79,47 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     height: 135,
                     width: 340,
                     html: ''
-                }, {
-                    xtype: 'progressbar',
-                    text: i18n.getMsg('progress'),
-                    height: 25,
-                    width: 340,
-                    margin: '5, 5, 5, 5'
                 });
-                var finished = 0;
-                for (var r=0; r < me.ids.length; r++) {
-                    var reqJsondata = {
-                        id: me.ids[r],
-                        start: startUTC,
-                        end: endUTC
-                    };
-                    Ext.Ajax.request({
-                        url: 'lada-server/rest/probe/messprogramm',
-                        method: 'POST',
-                        timeout: 2 * 60 * 1000,
-                        jsonData: reqJsondata,
-                        success: function(response) {
-                            finished++;
-                            me.down('progressbar').updateProgress(finished/me.ids.length);
-                            results.push(response);
-                            var panel = me.down('panel');
-                            var json = Ext.JSON.decode(response.responseText);
-                            var id = response.request.options.jsonData.id;
-                            if (json.success) {
-                                panel.setHtml(panel.html + '<br>'
-                                        + i18n.getMsg('gpfm.generated.success',
-                                            json.data.length, id));
-                            } else {
-                                panel.setHtml(panel.html + '<br>'
-                                        + i18n.getMsg('gpfm.generated.error',
-                                            id, i18n.getMsg(json.message)));
-                            }
-                            if (finished === me.ids.length) {
-                                me.down('toolbar').down('button').setDisabled(false);
-                                me.processResults(results);
-                            }
-                        },
-                        failure: function(response) {
-                            finished++;
-                            me.down('progressbar').updateProgress(finished/me.ids.length);
-                            var panel = me.down('panel');
-                            var error = response.statusText;
-                            var id = response.request.options.jsonData.id;
-                            panel.setHtml(panel.html + '<br>'
-                                    + i18n.getMsg('gpfm.generated.error', id, error));
-
-                            if (finished === me.ids.length) {
-                                me.down('toolbar').down('button').setDisabled(false);
-                                me.processResults(results);
-                            }
+                this.down('panel').setLoading(true);
+                var reqJsondata = {
+                    ids: me.ids,
+                    start: startUTC,
+                    end: endUTC
+                };
+                Ext.Ajax.request({
+                    url: 'lada-server/rest/probe/messprogramm',
+                    method: 'POST',
+                    timeout: 2 * 60 * 1000,
+                    jsonData: reqJsondata,
+                    success: function(response) {
+                        var panel = me.down('panel');
+                        panel.setLoading(false);
+                        var json = Ext.JSON.decode(response.responseText);
+                        if (json.success && json.data.proben) {
+                            Ext.Object.each(json.data.proben, function(key, result) {
+                                if (result.success) {
+                                    results.push(result);
+                                    panel.setHtml(panel.html + '<br>'
+                                    + i18n.getMsg('gpfm.generated.success',
+                                        result.data.length, key));
+                                } else {
+                                    panel.setHtml(panel.html + '<br>'
+                                            + i18n.getMsg('gpfm.generated.error',
+                                                key, i18n.getMsg(result.message)));
+                                }
+                            });
                         }
-                    });
-                }
+                        me.down('toolbar').down('button').setDisabled(false);
+                        me.processResults(results, json.data.tag? json.data.tag: '');
+                    },
+                    failure: function(response) {
+                        var panel = me.down('panel');
+                        panel.setLoading(false);
+                        panel.setHtml(i18n.getMsg('gpfm.generated.requestfail', response.status, response.statusText));
+                        me.down('toolbar').down('button').setDisabled(false);
+
+                    }
+                });
             }
         }];
 
@@ -202,16 +187,19 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     },
 
     /**
+     * @private
      * Handle results of Probe creation from Messprogramm
+     * @param results Array of results object
+     * @param genTagName Generated tag name
      */
-    processResults: function(results) {
+    processResults: function(results, genTagName) {
         var data = [];
         for (var r in results) {
-            var json = Ext.JSON.decode(results[r].responseText);
-            if (json.data === null) {
+            var result = results[r];
+            if (result === null) {
                 continue;
             }
-            data = data.concat(json.data);
+            data = data.concat(result.data);
         }
         if (data.length === 0) {
             return;
@@ -221,14 +209,20 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         });
         var me = this;
         umwStore.load({callback: function(){
-            me.genResultWindow(umwStore, data)
+            me.genResultWindow(umwStore, data, genTagName)
         }});
     },
 
-    genResultWindow: function(umwStore, data){
+    /**
+     * @private
+     * Create generation result window
+     * @param umwStore Umwelt store instance
+     * @param data Generated probe instances
+     * @param genTagname Generated tag name
+     */
+    genResultWindow: function(umwStore, data, genTagName){
         var i18n = Lada.getApplication().bundle;
         var me = this;
-        var probeIds = [];
 
         var columnstore = Ext.data.StoreManager.get('columnstore');
         columnstore.clearFilter();
@@ -253,11 +247,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 gridColumnId: i
             }));
         }
-
-        Ext.Array.each(data, function(probe) {
-            probeIds.push(probe.id);
-        });
-
         var newStore = Ext.create('Lada.store.Proben', {data: data});
 
         var win = Ext.create('Ext.window.Window', {
@@ -266,6 +255,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             minHeight: 500,
             maxHeight: 600,
             constrain: true,
+            title: i18n.getMsg('gpfm.generated.grid.title', genTagName? genTagName: ''),
             items: [{
                 xtype: 'dynamicgrid',
                 hidebuttons: ['importprobe', 'genericadd'],
@@ -436,34 +426,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     button.up('window').close();
                 }
             }]
-        });
-        //Let the server generate the tag and set result grid title when finished
-        new Ext.Promise(function(resolve, reject) {
-            Ext.Ajax.request({
-                url: 'lada-server/rest/tag/generated',
-                method: 'POST',
-                jsonData: {
-                    probeIds: probeIds,
-                    mstId: Lada.mst[0]
-                },
-                success: function(response) {
-                    var responseJson = Ext.JSON.decode(response.responseText);
-                    if (responseJson.success) {
-                        var tagName = '';
-                        if (responseJson.data.length > 0) {
-                            tagName = responseJson.data[0].tag.tag;
-                        }
-                        resolve(tagName);
-                    } else {
-                        reject();
-                    }
-                },
-                failure: function(response) {
-                    reject();
-                }
-            })
-        }).then(function(genTagName) {
-            win.setTitle(i18n.getMsg('gpfm.generated.grid.title', genTagName));
         });
         win.show();
         win.down('dynamicgrid').setToolbar();
