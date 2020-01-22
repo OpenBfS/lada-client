@@ -320,6 +320,8 @@ Ext.define('Lada.view.window.GridExport', {
             }, {
                 xtype: 'button',
                 action: 'copyGeoJson',
+                icon: 'resources/img/map_add.png',
+                iconAlign: 'left',
                 text: i18n.getMsg('export.button.copy'),
                 hidden: true
             }]
