@@ -38,10 +38,10 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
      */
     displayTemplate: {
         //Used for title string
-        title: "Ereignis:<p style='font-size: 2em; margin: 5px 0 10px 0;'> $VALUE</p>",
+        title: '<p style=\'font-size: 1.5em; margin: 25px 0 5px 0;\'><a href="$LINK" target="_blank"> $VALUE</a></p>',
         //Use for string that marks the event as changed or unchanged
         change: {
-            changed: "<div style='color:red; margin: 0;'>$VALUE<br></div>",
+            changed: '<div style=\'color:red; margin: 0;\'>$VALUE<br></div>',
             unchanged: '$VALUE<br>'
         },
         //Used for event keys
@@ -49,21 +49,27 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
             //Field was modified
             unchanged: '<b>$VALUE</b>: ',
             //Field is unmodified
-            changed: "<div style='color:red; margin: 0;'><b>$VALUE</b>: "
+            changed: '<div style=\'color:red; margin: 0;\'><b>$VALUE</b>: '
         },
         //Used for event values
         value: {
             unchanged: '$VALUE <br>',
-            changed: "$VALUE<br></div>"
+            changed: '$VALUE<br></div>'
         }
     },
 
     /**
      * Keys to be displayed in the event window
      */
-    displayValues: ['modified', 'modified_by',
-            'Exercise', 'id', 'description', 'TimeOfEvent',
-            'ScenarioPhase.title', 'ScenarioPhase.Location'],
+    displayValues: ['description',
+        'EventType.title',
+        'TimeOfEvent',
+        'OperationMode.title',
+        'SectorizingNetworks',
+        'SectorizingSampleTypes',
+        'modified',
+        'modified_by'
+    ],
 
     height: 550,
 
@@ -142,6 +148,15 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
             var k = a[i];
             if (k in o) {
                 o = o[k];
+                if (Array.isArray(o) && o.length > 0) {
+                    if (o[0].hasOwnProperty('title')) {//currently true for all second level arrays
+                        o = o.map(function(x) {
+                            return x.title;
+                        });
+                    } else {
+                        return JSON.stringify(o);
+                    }
+                }
             } else {
                 return;
             }
@@ -181,13 +196,15 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
         scenarioString += changeTemplate.replace('$VALUE', changeString);
 
         //Check for changes since last update
-        var changedFields = Ext.Array.contains(me.changes, scenario.id) ? 
+        var changedFields = Ext.Array.contains(me.changes, scenario.id) ?
                 me.getChanges(scenario): [];
 
         //Add display values
         Ext.Array.each(this.displayValues, function(key) {
             var value = me.getPropertyByString(scenario, key);//scenario[key];
-            value = value != null ? value: '';
+            if (!value || value.length !== undefined && value.length === 0) {
+                return true;
+            }
             var keyString = i18n.getMsg('elan.' + key);
             if (typeof value === 'boolean') {
                 value = value? i18n.getMsg('true'): i18n.getMsg('false');
