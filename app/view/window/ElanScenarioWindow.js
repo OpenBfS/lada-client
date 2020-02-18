@@ -80,6 +80,11 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
      */
     titleProperty: 'title',
 
+    /**
+     * Key that contains the hyperlink to the event
+     */
+    linkProperty: '@id',
+
     title: 'Dokpool-Messenger',
 
     width: 450,
