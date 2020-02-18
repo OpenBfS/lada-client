@@ -185,6 +185,9 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
         //Add title
         var title = scenario[me.titleProperty];
         scenarioString += me.displayTemplate.title.replace('$VALUE', title);
+        //Add hyperlink to title
+        var link = scenario[me.linkProperty];
+        scenarioString = scenarioString.replace('$LINK', link);
 
         //Check if Scenario was changed
         var changeString = i18n.getMsg('elan.unchanged');
