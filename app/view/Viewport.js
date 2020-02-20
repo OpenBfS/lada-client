@@ -38,6 +38,10 @@ Ext.define('Lada.view.Viewport', {
                     enableToggle: true,
                     action: 'toggletimezone'
                 }, {
+                    xtype: 'elanscenariobutton',
+                    action: 'elanscenarios',
+                    hidden: false
+                }, {
                     xtype: 'tbtext',
                     id: 'userinfo',
                     text: i18n.getMsg('userinfo.user') + ' ' + Lada.username
