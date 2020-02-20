@@ -583,7 +583,7 @@ Ext.application({
         Ext.create('Lada.view.window.ElanScenarioWindow');
         window.setInterval(function() {
             dokpool.updateActiveElanScenarios();
-        }, 3000);
+        }, 60000);
     },
 
     getServerVersion: function() {
