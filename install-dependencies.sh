@@ -22,16 +22,19 @@ cd resources/lib
 curl -L https://github.com/eligrey/FileSaver.js/archive/${FILESAVER_VERSION}.zip \
      -o FileSaver-js-${FILESAVER_VERSION}.zip
 unzip -n FileSaver-js-${FILESAVER_VERSION}.zip
+rm -rf FileSaver
 ln -sf FileSaver.js-${FILESAVER_VERSION} FileSaver
 
 curl -L https://github.com/eligrey/Blob.js/archive/${BLOB_VERSION}.zip \
      -o Blob-js-${BLOB_VERSION}.zip
 unzip -n Blob-js-${BLOB_VERSION}.zip
+rm -rf Blob 
 ln -sf Blob.js-${BLOB_VERSION} Blob
 
 curl -L https://github.com/openlayers/openlayers/releases/download/v${OL_VERSION}/v${OL_VERSION}-dist.zip \
      -o OpenLayers-${OL_VERSION}.zip
 unzip -n OpenLayers-${OL_VERSION}.zip
+rm -rf ol
 mv v${OL_VERSION}-dist ol/
 
 curl -L https://momentjs.com/downloads/moment.js -o moment.js
