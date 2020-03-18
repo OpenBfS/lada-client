@@ -509,6 +509,7 @@ Ext.define('Lada.controller.Print', {
         } else {
             requestData.url = me.printUrlPrefix + templateName + '/buildreport.pdf';
             requestData.binary = true;
+            requestData.timeout = 60000;
             requestData.jsonData = JSON.stringify(jsonData);
         }
         Ext.Ajax.request(requestData);
