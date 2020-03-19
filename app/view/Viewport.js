@@ -26,7 +26,7 @@ Ext.define('Lada.view.Viewport', {
             layout: 'border',
             name: 'main',
             header:{
-                titlePosition:3,
+                titlePosition:4,
                 items: [{
                     xtype: 'button',
                     text: i18n.getMsg('info'),
