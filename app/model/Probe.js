@@ -133,6 +133,16 @@ Ext.define('Lada.model.Probe', {
             return value;
         }
     }, {
+        name: 'ursprungszeit',
+        type: 'date',
+        convert: Lada.util.Date.convertTimeFn,
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
+    }, {
         name: 'readonly',
         type: 'boolean',
         persist: false

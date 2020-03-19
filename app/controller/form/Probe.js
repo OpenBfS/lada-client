@@ -766,9 +766,29 @@ Ext.define('Lada.controller.form.Probe', {
             if (partners[0] && partners[1] && partners[0] > partners [1]) {
                 var msg = Lada.getApplication().bundle.getMsg('662');
                 field.up('fieldset').showWarningOrError(true, msg, false, '');
-            } else {
-                field.up('fieldset').clearMessages();
+                field.up('fset[name=entnahmePeriod]').showWarningOrError(true, msg, false, '');
+             } else {
+                field.up('fset[name=entnahmePeriod]').clearMessages();
+             }
+             if  (partners[0] && field.up('fieldset[name=zeit]').down('datetime[name=ursprungszeit]').getValue()) {
+                if (partners[0] <= field.up('fieldset[name=zeit]').down('datetime[name=ursprungszeit]').getValue())
+                {
+                    var msg = Lada.getApplication().bundle.getMsg('663');
+                    field.up('fieldset[name=zeit]').down('fset[name=ursprung]').showWarningOrError(true, msg, false, '');
+                } else {
+                    field.up('fieldset[name=zeit]').down('fset[name=ursprung]').clearMessages();
+                }
             }
+        }
+        if (field.name === 'ursprungszeit') {
+             var partners = new Array();
+             partners[0] = field.up('fieldset[name=zeit]').down('datetime[period=start]').getValue();
+             if (partners[0] && partners[0] <= field.getValue()) {
+                 var msg = Lada.getApplication().bundle.getMsg('663');
+                 field.up('fset[name=ursprung]').showWarningOrError(true, msg, false, '');
+             } else {
+                 field.up('fset[name=ursprung]').clearMessages();
+             }
         }
         if (w && field.up().showWarnings) {
             field.up().showWarnings(wmsg);

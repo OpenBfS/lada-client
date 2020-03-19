@@ -381,7 +381,8 @@ Ext.define('Lada.view.form.Probe', {
                     }]
                 }, {
                     // Zeit
-                    xtype: 'fieldset',
+                    xtype: 'fset',
+                    name: 'zeit',
                     title: i18n.getMsg('title.time'),
                     layout: {
                         type: 'vbox',
@@ -422,6 +423,7 @@ Ext.define('Lada.view.form.Probe', {
                     }, {
                         xtype: 'fset',
                         name: 'entnahmePeriod',
+                        plainTitle: ' ',
                         width: '100%',
                         border: false,
                         margin: 0,
@@ -446,6 +448,25 @@ Ext.define('Lada.view.form.Probe', {
                             format: 'd.m.Y H:i',
                             width: '50%',
                             period: 'end'
+                        }]
+                    }, {
+                        xtype: 'fset',
+                        name: 'ursprung',
+                        plainTitle: ' ',
+                        width: '100%',
+                        border: false,
+                        margin: 0,
+                        layout: {
+                            type: 'hbox'
+                        },
+                        items: [{
+                            xtype: 'datetime',
+                            fieldLabel: i18n.getMsg('ursprungszeit'),
+                            labelWidth: 130,
+                            margin: '0, 5, 5, 5',
+                            name: 'ursprungszeit',
+                            format: 'd.m.Y H:i',
+                            width: '50%'
                         }]
                     }]
                 }, {
@@ -724,6 +745,7 @@ Ext.define('Lada.view.form.Probe', {
         this.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
         this.down('fset[name=entnahmePeriod]').clearMessages();
         this.down('fset[name=sollzeitPeriod]').clearMessages();
+        this.down('fset[name=ursprung]').clearMessages();
     },
 
     setReadOnly: function(value) {
@@ -740,6 +762,7 @@ Ext.define('Lada.view.form.Probe', {
         this.down('cbox[name=umwId]').setReadOnly(value);
         this.down('datetime[name=probeentnahmeBeginn]').setReadOnly(value);
         this.down('datetime[name=probeentnahmeEnde]').setReadOnly(value);
+        this.down('datetime[name=ursprungszeit]').setReadOnly(value);
         this.down('cbox[name=probeNehmerId]').setReadOnly(value);
         this.down('cbox[name=mplId]').setReadOnly(value);
         this.readOnly = value;
