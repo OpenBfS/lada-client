@@ -13,6 +13,11 @@ Ext.define('Lada.view.window.GridExport', {
     extend: 'Ext.window.Window',
     alias: 'widget.exportdata',
 
+    defaults: {
+        margin: '5, 5, 5, 5',
+        border: false
+    },
+
     collapsible: true,
     maximizable: true,
     autoShow: true,
@@ -494,7 +499,7 @@ Ext.define('Lada.view.window.GridExport', {
                     textType = 'application/json';
                     break;
                 case 'csv':
-                    content = win.getCSV();
+                    content = win.getCSV(encoding);
                     textType = 'text/csv';
                     break;
             }
@@ -829,7 +834,7 @@ Ext.define('Lada.view.window.GridExport', {
      * Saves the resulting data
      */
     exportFile: function(data, encoding, filename) {
-        var blob = new Blob([data], encoding);
+        var blob = new Blob(["\ufeff",data], encoding);
         saveAs(blob, filename, true);
         this.close();
     },
@@ -940,7 +945,34 @@ Ext.define('Lada.view.window.GridExport', {
                 return '';
             }
             /** end of (hopefully temporary) section */
-
+            if (column.dataIndex === 'messgroesseId') {
+                console.log(column.dataIndex);
+                var store = Ext.data.StoreManager.get('messgroessen');
+                var record = store.getById(value);
+                if (record) {
+                    var r = record.get('messgroesse');
+                    return r || '';
+                }
+                return '';
+            }
+            if (column.dataIndex === 'mehId') {
+                var store = Ext.data.StoreManager.get('messeinheiten');
+                var record = store.getById(value);
+                if (record) {
+                    var r = record.get('einheit');
+                    return r || '';
+                }
+                return '';
+            }
+            if (column.dataIndex === 'statusKombi') {
+                var store = Ext.data.StoreManager.get('statuskombi');
+                var record = store.getById(value);
+                if (record) {
+                    var r = record.data.statusStufe.stufe + ' ' + record.data.statusWert.wert;
+                    return r || '';
+                }
+                return '';
+            }
             return value;
         }
         switch (column.dataType.name) {
@@ -949,6 +981,7 @@ Ext.define('Lada.view.window.GridExport', {
                     return null;
                 }
                 return parseFloat(value);
+                break;
             case 'date':
                 if (column.dataType.format && !json) {
                     return Lada.util.Date.formatTimestamp(
@@ -957,12 +990,25 @@ Ext.define('Lada.view.window.GridExport', {
                 } else {
                     return new Date(value);
                 }
+                break;
             case 'geom':
                 return value;
+                break;
             case 'text':
+                return value;
+                break;
             case 'probeId':
             case 'messungId':
             case 'ortId':
+            case 'statuskombi':
+                var store = Ext.data.StoreManager.get('statuskombi');
+                     var record = store.getById(value);
+                     if (record) {
+                         var r = record.data.statusStufe.stufe + ' ' + record.data.statusWert.wert;
+                         return r || '';
+                     }
+                     return '';
+                break;
             default:
                 return value.toString();
         }
@@ -1039,8 +1085,7 @@ Ext.define('Lada.view.window.GridExport', {
      * @param columns the columns to be added
      * @param primaryRow The prepared part of the csv which adds (redundant)
      */
-    getSecondaryCsv: function(item, columns, primaryRow) {
-
+    getSecondaryCsv: function(item, columns, primaryRow, encoding) {
         var me = this;
         if (!me.rowexp || !me.down('checkbox[name=secondarycolumns]').getValue() ) {
             return primaryRow;
@@ -1090,7 +1135,11 @@ Ext.define('Lada.view.window.GridExport', {
             if (record.get) {
                 newvalue = record.get(columns[col].dataIndex);
             } else { // not an extJS model, but a direct json object
-                newvalue = record[columns[col].dataIndex];
+                if (columns[col].dataIndex === 'statusKombi') {
+                    newvalue = record.statusProtokoll.statusKombi;
+                } else {
+                    newvalue = record[columns[col].dataIndex];
+                }
             }
             line += col > 0 ? this.csv.colsep: '';
             var value = this.formatValue(newvalue, columns[col], false);
