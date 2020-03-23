@@ -1043,7 +1043,13 @@ Ext.define('Lada.controller.Query', {
     dataChanged: function() {
         var qp = Ext.ComponentQuery.query('querypanel')[0];
         var savedisabled = qp.isQueryReadonly();
-        qp.down('button[action=save]').setDisabled(savedisabled);
+        if (qp.isValid()){
+            qp.down('button[action=save]').setDisabled(savedisabled);
+            qp.down('button[action=newquery]').setDisabled(false);
+        } else {
+            qp.down('button[action=save]').setDisabled(true);
+            qp.down('button[action=newquery]').setDisabled(true);
+        }
     },
 
     /**

@@ -99,6 +99,7 @@ Ext.define('Lada.view.QueryPanel', {
                     xtype: 'textarea',
                     name: 'description',
                     width: '100%',
+                    allowBlank: false,
                     fieldLabel: 'query.comment',
                     labelWidth: 90,
                     margin: '15 5 5 5'
