@@ -144,6 +144,10 @@ span.x-grid-checkcolumn {
     padding: 7px 3px;
 }
 
+.x-column-header-checkbox {
+    border-color: #cecece;
+}
+
 .x-form-trigger-wrap-default {
     border-width: 2px;
 }
