@@ -310,8 +310,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             record: Ext.create('Lada.model.Ort', {
                 netzbetreiberId: win.netzbetreiberId,
                 staatId: record.get('id'),
-                ortId: 'Staat_' + record.get('staatIso'),
-                kurztext: record.get('staat'),
+                ortId: 'STAAT_' + record.get('id'),
+                kurztext: ((record.get('staatIso') == null) ? 
+                   'STAAT_' + record.get('id') : 
+                   'STAAT_' + record.get('staatIso')),
                 langtext: record.get('staat'),
                 berichtstext: record.get('staat'),
                 ortTyp: 5
