@@ -404,8 +404,12 @@ Ext.define('Lada.controller.Print', {
     doPrint: function(button) {
         var window = button.up('printgrid');
         window.setDisabled(true);
+        window.setLoading(true);
         var isIrix = false;
         var irixCheckbox = window.down('checkbox[name=irix-fieldset-checkbox]');
+        if (window.down('label[name=results]')) {
+            window.down('label[name=results]').setHidden(true);
+        }
         if (irixCheckbox && irixCheckbox.getValue() === true) {
             isIrix = true;
         }
@@ -430,6 +434,7 @@ Ext.define('Lada.controller.Print', {
             window.down('label[name=results]').setText(result);
             window.down('label[name=results]').setHidden(false);
             window.setDisabled(false);
+            window.setLoading(false);
         };
         //Check if layout attributes are proben and messungen
         var attributes = capabilities.layouts[layout].attributes;
