@@ -56,7 +56,7 @@ Ext.define('Lada.view.window.PrintGrid', {
         this.title = i18n.getMsg('print.window.title');
         this.items = [{
             layout: 'vbox',
-            minWidth: 330,
+            minWidth: 380,
             border: false,
             scrollable: true,
             defaults: {
@@ -76,6 +76,7 @@ Ext.define('Lada.view.window.PrintGrid', {
                 forceSelection: true,
                 queryMode: 'local',
                 minChars: 0,
+                matchFieldWidth: false,
                 typeAhead: false,
                 disabled: true,
                 triggerAction: 'all'
@@ -105,9 +106,8 @@ Ext.define('Lada.view.window.PrintGrid', {
                 xtype: 'fieldset',
                 title: i18n.getMsg('print.presets'),
                 collapsible: true,
-                collapsed: true,
+                collapsed: false,
                 scrollable: true,
-                height: 300,
                 maxWidth: '100%',
                 name: 'dynamicfields',
                 items: [],

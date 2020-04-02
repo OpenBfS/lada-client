@@ -163,11 +163,12 @@ Ext.define('Lada.controller.Print', {
                             }
 
                             listOfItems.push({
-                                xtype: 'textfield',
+                                xtype: 'textarea',
                                 fieldLabel: attributes[i].name,
                                 name: attributes[i].name,
-                                labelWidth: 125,
+                                labelWidth: 80,
                                 margin: '5, 5, 5, 5',
+                                anchor: '100%',
                                 value: value
                             });
                         }
