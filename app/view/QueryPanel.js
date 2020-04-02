@@ -54,6 +54,7 @@ Ext.define('Lada.view.QueryPanel', {
                         '{name}</div></tpl>'),
                     displayTpl: Ext.create('Ext.XTemplate', '<tpl for=".">{name}</tpl>'),
                     flex: 1,
+                    matchFieldWidth: false,
                     labelWidth: 90,
                     submitValue: false,
                     triggers: {
@@ -141,6 +142,7 @@ Ext.define('Lada.view.QueryPanel', {
             xtype: 'textfield',
             name: 'name',
             fieldLabel: 'query.name',
+            maxLength: 80,
             labelWidth: 125,
             flex: 1,
             triggers: {

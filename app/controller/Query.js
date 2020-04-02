@@ -139,9 +139,15 @@ Ext.define('Lada.controller.Query', {
         var panel = button.up('panel');
         var cbox = panel.down('combobox[name=selectedQuery]');
         var cquery = cbox.getStore().getById(cbox.getValue());
+        var name = panel.down('textfield[name=name]').getValue();
+        if (name.length > 70) {
+            name = name.substring(0,60) + '... ('+Lada.username+')';
+        } else {
+            name = name+ '('+Lada.username+')';
+        }
         var newrecord = Ext.create('Lada.model.Query',{
             baseQuery: cquery.get('baseQuery'),
-            name: cquery.get('name') + ' ('+Lada.username+')',
+            name: name,
             userId: Lada.userId,
             description: cquery.get('description'),
             messStellesIds: '',
