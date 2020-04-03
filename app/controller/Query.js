@@ -291,6 +291,7 @@ Ext.define('Lada.controller.Query', {
                 qp.isQueryReadonly());
             qp.down('button[action=save]').setDisabled(true);
         }
+        Lada.view.window.PrintGrid.getInstance().parentGrid = null;
     },
 
     handleSaveClicked: function(button) {
@@ -500,6 +501,8 @@ Ext.define('Lada.controller.Query', {
                         if (rowtarget.dataType === 'ortId') {
                             this.setMapOrte(resultGrid);
                         }
+                        //Update print window instance
+                        Lada.view.window.PrintGrid.getInstance().update(resultGrid);
                     } else {
                         if (operation.error.response.timedout) {
                             Ext.Msg.alert(i18n.getMsg('query.error.search.title'),

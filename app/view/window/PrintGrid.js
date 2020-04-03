@@ -7,12 +7,40 @@
  */
 
 /**
- * Window for selecting/ prefilling print templates.
+ * Singleton window for selecting/ prefilling print templates.
+ * This class should not be instanced directly, instead
+ * Lada.View.PrintGrid.getInstance() can be used to create or get the instance.
  */
 Ext.define('Lada.view.window.PrintGrid', {
     alias: 'widget.printgrid',
     extend: 'Ext.window.Window',
     requires: ['Koala.view.form.IrixFieldSet'],
+
+    id: 'printgridwindow',
+
+    statics: {
+        /**
+         * @private
+         * Static instance
+         */
+        instance: null,
+
+        /**
+         * Get the PrintGrid window instance
+         */
+        getInstance: function() {
+            if (!Lada.view.window.PrintGrid.instance) {
+                var win = Ext.create('Lada.view.window.PrintGrid', {
+                    parentGrid: Ext.ComponentQuery.query('dynamicgrid')[0] || null,
+                    closeAction: 'hide'
+                });
+                Lada.view.window.PrintGrid.instance = win;
+            }
+            return Lada.view.window.PrintGrid.instance;
+        }
+    },
+
+    dokPoolEnabled: true,
 
     constrain: true,
 
@@ -163,6 +191,9 @@ Ext.define('Lada.view.window.PrintGrid', {
 
     // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
     addIrixCheckbox: function() {
+        if (this.down('checkbox[name=irix-fieldset-checkbox]')) {
+            return;
+        }
         var me = this;
         var genericFieldset = me.down('panel[name=generic-fieldset]');
         var printDisabled = this.down('combobox[name=template]').getValue() ? false: true ;
@@ -183,8 +214,8 @@ Ext.define('Lada.view.window.PrintGrid', {
                 }
             }
         });
-
         genericFieldset.add(irixCheckbox);
+
     },
 
     // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
@@ -211,6 +242,34 @@ Ext.define('Lada.view.window.PrintGrid', {
         if (irixBox) {
             irixBox.setDisabled(newValue);
         }
-    }
+    },
 
+    /**
+     * Update the window after the parent grid changed
+     * @param {Lada.view.widget.DynamicGrid} parentGrid The new parent grid
+     */
+    update: function(parentGrid) {
+        this.parentGrid = parentGrid;
+        //If layout is selected, trigger template update
+        var layoutBox = this.down('combobox[name=layout]');
+        if (layoutBox.getValue() !== null) {
+            layoutBox.fireEvent('changed', layoutBox, layoutBox.getValue());
+        }
+    },
+
+    /**
+     * Reset window and show if its hidden, else focus on window
+     */
+    show: function() {
+        if (this.isHidden()) {
+            this.callParent(arguments);
+
+            this.down('label[name=results]').setHidden(true);
+            this.down('combobox[name=template]').clearValue();
+            this.down('combobox[name=layout]').clearValue();
+
+        } else {
+            this.focus();
+        }
+    }
 });

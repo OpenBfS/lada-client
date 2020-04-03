@@ -37,7 +37,6 @@ Ext.define('Lada.controller.Print', {
     // may be overwritten by any appContext settings
     printUrlPrefix: 'lada-printer/print/',
     irixServletURL: 'irix-servlet',
-    dokPoolEnabled: true,
 
     init: function() {
         this.control({
@@ -63,16 +62,8 @@ Ext.define('Lada.controller.Print', {
      * Triggers a 'print' dialog from a grid, where further choices about
      * templates can be made
      */
-    openPrintDialog: function( button ) {
-        button.setDisabled(true);
-        var win = Ext.create('Lada.view.window.PrintGrid', {
-            parentGrid: Ext.ComponentQuery.query('dynamicgrid')[0] || null,
-            listeners: {
-                close: function() {
-                    button.setDisabled(false);
-                }
-            }
-        });
+    openPrintDialog: function() {
+        var win = Lada.view.window.PrintGrid.getInstance();
         if (Lada.appContext) {
             if (Lada.appContext.merge.tools.indexOf('irixPrintBtn') >= 0) {
                 this.dokPoolEnabled = true;
@@ -122,6 +113,10 @@ Ext.define('Lada.controller.Print', {
 
     changeLayout: function(combobox, newValue) {
         var win = combobox.up('printgrid');
+
+        if (!win.parentGrid) {
+            return;
+        }
         var fieldset = win.down('fieldset[name=dynamicfields]');
         fieldset.removeAll();
         var availableColumns = win.parentGrid.getColumns();
@@ -357,7 +352,7 @@ Ext.define('Lada.controller.Print', {
      * return a the selection as data table
      */
     printTable: function(grid) {
-        var selection = grid.view.getSelectionModel().getSelection();
+        var selection = grid.getView().getSelectionModel().getSelection();
         var columnNames = [];
         var data = [];
         // create array of column definitions from visible columns
@@ -404,8 +399,7 @@ Ext.define('Lada.controller.Print', {
      */
     doPrint: function(button) {
         var window = button.up('printgrid');
-        window.setDisabled(true);
-        window.setLoading(true);
+        var i18n = Lada.getApplication().bundle;
         var isIrix = false;
         var irixCheckbox = window.down('checkbox[name=irix-fieldset-checkbox]');
         if (window.down('label[name=results]')) {
@@ -424,11 +418,17 @@ Ext.define('Lada.controller.Print', {
         var filename = window.down('textfield[name=filename]').getValue() || 'lada-export';
         var format = window.down('combobox[name=filetype]').getValue();
         var capabilities = window.currentCapabilities;
+        if (template === null) {
+            Ext.Msg.alert('', i18n.getMsg('err.msg.print.noTemplateSelected'));
+            return;
+        }
         filename = this.validateFilename(filename, format);
         if (!filename) {
             window.down('textfield[name=filename]').reset();
             return;
         }
+        window.setDisabled(true);
+        window.setLoading(true);
         var callbackFn = function(success) {
             var i18n = Lada.getApplication().bundle;
             var result = success? i18n.getMsg('print.success') : i18n.getMsg('print.fail');
@@ -458,7 +458,13 @@ Ext.define('Lada.controller.Print', {
 
             this.printSelection(grid, filename, format, callbackFn, isIrix);
         } else {
-            var selection = grid.getView().getSelectionModel().getSelection();
+            var selection;
+            try {
+                selection = grid.getView().getSelectionModel().getSelection();
+            } catch (e) {
+                this.handleError();
+                return;
+            }
             var data = this.fillTemplate(
                 capabilities.layouts[layout].attributes,
                 selection,
@@ -695,9 +701,9 @@ Ext.define('Lada.controller.Print', {
         var errormsg = i18n.getMsg('err.msg.print.noContact');
         if (message !== undefined) {
             errormsg = i18n.getMsg(message);
-        } else if (response.status && response.status === 404) {
+        } else if (response && response.status && response.status === 404) {
             errormsg = i18n.getMsg('err.msg.print.404');
-        } else if (response.responseText) {
+        } else if (response && response.responseText) {
             try {
                 var json = Ext.JSON.decode(response.responseText);
                 if (json && json.message) {
@@ -707,6 +713,8 @@ Ext.define('Lada.controller.Print', {
                 console.log(e);
             }
         }
+        Lada.view.window.PrintGrid.getInstance().setDisabled(false);
+        Lada.view.window.PrintGrid.getInstance().setLoading(false);
         Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'), errormsg);
     },
 
