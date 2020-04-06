@@ -607,8 +607,7 @@ Ext.define('Lada.controller.Print', {
             } else {
                 prep[i]['labormessstelle.messStelle'] = '';
             }
-
-            if (deskriptoren !== null) {
+            if ((deskriptoren)) {
                 prep[i].deskriptoren = [];
                 prep[i].deskriptoren[0] = deskriptoren;
             } else {
