@@ -360,6 +360,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     default:
                         col.xtype = 'gridcolumn';
                         col.renderer = function(value) {
+                            if (value == 0) {
+                                return value;
+                            }
                             return value || '';
                         };
                 }
