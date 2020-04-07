@@ -54,6 +54,9 @@ Ext.define('Lada.controller.Print', {
             },
             'printgrid checkbox[name=irix-fieldset-checkbox]': {
                 select: this.toggleIrix
+            },
+            'printgrid': {
+                gridupdate: this.handleGridUpdate
             }
         });
     },
@@ -857,5 +860,19 @@ Ext.define('Lada.controller.Print', {
         if (fieldset) {
             fieldset.setVisible(newValue);
         }
+    },
+
+    /**
+     * Handle an update of the current result window and update the print window
+     * accordingly.
+     * @param {Lada.view.window.PrintGrid} win The window to update
+     */
+    handleGridUpdate: function(win) {
+        var layoutBox = win.down('combobox[name=layout]');
+        if (!layoutBox) {
+            return;
+        }
+        var layout = layoutBox.getValue();
+        this.changeLayout(layoutBox, layout);
     }
 });

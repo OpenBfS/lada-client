@@ -245,15 +245,28 @@ Ext.define('Lada.view.window.PrintGrid', {
     },
 
     /**
-     * Update the window after the parent grid changed
+     * Update the window after the parent grid changed.
      * @param {Lada.view.widget.DynamicGrid} parentGrid The new parent grid
      */
-    update: function(parentGrid) {
-        this.parentGrid = parentGrid;
+    updateGrid: function(parentGrid) {
+        //If parentGrid was null before, the query has been updated
+        if (!this.parentGrid) {
+            this.parentGrid = parentGrid;
+            this.updateQuery();
+        } else {
+            this.parentGrid = parentGrid;
+        }
+    },
+
+    /**
+     * Update the window after the selected query changed.
+     * Fires a gridupdate event.
+     */
+    updateQuery: function() {
         //If layout is selected, trigger template update
         var layoutBox = this.down('combobox[name=layout]');
-        if (layoutBox.getValue() !== null) {
-            layoutBox.fireEvent('changed', layoutBox, layoutBox.getValue());
+        if (layoutBox.getValue() !== null && !this.isHidden()) {
+            this.fireEvent('gridupdate', this);
         }
     },
 

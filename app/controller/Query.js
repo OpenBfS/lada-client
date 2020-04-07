@@ -502,7 +502,7 @@ Ext.define('Lada.controller.Query', {
                             this.setMapOrte(resultGrid);
                         }
                         //Update print window instance
-                        Lada.view.window.PrintGrid.getInstance().update(resultGrid);
+                        Lada.view.window.PrintGrid.getInstance().updateGrid(resultGrid);
                     } else {
                         if (operation.error.response.timedout) {
                             Ext.Msg.alert(i18n.getMsg('query.error.search.title'),
