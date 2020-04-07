@@ -112,6 +112,7 @@ Ext.define('Lada.view.window.TagCreate', {
         if (tagFilterWidget) {
             tagFilterWidget.reload(true);
         }
+        textfield.up('window').close();
     },
 
     saveBulkTag: function(textfield) {
@@ -169,6 +170,7 @@ Ext.define('Lada.view.window.TagCreate', {
                 me.tagWidget.clearValue();
                 me.tagWidget.select(newItem);
                 textfield.reset();
+                textfield.up('window').close();
                 me.tagEdit.down('button[action=bulkaddtags]').click();
             });
         });
@@ -216,6 +218,7 @@ Ext.define('Lada.view.window.TagCreate', {
                 me.tagWidget.clearValue();
                 me.tagWidget.select(newItem);
                 textfield.reset();
+                textfield.up('window').close();
                 me.tagEdit.down('button[action=bulkaddtags]').click();
             });
         });
