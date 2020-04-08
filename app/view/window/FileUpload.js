@@ -71,6 +71,7 @@ Ext.define('Lada.view.window.FileUpload', {
                         }
                         fset.setTitle(i18n.getMsg('import.filesSelected', files.length));
                         node.value = fileNames;
+                        field.up('window').down('button[name=save]').setDisabled(false);
                     }
                 }
             }),
@@ -130,7 +131,9 @@ Ext.define('Lada.view.window.FileUpload', {
                 items: [{
                     xtype: 'button',
                     text: i18n.getMsg('save'),
+                    name: 'save',
                     margin: '3, 3, 3, 3',
+                    disabled: true,
                     handler: this.readFiles
                 }, {
                     xtype: 'button',
@@ -159,6 +162,7 @@ Ext.define('Lada.view.window.FileUpload', {
      */
     readFiles: function(button) {
         var win = button.up('window');
+        win.setLoading(true);
         var fileInput = win.down('filefield');
         var files = fileInput.fileInputEl.dom.files;
         var readers = new Array(files.length);
@@ -218,6 +222,7 @@ Ext.define('Lada.view.window.FileUpload', {
                 binaryData: binData,
                 success: function(response, opts) {
                     win.uploadSuccess(response, opts, fileIndex);
+                    win.setLoading(false);
                 },
                 failure: function(response, opts) {
                     win.uploadFailure(response, opts, fileIndex);
