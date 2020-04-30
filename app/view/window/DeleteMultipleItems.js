@@ -84,6 +84,10 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 title = i18n.getMsg('delete.multiple_ort.window.title');
                 dialog1 = i18n.getMsg('delete.multiple_ort');
                 break;
+            case 'messungId':
+                title = i18n.getMsg('delete.multiple_messung.window.title');
+                dialog1 = i18n.getMsg('delete.multiple_messung');
+                break;
 
 
         }
