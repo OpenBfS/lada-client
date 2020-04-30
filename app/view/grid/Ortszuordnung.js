@@ -123,7 +123,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('staat'),
             dataIndex: 'ortId',
-            width: 40,
+            width: 45,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var staaten = Ext.data.StoreManager.get('staaten');
@@ -136,6 +136,9 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     return '';
                 }
                 var record = staaten.getById(stId);
+                if (!record.get('staatIso')) {
+                    return record.get('id')
+                }
                 return record.get('staatIso');
             }
         }, {
