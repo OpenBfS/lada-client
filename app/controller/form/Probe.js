@@ -16,10 +16,6 @@ Ext.define('Lada.controller.form.Probe', {
         'Lada.view.window.AuditTrail'
     ],
 
-    dirtyTags: false,
-
-    dirtyProbeForm: false,
-
     /**
      * Initialize the Controller
      * It has 4 listeners
@@ -153,7 +149,7 @@ Ext.define('Lada.controller.form.Probe', {
                 fetchedOrtszuordnungen = ortszuordnungArr.length;
                 var ortszuordnungCopyArr = [];
                 var ortszuordnungRecArr = [];
-                if (fetchedOrtszuordnungen == 0) {
+                if (fetchedOrtszuordnungen === 0) {
                     me.copyMessungen(probe, probeCopy, callback);
                     return;
                 }
@@ -182,7 +178,7 @@ Ext.define('Lada.controller.form.Probe', {
                     });
                 }
             },
-            failure: function(response) {
+            failure: function() {
             }
         });
     },
@@ -219,7 +215,7 @@ Ext.define('Lada.controller.form.Probe', {
                 //Array of original records
                 var messungRecArr = [];
 
-                if (fetchedMessungen == 0) {
+                if (fetchedMessungen === 0) {
                     callback(probeCopy);
                     return;
                 }
@@ -277,8 +273,8 @@ Ext.define('Lada.controller.form.Probe', {
     copyMesswerte: function(probeCopy, messungen, messungenCopy, finishedCallback) {
         //Number of messung objects to copy and objects already copied
         var numMessungen = messungen.length;
-        messungenFinished = 0;
-        currentFinishedMesswerte = 0;
+        var messungenFinished = 0;
+        var currentFinishedMesswerte = 0;
         //Maps containing the numbers of messwert objects to copy and objects already copied;
         var numMesswert = new Ext.util.HashMap();
         var messwertFinished = new Ext.util.HashMap();
@@ -287,7 +283,7 @@ Ext.define('Lada.controller.form.Probe', {
             finishedCallback(probeCopy);
             return;
         };
-        messungsIDNew = new Ext.util.HashMap();
+        var messungsIDNew = new Ext.util.HashMap();
         for (var i = 0; i < messungen.length; i++) {
             messungsIDNew.add(messungen[i].get('copyOfMessungId'), messungen[i].get('id'));
         }
@@ -371,7 +367,7 @@ Ext.define('Lada.controller.form.Probe', {
                         });
                     }
                 }
-            })
+            });
         }
     },
 
@@ -577,8 +573,8 @@ Ext.define('Lada.controller.form.Probe', {
             var record = formPanel.getForm().getRecord();
             for (var key in data) {
                 //Only set existing fields, avoids sending the tag widget
-                if (record.get(key) != undefined &&
-                            key != formPanel.down('tagwidget').getInputId()) {
+                if (record.get(key) !== undefined &&
+                            key !== formPanel.down('tagwidget').getInputId()) {
                     record.set(key, data[key]);
                 }
             }
@@ -674,7 +670,7 @@ Ext.define('Lada.controller.form.Probe', {
         } else { //called by the form
             panel = callingEl.owner;
         }
-        if (panel.getRecord().get('readonly')  )  {
+        if (panel.getRecord().get('readonly')) {
             panel.down('button[action=save]').setDisabled(true);
             panel.down('button[action=discard]').setDisabled(true);
             panel.down('button[action=copy]').setDisabled(false);
@@ -701,27 +697,15 @@ Ext.define('Lada.controller.form.Probe', {
         }
     },
 
-    enableButtons: function(form) {
-        form.owner.down('button[action=save]').setDisabled(false);
-        form.owner.down('button[action=discard]').setDisabled(false);
-        form.owner.up('window').disableChildren();
-    },
-
-    disableButtons: function(form) {
-        form.owner.down('button[action=save]').setDisabled(true);
-        form.owner.down('button[action=discard]').setDisabled(true);
-        form.owner.up('window').enableChildren(); // todo this might not be true in all cases
-    },
-
     /**
      * Enables/disabled the save/reset buttons if tags hast been altered.
      * Only disables buttons if form is not dirty, too.
      */
     dirtyTags: function(form, dirty) {
-        this.dirtyTags = dirty;
+        var dirtyProbeForm = form.owner.isDirty();
         if (dirty) {
             this.enableButtons(form);
-        } else if(this.dirtyProbeForm == false) {
+        } else if (dirtyProbeForm === false) {
             this.disableButtons(form);
         }
     },
@@ -770,9 +754,8 @@ Ext.define('Lada.controller.form.Probe', {
              } else {
                 field.up('fset[name=entnahmePeriod]').clearMessages();
              }
-             if  (partners[0] && field.up('fieldset[name=zeit]').down('datetime[name=ursprungszeit]').getValue()) {
-                if (partners[0] <= field.up('fieldset[name=zeit]').down('datetime[name=ursprungszeit]').getValue())
-                {
+             if (partners[0] && field.up('fieldset[name=zeit]').down('datetime[name=ursprungszeit]').getValue()) {
+                if (partners[0] <= field.up('fieldset[name=zeit]').down('datetime[name=ursprungszeit]').getValue()) {
                     var msg = Lada.getApplication().bundle.getMsg('663');
                     field.up('fieldset[name=zeit]').down('fset[name=ursprung]').showWarningOrError(true, msg, false, '');
                 } else {
@@ -811,7 +794,7 @@ Ext.define('Lada.controller.form.Probe', {
         } else { //called by the form
             panel = callingEl.owner;
         }
-        if (panel.getRecord().get('readonly')  )  {
+        if (panel.getRecord().get('readonly')) {
             panel.down('button[action=save]').setDisabled(true);
             panel.down('button[action=discard]').setDisabled(true);
             panel.down('button[action=copy]').setDisabled(true);
