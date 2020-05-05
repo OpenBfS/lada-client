@@ -570,6 +570,7 @@ Ext.define('Lada.controller.Query', {
                     case 'text':
                     case 'probeId':
                     case 'messungId':
+                    case 'mpId':
                     case 'ortId':
                         options.triggers = {
                             clear: {
