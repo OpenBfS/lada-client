@@ -786,21 +786,32 @@ Ext.define('Lada.controller.form.Probe', {
         }
     },
 
+    /**
+     * Handle changes of the probe forms dirty state and (de-) activate form buttons accordingly.
+     * This function also checks the tag widget for changes as its not a regular form
+     * component. Buttons are only activated if probe form, tag widget or both have changes.
+     * @param {Ext.Component} callingEl Component that fired the event
+     * @param {Boolean} dirty The new dirty state
+     */
     handleDirtyChange: function(callingEl, dirty) {
-        this.dirtyProbeForm = dirty;
         var panel;
         if (callingEl.up) { //called by a field in the form
             panel = callingEl.up('probeform');
         } else { //called by the form
             panel = callingEl.owner;
         }
+        var tagWidget = panel.down('tagwidget');
+        if (!tagWidget) {
+            Ext.log({msg: 'Unable to get probe tag widget', lvl: 'warn'});
+        }
+        var dirtyTags = tagWidget.hasChanges();
         if (panel.getRecord().get('readonly')) {
             panel.down('button[action=save]').setDisabled(true);
             panel.down('button[action=discard]').setDisabled(true);
             panel.down('button[action=copy]').setDisabled(true);
         } else {
             if (panel.isValid()) {
-                if (panel.isDirty() || this.dirtyTags) {
+                if (panel.isDirty() || dirtyTags) {
                     panel.down('button[action=discard]').setDisabled(false);
                     panel.down('button[action=save]').setDisabled(false);
                     panel.down('button[action=copy]').setDisabled(true);
@@ -821,7 +832,7 @@ Ext.define('Lada.controller.form.Probe', {
     },
 
     hauptprobenNrChanged: function(field) {
-        if (field.getValue() !== "") {
+        if (field.getValue() !== '') {
             field.up().clearWarningOrError();
         } else {
             field.up().showWarnings('631');

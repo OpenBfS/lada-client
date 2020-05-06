@@ -239,11 +239,16 @@ Ext.define('Lada.controller.form.Messung', {
       * flag, the function calls the embedding windows enableChilren() function
       */
     dirtyForm: function(form, dirty) {
+        var tagwidget = form.owner.down('tagwidget');
+        if (!tagwidget) {
+            Ext.log({msg: 'Unable to get messung tag widget', lvl: 'warn'});
+            return;
+        }
         if (dirty) {
             form.owner.down('button[action=save]').setDisabled(false);
             form.owner.down('button[action=discard]').setDisabled(false);
             form.owner.up('window').disableChildren();
-        } else {
+        } else if (!tagwidget.hasChanges()) {
             form.owner.down('button[action=save]').setDisabled(true);
             form.owner.down('button[action=discard]').setDisabled(true);
             //Only enable children if the form was not readOnly
