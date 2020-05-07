@@ -13,10 +13,6 @@ Ext.define('Lada.controller.form.Messung', {
     extend: 'Ext.app.Controller',
     requires: ['Lada.view.window.SetStatus'],
 
-    dirtyTags: false,
-
-    dirtyMessungForm: false,
-
     /**
      * Initialize the Controller
      * It has 3 listeners
@@ -152,10 +148,10 @@ Ext.define('Lada.controller.form.Messung', {
      * Only disables buttons if form is not dirty, too.
      */
     dirtyTags: function(form, dirty) {
-        this.dirtyTags = dirty;
+        var dirtyMessungForm = form.owner.isDirty();
         if (dirty) {
             this.enableButtons(form);
-        } else if(this.dirtyMessungForm == false) {
+        } else if (dirtyMessungForm === false) {
             this.disableButtons(form);
         }
     },
@@ -243,11 +239,16 @@ Ext.define('Lada.controller.form.Messung', {
       * flag, the function calls the embedding windows enableChilren() function
       */
     dirtyForm: function(form, dirty) {
+        var tagwidget = form.owner.down('tagwidget');
+        if (!tagwidget) {
+            Ext.log({msg: 'Unable to get messung tag widget', lvl: 'warn'});
+            return;
+        }
         if (dirty) {
             form.owner.down('button[action=save]').setDisabled(false);
             form.owner.down('button[action=discard]').setDisabled(false);
             form.owner.up('window').disableChildren();
-        } else {
+        } else if (!tagwidget.hasChanges()) {
             form.owner.down('button[action=save]').setDisabled(true);
             form.owner.down('button[action=discard]').setDisabled(true);
             //Only enable children if the form was not readOnly
