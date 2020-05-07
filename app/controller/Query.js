@@ -901,10 +901,6 @@ Ext.define('Lada.controller.Query', {
             }
             rec.set('filterValue', newvalue);
         }
-        var noCheck = box.up('fieldset').down('checkbox[name=' + box.name + '_filterIsNull]');
-        if (noCheck) {
-            noCheck.setValue(false);
-        }
         this.dataChanged();
     },
 
@@ -930,8 +926,10 @@ Ext.define('Lada.controller.Query', {
             if (model === 'filterIsNull' && checkbox.getValue() === true) {
                 var field = checkbox.up('querypanel').down('[name=' + dataIndex + ']');
                 if (field.clearValue) {
+                    //Löschen eines Wertes in einer Combobox
                     field.clearValue();
                 } else {
+                    //Da gehts rein wenn keine Combobox
                     field.setValue(null);
                 }
             }
