@@ -210,5 +210,5 @@ Ext.define('Lada.view.window.TagEdit', {
                 });
             }
         }
-    },
+    }
 });
