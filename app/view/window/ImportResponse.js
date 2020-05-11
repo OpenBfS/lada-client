@@ -31,6 +31,11 @@ Ext.define('Lada.view.window.ImportResponse', {
      */
     mstEncoding: null,
 
+    /**
+     * Json object containing import response
+     */
+    response: null,
+
     layout: 'fit',
     resizable: true,
 
@@ -72,9 +77,6 @@ Ext.define('Lada.view.window.ImportResponse', {
             scrollable: true,
             margin: '10 0 15 10',
             border: false
-        }, {
-            xtype: 'progressbar',
-            margin: '10 0 20 0'
         }];
 
         me.buttons = [{
@@ -93,37 +95,25 @@ Ext.define('Lada.view.window.ImportResponse', {
             }
         }];
         this.callParent(arguments);
+        this.initContent(this.response.data);
     },
 
     /**
-     * Update the result window after a file has been successfully uploaded.
-     * Updates the result text and the progress bar.
-     * @param responseData Responsedata of the upload
-     * @param fileIndex Index of the file in the name array
+     * Init window content to display file import results
+     * @param data Response data containing warnings and errors
      */
-    updateOnSuccess: function(responseData, fileIndex) {
+    initContent: function(data) {
         var i18n = Lada.getApplication().bundle;
         var me = this;
-        var data;
-        try {
-            data = Ext.decode(responseData);
-        } catch (e) {
-            data = null;
-        }
-        Ext.Array.each(data.data.probeIds, function(item) {
-            me.importedProbeIds.push(item);
+
+        Ext.Object.each(data, function(fileName, fileResult) {
+            var response = '<br/><hr><b>' + fileName + ':</b><br/><ol>&#40' + me.mstEncoding + '&#41</ol>';
+            response += i18n.getMsg('import.messages') + ':<br/><hr>';
+            response += me.parseResponse(fileResult, true);
+            me.download += response;
+            me.down('panel').setHtml(me.down('panel').html + response);
+    
         });
-        this.finished++;
-        this.down('progressbar').updateProgress(this.finished/this.fileCount);
-        var filename = this.fileNames[fileIndex];
-        this.down('progressbar').updateProgress(this.finished/this.fileCount);
-        var filename = this.fileNames[fileIndex];
-        var tag = data.data.tag ? '<ol>Tag: ' + data.data.tag + '</ol>': '';
-        var response = '<br/><hr><b>' + filename + ':</b><br/>' + tag + '<ol>&#40' + this.mstEncoding + '&#41</ol>';
-        response += i18n.getMsg('import.messages') + ':<br/><hr>';
-        response += this.parseResponse(data, true);
-        this.download += response;
-        this.down('panel').setHtml(this.down('panel').html + response);
         me.down('button[name=download]').enable();
     },
 
@@ -155,8 +145,8 @@ Ext.define('Lada.view.window.ImportResponse', {
      */
     parseShortResponse: function(data) {
         var i18n = Lada.getApplication().bundle;
-        var errors = data.data.errors;
-        var warnings = data.data.warnings;
+        var errors = data.errors;
+        var warnings = data.warnings;
         var out = [];
         // There is a entry for each imported proben in the errors dict (might be
         // empty)
@@ -219,8 +209,8 @@ Ext.define('Lada.view.window.ImportResponse', {
      */
     parseResponse: function(data, divHtml) {
         var i18n = Lada.getApplication().bundle;
-        var errors = data.data.errors;
-        var warnings = data.data.warnings;
+        var errors = data.errors;
+        var warnings = data.warnings;
         var out = [];
         // There is a entry for each imported proben in the errors dict (might be
         // empty)
