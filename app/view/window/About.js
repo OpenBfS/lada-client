@@ -14,6 +14,7 @@ Ext.define('Lada.view.window.About', {
 
     layout: 'fit',
     constrain: true,
+    modal: true,
 
     /**
      * This function initialises the Window
