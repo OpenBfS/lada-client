@@ -1004,6 +1004,8 @@ Ext.define('Lada.view.window.GridExport', {
             case 'probeId':
             case 'messungId':
             case 'ortId':
+                return value;
+                break;
             case 'statuskombi':
                 var store = Ext.data.StoreManager.get('statuskombi');
                      var record = store.getById(value);
