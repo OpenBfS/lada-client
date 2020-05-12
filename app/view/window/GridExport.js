@@ -834,7 +834,11 @@ Ext.define('Lada.view.window.GridExport', {
      * Saves the resulting data
      */
     exportFile: function(data, encoding, filename) {
-        var blob = new Blob(["\ufeff",data], encoding);
+        if (filename.split('.').pop() === 'csv') {
+            var blob = new Blob(["\uFEFF",data], encoding);
+        } else {
+            var blob = new Blob([data], encoding);
+        }
         saveAs(blob, filename, true);
         this.close();
     },
