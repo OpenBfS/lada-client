@@ -71,7 +71,11 @@ Ext.define('Lada.view.window.FileUpload', {
                         }
                         fset.setTitle(i18n.getMsg('import.filesSelected', files.length));
                         node.value = fileNames;
-                        field.up('window').down('button[name=save]').setDisabled(false);
+                        if ( (field.up('window').down('combobox[name=mst]').isValid()) && (files.length !== 0) ) {
+                            field.up('window').down('button[name=save]').setDisabled(false);
+                        } else {
+                            field.up('window').down('button[name=save]').setDisabled(true);
+                        }
                     }
                 }
             }),
@@ -114,13 +118,27 @@ Ext.define('Lada.view.window.FileUpload', {
                 displayField: 'messStelle',
                 valueField: 'id',
                 fieldLabel: i18n.getMsg('vorbelegung'),
-                allowBlank: true,
+                allowBlank: false,
                 matchFieldWidth: false,
                 triggers: {
                     clear: {
                         cls: 'x-form-clear-trigger',
                         handler: function() {
+                            this.up('window').down('button[name=save]').setDisabled(true);
                             this.clearValue();
+                        }
+                    }
+                },
+                listeners: {
+                    afterrender: function(combo) {
+                        if (combo.getStore().getCount() === 1) {
+                            var recordSelected = combo.getStore().getAt(0);
+                            combo.setValue(recordSelected);
+                        }
+                    },
+                    select: function(combo) {
+                        if (combo.up('window').down('filefield').isValid()) {
+                            combo.up('window').down('button[name=save]').setDisabled(false);
                         }
                     }
                 }
@@ -166,8 +184,8 @@ Ext.define('Lada.view.window.FileUpload', {
         var fileInput = win.down('filefield');
         var files = fileInput.fileInputEl.dom.files;
         var readers = new Array(files.length);
-        if (!files) {
-            //TODO error handling
+        if (readers.length === 0) {
+            win.setLoading(false);
             return;
         }
         win.files = files;
