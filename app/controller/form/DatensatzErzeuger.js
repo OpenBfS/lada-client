@@ -20,8 +20,17 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
             'datensatzerzeugerform button[action=discard]': {
                 click: this.discard
             },
-            'datensatzerzeugerform': {
-                dirtychange: this.checkCommitEnabled
+            'datensatzerzeugerform [name="datensatzErzeugerId"]': {
+                change: this.checkCommitEnabled
+            },
+            'datensatzerzeugerform [name="bezeichnung"]': {
+                change: this.checkCommitEnabled
+            },
+            'datensatzerzeugerform [name="mstId"]': {
+                change: this.checkCommitEnabled
+            },
+            'datensatzerzeugerform [name="netzbetreiberId"]': {
+                change: this.checkCommitEnabled
             }
         });
     },
@@ -93,27 +102,41 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
+        formPanel.getForm().isValid();
         formPanel.up('datensatzerzeugeredit').down(
             'button[action=discard]').setDisabled(true);
         formPanel.up('datensatzerzeugeredit').down(
             'button[action=save]').setDisabled(true);
     },
 
-    checkCommitEnabled: function(callingEl, dirty) {
-        var form = callingEl.owner;
-        var netzbetr = form.down('netzbetreiber').getValue();
-        if (Ext.Array.contains(Lada.funktionen, 4)
-        && !form.getRecord().get('readonly')
-        && netzbetr && dirty) {
-            form.down('button[action=discard]').enable();
-            if (form.isValid()) {
-                form.down('button[action=save]').enable();
-            } else {
-                form.down('button[action=save]').disable();
-            }
+    checkCommitEnabled: function(callingEl) {
+        var panel;
+        if (callingEl.up) { //called by a field in the form
+            panel = callingEl.up('datensatzerzeugerform');
+        } else { //called by the form
+            panel = callingEl.owner;
+        }
+
+        if (panel.getRecord().get('readonly')  )  {
+            panel.down('button[action=save]').setDisabled(true);
+            panel.down('button[action=discard]').setDisabled(true);
         } else {
-            form.down('button[action=discard]').disable();
-            form.down('button[action=save]').disable();
+            if ( panel.isValid() && panel.down('netzbetreiber').getValue().length > 0 ) {
+                if (panel.isDirty()) {
+                    panel.down('button[action=discard]').setDisabled(false);
+                    panel.down('button[action=save]').setDisabled(false);
+                } else {
+                    panel.down('button[action=discard]').setDisabled(true);
+                    panel.down('button[action=save]').setDisabled(true);
+                }
+            } else {
+                panel.down('button[action=save]').setDisabled(true);
+                if ( panel.getRecord().phantom === true && !panel.isDirty() ) {
+                    panel.down('button[action=discard]').setDisabled(true);
+                } else {
+                    panel.down('button[action=discard]').setDisabled(false);
+                }
+            }
         }
     }
 });

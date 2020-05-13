@@ -60,7 +60,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                 align: 'stretch',
                 margin: 5,
                 defaults: {
-                    labelWidth: 120,
+                    labelWidth: 135,
                     margin: '0 0 5 0',
                     minWidth: 350
                 },
@@ -80,11 +80,13 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                     allowBlank: false,
                     queryMode: 'local',
                     name: 'mstId',
+                    matchFieldWidth: false,
                     fieldLabel: i18n.getMsg('mst_id')
                 }, {
                     xtype: 'tfield',
                     name: 'datensatzErzeugerId',
                     readOnly: true,
+                    allowBlank: false,
                     fieldLabel: i18n.getMsg('daErzeugerId'),
                     maxLength: 2
                 }, {
@@ -108,6 +110,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                 this.down('netzbetreiber').setReadOnly(true);
             }
         }
+        this.isValid();
     },
 
     setRecord: function(datensatzerzeugerRecord) {
