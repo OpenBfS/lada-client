@@ -899,7 +899,11 @@ Ext.define('Lada.controller.Query', {
             if (newvalue && Array.isArray(newvalue)) {
                 newvalue = newvalue.join(',');
             }
-            rec.set('filterValue', newvalue);
+            if (newvalue === '') {
+                rec.set('filterValue', null);
+            } else {
+                rec.set('filterValue', newvalue);
+            }
         }
         this.dataChanged();
     },
@@ -908,7 +912,11 @@ Ext.define('Lada.controller.Query', {
         var store = box.up('querypanel').gridColumnValueStore;
         var rec = store.findRecord('dataIndex', widget.name, false, false,
             false, true);
-        rec.set('filterValue', widget.getValue());
+        if (widget.getValue() === '') {
+            rec.set('filterValue', null);
+        } else {
+            rec.set('filterValue', widget.getValue());
+        }
     },
 
     /**
