@@ -12,7 +12,7 @@
 Ext.define('Lada.view.widget.Verwaltungseinheit', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.verwaltungseinheit',
-    store: 'null',
+    store: null,
     displayField: 'bezeichnung',
     valueField: 'id',
     hideTrigger: true,
@@ -32,8 +32,8 @@ Ext.define('Lada.view.widget.Verwaltungseinheit', {
     forceSelection: this.forceSelection || false,
 
     initComponent: function() {
-        var i18n= Lada.getApplication().bundle;
-        this.emptyText= i18n.getMsg('emptytext.verwaltungseinheit');
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.verwaltungseinheit');
         if (!this.store) {
             //If no store is provided, create one to prevent side effects
             this.store = Ext.create('Lada.store.Verwaltungseinheiten');
