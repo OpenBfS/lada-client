@@ -956,7 +956,8 @@ Ext.define('Lada.controller.Query', {
         var result = {
             dataType: null,
             dataIndex: null,
-            idx: rowHierarchy.length + 1
+            idx: rowHierarchy.length + 1,
+            probeIdentifier: null // used to check if a grid contains a probe
         };
         var cs = Ext.data.StoreManager.get('columnstore');
         cs.clearFilter();
@@ -967,24 +968,27 @@ Ext.define('Lada.controller.Query', {
         });
         var csdata = cs.getData().items;
         for (var i=0; i < csdata.length; i++ ) {
+            if (csdata[i].get('dataType').name === 'probeId') {
+                result.probeIdentifier = csdata[i].get('dataIndex');
+            }
             var idx = rowHierarchy.indexOf(csdata[i].get('dataType').name);
             if (idx > -1 && idx < result.idx) {
-                result = {
-                    dataType: csdata[i].get('dataType').name,
-                    dataIndex: csdata[i].get('dataIndex'),
-                    idx: idx
-                };
+                result.dataType = csdata[i].get('dataType').name;
+                result.dataIndex = csdata[i].get('dataIndex');
+                result.idx = idx;
             }
         }
         if (result.idx < rowHierarchy.length + 2) {
             return {
                 dataType: result.dataType,
-                dataIndex: result.dataIndex
+                dataIndex: result.dataIndex,
+                probeIdentifier: result.probeIdentifier || null
             };
         } else {
             return {
                 dataType: null,
-                dataIndex: null
+                dataIndex: null,
+                probeIdentifier: null
             };
         }
     },
