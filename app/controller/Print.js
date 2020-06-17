@@ -181,7 +181,7 @@ Ext.define('Lada.controller.Print', {
         try {
             fields = recursiveFields(capabilitiesForLayout.attributes);
         } catch (e) {
-            if (e === 'erfassungsbogen') {
+            if (e === 'lada_erfassungsbogen') {
                 fields = null;
             } else {
                 throw new Error('unknown template');
@@ -648,7 +648,12 @@ Ext.define('Lada.controller.Print', {
         var selection = grid.getView().getSelectionModel().getSelection();
         var ids = [];
         for (var item in selection) {
-            ids.push(selection[item].get(grid.rowtarget.dataIndex));
+            var probeId = selection[item].get(grid.rowtarget.probeIdentifier);
+
+            // avoids printing more than one sheet per probe
+            if (ids.indexOf(probeId < 0)) {
+                ids.push(probeId);
+            }
         }
         //basically, thats the same as the downloadFile
         // code does.
@@ -679,9 +684,18 @@ Ext.define('Lada.controller.Print', {
                 if (response.responseText) {
                     var json = Ext.decode(response.responseText);
                     // TODO filter by availableTemplates for this query
+
                     if (Array.isArray(json)) {
                         for (var i=0; i < json.length; i++) {
-                            data.push({name: json[i]});
+                            if (json[i] !== 'lada_erfassungsbogen') {
+                                data.push({name: json[i]});
+                            } else if (
+                                window.parentGrid.rowtarget.probeIdentifier
+                            ) {
+                            // special handling for "lada_erfassungsbogen":
+                            // only usable if we have some non-null probe identifier
+                                data.push({name: json[i]});
+                            }
                         }
                     }
                 }
