@@ -203,12 +203,12 @@ Ext.define('Lada.view.form.Messung', {
                             var win = Ext.create('Lada.view.window.TagCreate', {
                                 tagWidget: me.down('tagwidget'),
                                 messung: button.up('messungform').getForm().getRecord().get('id'),
-                                recordType: "messung"
+                                recordType: 'messung'
                             });
                             //Close window if parent window is closed
                             button.up('messungedit').on('close', function() {
                                 win.close();
-                            })
+                            });
                             win.show();
                         }
                     }]
@@ -225,7 +225,7 @@ Ext.define('Lada.view.form.Messung', {
         form.loadRecord(record);
         if (record.getId()) {
             me.down('statuskombi').setValue(
-                    record.get('status'),false, record.get('statusEdit'));
+                    record.get('status'), false, record.get('statusEdit'));
         } else {
             //remove the Statuskombi field from the form
             me.down('statuskombi').hide();
@@ -248,7 +248,7 @@ Ext.define('Lada.view.form.Messung', {
                     }
                 });
             },
-            failure: function(proberecord) {
+            failure: function() {
                 //TODO: handle failure
             }
         });

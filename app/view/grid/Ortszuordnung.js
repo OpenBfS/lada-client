@@ -304,6 +304,14 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
 
     reiHandling: function(value) {
         if (!this.isMessprogramm) {
+            if (!this.up('probenedit')) {
+                Ext.log({msg: 'Can not find parent window', level: 'warn'});
+                return;
+            }
+            if (!this.up('probenedit').record) {
+                Ext.log({msg: 'Can not find parent record', level: 'warn'});
+                return;
+            }
             var readonly = this.up('probenedit').record.get('readonly');
             var dbId = this.up('probenedit').record.get('datenbasisId');
             var dbStore = Ext.data.StoreManager.get('datenbasis');

@@ -11,13 +11,26 @@
 /**
  * Base window class which overrides show and close functions to use the WindowTracker functions.
  * Overwrite recordType to make use of the tracking.
+ * If the record used in the window is not loaded yet, the recordId attribute must be set as windows with
+ * neither record nor id will be considered as windows with new records.
  */
 Ext.define('Lada.view.window.TrackedWindow', {
     extend: 'Ext.window.Window',
 
     record: null,
 
+    recordId: null,
+
     recordType: null,
+
+    /**
+     * Set the new record
+     * @param {Ext.data.Model} record The new record
+     */
+    setRecord: function(record) {
+        this.record = record;
+        this.recordId = record.get('id');
+    },
 
     /**
      * Checks if a window for the current record is already open.
@@ -26,16 +39,17 @@ Ext.define('Lada.view.window.TrackedWindow', {
      * @return True if window will be shown, else false
      */
     show: function() {
-        if (!this.record.get('id')) {
+        var id = this.record? this.record.get('id'): this.recordId;
+        if (!id) {
             //This is a new record
             this.callParent();
             return true;
         }
-        if (Lada.util.WindowTracker.isOpen(this.recordType, this.record.get('id'))) {
-            Lada.util.WindowTracker.focus(this.recordType, this.record.get('id'));
+        if (Lada.util.WindowTracker.isOpen(this.recordType, id)) {
+            Lada.util.WindowTracker.focus(this.recordType, id);
             return false;
         } else {
-            Lada.util.WindowTracker.open(this.recordType, this.record.get('id'), this);
+            Lada.util.WindowTracker.open(this.recordType, id, this);
             this.callParent();
             return true;
         }
@@ -43,7 +57,8 @@ Ext.define('Lada.view.window.TrackedWindow', {
 
 
     close: function() {
-        Lada.util.WindowTracker.close(this.recordType, this.record.get('id'), this);
+        var id = this.record? this.record.get('id'): this.recordId;
+        Lada.util.WindowTracker.close(this.recordType, id, this);
         this.callParent();
     }
 });

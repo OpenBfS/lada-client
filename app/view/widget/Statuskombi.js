@@ -72,10 +72,16 @@ Ext.define('Lada.view.widget.Statuskombi', {
                     statusStufe: kombi.get('statusStufe'),
                     statusWert: kombi.get('statusWert')
                 };
-                var textfield = me.down('textfield');
-                if (textfield) {
-                    textfield.setEmptyText(text);
+                //Try updating the view
+                try {
+                    var textfield = me.down('textfield');
+                    if (textfield) {
+                        textfield.setEmptyText(text);
+                    }
+                } catch (e) {
+                    Ext.log({msg: 'Updating status kombi field failed: ' + e, level: 'warn'});
                 }
+
             }
         });
         // instead of overwriting/appending initComponent, add the button at loading of values

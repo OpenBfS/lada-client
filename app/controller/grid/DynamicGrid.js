@@ -125,12 +125,20 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 Lada.model.Messung.load(id, {
                     scope: row,
                     callback: function(record, operation, success) {
+                        if (!record || !operation) {
+                            Ext.log({msg: 'Loading messung record failed', level: 'warn'});
+                            return;
+                        }
                         if (success) {
                             var messungRecord = record;
                             Lada.model.Probe.load(
                                 messungRecord.get('probeId'), {
                                     scope: this,
                                     callback: function(precord, poperation, psuccess) {
+                                        if (!precord || !poperation || !poperation.getResponse()) {
+                                            Ext.log({msg: 'Loading probe record failed', level: 'warn'});
+                                            return;
+                                        }
                                         var probeWin = Ext.create(
                                             'Lada.view.window.ProbeEdit', {
                                                 record: precord,
@@ -155,28 +163,31 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                         win.setMessages(json.errors, json.warnings);
                                         win.setPosition(35 + probeWin.width);
                                     }
-                                });
+                                }
+                            );
                         }
                     }
                 });
                 break;
             case 'probeId':
-                Lada.model.Probe.load(id, {
-                    scope: row,
-                    callback: function(record, operation, success) {
-                        if (success) {
-                            var win = Ext.create('Lada.view.window.ProbeEdit', {
-                                record: record,
-                                style: 'z-index: -1;'
-                            });
-                            win.initData(record);
-                            win.show();
-                            var json = operation ? Ext.decode(operation.getResponse().responseText) : null;
-                            win.setMessages(json.errors, json.warnings);
-                            win.setPosition(30);
-                        }
-                    }
+                var win = Ext.create('Lada.view.window.ProbeEdit', {
+                    style: 'z-index: -1;',
+                    recordId: id
                 });
+                if (win.show()) {
+                    win.setPosition(30);
+                    Lada.model.Probe.load(id, {
+                        scope: row,
+                        callback: function(record, operation, success) {
+                            if (success) {
+                                win.setRecord(record);
+                                win.initData(record);
+                                var json = operation ? Ext.decode(operation.getResponse().responseText) : null;
+                                win.setMessages(json.errors, json.warnings);
+                            }
+                        }
+                    });    
+                }
                 break;
             case 'mpId':
                 Lada.model.Messprogramm.load(id, {

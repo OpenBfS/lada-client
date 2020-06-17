@@ -671,7 +671,12 @@ Ext.define('Lada.view.form.Probe', {
                 Lada.view.form.Probe.mediaSnScheduler.finished();
                 return;
             }
-            cbox.select(cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
+            try {
+                cbox.select(cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
+            } catch (e) {
+                Ext.log({msg: 'Selecting media failed: ' + e, level: 'warn'});
+                return;
+            }
             var mediatext = cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10));
             if (mediatext !== null) {
                 if ( (ndx <= 3) && (media[1] === '01') && (mediatext.data.beschreibung !== 'leer') ) {

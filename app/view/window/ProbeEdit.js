@@ -34,18 +34,21 @@ Ext.define('Lada.view.window.ProbeEdit', {
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        if (this.record === null) {
-            Ext.Msg.alert(i18n.getMsg('err.msg.invalidprobe'));
-            this.callParent(arguments);
-            return;
-        }
         this.buttons = [{
             text: i18n.getMsg('close'),
             scope: this,
             handler: this.handleBeforeClose
         }];
         this.width = 700;
+        this.height = Ext.getBody().getViewSize().height - 30;
 
+        //Create a placeholder panel to show a loading mask until data is loaded
+        this.items = [{
+            layout: 'fit',
+            name: 'placeholder',
+            height: '100%',
+            width: '100%'
+        }];
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
@@ -60,64 +63,10 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }
         });
 
-        this.height = Ext.getBody().getViewSize().height - 30;
         // InitialConfig is the config object passed to the constructor on
         // creation of this window. We need to pass it throuh to the form as
         // we need the "modelId" param to load the correct item.
-        this.items = [{
-            border: false,
-            autoScroll: true,
-            items: [{
-                xtype: 'probeform',
-                recordId: this.record.get('id')
-            }, {
-                xtype: 'fset',
-                name: 'orte',
-                title: i18n.getMsg('title.ortsangabe'),
-                padding: '5, 5',
-                margin: 5,
-                items: [{
-                    xtype: 'ortszuordnunggrid',
-                    recordId: this.record.get('id')
-                }]
-            }, {
-                xtype: 'fset',
-                name: 'messungen',
-                title: i18n.getMsg('title.messungen'),
-                padding: '5, 5',
-                margin: 5,
-                collapsible: false,
-                collapsed: false,
-                items: [{
-                    xtype: 'messunggrid',
-                    recordId: this.record.get('id')
-                }]
-            }, {
-                xtype: 'fset',
-                name: 'probenzusatzwerte',
-                title: i18n.getMsg('title.zusatzwerte'),
-                padding: '5, 5',
-                margin: 5,
-                collapsible: true,
-                collapsed: false,
-                items: [{
-                    xtype: 'probenzusatzwertgrid',
-                    recordId: this.record.get('id')
-                }]
-            }, {
-                xtype: 'fset',
-                name: 'pkommentare',
-                title: i18n.getMsg('title.kommentare'),
-                padding: '5, 5',
-                margin: 5,
-                collapsible: true,
-                collapsed: false,
-                items: [{
-                    xtype: 'pkommentargrid',
-                    recordId: this.record.get('id')
-                }]
-            }]
-        }];
+
         this.tools = [{
             type: 'help',
             tooltip: i18n.getMsg('help.qtip'),
@@ -138,7 +87,91 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 }
             }
         }];
+        if (this.record) {
+            this.recordId = this.record.get('id');
+        }
         this.callParent(arguments);
+    },
+
+    /**
+     * Initialize ui elements and replace placeholder panel
+     */
+    initializeUI: function() {
+        var i18n = Lada.getApplication().bundle;
+        this.removeAll();
+
+        if (this.record === null) {
+            Ext.Msg.alert(i18n.getMsg('err.msg.invalidprobe'));
+            this.callParent(arguments);
+            return;
+        }
+
+        this.add([{
+            border: false,
+            autoScroll: true,
+            items: [{
+                xtype: 'probeform',
+                recordId: this.recordId
+            }, {
+                xtype: 'fset',
+                name: 'orte',
+                title: i18n.getMsg('title.ortsangabe'),
+                padding: '5, 5',
+                margin: 5,
+                items: [{
+                    xtype: 'ortszuordnunggrid',
+                    recordId: this.recordId
+                }]
+            }, {
+                xtype: 'fset',
+                name: 'messungen',
+                title: i18n.getMsg('title.messungen'),
+                padding: '5, 5',
+                margin: 5,
+                collapsible: false,
+                collapsed: false,
+                items: [{
+                    xtype: 'messunggrid',
+                    recordId: this.recordId
+                }]
+            }, {
+                xtype: 'fset',
+                name: 'probenzusatzwerte',
+                title: i18n.getMsg('title.zusatzwerte'),
+                padding: '5, 5',
+                margin: 5,
+                collapsible: true,
+                collapsed: false,
+                items: [{
+                    xtype: 'probenzusatzwertgrid',
+                    recordId: this.recordId
+                }]
+            }, {
+                xtype: 'fset',
+                name: 'pkommentare',
+                title: i18n.getMsg('title.kommentare'),
+                padding: '5, 5',
+                margin: 5,
+                collapsible: true,
+                collapsed: false,
+                items: [{
+                    xtype: 'pkommentargrid',
+                    recordId: this.recordId
+                }]
+            }]
+        }]);
+    },
+
+    /**
+     * Show the window.
+     * If a placeholder panel is still in place, it is set to loading
+     */
+    show: function() {
+        var returnVal = this.callParent(arguments);
+        if (this.down('container[name=placeholder]')) {
+            this.down('container[name=placeholder]').setLoading(true);
+        }
+        return returnVal;
     },
 
     /**
@@ -157,14 +190,19 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
     /**
       * Initialise the Data of this Window
-      * @param loadedRecord if given, it is assumed that this is a freshly
+      * @param {Object}loadedRecord if given, it is assumed that this is a freshly
       * loaded record, not requiring a reload from server
       */
     initData: function(loadedRecord) {
-        this.setLoading(true);
+        if (this.down('container[name=placeholder]')) {
+            this.down('container[name=placeholder]').setLoading(true);
+        } else {
+            this.setLoading(true);
+        }
         this.clearMessages();
         var me = this;
         var loadCallBack = function(record, response) {
+            me.initializeUI();
             me.record = record;
             me.down('probeform').setRecord(record);
             var owner = record.get('owner');
@@ -356,7 +394,11 @@ Ext.define('Lada.view.window.ProbeEdit', {
      * Instructs the fields / forms listed in this method to clear their messages.
      */
     clearMessages: function() {
-        this.down('probeform').clearMessages();
-        this.down('fset[name=orte]').clearMessages();
+        var probeform = this.down('probeform');
+        var orteset = this.down('fset[name=orte]');
+        if (probeform && orteset) {
+            this.down('probeform').clearMessages();
+            this.down('fset[name=orte]').clearMessages();
+        }
     }
 });

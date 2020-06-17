@@ -41,7 +41,11 @@ Ext.define('Lada.view.widget.Deskriptor', {
                 !this.proxy.extraParams.parents) {
                 this.removeAll();
             }
-            me.down('combobox').setStore(this);
+            try {
+                me.down('combobox').setStore(this);
+            } catch (e) {
+                Ext.log({msg: 'Initializing deskriptor widget failed: ' + e, level: 'warn'});
+            }
         }, this.store);
 
         this.callParent(arguments);

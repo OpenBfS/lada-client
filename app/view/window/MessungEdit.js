@@ -39,26 +39,6 @@ Ext.define('Lada.view.window.MessungEdit', {
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        if (this.record === null) {
-            Ext.Msg.alert(i18n.getMsg('err.msg.messung.noselect'));
-            this.callParent(arguments);
-            return;
-        }
-        if (this.probe === null) {
-            Ext.Msg.alert(i18n.getMsg('err.msg.messung.noprobe'));
-            this.callParent(arguments);
-            return;
-        }
-
-        //Clone proxy instance as it seems to be shared between store instances
-        var store = Ext.create('Lada.store.Messgroessen');
-        var proxy = Ext.clone(store.getProxy());
-        proxy.extraParams = {};
-        store.setProxy(proxy);
-        this.mStore = store;
-
-        this.mStore.proxy.extraParams = {mmtId: this.record.get('mmtId')};
-        this.mStore.load();
 
         this.buttons = [{
             text: i18n.getMsg('close'),
@@ -82,7 +62,68 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.width = 700;
         this.height = Ext.getBody().getViewSize().height - 30;
 
+        //Create a placeholder panel to show a loading mask until data is loaded
         this.items = [{
+            layout: 'fit',
+            name: 'placeholder',
+            height: '100%',
+            width: '100%'
+        }];
+
+        this.tools = [{
+            type: 'help',
+            tooltip: i18n.getMsg('help.qtip'),
+            titlePosition: 0,
+            callback: function() {
+                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                if (!imprintWin) {
+                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin.on('afterlayout', function() {
+                        var imprintWinController = this.getController();
+                        imprintWinController.setTopic('messung');
+                    }, imprintWin, {single: true});
+                } else {
+                    // BasiGX.util.Animate.shake(imprintWin);
+                    var imprintWinController = imprintWin.getController();
+                    imprintWinController.shake(imprintWin);
+                    imprintWinController.setTopic('messung');
+                }
+            }
+        }];
+        if (this.record) {
+            this.recordId = this.record.get('id');
+        }
+        this.callParent(arguments);
+    },
+
+    /**
+     * Initialize ui elements and replace placeholder panel
+     */
+    intializeUI: function() {
+        var i18n = Lada.getApplication().bundle;
+
+        if (this.record === null) {
+            Ext.Msg.alert(i18n.getMsg('err.msg.messung.noselect'));
+            this.callParent(arguments);
+            return;
+        }
+        if (this.probe === null) {
+            Ext.Msg.alert(i18n.getMsg('err.msg.messung.noprobe'));
+            this.callParent(arguments);
+            return;
+        }
+
+        //Clone proxy instance as it seems to be shared between store instances
+        var store = Ext.create('Lada.store.Messgroessen');
+        var proxy = Ext.clone(store.getProxy());
+        proxy.extraParams = {};
+        store.setProxy(proxy);
+        this.mStore = store;
+        this.mStore.proxy.extraParams = {mmtId: this.record.get('mmtId')};
+        this.mStore.load();
+
+        this.removeAll();
+        this.add([{
             border: false,
             autoScroll: true,
             items: [{
@@ -123,29 +164,19 @@ Ext.define('Lada.view.window.MessungEdit', {
                     recordId: this.record.get('id')
                 }]
             }]
-        }];
-        this.tools = [{
-            type: 'help',
-            tooltip: i18n.getMsg('help.qtip'),
-            titlePosition: 0,
-            callback: function() {
-                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
-                if (!imprintWin) {
-                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
-                    imprintWin.on('afterlayout', function() {
-                        var imprintWinController = this.getController();
-                        console.log(imprintWinController);
-                        imprintWinController.setTopic('messung');
-                    }, imprintWin, {single: true});
-                } else {
-                    // BasiGX.util.Animate.shake(imprintWin);
-                    var imprintWinController = imprintWin.getController();
-                    imprintWinController.shake(imprintWin);
-                    imprintWinController.setTopic('messung');
-                }
-            }
-        }];
-        this.callParent(arguments);
+        }]);
+    },
+
+    /**
+     * Show the window.
+     * If a placeholder panel is still in place, it is set to loading
+     */
+    show: function() {
+        var returnVal = this.callParent(arguments);
+        if (this.down('container[name=placeholder]')) {
+            this.down('container[name=placeholder]').setLoading(true);
+        }
+        return returnVal;
     },
 
     /**
@@ -157,6 +188,7 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.clearMessages();
         var me = this;
         var loadCallback = function(record, response) {
+            me.intializeUI();
             me.mStore.proxy.extraParams = {mmtId: record.get('mmtId')};
             me.mStore.load();
             if (me.parentWindow && me.parentWindow.record.get('treeModified') < record.get('parentModified')) {
@@ -339,6 +371,14 @@ Ext.define('Lada.view.window.MessungEdit', {
     },
 
     /**
+     * Set the current ProbeRecord
+     * @param {Lada.model.Probe} probeRecord New probe record
+     */
+    setProbe: function(probeRecord) {
+        this.probe = probeRecord;
+    },
+
+    /**
      * Instructs the fields / forms listed in this method to set a message.
      * @param errors These Errors shall be shown
      * @param warnings These Warning shall be shown
@@ -387,8 +427,12 @@ Ext.define('Lada.view.window.MessungEdit', {
      * Instructs the fields / forms listed in this method to clear their messages.
      */
     clearMessages: function() {
-        this.down('messungform').clearMessages();
-        this.down('fset[name=messwerte]').clearMessages();
+        var messungform = this.down('messungform');
+        var messwerteSet = this.down('fset[name=messwerte]');
+        if (messungform && messwerteSet) {
+            messungform.clearMessages();
+            messwerteset.clearMessages();
+        }
     }
 
 });
