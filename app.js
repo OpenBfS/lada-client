@@ -74,6 +74,7 @@ Ext.application({
         'Lada.store.StatusKombi',
         'Lada.store.Probenehmer',
         'Lada.store.DatensatzErzeuger',
+        'Lada.store.DownloadQueue',
         'Lada.store.GenericResults',
         'Lada.store.MessprogrammKategorie',
         'Lada.store.Ktas',
@@ -567,6 +568,9 @@ Ext.application({
         });
         Ext.create('Lada.store.Query', {
             storeId: 'querystore'
+        });
+        Ext.create('Lada.store.DownloadQueue', {
+            storeId: 'downloadqueue'
         });
         Ext.create('Lada.view.Viewport');
         this.initElanScenarios();
