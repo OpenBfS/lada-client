@@ -7,7 +7,6 @@ resources/lib/
 bootstrap.*
 build.xml
 packages
-.sencha
 sencha-error.*
 .idea
 .travis.yml

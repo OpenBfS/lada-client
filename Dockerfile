@@ -17,6 +17,7 @@ FROM httpd:2.4
 MAINTAINER mlechner@bfs.de
 
 ENV DEBIAN_FRONTEND noninteractive
+ENV OPENSSL_CONF /etc/ssl/
 
 #
 # Install required packages
@@ -59,6 +60,7 @@ ADD *.js *.json /usr/local/lada/
 ADD app /usr/local/lada/app
 ADD Koala /usr/local/lada/Koala
 ADD .git /usr/local/lada/.git
+ADD .sencha /usr/local/lada/.sencha
 
 RUN GITINFO="$(git name-rev --name-only HEAD 2>/dev/null) $(git rev-parse --short HEAD 2>/dev/null)"  echo ${GITINFO} i;\
     sed -i -e "/Lada.clientVersion/s/';/${GITINFO}';/" app.js
