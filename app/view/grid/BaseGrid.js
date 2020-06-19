@@ -17,6 +17,9 @@
 Ext.define('Lada.view.grid.BaseGrid', {
     extend: 'Ext.grid.Panel',
     alias: 'basegrid',
+    requires: [
+        'Lada.view.window.ReloadMask'
+    ],
 
     /**
      * @protected
@@ -42,48 +45,11 @@ Ext.define('Lada.view.grid.BaseGrid', {
      * The window contains an error message and a button to reload the grid.
      */
     createReloadMask: function() {
-        var i18n = Lada.getApplication().bundle;
         var me = this;
-        var mask = Ext.create('Ext.window.Window', {
+        var mask = Ext.create('Lada.view.window.ReloadMask', {
             renderTo: this.getId(),
-            resizable: false,
-            border: 0,
-            header: false,
-            frame: false,
-            style: 'padding: 0; border-width: 2px; border-radius: 0px;',
-            layout: 'hbox',
-            items: [{
-                xtype: 'panel',
-                height: '100%',
-                width: 30,
-                layout: {
-                    type: 'hbox',
-                    align: 'center',
-                    pack: 'center'
-                },
-                items: [{
-                    xtype: 'image',
-                    src: 'resources/img/dialog-warning.png',
-                    width: 20,
-                    height: 20
-                }]
-            }, {
-                layout: 'vbox',
-                padding: 5,
-                items: [{
-                    xtype: 'panel',
-                    html: i18n.getMsg('err.msg.grid.loadingfailed'),
-                    padding: 3
-                }, {
-                    xtype: 'button',
-                    text: i18n.getMsg('reload'),
-                    icon: 'resources/img/view-refresh.png',
-                    padding: 3,
-                    handler: function() {
-                        me.reload();
-                    }
-                }]
-            }]
+            reloadButtonHandler: me.reload,
+            reloadButtonHandlerScope: me
         });
         return mask;
     },
