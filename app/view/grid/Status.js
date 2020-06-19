@@ -10,7 +10,7 @@
  * Grid to list Status
  */
 Ext.define('Lada.view.grid.Status', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.statusgrid',
 
     requires: ['Ext.grid.filters.Filters'],
@@ -119,11 +119,25 @@ Ext.define('Lada.view.grid.Status', {
             });
         }
 
+        this.addLoadingFailureHandler(this.store);
+
         this.store.load({
             params: {
                 messungsId: this.recordId
             }
         });
+    },
+
+    /**
+     * Reload this grid
+     */
+    reload: function() {
+        if (!this.store) {
+            this.initData();
+            return;
+        }
+        this.hideReloadMask();
+        this.store.reload();
     }
 
 });

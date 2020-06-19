@@ -10,7 +10,7 @@
  * Grid to list Probenzusatzwerte
  */
 Ext.define('Lada.view.grid.Probenzusatzwert', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.probenzusatzwertgrid',
     requires: [
         'Lada.view.form.ExpNumberField',
@@ -177,11 +177,24 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
 
     initData: function() {
         this.store = Ext.create('Lada.store.Zusatzwerte');
+        this.addLoadingFailureHandler(this.store);
         this.store.load({
             params: {
                 probeId: this.recordId
             }
         });
+    },
+
+    /**
+     * Reload the grid
+     */
+    reload: function() {
+        if (!this.store) {
+            this.initData();
+            return;
+        }
+        this.hideReloadMask();
+        this.store.reload();
     },
 
     setReadOnly: function(b) {

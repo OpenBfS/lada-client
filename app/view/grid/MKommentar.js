@@ -10,7 +10,7 @@
  * Grid to list Kommentare for Messunge
  */
 Ext.define('Lada.view.grid.MKommentar', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.mkommentargrid',
 
     maxHeight: 350,
@@ -125,11 +125,23 @@ Ext.define('Lada.view.grid.MKommentar', {
         } else {
             this.store = Ext.create('Lada.store.MKommentare');
         }
+        this.addLoadingFailureHandler(this.store);
         this.store.load({
             params: {
                 messungsId: this.recordId
             }
         });
+    },
+
+    /**
+     * Reload the grid
+     */
+    reload: function() {
+        if (!this.store) {
+            this.initData();
+        }
+        this.hideReloadMask();
+        this.store.reload();
     },
 
     setReadOnly: function(b) {

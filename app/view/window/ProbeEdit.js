@@ -168,8 +168,9 @@ Ext.define('Lada.view.window.ProbeEdit', {
      */
     show: function() {
         var returnVal = this.callParent(arguments);
-        if (this.down('container[name=placeholder]')) {
-            this.down('container[name=placeholder]').setLoading(true);
+        var placeholder = this.down('container[name=placeholder]');
+        if (placeholder) {
+            placeholder.setLoading(true);
         }
         return returnVal;
     },

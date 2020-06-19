@@ -10,7 +10,7 @@
  * Grid to list Ortszuordnungen
  */
 Ext.define('Lada.view.grid.Ortszuordnung', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.ortszuordnunggrid',
 
     maxHeight: 350,
@@ -244,6 +244,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         if (this.isMessprogramm) {
             this.store = Ext.create('Lada.store.OrtszuordnungMp');
             if (this.recordId) {
+                this.addLoadingFailureHandler(this.store);
                 this.store.load({
                     params: {
                         messprogrammId: this.recordId
@@ -255,6 +256,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         } else {
             modelname = 'Lada.model.Probe';
             this.store = Ext.create('Lada.store.Ortszuordnung');
+            this.addLoadingFailureHandler(this.store);
             this.store.load({
                 params: {
                     probeId: this.recordId
@@ -264,6 +266,18 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 }
             });
         }
+    },
+
+    /**
+     * Reload the grid
+     */
+    reload: function() {
+        if (!this.store) {
+            this.initData();
+            return;
+        }
+        this.hideReloadMask();
+        this.store.reload();
     },
 
     /**

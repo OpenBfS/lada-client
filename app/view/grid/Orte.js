@@ -10,7 +10,7 @@
  * Grid to list Orte Stammdaten
  */
 Ext.define('Lada.view.grid.Orte', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.ortstammdatengrid',
 
     requires: [
@@ -345,7 +345,9 @@ Ext.define('Lada.view.grid.Orte', {
         var me = this;
 
         if (store) {
+            this.store = store;
             this.reconfigure(store);
+            this.addLoadingFailureHandler(store);
             store.on('load', function(loadedStore) {
                 if (me.up('tabpanel')) {
                     me.setTitle('Orte(' + loadedStore.getCount() + ')');
@@ -361,6 +363,18 @@ Ext.define('Lada.view.grid.Orte', {
             panel.down('button[action=add]').enable();
             panel.down('button[action=addMap]').enable();
         }
+    },
+
+    /**
+     * Reload the grid
+     */
+    reload: function() {
+        if (!this.store) {
+            Ext.log({msg: 'Orte store is null', level: 'warn'});
+            return;
+        }
+        this.hideReloadMask();
+        this.store.reload();
     },
 
     /*

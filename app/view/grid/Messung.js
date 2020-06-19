@@ -10,7 +10,7 @@
  * Grid to list Messungen
  */
 Ext.define('Lada.view.grid.Messung', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.messunggrid',
 
     maxHeight: 350,
@@ -198,6 +198,7 @@ Ext.define('Lada.view.grid.Messung', {
     initData: function() {
         this.setLoading(true);
         this.store = Ext.create('Lada.store.Messungen');
+        this.addLoadingFailureHandler(this.store);
         this.store.load({
             params: {
                 probeId: this.recordId
@@ -207,6 +208,18 @@ Ext.define('Lada.view.grid.Messung', {
             },
             scope: this
         });
+    },
+
+    /**
+     * Reload this grid
+     */
+    reload: function() {
+        if (!this.store) {
+            this.initData();
+            return;
+        }
+        this.hideReloadMask();
+        this.store.reload();
     },
 
     /**

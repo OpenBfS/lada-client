@@ -10,7 +10,7 @@
  * Grid to list Kommentare
  */
 Ext.define('Lada.view.grid.PKommentar', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.pkommentargrid',
 
     requires: [
@@ -125,11 +125,24 @@ Ext.define('Lada.view.grid.PKommentar', {
 
     initData: function() {
         this.store = Ext.create('Lada.store.PKommentare');
+        this.addLoadingFailureHandler(this.store);
         this.store.load({
             params: {
                 probeId: this.recordId
             }
         });
+    },
+
+    /**
+     * Reload the grid
+     */
+    reload: function() {
+        if (!this.store) {
+            this.initData();
+            return;
+        }
+        this.hideReloadMask();
+        this.store.reload();
     },
 
     setReadOnly: function(b) {
