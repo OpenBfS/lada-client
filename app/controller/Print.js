@@ -450,16 +450,19 @@ Ext.define('Lada.controller.Print', {
                 probenAttribute = attribute;
             }
         }
+        var qitem = this.addQueueItem(filename);
         if (probenAttribute
             && probenAttribute.clientParams.attributes.some(
                 function(p) {
                     return p.name === 'messungen';
-            })
+                })
         ) {
             //TODO: preset fields are ignored here as they are no longer needed
             // see printSelection, prepareData, createSheetData (moved without major adaption)
 
-            this.printSelection(grid, filename, format, callbackFn, isIrix);
+            this.printSelection(
+                grid, filename, format, callbackFn, isIrix, qitem
+            );
         } else {
             var selection;
             try {
@@ -477,7 +480,9 @@ Ext.define('Lada.controller.Print', {
                 outputFormat: format,
                 attributes: data
             };
-            this.sendRequest(printData, template, filename, callbackFn, isIrix);
+            this.sendRequest(
+                printData, template, filename, callbackFn, isIrix, qitem
+            );
         }
     },
 
@@ -487,16 +492,26 @@ Ext.define('Lada.controller.Print', {
      * @param jsonData the prepared data matching the capabilities description of the server
      * @param templateName name/identifier of the template as part of the url
      * @param fileName a filename (including filetype typical ending)
+     * @param callbackFn a function used in callback
+     * @param isIrix Irix requests are handled differently, as the response is a pdf
+     * @param queueItem a downloadqueue store item to be used for information on the download status
      */
-    sendRequest: function(jsonData, templateName, filename, callbackFn, isIrix) {
+
+    sendRequest: function(jsonData, templateName, filename, callbackFn, isIrix, queueItem) {
         var me = this;
         var requestData = {
             success: function(response) {
-                var content = response.responseBytes;
-                var filetype = response.getResponseHeader('Content-Type');
                 if (!isIrix) {
-                    var blob = new Blob([content],{type: filetype});
-                    saveAs(blob, filename);
+                    var json = Ext.decode(response.responseText);
+                    queueItem.set('refId', json.ref);
+                    queueItem.set('mapfish_statusURL', json.statusURL);
+                    queueItem.set('mapfish_downloadURL', json.downloadURL);
+                    queueItem.set('status', 'waiting');
+                    if (json.error) {
+                        queueItem.set('message', json.error );
+                    } else {
+                        queueItem.set('message', '' );
+                    }
                 } else {
                     if (response.responseText) {
                         window.open(
@@ -510,6 +525,10 @@ Ext.define('Lada.controller.Print', {
                 }
             },
             failure: function(response) {
+                if (queueItem) {
+                    queueItem.set('status', 'error');
+                    queueItem.set('message', 'server error'); // TODO clarify
+                }
                 me.handleError(response);
                 if (callbackFn) {
                     callbackFn(false);
@@ -517,24 +536,28 @@ Ext.define('Lada.controller.Print', {
             }
         };
         if (isIrix) {
-            requestData.jsonData = JSON.stringify(this.setUpIrixJson(jsonData, templateName));
+            requestData.jsonData = JSON.stringify(
+                this.setUpIrixJson(jsonData, templateName)
+            );
             requestData.headers = {
-                'Content-Type': 'application/json'};
+                'Content-Type': 'application/json'
+            };
             requestData.url = this.irixServletURL;
         } else {
-            requestData.url = me.printUrlPrefix + templateName + '/buildreport.pdf';
-            requestData.binary = true;
+            requestData.url = me.printUrlPrefix + templateName + '/report.pdf';
             requestData.timeout = 60000;
             requestData.jsonData = JSON.stringify(jsonData);
         }
         Ext.Ajax.request(requestData);
     },
 
-    // TODO from "Erfassungsbogen".
     /**
-     * Send the selection to a Printservice
+     * (Legacy) Send the selection to a Printservice. Special handling for an
+     * lada_erfassungsbogen. First it needs to query the lada-server, then
+     * this response is aggregated (see pepareData)
+     * TODO: lacks handling for server errors/timeouts
      */
-    printSelection: function(grid, filename, format, callbackFn, isIrix) {
+    printSelection: function(grid, filename, format, callbackFn, isIrix, queueitem) {
         // The Data is loaded from the server again, so we need
         // to be a little bit asynchronous here...
         var callback = function(response) {
@@ -555,13 +578,17 @@ Ext.define('Lada.controller.Print', {
                 'lada_erfassungsbogen',
                 filename,
                 callbackFn,
-                isIrix);
+                isIrix,
+                queueitem);
         };
 
         this.createSheetData(grid, callback, this);
     },
 
-    //TODO moved from "Erfassunsbogen"
+    /**
+     * (legacy function) Aggregates json responses from lada server in order
+     * to satisfy lada_erfassungsbogen template demands
+     */
     prepareData: function(data) {
         // Copy data
         var prep = JSON.parse(data);
@@ -888,5 +915,19 @@ Ext.define('Lada.controller.Print', {
         }
         var layout = layoutBox.getValue();
         this.changeLayout(layoutBox, layout);
+    },
+
+    addQueueItem: function(filename) {
+        var storeItem = Ext.create('Lada.model.DownloadQueue', {
+            type: 'lada-print',
+            filename: filename,
+            startDate: new Date().valueOf(),
+            status: 'preparation',
+            done: false,
+            autodownload: true
+        });
+        var store = Ext.data.StoreManager.get('downloadqueue');
+        store.add(storeItem);
+        return storeItem;
     }
 });
