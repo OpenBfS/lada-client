@@ -331,6 +331,11 @@ Ext.define('Lada.view.window.MessungEdit', {
         var me = this;
         var i18n = Lada.getApplication().bundle;
         var item = me.down('messungform');
+        if (!item) {
+            //Form may not be initialized yet
+            me.close();
+            return;
+        }
         if (item.isDirty()) {
             var confWin = Ext.create('Ext.window.Window', {
                 title: i18n.getMsg('form.saveonclosetitle'),

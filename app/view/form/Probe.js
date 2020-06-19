@@ -543,6 +543,7 @@ Ext.define('Lada.view.form.Probe', {
                     //Tag widget
                     xtype: 'fieldset',
                     title: i18n.getMsg('title.tagfieldset'),
+                    name: 'tagfieldset',
                     layout: {
                         type: 'hbox',
                         align: 'stretchmax'
@@ -551,6 +552,9 @@ Ext.define('Lada.view.form.Probe', {
                         flex: 1,
                         xtype: 'tagwidget',
                         emptyText: i18n.getMsg('emptytext.tag'),
+                        parentWindow: this,
+                        maskTargetComponentType: 'fieldset',
+                        maskTargetComponentName: 'tagfieldset',
                         margin: '5 5 5 5'
                     }, {
                         width: 25,

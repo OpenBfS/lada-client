@@ -22,6 +22,20 @@ Ext.define('Lada.view.widget.Tag', {
     typeAhead: false,
     minChars: 0,
     submitValue: false,
+    /**
+     * Window containing this widget.
+     */
+    parentWindow: null,
+
+
+    /**
+     * Component type to use as render target for the loading mask
+     */
+    maskTargetComponentType: 'fieldset',
+    /**
+     * Component name to use as render target for the loading mask
+     */
+    maskTargetComponentName: 'tagfieldset',
 
     /**
      * @private
@@ -72,6 +86,18 @@ Ext.define('Lada.view.widget.Tag', {
         }
 
     ),
+
+    getMaskTarget: function() {
+        if (!this.parentWindow) {
+            return this.getEl();
+        }
+        var queryString = this.maskTargetComponentType + '[name=' + this.maskTargetComponentName + ']';
+        var targetComponent = this.parentWindow.down(queryString);
+        if (!targetComponent) {
+            Ext.log({msg: 'Invalid mask target: ' + queryString, level: 'warn'});
+        }
+        return targetComponent.getEl();
+    },
 
     /**
      * Returns always false to prevent ExtJS to handle this widget as a normal

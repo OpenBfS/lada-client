@@ -274,7 +274,17 @@ Ext.define('Lada.view.window.ProbeEdit', {
     handleBeforeClose: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
-        var item = me.items.items[0].items.get(0);
+        var item;
+        try {
+            item = me.items.items[0].items.get(0);
+        } catch (e) {
+            item = null;
+        }
+        if (!item) {
+            //Form may not be initialized yet
+            me.close();
+            return;
+        }
         if (item.isDirty()) {
             var confWin = Ext.create('Ext.window.Window', {
                 title: i18n.getMsg('form.saveonclosetitle'),
