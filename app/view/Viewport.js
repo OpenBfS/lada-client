@@ -65,6 +65,16 @@ Ext.define('Lada.view.Viewport', {
                         imprintWinController.setTopic('intro');
                     }
                 }
+            }, {
+                type: 'print',
+                tooltip: i18n.getMsg('printqueue.title'),
+                callback: function() {
+                    var qw = Ext.ComponentQuery.query('downloadqueuewin');
+                    if (!qw[0]) {
+                        Ext.create('Lada.view.window.Downloads').show();
+                    }
+                }
+
             }],
             items: [{
                 layout: {

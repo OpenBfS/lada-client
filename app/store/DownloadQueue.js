@@ -19,5 +19,8 @@ Ext.define('Lada.store.DownloadQueue', {
             property: 'startDate',
             direction: 'DESC'
         }],
-    autoLoad: true
+    autoLoad: true,
+    proxy: {
+        type: 'memory'
+    }
 });

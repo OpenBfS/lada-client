@@ -48,6 +48,9 @@ Ext.define('Lada.model.DownloadQueue', {
     }, {
         name: 'autodownload',
         type: 'boolean'
+    }, {
+        name: 'downloadRequested',
+        type: 'boolean'
     }],
     idProperty: 'id'
 });

@@ -434,7 +434,7 @@ Ext.define('Lada.controller.Print', {
         window.setLoading(true);
         var callbackFn = function(success) {
             var i18n = Lada.getApplication().bundle;
-            var result = success? i18n.getMsg('print.success') : i18n.getMsg('print.fail');
+            var result = success ? i18n.getMsg('print.success') : i18n.getMsg('print.fail');
             window.down('label[name=results]').setText(result);
             window.down('label[name=results]').setHidden(false);
             window.setDisabled(false);
@@ -917,7 +917,14 @@ Ext.define('Lada.controller.Print', {
         this.changeLayout(layoutBox, layout);
     },
 
+    /**
+     * Add an entry to the downloadqueue.
+     * @param filename: The name used to save results
+     * @returns reference to the model item
+     */
     addQueueItem: function(filename) {
+        // TODO some visual feedback on printqueue icon (if visible)
+        // TODO some visual feedback on print window.PrintGrid, e.g. temporary change/disable 'doPrint' button
         var storeItem = Ext.create('Lada.model.DownloadQueue', {
             type: 'lada-print',
             filename: filename,

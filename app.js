@@ -88,6 +88,7 @@ Ext.application({
         'Lada.model.GridColumn',
         'Lada.model.QueryGroup',
         'Lada.model.Query',
+        'Lada.model.DownloadQueue',
         'Lada.store.GridColumn',
         'Lada.store.Query',
         'Lada.view.widget.base.SelectableDisplayField',
@@ -664,6 +665,7 @@ Ext.application({
         'Lada.controller.Query',
         'Lada.controller.Global',
         'Lada.controller.Print',
-        'Lada.controller.ElanScenario'
+        'Lada.controller.ElanScenario',
+        'Lada.controller.grid.Downloads'
     ]
 });
