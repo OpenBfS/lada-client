@@ -12,6 +12,9 @@
 Ext.define('Lada.view.widget.Tag', {
     extend: 'Ext.form.field.Tag',
     alias: 'widget.tagwidget',
+    requires: [
+        'Lada.view.window.ReloadMask'
+    ],
     store: null,
     displayField: 'tag',
     valueField: 'id',
@@ -22,11 +25,17 @@ Ext.define('Lada.view.widget.Tag', {
     typeAhead: false,
     minChars: 0,
     submitValue: false,
+
+    /**
+     * @private
+     * Mask component to be show if store failed loading
+     */
+    reloadMask: null,
+
     /**
      * Window containing this widget.
      */
     parentWindow: null,
-
 
     /**
      * Component type to use as render target for the loading mask
@@ -109,10 +118,28 @@ Ext.define('Lada.view.widget.Tag', {
 
     initComponent: function() {
         this.changes = {};
+        var me = this;
         this.store = Ext.create('Lada.store.Tag');
+
+        this.reloadMask = Ext.create('Lada.view.window.ReloadMask', {
+            reloadButtonHandler: me.reloadButtonClicked,
+            reloadButtonHandlerScope: me
+        });
+
+        this.store.setLoadingCallback(
+            function(store, records, successful) {
+                if (!successful) {
+                    me.setLoading(false);
+                    me.reloadMask.renderTo = me.getMaskTarget();
+                    me.mask();
+                    me.showReloadMask();
+                }
+            }
+        );
         if (this.monitorChanges === true) {
             this.on('change', this.handleChanges);
         }
+
         this.callParent(arguments);
     },
 
@@ -130,12 +157,22 @@ Ext.define('Lada.view.widget.Tag', {
     },
 
     /**
+     * Handle clicks on reload button.
+     * Calls reload function
+     */
+    reloadButtonClicked: function() {
+        this.reload();
+    },
+
+    /**
      *  Reloads the current store.
      *  @param silent If true, neither tags are preselected nor the dirty status changed.
      *  @param callback Callback function to call after reload
      */
     reload: function(silent, callback) {
         var me = this;
+        me.hideReloadMask();
+        me.setLoading(true);
         this.store.load({
             callback: function() {
                 if (!silent || silent === false) {
@@ -417,5 +454,25 @@ Ext.define('Lada.view.widget.Tag', {
         } else {
             this.un('change', this.handleChanges);
         }
-    }
+    },
+
+    /**
+     * Mask this component using the reload mask
+     */
+    showReloadMask: function() {
+        if (this.reloadMask.isHidden()) {
+            this.mask();
+            this.reloadMask.show();
+        }
+    },
+
+    /**
+     * Unmask this component
+     */
+    hideReloadMask: function() {
+        this.unmask();
+        if (this.reloadMask && this.reloadMask.isVisible()) {
+            this.reloadMask.hide();
+        }
+    },
 });

@@ -7,12 +7,9 @@
  */
 
 /**
- * Grid base class providing common functions for the Lada grids.
- *
- * ## Loading
- * Grids extending this class can use the addLoadingFailureHandler function to add a handler to
- * store that shows an error mask if the store failed to load. This mask contains a button to call
- * the reload function that must be implemented by extending classes.
+ * Borderless window serving as a mask for components that failed to load.
+ * The window provides a reload button that can call the function defined in
+ * reloadButtonHandler and will be rendered to the component set in the renderTo attribute.
  */
 Ext.define('Lada.view.window.ReloadMask', {
     extend: 'Ext.window.Window',

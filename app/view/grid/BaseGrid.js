@@ -10,7 +10,7 @@
  * Grid base class providing common functions for the Lada grids.
  *
  * ## Loading
- * Grids extending this class can use the addLoadingFailureHandler function to add a handler to
+ * Grids extending this class can use the addLoadingFailureHandler function to add a handler to a
  * store that shows an error mask if the store failed to load. This mask contains a button to call
  * the reload function that must be implemented by extending classes.
  */
