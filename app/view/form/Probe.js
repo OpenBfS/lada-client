@@ -45,7 +45,6 @@ Ext.define('Lada.view.form.Probe', {
     readOnly: false,
 
     recordId: null,
-    readOnly: false,
 
     trackResetOnLoad: true,
 
@@ -54,7 +53,7 @@ Ext.define('Lada.view.form.Probe', {
     },
 
     initComponent: function() {
-        if (Lada.view.form.Probe.mediaSnScheduler == null) {
+        if (Lada.view.form.Probe.mediaSnScheduler === null) {
             Lada.view.form.Probe.mediaSnScheduler = Ext.create('Lada.util.FunctionScheduler');
         }
         var me = this;

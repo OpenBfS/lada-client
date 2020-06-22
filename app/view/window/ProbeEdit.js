@@ -34,6 +34,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        this.title = i18n.getMsg('title.loading.probe');
         this.buttons = [{
             text: i18n.getMsg('close'),
             scope: this,

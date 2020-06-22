@@ -122,52 +122,56 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         var id = record.get(row.grid.rowtarget.dataIndex);
         switch (row.grid.rowtarget.dataType) {
             case 'messungId':
-                Lada.model.Messung.load(id, {
-                    scope: row,
-                    callback: function(record, operation, success) {
-                        if (!record || !operation) {
-                            Ext.log({msg: 'Loading messung record failed', level: 'warn'});
-                            return;
-                        }
-                        if (success) {
-                            var messungRecord = record;
-                            Lada.model.Probe.load(
-                                messungRecord.get('probeId'), {
-                                    scope: this,
-                                    callback: function(precord, poperation, psuccess) {
-                                        if (!precord || !poperation || !poperation.getResponse()) {
-                                            Ext.log({msg: 'Loading probe record failed', level: 'warn'});
-                                            return;
-                                        }
-                                        var probeWin = Ext.create(
-                                            'Lada.view.window.ProbeEdit', {
-                                                record: precord,
-                                                style: 'z-index: -1;'
-                                            });
-                                        var pjson = poperation ? Ext.decode(poperation.getResponse().responseText) : null;
-                                        if (probeWin.show()) {
+                var win = Ext.create(
+                    'Lada.view.window.MessungEdit', {
+                        recordId: id,
+                        style: 'z-index: -1;'
+                    });
+                if (win.show()) {
+                    Lada.model.Messung.load(id, {
+                        scope: row,
+                        callback: function(record, operation, success) {
+                            if (!record || !operation) {
+                                Ext.log({msg: 'Loading messung record failed', level: 'warn'});
+                                return;
+                            }
+                            if (success) {
+                                var messungRecord = record;
+                                var probeWin = Ext.create(
+                                    'Lada.view.window.ProbeEdit', {
+                                        recordId: messungRecord.get('probeId'),
+                                        style: 'z-index: -1;'
+                                    });
+                                probeWin.show();
+                                probeWin.setPosition(30);
+                                win.parentWindow = probeWin;
+                                win.setPosition(35 + probeWin.width);
+                                Lada.model.Probe.load(
+                                    messungRecord.get('probeId'), {
+                                        scope: this,
+                                        callback: function(precord, poperation, psuccess) {
+                                            if (!precord || !poperation || !poperation.getResponse()) {
+                                                Ext.log({msg: 'Loading probe record failed', level: 'warn'});
+                                                return;
+                                            }
+
+                                            var pjson = poperation ? Ext.decode(poperation.getResponse().responseText) : null;
+                                            probeWin.setRecord(precord);
                                             probeWin.initData(precord);
                                             probeWin.setMessages(pjson.errors, pjson.warnings);
-                                            probeWin.setPosition(30);
+                                            win.setProbe(precord);
+                                            win.setRecord(messungRecord);
+                                            win.initData(messungRecord);
+                                            var json = operation ? Ext.decode(operation.getResponse().responseText) : null;
+                                            win.setMessages(json.errors, json.warnings);
+
                                         }
-                                        var win = Ext.create(
-                                            'Lada.view.window.MessungEdit', {
-                                                parentWindow: probeWin,
-                                                probe: precord,
-                                                record: record,
-                                                style: 'z-index: -1;'
-                                            });
-                                        win.initData(record);
-                                        win.show();
-                                        var json = operation ? Ext.decode(operation.getResponse().responseText) : null;
-                                        win.setMessages(json.errors, json.warnings);
-                                        win.setPosition(35 + probeWin.width);
                                     }
-                                }
-                            );
+                                );
+                            }
                         }
-                    }
-                });
+                    });
+                }
                 break;
             case 'probeId':
                 var win = Ext.create('Lada.view.window.ProbeEdit', {
@@ -186,7 +190,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                 win.setMessages(json.errors, json.warnings);
                             }
                         }
-                    });    
+                    });
                 }
                 break;
             case 'mpId':

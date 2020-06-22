@@ -457,26 +457,25 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 click: function(button) {
                     var id = Number(button.text);
                     button.getEl().swallowEvent(['click', 'dblclick'], true);
-                    
-                    Lada.model.Messung.load(id, {
-                        scope: this,
-                        callback: function(record, operation, success) {
-                            if (success) {
-                                var messungRecord = record;
-                                var probeWin = Ext.create(
-                                    'Lada.view.window.ProbeEdit', {
-                                        style: 'z-index: -1;',
-                                        recordId: messungRecord.get('probeId'),
-                                    });
-                                probeWin.show();
-                                probeWin.setPosition(30);
-                                var win = Ext.create(
-                                    'Lada.view.window.MessungEdit', {
-                                        parentWindow: probeWin,
-                                        style: 'z-index: -1;',
-                                        recordId: id
-                                    });
-                                if (win.show()) {
+                    var win = Ext.create(
+                        'Lada.view.window.MessungEdit', {
+                            style: 'z-index: -1;',
+                            recordId: id
+                        });
+                    if (win.show()) {
+                        Lada.model.Messung.load(id, {
+                            scope: this,
+                            callback: function(record, operation, success) {
+                                if (success) {
+                                    var messungRecord = record;
+                                    var probeWin = Ext.create(
+                                        'Lada.view.window.ProbeEdit', {
+                                            style: 'z-index: -1;',
+                                            recordId: messungRecord.get('probeId'),
+                                        });
+                                    probeWin.show();
+                                    probeWin.setPosition(30);
+                                    win.parentWindow = probeWin;
                                     win.setPosition(35 + probeWin.width);
                                     Lada.model.Probe.load(messungRecord.get('probeId'), {
                                         scope: this,
@@ -490,8 +489,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                     });
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 },
                 textchange: function(button, oldval, newval) {
                     if (!newval || newval === '') {

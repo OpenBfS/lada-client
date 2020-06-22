@@ -40,6 +40,8 @@ Ext.define('Lada.view.window.MessungEdit', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
 
+        this.title = i18n.getMsg('title.loading.messung');
+
         this.buttons = [{
             text: i18n.getMsg('close'),
             scope: this,
@@ -104,12 +106,10 @@ Ext.define('Lada.view.window.MessungEdit', {
 
         if (this.record === null) {
             Ext.Msg.alert(i18n.getMsg('err.msg.messung.noselect'));
-            this.callParent(arguments);
             return;
         }
         if (this.probe === null) {
             Ext.Msg.alert(i18n.getMsg('err.msg.messung.noprobe'));
-            this.callParent(arguments);
             return;
         }
 
@@ -436,7 +436,7 @@ Ext.define('Lada.view.window.MessungEdit', {
         var messwerteSet = this.down('fset[name=messwerte]');
         if (messungform && messwerteSet) {
             messungform.clearMessages();
-            messwerteset.clearMessages();
+            messwerteSet.clearMessages();
         }
     }
 
