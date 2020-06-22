@@ -330,7 +330,13 @@ Ext.define('Lada.view.window.MessungEdit', {
     handleBeforeClose: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
-        var item = me.down('messungform');
+        var item;
+        try {
+            item = me.down('messungform');
+        } catch (e) {
+            Ext.log({msg: 'Closing uninitialized messung window: ' + e, level: 'warn'});
+            return;
+        }
         if (!item) {
             //Form may not be initialized yet
             me.close();

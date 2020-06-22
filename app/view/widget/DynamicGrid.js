@@ -471,7 +471,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                     var probeWin = Ext.create(
                                         'Lada.view.window.ProbeEdit', {
                                             style: 'z-index: -1;',
-                                            recordId: messungRecord.get('probeId'),
+                                            recordId: messungRecord.get('probeId')
                                         });
                                     probeWin.show();
                                     probeWin.setPosition(30);

@@ -279,6 +279,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         try {
             item = me.items.items[0].items.get(0);
         } catch (e) {
+            Ext.log({msg: 'Closing uninitialized messung window: ' + e, level: 'warn'});
             item = null;
         }
         if (!item) {
