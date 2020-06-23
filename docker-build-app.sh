@@ -13,6 +13,7 @@ $SENCHA_CMD workspace init
 $SENCHA_CMD app install
 $SENCHA_CMD app clean
 $SENCHA_CMD app build production
+$SENCHA_CMD app refresh
 
 ln -sf $WORKSPACE/build/production/Lada $WORKSPACE/lada
 
