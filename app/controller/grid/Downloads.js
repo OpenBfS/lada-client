@@ -19,10 +19,9 @@ Ext.define('Lada.controller.grid.Downloads', {
     printUrlPrefix: 'lada-printer/print/',
 
     /**
-     * Initialize the controller
+     * Initialize the controller, request polling to run every 2 seconds
      */
     init: function() {
-        // request polling every 2 seconds
         window.setInterval(this.refreshQueue, 2000);
     },
 

@@ -56,18 +56,17 @@ Ext.define('Lada.view.grid.DownloadQueue', {
             dataIndex: 'message',
             flex: 2
         }, {
-            xtype: 'actioncolumn',
-            text: '',
+            xtype: 'actioncolumn', // cancel/save icon
+            text: ' ',
             dataIndex: 'status',
-            renderer: function(value) {
-                switch (value) {
+            getClass: function(value, meta, rec) {
+                // see x.action-col-icon definitions at lada.css for img urls
+                switch (rec.get('status')) {
                     case 'finished':
-                        return 'SAVE';
-                        // TODO save button
+                        return 'save';
                     case 'running':
                     case 'waiting':
-                        return 'CANCEL';
-                        // TODO cancel button
+                        return 'cancel';
                     default:
                         return '';
                 }
@@ -81,6 +80,20 @@ Ext.define('Lada.view.grid.DownloadQueue', {
                     controller.onSaveItem(rec);
                 }
             }
+        }, {
+            xtype: 'actioncolumn', // remove from list icon (available for finished jobs)
+            text: ' ',
+            dataIndex: 'status',
+            getClass: function(value, meta, rec) {
+                return rec.get('done') ? 'delete' : '';
+            },
+            handler: function(grid, rowIndex) {
+                var rec = grid.getStore().getAt(rowIndex);
+                if (rec.get('done') === true) {
+                    controller.onCancelItem(rec);
+                }
+            }
+
         }];
         this.callParent(arguments);
     }
