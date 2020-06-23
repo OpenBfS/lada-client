@@ -12,10 +12,6 @@
  */
 
 // TODO layout, esp. if updates come in
-// TODO layout of parent
-
-var controller = Lada.app.getController(
-    'Lada.controller.grid.Downloads');
 
 
 Ext.define('Lada.view.grid.DownloadQueue', {
@@ -31,6 +27,8 @@ Ext.define('Lada.view.grid.DownloadQueue', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        var controller = Lada.app.getController(
+            'Lada.controller.grid.Downloads');
         this.emptyText = i18n.getMsg('emptygrid.downloadqueue');
         this.store = Ext.data.StoreManager.get('downloadqueue');
         this.columns = [{
@@ -90,7 +88,7 @@ Ext.define('Lada.view.grid.DownloadQueue', {
             handler: function(grid, rowIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
                 if (rec.get('done') === true) {
-                    controller.onCancelItem(rec);
+                    controller.onDeleteItem(rec);
                 }
             }
 

@@ -16,7 +16,8 @@
 Ext.define('Lada.view.Viewport', {
     extend: 'Ext.container.Viewport',
     requires: [
-        'Lada.view.QueryPanel'
+        'Lada.view.QueryPanel',
+        'Lada.view.window.Downloads'
     ],
     layout: 'fit',
     initComponent: function() {
