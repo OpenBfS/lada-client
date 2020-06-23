@@ -22,11 +22,16 @@ Ext.define('Lada.view.grid.DownloadQueue', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.downloadqueuegrid',
     requires: ['Lada.controller.grid.Downloads'],
-    minHeight: 20,
     store: null,
+    minHeight: 150,
+    viewConfig: {
+        deferEmptyText: true
+    },
+    emptyText: 'emptygrid.downloadqueue',
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptygrid.downloadqueue');
         this.store = Ext.data.StoreManager.get('downloadqueue');
         this.columns = [{
             header: i18n.getMsg('export.filename'),

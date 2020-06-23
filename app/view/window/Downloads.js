@@ -12,9 +12,11 @@
 Ext.define('Lada.view.window.Downloads', {
     extend: 'Ext.window.Window',
     alias: 'widget.downloadqueuewin',
-    // TODO rework layout, expecially with child grid
     // TODO clear 'old' jobs (controller.onDeleteItem(item)) -> automated ?
+    collapsible: true,
     margin: '0, 5, 15, 5',
+    maximizable: true,
+    layout: 'fit',
     requires: ['Lada.view.grid.DownloadQueue'],
     items: [{
         xtype: 'downloadqueuegrid'
