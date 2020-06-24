@@ -86,7 +86,7 @@ Ext.define('Lada.controller.grid.Downloads', {
     },
 
     /**
-     * Tries to refresh all queued item info
+     * Tries to refresh all queued item info.
      */
     refreshQueue: function() {
         // this should be done only once, but after initialization
@@ -96,11 +96,13 @@ Ext.define('Lada.controller.grid.Downloads', {
         }
         var store = Ext.data.StoreManager.get('downloadqueue');
         var controller = Lada.app.getController('Lada.controller.grid.Downloads');
-        Ext.each(store.getData().items, function(item) {
-            if (item.get('done') !== true) {
-                controller.refreshItemInfo(item);
-            }
-        });
+        if (store) {
+            Ext.each(store.getData().items, function(item) {
+                if (item.get('done') !== true) {
+                    controller.refreshItemInfo(item);
+                }
+            });
+        }
     },
 
     /**

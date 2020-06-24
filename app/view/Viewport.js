@@ -72,7 +72,9 @@ Ext.define('Lada.view.Viewport', {
                 callback: function() {
                     var qw = Ext.ComponentQuery.query('downloadqueuewin');
                     if (!qw[0]) {
-                        Ext.create('Lada.view.window.Downloads').show();
+                        var win = Ext.create('Lada.view.window.Downloads')
+                        win.show();
+                        win.setPosition(30);
                     }
                 }
 
