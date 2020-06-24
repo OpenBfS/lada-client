@@ -10,7 +10,7 @@
  * Window for new Ort, wraps around a {@link Lada.view.form.Ort}
  */
 Ext.define('Lada.view.window.Ort', {
-    extend: 'Lada.view.window.TrackedWindow',
+    extend: 'Lada.view.window.RecordWindow',
     alias: 'window.ort',
     requires: [
         'Lada.model.Ort',
@@ -52,36 +52,14 @@ Ext.define('Lada.view.window.Ort', {
 
     parentWindow: null,
 
+    modelClass: Lada.model.Ort,
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
-        if (this.record === null) {
-            this.record = Ext.create('Lada.model.Ort');
-        }
 
-        if (this.parentWindow !== null) {
-            if (this.parentWindow.xtype === 'ortszuordnungwindow' || this.parentWindow.xtype === 'ortstammdatengrid') {
-                this.record.set('readonly', true);
-            }
-        }
+        this.title = i18n.getMsg('title.loading.ort');
 
-        if (this.mode) {
-            this.title = i18n.getMsg('orte.' + this.mode);
-        } else {
-            this.title = this.record.phantom? i18n.getMsg('orte.new'): i18n.getMsg('orte.edit')+' <i>(Referenzierte Proben '+this.record.get('referenceCount')+')</i>';
-        }
-        this.items = [
-            Ext.create('Lada.view.form.Ort', {
-                record: me.record,
-                original: me.original,
-                mode: this.mode,
-                listeners: {
-                    destroy: {fn: function() {
-                        me.close();
-                    }}
-                }
-            })
-        ];
         this.tools = [{
             type: 'help',
             tooltip: i18n.getMsg('help.qtip'),
@@ -106,6 +84,45 @@ Ext.define('Lada.view.window.Ort', {
             handler: this.close
         }];
         this.callParent(arguments);
+    },
+
+    initData: function(record) {
+        this.record = record;
+        this.initializeUi();
+    },
+
+    initializeUi: function() {
+        var i18n = Lada.getApplication().bundle;
+        var me = this;
+        this.removeAll();
+        if (this.record === null) {
+            this.record = Ext.create('Lada.model.Ort');
+        }
+
+        if (this.parentWindow !== null) {
+            if (this.parentWindow.xtype === 'ortszuordnungwindow' || this.parentWindow.xtype === 'ortstammdatengrid') {
+                this.record.set('readonly', true);
+            }
+        }
+
+        if (this.mode) {
+            this.title = i18n.getMsg('orte.' + this.mode);
+        } else {
+            this.title = this.record.phantom? i18n.getMsg('orte.new'): i18n.getMsg('orte.edit')+' <i>(Referenzierte Proben '+this.record.get('referenceCount')+')</i>';
+        }
+
+        this.add([
+            Ext.create('Lada.view.form.Ort', {
+                record: me.record,
+                original: me.original,
+                mode: this.mode,
+                listeners: {
+                    destroy: {fn: function() {
+                        me.close();
+                    }}
+                }
+            })
+        ]);
     },
 
     setMode: function(mode) {

@@ -29,11 +29,15 @@ Ext.define('Lada.view.grid.BaseGrid', {
 
     /**
      * Adds a handler to the given store to show an error mask if the store failed to load.
+     * The handle will exit if this component is no longer visible.
      * @param {Ext.data.Store} store Store to add the handler to
      */
     addLoadingFailureHandler: function(store) {
         var me = this;
         store.on('load', function(loadedStore, records, success, operation) {
+            if (!me.isVisible()) {
+                return;
+            }
             if (!success) {
                 me.loadingFailed(loadedStore, operation);
             }

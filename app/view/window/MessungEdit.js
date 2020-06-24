@@ -10,7 +10,7 @@
  * Window to edit a Messung
  */
 Ext.define('Lada.view.window.MessungEdit', {
-    extend: 'Lada.view.window.TrackedWindow',
+    extend: 'Lada.view.window.RecordWindow',
     alias: 'widget.messungedit',
 
     requires: [
@@ -64,14 +64,6 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.width = 700;
         this.height = Ext.getBody().getViewSize().height - 30;
 
-        //Create a placeholder panel to show a loading mask until data is loaded
-        this.items = [{
-            layout: 'fit',
-            name: 'placeholder',
-            height: '100%',
-            width: '100%'
-        }];
-
         this.tools = [{
             type: 'help',
             tooltip: i18n.getMsg('help.qtip'),
@@ -92,6 +84,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 }
             }
         }];
+        this.modelClass = Lada.model.Messung;
         if (this.record) {
             this.recordId = this.record.get('id');
         }
@@ -165,18 +158,6 @@ Ext.define('Lada.view.window.MessungEdit', {
                 }]
             }]
         }]);
-    },
-
-    /**
-     * Show the window.
-     * If a placeholder panel is still in place, it is set to loading
-     */
-    show: function() {
-        var returnVal = this.callParent(arguments);
-        if (this.down('container[name=placeholder]')) {
-            this.down('container[name=placeholder]').setLoading(true);
-        }
-        return returnVal;
     },
 
     /**

@@ -96,6 +96,9 @@ Ext.define('Lada.view.widget.Tag', {
 
     ),
 
+    /**
+     * Get the component to render the loading/reloading mask to.
+     */
     getMaskTarget: function() {
         if (!this.parentWindow) {
             return this.getEl();
@@ -128,6 +131,10 @@ Ext.define('Lada.view.widget.Tag', {
 
         this.store.setLoadingCallback(
             function(store, records, successful) {
+                //Skip if component is no longer visible
+                if (!me.isVisible()) {
+                    return;
+                }
                 if (!successful) {
                     me.setLoading(false);
                     me.reloadMask.renderTo = me.getMaskTarget();

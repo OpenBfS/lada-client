@@ -10,7 +10,7 @@
  * Window to edit a Probe
  */
 Ext.define('Lada.view.window.ProbeEdit', {
-    extend: 'Lada.view.window.TrackedWindow',
+    extend: 'Lada.view.window.RecordWindow',
     alias: 'widget.probenedit',
 
     requires: [
@@ -42,14 +42,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
         }];
         this.width = 700;
         this.height = Ext.getBody().getViewSize().height - 30;
-
-        //Create a placeholder panel to show a loading mask until data is loaded
-        this.items = [{
-            layout: 'fit',
-            name: 'placeholder',
-            height: '100%',
-            width: '100%'
-        }];
 
         // add listeners to change the window appearence when it becomes inactive
         this.on({
@@ -88,6 +80,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 }
             }
         }];
+        this.modelClass = Lada.model.Probe;
         if (this.record) {
             this.recordId = this.record.get('id');
         }
@@ -164,19 +157,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
     },
 
     /**
-     * Show the window.
-     * If a placeholder panel is still in place, it is set to loading
-     */
-    show: function() {
-        var returnVal = this.callParent(arguments);
-        var placeholder = this.down('container[name=placeholder]');
-        if (placeholder) {
-            placeholder.setLoading(true);
-        }
-        return returnVal;
-    },
-
-    /**
      * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
      */
     customizeToolbar: function() {
@@ -196,16 +176,12 @@ Ext.define('Lada.view.window.ProbeEdit', {
       * loaded record, not requiring a reload from server
       */
     initData: function(loadedRecord) {
-        if (this.down('container[name=placeholder]')) {
-            this.down('container[name=placeholder]').setLoading(true);
-        } else {
-            this.setLoading(true);
-        }
         this.clearMessages();
         var me = this;
         var loadCallBack = function(record, response) {
             me.initializeUI();
             me.record = record;
+            me.recordId = record.get('id');
             me.down('probeform').setRecord(record);
             var owner = record.get('owner');
             var readonly = record.get('readonly');
