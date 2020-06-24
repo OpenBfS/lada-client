@@ -12,25 +12,21 @@
 Ext.define('Lada.view.window.Downloads', {
     extend: 'Ext.window.Window',
     alias: 'widget.downloadqueuewin',
-    // TODO clear 'old' jobs (controller.onDeleteItem(item)) -> automated ?
-    collapsible: true,
-    margin: '0, 5, 15, 5',
-    maximizable: true,
-    layout: 'fit',
     requires: ['Lada.view.grid.DownloadQueue'],
+    collapsible: true,
+    maximizable: true,
+    resizable: true,
+    width: 550,
+    layout: 'fit',
     items: [{
-        xtype: 'downloadqueuegrid'
-    }, {
-        xtype: 'checkbox',
-        name: 'autodownload',
-        value: true
+        xtype: 'downloadqueuegrid',
+        width: '100%'
+
     }],
 
     initComponent: function() {
         this.callParent(arguments);
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('printqueue.title');
-        this.down('checkbox[name=autodownload]').boxLabel = i18n.getMsg(
-            'print.autodownload');
     }
 });

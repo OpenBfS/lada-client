@@ -61,9 +61,9 @@
   background-image: url(../img/view-time-schedule-edit-status.png);
 }
 
-.x-action-col-icon.save
+.x-action-col-icon.okay
 {
-  background-image: url(../img/document-save-as-6.png);
+    background-image: url(../img/dialog-okay-apply.png);
 }
 
 .x-action-col-icon.cancel
@@ -72,7 +72,8 @@
 }
 .x-action-col-icon.delete
 {
-  background-image: url(../img/edit-delete.png);
+    background-image: url(../img/edit-delete.png);
+    background-size: 100%;
 }
 
 .x-grid-checkheader {

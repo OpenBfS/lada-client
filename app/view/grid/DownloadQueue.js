@@ -19,12 +19,11 @@ Ext.define('Lada.view.grid.DownloadQueue', {
     alias: 'widget.downloadqueuegrid',
     requires: ['Lada.controller.grid.Downloads'],
     store: null,
-    minHeight: 150,
     viewConfig: {
-        deferEmptyText: true
+        deferEmptyText: true,
+        markDirty: false
     },
     emptyText: 'emptygrid.downloadqueue',
-
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var controller = Lada.app.getController(
@@ -38,10 +37,10 @@ Ext.define('Lada.view.grid.DownloadQueue', {
         }, {
             header: i18n.getMsg('print.startDate'),
             dataIndex: 'startDate',
+            width: 85,
             renderer: function(value) {
                 return Lada.util.Date.formatTimestamp(value, 'hh:mm:ss');
-            },
-            flex: 1
+            }
         }, {
             header: i18n.getMsg('print.status'),
             dataIndex: 'status',
@@ -54,14 +53,16 @@ Ext.define('Lada.view.grid.DownloadQueue', {
             dataIndex: 'message',
             flex: 2
         }, {
-            xtype: 'actioncolumn', // cancel/save icon
+            // cancel icon
+            xtype: 'actioncolumn',
             text: ' ',
             dataIndex: 'status',
+            width: 20,
             getClass: function(value, meta, rec) {
                 // see x.action-col-icon definitions at lada.css for img urls
                 switch (rec.get('status')) {
                     case 'finished':
-                        return 'save';
+                        return 'okay';
                     case 'running':
                     case 'waiting':
                         return 'cancel';
@@ -74,14 +75,14 @@ Ext.define('Lada.view.grid.DownloadQueue', {
                 var status = rec.get('status');
                 if (status === 'running' || status === 'waiting') {
                     controller.onCancelItem(rec);
-                } else if (status === 'finished') {
-                    controller.onSaveItem(rec);
                 }
             }
         }, {
-            xtype: 'actioncolumn', // remove from list icon (available for finished jobs)
+            // remove from list icon (available for finished jobs)
+            xtype: 'actioncolumn',
             text: ' ',
             dataIndex: 'status',
+            width: 20,
             getClass: function(value, meta, rec) {
                 return rec.get('done') ? 'delete' : '';
             },

@@ -6,9 +6,6 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-// TODO: functionality to delete all finished/all errors
-// TODO: better visual feedback in print window and queue icon
-
 /**
  * Controller for the DownloadQueue actions: adding, removing, occasional
  * updates
@@ -72,8 +69,8 @@ Ext.define('Lada.controller.grid.Downloads', {
                 var blob = new Blob([content],{type: filetype});
                 saveAs(blob, model.get('filename'));
                 model.set('downloadRequested', false);
-                /* eslint-enable no-undef */
                 me.refreshQueue();
+                /* eslint-enable no-undef */
             },
             failure: function(error) {
                 model.set('status', 'error');
@@ -120,7 +117,7 @@ Ext.define('Lada.controller.grid.Downloads', {
                     url: url,
                     success: function(response) {
                         var json = Ext.decode(response.responseText);
-                        // save to disk if autodownload is set
+                        // save to disk if autodownload is true.
                         if ( item.status !== 'finished' &&
                             json.status === 'finished' &&
                             item.get('autodownload') === true &&
@@ -144,13 +141,10 @@ Ext.define('Lada.controller.grid.Downloads', {
                         item.set('done', true);
                         item.set('status', 'error');
                         if (response.status === 404) {
-                            item.set('status', 'URL not found');
-                            // remove print jobs with URL not found (e.g. expired link)
-                            // Ext.data.StoreManager.get('downloadqueue').remove(item);
+                            item.set('message', 'URL not found');
+
                         } else {
-                            // remove print jobs with URL not found.
                             item.set('message', 'bad server answer');
-                            // Ext.data.StoreManager.get('downloadqueue').remove(item);
                         }
                     }
                 });

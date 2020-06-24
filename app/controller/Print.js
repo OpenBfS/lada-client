@@ -930,8 +930,6 @@ Ext.define('Lada.controller.Print', {
      * @returns reference to the model item
      */
     addQueueItem: function(filename) {
-        // TODO some visual feedback on printqueue icon (if visible)
-        // TODO some visual feedback on print window.PrintGrid, e.g. temporary change/disable 'doPrint' button
         var storeItem = Ext.create('Lada.model.DownloadQueue', {
             type: 'lada-print',
             filename: filename,
@@ -939,6 +937,7 @@ Ext.define('Lada.controller.Print', {
             status: 'preparation',
             done: false,
             autodownload: true
+            // TODO: no UI toggle for autodownload implemented yet.
         });
         var store = Ext.data.StoreManager.get('downloadqueue');
         store.add(storeItem);
