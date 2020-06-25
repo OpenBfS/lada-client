@@ -96,7 +96,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
         if (this.record === null) {
             Ext.Msg.alert(i18n.getMsg('err.msg.invalidprobe'));
-            this.callParent(arguments);
             return;
         }
 

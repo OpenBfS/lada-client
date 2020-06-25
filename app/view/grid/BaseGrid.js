@@ -36,7 +36,7 @@ Ext.define('Lada.view.grid.BaseGrid', {
         var me = this;
         store.on('load', function(loadedStore, records, success, operation) {
             if (!me.isVisible()) {
-                return;
+                return false;
             }
             if (!success) {
                 me.loadingFailed(loadedStore, operation);

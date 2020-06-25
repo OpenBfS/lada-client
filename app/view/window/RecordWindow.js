@@ -47,6 +47,15 @@ Ext.define('Lada.view.window.RecordWindow', {
      */
     placeholder: null,
 
+    shadow: false,
+
+    /**
+     * @private
+     * Record used in this window and is currently loaded.
+     * Note: The model data may not be initialized, use the record property to access model data
+     */
+    loadingModel: null,
+
     initComponent: function() {
         if (!this.modelClass) {
             Ext.raise('modelClass is undefined');
@@ -66,7 +75,6 @@ Ext.define('Lada.view.window.RecordWindow', {
             this.items = [this.placeholder];
         }
         this.callParent(arguments);
-        this.placeholder.setLoading(true);
     },
 
     /**
@@ -100,12 +108,12 @@ Ext.define('Lada.view.window.RecordWindow', {
         this.loadCallback = callback;
         this.loadScope = scope;
         this.recordId = id;
-        this.modelClass.load(id, {
+        this.loadingModel = this.modelClass.load(id, {
             scope: scope? scope: this,
             callback: function(record, operation, success) {
                 //Check if window is still visible
                 if (!me.isVisible()) {
-                    return;
+                    return false;
                 }
                 if (!success) {
                     me.showReloadMask();
@@ -160,12 +168,22 @@ Ext.define('Lada.view.window.RecordWindow', {
             this.hideReloadMask();
             try {
                 this.remove(this.placeholder);
-                this.placeholder.destroy();
+                //this.placeholder.destroy();
             } catch (e) {
                 Ext.log({msg: 'Can not destroy placeholder panel: ' + e, level: 'warn'});
             }
             this.placeholder = null;
         }
         return this.callParent(arguments);
+    },
+
+    /**
+     * If a request is still pending, abort and close this window
+     */
+    close: function() {
+        this.callParent(arguments);
+        if (this.loadingModel) {
+            this.loadingModel.abort();
+        }
     }
 });
