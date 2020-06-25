@@ -61,6 +61,7 @@ ADD app /usr/local/lada/app
 ADD Koala /usr/local/lada/Koala
 ADD .git /usr/local/lada/.git
 ADD .sencha /usr/local/lada/.sencha
+ADD build.xml /usr/local/lada/
 
 RUN GITINFO="$(git name-rev --name-only HEAD 2>/dev/null) $(git rev-parse --short HEAD 2>/dev/null)"  echo ${GITINFO} i;\
     sed -i -e "/Lada.clientVersion/s/';/${GITINFO}';/" app.js
