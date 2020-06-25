@@ -173,7 +173,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         Ext.on('timezonetoggled', function() {
             var grid = Ext.ComponentQuery.query('dynamicgrid');
             if (grid.length === 1) {
-                grid[0].reload();
+                grid[0].reload(function() {
+                    Ext.ComponentQuery.query('timezonebutton[action=toggletimezone]')[0].requestFinished();
+                });
             }
         });
     },
@@ -927,7 +929,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 action: 'assigntags',
                 needsSelection: true,
                 disabled: true
-            })
+            });
         }
     },
 
@@ -1084,12 +1086,19 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         return false;
     },
 
-    reload: function() {
+    /**
+     * Reload the grid.
+     * @param {Object} callback Additional callback function to call after reloading
+     */
+    reload: function(callback) {
         var store = this.getStore();
         var options = store.lastOptions;
         options.scope = this;
         options.callback = function() {
             this.setStore(store);
+            if (callback) {
+                callback();
+            }
         };
         store.load(options);
     },

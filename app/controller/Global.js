@@ -40,6 +40,11 @@ Ext.define('Lada.controller.Global', {
         var i18n = Lada.getApplication().bundle;
         var tztext = utc ? i18n.getMsg('timezone.text.utc') : i18n.getMsg('timezone.text.local');
         button.setText( i18n.getMsg('timezone.button.text') + tztext );
+        //Get components that need a reload
+        var dynamicgrids = Ext.ComponentQuery.query('dynamicgrid');
+        var auditrails = Ext.ComponentQuery.query('audittrail');
+        var componentsToWaitFor = dynamicgrids.length + auditrails.length;
+        button.startToggle(componentsToWaitFor);
         //Fire event to notify components
         Ext.fireEvent('timezonetoggled', utc);
     }

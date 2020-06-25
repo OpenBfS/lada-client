@@ -90,6 +90,7 @@ Ext.application({
         'Lada.model.Query',
         'Lada.store.GridColumn',
         'Lada.store.Query',
+        'Lada.view.widget.TimeZoneButton',
         'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.window.ElanScenarioWindow',
         'Lada.view.window.TrackedWindow',
