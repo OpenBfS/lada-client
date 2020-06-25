@@ -14,11 +14,11 @@ var Ext = Ext || window['Ext'] || {};
  */
 Ext.Microloader = Ext.Microloader || (function () {
     var Boot = Ext.Boot,
-    //<debug>
+        //<debug>
         _debug = function (message) {
             //console.log(message);
         },
-    //</debug>
+        //</debug>
         _warn = function (message) {
             console.log("[WARN] " + message);
         },
@@ -44,9 +44,11 @@ Ext.Microloader = Ext.Microloader || (function () {
         // ignore
     }
 
-    var _cache = window['applicationCache'],
-        // Local Storage Controller
-        LocalStorage = {
+    // appCache
+    var _cache;
+
+    // Local Storage Controller
+    var LocalStorage = {
             clearAllPrivate: function(manifest) {
                 if(_storage) {
 
@@ -96,9 +98,7 @@ Ext.Microloader = Ext.Microloader || (function () {
                 }
                 catch (e) {
                     if (_storage && e.code == e.QUOTA_EXCEEDED_ERR) {
-                        //<debug>
                         _warn("LocalStorage Quota exceeded, cannot store " + key + " locally");
-                        //</debug>
                     }
                 }
             }
@@ -225,7 +225,7 @@ Ext.Microloader = Ext.Microloader || (function () {
             },
 
             useAppCache: function() {
-                return true;
+                return this.content.appCacheEnabled;
             },
 
             // Concatenate all assets for easy access
@@ -307,8 +307,12 @@ Ext.Microloader = Ext.Microloader || (function () {
 
             applyCacheBuster: function(url) {
                 var tstamp = new Date().getTime(),
-                    sep = url.indexOf('?') === -1 ? '?' : '&';
-                url = url + sep + "_dc=" + tstamp;
+                    sep = url.indexOf('?') === -1 ? '?' : '&',
+                    progressive = Ext.manifest.progressive,
+                    serviceWorker = progressive && progressive.serviceWorker;
+                if (!serviceWorker) {
+                    url = url + sep + "_dc=" + tstamp;
+                }
                 return url;
             },
 
@@ -393,6 +397,13 @@ Ext.Microloader = Ext.Microloader || (function () {
                 Microloader.urls = [];
                 Microloader.manifest = manifest;
                 Ext.manifest = Microloader.manifest.exportContent();
+                var progressive = Ext.manifest.progressive;
+                if (progressive && progressive.serviceWorker) {
+                    if ('serviceWorker' in navigator) {
+                        navigator.serviceWorker.register('./' + progressive.serviceWorker);
+                        Ext.Boot.config.disableCaching = false;
+                    }
+                }
 
                 var assets = manifest.getAssets(),
                     cachedAssets = [],
@@ -459,7 +470,6 @@ Ext.Microloader = Ext.Microloader || (function () {
                         // Un cache this asset so it is loaded next time
                         asset.uncache();
                     }
-
                     //<debug>
                         _debug("Checksum for Cached Asset: " + asset.assetConfig.path + " is " + checksum);
                     //</debug>
@@ -492,7 +502,6 @@ Ext.Microloader = Ext.Microloader || (function () {
             onAllAssetsReady: function() {
                 _loaded = true;
                 Microloader.notify();
-
                 if (navigator.onLine !== false) {
                     //<debug>
                         _debug("Application is online, checking for updates");
@@ -561,7 +570,7 @@ Ext.Microloader = Ext.Microloader || (function () {
                     window.removeEventListener('online', Microloader.checkAllUpdates, false);
                 }
 
-                if(_cache) {
+                if (Microloader.manifest.useAppCache()) {
                     Microloader.checkForAppCacheUpdate();
                 }
 
@@ -573,12 +582,29 @@ Ext.Microloader = Ext.Microloader || (function () {
 
             checkForAppCacheUpdate: function() {
                 //<debug>
-                    _debug("Checking App Cache status");
+                _debug("Checking App Cache status");
                 //</debug>
+
+                if (!_cache) {
+                    try {
+                        _cache = !!window.applicationCache && window.applicationCache
+                    } catch (e) {
+                            //<debug>
+                          _debug("Application has enabled AppCache but it is not supported by this browser");
+                            //</debug>
+                        return;
+                    }
+
+                    // If cache retrieval didn't throw an exception but cache is still not valid, bail
+                    if (!_cache) {
+                        return;
+                    }
+                }
+
                 if (_cache.status === _cache.UPDATEREADY || _cache.status === _cache.OBSOLETE) {
-                    //<debug>
+                        //<debug>
                         _debug("App Cache is already in an updated");
-                    //</debug>
+                        //</debug>
                     Microloader.appCacheState = 'updated';
                 } else if (_cache.status !== _cache.IDLE && _cache.status !== _cache.UNCACHED) {
                     //<debug>
@@ -600,9 +626,9 @@ Ext.Microloader = Ext.Microloader || (function () {
 
             checkForUpdates: function() {
                 // Fetch the Latest Manifest from the server
-                //<debug>
+                    //<debug>
                     _debug("Checking for updates at: " + Microloader.manifest.url);
-                //</debug>
+                    //</debug>
                 Boot.fetch(Microloader.applyCacheBuster(Microloader.manifest.url), Microloader.onUpdatedManifestLoaded);
             },
 
@@ -672,7 +698,6 @@ Ext.Microloader = Ext.Microloader || (function () {
                         //<debug>
                         _debug("New Manifest has caching disabled, clearing out any private storage");
                         //</debug>
-
                         Microloader.updatedManifest = manifest;
                         LocalStorage.clearAllPrivate(manifest);
                         Microloader.onAllUpdatedAssetsReady();
@@ -748,9 +773,9 @@ Ext.Microloader = Ext.Microloader || (function () {
                                     deltas = manifest.deltas;
                                     deltaPath = deltas + "/" + newAsset.assetConfig.path + "/" + currentAsset.assetConfig.hash + ".json";
                                     // Fetch the Delta Patch and update the contents of the asset
-                                    //<debug>
+                                        //<debug>
                                         _debug("Delta update found for: " + newAsset.assetConfig.path + " fetching");
-                                    //</debug>
+                                        //</debug>
                                     Boot.fetch(deltaPath,
                                         (function (asset, oldAsset) {
                                             return function (result) {
@@ -785,14 +810,13 @@ Ext.Microloader = Ext.Microloader || (function () {
 
                 if (!result.error) {
                     checksum = Microloader.checksum(result.content, asset.assetConfig.hash);
-                    //<debug>
+                        //<debug>
                         _debug("Checksum for Full asset: " + asset.assetConfig.path + " is " + checksum);
-                    //</debug>
+                        //</debug>
                     if (!checksum) {
                         //<debug>
                             _debug("Full Update Asset: " + asset.assetConfig.path + " has failed checksum. This asset will be uncached for future loading");
                         //</debug>
-
                         // uncache this asset as there is a new version somewhere that has not been loaded.
                         asset.uncache();
                     } else {
@@ -803,7 +827,6 @@ Ext.Microloader = Ext.Microloader || (function () {
                     //<debug>
                         _debug("Error loading file at" + asset.assetConfig.path + ". This asset will be uncached for future loading");
                     //</debug>
-
                     // uncache this asset as there is a new version somewhere that has not been loaded.
                     asset.uncache();
                 }
@@ -826,14 +849,13 @@ Ext.Microloader = Ext.Microloader || (function () {
                         json = JSON.parse(result.content);
                         content = Microloader.patch(oldAsset.content, json);
                         checksum = Microloader.checksum(content, asset.assetConfig.hash);
-                        //<debug>
+                            //<debug>
                             _debug("Checksum for Delta Patched asset: " + asset.assetConfig.path + " is " + checksum);
-                        //</debug>
+                            //</debug>
                         if (!checksum) {
                             //<debug>
                                 _debug("Delta Update Asset: " + asset.assetConfig.path + " has failed checksum. This asset will be uncached for future loading");
                             //</debug>
-
                             // uncache this asset as there is a new version somewhere that has not been loaded.
                             asset.uncache();
                         } else {
@@ -864,9 +886,9 @@ Ext.Microloader = Ext.Microloader || (function () {
                 if (Microloader.updatedManifest) {
                     while (Microloader.removedAssets.length > 0) {
                         asset = Microloader.removedAssets.pop();
-                        //<debug>
+                            //<debug>
                             _debug("Asset: " + asset.assetConfig.path + " was removed, un-caching");
-                        //</debug>
+                            //</debug>
                         asset.uncache();
                     }
 
@@ -879,9 +901,9 @@ Ext.Microloader = Ext.Microloader || (function () {
 
                     while (Microloader.updatedAssets.length > 0) {
                         asset = Microloader.updatedAssets.pop();
-                        //<debug>
+                            //<debug>
                             _debug("Asset: " + asset.assetConfig.path + " was updated, re-caching");
-                        //</debug>
+                            //</debug>
                         asset.cache();
                     }
 
@@ -893,9 +915,9 @@ Ext.Microloader = Ext.Microloader || (function () {
             notifyUpdateReady: function () {
                 if (Microloader.appCacheState !== 'checking' && Microloader.updatedAssetsReady) {
                     if (Microloader.appCacheState === 'updated' || Microloader.updatedManifest) {
-                        //<debug>
+                            //<debug>
                             _debug("There was an update here you will want to reload the app, trigger an event");
-                        //</debug>
+                            //</debug>
                         Microloader.appUpdate = {
                             updated: true,
                             app: Microloader.appCacheState === 'updated',
@@ -904,12 +926,12 @@ Ext.Microloader = Ext.Microloader || (function () {
 
                         Microloader.fireAppUpdate();
                     }
-                    //<debug>
                     else {
+                        //<debug>
                         _debug("AppCache and LocalStorage Cache are current, no updating needed");
+                        //</debug>
                         Microloader.appUpdate = {};
                     }
-                    //</debug>
                 }
             },
 
