@@ -24,7 +24,7 @@ ENV OPENSSL_CONF /etc/ssl/
 #
 
 RUN mkdir -p /usr/share/man/man1/ && apt-get update -y && apt-get install -y \
-    curl unzip openjdk-11-jre git && \
+    curl unzip default-jre-headless git && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 80 81 82 83 84
