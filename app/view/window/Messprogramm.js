@@ -10,7 +10,7 @@
  * Window to edit a Messprogramm
  */
 Ext.define('Lada.view.window.Messprogramm', {
-    extend: 'Lada.view.window.TrackedWindow',
+    extend: 'Lada.view.window.RecordWindow',
     alias: 'widget.messprogramm',
 
     requires: [
@@ -29,7 +29,7 @@ Ext.define('Lada.view.window.Messprogramm', {
 
     record: null,
     recordType: 'messprogramm',
-    modellClass: Lada.model.Messprogramm,
+    modelClass: Lada.model.Messprogramm,
 
     /**
      * This function initialises the Window
@@ -114,6 +114,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                 }
             }
         }];
+        this.modelClass = Lada.model.Messprogramm;
         this.callParent(arguments);
     },
 

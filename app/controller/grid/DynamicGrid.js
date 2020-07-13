@@ -195,6 +195,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 if (win.show()) {
                     win.loadRecord(id, this, function(record, operation, success) {
                         if (success) {
+                            win.setRecord(record);
                             win.initData(record);
                         }
                     });
