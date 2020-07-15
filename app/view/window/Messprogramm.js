@@ -37,12 +37,7 @@ Ext.define('Lada.view.window.Messprogramm', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
-
-        if (this.record === null) {
-            this.title = i18n.getMsg('messprogramm.window.create.title');
-        } else {
-            this.title = i18n.getMsg('messprogramm.window.edit.title') +' <i>(Referenzierte Proben '+this.record.get('referenceCount')+')</i>';
-        }
+        this.title = i18n.getMsg('title.loading.messprogramm');
         this.buttons = [{
             text: i18n.getMsg('generateproben'),
             action: 'generateproben',
@@ -134,6 +129,7 @@ Ext.define('Lada.view.window.Messprogramm', {
         this.initializeUi();
         this.clearMessages();
         var me = this;
+        var i18n = Lada.getApplication().bundle;
 
         // If a record was passed to this window,
         // create a Edit window
@@ -167,6 +163,11 @@ Ext.define('Lada.view.window.Messprogramm', {
 
                 me.down('messprogrammform').setMediaDesk(record);
                 me.setLoading(false);
+                if (me.record === null) {
+                    me.setTitle(i18n.getMsg('messprogramm.window.create.title'));
+                } else {
+                    me.setTitle(i18n.getMsg('messprogramm.window.edit.title') +' <i>(Referenzierte Proben '+ me.record.get('referenceCount')+')</i>');
+                }
             };
             if (!loadedRecord) {
                 Ext.ClassManager.get('Lada.model.Messprogramm').load(this.record.get('id'), {
