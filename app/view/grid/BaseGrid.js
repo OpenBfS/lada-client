@@ -28,6 +28,26 @@ Ext.define('Lada.view.grid.BaseGrid', {
     reloadMask: null,
 
     /**
+     * Init component
+     */
+    initComponent: function() {
+        //Check if component is used in a window
+        var parentWin = this.up('window');
+        if (parentWin) {
+            //If used in a window destroy mask component before parent window is closed
+            //This should prevent errors in the framework during the windows closing process
+            var me = this;
+            parentWin.onBefore('close', function() {
+                if (me.reloadMask && me.reloadMask.rendered) {
+                    me.reloadMask.hide();
+                    me.reloadMask.destroy();
+                }
+            });
+        }
+        this.callParent(arguments);
+    },
+
+    /**
      * Adds a handler to the given store to show an error mask if the store failed to load.
      * The handle will exit if this component is no longer visible.
      * @param {Ext.data.Store} store Store to add the handler to

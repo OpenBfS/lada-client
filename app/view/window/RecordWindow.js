@@ -179,6 +179,10 @@ Ext.define('Lada.view.window.RecordWindow', {
      * If a request is still pending, abort and close this window
      */
     close: function() {
+        //If still loading, close mask
+        if (this.reloadMask) {
+            this.reloadMask.destroy();
+        }
         this.callParent(arguments);
         if (this.loadingModel) {
             this.loadingModel.abort();
