@@ -36,6 +36,8 @@ Ext.define('Lada.view.window.ReloadMask', {
      */
     renderTo: null,
 
+    shadow: false,
+
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

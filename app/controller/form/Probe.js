@@ -731,6 +731,9 @@ Ext.define('Lada.controller.form.Probe', {
      * TODO: also trigers for 'subfields' (hour/minute picker)
      */
     checkDate: function(field) {
+        if (!field) {
+            return;
+        }
         var now = new Date().valueOf();
         var w = 0; //amount of warnings
         var e = 0; //errors

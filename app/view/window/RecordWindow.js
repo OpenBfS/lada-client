@@ -47,7 +47,6 @@ Ext.define('Lada.view.window.RecordWindow', {
      */
     placeholder: null,
 
-    shadow: false,
 
     /**
      * @private
@@ -157,20 +156,19 @@ Ext.define('Lada.view.window.RecordWindow', {
      */
     hideReloadMask: function() {
         this.unmask();
-        if (this.reloadMask && this.reloadMask.isVisible()) {
+        if (this.isVisible() && this.reloadMask && this.reloadMask.isVisible()) {
             this.reloadMask.hide();
         }
     },
 
     removeAll: function() {
-        //If placeholder panel is still in place: try to destroy it
+        //If placeholder panel is still in place: try to remove it
         if (this.placeholder) {
             this.hideReloadMask();
             try {
                 this.remove(this.placeholder);
-                //this.placeholder.destroy();
             } catch (e) {
-                Ext.log({msg: 'Can not destroy placeholder panel: ' + e, level: 'warn'});
+                Ext.log({msg: 'Can not remove placeholder panel: ' + e, level: 'warn'});
             }
             this.placeholder = null;
         }
