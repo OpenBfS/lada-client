@@ -39,7 +39,7 @@ Ext.define('Lada.view.grid.DownloadQueue', {
             dataIndex: 'startDate',
             width: 85,
             renderer: function(value) {
-                return Lada.util.Date.formatTimestamp(value, 'hh:mm:ss');
+                return Lada.util.Date.formatTimestamp(value, 'HH:mm:ss');
             }
         }, {
             header: i18n.getMsg('print.status'),
