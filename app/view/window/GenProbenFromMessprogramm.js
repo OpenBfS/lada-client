@@ -169,6 +169,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 width: 200,
                 name: 'start',
                 format: 'd.m.Y',
+                formatText: '',
                 period: 'start',
                 value: new Date()
             }, {
@@ -179,6 +180,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 width: 200,
                 name: 'end',
                 format: 'd.m.Y',
+                formatText: '',
                 period: 'end',
                 value: new Date(new Date().getFullYear(), 11, 31)
             }]

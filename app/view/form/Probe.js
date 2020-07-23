@@ -405,6 +405,7 @@ Ext.define('Lada.view.form.Probe', {
                             margin: '0, 5, 5, 5',
                             name: 'solldatumBeginn',
                             format: 'd.m.Y',
+                            formatText: '',
                             width: '50%',
                             period: 'start',
                             readOnly: true
@@ -416,6 +417,7 @@ Ext.define('Lada.view.form.Probe', {
                             margin: '0, 5, 5, 5',
                             name: 'solldatumEnde',
                             format: 'd.m.Y',
+                            formatText: '',
                             width: '50%',
                             period: 'end',
                             readOnly: true
