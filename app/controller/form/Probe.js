@@ -551,6 +551,7 @@ Ext.define('Lada.controller.form.Probe', {
         var formPanel = button.up('form');
         var data = formPanel.getForm().getFieldValues(false);
         var record = formPanel.getForm().getRecord();
+        var wasPhantom = record.phantom;
         for (var key in data) {
             record.set(key, data[key]);
         }
@@ -561,7 +562,10 @@ Ext.define('Lada.controller.form.Probe', {
             record.set('id',null);
         }
 
-        formPanel.down('tagwidget').applyChanges();
+        //If record is phantom, do not apply tags yet
+        if (!wasPhantom) {
+            formPanel.down('tagwidget').applyChanges();
+        }
 
         //If form data is read only, exit after saving tags
         if (formPanel.readOnly) {
@@ -572,7 +576,7 @@ Ext.define('Lada.controller.form.Probe', {
             var data = formPanel.getForm().getFieldValues(false);
             var record = formPanel.getForm().getRecord();
             for (var key in data) {
-                //Only set existing fields, avoids sending the tag widget
+                //Only set existing fields, wait until record is saved before applying tags
                 if (record.get(key) !== undefined &&
                             key !== formPanel.down('tagwidget').getInputId()) {
                     record.set(key, data[key]);
@@ -601,6 +605,11 @@ Ext.define('Lada.controller.form.Probe', {
                         formPanel.setRecord(record);
                         formPanel.setMessages(json.errors, json.warnings);
                         if (response.action === 'create' && json.success) {
+                            if (wasPhantom) {
+                                var tagWidget = formPanel.down('tagwidget');
+                                tagWidget.setProbe(record.data.id);
+                                tagWidget.applyChanges();
+                            }
                             button.up('window').close();
                             var win = Ext.create('Lada.view.window.ProbeEdit', {
                                 record: record

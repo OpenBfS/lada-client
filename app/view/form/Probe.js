@@ -572,7 +572,7 @@ Ext.define('Lada.view.form.Probe', {
                             //Close window if parent window is closed
                             button.up('probenedit').on('close', function() {
                                 win.close();
-                            })
+                            });
                             win.show();
                         }
                     }]
@@ -632,7 +632,10 @@ Ext.define('Lada.view.form.Probe', {
             this.down('messstellelabor').setValue(items.getAt(0));
         }
         this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
-        this.down('tagwidget').setProbe(probeRecord.data.id);
+        //Do not set tagwidget probe id if record is not saved
+        if (probeRecord.phantom === false) {
+            this.down('tagwidget').setProbe(probeRecord.data.id);
+        }
     },
 
     setMediaDesk: function(record) {
