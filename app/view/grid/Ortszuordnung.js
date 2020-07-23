@@ -114,7 +114,9 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                                 record.set(key, rec.getData()[key]);
                             }
                             record.endEdit();
-                            me.getView().refresh();
+                            if (me.isVisible() === true) {
+                                me.getView().refresh();
+                            }
                         }
                     });
                 }
