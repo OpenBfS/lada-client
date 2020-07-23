@@ -147,12 +147,14 @@ Ext.define('Lada.view.window.ImportResponse', {
         var i18n = Lada.getApplication().bundle;
         var errors = data.errors;
         var warnings = data.warnings;
+        var notifications = data.notifications;
         var out = [];
         // There is a entry for each imported proben in the errors dict (might be
         // empty)
 
         var numErrors;
         var numWarnings;
+        var numNotifications;
         if (!Ext.isObject(errors)) {
             numErrors = 0;
         } else {
@@ -190,6 +192,21 @@ Ext.define('Lada.view.window.ImportResponse', {
                 out.push('<br/>');
                 out.push('<br/>');
             }
+
+            if (numNotifications > 0) {
+                if (notifications.Parser) {
+                    out.push(i18n.getMsg('importResponse.numNotifications',
+                        numNotifications - 1));
+                    out.push('<br/>');
+                    out.push(i18n.getMsg('importResponse.Notifications'));
+                } else {
+                    out.push(i18n.getMsg('importResponse.numNotifications',
+                        numNotifications));
+                }
+                out.push('<br/>');
+                out.push('<br/>');
+            }
+
             if (numErrors > 0 || numWarnings > 0) {
                 out.push(i18n.getMsg('importResponse.failure.details'));
                 out.push('<hr>');
@@ -211,6 +228,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         var i18n = Lada.getApplication().bundle;
         var errors = data.errors;
         var warnings = data.warnings;
+        var notifications = data.notifications;
         var out = [];
         // There is a entry for each imported proben in the errors dict (might be
         // empty)
@@ -228,6 +246,11 @@ Ext.define('Lada.view.window.ImportResponse', {
             numWarnings = 0;
         } else {
             numWarnings = Object.keys(warnings).length;
+        }
+        if (!Ext.isObject(notifications)) {
+            numNotifications = 0;
+        } else {
+            numNotifications = Object.keys(notifications).length;
         }
 
         if (!data.success) {
@@ -346,6 +369,64 @@ Ext.define('Lada.view.window.ImportResponse', {
             } else {
                 out.push('<br>Beim Import traten keine Warnungen auf.</br>');
             }
+
+            if (numNotifications > 0) {
+                out.push('<br/>');
+                out.push(i18n.getMsg('importResponse.notifications.notificationlist'));
+                out.push('<br/>');
+                out.push('<ol>');
+                if (notifications.Parser) {
+                    out.push(i18n.getMsg('importResponse.parser'));
+                    out.push('<ol>');
+                    msgs = notifications.Parser;
+                    for (var i = msgs.length - 1; i >= 0; i--) {
+                        out.push('<li>' + msgs[i].key + ' ('
+                                 + i18n.getMsg(msgs[i].code.toString())
+                                 + '): ' + msgs[i].value + '</li>');
+                    }
+                    out.push('</ol>');
+                }
+                for (key in notifications) {
+                    if (key !== 'Parser') {
+                        out.push(i18n.getMsg('importResponse.list.probe', key));
+                    } else {
+                        continue;
+                    }
+                    msgs = notifications[key];
+                    out.push('<ol>');
+                    validation = [];
+                    validation.push(i18n.getMsg(
+                        'importResponse.notifications.validations'));
+                    for (var i = msgs.length - 1; i >= 0; i--) {
+                        if (msgs[i].key === 'validation') {
+                            validation.push('<ol>');
+                            var parts = msgs[i].value.split('#');
+                            var str = i18n.getMsg(parts[0]) +
+                                (parts[1] === undefined ? '' : ' ' + parts[1]);
+                            validation.push(str + ' ('
+                                + i18n.getMsg(msgs[i].code.toString()) + ')');
+                            validation.push('</ol>');
+                        } else {
+                            out.push('<li>' + msgs[i].key + ' ('
+                                     + i18n.getMsg(msgs[i].code.toString())
+                                     + '): ' + msgs[i].value + '</li>');
+                        }
+                    }
+                    if (validation.length > 1) {
+                        out.push('<li>');
+                        out.push(validation.join(''));
+                        out.push('</li>');
+                    }
+                    out.push('</ol>');
+                    if (key !== 'Parser') {
+                        out.push('</li>');
+                    }
+                }
+                out.push('</ol>');
+            } else {
+                out.push('<br>Beim Import traten keine Hinweismeldungen auf.</br>');
+            }
+
             if (!divHtml) {
                 out.push('</body></html>');
             } else {

@@ -194,9 +194,11 @@ Ext.define('Lada.view.window.SetStatus', {
                         var sel = me.selection[count];
                         var errors = json.errors;
                         var warnings = json.warnings;
+                        var notifications = json.notifications;
                         var out = [];
                         var numErrors;
                         var numWarnings;
+                        var notifications;
                         if (!Ext.isObject(errors)) {
                             numErrors = 0;
                         } else {
@@ -227,6 +229,20 @@ Ext.define('Lada.view.window.SetStatus', {
                             out.push('<dd><ul>');
                             for (var key in warnings) {
                                 msgs = warnings[key];
+                                var validation = [];
+                                for (var j = msgs.length - 1; j >= 0; j--) {
+                                    validation.push('<li><b>' + i18n.getMsg(key) + ':</b> '
+                                            + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                }
+                                out.push(validation.join(''));
+                            }
+                            out.push('</ul></dd>');
+                        }
+                        if (numNotifications > 0) {
+                            out.push('<dl><dd>' + i18n.getMsg('notes') + '</dd>');
+                            out.push('<dd><ul>');
+                            for (var key in notifications) {
+                                msgs = notifications[key];
                                 var validation = [];
                                 for (var j = msgs.length - 1; j >= 0; j--) {
                                     validation.push('<li><b>' + i18n.getMsg(key) + ':</b> '
@@ -298,9 +314,11 @@ Ext.define('Lada.view.window.SetStatus', {
                         progress.updateProgress(1, progressText + ' (' + 1 + ')');
                         var errors = json.errors;
                         var warnings = json.warnings;
+                        var notifications = json.notifications;
                         var out = [];
                         var numErrors;
                         var numWarnings = 0;
+                        var numNotifications = 0;
                         //Check warnings
                         if (Ext.isObject(warnings)) {
                             numWarnings = Object.keys(warnings).length;
@@ -332,6 +350,25 @@ Ext.define('Lada.view.window.SetStatus', {
                             out.push('<dd><ul>');
                             for (var key in errors) {
                                 msgs = errors[key];
+                                var validation = [];
+                                for (var i = msgs.length - 1; i >= 0; i--) {
+                                        validation.push('<li><b>' + i18n.getMsg(key) + ':</b> ' + i18n.getMsg(msgs[i].toString()) + '</li>');
+                                }
+                                out.push(validation.join(''));
+                            }
+                            out.push('</ul></dd></dl>');
+                            out.push('<br/>');
+                        }
+                        if (Ext.isObject(notifications)) {
+                            numNotifications = Object.keys(notifications).length;
+                        }
+                        //check notifications
+                        if (numNotifications > 0) {
+                            var msgs;
+                            out.push('<dl><dd>' + i18n.getMsg('notes') + '</dd>');
+                            out.push('<dd><ul>');
+                            for (var key in notifications) {
+                                msgs = notifications[key];
                                 var validation = [];
                                 for (var i = msgs.length - 1; i >= 0; i--) {
                                         validation.push('<li><b>' + i18n.getMsg(key) + ':</b> ' + i18n.getMsg(msgs[i].toString()) + '</li>');
