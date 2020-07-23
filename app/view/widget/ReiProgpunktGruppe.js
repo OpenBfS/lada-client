@@ -21,6 +21,8 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
             '{reiProgPunktGruppe} - {beschreibung}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">{reiProgPunktGruppe}</tpl>'),
+    labelTpl: Ext.create('Ext.XTemplate',
+        '<tpl for=".">{reiProgPunktGruppe} - {beschreibung}</tpl>'),
     editable: this.editable || false,
     disableKeyFilter: true,
     forceSelection: true,
