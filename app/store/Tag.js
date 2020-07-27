@@ -89,9 +89,19 @@ Ext.define('Lada.store.Tag', {
     },
 
     /**
-     * Loads the store holding the tags, assigned to the current probe
+     * Loads the store holding the tags, assigned to the current probe.
+     * After loading the callback is executed.
+     * @param {*} scope Callback scope
+     * @param {*} callback Callback function
      */
     loadAssignedTags: function(scope, callback) {
+        if (!this.assignedTagsStore) {
+            this.assignedTagsStore = Ext.create('Lada.store.Tag');
+            if (!this.pId) {
+                callback.call(scope? scope: this);
+                return;
+            }
+        }
         this.assignedTagsStore.load({
             scope: scope,
             callback: callback

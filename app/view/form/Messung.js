@@ -234,7 +234,10 @@ Ext.define('Lada.view.form.Messung', {
             //remove the Statuskombi field from the form
             me.down('statuskombi').hide();
         }
-        this.down('tagwidget').setMessung(this.record.id);
+        //Do not set record in tag widget if it is a phantom record
+        if (this.record.phantom === false) {
+            this.down('tagwidget').setMessung(this.record.id);
+        }
         //Get the connected Probe instance and Datenbasis
         Lada.model.Probe.load(this.record.get('probeId'), {
             success: function(proberecord) {

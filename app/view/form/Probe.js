@@ -570,7 +570,8 @@ Ext.define('Lada.view.form.Probe', {
                                 recordType: "probe"
                             });
                             //Close window if parent window is closed
-                            button.up('probenedit').on('close', function() {
+                            var parentWindow = button.up('probenedit')? button.up('probenedit'): button.up('probecreate');
+                            parentWindow.on('close', function() {
                                 win.close();
                             });
                             win.show();

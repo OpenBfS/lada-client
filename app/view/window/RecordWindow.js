@@ -155,8 +155,8 @@ Ext.define('Lada.view.window.RecordWindow', {
      * Unmask this component
      */
     hideReloadMask: function() {
-        this.unmask();
         if (this.isVisible() && this.reloadMask && this.reloadMask.isVisible()) {
+            this.unmask();
             this.reloadMask.hide();
         }
     },

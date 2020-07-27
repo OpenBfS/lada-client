@@ -212,8 +212,7 @@ Ext.define('Lada.view.widget.Tag', {
         this.store.loadAssignedTags(me, function(records) {
             var ids = [];
             if (!records) {
-                Ext.log({msg: 'No tag records loaded', level: 'warn'});
-                return;
+                records = [];
             }
 
             //Set tags, received from the server
@@ -403,20 +402,27 @@ Ext.define('Lada.view.widget.Tag', {
         var i18n = Lada.getApplication().bundle;
         var keys = Object.keys(this.changes);
         var requests = 0;
+        //True if all tags were saved successfully
         var success = true;
         var errorHtml = '';
         var callback = function(options, suc, responseObj) {
-            var response = Ext.decode(responseObj.responseText);
-            var tagId = responseObj.request.jsonData.tagId;
-            if (response.success === false) {
-                success = false;
-                var msg = i18n.getMsg('tag.widget.err.genericsave');
-                if (response.message === '699') {
-                    msg = i18n.getMsg('tag.widget.err.globaltagnotallowed.' + me.getRecordType());
+            if (suc === true) {
+                var response = Ext.decode(responseObj.responseText);
+                var tagId = responseObj.request.jsonData.tagId;
+                if (response.success === false) {
+                    success = false;
+                    var msg = i18n.getMsg('tag.widget.err.genericsave');
+                    if (response.message === '699') {
+                        msg = i18n.getMsg('tag.widget.err.globaltagnotallowed.' + me.getRecordType());
+                    }
+                    errorHtml += me.store.getById(tagId).get('tag') + ' - ' + msg + '<br />';
+                } else {
+                    me.changes[tagId] = null;
                 }
-                errorHtml += me.store.getById(tagId).get('tag') + ' - ' + msg + '<br />';
             } else {
-                me.changes[tagId] = null;
+                errorHtml += 'Fehler: ' + responseObj.status + '<br />';
+                success = false;
+                return;
             }
             requests++;
             if (requests === keys.length) {
