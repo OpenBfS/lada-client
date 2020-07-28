@@ -33,6 +33,7 @@ Ext.define('Lada.view.widget.base.DateField', {
             listeners: this.listeners,
             triggerAction: this.triggerAction,
             format: this.format,
+            formatText: this.formatText,
             msgTarget: 'none',
             tpl: this.tpl
         }, {
