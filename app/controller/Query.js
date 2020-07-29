@@ -716,6 +716,7 @@ Ext.define('Lada.controller.Query', {
                         options.store = Ext.getStore('statuskombi');
                         field = Ext.create('Lada.view.widget.StatuskombiSelect',
                             options);
+                        field.store.load();
                         negateCheckbox = true;
                         break;
                     case 'anlage':
