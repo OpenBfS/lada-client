@@ -657,7 +657,7 @@ Ext.define('Lada.view.window.GridExport', {
             }
             // create header
             var expcolumns = [];
-            if ( me.down('checkbox[name=secondarycolumns]').value) {
+            if ( me.down('checkbox[name=secondarycolumns]').getValue()) {
                 expcolumns = me.getColumns(true);
             }
             var columns = me.getColumns();
@@ -798,6 +798,13 @@ Ext.define('Lada.view.window.GridExport', {
         }
         if (newValue === 'laf') {
             ecolVisible = false;
+            win.down('checkbox[name=allcolumns]').setVisible(false);
+            win.down('checkbox[name=secondarycolumns]').setVisible(false);
+        } else {
+            win.down('checkbox[name=allcolumns]').setVisible(true);
+            if (this.rowexp) {
+                win.down('checkbox[name=secondarycolumns]').setVisible(true);
+            }
         }
         win.down('tagfield[name=exportcolumns]').setVisible(ecolVisible);
     },
@@ -815,16 +822,16 @@ Ext.define('Lada.view.window.GridExport', {
     exportsecondarytoggle: function(box, newValue) {
         var me = box.up('window');
         var expButton = me.down('button[action=export]');
-        if (newValue && !me.down('checkbox[name=allcolumns]').getValue()) {
-            me.down('tagfield[name=exportcolumns]').setVisible(true);
+        if (newValue) {
+            me.down('tagfield[name=exportexpcolumns]').setVisible(
+                !me.down('checkbox[name=allcolumns]').getValue()
+            );
         } else {
-            me.down('tagfield[name=exportcolumns]').setVisible(false);
+            me.down('tagfield[name=exportexpcolumns]').setVisible(false);
         }
-        if (!newValue) {
-            expButton.setText(
-                Lada.getApplication().bundle.getMsg('export.button'));
-            expButton.setDisabled(false);
-        }
+        expButton.setText(
+            Lada.getApplication().bundle.getMsg('export.button'));
+        expButton.setDisabled(false);
         me.resetCopyButton(me);
     },
 
