@@ -19,6 +19,7 @@ Ext.define('Lada.view.form.Messung', {
         'Lada.view.widget.Messmethode',
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.base.Datetime',
+        'Lada.view.widget.base.NumberField',
         'Lada.view.widget.Statuskombi'
     ],
 
@@ -107,7 +108,7 @@ Ext.define('Lada.view.form.Messung', {
                             width: 300,
                             labelWidth: 100
                         }, {
-                            xtype: 'numberfield',
+                            xtype: 'numfield',
                             allowDecimals: false,
                             allowExponential: false,
                             enforceMaxLength: true,
@@ -331,7 +332,7 @@ Ext.define('Lada.view.form.Messung', {
         this.down('tfield[name=nebenprobenNr]').clearWarningOrError();
         //this.down('messmethode[name=mmtId]').clearWarningOrError();
         this.down('datetime[name=messzeitpunkt]').clearWarningOrError();
-        //this.down('numberfield[name=messdauer]').clearWarningOrError();
+        this.down('numfield[name=messdauer]').clearWarningOrError();
         this.down('chkbox[name=fertig]').clearWarningOrError();
         this.down('chkbox[name=geplant]').clearWarningOrError();
     },
@@ -341,7 +342,7 @@ Ext.define('Lada.view.form.Messung', {
         this.down('tfield[name=nebenprobenNr]').setReadOnly(value);
         this.down('messmethode[name=mmtId]').setReadOnly(value);
         this.down('datetime[name=messzeitpunkt]').setReadOnly(value);
-        this.down('numberfield[name=messdauer]').setReadOnly(value);
+        this.down('numfield[name=messdauer]').setReadOnly(value);
         this.down('chkbox[name=fertig]').setReadOnly(value);
     }
 });

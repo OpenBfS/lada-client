@@ -165,6 +165,11 @@ Ext.define('Lada.view.window.MessungCreate', {
         //Delete generated id to prevent sending invalid ids to the server
         messung.set('id', null);
         this.down('messungform').setRecord(messung);
+        var warnings = {  messdauer: [631],
+                          nebenprobenNr: [631]};
+        var errors = [];
+        this.setMessages(errors, warnings);
+        this.down('messungform').isValid();
     },
 
     /**
@@ -173,14 +178,14 @@ Ext.define('Lada.view.window.MessungCreate', {
      * @param warnings These Warning shall be shown
      */
     setMessages: function(errors, warnings) {
-        //todo this is a stub
+        this.down('messungform').setMessages(errors, warnings);
     },
 
     /**
      * Instructs the fields / forms listed in this method to clear their messages.
      */
     clearMessages: function() {
-        //todo this is a stub
+        this.down('messungform').clearMessages();
     },
 
     /**

@@ -31,7 +31,14 @@ Ext.define('Lada.controller.form.Messung', {
             'messungform': {
                 tagdirtychange: this.dirtyTags,
                 dirtychange: this.dirtyForm,
-                save: this.saveHeadless
+                save: this.saveHeadless,
+                validitychange: this.checkCommitEnabled
+            },
+            'messungform numfield [name=messdauer]': {
+                change: this.messdauerChanged
+            },
+            'messungform tfield [name=nebenprobenNr]': {
+                change: this.nebenprobenNrChanged
             },
             'messungform statuskombi button[action=newstatus]': {
                 click: this.addStatus
@@ -73,8 +80,8 @@ Ext.define('Lada.controller.form.Messung', {
                         .setDisabled(true);
                     formPanel.clearMessages();
                     formPanel.setRecord(record);
-                    formPanel.setMessages(json.errors, json.warnings);
                     formPanel.up('window').initData(record);
+                    formPanel.setMessages(json.errors, json.warnings);
 
                     var parentWin = button.up('window').parentWindow;
                     if (parentWin) {
@@ -229,6 +236,54 @@ Ext.define('Lada.controller.form.Messung', {
         formPanel.getForm().reset();
     },
 
+    checkCommitEnabled: function(callingEl) {
+        var panel;
+        if (callingEl.up) { //called by a field in the form
+            panel = callingEl.up('messungform');
+        } else { //called by the form
+            panel = callingEl.owner;
+        }
+        if (panel.getRecord().get('readonly')) {
+            panel.down('button[action=save]').setDisabled(true);
+            panel.down('button[action=discard]').setDisabled(true);
+        } else {
+            if (panel.isValid()) {
+                if (panel.isDirty()) {
+                    panel.down('button[action=discard]').setDisabled(false);
+                    panel.down('button[action=save]').setDisabled(false);
+                } else {
+                    panel.down('button[action=discard]').setDisabled(true);
+                    panel.down('button[action=save]').setDisabled(true);
+                }
+            } else {
+                panel.down('button[action=save]').setDisabled(true);
+                if ( panel.getRecord().phantom === true && !panel.isDirty() ) {
+                    panel.down('button[action=discard]').setDisabled(true);
+                } else {
+                    panel.down('button[action=discard]').setDisabled(false);
+                }
+            }
+        }
+    },
+
+    messdauerChanged: function(field) {
+        if (field.getValue() !== null ) {
+            field.up().clearWarningOrError();
+        } else {
+            field.up().showWarnings('Wert nicht gesetzt');
+        }
+    },
+
+    nebenprobenNrChanged: function(field) {
+        if (field.getValue() !== '') {
+            field.up().clearWarningOrError();
+        } else {
+            field.up().showWarnings('Wert nicht gesetzt');
+        }
+    },
+
+
+
     /**
       * The dirtyForm function enables or disables the save and discard
       * button which are present in the toolbar of the form.
@@ -245,7 +300,9 @@ Ext.define('Lada.controller.form.Messung', {
             return;
         }
         if (dirty) {
-            form.owner.down('button[action=save]').setDisabled(false);
+            if (form.isValid()) {
+                form.owner.down('button[action=save]').setDisabled(false);
+            }
             form.owner.down('button[action=discard]').setDisabled(false);
             form.owner.up('window').disableChildren();
         } else if (!tagwidget.hasChanges()) {
