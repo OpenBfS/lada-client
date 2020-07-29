@@ -806,7 +806,7 @@ Ext.define('Lada.view.window.GridExport', {
         var me = box.up('window');
         me.down('tagfield[name=exportcolumns]').setVisible(
             !newValue);
-        if (me.rowexp && me.down('checkbox[name=secondarycolumns]').value) {
+        if (me.rowexp && me.down('checkbox[name=secondarycolumns]').getValue()) {
             me.down('tagfield[name=exportexpcolumns]').setVisible(!newValue);
         }
         me.resetCopyButton(me);
@@ -815,8 +815,7 @@ Ext.define('Lada.view.window.GridExport', {
     exportsecondarytoggle: function(box, newValue) {
         var me = box.up('window');
         var expButton = me.down('button[action=export]');
-        me.down('checkbox[name=allcolumns]');
-        if (newValue && !me.down('checkbox[name=allcolumns]').value) {
+        if (newValue && !me.down('checkbox[name=allcolumns]').getValue()) {
             me.down('tagfield[name=exportcolumns]').setVisible(true);
         } else {
             me.down('tagfield[name=exportcolumns]').setVisible(false);
