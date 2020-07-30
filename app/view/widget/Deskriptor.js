@@ -98,5 +98,86 @@ Ext.define('Lada.view.widget.Deskriptor', {
 
     setStore: function(store) {
         this.down('combobox').setStore(store);
+    },
+
+    showWarnings: function(warnings) {
+        this.clearWarningOrError();
+        var img = this.down('image[name=warnImg]');
+        var tt = Ext.create('Ext.tip.ToolTip', {
+            target: img.getEl(),
+            html: warnings
+        });
+        this.warning = tt;
+        var cb = this.down('combobox');
+        if (cb.inputWrap && cb.inputEl) {
+            cb.inputWrap.addCls('x-lada-warning-field');
+            cb.inputEl.addCls('x-lada-warning-field');
+        } else {
+            cb.onAfter({
+                render: {
+                    fn: function(el) {
+                        el.inputWrap.addCls('x-lada-warning-field');
+                        el.inputEl.addCls('x-lada-warning-field');
+                    },
+                    single: true
+                }
+            });
+        }
+            img.show();
+        var fieldset = this.up('fieldset[collapsible=true]');
+        if (fieldset) {
+            var warningText = this.name + ': ' + warnings;
+            fieldset.showWarningOrError(true, warningText);
+        }
+    },
+
+    showErrors: function(errors) {
+        this.clearWarningOrError();
+        var img = this.down('image[name=errorImg]');
+        var warnImg = this.down('image[name=warnImg]');
+        warnImg.hide();
+        this.error = Ext.create('Ext.tip.ToolTip', {
+            target: img.getEl(),
+            html: errors
+        });
+        this.down('combobox').markInvalid('');
+        img.show();
+        var fieldset = this.up('fieldset[collapsible=true]');
+        if (fieldset) {
+            var i18n = Lada.getApplication().bundle;
+            var errorText = i18n.getMsg(this.name) + ': ' + errors;
+            fieldset.showWarningOrError(false, '', true, errorText);
+        }
+    },
+
+    clearWarningOrError: function() {
+        if (this.warning) {
+            this.warning.destroy();
+        }
+        if (this.error) {
+            this.error.destroy();
+        }
+        this.down('image[name=errorImg]').hide();
+        this.down('image[name=warnImg]').hide();
+        var cb = this.down('combobox');
+        if (cb.inputWrap && cb.inputEl) {
+            cb.inputWrap.removeCls('x-lada-warning-field');
+            cb.inputWrap.removeCls('x-lada-error-field');
+            cb.inputEl.removeCls('x-lada-warning-field');
+            cb.inputEl.removeCls('x-lada-error-field');
+        } else {
+            cb.onAfter({
+                render: {
+                    fn: function(el) {
+                        el.inputWrap.removeCls('x-lada-warning-field');
+                        el.inputWrap.removeCls('x-lada-error-field');
+                        el.inputEl.removeCls('x-lada-warning-field');
+                        el.inputEl.removeCls('x-lada-error-field');
+                    },
+                    single: true
+                }
+            });
+        }
+        cb.clearInvalid();
     }
 });

@@ -530,8 +530,9 @@ Ext.define('Lada.view.form.Probe', {
                                 readOnly: true
                             }]
                         }, {
-                            xtype: 'fieldset',
+                            xtype: 'fset',
                             title: i18n.getMsg('title.deskriptordetails'),
+                            name: 'deskriptordetails',
                             collapsible: true,
                             collapsed: true,
                             layout: {
@@ -747,7 +748,13 @@ Ext.define('Lada.view.form.Probe', {
         this.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
         this.down('fset[name=entnahmePeriod]').clearMessages();
         this.down('fset[name=sollzeitPeriod]').clearMessages();
+        this.down('tfield[name=mediaDesk]').clearWarningOrError();
+        this.down('fset[name=deskriptordetails]').clearMessages();
         this.down('fset[name=ursprung]').clearMessages();
+        //Deskriptoren
+        for (var i = 0; i < 12; i++) {
+            this.down('deskriptor[layer='+i+']').clearWarningOrError();
+        }
     },
 
     setReadOnly: function(value) {
@@ -781,7 +788,7 @@ Ext.define('Lada.view.form.Probe', {
             fields[i] = {
                 xtype: 'deskriptor',
                 fieldLabel: 'S' + i,
-                //name: 's' + i,
+                name: 's' + i,
                 labelWidth: 25,
                 width: 190,
                 layer: i,
