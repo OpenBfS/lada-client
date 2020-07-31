@@ -68,7 +68,7 @@ Ext.define('Lada.view.Viewport', {
                 }
             }, {
                 type: 'print',
-                tooltip: i18n.getMsg('printqueue.title'),
+                tooltip: i18n.getMsg('downloadqueue.title'),
                 callback: function() {
                     var qw = Ext.ComponentQuery.query('downloadqueuewin');
                     if (!qw[0]) {

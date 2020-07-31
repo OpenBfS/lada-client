@@ -27,6 +27,6 @@ Ext.define('Lada.view.window.Downloads', {
     initComponent: function() {
         this.callParent(arguments);
         var i18n = Lada.getApplication().bundle;
-        this.title = i18n.getMsg('printqueue.title');
+        this.title = i18n.getMsg('downloadqueue.title');
     }
 });
