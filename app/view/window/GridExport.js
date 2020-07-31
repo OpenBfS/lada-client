@@ -761,6 +761,7 @@ Ext.define('Lada.view.window.GridExport', {
                 }
             },
             failure: function(response) {
+                queueItem.set('done', true);
                 queueItem.set('status', 'error');
                 /* SSO will send a 302 if the Client is not authenticated
                 unfortunately this seems to be filtered by the browser.

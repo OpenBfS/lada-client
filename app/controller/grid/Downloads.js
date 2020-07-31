@@ -40,8 +40,12 @@ Ext.define('Lada.controller.grid.Downloads', {
                 method: 'DELETE',
                 callback: this.refreshQueue
             });
+        } else if (type === 'laf') {
+            // LAF export offers no server side cancelling API. This just stops
+            // caring about some future answer
+            model.set('done', true);
+            model.set('status', 'cancelled');
         }
-        // LAF offers no cancel
     },
 
     /**
