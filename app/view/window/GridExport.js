@@ -58,6 +58,8 @@ Ext.define('Lada.view.window.GridExport', {
      */
     secondaryData: [],
 
+    lafRequestUrl: '/laf',
+
     /**
      *Initialize the Window and the options available
      */
@@ -502,18 +504,13 @@ Ext.define('Lada.view.window.GridExport', {
                     content = win.getCSV(encoding);
                     textType = 'text/csv';
                     break;
+                case 'laf':
+                    win.getLAF(encoding, filename);
+                    break;
             }
             if (content) {
                 win.exportFile(content, {
                     type: textType + ';charset=' + encoding}, filename);
-            }
-            if (exportFormat === 'laf') {
-                win.getLAF(encoding).then(function(lafcontent) {
-                    win.exportFile(lafcontent, {
-                        type: 'text/plain;charset=' + encoding}, filename);
-                }, function(error) {
-                    win.showError(error);
-                });
             }
         };
         if (win.down('checkbox[name=secondarycolumns]').getValue()) {
@@ -706,7 +703,7 @@ Ext.define('Lada.view.window.GridExport', {
     /**
      * fetches probe-LAF, or, if available, messung-LAF
      */
-    getLAF: function(encoding) {
+    getLAF: function(encoding, filename) {
         var dataset = this.getDataSets();
         var jsondata = {};
         if (this.hasMessung) {
@@ -727,8 +724,8 @@ Ext.define('Lada.view.window.GridExport', {
             }
         } else if (this.hasProbe) {
             jsondata.proben = [];
-            for (var i= 0; i < dataset.length; i++) {
-                var pid = dataset[i].get(this.hasProbe);
+            for (var k= 0; k < dataset.length; k++) {
+                var pid = dataset[k].get(this.hasProbe);
                 jsondata.proben.push(pid);
             }
             if (!jsondata.proben.length) {
@@ -740,36 +737,43 @@ Ext.define('Lada.view.window.GridExport', {
             return false;
         }
         var me = this;
-        return new Ext.Promise(function(resolve, reject) {
-            Ext.Ajax.request({
-                url: 'lada-server/data/export/laf',
-                jsonData: jsondata,
-                headers: {
-                    'X-FILE-ENCODING': encoding
-                },
-                responseType: 'arraybuffer',
-                binary: true,
-                timeout: 2 * 60 * 1000,
-                success: function(response) {
-                    var data = response.responseBytes;
-                    resolve(data);
-                },
-                failure: function(response) {
-                    /* SSO will send a 302 if the Client is not authenticated
-                    unfortunately this seems to be filtered by the browser.
-                    We assume that a 302 was send when the follwing statement
-                    is true.
-                    */
-                    if (response.status === 0 &&
-                    response.getResponse().responseText === '') {
-                        var i18n = Lada.getApplication().bundle;
-                        Ext.MessageBox.confirm(i18n.getMsg('err.msg.sso.expired.title'),
-                            i18n.getMsg('err.msg.sso.expired.body'), me.reload);
-                    } else {
-                        reject();
-                    }
+        var printController = Lada.app.getController('Lada.controller.Print');
+        var queueItem = printController.addQueueItem(filename, 'laf');
+        Ext.Ajax.request({
+            url: me.lafRequestUrl,
+            jsonData: jsondata,
+            headers: {
+                'X-FILE-ENCODING': encoding
+            },
+            success: function(response) {
+                var json = Ext.decode(response.responseText);
+                if (json.refId) {
+                    queueItem.set('refId', json.refId);
+                    queueItem.set('status', 'waiting');
+                } else {
+                    queueItem.set('status', 'error');
                 }
-            });
+
+                if (json.error) {
+                    queueItem.set('message', json.error );
+                } else {
+                    queueItem.set('message', '' );
+                }
+            },
+            failure: function(response) {
+                queueItem.set('status', 'error');
+                /* SSO will send a 302 if the Client is not authenticated
+                unfortunately this seems to be filtered by the browser.
+                We assume that a 302 was send when the follwing statement
+                is true.
+                */
+                if (response.status === 0 &&
+                response.getResponse().responseText === '') {
+                    var i18n = Lada.getApplication().bundle;
+                    Ext.MessageBox.confirm(i18n.getMsg('err.msg.sso.expired.title'),
+                        i18n.getMsg('err.msg.sso.expired.body'), me.reload);
+                }
+            }
         });
     },
 
@@ -1244,4 +1248,5 @@ Ext.define('Lada.view.window.GridExport', {
             button.setVisible(false);
         }
     }
+
 });
