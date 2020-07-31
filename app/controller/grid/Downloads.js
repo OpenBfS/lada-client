@@ -127,7 +127,16 @@ Ext.define('Lada.controller.grid.Downloads', {
     refreshItemInfo: function(item) {
         // potentially submits wrong prefix part if url is proxied
         // var url = item.get('mapfish_statusURL');
-        var url = this.ladaPrintUrlPrefix + '/status/' + item.get('refId') + '.json';
+        var type = item.get('type');
+        var url;
+        switch (type) {
+            case 'lada-print':
+                url = this.ladaPrintUrlPrefix + '/status/' + item.get('refId') + '.json';
+                break;
+            case 'laf':
+                url = this.lafUrls.status + item.get('refId');
+                break;
+        }
         if (url) {
             var me = this;
             return new Ext.Promise(function() {
@@ -144,7 +153,7 @@ Ext.define('Lada.controller.grid.Downloads', {
                         }
                         item.set('done', json.done);
                         item.set('status', json.status);
-                        item.set('downloadURL', json.downloadURL);
+                        item.set('downloadURL', json.downloadURL || null);
                         if (json.message) {
                             item.set('message', json.message);
                         } else {
