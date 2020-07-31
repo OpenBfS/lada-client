@@ -135,7 +135,7 @@ Ext.define('Lada.controller.Print', {
         var recursiveFields = function(attributes) {
             var listOfItems = [];
             for (var i = 0; i < attributes.length; i++) {
-                switch (attributes[i].type){
+                switch (attributes[i].type) {
                     case 'DataSourceAttributeValue':
                     case 'TableAttributeValue':
                         break;
@@ -450,7 +450,7 @@ Ext.define('Lada.controller.Print', {
                 probenAttribute = attribute;
             }
         }
-        var qitem = this.addQueueItem(filename);
+        var qitem = this.addQueueItem(filename, 'lada-print');
         if (probenAttribute
             && probenAttribute.clientParams.attributes.some(
                 function(p) {
@@ -927,11 +927,13 @@ Ext.define('Lada.controller.Print', {
     /**
      * Add an entry to the downloadqueue.
      * @param filename: The name used to save results
+     * @param type: queue type (defining the interface for communication)
+     *          available: 'lada-print', 'laf-export'
      * @returns reference to the model item
      */
-    addQueueItem: function(filename) {
+    addQueueItem: function(filename, type) {
         var storeItem = Ext.create('Lada.model.DownloadQueue', {
-            type: 'lada-print',
+            type: type,
             filename: filename,
             startDate: new Date().valueOf(),
             status: 'preparation',

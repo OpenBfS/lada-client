@@ -13,7 +13,11 @@
 Ext.define('Lada.controller.grid.Downloads', {
     extend: 'Ext.app.Controller',
     record: null,
-    printUrlPrefix: 'lada-printer/print/',
+    ladaPrintUrlPrefix: 'lada-printer/print/',
+    lafUrls: {
+        status: 'status/',
+        download: 'download/'
+    },
 
     /**
      * Initialize the controller, request polling to run every 2 seconds
@@ -27,14 +31,17 @@ Ext.define('Lada.controller.grid.Downloads', {
      * @param {*} model
      */
     onCancelItem: function(model) {
+        var type = model.get('type');
+
         var ref = model.get('refId');
-        if (ref) {
+        if (ref && type === 'lada-print') {
             Ext.Ajax.request({
-                url: this.printUrlPrefix + 'cancel/' + ref,
+                url: this.ladaPrintUrlPrefix + 'cancel/' + ref,
                 method: 'DELETE',
                 callback: this.refreshQueue
             });
         }
+        // LAF offers no cancel
     },
 
     /**
@@ -54,32 +61,43 @@ Ext.define('Lada.controller.grid.Downloads', {
     onSaveItem: function(model) {
         // potentially submits wrong prefix part if url is proxied:
         // var url = model.get('downloadURL');
-        var url = this.printUrlPrefix + 'report/' + model.get('refId');
-        model.set('downloadRequested', true);
-        var me = this;
-        Ext.Ajax.request({
-            url: url,
-            method: 'GET',
-            binary: true,
-            timeout: 60000,
-            success: function(response) {
-                var content = response.responseBytes;
-                var filetype = response.getResponseHeader('Content-Type');
-                /* eslint-disable no-undef */
-                var blob = new Blob([content],{type: filetype});
-                saveAs(blob, model.get('filename'));
-                model.set('downloadRequested', false);
-                me.refreshQueue();
-                /* eslint-enable no-undef */
-            },
-            failure: function(error) {
-                model.set('status', 'error');
-                // sets more of a debug info. Needs end user readability why
-                // download failed.
-                model.set('message', error.error);
-                me.refreshQueue();
-            }
-        });
+        var type = model.get('type');
+        var url;
+        switch (type) {
+            case 'lada-print':
+                url = this.ladaPrintUrlPrefix + 'report/' + model.get('refId');
+                break;
+            case 'laf':
+                url = this.lafUrls.download + model.get('refId');
+                break;
+        }
+        if (url) {
+            model.set('downloadRequested', true);
+            var me = this;
+            Ext.Ajax.request({
+                url: url,
+                method: 'GET',
+                binary: true,
+                timeout: 60000,
+                success: function(response) {
+                    var content = response.responseBytes;
+                    var filetype = response.getResponseHeader('Content-Type');
+                    /* eslint-disable no-undef */
+                    var blob = new Blob([content],{type: filetype});
+                    saveAs(blob, model.get('filename'));
+                    model.set('downloadRequested', false);
+                    me.refreshQueue();
+                    /* eslint-enable no-undef */
+                },
+                failure: function(error) {
+                    model.set('status', 'error');
+                    // sets more of a debug info. Needs end user readability why
+                    // download failed.
+                    model.set('message', error.error);
+                    me.refreshQueue();
+                }
+            });
+        }
     },
 
     /**
@@ -89,7 +107,7 @@ Ext.define('Lada.controller.grid.Downloads', {
         // this should be done only once, but after initialization
         // (after app.js: GET appContext.json finished)
         if (Lada.appContext && Lada.appContext.merge.urls['print-servlet']) {
-            this.printUrlPrefix = Lada.appContext.merge.urls['print-servlet'];
+            this.ladaPrintUrlPrefix = Lada.appContext.merge.urls['print-servlet'];
         }
         var store = Ext.data.StoreManager.get('downloadqueue');
         var controller = Lada.app.getController('Lada.controller.grid.Downloads');
@@ -109,7 +127,7 @@ Ext.define('Lada.controller.grid.Downloads', {
     refreshItemInfo: function(item) {
         // potentially submits wrong prefix part if url is proxied
         // var url = item.get('mapfish_statusURL');
-        var url = this.printUrlPrefix + '/status/' + item.get('refId') + '.json';
+        var url = this.ladaPrintUrlPrefix + '/status/' + item.get('refId') + '.json';
         if (url) {
             var me = this;
             return new Ext.Promise(function() {

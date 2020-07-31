@@ -18,11 +18,10 @@ Ext.define('Lada.model.DownloadQueue', {
         name: 'id'
     }, {
         name: 'type'
-        // 'lada-print'
-        // TODO display/handle other future async downloads (e.g. LAF-export)
+        // 'lada-print', 'laf'
     }, {
         name: 'refId'
-        // a mapfish uuid for 'lada-print' cases
+        // a unique identifier
     }, {
         name: 'filename'
     }, {
