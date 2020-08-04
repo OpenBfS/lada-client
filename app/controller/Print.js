@@ -684,17 +684,18 @@ Ext.define('Lada.controller.Print', {
                 if (response.responseText) {
                     var json = Ext.decode(response.responseText);
                     // TODO filter by availableTemplates for this query
-
+                    var grid = window.parentGrid;
                     if (Array.isArray(json)) {
                         for (var i=0; i < json.length; i++) {
                             if (json[i] !== 'lada_erfassungsbogen') {
                                 data.push({name: json[i]});
-                            } else if (
-                                window.parentGrid.rowtarget.probeIdentifier
-                            ) {
+                            } else if (grid.rowtarget.probeIdentifier) {
                             // special handling for "lada_erfassungsbogen":
                             // only usable if we have some non-null probe identifier
-                                data.push({name: json[i]});
+                                var selection = grid.getSelectionModel().getSelection()[0];
+                                if (selection && selection.data[grid.rowtarget.probeIdentifier] !== undefined) {
+                                    data.push({name: json[i]});
+                                }
                             }
                         }
                     }
