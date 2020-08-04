@@ -133,15 +133,16 @@ Ext.define('Lada.controller.grid.Downloads', {
         // var url = item.get('mapfish_statusURL');
         var type = item.get('type');
         var url;
+        var refId = item.get('refId');
         switch (type) {
             case 'lada-print':
-                url = this.ladaPrintUrlPrefix + '/status/' + item.get('refId') + '.json';
+                url = this.ladaPrintUrlPrefix + '/status/' + refId + '.json';
                 break;
             case 'laf':
-                url = this.lafUrls.status + item.get('refId');
+                url = this.lafUrls.status + refId;
                 break;
         }
-        if (url) {
+        if (url && refId) {
             var me = this;
             return new Ext.Promise(function() {
                 Ext.Ajax.request({
