@@ -547,13 +547,6 @@ Ext.define('Lada.controller.Print', {
             requestData.url = me.printUrlPrefix + templateName + '/report.pdf';
             requestData.timeout = 60000;
             requestData.jsonData = JSON.stringify(jsonData);
-            // open the print queue window as some better visual feedback that things are happening
-            var qw = Ext.ComponentQuery.query('downloadqueuewin');
-            if (!qw[0]) {
-                var win = Ext.create('Lada.view.window.Downloads');
-                win.show();
-                win.setPosition(30);
-            }
         }
         Ext.Ajax.request(requestData);
     },
@@ -943,6 +936,15 @@ Ext.define('Lada.controller.Print', {
         });
         var store = Ext.data.StoreManager.get('downloadqueue');
         store.add(storeItem);
+
+        // opens the download queue as feedback that something was added ...
+        var qw = Ext.ComponentQuery.query('downloadqueuewin');
+        if (!qw[0]) {
+            var win = Ext.create('Lada.view.window.Downloads');
+            win.show();
+            win.setPosition(30);
+        }
+
         return storeItem;
     }
 });
