@@ -58,7 +58,7 @@ Ext.define('Lada.view.window.GridExport', {
      */
     secondaryData: [],
 
-    lafRequestUrl: '/laf',
+    lafRequestUrl: 'lada-server/data/asyncexport/laf',
 
     /**
      *Initialize the Window and the options available
@@ -739,6 +739,7 @@ Ext.define('Lada.view.window.GridExport', {
         var me = this;
         var printController = Lada.app.getController('Lada.controller.Print');
         var queueItem = printController.addQueueItem(filename, 'laf');
+        jsondata.filename = filename;
         Ext.Ajax.request({
             url: me.lafRequestUrl,
             jsonData: jsondata,

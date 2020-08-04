@@ -15,8 +15,8 @@ Ext.define('Lada.controller.grid.Downloads', {
     record: null,
     ladaPrintUrlPrefix: 'lada-printer/print/',
     lafUrls: {
-        status: 'status/',
-        download: 'download/'
+        status: 'lada-server/data/asyncexport/status/',
+        download: 'lada-server/data/asyncexport/download/'
     },
 
     /**
