@@ -84,7 +84,7 @@ Ext.define('Lada.view.window.PrintGrid', {
         this.title = i18n.getMsg('print.window.title');
         this.items = [{
             layout: 'vbox',
-            minWidth: 380,
+            minWidth: 500,
             border: false,
             scrollable: true,
             defaults: {
@@ -166,11 +166,11 @@ Ext.define('Lada.view.window.PrintGrid', {
                 xtype: 'label',
                 name: 'results',
                 hidden: true
+            },{
+                xtype: 'downloadqueuegrid',
+                store: 'downloadqueue-print',
+                width: '100%'
             }]
-        },{
-            xtype: 'downloadqueuegrid',
-            store: 'downloadqueue-print',
-            width: '100%'
         }];
         this.buttons = [{
             text: i18n.getMsg('close'),
