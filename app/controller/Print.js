@@ -934,17 +934,13 @@ Ext.define('Lada.controller.Print', {
             autodownload: true
             // TODO: no UI toggle for autodownload implemented yet.
         });
-        var store = Ext.data.StoreManager.get('downloadqueue');
-        store.add(storeItem);
-
-        // opens the download queue as feedback that something was added ...
-        var qw = Ext.ComponentQuery.query('downloadqueuewin');
-        if (!qw[0]) {
-            var win = Ext.create('Lada.view.window.Downloads');
-            win.show();
-            win.setPosition(30);
+        var store;
+        if (type === 'lada-print') {
+            store = Ext.data.StoreManager.get('downloadqueue-print');
+        } else {
+            store = Ext.data.StoreManager.get('downloadqueue-export');
         }
-
+        store.add(storeItem);
         return storeItem;
     }
 });

@@ -571,7 +571,10 @@ Ext.application({
             storeId: 'querystore'
         });
         Ext.create('Lada.store.DownloadQueue', {
-            storeId: 'downloadqueue'
+            storeId: 'downloadqueue-print'
+        });
+        Ext.create('Lada.store.DownloadQueue', {
+            storeId: 'downloadqueue-export'
         });
         Ext.create('Lada.view.Viewport');
         this.initElanScenarios();

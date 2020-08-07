@@ -87,9 +87,10 @@ Ext.define('Lada.view.grid.DownloadQueue', {
                 return rec.get('done') ? 'delete' : '';
             },
             handler: function(grid, rowIndex) {
-                var rec = grid.getStore().getAt(rowIndex);
+                var store = grid.getStore();
+                var rec = store.getAt(rowIndex);
                 if (rec.get('done') === true) {
-                    controller.onDeleteItem(rec);
+                    controller.onDeleteItem(rec, store);
                 }
             }
 

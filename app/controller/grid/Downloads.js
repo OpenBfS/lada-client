@@ -51,10 +51,11 @@ Ext.define('Lada.controller.grid.Downloads', {
     /**
      * Deletes an old entry from queue
      * @param {*} model
+     * @param store
      */
-    onDeleteItem: function(model) {
+    onDeleteItem: function(model, store) {
         if (model.get('done') === true) {
-            Ext.data.StoreManager.get('downloadqueue').remove(model);
+            store.remove(model);
         }
     },
 
@@ -113,10 +114,18 @@ Ext.define('Lada.controller.grid.Downloads', {
         if (Lada.appContext && Lada.appContext.merge.urls['print-servlet']) {
             this.ladaPrintUrlPrefix = Lada.appContext.merge.urls['print-servlet'];
         }
-        var store = Ext.data.StoreManager.get('downloadqueue');
+        var store0 = Ext.data.StoreManager.get('downloadqueue-print');
+        var store1 = Ext.data.StoreManager.get('downloadqueue-export');
         var controller = Lada.app.getController('Lada.controller.grid.Downloads');
-        if (store) {
-            Ext.each(store.getData().items, function(item) {
+        if (store0) {
+            Ext.each(store0.getData().items, function(item) {
+                if (item.get('done') !== true) {
+                    controller.refreshItemInfo(item);
+                }
+            });
+        }
+        if (store1) {
+            Ext.each(store0.getData().items, function(item) {
                 if (item.get('done') !== true) {
                     controller.refreshItemInfo(item);
                 }
