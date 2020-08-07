@@ -309,6 +309,10 @@ Ext.define('Lada.view.window.GridExport', {
                 fieldLabel: i18n.getMsg('export.filename'),
                 allowBlank: true,
                 editable: true
+            }, {
+                xtype: 'downloadqueuegrid',
+                store: 'downloadqueue-export',
+                width: '100%'
             }]
         }, {
             xtype: 'container',

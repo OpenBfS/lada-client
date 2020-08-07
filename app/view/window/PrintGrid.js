@@ -167,6 +167,10 @@ Ext.define('Lada.view.window.PrintGrid', {
                 name: 'results',
                 hidden: true
             }]
+        },{
+            xtype: 'downloadqueuegrid',
+            store: 'downloadqueue-print',
+            width: '100%'
         }];
         this.buttons = [{
             text: i18n.getMsg('close'),

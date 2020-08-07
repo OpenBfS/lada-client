@@ -7,18 +7,16 @@
  */
 
 /**
- * Grid for the store 'downloadqueue', listing all open and recently failed
+ * Grid for the downloadqueue- Stores, listing all open and recently failed
  * print jobs for the current session
  */
-
-// TODO layout, esp. if updates come in
 
 
 Ext.define('Lada.view.grid.DownloadQueue', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.downloadqueuegrid',
     requires: ['Lada.controller.grid.Downloads'],
-    store: null,
+    store: null, //TODO needs to be set
     viewConfig: {
         deferEmptyText: true,
         markDirty: false
@@ -29,7 +27,6 @@ Ext.define('Lada.view.grid.DownloadQueue', {
         var controller = Lada.app.getController(
             'Lada.controller.grid.Downloads');
         this.emptyText = i18n.getMsg('emptygrid.downloadqueue');
-        this.store = Ext.data.StoreManager.get('downloadqueue');
         this.columns = [{
             header: i18n.getMsg('export.filename'),
             dataIndex: 'filename',

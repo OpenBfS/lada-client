@@ -16,8 +16,7 @@
 Ext.define('Lada.view.Viewport', {
     extend: 'Ext.container.Viewport',
     requires: [
-        'Lada.view.QueryPanel',
-        'Lada.view.window.Downloads'
+        'Lada.view.QueryPanel'
     ],
     layout: 'fit',
     initComponent: function() {
@@ -66,18 +65,6 @@ Ext.define('Lada.view.Viewport', {
                         imprintWinController.setTopic('intro');
                     }
                 }
-            }, {
-                type: 'print',
-                tooltip: i18n.getMsg('downloadqueue.title'),
-                callback: function() {
-                    var qw = Ext.ComponentQuery.query('downloadqueuewin');
-                    if (!qw[0]) {
-                        var win = Ext.create('Lada.view.window.Downloads')
-                        win.show();
-                        win.setPosition(30);
-                    }
-                }
-
             }],
             items: [{
                 layout: {
