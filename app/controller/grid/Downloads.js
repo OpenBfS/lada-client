@@ -125,7 +125,7 @@ Ext.define('Lada.controller.grid.Downloads', {
             });
         }
         if (store1) {
-            Ext.each(store0.getData().items, function(item) {
+            Ext.each(store1.getData().items, function(item) {
                 if (item.get('done') !== true) {
                     controller.refreshItemInfo(item);
                 }
