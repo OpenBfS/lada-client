@@ -31,8 +31,6 @@ Ext.define('Lada.controller.GridExport', {
         var failmessage = false;
         if (!grid || !grid.store.getCount()) {
             failmessage = i18n.getMsg('export.nodata');
-        } else if (!grid.getSelectionModel().getSelection().length) {
-            failmessage = i18n.getMsg('export.noselection');
         } else if (!grid.rowtarget) {
             failmessage = i18n.getMsg('undefined'); // should not happen
         }

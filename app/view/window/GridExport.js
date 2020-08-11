@@ -12,6 +12,7 @@
 Ext.define('Lada.view.window.GridExport', {
     extend: 'Ext.window.Window',
     alias: 'widget.exportdata',
+    requires: ['Lada.view.grid.DownloadQueue'],
 
     defaults: {
         margin: '5, 5, 5, 5',
@@ -217,6 +218,13 @@ Ext.define('Lada.view.window.GridExport', {
                 },
                 hidden: true
             }, {
+                xtype: 'checkbox',
+                name: 'allrows',
+                fieldLabel: i18n.getMsg('export.allrows'),
+                listeners: {
+                    change: me.checkExportButton
+                }
+            },{
                 xtype: 'tagfield',
                 name: 'exportcolumns',
                 labelWidth: 100,
@@ -343,6 +351,9 @@ Ext.define('Lada.view.window.GridExport', {
         this.down('button[action=export]').on({
             click: me.doExport
         });
+        if (!this.grid.getSelectionModel().getSelection().length) {
+            this.down('checkbox[name=allrows]').setValue(true);
+        }
         this.down('button[action=close]').text = i18n.getMsg('close');
         this.down('button[action=export]').text = i18n.getMsg('export.button');
         this.down('button[action=close]').on({
@@ -354,6 +365,7 @@ Ext.define('Lada.view.window.GridExport', {
         this.down('button[action=copyGeoJson]').on({
             click: me.doCopy
         });
+        this.checkExportButton();
 
         // get rowexpander and their columns
         var toggled = false;

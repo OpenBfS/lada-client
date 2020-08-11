@@ -14,7 +14,10 @@
 Ext.define('Lada.view.window.PrintGrid', {
     alias: 'widget.printgrid',
     extend: 'Ext.window.Window',
-    requires: ['Koala.view.form.IrixFieldSet'],
+    requires: [
+        'Koala.view.form.IrixFieldSet',
+        'Lada.view.grid.DownloadQueue'
+    ],
 
     id: 'printgridwindow',
 

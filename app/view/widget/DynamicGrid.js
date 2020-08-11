@@ -1066,8 +1066,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 text: this.i18n.getMsg('export.button'),
                 icon: 'resources/img/svn-update.png',
                 action: 'gridexport',
-                needsSelection: true,
-                disabled: true
+                needsSelection: false,
+                disabled: false
             });
         }
     },
