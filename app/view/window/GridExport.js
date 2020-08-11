@@ -1043,13 +1043,16 @@ Ext.define('Lada.view.window.GridExport', {
         if (!win.down('checkbox[name=secondarycolumns]').getValue()) {
             return null;
         }
-        if (win.down('checkbox[name=allcolumns]').getValue()) {
-            return Ext.Array.map(this.expcolumnList, function(c) {
-                return c.value;
+        var expColumns = this.expcolumnList.getData().items;
+        if (!win.down('checkbox[name=allcolumns]').getValue()) {
+            var tagCols = this.down('tagfield[name=exportexpcolumns]').getValue();
+            expColumns = Ext.Array.filter(expColumns, function (col) {
+                return tagCols.indexOf(col.name) >= 0;
             });
-        } else {
-            return this.down('tagfield[name=exportexpcolumns]').getValue();
         }
+        return Ext.Array.map(expColumns, function(c) {
+            return c.get('value');
+        });
     },
 
     getColumnDefinitions: function(win) {
@@ -1064,9 +1067,9 @@ Ext.define('Lada.view.window.GridExport', {
         return Ext.Array.map(cols, function(c) {
             delete c.visible;
             c.export = false;
-            var gridColumn = columnstore.findRecord('id', c.id,0,false, false, true);
+            var gridColumn = columnstore.findRecord('id', c.gridColumnId,0,false, false, true);
             if (gridColumn) {
-                if (allcolumns || expcolumns.indexOf(gridColumn.get('name')) > -1) {
+                if (allcolumns || expcolumns.indexOf(gridColumn.get('dataIndex')) > -1) {
                     c.export = true;
                 }
             }
