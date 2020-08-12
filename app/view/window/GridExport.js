@@ -958,7 +958,7 @@ Ext.define('Lada.view.window.GridExport', {
             this.showError('export.invalidfilename');
             return false;
         } else {
-            if (fname.length > defaultend.length && // fname may be shorter than ending
+            if (fname.length > defaultend.length + 1 && // fname may be shorter than ending
                 fname.toLowerCase().indexOf(defaultend.toLowerCase()) ===
                     fname.length - defaultend.length) {
                 return fname;
