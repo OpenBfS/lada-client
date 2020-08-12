@@ -921,7 +921,7 @@ Ext.define('Lada.controller.Print', {
      * Add an entry to the downloadqueue.
      * @param filename: The name used to save results
      * @param type: queue type (defining the interface for communication)
-     *          available: 'lada-print', 'laf-export'
+     *          available: 'lada-print', 'export'
      * @returns reference to the model item
      */
     addQueueItem: function(filename, type) {

@@ -660,7 +660,7 @@ Ext.define('Lada.view.window.GridExport', {
      */
     requestExport: function(type, url, data) {
         var printController = Lada.app.getController('Lada.controller.Print');
-        var queueItem = printController.addQueueItem(data.filename, type);
+        var queueItem = printController.addQueueItem(data.filename, 'export');
         var me = this;
         Ext.Ajax.request({
             url: url,

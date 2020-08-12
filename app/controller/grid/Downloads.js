@@ -14,7 +14,7 @@ Ext.define('Lada.controller.grid.Downloads', {
     extend: 'Ext.app.Controller',
     record: null,
     ladaPrintUrlPrefix: 'lada-printer/print/',
-    lafUrls: {
+    exportUrls: {
         status: 'lada-server/data/asyncexport/status/',
         download: 'lada-server/data/asyncexport/download/'
     },
@@ -72,8 +72,8 @@ Ext.define('Lada.controller.grid.Downloads', {
             case 'lada-print':
                 url = this.ladaPrintUrlPrefix + 'report/' + model.get('refId');
                 break;
-            case 'laf':
-                url = this.lafUrls.download + model.get('refId');
+            case 'export':
+                url = this.exportUrls.download + model.get('refId');
                 break;
         }
         if (url) {
@@ -147,8 +147,8 @@ Ext.define('Lada.controller.grid.Downloads', {
             case 'lada-print':
                 url = this.ladaPrintUrlPrefix + '/status/' + refId + '.json';
                 break;
-            case 'laf':
-                url = this.lafUrls.status + refId;
+            case 'export':
+                url = this.exportUrls.status + refId;
                 break;
         }
         if (url && refId) {
