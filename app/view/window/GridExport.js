@@ -375,8 +375,11 @@ Ext.define('Lada.view.window.GridExport', {
             if (this.grid.plugins[j].ptype === 'gridrowexpander') {
                 this.down('checkbox[name=secondarycolumns]').setHidden(false);
                 this.rowexp = this.grid.plugins[j];
-                this.secondaryDataIsPrefetched = false;
-                this.getSecondaryData();
+                var dataset = this.grid.getSelectionModel().getSelection();
+                if (dataset.length) {
+                    this.secondaryDataIsPrefetched = false;
+                    this.getSecondaryData();
+                }
                 var nodes = this.rowexp.view.getNodes();
                 var node = Ext.fly(nodes[0]);
                 if (node.hasCls(this.rowexp.rowCollapsedCls) === true) {
@@ -1044,11 +1047,11 @@ Ext.define('Lada.view.window.GridExport', {
         if (!win.down('checkbox[name=secondarycolumns]').getValue()) {
             return null;
         }
-        var expColumns = this.expcolumnList.getData().items;
+        var expColumns = win.expcolumnList.getData().items;
         if (!win.down('checkbox[name=allcolumns]').getValue()) {
-            var tagCols = this.down('tagfield[name=exportexpcolumns]').getValue();
-            expColumns = Ext.Array.filter(expColumns, function (col) {
-                return tagCols.indexOf(col.name) >= 0;
+            var tagCols = win.down('tagfield[name=exportexpcolumns]').getValue();
+            expColumns = Ext.Array.filter(expColumns, function(col) {
+                return tagCols.indexOf(col.get('value')) >= 0;
             });
         }
         return Ext.Array.map(expColumns, function(c) {
