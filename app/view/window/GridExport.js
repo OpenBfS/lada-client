@@ -267,7 +267,8 @@ Ext.define('Lada.view.window.GridExport', {
                         name: 'UTF-8',
                         value: 'utf-8'
                     }]
-                })
+                }),
+                value: 'iso-8859-15'
             }, {
                 xtype: 'fieldset',
                 title: i18n.getMsg('export.csvdetails'),
@@ -403,8 +404,6 @@ Ext.define('Lada.view.window.GridExport', {
 
         this.down('button[action=export]').text= i18n.getMsg('export.button');
         this.down('tagfield[name=exportexpcolumns]').select(preselectedEx);
-        // Set this value because most systems work still with 'ISO-8859-15'
-        this.down('combobox[name=encoding]').setValue('iso-8859-15');
     },
 
     doCopy: function(button) {
@@ -515,16 +514,16 @@ Ext.define('Lada.view.window.GridExport', {
             };
             switch (exportFormat) {
                 case 'laf':
-                    win.requestExport('laf', win.lafRequestURL, requestData);
+                    win.requestExport('laf', win.lafRequestURL, requestData, win);
                 case 'geojson':
                     // TODO: different treatment from json needed?
                 case 'json':
-                    win.requestExport('json', win.jsonRequestURL, requestData);
+                    win.requestExport('json', win.jsonRequestURL, requestData, win);
                     break;
                 case 'csv':
                     if (win.validateCsvOptions(win)) {
                         requestData = win.getCsvOptions(requestData, win);
-                        win.requestExport('csv', win.csvRequestURL, requestData);
+                        win.requestExport('csv', win.csvRequestURL, requestData, win);
                     }
                     break;
             }
@@ -657,16 +656,18 @@ Ext.define('Lada.view.window.GridExport', {
      * @param {*} type e.g. 'laf', 'csv', 'json'
      * @param {*} url the url used for the request
      * @param {*} data preptared json payload
+     * @param {*} scope optional scope ('this')
      */
-    requestExport: function(type, url, data) {
+    requestExport: function(type, url, data, scope) {
+
         var printController = Lada.app.getController('Lada.controller.Print');
         var queueItem = printController.addQueueItem(data.filename, 'export');
-        var me = this;
+        var me = scope || this;
         Ext.Ajax.request({
             url: url,
             jsonData: data,
             headers: {
-                'X-FILE-ENCODING': this.down('combobox[name=encoding]').getValue()
+                'X-FILE-ENCODING': me.down('combobox[name=encoding]').getValue()
             },
             success: function(response) {
                 var json = Ext.decode(response.responseText);
