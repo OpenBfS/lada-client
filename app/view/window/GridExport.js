@@ -508,7 +508,7 @@ Ext.define('Lada.view.window.GridExport', {
             requestData = win.getLAF(filename);
         } else {
             requestData = {
-                columns: win.getColumnDefinitions(win), // TODO
+                columns: win.getColumnDefinitions(win),
                 exportSubData: win.down('checkbox[name=secondarycolumns]').getValue(),
                 idField: win.grid.rowtarget.dataIndex,
                 idFilter: win.getExportIds(win),
@@ -518,8 +518,12 @@ Ext.define('Lada.view.window.GridExport', {
             switch (exportFormat) {
                 case 'laf':
                     win.requestExport('laf', win.lafRequestURL, requestData, win);
+                    break;
                 case 'geojson':
-                    // TODO: different treatment from json needed?
+                    var data = JSON.stringify(win.getGeoJson());
+                    var blob = new Blob([data], 'utf-8');
+                    saveAs(blob, filename, true);
+                    break;
                 case 'json':
                     win.requestExport('json', win.jsonRequestURL, requestData, win);
                     break;

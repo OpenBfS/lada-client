@@ -87,12 +87,10 @@ Ext.define('Lada.controller.grid.Downloads', {
                 success: function(response) {
                     var content = response.responseBytes;
                     var filetype = response.getResponseHeader('Content-Type');
-                    /* eslint-disable no-undef */
                     var blob = new Blob([content],{type: filetype});
                     saveAs(blob, model.get('filename'));
                     model.set('downloadRequested', false);
                     me.refreshQueue();
-                    /* eslint-enable no-undef */
                 },
                 failure: function(error) {
                     model.set('status', 'error');

@@ -13,7 +13,9 @@
         "moment": true,
         "html2canvas": true,
         "Set": true,
-        "FileSaver": true
+        "FileSaver": true,
+        "saveAs": true,
+        "Blob": true
     },
     "rules": {
         "comma-dangle": 2,
