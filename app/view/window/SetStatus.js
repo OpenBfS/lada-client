@@ -198,7 +198,7 @@ Ext.define('Lada.view.window.SetStatus', {
                         var out = [];
                         var numErrors;
                         var numWarnings;
-                        var notifications;
+                        var numNotifications;
                         if (!Ext.isObject(errors)) {
                             numErrors = 0;
                         } else {
@@ -208,6 +208,11 @@ Ext.define('Lada.view.window.SetStatus', {
                             numWarnings = 0;
                         } else {
                             numWarnings = Object.keys(warnings).length;
+                        }
+                        if (!Ext.isObject(notifications)){
+                            numNotifications = 0;
+                        } else {
+                            numNotifications = Object.keys(notifications).length;
                         }
                         if (numErrors > 0) {
                             var msgs;
