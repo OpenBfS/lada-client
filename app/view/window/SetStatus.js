@@ -221,9 +221,17 @@ Ext.define('Lada.view.window.SetStatus', {
                             for (var key in errors) {
                                 msgs = errors[key];
                                 var validation = [];
-                                for (var j = msgs.length - 1; j >= 0; j--) {
-                                    validation.push('<li><b>' + i18n.getMsg(key) +
+                                if (key.includes('#')) {
+                                  keyParts = key.split('#');
+                                  for (var j = msgs.length -1; j >= 0; j--) {
+                                     validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
+                                        '</b><i> ' + keyParts[1].toString() + '</i>: ' + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                  }
+                                } else {
+                                  for (var j = msgs.length - 1; j >= 0; j--) {
+                                     validation.push('<li><b>' + i18n.getMsg(key) +
                                             ':</b> ' + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                  }
                                 }
                                 out.push(validation.join(''));
                             }
@@ -235,28 +243,48 @@ Ext.define('Lada.view.window.SetStatus', {
                             for (var key in warnings) {
                                 msgs = warnings[key];
                                 var validation = [];
-                                for (var j = msgs.length - 1; j >= 0; j--) {
-                                    validation.push('<li><b>' + i18n.getMsg(key) + ':</b> '
-                                            + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                if (key.includes('#')) {
+                                  keyParts = key.split('#');
+                                  for (var j = msgs.length -1; j >= 0; j--) {
+                                     validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
+                                        '</b><i> ' + keyParts[1].toString()+ '</i>: ' + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                  }
+                                } else {
+                                  for (var j = msgs.length - 1; j >= 0; j--) {
+                                     validation.push('<li><b>' + i18n.getMsg(key) +
+                                            ':</b> ' + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                  }
                                 }
                                 out.push(validation.join(''));
                             }
                             out.push('</ul></dd>');
                         }
+ 
+
                         if (numNotifications > 0) {
                             out.push('<dl><dd>' + i18n.getMsg('notes') + '</dd>');
                             out.push('<dd><ul>');
                             for (var key in notifications) {
                                 msgs = notifications[key];
                                 var validation = [];
-                                for (var j = msgs.length - 1; j >= 0; j--) {
-                                    validation.push('<li><b>' + i18n.getMsg(key) + ':</b> '
-                                            + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                if (key.includes('#')) {
+                                  keyParts = key.split('#');
+                                  for (var j = msgs.length -1; j >= 0; j--) {
+                                     validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
+                                        '</b><i> ' + keyParts[1].toString()+ '</i>: ' + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                  }
+                                } else {
+                                  for (var j = msgs.length - 1; j >= 0; j--) {
+                                     validation.push('<li><b>' + i18n.getMsg(key) +
+                                            ':</b> ' + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                  }
                                 }
                                 out.push(validation.join(''));
                             }
                             out.push('</ul></dd>');
                         }
+
+
                         out.push('<hr>');
                         for ( z=0; z < me.selection.length; z++) {
                             if (me.selection[z].get('id') == json.data.messungsId) {
@@ -335,8 +363,17 @@ Ext.define('Lada.view.window.SetStatus', {
                             for (var key in warnings) {
                                 msgs = warnings[key];
                                 var validation = [];
-                                for (var i = msgs.length - 1; i >= 0; i--) {
-                                        validation.push('<li><b>' + i18n.getMsg(key) + ':</b> ' + i18n.getMsg(msgs[i].toString()) + '</li>');
+                                if (key.includes('#')) {
+                                  keyParts = key.split('#');
+                                  for (var j = msgs.length -1; j >= 0; j--) {
+                                     validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
+                                        '</b><i> ' + keyParts[1].toString() + '</i>: ' + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                  }
+                                } else {
+                                  for (var j = msgs.length - 1; j >= 0; j--) {
+                                     validation.push('<li><b>' + i18n.getMsg(key) +
+                                            ':</b> ' + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                  }
                                 }
                                 out.push(validation.join(''));
                             }
@@ -356,8 +393,17 @@ Ext.define('Lada.view.window.SetStatus', {
                             for (var key in errors) {
                                 msgs = errors[key];
                                 var validation = [];
-                                for (var i = msgs.length - 1; i >= 0; i--) {
-                                        validation.push('<li><b>' + i18n.getMsg(key) + ':</b> ' + i18n.getMsg(msgs[i].toString()) + '</li>');
+                                if (key.includes('#')) {
+                                  keyParts = key.split('#');
+                                  for (var j = msgs.length -1; j >= 0; j--) {
+                                     validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
+                                        '</b><i> ' + keyParts[1].toString() + '</i>: ' + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                  }
+                                } else {
+                                  for (var j = msgs.length - 1; j >= 0; j--) {
+                                     validation.push('<li><b>' + i18n.getMsg(key) +
+                                            ':</b> ' + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                  }
                                 }
                                 out.push(validation.join(''));
                             }
@@ -375,8 +421,17 @@ Ext.define('Lada.view.window.SetStatus', {
                             for (var key in notifications) {
                                 msgs = notifications[key];
                                 var validation = [];
-                                for (var i = msgs.length - 1; i >= 0; i--) {
-                                        validation.push('<li><b>' + i18n.getMsg(key) + ':</b> ' + i18n.getMsg(msgs[i].toString()) + '</li>');
+                                if (key.includes('#')) {
+                                  keyParts = key.split('#');
+                                  for (var j = msgs.length -1; j >= 0; j--) {
+                                     validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
+                                        '</b><i> ' + keyParts[1].toString() + '</i>: ' + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                  }
+                                } else {
+                                  for (var j = msgs.length - 1; j >= 0; j--) {
+                                     validation.push('<li><b>' + i18n.getMsg(key) +
+                                            ':</b> ' + i18n.getMsg(msgs[j].toString()) + '</li>');
+                                  }
                                 }
                                 out.push(validation.join(''));
                             }
