@@ -82,6 +82,7 @@ Ext.define('Lada.view.window.PrintGrid', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('print.window.title');
+        this.templateStore.sort('name', 'ASC');
         this.items = [{
             layout: 'vbox',
             minWidth: 380,
