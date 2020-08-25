@@ -576,7 +576,7 @@ Ext.application({
         Lada.util.LocalStorage.setCurrentUser(Lada.username);
         var dokpool = Koala.util.DokpoolRequest;
         //Configure dokpool utility
-        dokpool.elanScenarioUrl = "../dokpool/"
+        dokpool.elanScenarioUrl = "../dokpool/bund/contentconfig/scen/"
         dokpool.storageModule = Lada.util.LocalStorage;
         dokpool.updateActiveElanScenarios();
         //Create the display window
