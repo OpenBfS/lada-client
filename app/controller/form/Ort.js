@@ -452,6 +452,7 @@ Ext.define('Lada.controller.form.Ort', {
                     }
                 },
                 failure: function() {
+                    win.setLoading(false);
                     win.down('button[action=apply]').setDisabled(true);
                     win.down('koordinatenart[name=newKDA]').setValue(
                         win.down('koordinatenart[name=originalKDA]').getValue());
