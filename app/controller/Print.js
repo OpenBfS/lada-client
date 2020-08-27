@@ -145,8 +145,9 @@ Ext.define('Lada.controller.Print', {
                         });
                         if (!matchingColumn) {
                             if (attributes[i].name === 'timezone' ||
-                                attributes[i].name === 'doc_creator') {
-                            // timezone and doc creator should be filled automatically, and not be seen in the client
+                                attributes[i].name === 'doc_creator' ||
+                                attributes[i].name === 'clientVersion') {
+                            // timezone, doc creator and ClientVersion should be filled automatically, and not be seen in the client
                                 break;
                             }
                             /* hardcoded workaround to not lose the previously
@@ -259,6 +260,8 @@ Ext.define('Lada.controller.Print', {
                         if (attributes[i].name === 'timezone') {
                             //timezone
                             resultData[attributes[i].name] = Lada.util.Date.getCurrentTimeZone();
+                        } else if (attributes[i].name === 'clientVersion') {
+                            resultData[attributes[i].name] = 'Clientversion ' + Lada.clientVersion;
                         } else if (attributes[i].name === 'doc_creator') {
                             //username
                             resultData[attributes[i].name] = Lada.username;
