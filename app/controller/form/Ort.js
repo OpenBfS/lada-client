@@ -406,6 +406,7 @@ Ext.define('Lada.controller.form.Ort', {
      */
     onKDARecalculation: function(button) {
         var win = button.up('window');
+        var i18n = Lada.getApplication().bundle;
         win.down('button[action=apply]').setDisabled(true);
         if (
             win.down('koordinatenart[name=newKDA]').getValue() === win.down(
@@ -444,6 +445,10 @@ Ext.define('Lada.controller.form.Ort', {
                             win.down('selectabledisplayfield[name=newY]').setValue(coords.y);
                             win.down('button[action=apply]').setDisabled(false);
                         } else {
+                            var messageContainer = win.down('container[name=messageContainer]');
+                            var messageField = win.down('textareafield[name=message]');
+                            messageContainer.setHidden(false);
+                            messageField.setValue(i18n.getMsg('err.msg.ort.changeKda'));
                             // TODO error handling: calculation not successful. For now, just resets
                             win.down('koordinatenart[name=newKDA]').setValue(
                                 win.down('koordinatenart[name=originalKDA]').getValue());

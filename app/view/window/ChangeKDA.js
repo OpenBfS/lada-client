@@ -60,6 +60,31 @@ Ext.define('Lada.view.window.ChangeKDA', {
             name: 'newY'
         }, {
             xtype: 'container',
+            layout: {
+                type: 'hbox'
+            },
+            width: '100%',
+            name: 'messageContainer',
+            hidden: true,
+            items: [{
+                xtype: 'image',
+                src: 'resources/img/dialog-warning.png',
+                width: 20,
+                height: 20,
+                margin: 5
+            }, {
+                xtype: 'textareafield',
+                fieldLabel: '',
+                name: 'message',
+                width: '100%',
+                editable: false,
+                inputWrapCls: '',
+                triggerWrapCls: '',
+                fieldStyle: 'background:none',
+                submitValue: false
+            }]
+        }, {
+            xtype: 'container',
             layout: 'hbox',
             items: [{
                 xtype: 'button',
