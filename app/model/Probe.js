@@ -60,7 +60,13 @@ Ext.define('Lada.model.Probe', {
             return value;
         }
     }, {
-        name: 'media'
+        name: 'media',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
     }, {
         name: 'umwId',
         serialize: function(value) {
