@@ -339,18 +339,16 @@ Ext.define('Lada.view.grid.Orte', {
 
     /**
      * This sets the Store of this Grid.
-     * TODO: check against dynamicGrid changes 2/2018
      */
     setStore: function(store) {
         var me = this;
-
         if (store) {
-            this.store = store;
             this.reconfigure(store);
+            this.store = store;
             this.addLoadingFailureHandler(store);
-            store.on('load', function(loadedStore) {
+            this.store.on('load', function() {
                 if (me.up('tabpanel')) {
-                    me.setTitle('Orte(' + loadedStore.getCount() + ')');
+                    me.setTitle('Orte(' + me.store.getCount() + ')');
                 }
             });
         }
