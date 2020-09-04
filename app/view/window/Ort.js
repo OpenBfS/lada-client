@@ -84,6 +84,9 @@ Ext.define('Lada.view.window.Ort', {
             handler: this.close
         }];
         this.callParent(arguments);
+        if (this.record) {
+            this.initData(this.record);
+        }
     },
 
     initData: function(record) {
