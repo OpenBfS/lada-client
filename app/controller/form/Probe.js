@@ -673,7 +673,8 @@ Ext.define('Lada.controller.form.Probe', {
         if (panel.getRecord().get('readonly')) {
             panel.down('button[action=save]').setDisabled(true);
             panel.down('button[action=discard]').setDisabled(true);
-            panel.down('button[action=copy]').setDisabled(false);
+            panel.down('button[action=copy]').setDisabled(
+                !panel.getRecord().get('owner'));
         } else {
             if (panel.isValid()) {
                 if (panel.isDirty()) {
@@ -682,8 +683,8 @@ Ext.define('Lada.controller.form.Probe', {
                     panel.down('button[action=copy]').setDisabled(true);
                 } else {
                     panel.down('button[action=discard]').setDisabled(true);
-                    panel.down('button[action=copy]').setDisabled(false);
                     panel.down('button[action=save]').setDisabled(true);
+                    panel.down('button[action=copy]').setDisabled(false);
                 }
             } else {
                 panel.down('button[action=save]').setDisabled(true);
