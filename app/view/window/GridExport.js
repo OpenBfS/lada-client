@@ -513,7 +513,8 @@ Ext.define('Lada.view.window.GridExport', {
                 idField: win.grid.rowtarget.dataIndex,
                 idFilter: win.getExportIds(win),
                 filename: filename,
-                subDataColumns: win.getSubdataColumns(win)
+                subDataColumns: win.getSubdataColumns(win),
+                timezone: Lada.util.Date.getCurrentTimeZone()
             };
             switch (exportFormat) {
                 case 'laf':
@@ -529,6 +530,7 @@ Ext.define('Lada.view.window.GridExport', {
                     break;
                 case 'csv':
                     if (win.validateCsvOptions(win)) {
+                        requestData.subDataColumnNames = win.getSubdataColumNames(requestData.subDataColumns);
                         requestData = win.getCsvOptions(requestData, win);
                         win.requestExport('csv', win.csvRequestURL, requestData, win);
                     }
@@ -1061,6 +1063,23 @@ Ext.define('Lada.view.window.GridExport', {
         return Ext.Array.map(expColumns, function(c) {
             return c.get('value');
         });
+    },
+
+    /**
+     * Get readable names for the given columns
+     * @param {String[]} columns Column data index array
+     * @return {Object} Object containing dataIndex: columnName
+     */
+    getSubdataColumNames: function(columns) {
+        if (!columns) {
+            return null;
+        }
+        var i18n = Lada.getApplication().bundle;
+        var names = {};
+        Ext.Array.forEach(columns, function(column) {
+            names[column] = i18n.getMsg(column);
+        });
+        return names;
     },
 
     getColumnDefinitions: function(win) {
