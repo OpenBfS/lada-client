@@ -117,6 +117,15 @@ Ext.define('Lada.view.grid.BaseGrid', {
      * @param {Ext.data.operation.operation} operation The operation that failed
      */
     loadingFailed: function(store, operation) {
-        this.showReloadMask();
+        var response = operation.getResponse();
+        var json = response ? JSON.parse(response.responseText) : null;
+        if (json && json.message && json.message === '699') {
+            // Don't show an error: store loaded correctly, but user has no
+            // permission to see any data
+            // TODO some message ?
+            return;
+        } else {
+            this.showReloadMask();
+        }
     }
 });
