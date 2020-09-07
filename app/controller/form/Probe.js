@@ -96,7 +96,7 @@ Ext.define('Lada.controller.form.Probe', {
                 parentGrid[0].reload();
             }
             button.up('toolbar[name=generaltoolbar]').setLoading(false);
-        });
+        }, button.up('toolbar[name=generaltoolbar]'));
     },
 
     /**
@@ -104,16 +104,16 @@ Ext.define('Lada.controller.form.Probe', {
      * @param Probe Probe object to copy
      * @param callback Function to call after probe, messungen and messwerte
      *                 has been copied successfully. Param: copied probe record
+     * @param toolbar toolbar to reactivate if finished (used in error cases)
      */
-    copyProbe: function(probe, callback) {
-        var probeId = probe.get('id');
+    copyProbe: function(probe, callback, toolbar) {
         var i18n = Lada.getApplication().bundle;
         var me = this;
         //Copy probe and reset fields not to be copied
         var fieldsToReset = [
-                'id', 'mprId', 'externeProbeId',
-                'probeentnahmeBeginn', 'probeentnahmeEnde',
-                'solldatumBeginn', 'solldatumEnde', 'hauptprobenNr'];
+            'id', 'mprId', 'externeProbeId',
+            'probeentnahmeBeginn', 'probeentnahmeEnde',
+            'solldatumBeginn', 'solldatumEnde', 'hauptprobenNr'];
         var copy = probe.copy(null);
         for (var i = 0; i < fieldsToReset.length; i++) {
             copy.set(fieldsToReset[i], null);
@@ -121,16 +121,17 @@ Ext.define('Lada.controller.form.Probe', {
         copy.save({
             callback: function(record, operation, success) {
                 if (success) {
-                    me.copyOrtszuordnung(probe, copy, callback);
+                    me.copyOrtszuordnung(probe, copy, callback, toolbar);
                 } else {
                     var responseObj = Ext.decode(operation.getResponse().responseText);
                     Ext.Msg.alert(i18n.getMsg('err.probe.copy'), i18n.getMsg(responseObj.message));
+                    toolbar.setLoading(false);
                 }
             }
         });
     },
 
-    copyOrtszuordnung: function(probe, probeCopy, callback) {
+    copyOrtszuordnung: function(probe, probeCopy, callback, toolbar) {
         var me = this;
         var savedOrtszuordnungen = 0;
         var fetchedOrtszuordnungen = 0;
@@ -150,7 +151,7 @@ Ext.define('Lada.controller.form.Probe', {
                 var ortszuordnungCopyArr = [];
                 var ortszuordnungRecArr = [];
                 if (fetchedOrtszuordnungen === 0) {
-                    me.copyMessungen(probe, probeCopy, callback);
+                    me.copyMessungen(probe, probeCopy, callback, toolbar);
                     return;
                 }
                 for (var i = 0; i < ortszuordnungArr.length; i++) {
@@ -172,13 +173,14 @@ Ext.define('Lada.controller.form.Probe', {
                                 if (saveErrors) {
                                     Ext.Msg.alert(i18n.getMsg('err.ortszuordnung.tile'), saveErrors);
                                 }
-                                me.copyMessungen(probe, probeCopy, callback);
+                                me.copyMessungen(probe, probeCopy, callback, toolbar);
                             }
                         }
                     });
                 }
             },
             failure: function() {
+                toolbar.setLoading(false);
             }
         });
     },
@@ -190,7 +192,7 @@ Ext.define('Lada.controller.form.Probe', {
      * @param probeCopy The copied probe record
      * @param callback Function to call after the copy process is finished.
      */
-    copyMessungen: function(probe, probeCopy, callback) {
+    copyMessungen: function(probe, probeCopy, callback, toolbar) {
         var me = this;
         //Num of copies already saved
         var savedMessungenCopies = 0;
@@ -210,8 +212,6 @@ Ext.define('Lada.controller.form.Probe', {
                 //All messung objects as json object
                 var messungArr = responseObj.data;
                 fetchedMessungen = messungArr.length;
-                //Array of copied models
-                var messungCopyArr = [];
                 //Array of original records
                 var messungRecArr = [];
 
@@ -233,7 +233,6 @@ Ext.define('Lada.controller.form.Probe', {
                     cpy.set('copyOfMessungId', messung.id);
                     cpy.set('id', null);
                     cpy.phantom = true;
-                    messungCopyArr.push(cpy);
                     messungRecArr.push(messungRec);
                     //Save new models
                     cpy.save({
@@ -247,15 +246,15 @@ Ext.define('Lada.controller.form.Probe', {
                                 if (saveErrors) {
                                     Ext.Msg.alert('Messung copy failure!', saveErrors);
                                 } else {
-                                    me.copyMesswerte(probeCopy, messungRecArr, messungCopyArr, callback);
+                                    me.copyMesswerte(probeCopy, messungRecArr, callback, toolbar);
                                 }
                             }
                         }
                     });
                 }
             },
-            failure: function(response) {
-
+            failure: function() {
+                toolbar.setLoading(false);
             }
         });
     },
@@ -267,10 +266,9 @@ Ext.define('Lada.controller.form.Probe', {
      *                  messwerte are attached
      * @param messungen Original messungen records to get the original messerte
      *                  from
-     * @param messungenCopy Copied messungen to attach the copied messwerte to.
      * @param fininshedCallback Function to call after copying.
      */
-    copyMesswerte: function(probeCopy, messungen, messungenCopy, finishedCallback) {
+    copyMesswerte: function(probeCopy, messungen, finishedCallback, toolbar) {
         //Number of messung objects to copy and objects already copied
         var numMessungen = messungen.length;
         var messungenFinished = 0;
@@ -279,17 +277,16 @@ Ext.define('Lada.controller.form.Probe', {
         var numMesswert = new Ext.util.HashMap();
         var messwertFinished = new Ext.util.HashMap();
 
-        if (numMessungen == 0) {
+        if (numMessungen === 0) {
             finishedCallback(probeCopy);
             return;
-        };
+        }
         var messungsIDNew = new Ext.util.HashMap();
         for (var i = 0; i < messungen.length; i++) {
             messungsIDNew.add(messungen[i].get('copyOfMessungId'), messungen[i].get('id'));
         }
         for (var i = 0; i < messungen.length; i++) {
             var messung = messungen[i];
-            var messungsId = messung.get('copyOfMessungId');
             Ext.Ajax.request({
                 url: 'lada-server/rest/messwert',
                 params: {
@@ -366,6 +363,9 @@ Ext.define('Lada.controller.form.Probe', {
                             }
                         });
                     }
+                },
+                failure: function() {
+                    toolbar.setLoading(false);
                 }
             });
         }
