@@ -1092,14 +1092,16 @@ Ext.define('Lada.view.window.GridExport', {
             return [];
         }
         return Ext.Array.map(cols, function(c) {
-            delete c.visible;
             c.export = false;
-            var gridColumn = columnstore.findRecord('id', c.gridColumnId,0,false, false, true);
-            if (gridColumn) {
+            if (c.visible === true) {
+                var gridColumn = columnstore.findRecord(
+                    'id', c.gridColumnId,0,false, false, true
+                );
                 if (allcolumns || expcolumns.indexOf(gridColumn.get('dataIndex')) > -1) {
                     c.export = true;
                 }
             }
+            delete c.visible;
             return c;
 
         });
