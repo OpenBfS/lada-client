@@ -59,7 +59,7 @@ Ext.define('Lada.view.window.FileUpload', {
                             var fname = files[i].name.replace("C:\\fakepath\\", "");
                             fset.add({
                                 xtype: 'textfield',
-                                readOnly: true, 
+                                readOnly: true,
                                 width: '95%',
                                 value: fname,
                                 margin: '5,5,5,5'
@@ -247,16 +247,23 @@ Ext.define('Lada.view.window.FileUpload', {
             failure: function(response, opts) {
                 //If request fails show an alert
                 var i18n = Lada.getApplication().bundle;
+                var msg = 'importResponse.failure.server.multi';
+                // TODO: correct status for an expected "file too big" would be
+                // 413, needs server adaption, 502 could be something else, too
+                if (response.status === 502) {
+                    msg = 'importResponse.failure.server.bigfile';
+                }
                 Ext.Msg.show({
-                    message: i18n.getMsg('importResponse.failure.server.multi'),
+                    message: i18n.getMsg(msg),
                     buttons: Ext.Msg.OK,
                     icon: Ext.Msg.ERROR
                 });
+                win.setLoading(false);
             }
         });
     },
 
-    /**
+    /** TODO obsolete code 2020/09?
      * @private
      * A handler uploading a file, given as binary string
      */
@@ -360,7 +367,7 @@ Ext.define('Lada.view.window.FileUpload', {
 
         this.resultWin.updateOnError(response.status, response.statusText, fileIndex);
 
-        if (this.filesUploaded == this.files.length) {
+        if (this.filesUploaded === this.files.length) {
             this.resultWin.finishedHandler();
             this.close();
         }
