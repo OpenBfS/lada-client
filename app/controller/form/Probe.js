@@ -888,7 +888,7 @@ Ext.define('Lada.controller.form.Probe', {
 
         if ( (desk.layer === 0 ) && (records.get('sn') === 0) ) {
             mediatext.setValue('');
-            media.setValue('')
+            media.setValue('');
         } else {
             if ( current[1] === '01') {
                 if ( (current[4] !== '00') && (desk.layer === 3) ) {
