@@ -332,8 +332,10 @@ Ext.define('Lada.controller.form.Messung', {
             modal: true
         });
         var view = button.up('messungform');
+        var messwertGrid = button.up('messungedit').down('messwertgrid');
         win.on('statussetend', function() {
             view.updateStatusTextAndFertigFlag();
+            messwertGrid.getStore().reload();
         });
         win.show();
     }
