@@ -791,6 +791,22 @@ Ext.define('Lada.controller.Query', {
                             options);
                         negateCheckbox = true;
                         break;
+                    case 'sollistUmwGr':
+                         options.multiSelect = true;
+                         options.editable = true;
+                         options.value = this.getFilterValueMulti(recs[i]);
+                         field = Ext.create('Lada.view.widget.SollIstUmwGruppe',
+                             options);
+                         negateCheckbox = true;
+                         break;
+                    case 'sollistMmtGr':
+                         options.multiSelect = true;
+                         options.editable = true;
+                         options.value = this.getFilterValueMulti(recs[i]);
+                         field = Ext.create('Lada.view.widget.SollIstMmtGruppe',
+                             options);
+                         negateCheckbox = true;
+                         break;
                     case 'tag':
                         options.multiSelect = true;
                         options.editable = true;
