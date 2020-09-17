@@ -17,5 +17,11 @@ Ext.define('Lada.store.SollIstUmwGruppe', {
         property: 'id',
         direction: 'ASC'
     }],
-    autoLoad: true
+    autoLoad: true,
+    filters: [function(item) {
+        if (item.data.beschreibung !== "Summe") {
+            return true;
+        }
+        return false;
+    }]
 });
