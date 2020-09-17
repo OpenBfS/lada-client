@@ -139,7 +139,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                         var pjson = poperation ? Ext.decode(poperation.getResponse().responseText) : null;
                                         if (probeWin.show()) {
                                             probeWin.initData(precord);
-                                            probeWin.setMessages(pjson.errors, pjson.warnings);
+                                            probeWin.setMessages(pjson.errors, pjson.warnings, pjson.notifications);
                                             probeWin.setPosition(30);
                                         }
                                         var win = Ext.create(
@@ -172,7 +172,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                             win.initData(record);
                             win.show();
                             var json = operation ? Ext.decode(operation.getResponse().responseText) : null;
-                            win.setMessages(json.errors, json.warnings);
+                            win.setMessages(json.errors, json.warnings, json.notifications);
                             win.setPosition(30);
                         }
                     }

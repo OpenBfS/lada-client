@@ -599,7 +599,7 @@ Ext.define('Lada.controller.form.Probe', {
                         }
                         formPanel.clearMessages();
                         formPanel.setRecord(record);
-                        formPanel.setMessages(json.errors, json.warnings);
+                        formPanel.setMessages(json.errors, json.warnings, json.notifications);
                         if (response.action === 'create' && json.success) {
                             button.up('window').close();
                             var win = Ext.create('Lada.view.window.ProbeEdit', {
@@ -635,7 +635,7 @@ Ext.define('Lada.controller.form.Probe', {
                             }
                             formPanel.clearMessages();
                             formPanel.setRecord(record);
-                            formPanel.setMessages(json.errors, json.warnings);
+                            formPanel.setMessages(json.errors, json.warnings, json.notifications);
                             if (response.action === 'create' && json.success) {
                                 button.up('window').close();
                                 var win = Ext.create('Lada.view.window.ProbeEdit', {
@@ -836,7 +836,10 @@ Ext.define('Lada.controller.form.Probe', {
         if (field.getValue() !== '') {
             field.up().clearWarningOrError();
         } else {
-            field.up().showWarnings('631');
+            var errors = [];
+            var warnings = [];
+            var notifications = { hauptprobenNr : [631] };
+            field.up('probeform').setMessages(errors,warnings,notifications);
         }
     },
 

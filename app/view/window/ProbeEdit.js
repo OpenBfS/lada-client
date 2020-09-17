@@ -196,7 +196,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
             var json = response ? Ext.decode(response.getResponse().responseText) : null;
             if (json) {
-                me.setMessages(json.errors, json.warnings);
+                me.setMessages(json.errors, json.warnings, json.notifications);
                 //if (!json.warnings.mediaDesk) { // TODO: not sure why this condition was present
                 //}
             }
@@ -312,8 +312,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
      * @param errors These Errors shall be shown
      * @param warnings These Warning shall be shown
      */
-    setMessages: function(errors, warnings) {
-        this.down('probeform').setMessages(errors, warnings);
+    setMessages: function(errors, warnings, notifications) {
+        this.down('probeform').setMessages(errors, warnings, notifications);
         var errorOrtText = '';
         var errorOrt = false;
         var warningOrtText = '';

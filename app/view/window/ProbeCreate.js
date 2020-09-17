@@ -162,13 +162,14 @@ Ext.define('Lada.view.window.ProbeCreate', {
             record.set('laborMstId', labRec.get('laborMst'));
         }
         var errors = [];
+        var warnings = [];
+        var notifications = { hauptprobenNr : [631] };
         var warnings = {  probeentnahmeBeginn: [631],
-                               hauptprobenNr : [631],
                                         umwId: [631]
         };
         this.down('probeform').setRecord(record);
         this.down('probeform').setMediaDesk(record);
-        this.down('probeform').setMessages(errors,warnings);
+        this.down('probeform').setMessages(errors,warnings,notifications);
         this.down('probeform').isValid();
     },
 
@@ -178,7 +179,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
      * @param warnings These Warning shall be shown
      */
     setMessages: function(errors, warnings) {
-        this.down('probeform').setMessages(errors, warnings);
+        this.down('probeform').setMessages(errors, warnings, notifications);
     },
 
     /**
