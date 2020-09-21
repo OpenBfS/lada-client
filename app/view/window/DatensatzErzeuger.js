@@ -74,6 +74,9 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
         }];
         this.modelClass = Lada.model.DatensatzErzeuger;
         this.callParent(arguments);
+        if (this.record) {
+            this.initData(this.record);
+        }
     },
 
     initData: function(record) {

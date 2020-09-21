@@ -77,6 +77,9 @@ Ext.define('Lada.view.window.Probenehmer', {
         }];
         this.modelClass = Lada.model.Probenehmer;
         this.callParent(arguments);
+        if (this.record) {
+            this.initData(this.record);
+        }
     },
 
     /**

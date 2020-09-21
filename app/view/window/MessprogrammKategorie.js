@@ -75,6 +75,9 @@ Ext.define('Lada.view.window.MessprogrammKategorie', {
         }];
         this.modelClass = Lada.model.MessprogrammKategorie;
         this.callParent(arguments);
+        if (this.record) {
+            this.initData(this.record);
+        }
     },
 
     initData: function(record) {
