@@ -208,8 +208,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             asynchronousLoad: false
         });
         var me = this;
-        umwStore.load({callback: function(){
-            me.genResultWindow(umwStore, data, genTagName)
+        umwStore.load({callback: function() {
+            me.genResultWindow(umwStore, data, genTagName);
         }});
     },
 
@@ -232,20 +232,34 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             exactMatch: true
         });
         var gcs = Ext.create('Lada.store.GridColumnValue');
-        //TODO basequery needed for this to work
-        var columns = ['externeProbeId', 'mstId', 'datenbasisId', 'baId', 'probenartId',
-            'solldatumBeginn', 'solldatumEnde', 'mprId', 'mediaDesk', 'umwId',
-            'probeNehmerId', 'mmt', 'gemId'];
+        var columns = ['externeProbeId', 'mstId', 'dBasis', 'baId', 'pArt',
+            'sollBegin', 'sollEnd', 'mprId', 'mediaDesk', 'umwId',
+            'probeNehmerId', 'mmt', 'eGemId'];
+        // TODO correct mapping to a matching basequery needed for
+        // server-side csv/json export to work. Currently missing on (1):
+        // mediaDesk mmt probenehmerId baId
+        var idcol = columnstore.findRecord('dataIndex', 'probeId',
+            false, false, false, true);
+        if (idcol) {
+            gcs.add( new Ext.create('Lada.model.GridColumnValue',{
+                columnIndex: 0,
+                filterActive: false,
+                qid: 0, // TODO: hardcoded value based on example data
+                dataIndex: idcol.get('dataIndex'),
+                visible: false,
+                gridColumnId: idcol.get('id')
+            }));
+        }
         for (var i=0; i < columns.length; i++) {
             var col = columnstore.findRecord('dataIndex', columns[i], false,
-                false, false, true); // TODO col is unused here?
+                false, false, true);
             gcs.add( new Ext.create('Lada.model.GridColumnValue',{
-                columnIndex: i,
+                columnIndex: i+1,
                 filterActive: false,
                 qid: 0, //TODO: hardcoded value based on example data
                 dataIndex: columns[i],
                 visible: true,
-                gridColumnId: i
+                gridColumnId: col ? col.get('id') : null
             }));
         }
         var newStore = Ext.create('Lada.store.Proben', {data: data});
@@ -263,6 +277,11 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 rowtarget: { dataType: 'probeId', dataIndex: 'id'},
                 exportRowexp: true,
                 store: newStore,
+                override: {
+                    columnstore: columnstore,
+                    data: data,
+                    gcs: gcs.getData().items
+                },
                 columns: [{
                     header: 'probe_id',
                     dataIndex: 'id',

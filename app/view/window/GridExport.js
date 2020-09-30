@@ -1035,7 +1035,13 @@ Ext.define('Lada.view.window.GridExport', {
 
     getExportIds: function(win) {
         if (win.down('checkbox[name=allrows]').getValue()) {
-            return [];
+            if (this.grid.override) {
+                return this.grid.override.data.map(function(item) {
+                    return item.id;
+                });
+            } else {
+                return [];
+            }
         } else {
             var selection = this.grid.getSelectionModel().getSelection();
             if (selection.length) {
@@ -1087,24 +1093,45 @@ Ext.define('Lada.view.window.GridExport', {
         var expcolumns = win.down('tagfield[name=exportcolumns]').getValue();
         var columnstore = Ext.data.StoreManager.get('columnstore');
         var genericResults = Ext.StoreManager.get('genericresults');
-        var cols = genericResults.getProxy().payload.columns;
-        if (!cols || !cols.length) {
-            return [];
-        }
-        return Ext.Array.map(cols, function(c) {
-            c.export = false;
-            if (c.visible === true) {
-                var gridColumn = columnstore.findRecord(
-                    'id', c.gridColumnId,0,false, false, true
-                );
-                if (allcolumns || expcolumns.indexOf(gridColumn.get('dataIndex')) > -1) {
-                    c.export = true;
-                }
-            }
-            delete c.visible;
-            return c;
 
-        });
+        if (this.grid.override) {
+            var override = this.grid.override;
+            return Ext.Array.map(override.gcs, function(col) {
+                var c = col.getData();
+                c.export = false;
+                if (c.visible === true) {
+                    var gridColumn = override.columnstore.findRecord(
+                        'id', c.gridColumnId,0,false, false, true
+                    );
+                    if (allcolumns || expcolumns.indexOf(gridColumn.get('dataIndex')) > -1) {
+                        c.export = true;
+                    }
+                }
+                delete c.visible;
+                delete c.id;
+                delete c.qid;
+                return c;
+            });
+        } else {
+            var cols = genericResults.getProxy().payload.columns;
+            if (!cols || !cols.length) {
+                return [];
+            }
+            return Ext.Array.map(cols, function(c) {
+                c.export = false;
+                if (c.visible === true) {
+                    var gridColumn = columnstore.findRecord(
+                        'id', c.gridColumnId,0,false, false, true
+                    );
+                    if (allcolumns || expcolumns.indexOf(gridColumn.get('dataIndex')) > -1) {
+                        c.export = true;
+                    }
+                }
+                delete c.visible;
+                return c;
+
+            });
+        }
     },
 
     resetCopyButton: function(scope) {
