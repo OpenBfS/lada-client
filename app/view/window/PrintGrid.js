@@ -278,6 +278,16 @@ Ext.define('Lada.view.window.PrintGrid', {
     },
 
     /**
+     * Set the current grid from which the items are extracted
+     * @param {Ext.grid.Panel} grid New parent grid
+     */
+    setParentGrid: function(grid) {
+        if (grid) {
+            this.parentGrid = grid;
+        }
+    },
+
+    /**
      * Reset window and show if its hidden, else focus on window
      */
     show: function() {

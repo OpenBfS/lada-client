@@ -220,7 +220,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
      * @param data Generated probe instances
      * @param genTagname Generated tag name
      */
-    genResultWindow: function(umwStore, data, genTagName){
+    genResultWindow: function(umwStore, data, genTagName) {
         var i18n = Lada.getApplication().bundle;
         var me = this;
 
@@ -229,7 +229,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         columnstore.filter({
             property: 'baseQuery',
             value: '1',
-            exactMatch: true});
+            exactMatch: true
+        });
         var gcs = Ext.create('Lada.store.GridColumnValue');
         //TODO basequery needed for this to work
         var columns = ['externeProbeId', 'mstId', 'datenbasisId', 'baId', 'probenartId',
@@ -402,7 +403,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             return value;
                         }
                         var id = rec.get('gemId');
-                        if (id){
+                        if (id) {
                             return id;
                         }
                         return '';
@@ -425,7 +426,15 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 handler: function(button) {
                     button.up('window').close();
                 }
-            }]
+            }],
+            onFocusEnter: function(event) {
+                var resultWin = event.toComponent;
+                var printWin = Lada.view.window.PrintGrid.getInstance();
+                if (printWin) {
+                    var grid = resultWin.down('dynamicgrid');
+                    printWin.setParentGrid(grid);
+                }
+            }
         });
         win.show();
         win.down('dynamicgrid').setToolbar();

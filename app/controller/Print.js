@@ -64,9 +64,12 @@ Ext.define('Lada.controller.Print', {
     /**
      * Triggers a 'print' dialog from a grid, where further choices about
      * templates can be made
+     * @param {Ext.button.Button} button Button that triggered the event
      */
-    openPrintDialog: function() {
+    openPrintDialog: function(button) {
         var win = Lada.view.window.PrintGrid.getInstance();
+        var grid = button.up('dynamicgrid');
+        win.setParentGrid(grid);
         if (Lada.appContext) {
             if (Lada.appContext.merge.tools.indexOf('irixPrintBtn') >= 0) {
                 this.dokPoolEnabled = true;
