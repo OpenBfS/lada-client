@@ -28,6 +28,7 @@ Ext.define('Lada.view.window.AuditTrail', {
         'solldatum_beginn',
         'solldatum_ende',
         'messzeitpunkt',
+        'ursprungszeit',
         'datum'
     ],
 
