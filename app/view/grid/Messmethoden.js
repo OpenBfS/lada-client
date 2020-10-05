@@ -10,7 +10,7 @@
  * Grid to list Messmethoden and Messgroessen
  */
 Ext.define('Lada.view.grid.Messmethoden', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.messmethodengrid',
 
     requires: [
@@ -151,6 +151,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
         }
         // Only load the Store when a Record ID is Present
         if (this.recordId) {
+            this.addLoadingFailureHandler(this.store);
             this.store.load({
                 params: {
                     messprogrammId: this.recordId
@@ -158,6 +159,19 @@ Ext.define('Lada.view.grid.Messmethoden', {
             });
         }
     },
+
+    /**
+     * Reload this grid
+     */
+    reload: function() {
+        if (!this.store) {
+            this.initData();
+            return;
+        }
+        this.hideReloadMask();
+        this.store.reload();
+    },
+
     setReadOnly: function(b) {
         if (b === true) {
             //Readonly

@@ -43,6 +43,7 @@ Ext.define('Lada.view.QueryPanel', {
                 margin: 0,
                 items: [{
                     xtype: 'combobox',
+                    shadow: false,
                     margin: 5,
                     fieldLabel: 'query.query',
                     name: 'selectedQuery',

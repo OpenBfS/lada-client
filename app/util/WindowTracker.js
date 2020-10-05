@@ -57,7 +57,7 @@ Ext.define('Lada.util.WindowTracker', {
         close: function(type, id, window) {
             this.init();
             var map = this.maps.get(type);
-            if(map) {
+            if (map) {
                 if (this.isOpen(type, id)) {
                     map.remove(window);
                 } else {

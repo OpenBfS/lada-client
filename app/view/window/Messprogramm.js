@@ -10,7 +10,7 @@
  * Window to edit a Messprogramm
  */
 Ext.define('Lada.view.window.Messprogramm', {
-    extend: 'Lada.view.window.TrackedWindow',
+    extend: 'Lada.view.window.RecordWindow',
     alias: 'widget.messprogramm',
 
     requires: [
@@ -29,6 +29,7 @@ Ext.define('Lada.view.window.Messprogramm', {
 
     record: null,
     recordType: 'messprogramm',
+    modelClass: Lada.model.Messprogramm,
 
     /**
      * This function initialises the Window
@@ -36,12 +37,7 @@ Ext.define('Lada.view.window.Messprogramm', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
-
-        if (this.record === null) {
-            this.title = i18n.getMsg('messprogramm.window.create.title');
-        } else {
-            this.title = i18n.getMsg('messprogramm.window.edit.title') +' <i>(Referenzierte Proben '+this.record.get('referenceCount')+')</i>';
-        }
+        this.title = i18n.getMsg('title.loading.messprogramm');
         this.buttons = [{
             text: i18n.getMsg('generateproben'),
             action: 'generateproben',
@@ -91,39 +87,7 @@ Ext.define('Lada.view.window.Messprogramm', {
         // InitialConfig is the config object passed to the constructor on
         // creation of this window. We need to pass it throuh to the form as
         // we need the "Id" param to load the correct item.
-        this.items = [{
-            border: false,
-            autoScroll: true,
-            items: [{
-                xtype: 'messprogrammform',
-                recordId: this.record ? this.record.get('id') : null
-            }, {
-                xtype: 'fset',
-                name: 'orte',
-                title: i18n.getMsg('title.ortsangabe'),
-                padding: '5, 5',
-                margin: 5,
-                items: [{
-                    xtype: 'ortszuordnunggrid',
-                    recordId: me.record ? me.record.get('id') : null,
-                    isMessprogramm: true
-                }]
-            }, {
-                //Messmethoden
-                xtype: 'fieldset',
-                padding: '5, 5',
-                title: i18n.getMsg('mmtmessprogramm.form.fieldset.title'),
-                margin: 5,
-                layout: {
-                    type: 'fit'
-                },
-                items: [{
-                    xtype: 'messmethodengrid',
-                    recordId: this.record ? this.record.get('id') : null,
-                    flex: 1
-                }]
-            }]
-        }];
+
         this.tools = [{
             type: 'help',
             tooltip: i18n.getMsg('help.qtip'),
@@ -145,6 +109,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                 }
             }
         }];
+        this.modelClass = Lada.model.Messprogramm;
         this.callParent(arguments);
     },
 
@@ -161,8 +126,10 @@ Ext.define('Lada.view.window.Messprogramm', {
       * loaded record, not requiring a reload from server
      */
     initData: function(loadedRecord) {
+        this.initializeUi();
         this.clearMessages();
         var me = this;
+        var i18n = Lada.getApplication().bundle;
 
         // If a record was passed to this window,
         // create a Edit window
@@ -196,6 +163,11 @@ Ext.define('Lada.view.window.Messprogramm', {
 
                 me.down('messprogrammform').setMediaDesk(record);
                 me.setLoading(false);
+                if (me.record === null) {
+                    me.setTitle(i18n.getMsg('messprogramm.window.create.title'));
+                } else {
+                    me.setTitle(i18n.getMsg('messprogramm.window.edit.title') +' <i>(Referenzierte Proben '+ me.record.get('referenceCount')+')</i>');
+                }
             };
             if (!loadedRecord) {
                 Ext.ClassManager.get('Lada.model.Messprogramm').load(this.record.get('id'), {
@@ -248,6 +220,45 @@ Ext.define('Lada.view.window.Messprogramm', {
         this.down('messprogrammform').isValid();
     },
 
+    initializeUi: function() {
+        var i18n = Lada.getApplication().bundle;
+        var me = this;
+        this.removeAll();
+        this.add([{
+            border: false,
+            autoScroll: true,
+            items: [{
+                xtype: 'messprogrammform',
+                recordId: this.record ? this.record.get('id') : null
+            }, {
+                xtype: 'fset',
+                name: 'orte',
+                title: i18n.getMsg('title.ortsangabe'),
+                padding: '5, 5',
+                margin: 5,
+                items: [{
+                    xtype: 'ortszuordnunggrid',
+                    recordId: me.record ? me.record.get('id') : null,
+                    isMessprogramm: true
+                }]
+            }, {
+                //Messmethoden
+                xtype: 'fieldset',
+                padding: '5, 5',
+                title: i18n.getMsg('mmtmessprogramm.form.fieldset.title'),
+                margin: 5,
+                layout: {
+                    type: 'fit'
+                },
+                items: [{
+                    xtype: 'messmethodengrid',
+                    recordId: this.record ? this.record.get('id') : null,
+                    flex: 1
+                }]
+            }]
+        }]);
+    },
+
     /**
      * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
      */
@@ -268,7 +279,7 @@ Ext.define('Lada.view.window.Messprogramm', {
         var me = this;
         var i18n = Lada.getApplication().bundle;
         var item = me.down('messprogrammform');
-        if (!item.getRecord().get('readonly') && item.isDirty()) {
+        if (item && !item.getRecord().get('readonly') && item.isDirty()) {
             var confWin = Ext.create('Ext.window.Window', {
                 title: i18n.getMsg('form.saveonclosetitle'),
                 modal: true,

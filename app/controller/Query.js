@@ -189,8 +189,8 @@ Ext.define('Lada.controller.Query', {
                     clonedModel.save({
                         callback: function(rec, op, suc) {
                             cur++;
-                            success = suc == false ? false: true;
-                            if (cur == len) {
+                            success = suc === false ? false: true;
+                            if (cur === len) {
                                 resolve(success);
                             }
                         }

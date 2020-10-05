@@ -18,6 +18,12 @@ Ext.define('Lada.store.Tag', {
     //Probe id used for filtering for selected tags
     mId: null,
 
+    /**
+     * Function to call after this or the assigned store finished loading
+     */
+    loadingCallback: null,
+
+
     sorters: ['tag'],
 
     //A second store instance used for filtering
@@ -34,10 +40,14 @@ Ext.define('Lada.store.Tag', {
 
     /**
      * Set the probe id as a filter param to get assigned tags
+     * @param {Number} pId Probe id to use
      */
     setProbe: function(pId) {
         if (!this.assignedTagsStore) {
             this.assignedTagsStore = Ext.create('Lada.store.Tag');
+        }
+        if (this.loadingCallback) {
+            this.assignedTagsStore.on('load', this.loadingCallback);
         }
         this.pId = pId;
         this.mId = null;
@@ -46,10 +56,18 @@ Ext.define('Lada.store.Tag', {
         };
     },
 
+    /**
+     * Set the messung id as a filter param to get assigned tags
+     * @param {Number} mId Messung id to use
+     */
     setMessung: function(mId) {
         if (!this.assignedTagsStore) {
             this.assignedTagsStore = Ext.create('Lada.store.Tag');
         }
+        if (this.loadingCallback) {
+            this.assignedTagsStore.on('load', this.loadingCallback);
+        }
+
         this.pId = null;
         this.mId = mId;
         this.assignedTagsStore.proxy.extraParams = {
@@ -58,9 +76,32 @@ Ext.define('Lada.store.Tag', {
     },
 
     /**
-     * Loads the store holding the tags, assigned to the current probe
+     * Set the callback after loading finished.
+     * Should be used instead of on
+     * @param {Object} callbackFunction Function to use as callback
+     */
+    setLoadingCallback: function(callbackFunction) {
+        this.loadingCallback = callbackFunction;
+        this.on('load', callbackFunction);
+        if (this.assignedTagsStore) {
+            this.assignedTagsStore.on('load', callbackFunction);
+        }
+    },
+
+    /**
+     * Loads the store holding the tags, assigned to the current probe.
+     * After loading the callback is executed.
+     * @param {*} scope Callback scope
+     * @param {*} callback Callback function
      */
     loadAssignedTags: function(scope, callback) {
+        if (!this.assignedTagsStore) {
+            this.assignedTagsStore = Ext.create('Lada.store.Tag');
+            if (!this.pId) {
+                callback.call(scope? scope: this);
+                return;
+            }
+        }
         this.assignedTagsStore.load({
             scope: scope,
             callback: callback

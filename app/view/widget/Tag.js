@@ -12,6 +12,9 @@
 Ext.define('Lada.view.widget.Tag', {
     extend: 'Ext.form.field.Tag',
     alias: 'widget.tagwidget',
+    requires: [
+        'Lada.view.window.ReloadMask'
+    ],
     store: null,
     displayField: 'tag',
     valueField: 'id',
@@ -22,6 +25,26 @@ Ext.define('Lada.view.widget.Tag', {
     typeAhead: false,
     minChars: 0,
     submitValue: false,
+
+    /**
+     * @private
+     * Mask component to be show if store failed loading
+     */
+    reloadMask: null,
+
+    /**
+     * Window containing this widget.
+     */
+    parentWindow: null,
+
+    /**
+     * Component type to use as render target for the loading mask
+     */
+    maskTargetComponentType: 'fieldset',
+    /**
+     * Component name to use as render target for the loading mask
+     */
+    maskTargetComponentName: 'tagfieldset',
 
     /**
      * @private
@@ -74,6 +97,21 @@ Ext.define('Lada.view.widget.Tag', {
     ),
 
     /**
+     * Get the component to render the loading/reloading mask to.
+     */
+    getMaskTarget: function() {
+        if (!this.parentWindow) {
+            return this.getEl();
+        }
+        var queryString = this.maskTargetComponentType + '[name=' + this.maskTargetComponentName + ']';
+        var targetComponent = this.parentWindow.down(queryString);
+        if (!targetComponent) {
+            Ext.log({msg: 'Invalid mask target: ' + queryString, level: 'warn'});
+        }
+        return targetComponent.getEl();
+    },
+
+    /**
      * Returns always false to prevent ExtJS to handle this widget as a normal
      * form component. Use Lada.view.widget.Tag.hasChanges instead.
      */
@@ -83,10 +121,32 @@ Ext.define('Lada.view.widget.Tag', {
 
     initComponent: function() {
         this.changes = {};
+        var me = this;
         this.store = Ext.create('Lada.store.Tag');
+
+        this.reloadMask = Ext.create('Lada.view.window.ReloadMask', {
+            reloadButtonHandler: me.reloadButtonClicked,
+            reloadButtonHandlerScope: me
+        });
+
+        this.store.setLoadingCallback(
+            function(store, records, successful) {
+                //Skip if component is no longer visible
+                if (!me.isVisible()) {
+                    return;
+                }
+                if (!successful) {
+                    me.setLoading(false);
+                    me.reloadMask.renderTo = me.getMaskTarget();
+                    me.mask();
+                    me.showReloadMask();
+                }
+            }
+        );
         if (this.monitorChanges === true) {
             this.on('change', this.handleChanges);
         }
+
         this.callParent(arguments);
     },
 
@@ -104,12 +164,22 @@ Ext.define('Lada.view.widget.Tag', {
     },
 
     /**
+     * Handle clicks on reload button.
+     * Calls reload function
+     */
+    reloadButtonClicked: function() {
+        this.reload();
+    },
+
+    /**
      *  Reloads the current store.
      *  @param silent If true, neither tags are preselected nor the dirty status changed.
      *  @param callback Callback function to call after reload
      */
     reload: function(silent, callback) {
         var me = this;
+        me.hideReloadMask();
+        me.setLoading(true);
         this.store.load({
             callback: function() {
                 if (!silent || silent === false) {
@@ -142,8 +212,7 @@ Ext.define('Lada.view.widget.Tag', {
         this.store.loadAssignedTags(me, function(records) {
             var ids = [];
             if (!records) {
-                Ext.log({msg: 'No tag records loaded', level: 'warn'});
-                return;
+                records = [];
             }
 
             //Set tags, received from the server
@@ -333,20 +402,27 @@ Ext.define('Lada.view.widget.Tag', {
         var i18n = Lada.getApplication().bundle;
         var keys = Object.keys(this.changes);
         var requests = 0;
+        //True if all tags were saved successfully
         var success = true;
         var errorHtml = '';
         var callback = function(options, suc, responseObj) {
-            var response = Ext.decode(responseObj.responseText);
-            var tagId = responseObj.request.jsonData.tagId;
-            if (response.success === false) {
-                success = false;
-                var msg = i18n.getMsg('tag.widget.err.genericsave');
-                if (response.message === '699') {
-                    msg = i18n.getMsg('tag.widget.err.globaltagnotallowed.' + me.getRecordType());
+            if (suc === true) {
+                var response = Ext.decode(responseObj.responseText);
+                var tagId = responseObj.request.jsonData.tagId;
+                if (response.success === false) {
+                    success = false;
+                    var msg = i18n.getMsg('tag.widget.err.genericsave');
+                    if (response.message === '699') {
+                        msg = i18n.getMsg('tag.widget.err.globaltagnotallowed.' + me.getRecordType());
+                    }
+                    errorHtml += me.store.getById(tagId).get('tag') + ' - ' + msg + '<br />';
+                } else {
+                    me.changes[tagId] = null;
                 }
-                errorHtml += me.store.getById(tagId).get('tag') + ' - ' + msg + '<br />';
             } else {
-                me.changes[tagId] = null;
+                errorHtml += 'Fehler: ' + responseObj.status + '<br />';
+                success = false;
+                return;
             }
             requests++;
             if (requests === keys.length) {
@@ -391,5 +467,25 @@ Ext.define('Lada.view.widget.Tag', {
         } else {
             this.un('change', this.handleChanges);
         }
-    }
+    },
+
+    /**
+     * Mask this component using the reload mask
+     */
+    showReloadMask: function() {
+        if (this.reloadMask.isHidden()) {
+            this.mask();
+            this.reloadMask.show();
+        }
+    },
+
+    /**
+     * Unmask this component
+     */
+    hideReloadMask: function() {
+        this.unmask();
+        if (this.reloadMask && this.reloadMask.isVisible()) {
+            this.reloadMask.hide();
+        }
+    },
 });

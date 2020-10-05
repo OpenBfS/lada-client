@@ -10,8 +10,12 @@
  * Window to create/edit a MessprogrammKategorie
  */
 Ext.define('Lada.view.window.MessprogrammKategorie', {
-    extend: 'Lada.view.window.TrackedWindow',
+    extend: 'Lada.view.window.RecordWindow',
     alias: 'widget.mprkatedit',
+
+    requires: [
+        'Lada.view.form.MessprogrammKategorie'
+    ],
 
     collapsible: true,
     maximizable: true,
@@ -44,14 +48,6 @@ Ext.define('Lada.view.window.MessprogrammKategorie', {
         // creation of this window. We need to pass it throuh to the form as
         // we need the "modelId" param to load the correct item.
 
-        this.items = [{
-            border: false,
-            layout: 'fit',
-            items: [{
-                xtype: 'mprkatform',
-                record: this.record
-            }]
-        }];
         this.tools = [{
             type: 'help',
             tooltip: i18n.getMsg('help.qtip'),
@@ -77,7 +73,28 @@ Ext.define('Lada.view.window.MessprogrammKategorie', {
             scope: this,
             handler: this.handleBeforeClose
         }];
+        this.modelClass = Lada.model.MessprogrammKategorie;
         this.callParent(arguments);
+        if (this.record) {
+            this.initData(this.record);
+        }
+    },
+
+    initData: function(record) {
+        this.record = record;
+        this.initializeUi();
+    },
+
+    initializeUi: function() {
+        this.removeAll();
+        this.add([{
+            border: false,
+            layout: 'fit',
+            items: [{
+                xtype: 'mprkatform',
+                record: this.record
+            }]
+        }]);
     },
 
     /**
@@ -102,7 +119,7 @@ Ext.define('Lada.view.window.MessprogrammKategorie', {
         var me = this;
         var i18n = Lada.getApplication().bundle;
         var item = me.down('form');
-        if (item.isDirty()) {
+        if (item && item.isDirty()) {
             var confWin = Ext.create('Ext.window.Window', {
                 title: i18n.getMsg('form.saveonclosetitle'),
                 modal: true,

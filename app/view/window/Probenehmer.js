@@ -10,7 +10,7 @@
  * Window to create/edit a Probenehmer
  */
 Ext.define('Lada.view.window.Probenehmer', {
-    extend: 'Lada.view.window.TrackedWindow',
+    extend: 'Lada.view.window.RecordWindow',
     alias: 'widget.probenehmeredit',
 
     collapsible: true,
@@ -19,6 +19,9 @@ Ext.define('Lada.view.window.Probenehmer', {
     autoScroll: true,
     layout: 'fit',
     constrain: true,
+
+    width: 650,
+    height: 510,
 
     record: null,
     recordType: 'probenehmer',
@@ -47,14 +50,6 @@ Ext.define('Lada.view.window.Probenehmer', {
         // creation of this window. We need to pass it throuh to the form as
         // we need the "modelId" param to load the correct item.
 
-        this.items = [{
-            border: false,
-            layout: 'fit',
-            items: [{
-                xtype: 'probenehmerform',
-                record: this.record
-            }]
-        }];
         this.tools = [{
             type: 'help',
             tooltip: i18n.getMsg('help.qtip'),
@@ -80,7 +75,32 @@ Ext.define('Lada.view.window.Probenehmer', {
             scope: this,
             handler: this.handleBeforeClose
         }];
+        this.modelClass = Lada.model.Probenehmer;
         this.callParent(arguments);
+        if (this.record) {
+            this.initData(this.record);
+        }
+    },
+
+    /**
+     * Init the window using the given record
+     * @param {Lada.model.Probenehmer} record Record to use
+     */
+    initData: function(record) {
+        this.record = record;
+        this.initializeUi();
+    },
+
+    initializeUi: function() {
+        this.removeAll();
+        this.add([{
+            border: false,
+            layout: 'fit',
+            items: [{
+                xtype: 'probenehmerform',
+                record: this.record
+            }]
+        }]);
         this.setMessages();
     },
 
@@ -117,7 +137,7 @@ Ext.define('Lada.view.window.Probenehmer', {
         var me = this;
         var i18n = Lada.getApplication().bundle;
         var item = me.down('form');
-        if (item.isDirty() && item.isValid()) {
+        if (item && item.isDirty() && item.isValid()) {
             var confWin = Ext.create('Ext.window.Window', {
                 title: i18n.getMsg('form.saveonclosetitle'),
                 modal: true,

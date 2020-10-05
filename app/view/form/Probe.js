@@ -45,7 +45,6 @@ Ext.define('Lada.view.form.Probe', {
     readOnly: false,
 
     recordId: null,
-    readOnly: false,
 
     trackResetOnLoad: true,
 
@@ -54,7 +53,7 @@ Ext.define('Lada.view.form.Probe', {
     },
 
     initComponent: function() {
-        if (Lada.view.form.Probe.mediaSnScheduler == null) {
+        if (Lada.view.form.Probe.mediaSnScheduler === null) {
             Lada.view.form.Probe.mediaSnScheduler = Ext.create('Lada.util.FunctionScheduler');
         }
         var me = this;
@@ -546,6 +545,7 @@ Ext.define('Lada.view.form.Probe', {
                     //Tag widget
                     xtype: 'fieldset',
                     title: i18n.getMsg('title.tagfieldset'),
+                    name: 'tagfieldset',
                     layout: {
                         type: 'hbox',
                         align: 'stretchmax'
@@ -554,6 +554,9 @@ Ext.define('Lada.view.form.Probe', {
                         flex: 1,
                         xtype: 'tagwidget',
                         emptyText: i18n.getMsg('emptytext.tag'),
+                        parentWindow: this,
+                        maskTargetComponentType: 'fieldset',
+                        maskTargetComponentName: 'tagfieldset',
                         margin: '5 5 5 5'
                     }, {
                         width: 25,
@@ -570,9 +573,10 @@ Ext.define('Lada.view.form.Probe', {
                                 recordType: "probe"
                             });
                             //Close window if parent window is closed
-                            button.up('probenedit').on('close', function() {
+                            var parentWindow = button.up('probenedit')? button.up('probenedit'): button.up('probecreate');
+                            parentWindow.on('close', function() {
                                 win.close();
-                            })
+                            });
                             win.show();
                         }
                     }]
@@ -632,7 +636,10 @@ Ext.define('Lada.view.form.Probe', {
             this.down('messstellelabor').setValue(items.getAt(0));
         }
         this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
-        this.down('tagwidget').setProbe(probeRecord.data.id);
+        //Do not set tagwidget probe id if record is not saved
+        if (probeRecord.phantom === false) {
+            this.down('tagwidget').setProbe(probeRecord.data.id);
+        }
     },
 
     setMediaDesk: function(record) {
@@ -674,7 +681,12 @@ Ext.define('Lada.view.form.Probe', {
                 Lada.view.form.Probe.mediaSnScheduler.finished();
                 return;
             }
-            cbox.select(cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
+            try {
+                cbox.select(cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
+            } catch (e) {
+                Ext.log({msg: 'Selecting media failed: ' + e, level: 'warn'});
+                return;
+            }
             var mediatext = cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10));
             if (mediatext !== null) {
                 if ( (ndx <= 3) && (media[1] === '01') && (mediatext.data.beschreibung !== 'leer') ) {

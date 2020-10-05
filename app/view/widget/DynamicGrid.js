@@ -173,7 +173,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         Ext.on('timezonetoggled', function() {
             var grid = Ext.ComponentQuery.query('dynamicgrid');
             if (grid.length === 1) {
-                grid[0].reload();
+                grid[0].reload(function() {
+                    Ext.ComponentQuery.query('timezonebutton[action=toggletimezone]')[0].requestFinished();
+                });
             }
         });
     },
@@ -360,7 +362,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     default:
                         col.xtype = 'gridcolumn';
                         col.renderer = function(value) {
-                            if (value == 0) {
+                            if (value === 0) {
                                 return value;
                             }
                             return value || '';
@@ -414,20 +416,20 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 click: function(button) {
                     var id = Number(button.text);
                     button.getEl().swallowEvent(['click', 'dblclick'], true);
-                    Lada.model.Probe.load(id, {
-                        scope: this,
-                        callback: function(record, operation, success) {
-                            if (success) {
-                                var win = Ext.create('Lada.view.window.ProbeEdit', {
-                                    record: record,
-                                    style: 'z-index: -1;'
-                                });
-                                win.initData();
-                                win.show();
-                                win.setPosition(30);
-                            }
-                        }
+                    var win = Ext.create('Lada.view.window.ProbeEdit', {
+                        style: 'z-index: -1;',
+                        recordId: id
                     });
+                    //Window may not be shown if another instance is already open
+                    if (win.show()) {
+                        win.setPosition(30);
+                        win.loadRecord(id, this, function(record, operation, success) {
+                            if (success) {
+                                win.setRecord(record);
+                                win.initData(record);
+                            }
+                        });
+                    }
                 },
                 textchange: function(button, oldval, newval) {
                     if (!newval || newval === '') {
@@ -454,37 +456,40 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 click: function(button) {
                     var id = Number(button.text);
                     button.getEl().swallowEvent(['click', 'dblclick'], true);
-                    Lada.model.Messung.load(id, {
-                        scope: this,
-                        callback: function(record, operation, success) {
+                    var win = Ext.create(
+                        'Lada.view.window.MessungEdit', {
+                            style: 'z-index: -1;',
+                            recordId: id
+                        });
+                    if (win.show()) {
+                        win.loadRecord(id, this, function(record, operation, success) {
                             if (success) {
                                 var messungRecord = record;
-                                Lada.model.Probe.load(messungRecord.get('probeId'), {
-                                    scope: this,
-                                    callback: function(precord, poperation, psuccess) {
-                                        var probeWin = Ext.create(
-                                            'Lada.view.window.ProbeEdit', {
-                                                record: precord,
-                                                style: 'z-index: -1;'
-                                            });
-                                        probeWin.show();
-                                        probeWin.setPosition(30);
-                                        probeWin.initData();
+                                var probeWin = Ext.create(
+                                    'Lada.view.window.ProbeEdit', {
+                                        style: 'z-index: -1;',
+                                        recordId: messungRecord.get('probeId')
+                                    });
+                                if (!probeWin.show()) {
+                                    //If there is already a probe window, use this instead of a new one
+                                    probeWin.destroy();
+                                    probeWin = Ext.ComponentQuery.query('probenedit[recordId=' + messungRecord.get('probeId') + ']')[0];
+                                }
 
-                                        var win = Ext.create(
-                                            'Lada.view.window.MessungEdit', {
-                                                parentWindow: probeWin,
-                                                probe: precord,
-                                                record: record,
-                                                style: 'z-index: -1;'
-                                            });
-                                        win.initData();
-                                        win.show();
-                                    }
-                                });
+                                win.parentWindow = probeWin;
+                                probeWin.setPosition(30);
+                                win.setPosition(35 + probeWin.width);
+                                probeWin.loadRecord(messungRecord.get('probeId'), this,
+                                    function(precord, poperation, psuccess) {
+                                        probeWin.setRecord(precord);
+                                        probeWin.initData(precord);
+                                        win.setProbe(precord);
+                                        win.setRecord(record);
+                                        win.initData(record);
+                                    });
                             }
-                        }
-                    });
+                        });
+                    }
                 },
                 textchange: function(button, oldval, newval) {
                     if (!newval || newval === '') {
@@ -512,15 +517,18 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 click: function(button) {
                     var id = button.getText();
                     button.getEl().swallowEvent(['click', 'dblclick'], true);
-                    Lada.model.Messprogramm.load(id, {
-                        success: function(record) {
-                            var win = Ext.create(
-                                'Lada.view.window.Messprogramm', {
-                                    record: record});
-                            win.initData();
-                            win.show();
-                        }
-                    });
+                    var win = Ext.create(
+                        'Lada.view.window.Messprogramm', {
+                            recordId: id});
+                    if (win.show()) {
+                        win.loadRecord(id, this, function(record, operation, success) {
+                            if (success) {
+                                win.setRecord(record);
+                                win.initData(record);
+                            }
+                        });
+                    }
+
                 },
                 textchange: function(button, oldval, newval) {
                     if (!newval || newval === '') {
@@ -548,14 +556,17 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 click: function(button) {
                     var id = button.getText();
                     button.getEl().swallowEvent(['click', 'dblclick'], true);
-                    Lada.model.Ort.load(id, {
-                        success: function(record) {
-                            var win = Ext.create('Lada.view.window.Ort', {
-                                record: record
-                            });
-                            win.show();
-                        }
+                    var win = Ext.create('Lada.view.window.Ort', {
+                        recordId: id
                     });
+                    if (win.show()) {
+                        win.loadRecord(id, this, function(record, operation, success) {
+                            if (success) {
+                                win.initData(record);
+                            }
+                        });
+                    }
+
                 },
                 textchange: function(button, oldval, newval) {
                     if (!newval || newval === '') {
@@ -646,7 +657,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 var strValue = value;
                 if (typeof(value) !== 'string') {
                     strValue = Lada.getApplication().toExponentialString(value, 2)
-                         .replace('.', Ext.util.Format.decimalSeparator);
+                        .replace('.', Ext.util.Format.decimalSeparator);
                 }
                 var splitted = strValue.split('e');
                 var exponent = parseInt(splitted[1], 10);
@@ -830,60 +841,55 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             clicklistener = function(button) {
                 var id = Number(button.text);
                 button.getEl().swallowEvent(['click', 'dblclick'], true);
-                Lada.model.Probenehmer.load(id, {
-                    scope: this,
-                    callback: function(record, operation, success) {
-                        if (success) {
-                            var win = Ext.create('Lada.view.window.Probenehmer', {
-                                record: record,
-                                style: 'z-index: -1;'
-                            });
-                            win.initData();
-                            win.show();
-                            win.setPosition(30);
-                        }
-                    }
+                var win = Ext.create('Lada.view.window.Probenehmer', {
+                    recordId: id,
+                    style: 'z-index: -1;'
                 });
+                if (win.show()) {
+                    win.setPosition(30);
+                    win.loadRecord(id, this, function(record, operation, success) {
+                        if (success) {
+                            win.initData(record);
+                        }
+                    });
+                }
             };
         } else if (datatype.name === 'dsatzerz') {
             tooltip = this.i18n.getMsg('typedgrid.tooltip.dsatzerz');
             clicklistener = function(button) {
                 var id = Number(button.text);
                 button.getEl().swallowEvent(['click', 'dblclick'], true);
-                Lada.model.DatensatzErzeuger.load(id, {
-                    scope: this,
-                    callback: function(record, operation, success) {
-                        if (success) {
-                            var win = Ext.create('Lada.view.window.DatensatzErzeuger', {
-                                record: record,
-                                style: 'z-index: -1;'
-                            });
-                            win.initData();
-                            win.show();
-                            win.setPosition(30);
-                        }
-                    }
+                var win = Ext.create('Lada.view.window.DatensatzErzeuger', {
+                    style: 'z-index: -1;',
+                    recordId: id
                 });
+                if (win.show()) {
+                    win.setPosition(30);
+                    win.loadRecord(id, this, function(record, operation, success) {
+                        if (success) {
+                            win.initData(record);
+                        }
+                    });
+                }
             };
         } else if (datatype.name === 'mprkat') {
             tooltip = this.i18n.getMsg('typedgrid.tooltip.mprkat');
             clicklistener = function(button) {
                 var id = Number(button.text);
                 button.getEl().swallowEvent(['click', 'dblclick'], true);
-                Lada.model.MessprogrammKategorie.load(id, {
-                    scope: this,
-                    callback: function(record, operation, success) {
-                        if (success) {
-                            var win = Ext.create('Lada.view.window.MessprogrammKategorie', {
-                                record: record,
-                                style: 'z-index: -1;'
-                            });
-                            win.initData();
-                            win.show();
-                            win.setPosition(30);
-                        }
-                    }
+                var win = Ext.create('Lada.view.window.MessprogrammKategorie', {
+                    recordId: id,
+                    style: 'z-index: -1;'
                 });
+                if (win.show()) {
+                    win.setPosition(30);
+                    win.loadRecord(id, this, function(record, operation, success) {
+                        if (success) {
+                            win.initData(record);
+                        }
+                    });
+                }
+
             };
         }
         colImg = Ext.getResourcePath(this.openIconPath, null, null);
@@ -924,7 +930,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 action: 'assigntags',
                 needsSelection: true,
                 disabled: true
-            })
+            });
         }
     },
 
@@ -933,9 +939,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             //Disable status button if user has no status role
             var needsSelection = false;
             for (var i = 0; i < Lada.funktionen.length; i++ ) {
-               if (Ext.Array.contains(this.statusUser, Lada.funktionen[i])) {
-                   needsSelection = true;
-               }
+                if (Ext.Array.contains(this.statusUser, Lada.funktionen[i])) {
+                    needsSelection = true;
+                }
             }
             this.toolbarbuttons.push({
                 text: this.i18n.getMsg('statusSetzen'),
@@ -1081,12 +1087,19 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         return false;
     },
 
-    reload: function() {
+    /**
+     * Reload the grid.
+     * @param {Object} callback Additional callback function to call after reloading
+     */
+    reload: function(callback) {
         var store = this.getStore();
         var options = store.lastOptions;
         options.scope = this;
         options.callback = function() {
             this.setStore(store);
+            if (callback) {
+                callback();
+            }
         };
         store.load(options);
     },

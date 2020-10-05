@@ -183,6 +183,7 @@ Ext.define('Lada.view.form.Messung', {
                     //Tag widget
                     xtype: 'fieldset',
                     title: i18n.getMsg('title.tagfieldset'),
+                    name: 'tagfieldset',
                     layout: {
                         type: 'hbox',
                         align: 'stretchmax'
@@ -191,6 +192,9 @@ Ext.define('Lada.view.form.Messung', {
                         flex: 1,
                         xtype: 'tagwidget',
                         emptyText: i18n.getMsg('emptytext.tag'),
+                        maskTargetComponentType: 'fieldset',
+                        maskTargetComponentName: 'tagfieldset',
+                        parentWindow: this,
                         margin: '5 5 5 5'
                     }, {
                         width: 25,
@@ -204,12 +208,12 @@ Ext.define('Lada.view.form.Messung', {
                             var win = Ext.create('Lada.view.window.TagCreate', {
                                 tagWidget: me.down('tagwidget'),
                                 messung: button.up('messungform').getForm().getRecord().get('id'),
-                                recordType: "messung"
+                                recordType: 'messung'
                             });
                             //Close window if parent window is closed
                             button.up('messungedit').on('close', function() {
                                 win.close();
-                            })
+                            });
                             win.show();
                         }
                     }]
@@ -226,12 +230,15 @@ Ext.define('Lada.view.form.Messung', {
         form.loadRecord(record);
         if (record.getId()) {
             me.down('statuskombi').setValue(
-                    record.get('status'),false, record.get('statusEdit'));
+                    record.get('status'), false, record.get('statusEdit'));
         } else {
             //remove the Statuskombi field from the form
             me.down('statuskombi').hide();
         }
-        this.down('tagwidget').setMessung(this.record.id);
+        //Do not set record in tag widget if it is a phantom record
+        if (this.record.phantom === false) {
+            this.down('tagwidget').setMessung(this.record.id);
+        }
         //Get the connected Probe instance and Datenbasis
         Lada.model.Probe.load(this.record.get('probeId'), {
             success: function(proberecord) {
@@ -249,7 +256,7 @@ Ext.define('Lada.view.form.Messung', {
                     }
                 });
             },
-            failure: function(proberecord) {
+            failure: function() {
                 //TODO: handle failure
             }
         });

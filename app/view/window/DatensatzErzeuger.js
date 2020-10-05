@@ -10,8 +10,12 @@
  * Window to create/edit a Datensatzerzeuger
  */
 Ext.define('Lada.view.window.DatensatzErzeuger', {
-    extend: 'Lada.view.window.TrackedWindow',
+    extend: 'Lada.view.window.RecordWindow',
     alias: 'widget.datensatzerzeugeredit',
+
+    requires: [
+        'Lada.view.form.DatensatzErzeuger'
+    ],
 
     collapsible: true,
     maximizable: true,
@@ -43,13 +47,6 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
         // creation of this window. We need to pass it throuh to the form as
         // we need the "modelId" param to load the correct item.
 
-        this.items = [{
-            border: false,
-            items: [{
-                xtype: 'datensatzerzeugerform',
-                record: this.record
-            }]
-        }];
         this.tools = [{
             type: 'help',
             tooltip: i18n.getMsg('help.qtip'),
@@ -75,7 +72,27 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
             scope: this,
             handler: this.handleBeforeClose
         }];
+        this.modelClass = Lada.model.DatensatzErzeuger;
         this.callParent(arguments);
+        if (this.record) {
+            this.initData(this.record);
+        }
+    },
+
+    initData: function(record) {
+        this.record = record;
+        this.initializeUi();
+    },
+
+    initializeUi: function() {
+        this.removeAll();
+        this.add([{
+            border: false,
+            items: [{
+                xtype: 'datensatzerzeugerform',
+                record: this.record
+            }]
+        }]);
     },
 
     /**
@@ -100,7 +117,7 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
         var me = this;
         var i18n = Lada.getApplication().bundle;
         var item = me.down('form');
-        if (item.isDirty()) {
+        if (item && item.isDirty()) {
             var confWin = Ext.create('Ext.window.Window', {
                 title: i18n.getMsg('form.saveonclosetitle'),
                 modal: true,

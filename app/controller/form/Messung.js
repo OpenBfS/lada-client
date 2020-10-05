@@ -53,9 +53,13 @@ Ext.define('Lada.controller.form.Messung', {
      */
     save: function(button) {
         var formPanel = button.up('form');
+        var oldWin = button.up('window');
+        var parentWin = oldWin.parentWindow;
+        var probe = oldWin.record;
         formPanel.setLoading(true);
         var record = formPanel.getForm().getRecord();
         var data = formPanel.getForm().getFieldValues();
+        var wasPhantom = record.phantom;
         for (var key in data) {
             record.set(key, data[key]);
         }
@@ -63,7 +67,10 @@ Ext.define('Lada.controller.form.Messung', {
             record.set('id', null);
         }
         delete record.data[formPanel.down('tagwidget').getInputId()];
-        formPanel.down('tagwidget').applyChanges();
+        //If record is phantom, do not apply tags yet
+        if (!wasPhantom) {
+            formPanel.down('tagwidget').applyChanges();
+        }
         //If form data is read only, exit after saving tags
         if (formPanel.readOnly) {
             //Reload the grid to display tag changes
@@ -80,10 +87,9 @@ Ext.define('Lada.controller.form.Messung', {
                         .setDisabled(true);
                     formPanel.clearMessages();
                     formPanel.setRecord(record);
-                    formPanel.up('window').initData(record);
                     formPanel.setMessages(json.errors, json.warnings);
+                    //formPanel.up('window').initData(record);
 
-                    var parentWin = button.up('window').parentWindow;
                     if (parentWin) {
                         parentWin.initData();
                         var messunggrid = parentWin.down('messunggrid');
@@ -97,8 +103,11 @@ Ext.define('Lada.controller.form.Messung', {
                         parentGrid[0].reload();
                     }
                     if (response.action === 'create' && json.success) {
-                        var oldWin = button.up('window');
-                        var probe = oldWin.record;
+                        if (wasPhantom) {
+                            var tagWidget = formPanel.down('tagwidget');
+                            tagWidget.setMessung(record.data.id);
+                            tagWidget.applyChanges();
+                        }
                         oldWin.close();
                         var win = Ext.create('Lada.view.window.MessungEdit', {
                             probe: probe,
@@ -110,7 +119,7 @@ Ext.define('Lada.controller.form.Messung', {
                         win.show();
                         win.setPosition(35 + parentWin.width);
                     } else {
-                        button.up('window').down('messwertgrid').getStore().reload();
+                        oldWin.down('messwertgrid').getStore().reload();
                     }
                 }
                 formPanel.setLoading(false);

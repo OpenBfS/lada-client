@@ -10,7 +10,7 @@
  * Grid to list Ortszuordnungen
  */
 Ext.define('Lada.view.grid.Ortszuordnung', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.ortszuordnunggrid',
 
     maxHeight: 350,
@@ -114,7 +114,9 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                                 record.set(key, rec.getData()[key]);
                             }
                             record.endEdit();
-                            me.getView().refresh();
+                            if (me.isVisible() === true) {
+                                me.getView().refresh();
+                            }
                         }
                     });
                 }
@@ -244,6 +246,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         if (this.isMessprogramm) {
             this.store = Ext.create('Lada.store.OrtszuordnungMp');
             if (this.recordId) {
+                this.addLoadingFailureHandler(this.store);
                 this.store.load({
                     params: {
                         messprogrammId: this.recordId
@@ -255,6 +258,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         } else {
             modelname = 'Lada.model.Probe';
             this.store = Ext.create('Lada.store.Ortszuordnung');
+            this.addLoadingFailureHandler(this.store);
             this.store.load({
                 params: {
                     probeId: this.recordId
@@ -264,6 +268,18 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 }
             });
         }
+    },
+
+    /**
+     * Reload the grid
+     */
+    reload: function() {
+        if (!this.store) {
+            this.initData();
+            return;
+        }
+        this.hideReloadMask();
+        this.store.reload();
     },
 
     /**
@@ -304,6 +320,14 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
 
     reiHandling: function(value) {
         if (!this.isMessprogramm) {
+            if (!this.up('probenedit')) {
+                Ext.log({msg: 'Can not find parent window', level: 'warn'});
+                return;
+            }
+            if (!this.up('probenedit').record) {
+                Ext.log({msg: 'Can not find parent record', level: 'warn'});
+                return;
+            }
             var readonly = this.up('probenedit').record.get('readonly');
             var dbId = this.up('probenedit').record.get('datenbasisId');
             var dbStore = Ext.data.StoreManager.get('datenbasis');

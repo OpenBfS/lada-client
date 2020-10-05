@@ -11,6 +11,7 @@
  */
 Ext.define('Lada.view.window.AuditTrail', {
     extend: 'Ext.window.Window',
+    alias: 'widget.audittrail',
 
     layout: 'fit',
     padding: '10 5 3 10',
@@ -21,6 +22,12 @@ Ext.define('Lada.view.window.AuditTrail', {
     type: null,
 
     objectId: null,
+
+    /**
+     * @private
+     * A pending request object
+     */
+    pendingRequest: null,
 
     dateItems: [
         'probeentnahme_beginn',
@@ -62,7 +69,26 @@ Ext.define('Lada.view.window.AuditTrail', {
             }]
         }];
         me.callParent(arguments);
-        Ext.on('timezonetoggled', this.initData, this);
+        Ext.on('timezonetoggled', this.handleTimezoneToggled, this);
+    },
+
+    handleTimezoneToggled: function() {
+        if (this.type === null || this.objectId === null) {
+            return;
+        }
+        this.pendingRequest = Ext.Ajax.request({
+            url: 'lada-server/rest/audit/' + this.type + '/' + this.objectId,
+            method: 'GET',
+            scope: this,
+            callback: function(options, success, response) {
+                Ext.ComponentQuery.query('timezonebutton[action=toggletimezone]')[0].requestFinished();
+                if (success) {
+                    this.loadSuccess(response);
+                } else {
+                    this.loadFailure(response);
+                }
+            }
+        });
     },
 
     initData: function() {
@@ -220,5 +246,12 @@ Ext.define('Lada.view.window.AuditTrail', {
         html += '</div>';
         html += '</p>';
         return html;
+    },
+
+    close: function() {
+        if (this.pendingRequest) {
+            this.pendingRequest.abort();
+        }
+        this.callParent(arguments);
     }
 });

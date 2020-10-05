@@ -10,7 +10,7 @@
  * Grid to list Messwerte
  */
 Ext.define('Lada.view.grid.Messwert', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.messwertgrid',
 
     requires: [
@@ -314,6 +314,7 @@ Ext.define('Lada.view.grid.Messwert', {
         }
         if (this.umwId) {
             var umwStore = Ext.create('Lada.store.Umwelt');
+            this.addLoadingFailureHandler(umwStore);
             umwStore.getModel().load(this.umwId, {
                 scope: this,
                 success: function(rec, op) {
@@ -328,10 +329,11 @@ Ext.define('Lada.view.grid.Messwert', {
                     //Filter messeinheiten comboboxes
                     this.mehComboStore.load({
                         params: params
-                    })
+                    });
                 }
             });
         }
+        this.addLoadingFailureHandler(this.store);
         this.store.load({
             scope: this,
             params: {
@@ -341,6 +343,39 @@ Ext.define('Lada.view.grid.Messwert', {
 
             }
         });
+    },
+
+    /**
+     * Reload this grid
+     */
+    reload: function() {
+        if (!this.store) {
+            this.initData();
+        }
+
+        this.hideReloadMask();
+        if (this.umwId) {
+            var umwStore = Ext.create('Lada.store.Umwelt');
+            this.addLoadingFailureHandler(umwStore);
+            umwStore.getModel().load(this.umwId, {
+                scope: this,
+                success: function(rec, op) {
+                    this.defaultMehId = rec.get('mehId');
+                    this.secMehId = rec.get('secMehId');
+                    var params = {
+                        mehId: this.defaultMehId
+                    }
+                    if (this.secMehId) {
+                        params['secMehId'] = this.secMehId;
+                    }
+                    //Filter messeinheiten comboboxes
+                    this.mehComboStore.load({
+                        params: params
+                    });
+                }
+            });
+        }
+        this.store.reload();
     },
 
     setReadOnly: function(b) {

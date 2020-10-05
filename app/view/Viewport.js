@@ -32,7 +32,7 @@ Ext.define('Lada.view.Viewport', {
                     text: i18n.getMsg('info'),
                     action: 'about'
                 }, {
-                    xtype: 'button',
+                    xtype: 'timezonebutton',
                     text: i18n.getMsg('timezone.button.text') + i18n.getMsg('timezone.text.local'),
                     tooltip: i18n.getMsg('timezone.button.tooltip'),
                     enableToggle: true,
