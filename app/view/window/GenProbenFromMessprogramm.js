@@ -259,7 +259,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             title: i18n.getMsg('gpfm.generated.grid.title', genTagName? genTagName: ''),
             items: [{
                 xtype: 'dynamicgrid',
-                hidebuttons: ['importprobe', 'genericadd'],
+                hidebuttons: ['importprobe', 'genericadd', 'gridexport'],
                 rowtarget: { dataType: 'probeId', dataIndex: 'id'},
                 exportRowexp: true,
                 store: newStore,
