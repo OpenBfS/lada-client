@@ -222,7 +222,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
      * @param data Generated probe instances
      * @param genTagname Generated tag name
      */
-    genResultWindow: function(umwStore, data, genTagName){
+    genResultWindow: function(umwStore, data, genTagName) {
         var i18n = Lada.getApplication().bundle;
         var me = this;
 
@@ -265,9 +265,24 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 exportRowexp: true,
                 store: newStore,
                 columns: [{
-                    header: 'probe_id',
+                    xtype: 'actioncolumn',
+                    hideable: false,
+                    width: 30,
+                    header: '',
                     dataIndex: 'id',
-                    hidden: true
+                    sortable: false,
+                    getClass: function(val, meta, rec) {
+                        if (rec.get('id')) {
+                            return 'edit';
+                        }
+                        return '';
+                    },
+                    handler: function(grid, rowIndex) {
+                        var rec = grid.getStore().getAt(rowIndex);
+                        if (rec.get('id')) {
+                            grid.fireEvent('itemdblclick', grid, rec);
+                        }
+                    }
                 }, {
                     header: i18n.getMsg('extProbeId'),
                     dataIndex: 'externeProbeId'
