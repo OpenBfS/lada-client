@@ -170,12 +170,12 @@ Ext.define('Lada.view.window.PrintGrid', {
             }]
         }];
         this.buttons = [{
+            text: i18n.getMsg('button.print'),
+            action: 'doPrint'
+        }, {
             text: i18n.getMsg('close'),
             scope: this,
             handler: this.close
-        }, {
-            text: i18n.getMsg('button.print'),
-            action: 'doPrint'
         }];
         this.callParent(arguments);
     },
