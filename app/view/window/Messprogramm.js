@@ -146,6 +146,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                     }
                     */
                 }
+                me.down('button[action=generateproben]').setDisabled(false);
                 var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
                 var recordIndex = mstLaborKombiStore.findExact('messStelle', record.get('mstId'));
                 // If the Messprogramm is ReadOnly, disable Inputfields and grids
