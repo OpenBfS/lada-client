@@ -99,9 +99,19 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             Ext.Object.each(json.data.proben, function(key, result) {
                                 if (result.success) {
                                     results.push(result);
+                                    var newRes = result.data.filter(function(r) {
+                                        return r.found !== true;
+                                    });
+                                    var foundRes =result.data.filter(function(r) {
+                                        return r.found === true;
+                                    });
                                     panel.setHtml(panel.html + '<br>'
                                     + i18n.getMsg('gpfm.generated.success',
-                                        result.data.length, key));
+                                        newRes.length, key)
+                                    + '<br>'
+                                    + i18n.getMsg('gpfm.generated.found',
+                                        foundRes.length, key)
+                                    );
                                 } else {
                                     panel.setHtml(panel.html + '<br>'
                                             + i18n.getMsg('gpfm.generated.error',
@@ -210,9 +220,11 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             asynchronousLoad: false
         });
         var me = this;
-        umwStore.load({callback: function(){
-            me.genResultWindow(umwStore, data, genTagName)
-        }});
+        umwStore.load({
+            callback: function() {
+                me.genResultWindow(umwStore, data, genTagName);
+            }
+        });
     },
 
     /**
@@ -286,6 +298,15 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 }, {
                     header: i18n.getMsg('extProbeId'),
                     dataIndex: 'externeProbeId'
+                }, {
+                    header: i18n.getMsg('gpfm.probefound'),
+                    dataIndex: 'found',
+                    renderer: function(value) {
+                        if (value) {
+                            return i18n.getMsg('yes');
+                        }
+                        return i18n.getMsg('no');
+                    }
                 }, {
                     header: i18n.getMsg('mstId'),
                     dataIndex: 'mstId',
@@ -399,15 +420,10 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 }, {
                     header: i18n.getMsg('messungen'),
                     dataIndex: 'mmt',
-                    renderer: function(value, metadata, rec) {
-                        if (!rec) {
-                            return value;
-                        }
-                        var mmth = rec.get('mmt');
-                        if (mmth) {
-                            return mmth;
-                        }
-                        else {
+                    renderer: function(value) {
+                        if (value && value.length) {
+                            return value.length;
+                        } else {
                             return '-';
                         }
                     }
