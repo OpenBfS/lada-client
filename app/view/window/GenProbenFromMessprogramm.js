@@ -60,6 +60,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 var endDate = new Date(me.down('datefield[name=end]').getValue());
                 var endUTC = Date.UTC(
                     endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+                var dryrun = me.down('checkbox[name=dryrun]').getValue();
                 var results = [];
                 this.removeAll();
                 this.down('toolbar').removeAll();
@@ -84,7 +85,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 var reqJsondata = {
                     ids: me.ids,
                     start: startUTC,
-                    end: endUTC
+                    end: endUTC,
+                    dryrun: dryrun
                 };
                 Ext.Ajax.request({
                     url: 'lada-server/rest/probe/messprogramm',
@@ -193,6 +195,10 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 formatText: '',
                 period: 'end',
                 value: new Date(new Date().getFullYear(), 11, 31)
+            }, {
+                xtype: 'checkbox',
+                name: 'dryrun',
+                boxLabel: i18n.getMsg('gpfm.window.test')
             }]
         }];
         this.callParent(arguments);
