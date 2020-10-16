@@ -97,6 +97,13 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         var panel = me.down('panel');
                         panel.setLoading(false);
                         var json = Ext.JSON.decode(response.responseText);
+                        if (reqJsondata.dryrun) {
+                            panel.setHtml(panel.html
+                                + '<br>'
+                                + i18n.getMsg('gpfm.window.test.result')
+                                + '<br>'
+                            );
+                        }
                         if (json.success && json.data.proben) {
                             Ext.Object.each(json.data.proben, function(key, result) {
                                 if (result.success) {
@@ -122,11 +129,20 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             });
                         }
                         me.down('toolbar').down('button').setDisabled(false);
-                        me.processResults(results, json.data.tag? json.data.tag: '');
+                        me.processResults(results,
+                            json.data.tag? json.data.tag: '',
+                            reqJsondata.dryrun);
                     },
                     failure: function(response) {
                         var panel = me.down('panel');
                         panel.setLoading(false);
+                        if (reqJsondata.dryrun) {
+                            panel.setHtml(panel.html
+                                + '<br>'
+                                + i18n.getMsg('gpfm.window.test.result')
+                                + '<br>'
+                            );
+                        }
                         panel.setHtml(i18n.getMsg('gpfm.generated.requestfail', response.status, response.statusText));
                         me.down('toolbar').down('button').setDisabled(false);
 
@@ -209,8 +225,10 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
      * Handle results of Probe creation from Messprogramm
      * @param results Array of results object
      * @param genTagName Generated tag name
+     * @param dryrun if set to true, some result data might not exist in
+     *  the database
      */
-    processResults: function(results, genTagName) {
+    processResults: function(results, genTagName, dryrun) {
         var data = [];
         for (var r in results) {
             var result = results[r];
@@ -228,7 +246,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         var me = this;
         umwStore.load({
             callback: function() {
-                me.genResultWindow(umwStore, data, genTagName);
+                me.genResultWindow(umwStore, data, genTagName, dryrun);
             }
         });
     },
@@ -239,8 +257,10 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
      * @param umwStore Umwelt store instance
      * @param data Generated probe instances
      * @param genTagname Generated tag name
+     * @param dryrun if set to true, some result data might not exist in
+     *  the database, reducing id based functionality.
      */
-    genResultWindow: function(umwStore, data, genTagName) {
+    genResultWindow: function(umwStore, data, genTagName, dryrun) {
         var i18n = Lada.getApplication().bundle;
         var me = this;
 
@@ -268,17 +288,31 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             }));
         }
         var newStore = Ext.create('Lada.store.Proben', {data: data});
-
+        var hidebuttons = ['importprobe', 'genericadd'];
+        if (dryrun) {
+            // In dry runs, some additional actions need to stay unavailable:
+            hidebuttons = hidebuttons.concat([
+                'assigntags',
+                'gridexport',
+                'genericdelete',
+                'expand'
+            ]);
+        }
+        var title = i18n.getMsg('gpfm.generated.grid.title',
+            genTagName? genTagName: '');
+        if (dryrun) {
+            title += i18n.getMsg('gpfm.window.test.result.title');
+        }
         var win = Ext.create('Ext.window.Window', {
             layout: 'fit',
             width: 800,
             minHeight: 500,
             maxHeight: 600,
             constrain: true,
-            title: i18n.getMsg('gpfm.generated.grid.title', genTagName? genTagName: ''),
+            title: title,
             items: [{
                 xtype: 'dynamicgrid',
-                hidebuttons: ['importprobe', 'genericadd'],
+                hidebuttons: hidebuttons,
                 rowtarget: { dataType: 'probeId', dataIndex: 'id'},
                 exportRowexp: true,
                 store: newStore,
@@ -450,14 +484,15 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     header: i18n.getMsg('probenehmer'),
                     dataIndex: 'probeNehmerId'
                 }],
-                plugins: Ext.create('Lada.view.plugin.GridRowExpander', {
-                    gridType: 'Lada.view.grid.Messung',
-                    idRow: 'id',
-                    expandOnDblClick: false,
-                    gridConfig: {
-                        bottomBar: false
-                    }
-                })
+                plugins: dryrun? false : Ext.create(
+                    'Lada.view.plugin.GridRowExpander', {
+                        gridType: 'Lada.view.grid.Messung',
+                        idRow: 'id',
+                        expandOnDblClick: false,
+                        gridConfig: {
+                            bottomBar: false
+                        }
+                    })
             }],
             buttons: [{
                 text: i18n.getMsg('close'),
