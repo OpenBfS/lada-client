@@ -475,7 +475,10 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     evalResponseData: function(data) {
         var i18n = Lada.getApplication().bundle;
         var r = '';
-        r += data.length;
+        var newData = data.filter(function(d) {
+            return !d.found;
+        });
+        r += newData.length;
         r += ' ' + i18n.getMsg('probecreated');
         r += '<br/>';
         return r;
