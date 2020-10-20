@@ -73,7 +73,6 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                     fieldLabel: i18n.getMsg('netzbetreiberId')
                 }, {
                     xtype: 'combobox',
-                    store: Ext.data.StoreManager.get('messstellenFiltered'),
                     displayField: 'messStelle',
                     readOnly: true,
                     valueField: 'id',
@@ -103,6 +102,12 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
         this.loadRecord(this.record);
         this.setReadOnly(this.record.get('readonly'));
         var netzstore = this.down('netzbetreiber').store;
+        this.mstTypStore = Ext.data.StoreManager.get('messstellen');
+        this.mstTypStore.filter({
+                    property: 'mstTyp',
+                    value: 'M',
+                    exactMatch: true});
+        this.down('combobox[name=mstId]').setStore(this.mstTypStore);
         if (!this.record.phantom) {
             var current = netzstore.getById(this.record.get('netzbetreiberId'));
             if (current) {
