@@ -35,7 +35,14 @@ Ext.define('Lada.model.Messung', {
         name: 'messdauer'
     }, {
         name: 'messzeitpunkt',
-        convert: Lada.util.Date.convertTimeFn
+        type: 'date',
+        convert: Lada.util.Date.convertTimeFn,
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
     }, {
         name: 'status'
     }, {
