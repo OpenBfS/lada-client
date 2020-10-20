@@ -635,6 +635,14 @@ Ext.define('Lada.controller.form.Probe', {
                         formPanel.getForm().loadRecord(record);
                         var json = Ext.decode(response.getResponse().responseText);
                         if (json) {
+                            if (json.message) {
+                                Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                                    +' #'+json.message,
+                                i18n.getMsg(json.message));
+                            } else {
+                                Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                    i18n.getMsg('err.msg.generic.body'));
+                            }
                             button.setDisabled(true);
                             button.up('toolbar').down('button[action=discard]')
                                 .setDisabled(true);
@@ -654,6 +662,9 @@ Ext.define('Lada.controller.form.Probe', {
                                 win.show();
                                 win.initData();
                             }
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.response.body'));
                         }
                     }
                 }
