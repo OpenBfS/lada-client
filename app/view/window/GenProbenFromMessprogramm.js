@@ -462,7 +462,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     dataIndex: 'mmt',
                     renderer: function(value) {
                         if (value && value.length) {
-                            return value.length;
+                            var result = value.length + ' (' + value.join(', ') + ')';
+                            return result;
                         } else {
                             return '-';
                         }
