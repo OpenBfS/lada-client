@@ -187,7 +187,7 @@ Ext.define('Lada.view.QueryPanel', {
             queryMode: 'local',
             valueField: 'dataIndex',
             displayField: 'name',
-            fieldLabel: 'query.filters.visible',
+            fieldLabel: 'title.filter',
             tpl: Ext.create('Ext.XTemplate',
                 '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
                 '{name}</div></tpl>'),
@@ -263,7 +263,7 @@ Ext.define('Lada.view.QueryPanel', {
         this.down('textarea[name=description]').fieldLabel = i18n.getMsg('query.comment');
         //TODO these two are ugly hacks:
         this.down('cbox[name=messStellesIds]').down().fieldLabel = i18n.getMsg('query.groups');
-        this.down('cbox[name=activefilters]').down().fieldLabel = i18n.getMsg('query.filters.visible');
+        this.down('cbox[name=activefilters]').down().fieldLabel = i18n.getMsg('title.filter');
         this.down('button[name=queryreload]').text = i18n.getMsg('query.button.reload');
 
         var selquery = this.down('combobox[name=selectedQuery]');
