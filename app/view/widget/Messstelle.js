@@ -29,6 +29,8 @@ Ext.define('Lada.view.widget.Messstelle', {
             '{id} - {messStelle}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">{id} - {messStelle}</tpl>'),
+    labelTpl: Ext.create('Ext.XTemplate',
+        '<tpl for=".">{id} - {messStelle}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

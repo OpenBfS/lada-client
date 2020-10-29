@@ -27,7 +27,8 @@ Ext.define('Lada.view.widget.Messmethode', {
             '{display}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">{display}</tpl>'),
-
+    labelTpl: Ext.create('Ext.XTemplate',
+        '<tpl for=".">{display}</tpl>'),
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.messmethode');

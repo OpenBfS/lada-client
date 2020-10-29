@@ -31,7 +31,8 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
         '{id} - {netzbetreiber}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">{id} - {netzbetreiber}</tpl>'),
-
+    labelTpl: Ext.create('Ext.XTemplate',
+        '<tpl for=".">{id} - {netzbetreiber}</tpl>'),
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.netzbetreiber');
