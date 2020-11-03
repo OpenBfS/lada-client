@@ -224,33 +224,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
      */
     genResultWindow: function(umwStore, data, genTagName) {
         var i18n = Lada.getApplication().bundle;
-        var me = this;
-
-        var columnstore = Ext.data.StoreManager.get('columnstore');
-        columnstore.clearFilter();
-        columnstore.filter({
-            property: 'baseQuery',
-            value: '1',
-            exactMatch: true});
-        var gcs = Ext.create('Lada.store.GridColumnValue');
-        //TODO basequery needed for this to work
-        var columns = ['externeProbeId', 'mstId', 'datenbasisId', 'baId', 'probenartId',
-            'solldatumBeginn', 'solldatumEnde', 'mprId', 'mediaDesk', 'umwId',
-            'probeNehmerId', 'mmt', 'gemId'];
-        for (var i=0; i < columns.length; i++) {
-            var col = columnstore.findRecord('dataIndex', columns[i], false,
-                false, false, true); // TODO col is unused here?
-            gcs.add( new Ext.create('Lada.model.GridColumnValue',{
-                columnIndex: i,
-                filterActive: false,
-                qid: 0, //TODO: hardcoded value based on example data
-                dataIndex: columns[i],
-                visible: true,
-                gridColumnId: i
-            }));
-        }
         var newStore = Ext.create('Lada.store.Proben', {data: data});
-
         var win = Ext.create('Ext.window.Window', {
             layout: 'fit',
             width: 800,
@@ -260,7 +234,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             title: i18n.getMsg('gpfm.generated.grid.title', genTagName? genTagName: ''),
             items: [{
                 xtype: 'dynamicgrid',
-                hidebuttons: ['importprobe', 'genericadd'],
+                hidebuttons: ['importprobe', 'genericadd', 'gridexport'],
                 rowtarget: { dataType: 'probeId', dataIndex: 'id'},
                 exportRowexp: true,
                 store: newStore,
@@ -419,7 +393,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             return value;
                         }
                         var id = rec.get('gemId');
-                        if (id){
+                        if (id) {
                             return id;
                         }
                         return '';
@@ -442,12 +416,20 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 handler: function(button) {
                     button.up('window').close();
                 }
-            }]
+            }],
+            onFocusEnter: function(event) {
+                var resultWin = event.toComponent;
+                var printWin = Lada.view.window.PrintGrid.getInstance();
+                if (printWin) {
+                    var grid = resultWin.down('dynamicgrid');
+                    printWin.setParentGrid(grid);
+                }
+            }
         });
         win.show();
         win.down('dynamicgrid').setToolbar();
-        me.down('panel').setHtml(me.down('panel').html + '<br><br>'
-                + me.evalResponseData(data));
+        this.down('panel').setHtml(this.down('panel').html + '<br><br>'
+                + this.evalResponseData(data));
     },
 
     evalResponseData: function(data) {

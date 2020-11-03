@@ -14,7 +14,10 @@
 Ext.define('Lada.view.window.PrintGrid', {
     alias: 'widget.printgrid',
     extend: 'Ext.window.Window',
-    requires: ['Koala.view.form.IrixFieldSet'],
+    requires: [
+        'Koala.view.form.IrixFieldSet',
+        'Lada.view.grid.DownloadQueue'
+    ],
 
     id: 'printgridwindow',
 
@@ -85,7 +88,7 @@ Ext.define('Lada.view.window.PrintGrid', {
         this.templateStore.sort('name', 'ASC');
         this.items = [{
             layout: 'vbox',
-            minWidth: 380,
+            minWidth: 500,
             border: false,
             scrollable: true,
             defaults: {
@@ -167,6 +170,10 @@ Ext.define('Lada.view.window.PrintGrid', {
                 xtype: 'label',
                 name: 'results',
                 hidden: true
+            },{
+                xtype: 'downloadqueuegrid',
+                store: 'downloadqueue-print',
+                width: '100%'
             }]
         }];
         this.buttons = [{
@@ -268,6 +275,16 @@ Ext.define('Lada.view.window.PrintGrid', {
         var layoutBox = this.down('combobox[name=layout]');
         if (layoutBox.getValue() !== null && !this.isHidden()) {
             this.fireEvent('gridupdate', this);
+        }
+    },
+
+    /**
+     * Set the current grid from which the items are extracted
+     * @param {Ext.grid.Panel} grid New parent grid
+     */
+    setParentGrid: function(grid) {
+        if (grid) {
+            this.parentGrid = grid;
         }
     },
 

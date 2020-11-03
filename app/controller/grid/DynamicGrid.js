@@ -346,8 +346,18 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
 
     },
 
+    /**
+     * Handle changes of selected grid records
+     * @param {*} selModel 
+     * @param {*} selected 
+     */
     selectionChanged: function(selModel, selected) {
         var grid = selModel.view.up('grid');
+        //If print window is active, set this grid as currently active grid
+        var win = Lada.view.window.PrintGrid.getInstance();
+        if (win) {
+            win.setParentGrid(grid);
+        }
         if (selected.length) {
             this.buttonToggle(true, grid);
         } else {
