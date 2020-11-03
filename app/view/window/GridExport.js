@@ -1093,7 +1093,7 @@ Ext.define('Lada.view.window.GridExport', {
         }
         return Ext.Array.map(cols, function(c) {
             c.export = false;
-            if (c.visible === true) {
+            if (c.visible === true || c.visible === undefined) {
                 var gridColumn = columnstore.findRecord(
                     'id', c.gridColumnId,0,false, false, true
                 );
