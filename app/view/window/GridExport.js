@@ -1091,6 +1091,9 @@ Ext.define('Lada.view.window.GridExport', {
         if (!cols || !cols.length) {
             return [];
         }
+        cols = cols.sort(function(a, b) {
+            return a.columnIndex - b.columnIndex;
+        });
         return Ext.Array.map(cols, function(c) {
             c.export = false;
             if (c.visible === true || c.visible === undefined) {
@@ -1103,7 +1106,6 @@ Ext.define('Lada.view.window.GridExport', {
             }
             delete c.visible;
             return c;
-
         });
     },
 
