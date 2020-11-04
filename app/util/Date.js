@@ -57,6 +57,7 @@ Ext.define('Lada.util.Date', {
          */
         formatTimestamp: function(timestamp, format, extFormat) {
             if (!moment || !moment.tz) {
+                // eslint-disable-next-line no-console
                 console.error('dependencies moment.js and/or moment-timezone are not found');
             }
             if (!timestamp) {
@@ -85,7 +86,7 @@ Ext.define('Lada.util.Date', {
          * @param {Boolean} utc True if time shall be displayed in UTC, else false
          */
         setUTCDisplay: function(utc) {
-            if (utc != null) {
+            if (utc !== null) {
                 this.utc = utc;
             }
         },

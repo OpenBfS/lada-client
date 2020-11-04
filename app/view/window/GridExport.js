@@ -870,40 +870,40 @@ Ext.define('Lada.view.window.GridExport', {
             if (column.dataIndex === 'messzeitpunkt' && !column.dataType) {
                 return new Date(value);
             }
+            var store, record, r;
             if (column.dataIndex === 'probenartId') {
-                var store = Ext.data.StoreManager.get('probenarten');
-                var record = store.getById(value);
+                store = Ext.data.StoreManager.get('probenarten');
+                record = store.getById(value);
                 if (record) {
-                    var r = record.get('probenart');
+                    r = record.get('probenart');
                     return r || '';
                 }
                 return '';
             }
             /** end of (hopefully temporary) section */
             if (column.dataIndex === 'messgroesseId') {
-                console.log(column.dataIndex);
-                var store = Ext.data.StoreManager.get('messgroessen');
-                var record = store.getById(value);
+                store = Ext.data.StoreManager.get('messgroessen');
+                record = store.getById(value);
                 if (record) {
-                    var r = record.get('messgroesse');
+                    r = record.get('messgroesse');
                     return r || '';
                 }
                 return '';
             }
             if (column.dataIndex === 'mehId') {
-                var store = Ext.data.StoreManager.get('messeinheiten');
-                var record = store.getById(value);
+                store = Ext.data.StoreManager.get('messeinheiten');
+                record = store.getById(value);
                 if (record) {
-                    var r = record.get('einheit');
+                    r = record.get('einheit');
                     return r || '';
                 }
                 return '';
             }
             if (column.dataIndex === 'statusKombi') {
-                var store = Ext.data.StoreManager.get('statuskombi');
-                var record = store.getById(value);
+                store = Ext.data.StoreManager.get('statuskombi');
+                record = store.getById(value);
                 if (record) {
-                    var r = record.data.statusStufe.stufe + ' ' + record.data.statusWert.wert;
+                    r = record.data.statusStufe.stufe + ' ' + record.data.statusWert.wert;
                     return r || '';
                 }
                 return '';
@@ -916,7 +916,6 @@ Ext.define('Lada.view.window.GridExport', {
                     return null;
                 }
                 return parseFloat(value);
-                break;
             case 'date':
                 if (column.dataType.format && !json) {
                     return Lada.util.Date.formatTimestamp(
@@ -925,27 +924,22 @@ Ext.define('Lada.view.window.GridExport', {
                 } else {
                     return new Date(value);
                 }
-                break;
             case 'geom':
                 return value;
-                break;
             case 'text':
                 return value;
-                break;
             case 'probeId':
             case 'messungId':
             case 'ortId':
                 return value;
-                break;
             case 'statuskombi':
-                var store = Ext.data.StoreManager.get('statuskombi');
-                var record = store.getById(value);
+                store = Ext.data.StoreManager.get('statuskombi');
+                record = store.getById(value);
                 if (record) {
-                    var r = record.data.statusStufe.stufe + ' ' + record.data.statusWert.wert;
+                    r = record.data.statusStufe.stufe + ' ' + record.data.statusWert.wert;
                     return r || '';
                 }
                 return '';
-                break;
             default:
                 return value.toString();
         }
@@ -1004,7 +998,7 @@ Ext.define('Lada.view.window.GridExport', {
         var content = [];
         for (var j=0; j< secondaryData.length; j++) {
             var item = {};
-            Object.keys(secondaryData[j]).forEach(function(key) {
+            Object.keys(secondaryData[j]).forEach(function() {
                 for (var i=0; i< columns.length; i++) {
                     var di = columns[i].dataIndex;
                     if (di) {

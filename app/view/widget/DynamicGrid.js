@@ -480,7 +480,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 probeWin.setPosition(30);
                                 win.setPosition(35 + probeWin.width);
                                 probeWin.loadRecord(messungRecord.get('probeId'), this,
-                                    function(precord, poperation, psuccess) {
+                                    function(precord) {
                                         probeWin.setRecord(precord);
                                         probeWin.initData(precord);
                                         win.setProbe(precord);
@@ -1147,7 +1147,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      * @return {Ext.util.HashMap} A map containg the filter values using the respective dataindex as key
      */
     getFilterValues: function() {
-        i18n = Lada.getApplication().bundle;
+        var i18n = Lada.getApplication().bundle;
         var filterMap = Ext.create('Ext.util.HashMap');
         //Get fieldsets containing the filter widgets
         var filters = Ext.ComponentQuery.query('panel[name=filtervalues]')[0].items.items;
@@ -1157,15 +1157,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         Ext.Array.each(filters, function(item) {
             var widget = item.down('component[name=' + item.dataIndex + ']');
             //Get readable value depending on the widget type
+            var datefield, value;
             switch (Ext.getClassName(widget)) {
                 case 'Lada.view.widget.base.DateField':
-                    var datefield = widget.down('datefield');
-                    var value = datefield.getValue();
+                    datefield = widget.down('datefield');
+                    value = datefield.getValue();
                     filterMap.add(item.dataIndex, value);
                     break;
                 case 'Lada.view.widget.base.Datetime':
-                    var datefield = widget.down('datetime');
-                    var value = datefield.getValue();
+                    datefield = widget.down('datetime');
+                    value = datefield.getValue();
                     filterMap.add(item.dataIndex, value);
                     break;
                 case 'Lada.view.widget.base.DateTimeRange':
@@ -1173,14 +1174,14 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     var toField = widget.down('component[name=' + item.dataIndex + 'To]');
                     var fromValue = Lada.util.Date.formatTimestamp(fromField.getValue(), 'DD.MM.YYYY HH:mm');
                     var toValue = Lada.util.Date.formatTimestamp(toField.getValue(), 'DD.MM.YYYY HH:mm');
-                    if (toValue != null) {
+                    if (toValue !== null) {
                         filterMap.add(item.dataIndex, i18n.getMsg('print.daterange', fromValue, toValue));
                     } else {
                         filterMap.add(item.dataIndex, fromValue);
                     }
                     break;
                 case 'Lada.view.widget.Tag':
-                    var value = widget.getDisplayValue();
+                    value = widget.getDisplayValue();
                     filterMap.add(item.dataIndex, value);
                     break;
                 default:

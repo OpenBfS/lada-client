@@ -74,7 +74,6 @@ Ext.define('Lada.view.window.ProbeCreate', {
                     imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
                     imprintWin.on('afterlayout', function() {
                         var imprintWinController = this.getController();
-                        console.log(imprintWinController);
                         imprintWinController.setTopic('probe');
                     }, imprintWin, {single: true});
                 } else {
@@ -166,7 +165,6 @@ Ext.define('Lada.view.window.ProbeCreate', {
             record.set('laborMstId', labRec.get('laborMst'));
         }
         var errors = [];
-        var warnings = [];
         var notifications = { hauptprobenNr: [631] };
         var warnings = { probeentnahmeBeginn: [631],
             umwId: [631]
@@ -181,8 +179,9 @@ Ext.define('Lada.view.window.ProbeCreate', {
      * Instructs the fields / forms listed in this method to set a message.
      * @param errors These Errors shall be shown
      * @param warnings These Warning shall be shown
+     * @param notifications
      */
-    setMessages: function(errors, warnings) {
+    setMessages: function(errors, warnings, notifications) {
         this.down('probeform').setMessages(errors, warnings, notifications);
     },
 

@@ -56,8 +56,6 @@ Ext.define('Lada.view.window.Ort', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        var me = this;
-
         this.title = i18n.getMsg('title.loading.ort');
 
         this.tools = [{

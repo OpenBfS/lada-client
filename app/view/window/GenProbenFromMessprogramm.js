@@ -358,7 +358,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     //TODO: load description
                     header: i18n.getMsg('umwId'),
                     dataIndex: 'umwId',
-                    renderer: function(value, metadata) {
+                    renderer: function(value) {
                         if (!value) {
                             return '';
                         }

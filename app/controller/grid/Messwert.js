@@ -65,7 +65,7 @@ Ext.define('Lada.controller.grid.Messwert', {
         }
     },
 
-    changeValue: function(editor, context) {
+    changeValue: function(editor) {
         var e = editor.up().down('expnumberfield[dataIndex=nwgZuMesswert]');
         e.allowBlank = true;
         e.setReadOnly(false);
@@ -85,7 +85,7 @@ Ext.define('Lada.controller.grid.Messwert', {
             context.record.set('id', null);
         }
         context.record.save({
-            success: function(request, response) {
+            success: function() {
                 if (Ext.data.StoreManager.get('messeinheiten')) {
                     Ext.data.StoreManager.get('messeinheiten').clearFilter();
                     Ext.data.StoreManager.get('messeinheiten').reload();
@@ -207,12 +207,10 @@ Ext.define('Lada.controller.grid.Messwert', {
      * @param {Number} newValue New mehId value
      */
     handleMehChanged: function(cbox, newValue) {
-        var grid = cbox.up('messwertgrid');
         var i18n = Lada.getApplication().bundle;
-        var attributes = cbox.bodyEl.dom.attributes;
         var meh = cbox.getStore().getById(newValue);
         //If secondary unit is selected
-        if (meh.get('primary') == false) {
+        if (meh.get('primary') === false) {
             cbox.bodyEl.addCls('x-lada-warning-grid-field');
             Ext.tip.QuickTipManager.register({
                 text: i18n.getMsg('636'),

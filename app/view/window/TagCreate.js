@@ -69,10 +69,10 @@ Ext.define('Lada.view.window.TagCreate', {
             msgTarget: 'under',
             //validate that text is not empty and the name does not already exists
             validator: function(val) {
-                if (val.trim().length == 0) {
+                if (val.trim().length === 0) {
                     return i18n.getMsg('tag.createwindow.err.invalidtagname');
                 }
-                if (val.length == 0) {
+                if (val.length === 0) {
                     return i18n.getMsg('tag.createwindow.err.emptytagname');
                 }
                 if (me.tagWidget.tagExists(val)) {
@@ -137,7 +137,7 @@ Ext.define('Lada.view.window.TagCreate', {
      */
     saveBulkTagMessung: function(textfield) {
         var me = this;
-        if (!this.selection || this.selection.length == 0) {
+        if (!this.selection || this.selection.length === 0) {
             return;
         }
         //Get the first messungId
@@ -148,7 +148,7 @@ Ext.define('Lada.view.window.TagCreate', {
         var text = textfield.getValue();
 
         //Save tag for first probe. Should trigger itemadd event on tag widget.
-        this.tagWidget.store.createTagForMid(text, firstMid, function(response) {
+        this.tagWidget.store.createTagForMid(text, firstMid, function() {
             var oldItems = Ext.clone(me.tagWidget.store.getData().items);
             //Wait for the reload to finish
             me.tagWidget.reload(true, function() {
@@ -157,9 +157,10 @@ Ext.define('Lada.view.window.TagCreate', {
                 var newItem = null;
                 for (var i = 0; i < newItems.length; i++) {
                     var id = newItems[i].id;
-                    if (!Ext.Array.findBy(oldItems,
-                        function(item, index) {
-                            return id == item.id;
+                    if (!Ext.Array.findBy(
+                        oldItems,
+                        function(item) {
+                            return id === item.id;
                         })
                     ) {
                         newItem = newItems[i];
@@ -185,7 +186,7 @@ Ext.define('Lada.view.window.TagCreate', {
      */
     saveBulkTagProbe: function(textfield) {
         var me = this;
-        if (!this.selection || this.selection.length == 0) {
+        if (!this.selection || this.selection.length === 0) {
             return;
         }
         //Get the first probeId
@@ -196,7 +197,7 @@ Ext.define('Lada.view.window.TagCreate', {
         var text = textfield.getValue();
 
         //Save tag for first probe. Should trigger itemadd event on tag widget.
-        this.tagWidget.store.createTagForPid(text, firstPid, function(response) {
+        this.tagWidget.store.createTagForPid(text, firstPid, function() {
             var oldItems = Ext.clone(me.tagWidget.store.getData().items);
             //Wait for the reload to finish
             me.tagWidget.reload(true, function() {
@@ -206,8 +207,8 @@ Ext.define('Lada.view.window.TagCreate', {
                 for (var i = 0; i < newItems.length; i++) {
                     var id = newItems[i].id;
                     if (!Ext.Array.findBy(oldItems,
-                        function(item, index) {
-                            return id == item.id;
+                        function(item) {
+                            return id === item.id;
                         })
                     ) {
                         newItem = newItems[i];
@@ -232,7 +233,11 @@ Ext.define('Lada.view.window.TagCreate', {
         var me = button.up('window');
         var textfield = me.down('textfield');
         if (textfield.validate()) {
-            me.mode === 'single' ? me.saveSingleTag(textfield): me.saveBulkTag(textfield);
+            if (me.mode === 'single') {
+                me.saveSingleTag(textfield);
+            } else {
+                me.saveBulkTag(textfield);
+            }
         }
     }
 });

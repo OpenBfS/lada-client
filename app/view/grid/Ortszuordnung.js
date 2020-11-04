@@ -81,7 +81,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 } else if (eventInst instanceof MouseEvent) {
                     //We are in chrome/firefox etc.
                     //Check if its not the second click of a doubleclick
-                    if (event.browserEvent.detail == 1) {
+                    if (event.browserEvent.detail === 1) {
                         grid.fireEvent('itemdblclick', grid, rec);
                     } else if (event.browserEvent.detail) {
                         //else tell the grid to ignore the next doubleclick as the edit window should already be open
@@ -100,7 +100,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             header: i18n.getMsg('orte.ortId'),
             dataIndex: 'ortId',
             flex: 3,
-            renderer: function(value, meta, zuordnung) {
+            renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
                 if (!record) {
@@ -241,7 +241,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     },
 
     initData: function() {
-        var modelname;
         var me = this;
         if (this.isMessprogramm) {
             this.store = Ext.create('Lada.store.OrtszuordnungMp');
@@ -251,12 +250,10 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     params: {
                         messprogrammId: this.recordId
                     }});
-                modelname = 'Lada.model.Messprogramm';
             } else {
                 return;
             }
         } else {
-            modelname = 'Lada.model.Probe';
             this.store = Ext.create('Lada.store.Ortszuordnung');
             this.addLoadingFailureHandler(this.store);
             this.store.load({
@@ -300,7 +297,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     /**
      * Activate the Remove Button
      */
-    activateRemoveButton: function(selection, record) {
+    activateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {
@@ -310,7 +307,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     /**
      * Activate the Remove Button
      */
-    deactivateRemoveButton: function(selection, record) {
+    deactivateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (grid.readOnly) {
@@ -318,7 +315,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }
     },
 
-    reiHandling: function(value) {
+    reiHandling: function() {
         if (!this.isMessprogramm) {
             if (!this.up('probenedit')) {
                 Ext.log({msg: 'Can not find parent window', level: 'warn'});

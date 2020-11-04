@@ -103,7 +103,7 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
         this.bbar = ['->', {
             xtype: 'button',
             text: i18n.getMsg('close'),
-            handler: function(button) {
+            handler: function() {
                 me.close();
             }
         }];
@@ -130,9 +130,11 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
         var changes = [];
         var id = event.id;
         me.displayValues.forEach(function(key) {
-            if (me.eventObjs[id] == null
-                || me.getPropertyByString(me.eventObjs[id], key) == null
-                || me.getPropertyByString(me.eventObjs[id], key) !==me.getPropertyByString(event, key)) {
+            if (me.eventObjs[id] === null ||
+                me.getPropertyByString(me.eventObjs[id], key) === null ||
+                    me.getPropertyByString(me.eventObjs[id], key) !==
+                    me.getPropertyByString(event, key)
+            ) {
                 changes.push(key);
             }
         });
@@ -284,7 +286,7 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
         if (!newEvents || newEvents === '') {
             content = i18n.getMsg('window.elanscenario.emptytext');
         }
-        displayOrder.forEach(function(key, index, array) {
+        displayOrder.forEach(function(key) {
             var value = me.eventObjs[key].displayText;
             content += value + '<br />';
         });
@@ -308,17 +310,17 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
         if (!newEvents || newEvents === '') {
             content = i18n.getMsg('window.elanscenario.emptytext');
         }
-        Ext.Object.each(newEvents, function(key, value, object) {
+        Ext.Object.each(newEvents, function(key, value) {
             var text = me.parseElanObject(value);
             newEvents[key].displayText = text;
         });
-        displayOrder.forEach(function(key, index, array) {
+        displayOrder.forEach(function(key) {
             var value = newEvents[key].displayText;
             content += value + '<br />';
         });
         this.down('panel').setHtml(content);
         me.eventObjs = newEvents;
-        if (preserveChanges != true) {
+        if (preserveChanges !== true) {
             this.changes = [];
         }
     }

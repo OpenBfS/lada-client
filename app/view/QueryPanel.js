@@ -337,7 +337,7 @@ Ext.define('Lada.view.QueryPanel', {
                 this.down('columnchoser').setStore(ccstore);
             }
             this.down('columnsort').setStore(null);
-            this.down('cbox[name=activefilters]').store.filter(function(item) {
+            this.down('cbox[name=activefilters]').store.filter(function() {
                 // don't show any items, as there is no baseQuery
                 return false;
             });

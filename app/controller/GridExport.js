@@ -53,8 +53,8 @@ Ext.define('Lada.controller.GridExport', {
                         xtype: 'button',
                         text: i18n.getMsg('export.continue'),
                         margin: '5, 0, 5, 5',
-                        handler: function(button) {
-                            button.up('window').close();
+                        handler: function(btn) {
+                            btn.up('window').close();
                         }
                     }]
                 }]

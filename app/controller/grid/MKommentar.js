@@ -45,7 +45,7 @@ Ext.define('Lada.controller.grid.MKommentar', {
             context.record.set('id', null);
         }
         context.record.save({
-            success: function(record, response) {
+            success: function() {
                 context.grid.getSelectionModel().clearSelections();
                 context.grid.initData();
                 context.grid.up('window').initData();

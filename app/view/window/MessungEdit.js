@@ -186,7 +186,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                             me.parentWindow.initData();
                         } else {
                             me.record.set('treeModified', me.probe.get('treeModified'));
-                            that.disableForm();
+                            me.disableForm();
                         }
                     }
                 });
@@ -201,9 +201,9 @@ Ext.define('Lada.view.window.MessungEdit', {
                 + ' Mst: ' + messstelle.get('messStelle')
                 + ' editieren.');
             var json = null;
-            try {
+            if (response.getResponse().responseText) {
                 json = Ext.decode(response.getResponse().responseText);
-            } catch (e) {}
+            }
             if (json) {
                 me.setMessages(json.errors, json.warnings);
             }

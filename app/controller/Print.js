@@ -281,7 +281,7 @@ Ext.define('Lada.controller.Print', {
                         var filters = window.parentGrid.currentParams.filters;
                         var setFilters = [];
                         //Remove blank filters
-                        Ext.Array.each(filters, function(value, index) {
+                        Ext.Array.each(filters, function(value) {
                             if (value.filter || value.filter !== '') {
                                 setFilters.push(value);
                             }
@@ -439,7 +439,6 @@ Ext.define('Lada.controller.Print', {
         window.setDisabled(true);
         window.setLoading(true);
         var callbackFn = function(success) {
-            var i18n = Lada.getApplication().bundle;
             var result = success ? i18n.getMsg('print.success') : i18n.getMsg('print.fail');
             window.down('label[name=results]').setText(result);
             window.down('label[name=results]').setHidden(false);
@@ -448,7 +447,6 @@ Ext.define('Lada.controller.Print', {
         };
         //Check if layout attributes are proben and messungen
         var attributes = capabilities.layouts[layout].attributes;
-        var layoutName = capabilities.layouts[layout].name;
         var probenAttribute = null;
         for (var i = 0; i < attributes.length; i++) {
             var attribute = attributes[i];
@@ -632,7 +630,6 @@ Ext.define('Lada.controller.Print', {
             var messstelle = probe.messstelle;
             var labormessstelle = probe.labormessstelle;
             var ortszuordnung = probe.ortszuordnung;
-            var zusatzwerte = probe.zusatzwerte;
 
             if (messstelle !== null) {
                 prep[i].messstelle = [];

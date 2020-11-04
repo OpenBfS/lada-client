@@ -50,24 +50,24 @@ Ext.define('Lada.controller.form.Probenehmer', {
             record.set('id',null);
         }
         record.save({
-            success: function(record, response) {
+            success: function(newRecord, response) {
                 var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                 if (parentGrid.length === 1) {
                     parentGrid[0].reload();
                 }
                 var rec = formPanel.getForm().getRecord();
                 rec.dirty = false;
-                formPanel.getForm().loadRecord(record);
+                formPanel.getForm().loadRecord(newRecord);
                 var json = Ext.decode(response.getResponse().responseText);
                 formPanel.clearMessages();
-                formPanel.setRecord(record);
+                formPanel.setRecord(newRecord);
                 formPanel.setMessages(json.errors, json.warnings);
                 button.setDisabled(true);
                 button.up('toolbar').down('button[action=discard]')
                     .setDisabled(true);
                 Ext.data.StoreManager.get('probenehmer').reload();
             },
-            failure: function(record, response) {
+            failure: function(newRecord, response) {
                 var i18n = Lada.getApplication().bundle;
                 if (response.error) {
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -119,7 +119,7 @@ Ext.define('Lada.controller.form.Probenehmer', {
             record.set('id',null);
         }
         record.save({
-            success: function(record, response) {
+            success: function(newRecord, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
@@ -128,7 +128,7 @@ Ext.define('Lada.controller.form.Probenehmer', {
                     }
                 }
             },
-            failure: function(record, response) {
+            failure: function(newRecord, response) {
                 var i18n = Lada.getApplication().bundle;
                 if (response.error) {
                     //TODO: check content of error.status (html error code)

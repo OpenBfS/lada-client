@@ -9,7 +9,7 @@
 Ext.define('Lada.override.RestProxy', {
     override: 'Ext.data.proxy.Rest',
 
-    processResponse: function(success, operation, request, response, callback, scope) {
+    processResponse: function(success, operation, request, response) {
         /*
            SSO will send a 302 if the Client is not authenticated
            unfortunately this seems to be filtered by the browser.
@@ -48,10 +48,6 @@ Ext.define('Lada.override.RestProxy', {
             }
         }
         return params;
-    },
-
-    parseStatus: function(status) {
-        console.log(status);
     },
 
     reload: function(btn) {

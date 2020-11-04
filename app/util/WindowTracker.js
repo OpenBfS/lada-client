@@ -63,8 +63,6 @@ Ext.define('Lada.util.WindowTracker', {
                 } else {
                     //raise error
                 }
-            } else {
-                console.log('Unknown object type');
             }
         },
 
@@ -83,8 +81,6 @@ Ext.define('Lada.util.WindowTracker', {
                 } else {
                     //raise error
                 }
-            } else {
-                console.log('Unknown object type');
             }
         },
 
@@ -103,8 +99,6 @@ Ext.define('Lada.util.WindowTracker', {
                 } else {
                     //Raise error
                 }
-            } else {
-                console.log('Unknown object type');
             }
         },
 
@@ -124,8 +118,6 @@ Ext.define('Lada.util.WindowTracker', {
                 } else {
                     open = true;
                 }
-            } else {
-                console.log('Unknown object type');
             }
             return open;
         }

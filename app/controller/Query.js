@@ -166,7 +166,7 @@ Ext.define('Lada.controller.Query', {
 
         //Clone columns after query is saved
         var saveCallback = function(savedQuery) {
-            new Ext.Promise(function(resolve, reject) {
+            new Ext.Promise(function(resolve) {
                 var len = columnValues.length;
                 var cur = 0;
                 var success = true;
@@ -196,9 +196,7 @@ Ext.define('Lada.controller.Query', {
                         }
                     });
                 });
-            }).then(function(saveSuccess) {
             });
-
         };
 
         cbox.setStore(panel.store);
@@ -227,7 +225,7 @@ Ext.define('Lada.controller.Query', {
                 i18n.getMsg('delete.query'), function(btn) {
                     if (btn === 'yes') {
                         query.erase({
-                            callback: function(record, operation, success) {
+                            callback: function() {
                                 var combobox = qp.down('combobox[name=selectedQuery]');
                                 qp.store.load({callback: function() {
                                     combobox.setStore(qp.store);
@@ -347,14 +345,13 @@ Ext.define('Lada.controller.Query', {
                 qp.getForm().loadRecord(rec);
                 if (!skipColumns) {
                     var columns = qp.gridColumnValueStore.getData().items;
-                    var count = columns.length;
                     var saved = 0;
-                    new Ext.Promise(function(resolve, reject) {
-                        for (var i=0; i < columns.length; i++) {
-                            columns[i].save({
-                                callback: function(record, operation, success) {
+                    new Ext.Promise(function(resolve) {
+                        for (var i2=0; i2 < columns.length; i2++) {
+                            columns[i2].save({
+                                callback: function() {
                                     saved++;
-                                    if (saved == columns.length) {
+                                    if (saved === columns.length) {
                                         resolve();
                                     }
                                 }
@@ -373,7 +370,7 @@ Ext.define('Lada.controller.Query', {
                     qp.loadingMask.hide();
                 }
             },
-            failure: function(rec, response) {
+            failure: function() {
                 Ext.Msg.alert(i18n.getMsg('query.error.save.title'),
                     i18n.getMsg('query.error.save.message'));
             }
@@ -507,7 +504,7 @@ Ext.define('Lada.controller.Query', {
                         if (operation.error.response.timedout) {
                             Ext.Msg.alert(i18n.getMsg('query.error.search.title'),
                                 i18n.getMsg('query.error.search.querytimeout.message'));
-                        } else if (operation.error.status != 0) {
+                        } else if (operation.error.status !== 0) {
                             /* Server response has HTTP error code.
                                If it's 0, we probably got a 302 from SSO,
                                which is handled elsewhere. */
@@ -891,7 +888,7 @@ Ext.define('Lada.controller.Query', {
         this.dataChanged();
     },
 
-    filterValueChanged: function(box, newvalue, oldvalue) {
+    filterValueChanged: function(box, newvalue) {
         if (box.xtype === 'datefield' && box.up('daterange')) {
             this.multiValueChanged(box, newvalue, box.up('daterange'));
         } else if (box.xtype === 'datetimefield' && box.up('datetimerange')) {
@@ -1048,7 +1045,7 @@ Ext.define('Lada.controller.Query', {
                 autoLoad: false,
                 remoteFilter: true
             });
-        grid.getStore().addListener('load', function(store) {
+        grid.getStore().addListener('load', function() {
             var dgrid = Ext.getCmp('dynamicgridid');
             if (dgrid && dgrid.ortstore) {
                 var data = dgrid.getStore().getData().items;
@@ -1071,7 +1068,7 @@ Ext.define('Lada.controller.Query', {
                 }
             }
         });
-        grid.ortstore.addListener('datachanged',function(store) {
+        grid.ortstore.addListener('datachanged',function() {
             var dgrid = Ext.getCmp('dynamicgridid');
             dgrid.down('map').addLocations(dgrid.ortstore);
         });

@@ -70,7 +70,7 @@ Ext.define('Lada.view.Viewport', {
                 layout: {
                     type: 'vbox',
                     align: 'stretch'
-                },
+                }, // TODO 'fit' declaration ?
                 tools: [{
                     type: 'help',
                     tooltip: i18n.getMsg('help.qtip'),
@@ -95,7 +95,6 @@ Ext.define('Lada.view.Viewport', {
                 collapsible: true,
                 minWidth: 540,
                 collapsed: false,
-                layout: 'fit',
                 items: [{
                     xtype: 'querypanel',
                     margin: 0,

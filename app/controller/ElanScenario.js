@@ -103,7 +103,11 @@ Ext.define('Lada.controller.ElanScenario', {
             });
             win.show();
         } else {
-            win.isVisible() ? win.focus(): win.show();
+            if (win.isVisible()) {
+                win.focus();
+            } else {
+                win.show();
+            }
             if (win.hasChanges()) {
                 win.update();
             }

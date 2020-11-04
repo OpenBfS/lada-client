@@ -134,7 +134,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         response += status + ' - ' + statusText;
         this.down('panel').setHtml(this.down('panel').html + response);
         this.download += response;
-        if (this.finished == this.fileCount) {
+        if (this.finished === this.fileCount) {
             this.down('button[name=download]').enable();
         }
     },
@@ -247,12 +247,9 @@ Ext.define('Lada.view.window.ImportResponse', {
         } else {
             numWarnings = Object.keys(warnings).length;
         }
-        if (!Ext.isObject(notifications)) {
-            numNotifications = 0;
-        } else {
-            numNotifications = Object.keys(notifications).length;
-        }
-
+        var numNotifications = Ext.isObject(notifications) ?
+            Object.keys(notifications).length :
+            0;
         if (!data.success) {
             if (divHtml) {
                 out.push(divStyle + i18n.getMsg(
@@ -272,7 +269,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                 out.push(i18n.getMsg('importResponse.failure.errorlist'));
                 out.push('<br/>');
                 out.push('<ol>');
-                var msgs;
+                var msgs, parts, str;
                 for (var key in errors) {
                     msgs = errors[key];
                     if (key !== 'parser') {
@@ -286,8 +283,8 @@ Ext.define('Lada.view.window.ImportResponse', {
                     for (var i = msgs.length - 1; i >= 0; i--) {
                         if (msgs[i].key === 'validation') {
                             validation.push('<ol>');
-                            var parts = msgs[i].value.split('#');
-                            var str = i18n.getMsg(parts[0]) +
+                            parts = msgs[i].value.split('#');
+                            str = i18n.getMsg(parts[0]) +
                                 (parts[1] === undefined ? '' : ' ' + parts[1]);
                             validation.push(str + ' ('
                                 + i18n.getMsg(msgs[i].code.toString()) + ')');
@@ -322,10 +319,10 @@ Ext.define('Lada.view.window.ImportResponse', {
                     out.push(i18n.getMsg('importResponse.parser'));
                     out.push('<ol>');
                     msgs = warnings.Parser;
-                    for (var i = msgs.length - 1; i >= 0; i--) {
-                        out.push('<li>' + msgs[i].key + ' ('
-                                 + i18n.getMsg(msgs[i].code.toString())
-                                 + '): ' + msgs[i].value + '</li>');
+                    for (var i2 = msgs.length - 1; i2 >= 0; i2--) {
+                        out.push('<li>' + msgs[i2].key + ' ('
+                                 + i18n.getMsg(msgs[i2].code.toString())
+                                 + '): ' + msgs[i2].value + '</li>');
                     }
                     out.push('</ol>');
                 }
@@ -340,14 +337,14 @@ Ext.define('Lada.view.window.ImportResponse', {
                     validation = [];
                     validation.push(i18n.getMsg(
                         'importResponse.warnings.validations'));
-                    for (var i = msgs.length - 1; i >= 0; i--) {
+                    for (var i3 = msgs.length - 1; i3 >= 0; i3--) {
                         if (msgs[i].key === 'validation') {
                             validation.push('<ol>');
-                            var parts = msgs[i].value.split('#');
-                            var str = i18n.getMsg(parts[0]) +
+                            parts = msgs[i3].value.split('#');
+                            str = i18n.getMsg(parts[0]) +
                                 (parts[1] === undefined ? '' : ' ' + parts[1]);
                             validation.push(str + ' ('
-                                + i18n.getMsg(msgs[i].code.toString()) + ')');
+                                + i18n.getMsg(msgs[i3].code.toString()) + ')');
                             validation.push('</ol>');
                         } else {
                             out.push('<li>' + msgs[i].key + ' ('
@@ -379,10 +376,10 @@ Ext.define('Lada.view.window.ImportResponse', {
                     out.push(i18n.getMsg('importResponse.parser'));
                     out.push('<ol>');
                     msgs = notifications.Parser;
-                    for (var i = msgs.length - 1; i >= 0; i--) {
-                        out.push('<li>' + msgs[i].key + ' ('
-                                 + i18n.getMsg(msgs[i].code.toString())
-                                 + '): ' + msgs[i].value + '</li>');
+                    for (var i4 = msgs.length - 1; i4 >= 0; i4--) {
+                        out.push('<li>' + msgs[i4].key + ' ('
+                                 + i18n.getMsg(msgs[i4].code.toString())
+                                 + '): ' + msgs[i4].value + '</li>');
                     }
                     out.push('</ol>');
                 }
@@ -397,19 +394,19 @@ Ext.define('Lada.view.window.ImportResponse', {
                     validation = [];
                     validation.push(i18n.getMsg(
                         'importResponse.notifications.validations'));
-                    for (var i = msgs.length - 1; i >= 0; i--) {
-                        if (msgs[i].key === 'validation') {
+                    for (var i5 = msgs.length - 1; i5 >= 0; i--) {
+                        if (msgs[i5].key === 'validation') {
                             validation.push('<ol>');
-                            var parts = msgs[i].value.split('#');
-                            var str = i18n.getMsg(parts[0]) +
+                            parts = msgs[i5].value.split('#');
+                            str = i18n.getMsg(parts[0]) +
                                 (parts[1] === undefined ? '' : ' ' + parts[1]);
                             validation.push(str + ' ('
-                                + i18n.getMsg(msgs[i].code.toString()) + ')');
+                                + i18n.getMsg(msgs[i5].code.toString()) + ')');
                             validation.push('</ol>');
                         } else {
-                            out.push('<li>' + msgs[i].key + ' ('
-                                     + i18n.getMsg(msgs[i].code.toString())
-                                     + '): ' + msgs[i].value + '</li>');
+                            out.push('<li>' + msgs[i5].key + ' ('
+                                     + i18n.getMsg(msgs[i5].code.toString())
+                                     + '): ' + msgs[i5].value + '</li>');
                         }
                     }
                     if (validation.length > 1) {
@@ -458,7 +455,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                         reject();
                     }
                 },
-                failure: function(response) {
+                failure: function() {
                     reject();
                 }
             });

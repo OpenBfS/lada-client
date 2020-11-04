@@ -50,7 +50,7 @@ Ext.define('Lada.store.Umwelt', {
         fieldset.setLoading(true);
         this.load({
             scope: this,
-            callback: function(records, op, success) {
+            callback: function(records) {
                 var found = false;
                 for (var i = 0; i < records.length; i++) {
                     if (records[i].id === oldVal) {
@@ -70,7 +70,7 @@ Ext.define('Lada.store.Umwelt', {
 
                                 this.onAfter({
                                     load: {
-                                        fn: function(store, records) {
+                                        fn: function(store) {
                                             store.add(record);
                                             umweltcombo.select(record);
                                             umweltcombo.up('umwelt').setReiWarningVisible(true);

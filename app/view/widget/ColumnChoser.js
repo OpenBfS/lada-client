@@ -184,12 +184,11 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
 
     sortvisibles: function() {
         var gcv_store = this.up('querypanel').gridColumnValueStore;
-        var gcv_items = gcv_store.getData().items;
         var tarstore = this.getComponent('targetGrid').getStore();
         var taritems = tarstore.getData().items;
         for ( var j = 0; j < taritems.length; j++) {
             var item = taritems[j];
-            if (item.get('visible') == true) {
+            if (item.get('visible') === true) {
                 var targetgridrecord = tarstore.findRecord('gridColumnId',
                     item.get('gridColumnId'), false, false, false,
                     true);

@@ -12,7 +12,11 @@
         "FileSaver": true,
         "Blob": true,
         "saveAs": true,
-        "console":true
+        "console":true,
+        "PointerEvent": true,
+        "MouseEvent": true,
+        "Uint8Array": true
+
     },
     "rules": {
         "comma-dangle": 2,

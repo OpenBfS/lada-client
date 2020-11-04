@@ -94,7 +94,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * or ortzuordnungMp
      */
     open: function(grid, record) {
-        if (grid.ignoreNextDblClick == true) {
+        if (grid.ignoreNextDblClick === true) {
             grid.ignoreNextDblClick = false;
             return;
         }
@@ -211,7 +211,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     /**
      * Search triggered by textfield key event.
      */
-    search: function(field, evt, opts) {
+    search: function(field, evt) {
         var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
 
@@ -311,7 +311,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 netzbetreiberId: win.netzbetreiberId,
                 staatId: record.get('id'),
                 ortId: 'STAAT_' + record.get('id'),
-                kurztext: ((record.get('staatIso') == null) ?
+                kurztext: ((record.get('staatIso') === null) ?
                     'STAAT_' + record.get('id') :
                     'STAAT_' + record.get('staatIso')),
                 langtext: record.get('staat'),
@@ -372,7 +372,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         ozw.ortstore.proxy.extraParams = extraParams;
         ozw.ortstore.load({
             scope: this,
-            callback: function(records, op, success) {
+            callback: function() {
                 var toolbar = ozw.down('tabpanel').down(
                     'ortstammdatengrid').down('pagingtoolbar');
                 this.ortefilter = filterstring || null;
@@ -386,7 +386,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     /**
      * Calls onStoreChanged at ortzuordnungwindow if the ort toolbar paged changed.
      */
-    ortPageChanged: function(toolbar, pageData, eOpts) {
+    ortPageChanged: function(toolbar) {
         var ozw = toolbar.up().up().up('ortszuordnungwindow');
         ozw.onStoreChanged();
     }

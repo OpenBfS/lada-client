@@ -98,7 +98,6 @@ Ext.define('Lada.view.window.Messprogramm', {
                     imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
                     imprintWin.on('afterlayout', function() {
                         var imprintWinController = this.getController();
-                        console.log(imprintWinController);
                         imprintWinController.setTopic('messprogramm');
                     }, imprintWin, {single: true});
                 } else {
@@ -194,9 +193,9 @@ Ext.define('Lada.view.window.Messprogramm', {
             this.disableChildren();
             var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
             mstLaborKombiStore.clearFilter(true);
-            var items = mstLaborKombiStore.queryBy(function(record) {
-                if ( (Lada.mst.indexOf(record.get('messStelle')) > -1) &&
-                   (Lada.mst.indexOf(record.get('laborMst')) > -1)) {
+            var items = mstLaborKombiStore.queryBy(function(newRecord) {
+                if ( (Lada.mst.indexOf(newRecord.get('messStelle')) > -1) &&
+                   (Lada.mst.indexOf(newRecord.get('laborMst')) > -1)) {
                     return true;
                 }
             });

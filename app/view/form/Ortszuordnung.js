@@ -145,7 +145,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
      * setOrt can be called from a CallbackFunction, ie select from a grid.
      * it will set the ortId of this record
      */
-    setOrt: function(row, selRecord, index, opts) {
+    setOrt: function(row, selRecord) {
         if (selRecord) {
             var newOrtId = selRecord.get('id');
             if (!this.readOnly && newOrtId) {
@@ -226,8 +226,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                 }
                 content = errors[key];
                 var errorText = '';
-                for (var i = 0; i < content.length; i++) {
-                    errorText += i18n.getMsg(content[i].toString()) + '\n';
+                for (var j = 0; j < content.length; j++) {
+                    errorText += i18n.getMsg(content[j].toString()) + '\n';
                 }
                 element.showErrors(errorText);
             }
@@ -253,7 +253,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     /**
      * Helper to trigger the forms' validity check
      */
-    changed: function(newValue, oldValue) {
+    changed: function() {
         var controller = Lada.app.getController(
             'Lada.controller.form.Ortszuordnung');
         var form = this.up('form').getForm();

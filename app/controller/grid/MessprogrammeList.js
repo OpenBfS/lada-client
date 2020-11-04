@@ -89,13 +89,13 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
                 success: function(response) {
                     var json = Ext.JSON.decode(response.responseText);
                     var resultMessage = '';
-                    for (var i=0; i< json.data.length; i++) {
-                        if (json.data[i].success !== 200) {
+                    for (var j=0; j< json.data.length; j++) {
+                        if (json.data[j].success !== 200) {
                             resultMessage += '<strong>'
                                 + i18n.getMsg('messprogramm') + ': '
-                                + json.data[i].id
+                                + json.data[j].id
                                 + '</strong><br><dd>'
-                                + i18n.getMsg(json.data[i].success)
+                                + i18n.getMsg(json.data[j].success)
                                 + '</dd><br>';
                         }
                     }
@@ -131,7 +131,7 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
                         grids[0].reload();
                     }
                 },
-                failure: function(response) {
+                failure: function() {
                     var errorWin = Ext.create('Ext.window.Window', {
                         title: i18n.getMsg('setActiveMp.failure.title'),
                         modal: true,

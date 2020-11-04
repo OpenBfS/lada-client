@@ -39,7 +39,7 @@ Ext.define('Lada.controller.grid.Messung', {
      * Window.
      */
     editItem: function(grid, record) {
-        if (grid.ignoreNextDblClick == true) {
+        if (grid.ignoreNextDblClick === true) {
             grid.ignoreNextDblClick = false;
             return;
         }

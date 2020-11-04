@@ -52,9 +52,9 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
             },
             failure: function(record, response) {
                 var json = null;
-                try {
-                    json = Ext.decode(response.getResponse().responseText);
-                } catch (e) {}
+                if (response.getResponse()) {
+                    json = response.getResponse().responseText;
+                }
                 if (json) {
                     if (json.message) {
                         Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')

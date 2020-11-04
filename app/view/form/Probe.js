@@ -162,7 +162,6 @@ Ext.define('Lada.view.form.Probe', {
                             listenersJson: {
                                 select: {
                                     fn: function(combo, newValue) {
-                                        console.log('anon. listener');
                                         var mst = newValue.get('messStelle');
                                         var labor = newValue.get('laborMst');
                                         combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
@@ -593,7 +592,7 @@ Ext.define('Lada.view.form.Probe', {
         if (!probeRecord.data || probeRecord.data.id === null) {
             return;
         }
-        if ((probeRecord.get('owner') == true) && (probeRecord.phantom == false)) {
+        if (probeRecord.get('owner') && !probeRecord.phantom) {
             this.down('button[action=copy]').setDisabled(false);
         }
         var mstStore = Ext.data.StoreManager.get('messstellen');
@@ -606,7 +605,7 @@ Ext.define('Lada.view.form.Probe', {
                 laborMstId = '';
             }
             var id = this.down('messstellelabor').store.count() + 1;
-
+            var displayCombi;
             if ( mstId.get('messStelle') === laborMstId ) {
                 displayCombi = mstId.get('messStelle');
             } else {
@@ -705,10 +704,11 @@ Ext.define('Lada.view.form.Probe', {
         var key;
         var element;
         var content;
+        var tmp;
         var i18n = Lada.getApplication().bundle;
         if (warnings) {
             for (key in warnings) {
-                var tmp = key;
+                tmp = key;
                 if (tmp.indexOf('#') > 0) {
                     tmp = tmp.split('#')[0];
                 }
@@ -726,7 +726,7 @@ Ext.define('Lada.view.form.Probe', {
         }
         if (notifications) {
             for (key in notifications) {
-                var tmp = key;
+                tmp = key;
                 if (tmp.indexOf('#') > 0) {
                     tmp = tmp.split('#')[0];
                 }
@@ -736,15 +736,15 @@ Ext.define('Lada.view.form.Probe', {
                 }
                 content = notifications[key];
                 var notificationsText = '';
-                for (var i = 0; i < content.length; i++) {
-                    notificationsText += i18n.getMsg(content[i].toString()) + '\n';
+                for (var j = 0; j < content.length; j++) {
+                    notificationsText += i18n.getMsg(content[j].toString()) + '\n';
                 }
                 element.showNotifications(notificationsText);
             }
         }
         if (errors) {
             for (key in errors) {
-                var tmp = key;
+                tmp = key;
                 if (tmp.indexOf('#') > 0) {
                     tmp = tmp.split('#')[0];
                 }
@@ -754,8 +754,8 @@ Ext.define('Lada.view.form.Probe', {
                 }
                 content = errors[key];
                 var errorText = '';
-                for (var i = 0; i < content.length; i++) {
-                    errorText += i18n.getMsg(content[i].toString()) + '\n';
+                for (var k = 0; k < content.length; k++) {
+                    errorText += i18n.getMsg(content[k].toString()) + '\n';
                 }
                 element.showErrors(errorText);
             }

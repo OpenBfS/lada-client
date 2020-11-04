@@ -44,7 +44,7 @@ Ext.define('Lada.view.form.Messprogramm', {
     },
 
     initComponent: function() {
-        if (Lada.view.form.Messprogramm.mediaSnScheduler == null) {
+        if (Lada.view.form.Messprogramm.mediaSnScheduler === null) {
             Lada.view.form.Messprogramm.mediaSnScheduler = Ext.create('Lada.util.FunctionScheduler');
         }
         var me = this;
@@ -640,6 +640,8 @@ Ext.define('Lada.view.form.Messprogramm', {
         var mstStore = Ext.data.StoreManager.get('messstellen');
         var mstId = mstStore.getById(messRecord.get('mstId'));
         var netzId = mstId.get('netzbetreiberId');
+        var mstLaborKombiStore = Ext.data.StoreManager.get(
+            'messstellelaborkombi');
         if (!messRecord.get('owner')) {
             var laborMstId = mstStore.getById(messRecord.get('laborMstId'));
             if (laborMstId) {
@@ -654,7 +656,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                 displayCombi = mstId.get('messStelle') + '/' + laborMstId;
             }
 
-            var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
             mstLaborKombiStore.clearFilter(true);
             var recordIndex = mstLaborKombiStore.findExact('displayCombi', displayCombi);
 
@@ -683,17 +684,16 @@ Ext.define('Lada.view.form.Messprogramm', {
                 this.down('messstellelaborkombi').down('combobox').resetOriginalValue();
             }
         } else {
-            var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
             var availableitems = mstLaborKombiStore.queryBy(function(record) {
                 if (record.get('messStelle') === messRecord.get('mstId') &&
                     record.get('laborMst') === messRecord.get('laborMstId')) {
                     return true;
                 }
             });
-            var newStore = Ext.create('Ext.data.Store', {
+            var newStore2 = Ext.create('Ext.data.Store', {
                 model: 'Lada.model.MessstelleLabor',
                 data: availableitems.items});
-            this.down('messstellelaborkombi').setStore(newStore);
+            this.down('messstellelaborkombi').setStore(newStore2);
             this.down('messstellelaborkombi').setValue(messRecord.get('messstellelabor'));
             this.down('messstellelaborkombi').down('combobox').resetOriginalValue();
         }
@@ -783,8 +783,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                 }
                 content = errors[key];
                 var errorText = '';
-                for (var i = 0; i < content.length; i++) {
-                    errorText += i18n.getMsg(content[i].toString()) + '\n';
+                for (var j = 0; j < content.length; j++) {
+                    errorText += i18n.getMsg(content[j].toString()) + '\n';
                 }
                 element.showErrors(errorText);
             }

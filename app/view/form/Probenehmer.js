@@ -239,10 +239,11 @@ Ext.define('Lada.view.form.Probenehmer', {
         var key;
         var element;
         var content;
+        var tmp;
         var i18n = Lada.getApplication().bundle;
         if (warnings) {
             for (key in warnings) {
-                var tmp = key;
+                tmp = key;
                 if (tmp.indexOf('#') > 0) {
                     tmp = tmp.split('#')[0];
                 }
@@ -260,7 +261,7 @@ Ext.define('Lada.view.form.Probenehmer', {
         }
         if (errors) {
             for (key in errors) {
-                var tmp = key;
+                tmp = key;
                 if (tmp.indexOf('#') > 0) {
                     tmp = tmp.split('#')[0];
                 }
@@ -270,8 +271,8 @@ Ext.define('Lada.view.form.Probenehmer', {
                 }
                 content = errors[key];
                 var errorText = '';
-                for (var i = 0; i < content.length; i++) {
-                    errorText += i18n.getMsg(content[i].toString()) + '\n';
+                for (var j = 0; j < content.length; j++) {
+                    errorText += i18n.getMsg(content[j].toString()) + '\n';
                 }
                 element.showErrors(errorText);
             }

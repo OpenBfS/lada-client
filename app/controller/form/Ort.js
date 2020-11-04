@@ -131,7 +131,7 @@ Ext.define('Lada.controller.form.Ort', {
                     formpanel.down('button[action=save]').setDisabled(true);
                     formpanel.up('window').setMode('edit');
                 },
-                failure: function(record, response) {
+                failure: function(newRecord, response) {
                     if (response.error) {
                         //TODO: check content of error.status (html error code)
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -164,8 +164,8 @@ Ext.define('Lada.controller.form.Ort', {
                 icon: Ext.Msg.WARNING,
                 message: i18n.getMsg('warn.ort.editreferencedort.message', plausibleRefs),
                 buttons: Ext.Msg.YESNO,
-                fn: function(button) {
-                    if (button === 'yes') {
+                fn: function(btn) {
+                    if (btn === 'yes') {
                         doSave();
                     }
                 }
@@ -266,9 +266,7 @@ Ext.define('Lada.controller.form.Ort', {
      * the original record
      */
     checkCommitOnCopyPanel: function(panel) {
-        var i18n = Lada.getApplication().bundle;
         var form = panel.getForm();
-        var copy = panel.record;
         var formValues = form.getValues();
         var original = panel.original;
         var valid = true;
@@ -288,7 +286,6 @@ Ext.define('Lada.controller.form.Ort', {
             errors['koordYExtern'] = ['err.orte.form.copy.duplicatecoordinates'];
         }
 
-        var revertbutton = panel.down('button[action=revert]');
         var savebutton = panel.down('button[action=save]');
         var copybutton = panel.down('button[action=copy]');
 
@@ -316,8 +313,6 @@ Ext.define('Lada.controller.form.Ort', {
      */
     checkCommitOnNewOrEditPanel: function(panel) {
         var savebutton = panel.down('button[action=save]');
-        var revertbutton = panel.down('button[action=revert]');
-        var copybutton = panel.down('button[action=copy]');
 
         var form = panel.getForm();
         if (!form.getRecord().phantom && form.getRecord().get('readonly')) {

@@ -174,7 +174,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
     /**
      * Initiates deletion of all selected items
      */
-    startDelete: function(btn) {
+    startDelete: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
         me.maxSteps = me.selection.length;
@@ -217,7 +217,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
             Ext.Ajax.request({
                 url: url + id,
                 method: 'DELETE',
-                success: function(resp, opts) {
+                success: function(resp) {
                     var json = Ext.JSON.decode(resp.responseText);
                     var urlArr = resp.request.url.split('/');
                     var delId = urlArr[urlArr.length - 1];
@@ -249,7 +249,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                         me.finishDelete();
                     }
                 },
-                failure: function(resp, opts) {
+                failure: function(resp) {
                     var urlArr = resp.request.url.split('/');
                     var delId = urlArr[urlArr.length - 1];
                     var html = me.down('panel').html;

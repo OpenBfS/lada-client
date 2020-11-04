@@ -51,24 +51,25 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
             record.set('id',null);
         }
         record.save({
-            success: function(record, response) {
+            success: function(newRecord, response) {
                 var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                 if (parentGrid.length === 1) {
                     parentGrid[0].reload();
                 }
                 var rec = formPanel.getForm().getRecord();
                 rec.dirty = false;
-                formPanel.getForm().loadRecord(record);
+                formPanel.getForm().loadRecord(newRecord);
                 var json = Ext.decode(response.getResponse().responseText);
                 formPanel.clearMessages();
-                formPanel.setRecord(record);
+                formPanel.setRecord(newRecord);
                 formPanel.setMessages(json.errors, json.warnings);
                 button.setDisabled(true);
-                button.up('datensatzerzeugeredit').down('button[action=discard]')
+                button.up('datensatzerzeugeredit')
+                    .down('button[action=discard]')
                     .setDisabled(true);
                 Ext.data.StoreManager.get('datensatzerzeuger').reload();
             },
-            failure: function(record, response) {
+            failure: function(newRecord, response) {
                 var i18n = Lada.getApplication().bundle;
                 if (response.error) {
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -121,7 +122,10 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
             panel.down('button[action=save]').setDisabled(true);
             panel.down('button[action=discard]').setDisabled(true);
         } else {
-            if ( panel.isValid() && panel.down('netzbetreiber').getValue().length > 0 ) {
+            if (
+                panel.isValid() &&
+                panel.down('netzbetreiber').getValue().length > 0
+            ) {
                 if (panel.isDirty()) {
                     panel.down('button[action=discard]').setDisabled(false);
                     panel.down('button[action=save]').setDisabled(false);

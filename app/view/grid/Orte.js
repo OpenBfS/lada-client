@@ -60,7 +60,7 @@ Ext.define('Lada.view.grid.Orte', {
                 }
                 return 'noedit';
             },
-            handler: function(grid, rowIndex, colIndex) {
+            handler: function(grid, rowIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
                 if (rec.get('readonly') === false) {
                     Lada.model.Ort.load(rec.get('id'), {
@@ -150,7 +150,7 @@ Ext.define('Lada.view.grid.Orte', {
                     }
                 }
                 var store = Ext.data.StoreManager.get('verwaltungseinheiten');
-                var record = store.getById(value);
+                record = store.getById(value);
                 if (!record) {
                     return value;
                 }
@@ -177,7 +177,7 @@ Ext.define('Lada.view.grid.Orte', {
                     }
                 }
                 var staaten = Ext.data.StoreManager.get('staaten');
-                var record = staaten.getById(value);
+                record = staaten.getById(value);
                 if (!record) {
                     return value;
                 }

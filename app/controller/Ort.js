@@ -45,9 +45,9 @@ Ext.define('Lada.controller.Ort', {
     editRecord: function(grid, record) {
         if (record.get('readonly') === false) {
             Lada.model.Ort.load(record.get('id'), {
-                success: function(record) {
+                success: function(newRecord) {
                     Ext.create('Lada.view.window.Ort',{
-                        record: record,
+                        record: newRecord,
                         parentWindow: grid.up('panel')
                     }).show();
                 }

@@ -164,7 +164,7 @@ Ext.define('Lada.view.grid.MKommentar', {
     /**
      * Activate the Remove Button
      */
-    activateRemoveButton: function(selection, record) {
+    activateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {
@@ -174,7 +174,7 @@ Ext.define('Lada.view.grid.MKommentar', {
     /**
      * Activate the Remove Button
      */
-    deactivateRemoveButton: function(selection, record) {
+    deactivateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {

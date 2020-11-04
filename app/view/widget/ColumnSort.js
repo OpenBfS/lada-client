@@ -68,7 +68,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                         containerScroll: true
                     },
                     listeners: {
-                        drop: function(node, data, overModel) {
+                        drop: function() {
                             me.saveColumnOrder();
                             me.fireEvent('change');
                         }
@@ -173,10 +173,18 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
             var maxIdx = this.store.count() - 1;
 
             switch (direction) {
-                case 'first': index = 0; break;
-                case 'up': index > 0 ? index-- : 0; break;
-                case 'down': index < maxIdx ? index++ : maxIdx; break;
-                case 'last': index = maxIdx; break;
+                case 'first':
+                    index = 0;
+                    break;
+                case 'up':
+                    index = index > 0 ? index-- : 0;
+                    break;
+                case 'down':
+                    index = index < maxIdx ? index++ : maxIdx;
+                    break;
+                case 'last':
+                    index = maxIdx;
+                    break;
             }
 
             this.store.remove(row);

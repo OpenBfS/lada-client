@@ -46,10 +46,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        var me = this;
         this.title = i18n.getMsg('ortszuordnung.window.title');
-        var recordtype;
-        var reiRecord = false;
         if (this.probe) {
             //Get datenbasis to check if its a REI Probe
             Ext.create('Lada.store.Datenbasis', {
@@ -57,7 +54,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 listeners: {
                     load: {
                         scope: this,
-                        fn: function(store, records, success, op, opts) {
+                        fn: function(store) {
                             var id = this.probe.get('datenbasisId');
                             if (!id) {
                                 this.datenbasis = null;
@@ -278,8 +275,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
      */
     afterRender: function() {
         this.superclass.afterRender.apply(this, arguments);
-        var map = this.down('map');
-        //         map.map.addControl(new OpenLayers.Control.LayerSwitcher()); TODO migration
     },
 
     /**
@@ -287,7 +282,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
      * @param errors These Errors shall be shown
      * @param warnings These Warning shall be shown
      */
-    setMessages: function(errors, warnings) {
+    setMessages: function() {
         //todo this is a stub
     },
 

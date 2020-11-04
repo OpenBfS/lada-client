@@ -44,9 +44,9 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         var formPanel = button.up('ortszuordnungform');
 
         //try to disable ortPickerButton:
-        try {
+        if (formPanel.down('button[action=setOrt]')) {
             formPanel.down('button[action=setOrt]').toggle(false);
-        } catch (e) {}
+        }
         var data = formPanel.getForm().getFieldValues(false);
         var record = formPanel.getForm().getRecord();
         record.set('ortId', data.ortId[0]);
@@ -59,11 +59,11 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             record.set('id', null);
         }
         record.save({
-            success: function(record, response) {
+            success: function(newRecord, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     formPanel.clearMessages();
-                    formPanel.setRecord(record);
+                    formPanel.setRecord(newRecord);
                     formPanel.setMessages(json.errors, json.warnings);
                     formPanel.up('window').parentWindow.initData();
                     button.setDisabled(true);
@@ -78,7 +78,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                     console.log(e);
                 }
             },
-            failure: function(record, response) {
+            failure: function(newRecord, response) {
                 var i18n = Lada.getApplication().bundle;
                 button.setDisabled(true);
                 button.up('ortszuordnungform').form.owner.down('button[action=revert]').setDisabled(true);

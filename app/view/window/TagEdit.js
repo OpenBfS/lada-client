@@ -45,7 +45,7 @@ Ext.define('Lada.view.window.TagEdit', {
                 action: 'createtag',
                 icon: 'resources/img/list-add.png',
                 tooltip: i18n.getMsg('button.createtag.tooltip'),
-                handler: function(button) {
+                handler: function() {
                     var win = Ext.create('Lada.view.window.TagCreate', {
                         tagWidget: me.down('tagwidget'),
                         recordType: me.recordType,
@@ -146,13 +146,12 @@ Ext.define('Lada.view.window.TagEdit', {
             }
             for (var j = 0; j < tags.length; j++) {
                 var tag = tags[j];
-                store.deleteZuordnung(tag, function(request, success, response) {
-                    var responseJson = Ext.decode(response.responseText);
+                store.deleteZuordnung(tag, function() {
                     tagsSet++;
                     var ratio = tagsSet/tagCount;
                     me.down('progressbar').updateProgress(
                         ratio, i18n.getMsg('tag.assignwindow.progress', tagsSet, tagCount, false));
-                    if (ratio == 1) {
+                    if (ratio === 1) {
                         Ext.getCmp('dynamicgridid').reload();
                         me.enableButtons();
                     }
@@ -194,16 +193,12 @@ Ext.define('Lada.view.window.TagEdit', {
             }
             for (var j = 0; j < tags.length; j++) {
                 var tag = tags[j];
-                store.createZuordnung(tag, function(request, success, response) {
-                    var responseJson = Ext.decode(response.responseText);
-                    if (success == false) {
-                        console.log('500 on tag set');
-                    }
+                store.createZuordnung(tag, function() {
                     tagsSet++;
                     var ratio = tagsSet/tagCount;
                     me.down('progressbar').updateProgress(
                         ratio, i18n.getMsg('tag.assignwindow.progress', tagsSet, tagCount, false));
-                    if (ratio == 1) {
+                    if (ratio === 1) {
                         Ext.getCmp('dynamicgridid').reload();
                         me.enableButtons();
                     }

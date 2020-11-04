@@ -55,6 +55,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform umwelt combobox': {
                 change: this.umweltChanged
             },
+            // eslint-disable-next-line max-len
             'messprogrammform container[name="reiComboContainer"] reiprogpunktgruppe combobox': {
                 change: this.reiProgpunktGruppeChanged
             },
@@ -78,7 +79,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var copy = origRecord.copy(null);
         copy.set('id', null);
         copy.save({
-            callback: function(rec, operation, success) {
+            callback: function(rec, op, success) {
                 if (success) {
                     me.copyOrtszuordnung(origRecord, copy, function(copiedRecord) {
                         var win = Ext.create('Lada.view.window.Messprogramm',{
@@ -89,8 +90,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         win.setPosition(pos);
                     });
                 } else {
+                    var i18n = Lada.getApplication().bundle;
                     var responseObj = Ext.decode(op.getResponse().responseText);
-                    Ext.Msg.alert(i18n.getMsg('err.messprogramm.copy'), i18n.getMsg(responseObj.message));
+                    Ext.Msg.alert(i18n.getMsg('err.messprogramm.copy'),
+                        i18n.getMsg(responseObj.message));
                 }
             }
         });
@@ -114,10 +117,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 //All messung objects as json object
                 var ortszuordnungArr = responseObj.data;
                 fetchedOrtszuordnungen = ortszuordnungArr.length;
-                var ortszuordnungCopyArr = [];
-                var ortszuordnungRecArr = [];
-
-                if (fetchedOrtszuordnungen == 0) {
+                if (fetchedOrtszuordnungen === 0) {
                     me.copyMessmethoden(mp, mpCopy, finishedCallback);
                 }
 
@@ -131,13 +131,13 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         callback: function(rec, op, success) {
                             savedOrtszuordnungen++;
                             if (!success) {
-                                var responseObj = Ext.decode(op.getResponse().responseText);
+                                var responseObj2 = Ext.decode(op.getResponse().responseText);
                                 var errString = i18n.getMsg('err.ortszuordnung.copy.text', rec.get('copyOf'),
-                                    i18n.getMsg(responseObj.message));
+                                    i18n.getMsg(responseObj2.message));
                                 saveErrors = saveErrors ? saveErrors + errString:
                                     errString;
                             }
-                            if (savedOrtszuordnungen == fetchedOrtszuordnungen) {
+                            if (savedOrtszuordnungen === fetchedOrtszuordnungen) {
                                 if (saveErrors) {
                                     Ext.Msg.alert(i18n.getMsg('err.ortszuordnung.tile'), saveErrors);
                                 }
@@ -146,14 +146,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         }
                     });
                 }
-            },
-            failure: function(response) {
             }
         });
     },
 
     copyMessmethoden: function(mp, mpCopy, finishedCallback) {
-        var me = this;
         var savedMmt = 0;
         var fetchedMmt = 0;
         var saveErrors = null;
@@ -171,7 +168,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 var mmtArr = responseObj.data;
                 fetchedMmt = mmtArr.length;
 
-                if (fetchedMmt == 0) {
+                if (fetchedMmt === 0) {
                     finishedCallback(mpCopy);
                 }
 
@@ -185,13 +182,13 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         callback: function(rec, op, success) {
                             savedMmt++;
                             if (!success) {
-                                var responseObj = Ext.decode(op.getResponse().responseText);
+                                var responseObj2 = Ext.decode(op.getResponse().responseText);
                                 var errString = i18n.getMsg('err.mmt.copy.text', rec.get('copyOf'),
-                                    i18n.getMsg(responseObj.message));
+                                    i18n.getMsg(responseObj2.message));
                                 saveErrors = saveErrors ? saveErrors + errString:
                                     errString;
                             }
-                            if (savedMmt == fetchedMmt) {
+                            if (savedMmt === fetchedMmt) {
                                 if (saveErrors) {
                                     Ext.Msg.alert(i18n.getMsg('err.mmt.tile'), saveErrors);
                                 }
@@ -200,8 +197,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         }
                     });
                 }
-            },
-            failure: function(response) {
             }
         });
     },
@@ -237,11 +232,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
         var mst = records.get('messStelle');
         var labor = records.get('laborMst');
-        var netzbetreiber = records.get('netzbetreiberId');
         combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
         combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
         combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
-        combo.up('fieldset').down('netzbetreiber[name=netzbetreiber]').setValue(netzbetreiber);
+        combo.up('fieldset').down('netzbetreiber[name=netzbetreiber]').setValue(nbId);
     },
 
     /**
@@ -303,7 +297,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
      * When the IntervallFields were used,
      * update the Slider
      */
-    synchronizeSlider: function(field, newValue, oldValue) {
+    synchronizeSlider: function(field, newValue) {
         var formPanel = field.up('form');
         if (field.name === 'teilintervallVon') {
             formPanel.down('probenintervallslider')
@@ -333,7 +327,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
             record.set('id', null);
         }
         record.save({
-            success: function(record, response) {
+            success: function(rec, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     button.setDisabled(true);
@@ -344,27 +338,27 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         parentGrid[0].reload();
                     }
                     formPanel.clearMessages();
-                    formPanel.setRecord(record);
-                    button.up('window').record = record;
+                    formPanel.setRecord(rec);
+                    button.up('window').record = rec;
                     formPanel.setMessages(json.errors, json.warnings);
                     if (response.action === 'create' && json.success) {
                         button.up('window').close();
                         var win = Ext.create('Lada.view.window.Messprogramm', {
-                            record: record
+                            record: rec
                         });
-                        win.initData(record);
+                        win.initData(rec);
                         win.show();
                     }
                 }
             },
-            failure: function(record, response) {
+            failure: function(newRecord, response) {
                 var i18n = Lada.getApplication().bundle;
                 button.setDisabled(true);
                 button.up('toolbar').down('button[action=discard]')
                     .setDisabled(true);
                 var rec = formPanel.getForm().getRecord();
                 rec.dirty = false;
-                formPanel.getForm().loadRecord(record);
+                formPanel.getForm().loadRecord(newRecord);
                 if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -408,7 +402,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
             record.set('id', null);
         }
         record.save({
-            success: function(record, response) {
+            success: function(newRecord, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     var parentGrid = Ext.ComponentQuery.query('dynamicGrid');
@@ -417,11 +411,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     }
                 }
             },
-            failure: function(record, response) {
+            failure: function(newRecord, response) {
                 var i18n = Lada.getApplication().bundle;
                 var rec = formPanel.getForm().getRecord();
                 rec.dirty = false;
-                formPanel.getForm().loadRecord(record);
+                formPanel.getForm().loadRecord(rec);
                 if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -459,7 +453,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var mstId = mstStore.getById(formPanel.getForm().getRecord().get('mstId'));
         if (mstId !== null) {
             var laborMstId = mstStore.getById(formPanel.getForm().getRecord().get('laborMstId'));
-            var netzbetreiber = formPanel.getForm().getRecord().get('netzbetreiber');
             if (laborMstId) {
                 laborMstId = laborMstId.get('messStelle');
             } else {
@@ -537,8 +530,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var desk = field.up('deskriptor');
         var media = field.up('messprogrammform').down('textfield[name="mediaDesk"]');
         var current = media.getValue().split(' ');
+        var value;
         if (current.length < 12) {
-            var value;
             for (var i = 0; i <= 12; i++) {
                 if (i === 0) {
                     current.push('D:');
@@ -554,7 +547,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 }
             }
         } else {
-            var value;
             if (records.get('sn') < 10) {
                 value = '0' + records.get('sn');
             } else {
@@ -562,8 +554,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
             }
             current[desk.layer + 1] = value;
             if (desk.layer < 2) {
-                for (var i = desk.layer + 2; i < 12; i++) {
-                    current[i] = '00';
+                for (var j = desk.layer + 2; j < 12; j++) {
+                    current[j] = '00';
                 }
                 this.clearChildDesk(desk);
             } else if (desk.layer === 2 && current[1] === '01') {
@@ -613,7 +605,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
     /**
      * Called if reiProgpunktGruppe value has changed. Filters Umweltbereich values according to the new value
      */
-    reiProgpunktGruppeChanged: function(combo, newVal, oldVal, opts) {
+    reiProgpunktGruppeChanged: function(combo) {
         // avoids endless loop
         if (combo.name !== 'reiProgpunktGrpId') {
             return true;
@@ -640,7 +632,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
     /**
      * Called if umweltBereich value has changed. filters reiProgpunktgruppe values according to the new value.
      */
-    umweltChanged: function(combo, newVal, oldVal, opts) {
+    umweltChanged: function(combo) {
         // avoids endless loop
         if (combo.name !== 'umwId') {
             return true;
@@ -666,17 +658,20 @@ Ext.define('Lada.controller.form.Messprogramm', {
 
     /* Called if Datenbasis value changed. Changes visibility of REI specific containers if Datenbasis is REI
     */
-    datenbasisChanged: function(combo, newVal, oldVal, opts) {
+    datenbasisChanged: function(combo) {
         var datenbasis = combo.getRawValue();
         var reiComboContainer = combo.up('messprogrammform').down('container[name=reiComboContainer]');
         if ( datenbasis === 'REI-E' || datenbasis === 'REI-I') {
-            reiComboContainer.down('reiprogpunktgruppe[name=reiProgpunktGrpId]').setHidden(false);
+            reiComboContainer.down(
+                'reiprogpunktgruppe[name=reiProgpunktGrpId]').setHidden(false);
             reiComboContainer.down('ktagruppe[name=ktaGruppeId]').show();
         } else {
-            var reiCombo = reiComboContainer.down('reiprogpunktgruppe[name=reiProgpunktGrpId]');
+            var reiCombo = reiComboContainer.down(
+                'reiprogpunktgruppe[name=reiProgpunktGrpId]');
             reiCombo.setHidden(true);
             reiCombo.setValue(null);
-            var ktaCombo = reiComboContainer.down('ktagruppe[name=ktaGruppeId]');
+            var ktaCombo = reiComboContainer.down(
+                'ktagruppe[name=ktaGruppeId]');
             ktaCombo.hide();
             ktaCombo.setValue(null);
         }

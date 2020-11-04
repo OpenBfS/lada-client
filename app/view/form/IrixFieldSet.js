@@ -313,7 +313,7 @@ Ext.define('Koala.view.form.IrixFieldSet',{
      * @param {Object} attributefields An `attributefields`-object, which often
      *     are formfields like `textfields`, `combos` etc.
      */
-    onBeforeAttributeFieldsAdd: function(printForm, attributeFields, attributeRec) {
+    onBeforeAttributeFieldsAdd: function() {
         // Koala.util.Hooks.executeBeforeAddHook(
         //     printForm, attributeFields, attributeRec);
     }

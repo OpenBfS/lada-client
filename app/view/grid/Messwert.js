@@ -317,7 +317,7 @@ Ext.define('Lada.view.grid.Messwert', {
             this.addLoadingFailureHandler(umwStore);
             umwStore.getModel().load(this.umwId, {
                 scope: this,
-                success: function(rec, op) {
+                success: function(rec) {
                     this.defaultMehId = rec.get('mehId');
                     this.secMehId = rec.get('secMehId');
                     var params = {
@@ -338,9 +338,6 @@ Ext.define('Lada.view.grid.Messwert', {
             scope: this,
             params: {
                 messungsId: this.recordId
-            },
-            callback: function(records, operation, success) {
-
             }
         });
     },
@@ -359,7 +356,7 @@ Ext.define('Lada.view.grid.Messwert', {
             this.addLoadingFailureHandler(umwStore);
             umwStore.getModel().load(this.umwId, {
                 scope: this,
-                success: function(rec, op) {
+                success: function(rec) {
                     this.defaultMehId = rec.get('mehId');
                     this.secMehId = rec.get('secMehId');
                     var params = {
@@ -426,7 +423,7 @@ Ext.define('Lada.view.grid.Messwert', {
     /**
      * Activate the Remove Button
      */
-    activateRemoveButton: function(selection, record) {
+    activateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {
@@ -436,7 +433,7 @@ Ext.define('Lada.view.grid.Messwert', {
     /**
      * Activate the Remove Button
      */
-    deactivateRemoveButton: function(selection, record) {
+    deactivateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {
