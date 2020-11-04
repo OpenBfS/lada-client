@@ -207,6 +207,6 @@ Ext.define('Lada.store.Tag', {
     },
 
     sync: function() {
-        //TODO: 
+        //TODO:
     }
 });

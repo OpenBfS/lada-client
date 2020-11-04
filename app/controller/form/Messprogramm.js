@@ -124,7 +124,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 for (var i = 0; i < ortszuordnungArr.length; i++) {
                     var copy = Ext.create('Lada.model.OrtszuordnungMp', ortszuordnungArr[i]);
                     copy.set('copyOf', copy.get('id'));
-                    copy.set('id', null)
+                    copy.set('id', null);
                     copy.set('messprogrammId', mpCopy.get('id'));
                     copy.phantom = true;
                     copy.save({
@@ -133,9 +133,9 @@ Ext.define('Lada.controller.form.Messprogramm', {
                             if (!success) {
                                 var responseObj = Ext.decode(op.getResponse().responseText);
                                 var errString = i18n.getMsg('err.ortszuordnung.copy.text', rec.get('copyOf'),
-                                        i18n.getMsg(responseObj.message));
+                                    i18n.getMsg(responseObj.message));
                                 saveErrors = saveErrors ? saveErrors + errString:
-                                        errString;
+                                    errString;
                             }
                             if (savedOrtszuordnungen == fetchedOrtszuordnungen) {
                                 if (saveErrors) {
@@ -178,7 +178,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 for (var i = 0; i < mmtArr.length; i++) {
                     var copy = Ext.create('Lada.model.MmtMessprogramm', mmtArr[i]);
                     copy.set('copyOf', copy.get('id'));
-                    copy.set('id', null)
+                    copy.set('id', null);
                     copy.set('messprogrammId', mpCopy.get('id'));
                     copy.phantom = true;
                     copy.save({
@@ -187,9 +187,9 @@ Ext.define('Lada.controller.form.Messprogramm', {
                             if (!success) {
                                 var responseObj = Ext.decode(op.getResponse().responseText);
                                 var errString = i18n.getMsg('err.mmt.copy.text', rec.get('copyOf'),
-                                        i18n.getMsg(responseObj.message));
+                                    i18n.getMsg(responseObj.message));
                                 saveErrors = saveErrors ? saveErrors + errString:
-                                        errString;
+                                    errString;
                             }
                             if (savedMmt == fetchedMmt) {
                                 if (saveErrors) {
@@ -258,7 +258,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         form.down('probenintervallslider').on(
             'change',
             Lada.app.getController('Lada.controller.form.Messprogramm')
-            .synchronizeFields
+                .synchronizeFields
         );
     },
 
@@ -501,11 +501,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
             form.getRecord().get('readonly') === true) {
             form.owner.up('messprogramm').down(
                 'button[action=generateproben]').setDisabled(true);
-                form.owner.down('button[action=copy]').setDisabled(true);
+            form.owner.down('button[action=copy]').setDisabled(true);
         } else {
             form.owner.up('messprogramm').down(
                 'button[action=generateproben]').setDisabled(false);
-                form.owner.down('button[action=copy]').setDisabled(false);
+            form.owner.down('button[action=copy]').setDisabled(false);
         }
     },
 

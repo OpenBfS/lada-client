@@ -330,8 +330,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         var grid = button.up('grid');
         var recordType = null;
         switch (grid.rowtarget.dataType) {
-            case "messungId": recordType = "messung"; break;
-            case "probeId": recordType = "probe"; break;
+            case 'messungId': recordType = 'messung'; break;
+            case 'probeId': recordType = 'probe'; break;
             default: break;
         }
         var selection = grid.getView().getSelectionModel().getSelection();
@@ -348,8 +348,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
 
     /**
      * Handle changes of selected grid records
-     * @param {*} selModel 
-     * @param {*} selected 
+     * @param {*} selModel
+     * @param {*} selected
      */
     selectionChanged: function(selModel, selected) {
         var grid = selModel.view.up('grid');

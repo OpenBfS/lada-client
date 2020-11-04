@@ -196,7 +196,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 targetgridrecord.set('columnIndex', j);
                 gcv_store.findRecord('gridColumnId',
                     item.get('gridColumnId'), false, false, false, true)
-                        .set('columnIndex', j);
+                    .set('columnIndex', j);
 
             }
         }

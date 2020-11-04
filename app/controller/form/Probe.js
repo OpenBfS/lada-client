@@ -156,7 +156,7 @@ Ext.define('Lada.controller.form.Probe', {
                 }
                 for (var i = 0; i < ortszuordnungArr.length; i++) {
                     var copy = Ext.create('Lada.model.Ortszuordnung', ortszuordnungArr[i]);
-                    copy.set('id', null)
+                    copy.set('id', null);
                     copy.set('probeId', probeCopy.get('id'));
                     copy.phantom = true;
                     copy.save({
@@ -165,9 +165,9 @@ Ext.define('Lada.controller.form.Probe', {
                             if (!success) {
                                 var responseObj = Ext.decode(op.getResponse().responseText);
                                 var errString = i18n.getMsg('err.ortszuordnung.copy.text', rec.get('copyOf'),
-                                        i18n.getMsg(responseObj.message));
+                                    i18n.getMsg(responseObj.message));
                                 saveErrors = saveErrors ? saveErrors + errString:
-                                        errString;
+                                    errString;
                             }
                             if (savedOrtszuordnungen == fetchedOrtszuordnungen) {
                                 if (saveErrors) {
@@ -240,7 +240,7 @@ Ext.define('Lada.controller.form.Probe', {
                             savedMessungenCopies++;
                             if (!success) {
                                 saveErrors = saveErrors ? saveErrors + rec.get('id') + ' failed. ':
-                                        '' + rec.get('id') + ' failed. ';
+                                    '' + rec.get('id') + ' failed. ';
                             }
                             if (savedMessungenCopies == fetchedMessungen) {
                                 if (saveErrors) {
@@ -312,7 +312,7 @@ Ext.define('Lada.controller.form.Probe', {
                         return;
                     }
                     if (fetchedMesswerte == 0) {
-                            callback(probeCopy);
+                        callback(probeCopy);
                         return;
                     }
                     numMesswert.add(messungsIDNew.get(messungsId), messwertArr.length);
@@ -340,26 +340,26 @@ Ext.define('Lada.controller.form.Probe', {
                                     var currentNumMesswerte = numMesswert.get(currentMessungsIDNew);
                                     currentFinishedMesswerte++;
                                     messwertFinished.add(currentMessungsIDNew, currentFinishedMesswerte);
-                                    if(currentFinishedMesswerte == currentNumMesswerte) {
+                                    if (currentFinishedMesswerte == currentNumMesswerte) {
                                         messungenFinished++;
                                     }
                                     if (numMesswert.length == messungenFinished && finishedCallback) {
                                         finishedCallback(probeCopy);
                                     }
-                                } else{
-                                   //TODO Messwerte liefern immer einen Fehler durch die Konsistenzprüfung
+                                } else {
+                                    //TODO Messwerte liefern immer einen Fehler durch die Konsistenzprüfung
                                     var currentMessungsIDNew = rec.get('messungsId');
                                     var currentFinishedMesswerte = messwertFinished.get(currentMessungsIDNew);
                                     var currentNumMesswerte = numMesswert.get(currentMessungsIDNew);
                                     currentFinishedMesswerte++;
                                     messwertFinished.add(currentMessungsIDNew, currentFinishedMesswerte);
-                                    if(currentFinishedMesswerte == currentNumMesswerte) {
+                                    if (currentFinishedMesswerte == currentNumMesswerte) {
                                         messungenFinished++;
                                     }
                                     if (numMesswert.length == messungenFinished && finishedCallback) {
                                         finishedCallback(probeCopy);
                                     }
-                               }
+                                }
                             }
                         });
                     }
@@ -664,7 +664,7 @@ Ext.define('Lada.controller.form.Probe', {
                             }
                         } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
+                                i18n.getMsg('err.msg.response.body'));
                         }
                     }
                 }
@@ -775,10 +775,10 @@ Ext.define('Lada.controller.form.Probe', {
                 var msg = Lada.getApplication().bundle.getMsg('662');
                 field.up('fieldset').showWarningOrError(true, msg, false, '');
                 field.up('fset[name=entnahmePeriod]').showWarningOrError(true, msg, false, '');
-             } else {
+            } else {
                 field.up('fset[name=entnahmePeriod]').clearMessages();
-             }
-             if (partners[0] && field.up('fieldset[name=zeit]').down('datetime[name=ursprungszeit]').getValue()) {
+            }
+            if (partners[0] && field.up('fieldset[name=zeit]').down('datetime[name=ursprungszeit]').getValue()) {
                 if (partners[0] <= field.up('fieldset[name=zeit]').down('datetime[name=ursprungszeit]').getValue()) {
                     var msg = Lada.getApplication().bundle.getMsg('663');
                     field.up('fieldset[name=zeit]').down('fset[name=ursprung]').showWarningOrError(true, msg, false, '');
@@ -788,14 +788,14 @@ Ext.define('Lada.controller.form.Probe', {
             }
         }
         if (field.name === 'ursprungszeit') {
-             var partners = new Array();
-             partners[0] = field.up('fieldset[name=zeit]').down('datetime[period=start]').getValue();
-             if (partners[0] && partners[0] <= field.getValue()) {
-                 var msg = Lada.getApplication().bundle.getMsg('663');
-                 field.up('fset[name=ursprung]').showWarningOrError(true, msg, false, '');
-             } else {
-                 field.up('fset[name=ursprung]').clearMessages();
-             }
+            var partners = new Array();
+            partners[0] = field.up('fieldset[name=zeit]').down('datetime[period=start]').getValue();
+            if (partners[0] && partners[0] <= field.getValue()) {
+                var msg = Lada.getApplication().bundle.getMsg('663');
+                field.up('fset[name=ursprung]').showWarningOrError(true, msg, false, '');
+            } else {
+                field.up('fset[name=ursprung]').clearMessages();
+            }
         }
         if (w && field.up().showWarnings) {
             field.up().showWarnings(wmsg);
@@ -861,7 +861,7 @@ Ext.define('Lada.controller.form.Probe', {
         } else {
             var errors = [];
             var warnings = [];
-            var notifications = { hauptprobenNr : [631] };
+            var notifications = { hauptprobenNr: [631] };
             field.up('probeform').setMessages(errors,warnings,notifications);
         }
     },

@@ -103,4 +103,4 @@ Ext.define('Lada.view.widget.ElanScenarioButton', {
         }
         this.state = state;
     }
-})
+});

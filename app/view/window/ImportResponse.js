@@ -61,11 +61,11 @@ Ext.define('Lada.view.window.ImportResponse', {
 
         this.downloadPrefix = '<!DOCTYPE html>' +
                 '<head><meta charset="utf-8"></head><body>';
-        this.downloadPostfix = '</body></html>'
+        this.downloadPostfix = '</body></html>';
 
         me.mstEncoding = i18n.getMsg('encoding') + ' ' + this.encoding;
         if (this.mst !== null) {
-            me.mstEncoding += '&emsp;' + i18n.getMsg('import.configMst') + ': ' +  this.mst;
+            me.mstEncoding += '&emsp;' + i18n.getMsg('import.configMst') + ': ' + this.mst;
         }
 
         this.bodyStyle = {background: '#fff'};
@@ -112,7 +112,7 @@ Ext.define('Lada.view.window.ImportResponse', {
             response += me.parseResponse(fileResult, true);
             me.download += response;
             me.down('panel').setHtml(me.down('panel').html + response);
-    
+
         });
         me.down('button[name=download]').enable();
     },
@@ -124,7 +124,7 @@ Ext.define('Lada.view.window.ImportResponse', {
      * @param statusText Status text
      * @param fileIndex Index of the file in the name array
      */
-    updateOnError: function (status, statusText, fileIndex) {
+    updateOnError: function(status, statusText, fileIndex) {
         var i18n = Lada.getApplication().bundle;
         this.finished++;
         this.down('progressbar').updateProgress(this.finished/this.fileCount);
@@ -461,7 +461,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                 failure: function(response) {
                     reject();
                 }
-            })
+            });
         });
     }
 });

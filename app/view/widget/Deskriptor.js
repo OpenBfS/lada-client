@@ -127,7 +127,7 @@ Ext.define('Lada.view.widget.Deskriptor', {
                 }
             });
         }
-            img.show();
+        img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
         if (fieldset) {
             var warningText = this.name + ': ' + warnings;

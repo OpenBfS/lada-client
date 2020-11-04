@@ -35,7 +35,7 @@ Ext.define('Lada.view.window.SetStatus', {
         var me = this;
         this.on({
             show: function() {
-                this.removeCls("x-unselectable");
+                this.removeCls('x-unselectable');
             }
         });
         var possibleStatusStore;
@@ -209,7 +209,7 @@ Ext.define('Lada.view.window.SetStatus', {
                         } else {
                             numWarnings = Object.keys(warnings).length;
                         }
-                        if (!Ext.isObject(notifications)){
+                        if (!Ext.isObject(notifications)) {
                             numNotifications = 0;
                         } else {
                             numNotifications = Object.keys(notifications).length;
@@ -222,16 +222,16 @@ Ext.define('Lada.view.window.SetStatus', {
                                 msgs = errors[key];
                                 var validation = [];
                                 if (key.includes('#')) {
-                                  keyParts = key.split('#');
-                                  for (var j = msgs.length -1; j >= 0; j--) {
-                                     validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
+                                    keyParts = key.split('#');
+                                    for (var j = msgs.length -1; j >= 0; j--) {
+                                        validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
                                         '</b><i> ' + keyParts[1].toString() + '</i>: ' + i18n.getMsg(msgs[j].toString()) + '</li>');
-                                  }
+                                    }
                                 } else {
-                                  for (var j = msgs.length - 1; j >= 0; j--) {
-                                     validation.push('<li><b>' + i18n.getMsg(key) +
+                                    for (var j = msgs.length - 1; j >= 0; j--) {
+                                        validation.push('<li><b>' + i18n.getMsg(key) +
                                             ':</b> ' + i18n.getMsg(msgs[j].toString()) + '</li>');
-                                  }
+                                    }
                                 }
                                 out.push(validation.join(''));
                             }
@@ -244,22 +244,22 @@ Ext.define('Lada.view.window.SetStatus', {
                                 msgs = warnings[key];
                                 var validation = [];
                                 if (key.includes('#')) {
-                                  keyParts = key.split('#');
-                                  for (var j = msgs.length -1; j >= 0; j--) {
-                                     validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
+                                    keyParts = key.split('#');
+                                    for (var j = msgs.length -1; j >= 0; j--) {
+                                        validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
                                         '</b><i> ' + keyParts[1].toString()+ '</i>: ' + i18n.getMsg(msgs[j].toString()) + '</li>');
-                                  }
+                                    }
                                 } else {
-                                  for (var j = msgs.length - 1; j >= 0; j--) {
-                                     validation.push('<li><b>' + i18n.getMsg(key) +
+                                    for (var j = msgs.length - 1; j >= 0; j--) {
+                                        validation.push('<li><b>' + i18n.getMsg(key) +
                                             ':</b> ' + i18n.getMsg(msgs[j].toString()) + '</li>');
-                                  }
+                                    }
                                 }
                                 out.push(validation.join(''));
                             }
                             out.push('</ul></dd>');
                         }
- 
+
 
                         if (numNotifications > 0) {
                             out.push('<dl><dd>' + i18n.getMsg('notes') + '</dd>');
@@ -268,16 +268,16 @@ Ext.define('Lada.view.window.SetStatus', {
                                 msgs = notifications[key];
                                 var validation = [];
                                 if (key.includes('#')) {
-                                  keyParts = key.split('#');
-                                  for (var j = msgs.length -1; j >= 0; j--) {
-                                     validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
+                                    keyParts = key.split('#');
+                                    for (var j = msgs.length -1; j >= 0; j--) {
+                                        validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
                                         '</b><i> ' + keyParts[1].toString()+ '</i>: ' + i18n.getMsg(msgs[j].toString()) + '</li>');
-                                  }
+                                    }
                                 } else {
-                                  for (var j = msgs.length - 1; j >= 0; j--) {
-                                     validation.push('<li><b>' + i18n.getMsg(key) +
+                                    for (var j = msgs.length - 1; j >= 0; j--) {
+                                        validation.push('<li><b>' + i18n.getMsg(key) +
                                             ':</b> ' + i18n.getMsg(msgs[j].toString()) + '</li>');
-                                  }
+                                    }
                                 }
                                 out.push(validation.join(''));
                             }
@@ -342,7 +342,7 @@ Ext.define('Lada.view.window.SetStatus', {
                         me.resultMessage += '<strong>' + i18n.getMsg('hauptprobenNr') + ' - ' + i18n.getMsg('nebenprobenNr') + ': </strong>';
                         me.resultMessage += hauptprobennummer || '<i>HP-Nr. nicht vergeben</i>';
                         me.resultMessage += ' - ';
-                        me.resultMessage +=  me.record.get('nebenprobenNr') || '<i>NP-Nr. nicht vergeben</i><br>';
+                        me.resultMessage += me.record.get('nebenprobenNr') || '<i>NP-Nr. nicht vergeben</i><br>';
                         me.resultMessage += '<dl><dd>' + i18n.getMsg('status-' + json.message) + '</dd></dl>';
                         progress.updateProgress(1, progressText + ' (' + 1 + ')');
                         var errors = json.errors;
@@ -364,16 +364,16 @@ Ext.define('Lada.view.window.SetStatus', {
                                 msgs = warnings[key];
                                 var validation = [];
                                 if (key.includes('#')) {
-                                  keyParts = key.split('#');
-                                  for (var j = msgs.length -1; j >= 0; j--) {
-                                     validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
+                                    keyParts = key.split('#');
+                                    for (var j = msgs.length -1; j >= 0; j--) {
+                                        validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
                                         '</b><i> ' + keyParts[1].toString() + '</i>: ' + i18n.getMsg(msgs[j].toString()) + '</li>');
-                                  }
+                                    }
                                 } else {
-                                  for (var j = msgs.length - 1; j >= 0; j--) {
-                                     validation.push('<li><b>' + i18n.getMsg(key) +
+                                    for (var j = msgs.length - 1; j >= 0; j--) {
+                                        validation.push('<li><b>' + i18n.getMsg(key) +
                                             ':</b> ' + i18n.getMsg(msgs[j].toString()) + '</li>');
-                                  }
+                                    }
                                 }
                                 out.push(validation.join(''));
                             }
@@ -394,16 +394,16 @@ Ext.define('Lada.view.window.SetStatus', {
                                 msgs = errors[key];
                                 var validation = [];
                                 if (key.includes('#')) {
-                                  keyParts = key.split('#');
-                                  for (var j = msgs.length -1; j >= 0; j--) {
-                                     validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
+                                    keyParts = key.split('#');
+                                    for (var j = msgs.length -1; j >= 0; j--) {
+                                        validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
                                         '</b><i> ' + keyParts[1].toString() + '</i>: ' + i18n.getMsg(msgs[j].toString()) + '</li>');
-                                  }
+                                    }
                                 } else {
-                                  for (var j = msgs.length - 1; j >= 0; j--) {
-                                     validation.push('<li><b>' + i18n.getMsg(key) +
+                                    for (var j = msgs.length - 1; j >= 0; j--) {
+                                        validation.push('<li><b>' + i18n.getMsg(key) +
                                             ':</b> ' + i18n.getMsg(msgs[j].toString()) + '</li>');
-                                  }
+                                    }
                                 }
                                 out.push(validation.join(''));
                             }
@@ -422,16 +422,16 @@ Ext.define('Lada.view.window.SetStatus', {
                                 msgs = notifications[key];
                                 var validation = [];
                                 if (key.includes('#')) {
-                                  keyParts = key.split('#');
-                                  for (var j = msgs.length -1; j >= 0; j--) {
-                                     validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
+                                    keyParts = key.split('#');
+                                    for (var j = msgs.length -1; j >= 0; j--) {
+                                        validation.push('<li><b>' + i18n.getMsg(keyParts[0]) +
                                         '</b><i> ' + keyParts[1].toString() + '</i>: ' + i18n.getMsg(msgs[j].toString()) + '</li>');
-                                  }
+                                    }
                                 } else {
-                                  for (var j = msgs.length - 1; j >= 0; j--) {
-                                     validation.push('<li><b>' + i18n.getMsg(key) +
+                                    for (var j = msgs.length - 1; j >= 0; j--) {
+                                        validation.push('<li><b>' + i18n.getMsg(key) +
                                             ':</b> ' + i18n.getMsg(msgs[j].toString()) + '</li>');
-                                  }
+                                    }
                                 }
                                 out.push(validation.join(''));
                             }

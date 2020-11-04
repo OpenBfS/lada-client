@@ -139,7 +139,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 }
                 var record = staaten.getById(stId);
                 if (!record.get('staatIso')) {
-                    return record.get('id')
+                    return record.get('id');
                 }
                 return record.get('staatIso');
             }

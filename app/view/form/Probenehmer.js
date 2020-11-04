@@ -192,7 +192,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                             maxLength: 5,
                             readOnly: true,
                             width: '30%',
-                            regex:/^[0-9]*$/,
+                            regex: /^[0-9]*$/,
                             labelWidth: 100
                         }, {
                             xtype: 'tfield',

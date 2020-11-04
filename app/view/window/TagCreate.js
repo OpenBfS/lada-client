@@ -55,20 +55,20 @@ Ext.define('Lada.view.window.TagCreate', {
         var me = this;
         var recordName;
         switch (this.recordType) {
-            case "probe": recordName = this.probe; break;
-            case "messung": recordName = this.messung; break;
+            case 'probe': recordName = this.probe; break;
+            case 'messung': recordName = this.messung; break;
             default: Ext.raise('Unkown record type: ' + this.recordType);
         }
         this.title = this.mode === 'single' ?
-                i18n.getMsg('title.tagcreatewindow.' + this.recordType, recordName):
-                i18n.getMsg('title.tagcreatewindowbulk.' + this.recordType, this.selection.length);
+            i18n.getMsg('title.tagcreatewindow.' + this.recordType, recordName):
+            i18n.getMsg('title.tagcreatewindowbulk.' + this.recordType, this.selection.length);
         this.items = [{
             xtype: 'textfield',
             width: '100%',
             margin: '5 5 5 5',
             msgTarget: 'under',
             //validate that text is not empty and the name does not already exists
-            validator: function (val) {
+            validator: function(val) {
                 if (val.trim().length == 0) {
                     return i18n.getMsg('tag.createwindow.err.invalidtagname');
                 }
@@ -118,10 +118,10 @@ Ext.define('Lada.view.window.TagCreate', {
     saveBulkTag: function(textfield) {
         var me = textfield.up('window');
         switch (me.recordType) {
-            case "messung":
+            case 'messung':
                 me.saveBulkTagMessung(textfield);
                 break;
-            case "probe":
+            case 'probe':
                 me.saveBulkTagProbe(textfield);
                 break;
             default:
@@ -158,9 +158,9 @@ Ext.define('Lada.view.window.TagCreate', {
                 for (var i = 0; i < newItems.length; i++) {
                     var id = newItems[i].id;
                     if (!Ext.Array.findBy(oldItems,
-                            function(item, index) {
-                                return id == item.id;
-                            })
+                        function(item, index) {
+                            return id == item.id;
+                        })
                     ) {
                         newItem = newItems[i];
                         break;
@@ -206,9 +206,9 @@ Ext.define('Lada.view.window.TagCreate', {
                 for (var i = 0; i < newItems.length; i++) {
                     var id = newItems[i].id;
                     if (!Ext.Array.findBy(oldItems,
-                            function(item, index) {
-                                return id == item.id;
-                            })
+                        function(item, index) {
+                            return id == item.id;
+                        })
                     ) {
                         newItem = newItems[i];
                         break;

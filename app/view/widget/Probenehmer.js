@@ -28,7 +28,7 @@ Ext.define('Lada.view.widget.Probenehmer' ,{
     typeAhead: false,
     minChars: 0,
     labelTpl: Ext.create('Ext.XTemplate',
-            '<tpl for=".">{kurzBezeichnung}</tpl>'),
+        '<tpl for=".">{kurzBezeichnung}</tpl>'),
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
             '{prnId} - {kurzBezeichnung}</div></tpl>'),

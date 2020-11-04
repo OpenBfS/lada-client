@@ -73,7 +73,7 @@ Ext.define('Lada.view.grid.Messwert', {
                                 e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').inputEl.removeCls('x-lada-warning-field');
                             }
                         } else {
-                            if  (o.record.get('messwertNwg') === '<') {
+                            if (o.record.get('messwertNwg') === '<') {
                                 e.editor.down('expnumberfield[dataIndex=messwert]').allowBlank = true;
                                 e.editor.down('expnumberfield[dataIndex=messwert]').setReadOnly(true);
                                 e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').allowBlank = false;
@@ -322,7 +322,7 @@ Ext.define('Lada.view.grid.Messwert', {
                     this.secMehId = rec.get('secMehId');
                     var params = {
                         mehId: this.defaultMehId
-                    }
+                    };
                     if (this.secMehId) {
                         params['secMehId'] = this.secMehId;
                     }
@@ -364,7 +364,7 @@ Ext.define('Lada.view.grid.Messwert', {
                     this.secMehId = rec.get('secMehId');
                     var params = {
                         mehId: this.defaultMehId
-                    }
+                    };
                     if (this.secMehId) {
                         params['secMehId'] = this.secMehId;
                     }

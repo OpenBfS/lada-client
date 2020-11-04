@@ -117,7 +117,7 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
             panel = callingEl.owner;
         }
 
-        if (panel.getRecord().get('readonly')  )  {
+        if (panel.getRecord().get('readonly') ) {
             panel.down('button[action=save]').setDisabled(true);
             panel.down('button[action=discard]').setDisabled(true);
         } else {

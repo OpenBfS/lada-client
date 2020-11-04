@@ -29,7 +29,7 @@ Ext.define('Lada.view.window.About', {
                 this.getEl().addCls('window-inactive');
             },
             show: function() {
-                this.removeCls("x-unselectable");
+                this.removeCls('x-unselectable');
             }
         });
 
@@ -56,9 +56,9 @@ Ext.define('Lada.view.window.About', {
         var me = this;
 
         Ext.on('timezonetoggled', function() {
-           if (me.isVisible()) {
+            if (me.isVisible()) {
                 me.down('panel[name=aboutcontent]').setHtml(me.updateContent());
-           }
+            }
         });
     },
 

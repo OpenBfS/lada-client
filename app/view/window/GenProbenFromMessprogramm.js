@@ -210,8 +210,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             asynchronousLoad: false
         });
         var me = this;
-        umwStore.load({callback: function(){
-            me.genResultWindow(umwStore, data, genTagName)
+        umwStore.load({callback: function() {
+            me.genResultWindow(umwStore, data, genTagName);
         }});
     },
 
@@ -380,8 +380,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         var mmth = rec.get('mmt');
                         if (mmth) {
                             return mmth;
-                        }
-                        else {
+                        } else {
                             return '-';
                         }
                     }

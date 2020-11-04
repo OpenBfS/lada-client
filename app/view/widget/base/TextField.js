@@ -64,7 +64,7 @@ Ext.define('Lada.view.widget.base.TextField', {
             width: 14,
             height: 14,
             hidden: true
-      }];
+        }];
         this.callParent(arguments);
         if (this.regex) {
             Ext.apply(this.down('textfield'), {regex: this.regex});

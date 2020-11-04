@@ -133,7 +133,7 @@ Ext.define('Lada.view.widget.base.NumberField', {
         var tf = this.down('numberfield');
 
         tf.invalidCls = 'x-lada-warning-field';
-                tf.markInvalid('');
+        tf.markInvalid('');
 
         if (tf.inputWrap) {
             tf.inputWrap.removeCls('x-lada-warning-field');

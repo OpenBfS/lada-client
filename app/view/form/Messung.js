@@ -230,7 +230,7 @@ Ext.define('Lada.view.form.Messung', {
         form.loadRecord(record);
         if (record.getId()) {
             me.down('statuskombi').setValue(
-                    record.get('status'), false, record.get('statusEdit'));
+                record.get('status'), false, record.get('statusEdit'));
         } else {
             //remove the Statuskombi field from the form
             me.down('statuskombi').hide();

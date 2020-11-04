@@ -104,9 +104,9 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
         var netzstore = this.down('netzbetreiber').store;
         this.mstTypStore = Ext.data.StoreManager.get('messstellen');
         this.mstTypStore.filter({
-                    property: 'mstTyp',
-                    value: 'M',
-                    exactMatch: true});
+            property: 'mstTyp',
+            value: 'M',
+            exactMatch: true});
         this.down('combobox[name=mstId]').setStore(this.mstTypStore);
         if (!this.record.phantom) {
             var current = netzstore.getById(this.record.get('netzbetreiberId'));

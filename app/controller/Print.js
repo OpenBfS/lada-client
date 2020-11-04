@@ -144,7 +144,7 @@ Ext.define('Lada.controller.Print', {
                         break;
                     case 'String':
                         var matchingColumn = availableColumns.some( function(el) {
-                            return el.dataIndex === attributes[i].name
+                            return el.dataIndex === attributes[i].name;
                         });
                         if (!matchingColumn) {
                             if (attributes[i].name === 'timezone' ||

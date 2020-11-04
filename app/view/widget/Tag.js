@@ -69,11 +69,11 @@ Ext.define('Lada.view.widget.Tag', {
     //Dropdown
     tpl: Ext.create('Ext.XTemplate',
         '<ul class="x-list-plain"><tpl for=".">',
-            '<tpl if="this.isGlobal(mstId)">',
-                '<li role="option" class="x-boundlist-item"><b>*{tag}</b></li>',
-            '<tpl else>',
-                '<li role="option" class="x-boundlist-item">{tag}</li>',
-            '</tpl>',
+        '<tpl if="this.isGlobal(mstId)">',
+        '<li role="option" class="x-boundlist-item"><b>*{tag}</b></li>',
+        '<tpl else>',
+        '<li role="option" class="x-boundlist-item">{tag}</li>',
+        '</tpl>',
         '</tpl></ul>',
         {
             isGlobal: function(mstId) {
@@ -83,11 +83,11 @@ Ext.define('Lada.view.widget.Tag', {
     ),
     //Tagfield
     labelTpl: Ext.create('Ext.XTemplate',
-            '<tpl if="this.isGlobal(mstId)">',
-                '*{tag}',
-            '<tpl else>',
-                '{tag}',
-            '</tpl>',
+        '<tpl if="this.isGlobal(mstId)">',
+        '*{tag}',
+        '<tpl else>',
+        '{tag}',
+        '</tpl>',
         {
             isGlobal: function(mstId) {
                 return mstId === null || mstId === '';
@@ -487,5 +487,5 @@ Ext.define('Lada.view.widget.Tag', {
         if (this.reloadMask && this.reloadMask.isVisible()) {
             this.reloadMask.hide();
         }
-    },
+    }
 });

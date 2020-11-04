@@ -98,13 +98,13 @@ Ext.define('Lada.view.QueryPanel', {
                     flex: 0.3
                 }]
             }, {
-                    xtype: 'textarea',
-                    name: 'description',
-                    width: '100%',
-                    allowBlank: false,
-                    fieldLabel: 'query.comment',
-                    labelWidth: 90,
-                    margin: '15 5 5 5'
+                xtype: 'textarea',
+                name: 'description',
+                width: '100%',
+                allowBlank: false,
+                fieldLabel: 'query.comment',
+                labelWidth: 90,
+                margin: '15 5 5 5'
             }]
     }, {
         xtype: 'container',
@@ -127,7 +127,7 @@ Ext.define('Lada.view.QueryPanel', {
             flex: 1,
             disabled: true
         }]
-    },  {
+    }, {
         xtype: 'fieldset',
         name: 'querydetails',
         title: 'query.details',

@@ -101,9 +101,9 @@ Ext.define('Lada.controller.form.Ort', {
                     form.loadRecord(newrecord);
                     formpanel.down('verwaltungseinheit').store.clearFilter();
                     formpanel.down('staat').store.clearFilter();
-                    if (formpanel.up('window').setOzOnComplete === true ){
+                    if (formpanel.up('window').setOzOnComplete === true ) {
                         var ozf = Ext.ComponentQuery.query('ortszuordnungform')[0];
-                        if (ozf){
+                        if (ozf) {
                             ozf.setOrt(null, newrecord);
                         }
                     }
@@ -156,7 +156,7 @@ Ext.define('Lada.controller.form.Ort', {
                     }
                 }
             });
-        }
+        };
         var plausibleRefs = record.get('plausibleReferenceCount');
         if (plausibleRefs > 0) {
             Ext.Msg.show({
@@ -244,8 +244,7 @@ Ext.define('Lada.controller.form.Ort', {
             panel = callingEl; //called by the formpanel itself
         }
         if ( ((callingEl.name === 'koordXExtern') || (callingEl.name === 'koordXExtern')) && (panel.mode === 'copy') && panel.original && panel.form.isDirty()
-            && panel.getForm().getValues()['koordXExtern'] !== "" && panel.getForm().getValues()['koordYExtern'] !== "")
-        {
+            && panel.getForm().getValues()['koordXExtern'] !== '' && panel.getForm().getValues()['koordYExtern'] !== '') {
             panel.down('verwaltungseinheit[name=gemId]').clearValue();
         }
         this.checkKDAchangeEnabled(panel);
@@ -277,11 +276,11 @@ Ext.define('Lada.controller.form.Ort', {
         //Helper function to compare form values and record values.
         //As empty form values are saved as "" and empty record values as null,
         //the == operator will fail to compare them
-        var equals = function (first, second) {
-            first = first === "" ? null: first;
-            second = second === "" ? null: second;
+        var equals = function(first, second) {
+            first = first === '' ? null: first;
+            second = second === '' ? null: second;
             return first === second;
-        }
+        };
         if (equals(formValues['koordXExtern'], original.get('koordXExtern'))
                 && equals(formValues['koordYExtern'], original.get('koordYExtern'))) {
             valid = false;
@@ -429,10 +428,10 @@ Ext.define('Lada.controller.form.Ort', {
                 url: 'lada-server/rest/koordinatenart',
                 method: 'POST',
                 jsonData: {
-                    "from": win.down('koordinatenart[name=originalKDA]').getValue(),
-                    "to": win.down('koordinatenart[name=newKDA]').getValue(),
-                    "x": win.down('selectabledisplayfield[name=originalX]').getValue(),
-                    "y": win.down('selectabledisplayfield[name=originalY]').getValue()
+                    'from': win.down('koordinatenart[name=originalKDA]').getValue(),
+                    'to': win.down('koordinatenart[name=newKDA]').getValue(),
+                    'x': win.down('selectabledisplayfield[name=originalX]').getValue(),
+                    'y': win.down('selectabledisplayfield[name=originalY]').getValue()
                 },
                 success: function(response) {
                     win.setLoading(false);

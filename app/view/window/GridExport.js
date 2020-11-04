@@ -939,12 +939,12 @@ Ext.define('Lada.view.window.GridExport', {
                 break;
             case 'statuskombi':
                 var store = Ext.data.StoreManager.get('statuskombi');
-                     var record = store.getById(value);
-                     if (record) {
-                         var r = record.data.statusStufe.stufe + ' ' + record.data.statusWert.wert;
-                         return r || '';
-                     }
-                     return '';
+                var record = store.getById(value);
+                if (record) {
+                    var r = record.data.statusStufe.stufe + ' ' + record.data.statusWert.wert;
+                    return r || '';
+                }
+                return '';
                 break;
             default:
                 return value.toString();

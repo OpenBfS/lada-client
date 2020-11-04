@@ -958,7 +958,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 action: 'assigntags',
                 needsSelection: true,
                 disabled: true
-            })
+            });
         }
     },
 

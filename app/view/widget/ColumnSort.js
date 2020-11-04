@@ -199,7 +199,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
             var nodename = nodes[i].innerText.substr(0,
                 nodes[i].innerText.length -3);
             //Remove linebreaks
-            nodename = nodename.replace(/(\r\n|\n|\r)/gm, "");
+            nodename = nodename.replace(/(\r\n|\n|\r)/gm, '');
             //TODO this relies on column names to be unique
             var qf = columnstore.findRecord('name', nodename);
             var entry = this.store.findRecord(

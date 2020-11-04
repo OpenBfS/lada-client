@@ -20,8 +20,8 @@ Ext.define('Lada.util.WindowTracker', {
          * Known record types
          */
         recordTypes: ['datensatzerzeuger', 'messprogramm',
-                'messprogrammkategorie', 'messung', 'ort', 'ortszuordnung',
-                'probe', 'probenehmer'],
+            'messprogrammkategorie', 'messung', 'ort', 'ortszuordnung',
+            'probe', 'probenehmer'],
 
         /**
          * Map of (type, map)
@@ -97,13 +97,13 @@ Ext.define('Lada.util.WindowTracker', {
             this.init();
             var map = this.maps.get(type);
             if (map) {
-                    if (this.isOpen(type, id)) {
-                        map.get(id, window).setCollapsed(false);
-                        map.get(id, window).focus();
-                    } else {
-                        //Raise error
-                    }
+                if (this.isOpen(type, id)) {
+                    map.get(id, window).setCollapsed(false);
+                    map.get(id, window).focus();
                 } else {
+                    //Raise error
+                }
+            } else {
                 console.log('Unknown object type');
             }
         },

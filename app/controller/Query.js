@@ -365,7 +365,7 @@ Ext.define('Lada.controller.Query', {
                         qp.down('combobox[name=selectedQuery]').select(newId);
                         qp.loadGridColumnStore();
                         qp.loadingMask.hide();
-                    })
+                    });
                 } else {
                     qp.down('combobox[name=selectedQuery]').setStore(qp.store);
                     qp.down('combobox[name=selectedQuery]').select(newId);
@@ -792,21 +792,21 @@ Ext.define('Lada.controller.Query', {
                         negateCheckbox = true;
                         break;
                     case 'sollistUmwGr':
-                         options.multiSelect = true;
-                         options.editable = true;
-                         options.value = this.getFilterValueMulti(recs[i]);
-                         field = Ext.create('Lada.view.widget.SollIstUmwGruppe',
-                             options);
-                         negateCheckbox = true;
-                         break;
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        field = Ext.create('Lada.view.widget.SollIstUmwGruppe',
+                            options);
+                        negateCheckbox = true;
+                        break;
                     case 'sollistMmtGr':
-                         options.multiSelect = true;
-                         options.editable = true;
-                         options.value = this.getFilterValueMulti(recs[i]);
-                         field = Ext.create('Lada.view.widget.SollIstMmtGruppe',
-                             options);
-                         negateCheckbox = true;
-                         break;
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        field = Ext.create('Lada.view.widget.SollIstMmtGruppe',
+                            options);
+                        negateCheckbox = true;
+                        break;
                     case 'tag':
                         options.multiSelect = true;
                         options.editable = true;

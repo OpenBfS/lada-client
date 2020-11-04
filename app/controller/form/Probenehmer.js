@@ -161,7 +161,7 @@ Ext.define('Lada.controller.form.Probenehmer', {
         if (callingEl.up && callingEl.up('probenehmerform')) { //called by a field
             form = callingEl.up('probenehmerform');
         } else if (callingEl.owner) { //called by the form
-           form = callingEl.owner;
+            form = callingEl.owner;
         } else {
             form = callingEl; //called by the formpanel itself
         }

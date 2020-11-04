@@ -570,7 +570,7 @@ Ext.define('Lada.view.form.Probe', {
                             var win = Ext.create('Lada.view.window.TagCreate', {
                                 tagWidget: me.down('tagwidget'),
                                 probe: button.up('probeform').getForm().getRecord().get('hauptprobenNr'),
-                                recordType: "probe"
+                                recordType: 'probe'
                             });
                             //Close window if parent window is closed
                             var parentWindow = button.up('probenedit')? button.up('probenedit'): button.up('probecreate');
@@ -610,7 +610,7 @@ Ext.define('Lada.view.form.Probe', {
             if ( mstId.get('messStelle') === laborMstId ) {
                 displayCombi = mstId.get('messStelle');
             } else {
-                displayCombi = mstId.get('messStelle') + '/' + laborMstId
+                displayCombi = mstId.get('messStelle') + '/' + laborMstId;
             }
 
             var rec = Ext.create('Lada.model.MessstelleLabor', {

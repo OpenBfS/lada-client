@@ -6,7 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
- /**
+/**
   * Controller listening to new ElanScenarios and controlling the scenario button and window
   */
 Ext.define('Lada.controller.ElanScenario', {
@@ -82,7 +82,7 @@ Ext.define('Lada.controller.ElanScenario', {
     },
 
     /**
-     * Handles update of the local storage 
+     * Handles update of the local storage
      */
     handleLocalElanStorageUpdated: function() {
         var win = Ext.getCmp('elanwindowid');

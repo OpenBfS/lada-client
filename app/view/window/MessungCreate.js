@@ -169,8 +169,8 @@ Ext.define('Lada.view.window.MessungCreate', {
         //Delete generated id to prevent sending invalid ids to the server
         messung.set('id', null);
         this.down('messungform').setRecord(messung);
-        var warnings = {  messdauer: [631],
-                          nebenprobenNr: [631]};
+        var warnings = { messdauer: [631],
+            nebenprobenNr: [631]};
         var errors = [];
         this.setMessages(errors, warnings);
         this.down('messungform').isValid();

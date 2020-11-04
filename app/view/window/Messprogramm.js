@@ -195,7 +195,7 @@ Ext.define('Lada.view.window.Messprogramm', {
             var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
             mstLaborKombiStore.clearFilter(true);
             var items = mstLaborKombiStore.queryBy(function(record) {
-            if ( (Lada.mst.indexOf(record.get('messStelle')) > -1) &&
+                if ( (Lada.mst.indexOf(record.get('messStelle')) > -1) &&
                    (Lada.mst.indexOf(record.get('laborMst')) > -1)) {
                     return true;
                 }

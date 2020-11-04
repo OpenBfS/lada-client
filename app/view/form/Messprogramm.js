@@ -133,7 +133,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             margin: '0, 5, 5, 5',
                             width: '32%',
                             labelWidth: 65
-                        }                        ]
+                        } ]
                     }, {
                         layout: {
                             type: 'hbox',

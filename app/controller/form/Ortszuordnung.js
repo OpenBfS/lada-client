@@ -184,8 +184,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
 
     dirtyChange: function(combo, value) {
         combo.up('ortszuordnungform').form.owner.down('button[action=revert]').setDisabled(false);
-        if (combo.up('ortszuordnungform').form.findField('ortId').getValue() !== '' && value !== null )
-        {
+        if (combo.up('ortszuordnungform').form.findField('ortId').getValue() !== '' && value !== null ) {
             combo.up('ortszuordnungform').form.owner.down('button[action=save]').setDisabled(false);
             combo.up('ortszuordnungform').clearMessages();
         }
