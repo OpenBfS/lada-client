@@ -121,7 +121,11 @@ Ext.define('Lada.controller.Query', {
                 return true;
             } else if ( cbGlobal && item.get('userId') === 0) {
                 return true;
-            } else if (cbAvail && item.get('userId') !== Lada.userId && item.get('userId') !== 0) {
+            } else if (
+                cbAvail &&
+                item.get('userId') !== Lada.userId &&
+                item.get('userId') !== 0
+            ) {
                 return true;
             }
             return false;
@@ -201,15 +205,18 @@ Ext.define('Lada.controller.Query', {
 
         cbox.setStore(panel.store);
         cbox.select(newrecord);
-        //Before changing query, set "own filter" to ensure that the new query can be shown
-        cbox.up('querypanel').down('checkbox[name=filterQueriesOwn]').setValue(true);
+        // Before changing query, set "own filter" to ensure that the new query
+        // can be shown
+        cbox.up('querypanel').down('checkbox[name=filterQueriesOwn]')
+            .setValue(true);
         this.changeCurrentQuery(cbox);
         panel.down('fieldset[name=querydetails]').setCollapsed(false);
         this.saveQuery(button, saveCallback, true);
     },
 
     expandDetails: function(button) {
-        button.up('querypanel').down('fieldset[name=querydetails]').setCollapsed(false);
+        button.up('querypanel').down('fieldset[name=querydetails]')
+            .setCollapsed(false);
     },
 
     deleteQuery: function(button) {
@@ -226,17 +233,22 @@ Ext.define('Lada.controller.Query', {
                     if (btn === 'yes') {
                         query.erase({
                             callback: function() {
-                                var combobox = qp.down('combobox[name=selectedQuery]');
+                                var combobox = qp.down(
+                                    'combobox[name=selectedQuery]');
                                 qp.store.load({callback: function() {
                                     combobox.setStore(qp.store);
-                                    if (combobox.store.getData().count() === 0) {
-                                        var globalCheckbox = qp.down('checkbox[name=filterQueriesGlobal]');
-                                        globalCheckbox.setValue(true);
-                                        globalCheckbox.fireEvent('change',globalCheckbox);
+                                    if (
+                                        combobox.store.getData().count() === 0
+                                    ) {
+                                        // eslint-disable-next-line max-len
+                                        var globalCB = qp.down('checkbox[name=filterQueriesGlobal]');
+                                        globalCB.setValue(true);
+                                        globalCB.fireEvent('change',globalCB);
                                     }
                                     combobox.setValue(qp.store.getAt(0));
                                     me.changeCurrentQuery(combobox);
-                                    qp.down('fieldset[name=querydetails]').collapse();
+                                    qp.down('fieldset[name=querydetails]')
+                                        .collapse();
                                 }});
                             }
                         });
@@ -249,7 +261,12 @@ Ext.define('Lada.controller.Query', {
     changeCurrentQuery: function(combobox) {
         var qp = combobox.up('querypanel');
         qp.down('button[name=search]').setDisabled(true);
-        var newquery = qp.store.findRecord('id', combobox.getValue(), false, false, false,
+        var newquery = qp.store.findRecord(
+            'id',
+            combobox.getValue(),
+            false,
+            false,
+            false,
             true);
         combobox.resetOriginalValue();
         qp.down('checkbox[name=filterQueriesAvail]').resetOriginalValue();
@@ -319,7 +336,9 @@ Ext.define('Lada.controller.Query', {
                 }
             });
         }
-        record.set('messStellesIds', qp.down('cbox[name=messStellesIds]').getValue());
+        record.set(
+            'messStellesIds',
+            qp.down('cbox[name=messStellesIds]').getValue());
         if (record.phantom) {
             record.set('id', null);
             record.set('userId', Lada.userId);
@@ -358,7 +377,8 @@ Ext.define('Lada.controller.Query', {
                             });
                         }
                     }).then(function() {
-                        qp.down('combobox[name=selectedQuery]').setStore(qp.store);
+                        qp.down('combobox[name=selectedQuery]')
+                            .setStore(qp.store);
                         qp.down('combobox[name=selectedQuery]').select(newId);
                         qp.loadGridColumnStore();
                         qp.loadingMask.hide();
@@ -480,17 +500,20 @@ Ext.define('Lada.controller.Query', {
                         if (resultGrid) {
                             resultGrid.destroy();
                         }
-                        resultGrid = Ext.create('Lada.view.widget.DynamicGrid', {
-                            id: 'dynamicgridid',
-                            emptyText: 'query.nodata',
-                            basequery: qp.getForm().getRecord().get('baseQuery'),
-                            selModel: Ext.create('Ext.selection.CheckboxModel', {
-                                checkOnly: true,
-                                injectCheckbox: 1
-                            }),
-                            plugins: plugin || null,
-                            rowtarget: rowtarget
-                        });
+                        resultGrid = Ext.create(
+                            'Lada.view.widget.DynamicGrid', {
+                                id: 'dynamicgridid',
+                                emptyText: 'query.nodata',
+                                basequery: qp.getForm().getRecord()
+                                    .get('baseQuery'),
+                                selModel: Ext.create(
+                                    'Ext.selection.CheckboxModel', {
+                                        checkOnly: true,
+                                        injectCheckbox: 1
+                                    }),
+                                plugins: plugin || null,
+                                rowtarget: rowtarget
+                            });
                         resultGrid.setup(gcs, fixColumnStore);
                         resultGrid.setStore(this.resultStore);
                         contentPanel.add(resultGrid);
@@ -499,16 +522,21 @@ Ext.define('Lada.controller.Query', {
                             this.setMapOrte(resultGrid);
                         }
                         //Update print window instance
-                        Lada.view.window.PrintGrid.getInstance().updateGrid(resultGrid);
+                        Lada.view.window.PrintGrid.getInstance()
+                            .updateGrid(resultGrid);
                     } else {
                         if (operation.error.response.timedout) {
-                            Ext.Msg.alert(i18n.getMsg('query.error.search.title'),
-                                i18n.getMsg('query.error.search.querytimeout.message'));
+                            Ext.Msg.alert(
+                                i18n.getMsg('query.error.search.title'),
+                                i18n.getMsg(
+                                    'query.error.search.querytimeout.message')
+                            );
                         } else if (operation.error.status !== 0) {
                             /* Server response has HTTP error code.
                                If it's 0, we probably got a 302 from SSO,
                                which is handled elsewhere. */
-                            Ext.Msg.alert(i18n.getMsg('query.error.search.title'),
+                            Ext.Msg.alert(
+                                i18n.getMsg('query.error.search.title'),
                                 i18n.getMsg('query.error.search.message'));
                         }
                     }
@@ -582,7 +610,9 @@ Ext.define('Lada.controller.Query', {
                             }
                         };
                         options.value = recs[i].get('filterValue') || null;
-                        field = Ext.create('Lada.view.widget.base.TextField', options);
+                        field = Ext.create(
+                            'Lada.view.widget.base.TextField',
+                            options);
                         negateCheckbox = true;
                         regexCheckbox = true;
                         break;
@@ -595,7 +625,8 @@ Ext.define('Lada.controller.Query', {
                                 }
                             }
                         };
-                        field = Ext.create('Lada.view.widget.base.DateTimeRange',
+                        field = Ext.create(
+                            'Lada.view.widget.base.DateTimeRange',
                             options);
                         negateCheckbox = true;
                         field.setValue(recs[i].get('filterValue'));
@@ -612,7 +643,7 @@ Ext.define('Lada.controller.Query', {
                         negateCheckbox = true;
                         field.setValue(recs[i].get('filterValue'));
                         break;
-                    case 'land': // TODO: Wird nicht benötigt, könnte gelöscht werden
+                    case 'land':
                         options.multiSelect = true;
                         options.editable = true;
                         options.value = this.getFilterValueMulti(recs[i]);
@@ -627,13 +658,17 @@ Ext.define('Lada.controller.Query', {
                         options.editable = true;
                         options.value = this.getFilterValueMulti(recs[i]);
                         options.store = Ext.getStore('messstellen');
-                        field = Ext.create('Lada.view.widget.Messstelle', options);
+                        field = Ext.create(
+                            'Lada.view.widget.Messstelle',
+                            options);
                         negateCheckbox = true;
                         break;
                     case 'boolean':
                         options.multiSelect = false;
                         options.value = this.getFilterValueMulti(recs[i]);
-                        field = Ext.create('Lada.view.widget.BoolFilter', options);
+                        field = Ext.create(
+                            'Lada.view.widget.BoolFilter',
+                            options);
                         break;
                     case 'umwbereich':
                         options.multiSelect = true;
@@ -655,9 +690,11 @@ Ext.define('Lada.controller.Query', {
                     case 'egem':
                         options.multiSelect = true;
                         options.editable = true;
-                        options.store = Ext.getStore('verwaltungseinheitenwidget');
+                        options.store = Ext.getStore(
+                            'verwaltungseinheitenwidget');
                         options.value = this.getFilterValueMulti(recs[i]);
-                        field = Ext.create('Lada.view.widget.Verwaltungseinheit',
+                        field = Ext.create(
+                            'Lada.view.widget.Verwaltungseinheit',
                             options);
                         negateCheckbox = true;
                         break;
@@ -665,7 +702,9 @@ Ext.define('Lada.controller.Query', {
                         options.multiSelect = true;
                         options.editable = true;
                         options.value = this.getFilterValueMulti(recs[i]);
-                        field = Ext.create('Lada.view.widget.Datenbasis', options);
+                        field = Ext.create(
+                            'Lada.view.widget.Datenbasis',
+                            options);
                         negateCheckbox = true;
                         break;
                     case 'netzbetr':
@@ -680,7 +719,9 @@ Ext.define('Lada.controller.Query', {
                         options.multiSelect = true;
                         options.editable = true;
                         options.value = this.getFilterValueMulti(recs[i]);
-                        field = Ext.create('Lada.view.widget.Probenart', options);
+                        field = Ext.create(
+                            'Lada.view.widget.Probenart',
+                            options);
                         negateCheckbox = true;
                         break;
                     case 'staat':
@@ -703,7 +744,9 @@ Ext.define('Lada.controller.Query', {
                         options.editable = true;
                         options.value = this.getFilterValueMulti(recs[i]);
                         options.store = Ext.getStore('statusstufe');
-                        field = Ext.create('Lada.view.widget.StatusStufe', options);
+                        field = Ext.create(
+                            'Lada.view.widget.StatusStufe',
+                            options);
                         negateCheckbox = true;
                         break;
                     case 'statuskombi':
@@ -728,7 +771,8 @@ Ext.define('Lada.controller.Query', {
                         options.multiSelect = true;
                         options.editable = true;
                         options.value = recs[i].get('filterValue');
-                        field = Ext.create('Lada.view.widget.ReiProgpunktGruppe',
+                        field = Ext.create(
+                            'Lada.view.widget.ReiProgpunktGruppe',
                             options);
                         negateCheckbox = true;
                         break;
@@ -807,7 +851,8 @@ Ext.define('Lada.controller.Query', {
                     case 'tag':
                         options.multiSelect = true;
                         options.editable = true;
-                        options.fieldLabel = i18n.getMsg('tag.filterwidget.label');
+                        options.fieldLabel = i18n.getMsg(
+                            'tag.filterwidget.label');
                         options.emptyText = '';
                         options.monitorChanges = false;
                         options.value = recs[i].get('filterValue');
@@ -941,15 +986,23 @@ Ext.define('Lada.controller.Query', {
      * (currently:
      * - filterNegate: reverse the filter
      * - isNull: filter value is explicitly set to 'empty'
-     * - filterRegex: ask the server to treat the filter string as regular expression
+     * - filterRegex: ask the server to treat the filter string as regular
+     *   expression
      */
     checkboxChanged: function(checkbox) {
         var store = checkbox.up('querypanel').gridColumnValueStore;
         var dataIndex = checkbox.name.slice(0, checkbox.name.lastIndexOf('_'));
         var model = checkbox.name.slice(checkbox.name.lastIndexOf('_') + 1 );
-        if (['filterNegate', 'filterRegex', 'filterIsNull'].indexOf(model) >= 0) {
-            if (model === 'filterIsNull' && checkbox.getValue() === true) {
-                var field = checkbox.up('querypanel').down('[name=' + dataIndex + ']');
+        if (
+            ['filterNegate', 'filterRegex', 'filterIsNull']
+                .indexOf(model) >= 0
+        ) {
+            if (
+                model === 'filterIsNull' &&
+                checkbox.getValue() === true
+            ) {
+                var field = checkbox.up('querypanel')
+                    .down('[name=' + dataIndex + ']');
                 if (field.clearValue) {
                     field.clearValue();
                 } else {
@@ -965,8 +1018,14 @@ Ext.define('Lada.controller.Query', {
 
 
     setrowtarget: function(querypanel) {
-        var rowHierarchy = ['messungId', 'probeId', 'mpId', 'ortId', 'probenehmer',
-            'dsatzerz', 'mprkat'];
+        var rowHierarchy = [
+            'messungId',
+            'probeId',
+            'mpId',
+            'ortId',
+            'probenehmer',
+            'dsatzerz',
+            'mprkat'];
         var result = {
             dataType: null,
             dataIndex: null,

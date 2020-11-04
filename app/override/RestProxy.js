@@ -16,7 +16,11 @@ Ext.define('Lada.override.RestProxy', {
            We assume that a 302 was send when the follwing statement
            is true.
         */
-        if (!success && response.status === 0 && response.responseText === '') {
+        if (
+            !success &&
+            response.status === 0 &&
+            response.responseText === ''
+        ) {
             var i18n = Lada.getApplication().bundle;
             Ext.MessageBox.confirm(
                 i18n.getMsg('err.msg.sso.expired.title'),

@@ -56,33 +56,66 @@ Ext.define('Lada.view.grid.Messwert', {
                         }
                         // We are in a messung window and should check if we can
                         // edit.
-                        var readonlywin = o.grid.up('window').record.get('readonly');
+                        var readonlywin = o.grid.up('window')
+                            .record.get('readonly');
                         var readonlygrid = o.record.get('readonly');
-                        if (readonlywin === true || readonlygrid === true || this.disabled) {
+                        if (
+                            readonlywin === true ||
+                            readonlygrid === true ||
+                            this.disabled
+                        ) {
                             return false;
                         }
                         if (o.record.phantom === true) {
-                            e.editor.down('expnumberfield[dataIndex=messwert]').allowBlank = false;
-                            e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').allowBlank = false;
-                            e.editor.down('formatnumberfield').allowBlank = false;
-                            e.editor.down('expnumberfield[dataIndex=messwert]').setReadOnly(false);
-                            e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').setReadOnly(false);
-                            e.editor.down('formatnumberfield').setReadOnly(false);
-                            if (e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').inputWrap) {
-                                e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').inputWrap.removeCls('x-lada-warning-field');
-                                e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').inputEl.removeCls('x-lada-warning-field');
+                            e.editor.down('expnumberfield[dataIndex=messwert]')
+                                .allowBlank = false;
+                            e.editor.down(
+                                'expnumberfield[dataIndex=nwgZuMesswert]')
+                                .allowBlank = false;
+                            e.editor.down('formatnumberfield')
+                                .allowBlank = false;
+                            e.editor.down('expnumberfield[dataIndex=messwert]')
+                                .setReadOnly(false);
+                            e.editor.down(
+                                'expnumberfield[dataIndex=nwgZuMesswert]')
+                                .setReadOnly(false);
+                            e.editor.down('formatnumberfield')
+                                .setReadOnly(false);
+                            var nwgZM = e.editor.down(
+                                'expnumberfield[dataIndex=nwgZuMesswert]');
+                            if (nwgZM.inputWrap) {
+                                nwgZM.inputWrap.removeCls(
+                                    'x-lada-warning-field');
+                                nwgZM.inputEl.removeCls(
+                                    'x-lada-warning-field');
                             }
                         } else {
                             if (o.record.get('messwertNwg') === '<') {
-                                e.editor.down('expnumberfield[dataIndex=messwert]').allowBlank = true;
-                                e.editor.down('expnumberfield[dataIndex=messwert]').setReadOnly(true);
-                                e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').allowBlank = false;
-                                e.editor.down('formatnumberfield').allowBlank = true;
-                                e.editor.down('formatnumberfield').setReadOnly(true);
+                                e.editor.down(
+                                    'expnumberfield[dataIndex=messwert]')
+                                    .allowBlank = true;
+                                e.editor.down(
+                                    'expnumberfield[dataIndex=messwert]')
+                                    .setReadOnly(true);
+                                e.editor.down(
+                                    'expnumberfield[dataIndex=nwgZuMesswert]')
+                                    .allowBlank = false;
+                                e.editor.down(
+                                    'formatnumberfield')
+                                    .allowBlank = true;
+                                e.editor.down(
+                                    'formatnumberfield')
+                                    .setReadOnly(true);
                             } else {
-                                e.editor.down('expnumberfield[dataIndex=messwert]').allowBlank = false;
-                                e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').allowBlank = true;
-                                e.editor.down('formatnumberfield').allowBlank = false;
+                                e.editor.down(
+                                    'expnumberfield[dataIndex=messwert]')
+                                    .allowBlank = false;
+                                e.editor.down(
+                                    'expnumberfield[dataIndex=nwgZuMesswert]')
+                                    .allowBlank = true;
+                                e.editor.down(
+                                    'formatnumberfield')
+                                    .allowBlank = false;
                             }
                         }
                         //Preselect Messeinheit
@@ -129,7 +162,9 @@ Ext.define('Lada.view.grid.Messwert', {
                     return '';
                 }
                 var store = Ext.data.StoreManager.get('messgroessen');
-                return store.findRecord('id', value, 0, false, false, true).get('messgroesse');
+                return store.findRecord(
+                    'id', value, 0, false, false, true)
+                    .get('messgroesse');
             },
             editor: {
                 xtype: 'combobox',
@@ -199,7 +234,8 @@ Ext.define('Lada.view.grid.Messwert', {
                 if (!value || value === '') {
                     return value;
                 }
-                var strValue = Lada.getApplication().toExponentialString(value, 2)
+                var strValue = Lada.getApplication().toExponentialString(
+                    value, 2)
                     .replace('.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
                 var exponent = parseInt(splitted[1], 10);
@@ -218,10 +254,16 @@ Ext.define('Lada.view.grid.Messwert', {
                     return '';
                 }
                 var store = me.mehComboStore;
-                if (store.findRecord('id', value, 0, false, false, true) === null) {
-                    return Ext.data.StoreManager.get('messeinheiten').findRecord('id', value, 0, false, false, true).get('einheit');
+                if (
+                    store.findRecord(
+                        'id', value, 0, false, false, true) === null
+                ) {
+                    return Ext.data.StoreManager.get('messeinheiten')
+                        .findRecord('id', value, 0, false, false, true)
+                        .get('einheit');
                 } else {
-                    return store.findRecord('id', value, 0, false, false, true).get('einheit');
+                    return store.findRecord('id', value, 0, false, false, true)
+                        .get('einheit');
                 }
             },
             editor: {
@@ -409,7 +451,8 @@ Ext.define('Lada.view.grid.Messwert', {
                 if (success && response) {
                     var json = Ext.decode(response.responseText);
                     if (json.success === true) {
-                        button.up('messungedit').down('messwertgrid').store.reload();
+                        button.up('messungedit').down('messwertgrid')
+                            .store.reload();
                     } else {
                         Ext.Msg.alert('', i18n.getMsg('err.normalize'));
                     }

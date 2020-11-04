@@ -393,7 +393,8 @@ Ext.define('Lada.view.window.GridExport', {
 
                         this.expcolumnList.add({
                             value: this.expcolumns[col].dataIndex,
-                            name: this.expcolumns[col].text || this.expcolumns[i].dataIndex
+                            name: this.expcolumns[col].text ||
+                                this.expcolumns[i].dataIndex
                         });
                         preselectedEx.push(this.expcolumns[col].dataIndex);
                     }
@@ -417,10 +418,14 @@ Ext.define('Lada.view.window.GridExport', {
         var prefetchCallBack = function() {
             var data = JSON.stringify(me.getGeoJson());
             window.localStorage.setItem('gis-transfer-data', data);
-            window.localStorage.setItem('gis-transfer-data-transfer-date', new Date().valueOf());
+            window.localStorage.setItem(
+                'gis-transfer-data-transfer-date', new Date().valueOf());
             button.setText(i18n.getMsg('export.button.copy.success'));
         };
-        if (me.down('checkbox[name=secondarycolumns]').getValue() && !me.secondaryDataIsPrefetched) {
+        if (
+            me.down('checkbox[name=secondarycolumns]').getValue() &&
+            !me.secondaryDataIsPrefetched
+        ) {
             me.secondaryDataIsPrefetching.then(
                 prefetchCallBack,
                 function() {
@@ -473,17 +478,18 @@ Ext.define('Lada.view.window.GridExport', {
             }
         }
         var me = this;
-        this.secondaryDataIsPrefetching = new Ext.Promise(function(resolve, reject) {
-            Ext.Promise.all(prm).then(function(result) {
-                me.secondaryData = result.reduce(function(acc, val) {
-                    return acc.concat(val);
-                }, []);
-                me.secondaryDataIsPrefetched = true;
-                resolve();
-            }, function(error) {
-                reject(error);
+        this.secondaryDataIsPrefetching = new Ext.Promise(
+            function(resolve, reject) {
+                Ext.Promise.all(prm).then(function(result) {
+                    me.secondaryData = result.reduce(function(acc, val) {
+                        return acc.concat(val);
+                    }, []);
+                    me.secondaryDataIsPrefetched = true;
+                    resolve();
+                }, function(error) {
+                    reject(error);
+                });
             });
-        });
         return this.secondaryDataIsPrefetching;
     },
 
@@ -493,7 +499,8 @@ Ext.define('Lada.view.window.GridExport', {
      */
     doExport: function(button) {
         var win = button.up('window');
-        var exportFormat = win.down('combobox[name=formatselection]').getValue();
+        var exportFormat = win.down('combobox[name=formatselection]')
+            .getValue();
         if (!exportFormat) {
             win.showError('export.noformat');
             return;
@@ -509,7 +516,8 @@ Ext.define('Lada.view.window.GridExport', {
         } else {
             requestData = {
                 columns: win.getColumnDefinitions(win),
-                exportSubData: win.down('checkbox[name=secondarycolumns]').getValue(),
+                exportSubData: win.down('checkbox[name=secondarycolumns]')
+                    .getValue(),
                 idField: win.grid.rowtarget.dataIndex,
                 idFilter: win.getExportIds(win),
                 filename: filename,
@@ -518,7 +526,8 @@ Ext.define('Lada.view.window.GridExport', {
             };
             switch (exportFormat) {
                 case 'laf':
-                    win.requestExport('laf', win.lafRequestURL, requestData, win);
+                    win.requestExport(
+                        'laf', win.lafRequestURL, requestData, win);
                     break;
                 case 'geojson':
                     var data = JSON.stringify(win.getGeoJson());
@@ -526,13 +535,16 @@ Ext.define('Lada.view.window.GridExport', {
                     saveAs(blob, filename, true);
                     break;
                 case 'json':
-                    win.requestExport('json', win.jsonRequestURL, requestData, win);
+                    win.requestExport(
+                        'json', win.jsonRequestURL, requestData, win);
                     break;
                 case 'csv':
                     if (win.validateCsvOptions(win)) {
-                        requestData.subDataColumnNames = win.getSubdataColumNames(requestData.subDataColumns);
+                        requestData.subDataColumnNames = win
+                            .getSubdataColumNames(requestData.subDataColumns);
                         requestData = win.getCsvOptions(requestData, win);
-                        win.requestExport('csv', win.csvRequestURL, requestData, win);
+                        win.requestExport(
+                            'csv', win.csvRequestURL, requestData, win);
                     }
                     break;
             }
@@ -565,7 +577,8 @@ Ext.define('Lada.view.window.GridExport', {
                         var geodata = data[row].get(c.dataIndex);
                         if (geodata) {
                             var realdata = JSON.parse(geodata);
-                            iresult.geometry['coordinates'] = realdata.coordinates;
+                            iresult.geometry['coordinates'] =
+                                realdata.coordinates;
                             iresult.geometry['type'] = realdata.type;
                         }
                     } else {
@@ -581,7 +594,10 @@ Ext.define('Lada.view.window.GridExport', {
                 iresult.geometry = null;
             }
             var entryId = data[row].get(this.grid.rowtarget.dataIndex);
-            if (this.rowexp && this.down('checkbox[name=secondarycolumns]').getValue()) {
+            if (
+                this.rowexp &&
+                this.down('checkbox[name=secondarycolumns]').getValue()
+            ) {
                 var secondaryData = this.setSecondaryJson(entryId, expcolumns);
                 if (this.rowexp.type === 'Lada.view.grid.Messung') {
                     iresult.Messungen = secondaryData;
@@ -704,8 +720,10 @@ Ext.define('Lada.view.window.GridExport', {
                 if (response.status === 0 &&
                 response.getResponse().responseText === '') {
                     var i18n = Lada.getApplication().bundle;
-                    Ext.MessageBox.confirm(i18n.getMsg('err.msg.sso.expired.title'),
-                        i18n.getMsg('err.msg.sso.expired.body'), me.reload);
+                    Ext.MessageBox.confirm(
+                        i18n.getMsg('err.msg.sso.expired.title'),
+                        i18n.getMsg('err.msg.sso.expired.body'),
+                        me.reload);
                 }
             }
         });
@@ -752,7 +770,10 @@ Ext.define('Lada.view.window.GridExport', {
         var me = box.up('window');
         me.down('tagfield[name=exportcolumns]').setVisible(
             !newValue);
-        if (me.rowexp && me.down('checkbox[name=secondarycolumns]').getValue()) {
+        if (
+            me.rowexp &&
+            me.down('checkbox[name=secondarycolumns]').getValue()
+        ) {
             me.down('tagfield[name=exportexpcolumns]').setVisible(!newValue);
         }
         me.resetCopyButton(me);
@@ -797,7 +818,8 @@ Ext.define('Lada.view.window.GridExport', {
         }
         var exportcols = null;
         if (sec) {
-            exportcols = this.down('tagfield[name=exportexpcolumns]').getValue();
+            exportcols = this.down('tagfield[name=exportexpcolumns]')
+                .getValue();
         } else {
             exportcols = this.down('tagfield[name=exportcolumns]').getValue();
         }
@@ -903,7 +925,9 @@ Ext.define('Lada.view.window.GridExport', {
                 store = Ext.data.StoreManager.get('statuskombi');
                 record = store.getById(value);
                 if (record) {
-                    r = record.data.statusStufe.stufe + ' ' + record.data.statusWert.wert;
+                    r = record.data.statusStufe.stufe +
+                        ' ' +
+                        record.data.statusWert.wert;
                     return r || '';
                 }
                 return '';
@@ -936,7 +960,9 @@ Ext.define('Lada.view.window.GridExport', {
                 store = Ext.data.StoreManager.get('statuskombi');
                 record = store.getById(value);
                 if (record) {
-                    r = record.data.statusStufe.stufe + ' ' + record.data.statusWert.wert;
+                    r = record.data.statusStufe.stufe +
+                        ' ' +
+                        record.data.statusWert.wert;
                     return r || '';
                 }
                 return '';
@@ -962,9 +988,12 @@ Ext.define('Lada.view.window.GridExport', {
             this.showError('export.invalidfilename');
             return false;
         } else {
-            if (fname.length > defaultend.length + 1 && // fname may be shorter than ending
+            // fname may be shorter than ending
+            if (
+                (fname.length > defaultend.length + 1) &&
                 fname.toLowerCase().indexOf(defaultend.toLowerCase()) ===
-                    fname.length - defaultend.length) {
+                    (fname.length - defaultend.length)
+            ) {
                 return fname;
             } else {
                 return fname + '.' + defaultend;
@@ -976,8 +1005,8 @@ Ext.define('Lada.view.window.GridExport', {
     /**
      * Adds the rowExpander data by sending an AJAX request; the resultobject
      * will be ammended asynchronously after an answer is received.
-     * @param {*} parentId Number/String to find the original record entry in the
-     * resultobject
+     * @param {*} parentId Number/String to find the original record entry in
+     * the resultobject
      * @param {*} columns Columns to be included
      * TODO: legacy. Can be removed if getGeoJson is removed
      */
@@ -1019,7 +1048,10 @@ Ext.define('Lada.view.window.GridExport', {
             button.setDisabled(false);
             return;
         } else {
-            if (win.down('combobox[name=formatselection]').getValue() === 'laf') {
+            if (
+                win.down('combobox[name=formatselection]').getValue() ===
+                    'laf'
+            ) {
                 button.setDisabled(true);
                 return;
             }
@@ -1049,7 +1081,8 @@ Ext.define('Lada.view.window.GridExport', {
         }
         var expColumns = win.expcolumnList.getData().items;
         if (!win.down('checkbox[name=allcolumns]').getValue()) {
-            var tagCols = win.down('tagfield[name=exportexpcolumns]').getValue();
+            var tagCols = win.down('tagfield[name=exportexpcolumns]')
+                .getValue();
             expColumns = Ext.Array.filter(expColumns, function(col) {
                 return tagCols.indexOf(col.get('value')) >= 0;
             });
@@ -1094,7 +1127,10 @@ Ext.define('Lada.view.window.GridExport', {
                 var gridColumn = columnstore.findRecord(
                     'id', c.gridColumnId,0,false, false, true
                 );
-                if (allcolumns || expcolumns.indexOf(gridColumn.get('dataIndex')) > -1) {
+                if (
+                    allcolumns ||
+                    expcolumns.indexOf(gridColumn.get('dataIndex')) > -1
+                ) {
                     c.export = true;
                 }
             }
@@ -1105,7 +1141,10 @@ Ext.define('Lada.view.window.GridExport', {
 
     resetCopyButton: function(scope) {
         var button = scope.down('button[action=copyGeoJson]');
-        if (scope.down('combobox[name=formatselection]').getValue() === 'geojson') {
+        if (
+            scope.down('combobox[name=formatselection]').getValue() ===
+                'geojson'
+        ) {
             button.setVisible(true);
             button.setText(
                 Lada.getApplication().bundle.getMsg('export.button.copy'));

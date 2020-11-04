@@ -81,7 +81,9 @@ Ext.define('Lada.view.window.AuditTrail', {
             method: 'GET',
             scope: this,
             callback: function(options, success, response) {
-                Ext.ComponentQuery.query('timezonebutton[action=toggletimezone]')[0].requestFinished();
+                Ext.ComponentQuery.query(
+                    'timezonebutton[action=toggletimezone]')[0]
+                    .requestFinished();
                 if (success) {
                     this.loadSuccess(response);
                 } else {
@@ -133,7 +135,9 @@ Ext.define('Lada.view.window.AuditTrail', {
 
     createHtmlProbe: function(json) {
         var i18n = Lada.getApplication().bundle;
-        var html = '<p><strong>Probe: ' + json.data.identifier + '</strong><br></p>';
+        var html = '<p><strong>Probe: ' +
+            json.data.identifier +
+            '</strong><br></p>';
         var audit = json.data.audit;
         if (audit.length === 0) {
             html += '<p>Keine Änderungen</p>';
@@ -144,8 +148,11 @@ Ext.define('Lada.view.window.AuditTrail', {
                 });
             }
             for (var i = 0; i < audit.length; i++) {
-                html += '<p style="margin-bottom:0"><b>' + i18n.getMsg('date') + ': ' +
-                    Lada.util.Date.formatTimestamp(audit[i].timestamp, 'd.m.Y H:i', true) +
+                html += '<p style="margin-bottom:0"><b>' +
+                    i18n.getMsg('date') +
+                    ': ' +
+                    Lada.util.Date.formatTimestamp(
+                        audit[i].timestamp, 'd.m.Y H:i', true) +
                     '</b>';
                 if (!Ext.isObject(audit[i].identifier)) {
                     if (audit[i].type !== 'probe') {
@@ -167,7 +174,9 @@ Ext.define('Lada.view.window.AuditTrail', {
 
     createHtmlMessung: function(json) {
         var i18n = Lada.getApplication().bundle;
-        var html = '<p><strong>Messung: ' + json.data.identifier + '</strong><br></p>';
+        var html = '<p><strong>Messung: ' +
+            json.data.identifier +
+            '</strong><br></p>';
         var audit = json.data.audit;
         if (audit.length === 0) {
             html += '<p>Keine Änderungen</p>';
@@ -178,8 +187,11 @@ Ext.define('Lada.view.window.AuditTrail', {
                 });
             }
             for (var i = 0; i < audit.length; i++) {
-                html += '<p style="margin-bottom:0"><b>' + i18n.getMsg('date') + ': ' +
-                    Lada.util.Date.formatTimestamp(audit[i].timestamp, 'd.m.Y H:i', true) +
+                html += '<p style="margin-bottom:0"><b>' +
+                    i18n.getMsg('date') +
+                    ': ' +
+                    Lada.util.Date.formatTimestamp(
+                        audit[i].timestamp, 'd.m.Y H:i', true) +
                     '</b>';
                 if (audit[i].type !== 'messung') {
                     html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
@@ -219,7 +231,8 @@ Ext.define('Lada.view.window.AuditTrail', {
                 key === 'messwert_pzs' ||
                 key === 'nwg_zu_messwert'
             ) {
-                var strValue = Lada.getApplication().toExponentialString(value, 2)
+                var strValue = Lada.getApplication().toExponentialString(
+                    value, 2)
                     .replace('.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
                 var exponent = parseInt(splitted[1],10);

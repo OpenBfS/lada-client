@@ -8,8 +8,10 @@
  */
 /**
  * Override fixing an ExtJS 6.0 Bug.
- * The garbage collector may destroy unintended elements which cause internal errors in the ExtJS framework.
- * See https://forum.sencha.com/forum/showthread.php?308989-Grbage-collector-destroys-cached-elements
+ * The garbage collector may destroy unintended elements which cause internal
+ * errors in the ExtJS framework.
+ * See https://forum.sencha.com/forum/showthread.php?
+ *  308989-Grbage-collector-destroys-cached-elements
  */
 Ext.define('Lada.override.UnderlayPool', {
     override: 'Ext.dom.UnderlayPool',
@@ -33,7 +35,8 @@ Ext.define('Lada.override.UnderlayPool', {
             el = Ext.Element.create(this.elementConfig);
             el.setVisibilityMode(2);
             //<debug>
-            // tell the spec runner to ignore this element when checking if the dom is clean
+            // tell the spec runner to ignore this element when checking if
+            // the dom is clean
             el.dom.setAttribute('data-sticky', true);
             //</debug>
         }

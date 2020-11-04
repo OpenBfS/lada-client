@@ -8,8 +8,8 @@
 
 /**
  * Unfiltered Store for Verwaltungseinheiten. Will not be obtained from server,
- * but cloned from the original store on initialization. This allows for dropdown
- * boxes to be independent of grids with this data
+ * but cloned from the original store on initialization. This allows for
+ * dropdown boxes to be independent of grids with this data
  */
 Ext.define('Lada.store.VerwaltungseinheitenUnfiltered', {
     extend: 'Lada.store.Verwaltungseinheiten',

@@ -181,7 +181,8 @@ Ext.define('Lada.controller.form.Messung', {
     disableButtons: function(form) {
         form.owner.down('button[action=save]').setDisabled(true);
         form.owner.down('button[action=discard]').setDisabled(true);
-        form.owner.up('window').enableChildren(); // todo this might not be true in all cases
+        // todo next line might not be true in all cases (Jan 2020)
+        form.owner.up('window').enableChildren();
     },
 
 
@@ -337,7 +338,8 @@ Ext.define('Lada.controller.form.Messung', {
         var i18n = Lada.getApplication().bundle;
         var win = Ext.create('Lada.view.window.SetStatus', {
             title: i18n.getMsg('statusSetzen.win.title'),
-            record: button.up('window').down('messungform').getForm().getRecord(),
+            record: button.up('window')
+                .down('messungform').getForm().getRecord(),
             modal: true
         });
         var view = button.up('messungform');

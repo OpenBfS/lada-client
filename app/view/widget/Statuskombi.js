@@ -52,10 +52,12 @@ Ext.define('Lada.view.widget.Statuskombi', {
 
 
     /**
-     * Sets the widget value, adds buttons if needed and checks if reset button is activated
+     * Sets the widget value, adds buttons if needed and checks if reset button
+     * is activated
      * @param value The new value
      * @param reset True if widget was reset, defaults to false
-     * @param statusEdit True if it is allowed to set the status, defaults to false
+     * @param statusEdit True if it is allowed to set the status,
+     * defaults to false
      */
     setValue: function(value, reset, statusEdit) {
         this.reset = reset !== undefined ? reset: false;
@@ -79,12 +81,15 @@ Ext.define('Lada.view.widget.Statuskombi', {
                         textfield.setEmptyText(text);
                     }
                 } catch (e) {
-                    Ext.log({msg: 'Updating status kombi field failed: ' + e, level: 'warn'});
+                    Ext.log({
+                        msg: 'Updating status kombi field failed: ' + e,
+                        level: 'warn'});
                 }
 
             }
         });
-        // instead of overwriting/appending initComponent, add the button at loading of values
+        // instead of overwriting/appending initComponent, add the button at
+        // loading of values
         var button = this.down('button[action=newstatus]');
         if (!button) {
             this.add(this.changebutton());

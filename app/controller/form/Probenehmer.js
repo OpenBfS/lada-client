@@ -158,7 +158,10 @@ Ext.define('Lada.controller.form.Probenehmer', {
 
     checkCommitEnabled: function(callingEl) {
         var form;
-        if (callingEl.up && callingEl.up('probenehmerform')) { //called by a field
+        if ( //called by a field
+            callingEl.up &&
+            callingEl.up('probenehmerform')
+        ) {
             form = callingEl.up('probenehmerform');
         } else if (callingEl.owner) { //called by the form
             form = callingEl.owner;
@@ -172,7 +175,11 @@ Ext.define('Lada.controller.form.Probenehmer', {
             revertbutton.setDisabled(true);
             return;
         }
-        if ( form.isValid() && form.down('netzbetreiber[name=netzbetreiberId]').getValue().length !== 0 ) {
+        if (
+            form.isValid() &&
+            form.down('netzbetreiber[name=netzbetreiberId]')
+                .getValue().length !== 0
+        ) {
             if (form.isDirty()) {
                 savebutton.enable();
                 revertbutton.enable();

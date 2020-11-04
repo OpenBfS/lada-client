@@ -37,7 +37,7 @@ Ext.define('Lada.model.Query', {
         // the linked stamm.query in the database.
     }, {
         name: 'printTemplates'
-        // TODO: string of (comma-separated) templates this query is able to fill in
+        // string of (comma-separated) templates this query is able to fill in
     }, {
         name: 'messStellesIds'
     }, {

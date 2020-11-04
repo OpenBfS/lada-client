@@ -7,7 +7,8 @@
  */
 
 /**
-  * Controller listening to new ElanScenarios and controlling the scenario button and window
+  * Controller listening to new ElanScenarios and controlling the scenario
+  * button and window
   */
 Ext.define('Lada.controller.ElanScenario', {
     extend: 'Ext.app.Controller',
@@ -40,10 +41,15 @@ Ext.define('Lada.controller.ElanScenario', {
     handleElanEventsReceived: function(success) {
         var button = Ext.ComponentQuery.query('elanscenariobutton')[0];
         if (!success) {
-            button.setState(Lada.view.widget.ElanScenarioButton.states.EVENTS_NONE);
+            button.setState(
+                Lada.view.widget.ElanScenarioButton.states.EVENTS_NONE);
         } else {
-            if (button.getState() !== Lada.view.widget.ElanScenarioButton.states.EVENTS_CHANGED) {
-                button.setState(Lada.view.widget.ElanScenarioButton.states.EVENTS_OLD);
+            if (
+                button.getState() !== Lada.view.widget
+                    .ElanScenarioButton.states.EVENTS_CHANGED
+            ) {
+                button.setState(
+                    Lada.view.widget.ElanScenarioButton.states.EVENTS_OLD);
             }
         }
     },
@@ -58,9 +64,11 @@ Ext.define('Lada.controller.ElanScenario', {
         var button = Ext.ComponentQuery.query('elanscenariobutton')[0];
         var window = Ext.getCmp('elanwindowid');
         if (routineMode) {
-            button.setState(Lada.view.widget.ElanScenarioButton.states.EVENTS_NONE);
+            button.setState(
+                Lada.view.widget.ElanScenarioButton.states.EVENTS_NONE);
         } else {
-            button.setState(Lada.view.widget.ElanScenarioButton.states.EVENTS_CHANGED);
+            button.setState(
+                Lada.view.widget.ElanScenarioButton.states.EVENTS_CHANGED);
             //If window is shown
             if (window) {
                 //Mark event as changed
@@ -120,9 +128,11 @@ Ext.define('Lada.controller.ElanScenario', {
      * Reset button state as the window events has been read by the user
      */
     handleElanWindowHidden: function() {
-        var button = Ext.ComponentQuery.query('button[action=elanscenarios]')[0];
+        var button = Ext.ComponentQuery
+            .query('button[action=elanscenarios]')[0];
         if (button) {
-            button.setState(Lada.view.widget.ElanScenarioButton.states.EVENTS_OLD);
+            button.setState(
+                Lada.view.widget.ElanScenarioButton.states.EVENTS_OLD);
         }
     }
 });

@@ -54,7 +54,8 @@ Ext.define('Lada.view.form.Probe', {
 
     initComponent: function() {
         if (Lada.view.form.Probe.mediaSnScheduler === null) {
-            Lada.view.form.Probe.mediaSnScheduler = Ext.create('Lada.util.FunctionScheduler');
+            Lada.view.form.Probe.mediaSnScheduler = Ext.create(
+                'Lada.util.FunctionScheduler');
         }
         var me = this;
         var i18n = Lada.getApplication().bundle;
@@ -164,9 +165,15 @@ Ext.define('Lada.view.form.Probe', {
                                     fn: function(combo, newValue) {
                                         var mst = newValue.get('messStelle');
                                         var labor = newValue.get('laborMst');
-                                        combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
-                                        combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
-                                        combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
+                                        combo.up('fieldset').down(
+                                            'messstelle[name=mstId]')
+                                            .setValue(mst);
+                                        combo.up('fieldset').down(
+                                            'messstelle[name=laborMstId]')
+                                            .setValue(labor);
+                                        combo.up('fieldset').down(
+                                            'messprogrammland[name=mplId]')
+                                            .setValue();
                                     }
                                 }
                             }
@@ -259,14 +266,19 @@ Ext.define('Lada.view.form.Probe', {
                                         fn: function(combo) {
                                             var store = combo.getStore();
                                             store.clearFilter();
+                                            /*eslint-disable max-len*/
                                             var nId = combo.up('fieldset')
                                                 .down('netzbetreiber[name=netzbetreiber]')
                                                 .getValue();
                                             if (!nId || nId.length === 0) {
-                                                store.filterBy(function(record) {
-                                                    return Lada.netzbetreiber.indexOf(
-                                                        record.get('netzbetreiberId')) > -1;
-                                                });
+                                                store.filterBy(
+                                                    function(record) {
+                                                        return Lada.netzbetreiber
+                                                            .indexOf(
+                                                                record.get('netzbetreiberId'))
+                                                            > -1;
+                                                    });
+                                                /*eslint-enable max-len*/
                                             } else {
                                                 store.filter({
                                                     property: 'netzbetreiberId',
@@ -293,14 +305,17 @@ Ext.define('Lada.view.form.Probe', {
                                         fn: function(combo) {
                                             var store = combo.getStore();
                                             store.clearFilter();
+                                            /*eslint-disable max-len*/
                                             var nId = combo.up('fieldset')
                                                 .down('netzbetreiber[name=netzbetreiber]')
                                                 .getValue();
                                             if (!nId || nId.length === 0) {
                                                 store.filterBy(function(record) {
                                                     return Lada.netzbetreiber.indexOf(
-                                                        record.get('netzbetreiberId')) > -1;
+                                                        record.get('netzbetreiberId'))
+                                                        > -1;
                                                 });
+                                            /*eslint-enable max-len*/
                                             } else {
                                                 store.filter({
                                                     property: 'netzbetreiberId',
@@ -328,6 +343,7 @@ Ext.define('Lada.view.form.Probe', {
                                     fn: function(combo) {
                                         var store = combo.getStore();
                                         store.clearFilter();
+                                        /*eslint-disable max-len*/
                                         var nId = combo.up('fieldset')
                                             .down('netzbetreiber[name=netzbetreiber]')
                                             .getValue();
@@ -336,6 +352,7 @@ Ext.define('Lada.view.form.Probe', {
                                                 return Lada.netzbetreiber.indexOf(
                                                     record.get('netzbetreiberId')) > -1;
                                             });
+                                        /*eslint-enable max-len*/
                                         } else {
                                             store.filter({
                                                 property: 'netzbetreiberId',
@@ -568,11 +585,14 @@ Ext.define('Lada.view.form.Probe', {
                         handler: function(button) {
                             var win = Ext.create('Lada.view.window.TagCreate', {
                                 tagWidget: me.down('tagwidget'),
-                                probe: button.up('probeform').getForm().getRecord().get('hauptprobenNr'),
+                                probe: button.up('probeform').getForm()
+                                    .getRecord().get('hauptprobenNr'),
                                 recordType: 'probe'
                             });
                             //Close window if parent window is closed
-                            var parentWindow = button.up('probenedit')? button.up('probenedit'): button.up('probecreate');
+                            var parentWindow = button.up('probenedit') ?
+                                button.up('probenedit') :
+                                button.up('probecreate');
                             parentWindow.on('close', function() {
                                 win.close();
                             });
@@ -681,21 +701,32 @@ Ext.define('Lada.view.form.Probe', {
                 return;
             }
             try {
-                cbox.select(cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
+                cbox.select(
+                    cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
             } catch (e) {
                 Ext.log({msg: 'Selecting media failed: ' + e, level: 'warn'});
                 return;
             }
-            var mediatext = cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10));
+            var mediatext = cbox.store.findRecord(
+                'sn', parseInt(media[ndx + 1], 10));
             if (mediatext !== null) {
-                if ( (ndx <= 3) && (media[1] === '01') && (mediatext.data.beschreibung !== 'leer') ) {
+                if (
+                    (ndx <= 3) &&
+                    (media[1] === '01') &&
+                    (mediatext.data.beschreibung !== 'leer')
+                ) {
                     beschreibung = mediatext.data.beschreibung;
-                } else if ( (media[1] !== '01') && (mediatext.data.beschreibung !== 'leer') && (ndx <= 1) ) {
+                } else if (
+                    (media[1] !== '01') &&
+                    (mediatext.data.beschreibung !== 'leer') &&
+                    (ndx <= 1)
+                ) {
                     beschreibung = mediatext.data.beschreibung;
                 }
             }
             var nextNdx = ++ndx;
-            Lada.view.form.Probe.mediaSnScheduler.enqueue(me.setMediaSN, [nextNdx, media, beschreibung], me);
+            Lada.view.form.Probe.mediaSnScheduler.enqueue(
+                me.setMediaSN, [nextNdx, media, beschreibung], me);
             Lada.view.form.Probe.mediaSnScheduler.finished();
         });
     },
@@ -737,7 +768,8 @@ Ext.define('Lada.view.form.Probe', {
                 content = notifications[key];
                 var notificationsText = '';
                 for (var j = 0; j < content.length; j++) {
-                    notificationsText += i18n.getMsg(content[j].toString()) + '\n';
+                    notificationsText += i18n.getMsg(
+                        content[j].toString()) + '\n';
                 }
                 element.showNotifications(notificationsText);
             }

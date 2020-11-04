@@ -113,12 +113,14 @@ Ext.define('Lada.view.widget.base.DateTimeRange', {
             var val0 = parseInt(value.split(',')[0], 10);
             var val1 = parseInt(value.split(',')[1], 10);
             if (!isNaN(val0)) {
-                this.down('[name=' + this.name + 'From]').setValue(new Date(val0));
+                this.down('[name=' + this.name + 'From]').setValue(
+                    new Date(val0));
             } else {
                 this.down('[name=' + this.name + 'From]').setValue(null);
             }
             if (!isNaN(val1)) {
-                this.down('[name=' + this.name + 'To]').setValue(new Date(val1));
+                this.down('[name=' + this.name + 'To]').setValue(
+                    new Date(val1));
             } else {
                 this.down('[name=' + this.name + 'To]').setValue(null);
             }

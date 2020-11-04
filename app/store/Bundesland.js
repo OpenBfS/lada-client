@@ -7,7 +7,8 @@
  */
 
 /**
-  * Store Bundesland for bundesland filter. Will not be obtained from server. It is a subset of Verwaltungseinheiten
+  * Store Bundesland for bundesland filter. Will not be obtained from server.
+  * It is a subset of Verwaltungseinheiten
   * ('isBundesland')
  */
 Ext.define('Lada.store.Bundesland', {

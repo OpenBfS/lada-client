@@ -112,7 +112,7 @@ Ext.define('Lada.controller.grid.MKommentar', {
                     failure: function(request, response) {
                         if (response.error) {
                             var i18n = Lada.getApplication().bundle;
-                            //TODO: check content of error.status (html error code)
+                            //TODO: check content of html error code
                             Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
                                 i18n.getMsg('err.msg.generic.body'));
                         } else {

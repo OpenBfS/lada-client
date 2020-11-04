@@ -174,7 +174,8 @@ Ext.define('Lada.store.Tag', {
     },
 
     /**
-     * Creates a new reference from the current probe to the given tag using a POST request
+     * Creates a new reference from the current probe to the given tag using
+     * a POST request
      */
     createZuordnung: function(tag, callback) {
         var zuordnung = {
@@ -191,7 +192,8 @@ Ext.define('Lada.store.Tag', {
     },
 
     /**
-     * Deletes a reference from the given tag to the current probe, using a DELETE request
+     * Deletes a reference from the given tag to the current probe, using a
+     * DELETE request
      */
     deleteZuordnung: function(tag, callback) {
         Ext.Ajax.request({

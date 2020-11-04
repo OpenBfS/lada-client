@@ -44,7 +44,9 @@ Ext.define('Lada.view.widget.Deskriptor', {
             try {
                 me.down('combobox').setStore(this);
             } catch (e) {
-                Ext.log({msg: 'Initializing deskriptor widget failed: ' + e, level: 'warn'});
+                Ext.log({
+                    msg: 'Initializing deskriptor widget failed: ' + e,
+                    level: 'warn'});
             }
         }, this.store);
 

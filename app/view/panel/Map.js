@@ -71,7 +71,7 @@ Ext.define('Lada.view.panel.Map', {
      * Select a feature by record (a Lada.model.Ort)
      * @param record Record
      */
-    selectFeature: function(model,record, opts) {
+    selectFeature: function(model,record) {
         if (!record || !record.get('id') || record.get('id') === '') {
             return;
         }
@@ -162,13 +162,19 @@ Ext.define('Lada.view.panel.Map', {
 
         //Use probe or messprogramm to get the mstId
         if (parent && (parent.probe || parent.messprogramm)) {
-            var parentRecord = parent.probe ? parent.probe : parent.messprogramm;
+            var parentRecord = parent.probe ?
+                parent.probe :
+                parent.messprogramm;
             var mstId = parentRecord.get('mstId');
             var mst = Ext.data.StoreManager.get('messstellen');
             var ndx = mst.findExact('id', mstId);
             var nId = mst.getAt(ndx).get('netzbetreiberId');
-            var koord_x = Math.round(clone.getGeometry().getCoordinates()[0] * 100000)/100000;
-            var koord_y = Math.round(clone.getGeometry().getCoordinates()[1] * 100000)/100000;
+            var koord_x = Math.round(
+                clone.getGeometry().getCoordinates()[0] * 100000)
+                /100000;
+            var koord_y = Math.round(
+                clone.getGeometry().getCoordinates()[1] * 100000)
+                /100000;
             Ext.create('Lada.view.window.Ort', {
                 record: Ext.create('Lada.model.Ort',{
                     netzbetreiberId: nId,
@@ -245,6 +251,7 @@ Ext.define('Lada.view.panel.Map', {
     afterRender: function() {
         var backgroundMap = new ol.layer.Tile({
             source: new ol.source.XYZ({
+                // eslint-disable-next-line max-len
                 url: 'http://www.imis.bfs.de/mapcache/tms/1.0.0/osm_bfs_google@GoogleMapsCompatible/{z}/{x}/{-y}.png'
             }),
             maxZoom: 18
@@ -279,7 +286,7 @@ Ext.define('Lada.view.panel.Map', {
         // style definitions for markers
         var stroke = new ol.style.Stroke({color: '#FFF', width: 1});
 
-        this.standardStyle = function(feature, resolution) {
+        this.standardStyle = function(feature) {
             return new ol.style.Style({
                 image: new ol.style.Icon({
                     src: 'resources/img/marker-green.png'
@@ -296,7 +303,7 @@ Ext.define('Lada.view.panel.Map', {
                 })
             });
         };
-        this.selectStyle = function(feature, resolution) {
+        this.selectStyle = function(feature) {
             return new ol.style.Style({
                 image: new ol.style.Icon({
                     src: 'resources/img/marker-blue.png'
@@ -313,7 +320,7 @@ Ext.define('Lada.view.panel.Map', {
                 })
             });
         };
-        this.newFeatureStyle= function(feature, resolution) {
+        this.newFeatureStyle= function() {
             return new ol.style.Style({
                 image: new ol.style.Icon({
                     src: 'resources/img/marker-blue.png',
@@ -392,8 +399,8 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     /**
-     * initializes a layer to display Orte records, and a selection control to interact
-     * with grids and forms.
+     * initializes a layer to display Orte records, and a selection control
+     * to interact with grids and forms.
      */
     initFeatureLayer: function() {
         var me = this;

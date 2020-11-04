@@ -65,7 +65,10 @@ Ext.define('Lada.view.window.ImportResponse', {
 
         me.mstEncoding = i18n.getMsg('encoding') + ' ' + this.encoding;
         if (this.mst !== null) {
-            me.mstEncoding += '&emsp;' + i18n.getMsg('import.configMst') + ': ' + this.mst;
+            me.mstEncoding += '&emsp;' +
+            i18n.getMsg('import.configMst') +
+            ': ' +
+            this.mst;
         }
 
         this.bodyStyle = {background: '#fff'};
@@ -89,7 +92,9 @@ Ext.define('Lada.view.window.ImportResponse', {
             name: 'download',
             disabled: true,
             handler: function() {
-                var downloadJoin = me.downloadPrefix + me.download + me.downloadPostfix;
+                var downloadJoin = me.downloadPrefix +
+                    me.download +
+                    me.downloadPostfix;
                 var blob = new Blob([downloadJoin],{type: 'text/html'});
                 saveAs(blob, 'report.html');
             }
@@ -107,7 +112,11 @@ Ext.define('Lada.view.window.ImportResponse', {
         var me = this;
 
         Ext.Object.each(data, function(fileName, fileResult) {
-            var response = '<br/><hr><b>' + fileName + ':</b><br/><ol>&#40' + me.mstEncoding + '&#41</ol>';
+            var response = '<br/><hr><b>' +
+                fileName +
+                ':</b><br/><ol>&#40' +
+                me.mstEncoding +
+                '&#41</ol>';
             response += i18n.getMsg('import.messages') + ':<br/><hr>';
             response += me.parseResponse(fileResult, true);
             me.download += response;
@@ -129,7 +138,11 @@ Ext.define('Lada.view.window.ImportResponse', {
         this.finished++;
         this.down('progressbar').updateProgress(this.finished/this.fileCount);
         var filename = this.fileNames[fileIndex];
-        var response = '<br/><hr><b>' + filename + ':</b><br/><ol>&#40' + this.mstEncoding + '&#41</ol>';
+        var response = '<br/><hr><b>' +
+            filename +
+            ':</b><br/><ol>&#40' +
+            this.mstEncoding +
+            '&#41</ol>';
         response += i18n.getMsg('import.messages') + ':<br/><hr>';
         response += status + ' - ' + statusText;
         this.down('panel').setHtml(this.down('panel').html + response);
@@ -149,8 +162,8 @@ Ext.define('Lada.view.window.ImportResponse', {
         var warnings = data.warnings;
         var notifications = data.notifications;
         var out = [];
-        // There is a entry for each imported proben in the errors dict (might be
-        // empty)
+        // There is a entry for each imported proben in the errors dict
+        // (might be empty)
 
         var numErrors;
         var numWarnings;
@@ -171,7 +184,8 @@ Ext.define('Lada.view.window.ImportResponse', {
         } else {
             if (numErrors > 0) {
                 if (errors.Parser) {
-                    out.push(i18n.getMsg('importResponse.failure', this.fileName));
+                    out.push(
+                        i18n.getMsg('importResponse.failure', this.fileName));
                 } else {
                     out.push(i18n.getMsg(
                         'importResponse.failure.generic.partial', numErrors));
@@ -230,11 +244,10 @@ Ext.define('Lada.view.window.ImportResponse', {
         var warnings = data.warnings;
         var notifications = data.notifications;
         var out = [];
-        // There is a entry for each imported proben in the errors dict (might be
-        // empty)
+        // There is a entry for each imported proben in the errors dict
+        // (might be empty)
 
-        //TODO. overflow is now neccessary
-        var divStyle = '<DIV>';//'<DIV style="max-height:300px;overflow-y:auto;">';
+        var divStyle = '<DIV>';
         var numErrors;
         var numWarnings;
         if (!Ext.isObject(errors)) {
@@ -369,7 +382,9 @@ Ext.define('Lada.view.window.ImportResponse', {
 
             if (numNotifications > 0) {
                 out.push('<br/>');
-                out.push(i18n.getMsg('importResponse.notifications.notificationlist'));
+                out.push(
+                    i18n.getMsg(
+                        'importResponse.notifications.notificationlist'));
                 out.push('<br/>');
                 out.push('<ol>');
                 if (notifications.Parser) {
@@ -421,7 +436,8 @@ Ext.define('Lada.view.window.ImportResponse', {
                 }
                 out.push('</ol>');
             } else {
-                out.push('<br>Beim Import traten keine Hinweismeldungen auf.</br>');
+                out.push(
+                    '<br>Beim Import traten keine Hinweismeldungen auf.</br>');
             }
 
             if (!divHtml) {

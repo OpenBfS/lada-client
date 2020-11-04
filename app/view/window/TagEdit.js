@@ -114,7 +114,8 @@ Ext.define('Lada.view.window.TagEdit', {
     },
 
     /**
-     * Eventhandler that unassigns the selected tag(s) from the selected probe instance(s)
+     * Eventhandler that unassigns the selected tag(s) from the selected probe
+     * instance(s)
      * @param button Button that caused the event
      */
     unassignFromSelection: function(button) {
@@ -128,7 +129,8 @@ Ext.define('Lada.view.window.TagEdit', {
         var tagCount = tags.length * me.selection.length;
         var tagsSet = 0;
         me.down('progressbar').show();
-        me.down('progressbar').updateProgress(0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
+        me.down('progressbar').updateProgress(
+            0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
         me.disableButtons();
 
         for (var i = 0; i < me.selection.length; i++) {
@@ -150,7 +152,12 @@ Ext.define('Lada.view.window.TagEdit', {
                     tagsSet++;
                     var ratio = tagsSet/tagCount;
                     me.down('progressbar').updateProgress(
-                        ratio, i18n.getMsg('tag.assignwindow.progress', tagsSet, tagCount, false));
+                        ratio,
+                        i18n.getMsg(
+                            'tag.assignwindow.progress',
+                            tagsSet,
+                            tagCount,
+                            false));
                     if (ratio === 1) {
                         Ext.getCmp('dynamicgridid').reload();
                         me.enableButtons();
@@ -161,7 +168,8 @@ Ext.define('Lada.view.window.TagEdit', {
     },
 
     /**
-     * Eventhandler that assigns the selected tag(s) to the chosen probe instance(s)
+     * Eventhandler that assigns the selected tag(s) to the chosen probe
+     * instance(s)
      * @param button Button that caused the event
      */
     assignToSelection: function(button) {
@@ -175,7 +183,8 @@ Ext.define('Lada.view.window.TagEdit', {
         var tagCount = tags.length * me.selection.length;
         var tagsSet = 0;
         me.down('progressbar').show();
-        me.down('progressbar').updateProgress(0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
+        me.down('progressbar').updateProgress(
+            0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
         me.disableButtons();
 
         for (var i = 0; i < me.selection.length; i++) {
@@ -197,7 +206,12 @@ Ext.define('Lada.view.window.TagEdit', {
                     tagsSet++;
                     var ratio = tagsSet/tagCount;
                     me.down('progressbar').updateProgress(
-                        ratio, i18n.getMsg('tag.assignwindow.progress', tagsSet, tagCount, false));
+                        ratio,
+                        i18n.getMsg(
+                            'tag.assignwindow.progress',
+                            tagsSet,
+                            tagCount,
+                            false));
                     if (ratio === 1) {
                         Ext.getCmp('dynamicgridid').reload();
                         me.enableButtons();

@@ -7,7 +7,8 @@
  */
 
 /**
-  * Store Regierungsbezirk for regierungsbezirk filter. Will not be obtained from server. It is a subset of Verwaltungseinheiten
+  * Store Regierungsbezirk for regierungsbezirk filter. Will not be obtained
+  * from server. It is a subset of Verwaltungseinheiten
   * ('is_regbezirk')
  */
 Ext.define('Lada.store.Regierungsbezirk', {

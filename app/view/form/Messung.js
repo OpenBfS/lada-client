@@ -162,14 +162,20 @@ Ext.define('Lada.view.form.Messung', {
                     buttonListener: {
                         click: {
                             fn: function() {
-                                if ((this.probedatenbasis === 'REI-E'
-                                            || this.probedatenbasis === 'REI-I')
-                                    && (this.probe.get('reiprogpunktgruppe') === null
-                                            ||this.probe.get('reiprogpunktgruppe') === '')
-                                    && (this.probe.get('ktagruppe') === null
-                                            ||this.probe.get('ktagruppe') === '')) {
-                                    Ext.Msg.alert(i18n.getMsg('err.msg.status.title'),
-                                        i18n.getMsg('err.msg.status.consistency'));
+                                if ((this.probedatenbasis === 'REI-E' ||
+                                        this.probedatenbasis === 'REI-I') &&
+                                    (this.probe.get(
+                                        'reiprogpunktgruppe') === null ||
+                                        this.probe.get(
+                                            'reiprogpunktgruppe') === '') &&
+                                    (this.probe.get('ktagruppe') === null ||
+                                        this.probe.get('ktagruppe') === '')
+                                ) {
+                                    Ext.Msg.alert(
+                                        i18n.getMsg('err.msg.status.title'),
+                                        i18n.getMsg(
+                                            'err.msg.status.consistency')
+                                    );
                                     return false;
                                 }
                             },
@@ -207,7 +213,8 @@ Ext.define('Lada.view.form.Messung', {
                         handler: function(button) {
                             var win = Ext.create('Lada.view.window.TagCreate', {
                                 tagWidget: me.down('tagwidget'),
-                                messung: button.up('messungform').getForm().getRecord().get('id'),
+                                messung: button.up('messungform').getForm()
+                                    .getRecord().get('id'),
                                 recordType: 'messung'
                             });
                             //Close window if parent window is closed
@@ -269,8 +276,10 @@ Ext.define('Lada.view.form.Messung', {
             success: function() {
                 this.setRecord(this.record);
                 this.setReadOnly(this.record.get('readonly'));
-                this.up('messungedit').down('messwertgrid').setReadOnly(this.record.get('readonly'));
-                this.up('messungedit').down('mkommentargrid').setReadOnly(this.record.get('readonly'));
+                this.up('messungedit').down('messwertgrid')
+                    .setReadOnly(this.record.get('readonly'));
+                this.up('messungedit').down('mkommentargrid')
+                    .setReadOnly(this.record.get('readonly'));
 
                 var parentWin = this.up('window').parentWindow;
                 if (parentWin) {

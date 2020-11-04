@@ -34,7 +34,8 @@ Ext.define('Lada.view.window.PrintGrid', {
         getInstance: function() {
             if (!Lada.view.window.PrintGrid.instance) {
                 var win = Ext.create('Lada.view.window.PrintGrid', {
-                    parentGrid: Ext.ComponentQuery.query('dynamicgrid')[0] || null,
+                    parentGrid: Ext.ComponentQuery.query(
+                        'dynamicgrid')[0] || null,
                     closeAction: 'hide'
                 });
                 Lada.view.window.PrintGrid.instance = win;
@@ -197,14 +198,17 @@ Ext.define('Lada.view.window.PrintGrid', {
         }
     },
 
-    // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
+    // taken from
+    // openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
     addIrixCheckbox: function() {
         if (this.down('checkbox[name=irix-fieldset-checkbox]')) {
             return;
         }
         var me = this;
         var genericFieldset = me.down('panel[name=generic-fieldset]');
-        var printDisabled = this.down('combobox[name=template]').getValue() ? false: true ;
+        var printDisabled = this.down('combobox[name=template]').getValue() ?
+            false :
+            true ;
         var irixCheckbox = Ext.create('Ext.form.field.Checkbox', {
             name: 'irix-fieldset-checkbox',
             boxLabel: 'DokPool:',
@@ -226,7 +230,8 @@ Ext.define('Lada.view.window.PrintGrid', {
 
     },
 
-    // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
+    // taken from
+    // openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
     addIrixFieldset: function() {
         var fs = this.down('k-form-irixfieldset');
         var checkBox = this.down('[name="irix-fieldset-checkbox"]');

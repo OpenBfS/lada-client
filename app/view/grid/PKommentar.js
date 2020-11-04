@@ -42,9 +42,14 @@ Ext.define('Lada.view.grid.PKommentar', {
                 // Normally this would belong into a controller an not the view.
                 // But the RowEditPlugin is not handled there.
                 beforeedit: function(e, o) {
-                    var readonlywin = o.grid.up('window').record.get('readonly');
+                    var readonlywin = o.grid.up('window')
+                        .record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
-                    if (readonlywin === true || readonlygrid === true || this.disabled) {
+                    if (
+                        readonlywin === true ||
+                        readonlygrid === true ||
+                        this.disabled
+                    ) {
                         return false;
                     }
                     return true;

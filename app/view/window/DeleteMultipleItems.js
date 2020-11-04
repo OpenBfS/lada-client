@@ -7,7 +7,8 @@
  */
 
 /**
- * Window to show a confirmation dialog to delete a Probe and a progress bar after confirmation
+ * Window to show a confirmation dialog to delete a Probe and a progress bar
+ * after confirmation
  */
 Ext.define('Lada.view.window.DeleteMultipleItems', {
     extend: 'Ext.window.Window',
@@ -30,7 +31,6 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
 
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -73,7 +73,8 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 dialog1 = i18n.getMsg('delete.multiple_probenehmer');
                 break;
             case 'dsatzerz':
-                title = i18n.getMsg('delete.multiple_datensatzerzeuger.window.title');
+                title = i18n.getMsg(
+                    'delete.multiple_datensatzerzeuger.window.title');
                 dialog1 = i18n.getMsg('delete.multiple_datensatzerzeuger');
                 break;
             case 'mprkat':
@@ -234,8 +235,12 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                             store.removeAt(delIdx);
                         }
 
-                        html = html + i18n.getMsg(
-                            'deleteItems.callback.success',datatype, delId) + '<br>';
+                        html = html +
+                            i18n.getMsg(
+                                'deleteItems.callback.success',
+                                datatype,
+                                delId) +
+                            '<br>';
                         me.down('panel').setHtml(html);
                     } else {
                         html = html + i18n.getMsg(
@@ -244,7 +249,8 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                         me.down('panel').setHtml(html);
                     }
                     me.currentProgress += 1;
-                    me.down('progressbar').updateProgress(me.currentProgress/me.maxSteps);
+                    me.down('progressbar').updateProgress(
+                        me.currentProgress/me.maxSteps);
                     if (me.currentProgress === me.maxSteps) {
                         me.finishDelete();
                     }

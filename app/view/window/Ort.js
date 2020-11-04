@@ -46,7 +46,8 @@ Ext.define('Lada.view.window.Ort', {
     recordType: 'ort',
 
     /**
-     * Original record if record is a copy. Will only be set if the copy is created.
+     * Original record if record is a copy. Will only be set if the copy is
+     * created.
      */
     original: null,
 
@@ -62,9 +63,12 @@ Ext.define('Lada.view.window.Ort', {
             type: 'help',
             tooltip: i18n.getMsg('help.qtip'),
             callback: function() {
-                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                var imprintWin = Ext.ComponentQuery.query(
+                    'k-window-imprint')[0];
                 if (!imprintWin) {
-                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin = Ext.create(
+                        'Lada.view.window.HelpprintWindow')
+                        .show();
                     imprintWin.on('afterlayout', function() {
                         var imprintWinController = this.getController();
                         imprintWinController.setTopic('ort');
@@ -101,7 +105,10 @@ Ext.define('Lada.view.window.Ort', {
         }
 
         if (this.parentWindow !== null) {
-            if (this.parentWindow.xtype === 'ortszuordnungwindow' || this.parentWindow.xtype === 'ortstammdatengrid') {
+            if (
+                this.parentWindow.xtype === 'ortszuordnungwindow' ||
+                this.parentWindow.xtype === 'ortstammdatengrid'
+            ) {
                 this.record.set('readonly', true);
             }
         }
@@ -109,7 +116,14 @@ Ext.define('Lada.view.window.Ort', {
         if (this.mode) {
             this.setTitle(i18n.getMsg('orte.' + this.mode));
         } else {
-            this.setTitle(this.record.phantom? i18n.getMsg('orte.new'): i18n.getMsg('orte.edit')+' <i>(Referenzierte Proben '+this.record.get('referenceCount')+')</i>');
+            this.setTitle(
+                this.record.phantom?
+                    i18n.getMsg('orte.new') :
+                    i18n.getMsg('orte.edit') +
+                        ' <i>(Referenzierte Proben ' +
+                        this.record.get('referenceCount') +
+                        ')</i>'
+            );
         }
 
         this.add([
@@ -132,7 +146,9 @@ Ext.define('Lada.view.window.Ort', {
         if (this.mode) {
             this.title = i18n.getMsg('orte.' + this.mode);
         } else {
-            this.title = this.record.phantom? i18n.getMsg('orte.new'): i18n.getMsg('orte.edit');
+            this.title = this.record.phantom ?
+                i18n.getMsg('orte.new') :
+                i18n.getMsg('orte.edit');
         }
     }
 });

@@ -9,7 +9,8 @@
 /**
  * Borderless window serving as a mask for components that failed to load.
  * The window provides a reload button that can call the function defined in
- * reloadButtonHandler and will be rendered to the component set in the renderTo attribute.
+ * reloadButtonHandler and will be rendered to the component set in the
+ * renderTo attribute.
  */
 Ext.define('Lada.view.window.ReloadMask', {
     extend: 'Ext.window.Window',

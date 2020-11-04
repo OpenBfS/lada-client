@@ -34,7 +34,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
 
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -54,12 +53,18 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             scope: this,
             handler: function() {
                 var me = this;
-                var startDate = new Date(me.down('datefield[name=start]').getValue());
+                var startDate = new Date(
+                    me.down('datefield[name=start]').getValue());
                 var startUTC = Date.UTC(
-                    startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-                var endDate = new Date(me.down('datefield[name=end]').getValue());
+                    startDate.getFullYear(),
+                    startDate.getMonth(),
+                    startDate.getDate());
+                var endDate = new Date(
+                    me.down('datefield[name=end]').getValue());
                 var endUTC = Date.UTC(
-                    endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+                    endDate.getFullYear(),
+                    endDate.getMonth(),
+                    endDate.getDate());
                 var results = [];
                 this.removeAll();
                 this.down('toolbar').removeAll();
@@ -96,34 +101,46 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         panel.setLoading(false);
                         var json = Ext.JSON.decode(response.responseText);
                         if (json.success && json.data.proben) {
-                            Ext.Object.each(json.data.proben, function(key, result) {
-                                if (result.success) {
-                                    results.push(result);
-                                    panel.setHtml(panel.html + '<br>'
-                                    + i18n.getMsg('gpfm.generated.success',
-                                        result.data.length, key));
-                                } else {
-                                    panel.setHtml(panel.html + '<br>'
-                                            + i18n.getMsg('gpfm.generated.error',
-                                                key, i18n.getMsg(result.message)));
-                                }
-                            });
+                            Ext.Object.each(json.data.proben,
+                                function(key, result) {
+                                    if (result.success) {
+                                        results.push(result);
+                                        panel.setHtml(panel.html +
+                                            '<br>' +
+                                            i18n.getMsg(
+                                                'gpfm.generated.success',
+                                                result.data.length, key));
+                                    } else {
+                                        panel.setHtml(panel.html +
+                                                '<br>' +
+                                                + i18n.getMsg(
+                                                    'gpfm.generated.error',
+                                                    key,
+                                                    i18n.getMsg(
+                                                        result.message)));
+                                    }
+                                });
                         }
                         me.down('toolbar').down('button').setDisabled(false);
-                        me.processResults(results, json.data.tag? json.data.tag: '');
+                        me.processResults(
+                            results,
+                            json.data.tag? json.data.tag: ''
+                        );
                     },
                     failure: function(response) {
                         var panel = me.down('panel');
                         panel.setLoading(false);
-                        panel.setHtml(i18n.getMsg('gpfm.generated.requestfail', response.status, response.statusText));
+                        panel.setHtml(
+                            i18n.getMsg(
+                                'gpfm.generated.requestfail',
+                                response.status,
+                                response.statusText));
                         me.down('toolbar').down('button').setDisabled(false);
 
                     }
                 });
             }
         }];
-
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -231,7 +248,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             minHeight: 500,
             maxHeight: 600,
             constrain: true,
-            title: i18n.getMsg('gpfm.generated.grid.title', genTagName? genTagName: ''),
+            title: i18n.getMsg(
+                'gpfm.generated.grid.title',
+                genTagName? genTagName: ''),
             items: [{
                 xtype: 'dynamicgrid',
                 hidebuttons: ['importprobe', 'genericadd', 'gridexport'],

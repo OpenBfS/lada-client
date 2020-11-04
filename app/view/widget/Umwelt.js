@@ -53,7 +53,8 @@ Ext.define('Lada.view.widget.Umwelt' ,{
     setReiWarningVisible: function(state) {
         var i18n = Lada.getApplication().bundle;
         if (state) {
-            this.showWarnings(i18n.getMsg('warn.msg.umwelt.reiprogpunktgruppe'));
+            this.showWarnings(
+                i18n.getMsg('warn.msg.umwelt.reiprogpunktgruppe'));
         } else {
             this.clearWarningOrError();
         }

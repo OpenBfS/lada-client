@@ -65,15 +65,18 @@ Ext.define('Lada.store.Umwelt', {
                             if (record && success) {
                                 this.add(record);
                                 umweltcombo.select(record);
-                                umweltcombo.up('umwelt').setReiWarningVisible(true);
-                                reicombo.up('reiprogpunktgruppe').setUmweltWarningVisible(true);
+                                umweltcombo.up('umwelt')
+                                    .setReiWarningVisible(true);
+                                reicombo.up('reiprogpunktgruppe')
+                                    .setUmweltWarningVisible(true);
 
                                 this.onAfter({
                                     load: {
                                         fn: function(store) {
                                             store.add(record);
                                             umweltcombo.select(record);
-                                            umweltcombo.up('umwelt').setReiWarningVisible(true);
+                                            umweltcombo.up('umwelt')
+                                                .setReiWarningVisible(true);
                                             reicombo.up('reiprogpunktgruppe')
                                                 .setUmweltWarningVisible(true);
                                         },

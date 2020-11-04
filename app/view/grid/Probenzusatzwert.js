@@ -43,9 +43,14 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 // Normally this would belong into a controller an not the view.
                 // But the RowEditPlugin is not handled there.
                 beforeedit: function(e, o) {
-                    var readonlywin = o.grid.up('window').record.get('readonly');
+                    var readonlywin = o.grid.up('window')
+                        .record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
-                    if (readonlywin === true || readonlygrid === true || this.disabled) {
+                    if (
+                        readonlywin === true ||
+                        readonlygrid === true ||
+                        this.disabled
+                    ) {
                         return false;
                     }
                     return true;
@@ -115,7 +120,8 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 if (!value || value === '') {
                     return value;
                 }
-                var strValue = Lada.getApplication().toExponentialString(value, 2)
+                var strValue = Lada.getApplication().toExponentialString(
+                    value, 2)
                     .replace('.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
                 var exponent = parseInt(splitted[1], 10);
@@ -135,7 +141,8 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 var zstore = Ext.data.StoreManager.get('probenzusaetze');
                 var mstore = Ext.data.StoreManager.get('messeinheiten');
                 var mehId = zstore.getById(value).get('messEinheitId');
-                var record = mstore.findRecord('id', mehId, 0, false, false, true);
+                var record = mstore.findRecord(
+                    'id', mehId, 0, false, false, true);
                 if (!record) {
                     return '';
                 }

@@ -42,7 +42,8 @@ Ext.define('Lada.view.grid.Orte', {
     plugins: 'gridfilters',
 
     /**
-     * TODO: currently does not use DynamicGrid behaviour, although it is defined as Dynamig Grid
+     * TODO: currently does not use DynamicGrid behaviour, although it is
+     * defined as Dynamic Grid
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -142,7 +143,8 @@ Ext.define('Lada.view.grid.Orte', {
                     value === null ||
                     value === ''
                 ) {
-                    //Check if filter changed the response field into verwaltungseinheiten
+                    // Check if filter changed the response field into
+                    // verwaltungseinheiten
                     if (record.get('verwaltungseinheit')) {
                         return record.get('verwaltungseinheit');
                     } else {

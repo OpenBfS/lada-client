@@ -52,7 +52,10 @@ Ext.define('Lada.view.widget.PagingSize', {
     initComponent: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
-        Lada.getApplication().on('pagingSizeChanged', me.refreshPagingSize, this);
+        Lada.getApplication().on(
+            'pagingSizeChanged',
+            me.refreshPagingSize,
+            this);
         me.store = Ext.StoreManager.get('pagingSizes');
         this.callParent(arguments);
         this.down('tbtext').text = i18n.getMsg('grid.itemsperpage');

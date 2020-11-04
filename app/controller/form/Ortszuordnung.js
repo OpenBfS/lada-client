@@ -81,8 +81,11 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             failure: function(newRecord, response) {
                 var i18n = Lada.getApplication().bundle;
                 button.setDisabled(true);
-                button.up('ortszuordnungform').form.owner.down('button[action=revert]').setDisabled(true);
-                formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
+                button.up('ortszuordnungform').form.owner
+                    .down('button[action=revert]')
+                    .setDisabled(true);
+                formPanel.getForm().loadRecord(
+                    formPanel.getForm().getRecord());
                 if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -158,7 +161,10 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
     validityChange: function(form, valid) {
         // the simple form.isDirty() check seems to fail for a lot of cases
         var ortIdIsDirty = true;
-        if (form.getRecord().data.ortId === form.findField('ortId').getValue()) {
+        if (
+            form.getRecord().data.ortId ===
+                form.findField('ortId').getValue()
+        ) {
             ortIdIsDirty = false;
         }
         if (form.getRecord().get('readonly') === true) {
@@ -183,10 +189,14 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
     },
 
     dirtyChange: function(combo, value) {
-        combo.up('ortszuordnungform').form.owner.down('button[action=revert]').setDisabled(false);
-        if (combo.up('ortszuordnungform').form.findField('ortId').getValue() !== '' && value !== null ) {
-            combo.up('ortszuordnungform').form.owner.down('button[action=save]').setDisabled(false);
-            combo.up('ortszuordnungform').clearMessages();
+        var ozf = combo.up('ortszuordnungform');
+        ozf.form.owner.down('button[action=revert]').setDisabled(false);
+        if (
+            ozf.form.findField('ortId').getValue() !== '' &&
+            value !== null
+        ) {
+            ozf.form.owner.down('button[action=save]').setDisabled(false);
+            ozf.clearMessages();
         }
     },
 

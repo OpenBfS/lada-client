@@ -59,7 +59,9 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             if (!id) {
                                 this.datenbasis = null;
                             } else {
-                                this.datenbasis = store.getById(this.probe.get('datenbasisId')).get('datenbasis');
+                                this.datenbasis = store.getById(
+                                    this.probe.get('datenbasisId'))
+                                    .get('datenbasis');
                             }
                         }
                     }
@@ -118,9 +120,12 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             tooltip: i18n.getMsg('help.qtip'),
             titlePosition: 0,
             callback: function() {
-                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                var imprintWin = Ext.ComponentQuery.query(
+                    'k-window-imprint')[0];
                 if (!imprintWin) {
-                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin = Ext.create(
+                        'Lada.view.window.HelpprintWindow')
+                        .show();
                     imprintWin.on('afterlayout', function() {
                         var imprintWinController = this.getController();
                         imprintWinController.setTopic('ort');
@@ -141,7 +146,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         this.height = Ext.getBody().getViewSize().height - 100;
         this.bodyStyle = {background: '#fff'};
 
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -150,7 +154,8 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 this.getEl().addCls('window-inactive');
             },
             close: function() {
-                var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
+                var verwaltungseinheiten = Ext.data.StoreManager.get(
+                    'verwaltungseinheiten');
                 var staaten = Ext.data.StoreManager.get('staaten');
                 if (verwaltungseinheiten) {
                     verwaltungseinheiten.clearFilter(true);
@@ -217,7 +222,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                         action: 'frommap'
                     }, {
                         text: i18n.getMsg('orte.all'),
-                        icon: 'resources/img/network-workgroup.png', //TODO better icon
+                        icon: 'resources/img/network-workgroup.png',
                         action: 'allorte'
                     }]
                 }]
@@ -242,7 +247,9 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 this.record.set('messprogrammId', this.messprogramm.get('id'));
             }
         }
-        var mstId = this.probe? this.probe.get('mstId') : this.messprogramm.get('mstId');
+        var mstId = this.probe?
+            this.probe.get('mstId') :
+            this.messprogramm.get('mstId');
         var mst = Ext.data.StoreManager.get('messstellen');
         var ndx = mst.findExact('id', mstId);
         this.netzbetreiberId = mst.getAt(ndx).get('netzbetreiberId');
@@ -287,7 +294,8 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     },
 
     /**
-     * Instructs the fields / forms listed in this method to clear their messages.
+     * Instructs the fields / forms listed in this method to clear their
+     * messages.
      */
     clearMessages: function() {
         //todo this is a stub

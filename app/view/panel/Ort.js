@@ -39,17 +39,17 @@ Ext.define('Lada.view.panel.Ort', {
                     text: i18n.getMsg('map.button.add'),
                     icon: 'resources/img/list-add.png',
                     action: 'addMap',
-                    disabled: true // disabled on startup, will be enabled by setStore
+                    disabled: true
                 }, {
                     text: i18n.getMsg('orte.button.add'),
                     icon: 'resources/img/list-add.png',
                     action: 'add',
-                    disabled: true // disabled on startup, will be enabled by setStore
+                    disabled: true
                 }, {
                     text: i18n.getMsg('orte.button.delete'),
                     icon: 'resources/img/list-remove.png',
                     action: 'delete',
-                    disabled: true // disabled on startup, will be enabled by controller if necessary
+                    disabled: true
                 }]
             }];
         } else {
@@ -61,12 +61,12 @@ Ext.define('Lada.view.panel.Ort', {
                         text: i18n.getMsg('map.button.add'),
                         icon: 'resources/img/list-add.png',
                         action: 'addMap',
-                        disabled: true // disabled on startup, will be enabled by setStore
+                        disabled: true
                     }, {
                         text: i18n.getMsg('orte.button.add'),
                         icon: 'resources/img/list-add.png',
                         action: 'add',
-                        disabled: true // disabled on startup, will be enabled by setStore
+                        disabled: true
                     }]
             }];
         }

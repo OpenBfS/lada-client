@@ -14,8 +14,8 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
     alias: 'window.elanscenariowindow',
 
     /**
-     * Component id. Should not be changed, as there should only be one event window which
-     * can be updated.
+     * Component id. Should not be changed, as there should only be one event
+     * window which can be updated.
      */
     id: 'elanwindowid',
 
@@ -38,6 +38,7 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
      */
     displayTemplate: {
         //Used for title string
+        // eslint-disable-next-line max-len
         title: '<p style=\'font-size: 1.5em; margin: 25px 0 5px 0;\'><a href="$LINK" target="_blank"> $VALUE</a></p>',
         //Use for string that marks the event as changed or unchanged
         change: {
@@ -156,7 +157,8 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
             if (k in o) {
                 o = o[k];
                 if (Array.isArray(o) && o.length > 0) {
-                    if (o[0].hasOwnProperty('title')) {//currently true for all second level arrays
+                    if (o[0].hasOwnProperty('title')) {
+                        // currently true for all second level arrays
                         o = o.map(function(x) {
                             return x.title;
                         });
@@ -248,7 +250,7 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
     /**
      * Sort an object holding events by modified date
      * @param {Object} newEvents Event object
-     * @return {Array} Array containing object ids, sorted by modified date, asc.
+     * @return {Array} containing object ids, sorted by modified date, asc.
      */
     sortEventsByModifiedDate: function(newEvents) {
         return Ext.Array.sort(Ext.Object.getKeys(newEvents),function(a, b) {

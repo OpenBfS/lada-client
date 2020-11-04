@@ -75,10 +75,12 @@ Ext.define('Lada.controller.Print', {
                 this.dokPoolEnabled = true;
             }
             if (Lada.appContext.merge.urls['irix-servlet']) {
-                this.irixServletURL = Lada.appContext.merge.urls['irix-servlet'];
+                this.irixServletURL = Lada.appContext.merge.urls[
+                    'irix-servlet'];
             }
             if (Lada.appContext.merge.urls['print-servlet']) {
-                this.printUrlPrefix = Lada.appContext.merge.urls['print-servlet'];
+                this.printUrlPrefix = Lada.appContext.merge.urls[
+                    'print-servlet'];
             }
         }
 
@@ -127,7 +129,10 @@ Ext.define('Lada.controller.Print', {
         fieldset.removeAll();
         var availableColumns = win.parentGrid.getColumns();
         win.setDisabled(true);
-        if (! win.currentCapabilities.layouts || !win.currentCapabilities.layouts.length) {
+        if (
+            !win.currentCapabilities.layouts ||
+            !win.currentCapabilities.layouts.length
+        ) {
             return;
         }
         var capabilitiesForLayout = win.currentCapabilities.layouts[newValue];
@@ -143,14 +148,17 @@ Ext.define('Lada.controller.Print', {
                     case 'TableAttributeValue':
                         break;
                     case 'String':
-                        var matchingColumn = availableColumns.some( function(el) {
-                            return el.dataIndex === attributes[i].name;
-                        });
+                        var matchingColumn = availableColumns
+                            .some( function(el) {
+                                return el.dataIndex === attributes[i].name;
+                            });
                         if (!matchingColumn) {
                             if (attributes[i].name === 'timezone' ||
                                 attributes[i].name === 'doc_creator' ||
                                 attributes[i].name === 'clientVersion') {
-                            // timezone, doc creator and ClientVersion should be filled automatically, and not be seen in the client
+                                // timezone, doc creator and ClientVersion
+                                // should be filled automatically, and not be
+                                // seen in the client
                                 break;
                             }
                             /* hardcoded workaround to not lose the previously
@@ -254,17 +262,22 @@ Ext.define('Lada.controller.Print', {
         for (var i=0; i < attributes.length; i++) {
             switch (attributes[i].type) {
                 case 'String':
-                    var fieldselector = 'textfield[name=' + attributes[i].name + ']';
-                    var field = window.down('fieldset[name=dynamicfields]').down(fieldselector);
+                    var fieldselector = 'textfield[name='
+                        + attributes[i].name
+                        + ']';
+                    var field = window.down('fieldset[name=dynamicfields]')
+                        .down(fieldselector);
                     if (field) {
                         resultData[attributes[i].name] = field.getValue() || '';
                     } else {
                         //Auto filled fields
                         if (attributes[i].name === 'timezone') {
                             //timezone
-                            resultData[attributes[i].name] = Lada.util.Date.getCurrentTimeZone();
+                            resultData[attributes[i].name] = Lada.util.Date
+                                .getCurrentTimeZone();
                         } else if (attributes[i].name === 'clientVersion') {
-                            resultData[attributes[i].name] = 'Clientversion ' + Lada.clientVersion;
+                            resultData[attributes[i].name] = 'Clientversion '
+                                + Lada.clientVersion;
                         } else if (attributes[i].name === 'doc_creator') {
                             //username
                             resultData[attributes[i].name] = Lada.username;
@@ -274,7 +287,8 @@ Ext.define('Lada.controller.Print', {
                     }
                     break;
                 case 'TableAttributeValue':
-                    resultData[attributes[i].name] = this.printTable(window.parentGrid);
+                    resultData[attributes[i].name] = this.printTable(
+                        window.parentGrid);
                     break;
                 case 'DataSourceAttributeValue':
                     if (attributes[i].name === 'filterParams') {
@@ -302,10 +316,11 @@ Ext.define('Lada.controller.Print', {
                     } else {
                         resultData[attributes[i].name] = [];
                         for (var sel = 0; sel < selection.length; sel++ ) {
-                            resultData[attributes[i].name].push(this.fillTemplateItem(
-                                attributes[i].clientParams.attributes,
-                                selection[sel],
-                                window)
+                            resultData[attributes[i].name].push(
+                                this.fillTemplateItem(
+                                    attributes[i].clientParams.attributes,
+                                    selection[sel],
+                                    window)
                             );
                         }
                     }
@@ -321,12 +336,18 @@ Ext.define('Lada.controller.Print', {
             switch (attributes[i].type) {
                 case 'String':
                     if (modelEntry.get(attributes[i].name)) {
-                        resultData[attributes[i].name] = modelEntry.get(attributes[i].name);
+                        resultData[attributes[i].name] = modelEntry.get(
+                            attributes[i].name);
                     } else {
-                        var fieldselector = 'textfield[name=' + attributes[i].name + ']';
+                        var fieldselector = 'textfield[name='
+                            + attributes[i].name
+                            + ']';
                         if (fieldselector) {
-                            var field = window.down('fieldset[name=dynamicfields]').down(fieldselector);
+                            var field = window
+                                .down('fieldset[name=dynamicfields]')
+                                .down(fieldselector);
                             if (field) {
+                                // eslint-disable-next-line max-len
                                 resultData[attributes[i].name] = field.getValue() || '';
                             }
                         }
@@ -335,20 +356,26 @@ Ext.define('Lada.controller.Print', {
                 case 'DataSourceAttributeValue':
                     resultData[attributes[i].name] = [];
                     var subitems = modelEntry.items;
-                    // considering the items of the model to be one or more models
-                    // currently, there is no known case for it
+                    // considering the items of the model to be one or more
+                    // models. currently, there is no known case for it
                     if (subitems && subitems.length) {
                         for (var j=0;j< subitems.length; j++) {
                             resultData[attributes[i].name].push(
-                                this.fillTemplate(attributes[i].clientParams, subitems[i], window)
+                                this.fillTemplate(
+                                    attributes[i].clientParams,
+                                    subitems[i],
+                                    window)
                             );
                         }
                     } else {
-                        // the nested object may be an array of length 1 with the
-                        // data already present in the 'main' model
+                        // the nested object may be an array of length 1 with
+                        // the data already present in the 'main' model
                         // (e.g. one query containing a probe and a messung)
                         resultData[attributes[i].name].push(
-                            this.fillTemplate(attributes[i].clientParams, modelEntry, window)
+                            this.fillTemplate(
+                                attributes[i].clientParams,
+                                modelEntry,
+                                window)
                         );
                     }
                     break;
@@ -370,10 +397,16 @@ Ext.define('Lada.controller.Print', {
         var visibleColumns =[];
         var cols = grid.getVisibleColumns();
         for (var i=0; i <cols.length; i++) {
-            if (cols[i].dataIndex && cols[i].text && (ignored.indexOf(cols[i].dataIndex) === -1)) {
+            if (
+                cols[i].dataIndex &&
+                cols[i].text &&
+                (ignored.indexOf(cols[i].dataIndex) === -1)
+            ) {
                 visibleColumns.push({
                     dataIndex: cols[i].dataIndex,
-                    renderer: (cols[i].renderer.$name === 'defaultRenderer') ? null: cols[i].renderer
+                    renderer: (cols[i].renderer.$name === 'defaultRenderer') ?
+                        null:
+                        cols[i].renderer
                 });
                 columnNames.push(cols[i].text);
             }
@@ -424,7 +457,8 @@ Ext.define('Lada.controller.Print', {
         }
         var template = window.down('combobox[name=template]').getValue();
         var layout = window.down('combobox[name=layout]').getValue();
-        var filename = window.down('textfield[name=filename]').getValue() || 'lada-export';
+        var filename = window.down('textfield[name=filename]')
+            .getValue() || 'lada-export';
         var format = window.down('combobox[name=filetype]').getValue();
         var capabilities = window.currentCapabilities;
         if (template === null) {
@@ -439,7 +473,9 @@ Ext.define('Lada.controller.Print', {
         window.setDisabled(true);
         window.setLoading(true);
         var callbackFn = function(success) {
-            var result = success ? i18n.getMsg('print.success') : i18n.getMsg('print.fail');
+            var result = success ?
+                i18n.getMsg('print.success') :
+                i18n.getMsg('print.fail');
             window.down('label[name=results]').setText(result);
             window.down('label[name=results]').setHidden(false);
             window.setDisabled(false);
@@ -462,7 +498,8 @@ Ext.define('Lada.controller.Print', {
                 })
         ) {
             //TODO: preset fields are ignored here as they are no longer needed
-            // see printSelection, prepareData, createSheetData (moved without major adaption)
+            // see printSelection, prepareData, createSheetData
+            // (moved without major adaption)
 
             this.printSelection(
                 grid, filename, format, callbackFn, isIrix, qitem
@@ -493,15 +530,25 @@ Ext.define('Lada.controller.Print', {
 
     /**
      * Send a prepared request to the print server, saves the answer as
-     * @param jsonData the prepared data matching the capabilities description of the server
+     * @param jsonData the prepared data matching the capabilities description
+     * of the server
      * @param templateName name/identifier of the template as part of the url
      * @param fileName a filename (including filetype typical ending)
      * @param callbackFn a function used in callback
-     * @param isIrix Irix requests are handled differently, as the response is a pdf
-     * @param queueItem a downloadqueue store item to be used for information on the download status
+     * @param isIrix Irix requests are handled differently, as the response
+     * is a pdf
+     * @param queueItem a downloadqueue store item to be used for information
+     * on the download status
      */
 
-    sendRequest: function(jsonData, templateName, filename, callbackFn, isIrix, queueItem) {
+    sendRequest: function(
+        jsonData,
+        templateName,
+        filename,
+        callbackFn,
+        isIrix,
+        queueItem
+    ) {
         var me = this;
         var requestData = {
             success: function(response) {
@@ -561,19 +608,28 @@ Ext.define('Lada.controller.Print', {
      * this response is aggregated (see pepareData)
      * TODO: lacks handling for server errors/timeouts
      */
-    printSelection: function(grid, filename, format, callbackFn, isIrix, queueitem) {
+    printSelection: function(
+        grid,
+        filename,
+        format,
+        callbackFn,
+        isIrix,
+        queueitem
+    ) {
         // The Data is loaded from the server again, so we need
         // to be a little bit asynchronous here...
         var callback = function(response) {
             var data = response.responseText;
-            data = this.prepareData(data); // Wraps all messstellen and deskriptoren objects into an array
+            // Wraps all messstellen and deskriptoren objects into an array
+            data = this.prepareData(data);
             var printData = {
                 layout: 'A4 portrait',
                 outputFormat: format,
                 attributes: {
                     proben: data,
-                    // TODO: hard coded submission of time zone data. Not elegant,
-                    // but required because of separate Erfassungsbogen handling
+                    // TODO: hard coded submission of time zone data.
+                    // Not elegant, but required because of separate
+                    // Erfassungsbogen handling
                     timezone: Lada.util.Date.getCurrentTimeZone()
                 }};
 
@@ -642,7 +698,8 @@ Ext.define('Lada.controller.Print', {
             }
 
             if (labormessstelle !== null) {
-                prep[i]['labormessstelle.messStelle'] = labormessstelle.messStelle;
+                prep[i]['labormessstelle.messStelle'] =
+                    labormessstelle.messStelle;
             } else {
                 prep[i]['labormessstelle.messStelle'] = '';
             }
@@ -721,9 +778,16 @@ Ext.define('Lada.controller.Print', {
                                 data.push({name: json[i]});
                             } else if (grid.rowtarget.probeIdentifier) {
                             // special handling for "lada_erfassungsbogen":
-                            // only usable if we have some non-null probe identifier
-                                var selection = grid.getSelectionModel().getSelection()[0];
-                                if (selection && selection.data[grid.rowtarget.probeIdentifier] !== undefined) {
+                            // only usable if we have some non-null probe
+                            // identifier
+                                var selection = grid.getSelectionModel()
+                                    .getSelection()[0];
+                                if (
+                                    selection &&
+                                    selection.data[
+                                        grid.rowtarget.probeIdentifier] !==
+                                            undefined
+                                ) {
                                     data.push({name: json[i]});
                                 }
                             }
@@ -771,7 +835,8 @@ Ext.define('Lada.controller.Print', {
      * @param name the filename
      * @param format and file 'type' typical ending
      * @returns the filename with the proper extension if valid, or null
-     * (and invokes "handleError" with a custom message indicating wrong filename)
+     * (and invokes "handleError" with a custom message indicating wrong
+     * filename)
      */
     validateFilename: function(name, format) {
         //TODO better regex: this is quite basic
@@ -789,29 +854,33 @@ Ext.define('Lada.controller.Print', {
         }
     },
 
-    // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
+    // taken from
+    // openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
     setUpIrixJson: function(mapfishPrint, printapp) {
 
         var printgrid = Ext.ComponentQuery.query('printgrid')[0];
         var me = this;
         var irixJson = {};
-        irixJson.irix = me.formItemToJson(printgrid.down('k-form-irixfieldset'));
+        irixJson.irix = me.formItemToJson(
+            printgrid.down('k-form-irixfieldset'));
         // the generic serialisation needs a little bit shuffeling
         irixJson = me.adjustIrixSerialisation(irixJson);
         // always add the printapp to the top-lvel for irix:
-        irixJson.printapp = printapp;// me.down('[name="appCombo"]').getValue(); // TODO: same as template app name?
+        irixJson.printapp = printapp;
         irixJson['mapfish-print'] = mapfishPrint;
         return irixJson;
     },
 
-    // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
+    // taken from
+    // openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
     /**
      * Certain fields must live inside the irix fieldset, as they only make
      * sense for this type of "print"; yet their serialisation cannot live in
      * dedicted irix-object, as it is e.g. expected on the top-level. Thus
-     * the "irixContext.json" represents the allocation how it shall look like inside
-     * the print window. This method will adjust a JSON (e.g. from formItemToJson),
-     * and shuffle certain key / value pairs around: currently only 'request-type'.
+     * the "irixContext.json" represents the allocation how it shall look like
+     * inside the print window. This method will adjust a JSON (e.g. from
+     * formItemToJson), and shuffle certain key / value pairs around: currently
+     * only 'request-type'.
      *
      * @param {object} irixJson The JSON for the IRIX service, a representation
      *     of the form.
@@ -836,25 +905,32 @@ Ext.define('Lada.controller.Print', {
                 }
             });
 
-            //move "DokpoolContentType", "IsElan", "IsDoksys", "IsRodos", "IsRei"
-            //back to  "DokpoolMeta"
+            //move "DokpoolContentType", "IsElan", "IsDoksys", "IsRodos",
+            // "IsRei" back to "DokpoolMeta"
             //and "ReportContext", "Confidentiality"
             //back to "Identification"
             //and "ElanScenarios"
             //back to "DokpoolMeta"
-            irixJson.irix.Identification.ReportContext = irixJson.irix.ReportContext;
+            irixJson.irix.Identification.ReportContext = irixJson.irix.
+                ReportContext;
             delete irixJson.irix.ReportContext;
 
-            irixJson.irix.Identification.Confidentiality = irixJson.irix.Confidentiality;
+            irixJson.irix.Identification.Confidentiality = irixJson.irix.
+                Confidentiality;
             delete irixJson.irix.Confidentiality;
 
-            irixJson.irix.DokpoolMeta.DokpoolContentType = irixJson.irix.DokpoolContentType;
+            irixJson.irix.DokpoolMeta.DokpoolContentType = irixJson.irix.
+                DokpoolContentType;
             delete irixJson.irix.DokpoolContentType;
 
-            irixJson.irix.DokpoolMeta.IsElan = irixJson.irix.DokpoolBehaviour.IsElan;
-            irixJson.irix.DokpoolMeta.IsDoksys = irixJson.irix.DokpoolBehaviour.IsDoksys;
-            irixJson.irix.DokpoolMeta.IsRodos = irixJson.irix.DokpoolBehaviour.IsRodos;
-            irixJson.irix.DokpoolMeta.IsRei = irixJson.irix.DokpoolBehaviour.IsRei;
+            irixJson.irix.DokpoolMeta.IsElan = irixJson.irix.DokpoolBehaviour.
+                IsElan;
+            irixJson.irix.DokpoolMeta.IsDoksys = irixJson.irix.DokpoolBehaviour.
+                IsDoksys;
+            irixJson.irix.DokpoolMeta.IsRodos = irixJson.irix.DokpoolBehaviour.
+                IsRodos;
+            irixJson.irix.DokpoolMeta.IsRei = irixJson.irix.DokpoolBehaviour.
+                IsRei;
             delete irixJson.irix.DokpoolBehaviour;
 
             irixJson.irix.DokpoolMeta.Elan = {};

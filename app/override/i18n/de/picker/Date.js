@@ -17,7 +17,8 @@ Ext.define('Lada.override.i18n.de.picker.Date', {
     disabledDatesText: '',
     nextText: 'Nächster Monat (Strg/Control + Rechts)',
     prevText: 'Vorheriger Monat (Strg/Control + Links)',
-    monthYearText: 'Monat auswählen (Strg/Control + Hoch/Runter, um ein Jahr auszuwählen)',
+    monthYearText: 'Monat auswählen ' +
+        '(Strg/Control + Hoch/Runter, um ein Jahr auszuwählen)',
     todayTip: 'Heute ({0}) (Leertaste)',
     format: 'd.m.Y',
     startDay: 1

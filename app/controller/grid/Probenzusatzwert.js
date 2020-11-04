@@ -51,22 +51,27 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
                 context.grid.up('window').initData();
             },
             failure: function(record, response) {
+                var i18n = Lada.getApplication().bundle;
                 var json = null;
                 if (response.getResponse()) {
                     json = response.getResponse().responseText;
                 }
                 if (json) {
                     if (json.message) {
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title')
-                            +' #'+json.message,
-                        Lada.getApplication().bundle.getMsg(json.message));
+                        Ext.Msg.alert(
+                            i18n.getMsg('err.msg.save.title')
+                                + ' #'
+                                + json.message,
+                            i18n.getMsg(json.message));
                     } else {
-                        Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                            Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                        Ext.Msg.alert(
+                            i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.generic.body'));
                     }
                 } else {
-                    Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.save.title'),
-                        Lada.getApplication().bundle.getMsg('err.msg.response.body'));
+                    Ext.Msg.alert(
+                        i18n.getMsg('err.msg.save.title'),
+                        i18n.getMsg('err.msg.response.body'));
                 }
             }
         });
@@ -104,37 +109,46 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
-        Ext.MessageBox.confirm('Zusatzwert löschen', 'Sind Sie sicher?', function(btn) {
-            if (btn === 'yes') {
-                selection.erase({
-                    success: function() {
-                        button.up('window').initData();
-                    },
-                    failure: function(request, response) {
-                        var json = response.request.scope.reader.jsonData;
-                        if (json) {
-                            if (json.message) {
-                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title')
-                                    +' #'+json.message,
-                                Lada.getApplication().bundle.getMsg(json.message));
+        var i18n = Lada.getApplication().bundle;
+        Ext.MessageBox.confirm(
+            i18n.getMsg('delete.zusatzwert'),
+            i18n.getMsg('confirmation.question'),
+            function(btn) {
+                if (btn === 'yes') {
+                    selection.erase({
+                        success: function() {
+                            button.up('window').initData();
+                        },
+                        failure: function(request, response) {
+                            var json = response.request.scope.reader.jsonData;
+                            if (json) {
+                                if (json.message) {
+                                    Ext.Msg.alert(
+                                        i18n.getMsg('err.msg.delete.title')
+                                            + ' #'
+                                            + json.message,
+                                        i18n.getMsg(json.message));
+                                } else {
+                                    Ext.Msg.alert(
+                                        i18n.getMsg('err.msg.delete.title'),
+                                        i18n.getMsg('err.msg.generic.body'));
+                                }
                             } else {
-                                Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
-                                    Lada.getApplication().bundle.getMsg('err.msg.generic.body'));
+                                Ext.Msg.alert(
+                                    i18n.getMsg('err.msg.delete.title'),
+                                    i18n.getMsg('err.msg.response.body'));
                             }
-                        } else {
-                            Ext.Msg.alert(Lada.getApplication().bundle.getMsg('err.msg.delete.title'),
-                                Lada.getApplication().bundle.getMsg('err.msg.response.body'));
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
         grid.down('button[action=delete]').disable();
     },
 
     select: function(editor, record) {
         editor.up().down('selectabledisplayfield').setValue(record.get('id'));
-        var mehid = Ext.data.StoreManager.get('messeinheiten').findRecord('id',record.get('messEinheitId'), 0, false, false, true);
+        var mehid = Ext.data.StoreManager.get('messeinheiten').findRecord(
+            'id',record.get('messEinheitId'), 0, false, false, true);
         if (!mehid) {
             editor.up().getRefItems()[4].setValue('');
         } else {

@@ -33,7 +33,8 @@ Ext.define('Lada.view.Viewport', {
                     action: 'about'
                 }, {
                     xtype: 'timezonebutton',
-                    text: i18n.getMsg('timezone.button.text') + i18n.getMsg('timezone.text.local'),
+                    text: i18n.getMsg('timezone.button.text') +
+                        i18n.getMsg('timezone.text.local'),
                     tooltip: i18n.getMsg('timezone.button.tooltip'),
                     enableToggle: true,
                     action: 'toggletimezone'
@@ -51,9 +52,12 @@ Ext.define('Lada.view.Viewport', {
                 type: 'help',
                 tooltip: i18n.getMsg('help.qtip'),
                 callback: function() {
-                    var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                    var imprintWin = Ext.ComponentQuery.query(
+                        'k-window-imprint')[0];
                     if (!imprintWin) {
-                        imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                        imprintWin = Ext.create(
+                            'Lada.view.window.HelpprintWindow')
+                            .show();
                         imprintWin.on('afterlayout', function() {
                             var imprintWinController = this.getController();
                             imprintWinController.setTopic('intro');
@@ -75,15 +79,19 @@ Ext.define('Lada.view.Viewport', {
                     type: 'help',
                     tooltip: i18n.getMsg('help.qtip'),
                     callback: function() {
-                        var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                        var imprintWin = Ext.ComponentQuery.query(
+                            'k-window-imprint')[0];
                         if (!imprintWin) {
-                            imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                            imprintWin = Ext.create(
+                                'Lada.view.window.HelpprintWindow')
+                                .show();
                             imprintWin.on('afterlayout', function() {
                                 var imprintWinController = this.getController();
                                 imprintWinController.setTopic('query');
                             }, imprintWin, {single: true});
                         } else {
-                            var imprintWinController = imprintWin.getController();
+                            var imprintWinController = imprintWin
+                                .getController();
                             imprintWinController.shake(imprintWin);
                             imprintWinController.setTopic('query');
                         }

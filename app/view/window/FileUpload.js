@@ -45,18 +45,21 @@ Ext.define('Lada.view.window.FileUpload', {
                 listeners: {
                     //Allow multiple files
                     afterRender: function(cmp) {
-                        cmp.fileInputEl.dom.setAttribute('multiple', 'multiple');
+                        cmp.fileInputEl.dom.setAttribute(
+                            'multiple', 'multiple');
                     },
                     //Remove 'C:\Fakepath' part of filenames and show a comma
                     //separated list to increase readability
                     change: function(field) {
-                        var node = Ext.DomQuery.selectNode('input[id='+ field.getInputId() + ']');
+                        var node = Ext.DomQuery.selectNode(
+                            'input[id='+ field.getInputId() + ']');
                         var files = field.fileInputEl.dom.files;
                         var fileNames = '';
                         var fset = field.up('window').down('fieldset');
                         fset.removeAll();
                         for (var i = 0; i < files.length; i++) {
-                            var fname = files[i].name.replace('C:\\fakepath\\', '');
+                            var fname = files[i].name.replace(
+                                'C:\\fakepath\\', '');
                             fset.add({
                                 xtype: 'textfield',
                                 readOnly: true,
@@ -69,12 +72,19 @@ Ext.define('Lada.view.window.FileUpload', {
                                 fileNames += ', ';
                             }
                         }
-                        fset.setTitle(i18n.getMsg('import.filesSelected', files.length));
+                        fset.setTitle(
+                            i18n.getMsg('import.filesSelected',files.length));
                         node.value = fileNames;
-                        if ( (field.up('window').down('combobox[name=mst]').isValid()) && (files.length !== 0) ) {
-                            field.up('window').down('button[name=save]').setDisabled(false);
+                        if (
+                            (field.up('window').down('combobox[name=mst]')
+                                .isValid()) &&
+                            (files.length !== 0)
+                        ) {
+                            field.up('window').down(
+                                'button[name=save]').setDisabled(false);
                         } else {
-                            field.up('window').down('button[name=save]').setDisabled(true);
+                            field.up('window').down(
+                                'button[name=save]').setDisabled(true);
                         }
                     }
                 }
@@ -124,7 +134,8 @@ Ext.define('Lada.view.window.FileUpload', {
                     clear: {
                         cls: 'x-form-clear-trigger',
                         handler: function() {
-                            this.up('window').down('button[name=save]').setDisabled(true);
+                            this.up('window').down('button[name=save]')
+                                .setDisabled(true);
                             this.clearValue();
                         }
                     }
@@ -138,7 +149,8 @@ Ext.define('Lada.view.window.FileUpload', {
                     },
                     select: function(combo) {
                         if (combo.up('window').down('filefield').isValid()) {
-                            combo.up('window').down('button[name=save]').setDisabled(false);
+                            combo.up('window').down('button[name=save]')
+                                .setDisabled(false);
                         }
                     }
                 }
@@ -176,7 +188,8 @@ Ext.define('Lada.view.window.FileUpload', {
 
     /**
      * @private
-     * A handler for the Upload-Button, reading the file specified in the form field
+     * A handler for the Upload-Button, reading the file specified in the
+     * form field
      */
     readFiles: function(button) {
         var win = button.up('window');
@@ -214,7 +227,8 @@ Ext.define('Lada.view.window.FileUpload', {
     /**
      * Upload a list of files to the import service
      * @param {Ext.button.Button} button Button that triggered the upload event
-     * @param {Object} binFiles Object containing file name as keys and file content as value
+     * @param {Object} binFiles Object containing file name as keys and file
+     * content as value
      */
     uploadFiles: function(button, binFiles) {
         var win = button.up('window');
@@ -374,7 +388,8 @@ Ext.define('Lada.view.window.FileUpload', {
             this.resultWin.show();
         }
 
-        this.resultWin.updateOnError(response.status, response.statusText, fileIndex);
+        this.resultWin.updateOnError(
+            response.status, response.statusText, fileIndex);
 
         if (this.filesUploaded === this.files.length) {
             this.resultWin.finishedHandler();

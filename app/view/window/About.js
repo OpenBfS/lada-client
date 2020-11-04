@@ -20,7 +20,6 @@ Ext.define('Lada.view.window.About', {
      * This function initialises the Window
      */
     initComponent: function() {
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -76,7 +75,8 @@ Ext.define('Lada.view.window.About', {
                 + '<p>'
                 + i18n.getMsg('about.window.text.logintime')
                 + '<br />'
-                + Lada.util.Date.formatTimestamp(Lada.logintime, 'd.m.y h:i:s P', true)
+                + Lada.util.Date.formatTimestamp(
+                    Lada.logintime, 'd.m.y h:i:s P', true)
                 + '</p>'
                 + '<p>'
                 + i18n.getMsg('about.window.text.serverversion')+ ' '

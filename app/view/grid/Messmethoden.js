@@ -45,9 +45,14 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 // Normally this would belong into a controller an not the view.
                 // But the RowEditPlugin is not handled there.
                 beforeedit: function(e, o) {
-                    var readonlywin = o.grid.up('window').record.get('readonly');
+                    var readonlywin = o.grid.up('window')
+                        .record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
-                    if (readonlywin === true || readonlygrid === true || this.disabled) {
+                    if (
+                        readonlywin === true ||
+                        readonlygrid === true ||
+                        this.disabled
+                    ) {
                         return false;
                     }
                     return true;
@@ -85,7 +90,8 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 if (!store) {
                     store = Ext.create('Lada.store.Messmethoden');
                 }
-                return value + ' - ' + store.findRecord('id', value, 0, false, false, true).get('messmethode');
+                return value + ' - ' + store.findRecord(
+                    'id', value, 0, false, false, true).get('messmethode');
             },
             editor: {
                 xtype: 'combobox',
@@ -102,12 +108,12 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 typeAhead: false,
                 triggerAction: 'all',
                 tpl: Ext.create('Ext.XTemplate',
-                    '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
+                    '<tpl for=".">' +
+                    '<div class="x-combo-list-item  x-boundlist-item" >' +
                     '{id} - {messmethode}</div></tpl>'),
                 displayTpl: Ext.create('Ext.XTemplate',
                     '<tpl for=".">{id} - {messmethode}</tpl>'),
                 listeners: {
-                    //TODO initial event firing setNuklide upon editor activation
                     change: me.setNuklide
                 }
             }
@@ -190,7 +196,9 @@ Ext.define('Lada.view.grid.Messmethoden', {
         }
     },
 
-    /* changes the nuklide store to reflect available nuklide for the method selected*/
+    /* changes the nuklide store to reflect available nuklide for
+    * the method selected
+    */
     setNuklide: function(cbox, newVal, oldVal) {
         if (oldVal && oldVal === newVal) {
             return;

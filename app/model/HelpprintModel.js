@@ -28,7 +28,9 @@ Ext.define('Lada.model.HelpprintModel', {
                 imprintHtmlUrl;
 
             if (selection) {
-                imprintHtmlUrl = (selection.getData()) ? selection.getData().content : null;
+                imprintHtmlUrl = (selection.getData()) ?
+                    selection.getData().content :
+                    null;
                 imprintController.setHtmlInPanel(imprintHtmlUrl);
             } else {
                 return 'No node selected';

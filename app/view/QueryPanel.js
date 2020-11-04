@@ -51,9 +51,11 @@ Ext.define('Lada.view.QueryPanel', {
                     queryMode: 'local',
                     valueField: 'id',
                     tpl: Ext.create('Ext.XTemplate',
-                        '<tpl for="."><div class="x-combo-list-item x-boundlist-item" >' +
+                        '<tpl for=".">' +
+                        '<div class="x-combo-list-item x-boundlist-item" >' +
                         '{name}</div></tpl>'),
-                    displayTpl: Ext.create('Ext.XTemplate', '<tpl for=".">{name}</tpl>'),
+                    displayTpl: Ext.create('Ext.XTemplate',
+                        '<tpl for=".">{name}</tpl>'),
                     flex: 1,
                     matchFieldWidth: false,
                     labelWidth: 90,
@@ -167,7 +169,8 @@ Ext.define('Lada.view.QueryPanel', {
             valueField: 'messStellesIds',
             displayField: 'messStellesIds',
             tpl: Ext.create('Ext.XTemplate',
-                '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
+                '<tpl for=".">' +
+                '<div class="x-combo-list-item  x-boundlist-item" >' +
                 '{messStellesIds} - {mst_name}</div></tpl>'),
             displayTpl: Ext.create('Ext.XTemplate',
                 '<tpl for=".">{messStellesIds} - {mst_name}</tpl>')
@@ -189,7 +192,8 @@ Ext.define('Lada.view.QueryPanel', {
             displayField: 'name',
             fieldLabel: 'title.filter',
             tpl: Ext.create('Ext.XTemplate',
-                '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
+                '<tpl for=".">' +
+                '<div class="x-combo-list-item  x-boundlist-item" >' +
                 '{name}</div></tpl>'),
             displayTpl: Ext.create('Ext.XTemplate',
                 '<tpl for=".">{name}</tpl>'),
@@ -249,22 +253,32 @@ Ext.define('Lada.view.QueryPanel', {
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('query.title');
         this.callParent(arguments);
-        this.down('fieldset[name=filtervariables]').setTitle(i18n.getMsg('query.filters.visible'));
+        this.down('fieldset[name=filtervariables]').setTitle(
+            i18n.getMsg('query.filters.visible'));
         this.down('button[action=search]').text = i18n.getMsg('query.search');
         this.down('button[action=save]').text = i18n.getMsg('save');
         this.down('button[action=reset]').text =i18n.getMsg('reset');
-        this.down('checkbox[name=filterQueriesAvail]').boxLabel = i18n.getMsg('query.showavailable');
-        this.down('checkbox[name=filterQueriesOwn]').boxLabel = i18n.getMsg('query.showown');
-        this.down('checkbox[name=filterQueriesGlobal]').boxLabel = i18n.getMsg('query.showglobal');
-        this.down('fieldset[name=querydetails]').setTitle(i18n.getMsg('query.details'));
+        this.down('checkbox[name=filterQueriesAvail]').boxLabel = i18n.getMsg(
+            'query.showavailable');
+        this.down('checkbox[name=filterQueriesOwn]').boxLabel = i18n.getMsg(
+            'query.showown');
+        this.down('checkbox[name=filterQueriesGlobal]').boxLabel = i18n.getMsg(
+            'query.showglobal');
+        this.down('fieldset[name=querydetails]').setTitle(i18n.getMsg(
+            'query.details'));
         this.down('button[action=newquery]').text = i18n.getMsg('query.new');
         this.down('button[action=delquery]').text = i18n.getMsg('delete');
-        this.down('textfield[name=name]').fieldLabel = i18n.getMsg('query.name');
-        this.down('textarea[name=description]').fieldLabel = i18n.getMsg('query.comment');
+        this.down('textfield[name=name]').fieldLabel = i18n.getMsg(
+            'query.name');
+        this.down('textarea[name=description]').fieldLabel = i18n.getMsg(
+            'query.comment');
         //TODO these two are ugly hacks:
-        this.down('cbox[name=messStellesIds]').down().fieldLabel = i18n.getMsg('query.groups');
-        this.down('cbox[name=activefilters]').down().fieldLabel = i18n.getMsg('title.filter');
-        this.down('button[name=queryreload]').text = i18n.getMsg('query.button.reload');
+        this.down('cbox[name=messStellesIds]').down().fieldLabel = i18n.getMsg(
+            'query.groups');
+        this.down('cbox[name=activefilters]').down().fieldLabel = i18n.getMsg(
+            'title.filter');
+        this.down('button[name=queryreload]').text = i18n.getMsg(
+            'query.button.reload');
 
         var selquery = this.down('combobox[name=selectedQuery]');
         selquery.fieldLabel = i18n.getMsg('query.query');
@@ -295,7 +309,8 @@ Ext.define('Lada.view.QueryPanel', {
                 var record0 = this.store.getAt(0);
                 if (!record0) {
                     this.down('button[action=delquery]').setDisabled(true);
-                    var globalCB = this.down('checkbox[name=filterQueriesGlobal]');
+                    var globalCB = this.down(
+                        'checkbox[name=filterQueriesGlobal]');
                     globalCB.setValue(true);
                     globalCB.fireEvent('change', globalCB);
                     record0 = this.store.getAt(0);
@@ -367,9 +382,15 @@ Ext.define('Lada.view.QueryPanel', {
                     var activeFilters = [];
                     if (items.length) {
                         for (var i=0; i < items.length; i++) {
-                            var gridColumn = columnstore.findRecord('id',
-                                items[i].get('gridColumnId'),0,false, false, true);
-                            items[i].set('dataIndex', gridColumn.get('dataIndex'));
+                            var gridColumn = columnstore.findRecord(
+                                'id',
+                                items[i].get('gridColumnId'),
+                                0,
+                                false,
+                                false,
+                                true);
+                            items[i].set(
+                                'dataIndex', gridColumn.get('dataIndex'));
                             items[i].set('name', gridColumn.get('name'));
                             if (items[i].get('filterActive')) {
                                 activeFilters.push(gridColumn.get('dataIndex'));
@@ -394,11 +415,16 @@ Ext.define('Lada.view.QueryPanel', {
                     });
                     filterwidget.setValue(activeFilters.join(','));
 
-                    me.down('cbox[name=messStellesIds]').setValue(record.get('messStellesIds'));
+                    me.down('cbox[name=messStellesIds]').setValue(
+                        record.get('messStellesIds'));
 
-                    me.down('button[action=save]').setDisabled(me.isQueryReadonly());
+                    me.down('button[action=save]').setDisabled(
+                        me.isQueryReadonly());
 
-                    if (record.get('clonedFrom') !== 'empty' || !record.phantom) {
+                    if (
+                        record.get('clonedFrom') !== 'empty' ||
+                        !record.phantom
+                    ) {
                         me.down('button[name=search]').setDisabled(false);
                     }
                 }

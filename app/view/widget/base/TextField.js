@@ -131,7 +131,9 @@ Ext.define('Lada.view.widget.base.TextField', {
         var fieldset = this.up('fieldset[collapsible=true]');
         if (fieldset) {
             var i18n = Lada.getApplication().bundle;
-            var notificationsText = i18n.getMsg(this.name) + ': ' + notifications;
+            var notificationsText = i18n.getMsg(this.name) +
+                ': ' +
+                notifications;
             fieldset.showWarningOrError(true, notificationsText);
         }
     },

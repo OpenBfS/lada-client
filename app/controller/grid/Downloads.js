@@ -110,11 +110,13 @@ Ext.define('Lada.controller.grid.Downloads', {
         // this should be done only once, but after initialization
         // (after app.js: GET appContext.json finished)
         if (Lada.appContext && Lada.appContext.merge.urls['print-servlet']) {
-            this.ladaPrintUrlPrefix = Lada.appContext.merge.urls['print-servlet'];
+            this.ladaPrintUrlPrefix = Lada.appContext.merge.urls[
+                'print-servlet'];
         }
         var store0 = Ext.data.StoreManager.get('downloadqueue-print');
         var store1 = Ext.data.StoreManager.get('downloadqueue-export');
-        var controller = Lada.app.getController('Lada.controller.grid.Downloads');
+        var controller = Lada.app.getController(
+            'Lada.controller.grid.Downloads');
         if (store0) {
             Ext.each(store0.getData().items, function(item) {
                 if (item.get('done') !== true) {

@@ -193,7 +193,9 @@ Ext.define('Lada.view.form.Ort', {
                 action: 'copy',
                 qtip: i18n.getMsg('copy.qtip', i18n.getMsg('ort')),
                 icon: 'resources/img/dialog-ok-apply.png',
-                disabled: !this.record.phantom && !this.record.get('readonly') ? false: true
+                disabled: !this.record.phantom && !this.record.get('readonly') ?
+                    false :
+                    true
             },
             '->',
             {
@@ -215,7 +217,8 @@ Ext.define('Lada.view.form.Ort', {
 
         this.readOnly = this.record.readOnly;
 
-        //If plausible probe instances reference this ort, disable coordinate fields, verwaltungseinheit, staat
+        //If plausible probe instances reference this ort, disable coordinate
+        // fields, verwaltungseinheit, staat
         if (this.record.get('plausibleReferenceCount') > 0) {
             this.down('tfield[name=koordXExtern]').setReadOnly(true);
             this.down('tfield[name=koordYExtern]').setReadOnly(true);

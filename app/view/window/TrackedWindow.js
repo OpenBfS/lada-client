@@ -9,9 +9,11 @@
  */
 
 /**
- * Base window class which overrides show and close functions to use the WindowTracker functions.
+ * Base window class which overrides show and close functions to use the
+ * WindowTracker functions.
  * Overwrite recordType to make use of the tracking.
- * If the record used in the window is not loaded yet, the recordId attribute must be set as windows with
+ * If the record used in the window is not loaded yet, the recordId attribute
+ * must be set as windows with
  * neither record nor id will be considered as windows with new records.
  */
 Ext.define('Lada.view.window.TrackedWindow', {

@@ -61,13 +61,16 @@ Ext.define('Lada.view.window.TagCreate', {
         }
         this.title = this.mode === 'single' ?
             i18n.getMsg('title.tagcreatewindow.' + this.recordType, recordName):
-            i18n.getMsg('title.tagcreatewindowbulk.' + this.recordType, this.selection.length);
+            i18n.getMsg(
+                'title.tagcreatewindowbulk.' +
+                this.recordType,
+                this.selection.length);
         this.items = [{
             xtype: 'textfield',
             width: '100%',
             margin: '5 5 5 5',
             msgTarget: 'under',
-            //validate that text is not empty and the name does not already exists
+            //validate that text is not empty and name does not already exists
             validator: function(val) {
                 if (val.trim().length === 0) {
                     return i18n.getMsg('tag.createwindow.err.invalidtagname');
@@ -133,7 +136,8 @@ Ext.define('Lada.view.window.TagCreate', {
      * Creates and saves a tag for a selection of messung instances.
      * As tags are only created if they are associated with a messung,
      * the first step is to create a tag for the first selected messung.
-     * Then it is chosen in the tag widget combobox and saved via the TagEdit window.
+     * Then it is chosen in the tag widget combobox and saved via the TagEdit
+     * window.
      */
     saveBulkTagMessung: function(textfield) {
         var me = this;
@@ -182,7 +186,8 @@ Ext.define('Lada.view.window.TagCreate', {
      * Creates and saves a tag for a selection of probe instances.
      * As tags are only created if they are associated with a probe,
      * the first step is to create a tag for the first selected probe.
-     * Then it is chosen in the tag widget combobox and saved via the TagEdit window.
+     * Then it is chosen in the tag widget combobox and saved via the TagEdit
+     * window.
      */
     saveBulkTagProbe: function(textfield) {
         var me = this;

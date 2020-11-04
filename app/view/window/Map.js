@@ -39,7 +39,11 @@ Ext.define('Lada.view.window.Map', {
         this.callParent(arguments);
 
         if (this.geom) {
-            this.map.onAfter('afterrender',this.drawGeoJson, this, {args: [this.geom]});
+            this.map.onAfter(
+                'afterrender',
+                this.drawGeoJson,
+                this,
+                {args: [this.geom]});
         }
     },
 

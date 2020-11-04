@@ -71,15 +71,19 @@ Ext.define('Lada.controller.Ort', {
                             var json = response.request.scope.reader.jsonData;
                             if (json) {
                                 if (json.message) {
-                                    Ext.Msg.alert(i18n.getMsg('err.msg.delete.title')
-                                    +' #'+json.message,
-                                    i18n.getMsg(json.message));
+                                    Ext.Msg.alert(
+                                        i18n.getMsg('err.msg.delete.title') +
+                                            ' #' +
+                                            json.message,
+                                        i18n.getMsg(json.message));
                                 } else {
-                                    Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
+                                    Ext.Msg.alert(
+                                        i18n.getMsg('err.msg.delete.title'),
                                         i18n.getMsg('err.msg.generic.body'));
                                 }
                             } else {
-                                Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
+                                Ext.Msg.alert(
+                                    i18n.getMsg('err.msg.delete.title'),
                                     i18n.getMsg('err.msg.response.body'));
                             }
                         }

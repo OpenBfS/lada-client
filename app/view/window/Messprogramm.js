@@ -42,7 +42,7 @@ Ext.define('Lada.view.window.Messprogramm', {
             text: i18n.getMsg('generateproben'),
             action: 'generateproben',
             scope: this,
-            disabled: this.record? false : true, // disable button if no record is set.
+            disabled: this.record? false : true,
             // further disabling/enabling logic in the controller
             handler: function() {
                 //Make the Window a "singleton"
@@ -68,7 +68,6 @@ Ext.define('Lada.view.window.Messprogramm', {
             handler: this.handleBeforeClose
         }];
 
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -93,9 +92,12 @@ Ext.define('Lada.view.window.Messprogramm', {
             tooltip: i18n.getMsg('help.qtip'),
             titlePosition: 0,
             callback: function() {
-                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                var imprintWin = Ext.ComponentQuery.query(
+                    'k-window-imprint')[0];
                 if (!imprintWin) {
-                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin = Ext.create(
+                        'Lada.view.window.HelpprintWindow')
+                        .show();
                     imprintWin.on('afterlayout', function() {
                         var imprintWinController = this.getController();
                         imprintWinController.setTopic('messprogramm');
@@ -137,7 +139,9 @@ Ext.define('Lada.view.window.Messprogramm', {
             var loadCallback = function(record, response) {
                 me.down('messprogrammform').setRecord(record);
                 me.record = record;
-                var json = response ? Ext.decode(response.getResponse().responseText) : null;
+                var json = response ?
+                    Ext.decode(response.getResponse().responseText) :
+                    null;
                 if (json) {
                     this.setMessages(json.errors, json.warnings);
                     /*
@@ -146,41 +150,56 @@ Ext.define('Lada.view.window.Messprogramm', {
                     */
                 }
                 me.down('button[action=generateproben]').setDisabled(false);
-                var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
-                var recordIndex = mstLaborKombiStore.findExact('messStelle', record.get('mstId'));
-                // If the Messprogramm is ReadOnly, disable Inputfields and grids
-                if ( (me.record.get('readonly') === true) || (recordIndex === -1) ) {
+                var mstLaborKombiStore = Ext.data.StoreManager.get(
+                    'messstellelaborkombi');
+                var recordIndex = mstLaborKombiStore.findExact(
+                    'messStelle', record.get('mstId'));
+                // If Messprogramm is ReadOnly, disable Inputfields and grids
+                if (
+                    (me.record.get('readonly') === true) ||
+                    (recordIndex === -1)
+                ) {
                     me.down('messprogrammform').setReadOnly(true);
                     me.disableChildren();
                 } else {
                     me.down('messprogrammform').setReadOnly(false);
                     me.enableChildren();
                     if (record.get('probenintervall') === 'J') {
-                        me.down('messprogrammform').down('dayofyear[name=gueltigBis]').setReadOnly(true);
-                        me.down('messprogrammform').down('dayofyear[name=gueltigVon]').setReadOnly(true);
+                        me.down('messprogrammform').down(
+                            'dayofyear[name=gueltigBis]').setReadOnly(true);
+                        me.down('messprogrammform').down(
+                            'dayofyear[name=gueltigVon]').setReadOnly(true);
                     }
                 }
 
                 me.down('messprogrammform').setMediaDesk(record);
                 me.setLoading(false);
                 if (me.record === null) {
-                    me.setTitle(i18n.getMsg('messprogramm.window.create.title'));
+                    me.setTitle(
+                        i18n.getMsg('messprogramm.window.create.title'));
                 } else {
-                    me.setTitle(i18n.getMsg('messprogramm.window.edit.title') +' <i>(Referenzierte Proben '+ me.record.get('referenceCount')+')</i>');
+                    me.setTitle(
+                        i18n.getMsg(
+                            'messprogramm.window.edit.title') +
+                            ' <i>(Referenzierte Proben '+
+                            me.record.get('referenceCount')+
+                            ')</i>');
                 }
             };
             if (!loadedRecord) {
-                Ext.ClassManager.get('Lada.model.Messprogramm').load(this.record.get('id'), {
-                    failure: function(record, action) {
-                        me.setLoading(false);
-                        // TODO
-                        console.log('An unhandled Failure occured. See following Response and Record');
-                        console.log(action);
-                        console.log(record);
-                    },
-                    success: loadCallback,
-                    scope: this
-                });
+                Ext.ClassManager.get('Lada.model.Messprogramm').load(
+                    this.record.get('id'), {
+                        failure: function(record, action) {
+                            me.setLoading(false);
+                            // TODO
+                            console.log('An unhandled Failure occured.' +
+                                ' See following Response and Record');
+                            console.log(action);
+                            console.log(record);
+                        },
+                        success: loadCallback,
+                        scope: this
+                    });
             } else {
                 loadCallback(loadedRecord);
             }
@@ -191,7 +210,8 @@ Ext.define('Lada.view.window.Messprogramm', {
                 gueltigBis: 365});
             this.record = record;
             this.disableChildren();
-            var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
+            var mstLaborKombiStore = Ext.data.StoreManager.get(
+                'messstellelaborkombi');
             mstLaborKombiStore.clearFilter(true);
             var items = mstLaborKombiStore.queryBy(function(newRecord) {
                 if ( (Lada.mst.indexOf(newRecord.get('messStelle')) > -1) &&
@@ -206,16 +226,18 @@ Ext.define('Lada.view.window.Messprogramm', {
                 record.set('mstId', defaultentry.get('messStelle'));
                 record.set('laborMstId', defaultentry.get('laborMst'));
                 var mstStore = Ext.data.StoreManager.get('messstellen');
-                var netzbetreiber = mstStore.getById(defaultentry.get('messStelle')).get('netzbetreiberId');
-                if (Ext.data.StoreManager.get('netzbetreiberFiltered').getCount() > 1) {
-                    this.down('messprogrammform').down('netzbetreiber');
-                } else {
-                    this.down('messprogrammform').down('netzbetreiber').setValue(netzbetreiber);
+                var netzbetreiber = mstStore.getById(
+                    defaultentry.get('messStelle')).get('netzbetreiberId');
+                if (
+                    Ext.data.StoreManager.get('netzbetreiberFiltered')
+                        .getCount() <= 1
+                ) {
+                    this.down('messprogrammform').down('netzbetreiber')
+                        .setValue(netzbetreiber);
                 }
             }
             this.down('messprogrammform').setRecord(record);
             this.down('messprogrammform').setMediaDesk(record);
-            this.down('messprogrammform').down('messstellelaborkombi').down('combobox');
         }
         this.down('messprogrammform').isValid();
     },
@@ -260,7 +282,8 @@ Ext.define('Lada.view.window.Messprogramm', {
     },
 
     /**
-     * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
+     * Adds new event handler to the toolbar close button to add a save
+     * confirmation dialogue if a dirty form is closed
      */
     customizeToolbar: function() {
         var tools = this.tools;
@@ -274,7 +297,8 @@ Ext.define('Lada.view.window.Messprogramm', {
     },
 
     /**
-     * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
+     * Called before closing the form window. Shows confirmation dialogue
+     * window to save the form if dirty*/
     handleBeforeClose: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
@@ -297,7 +321,8 @@ Ext.define('Lada.view.window.Messprogramm', {
                         margin: '5, 0, 5, 5',
 
                         handler: function() {
-                            me.down('messprogrammform').fireEvent('save', me.down('messprogrammform'));
+                            me.down('messprogrammform').fireEvent(
+                                'save', me.down('messprogrammform'));
                             confWin.close();
                         }
                     }, {
@@ -318,21 +343,15 @@ Ext.define('Lada.view.window.Messprogramm', {
         }
     },
 
-
-    //This was used in a Probewindow, I left it here for reference...
-    /*
-    enableAddMessungen: function() {
-        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(false);
-    },
-    */
-
     disableChildren: function() {
-        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(true);
+        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(
+            true);
         this.down('messmethodengrid').setReadOnly(true);
     },
 
     enableChildren: function() {
-        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(false);
+        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(
+            false);
     },
 
     /**
@@ -345,7 +364,8 @@ Ext.define('Lada.view.window.Messprogramm', {
     },
 
     /**
-     * Instructs the fields / forms listed in this method to clear their messages.
+     * Instructs the fields / forms listed in this method to clear their
+     * messages.
      */
     clearMessages: function() {
         this.down('messprogrammform').clearMessages();
@@ -357,7 +377,11 @@ Ext.define('Lada.view.window.Messprogramm', {
             return;
         }
         var mmtgrid = this.down('messmethodengrid');
-        if (mmtgrid && mmtgrid.rowEditing && mmtgrid.rowEditing.editing === true) {
+        if (
+            mmtgrid &&
+            mmtgrid.rowEditing &&
+            mmtgrid.rowEditing.editing === true
+        ) {
             button.setDisabled(true);
             return;
         }

@@ -64,7 +64,8 @@ Ext.define('Lada.view.widget.ElanScenarioButton', {
         if (this.state) {
             this.setState(this.state);
         } else {
-            this.setState(Lada.view.widget.ElanScenarioButton.states.EVENTS_NONE);
+            this.setState(
+                Lada.view.widget.ElanScenarioButton.states.EVENTS_NONE);
         }
     },
 

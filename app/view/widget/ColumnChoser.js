@@ -218,7 +218,8 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             // var data = store.getData().items;
             var fixeddata = fixedcolumnstore.getData().items;
             for (var i=0; i < fixeddata.length; i++) {
-                var col = store.findRecord('gridColumnId', fixeddata[i].get('id'));
+                var col = store.findRecord(
+                    'gridColumnId', fixeddata[i].get('id'));
                 if (col) {
                     if (col.get('visible') === true) {
                         tstore.add(col);

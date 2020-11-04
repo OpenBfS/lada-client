@@ -25,8 +25,8 @@ Ext.define('Lada.util.WindowTracker', {
 
         /**
          * Map of (type, map)
-         * Contains maps of (recordId, window) which are used to track open windows
-         * for each record of each type
+         * Contains maps of (recordId, window) which are used to track open
+         * windows for each record of each type
          */
         maps: Ext.create('Ext.util.HashMap'),
 

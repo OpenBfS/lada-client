@@ -7,7 +7,8 @@
  */
 
 /**
- * Store Landkreis for landkreis filter. Will not be obtained from server. It is a subset of Verwaltungseinheiten
+ * Store Landkreis for landkreis filter. Will not be obtained from server.
+ * It is a subset of Verwaltungseinheiten
  * ('isLandkreis')
  */
 Ext.define('Lada.store.Landkreis', {
