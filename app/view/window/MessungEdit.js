@@ -233,13 +233,6 @@ Ext.define('Lada.view.window.MessungEdit', {
         if (!loadedRecord) {
             Ext.ClassManager.get('Lada.model.Messung').load(
                 this.record.get('id'), {
-                    failure: function(record, response) {
-                        console.log(
-                            'An unhandled Failure occured. ' +
-                            'See following Response and Record');
-                        console.log(response);
-                        console.log(record);
-                    },
                     success: loadCallback,
                     scope: this
                 });

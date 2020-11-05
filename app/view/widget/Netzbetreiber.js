@@ -69,6 +69,7 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
         var retValues = [];
         for (var i = 0; i < value.length; i++) {
             var item = value[i];
+            // eslint-disable-next-line no-loop-func
             var found = this.store.queryBy(function(rec) {
                 if (rec.get('id') === item ||
                     rec.get('netzbetreiber') === item) {

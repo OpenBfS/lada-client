@@ -189,13 +189,8 @@ Ext.define('Lada.view.window.Messprogramm', {
             if (!loadedRecord) {
                 Ext.ClassManager.get('Lada.model.Messprogramm').load(
                     this.record.get('id'), {
-                        failure: function(record, action) {
+                        failure: function() {
                             me.setLoading(false);
-                            // TODO
-                            console.log('An unhandled Failure occured.' +
-                                ' See following Response and Record');
-                            console.log(action);
-                            console.log(record);
                         },
                         success: loadCallback,
                         scope: this

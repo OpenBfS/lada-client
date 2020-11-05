@@ -462,6 +462,7 @@ Ext.define('Lada.view.window.GridExport', {
             }
             if (urlString) {
                 prm.push(
+                    // eslint-disable-next-line no-loop-func
                     new Ext.Promise(function(resolve, reject) {
                         Ext.Ajax.request({
                             url: 'lada-server/rest/'+ urlString,
@@ -1027,6 +1028,7 @@ Ext.define('Lada.view.window.GridExport', {
         var content = [];
         for (var j=0; j< secondaryData.length; j++) {
             var item = {};
+            // eslint-disable-next-line no-loop-func
             Object.keys(secondaryData[j]).forEach(function() {
                 for (var i=0; i< columns.length; i++) {
                     var di = columns[i].dataIndex;

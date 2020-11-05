@@ -163,6 +163,7 @@ Ext.define('Lada.view.window.TagCreate', {
                     var id = newItems[i].id;
                     if (!Ext.Array.findBy(
                         oldItems,
+                        // eslint-disable-next-line no-loop-func
                         function(item) {
                             return id === item.id;
                         })
@@ -212,6 +213,7 @@ Ext.define('Lada.view.window.TagCreate', {
                 for (var i = 0; i < newItems.length; i++) {
                     var id = newItems[i].id;
                     if (!Ext.Array.findBy(oldItems,
+                        // eslint-disable-next-line no-loop-func
                         function(item) {
                             return id === item.id;
                         })

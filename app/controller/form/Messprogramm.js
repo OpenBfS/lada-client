@@ -132,6 +132,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     copy.set('messprogrammId', mpCopy.get('id'));
                     copy.phantom = true;
                     copy.save({
+                        // eslint-disable-next-line no-loop-func
                         callback: function(rec, op, success) {
                             savedOZ++;
                             if (!success) {
@@ -192,6 +193,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     copy.set('messprogrammId', mpCopy.get('id'));
                     copy.phantom = true;
                     copy.save({
+                        // eslint-disable-next-line no-loop-func
                         callback: function(rec, op, success) {
                             savedMmt++;
                             if (!success) {

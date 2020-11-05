@@ -191,6 +191,7 @@ Ext.define('Lada.view.window.SetStatus', {
                     url: 'lada-server/rest/status',
                     method: 'POST',
                     jsonData: data,
+                    // eslint-disable-next-line no-loop-func
                     success: function(response) {
                         var json = Ext.JSON.decode(response.responseText);
                         var errors = json.errors;
@@ -364,6 +365,7 @@ Ext.define('Lada.view.window.SetStatus', {
                         }
                         me.fireEvent('statussetend');
                     },
+                    // eslint-disable-next-line no-loop-func
                     failure: function() {
                         count++;
                         progress.updateProgress(count / me.selection.length);

@@ -330,6 +330,7 @@ Ext.define('Lada.controller.Query', {
         var queryUserFields = Ext.create('Lada.model.Query').fields;
         for (var i=0; i< fv.length; i++) {
             //If field is in query model, append key and value to record
+            // eslint-disable-next-line no-loop-func
             queryUserFields.forEach(function(element) {
                 if (element.getName() === fv[i]) {
                     record.set(fv[i], values[fv[i]]);
@@ -368,6 +369,7 @@ Ext.define('Lada.controller.Query', {
                     new Ext.Promise(function(resolve) {
                         for (var i2=0; i2 < columns.length; i2++) {
                             columns[i2].save({
+                                // eslint-disable-next-line no-loop-func
                                 callback: function() {
                                     saved++;
                                     if (saved === columns.length) {

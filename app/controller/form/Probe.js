@@ -163,6 +163,7 @@ Ext.define('Lada.controller.form.Probe', {
                     copy.set('probeId', probeCopy.get('id'));
                     copy.phantom = true;
                     copy.save({
+                        // eslint-disable-next-line no-loop-func
                         callback: function(rec, op, success) {
                             savedOZ++;
                             if (!success) {
@@ -247,6 +248,7 @@ Ext.define('Lada.controller.form.Probe', {
                     messungRecArr.push(messungRec);
                     //Save new models
                     cpy.save({
+                        // eslint-disable-next-line no-loop-func
                         callback: function(rec, op, success) {
                             savedMessungenCopies++;
                             if (!success) {
@@ -312,6 +314,7 @@ Ext.define('Lada.controller.form.Probe', {
                     messungsId: messung.get('copyOfMessungId')
                 },
                 method: 'GET',
+                // eslint-disable-next-line no-loop-func
                 success: function(response) {
                     var responseObj = Ext.decode(response.responseText);
                     var messwertArr = responseObj.data;
@@ -360,6 +363,7 @@ Ext.define('Lada.controller.form.Probe', {
                         messwertCopyArr.push(cpy);
                         messwertRecArr.push(messwertRec);
                         cpy.save({
+                            // eslint-disable-next-line no-loop-func
                             callback: function(rec, op, success) {
                                 var currentMessungsIDNew = rec.get(
                                     'messungsId');

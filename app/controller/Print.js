@@ -149,6 +149,7 @@ Ext.define('Lada.controller.Print', {
                         break;
                     case 'String':
                         var matchingColumn = availableColumns
+                            // eslint-disable-next-line no-loop-func
                             .some( function(el) {
                                 return el.dataIndex === attributes[i].name;
                             });
@@ -295,6 +296,7 @@ Ext.define('Lada.controller.Print', {
                         var filters = window.parentGrid.currentParams.filters;
                         var setFilters = [];
                         //Remove blank filters
+                        // eslint-disable-next-line no-loop-func
                         Ext.Array.each(filters, function(value) {
                             if (value.filter || value.filter !== '') {
                                 setFilters.push(value);
@@ -816,13 +818,9 @@ Ext.define('Lada.controller.Print', {
         } else if (response && response.status && response.status === 404) {
             errormsg = i18n.getMsg('err.msg.print.404');
         } else if (response && response.responseText) {
-            try {
-                var json = Ext.JSON.decode(response.responseText);
-                if (json && json.message) {
-                    errormsg = i18n.getMsg(json.message);
-                }
-            } catch (e) {
-                console.log(e);
+            var json = Ext.JSON.decode(response.responseText);
+            if (json && json.message) {
+                errormsg = i18n.getMsg(json.message);
             }
         }
         Lada.view.window.PrintGrid.getInstance().setDisabled(false);

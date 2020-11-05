@@ -148,6 +148,7 @@ Ext.define('Lada.view.window.TagEdit', {
             }
             for (var j = 0; j < tags.length; j++) {
                 var tag = tags[j];
+                // eslint-disable-next-line no-loop-func
                 store.deleteZuordnung(tag, function() {
                     tagsSet++;
                     var ratio = tagsSet/tagCount;
@@ -202,6 +203,7 @@ Ext.define('Lada.view.window.TagEdit', {
             }
             for (var j = 0; j < tags.length; j++) {
                 var tag = tags[j];
+                // eslint-disable-next-line no-loop-func
                 store.createZuordnung(tag, function() {
                     tagsSet++;
                     var ratio = tagsSet/tagCount;

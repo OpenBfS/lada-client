@@ -211,6 +211,7 @@ Ext.define('Lada.view.window.FileUpload', {
             var file = files[i];
             readers[i] = new FileReader();
             readers[i].fileName = files[i].name;
+            // eslint-disable-next-line no-loop-func
             readers[i].onload = function(evt) {
                 var binData = evt.target.result;
                 //Remove mime type and save to array

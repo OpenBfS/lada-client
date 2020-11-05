@@ -233,16 +233,10 @@ Ext.define('Lada.view.window.ProbeEdit', {
         if (!loadedRecord) {
             Ext.ClassManager.get('Lada.model.Probe').load(
                 this.record.get('id'), {
-                    failure: function(record, action) {
+                    failure: function() {
                         me.setLoading(false);
-                        // TODO
-                        console.log('An unhandled Failure occured. ' +
-                            'See following Response and Record');
-                        console.log(action);
-                        console.log(record);
                     },
                     success: loadCallBack
-                    // scope: this
                 });
         } else {
             loadCallBack(loadedRecord);
