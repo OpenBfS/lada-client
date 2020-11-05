@@ -882,7 +882,7 @@ Ext.define('Lada.controller.Query', {
             if (a === -1 || a === null) {
                 if (b === -1 || b === null) {
                     // both no columns; sort alphabetically by dataIndex?
-                    return (item0.name).localeCompare(item1.name);
+                    return (item0.dataIndex).localeCompare(item1.dataIndex);
                 }
                 return -1;
             } else if (b === -1 || b === null) {
