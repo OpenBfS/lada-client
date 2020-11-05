@@ -71,10 +71,6 @@ Ext.define('Lada.view.Viewport', {
                 }
             }],
             items: [{
-                layout: {
-                    type: 'vbox',
-                    align: 'stretch'
-                }, // TODO 'fit' declaration ?
                 tools: [{
                     type: 'help',
                     tooltip: i18n.getMsg('help.qtip'),
