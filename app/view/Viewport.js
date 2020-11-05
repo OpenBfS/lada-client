@@ -103,6 +103,7 @@ Ext.define('Lada.view.Viewport', {
                 collapsible: true,
                 minWidth: 540,
                 collapsed: false,
+                layout: 'fit',
                 items: [{
                     xtype: 'querypanel',
                     margin: 0,
