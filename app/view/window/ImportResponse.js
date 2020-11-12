@@ -351,7 +351,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                     validation.push(i18n.getMsg(
                         'importResponse.warnings.validations'));
                     for (var i3 = msgs.length - 1; i3 >= 0; i3--) {
-                        if (msgs[i].key === 'validation') {
+                        if (msgs[i3].key === 'validation') {
                             validation.push('<ol>');
                             parts = msgs[i3].value.split('#');
                             str = i18n.getMsg(parts[0]) +
@@ -360,9 +360,9 @@ Ext.define('Lada.view.window.ImportResponse', {
                                 + i18n.getMsg(msgs[i3].code.toString()) + ')');
                             validation.push('</ol>');
                         } else {
-                            out.push('<li>' + msgs[i].key + ' ('
+                            out.push('<li>' + msgs[i3].key + ' ('
                                      + i18n.getMsg(msgs[i].code.toString())
-                                     + '): ' + msgs[i].value + '</li>');
+                                     + '): ' + msgs[i3].value + '</li>');
                         }
                     }
                     if (validation.length > 1) {
