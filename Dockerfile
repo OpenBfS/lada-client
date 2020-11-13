@@ -23,9 +23,9 @@ ENV OPENSSL_CONF /etc/ssl/
 # Install required packages
 #
 
-RUN mkdir -p /usr/share/man/man1/ && apt-get update -y && apt-get install -y \
+RUN mkdir -p /usr/share/man/man1/ && apt-get -qq update && apt-get -qq install \
     curl unzip default-jre-headless git && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    apt-get -qq clean && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 80 81 82 83 84
 
@@ -62,10 +62,8 @@ ADD Koala /usr/local/lada/Koala
 ADD .git /usr/local/lada/.git
 ADD .sencha /usr/local/lada/.sencha
 ADD build.xml /usr/local/lada/
-
-RUN GITINFO="$(git rev-parse --short HEAD 2>/dev/null)"  echo "GITINFO: ${GITINFO}" ;\
-    sed -i -e "/Lada.clientVersion/s/';/  ${GITINFO}';/" app.js
-
+# set version info
+RUN sed -i -e "/Lada.clientVersion/s/';/ $(git rev-parse --short HEAD)';/" app.js
 #
 # build application
 #
