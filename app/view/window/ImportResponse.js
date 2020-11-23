@@ -361,7 +361,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                             validation.push('</ol>');
                         } else {
                             out.push('<li>' + msgs[i3].key + ' ('
-                                     + i18n.getMsg(msgs[i].code.toString())
+                                     + i18n.getMsg(msgs[i3].code.toString())
                                      + '): ' + msgs[i3].value + '</li>');
                         }
                     }
@@ -409,7 +409,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                     validation = [];
                     validation.push(i18n.getMsg(
                         'importResponse.notifications.validations'));
-                    for (var i5 = msgs.length - 1; i5 >= 0; i--) {
+                    for (var i5 = msgs.length - 1; i5 >= 0; i5--) {
                         if (msgs[i5].key === 'validation') {
                             validation.push('<ol>');
                             parts = msgs[i5].value.split('#');
