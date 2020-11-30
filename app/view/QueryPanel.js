@@ -59,10 +59,7 @@ Ext.define('Lada.view.QueryPanel', {
                     flex: 1,
                     matchFieldWidth: false,
                     labelWidth: 90,
-                    submitValue: false,
-                    triggers: {
-                        clear: { hidden: true}
-                    }
+                    submitValue: false
                 },{
                     xtype: 'button',
                     name: 'queryreload',
