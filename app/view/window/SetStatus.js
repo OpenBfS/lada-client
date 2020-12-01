@@ -224,7 +224,7 @@ Ext.define('Lada.view.window.SetStatus', {
                             for (var key in errors) {
                                 msgs = errors[key];
                                 var validation = [];
-                                if (key.includes('#')) {
+                                if (key.indexOf('#') > -1) {
                                     var keyParts = key.split('#');
                                     for (j = msgs.length -1; j >= 0; j--) {
                                         validation.push('<li><b>' +
@@ -256,7 +256,7 @@ Ext.define('Lada.view.window.SetStatus', {
                             for (var key2 in warnings) {
                                 msgs = warnings[key2];
                                 validation = [];
-                                if (key2.includes('#')) {
+                                if (key2.indexOf('#') > -1) {
                                     keyParts = key2.split('#');
                                     for (j = msgs.length -1; j >= 0; j--) {
                                         validation.push('<li><b>' +
@@ -290,7 +290,7 @@ Ext.define('Lada.view.window.SetStatus', {
                             for (var key3 in notifications) {
                                 msgs = notifications[key3];
                                 validation = [];
-                                if (key3.includes('#')) {
+                                if (key3.indexOf('#') > -1) {
                                     keyParts = key3.split('#');
                                     for (j = msgs.length -1; j >= 0; j--) {
                                         validation.push('<li><b>' +
@@ -436,7 +436,7 @@ Ext.define('Lada.view.window.SetStatus', {
                             for (var key in warnings) {
                                 msgs = warnings[key];
                                 var validation = [];
-                                if (key.includes('#')) {
+                                if (key.indexOf('#') > -1) {
                                     keyParts = key.split('#');
                                     for (var j = msgs.length -1; j >= 0; j--) {
                                         validation.push('<li><b>' +
@@ -475,7 +475,7 @@ Ext.define('Lada.view.window.SetStatus', {
                             for (var key3 in errors) {
                                 msgs = errors[key3];
                                 validation = [];
-                                if (key3.includes('#')) {
+                                if (key3.indexOf('#') > -1) {
                                     keyParts = key3.split('#');
                                     for (j = msgs.length -1; j >= 0; j--) {
                                         validation.push('<li><b>' +
@@ -513,7 +513,7 @@ Ext.define('Lada.view.window.SetStatus', {
                             for (var key4 in notifications) {
                                 msgs = notifications[key];
                                 validation = [];
-                                if (key4.includes('#')) {
+                                if (key4.indexOf('#') > -1) {
                                     keyParts = key4.split('#');
                                     for (j = msgs.length -1; j >= 0; j--) {
                                         validation.push('<li><b>' +
