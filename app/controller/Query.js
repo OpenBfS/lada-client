@@ -27,9 +27,8 @@ Ext.define('Lada.controller.Query', {
         'Lada.view.widget.Datenbasis',
         'Lada.view.widget.Betriebsart',
         'Lada.view.plugin.GridRowExpander',
-        'Lada.view.widget.DynamicGrid'
-
-
+        'Lada.view.widget.DynamicGrid',
+        'Lada.view.window.SqlDisplay'
     ],
 
     resultStore: null,
@@ -63,6 +62,9 @@ Ext.define('Lada.controller.Query', {
             },
             'querypanel button[action=reset]': {
                 click: me.reset
+            },
+            'querypanel button[action=showsql]': {
+                click: me.showsql
             },
             'querypanel button[action=search]': {
                 click: me.search
@@ -261,6 +263,7 @@ Ext.define('Lada.controller.Query', {
     changeCurrentQuery: function(combobox) {
         var qp = combobox.up('querypanel');
         qp.down('button[name=search]').setDisabled(true);
+        qp.down('button[action=showsql]').setDisabled(true);
         var newquery = qp.store.findRecord(
             'id',
             combobox.getValue(),
@@ -494,6 +497,7 @@ Ext.define('Lada.controller.Query', {
                 scope: this,
                 callback: function(responseData, operation, success) {
                     loadingMask.hide();
+                    qp.down('button[action=showsql]').setDisabled(false);
                     if (success && responseData) {
                         var contentPanel = button.up('panel[name=main]').down(
                             'panel[name=contentpanel]');
@@ -545,6 +549,31 @@ Ext.define('Lada.controller.Query', {
                 }
             });
         }
+    },
+
+    showsql: function() {
+        if (!this.resultStore) {
+            return;
+        }
+        var payload = this.resultStore.getProxy().payload;
+        Ext.Ajax.request({
+            url: 'lada-server/rest/sql',
+            method: 'POST',
+            jsonData: payload,
+            success: function(response) {
+                if (response) {
+                    var json = Ext.decode(response.responseText);
+                    if (json.success && json.data) {
+                        Ext.create('Lada.view.window.SqlDisplay', {
+                            sql: json.data
+                        }).show();
+                    }
+                }
+            },
+            failure: function() {
+                Ext.log({msg: 'Unable to get sql query', lvl: 'warn'});
+            }
+        });
     },
 
     /**

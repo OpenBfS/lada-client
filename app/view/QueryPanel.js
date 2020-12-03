@@ -238,6 +238,13 @@ Ext.define('Lada.view.QueryPanel', {
             disabled: true
         }, {
             xtype: 'button',
+            action: 'showsql',
+            margin: '5,0,5,0',
+            flex: 1,
+            text: 'button.showsql',
+            disabled: true
+        }, {
+            xtype: 'button',
             action: 'reset',
             margin: '5,0,5,0',
             flex: 1,
@@ -254,7 +261,9 @@ Ext.define('Lada.view.QueryPanel', {
             i18n.getMsg('query.filters.visible'));
         this.down('button[action=search]').text = i18n.getMsg('query.search');
         this.down('button[action=save]').text = i18n.getMsg('save');
-        this.down('button[action=reset]').text =i18n.getMsg('reset');
+        this.down('button[action=reset]').text = i18n.getMsg('reset');
+        this.down('button[action=showsql]').text = i18n.getMsg(
+            'button.showsql');
         this.down('checkbox[name=filterQueriesAvail]').boxLabel = i18n.getMsg(
             'query.showavailable');
         this.down('checkbox[name=filterQueriesOwn]').boxLabel = i18n.getMsg(
