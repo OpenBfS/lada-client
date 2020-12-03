@@ -163,3 +163,12 @@ span.x-grid-checkcolumn {
     word-break: break-word;
     word-wrap: break-word;
 }
+
+/* Chrome  87.0.4280.67 */
+.x-fieldset-header, .x-fieldset-header-default > .x-fieldset-header-text {
+    position: initial;
+}
+
+.x-fieldset-header, .x-fieldset-header-default .x-tool-tool-el {
+    overflow: initial;
+}
