@@ -119,7 +119,7 @@ Ext.define('Lada.view.grid.Messwert', {
                             }
                         }
                         //Preselect Messeinheit
-                        if (this.defaultMehId) {
+                        if (this.defaultMehId && o.record.phantom) {
                             o.record.set('mehId', this.defaultMehId);
                         }
                         return true;
