@@ -252,7 +252,7 @@ Ext.define('Lada.view.panel.Map', {
         var backgroundMap = new ol.layer.Tile({
             source: new ol.source.XYZ({
                 // eslint-disable-next-line max-len
-                url: 'http://www.imis.bfs.de/mapcache/tms/1.0.0/osm_bfs_google@GoogleMapsCompatible/{z}/{x}/{-y}.png'
+                url: 'https://www.imis.bfs.de/ogc/tiles/tms/1.0.0/osm_bfs_google_disk@GoogleMapsCompatible/{z}/{x}/{-y}.png'
             }),
             maxZoom: 18
         });
