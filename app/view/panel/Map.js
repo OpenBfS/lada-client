@@ -243,9 +243,12 @@ Ext.define('Lada.view.panel.Map', {
      * Override to display and update the map view in the panel.
      */
     afterRender: function() {
+        if (Lada.appContext && Lada.appContext.merge.urls['backgroundMap']) {
+            var backgroundMapUrl = Lada.appContext.merge.urls['backgroundMap'];
+        };
         var backgroundMap = new ol.layer.Tile({
             source: new ol.source.XYZ({
-                url: 'https://www.imis.bfs.de/ogc/tiles/tms/1.0.0/osm_bfs_google_disk@GoogleMapsCompatible/{z}/{x}/{-y}.png'
+                url: backgroundMapUrl
             }),
             maxZoom: 18
         });
