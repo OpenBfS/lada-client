@@ -690,6 +690,32 @@ Ext.define('Lada.controller.form.Messprogramm', {
             reiStore.proxy.extraParams.umwelt = umwId;
         }
         reiStore.load();
+
+        var masseinheitCombo = formPanel.down('messeinheit').down('combobox');
+        var masseinheitStore = masseinheitCombo.store;
+        if (umwId === null) {
+            masseinheitCombo.clearValue();
+            masseinheitStore.load();
+            return true;
+        }
+
+        var umwStore = formPanel.down('umwelt').down('combobox').store;
+        umwStore.getModel().load(umwId, {
+            success: function(rec) {
+                var defaultMehId = rec.get('mehId');
+                var secMehId = rec.get('secMehId');
+                var params = {
+                    mehId: defaultMehId
+                };
+                if (secMehId) {
+                    params['secMehId'] = secMehId;
+                };
+                masseinheitStore.load({
+                    scope: this,
+                    params: params
+                });
+            }
+        });
     },
 
     /* Called if Datenbasis value changed. Changes visibility of REI specific
