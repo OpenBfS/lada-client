@@ -196,13 +196,14 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 title += datenbasis.get('datenbasis');
                 title += ' ';
             }
-            title += 'Probe';
+            title += 'Probe: ';
+            title += record.get('externeProbeId');
             if (record.get('hauptprobenNr')) {
-                title += ' - Hauptprobennr.: ';
-                title += record.get('hauptprobenNr');
+                //title += ' - extPID/Hauptprobennr.: ';
+                title += ' / '+ record.get('hauptprobenNr');
             }
             if (messstelle) {
-                title += ' Mst: ';
+                title += '    -    Mst: ';
                 title += messstelle.get('messStelle');
             }
             me.setTitle(title);
