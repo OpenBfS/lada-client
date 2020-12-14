@@ -15,9 +15,9 @@ Ext.define('Lada.view.window.SqlDisplay', {
 
     layout: 'fit',
     padding: '10 5 3 10',
-    width: 400,
+    width: 800,
     height: 500,
-    constrain: true,
+    constrain: false,
     sql: null,
 
     /**

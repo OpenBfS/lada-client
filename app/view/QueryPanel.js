@@ -196,6 +196,13 @@ Ext.define('Lada.view.QueryPanel', {
                 '<tpl for=".">{name}</tpl>'),
             persist: false
 
+        }, {
+            xtype: 'button',
+            action: 'showsql',
+            margin: '5,0,5,0',
+            flex: 1,
+            text: 'button.showsql',
+            disabled: true
         }]
     }, {
         xtype: 'fieldset',
@@ -235,13 +242,6 @@ Ext.define('Lada.view.QueryPanel', {
             flex: 1,
             margin: '5,0,5,0',
             text: 'save',
-            disabled: true
-        }, {
-            xtype: 'button',
-            action: 'showsql',
-            margin: '5,0,5,0',
-            flex: 1,
-            text: 'button.showsql',
             disabled: true
         }, {
             xtype: 'button',
@@ -432,6 +432,7 @@ Ext.define('Lada.view.QueryPanel', {
                         !record.phantom
                     ) {
                         me.down('button[name=search]').setDisabled(false);
+                        me.down('button[action=showsql]').setDisabled(false);
                     }
                 }
             });

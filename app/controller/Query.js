@@ -593,6 +593,7 @@ Ext.define('Lada.controller.Query', {
         }
         return jsonData;
     },
+
     /**
      * Create or update the filter panel according to given combobox
      * @param {Ext.form.field.Tag} element Tagfield containing chosen filters
