@@ -425,39 +425,16 @@ Ext.define('Lada.controller.Query', {
         var i18n = Lada.getApplication().bundle;
         var qp = button.up('querypanel');
         var gcs = qp.gridColumnValueStore;
-        var jsonData = {columns: []};
-        var csdata = gcs.getData().items;
+        var rowtarget = this.setrowtarget(qp);
+        var jsonData = this.getQueryPayload(gcs, rowtarget);
+        if (!jsonData) {
+            //TODO warning: no data requested
+            return;
+        }
         var loadingMask = Ext.create('Ext.LoadMask', {
             target: qp
         });
         loadingMask.show();
-        if (csdata.length === 0) {
-            //TODO warning: no data requested
-            return;
-        }
-        var rowtarget = this.setrowtarget(qp);
-        for (var i=0; i < csdata.length; i++ ) {
-            var columnObj = {
-                gridColumnId: csdata[i].get('gridColumnId'),
-                filterActive: csdata[i].get('filterActive'),
-                filterValue: csdata[i].get('filterValue') || '',
-                filterRegex: csdata[i].get('filterRegex') || false,
-                filterNegate: csdata[i].get('filterNegate') || false,
-                filterIsNull: csdata[i].get('filterIsNull') || false,
-                visible: csdata[i].get('visible'),
-                columnIndex: csdata[i].get('columnIndex'),
-                sortIndex: csdata[i].get('sortIndex'),
-                sort: csdata[i].get('sort')
-            };
-            if (csdata[i].get('dataIndex') === rowtarget.dataIndex) {
-                jsonData.columns.push(columnObj);
-                continue;
-            }
-            if (csdata[i].get('visible') === true ||
-                csdata[i].get('filterActive') === true ) {
-                jsonData.columns.push(columnObj);
-            }
-        }
         if (!jsonData.columns.length) {
             //TODO warning: no data requested
         } else {
@@ -497,7 +474,6 @@ Ext.define('Lada.controller.Query', {
                 scope: this,
                 callback: function(responseData, operation, success) {
                     loadingMask.hide();
-                    qp.down('button[action=showsql]').setDisabled(false);
                     if (success && responseData) {
                         var contentPanel = button.up('panel[name=main]').down(
                             'panel[name=contentpanel]');
@@ -551,15 +527,19 @@ Ext.define('Lada.controller.Query', {
         }
     },
 
-    showsql: function() {
-        if (!this.resultStore) {
+    showsql: function(button) {
+        var qp = button.up('querypanel');
+        var rowtarget = this.setrowtarget(qp);
+        var gcs = qp.gridColumnValueStore;
+        var jsonData = this.getQueryPayload(gcs, rowtarget);
+        if (!jsonData) {
+            //TODO warning: no data requested
             return;
         }
-        var payload = this.resultStore.getProxy().payload;
         Ext.Ajax.request({
             url: 'lada-server/rest/sql',
             method: 'POST',
-            jsonData: payload,
+            jsonData: jsonData,
             success: function(response) {
                 if (response) {
                     var json = Ext.decode(response.responseText);
@@ -576,6 +556,43 @@ Ext.define('Lada.controller.Query', {
         });
     },
 
+    /**
+     * Creates the current query as to be sent to the server
+     * @param {*} gcs an Extjs store containing the current baseQuery and
+     *  gridColumns (usually: querypanel.gridColumnStore)
+     * @param {*} rowtarget the calculated rowtarget calculated from the query
+     *   panel (see setrowtarget)
+     */
+    getQueryPayload: function(gcs, rowtarget) {
+        var csdata = gcs.getData().items;
+        if (!csdata.length) {
+            return null;
+        }
+        var jsonData = {columns: []};
+        for (var i=0; i < csdata.length; i++ ) {
+            var columnObj = {
+                gridColumnId: csdata[i].get('gridColumnId'),
+                filterActive: csdata[i].get('filterActive'),
+                filterValue: csdata[i].get('filterValue') || '',
+                filterRegex: csdata[i].get('filterRegex') || false,
+                filterNegate: csdata[i].get('filterNegate') || false,
+                filterIsNull: csdata[i].get('filterIsNull') || false,
+                visible: csdata[i].get('visible'),
+                columnIndex: csdata[i].get('columnIndex'),
+                sortIndex: csdata[i].get('sortIndex'),
+                sort: csdata[i].get('sort')
+            };
+            if (csdata[i].get('dataIndex') === rowtarget.dataIndex) {
+                jsonData.columns.push(columnObj);
+                continue;
+            }
+            if (csdata[i].get('visible') === true ||
+                csdata[i].get('filterActive') === true ) {
+                jsonData.columns.push(columnObj);
+            }
+        }
+        return jsonData;
+    },
     /**
      * Create or update the filter panel according to given combobox
      * @param {Ext.form.field.Tag} element Tagfield containing chosen filters
