@@ -57,6 +57,7 @@ Ext.define('Lada.view.window.SqlDisplay', {
         if (!this.sql) {
             return;
         }
+        this.down('[name=sqlcontainer]').getEl().setStyle('white-space', 'pre-wrap');
         this.down('[name=sqlcontainer]').setHtml(this.sql);
         if (ClipboardJS && ClipboardJS.isSupported()) {
             var copybutton = this.down('[name=copysql]').getEl().dom;
