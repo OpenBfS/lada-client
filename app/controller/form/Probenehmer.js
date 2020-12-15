@@ -20,6 +20,9 @@ Ext.define('Lada.controller.form.Probenehmer', {
             'probenehmerform button[action=discard]': {
                 click: this.discard
             },
+            'probenehmerform button[action=copy]': {
+                click: this.copyProbenehmer
+            },
             'probenehmerform': {
                 dirtychange: this.handleDirtyChange,
                 validitychange: this.checkCommitEnabled,
@@ -156,6 +159,22 @@ Ext.define('Lada.controller.form.Probenehmer', {
         });
     },
 
+    copyProbenehmer: function(button) {
+        var record = button.up('probenehmerform').getForm().getRecord();
+        var copy = record.copy(null);
+        copy.set('prnId', null);
+        var win = Ext.create('Lada.view.window.Probenehmer',{
+            record: copy,
+            mode: 'copy',
+            original: record
+        });
+        var pos = button.up('probenehmerform').up().getPosition();
+        pos[0] += 10;
+        pos[1] += 10;
+        win.show();
+        win.setPosition(pos);
+    },
+
     checkCommitEnabled: function(callingEl) {
         var form;
         if ( //called by a field
@@ -170,9 +189,11 @@ Ext.define('Lada.controller.form.Probenehmer', {
         }
         var savebutton = form.down('button[action=save]');
         var revertbutton = form.down('button[action=discard]');
+        var copybutton = form.down('button[action=copy]');
         if (!form.getRecord().phantom && form.getRecord().get('readonly')) {
             savebutton.setDisabled(true);
             revertbutton.setDisabled(true);
+            copybutton.setDisabled(true);
             return;
         }
         if (
@@ -183,17 +204,23 @@ Ext.define('Lada.controller.form.Probenehmer', {
             if (form.isDirty()) {
                 savebutton.enable();
                 revertbutton.enable();
+                if (!form.getRecord().phantom) {
+                    copybutton.setDisabled(true);
+                }
             } else {
                 savebutton.setDisabled(true);
                 revertbutton.setDisabled(true);
+                copybutton.setDisabled(false);
             }
         } else { //form invalid
             if (form.isDirty()) {
                 savebutton.setDisabled(true);
                 revertbutton.enable();
+                copybutton.setDisabled(true);
             } else {
                 savebutton.setDisabled(true);
                 revertbutton.setDisabled(true);
+                copybutton.setDisabled(true);
             }
         }
     },
