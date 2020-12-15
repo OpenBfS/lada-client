@@ -251,7 +251,7 @@ Ext.define('Lada.view.panel.Map', {
     afterRender: function() {
         if (Lada.appContext && Lada.appContext.merge.urls['backgroundMap']) {
             var backgroundMapUrl = Lada.appContext.merge.urls['backgroundMap'];
-        };
+        }
         var backgroundMap = new ol.layer.Tile({
             source: new ol.source.XYZ({
                 // eslint-disable-next-line max-len
