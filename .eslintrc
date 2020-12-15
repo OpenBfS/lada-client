@@ -15,7 +15,8 @@
         "console":true,
         "PointerEvent": true,
         "MouseEvent": true,
-        "Uint8Array": true
+        "Uint8Array": true,
+        "ClipboardJS": true
 
     },
     "rules": {
