@@ -178,10 +178,10 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                     index = 0;
                     break;
                 case 'up':
-                    index > 0 ? index-- : 0;
+                    index = index > 0 ? index - 1 : 0;
                     break;
                 case 'down':
-                    index < maxIdx ? index++ : maxIdx;
+                    index = index < maxIdx ? index + 1 : maxIdx;
                     break;
                 case 'last':
                     index = maxIdx;
