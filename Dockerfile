@@ -1,6 +1,6 @@
 # See README.markdown in the LADA server repository for usage hints
 
-FROM centos:centos6
+FROM centos:centos7
 MAINTAINER mlechner@bfs.de
 
 ENV HTTPD_PREFIX=/etc/httpd \
