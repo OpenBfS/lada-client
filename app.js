@@ -64,7 +64,6 @@ Ext.application({
         'Lada.store.Umwelt',
         'Lada.store.Verwaltungseinheiten',
         'Lada.store.VerwaltungseinheitenUnfiltered',
-        'Lada.store.Bundesland',
         'Lada.store.ReiProgpunktGruppe',
         'Lada.store.StatusWerte',
         'Lada.store.StatusStufe',
@@ -324,29 +323,18 @@ Ext.application({
         Ext.create('Lada.store.VerwaltungseinheitenUnfiltered', {
             storeId: 'verwaltungseinheitenwidget'
         });
-        Ext.create('Lada.store.Bundesland', {
-            storeId: 'bundeslandwidget'
-        });
         Ext.create('Lada.store.Verwaltungseinheiten', {
             storeId: 'verwaltungseinheiten',
             listeners: {
                 load: function(){
                     var w = Ext.data.StoreManager.get(
                         'verwaltungseinheitenwidget');
-                    var b = Ext.data.StoreManager.get(
-                        'bundeslandwidget');
                     w.removeAll(true);
-                    b.removeAll(true);
                     var rec = [];
-                    var recb = [];
                     this.each(function(r){
                         rec.push(r.copy());
-                        if (r.get('isBundesland')) {
-                            recb.push(r.copy());
-                        }
                     });
                     w.add(rec);
-                    b.add(recb);
                 }
             }
         });
