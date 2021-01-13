@@ -140,18 +140,20 @@ Ext.define('Lada.view.form.Ort', {
             fieldLabel: i18n.getMsg('orte.kda'),
             name: 'kdaId'
         }, {
-            xtype: 'tfield',
+            xtype: 'numfield',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.koordx'),
             name: 'koordXExtern',
-            regex: /^[noeswNOESW\d\.,]+$/,
+            allowDecimals: true,
+            decimalPrecision: 5,
             maxLength: 22
         }, {
-            xtype: 'tfield',
+            xtype: 'numfield',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.koordy'),
             name: 'koordYExtern',
-            regex: /^[noeswNOESW\d\.,]+$/,
+            allowDecimals: true,
+            decimalPrecision: 5,
             maxLength: 22
         }, {
             xtype: 'chkbox',
@@ -255,8 +257,8 @@ Ext.define('Lada.view.form.Ort', {
 
     clearMessages: function() {
         // TODO: this is a stub
-        this.down('tfield[name=koordXExtern]').clearWarningOrError();
-        this.down('tfield[name=koordYExtern]').clearWarningOrError();
+        this.down('numfield[name=koordXExtern]').clearWarningOrError();
+        this.down('numfield[name=koordYExtern]').clearWarningOrError();
         this.down('verwaltungseinheit[name=gemId]').clearWarningOrError();
         this.down('orttyp[name=ortTyp]').clearWarningOrError();
         this.down('staat[name=staatId]').clearWarningOrError();

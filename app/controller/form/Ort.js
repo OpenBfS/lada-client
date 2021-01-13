@@ -38,10 +38,10 @@ Ext.define('Lada.controller.form.Ort', {
             'ortform koordinatenart combobox': {
                 change: this.checkCommitEnabled
             },
-            'ortform tfield [name=koordXExtern]': {
+            'ortform numfield [name=koordXExtern]': {
                 change: this.checkCommitEnabled
             },
-            'ortform tfield [name=koordYExtern]': {
+            'ortform numfield [name=koordYExtern]': {
                 change: this.checkCommitEnabled
             },
             'ortform': {
@@ -300,10 +300,6 @@ Ext.define('Lada.controller.form.Ort', {
         var copybutton = panel.down('button[action=copy]');
 
         var form = panel.getForm();
-        if (!form.getRecord().phantom && form.getRecord().get('readonly')) {
-            savebutton.setDisabled(true);
-            return;
-        }
         if ( (form.isDirty()) || (panel.down('netzbetreiber[name=netzbetreiberId]').getValue().length !== 0) ) {
             panel.down('button[action=revert]').setDisabled(false);
         } else {
