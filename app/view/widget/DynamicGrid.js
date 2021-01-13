@@ -175,8 +175,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         for (var i=0; i < features.length;i++) {
             var id = features[i].get ? features[i].get('id') : features[i];
             if (id !== undefined) {
-                records.push(this.store.findRecord(this.rowtarget.dataIndex, id, false,
-                    false, false, true));
+                records.push(this.store.getById(id));
             }
         }
         this.getSelectionModel().select(records);
