@@ -17,13 +17,8 @@ Ext.define('Lada.view.window.ChangeKDA', {
     ],
     collapsible: false,
     maximizable: false,
-    layout: 'vbox',
-    align: 'end',
-    defaults: {
-        labelWidth: 140,
-        margin: '5,0,5,0'
-    },
     autoShow: true,
+    layout: 'vbox',
     constrain: true,
     parentWindow: null,
 
@@ -65,13 +60,11 @@ Ext.define('Lada.view.window.ChangeKDA', {
                 xtype: 'button',
                 action: 'apply',
                 text: i18n.getMsg('apply'),
-                disabled: true,
-                flex: 1
+                disabled: true
             }, {
                 xtype: 'button',
                 action: 'cancel',
                 text: i18n.getMsg('cancel'),
-                flex: 1,
                 handler: function() {
                     me.close();
                 }
