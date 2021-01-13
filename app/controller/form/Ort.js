@@ -373,7 +373,6 @@ Ext.define('Lada.controller.form.Ort', {
         // dropdownBox: Koordinatenarten:
         var win = Ext.create('Lada.view.window.ChangeKDA',{
             parentWindow: panel,
-            modal: true,
             title: i18n.getMsg('changeKDA.title')
         });
         win.show();
