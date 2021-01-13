@@ -135,9 +135,6 @@ Ext.define('Lada.view.window.FileUpload', {
         var cb = win.down('combobox[name=encoding]');
         var contentType = 'text/plain; charset=' + cb.getValue();
         var mstSelector = win.down('combobox[name=mst]').getValue();
-        var x = new Uint8Array(binData.slice(0,3));
-        if (cb.getValue() === "utf-8" && x[0] == 0xEF && x[1] == 0xBB && x[2] == 0xBF)
-            binData = binData.slice(3);
         Ext.Ajax.request({
             url: 'lada-server/data/import/laf',
             method: 'POST',
