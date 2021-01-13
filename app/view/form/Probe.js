@@ -519,9 +519,7 @@ Ext.define('Lada.view.form.Probe', {
         if (!probeRecord.data || probeRecord.data.id === null) {
             return;
         }
-        if ((probeRecord.get('owner') == true) && (probeRecord.phantom == false)) {
-            this.down('button[action=copy]').setDisabled(false);
-        }
+        this.down('button[action=copy]').setDisabled(probeRecord.phantom && record.get('readOnly'));
         var mstStore = Ext.data.StoreManager.get('messstellen');
         var mstId = mstStore.getById(probeRecord.get('mstId'));
         if (!probeRecord.get('owner')) {
@@ -687,6 +685,7 @@ Ext.define('Lada.view.form.Probe', {
         this.down('datetime[name=probeentnahmeEnde]').setReadOnly(value);
         this.down('cbox[name=probeNehmerId]').setReadOnly(value);
         this.down('cbox[name=mplId]').setReadOnly(value);
+        this.down('button[action=copy]').setDisabled(value);
         this.readOnly = value;
 
         //Deskriptoren
