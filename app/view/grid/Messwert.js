@@ -96,8 +96,6 @@ Ext.define('Lada.view.grid.Messwert', {
         var me = this;
         this.plugins = [this.rowEditing];
 
-        this.mehComboStore = Ext.create('Lada.store.Messeinheiten');
-
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -202,12 +200,12 @@ Ext.define('Lada.view.grid.Messwert', {
                 if (!value || value === '') {
                     return '';
                 }
-                var store = me.mehComboStore;
+                var store = Ext.data.StoreManager.get('messeinheiten');
                 return store.findRecord('id', value, 0, false, false, true).get('einheit');
             },
             editor: {
                 xtype: 'combobox',
-                store: me.mehComboStore,
+                store: Ext.data.StoreManager.get('messeinheiten'),
                 displayField: 'einheit',
                 valueField: 'id',
                 allowBlank: false,
@@ -274,12 +272,6 @@ Ext.define('Lada.view.grid.Messwert', {
                 scope: this,
                 success: function(rec, op) {
                     this.defaultMehId = rec.get('mehId');
-                    //Filter messeinheiten comboboxes
-                    this.mehComboStore.load({
-                        params: {
-                            mehId: this.defaultMehId
-                        }
-                    })
                 }
             });
         }
