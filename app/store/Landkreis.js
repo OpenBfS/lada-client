@@ -11,7 +11,7 @@
  * ('isLandkreis')
  */
 Ext.define('Lada.store.Landkreis', {
-    extend: 'Lada.store.Verwaltungseinheiten',
+    extend: 'Ext.data.Store',
     proxy: {
         type: 'memory',
         reader: {
