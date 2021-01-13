@@ -52,7 +52,6 @@ Ext.define('Lada.view.window.ProbeCreate', {
         });
 
         this.width = 700;
-        this.height = Ext.getBody().getViewSize().height - 30;
         // InitialConfig is the config object passed to the constructor on
         // creation of this window. We need to pass it throuh to the form as
         // we need the "modelId" param to load the correct item.
