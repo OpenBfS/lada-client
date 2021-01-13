@@ -34,8 +34,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
     record: null,
 
-    currentOrt: null, // the record of the currently set Ort
-
     trackResetOnLoad: true,
 
     initComponent: function() {
@@ -59,11 +57,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                         borderRight: '1px solid #b5b8c8 !important'
                     },
                     items: ['->', {
-                        text: i18n.getMsg('orte.show'),
-                        tooltip: i18n.getMsg('save.qtip'),
-                        // TODO icon:
-                        action: 'showort'
-                    }, {
                         text: i18n.getMsg('save'),
                         tooltip: i18n.getMsg('save.qtip'),
                         icon: 'resources/img/dialog-ok-apply.png',
@@ -151,10 +144,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
             if (!this.readOnly && newOrtId) {
                 this.getForm().setValues({ortId: newOrtId});
                 this.setOrtInfo(selRecord);
-                this.down('button [action=showort]').setDisabled(false);
             }
-        } else {
-            this.down('button [action=showort]').setDisabled(true);
         }
     },
 
@@ -170,7 +160,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     },
 
     setOrtInfo: function(ortrecord) {
-        this.currentOrt = ortrecord;
         var verwStore = Ext.StoreManager.get('verwaltungseinheiten');
         var verw = verwStore.getById(ortrecord.get('gemId'));
         var staatStore = Ext.StoreManager.get('staaten');
