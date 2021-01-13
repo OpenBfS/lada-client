@@ -66,7 +66,6 @@ Ext.application({
         'Lada.store.VerwaltungseinheitenUnfiltered',
         'Lada.store.Bundesland',
         'Lada.store.Landkreis',
-        'Lada.store.Regierungsbezirk',
         'Lada.store.ReiProgpunktGruppe',
         'Lada.store.StatusWerte',
         'Lada.store.StatusStufe',
@@ -332,9 +331,6 @@ Ext.application({
         Ext.create('Lada.store.Landkreis', {
             storeId: 'landkreiswidget'
         });
-        Ext.create('Lada.store.Regierungsbezirk', {
-            storeId: 'regierungsbezirkwidget'
-        });
         Ext.create('Lada.store.Verwaltungseinheiten', {
             storeId: 'verwaltungseinheiten',
             listeners: {
@@ -345,16 +341,12 @@ Ext.application({
                         'bundeslandwidget');
                     var l = Ext.data.StoreManager.get(
                         'landkreiswidget');
-                    var r = Ext.data.StoreManager.get(
-                        'regierungsbezirkwidget');
                     w.removeAll(true);
                     b.removeAll(true);
                     l.removeAll(true);
-                    r.removeAll(true);
                     var rec = [];
                     var recb = [];
                     var recl = [];
-                    var recr = [];
                     this.each(function(r){
                         rec.push(r.copy());
                         if (r.get('isBundesland')) {
@@ -363,14 +355,11 @@ Ext.application({
                         if (r.get('isLandkreis')) {
                             recl.push(r.copy());
                         }
-                        if (r.get('isRegbezirk')) {
-                            recr.push(r.copy());
-                        }
+
                     });
                     w.add(rec);
                     l.add(recl);
                     b.add(recb);
-                    r.add(recr);
                 }
             }
         });

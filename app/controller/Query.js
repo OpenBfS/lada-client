@@ -703,13 +703,6 @@ Ext.define('Lada.controller.Query', {
                         field = Ext.create('Lada.view.widget.Landkreis',
                             options);
                         break;
-                    case 'regbezirk':
-                        options.multiSelect = true;
-                        options.editable = true;
-                        options.value = this.getFilterValueMulti(recs[i]);
-                        field = Ext.create('Lada.view.widget.Regierungsbezirk',
-                            options);
-                        break;
                     default:
                         options.value = recs[i].get('filterValue');
                         field = Ext.create('Lada.view.widget.base.TextField',
