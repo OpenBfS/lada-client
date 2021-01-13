@@ -71,7 +71,7 @@ Ext.define('Lada.view.Viewport', {
                 split: true,
                 flex: 1,
                 collapsible: true,
-                minWidth: 540,
+                minWidth: 500,
                 collapsed: false,
                 layout: 'fit',
                 dockedItems: [{
