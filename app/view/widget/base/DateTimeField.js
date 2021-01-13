@@ -17,8 +17,7 @@ Ext.define('Lada.view.widget.base.DateTimeField', {
         'Lada.view.widget.base.DateTimePicker'
     ],
 
-    format: 'd.m.Y H:i',
-    altFormats: 'dmY Hi|dmy Hi|dmy|d.m.y Hi|d.m.y Hi|d.m.Y Hi|dmY',
+    format: 'm/d/Y H:i',
 
     collapseIf: function(e) {
         var me = this;

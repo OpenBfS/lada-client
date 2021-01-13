@@ -539,7 +539,7 @@ Ext.define('Lada.controller.Query', {
                                 }
                             }
                         };
-                        field = Ext.create('Lada.view.widget.base.DateTimeRange',
+                        field = Ext.create('Lada.view.widget.base.DateRange',
                             options);
                         field.setValue(recs[i].get('filterValue'));
                         break;
@@ -762,10 +762,6 @@ Ext.define('Lada.controller.Query', {
     filterValueChanged: function(box, newvalue, oldvalue) {
         if (box.xtype === 'datefield' && box.up('daterange')) {
             this.multiValueChanged(box, newvalue, box.up('daterange'));
-        } else if (box.xtype === 'datetimefield' && box.up('datetimerange')) {
-            this.multiValueChanged(box, newvalue, box.up('datetimerange'));
-        } else if (box.xtype === 'numberfield' && box.up('datetimerange')) {
-            this.multiValueChanged(box, newvalue, box.up('datetimerange'));
         } else if (box.xtype === 'expnumberfield' && box.up('numrangefield')) {
             this.multiValueChanged(box, newvalue, box.up('numrangefield'));
         } else {
