@@ -93,18 +93,6 @@ Ext.define('Lada.view.window.MessungEdit', {
                     recordId: this.record.get('id'),
                     umwId: this.probe.get('umwId'),
                     messgroesseStore: this.mStore
-                }, {
-                    xtype: 'toolbar',
-                    dock: 'bottom',
-                    border: false,
-                    items: [
-                    '->',{
-                        buttonAlign: 'right',
-                        margin: 5,
-                        action: 'normalize',
-                        handler: this.normalize,
-                        text: i18n.getMsg('button.normalize')
-                    }]
                 }]
             }, {
                 xtype: 'fset',
@@ -338,24 +326,6 @@ Ext.define('Lada.view.window.MessungEdit', {
         }
     },
 
-
-    normalize: function(button) {
-        var record = button.up('messungedit').record;
-        var messungId = record.get('id');
-        Ext.Ajax.request({
-            url: 'lada-server/rest/messwert/normalize?messungsId=' + messungId,
-            method: 'PUT',
-            scope: this,
-            jsonData: {},
-            callback: function(opts, success, response) {
-                if (success == true) {
-                    button.up('messungedit').down('messwertgrid').store.reload();
-                } else {
-                    Ext.Msg.alert('', 'Fehler beim Normalisieren');
-                }
-            }
-        });
-    },
 
     /**
      * Instructs the fields / forms listed in this method to set a message.
