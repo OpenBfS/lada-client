@@ -408,7 +408,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         return '';
                     }
                 }, {
-                    header: i18n.getMsg('probenehmer'),
+                    header: i18n.getMsg('probenehmerId'),
                     dataIndex: 'probeNehmerId'
                 }],
                 plugins: Ext.create('Lada.view.plugin.GridRowExpander', {
