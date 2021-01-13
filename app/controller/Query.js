@@ -915,14 +915,9 @@ Ext.define('Lada.controller.Query', {
                 var qp = Ext.ComponentQuery.query('querypanel')[0];
                 var gcsColumns = qp.gridColumnValueStore.getData().items;
                 dcColumns.forEach(function(dcCol) {
-                    var gridColumn;
-                    for (var i = 0; i < gcsColumns.length; i++) {
-                        var col = gcsColumns[i];
-                        if (col.get('dataIndex') === dcCol.dataIndex) {
-                            gridColumn = col;
-                            break;
-                        }
-                    }
+                    var gridColumn = gcsColumns.find(function(col) {
+                        return (col.get('dataIndex') === dcCol.dataIndex);
+                    });
                     if (gridColumn) {
                         gridColumn.set('width', dcCol.width);
                         gridColumn.save();
