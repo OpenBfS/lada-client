@@ -322,6 +322,12 @@ Ext.define('Lada.view.grid.Orte', {
             },
             dataIndex: 'hoeheLand'
         }, {
+            header: i18n.getMsg('orte.hoeheUeberNn'),
+            filter: {
+                type: 'numeric'
+            },
+            dataIndex: 'hoeheUeberNn'
+        }, {
             header: i18n.getMsg('letzteAenderung'),
             filter: {
                 type: 'date'

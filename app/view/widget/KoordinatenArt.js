@@ -7,7 +7,7 @@
  */
 
 /**
- * Combobox for Datenbasis
+ * Combobox for KoordinatenArt
  */
 Ext.define('Lada.view.widget.KoordinatenArt', {
     extend: 'Lada.view.widget.base.ComboBox',
@@ -35,6 +35,8 @@ Ext.define('Lada.view.widget.KoordinatenArt', {
         this.store = Ext.data.StoreManager.get('koordinatenart');
         if (!this.store) {
             this.store = Ext.create('Lada.store.KoordinatenArt');
+            this.store.setProxy(Ext.clone(this.store.getProxy()));
+            this.store.load();
         }
         this.callParent(arguments);
     }

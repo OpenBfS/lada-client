@@ -484,13 +484,7 @@ Ext.application({
         });
         Ext.create('Lada.store.KoordinatenArt', {
             storeId: 'koordinatenart',
-            autoLoad: 'true',
-            filters: function(item) {
-                if (item.get('koordinatenart') === 'UTM-MGRS (WGS84)' || item.get('koordinatenart') === 'UTM-MGRS (Hayford)') {
-                    return false;
-                }
-                return true;
-            }
+            autoLoad: 'true'
         });
         Ext.create('Lada.store.GenericResults', {
             storeId: 'genericresults',

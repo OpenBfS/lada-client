@@ -92,6 +92,8 @@ Ext.define('Lada.model.Ort', {
     }, {
         name: 'hoeheLand'
     }, {
+        name: 'hoeheUeberNn'
+    }, {
         name: 'koordXExtern',
         convert: function(v) {
             if (v === '') {
