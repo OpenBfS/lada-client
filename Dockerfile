@@ -29,7 +29,7 @@ EXPOSE 80 81 82 83 84 85
 RUN sed -i -e "/^#LoadModule proxy_module/s/#//;/^#LoadModule proxy_http_module/s/#//;/^#Include conf.*httpd-vhosts.conf/s/#//" $HTTPD_PREFIX/conf/httpd.conf
 
 RUN mkdir /usr/local/lada
-RUN ln -s /usr/local/lada/ /var/www/html/
+RUN rm -rf /var/www/html && ln -s /usr/local/lada/ /var/www/html
 WORKDIR /usr/local/lada
 
 ADD custom-vhosts.conf ./
