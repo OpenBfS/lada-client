@@ -173,8 +173,8 @@ Ext.define('Lada.controller.Print', {
                                     'rowtarget.title.'
                                     + win.parentGrid.rowtarget.dataType);
                             }
-                            if ((i18n.getMsg(attributes[i].name).indexOf('undefined'))
-                                     !== -1) {
+                            if ((i18n.getMsg(attributes[i].name).
+                                indexOf('undefined')) !== -1) {
                                 listOfItems.push({
                                     xtype: 'textfield',
                                     fieldLabel: attributes[i].name,
