@@ -17,7 +17,7 @@ Ext.define('Lada.view.window.Ort', {
         'Lada.view.form.Ort'
     ],
 
-    minWidth: 420,
+    minWidth: 440,
 
     margin: 10,
 
@@ -120,9 +120,13 @@ Ext.define('Lada.view.window.Ort', {
                 this.record.phantom?
                     i18n.getMsg('orte.new') :
                     i18n.getMsg('orte.edit') +
-                        ' <i>(Referenzierte Proben ' +
+                        ' <i>- ' +
+                        this.record.get('plausibleReferenceCount') +
+                        ' plausible ' +
+                        ' von ' +
                         this.record.get('referenceCount') +
-                        ')</i>'
+                        ' referenzierte(n) Probe(n)' +
+                        '</i>'
             );
         }
 
