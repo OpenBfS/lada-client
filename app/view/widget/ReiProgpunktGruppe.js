@@ -21,12 +21,14 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
             '{reiProgPunktGruppe} - {beschreibung}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">{reiProgPunktGruppe}</tpl>'),
+    labelTpl: Ext.create('Ext.XTemplate',
+        '<tpl for=".">{reiProgPunktGruppe} - {beschreibung}</tpl>'),
     editable: this.editable || false,
     disableKeyFilter: true,
     forceSelection: true,
     // Enable filtering of comboboxes
     autoSelect: false,
-    listConfig: {maxWidth: 500},
+    listConfig: {maxWidth: 850},
     queryMode: 'local',
     triggerAction: 'all',
     typeAhead: false,
@@ -107,7 +109,8 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
     setUmweltWarningVisible: function(state) {
         var i18n = Lada.getApplication().bundle;
         if (state) {
-            this.showWarnings(i18n.getMsg('warn.msg.reiprogpunktgruppe.umwelt'));
+            this.showWarnings(
+                i18n.getMsg('warn.msg.reiprogpunktgruppe.umwelt'));
         } else {
             this.clearWarningOrError();
         }

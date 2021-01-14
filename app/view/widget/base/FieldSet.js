@@ -19,7 +19,41 @@ Ext.define('Lada.view.widget.base.FieldSet', {
     warningText: '',
     tooltip: null,
 
+    /**
+     * Show warnings or errors for this fieldset.
+     * If this component is not rendered, the warnings will be shown after
+     * rendering.
+     * @param {Boolean} warning True if there are warnings
+     * @param {String} warningText Warning text
+     * @param {Boolean} error True if there are errors
+     * @param {String} errorText Error Text
+     */
     showWarningOrError: function(warning, warningText, error, errorText) {
+        //If component is rendered, show warnings, else add afterRender listener
+        if (this.rendered === true) {
+            this.doShowWarningOrError(warning, warningText, error, errorText);
+        } else {
+            this.onAfter(
+                'render',
+                function() {
+                    this.doShowWarningOrError(
+                        warning, warningText, error, errorText);
+                },
+                this,
+                {single: true});
+        }
+    },
+
+    /**
+     * @private
+     * Render the given warnings or errors.
+     * should now be called directly, use showWarningOrError instead.
+     * @param {Boolean} warning True if there are warnings
+     * @param {String} warningText Warning text
+     * @param {Boolean} error True if there are errors
+     * @param {String} errorText Error Text
+     */
+    doShowWarningOrError: function(warning, warningText, error, errorText) {
         this.clearMessages(); //Clear Errors and Warning first
         if (this.errorText && this.errorText !== '') {
             this.errorText += '\n';
@@ -37,6 +71,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
         var imgId = Ext.id();
         if (error) {
             this.getEl().dom.style['border-color'] = '#FF0000';
+            // eslint-disable-next-line max-len
             this.setTitle('<img src="resources/img/emblem-important.png" width="13" height="13" id="'+ imgId +'"/>  '+
                     this.plainTitle);
             if (errorText) {
@@ -53,6 +88,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
         }
         if (warning) {
             this.getEl().dom.style['border-color'] = '#FFE25D';
+            // eslint-disable-next-line max-len
             this.setTitle('<img src="resources/img/dialog-warning.png" width="13" height="13"  id="'+ imgId +'"/>  '+
                     this.plainTitle);
             if (warningText) {

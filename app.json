@@ -21,6 +21,7 @@
      * application resides (the same folder in which this file is located).
      */
     "classpath": [
+        "Koala",
         "app",
         "resources/lib/ext",
         "${build.id}"
@@ -235,7 +236,7 @@
      */
     "js": [
         {
-            "path": "${framework.dir}/build/ext-all-rtl-debug.js"
+            "path": "${framework.dir}/build/ext-all-debug.js"
         },
         {
             "path": "app.js",

@@ -6,12 +6,33 @@
   border-color: #FFE25D !important;
 }
 
+.x-lada-notification-field {
+  background-color: white;
+  background-image: url(../img/warning_line_gray.png) !important;
+  background-repeat: repeat-x !important;
+  background-position: bottom !important;
+  border-color: #70706e !important;
+}
+
 .x-lada-error-field {
   background-color: white;
   background-image: url(../img/error_line.gif) !important;
   background-repeat: repeat-x !important;
   background-position: bottom !important;
   border-color: #FF0000 !important;
+}
+
+.x-lada-warning-grid-field {
+    border: 2px solid #FFE25D;
+}
+
+.x-lada-error-grid-field {
+    border: 2px solid #cf4c35;
+}
+
+.x-lada-elan-button-new{
+    background-image: -webkit-linear-gradient(top, #FF0d08, #DD0204 50%, #DD0b09 51%, #DD0204) !important;
+    border-color: #690000 !important;
 }
 
 .x-lada-multiline-grid .x-grid-cell-inner{
@@ -46,6 +67,21 @@
 .x-action-col-icon.editstatus
 {
   background-image: url(../img/view-time-schedule-edit-status.png);
+}
+
+.x-action-col-icon.okay
+{
+    background-image: url(../img/dialog-okay-apply.png);
+}
+
+.x-action-col-icon.cancel
+{
+  background-image: url(../img/dialog-cancel.png);
+}
+.x-action-col-icon.delete
+{
+    background-image: url(../img/edit-delete.png);
+    background-size: 100%;
 }
 
 .x-grid-checkheader {
@@ -131,6 +167,10 @@ span.x-grid-checkcolumn {
     padding: 7px 3px;
 }
 
+.x-column-header-checkbox {
+    border-color: #cecece;
+}
+
 .x-form-trigger-wrap-default {
     border-width: 2px;
 }
@@ -140,4 +180,18 @@ span.x-grid-checkcolumn {
 }
 .x-tab-bar-default {
     background-color: #cfe0ec;
+}
+
+.text-wrapper .x-form-display-field {
+    word-break: break-word;
+    word-wrap: break-word;
+}
+
+/* Chrome  87.0.4280.67 */
+.x-fieldset-header, .x-fieldset-header-default > .x-fieldset-header-text {
+    position: initial;
+}
+
+.x-fieldset-header, .x-fieldset-header-default .x-tool-tool-el {
+    overflow: initial;
 }

@@ -39,7 +39,15 @@ Ext.define('Lada.view.form.Messprogramm', {
 
     trackResetOnLoad: true,
 
+    statics: {
+        mediaSnScheduler: null
+    },
+
     initComponent: function() {
+        if (Lada.view.form.Messprogramm.mediaSnScheduler === null) {
+            Lada.view.form.Messprogramm.mediaSnScheduler = Ext.create(
+                'Lada.util.FunctionScheduler');
+        }
         var me = this;
         var i18n = Lada.getApplication().bundle;
         this.items = [{
@@ -60,7 +68,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                     items: [{
                         text: i18n.getMsg('copy'),
                         action: 'copy',
-                        qtip: i18n.getMsg('copy.qtip', i18n.getMsg('messprogramm')),
+                        qtip: i18n.getMsg('copy.qtip',
+                            i18n.getMsg('messprogramm')),
                         icon: 'resources/img/dialog-ok-apply.png',
                         disabled: true
                     },'->', {
@@ -126,7 +135,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             margin: '0, 5, 5, 5',
                             width: '32%',
                             labelWidth: 65
-                        }                        ]
+                        } ]
                     }, {
                         layout: {
                             type: 'hbox',
@@ -147,9 +156,16 @@ Ext.define('Lada.view.form.Messprogramm', {
                                     fn: function(combo, newValue) {
                                         var mst = newValue.get('messStelle');
                                         var labor = newValue.get('laborMst');
-                                        combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
-                                        combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
-                                        combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
+                                        combo.up('fieldset')
+                                            .down('messstelle[name=mstId]')
+                                            .setValue(mst);
+                                        combo.up('fieldset')
+                                            .down('messstelle[name=laborMstId]')
+                                            .setValue(labor);
+                                        combo.up('fieldset')
+                                            .down(
+                                                'messprogrammland[name=mplId]')
+                                            .setValue();
                                     }
                                 }
                             }
@@ -224,7 +240,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     extraParams: function() {
                         this.down('combobox').on({ // this = widget
                             focus: function(combo) {
-                                var store = Ext.StoreManager.get('probenehmer');
+                                var store = combo.getStore();
                                 store.clearFilter();
                                 var nId = combo.up('fieldset')
                                     .down('netzbetreiber[name=netzbetreiber]')
@@ -253,7 +269,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     extraParams: function() {
                         this.down('combobox').on({ // this = widget
                             focus: function(combo) {
-                                var store = Ext.StoreManager.get('messprogrammkategorie');
+                                var store = combo.getStore();
                                 store.clearFilter();
                                 var nId = combo.up('fieldset')
                                     .down('netzbetreiber[name=netzbetreiber]')
@@ -286,7 +302,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         name: 'reiProgpunktGrpId',
                         width: '50%',
                         labelWidth: 140,
-                        fieldLabel: i18n.getMsg('reiprogpunktgruppe'),
+                        fieldLabel: i18n.getMsg('reiProgpunktGrpId'),
                         margin: '0 5 5 5',
                         allowBlank: true,
                         editable: true,
@@ -296,7 +312,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         name: 'ktaGruppeId',
                         width: '50%',
                         labelWidth: 140,
-                        fieldLabel: i18n.getMsg('ktagruppe'),
+                        fieldLabel: i18n.getMsg('ktaGruppeId'),
                         margin: '0 5 5 5',
                         hidden: true,
                         editable: true,
@@ -566,8 +582,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                 intervall, 0, false, false, true);
 
         if (intrec) { // in cases when a new messprogramm is
-        // created and the discard function is used, intrec will be null && edit is allowed
-        // consequently the assertion below will fail.
+        // created and the discard function is used, intrec will be null &&
+        // edit is allowed consequently the assertion below will fail.
             min = intrec.get('periodstart');
             max = intrec.get('periodend');
         }
@@ -611,7 +627,8 @@ Ext.define('Lada.view.form.Messprogramm', {
 
 
     setRecord: function(messRecord) {
-        this.down('button[action=copy]').setDisabled(messRecord.get('readonly'));
+        this.down('button[action=copy]').setDisabled(
+            messRecord.get('readonly'));
         this.clearMessages();
         this.getForm().loadRecord(messRecord);
         if (!messRecord.data || messRecord.data.id === null) {
@@ -633,6 +650,8 @@ Ext.define('Lada.view.form.Messprogramm', {
         var mstStore = Ext.data.StoreManager.get('messstellen');
         var mstId = mstStore.getById(messRecord.get('mstId'));
         var netzId = mstId.get('netzbetreiberId');
+        var mstLaborKombiStore = Ext.data.StoreManager.get(
+            'messstellelaborkombi');
         if (!messRecord.get('owner')) {
             var laborMstId = mstStore.getById(messRecord.get('laborMstId'));
             if (laborMstId) {
@@ -647,9 +666,9 @@ Ext.define('Lada.view.form.Messprogramm', {
                 displayCombi = mstId.get('messStelle') + '/' + laborMstId;
             }
 
-            var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
             mstLaborKombiStore.clearFilter(true);
-            var recordIndex = mstLaborKombiStore.findExact('displayCombi', displayCombi);
+            var recordIndex = mstLaborKombiStore.findExact(
+                'displayCombi', displayCombi);
 
             mstLaborKombiStore.filter({
                 property: 'netzbetreiberId',
@@ -669,26 +688,30 @@ Ext.define('Lada.view.form.Messprogramm', {
                 });
                 this.down('messstellelaborkombi').setStore(newStore);
                 this.down('messstellelaborkombi').down('combobox').setValue(1);
-                this.down('messstellelaborkombi').down('combobox').resetOriginalValue();
+                this.down('messstellelaborkombi').down('combobox')
+                    .resetOriginalValue();
             } else {
                 this.down('messstellelaborkombi').setStore(mstLaborKombiStore);
-                this.down('messstellelaborkombi').down('combobox').setValue(recordIndex);
-                this.down('messstellelaborkombi').down('combobox').resetOriginalValue();
+                this.down('messstellelaborkombi').down('combobox')
+                    .setValue(recordIndex);
+                this.down('messstellelaborkombi').down('combobox')
+                    .resetOriginalValue();
             }
         } else {
-            var mstLaborKombiStore = Ext.data.StoreManager.get('messstellelaborkombi');
             var availableitems = mstLaborKombiStore.queryBy(function(record) {
                 if (record.get('messStelle') === messRecord.get('mstId') &&
                     record.get('laborMst') === messRecord.get('laborMstId')) {
                     return true;
                 }
             });
-            var newStore = Ext.create('Ext.data.Store', {
+            var newStore2 = Ext.create('Ext.data.Store', {
                 model: 'Lada.model.MessstelleLabor',
                 data: availableitems.items});
-            this.down('messstellelaborkombi').setStore(newStore);
-            this.down('messstellelaborkombi').setValue(messRecord.get('messstellelabor'));
-            this.down('messstellelaborkombi').down('combobox').resetOriginalValue();
+            this.down('messstellelaborkombi').setStore(newStore2);
+            this.down('messstellelaborkombi').setValue(
+                messRecord.get('messstellelabor'));
+            this.down('messstellelaborkombi').down('combobox')
+                .resetOriginalValue();
         }
         this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
         this.down('netzbetreiber').down('combobox').resetOriginalValue();
@@ -699,16 +722,19 @@ Ext.define('Lada.view.form.Messprogramm', {
         var media = record.get('mediaDesk');
         if (media) {
             var mediaParts = media.split(' ');
-            this.setMediaSN(0, mediaParts);
+            Lada.view.form.Messprogramm.mediaSnScheduler.enqueue(
+                this.setMediaSN, [0, mediaParts], this);
         } else {
-            this.setMediaSN(0, '0');
+            Lada.view.form.Messprogramm.mediaSnScheduler.enqueue(
+                this.setMediaSN, [0, '0'], this);
         }
-
+        Lada.view.form.Messprogramm.mediaSnScheduler.next();
     },
 
     setMediaSN: function(ndx, media, beschreibung) {
         var mediabeschreibung = this.getForm().findField('media');
         if (ndx >= 12) {
+            Lada.view.form.Messprogramm.mediaSnScheduler.finished();
             mediabeschreibung.setValue(beschreibung);
             return;
         }
@@ -721,24 +747,45 @@ Ext.define('Lada.view.form.Messprogramm', {
         if (ndx >= 1) {
             var parents = current.getParents(cbox);
             if (parents.length === 0) {
+                Lada.view.form.Messprogramm.mediaSnScheduler.finished();
                 return;
             }
             cbox.store.proxy.extraParams.parents = parents;
         }
         cbox.store.load(function(records, op, success) {
             if (!success) {
+                Lada.view.form.Messprogramm.mediaSnScheduler.finished();
                 return;
             }
-            cbox.select(cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
-            var mediatext = cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10));
+            try {
+                cbox.select(
+                    cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
+            } catch (e) {
+                Ext.log({msg: 'Selecting media failed: ' + e, level: 'warn'});
+                Lada.view.form.Messprogramm.mediaSnScheduler.finished();
+                return;
+            }
+            var mediatext = cbox.store.findRecord(
+                'sn', parseInt(media[ndx + 1], 10));
             if (mediatext !== null) {
-                if ( (ndx <= 3) && (media[1] === '01') && (mediatext.data.beschreibung !== 'leer') ) {
+                if (
+                    (ndx <= 3) &&
+                    (media[1] === '01') &&
+                    (mediatext.data.beschreibung !== 'leer')
+                ) {
                     beschreibung = mediatext.data.beschreibung;
-                } else if ( (media[1] !== '01') && (mediatext.data.beschreibung !== 'leer') && (ndx <= 1) ) {
+                } else if (
+                    (media[1] !== '01') &&
+                    (mediatext.data.beschreibung !== 'leer') &&
+                    (ndx <= 1)
+                ) {
                     beschreibung = mediatext.data.beschreibung;
                 }
             }
-            me.setMediaSN(++ndx, media, beschreibung);
+            var nextNdx = ++ndx;
+            Lada.view.form.Messprogramm.mediaSnScheduler.enqueue(
+                me.setMediaSN, [nextNdx, media, beschreibung], me);
+            Lada.view.form.Messprogramm.mediaSnScheduler.finished();
         });
     },
 
@@ -769,8 +816,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                 }
                 content = errors[key];
                 var errorText = '';
-                for (var i = 0; i < content.length; i++) {
-                    errorText += i18n.getMsg(content[i].toString()) + '\n';
+                for (var j = 0; j < content.length; j++) {
+                    errorText += i18n.getMsg(content[j].toString()) + '\n';
                 }
                 element.showErrors(errorText);
             }

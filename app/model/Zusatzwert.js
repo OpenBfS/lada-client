@@ -55,12 +55,7 @@ Ext.define('Lada.model.Zusatzwert', {
         name: 'letzteAenderung',
         type: 'date',
         dateFormat: 'time',
-        convert: function(v) {
-            if (!v) {
-                return v;
-            }
-            return new Date(v);
-        },
+        convert: Lada.util.Date.convertTimeFn,
         defaultValue: new Date()
     }, {
         name: 'treeModified',

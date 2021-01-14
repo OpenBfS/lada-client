@@ -11,15 +11,15 @@
  * ExtJS 6.2.0 the new rtl fucntionality was inserted so that it always
  * overwrites the ltr definitions.
  */
-Ext.define('Lada.override.gridColumn', function(){
+Ext.define('Lada.override.gridColumn', (function() {
     return {
         override: 'Ext.grid.column.Column',
         privates: {
             _alignMap: {
                 start: 'left',
-           end: 'right'
+                end: 'right'
             }
         }
     };
-}()
+}())
 );

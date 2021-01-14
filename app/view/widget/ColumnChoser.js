@@ -184,19 +184,18 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
 
     sortvisibles: function() {
         var gcv_store = this.up('querypanel').gridColumnValueStore;
-        var gcv_items = gcv_store.getData().items;
         var tarstore = this.getComponent('targetGrid').getStore();
         var taritems = tarstore.getData().items;
         for ( var j = 0; j < taritems.length; j++) {
             var item = taritems[j];
-            if (item.get('visible') == true) {
+            if (item.get('visible') === true) {
                 var targetgridrecord = tarstore.findRecord('gridColumnId',
                     item.get('gridColumnId'), false, false, false,
                     true);
                 targetgridrecord.set('columnIndex', j);
                 gcv_store.findRecord('gridColumnId',
                     item.get('gridColumnId'), false, false, false, true)
-                        .set('columnIndex', j);
+                    .set('columnIndex', j);
 
             }
         }
@@ -219,7 +218,8 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
             // var data = store.getData().items;
             var fixeddata = fixedcolumnstore.getData().items;
             for (var i=0; i < fixeddata.length; i++) {
-                var col = store.findRecord('gridColumnId', fixeddata[i].get('id'));
+                var col = store.findRecord(
+                    'gridColumnId', fixeddata[i].get('id'));
                 if (col) {
                     if (col.get('visible') === true) {
                         tstore.add(col);

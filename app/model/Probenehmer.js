@@ -19,37 +19,86 @@ Ext.define('Lada.model.Probenehmer', {
     }, {
         name: 'prnId'
     }, {
-        name: 'bearbeiter'
+        name: 'bearbeiter',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
-        name: 'bemerkung'
+        name: 'bemerkung',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
         name: 'bezeichnung'
     }, {
         name: 'kurzBezeichnung'
     }, {
-        name: 'ort'
+        name: 'ort',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
-        name: 'plz'
+        name: 'plz',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
-        name: 'betrieb'
+        name: 'betrieb',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
-        name: 'strasse'
+        name: 'strasse',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
-        name: 'telefon'
+        name: 'telefon',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
-        name: 'tp'
+        name: 'tp',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
-        name: 'typ'
+        name: 'typ',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
         name: 'letzteAenderung',
         type: 'date',
         dateFormat: 'time',
-        convert: function(v) {
-            if (!v) {
-                return v;
-            }
-            return new Date(v);
-        }
+        convert: Lada.util.Date.convertTimeFn
     }, {
         name: 'readonly',
         type: 'boolean',

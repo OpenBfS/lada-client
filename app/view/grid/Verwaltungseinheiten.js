@@ -10,7 +10,7 @@
  * Grid to list Orte Stammdaten
  */
 Ext.define('Lada.view.grid.Verwaltungseinheiten', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.verwaltungseinheitengrid',
     requires: ['Ext.grid.filters.Filters',
         'Lada.view.widget.PagingSize'],
@@ -25,7 +25,7 @@ Ext.define('Lada.view.grid.Verwaltungseinheiten', {
         displayInfo: true
     },
     initComponent: function() {
-        this.store = Ext.data.StoreManager.lookup('verwaltungseinheiten');
+        this.store = Ext.create('Lada.store.Verwaltungseinheiten');
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('grid.emptyGrid');
         this.columns = [{
@@ -52,9 +52,23 @@ Ext.define('Lada.view.grid.Verwaltungseinheiten', {
      */
     setStore: function(store) {
         if (store) {
+            this.store = store;
+            this.addLoadingFailureHandler(this.store);
             this.reconfigure(store);
             this.setTitle(
                 'Verwaltungseinheiten (' + store.getCount() + ')');
         }
+    },
+
+    /**
+     * Reload the grid
+     */
+    reload: function() {
+        if (!this.store) {
+            Ext.log({msg: 'Verwaltungseinheiten store is null', level: 'warn'});
+            return;
+        }
+        this.hideReloadMask();
+        this.store.reload();
     }
 });

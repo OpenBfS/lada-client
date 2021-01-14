@@ -10,7 +10,7 @@
  * Grid to list Messungen
  */
 Ext.define('Lada.view.grid.Messung', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.messunggrid',
 
     maxHeight: 350,
@@ -28,8 +28,15 @@ Ext.define('Lada.view.grid.Messung', {
     bottomBar: true,
     allowDeselect: true,
 
+    ignoreNextDblClick: false,
+
+    lastClickTime: 0,
+
+    messwerteLoading: false,
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        var me = this;
         this.emptyText = i18n.getMsg('emptytext.messungen');
         this.dockedItems = [{
             xtype: 'toolbar',
@@ -57,21 +64,45 @@ Ext.define('Lada.view.grid.Messung', {
                 }
                 return 'noedit';
             },
-            handler: function(grid, rowIndex, colIndex) {
+            handler: function(grid, rowIndex, colIndex, item, event) {
+                var eventInst = event.browserEvent;
                 var rec = grid.getStore().getAt(rowIndex);
-                grid.fireEvent('itemdblclick', grid, rec);
+                //Check if event is a pointer event
+                if (eventInst instanceof PointerEvent) {
+                    //We are using IE11
+                    var lastTimeStamp = me.lastClickTime;
+                    me.lastClickTime = eventInst.timeStamp;
+                    if (
+                        eventInst.timeStamp - lastTimeStamp >
+                            Lada.$application.dblClickTimeout
+                    ) {
+                        grid.fireEvent('itemdblclick', grid, rec);
+                    } else {
+                        grid.ignoreNextDblClick = true;
+                    }
+                } else if (eventInst instanceof MouseEvent) {
+                    //We are in chrome/firefox etc.
+                    //Check if its not the second click of a doubleclick
+                    if (event.browserEvent.detail === 1) {
+                        grid.fireEvent('itemdblclick', grid, rec);
+                    } else if (event.browserEvent.detail) {
+                        //else tell the grid to ignore the next doubleclick as
+                        // the edit window should already be open
+                        grid.ignoreNextDblClick = true;
+                    }
+                }
             }
         }, {
             header: i18n.getMsg('extMessungsId'),
             dataIndex: 'externeMessungsId',
-            flex: 1,
+            flex: 0.7,
             editor: {
                 allowBlank: false
             }
         }, {
             header: i18n.getMsg('nebenprobenNr'),
             dataIndex: 'nebenprobenNr',
-            flex: 1,
+            flex: 0.8,
             editor: {
                 allowBlank: false
             }
@@ -92,52 +123,34 @@ Ext.define('Lada.view.grid.Messung', {
                 xtype: 'datefield',
                 allowBlank: false,
                 format: 'd.m.Y H:i',
-                // minValue: '01.01.2001', //todo: gibt es das?
-                // minText: 'Das Datum der Messung darf nicht vor dem 01.01.2001 liegen.',
-                maxValue: Ext.Date.format(new Date(), 'd.m.Y H:i')
+                maxValue: Lada.util.Date.formatTimestamp(
+                    new Date(), 'd.m.Y H:i', true)
             }
         }, {
-            header: i18n.getMsg('status'),
-            flex: 1,
+            header: i18n.getMsg('header.statuskombi'),
+            flex: 2,
             dataIndex: 'statusKombi',
-            renderer: function(value, meta, record, rNdx, cNdx) {
+            renderer: function(value, meta, record) {
                 var statusId = record.get('status');
                 var mId = record.get('id');
-                //also fwd the record to the asynchronous loading of statuswerte
+                //also fwd the record to the async loading of statuswerte
                 // in order to add the statuswert to the record,
                 // after the grid was rendered...
                 if (!value || value === '') {
+                    // the loading happens in linked 'status' column
                     this.updateStatus(mId, statusId, record);
                     return 'Lade...';
                 }
                 var kombis = Ext.data.StoreManager.get('statuskombi');
                 var kombi = kombis.getById(value);
-                var st = kombi.data.statusWert.wert;
+                var st = kombi.get('statusStufe').stufe + ' - '
+                            + kombi.get('statusWert').wert;
                 return st;
             }
         }, {
-            header: i18n.getMsg('header.statusstufe'),
-            flex: 1,
-            dataIndex: 'statusKombi',
-            renderer: function(value, meta, record, rNdx, cNdx) {
-                var statusId = record.get('status');
-                var mId = record.get('id');
-                //also fwd the record to the asynchronous loading of statuswerte
-                // in order to add the statuswert to the record,
-                // after the grid was rendered...
-                if (!value || value === '') {
-                    this.updateStatus(mId, statusId, record);
-                    return 'Lade...';
-                }
-                var kombis = Ext.data.StoreManager.get('statuskombi');
-                var kombi = kombis.getById(value);
-                var st = kombi.data.statusStufe.stufe;
-                return st;
-            }
-        }, {
-            header: i18n.getMsg('header.ok'),
+            header: i18n.getMsg('header.fertig'),
             dataIndex: 'fertig',
-            flex: 1,
+            flex: 0.8,
             renderer: function(value) {
                 if (value) {
                     return 'Ja';
@@ -156,22 +169,15 @@ Ext.define('Lada.view.grid.Messung', {
             dataIndex: 'messwerteCount',
             flex: 1,
             renderer: function(value, meta, record) {
-                if (!value || value === '') {
+                if (
+                    (!value || value === '') &&
+                    this.messwerteLoading === false
+                ) {
                     var mId = record.get('id');
                     this.updateNuklide(mId, record);
                     return 'Lade...';
-                }
-                return value;
-            }
-        }, {
-            header: i18n.getMsg('number_of_comments'),
-            flex: 1,
-            dataIndex: 'kommentarCount',
-            renderer: function(value, meta, record) {
-                if (!value || value === '') {
-                    var mId = record.get('id');
-                    this.updateKommentare(mId, record);
-                    return 'Lade...';
+                } else {
+                    this.messwerteLoading = false;
                 }
                 return value;
             }
@@ -197,15 +203,28 @@ Ext.define('Lada.view.grid.Messung', {
     initData: function() {
         this.setLoading(true);
         this.store = Ext.create('Lada.store.Messungen');
+        this.addLoadingFailureHandler(this.store);
         this.store.load({
             params: {
                 probeId: this.recordId
             },
-            callback: function(records, operation, success) {
+            callback: function() {
                 this.setLoading(false);
             },
             scope: this
         });
+    },
+
+    /**
+     * Reload this grid
+     */
+    reload: function() {
+        if (!this.store) {
+            this.initData();
+            return;
+        }
+        this.hideReloadMask();
+        this.store.reload();
     },
 
     /**
@@ -214,7 +233,7 @@ Ext.define('Lada.view.grid.Messung', {
      */
     updateStatus: function(value, statusId, record) {
         var statusStore = Ext.create('Lada.store.Status');
-        statusStore.on({
+        statusStore.onAfter({
             load: {
                 fn: this.updateStatusColumn,
                 scope: this,
@@ -230,26 +249,24 @@ Ext.define('Lada.view.grid.Messung', {
 
     updateNuklide: function(id, record) {
         var messwerte = Ext.create('Lada.store.Messwerte');
-        messwerte.on('load',
+        var me = this;
+        me.messwerteLoading = true;
+        /*messwerte.onAfter('load',
             this.updateColumn,
             this,
-            {record: record, type: 'messwerteCount'});
+            {record: record, type: 'messwerteCount'});*/
         messwerte.load({
             params: {
                 messungsId: id
-            }
-        });
-    },
-
-    updateKommentare: function(id, record) {
-        var kommentare = Ext.create('Lada.store.MKommentare');
-        kommentare.on('load',
-            this.updateColumn,
-            this,
-            {record: record, type: 'kommentarCount'});
-        kommentare.load({
-            params: {
-                messungsId: id
+            },
+            callback: function(records, operation, success) {
+                me.updateColumn(
+                    messwerte,
+                    record,
+                    success,
+                    operation,
+                    {record: record, type: 'messwerteCount'}
+                );
             }
         });
     },
@@ -257,7 +274,7 @@ Ext.define('Lada.view.grid.Messung', {
     updateColumn: function(store, record, success, operation, opts) {
         var value;
         if (success) {
-            var amount = store.getData().items.length;
+            var amount = store.count();
             if ( amount === 0 ) {
                 value = '0';
             } else {
@@ -328,7 +345,7 @@ Ext.define('Lada.view.grid.Messung', {
     /**
      * Activate the Remove Button
      */
-    deactivateRemoveButton: function(selection, record) {
+    deactivateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {

@@ -10,7 +10,7 @@
  * Grid to list Ortszuordnungen
  */
 Ext.define('Lada.view.grid.Ortszuordnung', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.ortszuordnunggrid',
 
     maxHeight: 350,
@@ -30,6 +30,10 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     errors: null,
     readOnly: true,
     allowDeselect: true,
+
+    ignoreNextDblClick: false,
+
+    lastClickTime: 0,
 
     initComponent: function() {
         var me = this;
@@ -61,22 +65,46 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 }
                 return 'noedit';
             },
-            handler: function(grid, rowIndex, colIndex) {
+            handler: function(grid, rowIndex, colIndex, item, event) {
+                var eventInst = event.browserEvent;
                 var rec = grid.getStore().getAt(rowIndex);
-                grid.fireEvent('itemdblclick', grid, rec);
+                //Check if event is a pointer event
+                if (eventInst instanceof PointerEvent) {
+                    //We are using IE11
+                    var lastTimeStamp = me.lastClickTime;
+                    me.lastClickTime = eventInst.timeStamp;
+                    if (
+                        (eventInst.timeStamp - lastTimeStamp) >
+                            Lada.$application.dblClickTimeout
+                    ) {
+                        grid.fireEvent('itemdblclick', grid, rec);
+                    } else {
+                        grid.ignoreNextDblClick = true;
+                    }
+                } else if (eventInst instanceof MouseEvent) {
+                    //We are in chrome/firefox etc.
+                    //Check if its not the second click of a doubleclick
+                    if (event.browserEvent.detail === 1) {
+                        grid.fireEvent('itemdblclick', grid, rec);
+                    } else if (event.browserEvent.detail) {
+                        // else tell the grid to ignore the next doubleclick
+                        // as the edit window should already be open
+                        grid.ignoreNextDblClick = true;
+                    }
+                }
             }
         }, {
             header: i18n.getMsg('typ'),
             dataIndex: 'ortszuordnungTyp',
-            flex: 1,
+            width: 30,
             editor: {
                 allowBlank: false
             }
         }, {
             header: i18n.getMsg('orte.ortId'),
             dataIndex: 'ortId',
-            width: 120,
-            renderer: function(value, meta, zuordnung) {
+            flex: 3,
+            renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
                 if (!record) {
@@ -90,7 +118,9 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                                 record.set(key, rec.getData()[key]);
                             }
                             record.endEdit();
-                            me.getView().refresh();
+                            if (me.isVisible() === true) {
+                                me.getView().refresh();
+                            }
                         }
                     });
                 }
@@ -99,7 +129,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('staat'),
             dataIndex: 'ortId',
-            flex: 1,
+            width: 45,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var staaten = Ext.data.StoreManager.get('staaten');
@@ -112,12 +142,15 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     return '';
                 }
                 var record = staaten.getById(stId);
+                if (!record.get('staatIso')) {
+                    return record.get('id');
+                }
                 return record.get('staatIso');
             }
         }, {
             header: i18n.getMsg('orte.gemId'),
             dataIndex: 'ortId',
-            flex: 2,
+            flex: 3,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
@@ -148,7 +181,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('orte.ozId'),
             dataIndex: 'ortId',
-            flex: 3,
+            width: 80,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
@@ -164,7 +197,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('orte.anlageId'),
             dataIndex: 'ortId',
-            flex: 3,
+            width: 60,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);
@@ -172,12 +205,37 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     return '';
                 }
                 var ktaGruppeId = record.get('ktaGruppeId');
-                if (ktaGruppeId === undefined || ktaGruppeId === null || ktaGruppeId === '') {
+                if (
+                    ktaGruppeId === undefined ||
+                    ktaGruppeId === null ||
+                    ktaGruppeId === ''
+                ) {
                     return '';
                 }
                 var ktaGruppen = Ext.data.StoreManager.get('ktaGruppe');
                 var ktaGruppe = ktaGruppen.getById(record.get('ktaGruppeId'));
                 return ktaGruppe.get('ktaGruppe');
+            }
+        }, {
+            header: i18n.getMsg('orte.langtext'),
+            dataIndex: 'ortId',
+            flex: 4,
+            renderer: function(value) {
+                var store = Ext.data.StoreManager.get('orte');
+                var record = store.getById(value);
+                if (!record) {
+                    return '';
+                }
+                var langtext = record.get('langtext');
+                if (
+                    langtext === '' ||
+                    langtext === undefined ||
+                    langtext === null
+                ) {
+                    return '';
+                }
+                return '<div style="white-space: normal !important;">' +
+                                           langtext + '</div>';
             }
         }];
         this.listeners = {
@@ -195,22 +253,21 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     },
 
     initData: function() {
-        var modelname;
         var me = this;
         if (this.isMessprogramm) {
             this.store = Ext.create('Lada.store.OrtszuordnungMp');
             if (this.recordId) {
+                this.addLoadingFailureHandler(this.store);
                 this.store.load({
                     params: {
                         messprogrammId: this.recordId
                     }});
-                modelname = 'Lada.model.Messprogramm';
             } else {
                 return;
             }
         } else {
-            modelname = 'Lada.model.Probe';
             this.store = Ext.create('Lada.store.Ortszuordnung');
+            this.addLoadingFailureHandler(this.store);
             this.store.load({
                 params: {
                     probeId: this.recordId
@@ -220,19 +277,18 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 }
             });
         }
-        Ext.ClassManager.get(modelname).load(this.recordId, {
-            failure: function(record, action) {
-                // TODO
-            },
-            success: function(record, response) {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    this.warnings = json.warnings;
-                    this.errors = json.errors;
-                }
-            },
-            scope: this
-        });
+    },
+
+    /**
+     * Reload the grid
+     */
+    reload: function() {
+        if (!this.store) {
+            this.initData();
+            return;
+        }
+        this.hideReloadMask();
+        this.store.reload();
     },
 
     /**
@@ -253,7 +309,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     /**
      * Activate the Remove Button
      */
-    activateRemoveButton: function(selection, record) {
+    activateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {
@@ -263,7 +319,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     /**
      * Activate the Remove Button
      */
-    deactivateRemoveButton: function(selection, record) {
+    deactivateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (grid.readOnly) {
@@ -271,8 +327,16 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }
     },
 
-    reiHandling: function(value) {
+    reiHandling: function() {
         if (!this.isMessprogramm) {
+            if (!this.up('probenedit')) {
+                Ext.log({msg: 'Can not find parent window', level: 'warn'});
+                return;
+            }
+            if (!this.up('probenedit').record) {
+                Ext.log({msg: 'Can not find parent record', level: 'warn'});
+                return;
+            }
             var readonly = this.up('probenedit').record.get('readonly');
             var dbId = this.up('probenedit').record.get('datenbasisId');
             var dbStore = Ext.data.StoreManager.get('datenbasis');
@@ -280,7 +344,10 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             if (dbStore && dbId) {
                 datenbasis = dbStore.getById(dbId).get('datenbasis');
             }
-            if (datenbasis && (datenbasis === 'REI-I' || datenbasis === 'REI-E')) {
+            if (
+                datenbasis &&
+                (datenbasis === 'REI-I' || datenbasis === 'REI-E')
+            ) {
                 if (this.store.getCount() === 0 && !readonly) {
                     this.down('button[action=add]').enable();
                     this.down('button[action=delete]').disable();

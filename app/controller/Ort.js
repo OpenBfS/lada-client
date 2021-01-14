@@ -45,9 +45,9 @@ Ext.define('Lada.controller.Ort', {
     editRecord: function(grid, record) {
         if (record.get('readonly') === false) {
             Lada.model.Ort.load(record.get('id'), {
-                success: function(record) {
+                success: function(newRecord) {
                     Ext.create('Lada.view.window.Ort',{
-                        record: record,
+                        record: newRecord,
                         parentWindow: grid.up('panel')
                     }).show();
                 }
@@ -71,15 +71,19 @@ Ext.define('Lada.controller.Ort', {
                             var json = response.request.scope.reader.jsonData;
                             if (json) {
                                 if (json.message) {
-                                    Ext.Msg.alert(i18n.getMsg('err.msg.delete.title')
-                                    +' #'+json.message,
-                                    i18n.getMsg(json.message));
+                                    Ext.Msg.alert(
+                                        i18n.getMsg('err.msg.delete.title') +
+                                            ' #' +
+                                            json.message,
+                                        i18n.getMsg(json.message));
                                 } else {
-                                    Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
+                                    Ext.Msg.alert(
+                                        i18n.getMsg('err.msg.delete.title'),
                                         i18n.getMsg('err.msg.generic.body'));
                                 }
                             } else {
-                                Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
+                                Ext.Msg.alert(
+                                    i18n.getMsg('err.msg.delete.title'),
                                     i18n.getMsg('err.msg.response.body'));
                             }
                         }

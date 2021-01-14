@@ -38,7 +38,6 @@ Ext.define('Lada.view.window.ProbeCreate', {
             handler: this.handleBeforeClose
         }];
 
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -52,6 +51,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
         });
 
         this.width = 700;
+        this.height = Ext.getBody().getViewSize().height - 30;
         // InitialConfig is the config object passed to the constructor on
         // creation of this window. We need to pass it throuh to the form as
         // we need the "modelId" param to load the correct item.
@@ -68,12 +68,14 @@ Ext.define('Lada.view.window.ProbeCreate', {
             tooltip: i18n.getMsg('help.qtip'),
             titlePosition: 0,
             callback: function() {
-                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                var imprintWin = Ext.ComponentQuery.query(
+                    'k-window-imprint')[0];
                 if (!imprintWin) {
-                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin = Ext.create(
+                        'Lada.view.window.HelpprintWindow')
+                        .show();
                     imprintWin.on('afterlayout', function() {
                         var imprintWinController = this.getController();
-                        console.log(imprintWinController);
                         imprintWinController.setTopic('probe');
                     }, imprintWin, {single: true});
                 } else {
@@ -85,10 +87,16 @@ Ext.define('Lada.view.window.ProbeCreate', {
             }
         }];
         this.callParent(arguments);
+        var tagCreateButton = this.down('button[action=createtag]');
+        if (tagCreateButton) {
+            tagCreateButton.disable();
+        }
     },
 
     /**
-     * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
+     * Called before closing the form window. Shows confirmation dialogue
+     * window to save the form if dirty
+    */
     handleBeforeClose: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
@@ -111,7 +119,8 @@ Ext.define('Lada.view.window.ProbeCreate', {
                         margin: '5, 0, 5, 5',
 
                         handler: function() {
-                            me.down('probeform').fireEvent('save', me.down('probeform'));
+                            me.down('probeform').fireEvent(
+                                'save', me.down('probeform'));
                             confWin.close();
                         }
                     }, {
@@ -133,7 +142,8 @@ Ext.define('Lada.view.window.ProbeCreate', {
     },
 
     /**
-     * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
+     * Adds new event handler to the toolbar close button to add a save
+     * confirmation dialogue if a dirty form is closed
      */
     customizeToolbar: function() {
         var tools = this.tools;
@@ -151,10 +161,8 @@ Ext.define('Lada.view.window.ProbeCreate', {
       */
     initData: function() {
         var record = Ext.create('Lada.model.Probe');
-        record.set('probeentnahmeBeginn', new Date());
-        record.set('probeentnahmeEnde', new Date());
-
-        var mstLabCb = this.down('probeform').down('messstellelabor').down('combobox');
+        var mstLabCb = this.down('probeform').down('messstellelabor').down(
+            'combobox');
         var mstLabRecs = mstLabCb.store.getData();
         //Try to preselect messstelle/labor
         if (mstLabRecs.length >= 1) {
@@ -163,21 +171,30 @@ Ext.define('Lada.view.window.ProbeCreate', {
             record.set('mstId', labRec.get('messStelle'));
             record.set('laborMstId', labRec.get('laborMst'));
         }
+        var errors = [];
+        var notifications = { hauptprobenNr: [631] };
+        var warnings = { probeentnahmeBeginn: [631],
+            umwId: [631]
+        };
         this.down('probeform').setRecord(record);
         this.down('probeform').setMediaDesk(record);
+        this.down('probeform').setMessages(errors,warnings,notifications);
+        this.down('probeform').isValid();
     },
 
     /**
      * Instructs the fields / forms listed in this method to set a message.
      * @param errors These Errors shall be shown
      * @param warnings These Warning shall be shown
+     * @param notifications
      */
-    setMessages: function(errors, warnings) {
-        this.down('probeform').setMessages(errors, warnings);
+    setMessages: function(errors, warnings, notifications) {
+        this.down('probeform').setMessages(errors, warnings, notifications);
     },
 
     /**
-     * Instructs the fields / forms listed in this method to clear their messages.
+     * Instructs the fields / forms listed in this method to clear their
+     * messages.
      */
     clearMessages: function() {
         this.down('probeform').clearMessages();

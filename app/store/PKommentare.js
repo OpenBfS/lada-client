@@ -11,5 +11,9 @@
  */
 Ext.define('Lada.store.PKommentare', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.PKommentar'
+    model: 'Lada.model.PKommentar',
+    sorters: [{
+        property: 'id',
+        direction: 'ASC'
+    }]
 });

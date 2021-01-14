@@ -52,17 +52,19 @@ Ext.define('Lada.view.widget.Statuskombi', {
 
 
     /**
-     * Sets the widget value, adds buttons if needed and checks if reset button is activated
+     * Sets the widget value, adds buttons if needed and checks if reset button
+     * is activated
      * @param value The new value
      * @param reset True if widget was reset, defaults to false
-     * @param statusEdit True if it is allowed to set the status, defaults to false
+     * @param statusEdit True if it is allowed to set the status,
+     * defaults to false
      */
     setValue: function(value, reset, statusEdit) {
-        this.reset = reset != undefined ? reset: false;
-        this.statusEdit = statusEdit != undefined ? statusEdit: false;
+        this.reset = reset !== undefined ? reset: false;
+        this.statusEdit = statusEdit !== undefined ? statusEdit: false;
         var me = this;
         Ext.ClassManager.get('Lada.model.Status').load(value, {
-            success: function(record, response) {
+            success: function(record) {
                 var statuskombistore = Ext.data.StoreManager.get('statuskombi');
                 var kombi = statuskombistore.getById(record.data.statusKombi);
                 var text = kombi.get('statusStufe').stufe + ' - ' +
@@ -72,13 +74,22 @@ Ext.define('Lada.view.widget.Statuskombi', {
                     statusStufe: kombi.get('statusStufe'),
                     statusWert: kombi.get('statusWert')
                 };
-                var textfield = me.down('textfield');
-                if (textfield) {
-                    textfield.setEmptyText(text);
+                //Try updating the view
+                try {
+                    var textfield = me.down('textfield');
+                    if (textfield) {
+                        textfield.setEmptyText(text);
+                    }
+                } catch (e) {
+                    Ext.log({
+                        msg: 'Updating status kombi field failed: ' + e,
+                        level: 'warn'});
                 }
+
             }
         });
-        // instead of overwriting/appending initComponent, add the button at loading of values
+        // instead of overwriting/appending initComponent, add the button at
+        // loading of values
         var button = this.down('button[action=newstatus]');
         if (!button) {
             this.add(this.changebutton());
@@ -92,8 +103,10 @@ Ext.define('Lada.view.widget.Statuskombi', {
     checkResetableState: function() {
         for (var i = 0; i < this.unresetableStates.length; i++) {
             var state = this.unresetableStates[i];
-            if (this.currentValue.statusStufe.id == state.statusStufe &&
-                    this.currentValue.statusWert.id == state.statusWert) {
+            if (
+                this.currentValue.statusStufe.id === state.statusStufe &&
+                this.currentValue.statusWert.id === state.statusWert
+            ) {
                 return false;
             }
         }

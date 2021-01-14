@@ -37,6 +37,12 @@ Ext.define('Lada.model.GridColumnValue', {
         name: 'dataIndex',
         persist: false
     }, {
+        name: 'filterNegate'
+    }, {
+        name: 'filterRegex'
+    }, {
+        name: 'filterIsNull'
+    }, {
         name: 'name',
         persist: false
     }],

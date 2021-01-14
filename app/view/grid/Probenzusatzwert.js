@@ -10,7 +10,7 @@
  * Grid to list Probenzusatzwerte
  */
 Ext.define('Lada.view.grid.Probenzusatzwert', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.probenzusatzwertgrid',
     requires: [
         'Lada.view.form.ExpNumberField',
@@ -19,7 +19,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
     ],
 
     maxHeight: 350,
-    minHeight: 125,
+    minHeight: 130,
     viewConfig: {
         deferEmptyText: false
     },
@@ -43,9 +43,14 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 // Normally this would belong into a controller an not the view.
                 // But the RowEditPlugin is not handled there.
                 beforeedit: function(e, o) {
-                    var readonlywin = o.grid.up('window').record.get('readonly');
+                    var readonlywin = o.grid.up('window')
+                        .record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
-                    if (readonlywin === true || readonlygrid === true || this.disabled) {
+                    if (
+                        readonlywin === true ||
+                        readonlygrid === true ||
+                        this.disabled
+                    ) {
                         return false;
                     }
                     return true;
@@ -115,7 +120,8 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 if (!value || value === '') {
                     return value;
                 }
-                var strValue = value.toExponential(2).toString()
+                var strValue = Lada.getApplication().toExponentialString(
+                    value, 2)
                     .replace('.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
                 var exponent = parseInt(splitted[1], 10);
@@ -135,7 +141,8 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 var zstore = Ext.data.StoreManager.get('probenzusaetze');
                 var mstore = Ext.data.StoreManager.get('messeinheiten');
                 var mehId = zstore.getById(value).get('messEinheitId');
-                var record = mstore.findRecord('id', mehId, 0, false, false, true);
+                var record = mstore.findRecord(
+                    'id', mehId, 0, false, false, true);
                 if (!record) {
                     return '';
                 }
@@ -177,11 +184,24 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
 
     initData: function() {
         this.store = Ext.create('Lada.store.Zusatzwerte');
+        this.addLoadingFailureHandler(this.store);
         this.store.load({
             params: {
                 probeId: this.recordId
             }
         });
+    },
+
+    /**
+     * Reload the grid
+     */
+    reload: function() {
+        if (!this.store) {
+            this.initData();
+            return;
+        }
+        this.hideReloadMask();
+        this.store.reload();
     },
 
     setReadOnly: function(b) {
@@ -205,7 +225,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
     /**
      * Activate the Remove Button
      */
-    activateRemoveButton: function(selection, record) {
+    activateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {
@@ -215,7 +235,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
     /**
      * Activate the Remove Button
      */
-    deactivateRemoveButton: function(selection, record) {
+    deactivateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {

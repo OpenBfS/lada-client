@@ -10,7 +10,7 @@
  * Grid to list Kommentare
  */
 Ext.define('Lada.view.grid.PKommentar', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.pkommentargrid',
 
     requires: [
@@ -19,7 +19,7 @@ Ext.define('Lada.view.grid.PKommentar', {
     ],
 
     maxHeight: 350,
-    minHeight: 125,
+    minHeight: 130,
     viewConfig: {
         deferEmptyText: false
     },
@@ -42,9 +42,14 @@ Ext.define('Lada.view.grid.PKommentar', {
                 // Normally this would belong into a controller an not the view.
                 // But the RowEditPlugin is not handled there.
                 beforeedit: function(e, o) {
-                    var readonlywin = o.grid.up('window').record.get('readonly');
+                    var readonlywin = o.grid.up('window')
+                        .record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
-                    if (readonlywin === true || readonlygrid === true || this.disabled) {
+                    if (
+                        readonlywin === true ||
+                        readonlygrid === true ||
+                        this.disabled
+                    ) {
                         return false;
                     }
                     return true;
@@ -125,11 +130,24 @@ Ext.define('Lada.view.grid.PKommentar', {
 
     initData: function() {
         this.store = Ext.create('Lada.store.PKommentare');
+        this.addLoadingFailureHandler(this.store);
         this.store.load({
             params: {
                 probeId: this.recordId
             }
         });
+    },
+
+    /**
+     * Reload the grid
+     */
+    reload: function() {
+        if (!this.store) {
+            this.initData();
+            return;
+        }
+        this.hideReloadMask();
+        this.store.reload();
     },
 
     setReadOnly: function(b) {
@@ -153,7 +171,7 @@ Ext.define('Lada.view.grid.PKommentar', {
     /**
      * Activate the Remove Button
      */
-    activateRemoveButton: function(selection, record) {
+    activateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {
@@ -163,7 +181,7 @@ Ext.define('Lada.view.grid.PKommentar', {
     /**
      * Activate the Remove Button
      */
-    deactivateRemoveButton: function(selection, record) {
+    deactivateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {

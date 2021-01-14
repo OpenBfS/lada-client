@@ -60,7 +60,13 @@ Ext.define('Lada.model.Probe', {
             return value;
         }
     }, {
-        name: 'media'
+        name: 'media',
+        serialize: function(value) {
+            if (value === '') {
+                return null;
+            }
+            return value;
+        }
     }, {
         name: 'umwId',
         serialize: function(value) {
@@ -73,13 +79,8 @@ Ext.define('Lada.model.Probe', {
         name: 'probeentnahmeBeginn',
         type: 'date',
         allowNull: true,
-        convert: function(v, record) {
-            if (!v) {
-                return v;
-            }
-            return new Date(v);
-        },
-        serialize: function(v, record) {
+        convert: Lada.util.Date.convertTimeFn,
+        serialize: function(v) {
             if (v === '' || v === null) {
                 return null;
             }
@@ -90,13 +91,8 @@ Ext.define('Lada.model.Probe', {
         name: 'probeentnahmeEnde',
         type: 'date',
         allowNull: true,
-        convert: function(v) {
-            if (!v) {
-                return v;
-            }
-            return new Date(v);
-        },
-        serialize: function(v, record) {
+        convert: Lada.util.Date.convertTimeFn,
+        serialize: function(v) {
             if (v === '' || v === null) {
                 return null;
             }
@@ -108,17 +104,8 @@ Ext.define('Lada.model.Probe', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
-        convert: function(v) {
-            if (!v) {
-                return v;
-            }
-            return new Date(v);
-        },
-        serialize: function(v, record) {
-            var formatted = Ext.Date.format(v, 'Y-m-d\\TH:i:sP');
-            return formatted;
-        }
-
+        dateFormat: 'time',
+        convert: Lada.util.Date.convertTimeFn
     }, {
         name: 'erzeugerId'
     }, {
@@ -134,12 +121,7 @@ Ext.define('Lada.model.Probe', {
     }, {
         name: 'solldatumBeginn',
         type: 'date',
-        convert: function(v) {
-            if (!v) {
-                return v;
-            }
-            return new Date(v);
-        },
+        convert: Lada.util.Date.convertTimeFn,
         serialize: function(value) {
             if (value === '') {
                 return null;
@@ -149,12 +131,17 @@ Ext.define('Lada.model.Probe', {
     }, {
         name: 'solldatumEnde',
         type: 'date',
-        convert: function(v) {
-            if (!v) {
-                return v;
+        convert: Lada.util.Date.convertTimeFn,
+        serialize: function(value) {
+            if (value === '') {
+                return null;
             }
-            return new Date(v);
-        },
+            return value;
+        }
+    }, {
+        name: 'ursprungszeit',
+        type: 'date',
+        convert: Lada.util.Date.convertTimeFn,
         serialize: function(value) {
             if (value === '') {
                 return null;

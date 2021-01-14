@@ -72,8 +72,21 @@ Ext.define('Lada.view.widget.base.NumberField', {
             html: warnings
         });
         img.show();
-        this.down('numberfield').invalidCls = 'x-lada-warning-field';
-        this.down('numberfield').markInvalid('');
+        var tf = this.down('numberfield');
+        if (tf.inputWrap) {
+            tf.inputWrap.addCls('x-lada-warning-field');
+            tf.inputEl.addCls('x-lada-warning-field');
+        } else {
+            tf.onAfter({
+                render: {
+                    fn: function(el) {
+                        el.inputWrap.addCls('x-lada-warning-field');
+                        el.inputEl.addCls('x-lada-warning-field');
+                    },
+                    single: true
+                }
+            });
+        }
         var fieldset = this.up('fieldset[collapsible=true]');
         if (fieldset) {
             var i18n = Lada.getApplication().bundle;
@@ -117,9 +130,32 @@ Ext.define('Lada.view.widget.base.NumberField', {
         if (this.error) {
             this.error.destroy();
         }
+        var tf = this.down('numberfield');
+
+        tf.invalidCls = 'x-lada-warning-field';
+        tf.markInvalid('');
+
+        if (tf.inputWrap) {
+            tf.inputWrap.removeCls('x-lada-warning-field');
+            tf.inputWrap.removeCls('x-lada-error-field');
+            tf.inputEl.removeCls('x-lada-warning-field');
+            tf.inputEl.removeCls('x-lada-error-field');
+        } else {
+            tf.onAfter({
+                render: {
+                    fn: function(el) {
+                        el.inputWrap.removeCls('x-lada-warning-field');
+                        el.inputWrap.removeCls('x-lada-error-field');
+                        el.inputEl.removeCls('x-lada-warning-field');
+                        el.inputEl.removeCls('x-lada-error-field');
+                    },
+                    single: true
+                }
+            });
+        }
+        this.down('numberfield').clearInvalid();
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
-        this.down('numberfield').clearInvalid();
     },
 
     setReadOnly: function(value) {

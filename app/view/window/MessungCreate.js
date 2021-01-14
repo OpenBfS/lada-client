@@ -19,7 +19,7 @@ Ext.define('Lada.view.window.MessungCreate', {
 
     collapsible: true,
     maximizable: true,
-    autoshow: true,
+    autoShow: true,
     autoscroll: true,
     layout: 'fit',
     constrain: true,
@@ -44,6 +44,7 @@ Ext.define('Lada.view.window.MessungCreate', {
             .getById(this.probe.get('mstId'));
 
         this.title = i18n.getMsg('messung.new.title',
+            this.probe.get('externeProbeId'),
             this.probe.get('hauptprobenNr'),
             messstelle.get('messStelle'));
         this.buttons = [{
@@ -53,7 +54,6 @@ Ext.define('Lada.view.window.MessungCreate', {
         }];
         this.width = 700;
 
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -77,9 +77,12 @@ Ext.define('Lada.view.window.MessungCreate', {
             type: 'help',
             tooltip: i18n.getMsg('help.qtip'),
             callback: function() {
-                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                var imprintWin = Ext.ComponentQuery.query(
+                    'k-window-imprint')[0];
                 if (!imprintWin) {
-                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin = Ext.create(
+                        'Lada.view.window.HelpprintWindow')
+                        .show();
                     imprintWin.on('afterlayout', function() {
                         var imprintWinController = this.getController();
                         imprintWinController.setTopic('messung');
@@ -92,10 +95,15 @@ Ext.define('Lada.view.window.MessungCreate', {
             }
         }];
         this.callParent(arguments);
+        var tagCreateButton = this.down('button[action=createtag]');
+        if (tagCreateButton) {
+            tagCreateButton.disable();
+        }
     },
 
     /**
-     * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
+     * Adds new event handler to the toolbar close button to add a save
+     * confirmation dialogue if a dirty form is closed
      */
     customizeToolbar: function() {
         var tools = this.tools;
@@ -109,7 +117,9 @@ Ext.define('Lada.view.window.MessungCreate', {
     },
 
     /**
-     * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
+     * Called before closing the form window. Shows confirmation dialogue
+     * window to save the form if dirty
+     */
     handleBeforeClose: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
@@ -132,7 +142,8 @@ Ext.define('Lada.view.window.MessungCreate', {
                         margin: '5, 0, 5, 5',
 
                         handler: function() {
-                            me.down('messungform').fireEvent('save', me.down('messungform'));
+                            me.down('messungform').fireEvent(
+                                'save', me.down('messungform'));
                             confWin.close();
                         }
                     }, {
@@ -165,6 +176,11 @@ Ext.define('Lada.view.window.MessungCreate', {
         //Delete generated id to prevent sending invalid ids to the server
         messung.set('id', null);
         this.down('messungform').setRecord(messung);
+        var warnings = { messdauer: [631],
+            nebenprobenNr: [631]};
+        var errors = [];
+        this.setMessages(errors, warnings);
+        this.down('messungform').isValid();
     },
 
     /**
@@ -173,14 +189,15 @@ Ext.define('Lada.view.window.MessungCreate', {
      * @param warnings These Warning shall be shown
      */
     setMessages: function(errors, warnings) {
-        //todo this is a stub
+        this.down('messungform').setMessages(errors, warnings);
     },
 
     /**
-     * Instructs the fields / forms listed in this method to clear their messages.
+     * Instructs the fields / forms listed in this method to clear their
+     * messages.
      */
     clearMessages: function() {
-        //todo this is a stub
+        this.down('messungform').clearMessages();
     },
 
     /**

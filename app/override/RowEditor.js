@@ -38,8 +38,9 @@ Ext.define('Lada.override.RowEditor', {
             // Get a default display field if necessary
             field = column.getEditor(null, {
                 xtype: 'selectabledisplayfield',
-                // Override Field's implementation so that the default display fields will not return values. This is done because
-                // the display field will pick up column renderers from the grid.
+                // Override Field's implementation so that the default display
+                // fields will not return values. This is done because the
+                // display field will pick up column renderers from the grid.
                 getModelData: function() {
                     return null;
                 }
@@ -49,7 +50,9 @@ Ext.define('Lada.override.RowEditor', {
             }
 
             if (column.xtype === 'actioncolumn') {
-                field.fieldCls += ' ' + Ext.baseCSSPrefix + 'form-action-col-field';
+                field.fieldCls += ' ' +
+                    Ext.baseCSSPrefix +
+                    'form-action-col-field';
             }
 
             if (me.isVisible() && me.context) {

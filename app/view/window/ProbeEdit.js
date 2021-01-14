@@ -10,7 +10,7 @@
  * Window to edit a Probe
  */
 Ext.define('Lada.view.window.ProbeEdit', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.RecordWindow',
     alias: 'widget.probenedit',
 
     requires: [
@@ -23,10 +23,10 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
     collapsible: true,
     maximizable: true,
-    autoShow: true,
+    autoShow: false,
     layout: 'fit',
     constrain: true,
-
+    recordType: 'probe',
     record: null,
 
     /**
@@ -34,20 +34,15 @@ Ext.define('Lada.view.window.ProbeEdit', {
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        if (this.record === null) {
-            Ext.Msg.alert(i18n.getMsg('err.msg.invalidprobe'));
-            this.callParent(arguments);
-            return;
-        }
+        this.title = i18n.getMsg('title.loading.probe');
         this.buttons = [{
             text: i18n.getMsg('close'),
             scope: this,
             handler: this.handleBeforeClose
         }];
         this.width = 700;
+        this.height = Ext.getBody().getViewSize().height - 30;
 
-
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -60,72 +55,21 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }
         });
 
-        this.height = Ext.getBody().getViewSize().height - 30;
         // InitialConfig is the config object passed to the constructor on
         // creation of this window. We need to pass it throuh to the form as
         // we need the "modelId" param to load the correct item.
-        this.items = [{
-            border: false,
-            autoScroll: true,
-            items: [{
-                xtype: 'probeform',
-                recordId: this.record.get('id')
-            }, {
-                xtype: 'fset',
-                name: 'orte',
-                title: i18n.getMsg('title.ortsangabe'),
-                padding: '5, 5',
-                margin: 5,
-                items: [{
-                    xtype: 'ortszuordnunggrid',
-                    recordId: this.record.get('id')
-                }]
-            }, {
-                xtype: 'fset',
-                name: 'messungen',
-                title: i18n.getMsg('title.messungen'),
-                padding: '5, 5',
-                margin: 5,
-                collapsible: false,
-                collapsed: false,
-                items: [{
-                    xtype: 'messunggrid',
-                    recordId: this.record.get('id')
-                }]
-            }, {
-                xtype: 'fset',
-                name: 'probenzusatzwerte',
-                title: i18n.getMsg('title.zusatzwerte'),
-                padding: '5, 5',
-                margin: 5,
-                collapsible: true,
-                collapsed: false,
-                items: [{
-                    xtype: 'probenzusatzwertgrid',
-                    recordId: this.record.get('id')
-                }]
-            }, {
-                xtype: 'fset',
-                name: 'pkommentare',
-                title: i18n.getMsg('title.kommentare'),
-                padding: '5, 5',
-                margin: 5,
-                collapsible: true,
-                collapsed: false,
-                items: [{
-                    xtype: 'pkommentargrid',
-                    recordId: this.record.get('id')
-                }]
-            }]
-        }];
+
         this.tools = [{
             type: 'help',
             tooltip: i18n.getMsg('help.qtip'),
             titlePosition: 0,
             callback: function() {
-                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                var imprintWin = Ext.ComponentQuery.query(
+                    'k-window-imprint')[0];
                 if (!imprintWin) {
-                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin = Ext.create(
+                        'Lada.view.window.HelpprintWindow')
+                        .show();
                     imprintWin.on('afterlayout', function() {
                         var imprintWinController = this.getController();
                         imprintWinController.setTopic('probe');
@@ -138,11 +82,84 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 }
             }
         }];
+        this.modelClass = Lada.model.Probe;
+        if (this.record) {
+            this.recordId = this.record.get('id');
+        }
         this.callParent(arguments);
     },
 
     /**
-     * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
+     * Initialize ui elements and replace placeholder panel
+     */
+    initializeUI: function() {
+        var i18n = Lada.getApplication().bundle;
+        this.removeAll();
+
+        if (this.record === null) {
+            Ext.Msg.alert(i18n.getMsg('err.msg.invalidprobe'));
+            return;
+        }
+
+        this.add([{
+            border: false,
+            autoScroll: true,
+            items: [{
+                xtype: 'probeform',
+                recordId: this.recordId
+            }, {
+                xtype: 'fset',
+                name: 'orte',
+                title: i18n.getMsg('title.ortsangabe'),
+                padding: '5, 5',
+                margin: 5,
+                items: [{
+                    xtype: 'ortszuordnunggrid',
+                    recordId: this.recordId
+                }]
+            }, {
+                xtype: 'fset',
+                name: 'messungen',
+                title: i18n.getMsg('title.messungen'),
+                padding: '5, 5',
+                margin: 5,
+                collapsible: false,
+                collapsed: false,
+                items: [{
+                    xtype: 'messunggrid',
+                    recordId: this.recordId
+                }]
+            }, {
+                xtype: 'fset',
+                name: 'probenzusatzwerte',
+                title: i18n.getMsg('title.zusatzwerte'),
+                padding: '5, 5',
+                margin: 5,
+                collapsible: true,
+                collapsed: false,
+                items: [{
+                    xtype: 'probenzusatzwertgrid',
+                    recordId: this.recordId
+                }]
+            }, {
+                xtype: 'fset',
+                name: 'pkommentare',
+                title: i18n.getMsg('title.kommentare'),
+                padding: '5, 5',
+                margin: 5,
+                collapsible: true,
+                collapsed: false,
+                items: [{
+                    xtype: 'pkommentargrid',
+                    recordId: this.recordId
+                }]
+            }]
+        }]);
+    },
+
+    /**
+     * Adds new event handler to the toolbar close button to add a save
+     * confirmation dialogue if a dirty form is closed
      */
     customizeToolbar: function() {
         var tools = this.tools;
@@ -157,78 +174,97 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
     /**
       * Initialise the Data of this Window
+      * @param {Object}loadedRecord if given, it is assumed that this is a
+      * freshly loaded record, not requiring a reload from server
       */
-    initData: function() {
-        this.setLoading(true);
+    initData: function(loadedRecord) {
         this.clearMessages();
         var me = this;
-        Ext.ClassManager.get('Lada.model.Probe').load(this.record.get('id'), {
-            failure: function(record, action) {
-                me.setLoading(false);
-                // TODO
-                console.log('An unhandled Failure occured. See following Response and Record');
-                console.log(action);
-                console.log(record);
-            },
-            success: function(record, response) {
-                this.down('probeform').setRecord(record);
-                this.record = record;
-                var owner = this.record.get('owner');
-                var readonly = this.record.get('readonly');
+        var loadCallBack = function(record, response) {
+            me.initializeUI();
+            me.record = record;
+            me.recordId = record.get('id');
+            me.down('probeform').setRecord(record);
+            var owner = record.get('owner');
+            var readonly = record.get('readonly');
+            var messstelle = Ext.data.StoreManager.get('messstellen')
+                .getById(record.get('mstId'));
+            var datenbasis = Ext.data.StoreManager.get('datenbasis')
+                .getById(record.get('datenbasisId'));
+            var title = '';
+            if (datenbasis) {
+                title += datenbasis.get('datenbasis');
+                title += ' ';
+            }
+            title += 'Probe: ';
+            title += record.get('externeProbeId');
+            if (record.get('hauptprobenNr')) {
+                //title += ' - extPID/Hauptprobennr.: ';
+                title += ' / '+ record.get('hauptprobenNr');
+            }
+            if (messstelle) {
+                title += '    -    Mst: ';
+                title += messstelle.get('messStelle');
+            }
+            me.setTitle(title);
 
-                var messstelle = Ext.data.StoreManager.get('messstellen')
-                    .getById(this.record.get('mstId'));
-                var datenbasis = Ext.data.StoreManager.get('datenbasis')
-                    .getById(this.record.get('datenbasisId'));
-                var title = '';
-                if (datenbasis) {
-                    title += datenbasis.get('datenbasis');
-                    title += ' ';
-                }
-                title += 'Probe';
-                if (this.record.get('hauptprobenNr')) {
-                    title += ' - Hauptprobennr.: ';
-                    title += this.record.get('hauptprobenNr');
-                }
-                if (messstelle) {
-                    title += ' Mst: ';
-                    title += messstelle.get('messStelle');
-                }
-                this.setTitle(title);
+            if (owner) {
+                //Always allow to Add Messungen.
+                me.enableAddMessungen();
+            }
 
-                if (owner) {
-                    //Always allow to Add Messungen.
-                    me.enableAddMessungen();
-                }
-
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    this.setMessages(json.errors, json.warnings);
-                    //if (!json.warnings.mediaDesk) { // TODO: not sure why this condition was present
-                    this.down('probeform').setMediaDesk(record);
-                    //}
-                }
-                // If the Probe is ReadOnly, disable Inputfields and grids
-                if (readonly === true || !owner) {
-                    this.down('probeform').setReadOnly(true);
-                    this.disableChildren();
-                } else {
-                    this.down('probeform').setReadOnly(false);
-                    this.enableChildren();
-                }
-                me.setLoading(false);
-            },
-            scope: this
-        });
+            var json = response ?
+                Ext.decode(response.getResponse().responseText) :
+                null;
+            if (json) {
+                me.setMessages(json.errors, json.warnings, json.notifications);
+            }
+            me.down('probeform').setMediaDesk(record);
+            // If the Probe is ReadOnly, disable Inputfields and grids
+            if (readonly === true || !owner) {
+                me.down('probeform').setReadOnly(true);
+                me.disableChildren();
+            } else {
+                me.down('probeform').setReadOnly(false);
+                me.enableChildren();
+            }
+            me.setLoading(false);
+            me.down('probeform').isValid();
+        };
+        if (!loadedRecord) {
+            Ext.ClassManager.get('Lada.model.Probe').load(
+                this.record.get('id'), {
+                    failure: function() {
+                        me.setLoading(false);
+                    },
+                    success: loadCallBack
+                });
+        } else {
+            loadCallBack(loadedRecord);
+        }
     },
 
     /**
-     * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty
+     * Called before closing the form window. Shows confirmation dialogue
+     * window to save the form if dirty
      */
     handleBeforeClose: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
-        var item = me.items.items[0].items.get(0);
+        var item;
+        try {
+            item = me.items.items[0].items.get(0);
+        } catch (e) {
+            Ext.log({
+                msg: 'Closing uninitialized messung window: ' + e,
+                level: 'warn'});
+            item = null;
+        }
+        if (!item) {
+            //Form may not be initialized yet
+            me.close();
+            return;
+        }
         if (item.isDirty()) {
             var confWin = Ext.create('Ext.window.Window', {
                 title: i18n.getMsg('form.saveonclosetitle'),
@@ -247,7 +283,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
                         margin: '5, 0, 5, 5',
 
                         handler: function() {
-                            me.down('probeform').fireEvent('save', me.down('probeform'));
+                            me.down('probeform').fireEvent(
+                                'save', me.down('probeform'));
                             confWin.close();
                         }
                     }, {
@@ -272,7 +309,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
      * Enable the Messungengrid
      */
     enableAddMessungen: function() {
-        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(false);
+        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(
+            false);
     },
 
     /**
@@ -282,22 +320,31 @@ Ext.define('Lada.view.window.ProbeEdit', {
         if (!this.record.get('owner')) {
             // Disable only when the User is not the owner of the Probe
             // Works in symbiosis with success callback some lines above.
-            this.down('fset[name=messungen]').down('messunggrid').setReadOnly(true);
-            this.down('fset[name=messungen]').down('messunggrid').readOnly = true;
+            this.down('fset[name=messungen]').down('messunggrid').setReadOnly(
+                true);
+            this.down('fset[name=messungen]').down(
+                'messunggrid').readOnly = true;
         }
-        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(true);
-        this.down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').setReadOnly(true);
-        this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(true);
+        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(
+            true);
+        this.down('fset[name=probenzusatzwerte]').down(
+            'probenzusatzwertgrid').setReadOnly(true);
+        this.down('fset[name=pkommentare]').down(
+            'pkommentargrid').setReadOnly(true);
     },
 
     /**
      * Enable the Childelements of this window
      */
     enableChildren: function() {
-        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(false);
-        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(false);
-        this.down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').setReadOnly(false);
-        this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(false);
+        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(
+            false);
+        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(
+            false);
+        this.down('fset[name=probenzusatzwerte]').down(
+            'probenzusatzwertgrid').setReadOnly(false);
+        this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(
+            false);
     },
 
     /**
@@ -305,8 +352,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
      * @param errors These Errors shall be shown
      * @param warnings These Warning shall be shown
      */
-    setMessages: function(errors, warnings) {
-        this.down('probeform').setMessages(errors, warnings);
+    setMessages: function(errors, warnings, notifications) {
+        this.down('probeform').setMessages(errors, warnings, notifications);
         var errorOrtText = '';
         var errorOrt = false;
         var warningOrtText = '';
@@ -346,10 +393,15 @@ Ext.define('Lada.view.window.ProbeEdit', {
     },
 
     /**
-     * Instructs the fields / forms listed in this method to clear their messages.
+     * Instructs the fields / forms listed in this method to clear their
+     * messages.
      */
     clearMessages: function() {
-        this.down('probeform').clearMessages();
-        this.down('fset[name=orte]').clearMessages();
+        var probeform = this.down('probeform');
+        var orteset = this.down('fset[name=orte]');
+        if (probeform && orteset) {
+            this.down('probeform').clearMessages();
+            this.down('fset[name=orte]').clearMessages();
+        }
     }
 });

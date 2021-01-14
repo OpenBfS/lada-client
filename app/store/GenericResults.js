@@ -27,9 +27,6 @@ Ext.define('Lada.store.GenericResults', {
             totalProperty: 'totalCount'
         }
     },
-    setProxyPayload: function(payload) {
-        this.getProxy().setPayload(payload);
-    },
 
     //    autoLoad: true,
     pageSize: Lada.pagingSize

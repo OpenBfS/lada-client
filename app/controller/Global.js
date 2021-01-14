@@ -19,6 +19,9 @@ Ext.define('Lada.controller.Global', {
             },
             'button[action=logout]': {
                 click: this.logout
+            },
+            'button[action=toggletimezone]': {
+                toggle: this.toggleTimezone
             }
         });
     },
@@ -45,5 +48,25 @@ Ext.define('Lada.controller.Global', {
                 Ext.Msg.alert(i18n.getMsg('err.msg.slo.failed.title'), i18n.getMsg('err.msg.slo.failed.body'));
             }
         });
+    },
+
+    /**
+     * Button toggle handler.
+     * Toggles timezone
+     */
+    toggleTimezone: function(button, utc) {
+        Lada.util.Date.setUTCDisplay(utc);
+        var i18n = Lada.getApplication().bundle;
+        var tztext = utc ?
+            i18n.getMsg('timezone.text.utc') :
+            i18n.getMsg('timezone.text.local');
+        button.setText( i18n.getMsg('timezone.button.text') + tztext );
+        //Get components that need a reload
+        var dynamicgrids = Ext.ComponentQuery.query('dynamicgrid');
+        var auditrails = Ext.ComponentQuery.query('audittrail');
+        var componentsToWaitFor = dynamicgrids.length + auditrails.length;
+        button.startToggle(componentsToWaitFor);
+        //Fire event to notify components
+        Ext.fireEvent('timezonetoggled', utc);
     }
 });

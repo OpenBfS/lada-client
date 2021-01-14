@@ -36,6 +36,9 @@ Ext.define('Lada.model.Query', {
         name: 'baseQuery'
         // the linked stamm.query in the database.
     }, {
+        name: 'printTemplates'
+        // string of (comma-separated) templates this query is able to fill in
+    }, {
         name: 'messStellesIds'
     }, {
         name: 'clonedFrom',

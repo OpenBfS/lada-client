@@ -26,11 +26,13 @@ Ext.define('Lada.view.form.Probe', {
         'Lada.view.widget.KtaGruppe',
         'Lada.view.widget.Umwelt',
         'Lada.view.widget.Deskriptor',
+        'Lada.view.widget.Tag',
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.base.Datetime',
         'Lada.view.widget.base.FieldSet',
         'Lada.view.widget.base.DateField',
         'Lada.view.window.MessungCreate',
+        'Lada.view.window.TagCreate',
         'Lada.model.Probe',
         'Lada.model.MessstelleLabor'
     ],
@@ -40,12 +42,21 @@ Ext.define('Lada.view.form.Probe', {
     margin: 5,
     border: false,
 
-    recordId: null,
     readOnly: false,
+
+    recordId: null,
 
     trackResetOnLoad: true,
 
+    statics: {
+        mediaSnScheduler: null
+    },
+
     initComponent: function() {
+        if (Lada.view.form.Probe.mediaSnScheduler === null) {
+            Lada.view.form.Probe.mediaSnScheduler = Ext.create(
+                'Lada.util.FunctionScheduler');
+        }
         var me = this;
         var i18n = Lada.getApplication().bundle;
         this.items = [{
@@ -152,12 +163,17 @@ Ext.define('Lada.view.form.Probe', {
                             listenersJson: {
                                 select: {
                                     fn: function(combo, newValue) {
-                                        console.log('anon. listener');
                                         var mst = newValue.get('messStelle');
                                         var labor = newValue.get('laborMst');
-                                        combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
-                                        combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
-                                        combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
+                                        combo.up('fieldset').down(
+                                            'messstelle[name=mstId]')
+                                            .setValue(mst);
+                                        combo.up('fieldset').down(
+                                            'messstelle[name=laborMstId]')
+                                            .setValue(labor);
+                                        combo.up('fieldset').down(
+                                            'messprogrammland[name=mplId]')
+                                            .setValue();
                                     }
                                 }
                             }
@@ -215,16 +231,17 @@ Ext.define('Lada.view.form.Probe', {
                             fieldLabel: 'Messregime',
                             margin: '0, 5, 5, 5',
                             width: '35%',
+                            allowBlank: false,
                             labelWidth: 80
                         }, {
                             xtype: 'probenart',
-                            editable: true,
+                            //editable: true,
                             name: 'probenartId',
                             fieldLabel: 'Probenart',
                             margin: '0, 5, 5, 5',
                             width: '30%',
-                            labelWidth: 65,
-                            allowBlank: true
+                            allowBlank: false,
+                            labelWidth: 65
                         }]
                     }, {
                         layout: {
@@ -247,16 +264,21 @@ Ext.define('Lada.view.form.Probe', {
                                 this.down('combobox').on({
                                     focus: {
                                         fn: function(combo) {
-                                            var store = Ext.StoreManager.get('probenehmer');
+                                            var store = combo.getStore();
                                             store.clearFilter();
+                                            /*eslint-disable max-len*/
                                             var nId = combo.up('fieldset')
                                                 .down('netzbetreiber[name=netzbetreiber]')
                                                 .getValue();
                                             if (!nId || nId.length === 0) {
-                                                store.filterBy(function(record) {
-                                                    return Lada.netzbetreiber.indexOf(
-                                                        record.get('netzbetreiberId')) > -1;
-                                                });
+                                                store.filterBy(
+                                                    function(record) {
+                                                        return Lada.netzbetreiber
+                                                            .indexOf(
+                                                                record.get('netzbetreiberId'))
+                                                            > -1;
+                                                    });
+                                                /*eslint-enable max-len*/
                                             } else {
                                                 store.filter({
                                                     property: 'netzbetreiberId',
@@ -281,16 +303,19 @@ Ext.define('Lada.view.form.Probe', {
                                 this.down('combobox').on({
                                     focus: {
                                         fn: function(combo) {
-                                            var store = Ext.StoreManager.get('datensatzerzeuger');
+                                            var store = combo.getStore();
                                             store.clearFilter();
+                                            /*eslint-disable max-len*/
                                             var nId = combo.up('fieldset')
                                                 .down('netzbetreiber[name=netzbetreiber]')
                                                 .getValue();
                                             if (!nId || nId.length === 0) {
                                                 store.filterBy(function(record) {
                                                     return Lada.netzbetreiber.indexOf(
-                                                        record.get('netzbetreiberId')) > -1;
+                                                        record.get('netzbetreiberId'))
+                                                        > -1;
                                                 });
+                                            /*eslint-enable max-len*/
                                             } else {
                                                 store.filter({
                                                     property: 'netzbetreiberId',
@@ -316,8 +341,9 @@ Ext.define('Lada.view.form.Probe', {
                             this.down('combobox').on({
                                 focus: {
                                     fn: function(combo) {
-                                        var store = Ext.StoreManager.get('messprogrammkategorie');
+                                        var store = combo.getStore();
                                         store.clearFilter();
+                                        /*eslint-disable max-len*/
                                         var nId = combo.up('fieldset')
                                             .down('netzbetreiber[name=netzbetreiber]')
                                             .getValue();
@@ -326,6 +352,7 @@ Ext.define('Lada.view.form.Probe', {
                                                 return Lada.netzbetreiber.indexOf(
                                                     record.get('netzbetreiberId')) > -1;
                                             });
+                                        /*eslint-enable max-len*/
                                         } else {
                                             store.filter({
                                                 property: 'netzbetreiberId',
@@ -350,7 +377,7 @@ Ext.define('Lada.view.form.Probe', {
                             width: '50%',
                             labelWidth: 140,
                             name: 'reiProgpunktGrpId',
-                            fieldLabel: i18n.getMsg('reiprogpunktgruppe'),
+                            fieldLabel: i18n.getMsg('reiProgpunktGrpId'),
                             margin: '0 5 5 5',
                             allowBlank: true,
                             editable: true,
@@ -360,7 +387,7 @@ Ext.define('Lada.view.form.Probe', {
                             width: '50%',
                             labelWidth: 140,
                             name: 'ktaGruppeId',
-                            fieldLabel: i18n.getMsg('ktagruppe'),
+                            fieldLabel: i18n.getMsg('ktaGruppeId'),
                             margin: '0 5 5 5',
                             hidden: true,
                             editable: true,
@@ -369,7 +396,8 @@ Ext.define('Lada.view.form.Probe', {
                     }]
                 }, {
                     // Zeit
-                    xtype: 'fieldset',
+                    xtype: 'fset',
+                    name: 'zeit',
                     title: i18n.getMsg('title.time'),
                     layout: {
                         type: 'vbox',
@@ -392,6 +420,7 @@ Ext.define('Lada.view.form.Probe', {
                             margin: '0, 5, 5, 5',
                             name: 'solldatumBeginn',
                             format: 'd.m.Y',
+                            formatText: '',
                             width: '50%',
                             period: 'start',
                             readOnly: true
@@ -403,6 +432,7 @@ Ext.define('Lada.view.form.Probe', {
                             margin: '0, 5, 5, 5',
                             name: 'solldatumEnde',
                             format: 'd.m.Y',
+                            formatText: '',
                             width: '50%',
                             period: 'end',
                             readOnly: true
@@ -410,6 +440,7 @@ Ext.define('Lada.view.form.Probe', {
                     }, {
                         xtype: 'fset',
                         name: 'entnahmePeriod',
+                        plainTitle: ' ',
                         width: '100%',
                         border: false,
                         margin: 0,
@@ -418,7 +449,7 @@ Ext.define('Lada.view.form.Probe', {
                         },
                         items: [{
                             xtype: 'datetime',
-                            fieldLabel: 'Probenentnahme von',
+                            fieldLabel: i18n.getMsg('probenentnahmeVon'),
                             labelWidth: 130,
                             margin: '0, 5, 5, 5',
                             name: 'probeentnahmeBeginn',
@@ -427,13 +458,32 @@ Ext.define('Lada.view.form.Probe', {
                             period: 'start'
                         }, {
                             xtype: 'datetime',
-                            fieldLabel: i18n.getMsg('sollBis'),
+                            fieldLabel: i18n.getMsg('probenentnahmeBis'),
                             labelWidth: 17,
                             margin: '0, 5, 5, 5',
                             name: 'probeentnahmeEnde',
                             format: 'd.m.Y H:i',
                             width: '50%',
                             period: 'end'
+                        }]
+                    }, {
+                        xtype: 'fset',
+                        name: 'ursprung',
+                        plainTitle: ' ',
+                        width: '100%',
+                        border: false,
+                        margin: 0,
+                        layout: {
+                            type: 'hbox'
+                        },
+                        items: [{
+                            xtype: 'datetime',
+                            fieldLabel: i18n.getMsg('ursprungszeit'),
+                            labelWidth: 130,
+                            margin: '0, 5, 5, 5',
+                            name: 'ursprungszeit',
+                            format: 'd.m.Y H:i',
+                            width: '50%'
                         }]
                     }]
                 }, {
@@ -495,8 +545,9 @@ Ext.define('Lada.view.form.Probe', {
                                 readOnly: true
                             }]
                         }, {
-                            xtype: 'fieldset',
+                            xtype: 'fset',
                             title: i18n.getMsg('title.deskriptordetails'),
+                            name: 'deskriptordetails',
                             collapsible: true,
                             collapsed: true,
                             layout: {
@@ -505,6 +556,48 @@ Ext.define('Lada.view.form.Probe', {
                             },
                             items: this.buildDescriptors()
                         }]
+                    }]
+                }, {
+                    //Tag widget
+                    xtype: 'fieldset',
+                    title: i18n.getMsg('title.tagfieldset'),
+                    name: 'tagfieldset',
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretchmax'
+                    },
+                    items: [{
+                        flex: 1,
+                        xtype: 'tagwidget',
+                        emptyText: i18n.getMsg('emptytext.tag'),
+                        parentWindow: this,
+                        maskTargetComponentType: 'fieldset',
+                        maskTargetComponentName: 'tagfieldset',
+                        margin: '5 5 5 5'
+                    }, {
+                        width: 25,
+                        height: 25,
+                        xtype: 'button',
+                        margin: '5 5 5 0',
+                        action: 'createtag',
+                        icon: 'resources/img/list-add.png',
+                        tooltip: i18n.getMsg('button.createtag.tooltip'),
+                        handler: function(button) {
+                            var win = Ext.create('Lada.view.window.TagCreate', {
+                                tagWidget: me.down('tagwidget'),
+                                probe: button.up('probeform').getForm()
+                                    .getRecord().get('hauptprobenNr'),
+                                recordType: 'probe'
+                            });
+                            //Close window if parent window is closed
+                            var parentWindow = button.up('probenedit') ?
+                                button.up('probenedit') :
+                                button.up('probecreate');
+                            parentWindow.on('close', function() {
+                                win.close();
+                            });
+                            win.show();
+                        }
                     }]
                 }]
             }]
@@ -519,7 +612,9 @@ Ext.define('Lada.view.form.Probe', {
         if (!probeRecord.data || probeRecord.data.id === null) {
             return;
         }
-        this.down('button[action=copy]').setDisabled(probeRecord.phantom && record.get('readOnly'));
+        if (probeRecord.get('owner') && !probeRecord.phantom) {
+            this.down('button[action=copy]').setDisabled(false);
+        }
         var mstStore = Ext.data.StoreManager.get('messstellen');
         var mstId = mstStore.getById(probeRecord.get('mstId'));
         if (!probeRecord.get('owner')) {
@@ -530,11 +625,11 @@ Ext.define('Lada.view.form.Probe', {
                 laborMstId = '';
             }
             var id = this.down('messstellelabor').store.count() + 1;
-
+            var displayCombi;
             if ( mstId.get('messStelle') === laborMstId ) {
                 displayCombi = mstId.get('messStelle');
             } else {
-                displayCombi = mstId.get('messStelle') + '/' + laborMstId
+                displayCombi = mstId.get('messStelle') + '/' + laborMstId;
             }
 
             var rec = Ext.create('Lada.model.MessstelleLabor', {
@@ -560,22 +655,29 @@ Ext.define('Lada.view.form.Probe', {
             this.down('messstellelabor').setValue(items.getAt(0));
         }
         this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
+        //Do not set tagwidget probe id if record is not saved
+        if (probeRecord.phantom === false) {
+            this.down('tagwidget').setProbe(probeRecord.data.id);
+        }
     },
 
     setMediaDesk: function(record) {
         var media = record.get('mediaDesk');
         if (media) {
             var mediaParts = media.split(' ');
-            this.setMediaSN(0, mediaParts);
+            Lada.view.form.Probe.mediaSnScheduler.enqueue(
+                this.setMediaSN, [0, mediaParts], this);
         } else {
-            this.setMediaSN(0, '0');
+            Lada.view.form.Probe.mediaSnScheduler.enqueue(
+                this.setMediaSN, [0, '0'], this);
         }
-
+        Lada.view.form.Probe.mediaSnScheduler.next();
     },
 
     setMediaSN: function(ndx, media, beschreibung) {
         var mediabeschreibung = this.getForm().findField('media');
         if (ndx >= 12) {
+            Lada.view.form.Probe.mediaSnScheduler.finished();
             mediabeschreibung.setValue(beschreibung);
             return;
         }
@@ -588,35 +690,57 @@ Ext.define('Lada.view.form.Probe', {
         if (ndx >= 1) {
             var parents = current.getParents(cbox);
             if (parents.length === 0) {
+                Lada.view.form.Probe.mediaSnScheduler.finished();
                 return;
             }
             cbox.store.proxy.extraParams.parents = parents;
         }
         cbox.store.load(function(records, op, success) {
             if (!success) {
+                Lada.view.form.Probe.mediaSnScheduler.finished();
                 return;
             }
-            cbox.select(cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
-            var mediatext = cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10));
+            try {
+                cbox.select(
+                    cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
+            } catch (e) {
+                Ext.log({msg: 'Selecting media failed: ' + e, level: 'warn'});
+                Lada.view.form.Probe.mediaSnScheduler.finished();
+                return;
+            }
+            var mediatext = cbox.store.findRecord(
+                'sn', parseInt(media[ndx + 1], 10));
             if (mediatext !== null) {
-                if ( (ndx <= 3) && (media[1] === '01') && (mediatext.data.beschreibung !== 'leer') ) {
+                if (
+                    (ndx <= 3) &&
+                    (media[1] === '01') &&
+                    (mediatext.data.beschreibung !== 'leer')
+                ) {
                     beschreibung = mediatext.data.beschreibung;
-                } else if ( (media[1] !== '01') && (mediatext.data.beschreibung !== 'leer') && (ndx <= 1) ) {
+                } else if (
+                    (media[1] !== '01') &&
+                    (mediatext.data.beschreibung !== 'leer') &&
+                    (ndx <= 1)
+                ) {
                     beschreibung = mediatext.data.beschreibung;
                 }
             }
-            me.setMediaSN(++ndx, media, beschreibung);
+            var nextNdx = ++ndx;
+            Lada.view.form.Probe.mediaSnScheduler.enqueue(
+                me.setMediaSN, [nextNdx, media, beschreibung], me);
+            Lada.view.form.Probe.mediaSnScheduler.finished();
         });
     },
 
-    setMessages: function(errors, warnings) {
+    setMessages: function(errors, warnings, notifications) {
         var key;
         var element;
         var content;
+        var tmp;
         var i18n = Lada.getApplication().bundle;
         if (warnings) {
             for (key in warnings) {
-                var tmp = key;
+                tmp = key;
                 if (tmp.indexOf('#') > 0) {
                     tmp = tmp.split('#')[0];
                 }
@@ -632,9 +756,28 @@ Ext.define('Lada.view.form.Probe', {
                 element.showWarnings(warnText);
             }
         }
+        if (notifications) {
+            for (key in notifications) {
+                tmp = key;
+                if (tmp.indexOf('#') > 0) {
+                    tmp = tmp.split('#')[0];
+                }
+                element = this.down('component[name=' + tmp + ']');
+                if (!element) {
+                    continue;
+                }
+                content = notifications[key];
+                var notificationsText = '';
+                for (var j = 0; j < content.length; j++) {
+                    notificationsText += i18n.getMsg(
+                        content[j].toString()) + '\n';
+                }
+                element.showNotifications(notificationsText);
+            }
+        }
         if (errors) {
             for (key in errors) {
-                var tmp = key;
+                tmp = key;
                 if (tmp.indexOf('#') > 0) {
                     tmp = tmp.split('#')[0];
                 }
@@ -644,8 +787,8 @@ Ext.define('Lada.view.form.Probe', {
                 }
                 content = errors[key];
                 var errorText = '';
-                for (var i = 0; i < content.length; i++) {
-                    errorText += i18n.getMsg(content[i].toString()) + '\n';
+                for (var k = 0; k < content.length; k++) {
+                    errorText += i18n.getMsg(content[k].toString()) + '\n';
                 }
                 element.showErrors(errorText);
             }
@@ -668,9 +811,17 @@ Ext.define('Lada.view.form.Probe', {
         this.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
         this.down('fset[name=entnahmePeriod]').clearMessages();
         this.down('fset[name=sollzeitPeriod]').clearMessages();
+        this.down('tfield[name=mediaDesk]').clearWarningOrError();
+        this.down('fset[name=deskriptordetails]').clearMessages();
+        this.down('fset[name=ursprung]').clearMessages();
+        //Deskriptoren
+        for (var i = 0; i < 12; i++) {
+            this.down('deskriptor[layer='+i+']').clearWarningOrError();
+        }
     },
 
     setReadOnly: function(value) {
+        this.readOnly = value;
         this.down('cbox[name=mstlabor]').setReadOnly(value);
         this.down('tfield[name=hauptprobenNr]').setReadOnly(value);
         this.down('cbox[name=reiProgpunktGrpId]').setReadOnly(value);
@@ -683,9 +834,9 @@ Ext.define('Lada.view.form.Probe', {
         this.down('cbox[name=umwId]').setReadOnly(value);
         this.down('datetime[name=probeentnahmeBeginn]').setReadOnly(value);
         this.down('datetime[name=probeentnahmeEnde]').setReadOnly(value);
+        this.down('datetime[name=ursprungszeit]').setReadOnly(value);
         this.down('cbox[name=probeNehmerId]').setReadOnly(value);
         this.down('cbox[name=mplId]').setReadOnly(value);
-        this.down('button[action=copy]').setDisabled(value);
         this.readOnly = value;
 
         //Deskriptoren
@@ -700,7 +851,7 @@ Ext.define('Lada.view.form.Probe', {
             fields[i] = {
                 xtype: 'deskriptor',
                 fieldLabel: 'S' + i,
-                //name: 's' + i,
+                name: 's' + i,
                 labelWidth: 25,
                 width: 190,
                 layer: i,

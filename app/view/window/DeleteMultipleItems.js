@@ -7,7 +7,8 @@
  */
 
 /**
- * Window to show a confirmation dialog to delete a Probe and a progress bar after confirmation
+ * Window to show a confirmation dialog to delete a Probe and a progress bar
+ * after confirmation
  */
 Ext.define('Lada.view.window.DeleteMultipleItems', {
     extend: 'Ext.window.Window',
@@ -30,7 +31,6 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
 
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -41,8 +41,8 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
         });
         this.items = [{
             xtype: 'panel',
-            height: 150,
-            width: 340,
+            height: 300,
+            width: 500,
             autoScroll: true,
             overflow: 'auto',
             html: '',
@@ -73,12 +73,21 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 dialog1 = i18n.getMsg('delete.multiple_probenehmer');
                 break;
             case 'dsatzerz':
-                title = i18n.getMsg('delete.multiple_datensatzerzeuger.window.title');
+                title = i18n.getMsg(
+                    'delete.multiple_datensatzerzeuger.window.title');
                 dialog1 = i18n.getMsg('delete.multiple_datensatzerzeuger');
                 break;
             case 'mprkat':
                 title = i18n.getMsg('delete.multiple_mpr_kat.window.title');
                 dialog1 = i18n.getMsg('delete.multiple_mpr_kat');
+                break;
+            case 'ortId':
+                title = i18n.getMsg('delete.multiple_ort.window.title');
+                dialog1 = i18n.getMsg('delete.multiple_ort');
+                break;
+            case 'messungId':
+                title = i18n.getMsg('delete.multiple_messung.window.title');
+                dialog1 = i18n.getMsg('delete.multiple_messung');
                 break;
 
 
@@ -103,6 +112,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 layout: 'hbox',
                 items: [{
                     xtype: 'button',
+                    margin: '5, 5, 5, 5',
                     text: i18n.getMsg('cancel'),
                     scope: me,
                     handler: function() {
@@ -111,6 +121,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                     }
                 }, {
                     xtype: 'button',
+                    margin: '5, 5, 5, 5',
                     text: i18n.getMsg('delete'),
                     handler: function(btn) {
                         me.confWin.close();
@@ -153,6 +164,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
         me.down('progressbar').hide();
         me.add({
             xtype: 'button',
+            margin: '5, 5, 5, 5',
             text: Lada.getApplication().bundle.getMsg('close'),
             handler: function() {
                 me.close();
@@ -163,7 +175,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
     /**
      * Initiates deletion of all selected items
      */
-    startDelete: function(btn) {
+    startDelete: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
         me.maxSteps = me.selection.length;
@@ -196,13 +208,17 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 url = 'lada-server/rest/messprogrammkategorie/';
                 datatype = i18n.getMsg('messprogrammkategorie');
                 break;
+            case 'ortId':
+                url = 'lada-server/rest/ort/';
+                datatype = 'Ort';
+                break;
         }
         for (var i = 0; i< me.selection.length; i++) {
             var id = me.selection[i].get(me.parentGrid.rowtarget.dataIndex);
             Ext.Ajax.request({
                 url: url + id,
                 method: 'DELETE',
-                success: function(resp, opts) {
+                success: function(resp) {
                     var json = Ext.JSON.decode(resp.responseText);
                     var urlArr = resp.request.url.split('/');
                     var delId = urlArr[urlArr.length - 1];
@@ -219,22 +235,27 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                             store.removeAt(delIdx);
                         }
 
-                        html = html + i18n.getMsg(
-                            'deleteItems.callback.success',datatype, delId);
+                        html = html +
+                            i18n.getMsg(
+                                'deleteItems.callback.success',
+                                datatype,
+                                delId) +
+                            '<br>';
                         me.down('panel').setHtml(html);
                     } else {
                         html = html + i18n.getMsg(
                             'deleteItems.callback.failure', datatype, delId)
-                            + i18n.getMsg(json.message) + '<br>';
+                            + '<li>' + i18n.getMsg(json.message) + '</li><br>';
                         me.down('panel').setHtml(html);
                     }
                     me.currentProgress += 1;
-                    me.down('progressbar').updateProgress(me.currentProgress/me.maxSteps);
+                    me.down('progressbar').updateProgress(
+                        me.currentProgress/me.maxSteps);
                     if (me.currentProgress === me.maxSteps) {
                         me.finishDelete();
                     }
                 },
-                failure: function(resp, opts) {
+                failure: function(resp) {
                     var urlArr = resp.request.url.split('/');
                     var delId = urlArr[urlArr.length - 1];
                     var html = me.down('panel').html;

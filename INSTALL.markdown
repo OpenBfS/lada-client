@@ -26,27 +26,23 @@ Sencha nicht mehr vorgesehen.
 ###Sencha Cmd
 
 Bei der Einrichtung der Entwicklungsumgebung und beim Kompilieren der Anwendung
-kommt das Tool Sencha Cmd 6.2.1.29 zum Einsatz. Sencha bietet Sencha Cmd zum
+kommt das Tool Sencha Cmd 7.2.0.84 zum Einsatz. Sencha bietet Sencha Cmd zum
 [Download](https://www.sencha.com/products/extjs/cmd-download/) an.
 
-Beachten Sie: Sencha Cmd ist keine freie Software. Bitte beachten Sie ebenfalls,
-dass Sencha Cmd in der Version 6.5.x nicht mit der GPL-Version von Extjs6
-(nur erhältlich in den Versionen bis 6.2.x) kompatibel ist.
-
-
 Die Fa. Sencha beschreibt die Installation von Sencha Cmd in der
-[Dokumentation von ExtJs](https://docs.sencha.com/cmd/guides/extjs/cmd_app.html)
+[Dokumentation von ExtJs](https://docs.sencha.com/cmd/7.2.0/guides/getting_started_cmd.html)
 
-Zur Installation von Sencha Cmd wird Java benötigt.
+Zur Installation von Sencha Cmd wird Java benötigt. Dabei werden die Varianten Oracle JRE (SE) 8-11 und OpenJDK 8-11 unterstützt.
 
 ### Installation einer Entwicklungsumgebung der Anwendung
 
 * cd (Umgebung)
-* sencha workspace init
 * Extjs6 nach ext/ kopieren/entpacken
+* sencha config --prop sencha.sdk.path=/pfad/zum/client/repository --save
+* sencha workspace init
 * Externe Libraries installieren: install-dependencies.sh
-* sencha app install --framework=ext
-* sencha app build
+* sencha app install
+* sencha app build development
 * Einstiegspunkt für Webbrowser: index.html
 
 ### Kompilieren und Minifizieren der Anwendung

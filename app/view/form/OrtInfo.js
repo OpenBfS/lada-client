@@ -25,7 +25,7 @@ Ext.define('Lada.view.form.OrtInfo', {
             border: false,
             defaults: {
                 xtype: 'selectabledisplayfield',
-                labelWidth: 125,
+                labelWidth: 115,
                 submitValue: false
             },
             items: [{
@@ -39,7 +39,11 @@ Ext.define('Lada.view.form.OrtInfo', {
                 name: 'kurztext'
             }, {
                 fieldLabel: i18n.getMsg('orte.langtext'),
-                name: 'langtext'
+                xtype: 'displayfield',
+                labelWidth: 120,
+                name: 'langtext',
+                maxWidth: 300,
+                cls: 'text-wrapper'
             }, {
                 xtype: 'ortinforow',
                 label: i18n.getMsg('staat'),
@@ -80,22 +84,23 @@ Ext.define('Lada.view.form.OrtInfoRow',{
     firstitem: '',
     secondtitem: '',
     defaults: {
-        xtype: 'selectabledisplayfield'
+        xtype: 'displayfield',
+        inputWrapCls: '',
+        triggerWrapCls: ''
     },
     initComponent: function() {
         this.items = [{
             xtype: 'label',
-            html: this.label,
+            html: this.label+':',
             width: 125,
             padding: '4, 0, 5, 0'
         },{
             name: this.firstitem,
-            width: 80,
-            margin: '0,5'
+            width: 80
         },{
             name: this.seconditem,
-            margin: '0,5',
-            width: 120
+            width: 115,
+            maxWidth: 115
         }];
         this.callParent();
     }

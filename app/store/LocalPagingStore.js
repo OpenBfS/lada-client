@@ -9,7 +9,8 @@
 /**
  * Store for models that are used in toolbars with paging, but with local data.
  * Overwrites filterchange listener and loadPage with a filter (items per page)
- * TODO: loadPage is not always triggered (another filter being applied initially?)
+ * TODO: loadPage is not always triggered
+ * (another filter being applied initially?)
  */
 Ext.define('Lada.store.LocalPagingStore', {
     extend: 'Ext.data.Store',
@@ -32,8 +33,9 @@ Ext.define('Lada.store.LocalPagingStore', {
         this.applyPaging();
     },
 
-    /* overwrites Ext.data.Store function reload. Remove paging filter before reload,
-    * apply pagingFilter after reload, try to load the page that was active before
+    /* overwrites Ext.data.Store function reload. Remove paging filter before
+    * reload, apply pagingFilter after reload, try to load the page that was
+    * active before
     */
     reload: function(options) {
         var me = this;
@@ -63,7 +65,11 @@ Ext.define('Lada.store.LocalPagingStore', {
         }
         for (var i= 0; i< tbs.length; i++) {
             var grid = tbs[i].up('grid');
-            if (!grid || !grid.store.model || grid.store.model !== this.model ) {
+            if (
+                !grid ||
+                !grid.store.model ||
+                grid.store.model !== this.model
+            ) {
                 continue;
             }
             //this.totalCount = this.getCount();
@@ -95,7 +101,7 @@ Ext.define('Lada.store.LocalPagingStore', {
             }
             var count = this.getCount();
             tbs[i].afterPageText = i18n.getMsg('pagingtoolbar.of')
-                + Math.ceil(count / this.pageSize);
+                + ' ' + Math.ceil(count / this.pageSize);
             var low = (this.currentPage - 1) * this.pageSize + 1;
             var high = Math.min(low - 1 + this.pageSize, count);
             tbs[i].displayMsg = i18n.getMsg('pagingtoolbar.text', low,

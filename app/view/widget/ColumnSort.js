@@ -55,9 +55,9 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                 border: true,
                 store: this.store,
                 scrollable: true,
-                maxHeight: 150,
-                height: 150,
-                minHeight: 150,
+                maxHeight: 200,
+                height: 200,
+                minHeight: 200,
                 autoSort: false,
                 multiSelect: true,
                 stripeRows: true,
@@ -68,7 +68,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                         containerScroll: true
                     },
                     listeners: {
-                        drop: function(node, data, overModel) {
+                        drop: function() {
                             me.saveColumnOrder();
                             me.fireEvent('change');
                         }
@@ -103,7 +103,8 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                                 var rec = box.$widgetRecord;
                                 rec.set('sort', newval);
                                 var origindata = this.up('querypanel')
-                                    .gridColumnValueStore.getById(rec.get('id'));
+                                    .gridColumnValueStore
+                                    .getById(rec.get('id'));
                                 if (origindata) {
                                     origindata.set('sort', newval);
                                 }
@@ -173,10 +174,18 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
             var maxIdx = this.store.count() - 1;
 
             switch (direction) {
-                case 'first': index = 0; break;
-                case 'up': index > 0 ? index-- : 0; break;
-                case 'down': index < maxIdx ? index++ : maxIdx; break;
-                case 'last': index = maxIdx; break;
+                case 'first':
+                    index = 0;
+                    break;
+                case 'up':
+                    index = index > 0 ? index - 1 : 0;
+                    break;
+                case 'down':
+                    index = index < maxIdx ? index + 1 : maxIdx;
+                    break;
+                case 'last':
+                    index = maxIdx;
+                    break;
             }
 
             this.store.remove(row);
@@ -198,7 +207,8 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
         for (var i = 0 ; i < nodes.length; i++) {
             var nodename = nodes[i].innerText.substr(0,
                 nodes[i].innerText.length -3);
-
+            //Remove linebreaks
+            nodename = nodename.replace(/(\r\n|\n|\r)/gm, '');
             //TODO this relies on column names to be unique
             var qf = columnstore.findRecord('name', nodename);
             var entry = this.store.findRecord(

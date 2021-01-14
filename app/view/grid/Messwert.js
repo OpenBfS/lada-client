@@ -10,7 +10,7 @@
  * Grid to list Messwerte
  */
 Ext.define('Lada.view.grid.Messwert', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.messwertgrid',
 
     requires: [
@@ -24,10 +24,11 @@ Ext.define('Lada.view.grid.Messwert', {
     viewConfig: {
         deferEmptyText: false
     },
-    margin: '0, 5, 15, 5',
+    margin: '0, 5, 5, 5',
     recordId: null,
     umwId: null,
     defaultMehId: null,
+    secMehId: null,
     readOnly: true,
     allowDeselect: true,
     messgroesseStore: null,
@@ -55,37 +56,70 @@ Ext.define('Lada.view.grid.Messwert', {
                         }
                         // We are in a messung window and should check if we can
                         // edit.
-                        var readonlywin = o.grid.up('window').record.get('readonly');
+                        var readonlywin = o.grid.up('window')
+                            .record.get('readonly');
                         var readonlygrid = o.record.get('readonly');
-                        if (readonlywin === true || readonlygrid === true || this.disabled) {
+                        if (
+                            readonlywin === true ||
+                            readonlygrid === true ||
+                            this.disabled
+                        ) {
                             return false;
                         }
                         if (o.record.phantom === true) {
-                            e.editor.down('expnumberfield[dataIndex=messwert]').allowBlank = false;
-                            e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').allowBlank = false;
-                            e.editor.down('formatnumberfield').allowBlank = false;
-                            e.editor.down('expnumberfield[dataIndex=messwert]').setReadOnly(false);
-                            e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').setReadOnly(false);
-                            e.editor.down('formatnumberfield').setReadOnly(false);
-                            if (e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').inputWrap) {
-                                e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').inputWrap.removeCls('x-lada-warning-field');
-                                e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').inputEl.removeCls('x-lada-warning-field');
+                            e.editor.down('expnumberfield[dataIndex=messwert]')
+                                .allowBlank = false;
+                            e.editor.down(
+                                'expnumberfield[dataIndex=nwgZuMesswert]')
+                                .allowBlank = false;
+                            e.editor.down('formatnumberfield')
+                                .allowBlank = false;
+                            e.editor.down('expnumberfield[dataIndex=messwert]')
+                                .setReadOnly(false);
+                            e.editor.down(
+                                'expnumberfield[dataIndex=nwgZuMesswert]')
+                                .setReadOnly(false);
+                            e.editor.down('formatnumberfield')
+                                .setReadOnly(false);
+                            var nwgZM = e.editor.down(
+                                'expnumberfield[dataIndex=nwgZuMesswert]');
+                            if (nwgZM.inputWrap) {
+                                nwgZM.inputWrap.removeCls(
+                                    'x-lada-warning-field');
+                                nwgZM.inputEl.removeCls(
+                                    'x-lada-warning-field');
                             }
                         } else {
-                            if (e.editor.down('checkbox').getValue() === true) {
-                                e.editor.down('expnumberfield[dataIndex=messwert]').allowBlank = true;
-                                e.editor.down('expnumberfield[dataIndex=messwert]').setReadOnly(true);
-                                e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').allowBlank = false;
-                                e.editor.down('formatnumberfield').allowBlank = true;
-                                e.editor.down('formatnumberfield').setReadOnly(true);
+                            if (o.record.get('messwertNwg') === '<') {
+                                e.editor.down(
+                                    'expnumberfield[dataIndex=messwert]')
+                                    .allowBlank = true;
+                                e.editor.down(
+                                    'expnumberfield[dataIndex=messwert]')
+                                    .setReadOnly(true);
+                                e.editor.down(
+                                    'expnumberfield[dataIndex=nwgZuMesswert]')
+                                    .allowBlank = false;
+                                e.editor.down(
+                                    'formatnumberfield')
+                                    .allowBlank = true;
+                                e.editor.down(
+                                    'formatnumberfield')
+                                    .setReadOnly(true);
                             } else {
-                                e.editor.down('expnumberfield[dataIndex=messwert]').allowBlank = false;
-                                e.editor.down('expnumberfield[dataIndex=nwgZuMesswert]').allowBlank = true;
-                                e.editor.down('formatnumberfield').allowBlank = false;
+                                e.editor.down(
+                                    'expnumberfield[dataIndex=messwert]')
+                                    .allowBlank = false;
+                                e.editor.down(
+                                    'expnumberfield[dataIndex=nwgZuMesswert]')
+                                    .allowBlank = true;
+                                e.editor.down(
+                                    'formatnumberfield')
+                                    .allowBlank = false;
                             }
                         }
                         //Preselect Messeinheit
-                        if (this.defaultMehId) {
+                        if (this.defaultMehId && o.record.phantom) {
                             o.record.set('mehId', this.defaultMehId);
                         }
                         return true;
@@ -95,6 +129,8 @@ Ext.define('Lada.view.grid.Messwert', {
         });
         var me = this;
         this.plugins = [this.rowEditing];
+
+        this.mehComboStore = Ext.create('Lada.store.Messeinheiten');
 
         this.dockedItems = [{
             xtype: 'toolbar',
@@ -109,18 +145,26 @@ Ext.define('Lada.view.grid.Messwert', {
                 text: i18n.getMsg('delete'),
                 icon: 'resources/img/list-remove.png',
                 action: 'delete'
+            }, {
+                buttonAlign: 'right',
+                action: 'normalize',
+                handler: this.normalize,
+                text: i18n.getMsg('button.normalize')
             }]
         }];
         this.columns = [{
             header: i18n.getMsg('messgroesseId'),
             dataIndex: 'messgroesseId',
             width: 118,
-            renderer: function(value) {
+            renderer: function(value, metaData, record) {
+                this.setValidationResults(metaData, record, 'messgroesseId');
                 if (!value || value === '') {
                     return '';
                 }
                 var store = Ext.data.StoreManager.get('messgroessen');
-                return store.findRecord('id', value, 0, false, false, true).get('messgroesse');
+                return store.findRecord(
+                    'id', value, 0, false, false, true)
+                    .get('messgroesse');
             },
             editor: {
                 xtype: 'combobox',
@@ -149,6 +193,10 @@ Ext.define('Lada.view.grid.Messwert', {
                 xtype: 'checkbox',
                 uncheckedValue: false,
                 inputValue: '<'
+            },
+            renderer: function(value, metaData, record) {
+                this.setValidationResults(metaData, record, 'messwertNwg');
+                return value;
             }
         }, {
             header: i18n.getMsg('messwert'),
@@ -158,12 +206,14 @@ Ext.define('Lada.view.grid.Messwert', {
                 xtype: 'expnumberfield',
                 allowBlank: false
             },
-            renderer: function(value) {
+            renderer: function(value, metaData, record) {
+                this.setValidationResults(metaData, record, 'messwert');
                 if (!value || value === '') {
                     return value;
                 }
-                var strValue = value.toExponential(2).toString()
-                    .replace('.', Ext.util.Format.decimalSeparator);
+                var strValue = Lada.getApplication().toExponentialString(
+                    parseFloat(value), 2).replace(
+                    '.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
                 var exponent = parseInt(splitted[1], 10);
                 return splitted[0] + 'e'
@@ -179,11 +229,13 @@ Ext.define('Lada.view.grid.Messwert', {
                 xtype: 'expnumberfield',
                 allowBlank: false
             },
-            renderer: function(value) {
+            renderer: function(value, metaData, record) {
+                this.setValidationResults(metaData, record, 'nwgZuMesswert');
                 if (!value || value === '') {
                     return value;
                 }
-                var strValue = value.toExponential(2).toString()
+                var strValue = Lada.getApplication().toExponentialString(
+                    value, 2)
                     .replace('.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
                 var exponent = parseInt(splitted[1], 10);
@@ -196,16 +248,29 @@ Ext.define('Lada.view.grid.Messwert', {
             header: i18n.getMsg('mehId'),
             dataIndex: 'mehId',
             width: 120,
-            renderer: function(value) {
+            renderer: function(value, metaData, record) {
+                this.setValidationResults(metaData, record, 'mehId');
                 if (!value || value === '') {
                     return '';
                 }
-                var store = Ext.data.StoreManager.get('messeinheiten');
-                return store.findRecord('id', value, 0, false, false, true).get('einheit');
+                var store = me.mehComboStore;
+                if (
+                    store.findRecord(
+                        'id', value, 0, false, false, true) === null
+                ) {
+                    return Ext.data.StoreManager.get('messeinheiten')
+                        .findRecord('id', value, 0, false, false, true)
+                        .get('einheit');
+                } else {
+                    return store.findRecord('id', value, 0, false, false, true)
+                        .get('einheit');
+                }
             },
             editor: {
                 xtype: 'combobox',
-                store: Ext.data.StoreManager.get('messeinheiten'),
+                store: me.mehComboStore,
+                invalidCls: 'x-lada-warning-grid-field',
+                name: 'messeinheit',
                 displayField: 'einheit',
                 valueField: 'id',
                 allowBlank: false,
@@ -239,6 +304,10 @@ Ext.define('Lada.view.grid.Messwert', {
                 allowExponential: false,
                 enforceMaxLength: true,
                 hideTrigger: true
+            },
+            renderer: function(value, metaData, record) {
+                this.setValidationResults(metaData, record, 'messfehler');
+                return value;
             }
         }];
         this.listeners = {
@@ -257,6 +326,26 @@ Ext.define('Lada.view.grid.Messwert', {
         if (!me.bottomBar) {
             this.down('toolbar[dock=bottom]').hide();
         }
+        this.on('edit', function(editor, context) {
+            var colIdx = context.colIdx;
+            var record = context.record;
+            var view = context.view;
+            var cell = view.getCell(record, colIdx);
+            var warnings = record.get('warnings');
+            var errors = record.get('errors');
+
+            //Remove warnings/errors from record as they should be resolved now
+            if (warnings) {
+                delete warnings[context.field];
+            }
+            if (errors) {
+                delete errors[context.field];
+            }
+            //Remove error/warning class from edited cell
+            view.getCell(record, colIdx).removeCls('x-lada-warning-grid-field');
+            view.getCell(record, colIdx).removeCls('x-lada-error-grid-field');
+            cell.dom.removeAttribute('data-qtip');
+        });
     },
 
     initData: function() {
@@ -265,21 +354,67 @@ Ext.define('Lada.view.grid.Messwert', {
         } else {
             this.store = Ext.create('Lada.store.Messwerte');
         }
-
         if (this.umwId) {
             var umwStore = Ext.create('Lada.store.Umwelt');
+            this.addLoadingFailureHandler(umwStore);
             umwStore.getModel().load(this.umwId, {
                 scope: this,
-                success: function(rec, op) {
+                success: function(rec) {
                     this.defaultMehId = rec.get('mehId');
+                    this.secMehId = rec.get('secMehId');
+                    var params = {
+                        mehId: this.defaultMehId
+                    };
+                    if (this.secMehId) {
+                        params['secMehId'] = this.secMehId;
+                    }
+                    //Filter messeinheiten comboboxes
+                    this.mehComboStore.load({
+                        params: params
+                    });
                 }
             });
         }
+        this.addLoadingFailureHandler(this.store);
         this.store.load({
+            scope: this,
             params: {
                 messungsId: this.recordId
             }
         });
+    },
+
+    /**
+     * Reload this grid
+     */
+    reload: function() {
+        if (!this.store) {
+            this.initData();
+        }
+
+        this.hideReloadMask();
+        if (this.umwId) {
+            var umwStore = Ext.create('Lada.store.Umwelt');
+            this.addLoadingFailureHandler(umwStore);
+            umwStore.getModel().load(this.umwId, {
+                scope: this,
+                success: function(rec) {
+                    this.defaultMehId = rec.get('mehId');
+                    this.secMehId = rec.get('secMehId');
+                    var params = {
+                        mehId: this.defaultMehId
+                    };
+                    if (this.secMehId) {
+                        params['secMehId'] = this.secMehId;
+                    }
+                    //Filter messeinheiten comboboxes
+                    this.mehComboStore.load({
+                        params: params
+                    });
+                }
+            });
+        }
+        this.store.reload();
     },
 
     setReadOnly: function(b) {
@@ -291,6 +426,7 @@ Ext.define('Lada.view.grid.Messwert', {
             }
             this.down('button[action=delete]').disable();
             this.down('button[action=add]').disable();
+            this.down('button[action=normalize]').disable();
         } else {
             //Writable
             if (this.getPlugin('rowedit')) {
@@ -298,12 +434,39 @@ Ext.define('Lada.view.grid.Messwert', {
             }
             //this.down('button[action=delete]').enable();
             this.down('button[action=add]').enable();
+            this.down('button[action=normalize]').enable();
         }
     },
+
+    normalize: function(button) {
+        var record = button.up('messungedit').record;
+        var messungId = record.get('id');
+        Ext.Ajax.request({
+            url: 'lada-server/rest/messwert/normalize?messungsId=' + messungId,
+            method: 'PUT',
+            scope: this,
+            jsonData: {},
+            callback: function(opts, success, response) {
+                var i18n = Lada.getApplication().bundle;
+                if (success && response) {
+                    var json = Ext.decode(response.responseText);
+                    if (json.success === true) {
+                        button.up('messungedit').down('messwertgrid')
+                            .store.reload();
+                    } else {
+                        Ext.Msg.alert('', i18n.getMsg('err.normalize'));
+                    }
+                } else {
+                    Ext.Msg.alert('', i18n.getMsg('err.normalize'));
+                }
+            }
+        });
+    },
+
     /**
      * Activate the Remove Button
      */
-    activateRemoveButton: function(selection, record) {
+    activateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {
@@ -313,11 +476,38 @@ Ext.define('Lada.view.grid.Messwert', {
     /**
      * Activate the Remove Button
      */
-    deactivateRemoveButton: function(selection, record) {
+    deactivateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {
             grid.down('button[action=delete]').disable();
+        }
+    },
+
+    /**
+     * @private
+     * Set validation results in the metadata of a grid column
+     * @param metaData Rendering metaData
+     * @param record Record
+     * @param dataIndex Column data index
+     */
+    setValidationResults: function(metaData, record, dataIndex) {
+        var i18n = Lada.getApplication().bundle;
+        var errors = record.get('errors');
+        var warnings = record.get('warnings');
+        var validationResult = '';
+        var validationResultCls = null;
+        if (warnings && warnings[dataIndex]) {
+            validationResult += i18n.getMsg(warnings[dataIndex]) + '<br>';
+            validationResultCls = 'x-lada-warning-grid-field';
+        }
+        if (errors && errors[dataIndex]) {
+            validationResult += i18n.getMsg(errors[dataIndex]) + '<br>';
+            validationResultCls = 'x-lada-error-grid-field';
+        }
+        if (validationResultCls) {
+            metaData.tdCls = validationResultCls;
+            metaData.tdAttr = 'data-qtip="' + validationResult + '"';
         }
     }
 });

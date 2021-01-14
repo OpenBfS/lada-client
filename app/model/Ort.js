@@ -30,12 +30,12 @@ Ext.define('Lada.model.Ort', {
         name: 'nutsCode'
     }, {
         name: 'ktaGruppeId',
-            convert: function(v) {
-                    if (v === '') {
-                        return null;
-                    }
-                    return v;
-                }
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
         name: 'netzbetreiberId'
     }, {
@@ -117,12 +117,11 @@ Ext.define('Lada.model.Ort', {
         name: 'letzteAenderung',
         type: 'date',
         dateFormat: 'time',
-        convert: function(v) {
-            if (!v) {
-                return null;
-            }
-            return new Date(v);
-        }
+        convert: Lada.util.Date.convertTimeFn
+    }, {
+        name: 'referenceCount'
+    }, {
+        name: 'plausibleReferenceCount'
     }, {
         name: 'readonly',
         type: 'boolean'

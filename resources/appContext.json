@@ -1,0 +1,15 @@
+{
+    "data": {
+        "merge": {
+            "urls": {
+                "print-servlet": "lada-printer/print/",
+                "irix-servlet": "irix-servlet",
+                "irix-context": "resources/irixContext.json",
+                "backgroundMap": "https://www.imis.bfs.de/ogc/tiles/tms/1.0.0/bkg_topplus_web_open_grey@GoogleMapsCompatible/{z}/{x}/{-y}.png"
+            },
+            "tools": ["irixPrintBtn"]
+        }
+    },
+    "success": true,
+    "debug": true
+}

@@ -11,7 +11,7 @@
  */
 
 Ext.define('Lada.view.window.Ortszuordnung', {
-    extend: 'Ext.window.Window',
+    extend: 'Lada.view.window.TrackedWindow',
     alias: 'widget.ortszuordnungwindow',
 
     requires: [
@@ -27,7 +27,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
 
     collapsible: true,
     maximizable: true,
-    autoshow: true,
+    autoShow: false,
     layout: 'fit',
     constrain: true,
 
@@ -36,6 +36,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
 
     parentWindow: null,
     record: null,
+    recordType: 'ortszuordnung',
     grid: null,
 
     datenbasis: null,
@@ -45,10 +46,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        var me = this;
         this.title = i18n.getMsg('ortszuordnung.window.title');
-        var recordtype;
-        var reiRecord = false;
         if (this.probe) {
             //Get datenbasis to check if its a REI Probe
             Ext.create('Lada.store.Datenbasis', {
@@ -56,12 +54,14 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 listeners: {
                     load: {
                         scope: this,
-                        fn: function(store, records, success, op, opts) {
+                        fn: function(store) {
                             var id = this.probe.get('datenbasisId');
                             if (!id) {
                                 this.datenbasis = null;
                             } else {
-                                this.datenbasis = store.getById(this.probe.get('datenbasisId')).get('datenbasis');
+                                this.datenbasis = store.getById(
+                                    this.probe.get('datenbasisId'))
+                                    .get('datenbasis');
                             }
                         }
                     }
@@ -120,9 +120,12 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             tooltip: i18n.getMsg('help.qtip'),
             titlePosition: 0,
             callback: function() {
-                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                var imprintWin = Ext.ComponentQuery.query(
+                    'k-window-imprint')[0];
                 if (!imprintWin) {
-                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin = Ext.create(
+                        'Lada.view.window.HelpprintWindow')
+                        .show();
                     imprintWin.on('afterlayout', function() {
                         var imprintWinController = this.getController();
                         imprintWinController.setTopic('ort');
@@ -143,7 +146,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         this.height = Ext.getBody().getViewSize().height - 100;
         this.bodyStyle = {background: '#fff'};
 
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -152,7 +154,8 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 this.getEl().addCls('window-inactive');
             },
             close: function() {
-                var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
+                var verwaltungseinheiten = Ext.data.StoreManager.get(
+                    'verwaltungseinheiten');
                 var staaten = Ext.data.StoreManager.get('staaten');
                 if (verwaltungseinheiten) {
                     verwaltungseinheiten.clearFilter(true);
@@ -219,7 +222,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                         action: 'frommap'
                     }, {
                         text: i18n.getMsg('orte.all'),
-                        icon: 'resources/img/network-workgroup.png', //TODO better icon
+                        icon: 'resources/img/network-workgroup.png',
                         action: 'allorte'
                     }]
                 }]
@@ -244,7 +247,9 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 this.record.set('messprogrammId', this.messprogramm.get('id'));
             }
         }
-        var mstId = this.probe? this.probe.get('mstId') : this.messprogramm.get('mstId');
+        var mstId = this.probe?
+            this.probe.get('mstId') :
+            this.messprogramm.get('mstId');
         var mst = Ext.data.StoreManager.get('messstellen');
         var ndx = mst.findExact('id', mstId);
         this.netzbetreiberId = mst.getAt(ndx).get('netzbetreiberId');
@@ -253,7 +258,8 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         var map = this.down('map');
         osg.setLoading(false);
         map.setLoading(false);
-        this.ortstore = Ext.data.StoreManager.get('orte');
+        this.ortstore = Ext.create('Lada.store.Orte');
+        this.ortstore.setProxy(Ext.clone(this.ortstore.getProxy()));
         // leave the ortstore empty at begin.
         // TODO check when changing filter method to remote/local
         this.ortstore.removeAll();
@@ -276,8 +282,6 @@ Ext.define('Lada.view.window.Ortszuordnung', {
      */
     afterRender: function() {
         this.superclass.afterRender.apply(this, arguments);
-        var map = this.down('map');
-        //         map.map.addControl(new OpenLayers.Control.LayerSwitcher()); TODO migration
     },
 
     /**
@@ -285,12 +289,13 @@ Ext.define('Lada.view.window.Ortszuordnung', {
      * @param errors These Errors shall be shown
      * @param warnings These Warning shall be shown
      */
-    setMessages: function(errors, warnings) {
+    setMessages: function() {
         //todo this is a stub
     },
 
     /**
-     * Instructs the fields / forms listed in this method to clear their messages.
+     * Instructs the fields / forms listed in this method to clear their
+     * messages.
      */
     clearMessages: function() {
         //todo this is a stub

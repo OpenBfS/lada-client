@@ -35,6 +35,8 @@ Ext.application({
         'Lada.override.i18n.DE',
         'Lada.override.RowExpander',
         'Lada.override.FilteredComboBox',
+        'Lada.override.Date',
+        'Lada.override.UnderlayPool',
         'Lada.view.plugin.GridRowExpander',
         'Ext.i18n.Bundle',
         'Ext.layout.container.Column',
@@ -64,12 +66,16 @@ Ext.application({
         'Lada.store.Umwelt',
         'Lada.store.Verwaltungseinheiten',
         'Lada.store.VerwaltungseinheitenUnfiltered',
+        'Lada.store.Bundesland',
+        'Lada.store.Landkreis',
+        'Lada.store.Regierungsbezirk',
         'Lada.store.ReiProgpunktGruppe',
         'Lada.store.StatusWerte',
         'Lada.store.StatusStufe',
         'Lada.store.StatusKombi',
         'Lada.store.Probenehmer',
         'Lada.store.DatensatzErzeuger',
+        'Lada.store.DownloadQueue',
         'Lada.store.GenericResults',
         'Lada.store.MessprogrammKategorie',
         'Lada.store.Ktas',
@@ -83,14 +89,26 @@ Ext.application({
         'Lada.model.GridColumn',
         'Lada.model.QueryGroup',
         'Lada.model.Query',
+        'Lada.model.DownloadQueue',
         'Lada.store.GridColumn',
         'Lada.store.Query',
-        'Lada.view.widget.base.SelectableDisplayField'
+        'Lada.view.widget.TimeZoneButton',
+        'Lada.view.widget.base.SelectableDisplayField',
+        'Lada.view.window.ElanScenarioWindow',
+        'Lada.view.window.TrackedWindow',
+        'Lada.util.Date',
+        'Lada.util.FunctionScheduler',
+        'Lada.util.WindowTracker',
+        'Lada.store.Tag',
+        'Lada.util.LocalStorage',
+        'Lada.util.WindowTracker',
+        'Koala.util.DokpoolRequest'
     ],
     statics: {
         applicationUpdateTitle: 'Anwendungsupdate',
-        applicationUpdateText: 'Für diese Anwendung steht ein Update zur Verfügung. Jetzt neu laden?'
-    },        
+        applicationUpdateText: 'Für diese Anwendung steht ein Update zur Verfügung. Jetzt neu laden?',
+        dblClickTimeout: 500
+    },
     bundle: {
         bundle: 'Lada',
         language: function() {
@@ -152,15 +170,15 @@ Ext.application({
         Lada.logintime = '';
         Lada.mst = [];
         Lada.netzbetreiber = [];
-        Lada.clientVersion = '3.3.8';
+        Lada.clientVersion = '4.0.1-SNAPSHOT';
         Lada.serverVersion = '';
         // paging sizes available for the client
         Lada.availablePagingSizes = [
-        {value: 25, label: '25'},
         {value: 50, label: '50'},
         {value: 100, label: '100'},
         {value: 500, label: '500'},
-        {value: 2000, label: '2000 (lange Ladezeit!)'}
+        {value: 2000, label: '2000'},
+        {value: 5000, label: '5000 (lange Ladezeit!)'}
         ];
 
         //initial default paging size, may be changed by user
@@ -173,6 +191,21 @@ Ext.application({
             success: this.onLoginSuccess,
             failure: this.onLoginFailure
         });
+
+        Ext.Ajax.request({
+            url: 'resources/appContext.json',
+            method: 'GET',
+            scope: this,
+            success: function(response) {
+                var json = Ext.decode(response.responseText);
+                if (json.data) {
+                    Lada.appContext = json.data;
+                }
+            }
+        });
+
+        Ext.tip.QuickTipManager.init();
+
         // ask before closing/refreshing the window.
         // Not all browsers will respect this, depending on settings
         window.addEventListener('beforeunload', this.beforeCloseHandler);
@@ -323,18 +356,51 @@ Ext.application({
         Ext.create('Lada.store.VerwaltungseinheitenUnfiltered', {
             storeId: 'verwaltungseinheitenwidget'
         });
+        Ext.create('Lada.store.Bundesland', {
+            storeId: 'bundeslandwidget'
+        });
+        Ext.create('Lada.store.Landkreis', {
+            storeId: 'landkreiswidget'
+        });
+        Ext.create('Lada.store.Regierungsbezirk', {
+            storeId: 'regierungsbezirkwidget'
+        });
         Ext.create('Lada.store.Verwaltungseinheiten', {
             storeId: 'verwaltungseinheiten',
             listeners: {
                 load: function(){
                     var w = Ext.data.StoreManager.get(
                         'verwaltungseinheitenwidget');
+                    var b = Ext.data.StoreManager.get(
+                        'bundeslandwidget');
+                    var l = Ext.data.StoreManager.get(
+                        'landkreiswidget');
+                    var r = Ext.data.StoreManager.get(
+                        'regierungsbezirkwidget');
                     w.removeAll(true);
+                    b.removeAll(true);
+                    l.removeAll(true);
+                    r.removeAll(true);
                     var rec = [];
+                    var recb = [];
+                    var recl = [];
+                    var recr = [];
                     this.each(function(r){
                         rec.push(r.copy());
+                        if (r.get('isBundesland')) {
+                            recb.push(r.copy());
+                        }
+                        if (r.get('isLandkreis')) {
+                            recl.push(r.copy());
+                        }
+                        if (r.get('isRegbezirk')) {
+                            recr.push(r.copy());
+                        }
                     });
                     w.add(rec);
+                    l.add(recl);
+                    b.add(recb);
+                    r.add(recr);
                 }
             }
         });
@@ -420,7 +486,13 @@ Ext.application({
         });
         Ext.create('Lada.store.KoordinatenArt', {
             storeId: 'koordinatenart',
-            autoLoad: 'true'
+            autoLoad: 'true',
+            filters: function(item) {
+                if (item.get('koordinatenart') === 'UTM-MGRS (WGS84)' || item.get('koordinatenart') === 'UTM-MGRS (Hayford)') {
+                    return false;
+                }
+                return true;
+            }
         });
         Ext.create('Lada.store.GenericResults', {
             storeId: 'genericresults',
@@ -502,10 +574,29 @@ Ext.application({
         Ext.create('Lada.store.Query', {
             storeId: 'querystore'
         });
+        Ext.create('Lada.store.DownloadQueue', {
+            storeId: 'downloadqueue-print'
+        });
+        Ext.create('Lada.store.DownloadQueue', {
+            storeId: 'downloadqueue-export'
+        });
         Ext.create('Lada.view.Viewport');
+        this.initElanScenarios();
     },
 
-
+    initElanScenarios: function() {
+        Lada.util.LocalStorage.setCurrentUser(Lada.username);
+        var dokpool = Koala.util.DokpoolRequest;
+        //Configure dokpool utility
+        dokpool.elanScenarioUrl = "../dokpool/bund/contentconfig/scen/"
+        dokpool.storageModule = Lada.util.LocalStorage;
+        dokpool.updateActiveElanScenarios();
+        //Create the display window
+        Ext.create('Lada.view.window.ElanScenarioWindow');
+        window.setInterval(function() {
+            dokpool.updateActiveElanScenarios();
+        }, 60000);
+    },
 
     getServerVersion: function() {
         var i18n = Lada.getApplication().bundle;
@@ -534,6 +625,26 @@ Ext.application({
         }
     },
 
+    /**
+     * Fix for odd behavior of some browsers in the toExponential(digits) function
+     * (MS Edge falsely rounds down some least significant digits
+     * @param {Number} value the numerical value to parse
+     * @param {Number} digits the amount of digits as in the toExponential fucntion
+     * @returns {String}
+     */
+    toExponentialString: function(value, digits) {
+        var rawExp = value.toExponential();
+        if (digits === undefined) {
+            return rawExp;
+        }
+        var fixedExp = value.toExponential(digits);
+        if (fixedExp.length === rawExp.length && fixedExp !== rawExp) {
+            return rawExp;
+        } else {
+            return fixedExp;
+        }
+    },
+
     // Define the controllers of the application. They will be initialized
     // first before the application "launch" function is called.
     controllers: [
@@ -559,6 +670,9 @@ Ext.application({
         'Lada.controller.GridExport',
         'Lada.controller.grid.DynamicGrid',
         'Lada.controller.Query',
-        'Lada.controller.Global'
+        'Lada.controller.Global',
+        'Lada.controller.Print',
+        'Lada.controller.ElanScenario',
+        'Lada.controller.grid.Downloads'
     ]
 });

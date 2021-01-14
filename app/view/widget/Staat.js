@@ -24,7 +24,8 @@ Ext.define('Lada.view.widget.Staat', {
     forceSelection: this.forceSelection || false,
 
     initComponent: function() {
-        // This widget requires a separate store to not change the grid during typing
+        // This widget requires a separate store to not change the grid
+        // during typing
         this.store = Ext.data.StoreManager.get('staatenwidget');
         var i18n= Lada.getApplication().bundle;
         this.emptyText= i18n.getMsg('emptytext.staat');

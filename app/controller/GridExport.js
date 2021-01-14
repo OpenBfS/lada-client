@@ -31,8 +31,6 @@ Ext.define('Lada.controller.GridExport', {
         var failmessage = false;
         if (!grid || !grid.store.getCount()) {
             failmessage = i18n.getMsg('export.nodata');
-        } else if (!grid.getSelectionModel().getSelection().length) {
-            failmessage = i18n.getMsg('export.noselection');
         } else if (!grid.rowtarget) {
             failmessage = i18n.getMsg('undefined'); // should not happen
         }
@@ -55,8 +53,8 @@ Ext.define('Lada.controller.GridExport', {
                         xtype: 'button',
                         text: i18n.getMsg('export.continue'),
                         margin: '5, 0, 5, 5',
-                        handler: function(button) {
-                            button.up('window').close();
+                        handler: function(btn) {
+                            btn.up('window').close();
                         }
                     }]
                 }]

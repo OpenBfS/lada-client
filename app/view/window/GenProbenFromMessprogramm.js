@@ -34,7 +34,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
 
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -54,12 +53,18 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             scope: this,
             handler: function() {
                 var me = this;
-                var startDate = new Date(me.down('datefield[name=start]').getValue());
+                var startDate = new Date(
+                    me.down('datefield[name=start]').getValue());
                 var startUTC = Date.UTC(
-                    startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-                var endDate = new Date(me.down('datefield[name=end]').getValue());
+                    startDate.getFullYear(),
+                    startDate.getMonth(),
+                    startDate.getDate());
+                var endDate = new Date(
+                    me.down('datefield[name=end]').getValue());
                 var endUTC = Date.UTC(
-                    endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+                    endDate.getFullYear(),
+                    endDate.getMonth(),
+                    endDate.getDate());
                 var results = [];
                 this.removeAll();
                 this.down('toolbar').removeAll();
@@ -79,66 +84,63 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     height: 135,
                     width: 340,
                     html: ''
-                }, {
-                    xtype: 'progressbar',
-                    text: i18n.getMsg('progress'),
-                    height: 25,
-                    width: 340,
-                    margin: '5, 5, 5, 5'
                 });
-                var finished = 0;
-                for (var r=0; r < me.ids.length; r++) {
-                    var reqJsondata = {
-                        id: me.ids[r],
-                        start: startUTC,
-                        end: endUTC
-                    };
-                    Ext.Ajax.request({
-                        url: 'lada-server/rest/probe/messprogramm',
-                        method: 'POST',
-                        timeout: 2 * 60 * 1000,
-                        jsonData: reqJsondata,
-                        success: function(response) {
-                            finished++;
-                            me.down('progressbar').updateProgress(finished/me.ids.length);
-                            results.push(response);
-                            var panel = me.down('panel');
-                            var json = Ext.JSON.decode(response.responseText);
-                            var id = response.request.options.jsonData.id;
-                            if (json.success) {
-                                panel.setHtml(panel.html + '<br>'
-                                        + i18n.getMsg('gpfm.generated.success',
-                                            json.data.length, id));
-                            } else {
-                                panel.setHtml(panel.html + '<br>'
-                                        + i18n.getMsg('gpfm.generated.error',
-                                            id, i18n.getMsg(json.message)));
-                            }
-                            if (finished === me.ids.length) {
-                                me.down('toolbar').down('button').setDisabled(false);
-                                me.processResults(results);
-                            }
-                        },
-                        failure: function(response) {
-                            finished++;
-                            me.down('progressbar').updateProgress(finished/me.ids.length);
-                            var panel = me.down('panel');
-                            var error = response.statusText;
-                            var id = response.request.options.jsonData.id;
-                            panel.setHtml(panel.html + '<br>'
-                                    + i18n.getMsg('gpfm.generated.error', id, error));
-
-                            if (finished === me.ids.length) {
-                                me.down('toolbar').down('button').setDisabled(false);
-                                me.processResults(results);
-                            }
+                this.down('panel').setLoading(true);
+                var reqJsondata = {
+                    ids: me.ids,
+                    start: startUTC,
+                    end: endUTC
+                };
+                Ext.Ajax.request({
+                    url: 'lada-server/rest/probe/messprogramm',
+                    method: 'POST',
+                    timeout: 2 * 60 * 1000,
+                    jsonData: reqJsondata,
+                    success: function(response) {
+                        var panel = me.down('panel');
+                        panel.setLoading(false);
+                        var json = Ext.JSON.decode(response.responseText);
+                        if (json.success && json.data.proben) {
+                            Ext.Object.each(json.data.proben,
+                                function(key, result) {
+                                    if (result.success) {
+                                        results.push(result);
+                                        panel.setHtml(panel.html +
+                                            '<br>' +
+                                            i18n.getMsg(
+                                                'gpfm.generated.success',
+                                                result.data.length, key));
+                                    } else {
+                                        panel.setHtml(panel.html +
+                                                '<br>' +
+                                                + i18n.getMsg(
+                                                    'gpfm.generated.error',
+                                                    key,
+                                                    i18n.getMsg(
+                                                        result.message)));
+                                    }
+                                });
                         }
-                    });
-                }
+                        me.down('toolbar').down('button').setDisabled(false);
+                        me.processResults(
+                            results,
+                            json.data.tag? json.data.tag: ''
+                        );
+                    },
+                    failure: function(response) {
+                        var panel = me.down('panel');
+                        panel.setLoading(false);
+                        panel.setHtml(
+                            i18n.getMsg(
+                                'gpfm.generated.requestfail',
+                                response.status,
+                                response.statusText));
+                        me.down('toolbar').down('button').setDisabled(false);
+
+                    }
+                });
             }
         }];
-
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -184,6 +186,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 width: 200,
                 name: 'start',
                 format: 'd.m.Y',
+                formatText: '',
                 period: 'start',
                 value: new Date()
             }, {
@@ -194,6 +197,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 width: 200,
                 name: 'end',
                 format: 'd.m.Y',
+                formatText: '',
                 period: 'end',
                 value: new Date(new Date().getFullYear(), 11, 31)
             }]
@@ -202,16 +206,19 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     },
 
     /**
+     * @private
      * Handle results of Probe creation from Messprogramm
+     * @param results Array of results object
+     * @param genTagName Generated tag name
      */
-    processResults: function(results) {
+    processResults: function(results, genTagName) {
         var data = [];
         for (var r in results) {
-            var json = Ext.JSON.decode(results[r].responseText);
-            if (json.data === null) {
+            var result = results[r];
+            if (result === null) {
                 continue;
             }
-            data = data.concat(json.data);
+            data = data.concat(result.data);
         }
         if (data.length === 0) {
             return;
@@ -220,56 +227,55 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             asynchronousLoad: false
         });
         var me = this;
-        umwStore.load({callback: function(){
-            me.genResultWindow(umwStore, data)
+        umwStore.load({callback: function() {
+            me.genResultWindow(umwStore, data, genTagName);
         }});
     },
 
-    genResultWindow: function(umwStore, data){
+    /**
+     * @private
+     * Create generation result window
+     * @param umwStore Umwelt store instance
+     * @param data Generated probe instances
+     * @param genTagname Generated tag name
+     */
+    genResultWindow: function(umwStore, data, genTagName) {
         var i18n = Lada.getApplication().bundle;
-        var me = this;
-
-        var columnstore = Ext.data.StoreManager.get('columnstore');
-        columnstore.clearFilter();
-        columnstore.filter({
-            property: 'baseQuery',
-            value: '1',
-            exactMatch: true});
-        var gcs = Ext.create('Lada.store.GridColumnValue');
-        //TODO basequery needed for this to work
-        var columns = ['externeProbeId', 'mstId', 'datenbasisId', 'baId', 'probenartId',
-            'solldatumBeginn', 'solldatumEnde', 'mprId', 'mediaDesk', 'umwId',
-            'probeNehmerId', 'mmt', 'gemId'];
-        for (var i=0; i < columns.length; i++) {
-            var col = columnstore.findRecord('dataIndex', columns[i], false,
-                false, false, true); // TODO col is unused here?
-            gcs.add( new Ext.create('Lada.model.GridColumnValue',{
-                columnIndex: i,
-                filterActive: false,
-                qid: 0, //TODO: hardcoded value based on example data
-                dataIndex: columns[i],
-                visible: true,
-                gridColumnId: i
-            }));
-        }
-
         var newStore = Ext.create('Lada.store.Proben', {data: data});
-
         var win = Ext.create('Ext.window.Window', {
             layout: 'fit',
             width: 800,
             minHeight: 500,
             maxHeight: 600,
+            constrain: true,
+            title: i18n.getMsg(
+                'gpfm.generated.grid.title',
+                genTagName? genTagName: ''),
             items: [{
                 xtype: 'dynamicgrid',
-                hidebuttons: ['importprobe', 'genericadd'],
+                hidebuttons: ['importprobe', 'genericadd', 'gridexport'],
                 rowtarget: { dataType: 'probeId', dataIndex: 'id'},
                 exportRowexp: true,
                 store: newStore,
                 columns: [{
-                    header: 'probe_id',
+                    xtype: 'actioncolumn',
+                    hideable: false,
+                    width: 30,
+                    header: '',
                     dataIndex: 'id',
-                    hidden: true
+                    sortable: false,
+                    getClass: function(val, meta, rec) {
+                        if (rec.get('id')) {
+                            return 'edit';
+                        }
+                        return '';
+                    },
+                    handler: function(grid, rowIndex) {
+                        var rec = grid.getStore().getAt(rowIndex);
+                        if (rec.get('id')) {
+                            grid.fireEvent('itemdblclick', grid, rec);
+                        }
+                    }
                 }, {
                     header: i18n.getMsg('extProbeId'),
                     dataIndex: 'externeProbeId'
@@ -308,17 +314,12 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     dataIndex: 'baId',
                     renderer: function(value) {
                         var r = '';
-                        var store = Ext.create('Ext.data.Store', {
-                            fields: ['id', 'betriebsart'],
-                            data: [{
-                                'id': 1,
-                                'betriebsart': 'Normal-/Routinebetrieb'
-                            }, {
-                                'id': 2,
-                                'betriebsart': 'Störfall/Intensivbetrieb'
-                            }]
-                        });
-                        var record = store.getById(value);
+                        if (!value || value === '') {
+                            r = value;
+                        }
+                        var store = Ext.data.StoreManager.get('betriebsartStore');
+                        var i = store.findExact('betriebsartId', value);
+                        var record = store.getData().items[i];
                         if (record) {
                             r = record.get('betriebsart');
                         }
@@ -346,7 +347,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         if (!value) {
                             return '';
                         }
-                        return Ext.Date.format(value, 'd.m.Y');
+                        return Lada.util.Date.formatTimestamp(
+                            value, 'd.m.Y', true
+                        );
                     }
                 }, {
                     header: i18n.getMsg('sollBis'),
@@ -355,7 +358,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         if (!value) {
                             return '';
                         }
-                        return Ext.Date.format(value, 'd.m.Y');
+                        return Lada.util.Date.formatTimestamp(
+                            value, 'd.m.Y', true
+                        );
                     }
                 }, {
                     header: i18n.getMsg('messprogramm.form.fieldset.title'),
@@ -367,7 +372,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     //TODO: load description
                     header: i18n.getMsg('umwId'),
                     dataIndex: 'umwId',
-                    renderer: function(value, metadata) {
+                    renderer: function(value) {
                         if (!value) {
                             return '';
                         }
@@ -389,8 +394,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         var mmth = rec.get('mmt');
                         if (mmth) {
                             return mmth;
-                        }
-                        else {
+                        } else {
                             return '-';
                         }
                     }
@@ -402,13 +406,13 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             return value;
                         }
                         var id = rec.get('gemId');
-                        if (id){
+                        if (id) {
                             return id;
                         }
                         return '';
                     }
                 }, {
-                    header: i18n.getMsg('probenehmerId'),
+                    header: i18n.getMsg('probenehmer'),
                     dataIndex: 'probeNehmerId'
                 }],
                 plugins: Ext.create('Lada.view.plugin.GridRowExpander', {
@@ -425,12 +429,20 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 handler: function(button) {
                     button.up('window').close();
                 }
-            }]
+            }],
+            onFocusEnter: function(event) {
+                var resultWin = event.toComponent;
+                var printWin = Lada.view.window.PrintGrid.getInstance();
+                if (printWin) {
+                    var grid = resultWin.down('dynamicgrid');
+                    printWin.setParentGrid(grid);
+                }
+            }
         });
         win.show();
         win.down('dynamicgrid').setToolbar();
-        me.down('panel').setHtml(me.down('panel').html + '<br><br>'
-                + me.evalResponseData(data));
+        this.down('panel').setHtml(this.down('panel').html + '<br><br>'
+                + this.evalResponseData(data));
     },
 
     evalResponseData: function(data) {

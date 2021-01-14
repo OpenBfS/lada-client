@@ -10,7 +10,7 @@
  * Grid to list Stammdaten for Countries
  */
 Ext.define('Lada.view.grid.Staaten', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.staatengrid',
 
     requires: ['Ext.grid.filters.Filters',
@@ -48,7 +48,7 @@ Ext.define('Lada.view.grid.Staaten', {
             flex: 1,
             align: 'start'
         }];
-        this.store = Ext.data.StoreManager.get('staaten');
+        this.store = Ext.create('Lada.store.Staaten');
         this.store.loadPage(1);
         this.setTitle('Staaten(' + this.store.getCount() + ')');
         var cbox = Ext.create('Lada.view.widget.PagingSize');
@@ -62,8 +62,19 @@ Ext.define('Lada.view.grid.Staaten', {
      */
     setStore: function(store) {
         if (store) {
+            this.store = store;
+            this.addLoadingFailureHandler(this.store);
             this.reconfigure(store);
             this.setTitle('Staaten(' + store.getCount() + ')');
         }
+    },
+
+    reload: function() {
+        if (!this.store) {
+            Ext.log({msg: 'Staaten store is null', level: 'warn'});
+            return;
+        }
+        this.hideReloadMask();
+        this.store.reload();
     }
 });

@@ -83,10 +83,6 @@ Ext.define('Lada.override.RestProxy', {
         return params;
     },
 
-    parseStatus: function(status) {
-        console.log(status);
-    },
-
     /**
      * Parse the form inside an idp response and send
      * the response containing form data

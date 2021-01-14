@@ -8,7 +8,7 @@
 
 Ext.define('Lada.override.RowExpander', {
     override: 'Ext.grid.plugin.RowExpander',
-    beforeReconfigure: function(grid, store, columns, oldStore, oldColumns) {
+    beforeReconfigure: function(grid, store, columns) {
         var expander = this.getHeaderConfig();
         expander.locked = true;
         if (columns) {

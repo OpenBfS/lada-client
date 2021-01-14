@@ -37,7 +37,17 @@ Ext.define('Lada.view.form.Probenehmer', {
                 borderLeft: '1px solid #b5b8c8 !important',
                 borderRight: '1px solid #b5b8c8 !important'
             },
-            items: ['->', {
+            items: [{
+                text: i18n.getMsg('copy'),
+                action: 'copy',
+                qtip: i18n.getMsg('copy.qtip', i18n.getMsg('ort')),
+                icon: 'resources/img/dialog-ok-apply.png',
+                disabled: !this.record.phantom && !this.record.get('readonly') ?
+                    false :
+                    true
+            },
+            '->',
+            {
                 text: i18n.getMsg('save'),
                 qtip: i18n.getMsg('save.qtip'),
                 icon: 'resources/img/dialog-ok-apply.png',
@@ -76,6 +86,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                         fieldLabel: i18n.getMsg('probenehmerId'),
                         labelWidth: 110,
                         readOnly: true,
+                        allowBlank: false,
                         width: '50%',
                         maxLength: 9
                     }, {
@@ -83,12 +94,14 @@ Ext.define('Lada.view.form.Probenehmer', {
                         name: 'netzbetreiberId',
                         editable: true,
                         readOnly: true,
+                        //submitValue: true,
                         allowBlank: false,
                         width: '50%',
                         filteredStore: true,
                         fieldLabel: i18n.getMsg('netzbetreiberId'),
                         margin: '0 0 0 5',
-                        labelWidth: 110
+                        labelWidth: 110,
+                        value: this.record.get('netzbetreiberId')
                     }]
                 }, {
                     layout: 'hbox',
@@ -100,6 +113,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                         labelWidth: 110,
                         readOnly: true,
                         width: '50%',
+                        allowBlank: false,
                         margin: '0 5 0 0',
                         maxLength: 10
                     }, {
@@ -127,6 +141,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                     fieldLabel: i18n.getMsg('bezeichnung'),
                     margin: '5 5 0 5',
                     width: '100%',
+                    allowBlank: false,
                     readOnly: true,
                     labelWidth: 110,
                     maxLength: 80
@@ -182,16 +197,13 @@ Ext.define('Lada.view.form.Probenehmer', {
                         border: false,
                         margin: '5 10 5 10',
                         items: [{
-                            xtype: 'numfield',
+                            xtype: 'tfield',
                             name: 'plz',
                             fieldLabel: i18n.getMsg('plz'),
-                            allowDecimals: false,
                             maxLength: 5,
                             readOnly: true,
-                            hideTrigger: true,
-                            keyNavEnabled: false,
-                            mouseWheelEnabled: false,
                             width: '30%',
+                            regex: /^[0-9]*$/,
                             labelWidth: 100
                         }, {
                             xtype: 'tfield',
@@ -220,13 +232,17 @@ Ext.define('Lada.view.form.Probenehmer', {
         this.loadRecord(this.record);
         this.setReadOnly(this.record.get('readonly'));
         var netzstore = this.down('netzbetreiber').store;
-        if (!this.record.phantom) {
+        if ( (!this.record.phantom) || (this.record.phantom &&
+            this.record.get('netzbetreiberId')) ) {
             var current = netzstore.getById(this.record.get('netzbetreiberId'));
             if (current) {
                 this.down('netzbetreiber').setValue(current);
                 this.down('netzbetreiber').setReadOnly(true);
             }
+        } else {
+            this.down('netzbetreiber').setValue(Lada.netzbetreiber[0]);
         }
+        this.isValid();
     },
 
     setRecord: function(probenehmerRecord) {
@@ -238,10 +254,11 @@ Ext.define('Lada.view.form.Probenehmer', {
         var key;
         var element;
         var content;
+        var tmp;
         var i18n = Lada.getApplication().bundle;
         if (warnings) {
             for (key in warnings) {
-                var tmp = key;
+                tmp = key;
                 if (tmp.indexOf('#') > 0) {
                     tmp = tmp.split('#')[0];
                 }
@@ -259,7 +276,7 @@ Ext.define('Lada.view.form.Probenehmer', {
         }
         if (errors) {
             for (key in errors) {
-                var tmp = key;
+                tmp = key;
                 if (tmp.indexOf('#') > 0) {
                     tmp = tmp.split('#')[0];
                 }
@@ -269,8 +286,8 @@ Ext.define('Lada.view.form.Probenehmer', {
                 }
                 content = errors[key];
                 var errorText = '';
-                for (var i = 0; i < content.length; i++) {
-                    errorText += i18n.getMsg(content[i].toString()) + '\n';
+                for (var j = 0; j < content.length; j++) {
+                    errorText += i18n.getMsg(content[j].toString()) + '\n';
                 }
                 element.showErrors(errorText);
             }
@@ -286,7 +303,7 @@ Ext.define('Lada.view.form.Probenehmer', {
         this.down('tfield[name=kurzBezeichnung]').clearWarningOrError();
         this.down('tfield[name=ort]').clearWarningOrError();
         this.down('tfield[name=betrieb]').clearWarningOrError();
-        this.down('numfield[name=plz]').clearWarningOrError();
+        this.down('tfield[name=plz]').clearWarningOrError();
         this.down('tfield[name=strasse]').clearWarningOrError();
         this.down('tfield[name=telefon]').clearWarningOrError();
         this.down('tfield[name=tp]').clearWarningOrError();
@@ -302,7 +319,7 @@ Ext.define('Lada.view.form.Probenehmer', {
         this.down('tfield[name=kurzBezeichnung]').setReadOnly(value);
         this.down('tfield[name=betrieb]').setReadOnly(value);
         this.down('tfield[name=ort]').setReadOnly(value);
-        this.down('numfield[name=plz]').setReadOnly(value);
+        this.down('tfield[name=plz]').setReadOnly(value);
         this.down('tfield[name=strasse]').setReadOnly(value);
         this.down('tfield[name=telefon]').setReadOnly(value);
         this.down('tfield[name=tp]').setReadOnly(value);

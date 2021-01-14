@@ -15,7 +15,5 @@ ext-*/
 resources/lib/
 
 bootstrap.*
-build.xml
 packages
-.sencha
 

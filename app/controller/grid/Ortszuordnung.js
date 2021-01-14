@@ -18,8 +18,13 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     ],
 
     searchField: null,
-    searchTimer: null,
+    /*
+     * Map of search timers using text field ids as keys
+     */
+    searchTimers: Ext.create('Ext.util.HashMap'),
     searchTimeout: 500,
+
+    ignoreNextDblClick: false,
 
     /**
      * Initialize the controller
@@ -56,19 +61,22 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                         return;
                     }
                     var me = this;
-                    if (!me.searchTimer) {
-                        me.searchTimer = new Ext.util.DelayedTask(function() {
-                            me.search(evt, opts);
+                    var searchTimer = me.searchTimers.get(field.getId());
+                    if (!searchTimer) {
+                        searchTimer = new Ext.util.DelayedTask(function() {
+                            me.search(field, evt, opts);
                         });
+                        me.searchTimers.add(field.getId(), searchTimer);
                     }
                     try {
-                        me.searchTimer.cancel();
-                        me.searchTimer.delay(me.searchTimeout);
+                        searchTimer.cancel();
+                        searchTimer.delay(me.searchTimeout);
                     } catch (e) {
-                        me.search(evt, opts);
+                        me.search(field, evt, opts);
                     }
                 }
             },
+            // eslint-disable-next-line max-len
             'ortszuordnungwindow tabpanel ortstammdatengrid pagingtoolbar[name=ortpagingtoolbar]': {
                 change: this.ortPageChanged
             },
@@ -87,7 +95,11 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * or ortzuordnungMp
      */
     open: function(grid, record) {
-        grid.getEl().swallowEvent(['click', 'dblclick'], true);
+        if (grid.ignoreNextDblClick === true) {
+            grid.ignoreNextDblClick = false;
+            return;
+        }
+
         var parent = grid.up('window').record;
         // parent is either probe or messprogramm.
         var parentisMp = false;
@@ -101,8 +113,9 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             record: record,
             grid: grid
         });
-        win.show();
-        win.initData();
+        if (win.show()) {
+            win.initData();
+        }
     },
 
     /**
@@ -121,8 +134,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             record: null,
             grid: button.up('ortszuordnunggrid')
         });
-        win.show();
         win.initData();
+        win.show();
     },
 
     /**
@@ -135,7 +148,9 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
         var i18n = Lada.getApplication().bundle;
-        Ext.MessageBox.confirm(i18n.getMsg('delete'), i18n.getMsg('confirmation.question'),
+        Ext.MessageBox.confirm(
+            i18n.getMsg('delete'),
+            i18n.getMsg('confirmation.question'),
             function(btn) {
                 if (btn === 'yes') {
                     selection.erase({
@@ -144,7 +159,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                         },
                         failure: function(request, response) {
                             if (response.error) {
-                            //TODO: check content of error.status (html error code)
+                            //TODO: check content of html error code
                                 Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                     i18n.getMsg('err.msg.generic.body'));
                             } else {
@@ -183,7 +198,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             record: Ext.create('Lada.model.Ort', {
                 ortTyp: 1,
                 netzbetreiberId: win.netzbetreiberId}),
-            parentWindow: button.up('ortszuordnungwindow')
+            parentWindow: win
         }).show();
     },
 
@@ -199,9 +214,9 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     /**
      * Search triggered by textfield key event.
      */
-    search: function(evt, opts) {
-        var field = Ext.ComponentQuery.query('textfield[name=search]')[0];
-        var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
+    search: function(field, evt) {
+        var verwaltungseinheiten = Ext.data.StoreManager.get(
+            'verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
 
         if (evt.getKey() === 27) {
@@ -231,14 +246,16 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * display the resultset.
      */
     execSearch: function(requestingCmp, filter) {
-        // Filter stores
-        var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
-        var staaten = Ext.data.StoreManager.get('staaten');
-        staaten.clearFilter(true);
         var ozw = requestingCmp.up('ortszuordnungwindow');
+        var verwgrid = ozw.down('verwaltungseinheitengrid');
+        var staatgrid= ozw.down('staatengrid');
+        // Filter stores
+        var verwaltungseinheiten = verwgrid.getStore();
+        var staaten = staatgrid.getStore();
+        staaten.clearFilter(true);
         this.doOrtFilter(ozw, filter);
 
-        var verwgrid = ozw.down('verwaltungseinheitengrid');
+
         verwaltungseinheiten.clearFilter(true);
         verwaltungseinheiten.filter({
             property: 'bezeichnung',
@@ -249,7 +266,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         verwgrid.setStore(verwaltungseinheiten);
         verwgrid.down('pagingtoolbar').doRefresh();
 
-        var staatgrid= ozw.down('staatengrid');
+
         staaten.filter({
             property: 'staat',
             anyMatch: true,
@@ -264,7 +281,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var newrecord = grid.store.getById(record.get('id'));
         grid.getView().getSelectionModel().select(newrecord);
         grid.getView().focusRow(newrecord);
-        var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
+        var verwaltungseinheiten = Ext.data.StoreManager.get(
+            'verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
         verwaltungseinheiten.clearFilter(true);
         staaten.clearFilter(true);
@@ -285,7 +303,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             parentWindow: win,
             setOzOnComplete: true
         }).show();
-        var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
+        var verwaltungseinheiten = Ext.data.StoreManager.get(
+            'verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
         verwaltungseinheiten.clearFilter(true);
         staaten.clearFilter(true);
@@ -297,8 +316,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             record: Ext.create('Lada.model.Ort', {
                 netzbetreiberId: win.netzbetreiberId,
                 staatId: record.get('id'),
-                ortId: 'Staat_' + record.get('staatIso'),
-                kurztext: record.get('staat'),
+                ortId: 'STAAT_' + record.get('id'),
+                kurztext: ((record.get('staatIso') === null) ?
+                    'STAAT_' + record.get('id') :
+                    'STAAT_' + record.get('staatIso')),
                 langtext: record.get('staat'),
                 berichtstext: record.get('staat'),
                 ortTyp: 5
@@ -306,7 +327,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             parentWindow: win,
             setOzOnComplete: true
         }).show();
-        var verwaltungseinheiten = Ext.data.StoreManager.get('verwaltungseinheiten');
+        var verwaltungseinheiten = Ext.data.StoreManager.get(
+            'verwaltungseinheiten');
         var staaten = Ext.data.StoreManager.get('staaten');
         verwaltungseinheiten.clearFilter(true);
         staaten.clearFilter(true);
@@ -337,10 +359,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var netzfilter = null;
         var mst_store = Ext.data.StoreManager.get('messstellen');
         if (ozw.probe) {
-            netzfilter = ozw.probe.get('laborMstId');
+            netzfilter = ozw.probe.get('mstId');
 
         } else if (ozw.messprogramm) {
-            netzfilter = ozw.messprogramm.get('laborMstId');
+            netzfilter = ozw.messprogramm.get('mstId');
         }
         var extraParams = {};
         if (netzfilter !== null) {
@@ -357,7 +379,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         ozw.ortstore.proxy.extraParams = extraParams;
         ozw.ortstore.load({
             scope: this,
-            callback: function(records, op, success) {
+            callback: function() {
                 var toolbar = ozw.down('tabpanel').down(
                     'ortstammdatengrid').down('pagingtoolbar');
                 this.ortefilter = filterstring || null;
@@ -369,9 +391,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     },
 
     /**
-     * Calls onStoreChanged at ortzuordnungwindow if the ort toolbar paged changed.
+     * Calls onStoreChanged at ortzuordnungwindow if the ort toolbar paged
+     * changed.
      */
-    ortPageChanged: function(toolbar, pageData, eOpts) {
+    ortPageChanged: function(toolbar) {
         var ozw = toolbar.up().up().up('ortszuordnungwindow');
         ozw.onStoreChanged();
     }

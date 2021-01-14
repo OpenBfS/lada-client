@@ -129,7 +129,6 @@ Ext.define('Lada.controller.grid.Messmethode', {
                     failure: function(request, response) {
                         var i18n = Lada.getApplication().bundle;
                         if (response.error) {
-                            //TODO: check content of error.status (html error code)
                             Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
                                 i18n.getMsg('err.msg.generic.body'));
                         } else {

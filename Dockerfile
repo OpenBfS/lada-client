@@ -6,6 +6,7 @@ MAINTAINER mlechner@bfs.de
 ENV HTTPD_PREFIX=/etc/httpd \
     JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk \
     INSTALL4J_JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk
+ENV OPENSSL_CONF /etc/ssl/
 
 #
 # Install required packages
@@ -22,8 +23,6 @@ RUN yum install -y shibboleth.x86_64
 
 
 EXPOSE 80 81 82 83 84 85
-
-
 
 # httpd setup
 
@@ -52,7 +51,10 @@ ADD index.html /usr/local/lada/
 
 ADD *.js *.json /usr/local/lada/
 ADD app /usr/local/lada/app
+ADD Koala /usr/local/lada/Koala
 ADD .git /usr/local/lada/.git
+ADD .sencha /usr/local/lada/.sencha
+ADD build.xml /usr/local/lada/
 
 # Add shibboleth config
 ADD shibboleth /usr/local/lada/shibboleth
@@ -66,11 +68,8 @@ RUN ln -sf /usr/local/lada/shibboleth/shibboleth2.xml \
           /etc/shibboleth/shibd.logger
 RUN cp /usr/local/lada/shibboleth/etc/*.pem /etc/shibboleth
 
-
-RUN GITINFO=" $(git name-rev --name-only HEAD 2>/dev/null) $(git rev-parse --short HEAD 2>/dev/null)" &&\
-    echo ${GITINFO} &&\
-    sed -i -e "/Lada.clientVersion/s/';/${GITINFO}';/" app.js
-
+# set version info
+RUN sed -i -e "/Lada.clientVersion/s/';/ $(git rev-parse --short HEAD)';/" app.js
 
 # build application
 #

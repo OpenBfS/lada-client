@@ -19,6 +19,7 @@ Ext.define('Lada.view.form.Messung', {
         'Lada.view.widget.Messmethode',
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.base.Datetime',
+        'Lada.view.widget.base.NumberField',
         'Lada.view.widget.Statuskombi'
     ],
 
@@ -41,6 +42,7 @@ Ext.define('Lada.view.form.Messung', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        var me = this;
         this.items = [{
             layout: 'fit',
             border: false,
@@ -106,7 +108,7 @@ Ext.define('Lada.view.form.Messung', {
                             width: 300,
                             labelWidth: 100
                         }, {
-                            xtype: 'numberfield',
+                            xtype: 'numfield',
                             allowDecimals: false,
                             allowExponential: false,
                             enforceMaxLength: true,
@@ -156,18 +158,24 @@ Ext.define('Lada.view.form.Messung', {
                     padding: '0,5,0,5',
                     readOnly: true,
                     isFormField: false,
-                    fieldLabel: 'Stufe/Status',
+                    fieldLabel: i18n.getMsg('header.statuskombi'),
                     buttonListener: {
                         click: {
                             fn: function() {
-                                if ((this.probedatenbasis === 'REI-E'
-                                            || this.probedatenbasis === 'REI-I')
-                                    && (this.probe.get('reiprogpunktgruppe') === null
-                                            ||this.probe.get('reiprogpunktgruppe') === '')
-                                    && (this.probe.get('ktagruppe') === null
-                                            ||this.probe.get('ktagruppe') === '')) {
-                                    Ext.Msg.alert(i18n.getMsg('err.msg.status.title'),
-                                        i18n.getMsg('err.msg.status.consistency'));
+                                if ((this.probedatenbasis === 'REI-E' ||
+                                        this.probedatenbasis === 'REI-I') &&
+                                    (this.probe.get(
+                                        'reiprogpunktgruppe') === null ||
+                                        this.probe.get(
+                                            'reiprogpunktgruppe') === '') &&
+                                    (this.probe.get('ktagruppe') === null ||
+                                        this.probe.get('ktagruppe') === '')
+                                ) {
+                                    Ext.Msg.alert(
+                                        i18n.getMsg('err.msg.status.title'),
+                                        i18n.getMsg(
+                                            'err.msg.status.consistency')
+                                    );
                                     return false;
                                 }
                             },
@@ -177,6 +185,45 @@ Ext.define('Lada.view.form.Messung', {
                             }
                         }
                     }
+                }, {
+                    //Tag widget
+                    xtype: 'fieldset',
+                    title: i18n.getMsg('title.tagfieldset'),
+                    name: 'tagfieldset',
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretchmax'
+                    },
+                    items: [{
+                        flex: 1,
+                        xtype: 'tagwidget',
+                        emptyText: i18n.getMsg('emptytext.tag'),
+                        maskTargetComponentType: 'fieldset',
+                        maskTargetComponentName: 'tagfieldset',
+                        parentWindow: this,
+                        margin: '5 5 5 5'
+                    }, {
+                        width: 25,
+                        height: 25,
+                        xtype: 'button',
+                        margin: '5 5 5 0',
+                        action: 'createtag',
+                        icon: 'resources/img/list-add.png',
+                        tooltip: i18n.getMsg('button.createtag.tooltip'),
+                        handler: function(button) {
+                            var win = Ext.create('Lada.view.window.TagCreate', {
+                                tagWidget: me.down('tagwidget'),
+                                messung: button.up('messungform').getForm()
+                                    .getRecord().get('id'),
+                                recordType: 'messung'
+                            });
+                            //Close window if parent window is closed
+                            button.up('messungedit').on('close', function() {
+                                win.close();
+                            });
+                            win.show();
+                        }
+                    }]
                 }]
             }]
         }];
@@ -190,10 +237,14 @@ Ext.define('Lada.view.form.Messung', {
         form.loadRecord(record);
         if (record.getId()) {
             me.down('statuskombi').setValue(
-                    record.get('status'),false, record.get('statusEdit'));
+                record.get('status'), false, record.get('statusEdit'));
         } else {
             //remove the Statuskombi field from the form
             me.down('statuskombi').hide();
+        }
+        //Do not set record in tag widget if it is a phantom record
+        if (this.record.phantom === false) {
+            this.down('tagwidget').setMessung(this.record.id);
         }
         //Get the connected Probe instance and Datenbasis
         Lada.model.Probe.load(this.record.get('probeId'), {
@@ -212,18 +263,36 @@ Ext.define('Lada.view.form.Messung', {
                     }
                 });
             },
-            failure: function(proberecord) {
+            failure: function() {
                 //TODO: handle failure
             }
         });
     },
 
 
-    updateStatusText: function(reset) {
+    updateStatusTextAndFertigFlag: function() {
         this.record.load({
             scope: this,
             success: function() {
-                this.down('statuskombi').setValue(this.record.get('status'), reset, this.record.get('statusEdit'));
+                this.setRecord(this.record);
+                this.setReadOnly(this.record.get('readonly'));
+                this.up('messungedit').down('messwertgrid')
+                    .setReadOnly(this.record.get('readonly'));
+                this.up('messungedit').down('mkommentargrid')
+                    .setReadOnly(this.record.get('readonly'));
+
+                var parentWin = this.up('window').parentWindow;
+                if (parentWin) {
+                    parentWin.initData();
+                    var messunggrid = parentWin.down('messunggrid');
+                    if (messunggrid) {
+                        messunggrid.getStore().reload();
+                    }
+                    var ortszuordnunggrid = parentWin.down('ortszuordnunggrid');
+                    if (ortszuordnunggrid) {
+                        ortszuordnunggrid.getStore().reload();
+                    }
+                }
             }
         });
     },
@@ -236,10 +305,11 @@ Ext.define('Lada.view.form.Messung', {
         var key;
         var element;
         var content;
+        var tmp;
         var i18n = Lada.getApplication().bundle;
         if (warnings) {
             for (key in warnings) {
-                var tmp = key;
+                tmp = key;
                 if (tmp.indexOf('#') > 0) {
                     tmp = tmp.split('#')[0];
                 }
@@ -257,7 +327,7 @@ Ext.define('Lada.view.form.Messung', {
         }
         if (errors) {
             for (key in errors) {
-                var tmp = key;
+                tmp = key;
                 if (tmp.indexOf('#') > 0) {
                     tmp = tmp.split('#')[0];
                 }
@@ -267,8 +337,8 @@ Ext.define('Lada.view.form.Messung', {
                 }
                 content = errors[key];
                 var errorText = '';
-                for (var i = 0; i < content.length; i++) {
-                    errorText += i18n.getMsg(content[i].toString()) + '\n';
+                for (var j = 0; j < content.length; j++) {
+                    errorText += i18n.getMsg(content[j].toString()) + '\n';
                 }
                 element.showErrors(errorText);
             }
@@ -279,16 +349,17 @@ Ext.define('Lada.view.form.Messung', {
         this.down('tfield[name=nebenprobenNr]').clearWarningOrError();
         //this.down('messmethode[name=mmtId]').clearWarningOrError();
         this.down('datetime[name=messzeitpunkt]').clearWarningOrError();
-        //this.down('numberfield[name=messdauer]').clearWarningOrError();
+        this.down('numfield[name=messdauer]').clearWarningOrError();
         this.down('chkbox[name=fertig]').clearWarningOrError();
         this.down('chkbox[name=geplant]').clearWarningOrError();
     },
 
     setReadOnly: function(value) {
+        this.readOnly = value;
         this.down('tfield[name=nebenprobenNr]').setReadOnly(value);
         this.down('messmethode[name=mmtId]').setReadOnly(value);
         this.down('datetime[name=messzeitpunkt]').setReadOnly(value);
-        this.down('numberfield[name=messdauer]').setReadOnly(value);
+        this.down('numfield[name=messdauer]').setReadOnly(value);
         this.down('chkbox[name=fertig]').setReadOnly(value);
     }
 });

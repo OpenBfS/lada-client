@@ -140,21 +140,26 @@ Ext.define('Lada.view.form.Ort', {
             fieldLabel: i18n.getMsg('orte.kda'),
             name: 'kdaId'
         }, {
-            xtype: 'numfield',
+            xtype: 'tfield',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.koordx'),
             name: 'koordXExtern',
-            allowDecimals: true,
-            decimalPrecision: 5,
+            regex: /^[noeswNOESW\d\.,-]+$/,
             maxLength: 22
         }, {
-            xtype: 'numfield',
+            xtype: 'tfield',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.koordy'),
             name: 'koordYExtern',
-            allowDecimals: true,
-            decimalPrecision: 5,
+            regex: /^[noeswNOESW\d\.,-]+$/,
             maxLength: 22
+        }, {
+            xtype: 'button',
+            action: 'changeKDA',
+            disabled: true,
+            text: i18n.getMsg('orte.kda.change'),
+            flex: 1,
+            align: 'end'
         }, {
             xtype: 'chkbox',
             labelWidth: 125,
@@ -188,7 +193,9 @@ Ext.define('Lada.view.form.Ort', {
                 action: 'copy',
                 qtip: i18n.getMsg('copy.qtip', i18n.getMsg('ort')),
                 icon: 'resources/img/dialog-ok-apply.png',
-                disabled: !this.record.phantom && !this.record.get('readonly') ? false: true
+                disabled: !this.record.phantom && !this.record.get('readonly') ?
+                    false :
+                    true
             },
             '->',
             {
@@ -209,6 +216,15 @@ Ext.define('Lada.view.form.Ort', {
         this.getForm().loadRecord(this.record);
 
         this.readOnly = this.record.readOnly;
+
+        //If plausible probe instances reference this ort, disable coordinate
+        // fields, verwaltungseinheit, staat
+        if (this.record.get('plausibleReferenceCount') > 0) {
+            this.down('tfield[name=koordXExtern]').setReadOnly(true);
+            this.down('tfield[name=koordYExtern]').setReadOnly(true);
+            this.down('verwaltungseinheit').setReadOnly(true);
+            this.down('staat').setReadOnly(true);
+        }
 
         if (this.record.get('ortTyp') === 3) {
             this.down('fieldset').expand();
@@ -247,8 +263,8 @@ Ext.define('Lada.view.form.Ort', {
                 }
                 content = errors[key];
                 var errorText = '';
-                for (var i = 0; i < content.length; i++) {
-                    errorText += i18n.getMsg(content[i].toString()) + '\n';
+                for (var j = 0; j < content.length; j++) {
+                    errorText += i18n.getMsg(content[j].toString()) + '\n';
                 }
                 element.showErrors(errorText);
             }
@@ -257,8 +273,8 @@ Ext.define('Lada.view.form.Ort', {
 
     clearMessages: function() {
         // TODO: this is a stub
-        this.down('numfield[name=koordXExtern]').clearWarningOrError();
-        this.down('numfield[name=koordYExtern]').clearWarningOrError();
+        this.down('tfield[name=koordXExtern]').clearWarningOrError();
+        this.down('tfield[name=koordYExtern]').clearWarningOrError();
         this.down('verwaltungseinheit[name=gemId]').clearWarningOrError();
         this.down('orttyp[name=ortTyp]').clearWarningOrError();
         this.down('staat[name=staatId]').clearWarningOrError();

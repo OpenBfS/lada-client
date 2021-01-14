@@ -10,7 +10,7 @@
  * Grid to list Status
  */
 Ext.define('Lada.view.grid.Status', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.statusgrid',
 
     requires: ['Ext.grid.filters.Filters'],
@@ -96,6 +96,9 @@ Ext.define('Lada.view.grid.Status', {
             flex: 1,
             sortable: false,
             renderer: function(value) {
+                if (value === '' || value === undefined || value === null) {
+                    return '';
+                }
                 return '<div style="white-space: normal !important;">' +
                 value + '</div>';
             }
@@ -110,17 +113,31 @@ Ext.define('Lada.view.grid.Status', {
         } else {
             this.store = Ext.create('Lada.store.Status',{
                 sorters: [{
-                    property: 'datum',
+                    property: 'id',
                     direction: 'DESC'
                 }]
             });
         }
+
+        this.addLoadingFailureHandler(this.store);
 
         this.store.load({
             params: {
                 messungsId: this.recordId
             }
         });
+    },
+
+    /**
+     * Reload this grid
+     */
+    reload: function() {
+        if (!this.store) {
+            this.initData();
+            return;
+        }
+        this.hideReloadMask();
+        this.store.reload();
     }
 
 });

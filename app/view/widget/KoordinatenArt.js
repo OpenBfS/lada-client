@@ -35,8 +35,6 @@ Ext.define('Lada.view.widget.KoordinatenArt', {
         this.store = Ext.data.StoreManager.get('koordinatenart');
         if (!this.store) {
             this.store = Ext.create('Lada.store.KoordinatenArt');
-        } else {
-            this.store.clearFilter();
         }
         this.callParent(arguments);
     }

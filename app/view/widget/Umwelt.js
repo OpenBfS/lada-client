@@ -12,7 +12,7 @@
 Ext.define('Lada.view.widget.Umwelt' ,{
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.umwelt',
-    store: 'Umwelt',
+    store: null,
     displayField: 'umweltBereich',
     valueField: 'id',
     editable: this.editable || false,
@@ -39,17 +39,22 @@ Ext.define('Lada.view.widget.Umwelt' ,{
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.umweltbereich');
 
-        this.store = Ext.create('Lada.store.Umwelt');
-        this.store.extraParams = {};
-        this.store.load();
-        this.store.sort();
+        if (!this.store) {
+            this.store = Ext.create('Lada.store.Umwelt');
+            this.store.setProxy(Ext.clone(this.store.getProxy()));
+            this.store.extraParams = {};
+            this.store.load();
+            this.store.sort();
+        }
+
         this.callParent(arguments);
     },
 
     setReiWarningVisible: function(state) {
         var i18n = Lada.getApplication().bundle;
         if (state) {
-            this.showWarnings(i18n.getMsg('warn.msg.umwelt.reiprogpunktgruppe'));
+            this.showWarnings(
+                i18n.getMsg('warn.msg.umwelt.reiprogpunktgruppe'));
         } else {
             this.clearWarningOrError();
         }
