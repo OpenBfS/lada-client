@@ -41,6 +41,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             },
             deactivate: function() {
                 this.getEl().addCls('window-inactive');
+            },
+            show: function() {
+                this.removeCls('x-unselectable');
             }
         });
 
@@ -505,7 +508,10 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         win.show();
         win.down('dynamicgrid').setToolbar();
         me.down('panel').setHtml(me.down('panel').html + '<br><br>'
-                + me.evalResponseData(data));
+                + me.evalResponseData(data)
+                + i18n.getMsg(
+                    'gpfm.generated.grid.title',
+                    genTagName? genTagName: ''));
     },
 
     evalResponseData: function(data) {
