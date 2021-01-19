@@ -7,7 +7,7 @@
  */
 
 /*
- * Formular to edit a Probe
+ * Formular to edit a DatensatzErzeuger
  */
 Ext.define('Lada.view.form.DatensatzErzeuger', {
     extend: 'Ext.form.Panel',
@@ -40,7 +40,17 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                     borderLeft: '1px solid #b5b8c8 !important',
                     borderRight: '1px solid #b5b8c8 !important'
                 },
-                items: ['->', {
+                items: [{
+                    text: i18n.getMsg('copy'),
+                    action: 'copy',
+                    qtip: i18n.getMsg('copy.qtip', i18n.getMsg('ort')),
+                    icon: 'resources/img/dialog-ok-apply.png',
+                    disabled: !this.record.phantom && !this.record.get('readonly') ?
+                        false :
+                        true
+                },
+                '->',
+                {
                     text: i18n.getMsg('save'),
                     qtip: i18n.getMsg('save.qtip'),
                     icon: 'resources/img/dialog-ok-apply.png',
@@ -70,7 +80,8 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                     readOnly: true,
                     allowBlank: false,
                     filteredStore: true,
-                    fieldLabel: i18n.getMsg('netzbetreiberId')
+                    fieldLabel: i18n.getMsg('netzbetreiberId'),
+                    value: this.record.get('netzbetreiberId')
                 }, {
                     xtype: 'combobox',
                     displayField: 'messStelle',
@@ -91,6 +102,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                 }, {
                     xtype: 'tarea',
                     name: 'bezeichnung',
+                    allowBlank: false,
                     readOnly: true,
                     fieldLabel: i18n.getMsg('bezeichnung'),
                     maxLength: 120
@@ -108,12 +120,13 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
             value: 'M',
             exactMatch: true});
         this.down('combobox[name=mstId]').setStore(this.mstTypStore);
-        if (!this.record.phantom) {
+        if ( (!this.record.phantom) || (this.record.phantom && this.record.get('netzbetreiberId')) ) {
             var current = netzstore.getById(this.record.get('netzbetreiberId'));
             if (current) {
                 this.down('netzbetreiber').setValue(current);
-                this.down('netzbetreiber').setReadOnly(true);
             }
+        } else {
+            this.down('netzbetreiber').setValue(Lada.netzbetreiber[0]);
         }
         this.isValid();
     },

@@ -339,6 +339,10 @@ Ext.define('Lada.controller.form.Ort', {
         var savebutton = panel.down('button[action=save]');
 
         var form = panel.getForm();
+        if (form.getRecord().get('kdaId') === 3) {
+            panel.down('button[action=copy]').setDisabled(true);
+            return;
+        }
         if (!form.getRecord().phantom && form.getRecord().get('readonly')) {
             savebutton.setDisabled(true);
             return;
@@ -388,6 +392,7 @@ Ext.define('Lada.controller.form.Ort', {
             return;
         }
         if (panel.down('koordinatenart').getValue()
+            && panel.down('koordinatenart').getValue() !== 3
             && panel.down('tfield[name=koordXExtern]').getValue()
             && panel.down('tfield[name=koordYExtern]').getValue()
         ) {

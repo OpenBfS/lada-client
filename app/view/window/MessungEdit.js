@@ -115,7 +115,6 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.mStore = store;
         this.mStore.proxy.extraParams = {mmtId: this.record.get('mmtId')};
         this.mStore.load();
-
         this.removeAll();
         this.add([{
             border: false,
@@ -202,13 +201,18 @@ Ext.define('Lada.view.window.MessungEdit', {
             me.record = record;
             var messstelle = Ext.data.StoreManager.get('messstellen')
                 .getById(me.probe.get('mstId'));
-            me.setTitle('Messung: ' +
-                me.record.get('nebenprobenNr') +
-                '   zu Probe - Hauptprobennr.: ' +
-                me.probe.get('hauptprobenNr') +
-                ' Mst: ' +
-                messstelle.get('messStelle') +
-                ' editieren.');
+            var title = '';
+            title += 'Messung: ';
+            if (me.record.get('nebenprobenNr')) {
+                title += me.record.get('nebenprobenNr');
+            }
+            title += ' zu Probe ' + me.probe.get('externeProbeId') ;
+            if (me.probe.get('hauptprobenNr')) {
+                title += ' / '+ me.probe.get('hauptprobenNr');
+            }
+            title += ' -  Mst: ' +  messstelle.get('messStelle') +
+                ' editieren.';
+            me.setTitle(title);
             var json = response ?
                 Ext.decode(response.getResponse().responseText) :
                 null;

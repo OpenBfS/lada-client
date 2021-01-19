@@ -44,6 +44,7 @@ Ext.define('Lada.view.window.MessungCreate', {
             .getById(this.probe.get('mstId'));
 
         this.title = i18n.getMsg('messung.new.title',
+            this.probe.get('externeProbeId'),
             this.probe.get('hauptprobenNr'),
             messstelle.get('messStelle'));
         this.buttons = [{

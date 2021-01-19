@@ -511,7 +511,7 @@ Ext.define('Lada.view.window.SetStatus', {
                                 '</dd>');
                             out.push('<dd><ul>');
                             for (var key4 in notifications) {
-                                msgs = notifications[key];
+                                msgs = notifications[key4];
                                 validation = [];
                                 if (key4.indexOf('#') > -1) {
                                     keyParts = key4.split('#');

@@ -249,10 +249,13 @@ Ext.define('Lada.view.panel.Map', {
      * Override to display and update the map view in the panel.
      */
     afterRender: function() {
+        if (Lada.appContext && Lada.appContext.merge.urls['backgroundMap']) {
+            var backgroundMapUrl = Lada.appContext.merge.urls['backgroundMap'];
+        }
         var backgroundMap = new ol.layer.Tile({
             source: new ol.source.XYZ({
                 // eslint-disable-next-line max-len
-                url: 'http://www.imis.bfs.de/mapcache/tms/1.0.0/osm_bfs_google@GoogleMapsCompatible/{z}/{x}/{-y}.png'
+                url: backgroundMapUrl
             }),
             maxZoom: 18
         });

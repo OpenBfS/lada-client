@@ -121,6 +121,7 @@ Ext.define('Lada.controller.Print', {
 
     changeLayout: function(combobox, newValue) {
         var win = combobox.up('printgrid');
+        var i18n = Lada.getApplication().bundle;
 
         if (!win.parentGrid) {
             return;
@@ -172,16 +173,32 @@ Ext.define('Lada.controller.Print', {
                                     'rowtarget.title.'
                                     + win.parentGrid.rowtarget.dataType);
                             }
-
-                            listOfItems.push({
-                                xtype: 'textarea',
-                                fieldLabel: attributes[i].name,
-                                name: attributes[i].name,
-                                labelWidth: 80,
-                                margin: '5, 5, 5, 5',
-                                anchor: '100%',
-                                value: value
-                            });
+                            if ((i18n.getMsg(attributes[i].name).
+                                indexOf('undefined')) !== -1) {
+                                listOfItems.push({
+                                    xtype: 'textfield',
+                                    fieldLabel: attributes[i].name,
+                                    name: attributes[i].name,
+                                    labelWidth: 105,
+                                    margin: '5, 5, 5, 5',
+                                    anchor: '100%',
+                                    value: value
+                                });
+                            } else {
+                                listOfItems.push({
+                                    xtype: 'textarea',
+                                    fieldLabel: i18n.getMsg(attributes[i].name),
+                                    emptyText: i18n.getMsg('emptyText.'+
+                                        attributes[i].name),
+                                    name: attributes[i].name,
+                                    labelWidth: 105,
+                                    margin: '5, 5, 5, 5',
+                                    anchor: '100%',
+                                    grow: true,
+                                    cls: 'textAreaCls',
+                                    value: value
+                                });
+                            }
                         }
                         break;
                     default:
