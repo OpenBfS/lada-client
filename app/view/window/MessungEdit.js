@@ -210,7 +210,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             if (me.probe.get('hauptprobenNr')) {
                 title += ' / '+ me.probe.get('hauptprobenNr');
             }
-            title += ' -  Mst: ' +  messstelle.get('messStelle') +
+            title += ' -  Mst: ' + messstelle.get('messStelle') +
                 ' editieren.';
             me.setTitle(title);
             var json = response ?

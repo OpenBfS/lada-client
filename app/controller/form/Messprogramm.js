@@ -709,7 +709,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 };
                 if (secMehId) {
                     params['secMehId'] = secMehId;
-                };
+                }
                 masseinheitStore.load({
                     scope: this,
                     params: params
