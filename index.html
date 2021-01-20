@@ -8,59 +8,91 @@ and comes with ABSOLUTELY NO WARRANTY! Check out
 the documentation coming with IMIS-Labordaten-Application for details.
 -->
 <html>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta http-equiv="cache-control" content="no-cache">
-<meta http-equiv="pragma" content="no-cache">
-<meta http-equiv="expires" content="-1">
-<head>
-    <link rel="shortcut icon" href="./resources/img/favicon.ico" type="image/x-icon" />
-    <title>Lada</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-</head>
-    <body>
-    <link rel="stylesheet" type="text/css" href="resources/lib/ol/ol.css">
-    <script type="text/javascript" src="resources/lib/ol/ol.js"></script>
-    <script type="text/javascript" src="resources/lib/FileSaver/FileSaver.js"></script>
-    <script type="text/javascript" src="resources/lib/Blob/Blob.js"></script>
-    <script type="text/javascript" src="resources/lib/moment.js"></script>
-    <script type="text/javascript" src="resources/lib/moment-timezone.js"></script>
-    <script type="text/javascript" src="resources/lib/clipboard.min.js"></script>
-    <!--Check for browser language.
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="-1">
+    <head>
+        <link rel="shortcut icon" href="./resources/img/favicon.ico" type="image/x-icon" />
+        <title>Lada</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" type="text/css" href="resources/lib/ol/ol.css">
+        <script type="text/javascript" src="resources/lib/ol/ol.js"></script>
+        <script type="text/javascript" src="resources/lib/FileSaver/FileSaver.js"></script>
+        <script type="text/javascript" src="resources/lib/Blob/Blob.js"></script>
+        <script type="text/javascript" src="resources/lib/moment.js"></script>
+        <script type="text/javascript" src="resources/lib/moment-timezone.js"></script>
+        <!--Check for browser language.
     TODO: Only use for production builds-->
-    <script type="text/javascript">
-        var Ext = Ext || {};
-        Ext.beforeLoad = function (tags) {
-            if (Ext.manifest !== 'bootstrap.json' &&
-                Ext.manifest !== 'bootstrap') {
-                var languages = {
-                    "en": "en(-[A-Za-z]{2})?$",
-                    "de": "de(-[A-Za-z]{2})?$"
-                }
-                var locale = navigator.language;
-                for (key in languages) {
-                    if (locale.match(languages[key])) {
-                        Ext.manifest = 'lada-' + key;
-                        return;
+        <script type="text/javascript">
+            var Ext = Ext || {};
+            Ext.beforeLoad = function(tags) {
+                if (Ext.manifest !== 'bootstrap.json' &&
+                    Ext.manifest !== 'bootstrap') {
+                    var languages = {
+                        "en": "en(-[A-Za-z]{2})?$",
+                        "de": "de(-[A-Za-z]{2})?$"
                     }
+                    var locale = navigator.language;
+                    for (key in languages) {
+                        if (locale.match(languages[key])) {
+                            Ext.manifest = 'lada-' + key;
+                            return;
+                        }
+                    }
+                    Ext.manifest = 'lada-de';
                 }
-                Ext.manifest = 'lada-de';
+            };
+        </script>
+        <script id="microloader" data-app="0762108d-8dd2-426d-b4c7-8d443c5a52de" type="text/javascript" src="bootstrap.js"></script>
+        <style>
+            div#loadmask {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                height: 152px;
+                width: 160px;
+                z-index: -1;
             }
-        };
-    </script>
-
-    <script id="microloader" data-app="0762108d-8dd2-426d-b4c7-8d443c5a52de" type="text/javascript" src="bootstrap.js"></script>
-    <style>
-        div#loadmask {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            height: 117px;
-            width: 310px;
-            background-image: url("resources/img/animated_BfS_logo_grey.gif");
-            background-repeat: no-repeat;
-        }
-    </style>
-    <div id="loadmask" />
-</body>
+            .svg-loadmask {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-120px, 0px);
+                */ width: 140px;
+                height: 20px;
+                */ margin: 5px;
+                display: inline-block;
+            }
+            .svg-image {
+                height: 250px;
+                object-position: 0px 0px;
+                transform: translate(-25%, -50%);
+            }
+        </style>
+    </head>
+    <body>
+        <div id="loadmask">
+            <object class="svg-image" data="resources/img/BfS_Logo_de_rgb.svg" type="image/svg+xml">
+            </object>
+            <svg version="1.1" class="svg-loadmask" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+                <circle fill="#999" stroke="none" cx="5" cy="10" r="4">
+                    <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.1" />
+                </circle>
+                <circle fill="#999" stroke="none" cx="25" cy="10" r="4">
+                    <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.2" />
+                </circle>
+                <circle fill="#999" stroke="none" cx="45" cy="10" r="4">
+                    <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.3" />
+                </circle>
+                <circle fill="#999" stroke="none" cx="65" cy="10" r="4">
+                    <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.4" />
+                </circle>
+                <circle fill="#999" stroke="none" cx="85" cy="10" r="4">
+                    <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.5" />
+                </circle>
+            </svg>
+        </div>
+    </body>
 </html>
