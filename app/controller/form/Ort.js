@@ -471,8 +471,11 @@ Ext.define('Lada.controller.form.Ort', {
                 success: function(response) {
                     win.setLoading(false);
                     if (response && response.responseText) {
+                        var messageContainer = win.down(
+                            'container[name=messageContainer]');
                         var json = Ext.decode(response.responseText);
                         if (json.data) {
+                            messageContainer.setHidden(true);
                             var coords = Ext.decode(json.data);
                             win.down('koordinatenart[name=newKDA]')
                                 .setReadOnly(false);
@@ -483,11 +486,9 @@ Ext.define('Lada.controller.form.Ort', {
                             win.down('button[action=apply]')
                                 .setDisabled(false);
                         } else {
-                            var messageContainer = win.down(
-                                'container[name=messageContainer]');
+                            messageContainer.setHidden(false);
                             var messageField = win.down(
                                 'textareafield[name=message]');
-                            messageContainer.setHidden(false);
                             messageField.setValue(
                                 i18n.getMsg('err.msg.ort.changeKda'));
                             // TODO error handling: calculation not successful.
