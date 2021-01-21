@@ -111,18 +111,18 @@ Ext.application({
     },
     bundle: {
         bundle: 'Lada',
-        language: function() {
+        language: (function() {
         //Set Language according to build profile
             switch (Ext.manifest.profile) {
-                case "lada-en":
+                case 'lada-en':
                     return 'en-US';
                     break;
-                case "lada-de":
+                case 'lada-de':
                     return 'de-DE';
                     break;
                 default: return 'de-DE';
             }
-        }(),
+        }()),
         path: 'resources/i18n',
         noCache: true
     },
@@ -134,8 +134,8 @@ Ext.application({
     // Start the application.
     launch: function() {
         var loadmask = Ext.get('loadmask');
-            if (loadmask) {
-                loadmask.destroy();
+        if (loadmask) {
+            loadmask.destroy();
         }
         Ext.JSON.encodeDate = function(o) {
             return '"' + Ext.Date.format(o, 'c') + '"';
@@ -201,7 +201,7 @@ Ext.application({
 
         // ask before closing/refreshing the window.
         // Not all browsers will respect this, depending on settings
-        window.addEventListener('beforeunload', function (evt){
+        window.addEventListener('beforeunload', function(evt) {
             // match different handling from different browsers
             var confirmMessage = i18n.getMsg('window.confirmclose');
             evt.returnValue = confirmMessage;
@@ -312,7 +312,7 @@ Ext.application({
                             if ( item.get('messStelle') === itemLabor.get('messStelle') ) {
                                 displayCombi = item.get('messStelle');
                             } else {
-                                displayCombi = item.get('messStelle') + '/' + itemLabor.get('messStelle')
+                                displayCombi = item.get('messStelle') + '/' + itemLabor.get('messStelle');
                             }
                             mstLaborStore.add({
                                 id: i,
@@ -366,7 +366,7 @@ Ext.application({
         Ext.create('Lada.store.Verwaltungseinheiten', {
             storeId: 'verwaltungseinheiten',
             listeners: {
-                load: function(){
+                load: function() {
                     var w = Ext.data.StoreManager.get(
                         'verwaltungseinheitenwidget');
                     var b = Ext.data.StoreManager.get(
@@ -383,7 +383,7 @@ Ext.application({
                     var recb = [];
                     var recl = [];
                     var recr = [];
-                    this.each(function(r){
+                    this.each(function(r) {
                         rec.push(r.copy());
                         if (r.get('isBundesland')) {
                             recb.push(r.copy());
@@ -518,7 +518,7 @@ Ext.application({
             storeId: 'messstellenkombi',
             autoLoad: true,
             listeners: {
-                beforeload:function(store,operation) {
+                beforeload: function(store,operation) {
                     operation.setParams(Ext.apply(operation.getParams()||{},{
                         netzbetreiberId: Lada.netzbetreiber.toString()
                     }));
@@ -535,7 +535,7 @@ Ext.application({
                             if ( item.get('messStelle') === itemLabor.get('messStelle') ) {
                                 displayCombi = item.get('messStelle');
                             } else {
-                                displayCombi = item.get('messStelle') + '/' + itemLabor.get('messStelle')
+                                displayCombi = item.get('messStelle') + '/' + itemLabor.get('messStelle');
                             }
                             var recordIndex = mstLaborKombiStore.findExact('displayCombi', displayCombi);
                             if (recordIndex == -1) {
@@ -580,7 +580,7 @@ Ext.application({
         Lada.util.LocalStorage.setCurrentUser(Lada.username);
         var dokpool = Koala.util.DokpoolRequest;
         //Configure dokpool utility
-        dokpool.elanScenarioUrl = "../dokpool/bund/contentconfig/scen/"
+        dokpool.elanScenarioUrl = '../dokpool/bund/contentconfig/scen/';
         dokpool.storageModule = Lada.util.LocalStorage;
         dokpool.updateActiveElanScenarios();
         //Create the display window
@@ -610,7 +610,7 @@ Ext.application({
     },
 
     //Sets the paging size and fires 'pagingSizeChangedEvent' if new value differs from old
-    setPagingSize: function(newVal){
+    setPagingSize: function(newVal) {
         if (newVal != Lada.pagingSize) {
             Lada.pagingSize = newVal;
             Lada.getApplication().fireEvent('pagingSizeChanged');
