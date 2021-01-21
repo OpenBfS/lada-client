@@ -116,10 +116,8 @@ Ext.application({
             switch (Ext.manifest.profile) {
                 case 'lada-en':
                     return 'en-US';
-                    break;
                 case 'lada-de':
                     return 'de-DE';
-                    break;
                 default: return 'de-DE';
             }
         }()),
