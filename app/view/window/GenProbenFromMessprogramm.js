@@ -22,6 +22,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     maximizable: true,
     autoShow: true,
     autoScroll: true,
+    minHeight: 250,
+    maxHeight: 500,
+    minWidth: 340,
     layout: 'vbox',
     constrain: true,
     alwaysOnTop: true,
@@ -78,10 +81,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     xtype: 'panel',
                     border: false,
                     layout: 'fit',
-                    autoScroll: true,
                     margin: '5, 5, 0, 5',
-                    height: 135,
-                    width: 340,
                     html: ''
                 });
                 this.down('panel').setLoading(true);
@@ -119,10 +119,12 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                                     });
                                     panel.setHtml(panel.html + '<br>'
                                     + i18n.getMsg('gpfm.generated.success',
-                                        newRes.length, key)
-                                    + '<br>'
-                                    + i18n.getMsg('gpfm.generated.found',
-                                        foundRes.length, key)
+                                        key)
+                                    + ':<br>'
+                                    + '<ul><li>'
+                                    + i18n.getMsg('gpfm.generated.found', foundRes.length)
+                                    + ' </li><li>'
+                                    + newRes.length + ' Probe(n) erzeugt</li></ul>'
                                     );
                                 } else {
                                     panel.setHtml(panel.html + '<br>'
@@ -175,7 +177,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         this.items = [{
             border: false,
             width: 340,
-            height: 165,
+            height: 270,
             margin: '5, 5, 5, 5',
             autoScroll: true,
             items: [{
@@ -291,7 +293,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             }));
         }
         var newStore = Ext.create('Lada.store.Proben', {data: data});
-        var hidebuttons = ['importprobe', 'genericadd'];
+        var hidebuttons = ['importprobe', 'genericadd', 'assigntags'];
         if (dryrun) {
             // In dry runs, some additional actions need to stay unavailable:
             hidebuttons = hidebuttons.concat([
@@ -301,8 +303,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 'expand'
             ]);
         }
-        var title = i18n.getMsg('gpfm.generated.grid.title',
-            genTagName? genTagName: '');
+        var title = i18n.getMsg('gpfm.generated.grid.title');
         if (dryrun) {
             title += i18n.getMsg('gpfm.window.test.result.title');
         }
@@ -448,7 +449,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     //TODO: load description
                     header: i18n.getMsg('umwId'),
                     dataIndex: 'umwId',
-                    renderer: function(value, metadata) {
+                    renderer: function(value) {
                         if (!value) {
                             return '';
                         }
@@ -479,7 +480,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             return value;
                         }
                         var id = rec.get('gemId');
-                        if (id){
+                        if (id) {
                             return id;
                         }
                         return '';
@@ -498,20 +499,31 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         }
                     })
             }],
-            buttons: [{
-                text: i18n.getMsg('close'),
-                handler: function(button) {
-                    button.up('window').close();
-                }
+            dockedItems: [{
+                xtype: 'toolbar',
+                dock: 'bottom',
+                items: [{
+                    xtype: 'tbtext'
+                }, '->', {
+                    xtype: 'button',
+                    text: i18n.getMsg('close'),
+                    handler: function(button) {
+                        button.up('window').close();
+                    }
+                }]
             }]
+        });
+        win.on({
+            show: function() {
+                this.removeCls('x-unselectable');
+            }
         });
         win.show();
         win.down('dynamicgrid').setToolbar();
-        me.down('panel').setHtml(me.down('panel').html + '<br><br>'
-                + me.evalResponseData(data)
-                + i18n.getMsg(
-                    'gpfm.generated.grid.title',
-                    genTagName? genTagName: ''));
+        if (genTagName) {
+            win.down('tbtext').setText(i18n.getMsg(
+                'gpfm.generated.tag', genTagName));
+        }
     },
 
     evalResponseData: function(data) {
