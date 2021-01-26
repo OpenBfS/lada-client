@@ -308,13 +308,39 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             title += i18n.getMsg('gpfm.window.test.result.title');
         }
         var win = Ext.create('Ext.window.Window', {
-            layout: 'fit',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
             width: 800,
             minHeight: 500,
             maxHeight: 600,
             constrain: true,
             title: title,
             items: [{
+                xtype: 'panel',
+                items: [{
+                    xtype: 'panel',
+                    name: 'genresultinfo',
+                    html: ''
+                }, {
+                    xtype: 'checkbox',
+                    name: 'newonly',
+                    value: false,
+                    boxLabel: i18n.getMsg('gpfm.newonly'),
+                    handler: function(box, newState) {
+                        var store = box.up('window').down('dynamicgrid')
+                            .getStore();
+                        if (!newState) {
+                            store.clearFilter();
+                        } else {
+                            store.filterBy(function(rec) {
+                                return rec.get('found') === false;
+                            });
+                        }
+                    }
+                }]
+            },{
                 xtype: 'dynamicgrid',
                 hidebuttons: hidebuttons,
                 rowtarget: { dataType: 'probeId', dataIndex: 'id'},
@@ -519,11 +545,26 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             }
         });
         win.show();
-        win.down('dynamicgrid').setToolbar();
+        win.down('checkbox[name=newonly]').setValue(!request.dryrun);
+
+        var resultHtml = '';
+        if (request.dryrun) {
+            resultHtml = i18n.getMsg('gpfm.window.test.result') + '<br>';
+        }
+        resultHtml += i18n.getMsg(
+            'gpfm.window.result.period',
+            Lada.util.Date.formatTimestamp(request.start, 'd.m.Y H:i', true),
+            Lada.util.Date.formatTimestamp(request.end, 'd.m.Y H:i', true)
+        );
+        resultHtml += '<br>';
         if (genTagName) {
+            resultHtml += i18n.getMsg('gpfm.generated.tag', genTagName)
+                + '<br>';
             win.down('tbtext').setText(i18n.getMsg(
                 'gpfm.generated.tag', genTagName));
         }
+        win.down('panel[name=genresultinfo]').setHtml(resultHtml);
+        win.down('dynamicgrid').setToolbar();
     },
 
     evalResponseData: function(data) {

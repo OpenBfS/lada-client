@@ -120,7 +120,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             return false;
         }
         var id = record.get(row.grid.rowtarget.dataIndex);
-        if (!id) {
+        if (!id || record.phantom) {
             return;
         }
         switch (row.grid.rowtarget.dataType) {
