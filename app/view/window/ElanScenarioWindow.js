@@ -132,6 +132,7 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
         var id = event.id;
         me.displayValues.forEach(function(key) {
             if (me.eventObjs[id] === null ||
+                me.eventObjs[id] === undefined ||
                 me.getPropertyByString(me.eventObjs[id], key) === null ||
                     me.getPropertyByString(me.eventObjs[id], key) !==
                     me.getPropertyByString(event, key)
