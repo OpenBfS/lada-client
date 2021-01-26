@@ -25,7 +25,7 @@
 .x-lada-warning-grid-field {
     border: 2px solid #FFE25D;
 }
-  
+
 .x-lada-error-grid-field {
     border: 2px solid #cf4c35;
 }
@@ -62,6 +62,11 @@
 .x-action-col-icon.edit
 {
   background-image: url(../img/view-time-schedule-edit.png);
+}
+
+.x-action-col-icon.forbidden
+{
+  background-image: url(../img/dialog-cancel.png);
 }
 
 .x-action-col-icon.editstatus

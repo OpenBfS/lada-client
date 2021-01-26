@@ -136,7 +136,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         me.down('toolbar').down('button').setDisabled(false);
                         me.processResults(results,
                             json.data.tag? json.data.tag: '',
-                            reqJsondata.dryrun);
+                            reqJsondata);
                     },
                     failure: function(response) {
                         var panel = me.down('panel');
@@ -230,10 +230,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
      * Handle results of Probe creation from Messprogramm
      * @param results Array of results object
      * @param genTagName Generated tag name
-     * @param dryrun if set to true, some result data might not exist in
-     *  the database
+     * @param request the original request used
      */
-    processResults: function(results, genTagName, dryrun) {
+    processResults: function(results, genTagName, request) {
         var data = [];
         for (var r in results) {
             var result = results[r];
@@ -251,7 +250,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         var me = this;
         umwStore.load({
             callback: function() {
-                me.genResultWindow(umwStore, data, genTagName, dryrun);
+                me.genResultWindow(umwStore, data, genTagName, request);
             }
         });
     },
@@ -262,10 +261,10 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
      * @param umwStore Umwelt store instance
      * @param data Generated probe instances
      * @param genTagname Generated tag name
-     * @param dryrun if set to true, some result data might not exist in
-     *  the database, reducing id based functionality.
+     * @param request information about the original request (e.g. if it is
+     *   a dryrun)
      */
-    genResultWindow: function(umwStore, data, genTagName, dryrun) {
+    genResultWindow: function(umwStore, data, genTagName, request) {
         var i18n = Lada.getApplication().bundle;
         var me = this;
 
@@ -280,6 +279,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         var columns = ['externeProbeId', 'mstId', 'datenbasisId', 'baId', 'probenartId',
             'solldatumBeginn', 'solldatumEnde', 'mprId', 'mediaDesk', 'umwId',
             'probeNehmerId', 'mmt', 'gemId'];
+        var dbIdentifier = 'externeProbeId';
         for (var i=0; i < columns.length; i++) {
             var col = columnstore.findRecord('dataIndex', columns[i], false,
                 false, false, true); // TODO col is unused here?
@@ -294,7 +294,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         }
         var newStore = Ext.create('Lada.store.Proben', {data: data});
         var hidebuttons = ['importprobe', 'genericadd', 'assigntags'];
-        if (dryrun) {
+        if (request.dryrun) {
             // In dry runs, some additional actions need to stay unavailable:
             hidebuttons = hidebuttons.concat([
                 'assigntags',
@@ -304,7 +304,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             ]);
         }
         var title = i18n.getMsg('gpfm.generated.grid.title');
-        if (dryrun) {
+        if (request.dryrun) {
             title += i18n.getMsg('gpfm.window.test.result.title');
         }
         var win = Ext.create('Ext.window.Window', {
@@ -328,14 +328,14 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     dataIndex: 'id',
                     sortable: false,
                     getClass: function(val, meta, rec) {
-                        if (rec.get('id')) {
+                        if (rec.get(dbIdentifier)) {
                             return 'edit';
                         }
-                        return '';
+                        return 'forbidden';
                     },
                     handler: function(grid, rowIndex) {
                         var rec = grid.getStore().getAt(rowIndex);
-                        if (rec.get('id')) {
+                        if (rec.get(dbIdentifier)) {
                             grid.fireEvent('itemdblclick', grid, rec);
                         }
                     }
@@ -343,13 +343,13 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     header: i18n.getMsg('extProbeId'),
                     dataIndex: 'externeProbeId'
                 }, {
-                    header: i18n.getMsg('gpfm.probefound'),
+                    header: i18n.getMsg('gpfm.pepstatus'),
                     dataIndex: 'found',
                     renderer: function(value) {
                         if (value) {
-                            return i18n.getMsg('yes');
+                            return i18n.getMsg('gpfm.existant');
                         }
-                        return i18n.getMsg('no');
+                        return i18n.getMsg('gpfm.new');
                     }
                 }, {
                     header: i18n.getMsg('mstId'),
@@ -489,7 +489,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     header: i18n.getMsg('probenehmer'),
                     dataIndex: 'probeNehmerId'
                 }],
-                plugins: dryrun? false : Ext.create(
+                plugins: request.dryrun? false : Ext.create(
                     'Lada.view.plugin.GridRowExpander', {
                         gridType: 'Lada.view.grid.Messung',
                         idRow: 'id',
