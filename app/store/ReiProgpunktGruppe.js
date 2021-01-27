@@ -16,10 +16,13 @@ Ext.define('Lada.store.ReiProgpunktGruppe', {
         {
             property: 'id',
             direction: 'ASC'
-        }],
+        }, {
+            property: 'reiProgPunktGruppe',
+            direction: 'ASC'
+        }
+    ],
     autoLoad: true,
     sortOnLoad: true,
-    sorters: 'reiProgPunktGruppe',
     proxy: {
         type: 'rest',
         url: 'lada-server/rest/reiprogpunktgruppe',
@@ -44,7 +47,7 @@ Ext.define('Lada.store.ReiProgpunktGruppe', {
         this.proxy.extraParams = params;
         this.load({
             scope: this,
-            callback: function(records, op, success) {
+            callback: function(records) {
 
                 var found = false;
                 for (var i = 0; i < records.length; i++) {
@@ -62,7 +65,8 @@ Ext.define('Lada.store.ReiProgpunktGruppe', {
                                 reicombo.select(record);
                                 reicombo.up('reiprogpunktgruppe')
                                     .setUmweltWarningVisible(true);
-                                umweltcombo.up('umwelt').setReiWarningVisible(true);
+                                umweltcombo.up('umwelt')
+                                    .setReiWarningVisible(true);
 
                                 this.onAfter({
                                     load: {
@@ -71,7 +75,8 @@ Ext.define('Lada.store.ReiProgpunktGruppe', {
                                             reicombo.select(record);
                                             reicombo.up('reiprogpunktgruppe')
                                                 .setUmweltWarningVisible(true);
-                                            umweltcombo.up('umwelt').setReiWarningVisible(true);
+                                            umweltcombo.up('umwelt')
+                                                .setReiWarningVisible(true);
                                         },
                                         single: true,
                                         scope: this,

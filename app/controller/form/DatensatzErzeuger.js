@@ -20,6 +20,9 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
             'datensatzerzeugerform button[action=discard]': {
                 click: this.discard
             },
+            'datensatzerzeugerform button[action=copy]': {
+                click: this.copyDatensatzerzeuger
+            },
             'datensatzerzeugerform [name="datensatzErzeugerId"]': {
                 change: this.checkCommitEnabled
             },
@@ -51,30 +54,34 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
             record.set('id',null);
         }
         record.save({
-            success: function(record, response) {
+            success: function(newRecord, response) {
                 var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                 if (parentGrid.length === 1) {
                     parentGrid[0].reload();
                 }
                 var rec = formPanel.getForm().getRecord();
                 rec.dirty = false;
-                formPanel.getForm().loadRecord(record);
+                formPanel.getForm().loadRecord(newRecord);
                 var json = Ext.decode(response.getResponse().responseText);
                 formPanel.clearMessages();
-                formPanel.setRecord(record);
+                formPanel.setRecord(newRecord);
                 formPanel.setMessages(json.errors, json.warnings);
                 button.setDisabled(true);
-                button.up('datensatzerzeugeredit').down('button[action=discard]')
+                button.up('datensatzerzeugeredit')
+                    .down('button[action=discard]')
                     .setDisabled(true);
+                button.up('datensatzerzeugeredit')
+                    .down('button[action=copy]')
+                    .setDisabled(false);
                 Ext.data.StoreManager.get('datensatzerzeuger').reload();
             },
-            failure: function(record, response) {
+            failure: function(newRecord, response) {
                 var i18n = Lada.getApplication().bundle;
                 if (response.error) {
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                         i18n.getMsg('err.msg.generic.body'));
                 } else {
-                    formPanel.getForm().reset();
+                    formPanel.down('tfield[name=datensatzErzeugerId]').setValue();
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
                         if (json.message) {
@@ -91,12 +98,28 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                             i18n.getMsg('err.msg.response.body'));
                     }
-                    button.setDisabled(true);
                     button.up('datensatzerzeugeredit').down(
                         'button[action=discard]').setDisabled(true);
+                    formPanel.isValid();
                 }
             }
         });
+    },
+
+    copyDatensatzerzeuger: function(button) {
+        var record = button.up('datensatzerzeugerform').getForm().getRecord();
+        var copy = record.copy(null);
+        copy.set('datensatzErzeugerId', null);
+        var win = Ext.create('Lada.view.window.DatensatzErzeuger',{
+            record: copy,
+            mode: 'copy',
+            original: record
+        });
+        var pos = button.up('datensatzerzeugerform').up().getPosition();
+        pos[0] += 10;
+        pos[1] += 10;
+        win.show();
+        win.setPosition(pos);
     },
 
     discard: function(button) {
@@ -107,6 +130,8 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
             'button[action=discard]').setDisabled(true);
         formPanel.up('datensatzerzeugeredit').down(
             'button[action=save]').setDisabled(true);
+        formPanel.up('datensatzerzeugeredit').down(
+            'button[action=copy]').setDisabled(true);
     },
 
     checkCommitEnabled: function(callingEl) {
@@ -116,26 +141,37 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
         } else { //called by the form
             panel = callingEl.owner;
         }
-
-        if (panel.getRecord().get('readonly')  )  {
+        if (!panel.getRecord().phantom && panel.getRecord().get('readonly')) {
             panel.down('button[action=save]').setDisabled(true);
             panel.down('button[action=discard]').setDisabled(true);
-        } else {
-            if ( panel.isValid() && panel.down('netzbetreiber').getValue().length > 0 ) {
-                if (panel.isDirty()) {
-                    panel.down('button[action=discard]').setDisabled(false);
-                    panel.down('button[action=save]').setDisabled(false);
-                } else {
-                    panel.down('button[action=discard]').setDisabled(true);
-                    panel.down('button[action=save]').setDisabled(true);
+            panel.down('button[action=copy]').setDisabled(true);
+            return;
+        }
+        if (
+            panel.isValid() &&
+            panel.down('netzbetreiber[name=netzbetreiberId]')
+                .getValue().length !== 0
+        ) {
+            if (panel.isDirty()) {
+                panel.down('button[action=save]').enable();
+                panel.down('button[action=discard]').enable();
+                if (!panel.getRecord().phantom) {
+                    panel.down('button[action=copy]').setDisabled(true);
                 }
             } else {
                 panel.down('button[action=save]').setDisabled(true);
-                if ( panel.getRecord().phantom === true && !panel.isDirty() ) {
-                    panel.down('button[action=discard]').setDisabled(true);
-                } else {
-                    panel.down('button[action=discard]').setDisabled(false);
-                }
+                panel.down('button[action=discard]').setDisabled(true);
+                panel.down('button[action=copy]').setDisabled(false);
+            }
+        } else { //form invalid
+            if (panel.isDirty()) {
+                panel.down('button[action=save]').setDisabled(true);
+                panel.down('button[action=discard]').setDisabled(false);
+                panel.down('button[action=copy]').setDisabled(true);
+            } else {
+                panel.down('button[action=save]').setDisabled(true);
+                panel.down('button[action=discard]').setDisabled(true);
+                panel.down('button[action=copy]').setDisabled(true);
             }
         }
     }

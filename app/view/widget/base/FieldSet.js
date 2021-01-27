@@ -21,7 +21,8 @@ Ext.define('Lada.view.widget.base.FieldSet', {
 
     /**
      * Show warnings or errors for this fieldset.
-     * If this component is not rendered, the warnings will be shown after rendering.
+     * If this component is not rendered, the warnings will be shown after
+     * rendering.
      * @param {Boolean} warning True if there are warnings
      * @param {String} warningText Warning text
      * @param {Boolean} error True if there are errors
@@ -35,7 +36,8 @@ Ext.define('Lada.view.widget.base.FieldSet', {
             this.onAfter(
                 'render',
                 function() {
-                    this.doShowWarningOrError(warning, warningText, error, errorText);
+                    this.doShowWarningOrError(
+                        warning, warningText, error, errorText);
                 },
                 this,
                 {single: true});
@@ -69,6 +71,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
         var imgId = Ext.id();
         if (error) {
             this.getEl().dom.style['border-color'] = '#FF0000';
+            // eslint-disable-next-line max-len
             this.setTitle('<img src="resources/img/emblem-important.png" width="13" height="13" id="'+ imgId +'"/>  '+
                     this.plainTitle);
             if (errorText) {
@@ -85,6 +88,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
         }
         if (warning) {
             this.getEl().dom.style['border-color'] = '#FFE25D';
+            // eslint-disable-next-line max-len
             this.setTitle('<img src="resources/img/dialog-warning.png" width="13" height="13"  id="'+ imgId +'"/>  '+
                     this.plainTitle);
             if (warningText) {

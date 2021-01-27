@@ -7,7 +7,7 @@
  */
 
 /*
- * Formular to edit a Probe
+ * Formular to edit a DatensatzErzeuger
  */
 Ext.define('Lada.view.form.DatensatzErzeuger', {
     extend: 'Ext.form.Panel',
@@ -40,7 +40,17 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                     borderLeft: '1px solid #b5b8c8 !important',
                     borderRight: '1px solid #b5b8c8 !important'
                 },
-                items: ['->', {
+                items: [{
+                    text: i18n.getMsg('copy'),
+                    action: 'copy',
+                    qtip: i18n.getMsg('copy.qtip', i18n.getMsg('ort')),
+                    icon: 'resources/img/dialog-ok-apply.png',
+                    disabled: !this.record.phantom && !this.record.get('readonly') ?
+                        false :
+                        true
+                },
+                '->',
+                {
                     text: i18n.getMsg('save'),
                     qtip: i18n.getMsg('save.qtip'),
                     icon: 'resources/img/dialog-ok-apply.png',
@@ -70,10 +80,10 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                     readOnly: true,
                     allowBlank: false,
                     filteredStore: true,
-                    fieldLabel: i18n.getMsg('netzbetreiberId')
+                    fieldLabel: i18n.getMsg('netzbetreiberId'),
+                    value: this.record.get('netzbetreiberId')
                 }, {
                     xtype: 'combobox',
-                    store: Ext.data.StoreManager.get('messstellenFiltered'),
                     displayField: 'messStelle',
                     readOnly: true,
                     valueField: 'id',
@@ -92,6 +102,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                 }, {
                     xtype: 'tarea',
                     name: 'bezeichnung',
+                    allowBlank: false,
                     readOnly: true,
                     fieldLabel: i18n.getMsg('bezeichnung'),
                     maxLength: 120
@@ -103,12 +114,19 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
         this.loadRecord(this.record);
         this.setReadOnly(this.record.get('readonly'));
         var netzstore = this.down('netzbetreiber').store;
-        if (!this.record.phantom) {
+        this.mstTypStore = Ext.data.StoreManager.get('messstellen');
+        this.mstTypStore.filter({
+            property: 'mstTyp',
+            value: 'M',
+            exactMatch: true});
+        this.down('combobox[name=mstId]').setStore(this.mstTypStore);
+        if ( (!this.record.phantom) || (this.record.phantom && this.record.get('netzbetreiberId')) ) {
             var current = netzstore.getById(this.record.get('netzbetreiberId'));
             if (current) {
                 this.down('netzbetreiber').setValue(current);
-                this.down('netzbetreiber').setReadOnly(true);
             }
+        } else {
+            this.down('netzbetreiber').setValue(Lada.netzbetreiber[0]);
         }
         this.isValid();
     },
@@ -123,9 +141,10 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
         var element;
         var content;
         var i18n = Lada.getApplication().bundle;
+        var tmp;
         if (warnings) {
             for (key in warnings) {
-                var tmp = key;
+                tmp = key;
                 if (tmp.indexOf('#') > 0) {
                     tmp = tmp.split('#')[0];
                 }
@@ -143,7 +162,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
         }
         if (errors) {
             for (key in errors) {
-                var tmp = key;
+                tmp = key;
                 if (tmp.indexOf('#') > 0) {
                     tmp = tmp.split('#')[0];
                 }
@@ -153,8 +172,8 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                 }
                 content = errors[key];
                 var errorText = '';
-                for (var i = 0; i < content.length; i++) {
-                    errorText += i18n.getMsg(content[i].toString()) + '\n';
+                for (var j = 0; j < content.length; j++) {
+                    errorText += i18n.getMsg(content[j].toString()) + '\n';
                 }
                 element.showErrors(errorText);
             }

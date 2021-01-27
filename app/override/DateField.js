@@ -14,7 +14,8 @@ Ext.define('Lada.override.Date', {
             if (!format) {
                 format = this.format;
             }
-            return Lada.util.Date.formatTimestamp(date.valueOf(), format, true);
+            return Lada.util.Date.formatTimestamp(
+                date.valueOf(), format, true);
         }
         return date;
     },
@@ -22,7 +23,8 @@ Ext.define('Lada.override.Date', {
         if (!val) {
             return '';
         }
-        return Lada.util.Date.formatTimestamp(val.valueOf(), this.format, true);
+        return Lada.util.Date.formatTimestamp(
+            val.valueOf(), this.format, true);
     },
     rawToValue: function(raw) {
         var val = this.parseDate(raw);

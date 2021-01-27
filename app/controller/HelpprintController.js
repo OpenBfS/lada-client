@@ -25,7 +25,9 @@ Ext.define('Lada.controller.HelpprintController', {
             treelist = me.lookupReference('treelist'),
             store = treelist.getStore(),
             topicNode = store.getNodeById(topic),
-            imprintHtmlUrl = (topicNode.getData()) ? topicNode.getData().content : null;
+            imprintHtmlUrl = (topicNode.getData()) ?
+                topicNode.getData().content :
+                null;
         treelist.setSelection(topicNode);
         if (imprintHtmlUrl) {
             me.setHtmlInPanel(imprintHtmlUrl);

@@ -44,7 +44,9 @@ Ext.define('Lada.view.widget.Deskriptor', {
             try {
                 me.down('combobox').setStore(this);
             } catch (e) {
-                Ext.log({msg: 'Initializing deskriptor widget failed: ' + e, level: 'warn'});
+                Ext.log({
+                    msg: 'Initializing deskriptor widget failed: ' + e,
+                    level: 'warn'});
             }
         }, this.store);
 
@@ -127,7 +129,7 @@ Ext.define('Lada.view.widget.Deskriptor', {
                 }
             });
         }
-            img.show();
+        img.show();
         var fieldset = this.up('fieldset[collapsible=true]');
         if (fieldset) {
             var warningText = this.name + ': ' + warnings;

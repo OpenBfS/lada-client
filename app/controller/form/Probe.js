@@ -55,6 +55,7 @@ Ext.define('Lada.controller.form.Probe', {
             'probeform netzbetreiber combobox': {
                 change: this.checkCommitEnabled
             },
+            // eslint-disable-next-line max-len
             'probeform container[name="reiComboContainer"] reiprogpunktgruppe combobox': {
                 change: this.reiProgpunktGruppeChanged
             },
@@ -123,8 +124,11 @@ Ext.define('Lada.controller.form.Probe', {
                 if (success) {
                     me.copyOrtszuordnung(probe, copy, callback, toolbar);
                 } else {
-                    var responseObj = Ext.decode(operation.getResponse().responseText);
-                    Ext.Msg.alert(i18n.getMsg('err.probe.copy'), i18n.getMsg(responseObj.message));
+                    var responseObj = Ext.decode(
+                        operation.getResponse().responseText);
+                    Ext.Msg.alert(
+                        i18n.getMsg('err.probe.copy'),
+                        i18n.getMsg(responseObj.message));
                     toolbar.setLoading(false);
                 }
             }
@@ -133,8 +137,8 @@ Ext.define('Lada.controller.form.Probe', {
 
     copyOrtszuordnung: function(probe, probeCopy, callback, toolbar) {
         var me = this;
-        var savedOrtszuordnungen = 0;
-        var fetchedOrtszuordnungen = 0;
+        var savedOZ = 0;
+        var fetchedOZ = 0;
         var saveErrors = null;
 
         Ext.Ajax.request({
@@ -147,33 +151,41 @@ Ext.define('Lada.controller.form.Probe', {
                 var responseObj = Ext.decode(response.responseText);
                 //All messung objects as json object
                 var ortszuordnungArr = responseObj.data;
-                fetchedOrtszuordnungen = ortszuordnungArr.length;
-                var ortszuordnungCopyArr = [];
-                var ortszuordnungRecArr = [];
-                if (fetchedOrtszuordnungen === 0) {
+                fetchedOZ = ortszuordnungArr.length;
+                if (fetchedOZ === 0) {
                     me.copyMessungen(probe, probeCopy, callback, toolbar);
                     return;
                 }
                 for (var i = 0; i < ortszuordnungArr.length; i++) {
-                    var copy = Ext.create('Lada.model.Ortszuordnung', ortszuordnungArr[i]);
-                    copy.set('id', null)
+                    var copy = Ext.create(
+                        'Lada.model.Ortszuordnung', ortszuordnungArr[i]);
+                    copy.set('id', null);
                     copy.set('probeId', probeCopy.get('id'));
                     copy.phantom = true;
                     copy.save({
+                        // eslint-disable-next-line no-loop-func
                         callback: function(rec, op, success) {
-                            savedOrtszuordnungen++;
+                            savedOZ++;
                             if (!success) {
-                                var responseObj = Ext.decode(op.getResponse().responseText);
-                                var errString = i18n.getMsg('err.ortszuordnung.copy.text', rec.get('copyOf'),
-                                        i18n.getMsg(responseObj.message));
-                                saveErrors = saveErrors ? saveErrors + errString:
-                                        errString;
+                                var i18n = Lada.getApplication().bundle;
+                                var responseObj2 = Ext.decode(
+                                    op.getResponse().responseText);
+                                var errString = i18n.getMsg(
+                                    'err.ortszuordnung.copy.text',
+                                    rec.get('copyOf'),
+                                    i18n.getMsg(responseObj2.message));
+                                saveErrors = saveErrors ?
+                                    saveErrors + errString:
+                                    errString;
                             }
-                            if (savedOrtszuordnungen == fetchedOrtszuordnungen) {
+                            if (savedOZ === fetchedOZ) {
                                 if (saveErrors) {
-                                    Ext.Msg.alert(i18n.getMsg('err.ortszuordnung.tile'), saveErrors);
+                                    Ext.Msg.alert(
+                                        i18n.getMsg('err.ortszuordnung.tile'),
+                                        saveErrors);
                                 }
-                                me.copyMessungen(probe, probeCopy, callback, toolbar);
+                                me.copyMessungen(
+                                    probe, probeCopy, callback, toolbar);
                             }
                         }
                     });
@@ -236,17 +248,24 @@ Ext.define('Lada.controller.form.Probe', {
                     messungRecArr.push(messungRec);
                     //Save new models
                     cpy.save({
+                        // eslint-disable-next-line no-loop-func
                         callback: function(rec, op, success) {
                             savedMessungenCopies++;
                             if (!success) {
-                                saveErrors = saveErrors ? saveErrors + rec.get('id') + ' failed. ':
-                                        '' + rec.get('id') + ' failed. ';
+                                saveErrors = saveErrors ?
+                                    saveErrors + rec.get('id') + ' failed. ':
+                                    '' + rec.get('id') + ' failed. ';
                             }
-                            if (savedMessungenCopies == fetchedMessungen) {
+                            if (savedMessungenCopies === fetchedMessungen) {
                                 if (saveErrors) {
-                                    Ext.Msg.alert('Messung copy failure!', saveErrors);
+                                    Ext.Msg.alert(
+                                        'Messung copy failure!', saveErrors);
                                 } else {
-                                    me.copyMesswerte(probeCopy, messungRecArr, callback, toolbar);
+                                    me.copyMesswerte(
+                                        probeCopy,
+                                        messungRecArr,
+                                        callback,
+                                        toolbar);
                                 }
                             }
                         }
@@ -272,8 +291,8 @@ Ext.define('Lada.controller.form.Probe', {
         //Number of messung objects to copy and objects already copied
         var numMessungen = messungen.length;
         var messungenFinished = 0;
-        var currentFinishedMesswerte = 0;
-        //Maps containing the numbers of messwert objects to copy and objects already copied;
+        //Maps containing the numbers of messwert objects to copy and objects
+        // already copied;
         var numMesswert = new Ext.util.HashMap();
         var messwertFinished = new Ext.util.HashMap();
 
@@ -283,49 +302,60 @@ Ext.define('Lada.controller.form.Probe', {
         }
         var messungsIDNew = new Ext.util.HashMap();
         for (var i = 0; i < messungen.length; i++) {
-            messungsIDNew.add(messungen[i].get('copyOfMessungId'), messungen[i].get('id'));
+            messungsIDNew.add(
+                messungen[i].get('copyOfMessungId'),
+                messungen[i].get('id'));
         }
-        for (var i = 0; i < messungen.length; i++) {
-            var messung = messungen[i];
+        for (var i2 = 0; i2 < messungen.length; i2++) {
+            var messung = messungen[i2];
             Ext.Ajax.request({
                 url: 'lada-server/rest/messwert',
                 params: {
                     messungsId: messung.get('copyOfMessungId')
                 },
                 method: 'GET',
+                // eslint-disable-next-line no-loop-func
                 success: function(response) {
                     var responseObj = Ext.decode(response.responseText);
                     var messwertArr = responseObj.data;
-                    fetchedMesswerte = messwertArr.length;
                     var messwertCopyArr = [];
                     var messwertRecArr = [];
-                    var messwertRec = Ext.create('Lada.model.Messwert', messwert);
-                    var messungsId = messwertArr.length >= 1 ? messwertArr[0].messungsId : null;
+                    var messungsId = messwertArr.length >= 1 ?
+                        messwertArr[0].messungsId :
+                        null;
                     if (!messungsId) {
                         messungenFinished++;
-                        if (messungenFinished == numMessungen && finishedCallback) {
+                        if (
+                            (messungenFinished === numMessungen) &&
+                            finishedCallback
+                        ) {
                             finishedCallback(probeCopy);
                         }
-                        numMesswert.add(messungsIDNew.get(messungsId), messwertArr.length);
-                        //messwertFinished steht die Anzahl der Messwerte, die schon gespeichert wurden
+                        numMesswert.add(
+                            messungsIDNew.get(messungsId),
+                            messwertArr.length);
                         messwertFinished.add(messungsIDNew.get(messungsId), 0);
                         return;
                     }
-                    if (fetchedMesswerte == 0) {
-                            callback(probeCopy);
+                    if (messwertArr.length === 0) {
+                        finishedCallback(probeCopy);
                         return;
                     }
-                    numMesswert.add(messungsIDNew.get(messungsId), messwertArr.length);
-                    //messwertFinished steht die Anzahl der Messwerte, die schon gespeichert wurden
+                    numMesswert.add(
+                        messungsIDNew.get(messungsId), messwertArr.length);
                     messwertFinished.add(messungsIDNew.get(messungsId), 0);
                     for (var j = 0; j < messwertArr.length; j++) {
                         var messwert = messwertArr[j];
+                        var messwertRec = Ext.create(
+                            'Lada.model.Messwert',
+                            messwert);
                         messwert.id = null;
                         messwert.messwert = null;
                         messwert.nwgZuMesswert = null;
                         messwert.messwertNwg = null;
                         messwert.messfehler = null;
-                        messwert.messungsId = messungsIDNew.get(messwertArr[j].messungsId);
+                        messwert.messungsId = messungsIDNew.get(
+                            messwertArr[j].messungsId);
 
                         var cpy = Ext.create('Lada.model.Messwert', messwert);
                         cpy.data['id']= null;
@@ -333,33 +363,53 @@ Ext.define('Lada.controller.form.Probe', {
                         messwertCopyArr.push(cpy);
                         messwertRecArr.push(messwertRec);
                         cpy.save({
+                            // eslint-disable-next-line no-loop-func
                             callback: function(rec, op, success) {
+                                var currentMessungsIDNew = rec.get(
+                                    'messungsId');
+                                var currentFinishedMesswerte =
+                                    messwertFinished.get(currentMessungsIDNew);
+                                var currentNumMesswerte = numMesswert.get(
+                                    currentMessungsIDNew);
                                 if (success) {
-                                    var currentMessungsIDNew = rec.get('messungsId');
-                                    var currentFinishedMesswerte = messwertFinished.get(currentMessungsIDNew);
-                                    var currentNumMesswerte = numMesswert.get(currentMessungsIDNew);
                                     currentFinishedMesswerte++;
-                                    messwertFinished.add(currentMessungsIDNew, currentFinishedMesswerte);
-                                    if(currentFinishedMesswerte == currentNumMesswerte) {
+                                    messwertFinished.add(
+                                        currentMessungsIDNew,
+                                        currentFinishedMesswerte);
+                                    if (
+                                        currentFinishedMesswerte ===
+                                            currentNumMesswerte
+                                    ) {
                                         messungenFinished++;
                                     }
-                                    if (numMesswert.length == messungenFinished && finishedCallback) {
+                                    if (
+                                        ( numMesswert.length ===
+                                            messungenFinished ) &&
+                                        finishedCallback
+                                    ) {
                                         finishedCallback(probeCopy);
                                     }
-                                } else{
-                                   //TODO Messwerte liefern immer einen Fehler durch die Konsistenzprüfung
-                                    var currentMessungsIDNew = rec.get('messungsId');
-                                    var currentFinishedMesswerte = messwertFinished.get(currentMessungsIDNew);
-                                    var currentNumMesswerte = numMesswert.get(currentMessungsIDNew);
+                                } else {
+                                    //TODO Messwerte liefern immer einen Fehler
+                                    // durch die Konsistenzprüfung
                                     currentFinishedMesswerte++;
-                                    messwertFinished.add(currentMessungsIDNew, currentFinishedMesswerte);
-                                    if(currentFinishedMesswerte == currentNumMesswerte) {
+                                    messwertFinished.add(
+                                        currentMessungsIDNew,
+                                        currentFinishedMesswerte);
+                                    if (
+                                        currentFinishedMesswerte ===
+                                            currentNumMesswerte
+                                    ) {
                                         messungenFinished++;
                                     }
-                                    if (numMesswert.length == messungenFinished && finishedCallback) {
+                                    if (
+                                        (numMesswert.length ===
+                                            messungenFinished) &&
+                                        finishedCallback
+                                    ) {
                                         finishedCallback(probeCopy);
                                     }
-                               }
+                                }
                             }
                         });
                     }
@@ -373,9 +423,10 @@ Ext.define('Lada.controller.form.Probe', {
 
 
     /**
-     * Called if reiProgpunktGruppe value has changed. Filters Umweltbereich values according to the new value
+     * Called if reiProgpunktGruppe value has changed. Filters Umweltbereich
+     * values according to the new value
      */
-    reiProgpunktGruppeChanged: function(combo, newVal, oldVal, opts) {
+    reiProgpunktGruppeChanged: function(combo) {
         // avoids endless loop
         if (combo.name !== 'reiProgpunktGrpId') {
             return true;
@@ -400,9 +451,10 @@ Ext.define('Lada.controller.form.Probe', {
     },
 
     /**
-     * Called if umweltBereich value has changed. filters reiProgpunktgruppe values according to the new value.
+     * Called if umweltBereich value has changed. filters reiProgpunktgruppe
+     * values according to the new value.
      */
-    umweltChanged: function(combo, newVal, oldVal, opts) {
+    umweltChanged: function(combo) {
         // avoids endless loop
         if (combo.name !== 'umwId') {
             return true;
@@ -428,19 +480,25 @@ Ext.define('Lada.controller.form.Probe', {
     },
 
     /**
-     * Called if Datenbasis value changed. Changes visibility of REI specific containers if Datenbasis is REI
+     * Called if Datenbasis value changed. Changes visibility of REI specific
+     * containers if Datenbasis is REI
      */
-    datenbasisChanged: function(combo, newVal, oldVal, opts) {
+    datenbasisChanged: function(combo) {
         var datenbasis = combo.getRawValue();
-        var reiComboContainer = combo.up().up().up().down('container[name=reiComboContainer]');
+        var reiComboContainer = combo.up().up().up()
+            .down('container[name=reiComboContainer]');
         if ( datenbasis === 'REI-E' || datenbasis === 'REI-I') {
-            reiComboContainer.down('reiprogpunktgruppe[name=reiProgpunktGrpId]').setHidden(false);
+            reiComboContainer
+                .down('reiprogpunktgruppe[name=reiProgpunktGrpId]')
+                .setHidden(false);
             reiComboContainer.down('ktagruppe[name=ktaGruppeId]').show();
         } else {
-            var reiCombo = reiComboContainer.down('reiprogpunktgruppe[name=reiProgpunktGrpId]');
+            var reiCombo = reiComboContainer
+                .down('reiprogpunktgruppe[name=reiProgpunktGrpId]');
             reiCombo.setHidden(true);
             reiCombo.setValue(null);
-            var ktaCombo = reiComboContainer.down('ktagruppe[name=ktaGruppeId]');
+            var ktaCombo = reiComboContainer
+                .down('ktagruppe[name=ktaGruppeId]');
             ktaCombo.hide();
             ktaCombo.setValue(null);
         }
@@ -484,7 +542,8 @@ Ext.define('Lada.controller.form.Probe', {
         var mst = records.get('messStelle');
         var labor = records.get('laborMst');
         combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
-        combo.up('fieldset').down('messstelle[name=laborMstId]').setValue(labor);
+        combo.up('fieldset').down('messstelle[name=laborMstId]')
+            .setValue(labor);
         combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
     },
 
@@ -505,7 +564,7 @@ Ext.define('Lada.controller.form.Probe', {
             record.set('id',null);
         }
         record.save({
-            success: function(record, response) {
+            success: function(newRecord, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
@@ -514,7 +573,7 @@ Ext.define('Lada.controller.form.Probe', {
                     }
                 }
             },
-            failure: function(record, response) {
+            failure: function(newRecord, response) {
                 var i18n = Lada.getApplication().bundle;
                 if (response.error) {
                     //TODO: check content of error.status (html error code)
@@ -573,13 +632,12 @@ Ext.define('Lada.controller.form.Probe', {
             Ext.getCmp('dynamicgridid').reload();
             return;
         } else {
-            var data = formPanel.getForm().getFieldValues(false);
-            var record = formPanel.getForm().getRecord();
-            for (var key in data) {
-                //Only set existing fields, wait until record is saved before applying tags
-                if (record.get(key) !== undefined &&
-                            key !== formPanel.down('tagwidget').getInputId()) {
-                    record.set(key, data[key]);
+            for (var key2 in data) {
+                //Only set existing fields, wait until record is saved before
+                //applying tags
+                if (record.get(key2) !== undefined &&
+                            key2 !== formPanel.down('tagwidget').getInputId()) {
+                    record.set(key2, data[key2]);
                 }
             }
             if (!record.get('letzteAenderung')) {
@@ -591,28 +649,32 @@ Ext.define('Lada.controller.form.Probe', {
             delete record.data[formPanel.down('tagwidget').getInputId()];
 
             record.save({
-                success: function(record, response) {
+                success: function(newRecord, response) {
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
                         button.setDisabled(true);
                         button.up('toolbar').down('button[action=discard]')
                             .setDisabled(true);
-                        var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                        var parentGrid = Ext.ComponentQuery.query(
+                            'dynamicgrid');
                         if (parentGrid.length === 1) {
                             parentGrid[0].reload();
                         }
                         formPanel.clearMessages();
-                        formPanel.setRecord(record);
-                        formPanel.setMessages(json.errors, json.warnings, json.notifications);
+                        formPanel.setRecord(newRecord);
+                        formPanel.setMessages(
+                            json.errors,
+                            json.warnings,
+                            json.notifications);
                         if (response.action === 'create' && json.success) {
                             if (wasPhantom) {
                                 var tagWidget = formPanel.down('tagwidget');
-                                tagWidget.setProbe(record.data.id);
+                                tagWidget.setProbe(newRecord.data.id);
                                 tagWidget.applyChanges();
                             }
                             button.up('window').close();
                             var win = Ext.create('Lada.view.window.ProbeEdit', {
-                                record: record
+                                record: newRecord
                             });
                             win.initData();
                             win.show();
@@ -620,7 +682,7 @@ Ext.define('Lada.controller.form.Probe', {
                         }
                     }
                 },
-                failure: function(record, response) {
+                failure: function(newRecord, response) {
                     var i18n = Lada.getApplication().bundle;
                     if (response.error) {
                         //TODO: check content of error.status (html error code)
@@ -632,28 +694,45 @@ Ext.define('Lada.controller.form.Probe', {
                             .setDisabled(true);
                         var rec = formPanel.getForm().getRecord();
                         rec.dirty = false;
-                        formPanel.getForm().loadRecord(record);
-                        var json = Ext.decode(response.getResponse().responseText);
+                        formPanel.getForm().loadRecord(newRecord);
+                        var json = Ext.decode(
+                            response.getResponse().responseText);
                         if (json) {
+                            if (json.message) {
+                                Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                                    +' #'+json.message,
+                                i18n.getMsg(json.message));
+                            } else {
+                                Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                    i18n.getMsg('err.msg.generic.body'));
+                            }
                             button.setDisabled(true);
                             button.up('toolbar').down('button[action=discard]')
                                 .setDisabled(true);
-                            var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                            var parentGrid = Ext.ComponentQuery.query(
+                                'dynamicgrid');
                             if (parentGrid.length === 1) {
                                 parentGrid[0].reload();
                             }
                             formPanel.clearMessages();
-                            formPanel.setRecord(record);
-                            formPanel.setMessages(json.errors, json.warnings, json.notifications);
+                            formPanel.setRecord(newRecord);
+                            formPanel.setMessages(
+                                json.errors,
+                                json.warnings,
+                                json.notifications);
                             if (response.action === 'create' && json.success) {
                                 button.up('window').close();
-                                var win = Ext.create('Lada.view.window.ProbeEdit', {
-                                    record: record
-                                });
+                                var win = Ext.create(
+                                    'Lada.view.window.ProbeEdit', {
+                                        record: newRecord
+                                    });
                                 win.setPosition(30);
                                 win.show();
                                 win.initData();
                             }
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                i18n.getMsg('err.msg.response.body'));
                         }
                     }
                 }
@@ -729,7 +808,9 @@ Ext.define('Lada.controller.form.Probe', {
     disableButtons: function(form) {
         form.owner.down('button[action=save]').setDisabled(true);
         form.owner.down('button[action=discard]').setDisabled(true);
-        form.owner.up('window').enableChildren(); // todo this might not be true in all cases
+
+        // todo this might not be true in all cases
+        form.owner.up('window').enableChildren();
     },
 
     /**
@@ -758,33 +839,48 @@ Ext.define('Lada.controller.form.Probe', {
         // End Before Start validation
         if (field.period) {
             var partners = new Array();
-            partners[0] = field.up('fieldset').down('datetime[period=start]').down().getValue();
-            partners[1] = field.up('fieldset').down('datetime[period=end]').down().getValue();
-            if (partners[0] && partners[1] && partners[0] > partners [1]) {
-                var msg = Lada.getApplication().bundle.getMsg('662');
+            partners[0] = field.up('fieldset').down('datetime[period=start]')
+                .down().getValue();
+            partners[1] = field.up('fieldset').down('datetime[period=end]')
+                .down().getValue();
+            var msg;
+            if (partners[0] && partners[1] && partners[0] > partners[1]) {
+                msg = Lada.getApplication().bundle.getMsg('662');
                 field.up('fieldset').showWarningOrError(true, msg, false, '');
-                field.up('fset[name=entnahmePeriod]').showWarningOrError(true, msg, false, '');
-             } else {
+                field.up('fset[name=entnahmePeriod]').showWarningOrError(
+                    true, msg, false, '');
+            } else {
                 field.up('fset[name=entnahmePeriod]').clearMessages();
-             }
-             if (partners[0] && field.up('fieldset[name=zeit]').down('datetime[name=ursprungszeit]').getValue()) {
-                if (partners[0] <= field.up('fieldset[name=zeit]').down('datetime[name=ursprungszeit]').getValue()) {
-                    var msg = Lada.getApplication().bundle.getMsg('663');
-                    field.up('fieldset[name=zeit]').down('fset[name=ursprung]').showWarningOrError(true, msg, false, '');
+            }
+            if (
+                partners[0] && field.up('fieldset[name=zeit]')
+                    .down('datetime[name=ursprungszeit]').getValue()
+            ) {
+                if (partners[0] < field.up('fieldset[name=zeit]')
+                    .down('datetime[name=ursprungszeit]').getValue()
+                ) {
+                    msg = Lada.getApplication().bundle.getMsg('663');
+                    field.up('fieldset[name=zeit]')
+                        .down('fset[name=ursprung]')
+                        .showWarningOrError(true, msg, false, '');
                 } else {
-                    field.up('fieldset[name=zeit]').down('fset[name=ursprung]').clearMessages();
+                    field.up('fieldset[name=zeit]')
+                        .down('fset[name=ursprung]')
+                        .clearMessages();
                 }
             }
         }
         if (field.name === 'ursprungszeit') {
-             var partners = new Array();
-             partners[0] = field.up('fieldset[name=zeit]').down('datetime[period=start]').getValue();
-             if (partners[0] && partners[0] <= field.getValue()) {
-                 var msg = Lada.getApplication().bundle.getMsg('663');
-                 field.up('fset[name=ursprung]').showWarningOrError(true, msg, false, '');
-             } else {
-                 field.up('fset[name=ursprung]').clearMessages();
-             }
+            var partners2 = new Array();
+            partners2[0] = field.up('fieldset[name=zeit]')
+                .down('datetime[period=start]').getValue();
+            if (partners2[0] && partners2[0] < field.getValue()) {
+                msg = Lada.getApplication().bundle.getMsg('663');
+                field.up('fset[name=ursprung]').showWarningOrError(
+                    true, msg, false, '');
+            } else {
+                field.up('fset[name=ursprung]').clearMessages();
+            }
         }
         if (w && field.up().showWarnings) {
             field.up().showWarnings(wmsg);
@@ -800,13 +896,14 @@ Ext.define('Lada.controller.form.Probe', {
     },
 
     /**
-     * Handle changes of the probe forms dirty state and (de-) activate form buttons accordingly.
-     * This function also checks the tag widget for changes as its not a regular form
-     * component. Buttons are only activated if probe form, tag widget or both have changes.
+     * Handle changes of the probe forms dirty state and (de-) activate form
+     * buttons accordingly. This function also checks the tag widget for
+     * changes as its not a regular form component. Buttons are only activated
+     * if probe form, tag widget or both have changes.
      * @param {Ext.Component} callingEl Component that fired the event
      * @param {Boolean} dirty The new dirty state
      */
-    handleDirtyChange: function(callingEl, dirty) {
+    handleDirtyChange: function(callingEl) {
         var panel;
         if (callingEl.up) { //called by a field in the form
             panel = callingEl.up('probeform');
@@ -835,7 +932,6 @@ Ext.define('Lada.controller.form.Probe', {
                     panel.down('button[action=save]').setDisabled(true);
                 }
             } else {
-                console.log('dirty und NICHT valide');
                 panel.down('button[action=save]').setDisabled(true);
                 panel.down('button[action=copy]').setDisabled(true);
                 panel.down('button[action=discard]').setDisabled(false);
@@ -850,7 +946,7 @@ Ext.define('Lada.controller.form.Probe', {
         } else {
             var errors = [];
             var warnings = [];
-            var notifications = { hauptprobenNr : [631] };
+            var notifications = { hauptprobenNr: [631] };
             field.up('probeform').setMessages(errors,warnings,notifications);
         }
     },
@@ -860,8 +956,8 @@ Ext.define('Lada.controller.form.Probe', {
         var desk = field.up('deskriptor');
         var media = field.up('probeform').down('textfield[name="mediaDesk"]');
         var current = media.getValue().split(' ');
+        var value;
         if (current.length < 12) {
-            var value;
             for (var i = 0; i < 13; i++) {
                 if (i === 0) {
                     current.push('D:');
@@ -877,7 +973,6 @@ Ext.define('Lada.controller.form.Probe', {
                 }
             }
         } else {
-            var value;
             if (records.get('sn') < 10) {
                 value = '0' + records.get('sn');
             } else {
@@ -885,8 +980,8 @@ Ext.define('Lada.controller.form.Probe', {
             }
             current[desk.layer + 1] = value;
             if (desk.layer < 2) {
-                for (var i = desk.layer + 2; i < 12; i++) {
-                    current[i] = '00';
+                for (var i2 = desk.layer + 2; i2 < 12; i2++) {
+                    current[i2] = '00';
                 }
                 this.clearChildDesk(desk);
             } else if (desk.layer === 2 && current[1] === '01') {

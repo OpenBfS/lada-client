@@ -31,7 +31,8 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
         '{id} - {netzbetreiber}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">{id} - {netzbetreiber}</tpl>'),
-
+    labelTpl: Ext.create('Ext.XTemplate',
+        '<tpl for=".">{id} - {netzbetreiber}</tpl>'),
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.netzbetreiber');
@@ -68,6 +69,7 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
         var retValues = [];
         for (var i = 0; i < value.length; i++) {
             var item = value[i];
+            // eslint-disable-next-line no-loop-func
             var found = this.store.queryBy(function(rec) {
                 if (rec.get('id') === item ||
                     rec.get('netzbetreiber') === item) {

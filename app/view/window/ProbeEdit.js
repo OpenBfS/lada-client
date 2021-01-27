@@ -43,7 +43,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
         this.width = 700;
         this.height = Ext.getBody().getViewSize().height - 30;
 
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -65,9 +64,12 @@ Ext.define('Lada.view.window.ProbeEdit', {
             tooltip: i18n.getMsg('help.qtip'),
             titlePosition: 0,
             callback: function() {
-                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                var imprintWin = Ext.ComponentQuery.query(
+                    'k-window-imprint')[0];
                 if (!imprintWin) {
-                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin = Ext.create(
+                        'Lada.view.window.HelpprintWindow')
+                        .show();
                     imprintWin.on('afterlayout', function() {
                         var imprintWinController = this.getController();
                         imprintWinController.setTopic('probe');
@@ -156,7 +158,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
     },
 
     /**
-     * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
+     * Adds new event handler to the toolbar close button to add a save
+     * confirmation dialogue if a dirty form is closed
      */
     customizeToolbar: function() {
         var tools = this.tools;
@@ -171,8 +174,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
     /**
       * Initialise the Data of this Window
-      * @param {Object}loadedRecord if given, it is assumed that this is a freshly
-      * loaded record, not requiring a reload from server
+      * @param {Object}loadedRecord if given, it is assumed that this is a
+      * freshly loaded record, not requiring a reload from server
       */
     initData: function(loadedRecord) {
         this.clearMessages();
@@ -193,13 +196,14 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 title += datenbasis.get('datenbasis');
                 title += ' ';
             }
-            title += 'Probe';
+            title += 'Probe: ';
+            title += record.get('externeProbeId');
             if (record.get('hauptprobenNr')) {
-                title += ' - Hauptprobennr.: ';
-                title += record.get('hauptprobenNr');
+                //title += ' - extPID/Hauptprobennr.: ';
+                title += ' / '+ record.get('hauptprobenNr');
             }
             if (messstelle) {
-                title += ' Mst: ';
+                title += '    -    Mst: ';
                 title += messstelle.get('messStelle');
             }
             me.setTitle(title);
@@ -209,11 +213,11 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 me.enableAddMessungen();
             }
 
-            var json = response ? Ext.decode(response.getResponse().responseText) : null;
+            var json = response ?
+                Ext.decode(response.getResponse().responseText) :
+                null;
             if (json) {
                 me.setMessages(json.errors, json.warnings, json.notifications);
-                //if (!json.warnings.mediaDesk) { // TODO: not sure why this condition was present
-                //}
             }
             me.down('probeform').setMediaDesk(record);
             // If the Probe is ReadOnly, disable Inputfields and grids
@@ -228,24 +232,21 @@ Ext.define('Lada.view.window.ProbeEdit', {
             me.down('probeform').isValid();
         };
         if (!loadedRecord) {
-            Ext.ClassManager.get('Lada.model.Probe').load(this.record.get('id'), {
-                failure: function(record, action) {
-                    me.setLoading(false);
-                    // TODO
-                    console.log('An unhandled Failure occured. See following Response and Record');
-                    console.log(action);
-                    console.log(record);
-                },
-                success: loadCallBack
-                // scope: this
-            });
+            Ext.ClassManager.get('Lada.model.Probe').load(
+                this.record.get('id'), {
+                    failure: function() {
+                        me.setLoading(false);
+                    },
+                    success: loadCallBack
+                });
         } else {
             loadCallBack(loadedRecord);
         }
     },
 
     /**
-     * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty
+     * Called before closing the form window. Shows confirmation dialogue
+     * window to save the form if dirty
      */
     handleBeforeClose: function() {
         var me = this;
@@ -254,7 +255,9 @@ Ext.define('Lada.view.window.ProbeEdit', {
         try {
             item = me.items.items[0].items.get(0);
         } catch (e) {
-            Ext.log({msg: 'Closing uninitialized messung window: ' + e, level: 'warn'});
+            Ext.log({
+                msg: 'Closing uninitialized messung window: ' + e,
+                level: 'warn'});
             item = null;
         }
         if (!item) {
@@ -280,7 +283,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
                         margin: '5, 0, 5, 5',
 
                         handler: function() {
-                            me.down('probeform').fireEvent('save', me.down('probeform'));
+                            me.down('probeform').fireEvent(
+                                'save', me.down('probeform'));
                             confWin.close();
                         }
                     }, {
@@ -305,7 +309,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
      * Enable the Messungengrid
      */
     enableAddMessungen: function() {
-        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(false);
+        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(
+            false);
     },
 
     /**
@@ -315,22 +320,31 @@ Ext.define('Lada.view.window.ProbeEdit', {
         if (!this.record.get('owner')) {
             // Disable only when the User is not the owner of the Probe
             // Works in symbiosis with success callback some lines above.
-            this.down('fset[name=messungen]').down('messunggrid').setReadOnly(true);
-            this.down('fset[name=messungen]').down('messunggrid').readOnly = true;
+            this.down('fset[name=messungen]').down('messunggrid').setReadOnly(
+                true);
+            this.down('fset[name=messungen]').down(
+                'messunggrid').readOnly = true;
         }
-        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(true);
-        this.down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').setReadOnly(true);
-        this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(true);
+        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(
+            true);
+        this.down('fset[name=probenzusatzwerte]').down(
+            'probenzusatzwertgrid').setReadOnly(true);
+        this.down('fset[name=pkommentare]').down(
+            'pkommentargrid').setReadOnly(true);
     },
 
     /**
      * Enable the Childelements of this window
      */
     enableChildren: function() {
-        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(false);
-        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(false);
-        this.down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').setReadOnly(false);
-        this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(false);
+        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(
+            false);
+        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(
+            false);
+        this.down('fset[name=probenzusatzwerte]').down(
+            'probenzusatzwertgrid').setReadOnly(false);
+        this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(
+            false);
     },
 
     /**
@@ -379,7 +393,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
     },
 
     /**
-     * Instructs the fields / forms listed in this method to clear their messages.
+     * Instructs the fields / forms listed in this method to clear their
+     * messages.
      */
     clearMessages: function() {
         var probeform = this.down('probeform');

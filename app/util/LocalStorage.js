@@ -6,7 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
- /**
+/**
   * Utility class providing Functions to read/write local storage properties.
   */
 Ext.define('Lada.util.LocalStorage', {

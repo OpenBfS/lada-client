@@ -19,6 +19,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
     ],
 
     renderTpl: [
+        /*eslint-disable max-len*/
         '<div id="{id}-innerEl" data-ref="innerEl" role="grid">',
         '<div role="presentation" class="{baseCls}-header">',
         // the href attribute is required for the :hover selector to work in IE6/7/quirks
@@ -71,6 +72,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         '</table>',
         '</div>',
         '</div>',
+        /*eslint-enable max-len*/
         {
             firstInitial: function(value) {
                 return Ext.picker.Date.prototype.getDayInitial(value);
@@ -83,22 +85,28 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
                 return end ? '</tr><tr role="row">' : '';
             },
             renderTodayBtn: function(values, out) {
-                Ext.DomHelper.generateMarkup(values.$comp.todayBtn.getRenderTree(), out);
+                Ext.DomHelper.generateMarkup(
+                    values.$comp.todayBtn.getRenderTree(), out);
             },
             renderMonthBtn: function(values, out) {
-                Ext.DomHelper.generateMarkup(values.$comp.monthBtn.getRenderTree(), out);
+                Ext.DomHelper.generateMarkup(
+                    values.$comp.monthBtn.getRenderTree(), out);
             },
             renderTimeLabel: function(values, out) {
-                Ext.DomHelper.generateMarkup(values.$comp.timeLabel.getRenderTree(), out);
+                Ext.DomHelper.generateMarkup(
+                    values.$comp.timeLabel.getRenderTree(), out);
             },
             renderTimeHour: function(values, out) {
-                Ext.DomHelper.generateMarkup(values.$comp.hourField.getRenderTree(), out);
+                Ext.DomHelper.generateMarkup(
+                    values.$comp.hourField.getRenderTree(), out);
             },
             renderTimeMinute: function(values, out) {
-                Ext.DomHelper.generateMarkup(values.$comp.minuteField.getRenderTree(), out);
+                Ext.DomHelper.generateMarkup(
+                    values.$comp.minuteField.getRenderTree(), out);
             },
             renderAcceptBtn: function(values, out) {
-                Ext.DomHelper.generateMarkup(values.$comp.acceptBtn.getRenderTree(), out);
+                Ext.DomHelper.generateMarkup(
+                    values.$comp.acceptBtn.getRenderTree(), out);
             }
         }
     ],
@@ -239,7 +247,9 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         this.value = new Date(value);
         this.hourField.setValue(
             parseInt(
-                Lada.util.Date.formatTimestamp(value.valueOf(), 'H', true), 10));
+                Lada.util.Date.formatTimestamp(
+                    value.valueOf(), 'H', true),
+                10));
         this.minuteField.setValue(value.getMinutes());
         return this.update(this.value);
     },
@@ -304,7 +314,8 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         var me = this;
         var dateOnly = Ext.Date.clearTime(date, true);
         var t = dateOnly.getTime();
-        var currentDate = (me.pickerField && me.pickerField.getValue()) || new Date();
+        var currentDate = (me.pickerField && me.pickerField.getValue()) ||
+            new Date();
         var cells = me.cells;
         var cls = me.selectedCls;
         var cellItems = cells.elements;
@@ -331,7 +342,9 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         if (currentDate) {
             me.hourField.setValue(
                 parseInt(
-                    Lada.util.Date.formatTimestamp(currentDate, 'H', true), 10));
+                    Lada.util.Date.formatTimestamp(
+                        currentDate, 'H', true),
+                    10));
             me.minuteField.setValue(currentDate.getMinutes());
         }
     }

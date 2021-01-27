@@ -49,23 +49,28 @@ Ext.define('Lada.controller.grid.Messwert', {
             e.down('formatnumberfield').setValue(null);
             e.down('formatnumberfield').allowBlank = true;
             e.down('formatnumberfield').setReadOnly(true);
-            e.down('expnumberfield[dataIndex=nwgZuMesswert]').allowBlank = false;
-            e.down('expnumberfield[dataIndex=nwgZuMesswert]').setReadOnly(false);
+            e.down('expnumberfield[dataIndex=nwgZuMesswert]')
+                .allowBlank = false;
+            e.down('expnumberfield[dataIndex=nwgZuMesswert]').setReadOnly(
+                false);
             e.form.isValid();
         } else {
             e.down('expnumberfield[dataIndex=messwert]').allowBlank = false;
             e.down('expnumberfield[dataIndex=messwert]').setReadOnly(false);
             e.down('expnumberfield[dataIndex=nwgZuMesswert]').allowBlank = true;
-            e.down('expnumberfield[dataIndex=nwgZuMesswert]').setReadOnly(false);
+            e.down('expnumberfield[dataIndex=nwgZuMesswert]').setReadOnly(
+                false);
             e.down('formatnumberfield').allowBlank = false;
             e.down('formatnumberfield').setReadOnly(false);
-            e.down('formatnumberfield').validateValue(e.down('formatnumberfield').getValue());
-            e.down('expnumberfield[dataIndex=messwert]').validateValue(e.down('expnumberfield[dataIndex=messwert]').getValue());
+            e.down('formatnumberfield').validateValue(
+                e.down('formatnumberfield').getValue());
+            e.down('expnumberfield[dataIndex=messwert]').validateValue(
+                e.down('expnumberfield[dataIndex=messwert]').getValue());
             e.form.isValid();
         }
     },
 
-    changeValue: function(editor, context) {
+    changeValue: function(editor) {
         var e = editor.up().down('expnumberfield[dataIndex=nwgZuMesswert]');
         e.allowBlank = true;
         e.setReadOnly(false);
@@ -85,7 +90,7 @@ Ext.define('Lada.controller.grid.Messwert', {
             context.record.set('id', null);
         }
         context.record.save({
-            success: function(request, response) {
+            success: function() {
                 if (Ext.data.StoreManager.get('messeinheiten')) {
                     Ext.data.StoreManager.get('messeinheiten').clearFilter();
                     Ext.data.StoreManager.get('messeinheiten').reload();
@@ -160,59 +165,63 @@ Ext.define('Lada.controller.grid.Messwert', {
     remove: function(button) {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection()[0];
-        Ext.MessageBox.confirm('Messwert löschen', 'Sind Sie sicher?', function(btn) {
-            if (btn === 'yes') {
-                selection.erase({
-                    success: function() {
-                        button.up('window').initData();
-                        grid.initData();
-                    },
-                    failure: function(request, response) {
-                        var i18n = Lada.getApplication().bundle;
-                        if (response.error) {
-                            //TODO: check content of error.status (html error code)
-                            Ext.Msg.alert(i18n.getMsg('err.msg.delete.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        } else {
-                            var json = Ext.decode(response.getResponse().responseText);
-                            if (json) {
-                                if (json.message) {
-                                    Ext.Msg.alert(i18n.getMsg(
-                                        'err.msg.delete.title')
-                                    + ' #' + json.message,
-                                    i18n.getMsg(json.message));
+        var i18n = Lada.getApplication().bundle;
+        Ext.MessageBox.confirm(
+            i18n.getMsg('delete.messwert'),
+            i18n.getMsg('confirmation.question'),
+            function(btn) {
+                if (btn === 'yes') {
+                    selection.erase({
+                        success: function() {
+                            button.up('window').initData();
+                            grid.initData();
+                        },
+                        failure: function(request, response) {
+                            if (response.error) {
+                                Ext.Msg.alert(
+                                    i18n.getMsg('err.msg.delete.title'),
+                                    i18n.getMsg('err.msg.generic.body'));
+                            } else {
+                                var json = Ext.decode(
+                                    response.getResponse().responseText);
+                                if (json) {
+                                    if (json.message) {
+                                        Ext.Msg.alert(
+                                            i18n.getMsg(
+                                                'err.msg.delete.title')
+                                                + ' #'
+                                                + json.message,
+                                            i18n.getMsg(json.message));
+                                    } else {
+                                        Ext.Msg.alert(i18n.getMsg(
+                                            'err.msg.delete.title'),
+                                        i18n.getMsg('err.msg.generic.body'));
+                                    }
                                 } else {
                                     Ext.Msg.alert(i18n.getMsg(
                                         'err.msg.delete.title'),
-                                    i18n.getMsg('err.msg.generic.body'));
+                                    i18n.getMsg('err.msg.response.body'));
                                 }
-                            } else {
-                                Ext.Msg.alert(i18n.getMsg(
-                                    'err.msg.delete.title'),
-                                i18n.getMsg('err.msg.response.body'));
                             }
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
         grid.down('button[action=delete]').disable();
     },
 
     /**
      * Handle changed values of messeinheit comboboxes.
-     * Checks if the new value is the secondary unit of the corresponding umweltbereich
-     * and adds a warning to the combobox.
+     * Checks if the new value is the secondary unit of the corresponding
+     * umweltbereich and adds a warning to the combobox.
      * @param {Ext.form.field.Combobox} cbox Combobox that triggered the event
      * @param {Number} newValue New mehId value
      */
     handleMehChanged: function(cbox, newValue) {
-        var grid = cbox.up('messwertgrid');
         var i18n = Lada.getApplication().bundle;
-        var attributes = cbox.bodyEl.dom.attributes;
         var meh = cbox.getStore().getById(newValue);
         //If secondary unit is selected
-        if (meh.get('primary') == false) {
+        if (meh.get('primary') === false) {
             cbox.bodyEl.addCls('x-lada-warning-grid-field');
             Ext.tip.QuickTipManager.register({
                 text: i18n.getMsg('636'),

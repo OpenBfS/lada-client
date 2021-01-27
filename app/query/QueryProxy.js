@@ -7,7 +7,8 @@
  */
 
 /**
-  * A Proxy override using POST requests with JSON data to get universal query results
+  * A Proxy override using POST requests with JSON data to get universal query
+  * results
   */
 Ext.define('Lada.query.QueryProxy', {
     extend: 'Ext.data.proxy.Rest',

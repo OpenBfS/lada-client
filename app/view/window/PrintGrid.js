@@ -14,7 +14,10 @@
 Ext.define('Lada.view.window.PrintGrid', {
     alias: 'widget.printgrid',
     extend: 'Ext.window.Window',
-    requires: ['Koala.view.form.IrixFieldSet'],
+    requires: [
+        'Koala.view.form.IrixFieldSet',
+        'Lada.view.grid.DownloadQueue'
+    ],
 
     id: 'printgridwindow',
 
@@ -31,7 +34,8 @@ Ext.define('Lada.view.window.PrintGrid', {
         getInstance: function() {
             if (!Lada.view.window.PrintGrid.instance) {
                 var win = Ext.create('Lada.view.window.PrintGrid', {
-                    parentGrid: Ext.ComponentQuery.query('dynamicgrid')[0] || null,
+                    parentGrid: Ext.ComponentQuery.query(
+                        'dynamicgrid')[0] || null,
                     closeAction: 'hide'
                 });
                 Lada.view.window.PrintGrid.instance = win;
@@ -85,7 +89,7 @@ Ext.define('Lada.view.window.PrintGrid', {
         this.templateStore.sort('name', 'ASC');
         this.items = [{
             layout: 'vbox',
-            minWidth: 380,
+            minWidth: 500,
             border: false,
             scrollable: true,
             defaults: {
@@ -167,6 +171,10 @@ Ext.define('Lada.view.window.PrintGrid', {
                 xtype: 'label',
                 name: 'results',
                 hidden: true
+            },{
+                xtype: 'downloadqueuegrid',
+                store: 'downloadqueue-print',
+                width: '100%'
             }]
         }];
         this.buttons = [{
@@ -190,14 +198,17 @@ Ext.define('Lada.view.window.PrintGrid', {
         }
     },
 
-    // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
+    // taken from
+    // openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
     addIrixCheckbox: function() {
         if (this.down('checkbox[name=irix-fieldset-checkbox]')) {
             return;
         }
         var me = this;
         var genericFieldset = me.down('panel[name=generic-fieldset]');
-        var printDisabled = this.down('combobox[name=template]').getValue() ? false: true ;
+        var printDisabled = this.down('combobox[name=template]').getValue() ?
+            false :
+            true ;
         var irixCheckbox = Ext.create('Ext.form.field.Checkbox', {
             name: 'irix-fieldset-checkbox',
             boxLabel: 'DokPool:',
@@ -219,7 +230,8 @@ Ext.define('Lada.view.window.PrintGrid', {
 
     },
 
-    // taken from openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
+    // taken from
+    // openBFS/gis-client/src/view/form/Print.js by terrestris GmbH & Co. KG
     addIrixFieldset: function() {
         var fs = this.down('k-form-irixfieldset');
         var checkBox = this.down('[name="irix-fieldset-checkbox"]');
@@ -268,6 +280,16 @@ Ext.define('Lada.view.window.PrintGrid', {
         var layoutBox = this.down('combobox[name=layout]');
         if (layoutBox.getValue() !== null && !this.isHidden()) {
             this.fireEvent('gridupdate', this);
+        }
+    },
+
+    /**
+     * Set the current grid from which the items are extracted
+     * @param {Ext.grid.Panel} grid New parent grid
+     */
+    setParentGrid: function(grid) {
+        if (grid) {
+            this.parentGrid = grid;
         }
     },
 

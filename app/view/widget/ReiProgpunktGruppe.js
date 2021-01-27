@@ -109,7 +109,8 @@ Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
     setUmweltWarningVisible: function(state) {
         var i18n = Lada.getApplication().bundle;
         if (state) {
-            this.showWarnings(i18n.getMsg('warn.msg.reiprogpunktgruppe.umwelt'));
+            this.showWarnings(
+                i18n.getMsg('warn.msg.reiprogpunktgruppe.umwelt'));
         } else {
             this.clearWarningOrError();
         }

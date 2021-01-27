@@ -65,16 +65,20 @@ Ext.define('Koala.view.form.IrixFieldSet',{
     // listeners: {
     // TODO: add hooks here
     //     beforerender: function(){
-    //         var DokpoolContentType = Ext.ComponentQuery.query('[name=DokpoolContentType]')[0];
-    //         var dokpoolMetaFieldset = Ext.ComponentQuery.query('[name=DokpoolMeta]')[0];
-    //         Koala.util.Hooks.onChangeDokpoolContentType(DokpoolContentType.value,dokpoolMetaFieldset);
+    //         var DokpoolContentType = Ext.ComponentQuery.query(
+    //    '[name=DokpoolContentType]')[0];
+    //         var dokpoolMetaFieldset = Ext.ComponentQuery.query(
+    //    '[name=DokpoolMeta]')[0];
+    //         Koala.util.Hooks.onChangeDokpoolContentType(
+    //    DokpoolContentType.value,dokpoolMetaFieldset);
     //     }
     // },
 
     initComponent: function() {
         var me = this;
         if (Lada.appContext && Lada.appContext.merge.urls['irix-context']) {
-            this.config.irixContextUrl = Lada.appContext.merge.urls['irix-context'];
+            this.config.irixContextUrl = Lada.appContext.merge.urls[
+                'irix-context'];
         }
         me.irixFieldsetLoaded = new Ext.Promise(function(resolve) {
             Ext.Ajax.request({
@@ -89,7 +93,9 @@ Ext.define('Koala.view.form.IrixFieldSet',{
                 },
 
                 failure: function(response) {
-                    Ext.raise('server-side failure with status code ' + response.status);
+                    Ext.raise(
+                        'server-side failure with status code ' +
+                        response.status);
                 }
             });
         });
@@ -313,7 +319,7 @@ Ext.define('Koala.view.form.IrixFieldSet',{
      * @param {Object} attributefields An `attributefields`-object, which often
      *     are formfields like `textfields`, `combos` etc.
      */
-    onBeforeAttributeFieldsAdd: function(printForm, attributeFields, attributeRec) {
+    onBeforeAttributeFieldsAdd: function() {
         // Koala.util.Hooks.executeBeforeAddHook(
         //     printForm, attributeFields, attributeRec);
     }

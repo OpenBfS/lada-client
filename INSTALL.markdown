@@ -141,6 +141,11 @@ Folgende Bibliotheken werden neben ExtJs verwendet:
    http://www.openlayers.org
    https://github.com/openlayers/openlayers
    2-Clause BSD-License
+ * ClipboardJS 2.0.6
+   https://clipboardjs.com
+   https://github.com/zenorocha/clipboard.js
+   MIT - License
+
 
 Diese werden in der `Index.html` referenziert.
 

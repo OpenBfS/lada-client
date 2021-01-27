@@ -44,7 +44,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     /** The untranslated i18n-Message for a grid title*/
     title: null,
 
-    /** If true, the export row expander option will be checked by default, defaults to false */
+    /** If true, the export row expander option will be checked by default,
+     * defaults to false
+    */
     exportRowexp: false,
 
     border: false,
@@ -174,7 +176,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             var grid = Ext.ComponentQuery.query('dynamicgrid');
             if (grid.length === 1) {
                 grid[0].reload(function() {
-                    Ext.ComponentQuery.query('timezonebutton[action=toggletimezone]')[0].requestFinished();
+                    Ext.ComponentQuery.query(
+                        'timezonebutton[action=toggletimezone]')[0]
+                        .requestFinished();
                 });
             }
         });
@@ -188,8 +192,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         for (var i=0; i < features.length;i++) {
             var id = features[i].get ? features[i].get('id') : features[i];
             if (id !== undefined) {
-                records.push(this.store.findRecord(this.rowtarget.dataIndex, id, false,
-                    false, false, true));
+                records.push(this.store.findRecord(
+                    this.rowtarget.dataIndex, id, false,false, false, true));
             }
         }
         this.getSelectionModel().select(records);
@@ -198,8 +202,12 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     addOrt: function(event) {
         var clone = event.feature.clone();
         clone.getGeometry().transform('EPSG:3857', 'EPSG:4326');
-        var koord_x = Math.round(clone.getGeometry().getCoordinates()[0] * 100000)/100000;
-        var koord_y = Math.round(clone.getGeometry().getCoordinates()[1] * 100000)/100000;
+        var koord_x = Math.round(
+            clone.getGeometry().getCoordinates()[0] * 100000)
+            /100000;
+        var koord_y = Math.round(
+            clone.getGeometry().getCoordinates()[1] * 100000)
+            /100000;
         Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Ort',{
                 koordXExtern: koord_x.toString(),
@@ -388,7 +396,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     //Filter value
                     filter: cc[i].get('filterValue'),
                     //Readable filter value
-                    filterDisplay: filterMap.get(dataIndex)? filterMap.get(dataIndex): cc[i].get('filterValue'),
+                    filterDisplay: filterMap.get(dataIndex) ?
+                        filterMap.get(dataIndex) :
+                        cc[i].get('filterValue'),
                     filterRegex: cc[i].get('filterRegex'),
                     filterNegate: cc[i].get('filterNegate'),
                     filterIsNull: cc[i].get('filterIsNull')
@@ -420,15 +430,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         style: 'z-index: -1;',
                         recordId: id
                     });
-                    //Window may not be shown if another instance is already open
+                    //Window may not be shown if another instance is open
                     if (win.show()) {
                         win.setPosition(30);
-                        win.loadRecord(id, this, function(record, operation, success) {
-                            if (success) {
-                                win.setRecord(record);
-                                win.initData(record);
-                            }
-                        });
+                        win.loadRecord(id, this,
+                            function(record, operation, success) {
+                                if (success) {
+                                    win.setRecord(record);
+                                    win.initData(record);
+                                }
+                            });
                     }
                 },
                 textchange: function(button, oldval, newval) {
@@ -462,33 +473,42 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                             recordId: id
                         });
                     if (win.show()) {
-                        win.loadRecord(id, this, function(record, operation, success) {
-                            if (success) {
-                                var messungRecord = record;
-                                var probeWin = Ext.create(
-                                    'Lada.view.window.ProbeEdit', {
-                                        style: 'z-index: -1;',
-                                        recordId: messungRecord.get('probeId')
-                                    });
-                                if (!probeWin.show()) {
-                                    //If there is already a probe window, use this instead of a new one
-                                    probeWin.destroy();
-                                    probeWin = Ext.ComponentQuery.query('probenedit[recordId=' + messungRecord.get('probeId') + ']')[0];
-                                }
+                        win.loadRecord(id,
+                            this,
+                            function(record, operation, success) {
+                                if (success) {
+                                    var messungRecord = record;
+                                    var probeWin = Ext.create(
+                                        'Lada.view.window.ProbeEdit', {
+                                            style: 'z-index: -1;',
+                                            recordId: messungRecord.get(
+                                                'probeId')
+                                        });
+                                    if (!probeWin.show()) {
+                                        //If there is already a probe window,
+                                        //use this instead of a new one
+                                        probeWin.destroy();
+                                        probeWin = Ext.ComponentQuery.query(
+                                            'probenedit[recordId=' +
+                                            messungRecord.get('probeId') +
+                                            ']')[0];
+                                    }
 
-                                win.parentWindow = probeWin;
-                                probeWin.setPosition(30);
-                                win.setPosition(35 + probeWin.width);
-                                probeWin.loadRecord(messungRecord.get('probeId'), this,
-                                    function(precord, poperation, psuccess) {
-                                        probeWin.setRecord(precord);
-                                        probeWin.initData(precord);
-                                        win.setProbe(precord);
-                                        win.setRecord(record);
-                                        win.initData(record);
-                                    });
-                            }
-                        });
+                                    win.parentWindow = probeWin;
+                                    probeWin.setPosition(30);
+                                    win.setPosition(35 + probeWin.width);
+                                    probeWin.loadRecord(
+                                        messungRecord.get('probeId'),
+                                        this,
+                                        function(precord) {
+                                            probeWin.setRecord(precord);
+                                            probeWin.initData(precord);
+                                            win.setProbe(precord);
+                                            win.setRecord(record);
+                                            win.initData(record);
+                                        });
+                                }
+                            });
                     }
                 },
                 textchange: function(button, oldval, newval) {
@@ -521,12 +541,15 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         'Lada.view.window.Messprogramm', {
                             recordId: id});
                     if (win.show()) {
-                        win.loadRecord(id, this, function(record, operation, success) {
-                            if (success) {
-                                win.setRecord(record);
-                                win.initData(record);
-                            }
-                        });
+                        win.loadRecord(
+                            id,
+                            this,
+                            function(record, operation, success) {
+                                if (success) {
+                                    win.setRecord(record);
+                                    win.initData(record);
+                                }
+                            });
                     }
 
                 },
@@ -560,11 +583,14 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         recordId: id
                     });
                     if (win.show()) {
-                        win.loadRecord(id, this, function(record, operation, success) {
-                            if (success) {
-                                win.initData(record);
-                            }
-                        });
+                        win.loadRecord(
+                            id,
+                            this,
+                            function(record, operation, success) {
+                                if (success) {
+                                    win.initData(record);
+                                }
+                            });
                     }
 
                 },
@@ -656,7 +682,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 //Check if value is already a string representation
                 var strValue = value;
                 if (typeof(value) !== 'string') {
-                    strValue = Lada.getApplication().toExponentialString(value, 2)
+                    strValue = Lada.getApplication().toExponentialString(
+                        value, 2)
                         .replace('.', Ext.util.Format.decimalSeparator);
                 }
                 var splitted = strValue.split('e');
@@ -847,11 +874,14 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 });
                 if (win.show()) {
                     win.setPosition(30);
-                    win.loadRecord(id, this, function(record, operation, success) {
-                        if (success) {
-                            win.initData(record);
-                        }
-                    });
+                    win.loadRecord(
+                        id,
+                        this,
+                        function(record, operation, success) {
+                            if (success) {
+                                win.initData(record);
+                            }
+                        });
                 }
             };
         } else if (datatype.name === 'dsatzerz') {
@@ -865,11 +895,14 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 });
                 if (win.show()) {
                     win.setPosition(30);
-                    win.loadRecord(id, this, function(record, operation, success) {
-                        if (success) {
-                            win.initData(record);
-                        }
-                    });
+                    win.loadRecord(
+                        id,
+                        this,
+                        function(record, operation, success) {
+                            if (success) {
+                                win.initData(record);
+                            }
+                        });
                 }
             };
         } else if (datatype.name === 'mprkat') {
@@ -883,11 +916,14 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 });
                 if (win.show()) {
                     win.setPosition(30);
-                    win.loadRecord(id, this, function(record, operation, success) {
-                        if (success) {
-                            win.initData(record);
-                        }
-                    });
+                    win.loadRecord(
+                        id,
+                        this,
+                        function(record, operation, success) {
+                            if (success) {
+                                win.initData(record);
+                            }
+                        });
                 }
 
             };
@@ -958,7 +994,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 action: 'assigntags',
                 needsSelection: true,
                 disabled: true
-            })
+            });
         }
     },
 
@@ -1030,14 +1066,18 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 });
             }
         }
-        if (this.rowtarget.dataType === 'probeId' || this.rowtarget.dataType === 'messungId') {
+        if (
+            this.rowtarget.dataType === 'probeId' ||
+            this.rowtarget.dataType === 'messungId'
+        ) {
             this.addRowExpanderButton();
         }
     },
 
     genericDeleteButton: function() {
         if (
-            ['probeId', 'mpId', 'ortId', 'messungId'].indexOf(this.rowtarget.dataType) >= 0 ||
+            ['probeId', 'mpId', 'ortId', 'messungId']
+                .indexOf(this.rowtarget.dataType) >= 0 ||
             ( ['probenehmer', 'dsatzerz', 'mprkat'].indexOf(
                 this.rowtarget.dataType) >= 0
                 && Ext.Array.contains(Lada.funktionen, 4)
@@ -1072,8 +1112,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 text: this.i18n.getMsg('export.button'),
                 icon: 'resources/img/svn-update.png',
                 action: 'gridexport',
-                needsSelection: true,
-                disabled: true
+                needsSelection: false,
+                disabled: false
             });
         }
     },
@@ -1089,7 +1129,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     /**
      * Reload the grid.
-     * @param {Object} callback Additional callback function to call after reloading
+     * @param {Object} callback Additional callback function to call after
+     * reloading
      */
     reload: function(callback) {
         var store = this.getStore();
@@ -1113,18 +1154,21 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 action: 'expand',
                 text: this.i18n.getMsg('grid.expandDetails'),
                 handler: function(button) {
-                    // for performance reasons, set a maximum for rowexpander instances
-                    // which to open simultaneously in one action
+                    // for performance reasons, set a maximum for rowexpander
+                    // instances which to open simultaneously in one action
                     var maxEntries = 100;
                     if (me.store.data.length <= maxEntries) {
                         var newStatus = expander.toggleAllRows();
                         if (!newStatus) {
-                            button.setText(me.i18n.getMsg('grid.expandDetails'));
+                            button.setText(
+                                me.i18n.getMsg('grid.expandDetails'));
                         } else {
-                            button.setText(me.i18n.getMsg('grid.unexpandDetails'));
+                            button.setText(
+                                me.i18n.getMsg('grid.unexpandDetails'));
                         }
                     } else {
-                        Ext.Msg.alert(' ', me.i18n.getMsg('err.pagingsize', maxEntries));
+                        Ext.Msg.alert(' ',
+                            me.i18n.getMsg('err.pagingsize', maxEntries));
                     }
                 }
             });
@@ -1144,50 +1188,60 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     /**
      * Get filter values as readable strings in a map.
-     * @return {Ext.util.HashMap} A map containg the filter values using the respective dataindex as key
+     * @return {Ext.util.HashMap} A map containg the filter values using the
+     * respective dataindex as key
      */
     getFilterValues: function() {
-        i18n = Lada.getApplication().bundle;
+        var i18n = Lada.getApplication().bundle;
         var filterMap = Ext.create('Ext.util.HashMap');
         //Get fieldsets containing the filter widgets
-        var filters = Ext.ComponentQuery.query('panel[name=filtervalues]')[0].items.items;
+        var filters = Ext.ComponentQuery.query(
+            'panel[name=filtervalues]')[0].items.items;
         if (!filters) {
             return filterMap;
         }
         Ext.Array.each(filters, function(item) {
             var widget = item.down('component[name=' + item.dataIndex + ']');
             //Get readable value depending on the widget type
+            var datefield, value;
             switch (Ext.getClassName(widget)) {
                 case 'Lada.view.widget.base.DateField':
-                    var datefield = widget.down('datefield');
-                    var value = datefield.getValue();
+                    datefield = widget.down('datefield');
+                    value = datefield.getValue();
                     filterMap.add(item.dataIndex, value);
                     break;
                 case 'Lada.view.widget.base.Datetime':
-                    var datefield = widget.down('datetime');
-                    var value = datefield.getValue();
+                    datefield = widget.down('datetime');
+                    value = datefield.getValue();
                     filterMap.add(item.dataIndex, value);
                     break;
                 case 'Lada.view.widget.base.DateTimeRange':
-                    var fromField = widget.down('component[name=' + item.dataIndex + 'From]');
-                    var toField = widget.down('component[name=' + item.dataIndex + 'To]');
-                    var fromValue = Lada.util.Date.formatTimestamp(fromField.getValue(), 'DD.MM.YYYY HH:mm');
-                    var toValue = Lada.util.Date.formatTimestamp(toField.getValue(), 'DD.MM.YYYY HH:mm');
-                    if (toValue != null) {
-                        filterMap.add(item.dataIndex, i18n.getMsg('print.daterange', fromValue, toValue));
+                    var fromField = widget.down(
+                        'component[name=' + item.dataIndex + 'From]');
+                    var toField = widget.down(
+                        'component[name=' + item.dataIndex + 'To]');
+                    var fromValue = Lada.util.Date.formatTimestamp(
+                        fromField.getValue(), 'DD.MM.YYYY HH:mm');
+                    var toValue = Lada.util.Date.formatTimestamp(
+                        toField.getValue(), 'DD.MM.YYYY HH:mm');
+                    if (toValue !== null) {
+                        filterMap.add(
+                            item.dataIndex,
+                            i18n.getMsg('print.daterange', fromValue, toValue));
                     } else {
                         filterMap.add(item.dataIndex, fromValue);
                     }
                     break;
                 case 'Lada.view.widget.Tag':
-                    var value = widget.getDisplayValue();
+                    value = widget.getDisplayValue();
                     filterMap.add(item.dataIndex, value);
                     break;
                 default:
                     //Widget can be a textfield or a combobx
                     var displayValue;
                     if (widget.down('combobox')) {
-                        displayValue = widget.down('combobox').getDisplayValue();
+                        displayValue = widget.down('combobox')
+                            .getDisplayValue();
                     } else if (widget.down('textfield')) {
                         displayValue = widget.down('textfield').getValue();
                     }

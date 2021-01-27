@@ -26,9 +26,9 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     border: false,
 
     /**
-     * @cfg: the type of the record to be passed. Should be either 'probe' or 'mpr'.
-     * Variable naming of these differ slightly (see function initComponent and the
-     * two lada.data.model.ortszuordnung* )
+     * @cfg: the type of the record to be passed. Should be either 'probe' or
+     * 'mpr'. Variable naming of these differ slightly (see function
+     * initComponent and the two lada.data.model.ortszuordnung* )
      */
     type: null,
 
@@ -96,7 +96,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 editable: true,
                                 name: 'ortszuordnungTyp',
                                 disableKeyFilter: true,
-                                fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszuordnungtyp')
+                                fieldLabel: i18n.getMsg(
+                                    'ortszuordnung.form.field.ortszuordnungtyp')
                             },{
                                 // empty conttainer for vertical separation
                                 xtype: 'container',
@@ -120,7 +121,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 labelWidth: 125,
                                 maxLength: 100,
                                 name: 'ortszusatztext',
-                                fieldLabel: i18n.getMsg('ortszuordnung.form.field.ortszusatztext'),
+                                fieldLabel: i18n.getMsg(
+                                    'ortszuordnung.form.field.ortszusatztext'),
                                 flex: 1
                             }]
                         }]
@@ -145,7 +147,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
      * setOrt can be called from a CallbackFunction, ie select from a grid.
      * it will set the ortId of this record
      */
-    setOrt: function(row, selRecord, index, opts) {
+    setOrt: function(row, selRecord) {
         if (selRecord) {
             var newOrtId = selRecord.get('id');
             if (!this.readOnly && newOrtId) {
@@ -159,8 +161,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     },
 
     /**
-     * sets the ort even if the record is readOnly. Used for initially setting a record
-     * on existing entries.
+     * sets the ort even if the record is readOnly. Used for initially setting
+     * a record on existing entries.
      * */
     setFirstOrt: function(record) {
         if (record) {
@@ -226,8 +228,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                 }
                 content = errors[key];
                 var errorText = '';
-                for (var i = 0; i < content.length; i++) {
-                    errorText += i18n.getMsg(content[i].toString()) + '\n';
+                for (var j = 0; j < content.length; j++) {
+                    errorText += i18n.getMsg(content[j].toString()) + '\n';
                 }
                 element.showErrors(errorText);
             }
@@ -236,7 +238,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
     clearMessages: function() {
         this.down('tarea[name=ortszusatztext]').clearWarningOrError();
-        this.down('ortszuordnungtyp[name=ortszuordnungTyp]').clearWarningOrError();
+        this.down('ortszuordnungtyp[name=ortszuordnungTyp]')
+            .clearWarningOrError();
     },
 
     setReadOnly: function(value) {
@@ -253,7 +256,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     /**
      * Helper to trigger the forms' validity check
      */
-    changed: function(newValue, oldValue) {
+    changed: function() {
         var controller = Lada.app.getController(
             'Lada.controller.form.Ortszuordnung');
         var form = this.up('form').getForm();

@@ -48,7 +48,6 @@ Ext.define('Lada.view.window.MessungEdit', {
             handler: this.handleBeforeClose
         }];
 
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -69,9 +68,11 @@ Ext.define('Lada.view.window.MessungEdit', {
             tooltip: i18n.getMsg('help.qtip'),
             titlePosition: 0,
             callback: function() {
-                var imprintWin = Ext.ComponentQuery.query('k-window-imprint')[0];
+                var imprintWin = Ext.ComponentQuery.query(
+                    'k-window-imprint')[0];
                 if (!imprintWin) {
-                    imprintWin = Ext.create('Lada.view.window.HelpprintWindow').show();
+                    imprintWin = Ext.create(
+                        'Lada.view.window.HelpprintWindow').show();
                     imprintWin.on('afterlayout', function() {
                         var imprintWinController = this.getController();
                         imprintWinController.setTopic('messung');
@@ -114,7 +115,6 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.mStore = store;
         this.mStore.proxy.extraParams = {mmtId: this.record.get('mmtId')};
         this.mStore.load();
-
         this.removeAll();
         this.add([{
             border: false,
@@ -172,7 +172,11 @@ Ext.define('Lada.view.window.MessungEdit', {
             me.intializeUI();
             me.mStore.proxy.extraParams = {mmtId: record.get('mmtId')};
             me.mStore.load();
-            if (me.parentWindow && me.parentWindow.record.get('treeModified') < record.get('parentModified')) {
+            if (
+                me.parentWindow &&
+                me.parentWindow.record.get('treeModified') <
+                    record.get('parentModified')
+            ) {
                 var i18n = Lada.getApplication().bundle;
                 Ext.Msg.show({
                     title: i18n.getMsg('probe.outdated.title'),
@@ -185,8 +189,9 @@ Ext.define('Lada.view.window.MessungEdit', {
                             me.close();
                             me.parentWindow.initData();
                         } else {
-                            me.record.set('treeModified', me.probe.get('treeModified'));
-                            that.disableForm();
+                            me.record.set(
+                                'treeModified', me.probe.get('treeModified'));
+                            me.disableForm();
                         }
                     }
                 });
@@ -196,14 +201,21 @@ Ext.define('Lada.view.window.MessungEdit', {
             me.record = record;
             var messstelle = Ext.data.StoreManager.get('messstellen')
                 .getById(me.probe.get('mstId'));
-            me.setTitle('Messung: ' + me.record.get('nebenprobenNr')
-                + '   zu Probe - Hauptprobennr.: ' + me.probe.get('hauptprobenNr')
-                + ' Mst: ' + messstelle.get('messStelle')
-                + ' editieren.');
-            var json = null;
-            try {
-                json = Ext.decode(response.getResponse().responseText);
-            } catch (e) {}
+            var title = '';
+            title += 'Messung: ';
+            if (me.record.get('nebenprobenNr')) {
+                title += me.record.get('nebenprobenNr');
+            }
+            title += ' zu Probe ' + me.probe.get('externeProbeId') ;
+            if (me.probe.get('hauptprobenNr')) {
+                title += ' / '+ me.probe.get('hauptprobenNr');
+            }
+            title += ' -  Mst: ' + messstelle.get('messStelle') +
+                ' editieren.';
+            me.setTitle(title);
+            var json = response ?
+                Ext.decode(response.getResponse().responseText) :
+                null;
             if (json) {
                 me.setMessages(json.errors, json.warnings);
             }
@@ -222,23 +234,19 @@ Ext.define('Lada.view.window.MessungEdit', {
             }
         };
         if (!loadedRecord) {
-            Ext.ClassManager.get('Lada.model.Messung').load(this.record.get('id'), {
-                failure: function(record, response) {
-                    // TODO
-                    console.log('An unhandled Failure occured. See following Response and Record');
-                    console.log(response);
-                    console.log(record);
-                },
-                success: loadCallback,
-                scope: this
-            });
+            Ext.ClassManager.get('Lada.model.Messung').load(
+                this.record.get('id'), {
+                    success: loadCallback,
+                    scope: this
+                });
         } else {
             loadCallback(loadedRecord);
         }
     },
 
     /**
-     * Adds new event handler to the toolbar close button to add a save confirmation dialogue if a dirty form is closed
+     * Adds new event handler to the toolbar close button to add a save
+     * confirmation dialogue if a dirty form is closed
      */
     customizeToolbar: function() {
         var tools = this.tools;
@@ -273,10 +281,13 @@ Ext.define('Lada.view.window.MessungEdit', {
      * Disable the Chilelements of this window
      */
     disableChildren: function() {
-        this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(true);
+        this.down('fset[name=messwerte]').down('messwertgrid')
+            .setReadOnly(true);
         this.down('fset[name=messwerte]').down('messwertgrid').readOnly = true;
-        this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(true);
-        this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = true;
+        this.down('fset[name=messungskommentare]').down('mkommentargrid')
+            .setReadOnly(true);
+        this.down('fset[name=messungskommentare]').down('mkommentargrid')
+            .readOnly = true;
         this.disableStatusEdit();
     },
 
@@ -284,10 +295,13 @@ Ext.define('Lada.view.window.MessungEdit', {
      * Enable the Childelements of this window
      */
     enableChildren: function() {
-        this.down('fset[name=messwerte]').down('messwertgrid').setReadOnly(false);
+        this.down('fset[name=messwerte]').down('messwertgrid')
+            .setReadOnly(false);
         this.down('fset[name=messwerte]').down('messwertgrid').readOnly = false;
-        this.down('fset[name=messungskommentare]').down('mkommentargrid').setReadOnly(false);
-        this.down('fset[name=messungskommentare]').down('mkommentargrid').readOnly = false;
+        this.down('fset[name=messungskommentare]').down('mkommentargrid')
+            .setReadOnly(false);
+        this.down('fset[name=messungskommentare]').down('mkommentargrid')
+            .readOnly = false;
         this.enableStatusEdit();
     },
 
@@ -307,7 +321,8 @@ Ext.define('Lada.view.window.MessungEdit', {
     },
 
     /**
-     * Called before closing the form window. Shows confirmation dialogue window to save the form if dirty*/
+     * Called before closing the form window. Shows confirmation dialogue
+     * window to save the form if dirty*/
     handleBeforeClose: function() {
         var me = this;
         var i18n = Lada.getApplication().bundle;
@@ -315,7 +330,9 @@ Ext.define('Lada.view.window.MessungEdit', {
         try {
             item = me.down('messungform');
         } catch (e) {
-            Ext.log({msg: 'Closing uninitialized messung window: ' + e, level: 'warn'});
+            Ext.log({
+                msg: 'Closing uninitialized messung window: ' + e,
+                level: 'warn'});
             return;
         }
         if (!item) {
@@ -341,7 +358,8 @@ Ext.define('Lada.view.window.MessungEdit', {
                         margin: '5, 0, 5, 5',
 
                         handler: function() {
-                            me.down('messungform').fireEvent('save', me.down('messungform'));
+                            me.down('messungform').fireEvent(
+                                'save', me.down('messungform'));
                             confWin.close();
                         }
                     }, {
@@ -416,7 +434,8 @@ Ext.define('Lada.view.window.MessungEdit', {
     },
 
     /**
-     * Instructs the fields / forms listed in this method to clear their messages.
+     * Instructs the fields / forms listed in this method to clear their
+     * messages.
      */
     clearMessages: function() {
         var messungform = this.down('messungform');

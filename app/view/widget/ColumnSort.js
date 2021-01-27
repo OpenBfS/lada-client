@@ -68,7 +68,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                         containerScroll: true
                     },
                     listeners: {
-                        drop: function(node, data, overModel) {
+                        drop: function() {
                             me.saveColumnOrder();
                             me.fireEvent('change');
                         }
@@ -103,7 +103,8 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                                 var rec = box.$widgetRecord;
                                 rec.set('sort', newval);
                                 var origindata = this.up('querypanel')
-                                    .gridColumnValueStore.getById(rec.get('id'));
+                                    .gridColumnValueStore
+                                    .getById(rec.get('id'));
                                 if (origindata) {
                                     origindata.set('sort', newval);
                                 }
@@ -173,10 +174,18 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
             var maxIdx = this.store.count() - 1;
 
             switch (direction) {
-                case 'first': index = 0; break;
-                case 'up': index > 0 ? index-- : 0; break;
-                case 'down': index < maxIdx ? index++ : maxIdx; break;
-                case 'last': index = maxIdx; break;
+                case 'first':
+                    index = 0;
+                    break;
+                case 'up':
+                    index = index > 0 ? index - 1 : 0;
+                    break;
+                case 'down':
+                    index = index < maxIdx ? index + 1 : maxIdx;
+                    break;
+                case 'last':
+                    index = maxIdx;
+                    break;
             }
 
             this.store.remove(row);
@@ -199,7 +208,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
             var nodename = nodes[i].innerText.substr(0,
                 nodes[i].innerText.length -3);
             //Remove linebreaks
-            nodename = nodename.replace(/(\r\n|\n|\r)/gm, "");
+            nodename = nodename.replace(/(\r\n|\n|\r)/gm, '');
             //TODO this relies on column names to be unique
             var qf = columnstore.findRecord('name', nodename);
             var entry = this.store.findRecord(

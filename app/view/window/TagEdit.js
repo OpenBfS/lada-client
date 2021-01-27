@@ -45,7 +45,7 @@ Ext.define('Lada.view.window.TagEdit', {
                 action: 'createtag',
                 icon: 'resources/img/list-add.png',
                 tooltip: i18n.getMsg('button.createtag.tooltip'),
-                handler: function(button) {
+                handler: function() {
                     var win = Ext.create('Lada.view.window.TagCreate', {
                         tagWidget: me.down('tagwidget'),
                         recordType: me.recordType,
@@ -105,7 +105,7 @@ Ext.define('Lada.view.window.TagEdit', {
         this.down('tagwidget').disable();
     },
 
-    enableButtons: function()  {
+    enableButtons: function() {
         this.down('button[action=createtag]').enable();
         this.down('button[action=bulkaddtags]').enable();
         this.down('button[action=bulkdeletetags]').enable();
@@ -114,7 +114,8 @@ Ext.define('Lada.view.window.TagEdit', {
     },
 
     /**
-     * Eventhandler that unassigns the selected tag(s) from the selected probe instance(s)
+     * Eventhandler that unassigns the selected tag(s) from the selected probe
+     * instance(s)
      * @param button Button that caused the event
      */
     unassignFromSelection: function(button) {
@@ -128,16 +129,17 @@ Ext.define('Lada.view.window.TagEdit', {
         var tagCount = tags.length * me.selection.length;
         var tagsSet = 0;
         me.down('progressbar').show();
-        me.down('progressbar').updateProgress(0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
+        me.down('progressbar').updateProgress(
+            0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
         me.disableButtons();
 
         for (var i = 0; i < me.selection.length; i++) {
             switch (me.recordType) {
-                case "messung":
+                case 'messung':
                     var messungId = me.selection[i].data.id;
                     store.setMessung(messungId);
                     break;
-                case "probe":
+                case 'probe':
                     var probeId = me.selection[i].data.probeId;
                     store.setProbe(probeId);
                     break;
@@ -146,13 +148,18 @@ Ext.define('Lada.view.window.TagEdit', {
             }
             for (var j = 0; j < tags.length; j++) {
                 var tag = tags[j];
-                store.deleteZuordnung(tag, function(request, success, response) {
-                    var responseJson = Ext.decode(response.responseText);
+                // eslint-disable-next-line no-loop-func
+                store.deleteZuordnung(tag, function() {
                     tagsSet++;
                     var ratio = tagsSet/tagCount;
                     me.down('progressbar').updateProgress(
-                            ratio, i18n.getMsg('tag.assignwindow.progress', tagsSet, tagCount, false));
-                    if (ratio == 1) {
+                        ratio,
+                        i18n.getMsg(
+                            'tag.assignwindow.progress',
+                            tagsSet,
+                            tagCount,
+                            false));
+                    if (ratio === 1) {
                         Ext.getCmp('dynamicgridid').reload();
                         me.enableButtons();
                     }
@@ -162,7 +169,8 @@ Ext.define('Lada.view.window.TagEdit', {
     },
 
     /**
-     * Eventhandler that assigns the selected tag(s) to the chosen probe instance(s)
+     * Eventhandler that assigns the selected tag(s) to the chosen probe
+     * instance(s)
      * @param button Button that caused the event
      */
     assignToSelection: function(button) {
@@ -176,16 +184,17 @@ Ext.define('Lada.view.window.TagEdit', {
         var tagCount = tags.length * me.selection.length;
         var tagsSet = 0;
         me.down('progressbar').show();
-        me.down('progressbar').updateProgress(0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
+        me.down('progressbar').updateProgress(
+            0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
         me.disableButtons();
 
         for (var i = 0; i < me.selection.length; i++) {
             switch (me.recordType) {
-                case "messung":
+                case 'messung':
                     var messungId = me.selection[i].data.id;
                     store.setMessung(messungId);
                     break;
-                case "probe":
+                case 'probe':
                     var probeId = me.selection[i].data.probeId;
                     store.setProbe(probeId);
                     break;
@@ -194,16 +203,18 @@ Ext.define('Lada.view.window.TagEdit', {
             }
             for (var j = 0; j < tags.length; j++) {
                 var tag = tags[j];
-                store.createZuordnung(tag, function(request, success, response) {
-                    var responseJson = Ext.decode(response.responseText);
-                    if (success == false) {
-                        console.log('500 on tag set');
-                    }
+                // eslint-disable-next-line no-loop-func
+                store.createZuordnung(tag, function() {
                     tagsSet++;
                     var ratio = tagsSet/tagCount;
                     me.down('progressbar').updateProgress(
-                            ratio, i18n.getMsg('tag.assignwindow.progress', tagsSet, tagCount, false));
-                    if (ratio == 1) {
+                        ratio,
+                        i18n.getMsg(
+                            'tag.assignwindow.progress',
+                            tagsSet,
+                            tagCount,
+                            false));
+                    if (ratio === 1) {
                         Ext.getCmp('dynamicgridid').reload();
                         me.enableButtons();
                     }

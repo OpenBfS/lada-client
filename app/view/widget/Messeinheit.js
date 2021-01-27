@@ -12,7 +12,7 @@
 Ext.define('Lada.view.widget.Messeinheit', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.messeinheit',
-    store: 'Messeinheiten',
+    store: null,
     displayField: 'einheit',
     valueField: 'id',
 
@@ -21,15 +21,17 @@ Ext.define('Lada.view.widget.Messeinheit', {
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
+    listConfig: {minWidth: 110},
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.messeinheit');
-        this.store = Ext.data.StoreManager.get('messeinheiten');
+
         if (!this.store) {
             this.store = Ext.create('Lada.store.Messeinheiten');
-        } else {
-            this.store.clearFilter();
+            this.store.setProxy(Ext.clone(this.store.getProxy()));
+            this.store.extraParams = {};
+            this.store.load();
         }
         this.callParent(arguments);
     }

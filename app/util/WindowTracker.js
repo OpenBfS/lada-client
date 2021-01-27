@@ -20,13 +20,13 @@ Ext.define('Lada.util.WindowTracker', {
          * Known record types
          */
         recordTypes: ['datensatzerzeuger', 'messprogramm',
-                'messprogrammkategorie', 'messung', 'ort', 'ortszuordnung',
-                'probe', 'probenehmer'],
+            'messprogrammkategorie', 'messung', 'ort', 'ortszuordnung',
+            'probe', 'probenehmer'],
 
         /**
          * Map of (type, map)
-         * Contains maps of (recordId, window) which are used to track open windows
-         * for each record of each type
+         * Contains maps of (recordId, window) which are used to track open
+         * windows for each record of each type
          */
         maps: Ext.create('Ext.util.HashMap'),
 
@@ -63,8 +63,6 @@ Ext.define('Lada.util.WindowTracker', {
                 } else {
                     //raise error
                 }
-            } else {
-                console.log('Unknown object type');
             }
         },
 
@@ -83,8 +81,6 @@ Ext.define('Lada.util.WindowTracker', {
                 } else {
                     //raise error
                 }
-            } else {
-                console.log('Unknown object type');
             }
         },
 
@@ -97,14 +93,12 @@ Ext.define('Lada.util.WindowTracker', {
             this.init();
             var map = this.maps.get(type);
             if (map) {
-                    if (this.isOpen(type, id)) {
-                        map.get(id, window).setCollapsed(false);
-                        map.get(id, window).focus();
-                    } else {
-                        //Raise error
-                    }
+                if (this.isOpen(type, id)) {
+                    map.get(id, window).setCollapsed(false);
+                    map.get(id, window).focus();
                 } else {
-                console.log('Unknown object type');
+                    //Raise error
+                }
             }
         },
 
@@ -124,8 +118,6 @@ Ext.define('Lada.util.WindowTracker', {
                 } else {
                     open = true;
                 }
-            } else {
-                console.log('Unknown object type');
             }
             return open;
         }

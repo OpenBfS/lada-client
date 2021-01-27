@@ -39,11 +39,15 @@ Ext.define('Lada.controller.grid.Messung', {
      * Window.
      */
     editItem: function(grid, record) {
-        if (grid.ignoreNextDblClick == true) {
+        if (grid.ignoreNextDblClick === true) {
             grid.ignoreNextDblClick = false;
             return;
         }
-        var probeLoadCallBack = function(probeWindow, probeRecord, messungRecord) {
+        var probeLoadCallBack = function(
+            probeWindow,
+            probeRecord,
+            messungRecord
+        ) {
             var win = Ext.create('Lada.view.window.MessungEdit', {
                 parentWindow: probeWindow,
                 probe: probeRecord,
@@ -58,7 +62,10 @@ Ext.define('Lada.controller.grid.Messung', {
             return;
         };
         if (grid.up('probenedit')) {
-            probeLoadCallBack(grid.up('probenedit'), grid.up('probenedit').record, record);
+            probeLoadCallBack(
+                grid.up('probenedit'),
+                grid.up('probenedit').record,
+                record);
         } else {
             Lada.model.Probe.load(record.get('probeId'), {
                 success: function(precord) {
@@ -117,12 +124,12 @@ Ext.define('Lada.controller.grid.Messung', {
                         failure: function(request, response) {
                             var i18n = Lada.getApplication().bundle;
                             if (response.error) {
-                                //TODO: check content of error.status (html error code)
                                 Ext.Msg.alert(i18n.getMsg(
                                     'err.msg.delete.title'),
                                 i18n.getMsg('err.msg.generic.body'));
                             } else {
-                                var json = Ext.decode(response.getResponse().responseText);
+                                var json = Ext.decode(
+                                    response.getResponse().responseText);
                                 if (json) {
                                     if (json.message) {
                                         Ext.Msg.alert(i18n.getMsg(

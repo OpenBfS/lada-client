@@ -42,7 +42,8 @@ Ext.define('Lada.view.grid.Orte', {
     plugins: 'gridfilters',
 
     /**
-     * TODO: currently does not use DynamicGrid behaviour, although it is defined as Dynamig Grid
+     * TODO: currently does not use DynamicGrid behaviour, although it is
+     * defined as Dynamic Grid
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -60,7 +61,7 @@ Ext.define('Lada.view.grid.Orte', {
                 }
                 return 'noedit';
             },
-            handler: function(grid, rowIndex, colIndex) {
+            handler: function(grid, rowIndex) {
                 var rec = grid.getStore().getAt(rowIndex);
                 if (rec.get('readonly') === false) {
                     Lada.model.Ort.load(rec.get('id'), {
@@ -142,7 +143,8 @@ Ext.define('Lada.view.grid.Orte', {
                     value === null ||
                     value === ''
                 ) {
-                    //Check if filter changed the response field into verwaltungseinheiten
+                    // Check if filter changed the response field into
+                    // verwaltungseinheiten
                     if (record.get('verwaltungseinheit')) {
                         return record.get('verwaltungseinheit');
                     } else {
@@ -150,7 +152,7 @@ Ext.define('Lada.view.grid.Orte', {
                     }
                 }
                 var store = Ext.data.StoreManager.get('verwaltungseinheiten');
-                var record = store.getById(value);
+                record = store.getById(value);
                 if (!record) {
                     return value;
                 }
@@ -177,7 +179,7 @@ Ext.define('Lada.view.grid.Orte', {
                     }
                 }
                 var staaten = Ext.data.StoreManager.get('staaten');
-                var record = staaten.getById(value);
+                record = staaten.getById(value);
                 if (!record) {
                     return value;
                 }
@@ -319,6 +321,12 @@ Ext.define('Lada.view.grid.Orte', {
                 type: 'numeric'
             },
             dataIndex: 'hoeheLand'
+        }, {
+            header: i18n.getMsg('orte.hoeheUeberNn'),
+            filter: {
+                type: 'numeric'
+            },
+            dataIndex: 'hoeheUeberNn'
         }, {
             header: i18n.getMsg('letzteAenderung'),
             filter: {

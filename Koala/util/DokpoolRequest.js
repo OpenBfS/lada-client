@@ -43,7 +43,8 @@ Ext.define('Koala.util.DokpoolRequest', {
         /**
          * Authentication module
 
-        Koala.util.DokpoolRequest.authenticationModule = Koala.util.Authentication
+        Koala.util.DokpoolRequest.authenticationModule =
+                Koala.util.Authentication
 
          */
         authenticationModule: null,
@@ -69,9 +70,10 @@ Ext.define('Koala.util.DokpoolRequest', {
          * Handler called if elan scenarios were updated.
          * Handler args:
          *  objectIds: Scenario object ids
-         *  routineMode (Boolean): True if update only contains routine scenarios, else false
+         *  routineMode (Boolean): True if update only contains routine
+         * scenarios, else false
          */
-         handleElanScenariosUpdated: function(scenarioIds, routineMode) {
+        handleElanScenariosUpdated: function(scenarioIds, routineMode) {
             Ext.fireEvent('elanEventsUpdated', scenarioIds, routineMode);
         },
 
@@ -98,8 +100,11 @@ Ext.define('Koala.util.DokpoolRequest', {
 
                 me.storageModule.updateDokpoolEvents(localStorageScenarios);
                 //Response only contains routinemode
-                if (!(activeElanScenarios.length >= 0) || (activeElanScenarios.length === 1)
-                        && (activeElanScenarios[0].title === 'Normalfall')) {
+                if (
+                    !(activeElanScenarios.length >= 0) ||
+                    (activeElanScenarios.length === 1) &&
+                        (activeElanScenarios[0].title === 'Normalfall')
+                ) {
                     me.handleElanScenariosUpdated([], true);
                 } else {
                     new Ext.Promise(function(resolve, reject) {
@@ -115,31 +120,39 @@ Ext.define('Koala.util.DokpoolRequest', {
                                 headers: headers,
                                 method: 'GET',
                                 success: function(response) {
-                                    var eventObj = Ext.decode(response.responseText);
+                                    var eventObj = Ext.decode(
+                                        response.responseText);
                                     var eventId = eventObj['id'];
                                     var storedEvent = storedEvents[eventId];
-                                    //Store active events in seperate for later check
+                                    //Store active events in separate for
+                                    // later check
                                     activeEvents[eventId] = eventObj;
                                     //If event is new or modified
-                                    if (!storedEvent
-                                        || storedEvent.modified !== eventObj.modified) {
-                                        //Update stored events and add id to changed list
+                                    if (
+                                        !storedEvent ||
+                                        storedEvent.modified !==
+                                            eventObj.modified
+                                    ) {
+                                        // Update stored events and add id to
+                                        // changed list
                                         storedEvents[eventId] = eventObj;
                                         changedIds.push(eventId);
                                     }
                                     resolved++;
                                     //Check if all requests were issued
-                                    if (resolved == eventCount) {
-                                        me.removeInactiveEvents(storedEvents, activeEvents);
-                                        me.storageModule.updateDokpoolEvents(storedEvents);
+                                    if (resolved === eventCount) {
+                                        me.removeInactiveEvents(
+                                            storedEvents, activeEvents);
+                                        me.storageModule.updateDokpoolEvents(
+                                            storedEvents);
                                         resolve(changedIds);
                                     }
                                 },
-                                failure: function(response) {
+                                failure: function() {
                                     reject('Request failed');
                                 }
                             });
-                        })
+                        });
                     }).then(function(changedIds) {
                         if (changedIds.length > 0) {
                             me.handleElanScenariosUpdated(changedIds, false);
@@ -153,7 +166,8 @@ Ext.define('Koala.util.DokpoolRequest', {
          * Checks local events for inactive/removed events and returns
          * an events object without them
          * @param {Object} localEvents Object containing locally stored events
-         * @param {Object} serverEvents Object containing events received from the server
+         * @param {Object} serverEvents Object containing events received from
+         * the server
          * @return {Object} Locally stored events without inactive ones
          */
         removeInactiveEvents: function(localEvents, serverEvents) {
@@ -183,8 +197,9 @@ Ext.define('Koala.util.DokpoolRequest', {
                     'Content-Type': 'application/json'//,
                     //'Authorization': auth
                 },
-                url = (dpType) ? this.elanScenarioUrl + me.elanScenarioSearch + dpType :
-                        this.elanScenarioUrl + me.elanScenarioSearch;
+                url = (dpType) ?
+                    this.elanScenarioUrl + me.elanScenarioSearch + dpType :
+                    this.elanScenarioUrl + me.elanScenarioSearch;
 
             if (this.appContext && this.appContext.getAppContext().debug) {
                 this.elanScenarioUrl = null;

@@ -55,24 +55,27 @@ Ext.define('Lada.view.window.TagCreate', {
         var me = this;
         var recordName;
         switch (this.recordType) {
-            case "probe": recordName = this.probe; break;
-            case "messung": recordName = this.messung; break;
+            case 'probe': recordName = this.probe; break;
+            case 'messung': recordName = this.messung; break;
             default: Ext.raise('Unkown record type: ' + this.recordType);
         }
         this.title = this.mode === 'single' ?
-                i18n.getMsg('title.tagcreatewindow.' + this.recordType, recordName):
-                i18n.getMsg('title.tagcreatewindowbulk.' + this.recordType, this.selection.length);
+            i18n.getMsg('title.tagcreatewindow.' + this.recordType, recordName):
+            i18n.getMsg(
+                'title.tagcreatewindowbulk.' +
+                this.recordType,
+                this.selection.length);
         this.items = [{
             xtype: 'textfield',
             width: '100%',
             margin: '5 5 5 5',
             msgTarget: 'under',
-            //validate that text is not empty and the name does not already exists
-            validator: function (val) {
-                if (val.trim().length == 0) {
+            //validate that text is not empty and name does not already exists
+            validator: function(val) {
+                if (val.trim().length === 0) {
                     return i18n.getMsg('tag.createwindow.err.invalidtagname');
                 }
-                if (val.length == 0) {
+                if (val.length === 0) {
                     return i18n.getMsg('tag.createwindow.err.emptytagname');
                 }
                 if (me.tagWidget.tagExists(val)) {
@@ -118,10 +121,10 @@ Ext.define('Lada.view.window.TagCreate', {
     saveBulkTag: function(textfield) {
         var me = textfield.up('window');
         switch (me.recordType) {
-            case "messung":
+            case 'messung':
                 me.saveBulkTagMessung(textfield);
                 break;
-            case "probe":
+            case 'probe':
                 me.saveBulkTagProbe(textfield);
                 break;
             default:
@@ -133,11 +136,12 @@ Ext.define('Lada.view.window.TagCreate', {
      * Creates and saves a tag for a selection of messung instances.
      * As tags are only created if they are associated with a messung,
      * the first step is to create a tag for the first selected messung.
-     * Then it is chosen in the tag widget combobox and saved via the TagEdit window.
+     * Then it is chosen in the tag widget combobox and saved via the TagEdit
+     * window.
      */
     saveBulkTagMessung: function(textfield) {
         var me = this;
-        if (!this.selection || this.selection.length == 0) {
+        if (!this.selection || this.selection.length === 0) {
             return;
         }
         //Get the first messungId
@@ -148,7 +152,7 @@ Ext.define('Lada.view.window.TagCreate', {
         var text = textfield.getValue();
 
         //Save tag for first probe. Should trigger itemadd event on tag widget.
-        this.tagWidget.store.createTagForMid(text, firstMid, function(response) {
+        this.tagWidget.store.createTagForMid(text, firstMid, function() {
             var oldItems = Ext.clone(me.tagWidget.store.getData().items);
             //Wait for the reload to finish
             me.tagWidget.reload(true, function() {
@@ -157,10 +161,12 @@ Ext.define('Lada.view.window.TagCreate', {
                 var newItem = null;
                 for (var i = 0; i < newItems.length; i++) {
                     var id = newItems[i].id;
-                    if (!Ext.Array.findBy(oldItems,
-                            function(item, index) {
-                                return id == item.id;
-                            })
+                    if (!Ext.Array.findBy(
+                        oldItems,
+                        // eslint-disable-next-line no-loop-func
+                        function(item) {
+                            return id === item.id;
+                        })
                     ) {
                         newItem = newItems[i];
                         break;
@@ -181,11 +187,12 @@ Ext.define('Lada.view.window.TagCreate', {
      * Creates and saves a tag for a selection of probe instances.
      * As tags are only created if they are associated with a probe,
      * the first step is to create a tag for the first selected probe.
-     * Then it is chosen in the tag widget combobox and saved via the TagEdit window.
+     * Then it is chosen in the tag widget combobox and saved via the TagEdit
+     * window.
      */
     saveBulkTagProbe: function(textfield) {
         var me = this;
-        if (!this.selection || this.selection.length == 0) {
+        if (!this.selection || this.selection.length === 0) {
             return;
         }
         //Get the first probeId
@@ -196,7 +203,7 @@ Ext.define('Lada.view.window.TagCreate', {
         var text = textfield.getValue();
 
         //Save tag for first probe. Should trigger itemadd event on tag widget.
-        this.tagWidget.store.createTagForPid(text, firstPid, function(response) {
+        this.tagWidget.store.createTagForPid(text, firstPid, function() {
             var oldItems = Ext.clone(me.tagWidget.store.getData().items);
             //Wait for the reload to finish
             me.tagWidget.reload(true, function() {
@@ -206,9 +213,10 @@ Ext.define('Lada.view.window.TagCreate', {
                 for (var i = 0; i < newItems.length; i++) {
                     var id = newItems[i].id;
                     if (!Ext.Array.findBy(oldItems,
-                            function(item, index) {
-                                return id == item.id;
-                            })
+                        // eslint-disable-next-line no-loop-func
+                        function(item) {
+                            return id === item.id;
+                        })
                     ) {
                         newItem = newItems[i];
                         break;
@@ -232,7 +240,11 @@ Ext.define('Lada.view.window.TagCreate', {
         var me = button.up('window');
         var textfield = me.down('textfield');
         if (textfield.validate()) {
-            me.mode === 'single' ? me.saveSingleTag(textfield): me.saveBulkTag(textfield);
+            if (me.mode === 'single') {
+                me.saveSingleTag(textfield);
+            } else {
+                me.saveBulkTag(textfield);
+            }
         }
     }
 });

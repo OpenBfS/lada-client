@@ -14,7 +14,8 @@ Ext.define('Lada.view.form.Ort', {
     alias: 'widget.ortform',
     requires: [
         'Lada.view.widget.Verwaltungseinheit',
-        'Lada.view.widget.Staat'
+        'Lada.view.widget.Staat',
+        'Lada.view.widget.KoordinatenArt'
     ],
     model: null,
 
@@ -138,13 +139,13 @@ Ext.define('Lada.view.form.Ort', {
             xtype: 'koordinatenart',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.kda'),
-            name: 'kdaId'
+            name: 'kdaId',
+            store: this.kdaComboStore
         }, {
             xtype: 'tfield',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.koordx'),
             name: 'koordXExtern',
-            regex: /^[noeswNOESW\d\.,-]+$/,
             maxLength: 22
         }, {
             xtype: 'tfield',
@@ -173,6 +174,13 @@ Ext.define('Lada.view.form.Ort', {
             maxLength: 10,
             allowDecimals: true
         }, {
+            xtype: 'numfield',
+            labelWidth: 125,
+            fieldLabel: i18n.getMsg('orte.hoeheUeberNn'),
+            name: 'hoeheUeberNn',
+            maxLength: 10,
+            allowDecimals: true
+        }, {
             xtype: 'tfield',
             labelWidth: 125,
             maxLength: 10,
@@ -193,7 +201,9 @@ Ext.define('Lada.view.form.Ort', {
                 action: 'copy',
                 qtip: i18n.getMsg('copy.qtip', i18n.getMsg('ort')),
                 icon: 'resources/img/dialog-ok-apply.png',
-                disabled: !this.record.phantom && !this.record.get('readonly') ? false: true
+                disabled: !this.record.phantom && !this.record.get('readonly') ?
+                    false :
+                    true
             },
             '->',
             {
@@ -211,11 +221,20 @@ Ext.define('Lada.view.form.Ort', {
             }]
         }];
         this.callParent(arguments);
+        this.kdaComboStore = Ext.create('Lada.store.KoordinatenArt');
+        if (this.record.get('kdaId') !== 3) {
+            this.down('koordinatenart').store.filter({property: 'id',
+                value: /(1|2|4|5|8)/,exactMatch: true});
+        } else {
+            this.down('koordinatenart').store.clearFilter();
+        }
+
         this.getForm().loadRecord(this.record);
 
         this.readOnly = this.record.readOnly;
 
-        //If plausible probe instances reference this ort, disable coordinate fields, verwaltungseinheit, staat
+        //If plausible probe instances reference this ort, disable coordinate
+        // fields, verwaltungseinheit, staat
         if (this.record.get('plausibleReferenceCount') > 0) {
             this.down('tfield[name=koordXExtern]').setReadOnly(true);
             this.down('tfield[name=koordYExtern]').setReadOnly(true);
@@ -260,8 +279,8 @@ Ext.define('Lada.view.form.Ort', {
                 }
                 content = errors[key];
                 var errorText = '';
-                for (var i = 0; i < content.length; i++) {
-                    errorText += i18n.getMsg(content[i].toString()) + '\n';
+                for (var j = 0; j < content.length; j++) {
+                    errorText += i18n.getMsg(content[j].toString()) + '\n';
                 }
                 element.showErrors(errorText);
             }

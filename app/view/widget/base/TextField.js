@@ -64,7 +64,7 @@ Ext.define('Lada.view.widget.base.TextField', {
             width: 14,
             height: 14,
             hidden: true
-      }];
+        }];
         this.callParent(arguments);
         if (this.regex) {
             Ext.apply(this.down('textfield'), {regex: this.regex});
@@ -131,7 +131,9 @@ Ext.define('Lada.view.widget.base.TextField', {
         var fieldset = this.up('fieldset[collapsible=true]');
         if (fieldset) {
             var i18n = Lada.getApplication().bundle;
-            var notificationsText = i18n.getMsg(this.name) + ': ' + notifications;
+            var notificationsText = i18n.getMsg(this.name) +
+                ': ' +
+                notifications;
             fieldset.showWarningOrError(true, notificationsText);
         }
     },

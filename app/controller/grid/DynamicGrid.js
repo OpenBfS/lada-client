@@ -123,136 +123,191 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         if (!id || record.phantom) {
             return;
         }
+        var win;
         switch (row.grid.rowtarget.dataType) {
             case 'messungId':
-                var win = Ext.create(
+                win = Ext.create(
                     'Lada.view.window.MessungEdit', {
                         recordId: id,
                         style: 'z-index: -1;'
                     });
                 if (win.show()) {
-                    win.loadRecord(id, row, function(record, operation, success) {
-                        if (!record || !operation) {
-                            Ext.log({msg: 'Loading messung record failed', level: 'warn'});
-                            return;
-                        }
-                        if (success) {
-                            var messungRecord = record;
-                            var probeWin = Ext.create(
-                                'Lada.view.window.ProbeEdit', {
-                                    recordId: messungRecord.get('probeId'),
-                                    style: 'z-index: -1;'
+                    win.loadRecord(
+                        id,
+                        row,
+                        function(newRecord, operation, success) {
+                            if (!newRecord || !operation) {
+                                Ext.log({
+                                    msg: 'Loading messung record failed',
+                                    level: 'warn'
                                 });
-                            if (!probeWin.show()) {
-                                //If there is already a probe window, use this instead of a new one
-                                probeWin.destroy();
-                                probeWin = Ext.ComponentQuery.query('probenedit[recordId=' + messungRecord.get('probeId') + ']')[0];
+                                return;
                             }
-
-                            win.parentWindow = probeWin;
-                            probeWin.setPosition(30);
-                            win.setPosition(35 + probeWin.width);
-                            probeWin.loadRecord(messungRecord.get('probeId'), this,
-                                function(precord, poperation, psuccess) {
-                                    if (!precord || !poperation || !poperation.getResponse()) {
-                                        Ext.log({msg: 'Loading probe record failed', level: 'warn'});
-                                        return;
-                                    }
-
-                                    var pjson = poperation ? Ext.decode(poperation.getResponse().responseText) : null;
-                                    probeWin.setRecord(precord);
-                                    probeWin.initData(precord);
-                                    probeWin.setMessages(pjson.errors, pjson.warnings, pjson.notifications);
-                                    win.setProbe(precord);
-                                    win.setRecord(messungRecord);
-                                    win.initData(messungRecord);
-                                    var json = operation ? Ext.decode(operation.getResponse().responseText) : null;
-                                    win.setMessages(json.errors, json.warnings);
-                                });
-                        }
-                    });
+                            if (success) {
+                                var messungRecord = newRecord;
+                                var probeWin = Ext.create(
+                                    'Lada.view.window.ProbeEdit', {
+                                        recordId: messungRecord.get('probeId'),
+                                        style: 'z-index: -1;'
+                                    });
+                                if (!probeWin.show()) {
+                                    probeWin.destroy();
+                                    probeWin = Ext.ComponentQuery.query(
+                                        'probenedit[recordId='
+                                        + messungRecord.get('probeId')
+                                        + ']')[0];
+                                }
+                                win.parentWindow = probeWin;
+                                probeWin.setPosition(30);
+                                win.setPosition(35 + probeWin.width);
+                                /* eslint-disable max-len */
+                                probeWin.loadRecord(
+                                    messungRecord.get('probeId'),
+                                    this,
+                                    function(precord, poperation) {
+                                        if (
+                                            !precord ||
+                                            !poperation ||
+                                            !poperation.getResponse()
+                                        ) {
+                                            Ext.log({
+                                                msg: 'Loading probe record failed',
+                                                level: 'warn'
+                                            });
+                                            return;
+                                        }
+                                        /* eslint-enable max-len */
+                                        var pjson = poperation ?
+                                            Ext.decode(
+                                                poperation.getResponse()
+                                                    .responseText) :
+                                            null;
+                                        probeWin.setRecord(precord);
+                                        probeWin.initData(precord);
+                                        probeWin.setMessages(
+                                            pjson.errors,
+                                            pjson.warnings,
+                                            pjson.notifications);
+                                        win.setProbe(precord);
+                                        win.setRecord(messungRecord);
+                                        win.initData(messungRecord);
+                                        var json = operation ?
+                                            Ext.decode(
+                                                operation.getResponse()
+                                                    .responseText) :
+                                            null;
+                                        win.setMessages(
+                                            json.errors,
+                                            json.warnings);
+                                    });
+                            }
+                        });
                 }
                 break;
             case 'probeId':
-                var win = Ext.create('Lada.view.window.ProbeEdit', {
+                win = Ext.create('Lada.view.window.ProbeEdit', {
                     style: 'z-index: -1;',
                     recordId: id
                 });
                 if (win.show()) {
                     win.setPosition(30);
-                    win.loadRecord(id, row, function(record, operation, success) {
-                        if (success) {
-                            win.setRecord(record);
-                            win.initData(record);
-                            var json = operation ? Ext.decode(operation.getResponse().responseText) : null;
-                            win.setMessages(json.errors, json.warnings, json.notifications);
-                        }
-                    });
+                    win.loadRecord(
+                        id,
+                        row,
+                        function(newRecord, operation, success) {
+                            if (success) {
+                                win.setRecord(newRecord);
+                                win.initData(newRecord);
+                                var json = operation ?
+                                    Ext.decode(
+                                        operation.getResponse().responseText) :
+                                    null;
+                                win.setMessages(
+                                    json.errors,
+                                    json.warnings,
+                                    json.notifications);
+                            }
+                        });
                 }
                 break;
             case 'mpId':
-                var win = Ext.create(
+                win = Ext.create(
                     'Lada.view.window.Messprogramm', {
                         recordId: id
                     });
                 if (win.show()) {
-                    win.loadRecord(id, this, function(record, operation, success) {
-                        if (success) {
-                            win.setRecord(record);
-                            win.initData(record);
-                        }
-                    });
+                    win.loadRecord(
+                        id,
+                        this,
+                        function(newRecord, operation, success) {
+                            if (success) {
+                                win.setRecord(newRecord);
+                                win.initData(newRecord);
+                            }
+                        });
                 }
 
                 break;
             case 'ortId':
-                var win = Ext.create(
+                win = Ext.create(
                     'Lada.view.window.Ort', {
                         recordId: id});
                 if (win.show()) {
-                    win.loadRecord(id, this, function(record, operation, success) {
-                        if (success) {
-                            win.initData(record);
-                        }
-                    });
+                    win.loadRecord(
+                        id,
+                        this,
+                        function(newRecord, operation, success) {
+                            if (success) {
+                                win.initData(newRecord);
+                            }
+                        });
                 }
 
                 break;
             case 'probenehmer':
-                var win = Ext.create(
+                win = Ext.create(
                     'Lada.view.window.Probenehmer', {
                         recordId: id});
                 if (win.show()) {
-                    win.loadRecord(id, this, function(record, operation, success) {
-                        if (success) {
-                            win.initData(record);
-                        }
-                    });
+                    win.loadRecord(
+                        id,
+                        this,
+                        function(newRecord, operation, success) {
+                            if (success) {
+                                win.initData(newRecord);
+                            }
+                        });
                 }
                 break;
             case 'dsatzerz':
-                var win = Ext.create(
+                win = Ext.create(
                     'Lada.view.window.DatensatzErzeuger', {
                         recordId: id});
                 if (win.show()) {
-                    win.loadRecord(id, this, function(record, operation, success) {
-                        if (success) {
-                            win.initData(record);
-                        }
-                    });
+                    win.loadRecord(
+                        id,
+                        this,
+                        function(newRecord, operation, success) {
+                            if (success) {
+                                win.initData(newRecord);
+                            }
+                        });
                 }
 
                 break;
             case 'mprkat':
-                var win = Ext.create(
+                win = Ext.create(
                     'Lada.view.window.MessprogrammKategorie', {
                         recordId: id});
                 if (win.show()) {
-                    win.loadRecord(id, this, function(record, operation, success) {
-                        if (success) {
-                            win.initData(record);
-                        }
-                    });
+                    win.loadRecord(
+                        id,
+                        this,
+                        function(newRecord, operation, success) {
+                            if (success) {
+                                win.initData(newRecord);
+                            }
+                        });
                 }
                 break;
         }
@@ -285,26 +340,26 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     win.show();
                     break;
                 case 'probeId':
-                    var win = Ext.create('Lada.view.window.ProbeCreate');
+                    win = Ext.create('Lada.view.window.ProbeCreate');
                     win.initData();
                     win.show();
                     win.setPosition(30);
                     break;
                 case 'probenehmer':
-                    var win = Ext.create('Lada.view.window.Probenehmer', {
+                    win = Ext.create('Lada.view.window.Probenehmer', {
                         record: Ext.create('Lada.model.Probenehmer')
                     });
                     win.show();
                     break;
                 case 'dsatzerz':
-                    var win = Ext.create('Lada.view.window.DatensatzErzeuger', {
+                    win = Ext.create('Lada.view.window.DatensatzErzeuger', {
                         record: Ext.create('Lada.model.DatensatzErzeuger',
                             {readonly: false})
                     });
                     win.show();
                     break;
                 case 'mprkat':
-                    var win = Ext.create('Lada.view.window.MessprogrammKategorie', {
+                    win = Ext.create('Lada.view.window.MessprogrammKategorie', {
                         record: Ext.create('Lada.model.MessprogrammKategorie',
                             {readonly: false})
                     });
@@ -330,8 +385,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         var grid = button.up('grid');
         var recordType = null;
         switch (grid.rowtarget.dataType) {
-            case "messungId": recordType = "messung"; break;
-            case "probeId": recordType = "probe"; break;
+            case 'messungId': recordType = 'messung'; break;
+            case 'probeId': recordType = 'probe'; break;
             default: break;
         }
         var selection = grid.getView().getSelectionModel().getSelection();
@@ -346,8 +401,18 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
 
     },
 
+    /**
+     * Handle changes of selected grid records
+     * @param {*} selModel
+     * @param {*} selected
+     */
     selectionChanged: function(selModel, selected) {
         var grid = selModel.view.up('grid');
+        //If print window is active, set this grid as currently active grid
+        var win = Lada.view.window.PrintGrid.getInstance();
+        if (win) {
+            win.setParentGrid(grid);
+        }
         if (selected.length) {
             this.buttonToggle(true, grid);
         } else {

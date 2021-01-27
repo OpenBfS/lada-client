@@ -48,7 +48,8 @@ Ext.define('Lada.view.widget.Tag', {
 
     /**
      * @private
-     * Set to true if changes to the widget shall be monitored to update dirty state.
+     * Set to true if changes to the widget shall be monitored to update dirty
+     * state.
      */
     monitorChanges: true,
 
@@ -69,11 +70,11 @@ Ext.define('Lada.view.widget.Tag', {
     //Dropdown
     tpl: Ext.create('Ext.XTemplate',
         '<ul class="x-list-plain"><tpl for=".">',
-            '<tpl if="this.isGlobal(mstId)">',
-                '<li role="option" class="x-boundlist-item"><b>*{tag}</b></li>',
-            '<tpl else>',
-                '<li role="option" class="x-boundlist-item">{tag}</li>',
-            '</tpl>',
+        '<tpl if="this.isGlobal(mstId)">',
+        '<li role="option" class="x-boundlist-item"><b>*{tag}</b></li>',
+        '<tpl else>',
+        '<li role="option" class="x-boundlist-item">{tag}</li>',
+        '</tpl>',
         '</tpl></ul>',
         {
             isGlobal: function(mstId) {
@@ -83,11 +84,11 @@ Ext.define('Lada.view.widget.Tag', {
     ),
     //Tagfield
     labelTpl: Ext.create('Ext.XTemplate',
-            '<tpl if="this.isGlobal(mstId)">',
-                '*{tag}',
-            '<tpl else>',
-                '{tag}',
-            '</tpl>',
+        '<tpl if="this.isGlobal(mstId)">',
+        '*{tag}',
+        '<tpl else>',
+        '{tag}',
+        '</tpl>',
         {
             isGlobal: function(mstId) {
                 return mstId === null || mstId === '';
@@ -103,10 +104,15 @@ Ext.define('Lada.view.widget.Tag', {
         if (!this.parentWindow) {
             return this.getEl();
         }
-        var queryString = this.maskTargetComponentType + '[name=' + this.maskTargetComponentName + ']';
+        var queryString = this.maskTargetComponentType +
+            '[name=' +
+            this.maskTargetComponentName +
+            ']';
         var targetComponent = this.parentWindow.down(queryString);
         if (!targetComponent) {
-            Ext.log({msg: 'Invalid mask target: ' + queryString, level: 'warn'});
+            Ext.log({
+                msg: 'Invalid mask target: ' + queryString,
+                level: 'warn'});
         }
         return targetComponent.getEl();
     },
@@ -173,7 +179,8 @@ Ext.define('Lada.view.widget.Tag', {
 
     /**
      *  Reloads the current store.
-     *  @param silent If true, neither tags are preselected nor the dirty status changed.
+     *  @param silent If true, neither tags are preselected nor the dirty
+     * status changed.
      *  @param callback Callback function to call after reload
      */
     reload: function(silent, callback) {
@@ -202,7 +209,8 @@ Ext.define('Lada.view.widget.Tag', {
         var me = this;
         this.setLoading(true);
 
-        //Disable change monitoring and reset it after change event fired by preselection
+        //Disable change monitoring and reset it after change event fired by
+        //preselection
         var wasMonitoringChanges = this.monitorChanges;
         this.setMonitorChanges(false);
         this.on('change', function() {
@@ -243,7 +251,9 @@ Ext.define('Lada.view.widget.Tag', {
                     this.resetOriginalValue();
                     this.fireTagDirtyEvent(false);
                 } catch (e) {
-                    Ext.log({msg: 'Preselecting tags failed: ' + e, level: 'warn'});
+                    Ext.log({
+                        msg: 'Preselecting tags failed: ' + e,
+                        level: 'warn'});
                 }
 
             } else {
@@ -278,10 +288,14 @@ Ext.define('Lada.view.widget.Tag', {
      */
     fireTagDirtyEvent: function(dirty) {
         if (this.up('probeform')) {
-            this.up('probeform').fireEventArgs('tagdirtychange', [{owner: this.up('probeform')}, dirty]);
+            this.up('probeform').fireEventArgs(
+                'tagdirtychange',
+                [{owner: this.up('probeform')}, dirty]);
         }
         if (this.up('messungform')) {
-            this.up('messungform').fireEventArgs('tagdirtychange', [{owner: this.up('messungform')}, dirty]);
+            this.up('messungform').fireEventArgs(
+                'tagdirtychange',
+                [{owner: this.up('messungform')}, dirty]);
         }
     },
 
@@ -358,7 +372,8 @@ Ext.define('Lada.view.widget.Tag', {
     },
 
     /**
-     * Handles the removal of an item in the Tagfield and updates the changes object:
+     * Handles the removal of an item in the Tagfield and updates the changes
+     * object:
      * If item is not in the object: delete it
      * If item was create it: undo creation
      * else: Throw exception
@@ -413,9 +428,14 @@ Ext.define('Lada.view.widget.Tag', {
                     success = false;
                     var msg = i18n.getMsg('tag.widget.err.genericsave');
                     if (response.message === '699') {
-                        msg = i18n.getMsg('tag.widget.err.globaltagnotallowed.' + me.getRecordType());
+                        msg = i18n.getMsg(
+                            'tag.widget.err.globaltagnotallowed.' +
+                            me.getRecordType());
                     }
-                    errorHtml += me.store.getById(tagId).get('tag') + ' - ' + msg + '<br />';
+                    errorHtml += me.store.getById(tagId).get('tag') +
+                        ' - ' +
+                        msg +
+                        '<br />';
                 } else {
                     me.changes[tagId] = null;
                 }
@@ -428,7 +448,9 @@ Ext.define('Lada.view.widget.Tag', {
             if (requests === keys.length) {
                 if (success === false) {
                     //TODO: Handle failure
-                    Ext.Msg.alert(i18n.getMsg('tag.widget.err.genericsavetitle'), errorHtml);
+                    Ext.Msg.alert(
+                        i18n.getMsg('tag.widget.err.genericsavetitle'),
+                        errorHtml);
                 } else {
                     me.fireTagDirtyEvent(false);
                 }
@@ -487,5 +509,5 @@ Ext.define('Lada.view.widget.Tag', {
         if (this.reloadMask && this.reloadMask.isVisible()) {
             this.reloadMask.hide();
         }
-    },
+    }
 });

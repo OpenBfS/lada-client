@@ -37,9 +37,14 @@ Ext.define('Lada.view.grid.MKommentar', {
                 // Normally this would belong into a controller an not the view.
                 // But the RowEditPlugin is not handled there.
                 beforeedit: function(e, o) {
-                    var readonlywin = o.grid.up('window').record.get('readonly');
+                    var readonlywin = o.grid.up('window')
+                        .record.get('readonly');
                     var readonlygrid = o.record.get('readonly');
-                    if (readonlywin === true || readonlygrid === true || this.disabled) {
+                    if (
+                        readonlywin === true ||
+                        readonlygrid === true ||
+                        this.disabled
+                    ) {
                         return false;
                     }
                     return true;
@@ -164,7 +169,7 @@ Ext.define('Lada.view.grid.MKommentar', {
     /**
      * Activate the Remove Button
      */
-    activateRemoveButton: function(selection, record) {
+    activateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {
@@ -174,7 +179,7 @@ Ext.define('Lada.view.grid.MKommentar', {
     /**
      * Activate the Remove Button
      */
-    deactivateRemoveButton: function(selection, record) {
+    deactivateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {

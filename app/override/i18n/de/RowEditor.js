@@ -13,5 +13,6 @@ Ext.define('Lada.override.i18n.de.RowEditor', {
     saveBtnText: 'Speichern',
     cancelBtnText: 'Abbrechen',
     errorsText: 'Fehler',
-    dirtyText: 'Sie müssen Ihre Änderungen Speichern oder durch Abbrechen verwerfen'
+    dirtyText: 'Sie müssen Ihre Änderungen Speichern oder durch ' +
+        'Abbrechen verwerfen'
 });

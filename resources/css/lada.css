@@ -74,6 +74,21 @@
   background-image: url(../img/view-time-schedule-edit-status.png);
 }
 
+.x-action-col-icon.okay
+{
+    background-image: url(../img/dialog-okay-apply.png);
+}
+
+.x-action-col-icon.cancel
+{
+  background-image: url(../img/dialog-cancel.png);
+}
+.x-action-col-icon.delete
+{
+    background-image: url(../img/edit-delete.png);
+    background-size: 100%;
+}
+
 .x-grid-checkheader {
   height: 16px;
   background-image: url('images/unchecked.gif');
@@ -175,4 +190,17 @@ span.x-grid-checkcolumn {
 .text-wrapper .x-form-display-field {
     word-break: break-word;
     word-wrap: break-word;
+}
+
+/* Chrome  87.0.4280.67 */
+.x-fieldset-header, .x-fieldset-header-default > .x-fieldset-header-text {
+    position: initial;
+}
+
+.x-fieldset-header, .x-fieldset-header-default .x-tool-tool-el {
+    overflow: initial;
+}
+
+.textAreaCls .x-form-empty-field{
+    font-style : italic;
 }

@@ -10,8 +10,9 @@
  * Grid base class providing common functions for the Lada grids.
  *
  * ## Loading
- * Grids extending this class can use the addLoadingFailureHandler function to add a handler to a
- * store that shows an error mask if the store failed to load. This mask contains a button to call
+ * Grids extending this class can use the addLoadingFailureHandler function
+ * to add a handler to a store that shows an error mask if the store failed to
+ * load. This mask contains a button to call
  * the reload function that must be implemented by extending classes.
  */
 Ext.define('Lada.view.grid.BaseGrid', {
@@ -34,8 +35,10 @@ Ext.define('Lada.view.grid.BaseGrid', {
         //Check if component is used in a window
         var parentWin = this.up('window');
         if (parentWin) {
-            //If used in a window destroy mask component before parent window is closed
-            //This should prevent errors in the framework during the windows closing process
+            //If used in a window destroy mask component before parent window
+            // is closed
+            //This should prevent errors in the framework during the windows
+            // closing process
             var me = this;
             parentWin.onBefore('close', function() {
                 if (me.reloadMask && me.reloadMask.rendered) {
@@ -48,7 +51,8 @@ Ext.define('Lada.view.grid.BaseGrid', {
     },
 
     /**
-     * Adds a handler to the given store to show an error mask if the store failed to load.
+     * Adds a handler to the given store to show an error mask if the store
+     * failed to load.
      * The handle will exit if this component is no longer visible.
      * @param {Ext.data.Store} store Store to add the handler to
      */

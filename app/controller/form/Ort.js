@@ -101,9 +101,10 @@ Ext.define('Lada.controller.form.Ort', {
                     form.loadRecord(newrecord);
                     formpanel.down('verwaltungseinheit').store.clearFilter();
                     formpanel.down('staat').store.clearFilter();
-                    if (formpanel.up('window').setOzOnComplete === true ){
-                        var ozf = Ext.ComponentQuery.query('ortszuordnungform')[0];
-                        if (ozf){
+                    if (formpanel.up('window').setOzOnComplete === true ) {
+                        var ozf = Ext.ComponentQuery
+                            .query('ortszuordnungform')[0];
+                        if (ozf) {
                             ozf.setOrt(null, newrecord);
                         }
                     }
@@ -118,7 +119,8 @@ Ext.define('Lada.controller.form.Ort', {
                     }
                     var ozw = formpanel.up('panel').parentWindow;
                     if (ozw && ozw.down('tabpanel')) {
-                        var ortgrid= ozw.down('tabpanel').down('ortstammdatengrid');
+                        var ortgrid= ozw.down('tabpanel')
+                            .down('ortstammdatengrid');
                         if (ortgrid) {
                             if (ortgrid.store.storeId === 'ext-empty-store') {
                                 ortgrid.store = Ext.create('Lada.store.Orte');
@@ -131,13 +133,14 @@ Ext.define('Lada.controller.form.Ort', {
                     formpanel.down('button[action=save]').setDisabled(true);
                     formpanel.up('window').setMode('edit');
                 },
-                failure: function(record, response) {
+                failure: function(newRecord, response) {
                     if (response.error) {
                         //TODO: check content of error.status (html error code)
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                             i18n.getMsg('err.msg.generic.body'));
                     } else {
-                        var json = Ext.decode(response.getResponse().responseText);
+                        var json = Ext.decode(
+                            response.getResponse().responseText);
                         if (json) {
                             if (json.message) {
                                 Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
@@ -156,16 +159,18 @@ Ext.define('Lada.controller.form.Ort', {
                     }
                 }
             });
-        }
+        };
         var plausibleRefs = record.get('plausibleReferenceCount');
         if (plausibleRefs > 0) {
             Ext.Msg.show({
                 title: 'Achtung',
                 icon: Ext.Msg.WARNING,
-                message: i18n.getMsg('warn.ort.editreferencedort.message', plausibleRefs),
+                message: i18n.getMsg(
+                    'warn.ort.editreferencedort.message',
+                    plausibleRefs),
                 buttons: Ext.Msg.YESNO,
-                fn: function(button) {
-                    if (button === 'yes') {
+                fn: function(btn) {
+                    if (btn === 'yes') {
                         doSave();
                     }
                 }
@@ -236,16 +241,27 @@ Ext.define('Lada.controller.form.Ort', {
      */
     checkCommitEnabled: function(callingEl) {
         var panel;
-        if (callingEl.up && callingEl.up('ortform')) { //called by a field in the form
+        if (//called by a field in the form
+            callingEl.up &&
+            callingEl.up('ortform')
+        ) {
             panel = callingEl.up('ortform');
         } else if (callingEl.owner) { //called by the form
             panel = callingEl.owner;
         } else {
             panel = callingEl; //called by the formpanel itself
         }
-        if ( ((callingEl.name === 'koordXExtern') || (callingEl.name === 'koordXExtern')) && (panel.mode === 'copy') && panel.original && panel.form.isDirty()
-            && panel.getForm().getValues()['koordXExtern'] !== "" && panel.getForm().getValues()['koordYExtern'] !== "")
-        {
+        if (
+            (
+                callingEl.name === 'koordXExtern' ||
+                callingEl.name === 'koordXExtern'
+            ) &&
+            panel.mode === 'copy' &&
+            panel.original &&
+            panel.form.isDirty() &&
+            panel.getForm().getValues()['koordXExtern'] !== '' &&
+            panel.getForm().getValues()['koordYExtern'] !== ''
+        ) {
             panel.down('verwaltungseinheit[name=gemId]').clearValue();
         }
         this.checkKDAchangeEnabled(panel);
@@ -267,9 +283,7 @@ Ext.define('Lada.controller.form.Ort', {
      * the original record
      */
     checkCommitOnCopyPanel: function(panel) {
-        var i18n = Lada.getApplication().bundle;
         var form = panel.getForm();
-        var copy = panel.record;
         var formValues = form.getValues();
         var original = panel.original;
         var valid = true;
@@ -277,19 +291,22 @@ Ext.define('Lada.controller.form.Ort', {
         //Helper function to compare form values and record values.
         //As empty form values are saved as "" and empty record values as null,
         //the == operator will fail to compare them
-        var equals = function (first, second) {
-            first = first === "" ? null: first;
-            second = second === "" ? null: second;
+        var equals = function(first, second) {
+            first = first === '' ? null: first;
+            second = second === '' ? null: second;
             return first === second;
-        }
-        if (equals(formValues['koordXExtern'], original.get('koordXExtern'))
-                && equals(formValues['koordYExtern'], original.get('koordYExtern'))) {
+        };
+        if (
+            equals(formValues['koordXExtern'], original.get('koordXExtern')) &&
+            equals(formValues['koordYExtern'], original.get('koordYExtern'))
+        ) {
             valid = false;
-            errors['koordXExtern'] = ['err.orte.form.copy.duplicatecoordinates'];
-            errors['koordYExtern'] = ['err.orte.form.copy.duplicatecoordinates'];
+            errors['koordXExtern'] = [
+                'err.orte.form.copy.duplicatecoordinates'];
+            errors['koordYExtern'] = [
+                'err.orte.form.copy.duplicatecoordinates'];
         }
 
-        var revertbutton = panel.down('button[action=revert]');
         var savebutton = panel.down('button[action=save]');
         var copybutton = panel.down('button[action=copy]');
 
@@ -298,8 +315,11 @@ Ext.define('Lada.controller.form.Ort', {
             savebutton.setDisabled(true);
             copybutton.setDisabled(true);
 
-            if ((form.isDirty())
-                    || (panel.down('netzbetreiber[name=netzbetreiberId]').getValue().length !== 0) ) {
+            if (
+                (form.isDirty()) ||
+                (panel.down('netzbetreiber[name=netzbetreiberId]')
+                    .getValue().length !== 0)
+            ) {
                 panel.down('button[action=revert]').setDisabled(false);
             } else {
                 panel.down('button[action=revert]').setDisabled(true);
@@ -317,20 +337,30 @@ Ext.define('Lada.controller.form.Ort', {
      */
     checkCommitOnNewOrEditPanel: function(panel) {
         var savebutton = panel.down('button[action=save]');
-        var revertbutton = panel.down('button[action=revert]');
-        var copybutton = panel.down('button[action=copy]');
 
         var form = panel.getForm();
+        if (form.getRecord().get('kdaId') === 3) {
+            panel.down('button[action=copy]').setDisabled(true);
+            return;
+        }
         if (!form.getRecord().phantom && form.getRecord().get('readonly')) {
             savebutton.setDisabled(true);
             return;
         }
-        if ( (form.isDirty()) || (panel.down('netzbetreiber[name=netzbetreiberId]').getValue().length !== 0) ) {
+        if (
+            (form.isDirty()) ||
+            (panel.down('netzbetreiber[name=netzbetreiberId]')
+                .getValue().length !== 0)
+        ) {
             panel.down('button[action=revert]').setDisabled(false);
         } else {
             panel.down('button[action=revert]').setDisabled(true);
         }
-        if ( (form.isValid()) && (panel.down('netzbetreiber[name=netzbetreiberId]').getValue().length !== 0) ) {
+        if (
+            (form.isValid()) &&
+            (panel.down('netzbetreiber[name=netzbetreiberId]')
+                .getValue().length !== 0)
+        ) {
             //one of three conditions must apply, the first one depending
             // on three fields
             if (
@@ -362,6 +392,7 @@ Ext.define('Lada.controller.form.Ort', {
             return;
         }
         if (panel.down('koordinatenart').getValue()
+            && panel.down('koordinatenart').getValue() !== 3
             && panel.down('tfield[name=koordXExtern]').getValue()
             && panel.down('tfield[name=koordYExtern]').getValue()
         ) {
@@ -429,38 +460,60 @@ Ext.define('Lada.controller.form.Ort', {
                 url: 'lada-server/rest/koordinatenart',
                 method: 'POST',
                 jsonData: {
-                    "from": win.down('koordinatenart[name=originalKDA]').getValue(),
-                    "to": win.down('koordinatenart[name=newKDA]').getValue(),
-                    "x": win.down('selectabledisplayfield[name=originalX]').getValue(),
-                    "y": win.down('selectabledisplayfield[name=originalY]').getValue()
+                    'from': win.down('koordinatenart[name=originalKDA]')
+                        .getValue(),
+                    'to': win.down('koordinatenart[name=newKDA]').getValue(),
+                    'x': win.down('selectabledisplayfield[name=originalX]')
+                        .getValue(),
+                    'y': win.down('selectabledisplayfield[name=originalY]')
+                        .getValue()
                 },
                 success: function(response) {
                     win.setLoading(false);
                     if (response && response.responseText) {
+                        var messageContainer = win.down(
+                            'container[name=messageContainer]');
                         var json = Ext.decode(response.responseText);
                         if (json.data) {
+                            messageContainer.setHidden(true);
                             var coords = Ext.decode(json.data);
-                            win.down('koordinatenart[name=newKDA]').setReadOnly(false);
-                            win.down('selectabledisplayfield[name=newX]').setValue(coords.x);
-                            win.down('selectabledisplayfield[name=newY]').setValue(coords.y);
-                            win.down('button[action=apply]').setDisabled(false);
+                            win.down('koordinatenart[name=newKDA]')
+                                .setReadOnly(false);
+                            win.down('selectabledisplayfield[name=newX]')
+                                .setValue(coords.x);
+                            win.down('selectabledisplayfield[name=newY]')
+                                .setValue(coords.y);
+                            win.down('button[action=apply]')
+                                .setDisabled(false);
                         } else {
-                            var messageContainer = win.down('container[name=messageContainer]');
-                            var messageField = win.down('textareafield[name=message]');
                             messageContainer.setHidden(false);
-                            messageField.setValue(i18n.getMsg('err.msg.ort.changeKda'));
-                            // TODO error handling: calculation not successful. For now, just resets
+                            var messageField = win.down(
+                                'textareafield[name=message]');
+                            messageField.setValue(
+                                i18n.getMsg('err.msg.ort.changeKda'));
+                            // TODO error handling: calculation not successful.
+                            // For now, just resets
                             win.down('koordinatenart[name=newKDA]').setValue(
-                                win.down('koordinatenart[name=originalKDA]').getValue());
-                            win.down('koordinatenart[name=newKDA]').setReadOnly(false);
+                                win.down('koordinatenart[name=originalKDA]')
+                                    .getValue());
+                            win.down('koordinatenart[name=newKDA]')
+                                .setReadOnly(false);
                         }
                     }
                 },
                 failure: function() {
                     win.setLoading(false);
+                    var messageContainer = win.down(
+                        'container[name=messageContainer]');
+                    var messageField = win.down(
+                        'textareafield[name=message]');
+                    messageContainer.setHidden(false);
+                    messageField.setValue(
+                        i18n.getMsg('err.msg.ort.changeKda'));
                     win.down('button[action=apply]').setDisabled(true);
                     win.down('koordinatenart[name=newKDA]').setValue(
-                        win.down('koordinatenart[name=originalKDA]').getValue());
+                        win.down('koordinatenart[name=originalKDA]')
+                            .getValue());
                     win.down('koordinatenart[name=newKDA]').setReadOnly(false);
                 }
             });

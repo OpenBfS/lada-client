@@ -44,9 +44,9 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         var formPanel = button.up('ortszuordnungform');
 
         //try to disable ortPickerButton:
-        try {
+        if (formPanel.down('button[action=setOrt]')) {
             formPanel.down('button[action=setOrt]').toggle(false);
-        } catch (e) {}
+        }
         var data = formPanel.getForm().getFieldValues(false);
         var record = formPanel.getForm().getRecord();
         record.set('ortId', data.ortId[0]);
@@ -59,11 +59,11 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             record.set('id', null);
         }
         record.save({
-            success: function(record, response) {
+            success: function(newRecord, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     formPanel.clearMessages();
-                    formPanel.setRecord(record);
+                    formPanel.setRecord(newRecord);
                     formPanel.setMessages(json.errors, json.warnings);
                     formPanel.up('window').parentWindow.initData();
                     button.setDisabled(true);
@@ -71,18 +71,24 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                         'button[action=revert]').setDisabled(true);
                 }
                 //try to refresh the Grid of the Probe
-                try {
+                if (
+                    formPanel.up('window').parentWindow.down(
+                        'ortszuordnunggrid') &&
+                        formPanel.up('window').parentWindow.down(
+                            'ortszuordnunggrid').store
+                ) {
                     formPanel.up('window').parentWindow
                         .down('ortszuordnunggrid').store.reload();
-                } catch (e) {
-                    console.log(e);
                 }
             },
-            failure: function(record, response) {
+            failure: function(newRecord, response) {
                 var i18n = Lada.getApplication().bundle;
                 button.setDisabled(true);
-                button.up('ortszuordnungform').form.owner.down('button[action=revert]').setDisabled(true);
-                formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
+                button.up('ortszuordnungform').form.owner
+                    .down('button[action=revert]')
+                    .setDisabled(true);
+                formPanel.getForm().loadRecord(
+                    formPanel.getForm().getRecord());
                 if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -158,7 +164,10 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
     validityChange: function(form, valid) {
         // the simple form.isDirty() check seems to fail for a lot of cases
         var ortIdIsDirty = true;
-        if (form.getRecord().data.ortId === form.findField('ortId').getValue()) {
+        if (
+            form.getRecord().data.ortId ===
+                form.findField('ortId').getValue()
+        ) {
             ortIdIsDirty = false;
         }
         if (form.getRecord().get('readonly') === true) {
@@ -183,11 +192,14 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
     },
 
     dirtyChange: function(combo, value) {
-        combo.up('ortszuordnungform').form.owner.down('button[action=revert]').setDisabled(false);
-        if (combo.up('ortszuordnungform').form.findField('ortId').getValue() !== '' && value !== null )
-        {
-            combo.up('ortszuordnungform').form.owner.down('button[action=save]').setDisabled(false);
-            combo.up('ortszuordnungform').clearMessages();
+        var ozf = combo.up('ortszuordnungform');
+        ozf.form.owner.down('button[action=revert]').setDisabled(false);
+        if (
+            ozf.form.findField('ortId').getValue() !== '' &&
+            value !== null
+        ) {
+            ozf.form.owner.down('button[action=save]').setDisabled(false);
+            ozf.clearMessages();
         }
     },
 

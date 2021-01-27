@@ -14,13 +14,13 @@ Ext.define('Lada.model.Tag', {
     extend: 'Ext.data.Model',
 
     fields: [{
-        name: "id"
+        name: 'id'
     }, {
-        name: "tag",
-        type: "string"
+        name: 'tag',
+        type: 'string'
     }, {
-        name: "mstId",
-        type: "string"
+        name: 'mstId',
+        type: 'string'
     }],
-    idProperty: "id"
+    idProperty: 'id'
 });

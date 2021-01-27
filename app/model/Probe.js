@@ -80,7 +80,7 @@ Ext.define('Lada.model.Probe', {
         type: 'date',
         allowNull: true,
         convert: Lada.util.Date.convertTimeFn,
-        serialize: function(v, record) {
+        serialize: function(v) {
             if (v === '' || v === null) {
                 return null;
             }
@@ -92,7 +92,7 @@ Ext.define('Lada.model.Probe', {
         type: 'date',
         allowNull: true,
         convert: Lada.util.Date.convertTimeFn,
-        serialize: function(v, record) {
+        serialize: function(v) {
             if (v === '' || v === null) {
                 return null;
             }

@@ -8,13 +8,16 @@
  */
 
 /**
- * Window extending the TrackedWindow providing common functions for windows showing records.
+ * Window extending the TrackedWindow providing common functions for windows
+ * showing records.
  *
- * If this window is initialized without content, a placeholder panel is created to show a
+ * If this window is initialized without content, a placeholder panel is
+ * created to show a
  * loading spinner until the ui is initialized.
  *
  * ## Loading failure handling
- * This class provides a loadRecord function which can be used to load a record and showing a reload mask in
+ * This class provides a loadRecord function which can be used to load a record
+ * and showing a reload mask in
  * case the loading process fails.
  */
 Ext.define('Lada.view.window.RecordWindow', {
@@ -51,7 +54,8 @@ Ext.define('Lada.view.window.RecordWindow', {
     /**
      * @private
      * Record used in this window and is currently loaded.
-     * Note: The model data may not be initialized, use the record property to access model data
+     * Note: The model data may not be initialized, use the record property to
+     * access model data
      */
     loadingModel: null,
 
@@ -70,7 +74,8 @@ Ext.define('Lada.view.window.RecordWindow', {
                 minHeight: 200,
                 minWidth: 300
             });
-            //Create a placeholder panel to show a loading mask until data is loaded
+            //Create a placeholder panel to show a loading mask until data is
+            //loaded
             this.items = [this.placeholder];
         }
         this.callParent(arguments);
@@ -82,7 +87,9 @@ Ext.define('Lada.view.window.RecordWindow', {
      */
     createReloadMask: function() {
         this.reloadMask = Ext.create('Lada.view.window.ReloadMask', {
-            renderTo: this.placeholder && this.placeholder.isVisible()? this.placeholder.getId(): this.getId(),
+            renderTo: this.placeholder && this.placeholder.isVisible() ?
+                this.placeholder.getId() :
+                this.getId(),
             reloadButtonHandler: this.reloadRecord,
             reloadButtonHandlerScope: this
         });
@@ -93,8 +100,8 @@ Ext.define('Lada.view.window.RecordWindow', {
      * Load record using the given id.
      * If the loading fails the component will show a reload mask, else
      * the given callback function is called.
-     * The callback will not be called if the window was already closed by the user
-     * as this can break other windows.
+     * The callback will not be called if the window was already closed by the
+     * user as this can break other windows.
      * @param {Number} id Record id to load
      * @param {Object} scope Scope to use in the callback
      * @param {Object} callback Function to call after loading finished
@@ -155,7 +162,11 @@ Ext.define('Lada.view.window.RecordWindow', {
      * Unmask this component
      */
     hideReloadMask: function() {
-        if (this.isVisible() && this.reloadMask && this.reloadMask.isVisible()) {
+        if (
+            this.isVisible() &&
+            this.reloadMask &&
+            this.reloadMask.isVisible()
+        ) {
             this.unmask();
             this.reloadMask.hide();
         }
@@ -168,7 +179,9 @@ Ext.define('Lada.view.window.RecordWindow', {
             try {
                 this.remove(this.placeholder);
             } catch (e) {
-                Ext.log({msg: 'Can not remove placeholder panel: ' + e, level: 'warn'});
+                Ext.log({
+                    msg: 'Can not remove placeholder panel: ' + e,
+                    level: 'warn'});
             }
             this.placeholder = null;
         }

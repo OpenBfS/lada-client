@@ -72,7 +72,10 @@ Ext.define('Lada.view.grid.Messung', {
                     //We are using IE11
                     var lastTimeStamp = me.lastClickTime;
                     me.lastClickTime = eventInst.timeStamp;
-                    if (eventInst.timeStamp - lastTimeStamp > Lada.$application.dblClickTimeout) {
+                    if (
+                        eventInst.timeStamp - lastTimeStamp >
+                            Lada.$application.dblClickTimeout
+                    ) {
                         grid.fireEvent('itemdblclick', grid, rec);
                     } else {
                         grid.ignoreNextDblClick = true;
@@ -80,10 +83,11 @@ Ext.define('Lada.view.grid.Messung', {
                 } else if (eventInst instanceof MouseEvent) {
                     //We are in chrome/firefox etc.
                     //Check if its not the second click of a doubleclick
-                    if (event.browserEvent.detail == 1) {
+                    if (event.browserEvent.detail === 1) {
                         grid.fireEvent('itemdblclick', grid, rec);
                     } else if (event.browserEvent.detail) {
-                        //else tell the grid to ignore the next doubleclick as the edit window should already be open
+                        //else tell the grid to ignore the next doubleclick as
+                        // the edit window should already be open
                         grid.ignoreNextDblClick = true;
                     }
                 }
@@ -119,19 +123,17 @@ Ext.define('Lada.view.grid.Messung', {
                 xtype: 'datefield',
                 allowBlank: false,
                 format: 'd.m.Y H:i',
-                // minValue: '01.01.2001', //todo: gibt es das?
-                // minText: 'Das Datum der Messung darf nicht vor dem 01.01.2001 liegen.',
-                maxValue: Lada.util.Date.formatTimestamp(new Date(), 'd.m.Y H:i', true)
-                // TODO should change if zeitbasis changes, also check 'translation' to UTC
+                maxValue: Lada.util.Date.formatTimestamp(
+                    new Date(), 'd.m.Y H:i', true)
             }
         }, {
             header: i18n.getMsg('header.statuskombi'),
             flex: 2,
             dataIndex: 'statusKombi',
-            renderer: function(value, meta, record, rNdx, cNdx) {
+            renderer: function(value, meta, record) {
                 var statusId = record.get('status');
                 var mId = record.get('id');
-                //also fwd the record to the asynchronous loading of statuswerte
+                //also fwd the record to the async loading of statuswerte
                 // in order to add the statuswert to the record,
                 // after the grid was rendered...
                 if (!value || value === '') {
@@ -167,7 +169,10 @@ Ext.define('Lada.view.grid.Messung', {
             dataIndex: 'messwerteCount',
             flex: 1,
             renderer: function(value, meta, record) {
-                if ((!value || value === '') && this.messwerteLoading == false) {
+                if (
+                    (!value || value === '') &&
+                    this.messwerteLoading === false
+                ) {
                     var mId = record.get('id');
                     this.updateNuklide(mId, record);
                     return 'Lade...';
@@ -203,7 +208,7 @@ Ext.define('Lada.view.grid.Messung', {
             params: {
                 probeId: this.recordId
             },
-            callback: function(records, operation, success) {
+            callback: function() {
                 this.setLoading(false);
             },
             scope: this
@@ -255,7 +260,13 @@ Ext.define('Lada.view.grid.Messung', {
                 messungsId: id
             },
             callback: function(records, operation, success) {
-                me.updateColumn(messwerte, record, success, operation, {record: record, type: 'messwerteCount'});
+                me.updateColumn(
+                    messwerte,
+                    record,
+                    success,
+                    operation,
+                    {record: record, type: 'messwerteCount'}
+                );
             }
         });
     },
@@ -334,7 +345,7 @@ Ext.define('Lada.view.grid.Messung', {
     /**
      * Activate the Remove Button
      */
-    deactivateRemoveButton: function(selection, record) {
+    deactivateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {

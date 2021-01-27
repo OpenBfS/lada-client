@@ -7,7 +7,8 @@
  */
 
 /**
- * Button widget which triggers a timezonechange and keeps track of pending requests.
+ * Button widget which triggers a timezonechange and keeps track of pending
+ * requests.
  */
 Ext.define('Lada.view.widget.TimeZoneButton', {
     extend: 'Ext.button.Button',

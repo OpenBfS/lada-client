@@ -45,18 +45,21 @@ Ext.define('Lada.view.window.FileUpload', {
                 listeners: {
                     //Allow multiple files
                     afterRender: function(cmp) {
-                        cmp.fileInputEl.dom.setAttribute('multiple', 'multiple');
+                        cmp.fileInputEl.dom.setAttribute(
+                            'multiple', 'multiple');
                     },
                     //Remove 'C:\Fakepath' part of filenames and show a comma
                     //separated list to increase readability
-                    change: function(field, value) {
-                        var node = Ext.DomQuery.selectNode('input[id='+ field.getInputId() + ']');
+                    change: function(field) {
+                        var node = Ext.DomQuery.selectNode(
+                            'input[id='+ field.getInputId() + ']');
                         var files = field.fileInputEl.dom.files;
                         var fileNames = '';
                         var fset = field.up('window').down('fieldset');
                         fset.removeAll();
                         for (var i = 0; i < files.length; i++) {
-                            var fname = files[i].name.replace("C:\\fakepath\\", "");
+                            var fname = files[i].name.replace(
+                                'C:\\fakepath\\', '');
                             fset.add({
                                 xtype: 'textfield',
                                 readOnly: true,
@@ -69,12 +72,19 @@ Ext.define('Lada.view.window.FileUpload', {
                                 fileNames += ', ';
                             }
                         }
-                        fset.setTitle(i18n.getMsg('import.filesSelected', files.length));
+                        fset.setTitle(
+                            i18n.getMsg('import.filesSelected',files.length));
                         node.value = fileNames;
-                        if ( (field.up('window').down('combobox[name=mst]').isValid()) && (files.length !== 0) ) {
-                            field.up('window').down('button[name=save]').setDisabled(false);
+                        if (
+                            (field.up('window').down('combobox[name=mst]')
+                                .isValid()) &&
+                            (files.length !== 0)
+                        ) {
+                            field.up('window').down(
+                                'button[name=save]').setDisabled(false);
                         } else {
-                            field.up('window').down('button[name=save]').setDisabled(true);
+                            field.up('window').down(
+                                'button[name=save]').setDisabled(true);
                         }
                     }
                 }
@@ -124,7 +134,8 @@ Ext.define('Lada.view.window.FileUpload', {
                     clear: {
                         cls: 'x-form-clear-trigger',
                         handler: function() {
-                            this.up('window').down('button[name=save]').setDisabled(true);
+                            this.up('window').down('button[name=save]')
+                                .setDisabled(true);
                             this.clearValue();
                         }
                     }
@@ -138,7 +149,8 @@ Ext.define('Lada.view.window.FileUpload', {
                     },
                     select: function(combo) {
                         if (combo.up('window').down('filefield').isValid()) {
-                            combo.up('window').down('button[name=save]').setDisabled(false);
+                            combo.up('window').down('button[name=save]')
+                                .setDisabled(false);
                         }
                     }
                 }
@@ -176,7 +188,8 @@ Ext.define('Lada.view.window.FileUpload', {
 
     /**
      * @private
-     * A handler for the Upload-Button, reading the file specified in the form field
+     * A handler for the Upload-Button, reading the file specified in the
+     * form field
      */
     readFiles: function(button) {
         var win = button.up('window');
@@ -198,12 +211,13 @@ Ext.define('Lada.view.window.FileUpload', {
             var file = files[i];
             readers[i] = new FileReader();
             readers[i].fileName = files[i].name;
+            // eslint-disable-next-line no-loop-func
             readers[i].onload = function(evt) {
                 var binData = evt.target.result;
                 //Remove mime type and save to array
                 binFiles[evt.target.fileName] = binData.split(',')[1];
                 filesRead++;
-                if (filesRead == files.length) {
+                if (filesRead === files.length) {
                     win.uploadFiles(button, binFiles);
                 }
             };
@@ -214,17 +228,22 @@ Ext.define('Lada.view.window.FileUpload', {
     /**
      * Upload a list of files to the import service
      * @param {Ext.button.Button} button Button that triggered the upload event
-     * @param {Object} binFiles Object containing file name as keys and file content as value
+     * @param {Object} binFiles Object containing file name as keys and file
+     * content as value
      */
     uploadFiles: function(button, binFiles) {
         var win = button.up('window');
         var cb = win.down('combobox[name=encoding]');
         var mstSelector = win.down('combobox[name=mst]').getValue();
 
-        if (cb.getValue() === "utf-8") {
+        if (cb.getValue() === 'utf-8') {
             Ext.Object.each(binFiles, function(fileName, fileContent) {
                 var x = new Uint8Array(fileContent.slice(0,3));
-                if (x[0] == 0xEF && x[1] == 0xBB && x[2] == 0xBF) {
+                if (
+                    x[0] === 0xEF &&
+                    x[1] === 0xBB &&
+                    x[2] === 0xBF
+                ) {
                     fileContent = fileContent.slice(3);
                 }
             });
@@ -244,7 +263,7 @@ Ext.define('Lada.view.window.FileUpload', {
             success: function(response, opts) {
                 win.uploadSuccess(response, opts);
             },
-            failure: function(response, opts) {
+            failure: function(response) {
                 //If request fails show an alert
                 var i18n = Lada.getApplication().bundle;
                 var msg = 'importResponse.failure.server.multi';
@@ -273,7 +292,12 @@ Ext.define('Lada.view.window.FileUpload', {
         var contentType = 'text/plain; charset=' + cb.getValue();
         var mstSelector = win.down('combobox[name=mst]').getValue();
         var x = new Uint8Array(binData.slice(0,3));
-        if (cb.getValue() === "utf-8" && x[0] == 0xEF && x[1] == 0xBB && x[2] == 0xBF) {
+        if (
+            cb.getValue() === 'utf-8' &&
+            x[0] === 0xEF &&
+            x[1] === 0xBB &&
+            x[2] === 0xBF
+        ) {
             binData = binData.slice(3);
         }
         Ext.Ajax.request({
@@ -299,12 +323,12 @@ Ext.define('Lada.view.window.FileUpload', {
      * @private
      * Show result window after successfull uploaded
      */
-    uploadSuccess: function(response, opts, fileIndex) {
+    uploadSuccess: function(response) {
         this.filesUploaded++;
         var i18n= Lada.getApplication().bundle;
         var responseText = response.responseBytes ?
-                String.fromCharCode.apply(null, response.responseBytes):
-                response.responseText;
+            String.fromCharCode.apply(null, response.responseBytes):
+            response.responseText;
         var responseJson = Ext.JSON.decode(responseText);
         var tag = '';
         //Get the generated tag name
@@ -365,7 +389,8 @@ Ext.define('Lada.view.window.FileUpload', {
             this.resultWin.show();
         }
 
-        this.resultWin.updateOnError(response.status, response.statusText, fileIndex);
+        this.resultWin.updateOnError(
+            response.status, response.statusText, fileIndex);
 
         if (this.filesUploaded === this.files.length) {
             this.resultWin.finishedHandler();

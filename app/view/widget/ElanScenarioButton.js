@@ -62,9 +62,10 @@ Ext.define('Lada.view.widget.ElanScenarioButton', {
         this.text = i18n.getMsg('elanscenarios');
         this.callParent(arguments);
         if (this.state) {
-            this.setState(state);
+            this.setState(this.state);
         } else {
-            this.setState(Lada.view.widget.ElanScenarioButton.states.EVENTS_NONE);
+            this.setState(
+                Lada.view.widget.ElanScenarioButton.states.EVENTS_NONE);
         }
     },
 
@@ -98,9 +99,10 @@ Ext.define('Lada.view.widget.ElanScenarioButton', {
                 this.hide();
                 break;
             default:
+                // eslint-disable-next-line no-console
                 console.log('Unknown event state: ' + state);
                 state = states.EVENTS_NONE;
         }
         this.state = state;
     }
-})
+});

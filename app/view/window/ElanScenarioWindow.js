@@ -14,8 +14,8 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
     alias: 'window.elanscenariowindow',
 
     /**
-     * Component id. Should not be changed, as there should only be one event window which
-     * can be updated.
+     * Component id. Should not be changed, as there should only be one event
+     * window which can be updated.
      */
     id: 'elanwindowid',
 
@@ -38,6 +38,7 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
      */
     displayTemplate: {
         //Used for title string
+        // eslint-disable-next-line max-len
         title: '<p style=\'font-size: 1.5em; margin: 25px 0 5px 0;\'><a href="$LINK" target="_blank"> $VALUE</a></p>',
         //Use for string that marks the event as changed or unchanged
         change: {
@@ -103,7 +104,7 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
         this.bbar = ['->', {
             xtype: 'button',
             text: i18n.getMsg('close'),
-            handler: function(button) {
+            handler: function() {
                 me.close();
             }
         }];
@@ -130,9 +131,12 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
         var changes = [];
         var id = event.id;
         me.displayValues.forEach(function(key) {
-            if (me.eventObjs[id] == null
-                || me.getPropertyByString(me.eventObjs[id], key) == null
-                || me.getPropertyByString(me.eventObjs[id], key) !==me.getPropertyByString(event, key)) {
+            if (me.eventObjs[id] === null ||
+                me.eventObjs[id] === undefined ||
+                me.getPropertyByString(me.eventObjs[id], key) === null ||
+                    me.getPropertyByString(me.eventObjs[id], key) !==
+                    me.getPropertyByString(event, key)
+            ) {
                 changes.push(key);
             }
         });
@@ -154,7 +158,8 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
             if (k in o) {
                 o = o[k];
                 if (Array.isArray(o) && o.length > 0) {
-                    if (o[0].hasOwnProperty('title')) {//currently true for all second level arrays
+                    if (o[0].hasOwnProperty('title')) {
+                        // currently true for all second level arrays
                         o = o.map(function(x) {
                             return x.title;
                         });
@@ -205,7 +210,7 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
 
         //Check for changes since last update
         var changedFields = Ext.Array.contains(me.changes, scenario.id) ?
-                me.getChanges(scenario): [];
+            me.getChanges(scenario): [];
 
         //Add display values
         Ext.Array.each(this.displayValues, function(key) {
@@ -246,7 +251,7 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
     /**
      * Sort an object holding events by modified date
      * @param {Object} newEvents Event object
-     * @return {Array} Array containing object ids, sorted by modified date, asc.
+     * @return {Array} containing object ids, sorted by modified date, asc.
      */
     sortEventsByModifiedDate: function(newEvents) {
         return Ext.Array.sort(Ext.Object.getKeys(newEvents),function(a, b) {
@@ -284,7 +289,7 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
         if (!newEvents || newEvents === '') {
             content = i18n.getMsg('window.elanscenario.emptytext');
         }
-        displayOrder.forEach(function(key, index, array) {
+        displayOrder.forEach(function(key) {
             var value = me.eventObjs[key].displayText;
             content += value + '<br />';
         });
@@ -308,17 +313,17 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
         if (!newEvents || newEvents === '') {
             content = i18n.getMsg('window.elanscenario.emptytext');
         }
-        Ext.Object.each(newEvents, function(key, value, object) {
+        Ext.Object.each(newEvents, function(key, value) {
             var text = me.parseElanObject(value);
             newEvents[key].displayText = text;
         });
-        displayOrder.forEach(function(key, index, array) {
+        displayOrder.forEach(function(key) {
             var value = newEvents[key].displayText;
             content += value + '<br />';
         });
         this.down('panel').setHtml(content);
         me.eventObjs = newEvents;
-        if (preserveChanges != true) {
+        if (preserveChanges !== true) {
             this.changes = [];
         }
     }

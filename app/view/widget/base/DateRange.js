@@ -71,12 +71,12 @@ Ext.define('Lada.view.widget.base.DateRange', {
         this.callParent(arguments);
         this.setValue(this.value);
     },
-    showWarnings: function(warnings) {
+    showWarnings: function() {
         //legacy - still called?
         this.clearWarningOrError();
     },
 
-    showErrors: function(errors) {
+    showErrors: function() {
         this.clearWarningOrError();
         //legacy - still called?
     },

@@ -37,7 +37,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
 
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -60,12 +59,18 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             scope: this,
             handler: function() {
                 var me = this;
-                var startDate = new Date(me.down('datefield[name=start]').getValue());
+                var startDate = new Date(
+                    me.down('datefield[name=start]').getValue());
                 var startUTC = Date.UTC(
-                    startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-                var endDate = new Date(me.down('datefield[name=end]').getValue());
+                    startDate.getFullYear(),
+                    startDate.getMonth(),
+                    startDate.getDate());
+                var endDate = new Date(
+                    me.down('datefield[name=end]').getValue());
                 var endUTC = Date.UTC(
-                    endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+                    endDate.getFullYear(),
+                    endDate.getMonth(),
+                    endDate.getDate());
                 var dryrun = me.down('checkbox[name=dryrun]').getValue();
                 var results = [];
                 this.removeAll();
@@ -108,33 +113,47 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             );
                         }
                         if (json.success && json.data.proben) {
-                            Ext.Object.each(json.data.proben, function(key, result) {
-                                if (result.success) {
-                                    results.push(result);
-                                    var newRes = result.data.filter(function(r) {
-                                        return r.found !== true;
-                                    });
-                                    var foundRes =result.data.filter(function(r) {
-                                        return r.found === true;
-                                    });
-                                    panel.setHtml(panel.html + '<br>'
-                                    + i18n.getMsg('gpfm.generated.success',
-                                        key)
-                                    + ':<br>'
-                                    + '<ul><li>'
-                                    + i18n.getMsg('gpfm.generated.found', foundRes.length)
-                                    + ' </li><li>'
-                                    + newRes.length + ' Probe(n) erzeugt</li></ul>'
-                                    );
-                                } else {
-                                    panel.setHtml(panel.html + '<br>'
-                                            + i18n.getMsg('gpfm.generated.error',
-                                                key, i18n.getMsg(result.message)));
-                                }
-                            });
+                            Ext.Object.each(json.data.proben,
+                                function(key, result) {
+                                    if (result.success) {
+                                        results.push(result);
+                                        var newRes = result.data.filter(
+                                            function(r) {
+                                                return r.found !== true;
+                                            });
+                                        var foundRes = result.data.filter(
+                                            function(r) {
+                                                return r.found === true;
+                                            });
+                                        panel.setHtml(
+                                            panel.html +
+                                            '<br>' +
+                                            i18n.getMsg(
+                                                'gpfm.generated.success',
+                                                key)
+                                            + ':<br>'
+                                            + '<ul><li>'
+                                            + i18n.getMsg(
+                                                'gpfm.generated.found',
+                                                foundRes.length)
+                                            + ' </li><li>'
+                                            + newRes.length
+                                            + ' Probe(n) erzeugt</li></ul>'
+                                        );
+                                    } else {
+                                        panel.setHtml(panel.html +
+                                                '<br>' +
+                                                + i18n.getMsg(
+                                                    'gpfm.generated.error',
+                                                    key,
+                                                    i18n.getMsg(
+                                                        result.message)));
+                                    }
+                                });
                         }
                         me.down('toolbar').down('button').setDisabled(false);
-                        me.processResults(results,
+                        me.processResults(
+                            results,
                             json.data.tag? json.data.tag: '',
                             reqJsondata);
                     },
@@ -148,15 +167,17 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                                 + '<br>'
                             );
                         }
-                        panel.setHtml(i18n.getMsg('gpfm.generated.requestfail', response.status, response.statusText));
+                        panel.setHtml(
+                            i18n.getMsg(
+                                'gpfm.generated.requestfail',
+                                response.status,
+                                response.statusText));
                         me.down('toolbar').down('button').setDisabled(false);
 
                     }
                 });
             }
         }];
-
-        // add listeners to change the window appearence when it becomes inactive
         this.on({
             activate: function() {
                 this.getEl().removeCls('window-inactive');
@@ -266,32 +287,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
      */
     genResultWindow: function(umwStore, data, genTagName, request) {
         var i18n = Lada.getApplication().bundle;
-        var me = this;
-
-        var columnstore = Ext.data.StoreManager.get('columnstore');
-        columnstore.clearFilter();
-        columnstore.filter({
-            property: 'baseQuery',
-            value: '1',
-            exactMatch: true});
-        var gcs = Ext.create('Lada.store.GridColumnValue');
-        //TODO basequery needed for this to work
-        var columns = ['externeProbeId', 'mstId', 'datenbasisId', 'baId', 'probenartId',
-            'solldatumBeginn', 'solldatumEnde', 'mprId', 'mediaDesk', 'umwId',
-            'probeNehmerId', 'mmt', 'gemId'];
         var dbIdentifier = 'externeProbeId';
-        for (var i=0; i < columns.length; i++) {
-            var col = columnstore.findRecord('dataIndex', columns[i], false,
-                false, false, true); // TODO col is unused here?
-            gcs.add( new Ext.create('Lada.model.GridColumnValue',{
-                columnIndex: i,
-                filterActive: false,
-                qid: 0, //TODO: hardcoded value based on example data
-                dataIndex: columns[i],
-                visible: true,
-                gridColumnId: i
-            }));
-        }
         var newStore = Ext.create('Lada.store.Proben', {data: data});
         var hidebuttons = ['importprobe', 'genericadd', 'assigntags'];
         if (request.dryrun) {
@@ -307,6 +303,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         if (request.dryrun) {
             title += i18n.getMsg('gpfm.window.test.result.title');
         }
+
         var win = Ext.create('Ext.window.Window', {
             layout: {
                 type: 'vbox',
@@ -412,17 +409,13 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     dataIndex: 'baId',
                     renderer: function(value) {
                         var r = '';
-                        var store = Ext.create('Ext.data.Store', {
-                            fields: ['id', 'betriebsart'],
-                            data: [{
-                                'id': 1,
-                                'betriebsart': 'Normal-/Routinebetrieb'
-                            }, {
-                                'id': 2,
-                                'betriebsart': 'Störfall/Intensivbetrieb'
-                            }]
-                        });
-                        var record = store.getById(value);
+                        if (!value || value === '') {
+                            r = value;
+                        }
+                        var store = Ext.data.StoreManager.get(
+                            'betriebsartStore');
+                        var i = store.findExact('betriebsartId', value);
+                        var record = store.getData().items[i];
                         if (record) {
                             r = record.get('betriebsart');
                         }
@@ -492,7 +485,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     dataIndex: 'mmt',
                     renderer: function(value) {
                         if (value && value.length) {
-                            var result = value.length + ' (' + value.join(', ') + ')';
+                            var result = value.length
+                                + ' (' + value.join(', ') + ')';
                             return result;
                         } else {
                             return '-';
@@ -537,7 +531,15 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         button.up('window').close();
                     }
                 }]
-            }]
+            }],
+            onFocusEnter: function(event) {
+                var resultWin = event.toComponent;
+                var printWin = Lada.view.window.PrintGrid.getInstance();
+                if (printWin) {
+                    var grid = resultWin.down('dynamicgrid');
+                    printWin.setParentGrid(grid);
+                }
+            }
         });
         win.on({
             show: function() {

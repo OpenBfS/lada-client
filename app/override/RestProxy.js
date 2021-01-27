@@ -9,14 +9,18 @@
 Ext.define('Lada.override.RestProxy', {
     override: 'Ext.data.proxy.Rest',
 
-    processResponse: function(success, operation, request, response, callback, scope) {
+    processResponse: function(success, operation, request, response) {
         /*
            SSO will send a 302 if the Client is not authenticated
            unfortunately this seems to be filtered by the browser.
            We assume that a 302 was send when the follwing statement
            is true.
         */
-        if (!success && response.status === 0 && response.responseText === '') {
+        if (
+            !success &&
+            response.status === 0 &&
+            response.responseText === ''
+        ) {
             var i18n = Lada.getApplication().bundle;
             Ext.MessageBox.confirm(
                 i18n.getMsg('err.msg.sso.expired.title'),
@@ -48,10 +52,6 @@ Ext.define('Lada.override.RestProxy', {
             }
         }
         return params;
-    },
-
-    parseStatus: function(status) {
-        console.log(status);
     },
 
     reload: function(btn) {
