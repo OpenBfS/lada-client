@@ -30,6 +30,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     alwaysOnTop: true,
     parentWindow: null,
     ids: null,
+    startUTC: null,
+    endUTC: null,
+    dryrun: null,
 
     /**
      * This function initialises the Window
@@ -65,13 +68,16 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     startDate.getFullYear(),
                     startDate.getMonth(),
                     startDate.getDate());
+                this.startUTC = startDate;
                 var endDate = new Date(
                     me.down('datefield[name=end]').getValue());
                 var endUTC = Date.UTC(
                     endDate.getFullYear(),
                     endDate.getMonth(),
                     endDate.getDate());
+                this.endUTC = endUTC;
                 var dryrun = me.down('checkbox[name=dryrun]').getValue();
+                this.dryrun = dryrun;
                 var results = [];
                 this.removeAll();
                 this.down('toolbar').removeAll();
@@ -225,7 +231,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 format: 'd.m.Y',
                 formatText: '',
                 period: 'start',
-                value: new Date()
+                value: this.startUTC || new Date()
             }, {
                 xtype: 'datefield',
                 fieldLabel: i18n.getMsg('to'),
@@ -236,11 +242,12 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 format: 'd.m.Y',
                 formatText: '',
                 period: 'end',
-                value: new Date(new Date().getFullYear(), 11, 31)
+                value: this.endUTC || new Date(new Date().getFullYear(), 11, 31)
             }, {
                 xtype: 'checkbox',
                 name: 'dryrun',
-                boxLabel: i18n.getMsg('gpfm.window.test')
+                boxLabel: i18n.getMsg('gpfm.window.test'),
+                value: this.dryrun || false
             }]
         }];
         this.callParent(arguments);
@@ -287,6 +294,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
      */
     genResultWindow: function(umwStore, data, genTagName, request) {
         var i18n = Lada.getApplication().bundle;
+        var me = this;
         var dbIdentifier = 'externeProbeId';
         var newStore = Ext.create('Lada.store.Proben', {data: data});
         var hidebuttons = ['importprobe', 'genericadd', 'assigntags'];
@@ -336,6 +344,21 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             });
                         }
                     }
+                }, {
+                    xtype: 'button',
+                    hidden: !request.dryrun,
+                    text: i18n.getMsg('gpfm.repeatprobegen'),
+                    handler: function(button) {
+                        Ext.create(
+                            'Lada.view.window.GenProbenFromMessprogramm', {
+                                ids: request.ids,
+                                parentWindow: me.parentWindow,
+                                startUTC: me.startUTC,
+                                endUTC: me.endUTC,
+                                dryrun: me.dryrun
+                            }).show();
+                        button.up('window').close();
+                    }
                 }]
             },{
                 xtype: 'dynamicgrid',
@@ -343,6 +366,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 rowtarget: { dataType: 'probeId', dataIndex: 'id'},
                 exportRowexp: true,
                 store: newStore,
+                emptyText: 'query.nodata',
                 columns: [{
                     xtype: 'actioncolumn',
                     hideable: false,
