@@ -318,8 +318,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 align: 'stretch'
             },
             width: 800,
-            minHeight: 500,
-            maxHeight: 600,
             constrain: true,
             title: title,
             items: [{
@@ -362,6 +360,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 }]
             },{
                 xtype: 'dynamicgrid',
+                width: 800,
+                minHeight: 500,
+                maxHeight: 600,
                 hidebuttons: hidebuttons,
                 rowtarget: { dataType: 'probeId', dataIndex: 'id'},
                 exportRowexp: true,
