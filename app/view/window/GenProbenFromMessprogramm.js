@@ -149,7 +149,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                                     } else {
                                         panel.setHtml(panel.html +
                                                 '<br>' +
-                                                + i18n.getMsg(
+                                                i18n.getMsg(
                                                     'gpfm.generated.error',
                                                     key,
                                                     i18n.getMsg(
