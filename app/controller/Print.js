@@ -835,7 +835,7 @@ Ext.define('Lada.controller.Print', {
         } else if (response && response.status && response.status === 404) {
             errormsg = i18n.getMsg('err.msg.print.404');
         } else if (response && response.responseText) {
-            var json = Ext.JSON.decode(response.responseText);
+            var json = Ext.JSON.decode(response.responseText, true);
             if (json && json.message) {
                 errormsg = i18n.getMsg(json.message);
             }
