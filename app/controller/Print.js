@@ -9,12 +9,12 @@
 /**
  * Controller for print functionalities
  * This offers printing using mapfish print templates.
- * To determine available templates, the mapfish print app.json is queried.
+ * To determine available templates, the mapfish print apps.json is queried.
  * To determine the data needed for a template, capabilities.json of mapfish
  * print is parsed.
  * Attribute fields that require "String" values will be matched against field
  * names from the input data. If a match is found, these values are used.
- * If not found, the user is offered text field where optional values can
+ * If not found, the user is offered a text field where optional values can
  * be inserted/edited prior to export.
  * If the template requires one or more "TableAttributeValue", then the whole
  * input table will be submitted into this field. This allows for printing out
@@ -826,6 +826,7 @@ Ext.define('Lada.controller.Print', {
      * Handles server error feedback by opening an popup window containing
      * details on the error
      * @param response the raw response as given by the server
+     * @param message Key of i18n message to be displayed
      */
     handleError: function(response, message) {
         var i18n = Lada.getApplication().bundle;
