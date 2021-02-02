@@ -661,7 +661,7 @@ Ext.define('Lada.controller.Print', {
                 queueitem);
         };
 
-        this.createSheetData(grid, callback, this);
+        this.createSheetData(grid, callback, this, queueitem);
     },
 
     /**
@@ -754,7 +754,7 @@ Ext.define('Lada.controller.Print', {
      * The parameter printFunctionCallback will be called once the ajax-request
      * starting the json-export was evaluated
      **/
-    createSheetData: function(grid, printFunctionCallback, cbscope) {
+    createSheetData: function(grid, printFunctionCallback, cbscope, qitem) {
         var selection = grid.getView().getSelectionModel().getSelection();
         var ids = [];
         for (var item in selection) {
@@ -776,7 +776,11 @@ Ext.define('Lada.controller.Print', {
             scope: cbscope,
             success: printFunctionCallback,
             failure: function(response) {
+                var i18n = Lada.getApplication().bundle;
                 me.handleError(response, 'err.msg.print.failed');
+                qitem.set('status', 'error');
+                qitem.set('message', i18n.getMsg('err.msg.print.failed'));
+                qitem.set('done', true);
                 return null;
             }
         });
