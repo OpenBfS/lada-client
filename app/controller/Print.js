@@ -670,10 +670,14 @@ Ext.define('Lada.controller.Print', {
      */
     prepareData: function(data) {
         // Copy data
-        var prep = JSON.parse(data);
-        data = JSON.parse(data);
+        var prep = Ext.JSON.decode(data, true);
+        if (prep === null) {
+            this.handleError(null, 'err.msg.print.failed');
+            return null;
+        }
+        data = Ext.JSON.decode(data, true);
         // ensure data and prep are equal, not sure
-        // if json.parse changes order of things
+        // if parsing changes order of things
 
         var emptyMessstelle = {
             'id': null,
