@@ -776,7 +776,7 @@ Ext.define('Lada.controller.Print', {
             scope: cbscope,
             success: printFunctionCallback,
             failure: function(response) {
-                me.handleError(response);
+                me.handleError(response, 'err.msg.print.failed');
                 return null;
             }
         });
