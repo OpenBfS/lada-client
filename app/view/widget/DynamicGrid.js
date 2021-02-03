@@ -1146,29 +1146,29 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     addRowExpanderButton: function() {
-        var expander = this.getRowExpander();
-        var me = this;
-        if (expander && !this.tbuttonExists('expand')) {
+        if (this.getRowExpander() && !this.tbuttonExists('expand')) {
             this.toolbarbuttons.push({
                 xtype: 'button',
                 action: 'expand',
                 text: this.i18n.getMsg('grid.expandDetails'),
                 handler: function(button) {
+                    var grid = button.up('dynamicgrid');
+                    var expander = grid.getRowExpander();
                     // for performance reasons, set a maximum for rowexpander
                     // instances which to open simultaneously in one action
                     var maxEntries = 100;
-                    if (me.store.data.length <= maxEntries) {
+                    if ( grid.store.data.length <= maxEntries ) {
                         var newStatus = expander.toggleAllRows();
                         if (!newStatus) {
                             button.setText(
-                                me.i18n.getMsg('grid.expandDetails'));
+                                grid.i18n.getMsg('grid.expandDetails'));
                         } else {
                             button.setText(
-                                me.i18n.getMsg('grid.unexpandDetails'));
+                                grid.i18n.getMsg('grid.unexpandDetails'));
                         }
                     } else {
                         Ext.Msg.alert(' ',
-                            me.i18n.getMsg('err.pagingsize', maxEntries));
+                            grid.i18n.getMsg('err.pagingsize', maxEntries));
                     }
                 }
             });

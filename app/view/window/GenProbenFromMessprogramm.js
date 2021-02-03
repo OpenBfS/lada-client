@@ -558,7 +558,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 }]
             }],
             onFocusEnter: function(event) {
-                var resultWin = event.toComponent.up('window');
+                var resultWin = event.toComponent.up('window') ||
+                    event.toComponent;
                 var printWin = Lada.view.window.PrintGrid.getInstance();
                 if (printWin) {
                     var grid = resultWin.down('dynamicgrid');
