@@ -22,11 +22,17 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     maximizable: true,
     autoShow: true,
     autoScroll: true,
+    minHeight: 250,
+    maxHeight: 500,
+    minWidth: 340,
     layout: 'vbox',
     constrain: true,
     alwaysOnTop: true,
     parentWindow: null,
     ids: null,
+    startUTC: null,
+    endUTC: null,
+    dryrun: null,
 
     /**
      * This function initialises the Window
@@ -40,6 +46,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             },
             deactivate: function() {
                 this.getEl().addCls('window-inactive');
+            },
+            show: function() {
+                this.removeCls('x-unselectable');
             }
         });
 
@@ -59,12 +68,16 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     startDate.getFullYear(),
                     startDate.getMonth(),
                     startDate.getDate());
+                this.startUTC = startDate;
                 var endDate = new Date(
                     me.down('datefield[name=end]').getValue());
                 var endUTC = Date.UTC(
                     endDate.getFullYear(),
                     endDate.getMonth(),
                     endDate.getDate());
+                this.endUTC = endUTC;
+                var dryrun = me.down('checkbox[name=dryrun]').getValue();
+                this.dryrun = dryrun;
                 var results = [];
                 this.removeAll();
                 this.down('toolbar').removeAll();
@@ -79,17 +92,15 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     xtype: 'panel',
                     border: false,
                     layout: 'fit',
-                    autoScroll: true,
                     margin: '5, 5, 0, 5',
-                    height: 135,
-                    width: 340,
                     html: ''
                 });
                 this.down('panel').setLoading(true);
                 var reqJsondata = {
                     ids: me.ids,
                     start: startUTC,
-                    end: endUTC
+                    end: endUTC,
+                    dryrun: dryrun
                 };
                 Ext.Ajax.request({
                     url: 'lada-server/rest/probe/messprogramm',
@@ -100,16 +111,41 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         var panel = me.down('panel');
                         panel.setLoading(false);
                         var json = Ext.JSON.decode(response.responseText);
+                        if (reqJsondata.dryrun) {
+                            panel.setHtml(panel.html
+                                + '<br>'
+                                + i18n.getMsg('gpfm.window.test.result')
+                                + '<br>'
+                            );
+                        }
                         if (json.success && json.data.proben) {
                             Ext.Object.each(json.data.proben,
                                 function(key, result) {
                                     if (result.success) {
                                         results.push(result);
-                                        panel.setHtml(panel.html +
+                                        var newRes = result.data.filter(
+                                            function(r) {
+                                                return r.found !== true;
+                                            });
+                                        var foundRes = result.data.filter(
+                                            function(r) {
+                                                return r.found === true;
+                                            });
+                                        panel.setHtml(
+                                            panel.html +
                                             '<br>' +
                                             i18n.getMsg(
                                                 'gpfm.generated.success',
-                                                result.data.length, key));
+                                                key)
+                                            + ':<br>'
+                                            + '<ul><li>'
+                                            + i18n.getMsg(
+                                                'gpfm.generated.found',
+                                                foundRes.length)
+                                            + ' </li><li>'
+                                            + newRes.length
+                                            + ' Probe(n) erzeugt</li></ul>'
+                                        );
                                     } else {
                                         panel.setHtml(panel.html +
                                                 '<br>' +
@@ -124,12 +160,19 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         me.down('toolbar').down('button').setDisabled(false);
                         me.processResults(
                             results,
-                            json.data.tag? json.data.tag: ''
-                        );
+                            json.data.tag? json.data.tag: '',
+                            reqJsondata);
                     },
                     failure: function(response) {
                         var panel = me.down('panel');
                         panel.setLoading(false);
+                        if (reqJsondata.dryrun) {
+                            panel.setHtml(panel.html
+                                + '<br>'
+                                + i18n.getMsg('gpfm.window.test.result')
+                                + '<br>'
+                            );
+                        }
                         panel.setHtml(
                             i18n.getMsg(
                                 'gpfm.generated.requestfail',
@@ -161,7 +204,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         this.items = [{
             border: false,
             width: 340,
-            height: 165,
+            height: 270,
             margin: '5, 5, 5, 5',
             autoScroll: true,
             items: [{
@@ -188,7 +231,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 format: 'd.m.Y',
                 formatText: '',
                 period: 'start',
-                value: new Date()
+                value: this.startUTC || new Date()
             }, {
                 xtype: 'datefield',
                 fieldLabel: i18n.getMsg('to'),
@@ -199,7 +242,12 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 format: 'd.m.Y',
                 formatText: '',
                 period: 'end',
-                value: new Date(new Date().getFullYear(), 11, 31)
+                value: this.endUTC || new Date(new Date().getFullYear(), 11, 31)
+            }, {
+                xtype: 'checkbox',
+                name: 'dryrun',
+                boxLabel: i18n.getMsg('gpfm.window.test'),
+                value: this.dryrun || false
             }]
         }];
         this.callParent(arguments);
@@ -210,8 +258,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
      * Handle results of Probe creation from Messprogramm
      * @param results Array of results object
      * @param genTagName Generated tag name
+     * @param request the original request used
      */
-    processResults: function(results, genTagName) {
+    processResults: function(results, genTagName, request) {
         var data = [];
         for (var r in results) {
             var result = results[r];
@@ -227,9 +276,11 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             asynchronousLoad: false
         });
         var me = this;
-        umwStore.load({callback: function() {
-            me.genResultWindow(umwStore, data, genTagName);
-        }});
+        umwStore.load({
+            callback: function() {
+                me.genResultWindow(umwStore, data, genTagName, request);
+            }
+        });
     },
 
     /**
@@ -238,25 +289,85 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
      * @param umwStore Umwelt store instance
      * @param data Generated probe instances
      * @param genTagname Generated tag name
+     * @param request information about the original request (e.g. if it is
+     *   a dryrun)
      */
-    genResultWindow: function(umwStore, data, genTagName) {
+    genResultWindow: function(umwStore, data, genTagName, request) {
         var i18n = Lada.getApplication().bundle;
+        var me = this;
+        var dbIdentifier = 'externeProbeId';
         var newStore = Ext.create('Lada.store.Proben', {data: data});
+        var hidebuttons = ['importprobe', 'genericadd', 'assigntags'];
+        if (request.dryrun) {
+            // In dry runs, some additional actions need to stay unavailable:
+            hidebuttons = hidebuttons.concat([
+                'assigntags',
+                'gridexport',
+                'genericdelete',
+                'expand'
+            ]);
+        }
+        var title = i18n.getMsg('gpfm.generated.grid.title');
+        if (request.dryrun) {
+            title += i18n.getMsg('gpfm.window.test.result.title');
+        }
+
         var win = Ext.create('Ext.window.Window', {
-            layout: 'fit',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
             width: 800,
-            minHeight: 500,
-            maxHeight: 600,
             constrain: true,
-            title: i18n.getMsg(
-                'gpfm.generated.grid.title',
-                genTagName? genTagName: ''),
+            title: title,
             items: [{
+                xtype: 'panel',
+                items: [{
+                    xtype: 'panel',
+                    name: 'genresultinfo',
+                    html: ''
+                }, {
+                    xtype: 'checkbox',
+                    name: 'newonly',
+                    value: false,
+                    boxLabel: i18n.getMsg('gpfm.newonly'),
+                    handler: function(box, newState) {
+                        var store = box.up('window').down('dynamicgrid')
+                            .getStore();
+                        if (!newState) {
+                            store.clearFilter();
+                        } else {
+                            store.filterBy(function(rec) {
+                                return rec.get('found') === false;
+                            });
+                        }
+                    }
+                }, {
+                    xtype: 'button',
+                    hidden: !request.dryrun,
+                    text: i18n.getMsg('gpfm.repeatprobegen'),
+                    handler: function(button) {
+                        Ext.create(
+                            'Lada.view.window.GenProbenFromMessprogramm', {
+                                ids: request.ids,
+                                parentWindow: me.parentWindow,
+                                startUTC: me.startUTC,
+                                endUTC: me.endUTC,
+                                dryrun: me.dryrun
+                            }).show();
+                        button.up('window').close();
+                    }
+                }]
+            },{
                 xtype: 'dynamicgrid',
-                hidebuttons: ['importprobe', 'genericadd', 'gridexport'],
+                width: 800,
+                minHeight: 500,
+                maxHeight: 600,
+                hidebuttons: hidebuttons,
                 rowtarget: { dataType: 'probeId', dataIndex: 'id'},
                 exportRowexp: true,
                 store: newStore,
+                emptyText: 'query.nodata',
                 columns: [{
                     xtype: 'actioncolumn',
                     hideable: false,
@@ -265,20 +376,29 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     dataIndex: 'id',
                     sortable: false,
                     getClass: function(val, meta, rec) {
-                        if (rec.get('id')) {
+                        if (rec.get(dbIdentifier)) {
                             return 'edit';
                         }
-                        return '';
+                        return 'forbidden';
                     },
                     handler: function(grid, rowIndex) {
                         var rec = grid.getStore().getAt(rowIndex);
-                        if (rec.get('id')) {
+                        if (rec.get(dbIdentifier)) {
                             grid.fireEvent('itemdblclick', grid, rec);
                         }
                     }
                 }, {
                     header: i18n.getMsg('extProbeId'),
                     dataIndex: 'externeProbeId'
+                }, {
+                    header: i18n.getMsg('gpfm.pepstatus'),
+                    dataIndex: 'found',
+                    renderer: function(value) {
+                        if (value) {
+                            return i18n.getMsg('gpfm.existant');
+                        }
+                        return i18n.getMsg('gpfm.new');
+                    }
                 }, {
                     header: i18n.getMsg('mstId'),
                     dataIndex: 'mstId',
@@ -317,7 +437,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         if (!value || value === '') {
                             r = value;
                         }
-                        var store = Ext.data.StoreManager.get('betriebsartStore');
+                        var store = Ext.data.StoreManager.get(
+                            'betriebsartStore');
                         var i = store.findExact('betriebsartId', value);
                         var record = store.getData().items[i];
                         if (record) {
@@ -387,13 +508,11 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 }, {
                     header: i18n.getMsg('messungen'),
                     dataIndex: 'mmt',
-                    renderer: function(value, metadata, rec) {
-                        if (!rec) {
-                            return value;
-                        }
-                        var mmth = rec.get('mmt');
-                        if (mmth) {
-                            return mmth;
+                    renderer: function(value) {
+                        if (value && value.length) {
+                            var result = value.length
+                                + ' (' + value.join(', ') + ')';
+                            return result;
                         } else {
                             return '-';
                         }
@@ -415,23 +534,31 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     header: i18n.getMsg('probenehmer'),
                     dataIndex: 'probeNehmerId'
                 }],
-                plugins: Ext.create('Lada.view.plugin.GridRowExpander', {
-                    gridType: 'Lada.view.grid.Messung',
-                    idRow: 'id',
-                    expandOnDblClick: false,
-                    gridConfig: {
-                        bottomBar: false
-                    }
-                })
+                plugins: request.dryrun? false : Ext.create(
+                    'Lada.view.plugin.GridRowExpander', {
+                        gridType: 'Lada.view.grid.Messung',
+                        idRow: 'id',
+                        expandOnDblClick: false,
+                        gridConfig: {
+                            bottomBar: false
+                        }
+                    })
             }],
-            buttons: [{
-                text: i18n.getMsg('close'),
-                handler: function(button) {
-                    button.up('window').close();
-                }
+            dockedItems: [{
+                xtype: 'toolbar',
+                dock: 'bottom',
+                items: [{
+                    xtype: 'tbtext'
+                }, '->', {
+                    xtype: 'button',
+                    text: i18n.getMsg('close'),
+                    handler: function(button) {
+                        button.up('window').close();
+                    }
+                }]
             }],
             onFocusEnter: function(event) {
-                var resultWin = event.toComponent;
+                var resultWin = event.toComponent.up('window');
                 var printWin = Lada.view.window.PrintGrid.getInstance();
                 if (printWin) {
                     var grid = resultWin.down('dynamicgrid');
@@ -439,16 +566,41 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 }
             }
         });
+        win.on({
+            show: function() {
+                this.removeCls('x-unselectable');
+            }
+        });
         win.show();
+        win.down('checkbox[name=newonly]').setValue(!request.dryrun);
+
+        var resultHtml = '';
+        if (request.dryrun) {
+            resultHtml = i18n.getMsg('gpfm.window.test.result') + '<br>';
+        }
+        resultHtml += i18n.getMsg(
+            'gpfm.window.result.period',
+            Lada.util.Date.formatTimestamp(request.start, 'd.m.Y H:i', true),
+            Lada.util.Date.formatTimestamp(request.end, 'd.m.Y H:i', true)
+        );
+        resultHtml += '<br>';
+        if (genTagName) {
+            resultHtml += i18n.getMsg('gpfm.generated.tag', genTagName)
+                + '<br>';
+            win.down('tbtext').setText(i18n.getMsg(
+                'gpfm.generated.tag', genTagName));
+        }
+        win.down('panel[name=genresultinfo]').setHtml(resultHtml);
         win.down('dynamicgrid').setToolbar();
-        this.down('panel').setHtml(this.down('panel').html + '<br><br>'
-                + this.evalResponseData(data));
     },
 
     evalResponseData: function(data) {
         var i18n = Lada.getApplication().bundle;
         var r = '';
-        r += data.length;
+        var newData = data.filter(function(d) {
+            return !d.found;
+        });
+        r += newData.length;
         r += ' ' + i18n.getMsg('probecreated');
         r += '<br/>';
         return r;

@@ -64,6 +64,11 @@
   background-image: url(../img/view-time-schedule-edit.png);
 }
 
+.x-action-col-icon.forbidden
+{
+  background-image: url(../img/dialog-cancel.png);
+}
+
 .x-action-col-icon.editstatus
 {
   background-image: url(../img/view-time-schedule-edit-status.png);
