@@ -81,7 +81,12 @@ Ext.define('Lada.view.form.Probe', {
                         qtip: i18n.getMsg('copy.qtip', i18n.getMsg('probe')),
                         icon: 'resources/img/dialog-ok-apply.png',
                         disabled: true
-                    },'->', {
+                    }, {
+                        text: i18n.getMsg('reload'),
+                        action: 'reload',
+                        qtip: i18n.getMsg('reload.qtip', i18n.getMsg('probe')),
+                        icon: 'resources/img/view-refresh.png'
+                    }, '->', {
                         text: i18n.getMsg('audittrail'),
                         qtip: i18n.getMsg('qtip.audit'),
                         icon: 'resources/img/distribute-vertical-center.png',
@@ -608,6 +613,7 @@ Ext.define('Lada.view.form.Probe', {
 
     setRecord: function(probeRecord) {
         this.clearMessages();
+        this.down('button[action=reload]').setHidden(true);
         this.getForm().loadRecord(probeRecord);
         if (!probeRecord.data || probeRecord.data.id === null) {
             return;
@@ -658,6 +664,7 @@ Ext.define('Lada.view.form.Probe', {
         //Do not set tagwidget probe id if record is not saved
         if (probeRecord.phantom === false) {
             this.down('tagwidget').setProbe(probeRecord.data.id);
+            this.down('button[action=reload]').setHidden(false);
         }
     },
 

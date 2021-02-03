@@ -27,6 +27,9 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform button[action=copy]': {
                 click: this.copy
             },
+            'messprogrammform button[action=reload]': {
+                click: this.reloadMPr
+            },
             'messprogrammform': {
                 dirtychange: this.dirtyForm,
                 save: this.saveHeadless
@@ -738,6 +741,22 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 'ktagruppe[name=ktaGruppeId]');
             ktaCombo.hide();
             ktaCombo.setValue(null);
+        }
+    },
+
+    reloadMPr: function(button) {
+        var form = button.up('window').down('messprogrammform');
+        var callback = function() {
+            button.up('messprogramm').initData();
+        };
+        if (form.isDirty()) {
+            var i18n = Lada.getApplication().bundle;
+            Ext.MessageBox.alert(
+                i18n.getMsg('reloadRecord', i18n.getMsg('messprogramm')),
+                i18n.getMsg('confirmation.discardchanges'),
+                callback);
+        } else {
+            callback();
         }
     }
 });

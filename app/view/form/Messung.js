@@ -51,7 +51,12 @@ Ext.define('Lada.view.form.Messung', {
                 xtype: 'toolbar',
                 dock: 'bottom',
                 border: false,
-                items: ['->', {
+                items: [{
+                    text: i18n.getMsg('reload'),
+                    action: 'reload',
+                    qtip: i18n.getMsg('reload.qtip', i18n.getMsg('messung')),
+                    icon: 'resources/img/view-refresh.png'
+                }, '->', {
                     text: i18n.getMsg('audittrail'),
                     qtip: i18n.getMsg('qtip.audit'),
                     icon: 'resources/img/distribute-vertical-center.png',
@@ -232,6 +237,7 @@ Ext.define('Lada.view.form.Messung', {
 
     setRecord: function(record) {
         this.record = record;
+        this.down('button[action=reload]').setHidden(true);
         var me = this;
         var form = me.getForm();
         form.loadRecord(record);
@@ -245,6 +251,7 @@ Ext.define('Lada.view.form.Messung', {
         //Do not set record in tag widget if it is a phantom record
         if (this.record.phantom === false) {
             this.down('tagwidget').setMessung(this.record.id);
+            this.down('button[action=reload]').setHidden(false);
         }
         //Get the connected Probe instance and Datenbasis
         Lada.model.Probe.load(this.record.get('probeId'), {
