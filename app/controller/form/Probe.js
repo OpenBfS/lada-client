@@ -31,9 +31,6 @@ Ext.define('Lada.controller.form.Probe', {
             'probeform button[action=copy]': {
                 click: this.copy
             },
-            'probeform button[action=reload]': {
-                click: this.reloadProbe
-            },
             'probeform button[action=audit]': {
                 click: this.showAuditTrail
             },
@@ -1039,22 +1036,5 @@ Ext.define('Lada.controller.form.Probe', {
             type: 'probe',
             objectId: button.up('form').recordId
         });
-    },
-
-    reloadProbe: function(button) {
-        var form = button.up('window').down('probeform');
-        // TODO: visual feedback on form and button
-        var callback = function() {
-            button.up('probenedit').initData();
-        };
-        if (form.isDirty()) {
-            var i18n = Lada.getApplication().bundle;
-            Ext.MessageBox.alert(
-                i18n.getMsg('reloadRecord', i18n.getMsg('probe')),
-                i18n.getMsg('confirmation.discardchanges'),
-                callback);
-        } else {
-            callback();
-        }
     }
 });

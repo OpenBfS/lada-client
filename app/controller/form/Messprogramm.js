@@ -27,9 +27,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform button[action=copy]': {
                 click: this.copy
             },
-            'messprogrammform button[action=reload]': {
-                click: this.reloadMPr
-            },
             'messprogrammform': {
                 dirtychange: this.dirtyForm,
                 save: this.saveHeadless

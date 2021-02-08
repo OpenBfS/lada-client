@@ -28,9 +28,6 @@ Ext.define('Lada.controller.form.Messung', {
             'messungform button[action=audit]': {
                 click: this.showAuditTrail
             },
-            'messungform button[action=reload]': {
-                click: this.reloadMessung
-            },
             'messungform': {
                 tagdirtychange: this.dirtyTags,
                 dirtychange: this.dirtyForm,
@@ -352,22 +349,5 @@ Ext.define('Lada.controller.form.Messung', {
             messwertGrid.getStore().reload();
         });
         win.show();
-    },
-
-    reloadMessung: function(button) {
-        var form = button.up('window').down('messungform');
-        // TODO: visual feedback on form and button
-        var callback = function() {
-            button.up('messungedit').initData();
-        };
-        if (form.isDirty()) {
-            var i18n = Lada.getApplication().bundle;
-            Ext.MessageBox.alert(
-                i18n.getMsg('reloadRecord', i18n.getMsg('messung')),
-                i18n.getMsg('confirmation.discardchanges'),
-                callback);
-        } else {
-            callback();
-        }
     }
 });

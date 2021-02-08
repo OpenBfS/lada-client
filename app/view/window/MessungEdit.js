@@ -43,6 +43,11 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.title = i18n.getMsg('title.loading.messung');
 
         this.buttons = [{
+            text: i18n.getMsg('reload'),
+            handler: this.reload,
+            scope: this,
+            icon: 'resources/img/view-refresh.png'
+        }, '->', {
             text: i18n.getMsg('close'),
             scope: this,
             handler: this.handleBeforeClose
@@ -256,6 +261,26 @@ Ext.define('Lada.view.window.MessungEdit', {
                 closeButton.handler = null;
                 closeButton.callback = this.handleBeforeClose;
             }
+        }
+    },
+
+    /**
+     * Reload MessungEdit Window
+     */
+    reload: function() {
+        var form = this.down('messungform');
+        // TODO: visual feedback on form and button
+        var callback = function() {
+            form.up('window').initData();
+        };
+        if (form.isDirty()) {
+            var i18n = Lada.getApplication().bundle;
+            Ext.MessageBox.alert(
+                i18n.getMsg('reloadRecord', i18n.getMsg('messung')),
+                i18n.getMsg('confirmation.discardchanges'),
+                callback(form));
+        } else {
+            callback(form);
         }
     },
 
