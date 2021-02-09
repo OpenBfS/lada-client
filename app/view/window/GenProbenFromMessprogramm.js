@@ -297,7 +297,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         var me = this;
         var dbIdentifier = 'externeProbeId';
         var newStore = Ext.create('Lada.store.Proben', {data: data});
-        var hidebuttons = ['importprobe', 'genericadd', 'assigntags'];
+        var hidebuttons = ['importprobe', 'genericadd', 'assigntags', 'gridexport'];
         if (request.dryrun) {
             // In dry runs, some additional actions need to stay unavailable:
             hidebuttons = hidebuttons.concat([
