@@ -107,8 +107,42 @@ Ext.define('Lada.controller.Query', {
             }
 
         });
-        this.resultStore = Ext.StoreManager.get('genericresults');
+    },
 
+    createResultStore: function() {
+        if (!this.resultStore) {
+            this.resultStore = Ext.StoreManager.get('genericresults');
+
+            // map <-> dynamic grid data exchange listener
+            this.resultStore.addListener('load', function() {
+                var dgrid = Ext.getCmp('dynamicgridid');
+                if (
+                    dgrid &&
+                    dgrid.rowtarget.dataType === 'ortId' &&
+                    dgrid.ortstore
+                ) {
+                    var data = dgrid.getStore().getData().items;
+                    var request = [];
+                    for (var i=0; i< data.length; i++) {
+                        request.push(data[i].get(dgrid.rowtarget.dataIndex));
+                    }
+                    if (request.length) {
+                        Ext.Ajax.request({
+                            url: 'lada-server/rest/ort/getbyids',
+                            jsonData: JSON.stringify(request),
+                            method: 'POST',
+                            success: function(response) {
+                                var json = Ext.JSON.decode(
+                                    response.responseText);
+                                if (json.data && dgrid.ortstore) {
+                                    dgrid.ortstore.setData(json.data);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
     },
 
     changeListedQueries: function(checkbox) {
@@ -422,6 +456,7 @@ Ext.define('Lada.controller.Query', {
     },
 
     search: function(button) {
+        this.createResultStore();
         var i18n = Lada.getApplication().bundle;
         var qp = button.up('querypanel');
         var gcs = qp.gridColumnValueStore;
@@ -444,9 +479,6 @@ Ext.define('Lada.controller.Query', {
                 property: 'baseQuery',
                 value: qp.getForm().getRecord().get('baseQuery'),
                 exactMatch: true});
-            if (!this.resultStore) {
-                this.resultStore = Ext.StoreManager.get('genericresults');
-            }
             this.resultStore.getProxy().setPayload(jsonData);
             this.resultStore.setPageSize(Lada.pagingSize);
 
@@ -1153,29 +1185,6 @@ Ext.define('Lada.controller.Query', {
                 autoLoad: false,
                 remoteFilter: true
             });
-        grid.getStore().addListener('load', function() {
-            var dgrid = Ext.getCmp('dynamicgridid');
-            if (dgrid && dgrid.ortstore) {
-                var data = dgrid.getStore().getData().items;
-                var request = [];
-                for (var i=0; i< data.length; i++) {
-                    request.push(data[i].get(dgrid.rowtarget.dataIndex));
-                }
-                if (request.length) {
-                    Ext.Ajax.request({
-                        url: 'lada-server/rest/ort/getbyids',
-                        jsonData: JSON.stringify(request),
-                        method: 'POST',
-                        success: function(response) {
-                            var json = Ext.JSON.decode(response.responseText);
-                            if (json.data && grid.ortstore) {
-                                grid.ortstore.setData(json.data);
-                            }
-                        }
-                    });
-                }
-            }
-        });
         grid.ortstore.addListener('datachanged',function() {
             var dgrid = Ext.getCmp('dynamicgridid');
             dgrid.down('map').addLocations(dgrid.ortstore);
