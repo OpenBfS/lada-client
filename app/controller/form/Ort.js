@@ -381,7 +381,7 @@ Ext.define('Lada.controller.form.Ort', {
     },
 
     /**
-     * Checks if the KDA change diaog can be used from a form with coordinate
+     * Checks if the KDA change dialog can be used from a form with coordinate
      * fields (some coordinates set; form is not readonly)
      * @param panel the panel around the form to check
      */
