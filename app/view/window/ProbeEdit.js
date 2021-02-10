@@ -314,10 +314,10 @@ Ext.define('Lada.view.window.ProbeEdit', {
      * Reload ProbeEdit Window
      */
     reload: function() {
+        this.setLoading(true);
         var form = this.down('probeform');
-        // TODO: visual feedback on form and button
         var callback = function() {
-            form.up('window').initData();
+            form.up('window').reloadRecord();
         };
         if (form.isDirty()) {
             var i18n = Lada.getApplication().bundle;

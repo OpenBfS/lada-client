@@ -237,6 +237,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             } else {
                 me.disableStatusEdit();
             }
+            me.setLoading(false);
         };
         if (!loadedRecord) {
             Ext.ClassManager.get('Lada.model.Messung').load(
@@ -268,10 +269,10 @@ Ext.define('Lada.view.window.MessungEdit', {
      * Reload MessungEdit Window
      */
     reload: function() {
+        this.setLoading(true);
         var form = this.down('messungform');
-        // TODO: visual feedback on form and button
         var callback = function() {
-            form.up('window').initData();
+            form.up('window').reloadRecord();
         };
         if (form.isDirty()) {
             var i18n = Lada.getApplication().bundle;
