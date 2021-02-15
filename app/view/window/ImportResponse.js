@@ -6,7 +6,6 @@ Ext.define('Lada.view.window.ImportResponse', {
     alias: 'widget.importresponse',
 
     responseData: '',
-    message: '',
     fileName: '',
     fileNames: [],
 
@@ -100,30 +99,35 @@ Ext.define('Lada.view.window.ImportResponse', {
             }
         }];
         this.callParent(arguments);
-        this.initContent(this.response.data);
+        this.initContent(this.response);
     },
 
     /**
      * Init window content to display file import results
      * @param data Response data containing warnings and errors
      */
-    initContent: function(data) {
+    initContent: function(response) {
         var i18n = Lada.getApplication().bundle;
         var me = this;
 
-        Ext.Object.each(data, function(fileName, fileResult) {
-            var response = '<br/><hr><b>' +
-                fileName +
-                ':</b><br/><ol>&#40' +
-                me.mstEncoding +
-                '&#41</ol>';
-            response += i18n.getMsg('import.messages') + ':<br/><hr>';
-            response += me.parseResponse(fileResult, true);
-            me.download += response;
-            me.down('panel').setHtml(me.down('panel').html + response);
-
-        });
-        me.down('button[name=download]').enable();
+        var html = '';
+        if (response.success && response.data) {
+            Ext.Object.each(response.data, function(fileName, fileResult) {
+                html = '<br/><hr><b>' +
+                    fileName +
+                    ':</b><br/><ol>&#40' +
+                    me.mstEncoding +
+                    '&#41</ol>';
+                html += i18n.getMsg('import.messages') + ':<br/><hr>';
+                html += me.parseResponse(fileResult, true);
+                me.download += html;
+            });
+            me.down('button[name=download]').enable();
+        } else {
+            html += i18n.getMsg(response.message) + ':<br/>'
+                + response.data;
+        }
+        me.down('panel').setHtml(me.down('panel').html + html);
     },
 
     /**

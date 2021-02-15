@@ -301,7 +301,6 @@ Ext.define('Lada.view.window.FileUpload', {
         }
         if (!this.resultWin) {
             this.resultWin = Ext.create('Lada.view.window.ImportResponse', {
-                message: {}, //TODO:response.message,
                 modal: true,
                 fileCount: this.fileCount,
                 fileNames: this.fileNames,
