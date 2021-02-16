@@ -172,7 +172,7 @@ Ext.define('Lada.controller.Query', {
 
         //Clone columns after query is saved
         var saveCallback = function(savedQuery) {
-            new Ext.Promise(function(resolve) {
+            return new Ext.Promise(function(resolve) {
                 var len = columnValues.length;
                 var cur = 0;
                 var success = true;
@@ -195,7 +195,9 @@ Ext.define('Lada.controller.Query', {
                     clonedModel.save({
                         callback: function(rec, op, suc) {
                             cur++;
-                            success = suc === false ? false: true;
+                            if (!suc) {
+                                success = false;
+                            }
                             if (cur === len) {
                                 resolve(success);
                             }
@@ -213,7 +215,7 @@ Ext.define('Lada.controller.Query', {
             .setValue(true);
         this.changeCurrentQuery(cbox);
         panel.down('fieldset[name=querydetails]').setCollapsed(false);
-        this.saveQuery(button, saveCallback, true);
+        this.saveQuery(button, saveCallback);
     },
 
     expandDetails: function(button) {
@@ -313,16 +315,16 @@ Ext.define('Lada.controller.Query', {
     },
 
     handleSaveClicked: function(button) {
-        this.saveQuery(button, null);
+        this.saveQuery(button);
     },
 
     /**
      * Saves the current query object and attached columns
      * @param button UI el inside the querypanel
-     * @param callback Function to call after successfull save
-     * @param skipColumns boolean, if true, columns wont be saved
+     * @param callback (optional) async Function to call after successful save.
+     *     If present, it will replace the saving of gridColumns
      */
-    saveQuery: function(button, callback, skipColumns) {
+    saveQuery: function(button, callback) {
         var i18n = Lada.getApplication().bundle;
         var qp = button.up('querypanel');
 
@@ -359,14 +361,20 @@ Ext.define('Lada.controller.Query', {
         var me = this;
         record.save({
             success: function(rec, response) {
-                if (callback) {
-                    callback(rec);
-                }
                 var json = Ext.decode(response.getResponse().responseText);
                 var newId = json.data.id;
-                me.persistColumnsWidth(rec);
                 qp.getForm().loadRecord(rec);
-                if (!skipColumns) {
+
+                var finalCallback = function() {
+                    me.persistColumnsWidth(rec).then(function() {
+                        qp.down('combobox[name=selectedQuery]')
+                            .setStore(qp.store);
+                        qp.down('combobox[name=selectedQuery]').select(newId);
+                        qp.loadGridColumnStore();
+                        qp.loadingMask.hide();
+                    });
+                };
+                if (!callback) {
                     var columns = qp.gridColumnValueStore.getData().items;
                     var saved = 0;
                     new Ext.Promise(function(resolve) {
@@ -382,17 +390,12 @@ Ext.define('Lada.controller.Query', {
                             });
                         }
                     }).then(function() {
-                        qp.down('combobox[name=selectedQuery]')
-                            .setStore(qp.store);
-                        qp.down('combobox[name=selectedQuery]').select(newId);
-                        qp.loadGridColumnStore();
-                        qp.loadingMask.hide();
+                        finalCallback();
                     });
                 } else {
-                    qp.down('combobox[name=selectedQuery]').setStore(qp.store);
-                    qp.down('combobox[name=selectedQuery]').select(newId);
-                    qp.loadGridColumnStore();
-                    qp.loadingMask.hide();
+                    callback(rec).then(function() {
+                        finalCallback();
+                    });
                 }
             },
             failure: function() {
@@ -1196,19 +1199,28 @@ Ext.define('Lada.controller.Query', {
     },
 
     /**
-     * tries to persist visible columns' width
+     * tries to persist visible columns' width of the given record
+     * @async resolves true on success, false if there was an error
      */
     persistColumnsWidth: function(record) {
-        if (!record.phantom) {
+        return new Ext.Promise(function(resolve) {
+
             var dgs = Ext.ComponentQuery.query('dynamicgrid');
             var dynamicgrid = null;
             if (dgs) {
                 dynamicgrid = dgs[0];
             }
+            if (!dynamicgrid || record.phantom ) {
+                resolve(true);
+                return;
+            }
             if (dynamicgrid) {
                 var dcColumns = dynamicgrid.getVisibleColumns();
                 var qp = Ext.ComponentQuery.query('querypanel')[0];
                 var gcsColumns = qp.gridColumnValueStore.getData().items;
+                var len = 0;
+                var cur = 0;
+                var success = true;
                 dcColumns.forEach(function(dcCol) {
                     var gridColumn;
                     for (var i = 0; i < gcsColumns.length; i++) {
@@ -1220,11 +1232,22 @@ Ext.define('Lada.controller.Query', {
                     }
                     if (gridColumn) {
                         gridColumn.set('width', dcCol.width);
-                        gridColumn.save();
+                        len++;
+                        gridColumn.save({
+                            callback: function(rec, op, suc) {
+                                cur++;
+                                if (!suc) {
+                                    success = false;
+                                }
+                                if (cur === len) {
+                                    resolve(success);
+                                }
+                            }
+                        });
                     }
                 });
             }
-        }
+        });
     },
 
 
