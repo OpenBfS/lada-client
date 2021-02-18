@@ -9,12 +9,12 @@
 /**
  * Controller for print functionalities
  * This offers printing using mapfish print templates.
- * To determine available templates, the mapfish print app.json is queried.
+ * To determine available templates, the mapfish print apps.json is queried.
  * To determine the data needed for a template, capabilities.json of mapfish
  * print is parsed.
  * Attribute fields that require "String" values will be matched against field
  * names from the input data. If a match is found, these values are used.
- * If not found, the user is offered text field where optional values can
+ * If not found, the user is offered a text field where optional values can
  * be inserted/edited prior to export.
  * If the template requires one or more "TableAttributeValue", then the whole
  * input table will be submitted into this field. This allows for printing out
@@ -121,6 +121,7 @@ Ext.define('Lada.controller.Print', {
 
     changeLayout: function(combobox, newValue) {
         var win = combobox.up('printgrid');
+        var i18n = Lada.getApplication().bundle;
 
         if (!win.parentGrid) {
             return;
@@ -172,16 +173,32 @@ Ext.define('Lada.controller.Print', {
                                     'rowtarget.title.'
                                     + win.parentGrid.rowtarget.dataType);
                             }
-
-                            listOfItems.push({
-                                xtype: 'textarea',
-                                fieldLabel: attributes[i].name,
-                                name: attributes[i].name,
-                                labelWidth: 80,
-                                margin: '5, 5, 5, 5',
-                                anchor: '100%',
-                                value: value
-                            });
+                            if ((i18n.getMsg(attributes[i].name).
+                                indexOf('undefined')) !== -1) {
+                                listOfItems.push({
+                                    xtype: 'textfield',
+                                    fieldLabel: attributes[i].name,
+                                    name: attributes[i].name,
+                                    labelWidth: 105,
+                                    margin: '5, 5, 5, 5',
+                                    anchor: '100%',
+                                    value: value
+                                });
+                            } else {
+                                listOfItems.push({
+                                    xtype: 'textarea',
+                                    fieldLabel: i18n.getMsg(attributes[i].name),
+                                    emptyText: i18n.getMsg('emptyText.'+
+                                        attributes[i].name),
+                                    name: attributes[i].name,
+                                    labelWidth: 105,
+                                    margin: '5, 5, 5, 5',
+                                    anchor: '100%',
+                                    grow: true,
+                                    cls: 'textAreaCls',
+                                    value: value
+                                });
+                            }
                         }
                         break;
                     default:
@@ -644,7 +661,7 @@ Ext.define('Lada.controller.Print', {
                 queueitem);
         };
 
-        this.createSheetData(grid, callback, this);
+        this.createSheetData(grid, callback, this, queueitem);
     },
 
     /**
@@ -653,10 +670,14 @@ Ext.define('Lada.controller.Print', {
      */
     prepareData: function(data) {
         // Copy data
-        var prep = JSON.parse(data);
-        data = JSON.parse(data);
+        var prep = Ext.JSON.decode(data, true);
+        if (prep === null) {
+            this.handleError(null, 'err.msg.print.failed');
+            return null;
+        }
+        data = Ext.JSON.decode(data, true);
         // ensure data and prep are equal, not sure
-        // if json.parse changes order of things
+        // if parsing changes order of things
 
         var emptyMessstelle = {
             'id': null,
@@ -733,7 +754,7 @@ Ext.define('Lada.controller.Print', {
      * The parameter printFunctionCallback will be called once the ajax-request
      * starting the json-export was evaluated
      **/
-    createSheetData: function(grid, printFunctionCallback, cbscope) {
+    createSheetData: function(grid, printFunctionCallback, cbscope, qitem) {
         var selection = grid.getView().getSelectionModel().getSelection();
         var ids = [];
         for (var item in selection) {
@@ -755,7 +776,11 @@ Ext.define('Lada.controller.Print', {
             scope: cbscope,
             success: printFunctionCallback,
             failure: function(response) {
-                me.handleError(response);
+                var i18n = Lada.getApplication().bundle;
+                me.handleError(response, 'err.msg.print.failed');
+                qitem.set('status', 'error');
+                qitem.set('message', i18n.getMsg('err.msg.print.failed'));
+                qitem.set('done', true);
                 return null;
             }
         });
@@ -809,6 +834,7 @@ Ext.define('Lada.controller.Print', {
      * Handles server error feedback by opening an popup window containing
      * details on the error
      * @param response the raw response as given by the server
+     * @param message Key of i18n message to be displayed
      */
     handleError: function(response, message) {
         var i18n = Lada.getApplication().bundle;
@@ -818,7 +844,7 @@ Ext.define('Lada.controller.Print', {
         } else if (response && response.status && response.status === 404) {
             errormsg = i18n.getMsg('err.msg.print.404');
         } else if (response && response.responseText) {
-            var json = Ext.JSON.decode(response.responseText);
+            var json = Ext.JSON.decode(response.responseText, true);
             if (json && json.message) {
                 errormsg = i18n.getMsg(json.message);
             }

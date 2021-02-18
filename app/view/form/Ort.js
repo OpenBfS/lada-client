@@ -14,7 +14,8 @@ Ext.define('Lada.view.form.Ort', {
     alias: 'widget.ortform',
     requires: [
         'Lada.view.widget.Verwaltungseinheit',
-        'Lada.view.widget.Staat'
+        'Lada.view.widget.Staat',
+        'Lada.view.widget.KoordinatenArt'
     ],
     model: null,
 
@@ -138,13 +139,13 @@ Ext.define('Lada.view.form.Ort', {
             xtype: 'koordinatenart',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.kda'),
-            name: 'kdaId'
+            name: 'kdaId',
+            store: this.kdaComboStore
         }, {
             xtype: 'tfield',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.koordx'),
             name: 'koordXExtern',
-            regex: /^[noeswNOESW\d\.,-]+$/,
             maxLength: 22
         }, {
             xtype: 'tfield',
@@ -170,6 +171,13 @@ Ext.define('Lada.view.form.Ort', {
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.hoeheLand'),
             name: 'hoeheLand',
+            maxLength: 10,
+            allowDecimals: true
+        }, {
+            xtype: 'numfield',
+            labelWidth: 125,
+            fieldLabel: i18n.getMsg('orte.hoeheUeberNn'),
+            name: 'hoeheUeberNn',
             maxLength: 10,
             allowDecimals: true
         }, {
@@ -213,6 +221,14 @@ Ext.define('Lada.view.form.Ort', {
             }]
         }];
         this.callParent(arguments);
+        this.kdaComboStore = Ext.create('Lada.store.KoordinatenArt');
+        if (this.record.get('kdaId') !== 3) {
+            this.down('koordinatenart').store.filter({property: 'id',
+                value: /(1|2|4|5|8)/,exactMatch: true});
+        } else {
+            this.down('koordinatenart').store.clearFilter();
+        }
+
         this.getForm().loadRecord(this.record);
 
         this.readOnly = this.record.readOnly;

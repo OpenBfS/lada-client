@@ -75,7 +75,9 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                     formPanel.up('window').parentWindow.down(
                         'ortszuordnunggrid') &&
                         formPanel.up('window').parentWindow.down(
-                            'ortszuordnunggrid').store
+                            'ortszuordnunggrid').store &&
+                        formPanel.up('window').parentWindow.xtype
+                            === 'probenedit'
                 ) {
                     formPanel.up('window').parentWindow
                         .down('ortszuordnunggrid').store.reload();

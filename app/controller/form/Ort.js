@@ -339,6 +339,10 @@ Ext.define('Lada.controller.form.Ort', {
         var savebutton = panel.down('button[action=save]');
 
         var form = panel.getForm();
+        if (form.getRecord().get('kdaId') === 3) {
+            panel.down('button[action=copy]').setDisabled(true);
+            return;
+        }
         if (!form.getRecord().phantom && form.getRecord().get('readonly')) {
             savebutton.setDisabled(true);
             return;
@@ -377,7 +381,7 @@ Ext.define('Lada.controller.form.Ort', {
     },
 
     /**
-     * Checks if the KDA change diaog can be used from a form with coordinate
+     * Checks if the KDA change dialog can be used from a form with coordinate
      * fields (some coordinates set; form is not readonly)
      * @param panel the panel around the form to check
      */
@@ -388,6 +392,7 @@ Ext.define('Lada.controller.form.Ort', {
             return;
         }
         if (panel.down('koordinatenart').getValue()
+            && panel.down('koordinatenart').getValue() !== 3
             && panel.down('tfield[name=koordXExtern]').getValue()
             && panel.down('tfield[name=koordYExtern]').getValue()
         ) {
@@ -466,8 +471,11 @@ Ext.define('Lada.controller.form.Ort', {
                 success: function(response) {
                     win.setLoading(false);
                     if (response && response.responseText) {
+                        var messageContainer = win.down(
+                            'container[name=messageContainer]');
                         var json = Ext.decode(response.responseText);
                         if (json.data) {
+                            messageContainer.setHidden(true);
                             var coords = Ext.decode(json.data);
                             win.down('koordinatenart[name=newKDA]')
                                 .setReadOnly(false);
@@ -478,11 +486,9 @@ Ext.define('Lada.controller.form.Ort', {
                             win.down('button[action=apply]')
                                 .setDisabled(false);
                         } else {
-                            var messageContainer = win.down(
-                                'container[name=messageContainer]');
+                            messageContainer.setHidden(false);
                             var messageField = win.down(
                                 'textareafield[name=message]');
-                            messageContainer.setHidden(false);
                             messageField.setValue(
                                 i18n.getMsg('err.msg.ort.changeKda'));
                             // TODO error handling: calculation not successful.
@@ -497,6 +503,13 @@ Ext.define('Lada.controller.form.Ort', {
                 },
                 failure: function() {
                     win.setLoading(false);
+                    var messageContainer = win.down(
+                        'container[name=messageContainer]');
+                    var messageField = win.down(
+                        'textareafield[name=message]');
+                    messageContainer.setHidden(false);
+                    messageField.setValue(
+                        i18n.getMsg('err.msg.ort.changeKda'));
                     win.down('button[action=apply]').setDisabled(true);
                     win.down('koordinatenart[name=newKDA]').setValue(
                         win.down('koordinatenart[name=originalKDA]')

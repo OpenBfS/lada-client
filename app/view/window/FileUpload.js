@@ -282,43 +282,6 @@ Ext.define('Lada.view.window.FileUpload', {
         });
     },
 
-    /** TODO obsolete code 2020/09?
-     * @private
-     * A handler uploading a file, given as binary string
-     */
-    uploadFile: function(button, binData, fileIndex) {
-        var win = button.up('window');
-        var cb = win.down('combobox[name=encoding]');
-        var contentType = 'text/plain; charset=' + cb.getValue();
-        var mstSelector = win.down('combobox[name=mst]').getValue();
-        var x = new Uint8Array(binData.slice(0,3));
-        if (
-            cb.getValue() === 'utf-8' &&
-            x[0] === 0xEF &&
-            x[1] === 0xBB &&
-            x[2] === 0xBF
-        ) {
-            binData = binData.slice(3);
-        }
-        Ext.Ajax.request({
-            url: 'lada-server/data/import/laf',
-            method: 'POST',
-            headers: {
-                'Content-Type': contentType,
-                'X-LADA-MST': mstSelector
-            },
-            scope: win,
-            binary: true,
-            binaryData: binData,
-            success: function(response, opts) {
-                win.uploadSuccess(response, opts, fileIndex);
-            },
-            failure: function(response, opts) {
-                win.uploadFailure(response, opts, fileIndex);
-            }
-        });
-    },
-
     /**
      * @private
      * Show result window after successfull uploaded
@@ -338,7 +301,6 @@ Ext.define('Lada.view.window.FileUpload', {
         }
         if (!this.resultWin) {
             this.resultWin = Ext.create('Lada.view.window.ImportResponse', {
-                message: {}, //TODO:response.message,
                 modal: true,
                 fileCount: this.fileCount,
                 fileNames: this.fileNames,

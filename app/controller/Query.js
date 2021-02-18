@@ -27,9 +27,8 @@ Ext.define('Lada.controller.Query', {
         'Lada.view.widget.Datenbasis',
         'Lada.view.widget.Betriebsart',
         'Lada.view.plugin.GridRowExpander',
-        'Lada.view.widget.DynamicGrid'
-
-
+        'Lada.view.widget.DynamicGrid',
+        'Lada.view.window.SqlDisplay'
     ],
 
     resultStore: null,
@@ -63,6 +62,9 @@ Ext.define('Lada.controller.Query', {
             },
             'querypanel button[action=reset]': {
                 click: me.reset
+            },
+            'querypanel button[action=showsql]': {
+                click: me.showsql
             },
             'querypanel button[action=search]': {
                 click: me.search
@@ -105,8 +107,42 @@ Ext.define('Lada.controller.Query', {
             }
 
         });
-        this.resultStore = Ext.StoreManager.get('genericresults');
+    },
 
+    createResultStore: function() {
+        if (!this.resultStore) {
+            this.resultStore = Ext.StoreManager.get('genericresults');
+
+            // map <-> dynamic grid data exchange listener
+            this.resultStore.addListener('load', function() {
+                var dgrid = Ext.getCmp('dynamicgridid');
+                if (
+                    dgrid &&
+                    dgrid.rowtarget.dataType === 'ortId' &&
+                    dgrid.ortstore
+                ) {
+                    var data = dgrid.getStore().getData().items;
+                    var request = [];
+                    for (var i=0; i< data.length; i++) {
+                        request.push(data[i].get(dgrid.rowtarget.dataIndex));
+                    }
+                    if (request.length) {
+                        Ext.Ajax.request({
+                            url: 'lada-server/rest/ort/getbyids',
+                            jsonData: JSON.stringify(request),
+                            method: 'POST',
+                            success: function(response) {
+                                var json = Ext.JSON.decode(
+                                    response.responseText);
+                                if (json.data && dgrid.ortstore) {
+                                    dgrid.ortstore.setData(json.data);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
     },
 
     changeListedQueries: function(checkbox) {
@@ -170,7 +206,7 @@ Ext.define('Lada.controller.Query', {
 
         //Clone columns after query is saved
         var saveCallback = function(savedQuery) {
-            new Ext.Promise(function(resolve) {
+            return new Ext.Promise(function(resolve) {
                 var len = columnValues.length;
                 var cur = 0;
                 var success = true;
@@ -193,7 +229,9 @@ Ext.define('Lada.controller.Query', {
                     clonedModel.save({
                         callback: function(rec, op, suc) {
                             cur++;
-                            success = suc === false ? false: true;
+                            if (!suc) {
+                                success = false;
+                            }
                             if (cur === len) {
                                 resolve(success);
                             }
@@ -211,7 +249,7 @@ Ext.define('Lada.controller.Query', {
             .setValue(true);
         this.changeCurrentQuery(cbox);
         panel.down('fieldset[name=querydetails]').setCollapsed(false);
-        this.saveQuery(button, saveCallback, true);
+        this.saveQuery(button, saveCallback);
     },
 
     expandDetails: function(button) {
@@ -261,6 +299,7 @@ Ext.define('Lada.controller.Query', {
     changeCurrentQuery: function(combobox) {
         var qp = combobox.up('querypanel');
         qp.down('button[name=search]').setDisabled(true);
+        qp.down('button[action=showsql]').setDisabled(true);
         var newquery = qp.store.findRecord(
             'id',
             combobox.getValue(),
@@ -310,16 +349,16 @@ Ext.define('Lada.controller.Query', {
     },
 
     handleSaveClicked: function(button) {
-        this.saveQuery(button, null);
+        this.saveQuery(button);
     },
 
     /**
      * Saves the current query object and attached columns
      * @param button UI el inside the querypanel
-     * @param callback Function to call after successfull save
-     * @param skipColumns boolean, if true, columns wont be saved
+     * @param callback (optional) async Function to call after successful save.
+     *     If present, it will replace the saving of gridColumns
      */
-    saveQuery: function(button, callback, skipColumns) {
+    saveQuery: function(button, callback) {
         var i18n = Lada.getApplication().bundle;
         var qp = button.up('querypanel');
 
@@ -356,14 +395,20 @@ Ext.define('Lada.controller.Query', {
         var me = this;
         record.save({
             success: function(rec, response) {
-                if (callback) {
-                    callback(rec);
-                }
                 var json = Ext.decode(response.getResponse().responseText);
                 var newId = json.data.id;
-                me.persistColumnsWidth(rec);
                 qp.getForm().loadRecord(rec);
-                if (!skipColumns) {
+
+                var finalCallback = function() {
+                    me.persistColumnsWidth(rec).then(function() {
+                        qp.down('combobox[name=selectedQuery]')
+                            .setStore(qp.store);
+                        qp.down('combobox[name=selectedQuery]').select(newId);
+                        qp.loadGridColumnStore();
+                        qp.loadingMask.hide();
+                    });
+                };
+                if (!callback) {
                     var columns = qp.gridColumnValueStore.getData().items;
                     var saved = 0;
                     new Ext.Promise(function(resolve) {
@@ -379,17 +424,12 @@ Ext.define('Lada.controller.Query', {
                             });
                         }
                     }).then(function() {
-                        qp.down('combobox[name=selectedQuery]')
-                            .setStore(qp.store);
-                        qp.down('combobox[name=selectedQuery]').select(newId);
-                        qp.loadGridColumnStore();
-                        qp.loadingMask.hide();
+                        finalCallback();
                     });
                 } else {
-                    qp.down('combobox[name=selectedQuery]').setStore(qp.store);
-                    qp.down('combobox[name=selectedQuery]').select(newId);
-                    qp.loadGridColumnStore();
-                    qp.loadingMask.hide();
+                    callback(rec).then(function() {
+                        finalCallback();
+                    });
                 }
             },
             failure: function() {
@@ -419,42 +459,20 @@ Ext.define('Lada.controller.Query', {
     },
 
     search: function(button) {
+        this.createResultStore();
         var i18n = Lada.getApplication().bundle;
         var qp = button.up('querypanel');
         var gcs = qp.gridColumnValueStore;
-        var jsonData = {columns: []};
-        var csdata = gcs.getData().items;
+        var rowtarget = this.setrowtarget(qp);
+        var jsonData = this.getQueryPayload(gcs, rowtarget);
+        if (!jsonData) {
+            //TODO warning: no data requested
+            return;
+        }
         var loadingMask = Ext.create('Ext.LoadMask', {
             target: qp
         });
         loadingMask.show();
-        if (csdata.length === 0) {
-            //TODO warning: no data requested
-            return;
-        }
-        var rowtarget = this.setrowtarget(qp);
-        for (var i=0; i < csdata.length; i++ ) {
-            var columnObj = {
-                gridColumnId: csdata[i].get('gridColumnId'),
-                filterActive: csdata[i].get('filterActive'),
-                filterValue: csdata[i].get('filterValue') || '',
-                filterRegex: csdata[i].get('filterRegex') || false,
-                filterNegate: csdata[i].get('filterNegate') || false,
-                filterIsNull: csdata[i].get('filterIsNull') || false,
-                visible: csdata[i].get('visible'),
-                columnIndex: csdata[i].get('columnIndex'),
-                sortIndex: csdata[i].get('sortIndex'),
-                sort: csdata[i].get('sort')
-            };
-            if (csdata[i].get('dataIndex') === rowtarget.dataIndex) {
-                jsonData.columns.push(columnObj);
-                continue;
-            }
-            if (csdata[i].get('visible') === true ||
-                csdata[i].get('filterActive') === true ) {
-                jsonData.columns.push(columnObj);
-            }
-        }
         if (!jsonData.columns.length) {
             //TODO warning: no data requested
         } else {
@@ -464,9 +482,6 @@ Ext.define('Lada.controller.Query', {
                 property: 'baseQuery',
                 value: qp.getForm().getRecord().get('baseQuery'),
                 exactMatch: true});
-            if (!this.resultStore) {
-                this.resultStore = Ext.StoreManager.get('genericresults');
-            }
             this.resultStore.getProxy().setPayload(jsonData);
             this.resultStore.setPageSize(Lada.pagingSize);
 
@@ -546,6 +561,73 @@ Ext.define('Lada.controller.Query', {
                 }
             });
         }
+    },
+
+    showsql: function(button) {
+        var qp = button.up('querypanel');
+        var rowtarget = this.setrowtarget(qp);
+        var gcs = qp.gridColumnValueStore;
+        var jsonData = this.getQueryPayload(gcs, rowtarget);
+        if (!jsonData) {
+            //TODO warning: no data requested
+            return;
+        }
+        Ext.Ajax.request({
+            url: 'lada-server/rest/sql',
+            method: 'POST',
+            jsonData: jsonData,
+            success: function(response) {
+                if (response) {
+                    var json = Ext.decode(response.responseText);
+                    if (json.success && json.data) {
+                        Ext.create('Lada.view.window.SqlDisplay', {
+                            sql: json.data
+                        }).show();
+                    }
+                }
+            },
+            failure: function() {
+                Ext.log({msg: 'Unable to get sql query', lvl: 'warn'});
+            }
+        });
+    },
+
+    /**
+     * Creates the current query as to be sent to the server
+     * @param {*} gcs an Extjs store containing the current baseQuery and
+     *  gridColumns (usually: querypanel.gridColumnStore)
+     * @param {*} rowtarget the calculated rowtarget calculated from the query
+     *   panel (see setrowtarget)
+     */
+    getQueryPayload: function(gcs, rowtarget) {
+        var csdata = gcs.getData().items;
+        if (!csdata.length) {
+            return null;
+        }
+        var jsonData = {columns: []};
+        for (var i=0; i < csdata.length; i++ ) {
+            var columnObj = {
+                gridColumnId: csdata[i].get('gridColumnId'),
+                filterActive: csdata[i].get('filterActive'),
+                filterValue: csdata[i].get('filterValue') || '',
+                filterRegex: csdata[i].get('filterRegex') || false,
+                filterNegate: csdata[i].get('filterNegate') || false,
+                filterIsNull: csdata[i].get('filterIsNull') || false,
+                visible: csdata[i].get('visible'),
+                columnIndex: csdata[i].get('columnIndex'),
+                sortIndex: csdata[i].get('sortIndex'),
+                sort: csdata[i].get('sort')
+            };
+            if (csdata[i].get('dataIndex') === rowtarget.dataIndex) {
+                jsonData.columns.push(columnObj);
+                continue;
+            }
+            if (csdata[i].get('visible') === true ||
+                csdata[i].get('filterActive') === true ) {
+                jsonData.columns.push(columnObj);
+            }
+        }
+        return jsonData;
     },
 
     /**
@@ -1107,29 +1189,6 @@ Ext.define('Lada.controller.Query', {
                 autoLoad: false,
                 remoteFilter: true
             });
-        grid.getStore().addListener('load', function() {
-            var dgrid = Ext.getCmp('dynamicgridid');
-            if (dgrid && dgrid.ortstore) {
-                var data = dgrid.getStore().getData().items;
-                var request = [];
-                for (var i=0; i< data.length; i++) {
-                    request.push(data[i].get(dgrid.rowtarget.dataIndex));
-                }
-                if (request.length) {
-                    Ext.Ajax.request({
-                        url: 'lada-server/rest/ort/getbyids',
-                        jsonData: JSON.stringify(request),
-                        method: 'POST',
-                        success: function(response) {
-                            var json = Ext.JSON.decode(response.responseText);
-                            if (json.data && grid.ortstore) {
-                                grid.ortstore.setData(json.data);
-                            }
-                        }
-                    });
-                }
-            }
-        });
         grid.ortstore.addListener('datachanged',function() {
             var dgrid = Ext.getCmp('dynamicgridid');
             dgrid.down('map').addLocations(dgrid.ortstore);
@@ -1150,19 +1209,28 @@ Ext.define('Lada.controller.Query', {
     },
 
     /**
-     * tries to persist visible columns' width
+     * tries to persist visible columns' width of the given record
+     * @async resolves true on success, false if there was an error
      */
     persistColumnsWidth: function(record) {
-        if (!record.phantom) {
+        return new Ext.Promise(function(resolve) {
+
             var dgs = Ext.ComponentQuery.query('dynamicgrid');
             var dynamicgrid = null;
             if (dgs) {
                 dynamicgrid = dgs[0];
             }
+            if (!dynamicgrid || record.phantom ) {
+                resolve(true);
+                return;
+            }
             if (dynamicgrid) {
                 var dcColumns = dynamicgrid.getVisibleColumns();
                 var qp = Ext.ComponentQuery.query('querypanel')[0];
                 var gcsColumns = qp.gridColumnValueStore.getData().items;
+                var len = 0;
+                var cur = 0;
+                var success = true;
                 dcColumns.forEach(function(dcCol) {
                     var gridColumn;
                     for (var i = 0; i < gcsColumns.length; i++) {
@@ -1174,11 +1242,22 @@ Ext.define('Lada.controller.Query', {
                     }
                     if (gridColumn) {
                         gridColumn.set('width', dcCol.width);
-                        gridColumn.save();
+                        len++;
+                        gridColumn.save({
+                            callback: function(rec, op, suc) {
+                                cur++;
+                                if (!suc) {
+                                    success = false;
+                                }
+                                if (cur === len) {
+                                    resolve(success);
+                                }
+                            }
+                        });
                     }
                 });
             }
-        }
+        });
     },
 
 

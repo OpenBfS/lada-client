@@ -28,7 +28,7 @@ ln -sf FileSaver.js-${FILESAVER_VERSION} FileSaver
 curl -sSL https://github.com/eligrey/Blob.js/archive/${BLOB_VERSION}.zip \
      -o Blob-js-${BLOB_VERSION}.zip
 unzip -q -n Blob-js-${BLOB_VERSION}.zip
-rm -rf Blob 
+rm -rf Blob
 ln -sf Blob.js-${BLOB_VERSION} Blob
 
 curl -sSL https://github.com/openlayers/openlayers/releases/download/v${OL_VERSION}/v${OL_VERSION}-dist.zip \
@@ -39,5 +39,7 @@ mv v${OL_VERSION}-dist ol/
 
 curl -sSL https://momentjs.com/downloads/moment.js -o moment.js
 curl -sSL https://momentjs.com/downloads/moment-timezone-with-data.js -o moment-timezone.js
+
+curl -sSL https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js -o clipboard.min.js
 
 cd $CUR_DIR

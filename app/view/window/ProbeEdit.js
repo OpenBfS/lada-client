@@ -36,6 +36,11 @@ Ext.define('Lada.view.window.ProbeEdit', {
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('title.loading.probe');
         this.buttons = [{
+            text: i18n.getMsg('reload'),
+            handler: this.reload,
+            scope: this,
+            icon: 'resources/img/view-refresh.png'
+        }, '->', {
             text: i18n.getMsg('close'),
             scope: this,
             handler: this.handleBeforeClose
@@ -302,6 +307,26 @@ Ext.define('Lada.view.window.ProbeEdit', {
             confWin.show();
         } else {
             me.close();
+        }
+    },
+
+    /**
+     * Reload ProbeEdit Window
+     */
+    reload: function() {
+        this.setLoading(true);
+        var form = this.down('probeform');
+        var callback = function() {
+            form.up('window').reloadRecord();
+        };
+        if (form.isDirty()) {
+            var i18n = Lada.getApplication().bundle;
+            Ext.MessageBox.alert(
+                i18n.getMsg('reloadRecord', i18n.getMsg('probe')),
+                i18n.getMsg('confirmation.discardchanges'),
+                callback(form));
+        } else {
+            callback(form);
         }
     },
 

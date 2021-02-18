@@ -81,7 +81,7 @@ Ext.define('Lada.view.form.Probe', {
                         qtip: i18n.getMsg('copy.qtip', i18n.getMsg('probe')),
                         icon: 'resources/img/dialog-ok-apply.png',
                         disabled: true
-                    },'->', {
+                    }, '->',{
                         text: i18n.getMsg('audittrail'),
                         qtip: i18n.getMsg('qtip.audit'),
                         icon: 'resources/img/distribute-vertical-center.png',
@@ -809,6 +809,7 @@ Ext.define('Lada.view.form.Probe', {
         this.down('cbox[name=umwId]').clearWarningOrError();
         this.down('datetime[name=probeentnahmeBeginn]').clearWarningOrError();
         this.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
+        this.down('datetime[name=ursprungszeit]').clearWarningOrError();
         this.down('fset[name=entnahmePeriod]').clearMessages();
         this.down('fset[name=sollzeitPeriod]').clearMessages();
         this.down('tfield[name=mediaDesk]').clearWarningOrError();

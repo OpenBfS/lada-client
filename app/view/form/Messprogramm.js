@@ -72,7 +72,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             i18n.getMsg('messprogramm')),
                         icon: 'resources/img/dialog-ok-apply.png',
                         disabled: true
-                    },'->', {
+                    }, '->', {
                         text: i18n.getMsg('save'),
                         qtip: i18n.getMsg('save.qtip'),
                         icon: 'resources/img/dialog-ok-apply.png',

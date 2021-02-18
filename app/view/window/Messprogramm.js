@@ -63,6 +63,13 @@ Ext.define('Lada.view.window.Messprogramm', {
         },
         '->',
         {
+            text: i18n.getMsg('reload'),
+            name: 'reload',
+            handler: this.reload,
+            scope: this,
+            qtip: i18n.getMsg('reload.qtip') + i18n.getMsg('messprogramm'),
+            icon: 'resources/img/view-refresh.png'
+        }, '->', {
             text: i18n.getMsg('close'),
             scope: this,
             handler: this.handleBeforeClose
@@ -150,6 +157,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                     */
                 }
                 me.down('button[action=generateproben]').setDisabled(false);
+                me.down('button[name=reload]').setDisabled(false);
                 var mstLaborKombiStore = Ext.data.StoreManager.get(
                     'messstellelaborkombi');
                 var recordIndex = mstLaborKombiStore.findExact(
@@ -231,6 +239,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                         .setValue(netzbetreiber);
                 }
             }
+            this.down('button[name=reload]').setDisabled(true);
             this.down('messprogrammform').setRecord(record);
             this.down('messprogrammform').setMediaDesk(record);
         }
@@ -335,6 +344,26 @@ Ext.define('Lada.view.window.Messprogramm', {
             confWin.show();
         } else {
             me.close();
+        }
+    },
+
+    /**
+     * Reload MessprogrammEdit Window
+     */
+    reload: function() {
+        var form = this.down('messprogrammform');
+        // TODO: visual feedback on form and button
+        var callback = function() {
+            form.up('window').initData();
+        };
+        if (form.isDirty()) {
+            var i18n = Lada.getApplication().bundle;
+            Ext.MessageBox.alert(
+                i18n.getMsg('reloadRecord', i18n.getMsg('messprogramm')),
+                i18n.getMsg('confirmation.discardchanges'),
+                callback(form));
+        } else {
+            callback(form);
         }
     },
 

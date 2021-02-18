@@ -709,7 +709,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 };
                 if (secMehId) {
                     params['secMehId'] = secMehId;
-                };
+                }
                 masseinheitStore.load({
                     scope: this,
                     params: params
@@ -738,6 +738,22 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 'ktagruppe[name=ktaGruppeId]');
             ktaCombo.hide();
             ktaCombo.setValue(null);
+        }
+    },
+
+    reloadMPr: function(button) {
+        var form = button.up('window').down('messprogrammform');
+        var callback = function() {
+            button.up('messprogramm').initData();
+        };
+        if (form.isDirty()) {
+            var i18n = Lada.getApplication().bundle;
+            Ext.MessageBox.alert(
+                i18n.getMsg('reloadRecord', i18n.getMsg('messprogramm')),
+                i18n.getMsg('confirmation.discardchanges'),
+                callback);
+        } else {
+            callback();
         }
     }
 });

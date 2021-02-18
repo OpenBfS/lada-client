@@ -43,6 +43,11 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.title = i18n.getMsg('title.loading.messung');
 
         this.buttons = [{
+            text: i18n.getMsg('reload'),
+            handler: this.reload,
+            scope: this,
+            icon: 'resources/img/view-refresh.png'
+        }, '->', {
             text: i18n.getMsg('close'),
             scope: this,
             handler: this.handleBeforeClose
@@ -210,7 +215,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             if (me.probe.get('hauptprobenNr')) {
                 title += ' / '+ me.probe.get('hauptprobenNr');
             }
-            title += ' -  Mst: ' +  messstelle.get('messStelle') +
+            title += ' -  Mst: ' + messstelle.get('messStelle') +
                 ' editieren.';
             me.setTitle(title);
             var json = response ?
@@ -232,6 +237,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             } else {
                 me.disableStatusEdit();
             }
+            me.setLoading(false);
         };
         if (!loadedRecord) {
             Ext.ClassManager.get('Lada.model.Messung').load(
@@ -256,6 +262,26 @@ Ext.define('Lada.view.window.MessungEdit', {
                 closeButton.handler = null;
                 closeButton.callback = this.handleBeforeClose;
             }
+        }
+    },
+
+    /**
+     * Reload MessungEdit Window
+     */
+    reload: function() {
+        this.setLoading(true);
+        var form = this.down('messungform');
+        var callback = function() {
+            form.up('window').reloadRecord();
+        };
+        if (form.isDirty()) {
+            var i18n = Lada.getApplication().bundle;
+            Ext.MessageBox.alert(
+                i18n.getMsg('reloadRecord', i18n.getMsg('messung')),
+                i18n.getMsg('confirmation.discardchanges'),
+                callback(form));
+        } else {
+            callback(form);
         }
     },
 

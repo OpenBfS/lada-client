@@ -51,7 +51,7 @@ Ext.define('Lada.view.form.Messung', {
                 xtype: 'toolbar',
                 dock: 'bottom',
                 border: false,
-                items: ['->', {
+                items: [ '->', {
                     text: i18n.getMsg('audittrail'),
                     qtip: i18n.getMsg('qtip.audit'),
                     icon: 'resources/img/distribute-vertical-center.png',

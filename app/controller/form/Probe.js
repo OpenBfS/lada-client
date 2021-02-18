@@ -856,7 +856,7 @@ Ext.define('Lada.controller.form.Probe', {
                 partners[0] && field.up('fieldset[name=zeit]')
                     .down('datetime[name=ursprungszeit]').getValue()
             ) {
-                if (partners[0] <= field.up('fieldset[name=zeit]')
+                if (partners[0] < field.up('fieldset[name=zeit]')
                     .down('datetime[name=ursprungszeit]').getValue()
                 ) {
                     msg = Lada.getApplication().bundle.getMsg('663');
@@ -874,7 +874,7 @@ Ext.define('Lada.controller.form.Probe', {
             var partners2 = new Array();
             partners2[0] = field.up('fieldset[name=zeit]')
                 .down('datetime[period=start]').getValue();
-            if (partners2[0] && partners2[0] <= field.getValue()) {
+            if (partners2[0] && partners2[0] < field.getValue()) {
                 msg = Lada.getApplication().bundle.getMsg('663');
                 field.up('fset[name=ursprung]').showWarningOrError(
                     true, msg, false, '');

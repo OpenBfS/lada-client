@@ -65,7 +65,9 @@ Ext.define('Lada.controller.Global', {
         var dynamicgrids = Ext.ComponentQuery.query('dynamicgrid');
         var auditrails = Ext.ComponentQuery.query('audittrail');
         var componentsToWaitFor = dynamicgrids.length + auditrails.length;
-        button.startToggle(componentsToWaitFor);
+        if (componentsToWaitFor !== 0) {
+            button.startToggle(componentsToWaitFor);
+        }
         //Fire event to notify components
         Ext.fireEvent('timezonetoggled', utc);
     }

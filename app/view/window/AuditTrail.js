@@ -157,7 +157,9 @@ Ext.define('Lada.view.window.AuditTrail', {
                 if (!Ext.isObject(audit[i].identifier)) {
                     if (audit[i].type !== 'probe') {
                         html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
-                        html += audit[i].identifier;
+                        html += audit[i].identifier === '(deleted)' ?
+                            i18n.getMsg('deleted') :
+                            audit[i].identifier;
                     }
                 } else {
                     html += '<br>' + i18n.getMsg('messung') + ': ' +
@@ -195,7 +197,9 @@ Ext.define('Lada.view.window.AuditTrail', {
                     '</b>';
                 if (audit[i].type !== 'messung') {
                     html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
-                    html += audit[i].identifier;
+                    html += audit[i].identifier === '(deleted)' ?
+                        i18n.getMsg('deleted') :
+                        audit[i].identifier;
                 }
                 html += this.createHtmlChangedFields(audit[i]);
             }
