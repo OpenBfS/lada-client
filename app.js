@@ -199,6 +199,7 @@ Ext.application({
         // ask before closing/refreshing the window.
         // Not all browsers will respect this, depending on settings
         window.addEventListener('beforeunload', function(evt) {
+            var i18n = Lada.getApplication().bundle;
             // match different handling from different browsers
             var confirmMessage = i18n.getMsg('window.confirmclose');
             evt.returnValue = confirmMessage;

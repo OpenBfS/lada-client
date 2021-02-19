@@ -1,15 +1,17 @@
 Development notes:
 
 To improve code quality and readability, eslint is used. The rules for eslint
-are defined in .eslintrc.
+are defined in .eslintrc. Files to be ignored because they are not developed
+within this repository are defined in .eslintignore.
 
 Usually, advanced IDEs use the linter automatically, by marking warnings and
 errors as they occur. Additionally, eslint can be run manually:
 
-`eslint app/`
+`eslint .`
 
 This shows a listing of errors and warnings in the subdirectory of the code. It
-is not recommended running eslint on sencha or build folders.
+is not recommended running eslint on sencha or build folders (thus listed in
+.eslintignore).
 
 For ensuring quality upon committing, a local pre-commit hook might be added to
 git. This is a small shell script that is automatically executed before
@@ -18,9 +20,9 @@ This example will only allow for commits without linting errors:
 `.git/hooks/pre-commit`
 
     #!/bin/sh
-    # A simple hook to use the linter on the app directory before committing
+    # A simple hook to use the linter before committing
     echo "Running linter"
-    if eslint app 2>&1
+    if eslint . 2>&1
     then
     echo "linter successfully passed."
     else
