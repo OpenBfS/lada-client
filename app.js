@@ -126,6 +126,7 @@ Ext.application({
     },
 
     beforeCloseHandler: function (evt){
+        var i18n = Lada.getApplication().bundle;
         // match different handling from different browsers
         var confirmMessage = i18n.getMsg('window.confirmclose');
         evt.returnValue = confirmMessage;
@@ -145,10 +146,9 @@ Ext.application({
         Ext.JSON.encodeDate = function(o) {
             return '"' + Ext.Date.format(o, 'c') + '"';
         };
-        var i18n = Lada.getApplication().bundle;
 
         //Set up an event handler to handle session timeouts
-        Ext.Ajax.on('requestexception', function(conn, response, options, e) {
+        Ext.Ajax.on('requestexception', function(conn, response) {
             if (response.status === 0 && response.responseText === '') {
                 var i18n = Lada.getApplication().bundle;
                 Ext.MessageBox.confirm(
@@ -168,7 +168,7 @@ Ext.application({
         Lada.logintime = '';
         Lada.mst = [];
         Lada.netzbetreiber = [];
-        Lada.clientVersion = '4.0.4-SNAPSHOT';
+        Lada.clientVersion = '4.0.5-SNAPSHOT';
         Lada.serverVersion = '';
         // paging sizes available for the client
         Lada.availablePagingSizes = [
@@ -302,23 +302,25 @@ Ext.application({
             storeId: 'messstellen',
             listeners: {
                 load: {
-                    fn: function(store, records) {
-                        for (var i = 0; i < mstLabor.length; i++) {
-                            var item = store.getById(mstLabor[i].messstelle);
-                            var itemLabor = store.getById(mstLabor[i].labor);
+                    fn: function(store) {
+                        for (var j = 0; j < mstLabor.length; j++) {
+                            var item = store.getById(mstLabor[j].messstelle);
+                            var itemLabor = store.getById(mstLabor[j].labor);
                             if (!itemLabor) {
                                 continue;
                             }
-                            if ( item.get('messStelle') === itemLabor.get('messStelle') ) {
-                                displayCombi = item.get('messStelle');
-                            } else {
-                                displayCombi = item.get('messStelle') + '/' + itemLabor.get('messStelle');
+                            var displayCombi = item.get('messStelle');
+                            if (item.get('messStelle')
+                                !== itemLabor.get('messStelle')
+                               ) {
+                                displayCombi += '/'
+                                    + itemLabor.get('messStelle');
                             }
                             mstLaborStore.add({
-                                id: i,
-                                messStelle: mstLabor[i].messstelle,
+                                id: j,
+                                messStelle: mstLabor[j].messstelle,
                                 netzbetreiberId: item.get('netzbetreiberId'),
-                                laborMst: mstLabor[i].labor,
+                                laborMst: mstLabor[j].labor,
                                 displayCombi: displayCombi
                             });
                         }
@@ -383,16 +385,16 @@ Ext.application({
                     var recb = [];
                     var recl = [];
                     var recr = [];
-                    this.each(function(r) {
-                        rec.push(r.copy());
-                        if (r.get('isBundesland')) {
-                            recb.push(r.copy());
+                    this.each(function(rr) {
+                        rec.push(rr.copy());
+                        if (rr.get('isBundesland')) {
+                            recb.push(rr.copy());
                         }
-                        if (r.get('isLandkreis')) {
-                            recl.push(r.copy());
+                        if (rr.get('isLandkreis')) {
+                            recl.push(rr.copy());
                         }
-                        if (r.get('isRegbezirk')) {
-                            recr.push(r.copy());
+                        if (rr.get('isRegbezirk')) {
+                            recr.push(rr.copy());
                         }
                     });
                     w.add(rec);
@@ -524,26 +526,34 @@ Ext.application({
                     }));
                 },
                 load: {
-                    fn: function(store, records) {
+                    fn: function(store) {
                         var z = 0;
-                        for (var i = 0; i < store.getCount(); i++) {
-                            var item = Ext.data.StoreManager.get('messstellen').getById(store.getAt(i).getData().mstId);
-                            var itemLabor = Ext.data.StoreManager.get('messstellen').getById(store.getAt(i).getData().laborMstId);
+                        for (var j = 0; j < store.getCount(); j++) {
+                            var item = Ext.data.StoreManager.get(
+                                'messstellen').getById(
+                                    store.getAt(j).getData().mstId);
+                            var itemLabor = Ext.data.StoreManager.get(
+                                'messstellen').getById(
+                                    store.getAt(j).getData().laborMstId);
                             if (!itemLabor) {
                                 continue;
                             }
-                            if ( item.get('messStelle') === itemLabor.get('messStelle') ) {
-                                displayCombi = item.get('messStelle');
-                            } else {
-                                displayCombi = item.get('messStelle') + '/' + itemLabor.get('messStelle');
+                            var displayCombi = item.get('messStelle');
+                            if (item.get('messStelle')
+                                !== itemLabor.get('messStelle')
+                               ) {
+                                displayCombi += '/'
+                                    + itemLabor.get('messStelle');
                             }
-                            var recordIndex = mstLaborKombiStore.findExact('displayCombi', displayCombi);
-                            if (recordIndex == -1) {
+                            var recordIndex = mstLaborKombiStore.findExact(
+                                'displayCombi', displayCombi);
+                            if (recordIndex === -1) {
                                 mstLaborKombiStore.add({
                                     id: z,
-                                    messStelle: store.getAt(i).getData().mstId,
+                                    messStelle: store.getAt(j).getData().mstId,
                                     netzbetreiberId: item.get('netzbetreiberId'),
-                                    laborMst: store.getAt(i).getData().laborMstId,
+                                    laborMst: store.getAt(
+                                        j).getData().laborMstId,
                                     displayCombi: displayCombi
                                 });
                                 z++;
@@ -600,7 +610,7 @@ Ext.application({
                 var json = Ext.decode(response.responseText);
                 Lada.serverVersion = json.data;
             },
-            failure: function(response) {
+            failure: function() {
                 console.log('Error in retrieving the server version.'
                     + ' It might be lower than 2.0-beta2'
                     + ' Or something is broken...');
@@ -609,9 +619,10 @@ Ext.application({
         });
     },
 
-    //Sets the paging size and fires 'pagingSizeChangedEvent' if new value differs from old
+    // Sets the paging size and fires 'pagingSizeChangedEvent' if
+    // new value differs from old
     setPagingSize: function(newVal) {
-        if (newVal != Lada.pagingSize) {
+        if (newVal !== Lada.pagingSize) {
             Lada.pagingSize = newVal;
             Lada.getApplication().fireEvent('pagingSizeChanged');
         }

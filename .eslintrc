@@ -16,8 +16,8 @@
         "PointerEvent": true,
         "MouseEvent": true,
         "Uint8Array": true,
-        "ClipboardJS": true
-
+        "ClipboardJS": true,
+        "Koala": true
     },
     "rules": {
         "comma-dangle": 2,

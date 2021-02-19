@@ -1,0 +1,6 @@
+/packages/**/*.js
+/resources/lib/**/*.js
+/ext-*/**/*.js
+/ext/**/*.js
+/build/**/*.js
+/bootstrap.js
