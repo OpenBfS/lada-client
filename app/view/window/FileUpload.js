@@ -292,7 +292,17 @@ Ext.define('Lada.view.window.FileUpload', {
         var responseText = response.responseBytes ?
             String.fromCharCode.apply(null, response.responseBytes):
             response.responseText;
-        var responseJson = Ext.JSON.decode(responseText);
+        var responseJson = Ext.JSON.decode(responseText, true);
+        if (!responseJson) {
+            // TODO: Handle SSO HTML form like in RestProxy.processResponse
+            Ext.Msg.show({
+                message: i18n.getMsg('importResponse.failure.server.multi'),
+                buttons: Ext.Msg.OK,
+                icon: Ext.Msg.ERROR
+            });
+            this.setLoading(false);
+            return;
+        }
         var tag = '';
         //Get the generated tag name
         if (Object.keys(responseJson.data).length > 0) {
