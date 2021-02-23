@@ -14,9 +14,6 @@ Ext.define('Lada.store.ReiProgpunktGruppe', {
     model: 'Lada.model.ReiProgpunktGruppe',
     sorters: [
         {
-            property: 'id',
-            direction: 'ASC'
-        }, {
             property: 'reiProgPunktGruppe',
             direction: 'ASC'
         }
