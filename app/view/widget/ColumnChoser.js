@@ -175,6 +175,7 @@ Ext.define('Lada.view.widget.ColumnChoser' ,{
                 }
                 if (visible === false) {
                     origindata.set('columnIndex', null);
+                    origindata.set('sort', null);
                     data[i].set('columnIndex', null);
                 }
             }
