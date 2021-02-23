@@ -27,7 +27,7 @@ Ext.define('Lada.view.grid.Verwaltungseinheiten', {
     initComponent: function() {
         this.store = Ext.create('Lada.store.Verwaltungseinheiten');
         var i18n = Lada.getApplication().bundle;
-        this.emptyText = i18n.getMsg('grid.emptyGrid');
+        this.emptyText = i18n.getMsg('emptytext.verwaltungsgrid');
         this.columns = [{
             header: i18n.getMsg('code'),
             dataIndex: 'id'

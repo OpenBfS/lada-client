@@ -28,7 +28,7 @@ Ext.define('Lada.view.grid.Staaten', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        this.emptyText = i18n.getMsg('grid.emptyGrid');
+        this.emptyText = i18n.getMsg('emptytext.staatengrid');
         this.columns = [{
             header: i18n.getMsg('isocode'),
             renderer: function(value) {
