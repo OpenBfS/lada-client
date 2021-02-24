@@ -760,7 +760,7 @@ Ext.define('Lada.view.window.GridExport', {
             win.down('checkbox[name=secondarycolumns]').setVisible(false);
         } else {
             win.down('checkbox[name=allcolumns]').setVisible(true);
-            if (this.rowexp) {
+            if (win.rowexp) {
                 win.down('checkbox[name=secondarycolumns]').setVisible(true);
             }
         }
