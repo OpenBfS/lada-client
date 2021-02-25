@@ -255,6 +255,7 @@ Ext.define('Lada.view.panel.Map', {
         var backgroundMap = new ol.layer.Tile({
             source: new ol.source.XYZ({
                 // eslint-disable-next-line max-len
+                crossOrigin: null,
                 url: backgroundMapUrl
             }),
             maxZoom: 18

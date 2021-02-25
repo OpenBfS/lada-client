@@ -5,7 +5,8 @@
                 "print-servlet": "lada-printer/print/",
                 "irix-servlet": "irix-servlet",
                 "irix-context": "resources/irixContext.json",
-                "backgroundMap": "https://www.imis.bfs.de/ogc/tiles/tms/1.0.0/bkg_topplus_web_open_grey@GoogleMapsCompatible/{z}/{x}/{-y}.png"
+                "backgroundMap": "https://osm.bfs.de/tiles/topplusopen/{z}/{x}/{y}.png"
+//                "backgroundMap": "https://www.imis.bfs.de/ogc/tiles/tms/1.0.0/bkg_topplus_web_open_grey@GoogleMapsCompatible/{z}/{x}/{-y}.png"
             },
             "tools": ["irixPrintBtn"]
         }
