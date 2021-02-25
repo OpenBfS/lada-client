@@ -69,6 +69,11 @@
   background-image: url(../img/dialog-cancel.png);
 }
 
+.x-action-col-icon.saveas
+{
+  background-image: url(../img/document-save-as-6.png);
+}
+
 .x-action-col-icon.editstatus
 {
   background-image: url(../img/view-time-schedule-edit-status.png);

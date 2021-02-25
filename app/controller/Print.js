@@ -1035,8 +1035,7 @@ Ext.define('Lada.controller.Print', {
             startDate: new Date().valueOf(),
             status: 'preparation',
             done: false,
-            autodownload: true
-            // TODO: no UI toggle for autodownload implemented yet.
+            autodownload: false
         });
         var store;
         if (type === 'lada-print') {

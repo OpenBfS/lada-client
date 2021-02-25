@@ -50,7 +50,7 @@ Ext.define('Lada.view.grid.DownloadQueue', {
             dataIndex: 'message',
             flex: 2
         }, {
-            // cancel icon
+            // cancel/download icon
             xtype: 'actioncolumn',
             text: ' ',
             dataIndex: 'status',
@@ -59,7 +59,11 @@ Ext.define('Lada.view.grid.DownloadQueue', {
                 // see x.action-col-icon definitions at lada.css for img urls
                 switch (rec.get('status')) {
                     case 'finished':
-                        return 'okay';
+                        if (!rec.get('downloadRequested')) {
+                            return 'saveas';
+                        } else {
+                            return '';
+                        }
                     case 'running':
                     case 'waiting':
                         return 'cancel';
@@ -72,6 +76,11 @@ Ext.define('Lada.view.grid.DownloadQueue', {
                 var status = rec.get('status');
                 if (status === 'running' || status === 'waiting') {
                     controller.onCancelItem(rec);
+                } else if (
+                    rec.get('status') === 'finished' &&
+                    rec.get('downloadRequested') === false
+                ) {
+                    controller.onSaveItem(rec);
                 }
             }
         }, {
