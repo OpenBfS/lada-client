@@ -37,12 +37,12 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform numfield numberfield': {
                 change: this.checkPeriod
             },
-            'messprogrammform [name="teilintervallVon"]': {
+            /*'messprogrammform [name="teilintervallVon"]': {
                 change: this.synchronizeSlider
             },
             'messprogrammform [name="teilintervallBis"]': {
                 change: this.synchronizeSlider
-            },
+            },*/
             'messprogrammform probenintervall combobox': {
                 change: this.updateIntervalls
             },
@@ -270,11 +270,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var form = field.up('messprogrammform');
         var record = form.getRecord();
         form.populateIntervall(record, field.getValue());
-        form.down('probenintervallslider').on(
+        /*form.down('probenintervallslider').on(
             'change',
             Lada.app.getController('Lada.controller.form.Messprogramm')
                 .synchronizeFields
-        );
+        );*/
     },
 
     /**
@@ -300,7 +300,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
      * When the Slider was used,
      * update the Value of the Teilintervallfields
      */
-    synchronizeFields: function(slider, newValue, thumb) {
+    /*synchronizeFields: function(slider, newValue, thumb) {
         var formPanel = slider.up('form');
         if (thumb.index === 0) {
             formPanel.getForm()
@@ -312,13 +312,13 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 .setValue(newValue);
         }
 
-    },
+    },*/
 
     /**
      * When the IntervallFields were used,
      * update the Slider
      */
-    synchronizeSlider: function(field, newValue) {
+    /*synchronizeSlider: function(field, newValue) {
         var formPanel = field.up('form');
         if (field.name === 'teilintervallVon') {
             formPanel.down('probenintervallslider')
@@ -328,7 +328,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 .setValue(1, newValue, false);
         }
 
-    },
+    },*/
     /**
      * The save function saves the content of the Messprogramm form.
      * On success it will reload the Store,

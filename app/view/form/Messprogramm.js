@@ -27,7 +27,6 @@ Ext.define('Lada.view.form.Messprogramm', {
         'Lada.model.Messprogramm',
         'Lada.model.MmtMessprogramm',
         'Lada.view.widget.Probenintervall',
-        'Lada.view.widget.ProbenintervallSlider',
         'Lada.view.widget.DayOfYear'
     ],
 
@@ -495,13 +494,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                             name: 'intervallOffset'
                         }]
                     }, {
-                        xtype: 'probenintervallslider',
-                        pack: 'center',
-                        margin: '5, 40, 10, 40',
-                        values: [0, 0]
-                        //this will be overridden
-                        // by setRecord
-                    }, {
                         xtype: 'fset',
                         name: 'gueltigPeriodFieldset',
                         layout: {
@@ -536,8 +528,6 @@ Ext.define('Lada.view.form.Messprogramm', {
     populateIntervall: function(record, intervall) {
         //intervall is an identifier of a intervall
         // for instance H, M, J, ...
-        // Initialize the probenintervallslider
-        var s = this.down('probenintervallslider');
         var i = this.getForm().findField('intervallOffset');
         var v = this.getForm().findField('teilintervallVon');
         var b = this.getForm().findField('teilintervallBis');
@@ -601,10 +591,6 @@ Ext.define('Lada.view.form.Messprogramm', {
         b.setMinValue(min);
         b.setMaxValue(max);
 
-        //Set Slider
-        s.setMinValue(min);
-        s.setMaxValue(max);
-
         v.setValue(svalLower);
         b.setValue(svalUpper);
 
@@ -634,19 +620,9 @@ Ext.define('Lada.view.form.Messprogramm', {
         if (!messRecord.data || messRecord.data.id === null) {
             return;
         }
-        //Set the intervall numberfields and the slider.
-        this.down('probenintervallslider').setValue([
-            messRecord.get('teilintervallVon'),
-            messRecord.get('teilintervallBis')
-        ]);
 
         this.populateIntervall(messRecord);
 
-        this.down('probenintervallslider').on(
-            'change',
-            Lada.app.getController('Lada.controller.form.Messprogramm')
-                .synchronizeFields
-        );
         var mstStore = Ext.data.StoreManager.get('messstellen');
         var mstId = mstStore.getById(messRecord.get('mstId'));
         var netzId = mstId.get('netzbetreiberId');
@@ -869,7 +845,6 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('cbox[name=mehId]').setReadOnly(value);
         this.down('cbox[name=probeNehmerId]').setReadOnly(value);
         this.down('messprogrammland[name=mplId]').setReadOnly(value);
-        this.down('probenintervallslider').setReadOnly(value);
         for (var i = 0; i < 12; i++) {
             this.down('deskriptor[layer='+i+']').setReadOnly(value);
         }
