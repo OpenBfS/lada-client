@@ -114,7 +114,8 @@ Ext.define('Lada.controller.form.Probe', {
         var fieldsToReset = [
             'id', 'mprId', 'externeProbeId',
             'probeentnahmeBeginn', 'probeentnahmeEnde',
-            'solldatumBeginn', 'solldatumEnde', 'hauptprobenNr'];
+            'solldatumBeginn', 'solldatumEnde', 'hauptprobenNr',
+            'ursprungszeit'];
         var copy = probe.copy(null);
         for (var i = 0; i < fieldsToReset.length; i++) {
             copy.set(fieldsToReset[i], null);
