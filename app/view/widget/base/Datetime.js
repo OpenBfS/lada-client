@@ -74,7 +74,6 @@ Ext.define('Lada.view.widget.base.Datetime', {
             html: warnings
         }) : this.tooltip.html = warnings;
         var df = this.down('datetimefield');
-        df.markInvalid('');
         img.show();
 
         if (df.inputWrap && df.inputEl) {
