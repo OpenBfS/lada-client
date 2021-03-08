@@ -349,9 +349,17 @@ Ext.define('Lada.view.window.GridExport', {
         this.down('button[action=export]').on({
             click: me.doExport
         });
-        if (!this.grid.getSelectionModel().getSelection().length) {
+
+        // If no idField can be provided, allow export of all rows only
+        if (this.grid.rowtarget.dataIndex === null) {
+            this.down('checkbox[name=allrows]').disable();
+        }
+        if (!this.grid.getSelectionModel().getSelection().length
+            || this.grid.rowtarget.dataIndex === null
+           ) {
             this.down('checkbox[name=allrows]').setValue(true);
         }
+
         this.down('button[action=close]').text = i18n.getMsg('close');
         this.down('button[action=export]').text = i18n.getMsg('export.button');
         this.down('button[action=close]').on({
