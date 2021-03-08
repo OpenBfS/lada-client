@@ -532,7 +532,8 @@ Ext.define('Lada.view.window.GridExport', {
                     break;
                 case 'geojson':
                     var data = JSON.stringify(win.getGeoJson());
-                    var blob = new Blob([data], 'utf-8');
+                    var blob = new Blob([data],
+                        {type: 'application/json;charset=utf-8'});
                     saveAs(blob, filename, true);
                     break;
                 case 'json':
