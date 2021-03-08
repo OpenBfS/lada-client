@@ -831,9 +831,11 @@ Ext.define('Lada.controller.form.Probe', {
         var e = 0; //errors
         var emsg = '';
         var wmsg = '';
-        if (field.getValue().valueOf() > now) {
-            wmsg += Lada.getApplication().bundle.getMsg('661');
-            w++;
+        if (field.getValue()) {
+            if (field.getValue().valueOf() > now) {
+                wmsg += Lada.getApplication().bundle.getMsg('661');
+                w++;
+            }
         }
         // This field might be a field within a DateTime-Period.
         // Search for Partner field (period: end/start) and validate
