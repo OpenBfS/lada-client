@@ -307,7 +307,10 @@ Ext.define('Lada.view.grid.Messwert', {
             },
             renderer: function(value, metaData, record) {
                 this.setValidationResults(metaData, record, 'messfehler');
-                return value;
+                if (!value || value === '') {
+                    return '';
+                }
+                return parseFloat(value).toString().replace('.', ',');
             }
         }];
         this.listeners = {
