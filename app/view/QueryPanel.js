@@ -19,6 +19,7 @@ Ext.define('Lada.view.QueryPanel', {
         'Lada.view.widget.ColumnSort',
         'Lada.store.GridColumnValue'
     ],
+    gridColumnStore: null,
     gridColumnValueStore: Ext.create('Lada.store.GridColumnValue'),
     store: null,
     scrollable: true,
@@ -179,6 +180,8 @@ Ext.define('Lada.view.QueryPanel', {
             xtype: 'cbox',
             name: 'activefilters',
             labelWidth: 125,
+            // Needs to be different from Ext.getStore('columnstore')
+            // because of extra filters:
             store: Ext.create('Ext.data.Store',{
                 model: 'Lada.model.GridColumn',
                 autoLoad: true
@@ -304,8 +307,9 @@ Ext.define('Lada.view.QueryPanel', {
             filtertags.clearValue();
             activefilterFilter(filtertags);
         };
-        this.store = Ext.data.StoreManager.get('querystore');
 
+        // Load query store
+        this.store = Ext.data.StoreManager.get('querystore');
         this.store.load({
             scope: this,
             callback: function() {
@@ -328,6 +332,7 @@ Ext.define('Lada.view.QueryPanel', {
                 selquery.fireEvent('select', selquery);
             }
         });
+
         //Init messstellen data
         var mst_store = Ext.data.StoreManager.get('messstellen');
         mst_store.load({
@@ -349,7 +354,7 @@ Ext.define('Lada.view.QueryPanel', {
     },
 
     loadGridColumnStore: function() {
-        var columnstore = Ext.data.StoreManager.get('columnstore');
+        this.gridColumnStore = Ext.getStore('columnstore');
         var record = this.getForm().getRecord();
         if (record === undefined || record.get('clonedFrom') === 'empty') {
             var ccstore = this.down('columnchoser').store;
@@ -357,6 +362,7 @@ Ext.define('Lada.view.QueryPanel', {
                 ccstore.removeAll();
                 this.down('columnchoser').setStore(ccstore);
             }
+
             this.down('columnsort').setStore(null);
             this.down('cbox[name=activefilters]').store.filter(function() {
                 // don't show any items, as there is no baseQuery
@@ -372,29 +378,59 @@ Ext.define('Lada.view.QueryPanel', {
             } else {
                 qid = record.get('id');
             }
+
+            // Server-side filters
+            this.gridColumnStore.proxy.extraParams = {
+                'qid': record.get('baseQuery')
+            };
             this.gridColumnValueStore.proxy.extraParams = {
                 'qid': qid
             };
-            var me = this;
-            this.gridColumnValueStore.load({
-                callback: function() {
-                    columnstore.clearFilter();
-                    columnstore.filter({
-                        property: 'baseQuery',
-                        value: record.get('baseQuery'),
-                        exactMatch: true
-                    });
-                    var items = me.gridColumnValueStore.getData().items;
-                    var activeFilters = [];
-                    if (items.length) {
-                        for (var i=0; i < items.length; i++) {
-                            var gridColumn = columnstore.findRecord(
-                                'id',
-                                items[i].get('gridColumnId'),
-                                0,
-                                false,
-                                false,
-                                true);
+
+            // Actually load stores for gridColumns and gridColumnValues
+            this.gridColumnStore.load({
+                scope: this,
+                callback: this.loadGridColumnValueStore
+            });
+        }
+    },
+
+    loadGridColumnValueStore: function(
+        gridColumns,
+        operation,
+        gridColumnSuccess
+    ) {
+        var i18n = Lada.getApplication().bundle;
+        if (!gridColumnSuccess) {
+            Ext.Msg.alert(
+                i18n.getMsg('query.error.load.title'),
+                i18n.getMsg('query.error.load.message'));
+            return;
+        }
+        var me = this;
+        this.gridColumnValueStore.load({
+            callback: function(
+                items,
+                op,
+                gridColumnValueSuccess
+            ) {
+                if (!gridColumnValueSuccess) {
+                    Ext.Msg.alert(
+                        i18n.getMsg('query.error.load.title'),
+                        i18n.getMsg('query.error.load.message'));
+                    return;
+                }
+                var activeFilters = [];
+                if (items.length) {
+                    for (var i=0; i < items.length; i++) {
+                        var gridColumn = me.gridColumnStore.findRecord(
+                            'id',
+                            items[i].get('gridColumnId'),
+                            0,
+                            false,
+                            false,
+                            true);
+                        if (gridColumn) {
                             items[i].set(
                                 'dataIndex', gridColumn.get('dataIndex'));
                             items[i].set('name', gridColumn.get('name'));
@@ -403,40 +439,41 @@ Ext.define('Lada.view.QueryPanel', {
                             }
                         }
                     }
-                    me.down('columnchoser').setStore(me.gridColumnValueStore,
-                        columnstore);
-                    me.down('columnsort').setStore(me.gridColumnValueStore);
-                    var filterwidget = me.down('cbox[name=activefilters]');
-                    filterwidget.store.clearFilter();
-                    filterwidget.store.filter({
-                        property: 'baseQuery',
-                        value: record.get('baseQuery'),
-                        exactMatch: true
-                    });
-                    filterwidget.store.filter(function(item) {
-                        if (item.get('filter')) {
-                            return true;
-                        }
-                        return false;
-                    });
-                    filterwidget.setValue(activeFilters.join(','));
-
-                    me.down('cbox[name=messStellesIds]').setValue(
-                        record.get('messStellesIds'));
-
-                    me.down('button[action=save]').setDisabled(
-                        me.isQueryReadonly());
-
-                    if (
-                        record.get('clonedFrom') !== 'empty' ||
-                        !record.phantom
-                    ) {
-                        me.down('button[name=search]').setDisabled(false);
-                        me.down('button[action=showsql]').setDisabled(false);
-                    }
                 }
-            });
-        }
+                me.down('columnchoser').setStore(
+                    me.gridColumnValueStore,
+                    me.gridColumnStore);
+                me.down('columnsort').setStore(
+                    me.gridColumnValueStore);
+
+                var record = me.getForm().getRecord();
+                var filterwidget = me.down('cbox[name=activefilters]');
+                filterwidget.store.clearFilter();
+                filterwidget.store.filter({
+                    property: 'baseQuery',
+                    value: record.get('baseQuery'),
+                    exactMatch: true
+                });
+                filterwidget.store.filter(function(item) {
+                    if (item.get('filter')) {
+                        return true;
+                    }
+                    return false;
+                });
+                filterwidget.setValue(activeFilters.join(','));
+
+                me.down('cbox[name=messStellesIds]').setValue(
+                    record.get('messStellesIds'));
+
+                me.down('button[action=save]').setDisabled(
+                    me.isQueryReadonly());
+
+                if (record.get('clonedFrom') !== 'empty' || !record.phantom) {
+                    me.down('button[name=search]').setDisabled(false);
+                    me.down('button[action=showsql]').setDisabled(false);
+                }
+            }
+        });
     },
 
     //checks checks if a query is editable by the current user

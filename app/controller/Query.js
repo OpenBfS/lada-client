@@ -463,7 +463,7 @@ Ext.define('Lada.controller.Query', {
         var i18n = Lada.getApplication().bundle;
         var qp = button.up('querypanel');
         var gcs = qp.gridColumnValueStore;
-        var rowtarget = this.setrowtarget(qp);
+        var rowtarget = this.setrowtarget();
         var jsonData = this.getQueryPayload(gcs, rowtarget);
         if (!jsonData) {
             //TODO warning: no data requested
@@ -476,12 +476,6 @@ Ext.define('Lada.controller.Query', {
         if (!jsonData.columns.length) {
             //TODO warning: no data requested
         } else {
-            var fixColumnStore = Ext.data.StoreManager.get('columnstore');
-            fixColumnStore.clearFilter();
-            fixColumnStore.filter({
-                property: 'baseQuery',
-                value: qp.getForm().getRecord().get('baseQuery'),
-                exactMatch: true});
             this.resultStore.getProxy().setPayload(jsonData);
             this.resultStore.setPageSize(Lada.pagingSize);
 
@@ -531,7 +525,7 @@ Ext.define('Lada.controller.Query', {
                                 plugins: plugin || null,
                                 rowtarget: rowtarget
                             });
-                        resultGrid.setup(gcs, fixColumnStore);
+                        resultGrid.setup(gcs, Ext.getStore('columnstore'));
                         resultGrid.setStore(this.resultStore);
                         contentPanel.add(resultGrid);
                         contentPanel.show();
@@ -564,7 +558,7 @@ Ext.define('Lada.controller.Query', {
 
     showsql: function(button) {
         var qp = button.up('querypanel');
-        var rowtarget = this.setrowtarget(qp);
+        var rowtarget = this.setrowtarget();
         var gcs = qp.gridColumnValueStore;
         var jsonData = this.getQueryPayload(gcs, rowtarget);
         if (!jsonData) {
@@ -637,12 +631,6 @@ Ext.define('Lada.controller.Query', {
         var i18n = Lada.getApplication().bundle;
         var panel = element.up('querypanel');
         var fixColumnStore = Ext.data.StoreManager.get('columnstore');
-        fixColumnStore.clearFilter();
-        fixColumnStore.filter({
-            property: 'baseQuery',
-            value: panel.getForm().getRecord().get('baseQuery'),
-            exactMatch: true
-        });
         var fvpanel = panel.down('panel[name=filtervalues]');
         fvpanel.removeAll();
         var recs = panel.gridColumnValueStore.getData().items;
@@ -980,12 +968,6 @@ Ext.define('Lada.controller.Query', {
         var qp = box.up('querypanel');
         var store =qp.gridColumnValueStore;
         var cs = Ext.data.StoreManager.get('columnstore');
-        cs.clearFilter();
-        cs.filter({
-            property: 'baseQuery',
-            value: qp.getForm().getRecord().get('baseQuery'),
-            exactMatch: true
-        });
         for (var i=0; i < oldvalue.length; i++) {
             if (newvalue.indexOf(oldvalue[i]) < 0) {
                 var rec = store.findRecord('dataIndex', oldvalue[i],
@@ -1101,7 +1083,7 @@ Ext.define('Lada.controller.Query', {
     },
 
 
-    setrowtarget: function(querypanel) {
+    setrowtarget: function() {
         var rowHierarchy = [
             'messungId',
             'probeId',
@@ -1116,14 +1098,7 @@ Ext.define('Lada.controller.Query', {
             idx: rowHierarchy.length + 1,
             probeIdentifier: null // used to check if a grid contains a probe
         };
-        var cs = Ext.data.StoreManager.get('columnstore');
-        cs.clearFilter();
-        cs.filter({
-            property: 'baseQuery',
-            value: querypanel.getForm().getRecord().get('baseQuery'),
-            exactMatch: true
-        });
-        var csdata = cs.getData().items;
+        var csdata = Ext.getStore('columnstore').getData().items;
         for (var i=0; i < csdata.length; i++ ) {
             if (csdata[i].get('dataType').name === 'probeId') {
                 result.probeIdentifier = csdata[i].get('dataIndex');
