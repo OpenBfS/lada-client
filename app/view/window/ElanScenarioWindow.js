@@ -254,7 +254,7 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
      * @return {Array} containing object ids, sorted by modified date, asc.
      */
     sortEventsByModifiedDate: function(newEvents) {
-        return Ext.Array.sort(Ext.Object.getKeys(newEvents),function(a, b) {
+        return Ext.Array.sort(Ext.Object.getKeys(newEvents), function(a, b) {
             if (newEvents[a]['modified'] > newEvents[b]['modified']) {
                 return -1;
             } else if (newEvents[a]['modified'] < newEvents[b]['modified']) {

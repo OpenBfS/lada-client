@@ -21,6 +21,7 @@
     },
     "rules": {
         "comma-dangle": 2,
+        "comma-spacing": 1,
         "no-cond-assign": 2,
         "no-console": 1,
         "no-constant-condition": 2,

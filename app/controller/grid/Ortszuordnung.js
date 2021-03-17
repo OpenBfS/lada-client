@@ -194,7 +194,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      */
     createort: function(button) {
         var win = button.up('ortszuordnungwindow');
-        Ext.create('Lada.view.window.Ort',{
+        Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Ort', {
                 ortTyp: 1,
                 netzbetreiberId: win.netzbetreiberId}),

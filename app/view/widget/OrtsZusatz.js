@@ -9,7 +9,7 @@
 /**
  * Combobox for OrtsZusatz
  */
-Ext.define('Lada.view.widget.OrtsZusatz' ,{
+Ext.define('Lada.view.widget.OrtsZusatz', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.ortszusatz',
     store: 'OrtsZusatz',

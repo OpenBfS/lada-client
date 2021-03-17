@@ -9,7 +9,7 @@
 /**
  * Combobox for type of Ortszuordnung
  */
-Ext.define('Lada.view.widget.OrtszuordnungTyp' ,{
+Ext.define('Lada.view.widget.OrtszuordnungTyp', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.ortszuordnungtyp',
     store: 'OrtszuordnungTyp',

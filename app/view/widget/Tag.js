@@ -395,7 +395,7 @@ Ext.define('Lada.view.widget.Tag', {
      */
     tagExists: function(tagName) {
         //Find record: case sensitive and exact match
-        if (this.store.find('tag', tagName, 0, false, true,true) !== -1) {
+        if (this.store.find('tag', tagName, 0, false, true, true) !== -1) {
             return true;
         } else {
             return false;

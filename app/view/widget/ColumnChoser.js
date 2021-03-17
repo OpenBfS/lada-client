@@ -9,7 +9,7 @@
 /**
  * Widget for chosing and sorting columns
  */
-Ext.define('Lada.view.widget.ColumnChoser' ,{
+Ext.define('Lada.view.widget.ColumnChoser', {
     extend: 'Ext.container.Container',
     alias: 'widget.columnchoser',
     layout: {

@@ -98,7 +98,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 disableKeyFilter: true,
                                 fieldLabel: i18n.getMsg(
                                     'ortszuordnung.form.field.ortszuordnungtyp')
-                            },{
+                            }, {
                                 // empty conttainer for vertical separation
                                 xtype: 'container',
                                 minHeight: 20
@@ -273,15 +273,15 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         var osg = win.down('ortstammdatengrid');
         var oForm = win.down('ortszuordnungform');
         if (!this.readOnly) {
-            osg.addListener('select',oForm.setOrt, oForm);
+            osg.addListener('select', oForm.setOrt, oForm);
             var map = win.down('map');
             if (!map.featureLayer) {
                 map.initFeatureLayer();
             }
             map.featureLayer.setVisibility(true);
-            osg.addListener('select',oForm.setOrt, oForm);
+            osg.addListener('select', oForm.setOrt, oForm);
         } else {
-            osg.removeListener('select',oForm.setOrt, oForm);
+            osg.removeListener('select', oForm.setOrt, oForm);
         }
     }
 });

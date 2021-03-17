@@ -9,7 +9,7 @@
 /**
  * Combobox for Umweltbereich
  */
-Ext.define('Lada.view.widget.DatensatzErzeuger' ,{
+Ext.define('Lada.view.widget.DatensatzErzeuger', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.datensatzerzeuger',
     store: 'datensatzerzeuger',

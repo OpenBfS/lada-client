@@ -35,7 +35,7 @@ Ext.define('Lada.view.panel.Ort', {
                     icon: 'resources/img/svn-update.png',
                     action: 'gridexport',
                     disabled: false
-                },{
+                }, {
                     text: i18n.getMsg('map.button.add'),
                     icon: 'resources/img/list-add.png',
                     action: 'addMap',

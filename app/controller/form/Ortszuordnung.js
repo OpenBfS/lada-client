@@ -212,7 +212,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         var win = button.up('ortszuordnungwindow');
         var currentOrt = win.down('ortszuordnungform').currentOrt;
         if (currentOrt) {
-            Ext.create('Lada.view.window.Ort',{
+            Ext.create('Lada.view.window.Ort', {
                 record: currentOrt,
                 parentWindow: win
             }).show();

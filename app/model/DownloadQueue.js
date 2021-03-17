@@ -26,9 +26,9 @@ Ext.define('Lada.model.DownloadQueue', {
         name: 'filename'
     }, {
         name: 'mapfish_statusURL'
-    },{
+    }, {
         name: 'mapfish_downloadURL'
-    },{
+    }, {
         name: 'startDate'
     }, {
         name: 'status'

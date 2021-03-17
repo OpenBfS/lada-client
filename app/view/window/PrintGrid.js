@@ -56,14 +56,14 @@ Ext.define('Lada.view.window.PrintGrid', {
 
     // store containing all available templates for the currently selected data
     templateStore: Ext.create('Ext.data.Store', {
-        model: Ext.create('Ext.data.Model',{
+        model: Ext.create('Ext.data.Model', {
             fields: [{ name: 'name', type: 'string' }]
         })
     }),
 
     // store containing all the layouts for the currently selected template
     layoutStore: Ext.create('Ext.data.Store', {
-        model: Ext.create('Ext.data.Model',{
+        model: Ext.create('Ext.data.Model', {
             fields: [
                 { name: 'id', type: 'number' },
                 { name: 'name', type: 'string' }
@@ -72,7 +72,7 @@ Ext.define('Lada.view.window.PrintGrid', {
     }),
 
     formatStore: Ext.create('Ext.data.Store', {
-        model: Ext.create('Ext.data.Model',{
+        model: Ext.create('Ext.data.Model', {
             fields: [{ name: 'name', type: 'string' }]
         })
     }),
@@ -171,7 +171,7 @@ Ext.define('Lada.view.window.PrintGrid', {
                 xtype: 'label',
                 name: 'results',
                 hidden: true
-            },{
+            }, {
                 xtype: 'downloadqueuegrid',
                 store: 'downloadqueue-print',
                 width: '100%'

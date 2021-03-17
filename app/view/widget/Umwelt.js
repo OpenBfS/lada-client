@@ -9,7 +9,7 @@
 /**
  * Combobox for Umweltbereich
  */
-Ext.define('Lada.view.widget.Umwelt' ,{
+Ext.define('Lada.view.widget.Umwelt', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.umwelt',
     store: null,

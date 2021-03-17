@@ -73,7 +73,7 @@ Ext.define('Lada.view.window.FileUpload', {
                             }
                         }
                         fset.setTitle(
-                            i18n.getMsg('import.filesSelected',files.length));
+                            i18n.getMsg('import.filesSelected', files.length));
                         node.value = fileNames;
                         if (
                             (field.up('window').down('combobox[name=mst]')
@@ -238,7 +238,7 @@ Ext.define('Lada.view.window.FileUpload', {
 
         if (cb.getValue() === 'utf-8') {
             Ext.Object.each(binFiles, function(fileName, fileContent) {
-                var x = new Uint8Array(fileContent.slice(0,3));
+                var x = new Uint8Array(fileContent.slice(0, 3));
                 if (
                     x[0] === 0xEF &&
                     x[1] === 0xBB &&

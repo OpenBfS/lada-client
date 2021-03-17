@@ -74,7 +74,7 @@ Ext.define('Lada.view.window.GridExport', {
             data: [{
                 name: i18n.getMsg('lineseparator.windows'),
                 value: 'windows'
-            },{
+            }, {
                 name: i18n.getMsg('lineseparator.linux'),
                 value: 'linux'
             }]
@@ -98,7 +98,7 @@ Ext.define('Lada.view.window.GridExport', {
             }, {
                 name: i18n.getMsg('comma'),
                 value: 'comma'
-            },{
+            }, {
                 name: i18n.getMsg('whitespace'),
                 value: 'space'
             }, {
@@ -112,7 +112,7 @@ Ext.define('Lada.view.window.GridExport', {
             data: [{
                 name: i18n.getMsg('comma'),
                 value: 'comma'
-            },{
+            }, {
                 name: i18n.getMsg('dot'),
                 value: 'period'
             }]
@@ -145,13 +145,13 @@ Ext.define('Lada.view.window.GridExport', {
                 }
             }
         }
-        this.columnListStore = Ext.create('Ext.data.Store',{
+        this.columnListStore = Ext.create('Ext.data.Store', {
             fields: ['name', 'value'],
             data: columnslist
         });
 
         //store for additional rowExpander columns
-        this.expcolumnList = Ext.create('Ext.data.Store',{
+        this.expcolumnList = Ext.create('Ext.data.Store', {
             fields: ['name', 'value']
         });
 
@@ -221,7 +221,7 @@ Ext.define('Lada.view.window.GridExport', {
                 listeners: {
                     change: me.checkExportButton
                 }
-            },{
+            }, {
                 xtype: 'tagfield',
                 name: 'exportcolumns',
                 labelWidth: 100,
@@ -330,7 +330,7 @@ Ext.define('Lada.view.window.GridExport', {
                 xtype: 'button',
                 action: 'export',
                 text: i18n.getMsg('export.button')
-            },{
+            }, {
                 xtype: 'button',
                 action: 'close',
                 text: i18n.getMsg('close')
@@ -1136,7 +1136,7 @@ Ext.define('Lada.view.window.GridExport', {
             c.export = false;
             if ( c.columnIndex > -1 && c.visible !== false) {
                 var gridColumn = columnstore.findRecord(
-                    'id', c.gridColumnId,0,false, false, true
+                    'id', c.gridColumnId, 0, false, false, true
                 );
                 if (
                     allcolumns ||

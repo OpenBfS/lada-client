@@ -61,7 +61,7 @@ Ext.define('Lada.view.QueryPanel', {
                     matchFieldWidth: false,
                     labelWidth: 90,
                     submitValue: false
-                },{
+                }, {
                     xtype: 'button',
                     name: 'queryreload',
                     action: 'reload',
@@ -121,7 +121,7 @@ Ext.define('Lada.view.QueryPanel', {
             action: 'newquery',
             text: 'query.new',
             flex: 1
-        },{
+        }, {
             action: 'delquery',
             text: 'delete',
             flex: 1,
@@ -161,7 +161,7 @@ Ext.define('Lada.view.QueryPanel', {
             labelWidth: 125,
             fieldLabel: 'query.groups',
             queryMode: 'local',
-            store: Ext.create('Ext.data.Store',{
+            store: Ext.create('Ext.data.Store', {
                 model: 'Lada.model.QueryGroup'
             }),
             valueField: 'messStellesIds',
@@ -182,7 +182,7 @@ Ext.define('Lada.view.QueryPanel', {
             labelWidth: 125,
             // Needs to be different from Ext.getStore('columnstore')
             // because of extra filters:
-            store: Ext.create('Ext.data.Store',{
+            store: Ext.create('Ext.data.Store', {
                 model: 'Lada.model.GridColumn',
                 autoLoad: true
             }),
@@ -301,8 +301,8 @@ Ext.define('Lada.view.QueryPanel', {
             });
         };
         var filtertags = this.down('cbox[name=activefilters]').down('tagfield');
-        filtertags.on('focus',activefilterFilter);
-        filtertags.on('select',activefilterFilter);
+        filtertags.on('focus', activefilterFilter);
+        filtertags.on('select', activefilterFilter);
         filtertags.triggers.clear.handler = function() {
             filtertags.clearValue();
             activefilterFilter(filtertags);

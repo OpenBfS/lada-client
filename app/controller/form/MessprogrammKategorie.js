@@ -40,7 +40,7 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
             record.set('letzteAenderung', new Date());
         }
         if (record.phantom) {
-            record.set('id',null);
+            record.set('id', null);
         }
         record.save({
             success: function(newRecord, response) {

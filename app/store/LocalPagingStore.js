@@ -78,7 +78,7 @@ Ext.define('Lada.store.LocalPagingStore', {
                 filterFn: function(record) {
                     var low = (me.currentPage -1) * me.pageSize;
                     var high = (me.currentPage) * me.pageSize -1;
-                    if (me.getRange(low,high).indexOf(record) > -1) {
+                    if (me.getRange(low, high).indexOf(record) > -1) {
                         return true;
                     }
                     return false;

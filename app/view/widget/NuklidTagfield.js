@@ -9,7 +9,7 @@
 /**
  * TagField Box for Messgroessen
  */
-Ext.define('Lada.view.widget.NuklidTagfield' ,{
+Ext.define('Lada.view.widget.NuklidTagfield', {
     extend: 'Ext.form.field.Tag',
     alias: 'widget.nuklidtags',
     allowBlank: true,

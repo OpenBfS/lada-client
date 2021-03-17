@@ -517,8 +517,8 @@ Ext.application({
             storeId: 'messstellenkombi',
             autoLoad: true,
             listeners: {
-                beforeload: function(store,operation) {
-                    operation.setParams(Ext.apply(operation.getParams()||{},{
+                beforeload: function(store, operation) {
+                    operation.setParams(Ext.apply(operation.getParams()||{}, {
                         netzbetreiberId: Lada.netzbetreiber.toString()
                     }));
                 },
@@ -562,7 +562,7 @@ Ext.application({
         });
         Ext.create('Ext.data.Store', {
             storeId: 'pagingSizes',
-            model: Ext.create('Ext.data.Model',{
+            model: Ext.create('Ext.data.Model', {
                 fields: [
                     {name: 'label', type: 'string'},
                     {name: 'value', type: 'string'}

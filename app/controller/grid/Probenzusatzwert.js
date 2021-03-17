@@ -148,7 +148,7 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
     select: function(editor, record) {
         editor.up().down('selectabledisplayfield').setValue(record.get('id'));
         var mehid = Ext.data.StoreManager.get('messeinheiten').findRecord(
-            'id',record.get('messEinheitId'), 0, false, false, true);
+            'id', record.get('messEinheitId'), 0, false, false, true);
         if (!mehid) {
             editor.up().getRefItems()[4].setValue('');
         } else {

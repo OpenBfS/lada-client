@@ -59,7 +59,7 @@ Ext.define('Lada.view.form.OrtInfo', {
                 label: i18n.getMsg('orte.kda'),
                 firstitem: 'kdaId',
                 seconditem: 'koordinatenart'
-            },{
+            }, {
                 xtype: 'ortinforow',
                 label: i18n.getMsg('orte.koords'),
                 firstitem: 'koordXExtern',
@@ -73,7 +73,7 @@ Ext.define('Lada.view.form.OrtInfo', {
 /**
  * A row with a label and two values, to be properly aligned in ortinfo form
  */
-Ext.define('Lada.view.form.OrtInfoRow',{
+Ext.define('Lada.view.form.OrtInfoRow', {
     extend: 'Ext.form.FieldSet',
     alias: 'widget.ortinforow',
     padding: 0,
@@ -94,10 +94,10 @@ Ext.define('Lada.view.form.OrtInfoRow',{
             html: this.label+':',
             width: 125,
             padding: '4, 0, 5, 0'
-        },{
+        }, {
             name: this.firstitem,
             width: 80
-        },{
+        }, {
             name: this.seconditem,
             width: 115,
             maxWidth: 115

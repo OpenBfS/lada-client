@@ -208,7 +208,7 @@ Ext.define('Lada.view.window.Messprogramm', {
             }
         } else {
             // Create a Create Window
-            var record = Ext.create('Lada.model.Messprogramm',{
+            var record = Ext.create('Lada.model.Messprogramm', {
                 gueltigVon: 1,
                 gueltigBis: 365});
             this.record = record;

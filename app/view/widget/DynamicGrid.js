@@ -66,7 +66,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     currentParams: null,
 
     /**List of userids that can set a messung's status */
-    statusUser: [1,2,3],
+    statusUser: [1, 2, 3],
 
     initComponent: function() {
         this.i18n = Lada.getApplication().bundle;
@@ -193,7 +193,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             var id = features[i].get ? features[i].get('id') : features[i];
             if (id !== undefined) {
                 records.push(this.store.findRecord(
-                    this.rowtarget.dataIndex, id, false,false, false, true));
+                    this.rowtarget.dataIndex, id, false, false, false, true));
             }
         }
         this.getSelectionModel().select(records);
@@ -209,7 +209,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             clone.getGeometry().getCoordinates()[1] * 100000)
             /100000;
         Ext.create('Lada.view.window.Ort', {
-            record: Ext.create('Lada.model.Ort',{
+            record: Ext.create('Lada.model.Ort', {
                 koordXExtern: koord_x.toString(),
                 koordYExtern: koord_y.toString(),
                 kdaId: 4,
@@ -669,7 +669,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 if (value[0] === '<' ) {
                     if (format === 'e') {
                         return '< ' + String(parseInt(
-                            value.substring(1),10).toExponential());
+                            value.substring(1), 10).toExponential());
                     } else {
                         return '< ' + String(
                             Ext.util.Format.number(value, format));
@@ -764,8 +764,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 return '';
             }
             var st = Ext.data.StoreManager.get('statuskombi');
-            var rec = st.findRecord('id', value, false,false,
-                false,true);
+            var rec = st.findRecord('id', value, false, false,
+                false, true);
             if (!rec) {
                 return value;
             }
@@ -1012,7 +1012,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                             text: me.i18n.getMsg('button.active'),
                             action: 'setActiveYes',
                             needsSelection: true
-                        },{
+                        }, {
                             text: me.i18n.getMsg('button.notActive'),
                             action: 'setActiveNo',
                             needsSelection: true

@@ -13,25 +13,25 @@ Ext.define('Lada.model.GridColumnValue', {
     extend: 'Ext.data.Model',
     fields: [{
         name: 'id'
-    },{
+    }, {
         name: 'columnIndex'
-    },{
+    }, {
         name: 'filterActive'
-    },{
+    }, {
         name: 'filterValue'
-    },{
+    }, {
         name: 'sort'
-    },{
+    }, {
         name: 'sortIndex'
-    },{
+    }, {
         name: 'userId'
-    },{
+    }, {
         name: 'qid'
-    },{
+    }, {
         name: 'visible'
-    },{
+    }, {
         name: 'width'
-    },{
+    }, {
         name: 'gridColumnId'
     }, {
         name: 'dataIndex',

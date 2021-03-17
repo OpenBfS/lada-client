@@ -81,7 +81,7 @@ Ext.define('Lada.view.form.Probe', {
                         qtip: i18n.getMsg('copy.qtip', i18n.getMsg('probe')),
                         icon: 'resources/img/dialog-ok-apply.png',
                         disabled: true
-                    }, '->',{
+                    }, '->', {
                         text: i18n.getMsg('audittrail'),
                         qtip: i18n.getMsg('qtip.audit'),
                         icon: 'resources/img/distribute-vertical-center.png',
@@ -328,7 +328,7 @@ Ext.define('Lada.view.form.Probe', {
                                 });
                             }
                         }]
-                    },{
+                    }, {
                         xtype: 'messprogrammland',
                         name: 'mplId',
                         fieldLabel: i18n.getMsg('mpl_id'),

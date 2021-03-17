@@ -359,7 +359,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         button.up('window').close();
                     }
                 }]
-            },{
+            }, {
                 xtype: 'dynamicgrid',
                 width: 800,
                 minHeight: 500,

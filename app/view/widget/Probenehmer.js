@@ -9,7 +9,7 @@
 /**
  * Combobox for Probenehmer
  */
-Ext.define('Lada.view.widget.Probenehmer' ,{
+Ext.define('Lada.view.widget.Probenehmer', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.probenehmer',
     store: 'Probenehmer',

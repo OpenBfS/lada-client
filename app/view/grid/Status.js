@@ -111,7 +111,7 @@ Ext.define('Lada.view.grid.Status', {
         if (this.store) {
             this.store.removeAll();
         } else {
-            this.store = Ext.create('Lada.store.Status',{
+            this.store = Ext.create('Lada.store.Status', {
                 sorters: [{
                     property: 'id',
                     direction: 'DESC'

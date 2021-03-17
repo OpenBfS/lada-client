@@ -218,7 +218,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
             me.timePicker.setWidth(el.getWidth());
             me.timePicker.setPosition(xPos, yPos);
             me.timePicker.show();
-        },1);
+        }, 1);
     },
 
     beforeDestroy: function() {

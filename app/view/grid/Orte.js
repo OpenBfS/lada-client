@@ -66,7 +66,7 @@ Ext.define('Lada.view.grid.Orte', {
                 if (rec.get('readonly') === false) {
                     Lada.model.Ort.load(rec.get('id'), {
                         success: function(record) {
-                            Ext.create('Lada.view.window.Ort',{
+                            Ext.create('Lada.view.window.Ort', {
                                 record: record,
                                 parentWindow: grid.up('panel')
                             }).show();

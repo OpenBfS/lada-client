@@ -76,13 +76,13 @@ Ext.define('Lada.view.window.TagEdit', {
                 margin: '5 5 5 5',
                 text: i18n.getMsg('tag.assignwindow.assignbutton.text'),
                 handler: this.assignToSelection
-            },{
+            }, {
                 xtype: 'button',
                 action: 'bulkdeletetags',
                 margin: '5 5 5 5',
                 text: i18n.getMsg('tag.assignwindow.unassignbutton.text'),
                 handler: this.unassignFromSelection
-            },{
+            }, {
                 xtype: 'button',
                 text: i18n.getMsg('cancel'),
                 action: 'cancel',

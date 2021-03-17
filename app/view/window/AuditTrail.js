@@ -239,7 +239,7 @@ Ext.define('Lada.view.window.AuditTrail', {
                     value, 2)
                     .replace('.', Ext.util.Format.decimalSeparator);
                 var splitted = strValue.split('e');
-                var exponent = parseInt(splitted[1],10);
+                var exponent = parseInt(splitted[1], 10);
                 value = splitted[0] + 'e'
                     + ((exponent < 0) ? '-' : '+')
                     + ((Math.abs(exponent) < 10) ? '0' : '')

@@ -103,7 +103,7 @@ Ext.define('Lada.controller.grid.Messmethode', {
         var grid = button.up('messmethodengrid');
         record.set('messprogrammId', grid.recordId);
         grid.store.insert(0, record);
-        grid.rowEditing.startEdit(0,0);
+        grid.rowEditing.startEdit(0, 0);
         var mp_win = grid.up('messprogramm');
         if (mp_win) {
             mp_win.toggleGenProben();

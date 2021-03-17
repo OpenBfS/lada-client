@@ -67,7 +67,7 @@ Ext.define('Lada.controller.form.Ort', {
         copy.set('ortId', null);
         copy.set('referenceCount', 0);
         copy.set('plausibleReferenceCount', 0);
-        var win = Ext.create('Lada.view.window.Ort',{
+        var win = Ext.create('Lada.view.window.Ort', {
             record: copy,
             mode: 'copy',
             original: record
@@ -412,7 +412,7 @@ Ext.define('Lada.controller.form.Ort', {
         var i18n = Lada.getApplication().bundle;
         // von Koordinatenart: form.get()
         // dropdownBox: Koordinatenarten:
-        var win = Ext.create('Lada.view.window.ChangeKDA',{
+        var win = Ext.create('Lada.view.window.ChangeKDA', {
             parentWindow: panel,
             modal: true,
             title: i18n.getMsg('changeKDA.title')

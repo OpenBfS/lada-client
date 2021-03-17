@@ -45,12 +45,12 @@ Ext.define('Lada.view.widget.base.NumberRange', {
             }
         };
         var fromField = Ext.create(
-            'Lada.view.form.ExpNumberField',numberOptions);
+            'Lada.view.form.ExpNumberField', numberOptions);
 
         numberOptions.name = this.name + 'To';
         numberOptions.fieldLabel = i18n.getMsg('to');
         numberOptions.margin = '5 0 5 5';
-        var toField = Ext.create('Lada.view.form.ExpNumberField',numberOptions);
+        var toField = Ext.create('Lada.view.form.ExpNumberField', numberOptions);
 
         this.items = [
             {

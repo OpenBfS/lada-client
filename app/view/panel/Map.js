@@ -32,7 +32,7 @@ Ext.define('Lada.view.panel.Map', {
      * 7 = 1:4000000 14 = 1:35000
      */
     mapOptions: {
-        extent: [-20037508.34,-20037508.34,20037508.34,20037508.34],
+        extent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
         minZoom: 3,
         maxZoom: 18,
         projection: 'EPSG:3857'
@@ -71,7 +71,7 @@ Ext.define('Lada.view.panel.Map', {
      * Select a feature by record (a Lada.model.Ort)
      * @param record Record
      */
-    selectFeature: function(model,record) {
+    selectFeature: function(model, record) {
         if (!record || !record.get('id') || record.get('id') === '') {
             return;
         }
@@ -176,7 +176,7 @@ Ext.define('Lada.view.panel.Map', {
                 clone.getGeometry().getCoordinates()[1] * 100000)
                 /100000;
             Ext.create('Lada.view.window.Ort', {
-                record: Ext.create('Lada.model.Ort',{
+                record: Ext.create('Lada.model.Ort', {
                     netzbetreiberId: nId,
                     koordXExtern: koord_x.toString(),
                     koordYExtern: koord_y.toString(),
@@ -273,7 +273,7 @@ Ext.define('Lada.view.panel.Map', {
             this.mapOptions.target = target.dom;
         }
         this.mapOptions.view = new ol.View({
-            center: [1160000,6694000],
+            center: [1160000, 6694000],
             zoom: 6,
             minZoom: 2,
             maxZoom: 17

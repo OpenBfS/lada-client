@@ -562,7 +562,7 @@ Ext.define('Lada.controller.form.Probe', {
             record.set('letzteAenderung', new Date());
         }
         if (record.phantom) {
-            record.set('id',null);
+            record.set('id', null);
         }
         record.save({
             success: function(newRecord, response) {
@@ -619,7 +619,7 @@ Ext.define('Lada.controller.form.Probe', {
             record.set('letzteAenderung', new Date());
         }
         if (record.phantom) {
-            record.set('id',null);
+            record.set('id', null);
         }
 
         //If record is phantom, do not apply tags yet
@@ -645,7 +645,7 @@ Ext.define('Lada.controller.form.Probe', {
                 record.set('letzteAenderung', new Date());
             }
             if (record.phantom) {
-                record.set('id',null);
+                record.set('id', null);
             }
             delete record.data[formPanel.down('tagwidget').getInputId()];
 
@@ -950,7 +950,7 @@ Ext.define('Lada.controller.form.Probe', {
             var errors = [];
             var warnings = [];
             var notifications = { hauptprobenNr: [631] };
-            field.up('probeform').setMessages(errors,warnings,notifications);
+            field.up('probeform').setMessages(errors, warnings, notifications);
         }
     },
 
@@ -995,7 +995,7 @@ Ext.define('Lada.controller.form.Probe', {
         media.setValue(current.join(' ').trim());
 
         if (current[0].length === 0) {
-            current.splice(0,1);
+            current.splice(0, 1);
         }
         var mediatext = field.up('probeform').down('textfield[name="media"]');
 

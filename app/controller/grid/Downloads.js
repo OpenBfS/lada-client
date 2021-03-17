@@ -87,7 +87,7 @@ Ext.define('Lada.controller.grid.Downloads', {
                 success: function(response) {
                     var content = response.responseBytes;
                     var filetype = response.getResponseHeader('Content-Type');
-                    var blob = new Blob([content],{type: filetype});
+                    var blob = new Blob([content], {type: filetype});
                     saveAs(blob, model.get('filename'));
                     model.set('downloadRequested', false);
                     me.refreshQueue();

@@ -9,7 +9,7 @@
 /**
  * Widget for sorting columns
  */
-Ext.define('Lada.view.widget.ColumnSort' ,{
+Ext.define('Lada.view.widget.ColumnSort', {
     extend: 'Ext.container.Container',
     alias: 'widget.columnsort',
     layout: {
@@ -80,7 +80,7 @@ Ext.define('Lada.view.widget.ColumnSort' ,{
                     sortable: false,
                     dataIndex: 'name',
                     flex: 2
-                },{
+                }, {
                     xtype: 'widgetcolumn',
                     minWidth: 150,
                     widget: {

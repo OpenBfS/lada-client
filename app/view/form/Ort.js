@@ -224,7 +224,7 @@ Ext.define('Lada.view.form.Ort', {
         this.kdaComboStore = Ext.create('Lada.store.KoordinatenArt');
         if (this.record.get('kdaId') !== 3) {
             this.down('koordinatenart').store.filter({property: 'id',
-                value: /(1|2|4|5|8)/,exactMatch: true});
+                value: /(1|2|4|5|8)/, exactMatch: true});
         } else {
             this.down('koordinatenart').store.clearFilter();
         }

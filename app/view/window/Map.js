@@ -26,7 +26,7 @@ Ext.define('Lada.view.window.Map', {
     map: null,
 
     initComponent: function() {
-        this.map = Ext.create('Lada.view.panel.Map',{
+        this.map = Ext.create('Lada.view.panel.Map', {
             resizable: false,
             layout: 'fit',
             collapsible: false,

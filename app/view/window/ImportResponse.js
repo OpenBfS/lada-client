@@ -94,7 +94,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                 var downloadJoin = me.downloadPrefix +
                     me.download +
                     me.downloadPostfix;
-                var blob = new Blob([downloadJoin],{type: 'text/html'});
+                var blob = new Blob([downloadJoin], {type: 'text/html'});
                 saveAs(blob, 'report.html');
             }
         }];

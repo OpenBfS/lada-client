@@ -117,7 +117,7 @@ Ext.define('Lada.view.Viewport', {
                         }]
                     }]
                 }]
-            },{
+            }, {
                 xtype: 'panel',
                 layout: 'fit',
                 name: 'contentpanel',

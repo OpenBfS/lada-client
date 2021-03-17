@@ -552,7 +552,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         media.setValue(current.join(' ').trim());
 
         if (current[0].length === 0) {
-            current.splice(0,1);
+            current.splice(0, 1);
         }
         var mediatext = field.up('messprogrammform')
             .down('textfield[name="media"]');

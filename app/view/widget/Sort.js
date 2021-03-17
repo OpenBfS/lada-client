@@ -15,7 +15,7 @@ var sortStore = Ext.create('Ext.data.Store', {
     }, {
         'id': 'desc',
         'value': 'absteigend'
-    },{
+    }, {
         'id': '',
         'value': '-'
     }]

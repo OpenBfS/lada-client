@@ -50,7 +50,7 @@ Ext.define('Lada.controller.form.Probenehmer', {
             record.set('letzteAenderung', new Date());
         }
         if (record.phantom) {
-            record.set('id',null);
+            record.set('id', null);
         }
         record.save({
             success: function(newRecord, response) {
@@ -119,7 +119,7 @@ Ext.define('Lada.controller.form.Probenehmer', {
             record.set('letzteAenderung', new Date());
         }
         if (record.phantom) {
-            record.set('id',null);
+            record.set('id', null);
         }
         record.save({
             success: function(newRecord, response) {
@@ -163,7 +163,7 @@ Ext.define('Lada.controller.form.Probenehmer', {
         var record = button.up('probenehmerform').getForm().getRecord();
         var copy = record.copy(null);
         copy.set('prnId', null);
-        var win = Ext.create('Lada.view.window.Probenehmer',{
+        var win = Ext.create('Lada.view.window.Probenehmer', {
             record: copy,
             mode: 'copy',
             original: record

@@ -181,11 +181,11 @@ Ext.define('Lada.controller.Query', {
         var cquery = cbox.getStore().getById(cbox.getValue());
         var name = panel.down('textfield[name=name]').getValue();
         if (name.length > 70) {
-            name = name.substring(0,60) + '... ('+Lada.username+')';
+            name = name.substring(0, 60) + '... ('+Lada.username+')';
         } else {
             name = name+ '('+Lada.username+')';
         }
-        var newrecord = Ext.create('Lada.model.Query',{
+        var newrecord = Ext.create('Lada.model.Query', {
             baseQuery: cquery.get('baseQuery'),
             name: name,
             userId: Lada.userId,
@@ -281,7 +281,7 @@ Ext.define('Lada.controller.Query', {
                                         // eslint-disable-next-line max-len
                                         var globalCB = qp.down('checkbox[name=filterQueriesGlobal]');
                                         globalCB.setValue(true);
-                                        globalCB.fireEvent('change',globalCB);
+                                        globalCB.fireEvent('change', globalCB);
                                     }
                                     combobox.setValue(qp.store.getAt(0));
                                     me.changeCurrentQuery(combobox);
@@ -317,7 +317,7 @@ Ext.define('Lada.controller.Query', {
         if (!newquery) {
             combobox.clearValue();
             combobox.resetOriginalValue();
-            var emptyentry = Ext.create('Lada.model.Query',{
+            var emptyentry = Ext.create('Lada.model.Query', {
                 baseQuery: null,
                 name: null,
                 userId: null,
@@ -499,7 +499,7 @@ Ext.define('Lada.controller.Query', {
                     }
                 });
             }
-            this.resultStore.loadPage(1,{
+            this.resultStore.loadPage(1, {
                 scope: this,
                 callback: function(responseData, operation, success) {
                     loadingMask.hide();
@@ -746,7 +746,7 @@ Ext.define('Lada.controller.Query', {
                         options.multiSelect = true;
                         options.store = Ext.getStore('umwelt');
                         options.value = recs[i].get('filterValue');
-                        field = Ext.create('Lada.view.widget.Umwelt' , options);
+                        field = Ext.create('Lada.view.widget.Umwelt', options);
                         negateCheckbox = true;
                         break;
                     case 'statuswert':
@@ -973,7 +973,7 @@ Ext.define('Lada.controller.Query', {
                 var rec = store.findRecord('dataIndex', oldvalue[i],
                     false, false, false, true);
                 if (rec) {
-                    rec.set('filterActive',false);
+                    rec.set('filterActive', false);
                 }
             }
         }
@@ -1134,7 +1134,7 @@ Ext.define('Lada.controller.Query', {
             callback: function() {
                 cb.setStore(qp.store);
                 var newrec = qp.store.findRecord('id', current,
-                    false,false,false,true);
+                    false, false, false, true);
                 if (newrec) {
                     cb.select(newrec);
                 } else {
@@ -1163,7 +1163,7 @@ Ext.define('Lada.controller.Query', {
                 autoLoad: false,
                 remoteFilter: true
             });
-        grid.ortstore.addListener('datachanged',function() {
+        grid.ortstore.addListener('datachanged', function() {
             var dgrid = Ext.getCmp('dynamicgridid');
             dgrid.down('map').addLocations(dgrid.ortstore);
         });
@@ -1245,7 +1245,7 @@ Ext.define('Lada.controller.Query', {
      */
     createFieldSet: function(field, options, negateBox, regexBox) {
         var i18n = Lada.getApplication().bundle;
-        var checkboxRow = Ext.create('Ext.container.Container',{
+        var checkboxRow = Ext.create('Ext.container.Container', {
             layout: {
                 type: 'hbox',
                 align: 'right'
