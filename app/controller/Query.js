@@ -1082,7 +1082,14 @@ Ext.define('Lada.controller.Query', {
         }
     },
 
-
+    /*
+     * Guess the type of data represented by a query result row based on
+     * the existence of columns with specific data types, the latter being
+     * listed in rowHierarchy.
+     * If multiple columns with such specific types appear in the result,
+     * the column of which the type appears first in rowHierarchy
+     * determines the type of data represented by the actual query result.
+     */
     setrowtarget: function() {
         var rowHierarchy = [
             'messungId',
@@ -1091,7 +1098,9 @@ Ext.define('Lada.controller.Query', {
             'ortId',
             'probenehmer',
             'dsatzerz',
-            'mprkat'];
+            'mprkat',
+            'id'
+        ];
         var result = {
             dataType: null,
             dataIndex: null,
