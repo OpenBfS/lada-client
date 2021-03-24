@@ -201,6 +201,17 @@ Ext.define('Lada.controller.Print', {
                             }
                         }
                         break;
+                    case 'Boolean':
+                        listOfItems.push({
+                            xtype: 'checkbox',
+                            fieldLabel: i18n.getMsg(attributes[i].name),
+                            name: attributes[i].name,
+                            labelWidth: 130,
+                            margin: '5, 5, 5, 5',
+                            anchor: '100%',
+                            value: value
+                        });
+                        break;
                     default:
                         break;
                 }
@@ -277,13 +288,15 @@ Ext.define('Lada.controller.Print', {
     fillTemplate: function(attributes, selection, window) {
         // TODO ensure there is no "table" further down the hierarchy
         var resultData = {};
+        var fieldselector = '';
+        var field = '';
         for (var i=0; i < attributes.length; i++) {
             switch (attributes[i].type) {
                 case 'String':
-                    var fieldselector = 'textfield[name='
+                    fieldselector = 'textfield[name='
                         + attributes[i].name
                         + ']';
-                    var field = window.down('fieldset[name=dynamicfields]')
+                    field = window.down('fieldset[name=dynamicfields]')
                         .down(fieldselector);
                     if (field) {
                         resultData[attributes[i].name] = field.getValue() || '';
@@ -303,6 +316,14 @@ Ext.define('Lada.controller.Print', {
                             resultData[attributes[i].name] = '';
                         }
                     }
+                    break;
+                case 'Boolean':
+                    fieldselector = 'checkbox[name='
+                        + attributes[i].name
+                        + ']';
+                    field = window.down('fieldset[name=dynamicfields]')
+                        .down(fieldselector);
+                    resultData[attributes[i].name] = field.getValue();
                     break;
                 case 'TableAttributeValue':
                     resultData[attributes[i].name] = this.printTable(
