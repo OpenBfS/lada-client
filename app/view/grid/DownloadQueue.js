@@ -54,6 +54,7 @@ Ext.define('Lada.view.grid.DownloadQueue', {
             xtype: 'actioncolumn',
             text: ' ',
             dataIndex: 'status',
+            tooltip: i18n.getMsg('print.download'),
             width: 20,
             getClass: function(value, meta, rec) {
                 // see x.action-col-icon definitions at lada.css for img urls
@@ -88,6 +89,7 @@ Ext.define('Lada.view.grid.DownloadQueue', {
             xtype: 'actioncolumn',
             text: ' ',
             dataIndex: 'status',
+            tooltip: i18n.getMsg('downloadqueue.delete'),
             width: 20,
             getClass: function(value, meta, rec) {
                 return rec.get('done') ? 'delete' : '';
