@@ -356,7 +356,7 @@ Ext.define('Lada.view.window.GridExport', {
         }
         if (!this.grid.getSelectionModel().getSelection().length
             || this.grid.rowtarget.dataIndex === null
-           ) {
+        ) {
             this.down('checkbox[name=allrows]').setValue(true);
         }
 

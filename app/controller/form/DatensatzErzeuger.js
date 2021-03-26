@@ -81,7 +81,8 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                         i18n.getMsg('err.msg.generic.body'));
                 } else {
-                    formPanel.down('tfield[name=datensatzErzeugerId]').setValue();
+                    formPanel.down(
+                        'tfield[name=datensatzErzeugerId]').setValue();
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
                         if (json.message) {

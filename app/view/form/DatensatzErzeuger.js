@@ -45,7 +45,8 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                     action: 'copy',
                     qtip: i18n.getMsg('copy.qtip', i18n.getMsg('ort')),
                     icon: 'resources/img/dialog-ok-apply.png',
-                    disabled: !this.record.phantom && !this.record.get('readonly') ?
+                    disabled: !this.record.phantom &&
+                        !this.record.get('readonly') ?
                         false :
                         true
                 },
@@ -120,7 +121,10 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
             value: 'M',
             exactMatch: true});
         this.down('combobox[name=mstId]').setStore(this.mstTypStore);
-        if ( (!this.record.phantom) || (this.record.phantom && this.record.get('netzbetreiberId')) ) {
+        if (
+            (!this.record.phantom) ||
+            (this.record.phantom && this.record.get('netzbetreiberId'))
+        ) {
             var current = netzstore.getById(this.record.get('netzbetreiberId'));
             if (current) {
                 this.down('netzbetreiber').setValue(current);
