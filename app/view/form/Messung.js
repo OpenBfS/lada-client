@@ -142,6 +142,7 @@ Ext.define('Lada.view.form.Messung', {
                             name: 'messzeitpunkt',
                             fieldLabel: i18n.getMsg('messzeitpunkt'),
                             width: 300,
+                            format: 'd.m.Y H:i',
                             labelWidth: 100
                         }, {
                             xtype: 'chkbox',
