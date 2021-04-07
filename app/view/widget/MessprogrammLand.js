@@ -15,6 +15,7 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
     store: 'messprogrammkategorie',
     displayField: 'bezeichnung',
     valueField: 'id',
+    searchValueField: 'code',
 
     //additional actions to be taken after initComponent
     extraParams: this.extraParams || null,
