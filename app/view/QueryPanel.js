@@ -162,10 +162,15 @@ Ext.define('Lada.view.QueryPanel', {
             fieldLabel: 'query.groups',
             queryMode: 'local',
             store: Ext.create('Ext.data.Store', {
-                model: 'Lada.model.QueryGroup'
+                model: 'Lada.model.QueryGroup',
+                sorters: [{
+                    property: 'messStellesIds',
+                    direction: 'ASC'
+                }]
             }),
             valueField: 'messStellesIds',
             displayField: 'messStellesIds',
+            searchValueField: 'mst_name',
             tpl: Ext.create('Ext.XTemplate',
                 '<tpl for=".">' +
                 '<div class="x-combo-list-item  x-boundlist-item" >' +
