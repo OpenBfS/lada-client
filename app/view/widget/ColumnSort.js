@@ -198,19 +198,16 @@ Ext.define('Lada.view.widget.ColumnSort', {
     saveColumnOrder: function() {
         // write the new order to the store(s)
         // TODO this is still not good. It relies on uniqueness
-        // of column names, and that the table's cell template
-        // does not change.
+        // that the table's cell template does not change.
         var me = this;
         var nodes = me.down('grid[name=sortGrid]').getView()
             .getNodes();
         var columnstore = Ext.data.StoreManager.get('columnstore');
         for (var i = 0 ; i < nodes.length; i++) {
-            var nodename = nodes[i].innerText.substr(0,
-                nodes[i].innerText.length -3);
-            //Remove linebreaks
-            nodename = nodename.replace(/(\r\n|\n|\r)/gm, '');
-            //TODO this relies on column names to be unique
-            var qf = columnstore.findRecord('name', nodename);
+            var nodename = nodes[i].innerText;
+            nodename = nodename.trim();
+            var qf = columnstore.findRecord(
+                'name', nodename, 0, false, false, true);
             var entry = this.store.findRecord(
                 'gridColumnId', qf.get('id'));
             var orig_entry = me.up(
