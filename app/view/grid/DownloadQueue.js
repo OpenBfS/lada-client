@@ -54,7 +54,17 @@ Ext.define('Lada.view.grid.DownloadQueue', {
             xtype: 'actioncolumn',
             text: ' ',
             dataIndex: 'status',
-            tooltip: i18n.getMsg('print.download'),
+            getTip: function(value, meta, rec) {
+                // Show tooltip for finished and not yet downloaded items
+                if (rec.get('status') === 'finished'
+                    && !rec.get('downloadRequested')
+                   ) {
+                    return i18n.getMsg('print.download');
+                }
+                // Return whitespace since an empty string will have no effect,
+                // i.e. leave the tooltip string as is:
+                return ' ';
+            },
             width: 20,
             getClass: function(value, meta, rec) {
                 // see x.action-col-icon definitions at lada.css for img urls
