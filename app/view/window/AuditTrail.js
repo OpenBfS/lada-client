@@ -22,6 +22,7 @@ Ext.define('Lada.view.window.AuditTrail', {
     type: null,
 
     objectId: null,
+    titleText: null,
 
     /**
      * @private
@@ -116,11 +117,17 @@ Ext.define('Lada.view.window.AuditTrail', {
                 + '</strong></p>';
             container.update(html);
         } else {
+            var title;
             if (this.type === 'probe') {
                 html = this.createHtmlProbe(json);
                 container.update(html);
+                title = i18n.getMsg('audit.title') + ' '
+                    + i18n.getMsg('probe') + ': ' + this.titleText;
+                this.setTitle(title);
             } else if (this.type === 'messung') {
                 container.update(this.createHtmlMessung(json));
+                title = i18n.getMsg('audit.title') + ' '+ this.titleText;
+                this.setTitle(title);
             }
         }
     },

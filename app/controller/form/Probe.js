@@ -1033,11 +1033,21 @@ Ext.define('Lada.controller.form.Probe', {
     },
 
     showAuditTrail: function(button) {
+        var formPanel = button.up('form');
+        var record = formPanel.getForm().getRecord();
+        var titleText;
+        if (record.get('hauptprobenNr')) {
+            titleText = record.get('externeProbeId') + ' / '
+                + record.get('hauptprobenNr');
+        } else {
+            titleText = record.get('externeProbeId');
+        }
         Ext.create('Lada.view.window.AuditTrail', {
             autoShow: true,
             closeAction: 'destroy',
             type: 'probe',
-            objectId: button.up('form').recordId
+            objectId: button.up('form').recordId,
+            titleText: titleText
         });
     }
 });
