@@ -35,6 +35,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     messprogramm: null,
 
     parentWindow: null,
+    childWindows: [],
     record: null,
     recordType: 'ortszuordnung',
     grid: null,
@@ -163,7 +164,16 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 if (staaten) {
                     staaten.clearFilter(true);
                 }
-
+                if (this.childWindows.length) {
+                    for (var key in this.childWindows) {
+                        if (
+                            this.childWindows[key] &&
+                                this.childWindows[key].close
+                        ) {
+                            this.childWindows[key].close();
+                        }
+                    }
+                }
             }
         });
 

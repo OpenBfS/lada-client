@@ -1042,12 +1042,13 @@ Ext.define('Lada.controller.form.Probe', {
         } else {
             titleText = record.get('externeProbeId');
         }
-        Ext.create('Lada.view.window.AuditTrail', {
+        var trail = Ext.create('Lada.view.window.AuditTrail', {
             autoShow: true,
             closeAction: 'destroy',
             type: 'probe',
             objectId: button.up('form').recordId,
             titleText: titleText
         });
+        button.up('window').addChild(trail);
     }
 });
