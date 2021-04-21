@@ -58,7 +58,7 @@ Ext.define('Lada.view.grid.DownloadQueue', {
                 // Show tooltip for finished and not yet downloaded items
                 if (rec.get('status') === 'finished'
                     && !rec.get('downloadRequested')
-                   ) {
+                ) {
                     return i18n.getMsg('print.download');
                 }
                 // Return whitespace since an empty string will have no effect,
