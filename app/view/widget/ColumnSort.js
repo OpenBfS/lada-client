@@ -101,6 +101,9 @@ Ext.define('Lada.view.widget.ColumnSort', {
                             change: function(box, newValue) {
                                 var newval = newValue || null;
                                 var rec = box.$widgetRecord;
+                                if (newval !== rec.get('sort') ) {
+                                    me.saveColumnOrder();
+                                }
                                 rec.set('sort', newval);
                                 var origindata = this.up('querypanel')
                                     .gridColumnValueStore
