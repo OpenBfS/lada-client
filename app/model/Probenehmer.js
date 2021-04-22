@@ -79,7 +79,7 @@ Ext.define('Lada.model.Probenehmer', {
             return v;
         }
     }, {
-        name: 'tp',
+        name: 'tourenplan',
         convert: function(v) {
             if (v === '') {
                 return null;

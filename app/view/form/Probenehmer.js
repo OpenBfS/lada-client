@@ -152,8 +152,8 @@ Ext.define('Lada.view.form.Probenehmer', {
                     width: '100%',
                     items: [{
                         xtype: 'tfield',
-                        name: 'tp',
-                        fieldLabel: i18n.getMsg('tp'),
+                        name: 'tourenplan',
+                        fieldLabel: i18n.getMsg('tourenplan'),
                         margin: '0 5 0 0',
                         width: '50%',
                         readOnly: true,
@@ -306,7 +306,7 @@ Ext.define('Lada.view.form.Probenehmer', {
         this.down('tfield[name=plz]').clearWarningOrError();
         this.down('tfield[name=strasse]').clearWarningOrError();
         this.down('tfield[name=telefon]').clearWarningOrError();
-        this.down('tfield[name=tp]').clearWarningOrError();
+        this.down('tfield[name=tourenplan]').clearWarningOrError();
         this.down('tfield[name=typ]').clearWarningOrError();
     },
 
@@ -322,7 +322,7 @@ Ext.define('Lada.view.form.Probenehmer', {
         this.down('tfield[name=plz]').setReadOnly(value);
         this.down('tfield[name=strasse]').setReadOnly(value);
         this.down('tfield[name=telefon]').setReadOnly(value);
-        this.down('tfield[name=tp]').setReadOnly(value);
+        this.down('tfield[name=tourenplan]').setReadOnly(value);
         this.down('tfield[name=typ]').setReadOnly(value);
     }
 });
