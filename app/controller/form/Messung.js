@@ -327,13 +327,14 @@ Ext.define('Lada.controller.form.Messung', {
 
     showAuditTrail: function(button) {
         var titleText = button.up('window').getTitle().split(' - ');
-        Ext.create('Lada.view.window.AuditTrail', {
+        var trail = Ext.create('Lada.view.window.AuditTrail', {
             autoShow: true,
             closeAction: 'destroy',
             type: 'messung',
             objectId: button.up('form').recordId,
             titleText: titleText[0]
         });
+        button.up('window').addChild(trail);
     },
 
     addStatus: function(button) {

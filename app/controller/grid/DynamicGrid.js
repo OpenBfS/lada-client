@@ -158,6 +158,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                         + ']')[0];
                                 }
                                 win.parentWindow = probeWin;
+                                probeWin.addChild(win);
                                 probeWin.setPosition(30);
                                 win.setPosition(35 + probeWin.width);
                                 /* eslint-disable max-len */

@@ -493,7 +493,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                             messungRecord.get('probeId') +
                                             ']')[0];
                                     }
-
+                                    probeWin.addChild(win);
                                     win.parentWindow = probeWin;
                                     probeWin.setPosition(30);
                                     win.setPosition(35 + probeWin.width);

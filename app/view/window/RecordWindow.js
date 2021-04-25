@@ -192,6 +192,13 @@ Ext.define('Lada.view.window.RecordWindow', {
      * If a request is still pending, abort and close this window
      */
     close: function() {
+        if (this.childWindows) {
+            for (var key in this.childWindows) {
+                if (this.childWindows[key] && this.childWindows[key].close) {
+                    this.childWindows[key].close();
+                }
+            }
+        }
         //If still loading, close mask
         if (this.reloadMask) {
             this.reloadMask.destroy();
@@ -200,5 +207,18 @@ Ext.define('Lada.view.window.RecordWindow', {
         if (this.loadingModel) {
             this.loadingModel.abort();
         }
+    },
+
+    addChild: function(childItem) {
+        if (!this.childWindows) {
+            this.childWindows = [];
+        }
+        var trailIdx = this.childWindows.findIndex(function(t) {
+            return t === childItem;
+        });
+        if (trailIdx < -1) {
+            this.childWindows.splice(trailIdx, 1);
+        }
+        this.childWindows.push(childItem);
     }
 });

@@ -175,7 +175,7 @@ Ext.define('Lada.view.panel.Map', {
             var koord_y = Math.round(
                 clone.getGeometry().getCoordinates()[1] * 100000)
                 /100000;
-            Ext.create('Lada.view.window.Ort', {
+            var ortWin = Ext.create('Lada.view.window.Ort', {
                 record: Ext.create('Lada.model.Ort', {
                     netzbetreiberId: nId,
                     koordXExtern: koord_x.toString(),
@@ -185,7 +185,9 @@ Ext.define('Lada.view.panel.Map', {
                 }),
                 parentWindow: parent,
                 setOzOnComplete: true
-            }).show();
+            });
+            ortWin.show();
+            parent.childWindows.push(ortWin);
             me.map.removeLayer(me.temporaryLayer);
         }
     },

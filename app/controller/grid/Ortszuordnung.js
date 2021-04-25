@@ -99,20 +99,21 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             grid.ignoreNextDblClick = false;
             return;
         }
-
-        var parent = grid.up('window').record;
+        var parentWin = grid.up('window');
+        var parent = parentWin.record;
         // parent is either probe or messprogramm.
         var parentisMp = false;
         if (parent.data.hauptprobenNr === undefined) {
             parentisMp = true;
         }
         var win = Ext.create('Lada.view.window.Ortszuordnung', {
-            parentWindow: grid.up('window'),
+            parentWindow: parentWin,
             probe: parentisMp ? null: parent,
             messprogramm: parentisMp ? parent: null,
             record: record,
             grid: grid
         });
+        parentWin.addChild(win);
         if (win.show()) {
             win.initData();
         }
@@ -194,12 +195,14 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      */
     createort: function(button) {
         var win = button.up('ortszuordnungwindow');
-        Ext.create('Lada.view.window.Ort', {
+        var ort = Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Ort', {
                 ortTyp: 1,
                 netzbetreiberId: win.netzbetreiberId}),
             parentWindow: win
-        }).show();
+        });
+        win.childWindows.push(ort);
+        ort.show();
     },
 
     /**
