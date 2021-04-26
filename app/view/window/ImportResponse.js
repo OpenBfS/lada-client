@@ -451,34 +451,5 @@ Ext.define('Lada.view.window.ImportResponse', {
             }
         }
         return out.join('');
-    },
-
-    getGeneratedTags: function() {
-        var me = this;
-        return new Ext.Promise(function(resolve, reject) {
-            Ext.Ajax.request({
-                url: 'lada-server/rest/tag/imported',
-                method: 'POST',
-                jsonData: {
-                    probeIds: me.importedProbeIds,
-                    mstId: Lada.mst[0]
-                },
-                success: function(response) {
-                    var responseJson = Ext.JSON.decode(response.responseText);
-                    if (responseJson.success) {
-                        var tagName = '';
-                        if (responseJson.data.length > 0) {
-                            tagName = responseJson.data[0].tag.tag;
-                        }
-                        resolve(tagName);
-                    } else {
-                        reject();
-                    }
-                },
-                failure: function() {
-                    reject();
-                }
-            });
-        });
     }
 });
