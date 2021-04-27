@@ -59,7 +59,7 @@ Ext.define('Lada.view.widget.base.TextField', {
             hidden: true
         }, {
             xtype: 'image',
-            name: 'notificationsImg',
+            name: 'notificationImg',
             src: 'resources/img/warning_gray.png',
             width: 14,
             height: 14,
@@ -106,8 +106,8 @@ Ext.define('Lada.view.widget.base.TextField', {
     },
 
     showNotifications: function(notifications) {
-        var img = this.down('image[name=notificationsImg]');
-        this.warning = Ext.create('Ext.tip.ToolTip', {
+        var img = this.down('image[name=notificationImg]');
+        this.notification = Ext.create('Ext.tip.ToolTip', {
             target: img.getEl(),
             html: notifications
         });
@@ -131,10 +131,10 @@ Ext.define('Lada.view.widget.base.TextField', {
         var fieldset = this.up('fieldset[collapsible=true]');
         if (fieldset) {
             var i18n = Lada.getApplication().bundle;
-            var notificationsText = i18n.getMsg(this.name) +
+            var notificationText = i18n.getMsg(this.name) +
                 ': ' +
                 notifications;
-            fieldset.showWarningOrError(true, notificationsText);
+            fieldset.showWarningOrError(true, notificationText);
         }
     },
 
@@ -172,8 +172,8 @@ Ext.define('Lada.view.widget.base.TextField', {
         if (this.error) {
             this.error.destroy();
         }
-        if (this.notifications) {
-            this.notifications.destroy();
+        if (this.notification) {
+            this.notification.destroy();
         }
         var tf = this.down('textfield');
         tf.invalidCls = 'x-lada-warning-field';
@@ -204,7 +204,7 @@ Ext.define('Lada.view.widget.base.TextField', {
         this.down('textfield').clearInvalid();
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
-        this.down('image[name=notificationsImg]').hide();
+        this.down('image[name=notificationImg]').hide();
     },
 
     setReadOnly: function(value) {

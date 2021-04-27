@@ -23,6 +23,8 @@ Ext.define('Lada.view.widget.base.ComboBox', {
 
     error: null,
 
+    notification: null,
+
     defaultInputWrapCls: null,
 
     initComponent: function() {
@@ -88,6 +90,13 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             width: 14,
             height: 14,
             hidden: true
+        }, {
+            xtype: 'image',
+            name: 'notificationImg',
+            src: 'resources/img/warning_gray.png',
+            width: 14,
+            height: 14,
+            hidden: true
         }];
 
         this.callParent(arguments);
@@ -96,6 +105,39 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         this.clearListeners();
 
         this.defaultInputWrapCls = this.down('combobox').inputWrapCls;
+    },
+
+    showNotifications: function(notifications) {
+        this.clearWarningOrError();
+        var img = this.down('image[name=notificationImg]');
+        var tt = Ext.create('Ext.tip.ToolTip', {
+            target: img.getEl(),
+            html: notifications
+        });
+        this.notification = tt;
+        var cb = this.down('combobox');
+        if (cb.inputWrap && cb.inputEl) {
+            cb.inputWrap.addCls('x-lada-notification-field');
+            cb.inputEl.addCls('x-lada-notification-field');
+        } else {
+            cb.onAfter({
+                render: {
+                    fn: function(el) {
+                        el.inputWrap.addCls('x-lada-notification-field');
+                        el.inputEl.addCls('x-lada-notification-field');
+                    },
+                    single: true
+                }
+            });
+        }
+        img.show();
+        var fieldset = this.up('fieldset[collapsible=true]');
+        if (fieldset) {
+            var i18n = Lada.getApplication().bundle;
+            var notificationText = i18n.getMsg(this.name) +
+                ': ' + notifications;
+            fieldset.showWarningOrError(true, notificationText);
+        }
     },
 
     showWarnings: function(warnings) {
@@ -157,22 +199,30 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         if (this.error) {
             this.error.destroy();
         }
+        if (this.notification) {
+            this.notification.destroy();
+        }
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
+        this.down('image[name=notificationImg]').hide();
         var cb = this.down('combobox');
         if (cb.inputWrap && cb.inputEl) {
             cb.inputWrap.removeCls('x-lada-warning-field');
             cb.inputWrap.removeCls('x-lada-error-field');
+            cb.inputWrap.removeCls('x-lada-notification-field');
             cb.inputEl.removeCls('x-lada-warning-field');
             cb.inputEl.removeCls('x-lada-error-field');
+            cb.inputEl.removeCls('x-lada-notification-field');
         } else {
             cb.onAfter({
                 render: {
                     fn: function(el) {
                         el.inputWrap.removeCls('x-lada-warning-field');
                         el.inputWrap.removeCls('x-lada-error-field');
+                        el.inputWrap.removeCls('x-lada-notification-field');
                         el.inputEl.removeCls('x-lada-warning-field');
                         el.inputEl.removeCls('x-lada-error-field');
+                        el.inputEl.removeCls('x-lada-notification-field');
                     },
                     single: true
                 }

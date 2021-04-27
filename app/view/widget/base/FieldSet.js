@@ -17,6 +17,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
     origColor: '',
     errorText: '',
     warningText: '',
+    notificationText: '',
     tooltip: null,
 
     /**
@@ -28,16 +29,19 @@ Ext.define('Lada.view.widget.base.FieldSet', {
      * @param {Boolean} error True if there are errors
      * @param {String} errorText Error Text
      */
-    showWarningOrError: function(warning, warningText, error, errorText) {
+    showWarningOrError: function(warning, warningText, error, errorText,
+        notification, notificationText) {
         //If component is rendered, show warnings, else add afterRender listener
         if (this.rendered === true) {
-            this.doShowWarningOrError(warning, warningText, error, errorText);
+            this.doShowWarningOrError(warning, warningText, error, errorText,
+                notification, notificationText);
         } else {
             this.onAfter(
                 'render',
                 function() {
                     this.doShowWarningOrError(
-                        warning, warningText, error, errorText);
+                        warning, warningText, error, errorText,
+                        notification, notificationText);
                 },
                 this,
                 {single: true});
@@ -53,7 +57,8 @@ Ext.define('Lada.view.widget.base.FieldSet', {
      * @param {Boolean} error True if there are errors
      * @param {String} errorText Error Text
      */
-    doShowWarningOrError: function(warning, warningText, error, errorText) {
+    doShowWarningOrError: function(warning, warningText, error, errorText,
+        notification, notificationText) {
         this.clearMessages(); //Clear Errors and Warning first
         if (this.errorText && this.errorText !== '') {
             this.errorText += '\n';
@@ -63,6 +68,10 @@ Ext.define('Lada.view.widget.base.FieldSet', {
             this.warningText += '\n';
         }
         this.warningText += warningText;
+        if (this.notificationText && this.notificationText !== '') {
+            this.notificationText += '\n';
+        }
+        this.notificationText += notificationText;
 
         if (this.title) {
             this.plainTitle = this.title;
@@ -99,6 +108,23 @@ Ext.define('Lada.view.widget.base.FieldSet', {
                     });
                 } else {
                     this.tooltip.html = warningText;
+                }
+            }
+            return;
+        }
+        if (notification) {
+            this.getEl().dom.style['border-color'] = '#FFE25D';
+            // eslint-disable-next-line max-len
+            this.setTitle('<img src="resources/img/dialog-warning.png" width="13" height="13"  id="'+ imgId +'"/>  '+
+                    this.plainTitle);
+            if (notificationText) {
+                if (!this.tooltip) {
+                    Ext.create('Ext.tip.ToolTip', {
+                        target: Ext.get(imgId),
+                        html: notificationText
+                    });
+                } else {
+                    this.tooltip.html = notificationText;
                 }
             }
             return;
