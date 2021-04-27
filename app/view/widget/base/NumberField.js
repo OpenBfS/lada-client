@@ -54,6 +54,13 @@ Ext.define('Lada.view.widget.base.NumberField', {
             width: 14,
             height: 14,
             hidden: true
+        }, {
+            xtype: 'image',
+            name: 'notificationImg',
+            src: 'resources/img/warning_gray.png',
+            width: 14,
+            height: 14,
+            hidden: true
         }];
         this.callParent(arguments);
         if (this.regex) {
@@ -92,6 +99,38 @@ Ext.define('Lada.view.widget.base.NumberField', {
             var i18n = Lada.getApplication().bundle;
             var warningText = i18n.getMsg(this.name) + ': ' + warnings;
             fieldset.showWarningOrError(true, warningText);
+        }
+    },
+
+    showNotifications: function(notifications) {
+        this.clearWarningOrError();
+        var img = this.down('image[name=notificationImg]');
+        this.notification = Ext.create('Ext.tip.ToolTip', {
+            target: img.getEl(),
+            html: notifications
+        });
+        img.show();
+        var tf = this.down('numberfield');
+        if (tf.inputWrap) {
+            tf.inputWrap.addCls('x-lada-notification-field');
+            tf.inputEl.addCls('x-lada-notification-field');
+        } else {
+            tf.onAfter({
+                render: {
+                    fn: function(el) {
+                        el.inputWrap.addCls('x-lada-notification-field');
+                        el.inputEl.addCls('x-lada-notification-field');
+                    },
+                    single: true
+                }
+            });
+        }
+        var fieldset = this.up('fieldset[collapsible=true]');
+        if (fieldset) {
+            var i18n = Lada.getApplication().bundle;
+            var notificationText = i18n.getMsg(this.name) +
+                ': ' + notifications;
+            fieldset.showWarningOrError(true, notificationText);
         }
     },
 
@@ -138,16 +177,20 @@ Ext.define('Lada.view.widget.base.NumberField', {
         if (tf.inputWrap) {
             tf.inputWrap.removeCls('x-lada-warning-field');
             tf.inputWrap.removeCls('x-lada-error-field');
+            tf.inputWrap.removeCls('x-lada-notification-field');
             tf.inputEl.removeCls('x-lada-warning-field');
             tf.inputEl.removeCls('x-lada-error-field');
+            tf.inputEl.removeCls('x-lada-notification-field');
         } else {
             tf.onAfter({
                 render: {
                     fn: function(el) {
                         el.inputWrap.removeCls('x-lada-warning-field');
                         el.inputWrap.removeCls('x-lada-error-field');
+                        el.inputWrap.removeCls('x-lada-notification-field');
                         el.inputEl.removeCls('x-lada-warning-field');
                         el.inputEl.removeCls('x-lada-error-field');
+                        el.inputEl.removeCls('x-lada-notification-field');
                     },
                     single: true
                 }
@@ -156,6 +199,7 @@ Ext.define('Lada.view.widget.base.NumberField', {
         this.down('numberfield').clearInvalid();
         this.down('image[name=errorImg]').hide();
         this.down('image[name=warnImg]').hide();
+        this.down('image[name=notificationImg]').hide();
     },
 
     setReadOnly: function(value) {
