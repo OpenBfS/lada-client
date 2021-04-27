@@ -179,7 +179,8 @@ Ext.define('Lada.view.window.MessungCreate', {
         var warnings = { messdauer: [631],
             nebenprobenNr: [631]};
         var errors = [];
-        this.setMessages(errors, warnings);
+        var notifications = [];
+        this.setMessages(errors, warnings, notifications);
         this.down('messungform').isValid();
     },
 
@@ -188,8 +189,8 @@ Ext.define('Lada.view.window.MessungCreate', {
      * @param errors These Errors shall be shown
      * @param warnings These Warning shall be shown
      */
-    setMessages: function(errors, warnings) {
-        this.down('messungform').setMessages(errors, warnings);
+    setMessages: function(errors, warnings, notifications) {
+        this.down('messungform').setMessages(errors, warnings, notifications);
     },
 
     /**

@@ -767,12 +767,12 @@ Ext.define('Lada.view.form.Probe', {
                     continue;
                 }
                 content = notifications[key];
-                var notificationsText = '';
+                var notificationText = '';
                 for (var j = 0; j < content.length; j++) {
-                    notificationsText += i18n.getMsg(
+                    notificationText += i18n.getMsg(
                         content[j].toString()) + '\n';
                 }
-                element.showNotifications(notificationsText);
+                element.showNotifications(notificationText);
             }
         }
         if (errors) {

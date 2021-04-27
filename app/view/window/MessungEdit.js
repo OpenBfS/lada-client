@@ -222,7 +222,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 Ext.decode(response.getResponse().responseText) :
                 null;
             if (json) {
-                me.setMessages(json.errors, json.warnings);
+                me.setMessages(json.errors, json.warnings, json.notifications);
             }
             if (me.record.get('readonly') === true ||
                 me.record.get('owner') === false
@@ -419,8 +419,8 @@ Ext.define('Lada.view.window.MessungEdit', {
      * @param errors These Errors shall be shown
      * @param warnings These Warning shall be shown
      */
-    setMessages: function(errors, warnings) {
-        this.down('messungform').setMessages(errors, warnings);
+    setMessages: function(errors, warnings, notifications) {
+        this.down('messungform').setMessages(errors, warnings, notifications);
         var errorMesswertText = '';
         var errorMesswert = false;
         var warningMesswertText = '';

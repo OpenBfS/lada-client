@@ -87,7 +87,8 @@ Ext.define('Lada.controller.form.Messung', {
                         .setDisabled(true);
                     formPanel.clearMessages();
                     formPanel.setRecord(newRecord);
-                    formPanel.setMessages(json.errors, json.warnings);
+                    formPanel.setMessages(json.errors, json.warnings,
+                        json.notifications);
                     //formPanel.up('window').initData(newRecord);
 
                     if (parentWin) {
@@ -147,7 +148,8 @@ Ext.define('Lada.controller.form.Messung', {
                         }
                         formPanel.clearMessages();
                         formPanel.setRecord(record);
-                        formPanel.setMessages(json.errors, json.warnings);
+                        formPanel.setMessages(json.errors, json.warnings,
+                            json.notifications);
                         formPanel.up('window').initData();
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
