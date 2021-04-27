@@ -199,7 +199,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                             null;
                                         win.setMessages(
                                             json.errors,
-                                            json.warnings);
+                                            json.warnings,
+                                            json.notifications);
                                     });
                             }
                         });
