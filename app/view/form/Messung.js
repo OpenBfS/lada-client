@@ -302,7 +302,7 @@ Ext.define('Lada.view.form.Messung', {
         return this.currentStatus;
     },
 
-    setMessages: function(errors, warnings) {
+    setMessages: function(errors, warnings, notifications) {
         var key;
         var element;
         var content;
@@ -324,6 +324,25 @@ Ext.define('Lada.view.form.Messung', {
                     warnText += i18n.getMsg(content[i].toString()) + '\n';
                 }
                 element.showWarnings(warnText);
+            }
+        }
+        if (notifications) {
+            for (key in notifications) {
+                tmp = key;
+                if (tmp.indexOf('#') > 0) {
+                    tmp = tmp.split('#')[0];
+                }
+                element = this.down('component[name=' + tmp + ']');
+                if (!element) {
+                    continue;
+                }
+                content = notifications[key];
+                var notificationText = '';
+                for (var k = 0; k < content.length; k++) {
+                    notificationText += i18n.getMsg(
+                        content[k].toString()) + '\n';
+                }
+                element.showNotifications(notificationText);
             }
         }
         if (errors) {
