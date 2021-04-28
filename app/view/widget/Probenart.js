@@ -19,6 +19,7 @@ Ext.define('Lada.view.widget.Probenart', {
     queryMode: 'local',
     triggerAction: 'all',
     typeAhead: false,
+    forceSelection: true,
     minChars: 0,
     maxChars: 1,
     tpl: Ext.create('Ext.XTemplate',

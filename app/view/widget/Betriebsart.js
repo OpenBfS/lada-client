@@ -109,7 +109,7 @@ Ext.define('Lada.view.widget.Betriebsart', {
     queryMode: 'local',
     triggerAction: 'all',
     typeAhead: false,
-
+    forceSelection: true,
     displayField: 'betriebsart',
     valueField: 'betriebsartId',
 

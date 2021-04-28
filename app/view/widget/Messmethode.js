@@ -18,6 +18,7 @@ Ext.define('Lada.view.widget.Messmethode', {
     // Enable filtering of comboboxes
     queryMode: 'local',
     triggerAction: 'all',
+    forceSelection: true,
     typeAhead: true,
     lastQuery: '',
     minChars: 0,

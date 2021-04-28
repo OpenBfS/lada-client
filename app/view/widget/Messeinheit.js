@@ -20,6 +20,7 @@ Ext.define('Lada.view.widget.Messeinheit', {
     queryMode: 'local',
     triggerAction: 'all',
     typeAhead: false,
+    forceSelection: true,
     minChars: 0,
     listConfig: {minWidth: 110},
 
