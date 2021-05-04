@@ -222,6 +222,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 Ext.decode(response.getResponse().responseText) :
                 null;
             if (json) {
+                me.clearMessages();
                 me.setMessages(json.errors, json.warnings, json.notifications);
             }
             if (me.record.get('readonly') === true ||
@@ -425,6 +426,8 @@ Ext.define('Lada.view.window.MessungEdit', {
         var errorMesswert = false;
         var warningMesswertText = '';
         var warningMesswert = false;
+        var notificationMesswertText = '';
+        var notificationMesswert = false;
         var key;
         var content;
         var i;
@@ -452,11 +455,24 @@ Ext.define('Lada.view.window.MessungEdit', {
                 }
             }
         }
+        for (key in notifications) {
+            if (key && key.indexOf('messwert') > -1) {
+                notificationMesswert = true;
+                content = notifications[key];
+                keyText = i18n.getMsg(key);
+                for (i = 0; i < content.length; i++) {
+                    notificationMesswertText += keyText + ': ' +
+                        i18n.getMsg(content[i].toString()) + '\n';
+                }
+            }
+        }
         this.down('fset[name=messwerte]').showWarningOrError(
             warningMesswert,
             warningMesswertText === '' ? null : warningMesswertText,
             errorMesswert,
-            errorMesswertText === '' ? null : errorMesswertText);
+            errorMesswertText === '' ? null : errorMesswertText,
+            notificationMesswert,
+            notificationMesswertText === '' ? null : notificationMesswertText);
     },
 
     /**

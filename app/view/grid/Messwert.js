@@ -336,6 +336,7 @@ Ext.define('Lada.view.grid.Messwert', {
             var cell = view.getCell(record, colIdx);
             var warnings = record.get('warnings');
             var errors = record.get('errors');
+            var notifications = record.get('notifications');
 
             //Remove warnings/errors from record as they should be resolved now
             if (warnings) {
@@ -344,9 +345,14 @@ Ext.define('Lada.view.grid.Messwert', {
             if (errors) {
                 delete errors[context.field];
             }
+            if (notifications) {
+                delete notifications[context.field];
+            }
             //Remove error/warning class from edited cell
             view.getCell(record, colIdx).removeCls('x-lada-warning-grid-field');
             view.getCell(record, colIdx).removeCls('x-lada-error-grid-field');
+            view.getCell(record, colIdx).
+                removeCls('x-lada-notification-grid-field');
             cell.dom.removeAttribute('data-qtip');
         });
     },
@@ -498,6 +504,7 @@ Ext.define('Lada.view.grid.Messwert', {
         var i18n = Lada.getApplication().bundle;
         var errors = record.get('errors');
         var warnings = record.get('warnings');
+        var notifications = record.get('notifications');
         var validationResult = '';
         var validationResultCls = null;
         if (warnings && warnings[dataIndex]) {
@@ -507,6 +514,10 @@ Ext.define('Lada.view.grid.Messwert', {
         if (errors && errors[dataIndex]) {
             validationResult += i18n.getMsg(errors[dataIndex]) + '<br>';
             validationResultCls = 'x-lada-error-grid-field';
+        }
+        if (notifications && notifications[dataIndex]) {
+            validationResult += i18n.getMsg(notifications[dataIndex]) + '<br>';
+            validationResultCls = 'x-lada-notification-grid-field';
         }
         if (validationResultCls) {
             metaData.tdCls = validationResultCls;
