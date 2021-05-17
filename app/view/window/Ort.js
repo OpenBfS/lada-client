@@ -120,12 +120,13 @@ Ext.define('Lada.view.window.Ort', {
                 this.record.phantom?
                     i18n.getMsg('orte.new') :
                     i18n.getMsg('orte.edit') +
-                        ' <i>- ' +
-                        this.record.get('plausibleReferenceCount') +
-                        ' plausible ' +
-                        ' von ' +
+                        ' <i>- Refs: ' +
                         this.record.get('referenceCount') +
-                        ' referenzierte(n) Probe(n)' +
+                        ' /' +
+                        this.record.get('plausibleReferenceCount') +
+                        ' /' +
+                        this.record.get('referenceCountMp') +
+                        ' (Proben/plaus.Proben/MP)' +
                         '</i>'
             );
         }

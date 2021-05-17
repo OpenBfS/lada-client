@@ -125,6 +125,8 @@ Ext.define('Lada.model.Ort', {
     }, {
         name: 'plausibleReferenceCount'
     }, {
+        name: 'referenceCountMp'
+    }, {
         name: 'readonly',
         type: 'boolean'
     }],
