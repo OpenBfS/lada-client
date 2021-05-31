@@ -55,6 +55,16 @@ Ext.define('Lada.view.grid.Messmethoden', {
                     ) {
                         return false;
                     }
+                    if (o.field === 'mmtId') {
+                        if (o.value !== undefined ) {
+                            return true;
+                        }
+                    }
+                    var nuklidfield = o.grid.columns[1].getEditor();
+                    var newVal = o.record.get('mmtId');
+                    var params = newVal ? {mmtId: newVal} : {};
+                    nuklidfield.getStore().proxy.extraParams = params;
+                    nuklidfield.getStore().load();
                     return true;
                 }
             }
@@ -209,6 +219,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
             var params = newVal ? {mmtId: newVal} : {};
             nuklidfield.getStore().proxy.extraParams = params;
             nuklidfield.getStore().load();
+            nuklidfield.setValue('');
         }
     }
 });
