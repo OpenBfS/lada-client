@@ -134,7 +134,8 @@ Ext.define('Lada.view.widget.base.Datetime', {
         var fieldset = this.up('fieldset[collapsible=true]');
         if (fieldset) {
             var i18n = Lada.getApplication().bundle;
-            var notificationText = i18n.getMsg(this.name) + ': ' + notifications;
+            var notificationText = i18n.getMsg(this.name) + ': '
+                + notifications;
             fieldset.showWarningOrError(true, notificationText);
         }
     },
