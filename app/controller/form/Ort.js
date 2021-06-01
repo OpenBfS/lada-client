@@ -67,6 +67,7 @@ Ext.define('Lada.controller.form.Ort', {
         copy.set('ortId', null);
         copy.set('referenceCount', 0);
         copy.set('plausibleReferenceCount', 0);
+        copy.set('referenceCountMp', 0);
         var win = Ext.create('Lada.view.window.Ort', {
             record: copy,
             mode: 'copy',
