@@ -76,6 +76,7 @@ Ext.application({
         'Lada.store.Probenehmer',
         'Lada.store.DatensatzErzeuger',
         'Lada.store.DownloadQueue',
+        'Lada.store.UploadQueue',
         'Lada.store.GenericResults',
         'Lada.store.MessprogrammKategorie',
         'Lada.store.Ktas',
@@ -90,6 +91,7 @@ Ext.application({
         'Lada.model.QueryGroup',
         'Lada.model.Query',
         'Lada.model.DownloadQueue',
+        'Lada.model.UploadQueue',
         'Lada.store.GridColumn',
         'Lada.store.Query',
         'Lada.view.widget.TimeZoneButton',
@@ -578,6 +580,9 @@ Ext.application({
         });
         Ext.create('Lada.store.DownloadQueue', {
             storeId: 'downloadqueue-export'
+        });
+        Ext.create('Lada.store.UploadQueue', {
+            storeId: 'uploadqueue'
         });
         Ext.create('Lada.view.Viewport');
         this.initElanScenarios();

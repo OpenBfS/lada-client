@@ -13,7 +13,8 @@ Ext.define('Lada.view.window.FileUpload', {
     extend: 'Ext.window.Window',
     requires: [
         'Ext.form.field.File',
-        'Lada.view.window.ImportResponse'
+        'Lada.view.window.ImportResponse',
+        'Lada.controller.grid.Uploads'
     ],
 
     layout: 'vbox',
@@ -172,6 +173,7 @@ Ext.define('Lada.view.window.FileUpload', {
                     handler: this.abort
                 }]
             })
+            // TODO: UploadGrid here
         ];
         this.callParent(arguments);
         this.down('combobox[name=encoding]').setValue('iso-8859-15');
@@ -235,6 +237,7 @@ Ext.define('Lada.view.window.FileUpload', {
         var win = button.up('window');
         var cb = win.down('combobox[name=encoding]');
         var mstSelector = win.down('combobox[name=mst]').getValue();
+        var filenames =[];
 
         if (cb.getValue() === 'utf-8') {
             Ext.Object.each(binFiles, function(fileName, fileContent) {
@@ -246,10 +249,14 @@ Ext.define('Lada.view.window.FileUpload', {
                 ) {
                     fileContent = fileContent.slice(3);
                 }
+                filenames.push(fileName);
             });
         }
+        var controller = Lada.app.getController(
+            'Lada.controller.grid.Uploads');
+        var queueItem = controller.addQueueItem(filenames);
         Ext.Ajax.request({
-            url: 'lada-server/data/import/laf/list',
+            url: 'lada-server/data/import/async/laf',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -260,103 +267,28 @@ Ext.define('Lada.view.window.FileUpload', {
                 files: binFiles,
                 encoding: cb.getValue()
             },
-            success: function(response, opts) {
-                win.uploadSuccess(response, opts);
+            success: function(response) {
+                var json = Ext.decode(response.responseText);
+                queueItem.set('refId', json.ref);
+                queueItem.set('status', 'waiting');
+                queueItem.set('message', '' );
+                if (json.error) {
+                    queueItem.set('message', json.error );
+                    queueItem.set('status', 'error');
+                }
             },
             failure: function(response) {
-                //If request fails show an alert
-                var i18n = Lada.getApplication().bundle;
+                queueItem.set('status', 'error');
                 var msg = 'importResponse.failure.server.multi';
-                // TODO: correct status for an expected "file too big" would be
-                // 413, needs server adaption, 502 could be something else, too
-                if (response.status === 502) {
+                if (response.status === 502 || response.status === 413) {
+                    // correct status for an expected "file too big" would be
+                    // 413, needs server adaption, 502 could be something else
                     msg = 'importResponse.failure.server.bigfile';
                 }
-                Ext.Msg.show({
-                    message: i18n.getMsg(msg),
-                    buttons: Ext.Msg.OK,
-                    icon: Ext.Msg.ERROR
-                });
-                win.setLoading(false);
+                var i18n = Lada.getApplication().bundle;
+                queueItem.set('message', i18n.getMsg(msg));
+                queueItem.set('done', true);
             }
         });
-    },
-
-    /**
-     * @private
-     * Show result window after successfull uploaded
-     */
-    uploadSuccess: function(response) {
-        this.filesUploaded++;
-        var i18n= Lada.getApplication().bundle;
-        var responseText = response.responseBytes ?
-            String.fromCharCode.apply(null, response.responseBytes):
-            response.responseText;
-        var responseJson = Ext.JSON.decode(responseText);
-        var tag = '';
-        //Get the generated tag name
-        if (Object.keys(responseJson.data).length > 0) {
-            var firstImport = Object.keys(responseJson.data)[0];
-            tag = responseJson.data[firstImport].tag;
-        }
-        if (!this.resultWin) {
-            this.resultWin = Ext.create('Lada.view.window.ImportResponse', {
-                modal: true,
-                fileCount: this.fileCount,
-                fileNames: this.fileNames,
-                response: responseJson,
-                encoding: this.down('combobox[name=encoding]').getValue(),
-                mst: this.down('combobox[name=mst]').getValue(),
-                width: 500,
-                height: 350,
-                title: i18n.getMsg('title.importresult', tag)
-            });
-            //Show result, reload grid, close this window
-            this.resultWin.show();
-            var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-            if (parentGrid.length === 1) {
-                parentGrid[0].reload();
-            }
-            this.close();
-        }
-    },
-
-    /**
-     * @private
-     * Handler if an import request failed
-     */
-    uploadFailure: function(response, opts, fileIndex) {
-        // TODO handle Errors correctly, especially AuthenticationTimeouts
-        var i18n= Lada.getApplication().bundle;
-        this.filesUploaded++;
-
-        if (!this.resultWin) {
-            this.resultWin = Ext.create('Lada.view.window.ImportResponse', {
-                message: {}, //TODO:response.message,
-                modal: true,
-                fileCount: this.fileCount,
-                fileNames: this.fileNames,
-                encoding: this.down('combobox[name=encoding]').getValue(),
-                mst: this.down('combobox[name=mst]').getValue(),
-                width: 600,
-                height: 400,
-                title: i18n.getMsg('title.importresult'),
-                finishedHandler: function() {
-                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
-                }
-            });
-            this.resultWin.show();
-        }
-
-        this.resultWin.updateOnError(
-            response.status, response.statusText, fileIndex);
-
-        if (this.filesUploaded === this.files.length) {
-            this.resultWin.finishedHandler();
-            this.close();
-        }
     }
 });
