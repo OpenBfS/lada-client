@@ -31,6 +31,7 @@ Ext.define('Lada.view.widget.base.NumberField', {
             allowDecimals: this.allowDecimals,
             decimalPrecision: this.decimalPrecision || 2,
             maxLength: this.maxLength || 1000,
+            minValue: this.minValue,
             enforceMaxLength: this.enforceMaxLength || true,
             fieldLabel: this.fieldLabel,
             labelWidth: this.labelWidth,
