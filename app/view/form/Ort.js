@@ -139,12 +139,12 @@ Ext.define('Lada.view.form.Ort', {
             xtype: 'koordinatenart',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.kda'),
-            name: 'kdaId',
-            store: this.kdaComboStore
+            name: 'kdaId'
         }, {
             xtype: 'tfield',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.koordx'),
+            regex: /^[noeswNOESW\d\.,-]+$/,
             name: 'koordXExtern',
             maxLength: 22
         }, {
@@ -221,16 +221,6 @@ Ext.define('Lada.view.form.Ort', {
             }]
         }];
         this.callParent(arguments);
-        this.kdaComboStore = Ext.create('Lada.store.KoordinatenArt');
-        if (this.record.get('kdaId') !== 3) {
-            // This is a hack to show only those coordinate reference systems
-            // the server is able to transform
-            this.down('koordinatenart').store.filter({property: 'id',
-                value: /(1|2|4|5|6|8)/, exactMatch: true});
-        } else {
-            this.down('koordinatenart').store.clearFilter();
-        }
-
         this.getForm().loadRecord(this.record);
 
         this.readOnly = this.record.readOnly;
