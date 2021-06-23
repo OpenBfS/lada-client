@@ -119,15 +119,13 @@ Ext.define('Lada.view.window.Ort', {
             this.setTitle(
                 this.record.phantom?
                     i18n.getMsg('orte.new') :
-                    i18n.getMsg('orte.edit') +
-                        ' <i>- Refs: ' +
-                        this.record.get('referenceCount') +
-                        ' /' +
-                        this.record.get('plausibleReferenceCount') +
-                        ' /' +
-                        this.record.get('referenceCountMp') +
-                        ' (Proben/plaus.Proben/MP)' +
-                        '</i>'
+                        this.record.get('readonly') ?
+                          i18n.getMsg('orte.show') + ' - ' +
+                          i18n.getMsg('orte.ortId') +
+                          ': ' + this.record.get('ortId') :
+                    (i18n.getMsg('orte.edit') + ' - '
+                    + i18n.getMsg('orte.ortId') + ': '
+                    + this.record.get('ortId'))
             );
         }
 
@@ -149,7 +147,17 @@ Ext.define('Lada.view.window.Ort', {
         var i18n = Lada.getApplication().bundle;
         this.mode = mode;
         if (this.mode) {
-            this.title = i18n.getMsg('orte.' + this.mode);
+            this.setTitle(
+                this.record.phantom?
+                    i18n.getMsg('orte.new') :
+                        this.record.get('readonly') ?
+                         i18n.getMsg('orte.show') + ' - ' +
+                         i18n.getMsg('orte.ortId') + ': ' +
+                         this.record.get('ortId'):
+                    (i18n.getMsg('orte.edit') + ' - '
+                    + i18n.getMsg('orte.ortId') + ': '
+                    + this.record.get('ortId'))
+            );
         } else {
             this.title = this.record.phantom ?
                 i18n.getMsg('orte.new') :

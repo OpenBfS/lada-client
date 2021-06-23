@@ -181,7 +181,10 @@ Ext.define('Lada.view.panel.Map', {
                     koordXExtern: koord_x.toString(),
                     koordYExtern: koord_y.toString(),
                     kdaId: 4,
-                    ortTyp: 1
+                    ortTyp: 1,
+                    plausibleReferenceCount: 0,
+                    referenceCountMp: 0,
+                    referenceCount: 0
                 }),
                 parentWindow: parent,
                 setOzOnComplete: true

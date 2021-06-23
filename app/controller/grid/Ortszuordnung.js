@@ -198,7 +198,10 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var ort = Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Ort', {
                 ortTyp: 1,
-                netzbetreiberId: win.netzbetreiberId}),
+                netzbetreiberId: win.netzbetreiberId,
+                plausibleReferenceCount: 0,
+                referenceCountMp: 0,
+                referenceCount: 0}),
             parentWindow: win
         });
         win.childWindows.push(ort);
@@ -211,6 +214,9 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     frommap: function(button) {
         var map = button.up('ortszuordnungwindow').down('map');
         var record = Ext.create('Lada.model.Ort');
+        record.set('plausibleReferenceCount', 0);
+        record.set('referenceCountMp', 0);
+        record.set('referenceCount', 0);
         map.activateDraw(record);
     },
 

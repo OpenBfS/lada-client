@@ -371,7 +371,10 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     Ext.create('Lada.view.window.Ort', {
                         record: Ext.create('Lada.model.Ort', {
                             ortTyp: 1,
-                            readonly: false
+                            readonly: false,
+                            plausibleReferenceCount: 0,
+                            referenceCountMp: 0,
+                            referenceCount: 0
                         }),
                         parentWindow: grid
                     }).show();

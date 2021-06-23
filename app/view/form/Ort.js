@@ -186,6 +186,17 @@ Ext.define('Lada.view.form.Ort', {
             maxLength: 10,
             name: 'nutsCode',
             fieldLabel: i18n.getMsg('orte.nutsCode')
+        }, {
+            xtype: 'label',
+            style: 'font-style: italic',
+            border: 10,
+            text: i18n.getMsg('orte.references') + ': ' +
+                this.record.get('referenceCount') +
+                ' /' +
+                this.record.get('plausibleReferenceCount') +
+                ' /' +
+                this.record.get('referenceCountMp') + ' ' +
+                i18n.getMsg('orte.references.text')
         }];
         this.dockedItems = [{
             xtype: 'toolbar',
@@ -227,7 +238,8 @@ Ext.define('Lada.view.form.Ort', {
 
         //If plausible probe instances reference this ort, disable coordinate
         // fields, verwaltungseinheit, staat
-        if (this.record.get('plausibleReferenceCount') > 0) {
+        if (this.record.get('plausibleReferenceCount') > 0 ||
+                this.record.get('referenceCountMp') >0) {
             this.down('tfield[name=koordXExtern]').setReadOnly(true);
             this.down('tfield[name=koordYExtern]').setReadOnly(true);
             this.down('verwaltungseinheit').setReadOnly(true);

@@ -213,7 +213,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 koordXExtern: koord_x.toString(),
                 koordYExtern: koord_y.toString(),
                 kdaId: 4,
-                ortTyp: 1
+                ortTyp: 1,
+                plausibleReferenceCount: 0,
+                referenceCountMp: 0,
+                referenceCount: 0
             })
         }).show();
     },
