@@ -14,6 +14,7 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
     alias: 'widget.messstellelabor',
     store: 'MessstelleLabor',
     displayField: 'displayCombi',
+    searchValueField: 'messStelle',
     valueField: 'id',
     editable: this.editable || false,
     forceSelection: true,
