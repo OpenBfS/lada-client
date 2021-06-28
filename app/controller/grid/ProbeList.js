@@ -50,8 +50,7 @@ Ext.define('Lada.controller.grid.ProbeList', {
         var i18n = Lada.getApplication().bundle;
         var win = Ext.create('Lada.view.window.FileUpload', {
             title: i18n.getMsg('title.dataimport'),
-            modal: true,
-            width: 260
+            modal: true
         });
 
         win.show();

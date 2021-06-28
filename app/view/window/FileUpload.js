@@ -17,7 +17,10 @@ Ext.define('Lada.view.window.FileUpload', {
         'Lada.controller.grid.Uploads'
     ],
 
-    layout: 'vbox',
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
 
     files: null,
     fileNames: null,
@@ -26,9 +29,11 @@ Ext.define('Lada.view.window.FileUpload', {
 
     resultWin: null,
 
+    width: 350,
+
     defaults: {
-        maxWidth: 240,
-        width: 240,
+        // maxWidth: 240,
+        // width: 240,
         labelAlign: 'top'
     },
 
@@ -156,8 +161,14 @@ Ext.define('Lada.view.window.FileUpload', {
                     }
                 }
             }),
+            Ext.create('Lada.view.grid.UploadQueue', {
+                store: Ext.getStore('uploadqueue'),
+                width: '100%',
+                height: 150,
+                margin: 3
+            }),
             Ext.create('Ext.container.Container', {
-                flex: 1,
+                width: '100%',
                 layout: 'hbox',
                 items: [{
                     xtype: 'button',
@@ -173,7 +184,6 @@ Ext.define('Lada.view.window.FileUpload', {
                     handler: this.abort
                 }]
             })
-            // TODO: UploadGrid here
         ];
         this.callParent(arguments);
         this.down('combobox[name=encoding]').setValue('iso-8859-15');
@@ -195,12 +205,10 @@ Ext.define('Lada.view.window.FileUpload', {
      */
     readFiles: function(button) {
         var win = button.up('window');
-        win.setLoading(true);
         var fileInput = win.down('filefield');
         var files = fileInput.fileInputEl.dom.files;
         var readers = new Array(files.length);
         if (readers.length === 0) {
-            win.setLoading(false);
             return;
         }
         win.files = files;
@@ -269,7 +277,7 @@ Ext.define('Lada.view.window.FileUpload', {
             },
             success: function(response) {
                 var json = Ext.decode(response.responseText);
-                queueItem.set('refId', json.ref);
+                queueItem.set('refId', json.refId);
                 queueItem.set('status', 'waiting');
                 queueItem.set('message', '' );
                 if (json.error) {

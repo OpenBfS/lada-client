@@ -109,11 +109,11 @@ Ext.define('Lada.view.window.ImportResponse', {
     initContent: function(response) {
         var i18n = Lada.getApplication().bundle;
         var me = this;
-
+        var responsedata = Ext.decode(response.responseText);
         var html = '';
-        if (response.success && response.data) {
-            Ext.Object.each(response.data, function(fileName, fileResult) {
-                html = '<br/><hr><b>' +
+        if (response.status === 200 && responsedata) {
+            Ext.Object.each(responsedata, function(fileName, fileResult) {
+                html += '<br/><hr><b>' +
                     fileName +
                     ':</b><br/><ol>&#40' +
                     me.mstEncoding +

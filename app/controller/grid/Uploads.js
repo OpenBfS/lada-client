@@ -13,13 +13,24 @@
 Ext.define('Lada.controller.grid.Uploads', {
     extend: 'Ext.app.Controller',
     record: null,
-    statusUrl: 'lada-server/data/import/laf/status/',
+
+    resultUrl: 'lada-server/data/import/async/result/',
+    statusUrl: 'lada-server/data/import/async/status/',
 
     /**
      * Initialize the controller, request polling to run every 2 seconds
      */
     init: function() {
         window.setInterval(this.refreshQueue, 2000);
+    },
+
+    /**
+     * Cancels the mapfish creation of a queued DownloadQueue item
+     * @param {*} model
+     */
+    onCancelItem: function(model) {
+        model.set('done', true);
+        model.set('status', 'cancelled');
     },
 
     /**
@@ -54,7 +65,7 @@ Ext.define('Lada.controller.grid.Uploads', {
     refreshItemInfo: function(item) {
         var url;
         var refId = item.get('refId');
-        url = this.statusUrl + refId + '.json';
+        url = this.statusUrl + refId;
         if (url && refId) {
             return new Ext.Promise(function() {
                 Ext.Ajax.request({
@@ -137,10 +148,41 @@ Ext.define('Lada.controller.grid.Uploads', {
             filename: filenames.join(','),
             startDate: new Date().valueOf(),
             status: 'preparation',
+            resultFetched: false,
             done: false
         });
         var store = Ext.data.StoreManager.get('uploadqueue');
         store.add(storeItem);
         return storeItem;
+    },
+
+    /**
+     * Get the result of an import and show a result window
+     * @param {Lada.model.UploadQueue} record UploadQueue record
+     */
+    getResult: function(record) {
+        if (record.get('resultFetched') === false) {
+            var me = this;
+            var url = this.resultUrl + record.get('refId');
+            Ext.Ajax.request({
+                url: url,
+                success: function(response) {
+                    record.set('result', response);
+                    record.set('resultFetched', true);
+                    me.showResult(response);
+                }
+            });
+        } else {
+            this.showResult(record.get('result'));
+        }
+    },
+
+    showResult: function(response) {
+        var win = Ext.create('Lada.view.window.ImportResponse', {
+            response: response,
+            height: 550,
+            width: 450
+        });
+        win.show();
     }
 });

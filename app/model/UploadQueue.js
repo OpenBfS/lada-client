@@ -25,6 +25,12 @@ Ext.define('Lada.model.UploadQueue', {
     }, {
         name: 'filename'
     }, {
+        name: 'result'
+    }, {
+        name: 'resultFetched'
+    }, {
+        name: 'startDate'
+    }, {
         name: 'status'
         // possible states:
         //      waiting

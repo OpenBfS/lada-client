@@ -25,7 +25,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var controller = Lada.app.getController(
-            'Lada.controller.grid.Downloads');
+            'Lada.controller.grid.Uploads');
         this.emptyText = i18n.getMsg('emptygrid.uploadqueue');
         this.columns = [{
             header: i18n.getMsg('export.filename'),
@@ -54,7 +54,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
             xtype: 'actioncolumn',
             text: ' ',
             dataIndex: 'status',
-            tooltip: i18n.getMsg('print.download'),
+            tooltip: i18n.getMsg('import.showresult'),
             width: 20,
             getClass: function(value, meta, rec) {
                 // see x.action-col-icon definitions at lada.css for img urls
@@ -78,10 +78,9 @@ Ext.define('Lada.view.grid.UploadQueue', {
                 if (status === 'running' || status === 'waiting') {
                     controller.onCancelItem(rec);
                 } else if (
-                    rec.get('status') === 'finished' &&
-                    rec.get('downloadRequested') === false
+                    rec.get('status') === 'finished'
                 ) {
-                    controller.onSaveItem(rec);
+                    controller.getResult(rec);
                 }
             }
         }, {
