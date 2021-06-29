@@ -114,6 +114,12 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 listeners: {
                                     change: me.changed
                                 }
+                            }, {
+                                xtype: 'ortszusatz',
+                                labelWidth: 125,
+                                editable: true,
+                                name: 'ozId',
+                                fieldLabel: i18n.getMsg('orte.ozId')
                             },
                             Ext.create('Lada.view.form.OrtInfo'),
                             {
