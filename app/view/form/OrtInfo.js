@@ -32,9 +32,6 @@ Ext.define('Lada.view.form.OrtInfo', {
                 fieldLabel: i18n.getMsg('orte.ortId'),
                 name: 'ortId'
             }, {
-                fieldLabel: i18n.getMsg('orte.ozId'),
-                name: 'ozId'
-            }, {
                 fieldLabel: i18n.getMsg('orte.kurztext'),
                 name: 'kurztext'
             }, {
@@ -93,7 +90,7 @@ Ext.define('Lada.view.form.OrtInfoRow', {
             xtype: 'label',
             html: this.label+':',
             width: 125,
-            padding: '4, 0, 5, 0'
+            padding: '2, 0, 2, 0'
         }, {
             name: this.firstitem,
             width: 80

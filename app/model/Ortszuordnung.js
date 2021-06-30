@@ -30,6 +30,8 @@ Ext.define('Lada.model.Ortszuordnung', {
     }, {
         name: 'ortszusatztext'
     }, {
+        name: 'ozId'
+    }, {
         name: 'letzteAenderung',
         type: 'date',
         dateFormat: 'time',

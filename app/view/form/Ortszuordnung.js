@@ -16,6 +16,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     requires: [
         'Lada.view.form.OrtInfo',
         'Lada.view.widget.OrtszuordnungTyp',
+        'Lada.view.widget.OrtsZusatz',
         'Lada.view.widget.Verwaltungseinheit',
         'Lada.view.widget.Staat',
         'Lada.view.widget.base.TextArea'
@@ -114,15 +115,15 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 listeners: {
                                     change: me.changed
                                 }
-                            }, {
+                            },
+                            Ext.create('Lada.view.form.OrtInfo'),
+                            {
                                 xtype: 'ortszusatz',
                                 labelWidth: 125,
                                 editable: true,
                                 name: 'ozId',
-                                fieldLabel: i18n.getMsg('orte.ozId')
-                            },
-                            Ext.create('Lada.view.form.OrtInfo'),
-                            {
+                                fieldLabel: i18n.getMsg('ortszuordnung.form.field.ozId')
+                            },{
                                 xtype: 'tarea',
                                 labelWidth: 125,
                                 maxLength: 100,
