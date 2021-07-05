@@ -68,11 +68,6 @@ Ext.define('Lada.model.HelpprintModel', {
                     content: 'resources/ladaHelp/queryList.html',
                     leaf: true
                 }, {
-                    id: 'queryColumns',
-                    text: 'Spalten der öffentlichen Selektionen',
-                    content: 'resources/ladaHelp/queryColumns.html',
-                    leaf: true
-                }, {
                     id: 'probe',
                     text: 'Ergebnisliste - Proben',
                     content: 'resources/ladaHelp/probe.html',
