@@ -91,6 +91,7 @@
         "no-mixed-spaces-and-tabs": 2,
         "no-nested-ternary": 0,
         "no-trailing-spaces": 2,
+        "no-warning-comments": 1,
         "semi": [2, "always"],
         "max-len": [1, 80, 4]
     }
