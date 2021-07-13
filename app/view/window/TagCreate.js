@@ -37,7 +37,7 @@ Ext.define('Lada.view.window.TagCreate', {
     probe: null,
 
     /**
-     * Array of probe instances used if creating tags for a selection
+     * Array of IDs used if creating tags for a selection
      */
     selection: [],
 
@@ -145,7 +145,7 @@ Ext.define('Lada.view.window.TagCreate', {
             return;
         }
         //Get the first messungId
-        var firstMid = this.selection[0].data.id;
+        var firstMid = this.selection[0];
         if (!firstMid) {
             return;
         }
@@ -196,7 +196,7 @@ Ext.define('Lada.view.window.TagCreate', {
             return;
         }
         //Get the first probeId
-        var firstPid = this.selection[0].data.probeId;
+        var firstPid = this.selection[0];
         if (!firstPid) {
             return;
         }

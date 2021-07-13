@@ -12,6 +12,9 @@
 Ext.define('Lada.view.window.TagEdit', {
     extend: 'Ext.window.Window',
     alias: 'widget.tageditwindow',
+    requires: [
+        'Lada.view.window.TagCreate'
+    ],
 
     layout: 'vbox',
 
@@ -134,14 +137,13 @@ Ext.define('Lada.view.window.TagEdit', {
         me.disableButtons();
 
         for (var i = 0; i < me.selection.length; i++) {
+            var id = me.selection[i];
             switch (me.recordType) {
                 case 'messung':
-                    var messungId = me.selection[i].data.id;
-                    store.setMessung(messungId);
+                    store.setMessung(id);
                     break;
                 case 'probe':
-                    var probeId = me.selection[i].data.probeId;
-                    store.setProbe(probeId);
+                    store.setProbe(id);
                     break;
                 default:
                     Ext.raise('Unkown record type: ' + me.recordType);
@@ -189,14 +191,13 @@ Ext.define('Lada.view.window.TagEdit', {
         me.disableButtons();
 
         for (var i = 0; i < me.selection.length; i++) {
+            var id = me.selection[i];
             switch (me.recordType) {
                 case 'messung':
-                    var messungId = me.selection[i].data.id;
-                    store.setMessung(messungId);
+                    store.setMessung(id);
                     break;
                 case 'probe':
-                    var probeId = me.selection[i].data.probeId;
-                    store.setProbe(probeId);
+                    store.setProbe(id);
                     break;
                 default:
                     Ext.raise('Unkown record type: ' + me.recordType);
