@@ -121,7 +121,8 @@ Ext.define('Lada.store.Tag', {
             url: this.proxy.url,
             method: 'POST',
             jsonData: zuordnung,
-            callback: callback
+            success: callback,
+            failure: this.failureHandler
         });
     },
 
@@ -145,7 +146,8 @@ Ext.define('Lada.store.Tag', {
             url: this.proxy.url,
             method: 'POST',
             jsonData: zuordnung,
-            callback: callback
+            success: callback,
+            failure: this.failureHandler
         });
     },
 
@@ -169,7 +171,8 @@ Ext.define('Lada.store.Tag', {
             url: this.proxy.url,
             method: 'POST',
             jsonData: zuordnung,
-            callback: callback
+            success: callback,
+            failure: this.failureHandler
         });
     },
 
@@ -187,7 +190,8 @@ Ext.define('Lada.store.Tag', {
             url: this.proxy.url,
             method: 'POST',
             jsonData: zuordnung,
-            callback: callback
+            success: callback,
+            failure: this.failureHandler
         });
     },
 
@@ -204,8 +208,16 @@ Ext.define('Lada.store.Tag', {
                 messungId: this.mId,
                 tagId: tag
             },
-            callback: callback
+            success: callback,
+            failure: this.failureHandler
         });
+    },
+
+    failureHandler: function() {
+        var i18n = Lada.getApplication().bundle;
+        Ext.Msg.alert(
+            i18n.getMsg('tag.widget.err.genericsavetitle'),
+            i18n.getMsg('tag.widget.err.genericsave'));
     },
 
     sync: function() {
