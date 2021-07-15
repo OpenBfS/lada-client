@@ -31,6 +31,12 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             },
             'ortszuordnungform ortszuordnungtyp [name=ortszuordnungTyp]': {
                 change: this.dirtyChange
+            },
+            'ortszuordnungform ortszusatz [name=ozId]': {
+                change: this.dirtyChange
+            },
+            'ortszuordnungform tarea [name=ortszusatztext]': {
+                change: this.dirtyChange
             }
         });
     },
@@ -168,7 +174,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         // the simple form.isDirty() check seems to fail for a lot of cases
         var ortIdIsDirty = true;
         if (
-            form.getRecord().data.ortId ===
+            form.getRecord().data.ortId ==
                 form.findField('ortId').getValue()
         ) {
             ortIdIsDirty = false;
@@ -180,6 +186,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         }
         if (form.findField('ortszusatztext').isDirty()
             || form.findField('ortszuordnungTyp').isDirty()
+            || form.findField('ozId').isDirty()
             || ortIdIsDirty) {
             form.owner.down('button[action=revert]').setDisabled(false);
             if (valid && form.getValues().ortId !== '') {
@@ -199,11 +206,12 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         ozf.form.owner.down('button[action=revert]').setDisabled(false);
         if (
             ozf.form.findField('ortId').getValue() !== '' &&
-            value !== null
+            ozf.form.isValid()
         ) {
             ozf.form.owner.down('button[action=save]').setDisabled(false);
             ozf.clearMessages();
         }
+
     },
 
     /**
