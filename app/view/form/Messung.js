@@ -20,8 +20,7 @@ Ext.define('Lada.view.form.Messung', {
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.base.Datetime',
         'Lada.view.widget.base.NumberField',
-        'Lada.view.widget.Statuskombi',
-        'Lada.view.window.TagCreate'
+        'Lada.view.widget.Statuskombi'
     ],
 
     model: 'Lada.model.Messung',
@@ -43,7 +42,6 @@ Ext.define('Lada.view.form.Messung', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        var me = this;
         this.items = [{
             layout: 'fit',
             border: false,
@@ -187,45 +185,6 @@ Ext.define('Lada.view.form.Messung', {
                             }
                         }
                     }
-                }, {
-                    //Tag widget
-                    xtype: 'fieldset',
-                    title: i18n.getMsg('title.tagfieldset'),
-                    name: 'tagfieldset',
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretchmax'
-                    },
-                    items: [{
-                        flex: 1,
-                        xtype: 'tagwidget',
-                        emptyText: i18n.getMsg('emptytext.tag'),
-                        maskTargetComponentType: 'fieldset',
-                        maskTargetComponentName: 'tagfieldset',
-                        parentWindow: this,
-                        margin: '5 5 5 5'
-                    }, {
-                        width: 25,
-                        height: 25,
-                        xtype: 'button',
-                        margin: '5 5 5 0',
-                        action: 'createtag',
-                        icon: 'resources/img/list-add.png',
-                        tooltip: i18n.getMsg('button.createtag.tooltip'),
-                        handler: function(button) {
-                            var win = Ext.create('Lada.view.window.TagCreate', {
-                                tagWidget: me.down('tagwidget'),
-                                messung: button.up('messungform').getForm()
-                                    .getRecord().get('id'),
-                                recordType: 'messung'
-                            });
-                            //Close window if parent window is closed
-                            button.up('messungedit').on('close', function() {
-                                win.close();
-                            });
-                            win.show();
-                        }
-                    }]
                 }]
             }]
         }];
@@ -244,10 +203,7 @@ Ext.define('Lada.view.form.Messung', {
             //remove the Statuskombi field from the form
             me.down('statuskombi').hide();
         }
-        //Do not set record in tag widget if it is a phantom record
-        if (this.record.phantom === false) {
-            this.down('tagwidget').setMessung(this.record.id);
-        }
+
         //Get the connected Probe instance and Datenbasis
         Lada.model.Probe.load(this.record.get('probeId'), {
             success: function(proberecord) {

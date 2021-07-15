@@ -95,10 +95,6 @@ Ext.define('Lada.view.window.MessungCreate', {
             }
         }];
         this.callParent(arguments);
-        var tagCreateButton = this.down('button[action=createtag]');
-        if (tagCreateButton) {
-            tagCreateButton.disable();
-        }
     },
 
     /**

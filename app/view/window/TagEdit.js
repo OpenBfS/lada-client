@@ -23,6 +23,8 @@ Ext.define('Lada.view.window.TagEdit', {
     width: 400,
     selection: null,
 
+    // Set this to reload a Tag widget in it
+    parentWindow: null,
 
     /**
      * This function initialises the Window
@@ -38,8 +40,7 @@ Ext.define('Lada.view.window.TagEdit', {
             items: [{
                 xtype: 'tagwidget',
                 margin: '5 5 5 5',
-                width: '75%',
-                mode: 'bulk'
+                width: '75%'
             }, {
                 width: 25,
                 height: 25,
@@ -52,7 +53,6 @@ Ext.define('Lada.view.window.TagEdit', {
                     var win = Ext.create('Lada.view.window.TagCreate', {
                         tagWidget: me.down('tagwidget'),
                         recordType: me.recordType,
-                        mode: 'bulk',
                         tagEdit: me,
                         selection: me.selection,
                         probe: null
@@ -162,6 +162,9 @@ Ext.define('Lada.view.window.TagEdit', {
                             tagCount,
                             false));
                     if (ratio === 1) {
+                        if (me.parentWindow) {
+                            me.parentWindow.down('tagwidget').reload();
+                        }
                         Ext.getCmp('dynamicgridid').reload();
                         me.enableButtons();
                     }
@@ -216,6 +219,9 @@ Ext.define('Lada.view.window.TagEdit', {
                             tagCount,
                             false));
                     if (ratio === 1) {
+                        if (me.parentWindow) {
+                            me.parentWindow.down('tagwidget').reload();
+                        }
                         Ext.getCmp('dynamicgridid').reload();
                         me.enableButtons();
                     }

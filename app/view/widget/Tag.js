@@ -54,13 +54,6 @@ Ext.define('Lada.view.widget.Tag', {
     monitorChanges: true,
 
     /**
-     * Mode, can either be single if assigning tags for a single probe
-     * or 'bulk' if editing tags for a selection.
-     * Defaults to 'single'
-     */
-    mode: 'single',
-
-    /**
      * Object storing item changes for later syncing.
      * Format: tagId: ['create'|'delete']
      */
@@ -117,14 +110,6 @@ Ext.define('Lada.view.widget.Tag', {
         return targetComponent.getEl();
     },
 
-    /**
-     * Returns always false to prevent ExtJS to handle this widget as a normal
-     * form component. Use Lada.view.widget.Tag.hasChanges instead.
-     */
-    isDirty: function() {
-        return false;
-    },
-
     initComponent: function() {
         this.changes = {};
         var me = this;
@@ -156,6 +141,9 @@ Ext.define('Lada.view.widget.Tag', {
         this.callParent(arguments);
     },
 
+    /**
+     * Sets the current messung and triggers the preselection
+     */
     setMessung: function(mId) {
         this.store.setMessung(mId);
         this.preselectTags();
@@ -314,14 +302,6 @@ Ext.define('Lada.view.widget.Tag', {
     },
 
     /**
-     * Check if widget has unsaved changes.
-     * @return {Boolean} True if there are changes, else false
-     */
-    hasChanges: function() {
-        return Ext.Object.getKeys(this.changes).length > 0;
-    },
-
-    /**
      * Handles item changes and updates the changes object.
      * @param {Lada.view.widget.Tag} TagWidget Widget instance
      * @param {Number} newValue New widget value
@@ -407,64 +387,6 @@ Ext.define('Lada.view.widget.Tag', {
      */
     resetChanges: function() {
         //TODO: Implement
-    },
-
-    /**
-     * Save current changes
-     */
-    applyChanges: function() {
-        var me = this;
-        var i18n = Lada.getApplication().bundle;
-        var keys = Object.keys(this.changes);
-        var requests = 0;
-        //True if all tags were saved successfully
-        var success = true;
-        var errorHtml = '';
-        var callback = function(options, suc, responseObj) {
-            if (suc === true) {
-                var response = Ext.decode(responseObj.responseText);
-                var tagId = responseObj.request.jsonData.tagId;
-                if (response.success === false) {
-                    success = false;
-                    var msg = i18n.getMsg('tag.widget.err.genericsave');
-                    if (response.message === '699') {
-                        msg = i18n.getMsg(
-                            'tag.widget.err.globaltagnotallowed.' +
-                            me.getRecordType());
-                    }
-                    errorHtml += me.store.getById(tagId).get('tag') +
-                        ' - ' +
-                        msg +
-                        '<br />';
-                } else {
-                    me.changes[tagId] = null;
-                }
-            } else {
-                errorHtml += 'Fehler: ' + responseObj.status + '<br />';
-                success = false;
-                return;
-            }
-            requests++;
-            if (requests === keys.length) {
-                if (success === false) {
-                    //TODO: Handle failure
-                    Ext.Msg.alert(
-                        i18n.getMsg('tag.widget.err.genericsavetitle'),
-                        errorHtml);
-                } else {
-                    me.fireTagDirtyEvent(false);
-                }
-            }
-        };
-        for (var i = 0; i < keys.length; i++ ) {
-            var tag = keys[i];
-            if (this.changes[tag] === 'create') {
-                this.store.createZuordnung(tag, callback);
-            }
-            if (this.changes[tag] === 'delete') {
-                this.store.deleteZuordnung(tag, callback);
-            }
-        }
     },
 
     /**

@@ -27,25 +27,9 @@ Ext.define('Lada.view.window.TagCreate', {
     tagEdit: null,
 
     /**
-     * Messung isntance set if creating a tag for a single messung
-     */
-    messung: null,
-
-    /**
-     * Probe instance set if creating a tag for a single probe
-     */
-    probe: null,
-
-    /**
      * Array of IDs used if creating tags for a selection
      */
     selection: [],
-
-    /**
-     * Mode. Can either be 'single' for creating a tag for a single probe
-     * or 'bulk' for creating a tag for a selection
-     */
-    mode: 'single',
 
     /**
      * This function initialises the Window
@@ -53,18 +37,9 @@ Ext.define('Lada.view.window.TagCreate', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
-        var recordName;
-        switch (this.recordType) {
-            case 'probe': recordName = this.probe; break;
-            case 'messung': recordName = this.messung; break;
-            default: Ext.raise('Unkown record type: ' + this.recordType);
-        }
-        this.title = this.mode === 'single' ?
-            i18n.getMsg('title.tagcreatewindow.' + this.recordType, recordName):
-            i18n.getMsg(
-                'title.tagcreatewindowbulk.' +
-                this.recordType,
-                this.selection.length);
+        this.title = i18n.getMsg(
+            'title.tagcreatewindowbulk.' + this.recordType,
+            this.selection.length);
         this.items = [{
             xtype: 'textfield',
             width: '100%',
@@ -101,35 +76,6 @@ Ext.define('Lada.view.window.TagCreate', {
             }]
         }];
         this.callParent(arguments);
-    },
-
-    /**
-     * Saves a tag for a single probe instance
-     */
-    saveSingleTag: function(textfield) {
-        var text = textfield.getValue();
-        this.tagWidget.createTag(text);
-        textfield.reset();
-        Ext.getCmp('dynamicgridid').reload();
-        var tagFilterWidget = Ext.getCmp('tagfilterwidget');
-        if (tagFilterWidget) {
-            tagFilterWidget.reload(true);
-        }
-        textfield.up('window').close();
-    },
-
-    saveBulkTag: function(textfield) {
-        var me = textfield.up('window');
-        switch (me.recordType) {
-            case 'messung':
-                me.saveBulkTagMessung(textfield);
-                break;
-            case 'probe':
-                me.saveBulkTagProbe(textfield);
-                break;
-            default:
-                Ext.raise('Unkown record type: ' + me.recordType);
-        }
     },
 
     /**
@@ -240,10 +186,15 @@ Ext.define('Lada.view.window.TagCreate', {
         var me = button.up('window');
         var textfield = me.down('textfield');
         if (textfield.validate()) {
-            if (me.mode === 'single') {
-                me.saveSingleTag(textfield);
-            } else {
-                me.saveBulkTag(textfield);
+            switch (me.recordType) {
+                case 'messung':
+                    me.saveBulkTagMessung(textfield);
+                    break;
+                case 'probe':
+                    me.saveBulkTagProbe(textfield);
+                    break;
+                default:
+                    Ext.raise('Unkown record type: ' + me.recordType);
             }
         }
     }

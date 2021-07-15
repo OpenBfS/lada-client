@@ -17,7 +17,8 @@ Ext.define('Lada.view.window.MessungEdit', {
         'Lada.view.form.Messung',
         'Lada.view.grid.Messwert',
         'Lada.view.grid.Status',
-        'Lada.view.grid.MKommentar'
+        'Lada.view.grid.MKommentar',
+        'Lada.view.window.TagEdit'
     ],
 
     collapsible: true,
@@ -101,6 +102,7 @@ Ext.define('Lada.view.window.MessungEdit', {
      * Initialize ui elements and replace placeholder panel
      */
     intializeUI: function() {
+        var me = this;
         var i18n = Lada.getApplication().bundle;
 
         if (this.record === null) {
@@ -128,6 +130,48 @@ Ext.define('Lada.view.window.MessungEdit', {
                 xtype: 'messungform',
                 margin: 5,
                 recordId: this.record.get('id')
+            }, {
+                // Tags
+                xtype: 'fieldset',
+                title: i18n.getMsg('title.tagfieldset'),
+                name: 'tagfieldset',
+                padding: '5, 5',
+                margin: 5,
+                layout: {
+                    type: 'hbox',
+                    align: 'stretchmax'
+                },
+                items: [{
+                    flex: 1,
+                    xtype: 'tagwidget',
+                    readOnly: true,
+                    emptyText: i18n.getMsg('emptytext.tag'),
+                    parentWindow: this,
+                    maskTargetComponentType: 'fieldset',
+                    maskTargetComponentName: 'tagfieldset',
+                    margin: '5 5 5 5'
+                }, {
+                    width: 150,
+                    height: 25,
+                    xtype: 'button',
+                    margin: '5 5 5 0',
+                    text: i18n.getMsg('tag.toolbarbutton.assigntags'),
+                    iconCls: 'x-fa fa-tag',
+                    handler: function() {
+                        var win = Ext.create('Lada.view.window.TagEdit', {
+                            title: i18n.getMsg(
+                                'tag.assignwindow.title.messung', 1),
+                            parentWindow: me,
+                            recordType: 'messung',
+                            selection: [me.record.get('id')]
+                        });
+                        //Close window if parent window is closed
+                        me.on('close', function() {
+                            win.close();
+                        });
+                        win.show();
+                    }
+                }]
             }, {
                 xtype: 'fset',
                 name: 'messwerte',
@@ -238,6 +282,10 @@ Ext.define('Lada.view.window.MessungEdit', {
             } else {
                 me.disableStatusEdit();
             }
+
+            // Initialize Tag widget
+            me.down('tagwidget').setMessung(record.get('id'));
+
             me.setLoading(false);
         };
         if (!loadedRecord) {
