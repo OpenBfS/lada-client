@@ -254,6 +254,7 @@ Ext.define('Lada.view.form.Ort', {
 
         if (this.record.get('ortTyp') === 3) {
             this.down('fieldset').expand();
+            this.down('ortszusatz').setHidden(false);
         }
         if (this.record.get('netzbetreiberId') &&
             this.record.get('netzbetreiberId') !== '') {
