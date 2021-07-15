@@ -51,16 +51,6 @@ Ext.define('Lada.view.form.OrtInfo', {
                 label: i18n.getMsg('orte.verwaltungseinheit'),
                 firstitem: 'gemId',
                 seconditem: 'gemeinde'
-            }, {
-                xtype: 'ortinforow',
-                label: i18n.getMsg('orte.kda'),
-                firstitem: 'kdaId',
-                seconditem: 'koordinatenart'
-            }, {
-                xtype: 'ortinforow',
-                label: i18n.getMsg('orte.koords'),
-                firstitem: 'koordXExtern',
-                seconditem: 'koordYExtern'
             }]
         }];
         this.callParent(arguments);
