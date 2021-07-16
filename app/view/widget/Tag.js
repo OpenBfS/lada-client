@@ -46,19 +46,6 @@ Ext.define('Lada.view.widget.Tag', {
      */
     maskTargetComponentName: 'tagfieldset',
 
-    /**
-     * @private
-     * Set to true if changes to the widget shall be monitored to update dirty
-     * state.
-     */
-    monitorChanges: true,
-
-    /**
-     * Object storing item changes for later syncing.
-     * Format: tagId: ['create'|'delete']
-     */
-    changes: null,
-
     //Templates to render global tags differently
     //Dropdown
     tpl: Ext.create('Ext.XTemplate',
@@ -111,7 +98,6 @@ Ext.define('Lada.view.widget.Tag', {
     },
 
     initComponent: function() {
-        this.changes = {};
         var me = this;
         this.store = Ext.create('Lada.store.Tag');
 
@@ -134,9 +120,6 @@ Ext.define('Lada.view.widget.Tag', {
                 }
             }
         );
-        if (this.monitorChanges === true) {
-            this.on('change', this.handleChanges);
-        }
 
         this.callParent(arguments);
     },
@@ -179,9 +162,7 @@ Ext.define('Lada.view.widget.Tag', {
             callback: function() {
                 if (!silent || silent === false) {
                     me.preselectTags();
-                    me.fireTagDirtyEvent(false);
                 }
-                me.changes = {};
                 if (callback) {
                     callback.call();
                 }
@@ -191,148 +172,23 @@ Ext.define('Lada.view.widget.Tag', {
 
     /**
      * Loads tags, assigned to the current probe and preselects the tags.
-     * Unsaved changes will be reapplied.
      */
     preselectTags: function() {
-        var me = this;
         this.setLoading(true);
 
-        //Disable change monitoring and reset it after change event fired by
-        //preselection
-        var wasMonitoringChanges = this.monitorChanges;
-        this.setMonitorChanges(false);
-        this.on('change', function() {
-            this.setMonitorChanges(wasMonitoringChanges);
-        }, this, {single: true});
-
-        this.store.loadAssignedTags(me, function(records) {
+        this.store.loadAssignedTags(this, function(records) {
             var ids = [];
-            if (!records) {
-                records = [];
-            }
 
             //Set tags, received from the server
-            for (var j = 0; j < records.length; j++) {
-                ids.push(records[j].id);
-            }
-            //Reapply unsaved changes
-            var unsavedChanges = false;
-            if (this.changes) {
-                var keys = Object.keys(this.changes);
-                for (var i = 0; i < keys.length; i++ ) {
-                    var tagId = keys[i];
-                    if (this.changes[tagId] === 'create') {
-                        ids.push(tagId);
-                        unsavedChanges = true;
-                    } else if (this.changes[tagId] === 'delete') {
-                        var indexOfTagId = ids.indexOf(tagId);
-                        ids.splice(indexOfTagId, 1);
-                        unsavedChanges = true;
-                    }
+            if (records) {
+                for (var j = 0; j < records.length; j++) {
+                    ids.push(records[j].id);
                 }
             }
-
-            //If there are no unsaved changes, prevent activation of save button
-            if (unsavedChanges === false) {
-                try {
-                    this.setValue(ids);
-                    this.resetOriginalValue();
-                    this.fireTagDirtyEvent(false);
-                } catch (e) {
-                    Ext.log({
-                        msg: 'Preselecting tags failed: ' + e,
-                        level: 'warn'});
-                }
-
-            } else {
-                this.setValue(ids);
-            }
+            this.setValue(ids);
+            this.resetOriginalValue();
             this.setLoading(false);
         });
-    },
-
-    /**
-     * Fires dirty change event for tag field
-     * @param {Boolean} dirty True if tagfield is dirty, else false
-     */
-    fireTagDirtyEvent: function(dirty) {
-        if (this.up('probeform')) {
-            this.up('probeform').fireEventArgs(
-                'tagdirtychange',
-                [{owner: this.up('probeform')}, dirty]);
-        }
-        if (this.up('messungform')) {
-            this.up('messungform').fireEventArgs(
-                'tagdirtychange',
-                [{owner: this.up('messungform')}, dirty]);
-        }
-    },
-
-    /**
-     * Handles item changes and updates the changes object.
-     * @param {Lada.view.widget.Tag} TagWidget Widget instance
-     * @param {Number} newValue New widget value
-     * @param {Number} oldValue Old widget value
-     */
-    handleChanges: function(me, newValue, oldValue) {
-        if (!me.monitorChanges) {
-            return;
-        }
-        for (var i = 0; i < newValue.length; i++) {
-            if (!Ext.Array.contains(oldValue, newValue[i])) {
-                me.handleCreateChange(newValue[i]);
-            }
-        }
-
-        for (var j=0; j < oldValue.length; j++) {
-            if (!Ext.Array.contains(newValue, oldValue[j])) {
-                me.handleDeleteChange(oldValue[j]);
-            }
-        }
-        var dirty = false;
-        //Check if field is dirty
-        var keys = Object.keys(me.changes);
-        for (var k = 0; k < keys.length; k++) {
-            if (me.changes[keys[k]] !== null) {
-                dirty = true;
-            }
-        }
-
-        //If this widget is embedded in a probeform: fire dirty change event
-        this.fireTagDirtyEvent(dirty);
-    },
-
-    /**
-     * Handles a new item in the combobox and updates the changes object:
-     * If item is not in the change object, create it,
-     * if item was deleted during last changes, undo deletion
-     * else: throw exception
-     * @param {Number} item Item id to handle change of
-     */
-    handleCreateChange: function(item) {
-        if (!this.changes[item] || this.changes[item] === null) {
-            this.changes[item] = 'create';
-        } else if (this.changes[item] === 'delete') {
-            this.changes[item] = null;
-            delete this.changes[item];
-        }
-    },
-
-    /**
-     * Handles the removal of an item in the Tagfield and updates the changes
-     * object:
-     * If item is not in the object: delete it
-     * If item was create it: undo creation
-     * else: Throw exception
-     * @param {Number} item Item id to handle change of
-     */
-    handleDeleteChange: function(item) {
-        if (!this.changes[item] || this.changes[item] === null) {
-            this.changes[item] = 'delete';
-        } else if (this.changes[item] === 'create') {
-            this.changes[item] = null;
-            delete this.changes[item];
-        }
     },
 
     /**
@@ -346,22 +202,6 @@ Ext.define('Lada.view.widget.Tag', {
             return true;
         } else {
             return false;
-        }
-    },
-
-    /**
-     * Enable/Disable change monitoring.
-     * @param {Boolean} monitorChanges True if changes shall be monitored
-     */
-    setMonitorChanges: function(monitorChanges) {
-        if (this.monitorChanges === monitorChanges) {
-            return;
-        }
-        this.monitorChanges = monitorChanges;
-        if (monitorChanges) {
-            this.on('change', this.handleChanges);
-        } else {
-            this.un('change', this.handleChanges);
         }
     },
 
