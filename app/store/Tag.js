@@ -109,24 +109,6 @@ Ext.define('Lada.store.Tag', {
     },
 
     /**
-     * Creates a new tag for the current probe using a POST request
-     */
-    createTag: function(tag, callback) {
-        var zuordnung = {
-            probeId: this.pId,
-            messungId: this.mId,
-            tag: tag
-        };
-        Ext.Ajax.request({
-            url: this.proxy.url,
-            method: 'POST',
-            jsonData: zuordnung,
-            success: callback,
-            failure: this.failureHandler
-        });
-    },
-
-    /**
      * Creates a new to for a given probeId using a POST request
      * @param tagName Tag name
      * @param mId Probe id to create tag for
@@ -218,9 +200,5 @@ Ext.define('Lada.store.Tag', {
         Ext.Msg.alert(
             i18n.getMsg('tag.widget.err.genericsavetitle'),
             i18n.getMsg('tag.widget.err.genericsave'));
-    },
-
-    sync: function() {
-        //TODO:
     }
 });

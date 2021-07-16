@@ -248,26 +248,7 @@ Ext.define('Lada.view.widget.Tag', {
                 this.setValue(ids);
             }
             this.setLoading(false);
-            //this.setMonitorChanges(wasMonitoringChanges);
         });
-    },
-
-    /**
-     * Creates a tag object and hands it to the store for saving.
-     * @param {String} tagName New tag name.
-     */
-    createTag: function(tagName) {
-        var me = this;
-        //TODO: Which mst?
-        var mstId = Lada.mst[0];
-        var tag = {
-            tag: tagName,
-            mstId: mstId
-        };
-        var callback = function() {
-            me.reload();
-        };
-        this.store.createTag(tag, callback);
     },
 
     /**
@@ -285,20 +266,6 @@ Ext.define('Lada.view.widget.Tag', {
                 'tagdirtychange',
                 [{owner: this.up('messungform')}, dirty]);
         }
-    },
-
-    /**
-     * Get the type of the record used by this instance.
-     * @return {string} Either 'probe', 'messung' or undefined if unknown
-     */
-    getRecordType: function() {
-        if (this.up('probeform')) {
-            return 'probe';
-        }
-        if (this.up('messungform')) {
-            return 'messung';
-        }
-        return undefined;
     },
 
     /**
@@ -380,21 +347,6 @@ Ext.define('Lada.view.widget.Tag', {
         } else {
             return false;
         }
-    },
-
-    /**
-     * Reset the tag widget
-     */
-    resetChanges: function() {
-        //TODO: Implement
-    },
-
-    /**
-     * Get the current state of change monitoring.
-     * @return {Boolean} True if changes are monitored, else false
-     */
-    isMonitorChanges: function() {
-        return this.monitorChanges;
     },
 
     /**
