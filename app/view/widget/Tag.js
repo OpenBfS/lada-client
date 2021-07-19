@@ -142,19 +142,16 @@ Ext.define('Lada.view.widget.Tag', {
 
     /**
      *  Reloads the current store.
-     *  @param silent If true, neither tags are preselected nor the dirty
-     * status changed.
+     *  @param silent If true, no tags are preselected.
      *  @param callback Callback function to call after reload
      */
-    reload: function(silent, callback) {
+    reload: function(callback) {
         var me = this;
         me.hideReloadMask();
         me.setLoading(true);
         this.store.load({
             callback: function() {
-                if (!silent || silent === false) {
-                    me.preselectTags();
-                }
+                me.preselectTags();
                 if (callback) {
                     callback.call();
                 }
@@ -164,7 +161,7 @@ Ext.define('Lada.view.widget.Tag', {
     },
 
     /**
-     * Loads tags, assigned to the current probe and preselects the tags.
+     * Loads and preselects assigned tags, if any.
      */
     preselectTags: function() {
         this.setLoading(true);

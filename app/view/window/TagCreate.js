@@ -101,7 +101,7 @@ Ext.define('Lada.view.window.TagCreate', {
         this.tagWidget.store.createTag(text, firstId, recordType, function() {
             var oldItems = Ext.clone(me.tagWidget.store.getData().items);
             //Wait for the reload to finish
-            me.tagWidget.reload(true, function() {
+            me.tagWidget.reload(function() {
                 var newItems = Ext.clone(me.tagWidget.store.getData().items);
                 //Look for the new item
                 var newItem = null;
