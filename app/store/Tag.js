@@ -45,7 +45,9 @@ Ext.define('Lada.store.Tag', {
      */
     setTagged: function(id, recordType) {
         if (!this.assignedTagsStore) {
-            this.assignedTagsStore = Ext.create('Lada.store.Tag');
+            this.assignedTagsStore = Ext.create('Lada.store.Tag', {
+                autoLoad: false
+            });
         }
         if (this.loadingCallback) {
             this.assignedTagsStore.on('load', this.loadingCallback);
