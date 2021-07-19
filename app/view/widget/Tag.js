@@ -125,18 +125,10 @@ Ext.define('Lada.view.widget.Tag', {
     },
 
     /**
-     * Sets the current messung and triggers the preselection
+     * Sets the current Probe or Messung and triggers the preselection
      */
-    setMessung: function(mId) {
-        this.store.setMessung(mId);
-        this.preselectTags();
-    },
-
-    /**
-     * Sets the current probe and triggers the preselection
-     */
-    setProbe: function(pId) {
-        this.store.setProbe(pId);
+    setTagged: function(id, recordType) {
+        this.store.setTagged(id, recordType);
         this.preselectTags();
     },
 

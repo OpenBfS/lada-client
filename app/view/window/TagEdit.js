@@ -143,17 +143,7 @@ Ext.define('Lada.view.window.TagEdit', {
         me.disableButtons();
 
         for (var i = 0; i < me.selection.length; i++) {
-            var id = me.selection[i];
-            switch (me.recordType) {
-                case 'messung':
-                    store.setMessung(id);
-                    break;
-                case 'probe':
-                    store.setProbe(id);
-                    break;
-                default:
-                    Ext.raise('Unkown record type: ' + me.recordType);
-            }
+            store.setTagged(me.selection[i], me.recordType);
             for (var j = 0; j < tags.length; j++) {
                 var tag = tags[j];
                 // eslint-disable-next-line no-loop-func

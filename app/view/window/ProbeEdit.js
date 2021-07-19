@@ -279,7 +279,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }
 
             // Initialize Tag widget
-            me.down('tagwidget').setProbe(record.get('id'));
+            me.down('tagwidget').setTagged(record.get('id'), 'probe');
 
             me.setLoading(false);
             me.down('probeform').isValid();

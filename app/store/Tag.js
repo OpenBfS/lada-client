@@ -39,40 +39,35 @@ Ext.define('Lada.store.Tag', {
     },
 
     /**
-     * Set the probe id as a filter param to get assigned tags
-     * @param {Number} pId Probe id to use
+     * Set the probe or messung ID as a filter param to get assigned tags
+     * @param id ID to use
+     * @param recordType 'probe' or 'messung'
      */
-    setProbe: function(pId) {
+    setTagged: function(id, recordType) {
         if (!this.assignedTagsStore) {
             this.assignedTagsStore = Ext.create('Lada.store.Tag');
         }
         if (this.loadingCallback) {
             this.assignedTagsStore.on('load', this.loadingCallback);
         }
-        this.pId = pId;
-        this.mId = null;
-        this.assignedTagsStore.proxy.extraParams = {
-            pid: pId
-        };
-    },
-
-    /**
-     * Set the messung id as a filter param to get assigned tags
-     * @param {Number} mId Messung id to use
-     */
-    setMessung: function(mId) {
-        if (!this.assignedTagsStore) {
-            this.assignedTagsStore = Ext.create('Lada.store.Tag');
+        switch (recordType) {
+            case 'messung':
+                this.pId = null;
+                this.mId = id;
+                this.assignedTagsStore.proxy.extraParams = {
+                    mid: id
+                };
+                break;
+            case 'probe':
+                this.pId = id;
+                this.mId = null;
+                this.assignedTagsStore.proxy.extraParams = {
+                    pid: id
+                };
+                break;
+            default:
+                Ext.raise('Unkown record type: ' + recordType);
         }
-        if (this.loadingCallback) {
-            this.assignedTagsStore.on('load', this.loadingCallback);
-        }
-
-        this.pId = null;
-        this.mId = mId;
-        this.assignedTagsStore.proxy.extraParams = {
-            mid: mId
-        };
     },
 
     /**
