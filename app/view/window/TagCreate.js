@@ -85,20 +85,20 @@ Ext.define('Lada.view.window.TagCreate', {
      * Then it is chosen in the tag widget combobox and saved via the TagEdit
      * window.
      */
-    saveBulkTagMessung: function(textfield) {
+    save: function(textfield, recordType) {
         var me = this;
         if (!this.selection || this.selection.length === 0) {
             return;
         }
-        //Get the first messungId
-        var firstMid = this.selection[0];
-        if (!firstMid) {
+        // Get the first ID
+        var firstId = this.selection[0];
+        if (!firstId) {
             return;
         }
         var text = textfield.getValue();
 
-        //Save tag for first probe. Should trigger itemadd event on tag widget.
-        this.tagWidget.store.createTagForMid(text, firstMid, function() {
+        // Save tag for first item. Should trigger itemadd event on tag widget.
+        this.tagWidget.store.createTag(text, firstId, recordType, function() {
             var oldItems = Ext.clone(me.tagWidget.store.getData().items);
             //Wait for the reload to finish
             me.tagWidget.reload(true, function() {
@@ -128,56 +128,6 @@ Ext.define('Lada.view.window.TagCreate', {
         });
     },
 
-
-    /**
-     * Creates and saves a tag for a selection of probe instances.
-     * As tags are only created if they are associated with a probe,
-     * the first step is to create a tag for the first selected probe.
-     * Then it is chosen in the tag widget combobox and saved via the TagEdit
-     * window.
-     */
-    saveBulkTagProbe: function(textfield) {
-        var me = this;
-        if (!this.selection || this.selection.length === 0) {
-            return;
-        }
-        //Get the first probeId
-        var firstPid = this.selection[0];
-        if (!firstPid) {
-            return;
-        }
-        var text = textfield.getValue();
-
-        //Save tag for first probe. Should trigger itemadd event on tag widget.
-        this.tagWidget.store.createTagForPid(text, firstPid, function() {
-            var oldItems = Ext.clone(me.tagWidget.store.getData().items);
-            //Wait for the reload to finish
-            me.tagWidget.reload(true, function() {
-                var newItems = Ext.clone(me.tagWidget.store.getData().items);
-                //Look for the new item
-                var newItem = null;
-                for (var i = 0; i < newItems.length; i++) {
-                    var id = newItems[i].id;
-                    if (!Ext.Array.findBy(oldItems,
-                        // eslint-disable-next-line no-loop-func
-                        function(item) {
-                            return id === item.id;
-                        })
-                    ) {
-                        newItem = newItems[i];
-                        break;
-                    }
-                }
-                //Select new item in combobox and fire click event
-                me.tagWidget.clearValue();
-                me.tagWidget.select(newItem);
-                textfield.reset();
-                textfield.up('window').close();
-                me.tagEdit.down('button[action=bulkaddtags]').click();
-            });
-        });
-    },
-
     /**
      * Handles click on save button:
      * Validate textfield input, if valid call single or bulk create function
@@ -186,16 +136,7 @@ Ext.define('Lada.view.window.TagCreate', {
         var me = button.up('window');
         var textfield = me.down('textfield');
         if (textfield.validate()) {
-            switch (me.recordType) {
-                case 'messung':
-                    me.saveBulkTagMessung(textfield);
-                    break;
-                case 'probe':
-                    me.saveBulkTagProbe(textfield);
-                    break;
-                default:
-                    Ext.raise('Unkown record type: ' + me.recordType);
-            }
+            me.save(textfield, me.recordType);
         }
     }
 });

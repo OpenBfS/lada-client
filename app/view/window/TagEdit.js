@@ -78,13 +78,17 @@ Ext.define('Lada.view.window.TagEdit', {
                 action: 'bulkaddtags',
                 margin: '5 5 5 5',
                 text: i18n.getMsg('tag.assignwindow.assignbutton.text'),
-                handler: this.assignToSelection
+                handler: function() {
+                    me.editSelection(this, 'POST');
+                }
             }, {
                 xtype: 'button',
                 action: 'bulkdeletetags',
                 margin: '5 5 5 5',
                 text: i18n.getMsg('tag.assignwindow.unassignbutton.text'),
-                handler: this.unassignFromSelection
+                handler: function() {
+                    me.editSelection(this, 'DELETE');
+                }
             }, {
                 xtype: 'button',
                 text: i18n.getMsg('cancel'),
@@ -117,11 +121,13 @@ Ext.define('Lada.view.window.TagEdit', {
     },
 
     /**
-     * Eventhandler that unassigns the selected tag(s) from the selected probe
-     * instance(s)
+     * Eventhandler that (un)assigns the selected tag(s) from
+     * the selected objects
+     *
      * @param button Button that caused the event
+     * @param method 'POST' to assign or 'DELETE' to unassign tag
      */
-    unassignFromSelection: function(button) {
+    editSelection: function(button, method) {
         var me = button.up('tageditwindow');
         var i18n = Lada.getApplication().bundle;
         var tagwidget = me.down('tagwidget');
@@ -151,64 +157,7 @@ Ext.define('Lada.view.window.TagEdit', {
             for (var j = 0; j < tags.length; j++) {
                 var tag = tags[j];
                 // eslint-disable-next-line no-loop-func
-                store.deleteZuordnung(tag, function() {
-                    tagsSet++;
-                    var ratio = tagsSet/tagCount;
-                    me.down('progressbar').updateProgress(
-                        ratio,
-                        i18n.getMsg(
-                            'tag.assignwindow.progress',
-                            tagsSet,
-                            tagCount,
-                            false));
-                    if (ratio === 1) {
-                        if (me.parentWindow) {
-                            me.parentWindow.down('tagwidget').reload();
-                        }
-                        Ext.getCmp('dynamicgridid').reload();
-                        me.enableButtons();
-                    }
-                });
-            }
-        }
-    },
-
-    /**
-     * Eventhandler that assigns the selected tag(s) to the chosen probe
-     * instance(s)
-     * @param button Button that caused the event
-     */
-    assignToSelection: function(button) {
-        var me = button.up('tageditwindow');
-        var i18n = Lada.getApplication().bundle;
-        var tagwidget = me.down('tagwidget');
-        var tags = tagwidget.getValue();
-        var store = Ext.create('Lada.store.Tag', {
-            autoload: false
-        });
-        var tagCount = tags.length * me.selection.length;
-        var tagsSet = 0;
-        me.down('progressbar').show();
-        me.down('progressbar').updateProgress(
-            0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
-        me.disableButtons();
-
-        for (var i = 0; i < me.selection.length; i++) {
-            var id = me.selection[i];
-            switch (me.recordType) {
-                case 'messung':
-                    store.setMessung(id);
-                    break;
-                case 'probe':
-                    store.setProbe(id);
-                    break;
-                default:
-                    Ext.raise('Unkown record type: ' + me.recordType);
-            }
-            for (var j = 0; j < tags.length; j++) {
-                var tag = tags[j];
-                // eslint-disable-next-line no-loop-func
-                store.createZuordnung(tag, function() {
+                store.editZuordnung(tag, method, function() {
                     tagsSet++;
                     var ratio = tagsSet/tagCount;
                     me.down('progressbar').updateProgress(
