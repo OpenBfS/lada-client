@@ -133,7 +133,7 @@ Ext.define('Lada.view.window.TagEdit', {
         var tagwidget = me.down('tagwidget');
         var tags = tagwidget.getValue();
         var store = Ext.create('Lada.store.Tag', {
-            autoload: false
+            autoLoad: false
         });
         var tagCount = tags.length * me.selection.length;
         var tagsSet = 0;
