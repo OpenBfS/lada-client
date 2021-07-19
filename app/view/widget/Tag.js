@@ -166,6 +166,7 @@ Ext.define('Lada.view.widget.Tag', {
                 if (callback) {
                     callback.call();
                 }
+                me.setLoading(false);
             }
         });
     },
