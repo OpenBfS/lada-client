@@ -18,6 +18,7 @@ Ext.define('Lada.view.window.MessungEdit', {
         'Lada.view.grid.Messwert',
         'Lada.view.grid.Status',
         'Lada.view.grid.MKommentar',
+        'Lada.view.widget.Tag',
         'Lada.view.window.TagEdit'
     ],
 

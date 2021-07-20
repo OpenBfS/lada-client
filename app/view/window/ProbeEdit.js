@@ -19,6 +19,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         'Lada.view.grid.Probenzusatzwert',
         'Lada.view.grid.PKommentar',
         'Lada.view.grid.Messung',
+        'Lada.view.widget.Tag',
         'Lada.view.window.TagEdit'
     ],
 
