@@ -74,7 +74,6 @@ Ext.define('Lada.view.widget.Tag', {
                 return mstId === null || mstId === '';
             }
         }
-
     ),
 
     /**
@@ -118,6 +117,34 @@ Ext.define('Lada.view.widget.Tag', {
                     me.mask();
                     me.showReloadMask();
                 }
+            }
+        );
+
+        // This is a hack to render the close icon at field items conditionally.
+        // multiSelectItemTpl is not a documented config, but see
+        // https://docs.sencha.com/extjs/6.2.0/classic/src/Tag.js.html
+        this.multiSelectItemTpl = Ext.create(
+            'Ext.XTemplate',
+            '<tpl for=".">',
+            '<li data-selectionIndex="{[xindex - 1]}"',
+            ' data-recordId="{internalId}"',
+            ' role="presentation" class="x-tagfield-item">',
+            '<div role="presentation" class="x-tagfield-item-text">',
+            '{[this.getItemLabel(values.data)]}',
+            '</div>',
+            '<tpl if ="!this.isReadOnly()">',
+            '<div role="presentation" class="x-tagfield-item-close"></div>',
+            '</tpl>',
+            '</li>',
+            '</tpl>',
+            {
+                getItemLabel: function(values) {
+                    return Ext.String.htmlEncode(me.labelTpl.apply(values));
+                },
+                isReadOnly: function() {
+                    return me.readOnly;
+                },
+                strict: true
             }
         );
 
