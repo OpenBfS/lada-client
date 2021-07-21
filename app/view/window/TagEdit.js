@@ -99,9 +99,15 @@ Ext.define('Lada.view.window.TagEdit', {
                 }
             }]
         }];
-        this.callParent(arguments);
-        this.down('progressbar').updateProgress(0, '');
 
+        this.callParent(arguments);
+
+        // Pre-populate tag widget if only one item selected
+        if (me.selection.length === 1) {
+            me.down('tagwidget').setTagged(me.selection[0], me.recordType);
+        }
+
+        this.down('progressbar').updateProgress(0, '');
     },
 
     disableButtons: function() {
