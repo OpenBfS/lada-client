@@ -188,7 +188,7 @@ Ext.define('Lada.view.window.TagEdit', {
                             me.parentWindow.down('tagwidget').reload();
                         }
                         Ext.getCmp('dynamicgridid').reload();
-                        me.enableButtons();
+                        me.close();
                     }
                 });
             }
