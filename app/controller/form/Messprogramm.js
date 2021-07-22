@@ -366,7 +366,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
      * Saves the current form content without manipulating the gui.
      */
     saveHeadless: function(panel) {
-        debugger;
         var formPanel = panel;
         var data = formPanel.getForm().getFieldValues(false);
         var record = formPanel.getForm().getRecord();
