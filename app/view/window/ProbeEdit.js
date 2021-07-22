@@ -142,6 +142,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
                     margin: '5 5 5 0',
                     text: i18n.getMsg('tag.toolbarbutton.assigntags'),
                     iconCls: 'x-fa fa-tag',
+                    // Only users with associated Messstelle can (un)assign tags
+                    disabled: Lada.mst.length === 0,
                     handler: function() {
                         var win = Ext.create('Lada.view.window.TagEdit', {
                             title: i18n.getMsg(
