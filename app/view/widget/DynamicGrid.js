@@ -952,6 +952,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
         };
     },
+
     addProbeButtons: function() {
         if (!this.tbuttonExists('importprobe')) {
             this.toolbarbuttons.push({
@@ -962,15 +963,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 disabled: false
             });
         }
-        if (!this.tbuttonExists('assigntags')) {
-            this.toolbarbuttons.push({
-                text: this.i18n.getMsg('tag.toolbarbutton.assigntags'),
-                iconCls: 'x-fa fa-tag',
-                action: 'assigntags',
-                needsSelection: true,
-                disabled: true
-            });
-        }
+        this.addAssignTagsButton();
     },
 
     addMessungButtons: function() {
@@ -990,7 +983,12 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 disabled: true
             });
         }
-        if (!this.tbuttonExists('assigntags')) {
+        this.addAssignTagsButton();
+    },
+
+    addAssignTagsButton: function() {
+        // Only users with associated Messstelle can (un)assign tags
+        if (Lada.mst.length > 0 && !this.tbuttonExists('assigntags')) {
             this.toolbarbuttons.push({
                 text: this.i18n.getMsg('tag.toolbarbutton.assigntags'),
                 iconCls: 'x-fa fa-tag',
