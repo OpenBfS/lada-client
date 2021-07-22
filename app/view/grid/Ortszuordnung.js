@@ -180,20 +180,8 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             }
         }, {
             header: i18n.getMsg('orte.ozId'),
-            dataIndex: 'ortId',
+            dataIndex: 'ozId',
             width: 80,
-            renderer: function(value) {
-                var store = Ext.data.StoreManager.get('orte');
-                var record = store.getById(value);
-                if (!record) {
-                    return '';
-                }
-                var ozid = record.get('ozId');
-                if (ozid === undefined || ozid === null || ozid === '') {
-                    return '';
-                }
-                return ozid;
-            }
         }, {
             header: i18n.getMsg('orte.anlageId'),
             dataIndex: 'ortId',

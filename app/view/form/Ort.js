@@ -56,6 +56,7 @@ Ext.define('Lada.view.form.Ort', {
             labelWidth: 125,
             editable: true,
             name: 'ozId',
+            hidden: true,
             fieldLabel: i18n.getMsg('orte.ozId')
         }, {
             xtype: 'orttyp',
@@ -136,24 +137,29 @@ Ext.define('Lada.view.form.Ort', {
                 fieldLabel: i18n.getMsg('orte.aktiv')
             }]
         }, {
-            xtype: 'koordinatenart',
-            labelWidth: 125,
-            fieldLabel: i18n.getMsg('orte.kda'),
-            name: 'kdaId'
-        }, {
-            xtype: 'tfield',
-            labelWidth: 125,
-            fieldLabel: i18n.getMsg('orte.koordx'),
-            regex: /^[noeswNOESW\d\.,-]+$/,
-            name: 'koordXExtern',
-            maxLength: 22
-        }, {
-            xtype: 'tfield',
-            labelWidth: 125,
-            fieldLabel: i18n.getMsg('orte.koordy'),
-            name: 'koordYExtern',
-            regex: /^[noeswNOESW\d\.,-]+$/,
-            maxLength: 22
+            xtype: 'fset',
+            collapsible: true,
+            name: 'koordinaten',
+            items: [{
+                xtype: 'koordinatenart',
+                labelWidth: 125,
+                fieldLabel: i18n.getMsg('orte.kda'),
+                name: 'kdaId'
+            }, {
+                xtype: 'tfield',
+                labelWidth: 125,
+                fieldLabel: i18n.getMsg('orte.koordx'),
+                regex: /^[noeswNOESW\d\.,-]+$/,
+                name: 'koordXExtern',
+                maxLength: 22
+            }, {
+                xtype: 'tfield',
+                labelWidth: 125,
+                fieldLabel: i18n.getMsg('orte.koordy'),
+                name: 'koordYExtern',
+                regex: /^[noeswNOESW\d\.,-]+$/,
+                maxLength: 22
+            }]
         }, {
             xtype: 'button',
             action: 'changeKDA',
@@ -248,6 +254,7 @@ Ext.define('Lada.view.form.Ort', {
 
         if (this.record.get('ortTyp') === 3) {
             this.down('fieldset').expand();
+            this.down('ortszusatz').setHidden(false);
         }
         if (this.record.get('netzbetreiberId') &&
             this.record.get('netzbetreiberId') !== '') {

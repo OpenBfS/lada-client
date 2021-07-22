@@ -16,6 +16,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     requires: [
         'Lada.view.form.OrtInfo',
         'Lada.view.widget.OrtszuordnungTyp',
+        'Lada.view.widget.OrtsZusatz',
         'Lada.view.widget.Verwaltungseinheit',
         'Lada.view.widget.Staat',
         'Lada.view.widget.base.TextArea'
@@ -99,9 +100,16 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 fieldLabel: i18n.getMsg(
                                     'ortszuordnung.form.field.ortszuordnungtyp')
                             }, {
+                                xtype: 'ortszusatz',
+                                labelWidth: 120,
+                                width: 350,
+                                editable: true,
+                                name: 'ozId',
+                                fieldLabel: i18n.getMsg('ortszuordnung.form.field.ozId')
+                            }, {
                                 // empty conttainer for vertical separation
                                 xtype: 'container',
-                                minHeight: 20
+                                minHeight: 10
                             }, {
                                 // this field is hidden because the user doesn't
                                 // need to know the internal ortID
@@ -114,12 +122,24 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 listeners: {
                                     change: me.changed
                                 }
-                            },
-                            Ext.create('Lada.view.form.OrtInfo'),
-                            {
+                            }, {
+                                xtype: 'fieldset',
+                                name: 'orte',
+                                title: i18n.getMsg('title.ortsangabe'),
+                                padding: '5, 5',
+                                margin: 5,
+                                items: [
+                                    Ext.create('Lada.view.form.OrtInfo')
+                                ]
+                            }, {
+                                // empty conttainer for vertical separation
+                                xtype: 'container',
+                                minHeight: 10
+                            }, {
                                 xtype: 'tarea',
                                 labelWidth: 125,
                                 maxLength: 100,
+                                width: 350,
                                 name: 'ortszusatztext',
                                 fieldLabel: i18n.getMsg(
                                     'ortszuordnung.form.field.ortszusatztext'),
@@ -245,6 +265,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     setReadOnly: function(value) {
         this.readOnly = value;
         this.down('tarea[name=ortszusatztext]').setReadOnly(value);
+        this.down('ortszusatz [name=ozId]').setReadOnly(value);
         var fieldId = 'textfield[name=ortszuordnungTyp]';
         this.down(fieldId).setReadOnly(value);
         if (value) {
