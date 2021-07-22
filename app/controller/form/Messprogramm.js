@@ -315,6 +315,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     }
                     formPanel.clearMessages();
                     formPanel.setRecord(rec);
+                    formPanel.setMediaDesk(rec);
                     button.up('window').record = rec;
                     formPanel.setMessages(json.errors, json.warnings);
                     if (response.action === 'create' && json.success) {
@@ -365,6 +366,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
      * Saves the current form content without manipulating the gui.
      */
     saveHeadless: function(panel) {
+        debugger;
         var formPanel = panel;
         var data = formPanel.getForm().getFieldValues(false);
         var record = formPanel.getForm().getRecord();
@@ -424,7 +426,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
-        formPanel.getForm().getRecord();
+        var record = formPanel.getForm().getRecord();
         var mstStore = Ext.data.StoreManager.get('messstellen');
         var mstId = mstStore.getById(
             formPanel.getForm().getRecord().get('mstId'));
@@ -459,6 +461,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
         formPanel.getForm().owner.populateIntervall(
             formPanel.getForm().getRecord());
+        formPanel.setMediaDesk(record);
     },
 
     /**
@@ -512,6 +515,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
     },
 
     deskriptorSelect: function(field, records) {
+        field.up('messprogrammform').down('umwelt[name="umwId"]').clearValue();
         var desk = field.up('deskriptor');
         var media = field.up('messprogrammform')
             .down('textfield[name="mediaDesk"]');
@@ -558,6 +562,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
             .down('textfield[name="media"]');
 
         if ( (desk.layer === 0 ) && (records.get('sn') === 0) ) {
+            media.setValue('');
             mediatext.setValue('');
         } else {
             if ( current[1] === '01') {

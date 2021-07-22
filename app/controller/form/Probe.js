@@ -477,6 +477,7 @@ Ext.define('Lada.controller.form.Probe', {
             reiStore.proxy.extraParams.umwelt = umwId;
         }
         reiStore.load();
+
     },
 
     /**
@@ -644,6 +645,7 @@ Ext.define('Lada.controller.form.Probe', {
                     }
                     formPanel.clearMessages();
                     formPanel.setRecord(newRecord);
+                    formPanel.setMediaDesk(newRecord);
                     formPanel.setMessages(
                         json.errors,
                         json.warnings,
@@ -723,6 +725,8 @@ Ext.define('Lada.controller.form.Probe', {
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
+        var record = formPanel.getForm().getRecord();
+        formPanel.setMediaDesk(record);
         formPanel.getForm().isValid();
         formPanel.down('button[action=discard]').setDisabled(true);
     },
@@ -952,7 +956,6 @@ Ext.define('Lada.controller.form.Probe', {
             current.splice(0, 1);
         }
         var mediatext = field.up('probeform').down('textfield[name="media"]');
-
         if ( (desk.layer === 0 ) && (records.get('sn') === 0) ) {
             mediatext.setValue('');
             media.setValue('');
