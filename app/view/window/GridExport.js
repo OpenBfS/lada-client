@@ -705,36 +705,30 @@ Ext.define('Lada.view.window.GridExport', {
                 'X-FILE-ENCODING': me.down('combobox[name=encoding]').getValue()
             },
             success: function(response) {
-                var json = Ext.decode(response.responseText);
-                if (json.refId) {
-                    queueItem.set('refId', json.refId);
-                    queueItem.set('status', 'waiting');
+                var json = Ext.JSON.decode(response.responseText, true);
+                if (json) {
+                    if (json.refId) {
+                        queueItem.set('refId', json.refId);
+                        queueItem.set('status', 'waiting');
+                    } else {
+                        queueItem.set('status', 'error');
+                    }
+
+                    if (json.error) {
+                        queueItem.set('message', json.error );
+                    } else {
+                        queueItem.set('message', '' );
+                    }
                 } else {
+                    // TODO: Handle SSO HTML form like in
+                    // RestProxy.processResponse
+                    queueItem.set('done', true);
                     queueItem.set('status', 'error');
                 }
-
-                if (json.error) {
-                    queueItem.set('message', json.error );
-                } else {
-                    queueItem.set('message', '' );
-                }
             },
-            failure: function(response) {
+            failure: function() {
                 queueItem.set('done', true);
                 queueItem.set('status', 'error');
-                /* SSO will send a 302 if the Client is not authenticated
-                unfortunately this seems to be filtered by the browser.
-                We assume that a 302 was send when the follwing statement
-                is true.
-                */
-                if (response.status === 0 &&
-                response.getResponse().responseText === '') {
-                    var i18n = Lada.getApplication().bundle;
-                    Ext.MessageBox.confirm(
-                        i18n.getMsg('err.msg.sso.expired.title'),
-                        i18n.getMsg('err.msg.sso.expired.body'),
-                        me.reload);
-                }
             }
         });
     },

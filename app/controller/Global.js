@@ -17,6 +17,9 @@ Ext.define('Lada.controller.Global', {
             'button[action=about]': {
                 click: this.about
             },
+            'button[action=logout]': {
+                click: this.logout
+            },
             'button[action=toggletimezone]': {
                 toggle: this.toggleTimezone
             }
@@ -29,6 +32,22 @@ Ext.define('Lada.controller.Global', {
     about: function() {
         var win = Ext.create('Lada.view.window.About');
         win.show();
+    },
+
+    logout: function() {
+        var i18n = Lada.getApplication().bundle;
+        Ext.Ajax.setUseDefaultXhrHeader(false);
+        Ext.Ajax.setWithCredentials(true);
+        Ext.Ajax.request({
+            url: '/Shibboleth.sso/Logout',
+            success: function (response) {
+                window.removeEventListener('beforeunload', Lada.getApplication().beforeCloseHandler);
+                window.location.reload();
+            },
+            failure: function (response) {
+                Ext.Msg.alert(i18n.getMsg('err.msg.slo.failed.title'), i18n.getMsg('err.msg.slo.failed.body'));
+            }
+        });
     },
 
     /**

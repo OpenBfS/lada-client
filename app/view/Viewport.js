@@ -46,6 +46,11 @@ Ext.define('Lada.view.Viewport', {
                     xtype: 'tbtext',
                     id: 'userinfo',
                     text: i18n.getMsg('userinfo.user') + ' ' + Lada.username
+                }, {
+                    xtype: 'button',
+                    id: 'logoutbutton',
+                    action: 'logout',
+                    text: i18n.getMsg('logout')
                 }]
             },
             tools: [{

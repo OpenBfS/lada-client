@@ -125,6 +125,14 @@ Ext.application({
         noCache: true
     },
 
+    beforeCloseHandler: function (evt){
+        var i18n = Lada.getApplication().bundle;
+        // match different handling from different browsers
+        var confirmMessage = i18n.getMsg('window.confirmclose');
+        evt.returnValue = confirmMessage;
+        return confirmMessage;
+    },
+
     // Setting this variable to true triggers loading the Viewport.js
     // file which sets ob the viewport.
     //autoCreateViewport: true,
@@ -140,6 +148,8 @@ Ext.application({
         };
 
         //Set up an event handler to handle session timeouts
+        // TODO: Obsolete code? In case of a session timeout, an HTML form
+        // is send with status code 200. See RestProxy.processResponse().
         Ext.Ajax.on('requestexception', function(conn, response) {
             if (response.status === 0 && response.responseText === '') {
                 var i18n = Lada.getApplication().bundle;
@@ -198,13 +208,7 @@ Ext.application({
 
         // ask before closing/refreshing the window.
         // Not all browsers will respect this, depending on settings
-        window.addEventListener('beforeunload', function(evt) {
-            var i18n = Lada.getApplication().bundle;
-            // match different handling from different browsers
-            var confirmMessage = i18n.getMsg('window.confirmclose');
-            evt.returnValue = confirmMessage;
-            return confirmMessage;
-        });
+        window.addEventListener('beforeunload', this.beforeCloseHandler);
         Ext.create('Lada.store.GenericResults');
     },
 
