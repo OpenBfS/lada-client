@@ -143,6 +143,7 @@ Ext.define('Lada.view.window.TagEdit', {
         });
         var tagCount = tags.length * me.selection.length;
         var tagsSet = 0;
+        var tagsFailed = '';
         me.down('progressbar').show();
         me.down('progressbar').updateProgress(
             0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
@@ -153,7 +154,21 @@ Ext.define('Lada.view.window.TagEdit', {
             for (var j = 0; j < tags.length; j++) {
                 var tag = tags[j];
                 // eslint-disable-next-line no-loop-func
-                store.editZuordnung(tag, method, function() {
+                store.editZuordnung(tag, method, function(opt, success, resp) {
+                    var tagId = resp.request.jsonData.tagId;
+                    if (!success) {
+                        tagsFailed = tagsFailed
+                            + tagwidget.store.getById(tagId).get('tag')
+                            + ': ' + resp.statusText + '<br><br>';
+                    } else {
+                        var respObj = Ext.decode(resp.responseText);
+                        if (!respObj.success) {
+                            tagsFailed = tagsFailed
+                                + tagwidget.store.getById(tagId).get('tag')
+                                + ': ' + i18n.getMsg(respObj.message)
+                                + '<br><br>';
+                        }
+                    }
                     tagsSet++;
                     var ratio = tagsSet/tagCount;
                     me.down('progressbar').updateProgress(
@@ -164,6 +179,11 @@ Ext.define('Lada.view.window.TagEdit', {
                             tagCount,
                             false));
                     if (ratio === 1) {
+                        if (tagsFailed) {
+                            Ext.Msg.alert(
+                                i18n.getMsg('tag.widget.err.genericsavetitle'),
+                                tagsFailed);
+                        }
                         if (me.parentWindow) {
                             me.parentWindow.down('tagwidget').reload();
                         }

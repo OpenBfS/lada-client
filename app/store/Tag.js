@@ -153,8 +153,7 @@ Ext.define('Lada.store.Tag', {
             url: this.proxy.url,
             method: method,
             jsonData: zuordnung,
-            success: callback,
-            failure: this.failureHandler
+            callback: callback
         });
     },
 
