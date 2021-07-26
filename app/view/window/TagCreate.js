@@ -79,9 +79,9 @@ Ext.define('Lada.view.window.TagCreate', {
     },
 
     /**
-     * Creates and saves a tag for a selection of messung instances.
-     * As tags are only created if they are associated with a messung,
-     * the first step is to create a tag for the first selected messung.
+     * Creates and saves a tag for a selection.
+     * As tags are only created if they are associated with an object,
+     * the first step is to create a tag for the first selected object.
      * Then it is chosen in the tag widget combobox and saved via the TagEdit
      * window.
      */
