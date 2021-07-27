@@ -472,13 +472,12 @@ Ext.define('Lada.controller.form.Ort', {
                         var json = Ext.decode(response.responseText);
                         if (json.data) {
                             messageContainer.setHidden(true);
-                            var coords = Ext.decode(json.data);
                             win.down('koordinatenart[name=newKDA]')
                                 .setReadOnly(false);
                             win.down('selectabledisplayfield[name=newX]')
-                                .setValue(coords.x);
+                                .setValue(json.data.x);
                             win.down('selectabledisplayfield[name=newY]')
-                                .setValue(coords.y);
+                                .setValue(json.data.y);
                             win.down('button[action=apply]')
                                 .setDisabled(false);
                         } else {
