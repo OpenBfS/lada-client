@@ -56,8 +56,7 @@ Ext.define('Lada.view.form.Ort', {
             labelWidth: 125,
             editable: true,
             name: 'ozId',
-            hidden: true,
-            fieldLabel: i18n.getMsg('orte.ozId')
+            fieldLabel: i18n.getMsg('orte.ozIdS')
         }, {
             xtype: 'orttyp',
             labelWidth: 125,

@@ -150,7 +150,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('orte.gemId'),
             dataIndex: 'ortId',
-            flex: 3,
+            width: 80,
             renderer: function(value) {
                 var store = Ext.data.StoreManager.get('orte');
                 var record = store.getById(value);

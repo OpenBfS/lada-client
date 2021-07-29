@@ -193,12 +193,19 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
     setOrtInfo: function(ortrecord) {
         this.currentOrt = ortrecord;
+        var dirtyForm = false;
         var verwStore = Ext.StoreManager.get('verwaltungseinheiten');
         var verw = verwStore.getById(ortrecord.get('gemId'));
         var staatStore = Ext.StoreManager.get('staaten');
+        if (this.down('ortinfo').getForm().getRecord() !== undefined) {
+            if (ortrecord.get('ortId') !==
+                this.down('ortinfo').getForm().getRecord().get('ortId') ) {
+                    dirtyForm = true;
+            }
+        }
         var staat = staatStore.getById(ortrecord.get('staatId'));
-        var kdaStore = Ext.StoreManager.get('koordinatenart');
-        var kda = kdaStore.getById(ortrecord.get('kdaId'));
+        var ozStore = Ext.StoreManager.get('ortszusatz');
+        var ozid = ozStore.getById(ortrecord.get('ozId'));
         var ortinfo = this.down('ortinfo');
         ortinfo.loadRecord(ortrecord);
         if (verw !== null) {
@@ -213,11 +220,18 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         } else {
             ortinfo.getForm().setValues({staat: '', staatISO: ''});
         }
-        if (kda !== null) {
-            ortinfo.getForm().setValues({
-                koordinatenart: kda.get('koordinatenart')});
+        if (ozid !== null) {
+            if (dirtyForm) {
+                this.down('ortszusatz').setValue(ozid.get('ozsId'));
+            } else {
+                if (this.record.get('ozId') === undefined) {
+                    this.down('ortszusatz').setValue(ozid.get('ozsId'));
+                }
+            }
         } else {
-            ortinfo.getForm().setValues({koordinatenart: ''});
+            if ( (this.record.get('ozId') === undefined) || dirtyForm === true) {
+                this.down('ortszusatz').setValue('');
+            }
         }
     },
 
