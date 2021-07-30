@@ -24,9 +24,9 @@ Ext.define('Lada.view.widget.KoordinatenArt', {
     forceSelection: true,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{idfGeoKey} - {koordinatenart}</div></tpl>'),
+            '{id} - {koordinatenart}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{idfGeoKey} - {koordinatenart}</tpl>'),
+        '<tpl for=".">{id} - {koordinatenart}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
