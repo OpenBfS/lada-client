@@ -181,7 +181,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('orte.ozId'),
             dataIndex: 'ozId',
-            width: 80,
+            width: 80
         }, {
             header: i18n.getMsg('orte.anlageId'),
             dataIndex: 'ortId',

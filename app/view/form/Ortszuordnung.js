@@ -200,7 +200,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         if (this.down('ortinfo').getForm().getRecord() !== undefined) {
             if (ortrecord.get('ortId') !==
                 this.down('ortinfo').getForm().getRecord().get('ortId') ) {
-                    dirtyForm = true;
+                dirtyForm = true;
             }
         }
         var staat = staatStore.getById(ortrecord.get('staatId'));

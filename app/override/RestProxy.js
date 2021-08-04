@@ -92,7 +92,7 @@ Ext.define('Lada.override.RestProxy', {
         //This should be the response to the request to the lada server
         var response = responseObj.responseText;
         var parser = new DOMParser();
-        var xmlDoc = parser.parseFromString(response,"text/html");
+        var xmlDoc = parser.parseFromString(response, 'text/html');
         //Parameters can be found as value of hidden input fields
         var idpUrl = this.getActionUrl(responseObj);
         var inputFields = xmlDoc.getElementsByTagName('input');
@@ -101,7 +101,7 @@ Ext.define('Lada.override.RestProxy', {
             var field = inputFields[i];
             var name = field.getAttribute('name');
             var value = field.getAttribute('value');
-            if (name && name != "") {
+            if (name && name != '') {
                 params[name] = value;
             }
         }
@@ -122,7 +122,7 @@ Ext.define('Lada.override.RestProxy', {
     getActionUrl: function(responseObj) {
         var response = responseObj.responseText;
         var parser = new DOMParser();
-        var xmlDoc = parser.parseFromString(response,"text/html");
+        var xmlDoc = parser.parseFromString(response, 'text/html');
         return xmlDoc.getElementsByTagName('form')[0].getAttribute('action');
 
     },
@@ -134,10 +134,10 @@ Ext.define('Lada.override.RestProxy', {
     reload: function(btn, response, initialRequest) {
         var me = this;
         return new Ext.Promise(function(resolve, reject) {
-            Ext.Ajax.on("beforerequest",function(con){
+            Ext.Ajax.on('beforerequest', function(con) {
                 con.setUseDefaultXhrHeader(false);
                 con.setWithCredentials(true);
-              });
+            });
             if (btn === 'yes') {
                 //Get the idp base url
                 var idpBaseUrl = me.getActionUrl(response).match(/^https:\/\/[^\/]+/i);
@@ -149,7 +149,7 @@ Ext.define('Lada.override.RestProxy', {
                             information to the local storage */
                             var idpresponseText = idpresponse.responseText;
                             var parser = new DOMParser();
-                            var xmlDoc = parser.parseFromString(idpresponseText,"text/html");
+                            var xmlDoc = parser.parseFromString(idpresponseText, 'text/html');
                             //Parameters can be found as value of hidden input fields
                             var inputFields = xmlDoc.getElementsByTagName('input');
                             var params = {};
@@ -157,7 +157,7 @@ Ext.define('Lada.override.RestProxy', {
                                 var field = inputFields[i];
                                 var name = field.getAttribute('name');
                                 var value = field.getAttribute('value');
-                                if (name && name != "") {
+                                if (name && name != '') {
                                     params[name] = value;
                                 }
                             }
@@ -171,7 +171,7 @@ Ext.define('Lada.override.RestProxy', {
                             var scripts = xmlDoc.getElementsByTagName('script');
                             var infoScript;
                             for (var j = 0; j < scripts.length; j++) {
-                                var tag = scripts[j]
+                                var tag = scripts[j];
                                 if (tag.parentElement.className === 'container') {
                                     infoScript = tag;
                                 }
@@ -181,7 +181,7 @@ Ext.define('Lada.override.RestProxy', {
                             }
                             writeLocalStorage = function(key, value) {
                                 params = me.writeLocalStorage(key, value, params);
-                            }
+                            };
                             var funcText = infoScript.innerText;
                             funcText = funcText.replace('<!--', '');
                             funcText = funcText.replace('-->', '');
@@ -233,12 +233,12 @@ Ext.define('Lada.override.RestProxy', {
             } else {
                 localStorage.setItem(key, value);
             }
-            success = "true";
+            success = 'true';
         } catch (e) {
-            success = "false";
-            params["shib_idp_ls_exception." + key] = e;
+            success = 'false';
+            params['shib_idp_ls_exception.' + key] = e;
         }
-        params["shib_idp_ls_success." + key] = success;
+        params['shib_idp_ls_success.' + key] = success;
         return params;
     }
 });

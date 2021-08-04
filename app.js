@@ -125,7 +125,7 @@ Ext.application({
         noCache: true
     },
 
-    beforeCloseHandler: function (evt){
+    beforeCloseHandler: function(evt) {
         var i18n = Lada.getApplication().bundle;
         // match different handling from different browsers
         var confirmMessage = i18n.getMsg('window.confirmclose');
