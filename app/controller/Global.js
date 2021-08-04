@@ -40,12 +40,15 @@ Ext.define('Lada.controller.Global', {
         Ext.Ajax.setWithCredentials(true);
         Ext.Ajax.request({
             url: '/Shibboleth.sso/Logout',
-            success: function(response) {
-                window.removeEventListener('beforeunload', Lada.getApplication().beforeCloseHandler);
+            success: function() {
+                window.removeEventListener(
+                    'beforeunload', Lada.getApplication().beforeCloseHandler);
                 window.location.reload();
             },
-            failure: function(response) {
-                Ext.Msg.alert(i18n.getMsg('err.msg.slo.failed.title'), i18n.getMsg('err.msg.slo.failed.body'));
+            failure: function() {
+                Ext.Msg.alert(
+                    i18n.getMsg('err.msg.slo.failed.title'),
+                    i18n.getMsg('err.msg.slo.failed.body'));
             }
         });
     },

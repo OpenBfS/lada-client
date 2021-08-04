@@ -17,6 +17,8 @@
         "MouseEvent": true,
         "Uint8Array": true,
         "ClipboardJS": true,
+        "DOMParser": true,
+        "localStorage": true,
         "Koala": true
     },
     "rules": {

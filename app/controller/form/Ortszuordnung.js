@@ -174,7 +174,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         // the simple form.isDirty() check seems to fail for a lot of cases
         var ortIdIsDirty = true;
         if (
-            form.getRecord().data.ortId ==
+            form.getRecord().data.ortId ===
                 form.findField('ortId').getValue()
         ) {
             ortIdIsDirty = false;
@@ -201,7 +201,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         }
     },
 
-    dirtyChange: function(combo, value) {
+    dirtyChange: function(combo) {
         var ozf = combo.up('ortszuordnungform');
         ozf.form.owner.down('button[action=revert]').setDisabled(false);
         if (

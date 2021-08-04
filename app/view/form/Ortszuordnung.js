@@ -105,7 +105,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 width: 350,
                                 editable: true,
                                 name: 'ozId',
-                                fieldLabel: i18n.getMsg('ortszuordnung.form.field.ozId')
+                                fieldLabel: i18n.getMsg(
+                                    'ortszuordnung.form.field.ozId')
                             }, {
                                 // empty conttainer for vertical separation
                                 xtype: 'container',
@@ -229,7 +230,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                 }
             }
         } else {
-            if ( (this.record.get('ozId') === undefined) || dirtyForm === true) {
+            if (this.record.get('ozId') === undefined || dirtyForm === true) {
                 this.down('ortszusatz').setValue('');
             }
         }

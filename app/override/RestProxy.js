@@ -9,12 +9,14 @@
 Ext.define('Lada.override.RestProxy', {
     override: 'Ext.data.proxy.Rest',
 
-    processResponse: function(success, operation, request, response, callback, scope) {
-        //SSO will send an html form if session is expired. Check content type for json or html:
+    processResponse: function(
+        success, operation, request, response, callback, scope
+    ) {
+        /* SSO will send an html form if session is expired.
+         * Check content type for json or html: */
         var me = this;
-        var parent = this.callParent;
         var contentType = response.getAllResponseHeaders()['content-type'];
-        if (success == true && contentType !== 'application/json') {
+        if (success && contentType !== 'application/json') {
             var i18n = Lada.getApplication().bundle;
 
             Ext.MessageBox.confirm(
@@ -25,9 +27,11 @@ Ext.define('Lada.override.RestProxy', {
                         //Renew session
                         me.reload(btn, response, request).then(
                             //Success handler
-                            function(args) {
-                                /* As any request json data will be dropped during the redirects while
-                                renewing the session, the original request must be send once again */
+                            function() {
+                                /* As any request JSON data will be dropped
+                                 * during the redirects while renewing the
+                                 * session, the original request must be send
+                                 * once again */
                                 var jsonData = request.getJsonData();
                                 var origUrl = request.getUrl();
                                 var method = request.getMethod();
@@ -36,21 +40,31 @@ Ext.define('Lada.override.RestProxy', {
                                     method: method,
                                     jsonData: jsonData,
                                     callback: function(opts, succ, resp) {
-                                        me.processResponse(succ, operation, request, resp, callback, scope);
+                                        me.processResponse(
+                                            succ,
+                                            operation,
+                                            request,
+                                            resp,
+                                            callback,
+                                            scope);
                                     }
                                 });
                             },
                             //Failure handler
                             function() {
                                 Ext.MessageBox.alert({
-                                    title: i18n.getMsg('err.msg.sso.renew.failed.title'),
-                                    message: i18n.getMsg('err.msg.sso.renew.failed.body')
+                                    title: i18n.getMsg(
+                                        'err.msg.sso.renew.failed.title'),
+                                    message: i18n.getMsg(
+                                        'err.msg.sso.renew.failed.body')
                                 });
                             });
                     } catch (e) {
                         Ext.MessageBox.alert({
-                            title: i18n.getMsg('err.msg.sso.renew.failed.title'),
-                            message: i18n.getMsg('err.msg.sso.renew.failed.body')
+                            title: i18n.getMsg(
+                                'err.msg.sso.renew.failed.title'),
+                            message: i18n.getMsg(
+                                'err.msg.sso.renew.failed.body')
                         });
                     }
                 }
@@ -101,7 +115,7 @@ Ext.define('Lada.override.RestProxy', {
             var field = inputFields[i];
             var name = field.getAttribute('name');
             var value = field.getAttribute('value');
-            if (name && name != '') {
+            if (name && name !== '') {
                 params[name] = value;
             }
         }
@@ -131,7 +145,7 @@ Ext.define('Lada.override.RestProxy', {
      * Renew an expired shibboleth sp session using an Ext.Promise
      * to synchronize the requests.
      */
-    reload: function(btn, response, initialRequest) {
+    reload: function(btn, response) {
         var me = this;
         return new Ext.Promise(function(resolve, reject) {
             Ext.Ajax.on('beforerequest', function(con) {
@@ -140,84 +154,106 @@ Ext.define('Lada.override.RestProxy', {
             });
             if (btn === 'yes') {
                 //Get the idp base url
-                var idpBaseUrl = me.getActionUrl(response).match(/^https:\/\/[^\/]+/i);
+                var idpBaseUrl = me.getActionUrl(response).match(
+                    /^https:\/\/[^\/]+/i);
                 //Parse the first response form and send data back to idp
-                me.parseAuthenticationRequest(response, function(opts, success, idpresponse) {
-                    if (success == true) {
-                        try {
-                            /* The response should be a form and scripts to save session
-                            information to the local storage */
-                            var idpresponseText = idpresponse.responseText;
-                            var parser = new DOMParser();
-                            var xmlDoc = parser.parseFromString(idpresponseText, 'text/html');
-                            //Parameters can be found as value of hidden input fields
-                            var inputFields = xmlDoc.getElementsByTagName('input');
-                            var params = {};
-                            for (var i = 0; i < inputFields.length; i++) {
-                                var field = inputFields[i];
-                                var name = field.getAttribute('name');
-                                var value = field.getAttribute('value');
-                                if (name && name != '') {
-                                    params[name] = value;
+                me.parseAuthenticationRequest(
+                    response, function(opts, success, idpresponse) {
+                        if (success) {
+                            try {
+                                /* The response should be a form and scripts
+                                 * to save session information to the local
+                                 * storage */
+                                var idpresponseText = idpresponse.responseText;
+                                var parser = new DOMParser();
+                                var xmlDoc = parser.parseFromString(
+                                    idpresponseText, 'text/html');
+                                /* Parameters can be found as value of hidden
+                                 * input fields */
+                                var inputFields = xmlDoc.getElementsByTagName(
+                                    'input');
+                                var params = {};
+                                for (var i = 0; i < inputFields.length; i++) {
+                                    var field = inputFields[i];
+                                    var name = field.getAttribute('name');
+                                    var value = field.getAttribute('value');
+                                    if (name && name !== '') {
+                                        params[name] = value;
+                                    }
                                 }
-                            }
-                            var form = xmlDoc.getElementsByTagName('form').length > 0 ?
-                                    xmlDoc.getElementsByTagName('form')[0] : null;
-                            var execUrl = form ? idpBaseUrl + form.getAttribute('action') : null;
-                            var scripts = xmlDoc.getElementsByTagName('script');
-                            var wrappingDiv = xmlDoc.getElementsByClassName('wrapper').length > 0 ?
-                                    xmlDoc.getElementsByClassName('wrapper')[0] : null;
+                                var form = xmlDoc.getElementsByTagName('form')
+                                    .length > 0
+                                    ? xmlDoc.getElementsByTagName('form')[0]
+                                    : null;
+                                var execUrl = form
+                                    ? idpBaseUrl + form.getAttribute('action')
+                                    : null;
+                                var scripts = xmlDoc.getElementsByTagName(
+                                    'script');
+                                var wrappingDiv = xmlDoc.getElementsByClassName(
+                                    'wrapper').length > 0
+                                    ? xmlDoc.getElementsByClassName('wrapper')[0]
+                                    : null;
 
-                            var scripts = xmlDoc.getElementsByTagName('script');
-                            var infoScript;
-                            for (var j = 0; j < scripts.length; j++) {
-                                var tag = scripts[j];
-                                if (tag.parentElement.className === 'container') {
-                                    infoScript = tag;
+                                var infoScript;
+                                for (var j = 0; j < scripts.length; j++) {
+                                    var tag = scripts[j];
+                                    if (tag.parentElement.className === 'container') {
+                                        infoScript = tag;
+                                    }
                                 }
+                                if (!form || !execUrl || !scripts
+                                    || !wrappingDiv || !scripts || !infoScript
+                                   ) {
+                                    reject();
+                                }
+                                writeLocalStorage = function(key, val) {
+                                    params = me.writeLocalStorage(
+                                        key, val, params);
+                                };
+                                var funcText = infoScript.innerText;
+                                funcText = funcText.replace('<!--', '');
+                                funcText = funcText.replace('-->', '');
+                                funcText = funcText.replace(
+                                    'function doSave() {', '');
+                                funcText = funcText.replace(
+                                    'document.form1.submit()', '');
+                                funcText = funcText.replace('}', '');
+                                var doSave = new Function(funcText);
+                                doSave.call();
+                            } catch (e) {
+                                reject('Renewing session failed');
                             }
-                            if (!form || !execUrl || !scripts || !wrappingDiv || !scripts || !infoScript) {
-                                reject();
-                            }
-                            writeLocalStorage = function(key, value) {
-                                params = me.writeLocalStorage(key, value, params);
-                            };
-                            var funcText = infoScript.innerText;
-                            funcText = funcText.replace('<!--', '');
-                            funcText = funcText.replace('-->', '');
-                            funcText = funcText.replace('function doSave() {', '');
-                            funcText = funcText.replace('document.form1.submit()', '');
-                            funcText = funcText.replace('}', '');
-                            var doSave = new Function(funcText);
-                            doSave.call();
-                        } catch (e) {
-                            reject('Renewing session failed');
-                        }
-                        //Issue the last request to the idp
-                        Ext.Ajax.request({
-                            url: execUrl,
-                            method: 'POST',
-                            params: params,
-                            callback: function(opts, success, idpresponse) {
-                                if (success == true) {
-                                    /* Parse saml response parameters and send to sp.
-                                    This request should be redirected to the actual rest service */
-                                    try {
-                                        me.parseAuthenticationRequest(idpresponse, function() {
-                                            resolve(arguments);
-                                        });
-                                    } catch (e) {
+                            //Issue the last request to the idp
+                            Ext.Ajax.request({
+                                url: execUrl,
+                                method: 'POST',
+                                params: params,
+                                callback: function(
+                                    opt, SAMLSuccess, SAMLResponse
+                                ) {
+                                    if (SAMLSuccess) {
+                                        /* Parse SAML response parameters and
+                                         * send to SP. This request should be
+                                         * redirected to the actual REST service
+                                         */
+                                        try {
+                                            me.parseAuthenticationRequest(
+                                                SAMLResponse, function() {
+                                                    resolve(arguments);
+                                                });
+                                        } catch (e) {
+                                            reject('Renewing session failed');
+                                        }
+                                    } else {
                                         reject('Renewing session failed');
                                     }
-                                } else {
-                                    reject('Renewing session failed');
                                 }
-                            }
-                        });
-                    } else {
-                        reject('Renewing session failed');
-                    }
-                });
+                            });
+                        } else {
+                            reject('Renewing session failed');
+                        }
+                    });
             }
         });
     },
@@ -228,7 +264,7 @@ Ext.define('Lada.override.RestProxy', {
     writeLocalStorage: function(key, value, params) {
         var success;
         try {
-            if (value == null || value.length == 0) {
+            if (value === null || value.length === 0) {
                 localStorage.removeItem(key);
             } else {
                 localStorage.setItem(key, value);

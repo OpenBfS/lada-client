@@ -247,9 +247,9 @@ Ext.application({
                     return;
                 }
             }
-        }
-        catch (e) {
-            // This is likely a 404 or some unknown error. Show general error then.
+        } catch (e) {
+            /* This is likely a 404 or some unknown error.
+             * Show general error then. */
         }
         Ext.MessageBox.alert(i18n.getMsg('err.init.generic.title'),
             i18n.getMsg('err.init.generic.msg'));
@@ -630,10 +630,10 @@ Ext.application({
     },
 
     /**
-     * Fix for odd behavior of some browsers in the toExponential(digits) function
-     * (MS Edge falsely rounds down some least significant digits
+     * Fix for odd behavior of some browsers in the toExponential(digits)
+     * function (MS Edge falsely rounds down some least significant digits).
      * @param {Number} value the numerical value to parse
-     * @param {Number} digits the amount of digits as in the toExponential fucntion
+     * @param {Number} digits the amount of digits as in toExponential()
      * @returns {String}
      */
     toExponentialString: function(value, digits) {
