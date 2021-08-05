@@ -15,8 +15,9 @@ Ext.define('Lada.override.RestProxy', {
         /* SSO will send an html form if session is expired.
          * Check content type for json or html: */
         var me = this;
-        var contentType = response.getAllResponseHeaders()['content-type'];
-        if (success && contentType !== 'application/json') {
+        if (success
+            && response.getResponseHeader('content-type') !== 'application/json'
+           ) {
             var i18n = Lada.getApplication().bundle;
 
             Ext.MessageBox.confirm(
@@ -198,7 +199,9 @@ Ext.define('Lada.override.RestProxy', {
                                 var infoScript;
                                 for (var j = 0; j < scripts.length; j++) {
                                     var tag = scripts[j];
-                                    if (tag.parentElement.className === 'container') {
+                                    if (tag.parentElement.className
+                                        === 'container'
+                                       ) {
                                         infoScript = tag;
                                     }
                                 }
