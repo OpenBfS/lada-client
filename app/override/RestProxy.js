@@ -207,10 +207,6 @@ Ext.define('Lada.override.RestProxy', {
                                    ) {
                                     reject();
                                 }
-                                writeLocalStorage = function(key, val) {
-                                    params = me.writeLocalStorage(
-                                        key, val, params);
-                                };
                                 var funcText = infoScript.innerText;
                                 funcText = funcText.replace('<!--', '');
                                 funcText = funcText.replace('-->', '');
@@ -256,25 +252,5 @@ Ext.define('Lada.override.RestProxy', {
                     });
             }
         });
-    },
-
-    /**
-     * Write session info to local storage and set params accordingly
-     */
-    writeLocalStorage: function(key, value, params) {
-        var success;
-        try {
-            if (value === null || value.length === 0) {
-                localStorage.removeItem(key);
-            } else {
-                localStorage.setItem(key, value);
-            }
-            success = 'true';
-        } catch (e) {
-            success = 'false';
-            params['shib_idp_ls_exception.' + key] = e;
-        }
-        params['shib_idp_ls_success.' + key] = success;
-        return params;
     }
 });
