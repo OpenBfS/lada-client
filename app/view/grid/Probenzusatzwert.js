@@ -28,6 +28,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
     recordId: null,
     readOnly: true,
     allowDeselect: true,
+    pzStore: null,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
@@ -90,7 +91,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             },
             editor: {
                 xtype: 'combobox',
-                store: Ext.data.StoreManager.get('probenzusaetze'),
+                store: this.pzStore,
                 displayField: 'beschreibung',
                 name: 'beschreibung',
                 valueField: 'id',
@@ -138,9 +139,9 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 if (!value || value === '') {
                     return '';
                 }
-                var zstore = Ext.data.StoreManager.get('probenzusaetze');
+                var zStore = this.zStore;
                 var mstore = Ext.data.StoreManager.get('messeinheiten');
-                var mehId = zstore.getById(value).get('messEinheitId');
+                var mehId = zStore.getById(value).get('messEinheitId');
                 var record = mstore.findRecord(
                     'id', mehId, 0, false, false, true);
                 if (!record) {
