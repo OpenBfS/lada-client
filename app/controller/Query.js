@@ -1093,14 +1093,14 @@ Ext.define('Lada.controller.Query', {
      */
     setrowtarget: function() {
         var rowHierarchy = [
+            'id',
             'messungId',
             'probeId',
             'mpId',
             'ortId',
             'probenehmer',
             'dsatzerz',
-            'mprkat',
-            'id'
+            'mprkat'
         ];
         var result = {
             dataType: null,
