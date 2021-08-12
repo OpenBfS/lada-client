@@ -127,7 +127,7 @@ Ext.define('Lada.view.window.ImportResponse', {
             html += i18n.getMsg(response.message) + ':<br/>'
                 + response.data;
         }
-        me.down('panel').setHtml(me.down('panel').html + html);
+        me.down('panel').setHtml(me.down('panel').html + me.download);
     },
 
     /**
@@ -182,11 +182,15 @@ Ext.define('Lada.view.window.ImportResponse', {
         } else {
             numWarnings = Object.keys(warnings).length;
         }
-        if (!data.success) {
+        if (!data.success && numErrors == 0) {
             out.push(i18n.getMsg('importResponse.failure.server',
                 this.fileName));
         } else {
             if (numErrors > 0) {
+                if (!data.success) {
+                    out.push(i18n.getMsg('importResponse.failure.mandatory'));
+                    out.push('<p/>');
+                }
                 if (errors.Parser) {
                     out.push(
                         i18n.getMsg('importResponse.failure', this.fileName));
@@ -267,7 +271,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         var numNotifications = Ext.isObject(notifications) ?
             Object.keys(notifications).length :
             0;
-        if (!data.success) {
+        if (!data.success && numErrors == 0) {
             if (divHtml) {
                 out.push(divStyle + i18n.getMsg(
                     'importResponse.failure.server', this.fileName) + '</DIV>');
@@ -283,6 +287,10 @@ Ext.define('Lada.view.window.ImportResponse', {
                 out.push(divStyle);
             }
             if (numErrors > 0) {
+                if (!data.success) {
+                    out.push(i18n.getMsg('importResponse.failure.mandatory'));
+                    out.push('<p/>');
+                }
                 out.push(i18n.getMsg('importResponse.failure.errorlist'));
                 out.push('<br/>');
                 out.push('<ol>');
