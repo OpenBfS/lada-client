@@ -139,7 +139,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 if (!value || value === '') {
                     return '';
                 }
-                var zStore = this.zStore;
+                var zStore = Ext.data.StoreManager.get('probenzusaetze');
                 var mstore = Ext.data.StoreManager.get('messeinheiten');
                 var mehId = zStore.getById(value).get('messEinheitId');
                 var record = mstore.findRecord(
