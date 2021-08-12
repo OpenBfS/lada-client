@@ -22,8 +22,7 @@ Ext.define('Lada.view.window.GridExport', {
     collapsible: true,
     maximizable: true,
     autoShow: true,
-    layout: 'vbox',
-    align: 'stretch',
+    layout: 'fit',
     grid: null,
 
     /** the column defining the geometry data for geojson export */
@@ -179,168 +178,175 @@ Ext.define('Lada.view.window.GridExport', {
         // create comboboxes and checkboxes
         this.items = [{
             xtype: 'container',
-            name: 'form',
-            layout: 'vbox',
-            align: 'stretch',
-            defaults: {
-                displayField: 'name',
-                valueField: 'value',
-                labelWidth: 200,
-                width: 400
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
             },
             items: [{
-                xtype: 'combobox',
-                fieldLabel: i18n.getMsg('export.format'),
-                name: 'formatselection',
-                store: me.formatStore,
-                value: 'csv',
-                listeners: {
-                    change: me.changeFormat
-                }
-            }, {
-                xtype: 'checkbox',
-                name: 'allcolumns',
-                fieldLabel: i18n.getMsg('export.allcolumns'),
-                checked: true,
-                listeners: {
-                    change: me.exportallcolumntoggle
-                }
-            }, {
-                xtype: 'checkbox',
-                name: 'secondarycolumns',
-                fieldLabel: i18n.getMsg('export.secondarycolumns'),
-                checked: this.grid.exportRowexp ? true: false,
-                listeners: {
-                    change: me.exportsecondarytoggle
+                xtype: 'container',
+                name: 'form',
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'
                 },
-                hidden: true
-            }, {
-                xtype: 'checkbox',
-                name: 'allrows',
-                fieldLabel: i18n.getMsg('export.allrows'),
-                listeners: {
-                    change: me.checkExportButton
-                }
-            }, {
-                xtype: 'tagfield',
-                name: 'exportcolumns',
-                labelWidth: 100,
-                fieldLabel: i18n.getMsg('export.columns'),
-                store: me.columnListStore,
-                hidden: true,
-                value: preselected,
-                multiSelect: true,
-                listeners: {
-                    change: function() {
-                        me.resetCopyButton(me);
-                    }
-                }
-            }, {
-                xtype: 'tagfield',
-                name: 'exportexpcolumns',
-                labelWidth: 100,
-                fieldLabel: i18n.getMsg('export.expcolumns'),
-                store: me.expcolumnList,
-                hidden: true,
-                value: null,
-                multiSelect: true,
-                listeners: {
-                    change: function() {
-                        me.resetCopyButton(me);
-                    }
-                }
-            }, {
-                xtype: 'combobox',
-                fieldLabel: i18n.getMsg('encoding'),
-                allowBlank: false,
-                displayField: 'name',
-                valueField: 'value',
-                name: 'encoding',
-                valueNotFoundText: i18n.getMsg('notfound'),
-                margin: '3, 3, 3, 3',
-                store: Ext.create('Ext.data.Store', {
-                    fields: ['name', 'value'],
-                    data: [{
-                        name: 'ISO-8859-15',
-                        value: 'iso-8859-15'
-                    }, {
-                        name: 'UTF-8',
-                        value: 'utf-8'
-                    }]
-                }),
-                value: 'iso-8859-15'
-            }, {
-                xtype: 'fieldset',
-                title: i18n.getMsg('export.csvdetails'),
-                collapsible: true,
-                collapsed: true,
-                name: 'csvoptions',
-                visible: false,
-                margins: '5,5,5,5',
-                align: 'end',
                 defaults: {
                     displayField: 'name',
                     valueField: 'value',
-                    labelWidth: 120
+                    labelWidth: 200
                 },
                 items: [{
                     xtype: 'combobox',
-                    name: 'linesep',
-                    store: me.csv_linesepstore,
-                    fieldLabel: i18n.getMsg('export.linesep'),
-                    value: 'windows'
+                    fieldLabel: i18n.getMsg('export.format'),
+                    name: 'formatselection',
+                    store: me.formatStore,
+                    value: 'csv',
+                    listeners: {
+                        change: me.changeFormat
+                    }
+                }, {
+                    xtype: 'checkbox',
+                    name: 'allcolumns',
+                    fieldLabel: i18n.getMsg('export.allcolumns'),
+                    checked: true,
+                    listeners: {
+                        change: me.exportallcolumntoggle
+                    }
+                }, {
+                    xtype: 'checkbox',
+                    name: 'secondarycolumns',
+                    fieldLabel: i18n.getMsg('export.secondarycolumns'),
+                    checked: this.grid.exportRowexp ? true: false,
+                    listeners: {
+                        change: me.exportsecondarytoggle
+                    },
+                    hidden: true
+                }, {
+                    xtype: 'checkbox',
+                    name: 'allrows',
+                    fieldLabel: i18n.getMsg('export.allrows'),
+                    listeners: {
+                        change: me.checkExportButton
+                    }
+                }, {
+                    xtype: 'tagfield',
+                    name: 'exportcolumns',
+                    labelWidth: 100,
+                    fieldLabel: i18n.getMsg('export.columns'),
+                    store: me.columnListStore,
+                    hidden: true,
+                    value: preselected,
+                    multiSelect: true,
+                    listeners: {
+                        change: function() {
+                            me.resetCopyButton(me);
+                        }
+                    }
+                }, {
+                    xtype: 'tagfield',
+                    name: 'exportexpcolumns',
+                    labelWidth: 100,
+                    fieldLabel: i18n.getMsg('export.expcolumns'),
+                    store: me.expcolumnList,
+                    hidden: true,
+                    value: null,
+                    multiSelect: true,
+                    listeners: {
+                        change: function() {
+                            me.resetCopyButton(me);
+                        }
+                    }
                 }, {
                     xtype: 'combobox',
-                    name: 'textlim',
-                    fieldLabel: i18n.getMsg('export.textsep'),
-                    store: me.csv_textlimstore,
-                    value: 'doublequote'
+                    fieldLabel: i18n.getMsg('encoding'),
+                    allowBlank: false,
+                    displayField: 'name',
+                    valueField: 'value',
+                    name: 'encoding',
+                    valueNotFoundText: i18n.getMsg('notfound'),
+                    margin: '3, 3, 3, 3',
+                    store: Ext.create('Ext.data.Store', {
+                        fields: ['name', 'value'],
+                        data: [{
+                            name: 'ISO-8859-15',
+                            value: 'iso-8859-15'
+                        }, {
+                            name: 'UTF-8',
+                            value: 'utf-8'
+                        }]
+                    }),
+                    value: 'iso-8859-15'
                 }, {
-                    xtype: 'combobox',
-                    name: 'colsep',
-                    fieldLabel: i18n.getMsg('export.columnlim'),
-                    store: me.csv_colsepstore,
-                    value: 'semicolon'
+                    xtype: 'fieldset',
+                    title: i18n.getMsg('export.csvdetails'),
+                    collapsible: true,
+                    collapsed: true,
+                    name: 'csvoptions',
+                    visible: false,
+                    margins: '5,5,5,5',
+                    align: 'end',
+                    defaults: {
+                        displayField: 'name',
+                        valueField: 'value',
+                        labelWidth: 120
+                    },
+                    items: [{
+                        xtype: 'combobox',
+                        name: 'linesep',
+                        store: me.csv_linesepstore,
+                        fieldLabel: i18n.getMsg('export.linesep'),
+                        value: 'windows'
+                    }, {
+                        xtype: 'combobox',
+                        name: 'textlim',
+                        fieldLabel: i18n.getMsg('export.textsep'),
+                        store: me.csv_textlimstore,
+                        value: 'doublequote'
+                    }, {
+                        xtype: 'combobox',
+                        name: 'colsep',
+                        fieldLabel: i18n.getMsg('export.columnlim'),
+                        store: me.csv_colsepstore,
+                        value: 'semicolon'
+                    }, {
+                        xtype: 'combobox',
+                        name: 'decsep',
+                        store: me.csv_decSepStore,
+                        fieldLabel: i18n.getMsg('decimalseparator'),
+                        value: 'comma'
+                    }]
                 }, {
-                    xtype: 'combobox',
-                    name: 'decsep',
-                    store: me.csv_decSepStore,
-                    fieldLabel: i18n.getMsg('decimalseparator'),
-                    value: 'comma'
+                    xtype: 'textfield',
+                    name: 'filename',
+                    margin: '3, 3, 3, 3',
+                    fieldLabel: i18n.getMsg('export.filename'),
+                    allowBlank: true,
+                    editable: true
+                }, {
+                    xtype: 'downloadqueuegrid',
+                    store: 'downloadqueue-export'
                 }]
             }, {
-                xtype: 'textfield',
-                name: 'filename',
-                margin: '3, 3, 3, 3',
-                fieldLabel: i18n.getMsg('export.filename'),
-                allowBlank: true,
-                editable: true
-            }, {
-                xtype: 'downloadqueuegrid',
-                store: 'downloadqueue-export',
-                width: '100%'
-            }]
-        }, {
-            xtype: 'container',
-            layout: 'hbox',
-            defaults: {
-                margin: '5,5,5,5'
-            },
-            items: [{
-                xtype: 'button',
-                action: 'export',
-                text: i18n.getMsg('export.button')
-            }, {
-                xtype: 'button',
-                action: 'close',
-                text: i18n.getMsg('close')
-            }, {
-                xtype: 'button',
-                action: 'copyGeoJson',
-                icon: 'resources/img/map_add.png',
-                iconAlign: 'left',
-                text: i18n.getMsg('export.button.copy'),
-                hidden: true
+                xtype: 'container',
+                layout: 'hbox',
+                defaults: {
+                    margin: '5,5,5,5'
+                },
+                items: [{
+                    xtype: 'button',
+                    action: 'export',
+                    text: i18n.getMsg('export.button')
+                }, {
+                    xtype: 'button',
+                    action: 'close',
+                    text: i18n.getMsg('close')
+                }, {
+                    xtype: 'button',
+                    action: 'copyGeoJson',
+                    icon: 'resources/img/map_add.png',
+                    iconAlign: 'left',
+                    text: i18n.getMsg('export.button.copy'),
+                    hidden: true
+                }]
             }]
         }];
         this.callParent(arguments);
