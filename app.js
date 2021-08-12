@@ -147,24 +147,6 @@ Ext.application({
             return '"' + Ext.Date.format(o, 'c') + '"';
         };
 
-        //Set up an event handler to handle session timeouts
-        // TODO: Obsolete code? In case of a session timeout, an HTML form
-        // is send with status code 200. See RestProxy.processResponse().
-        Ext.Ajax.on('requestexception', function(conn, response) {
-            if (response.status === 0 && response.responseText === '') {
-                var i18n = Lada.getApplication().bundle;
-                Ext.MessageBox.confirm(
-                    i18n.getMsg('err.msg.sso.expired.title'),
-                    i18n.getMsg('err.msg.sso.expired.body'),
-                    function(btn) {
-                        if (btn === 'yes') {
-                            window.location.reload();
-                        }
-                    }
-                );
-            }
-        });
-
         Lada.username = '';
         Lada.userroles = '';
         Lada.logintime = '';
