@@ -17,7 +17,7 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
         'Lada.model.MessprogrammKategorie'
     ],
 
-    model: 'Lada.model.MessporgrammKategorie',
+    model: 'Lada.model.MessprogrammKategorie',
     border: false,
     layout: {
         type: 'vbox',
