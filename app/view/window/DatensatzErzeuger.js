@@ -89,6 +89,7 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
         this.removeAll();
         this.add([{
             border: false,
+            layout: 'fit',
             items: [{
                 xtype: 'datensatzerzeugerform',
                 record: this.record
