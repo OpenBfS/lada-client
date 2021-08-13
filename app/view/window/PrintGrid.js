@@ -47,10 +47,13 @@ Ext.define('Lada.view.window.PrintGrid', {
     dokPoolEnabled: true,
 
     constrain: true,
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
 
     defaults: {
         margin: '5, 5, 5, 5',
-        width: '100%',
         border: false
     },
 
@@ -88,13 +91,15 @@ Ext.define('Lada.view.window.PrintGrid', {
         this.title = i18n.getMsg('print.window.title');
         this.templateStore.sort('name', 'ASC');
         this.items = [{
-            layout: 'vbox',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
             minWidth: 500,
             border: false,
             scrollable: true,
             defaults: {
-                margin: '5 5 5 5',
-                width: '100%'
+                margin: '5 5 5 5'
             },
             items: [{
                 xtype: 'combobox',
@@ -133,7 +138,6 @@ Ext.define('Lada.view.window.PrintGrid', {
                 xtype: 'panel',
                 name: 'generic-fieldset',
                 border: false,
-                width: '100%',
                 margin: '0 135 0 0'
             }, {
                 xtype: 'fieldset',
@@ -173,8 +177,7 @@ Ext.define('Lada.view.window.PrintGrid', {
                 hidden: true
             }, {
                 xtype: 'downloadqueuegrid',
-                store: 'downloadqueue-print',
-                width: '100%'
+                store: 'downloadqueue-print'
             }]
         }];
         this.buttons = [{
@@ -213,7 +216,6 @@ Ext.define('Lada.view.window.PrintGrid', {
             name: 'irix-fieldset-checkbox',
             boxLabel: 'DokPool:',
             boxLabelAlign: 'before',
-            width: '100%',
             border: false,
             checked: this.config.chartPrint,
             disabled: printDisabled,
