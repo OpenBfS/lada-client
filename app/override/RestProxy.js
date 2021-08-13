@@ -17,7 +17,7 @@ Ext.define('Lada.override.RestProxy', {
         var me = this;
         if (success
             && response.getResponseHeader('content-type') !== 'application/json'
-           ) {
+        ) {
             var i18n = Lada.getApplication().bundle;
 
             Ext.MessageBox.confirm(
@@ -192,8 +192,8 @@ Ext.define('Lada.override.RestProxy', {
                                 var scripts = xmlDoc.getElementsByTagName(
                                     'script');
                                 var wrappingDiv = xmlDoc.getElementsByClassName(
-                                    'wrapper').length > 0
-                                    ? xmlDoc.getElementsByClassName('wrapper')[0]
+                                    'wrapper').length > 0 ?
+                                    xmlDoc.getElementsByClassName('wrapper')[0]
                                     : null;
 
                                 var infoScript;
@@ -201,13 +201,13 @@ Ext.define('Lada.override.RestProxy', {
                                     var tag = scripts[j];
                                     if (tag.parentElement.className
                                         === 'container'
-                                       ) {
+                                    ) {
                                         infoScript = tag;
                                     }
                                 }
                                 if (!form || !execUrl || !scripts
                                     || !wrappingDiv || !scripts || !infoScript
-                                   ) {
+                                ) {
                                     reject();
                                 }
                                 var funcText = infoScript.innerText;
@@ -218,6 +218,7 @@ Ext.define('Lada.override.RestProxy', {
                                 funcText = funcText.replace(
                                     'document.form1.submit()', '');
                                 funcText = funcText.replace('}', '');
+                                //eslint-disable-next-line no-new-func
                                 var doSave = new Function(funcText);
                                 doSave.call();
                             } catch (e) {

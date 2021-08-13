@@ -666,7 +666,7 @@ Ext.define('Lada.controller.form.Probe', {
                 if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                  i18n.getMsg('err.msg.generic.body'));
+                        i18n.getMsg('err.msg.generic.body'));
                 } else {
                     button.setDisabled(true);
                     button.up('toolbar').down('button[action=discard]')
@@ -679,11 +679,11 @@ Ext.define('Lada.controller.form.Probe', {
                     if (json) {
                         if (json.message) {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                          +' #'+json.message,
-                                          i18n.getMsg(json.message));
+                                +' #'+json.message,
+                            i18n.getMsg(json.message));
                         } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                          i18n.getMsg('err.msg.generic.body'));
+                                i18n.getMsg('err.msg.generic.body'));
                         }
                         button.setDisabled(true);
                         button.up('toolbar').down('button[action=discard]')
@@ -711,7 +711,7 @@ Ext.define('Lada.controller.form.Probe', {
                         }
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                      i18n.getMsg('err.msg.response.body'));
+                            i18n.getMsg('err.msg.response.body'));
                     }
                 }
             }

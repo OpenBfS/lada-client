@@ -182,7 +182,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         } else {
             numWarnings = Object.keys(warnings).length;
         }
-        if (!data.success && numErrors == 0) {
+        if (!data.success && numErrors === 0) {
             out.push(i18n.getMsg('importResponse.failure.server',
                 this.fileName));
         } else {
@@ -271,7 +271,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         var numNotifications = Ext.isObject(notifications) ?
             Object.keys(notifications).length :
             0;
-        if (!data.success && numErrors == 0) {
+        if (!data.success && numErrors === 0) {
             if (divHtml) {
                 out.push(divStyle + i18n.getMsg(
                     'importResponse.failure.server', this.fileName) + '</DIV>');
@@ -294,7 +294,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                 out.push(i18n.getMsg('importResponse.failure.errorlist'));
                 out.push('<br/>');
                 out.push('<ol>');
-                var msgs, parts, str;
+                var msgs, parts, str, keySplit;
                 for (var key in errors) {
                     msgs = errors[key];
                     if (key !== 'parser') {
@@ -424,7 +424,7 @@ Ext.define('Lada.view.window.ImportResponse', {
                     validation.push(i18n.getMsg(
                         'importResponse.notifications.validations'));
                     for (var i5 = msgs.length - 1; i5 >= 0; i5--) {
-                        keySplit = msgs[i5].key.split('#')
+                        keySplit = msgs[i5].key.split('#');
                         if (keySplit[0] === 'validation') {
                             validation.push('<ol>');
                             parts = msgs[i5].value.split('#');
