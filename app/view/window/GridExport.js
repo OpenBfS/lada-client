@@ -18,12 +18,13 @@ Ext.define('Lada.view.window.GridExport', {
         margin: '5, 5, 5, 5',
         border: false
     },
-
     collapsible: true,
     maximizable: true,
     autoShow: true,
-    layout: 'vbox',
-    align: 'stretch',
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
     grid: null,
 
     /** the column defining the geometry data for geojson export */
@@ -180,8 +181,10 @@ Ext.define('Lada.view.window.GridExport', {
         this.items = [{
             xtype: 'container',
             name: 'form',
-            layout: 'vbox',
-            align: 'stretch',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
             defaults: {
                 displayField: 'name',
                 valueField: 'value',
@@ -271,6 +274,10 @@ Ext.define('Lada.view.window.GridExport', {
                 value: 'iso-8859-15'
             }, {
                 xtype: 'fieldset',
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'
+                },
                 title: i18n.getMsg('export.csvdetails'),
                 collapsible: true,
                 collapsed: true,
@@ -317,12 +324,10 @@ Ext.define('Lada.view.window.GridExport', {
                 editable: true
             }, {
                 xtype: 'downloadqueuegrid',
-                store: 'downloadqueue-export',
-                width: '100%'
+                store: 'downloadqueue-export'
             }]
         }, {
             xtype: 'container',
-            layout: 'hbox',
             defaults: {
                 margin: '5,5,5,5'
             },
@@ -855,7 +860,10 @@ Ext.define('Lada.view.window.GridExport', {
         Ext.create('Ext.window.Window', {
             title: title,
             modal: true,
-            layout: 'vbox',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
             items: [{
                 xtype: 'container',
                 html: text,

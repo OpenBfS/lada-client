@@ -16,7 +16,10 @@ Ext.define('Lada.view.window.FileUpload', {
         'Lada.view.window.ImportResponse'
     ],
 
-    layout: 'vbox',
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
 
     files: null,
     fileNames: null,
@@ -26,7 +29,6 @@ Ext.define('Lada.view.window.FileUpload', {
     resultWin: null,
 
     defaults: {
-        maxWidth: 240,
         width: 240,
         labelAlign: 'top'
     },
@@ -156,8 +158,9 @@ Ext.define('Lada.view.window.FileUpload', {
                 }
             }),
             Ext.create('Ext.container.Container', {
-                flex: 1,
-                layout: 'hbox',
+                layout: {
+                    type: 'hbox'
+                },
                 items: [{
                     xtype: 'button',
                     text: i18n.getMsg('save'),

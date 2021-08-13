@@ -17,8 +17,10 @@ Ext.define('Lada.view.window.ChangeKDA', {
     ],
     collapsible: false,
     maximizable: false,
-    layout: 'vbox',
-    align: 'end',
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
     defaults: {
         labelWidth: 140,
         margin: '5,0,5,0'

@@ -63,14 +63,19 @@ Ext.define('Lada.view.form.Probenehmer', {
         }];
         this.items = [{
             border: false,
-            align: 'stretch',
-            layout: 'vbox',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
             margin: '5, 5, 5, 5',
             defaults: {
                 border: false
             },
             items: [{
-                layout: 'vbox',
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'
+                },
                 defaults: {
                     border: false,
                     margin: '5 5 5 5'
@@ -78,7 +83,6 @@ Ext.define('Lada.view.form.Probenehmer', {
                 items: [{
                     layout: 'hbox',
                     border: false,
-                    width: '100%',
                     items: [{
                         xtype: 'tfield',
                         name: 'prnId',
@@ -149,7 +153,6 @@ Ext.define('Lada.view.form.Probenehmer', {
                     layout: 'hbox',
                     margin: '5 5 0 5',
                     border: false,
-                    width: '100%',
                     items: [{
                         xtype: 'tfield',
                         name: 'tourenplan',
@@ -173,7 +176,10 @@ Ext.define('Lada.view.form.Probenehmer', {
                     xtype: 'fieldset',
                     title: i18n.getMsg('address'),
                     border: true,
-                    layout: 'vbox',
+                    layout: {
+                        type: 'vbox',
+                        align: 'stretch'
+                    },
                     items: [{
                         xtype: 'tfield',
                         name: 'betrieb',
@@ -181,7 +187,6 @@ Ext.define('Lada.view.form.Probenehmer', {
                         labelWidth: 100,
                         margin: '5 10 5 10',
                         readOnly: true,
-                        width: '100%',
                         maxLength: 80
                     }, {
                         xtype: 'tfield',
@@ -190,10 +195,11 @@ Ext.define('Lada.view.form.Probenehmer', {
                         labelWidth: 100,
                         margin: '5 10 5 10',
                         readOnly: true,
-                        width: '100%',
                         maxLength: 30
                     }, {
-                        layout: 'hbox',
+                        layout: {
+                            type: 'hbox'
+                        },
                         border: false,
                         margin: '5 10 5 10',
                         items: [{

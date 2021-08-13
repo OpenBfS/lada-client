@@ -21,7 +21,10 @@ Ext.define('Lada.view.window.SetStatus', {
     grid: null,
     selection: null,
     record: null,
-
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
     modal: true,
     constrain: true,
     closable: false,
@@ -52,11 +55,22 @@ Ext.define('Lada.view.window.SetStatus', {
         this.items = [{
             xtype: 'form',
             name: 'valueselection',
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
             border: false,
             items: [{
                 xtype: 'fieldset',
                 title: '',
                 margin: '5, 5, 10, 5',
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'
+                },
+                defaults: {
+                    labelWidth: 100
+                },
                 items: [{
                     xtype: 'combobox',
                     store: Ext.data.StoreManager.get('messstellenFiltered'),
@@ -66,22 +80,16 @@ Ext.define('Lada.view.window.SetStatus', {
                     queryMode: 'local',
                     editable: true,
                     matchFieldWidth: false,
-                    width: 350,
-                    labelWidth: 100,
                     emptyText: i18n.getMsg('emptytext.erzeuger'),
                     fieldLabel: i18n.getMsg('erzeuger')
                 }, {
                     xtype: 'statuskombiselect',
                     store: possibleStatusStore,
                     allowBlank: false,
-                    width: 350,
-                    labelWidth: 100,
                     fieldLabel: i18n.getMsg('header.statuskombi')
                 }, {
                     xtype: 'textarea',
-                    width: 350,
                     height: 100,
-                    labelWidth: 100,
                     fieldLabel: i18n.getMsg('text'),
                     emptyText: i18n.getMsg('emptytext.kommentar.widget')
                 }]

@@ -37,9 +37,11 @@ Ext.define('Lada.view.QueryPanel', {
         margin: 10,
         items: [
             {
-                layout: 'hbox',
+                layout: {
+                    type: 'hbox',
+                    align: 'stretch'
+                },
                 width: '100%',
-                align: 'stretch',
                 border: false,
                 margin: 0,
                 items: [{
@@ -72,9 +74,11 @@ Ext.define('Lada.view.QueryPanel', {
                     submitValue: false
                 }]
             }, {
-                layout: 'hbox',
+                layout: {
+                    type: 'hbox',
+                    align: 'stretch'
+                },
                 width: '100%',
-                align: 'stretch',
                 margin: '10 0 10 15',
                 border: false,
                 items: [{
