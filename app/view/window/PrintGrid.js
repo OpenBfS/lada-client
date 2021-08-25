@@ -47,11 +47,7 @@ Ext.define('Lada.view.window.PrintGrid', {
     dokPoolEnabled: true,
 
     constrain: true,
-    layout: {
-        type: 'vbox',
-        align: 'stretch'
-    },
-
+    resizable: false,
     defaults: {
         margin: '5, 5, 5, 5',
         border: false
@@ -91,15 +87,13 @@ Ext.define('Lada.view.window.PrintGrid', {
         this.title = i18n.getMsg('print.window.title');
         this.templateStore.sort('name', 'ASC');
         this.items = [{
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-            },
+            layout: 'vbox',
             minWidth: 500,
             border: false,
             scrollable: true,
             defaults: {
-                margin: '5 5 5 5'
+                margin: '5 5 5 5',
+                width: '100%'
             },
             items: [{
                 xtype: 'combobox',
@@ -177,7 +171,8 @@ Ext.define('Lada.view.window.PrintGrid', {
                 hidden: true
             }, {
                 xtype: 'downloadqueuegrid',
-                store: 'downloadqueue-print'
+                store: 'downloadqueue-print',
+                width: '100%'
             }]
         }];
         this.buttons = [{
