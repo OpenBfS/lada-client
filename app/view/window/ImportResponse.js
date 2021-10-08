@@ -71,9 +71,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         me.mstEncoding = i18n.getMsg('encoding') + ' ' + this.encoding;
         if (this.mst !== null) {
             me.mstEncoding += '&emsp;' +
-            i18n.getMsg('import.configMst') +
-            ': ' +
-            this.mst;
+            i18n.getMsg('import.configMst') + ': ' + this.mst;
         }
 
         this.bodyStyle = {background: '#fff'};
