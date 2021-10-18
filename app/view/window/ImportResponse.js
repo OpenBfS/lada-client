@@ -63,7 +63,6 @@ Ext.define('Lada.view.window.ImportResponse', {
                 this.removeCls('x-unselectable');
             }
         });
-        
         this.downloadPrefix = '<!DOCTYPE html>' +
                 '<head><meta charset="utf-8"></head><body>';
         this.downloadPostfix = '</body></html>';
@@ -121,10 +120,10 @@ Ext.define('Lada.view.window.ImportResponse', {
                     fileName +
                     ':</b><br/><ol>&#40' +
                     me.mstEncoding +
-                    '&#41</ol>' + 
+                    '&#41</ol>' +
                     '<br/>Tag: ' +
                     fileResult.tag+
-                    "<p/>";
+                    '<p/>';
                 html += i18n.getMsg('import.messages') + ':<br/><hr>';
                 html += me.parseResponse(fileResult, true);
                 me.download += html;
