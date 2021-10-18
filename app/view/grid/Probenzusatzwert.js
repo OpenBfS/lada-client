@@ -15,6 +15,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
     requires: [
         'Lada.view.form.ExpNumberField',
         'Lada.view.form.FormatNumberField',
+        'Lada.store.Zusatzwerte',
         'Lada.view.widget.Probenzusatzwert'
     ],
 

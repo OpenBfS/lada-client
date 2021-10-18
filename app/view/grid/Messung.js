@@ -12,6 +12,11 @@
 Ext.define('Lada.view.grid.Messung', {
     extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.messunggrid',
+    requires: [
+        'Lada.store.Messungen',
+        'Lada.store.Status',
+        'Lada.store.Messwerte'
+    ],
 
     maxHeight: 350,
     minHeight: 44,

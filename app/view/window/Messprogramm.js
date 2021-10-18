@@ -231,10 +231,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                 var mstStore = Ext.data.StoreManager.get('messstellen');
                 var netzbetreiber = mstStore.getById(
                     defaultentry.get('messStelle')).get('netzbetreiberId');
-                if (
-                    Ext.data.StoreManager.get('netzbetreiberFiltered')
-                        .getCount() <= 1
-                ) {
+                if (Lada.netzbetreiber.length <= 1) {
                     this.down('messprogrammform').down('netzbetreiber')
                         .setValue(netzbetreiber);
                 }

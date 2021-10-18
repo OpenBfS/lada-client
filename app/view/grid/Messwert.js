@@ -17,7 +17,9 @@ Ext.define('Lada.view.grid.Messwert', {
         'Lada.view.form.ExpNumberField',
         'Lada.view.form.FormatNumberField',
         'Lada.view.widget.Messgroesse',
-        'Lada.view.widget.Messeinheit'
+        'Lada.view.widget.Messeinheit',
+        'Lada.store.Umwelt',
+        'Lada.store.Messwerte'
     ],
 
     minHeight: 44,

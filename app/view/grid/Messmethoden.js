@@ -15,6 +15,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
 
     requires: [
         'Lada.store.MmtMessprogramm',
+        'Lada.store.Messmethoden',
         'Lada.view.widget.Messmethode',
         'Lada.view.widget.NuklidTagfield'
     ],

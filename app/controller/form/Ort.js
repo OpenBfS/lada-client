@@ -11,7 +11,10 @@
  */
 Ext.define('Lada.controller.form.Ort', {
     extend: 'Ext.app.Controller',
-    requires: ['Lada.view.window.ChangeKDA'],
+    requires: [
+        'Lada.view.window.ChangeKDA',
+        'Lada.store.Orte'
+    ],
 
     /**
      * Initialize the Controller

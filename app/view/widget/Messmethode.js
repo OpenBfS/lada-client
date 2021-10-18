@@ -10,9 +10,10 @@
  * Combobox for Messmethode
  */
 Ext.define('Lada.view.widget.Messmethode', {
+    requires: ['Lada.store.Messmethoden'],
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.messmethode',
-    store: 'Messmethoden',
+    store: 'messmethoden',
     displayField: 'messmethode',
     valueField: 'id',
     // Enable filtering of comboboxes
@@ -33,12 +34,13 @@ Ext.define('Lada.view.widget.Messmethode', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.messmethode');
-        this.store = Ext.data.StoreManager.get('messmethoden');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.Messmethoden');
-        } else {
-            this.store.clearFilter();
+        var store = Ext.data.StoreManager.get('messmethoden');
+        if (!store) {
+            Ext.create('Lada.store.Messmethoden', {
+                storeId: 'messmethoden'});
         }
+        this.store = Ext.data.StoreManager.get('messmethoden');
+        this.store.clearFilter();
         this.callParent(arguments);
         //this.down('combobox').anyMatch = true;
     }

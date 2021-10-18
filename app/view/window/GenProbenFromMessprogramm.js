@@ -15,7 +15,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
 
     requires: [
         'Lada.store.GridColumnValue',
-        'Lada.store.Proben'
+        'Lada.store.Proben',
+        'Lada.store.Umwelt'
     ],
 
     collapsible: true,
