@@ -566,15 +566,15 @@ Ext.define('Lada.view.window.SetStatus', {
                             out.push('</ul></dd></dl>');
                             out.push('<br/>');
                         }
-                        var result = me.down('panel[name=result]');
-                        var values = me.down('panel[name=valueselection]');
+                        var res = me.down('panel[name=result]');
+                        var vals = me.down('panel[name=valueselection]');
                         me.down('button[name=start]').hide();
                         me.down('button[name=abort]').hide();
                         me.down('button[name=close]').show();
                         me.resultMessage += out.join('');
-                        result.setHtml(me.resultMessage);
-                        result.setSize(values.getWidth(), values.getHeight());
-                        result.show();
+                        res.setHtml(me.resultMessage);
+                        res.setSize(vals.getWidth(), vals.getHeight());
+                        res.show();
                         var grids = Ext.ComponentQuery.query('statusgrid');
                         if (grids.length) {
                             grids[0].store.reload();
@@ -584,8 +584,8 @@ Ext.define('Lada.view.window.SetStatus', {
                     failure: function() {
                         me.resultMessage += '<strong>' +
                             'Ein interner Fehler ist aufgetreten' ;
-                        var result = me.down('panel[name=result]');
-                        result.setHtml(me.resultMessage);
+                        var res = me.down('panel[name=result]');
+                        res.setHtml(me.resultMessage);
                     }
                 });
             }
