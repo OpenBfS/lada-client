@@ -12,7 +12,7 @@
 Ext.define('Lada.view.widget.OrtTyp', {
     extend: 'Lada.view.widget.base.ComboBox',
     requires: [
-        'Lada.store.Orttyp'
+        'Lada.store.OrtTyp'
     ],
     alias: 'widget.orttyp',
     store: null,
