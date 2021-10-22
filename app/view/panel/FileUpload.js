@@ -25,10 +25,6 @@ Ext.define('Lada.view.panel.FileUpload', {
     files: null,
     fileNames: null,
 
-    filesUploaded: 0,
-
-    resultWin: null,
-
     defaults: {
         width: 240,
         labelAlign: 'top'
@@ -279,7 +275,6 @@ Ext.define('Lada.view.panel.FileUpload', {
      * Show result window after successfull uploaded
      */
     uploadSuccess: function(response) {
-        this.filesUploaded++;
         var i18n= Lada.getApplication().bundle;
         var responseText = response.responseBytes ?
             String.fromCharCode.apply(null, response.responseBytes):
@@ -300,68 +295,26 @@ Ext.define('Lada.view.panel.FileUpload', {
             var firstImport = Object.keys(responseJson.data)[0];
             tag = responseJson.data[firstImport].tag;
         }
-        if (!this.resultWin) {
-            this.resultWin = Ext.create('Lada.view.window.ImportResponse', {
-                modal: true,
-                fileCount: this.fileCount,
-                fileNames: this.fileNames,
-                response: responseJson,
-                encoding: this.down('combobox[name=encoding]').getValue(),
-                mst: this.down('combobox[name=mst]').getValue(),
-                width: 500,
-                height: 350,
-                title: i18n.getMsg('title.importresult', tag)
-            });
-            //Show result, reload grid, close this window
-            this.resultWin.show();
-            var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-            if (parentGrid.length === 1) {
-                parentGrid[0].reload();
-            }
-            this.clear();
-            this.setLoading(false);
+        Ext.create('Lada.view.window.ImportResponse', {
+            modal: true,
+            fileCount: this.fileCount,
+            fileNames: this.fileNames,
+            response: responseJson,
+            encoding: this.down('combobox[name=encoding]').getValue(),
+            mst: this.down('combobox[name=mst]').getValue(),
+            width: 500,
+            height: 350,
+            title: i18n.getMsg('title.importresult', tag)
+        });
+        this.resultWin.show();
+        var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+        if (parentGrid.length === 1) {
+            parentGrid[0].reload();
         }
+        this.clear();
+        this.setLoading(false);
     },
 
-    /**
-     * @private
-     * Handler if an import request failed
-     */
-    uploadFailure: function(response, opts, fileIndex) {
-        // TODO handle Errors correctly, especially AuthenticationTimeouts
-        var i18n= Lada.getApplication().bundle;
-        this.filesUploaded++;
-
-        if (!this.resultWin) {
-            this.resultWin = Ext.create('Lada.view.window.ImportResponse', {
-                message: {}, //TODO:response.message,
-                modal: true,
-                fileCount: this.fileCount,
-                fileNames: this.fileNames,
-                encoding: this.down('combobox[name=encoding]').getValue(),
-                mst: this.down('combobox[name=mst]').getValue(),
-                width: 600,
-                height: 400,
-                title: i18n.getMsg('title.importresult'),
-                finishedHandler: function() {
-                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
-                }
-            });
-            this.resultWin.show();
-        }
-
-        this.resultWin.updateOnError(
-            response.status, response.statusText, fileIndex);
-
-        if (this.filesUploaded === this.files.length) {
-            this.resultWin.finishedHandler();
-            this.clear();
-            this.setLoading(false);
-        }
-    },
     clear: function() {
         var uploader = this.down('fileuploadfield');
         uploader.reset();
