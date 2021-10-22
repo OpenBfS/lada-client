@@ -16,7 +16,8 @@
 Ext.define('Lada.view.Viewport', {
     extend: 'Ext.container.Viewport',
     requires: [
-        'Lada.view.QueryPanel'
+        'Lada.view.QueryPanel',
+        'Lada.view.panel.FileUpload'
     ],
     layout: 'fit',
     initComponent: function() {
@@ -106,20 +107,36 @@ Ext.define('Lada.view.Viewport', {
                 collapsed: false,
                 layout: 'fit',
                 items: [{
-                    xtype: 'querypanel',
-                    margin: 0,
-                    dockedItems: [{
-                        xtype: 'toolbar',
-                        dock: 'bottom',
-                        items: [{
-                            xtype: 'button',
-                            action: 'search',
-                            name: 'search',
-                            icon: 'resources/img/Find.png',
-                            margin: '0 15 0 15',
-                            disabled: true,
-                            flex: 1
+                    xtype: 'tabpanel',
+                    autodestroy: false,
+                    listeners: {
+                        tabchange: function( tabPanel, newItem, oldItem) {
+                            if (newItem.clear) {
+                                newItem.clear();
+                            }
+                            if (oldItem.clear) {
+                                oldItem.clear();
+                            }
+                        }
+                    },
+                    items: [{
+                        xtype: 'querypanel',
+                        margin: 0,
+                        dockedItems: [{
+                            xtype: 'toolbar',
+                            dock: 'bottom',
+                            items: [{
+                                xtype: 'button',
+                                action: 'search',
+                                name: 'search',
+                                icon: 'resources/img/Find.png',
+                                margin: '0 15 0 15',
+                                disabled: true,
+                                flex: 1
+                            }]
                         }]
+                    }, {
+                        xtype: 'fileupload'
                     }]
                 }]
             }, {

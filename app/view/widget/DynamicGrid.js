@@ -954,15 +954,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     addProbeButtons: function() {
-        if (!this.tbuttonExists('importprobe')) {
-            this.toolbarbuttons.push({
-                text: this.i18n.getMsg('button.import'),
-                icon: 'resources/img/svn-commit.png',
-                action: 'importprobe',
-                needsSelection: false,
-                disabled: false
-            });
-        }
         this.addAssignTagsButton();
     },
 

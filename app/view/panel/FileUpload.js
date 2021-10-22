@@ -7,14 +7,15 @@
  */
 
 /**
- * This is a simple Fileupload Window, used to upload LAF-Files
+ * This is a the Fileupload panel, used to upload LAF-Files
  */
-Ext.define('Lada.view.window.FileUpload', {
-    extend: 'Ext.window.Window',
+Ext.define('Lada.view.panel.FileUpload', {
+    extend: 'Ext.form.Panel',
     requires: [
         'Ext.form.field.File',
         'Lada.view.window.ImportResponse'
     ],
+    alias: 'widget.fileupload',
 
     layout: {
         type: 'vbox',
@@ -50,14 +51,13 @@ Ext.define('Lada.view.window.FileUpload', {
                         cmp.fileInputEl.dom.setAttribute(
                             'multiple', 'multiple');
                     },
-                    //Remove 'C:\Fakepath' part of filenames and show a comma
-                    //separated list to increase readability
+                    //Remove 'C:\Fakepath' part of filenames
                     change: function(field) {
                         var node = Ext.DomQuery.selectNode(
                             'input[id='+ field.getInputId() + ']');
                         var files = field.fileInputEl.dom.files;
                         var fileNames = '';
-                        var fset = field.up('window').down('fieldset');
+                        var fset = field.up('panel').down('fieldset');
                         fset.removeAll();
                         for (var i = 0; i < files.length; i++) {
                             var fname = files[i].name.replace(
@@ -78,14 +78,14 @@ Ext.define('Lada.view.window.FileUpload', {
                             i18n.getMsg('import.filesSelected', files.length));
                         node.value = fileNames;
                         if (
-                            (field.up('window').down('combobox[name=mst]')
+                            (field.up('panel').down('combobox[name=mst]')
                                 .isValid()) &&
                             (files.length !== 0)
                         ) {
-                            field.up('window').down(
+                            field.up('panel').down(
                                 'button[name=save]').setDisabled(false);
                         } else {
-                            field.up('window').down(
+                            field.up('panel').down(
                                 'button[name=save]').setDisabled(true);
                         }
                     }
@@ -136,22 +136,22 @@ Ext.define('Lada.view.window.FileUpload', {
                     clear: {
                         cls: 'x-form-clear-trigger',
                         handler: function() {
-                            this.up('window').down('button[name=save]')
+                            this.up('panel').down('button[name=save]')
                                 .setDisabled(true);
                             this.clearValue();
                         }
                     }
                 },
                 listeners: {
-                    afterrender: function(combo) {
+                    afterRender: function(combo) {
                         if (combo.getStore().getCount() === 1) {
                             var recordSelected = combo.getStore().getAt(0);
                             combo.setValue(recordSelected);
                         }
                     },
                     select: function(combo) {
-                        if (combo.up('window').down('filefield').isValid()) {
-                            combo.up('window').down('button[name=save]')
+                        if (combo.up('panel').down('filefield').isValid()) {
+                            combo.up('panel').down('button[name=save]')
                                 .setDisabled(false);
                         }
                     }
@@ -178,6 +178,7 @@ Ext.define('Lada.view.window.FileUpload', {
         ];
         this.callParent(arguments);
         this.down('combobox[name=encoding]').setValue('iso-8859-15');
+        this.title = i18n.getMsg('title.dataimport');
     },
 
     /**
@@ -185,8 +186,8 @@ Ext.define('Lada.view.window.FileUpload', {
      * A handler for a Abort-Button
      */
     abort: function(button) {
-        var win = button.up('window');
-        win.close();
+        var win = button.up('panel');
+        win.clear();
     },
 
     /**
@@ -195,7 +196,7 @@ Ext.define('Lada.view.window.FileUpload', {
      * form field
      */
     readFiles: function(button) {
-        var win = button.up('window');
+        var win = button.up('panel');
         win.setLoading(true);
         var fileInput = win.down('filefield');
         var files = fileInput.fileInputEl.dom.files;
@@ -235,7 +236,7 @@ Ext.define('Lada.view.window.FileUpload', {
      * content as value
      */
     uploadFiles: function(button, binFiles) {
-        var win = button.up('window');
+        var win = button.up('panel');
         var cb = win.down('combobox[name=encoding]');
         var mstSelector = win.down('combobox[name=mst]').getValue();
 
@@ -285,7 +286,6 @@ Ext.define('Lada.view.window.FileUpload', {
             response.responseText;
         var responseJson = Ext.JSON.decode(responseText, true);
         if (!responseJson) {
-            // TODO: Handle SSO HTML form like in RestProxy.processResponse
             Ext.Msg.show({
                 message: i18n.getMsg('importResponse.failure.server.multi'),
                 buttons: Ext.Msg.OK,
@@ -318,7 +318,8 @@ Ext.define('Lada.view.window.FileUpload', {
             if (parentGrid.length === 1) {
                 parentGrid[0].reload();
             }
-            this.close();
+            this.clear();
+            this.setLoading(false);
         }
     },
 
@@ -357,7 +358,15 @@ Ext.define('Lada.view.window.FileUpload', {
 
         if (this.filesUploaded === this.files.length) {
             this.resultWin.finishedHandler();
-            this.close();
+            this.clear();
+            this.setLoading(false);
         }
+    },
+    clear: function() {
+        var uploader = this.down('fileuploadfield');
+        uploader.reset();
+        uploader.fireEvent('change', uploader);
+        uploader.fireEvent('afterRender', uploader);
+        this.down('button[name=save]').setDisabled(true);
     }
 });

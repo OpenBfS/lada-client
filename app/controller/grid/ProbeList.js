@@ -12,7 +12,6 @@
 Ext.define('Lada.controller.grid.ProbeList', {
     extend: 'Ext.app.Controller',
     requires: [
-        'Lada.view.window.FileUpload',
         'Lada.view.window.ProbeEdit'
     ],
 
@@ -23,9 +22,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
         this.control({
             'dynamicgrid toolbar button[action=addProbe]': {
                 click: this.addProbeItem
-            },
-            'dynamicgrid toolbar button[action=importprobe]': {
-                click: this.uploadFile
             }
         });
         this.callParent(arguments);
@@ -40,20 +36,5 @@ Ext.define('Lada.controller.grid.ProbeList', {
         win.initData();
         win.show();
         win.setPosition(30);
-    },
-
-    /**
-     * This function opens a {@link Lada.view.window.FileUpload}
-     * window to upload a LAF-File
-     */
-    uploadFile: function() {
-        var i18n = Lada.getApplication().bundle;
-        var win = Ext.create('Lada.view.window.FileUpload', {
-            title: i18n.getMsg('title.dataimport'),
-            modal: true,
-            width: 260
-        });
-
-        win.show();
     }
 });
