@@ -304,9 +304,9 @@ Ext.define('Lada.view.panel.FileUpload', {
             mst: this.down('combobox[name=mst]').getValue(),
             width: 500,
             height: 350,
-            title: i18n.getMsg('title.importresult', tag)
-        });
-        this.resultWin.show();
+            title: i18n.getMsg('title.importresult', tag),
+            importtag: tag
+        }).show();
         var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
         if (parentGrid.length === 1) {
             parentGrid[0].reload();

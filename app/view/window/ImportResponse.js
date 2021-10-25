@@ -12,6 +12,9 @@ Ext.define('Lada.view.window.ImportResponse', {
     downloadPrefix: '',
     downloadPostfix: '',
 
+    // submitted generated tags, to be offered as "send to clipboard"
+    importtag: null,
+
     //Downloadable report content
     download: '',
 
@@ -84,6 +87,7 @@ Ext.define('Lada.view.window.ImportResponse', {
             border: false
         }];
 
+        var isClip = ClipboardJS && ClipboardJS.isSupported();
         me.buttons = [{
             text: i18n.getMsg('close'),
             scope: this,
@@ -99,6 +103,24 @@ Ext.define('Lada.view.window.ImportResponse', {
                     me.downloadPostfix;
                 var blob = new Blob([downloadJoin], {type: 'text/html'});
                 saveAs(blob, 'report.html');
+            }
+        }, {
+            text: i18n.getMsg('button.tagToClipboard'),
+            name: 'tagclipboard',
+            hidden: !isClip,
+            disabled: true,
+            listeners: {
+                afterrender: function(cmp) {
+                    if (ClipboardJS && ClipboardJS.isSupported() && me.importtag) {
+                        var btnDom = cmp.getEl().dom;
+                        btnDom.setAttribute('data-clipboard-text', me.importtag);
+                        new ClipboardJS(btnDom);
+                    }
+                    else {
+                        cmp.setHidden(true);
+                    }
+
+                }
             }
         }];
         this.callParent(arguments);
@@ -129,6 +151,9 @@ Ext.define('Lada.view.window.ImportResponse', {
                 me.download += html;
             });
             me.down('button[name=download]').enable();
+            if (me.importtag) {
+                me.down('button[name=tagclipboard]').enable();
+            }
         } else {
             html += i18n.getMsg(response.message) + ':<br/>'
                 + response.data;
