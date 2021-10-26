@@ -664,7 +664,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         col.xtype = 'numbercolumn';
         col.format = orig_column.get('dataType').format;
         col.renderer = function(value) {
-            if (!value) {
+            if (value === null) {
                 return '';
             }
             var format = col.format;
