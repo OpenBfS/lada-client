@@ -1113,6 +1113,9 @@ Ext.define('Lada.controller.Query', {
             if (csdata[i].get('dataType').name === 'probeId') {
                 result.probeIdentifier = csdata[i].get('dataIndex');
             }
+            if (csdata[i].get('dataType').name === 'messungId') {
+                result.messungIdentifier = csdata[i].get('dataIndex');
+            }
             var idx = rowHierarchy.indexOf(csdata[i].get('dataType').name);
             if (idx > -1 && idx < result.idx) {
                 result.dataType = csdata[i].get('dataType').name;
@@ -1124,13 +1127,16 @@ Ext.define('Lada.controller.Query', {
             return {
                 dataType: result.dataType,
                 dataIndex: result.dataIndex,
-                probeIdentifier: result.probeIdentifier || null
+                probeIdentifier: result.probeIdentifier || null,
+                messungIdentifier: result.messungIdentifier || null
+
             };
         } else {
             return {
                 dataType: null,
                 dataIndex: null,
-                probeIdentifier: null
+                probeIdentifier: null,
+                messungIdentifier: null
             };
         }
     },

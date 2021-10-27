@@ -45,7 +45,8 @@ Ext.define('Lada.view.window.SetStatus', {
         var possibleStatusStore;
         if (this.selection) {
             this.sendIds = [];
-            var dI = this.grid.hasMessung || this.grid.rowtarget.dataIndex;
+            var dI = this.grid.rowtarget.messungIdentifier ||
+                this.grid.rowtarget.dataIndex;
             for (var i=0; i< this.selection.length; i++) {
                 this.sendIds.push(this.selection[i].get(dI));
             }
@@ -412,6 +413,9 @@ Ext.define('Lada.view.window.SetStatus', {
                     me.store.setData(json.data);
                     me.down('statuskombiselect').down(
                         'combobox').getStore().setData(json.data);
+                    if (!json.data.length) {
+                        me.down('button[name=start]').disable();
+                    }
                 }
             }
         });
