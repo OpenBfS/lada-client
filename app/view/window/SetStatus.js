@@ -42,11 +42,11 @@ Ext.define('Lada.view.window.SetStatus', {
             }
         });
         var possibleStatusStore;
-        if ( this.selection) {
+        if (this.selection) {
             var selectionIds = [];
+            var dI = this.grid.hasMessung || this.grid.rowtarget.dataIndex;
             for (var i=0; i< this.selection.length; i++) {
-                selectionIds.push(this.selection[i].get(
-                    this.grid.rowtarget.dataIndex));
+                selectionIds.push(this.selection[i].get(dI));
             }
             this.getPossibleStatus(selectionIds);
         } else {
