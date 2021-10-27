@@ -14,7 +14,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     alias: 'widget.genpfm',
 
     requires: [
-        'Lada.store.GridColumnValue',
         'Lada.store.Proben'
     ],
 
