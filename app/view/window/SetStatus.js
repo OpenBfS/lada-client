@@ -21,6 +21,7 @@ Ext.define('Lada.view.window.SetStatus', {
     grid: null,
     selection: null,
     record: null,
+    sendIds: null,
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -43,15 +44,15 @@ Ext.define('Lada.view.window.SetStatus', {
         });
         var possibleStatusStore;
         if (this.selection) {
-            var selectionIds = [];
+            this.sendIds = [];
             var dI = this.grid.hasMessung || this.grid.rowtarget.dataIndex;
             for (var i=0; i< this.selection.length; i++) {
-                selectionIds.push(this.selection[i].get(dI));
+                this.sendIds.push(this.selection[i].get(dI));
             }
-            this.getPossibleStatus(selectionIds);
         } else {
-            this.getPossibleStatus([this.record.get('id')]);
+            this.sendIds = [this.record.get('id')];
         }
+        this.getPossibleStatus(this.sendIds);
         this.items = [{
             xtype: 'form',
             name: 'valueselection',
@@ -187,16 +188,26 @@ Ext.define('Lada.view.window.SetStatus', {
         }
         var data;
         var done = [];
-        if (this.selection) {
-            for (var i = 0; i < this.selection.length; i++) {
-                if (!done.includes(this.selection[i].get('id'))) {
-                    done.push(this.selection[i].get('id'));
-                    data = {
-                        messungsId: this.selection[i].get('id'),
+        for (var i = 0; i < this.sendIds.length; i++) {
+            if (!done.includes(this.sendIds[i])) {
+                done.push(this.sendIds[i]);
+                data = {
+                        messungsId: this.sendIds[i],
                         mstId: this.down('combobox').getValue(),
                         datum: new Date(),
                         statusKombi: kombi,
                         text: this.down('textarea').getValue()
+                    };
+                    var finalcallback = function() {
+                        var result = me.down('panel[name=result]');
+                        var values = me.down('panel[name=valueselection]');
+                        me.down('button[name=start]').hide();
+                        me.down('button[name=abort]').hide();
+                        me.down('button[name=close]').show();
+                        result.setMaxHeight('400');
+                        result.setHtml(me.resultMessage);
+                        result.show();
+                        values.hide();
                     };
                     Ext.Ajax.request({
                         url: 'lada-server/rest/status',
@@ -364,15 +375,7 @@ Ext.define('Lada.view.window.SetStatus', {
                                 count / me.selection.length,
                                 progressText + ' (' + count + ')');
                             if (count === me.selection.length) {
-                                var result = me.down('panel[name=result]');
-                                var values = me.down('panel[name=valueselection]');
-                                me.down('button[name=start]').hide();
-                                me.down('button[name=abort]').hide();
-                                me.down('button[name=close]').show();
-                                result.setMaxHeight('400');
-                                result.setHtml(me.resultMessage);
-                                result.show();
-                                values.hide();
+                                finalcallback();
                             }
                             me.fireEvent('statussetend');
                         },
@@ -391,205 +394,10 @@ Ext.define('Lada.view.window.SetStatus', {
                         count / me.selection.length,
                         progressText + ' (' + count + ')');
                     if (count === me.selection.length) {
-                        var result = me.down('panel[name=result]');
-                        var values = me.down('panel[name=valueselection]');
-                        me.down('button[name=start]').hide();
-                        me.down('button[name=abort]').hide();
-                        me.down('button[name=close]').show();
-                        result.setMaxHeight('400');
-                        result.setHtml(me.resultMessage);
-                        result.show();
-                        values.hide();
+                        finalcallback();
                     }
                 }
             }
-        } else {
-            if (this.record) {
-                data = {
-                    messungsId: this.record.get('id'),
-                    mstId: this.down('combobox').getValue(),
-                    datum: new Date(),
-                    statusKombi: kombi,
-                    text: this.down('textarea').getValue()
-                };
-                Ext.Ajax.request({
-                    url: 'lada-server/rest/status',
-                    method: 'POST',
-                    jsonData: data,
-                    success: function(response) {
-                        var json = Ext.JSON.decode(response.responseText);
-
-                        var probenform = Ext.ComponentQuery.query('probeform');
-                        var hauptprobennummer = probenform[0].getRecord().get(
-                            'hauptprobenNr');
-                        me.resultMessage += '<strong>' +
-                            i18n.getMsg('hauptprobenNr') +
-                            ' - ' +
-                            i18n.getMsg('nebenprobenNr') +
-                            ': </strong>';
-                        if (hauptprobennummer) {
-                            me.resultMessage += hauptprobennummer;
-                        } else {
-                            me.resultMessage += '<i>HP-Nr. nicht vergeben</i>';
-                        }
-                        me.resultMessage += ' - ';
-                        if (me.record.get('nebenprobenNr')) {
-                            me.resultMessage += me.record.get('nebenprobenNr');
-                        } else {
-                            me.resultMessage += '<i>NP-Nr. nicht ' +
-                                'vergeben</i><br>';
-                        }
-                        me.resultMessage += '<dl><dd>' +
-                            i18n.getMsg('status-' + json.message) +
-                            '</dd></dl>';
-                        progress.updateProgress(
-                            1, progressText + ' (' + 1 + ')');
-                        var errors = json.errors;
-                        var warnings = json.warnings;
-                        var notifications = json.notifications;
-                        var out = [];
-                        var numErrors;
-                        var numWarnings = 0;
-                        var numNotifications = 0;
-                        //Check warnings
-                        if (Ext.isObject(warnings)) {
-                            numWarnings = Object.keys(warnings).length;
-                        }
-                        if (numWarnings > 0) {
-                            var msgs, keyParts;
-                            out.push('<dl><dd>' +
-                                i18n.getMsg('warns') +
-                                '</dd>');
-                            out.push('<dd><ul>');
-                            for (var key in warnings) {
-                                msgs = warnings[key];
-                                var validation = [];
-                                if (key.indexOf('#') > -1) {
-                                    keyParts = key.split('#');
-                                    for (var j = msgs.length -1; j >= 0; j--) {
-                                        validation.push('<li><b>' +
-                                            i18n.getMsg(keyParts[0]) +
-                                            '</b><i> ' +
-                                            keyParts[1].toString() +
-                                            '</i>: ' +
-                                            i18n.getMsg(msgs[j].toString()) +
-                                            '</li>');
-                                    }
-                                } else {
-                                    for (j = msgs.length - 1; j >= 0; j--) {
-                                        validation.push('<li><b>' +
-                                            i18n.getMsg(key) +
-                                            ':</b> ' +
-                                            i18n.getMsg(msgs[j].toString()) +
-                                            '</li>');
-                                    }
-                                }
-                                out.push(validation.join(''));
-                            }
-                            out.push('</ul></dd></dl>');
-                            out.push('<br/>');
-                        }
-                        //Check errors
-                        if (!Ext.isObject(errors)) {
-                            numErrors = 0;
-                        } else {
-                            numErrors = Object.keys(errors).length;
-                        }
-                        if (numErrors > 0) {
-                            out.push('<dl><dd>' +
-                                i18n.getMsg('errors') +
-                                '</dd>');
-                            out.push('<dd><ul>');
-                            for (var key3 in errors) {
-                                msgs = errors[key3];
-                                validation = [];
-                                if (key3.indexOf('#') > -1) {
-                                    keyParts = key3.split('#');
-                                    for (j = msgs.length -1; j >= 0; j--) {
-                                        validation.push('<li><b>' +
-                                            i18n.getMsg(keyParts[0]) +
-                                            '</b><i> ' +
-                                            keyParts[1].toString() +
-                                            '</i>: ' +
-                                            i18n.getMsg(msgs[j].toString()) +
-                                            '</li>');
-                                    }
-                                } else {
-                                    for (j = msgs.length - 1; j >= 0; j--) {
-                                        validation.push('<li><b>' +
-                                            i18n.getMsg(key3) +
-                                            ':</b> ' +
-                                            i18n.getMsg(msgs[j].toString()) +
-                                            '</li>');
-                                    }
-                                }
-                                out.push(validation.join(''));
-                            }
-                            out.push('</ul></dd></dl>');
-                            out.push('<br/>');
-                        }
-                        if (Ext.isObject(notifications)) {
-                            numNotifications = Object.keys(notifications)
-                                .length;
-                        }
-                        //check notifications
-                        if (numNotifications > 0) {
-                            out.push('<dl><dd>' +
-                                i18n.getMsg('notes') +
-                                '</dd>');
-                            out.push('<dd><ul>');
-                            for (var key4 in notifications) {
-                                msgs = notifications[key4];
-                                validation = [];
-                                if (key4.indexOf('#') > -1) {
-                                    keyParts = key4.split('#');
-                                    for (j = msgs.length -1; j >= 0; j--) {
-                                        validation.push('<li><b>' +
-                                            i18n.getMsg(keyParts[0]) +
-                                            '</b><i> ' +
-                                            keyParts[1].toString() +
-                                            '</i>: ' +
-                                            i18n.getMsg(msgs[j].toString()) +
-                                            '</li>');
-                                    }
-                                } else {
-                                    for (j = msgs.length - 1; j >= 0; j--) {
-                                        validation.push('<li><b>' +
-                                            i18n.getMsg(key4) +
-                                            ':</b> ' +
-                                            i18n.getMsg(msgs[j].toString()) +
-                                            '</li>');
-                                    }
-                                }
-                                out.push(validation.join(''));
-                            }
-                            out.push('</ul></dd></dl>');
-                            out.push('<br/>');
-                        }
-                        var res = me.down('panel[name=result]');
-                        var vals = me.down('panel[name=valueselection]');
-                        me.down('button[name=start]').hide();
-                        me.down('button[name=abort]').hide();
-                        me.down('button[name=close]').show();
-                        me.resultMessage += out.join('');
-                        res.setHtml(me.resultMessage);
-                        res.setSize(vals.getWidth(), vals.getHeight());
-                        res.show();
-                        var grids = Ext.ComponentQuery.query('statusgrid');
-                        if (grids.length) {
-                            grids[0].store.reload();
-                        }
-                        me.fireEvent('statussetend');
-                    },
-                    failure: function() {
-                        me.resultMessage += '<strong>' +
-                            'Ein interner Fehler ist aufgetreten' ;
-                        var res = me.down('panel[name=result]');
-                        res.setHtml(me.resultMessage);
-                    }
-                });
-            }
-        }
     },
 
     getPossibleStatus: function(ids) {
