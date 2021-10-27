@@ -238,12 +238,17 @@ Ext.define('Lada.view.window.SetStatus', {
                             numNotifications = Object.keys(notifications)
                                 .length;
                         }
-                        if (numErrors > 0) {
+
+                        if (!json.success || numErrors > 0) {
                             var msgs;
                             out.push('<dl><dd>' +
                                 i18n.getMsg('errors') +
                                 '</dd>');
                             out.push('<dd><ul>');
+                            if (!json.success) {
+                                out.push('<li>' +
+                                    i18n.getMsg(json.message) + '</li>');
+                            }
                             for (var key in errors) {
                                 msgs = errors[key];
                                 var validation = [];
@@ -271,6 +276,7 @@ Ext.define('Lada.view.window.SetStatus', {
                             }
                             out.push('</ul></dd>');
                         }
+
                         if (numWarnings > 0) {
                             out.push('<dl><dd>' +
                                 i18n.getMsg('warns') +
@@ -304,7 +310,6 @@ Ext.define('Lada.view.window.SetStatus', {
                             out.push('</ul></dd>');
                         }
 
-
                         if (numNotifications > 0) {
                             out.push('<dl><dd>' +
                                 i18n.getMsg('notes') +
@@ -337,7 +342,6 @@ Ext.define('Lada.view.window.SetStatus', {
                             }
                             out.push('</ul></dd>');
                         }
-
 
                         out.push('<hr>');
                         for ( var z = 0; z < me.selection.length; z++) {
@@ -382,8 +386,14 @@ Ext.define('Lada.view.window.SetStatus', {
                     },
                     // eslint-disable-next-line no-loop-func
                     failure: function() {
+                        me.resultMessage += '<dl><dd>' +
+                            i18n.getMsg('errors') + '</dd><dd><ul><li>' +
+                            i18n.getMsg('err.msg.generic.body') +
+                            '</li></ul></dd></dl><hr>';
                         count++;
-                        progress.updateProgress(count / me.selection.length);
+                        progress.updateProgress(
+                            count / me.selection.length,
+                            progressText + ' (' + count + ')');
                         if (count === me.selection.length) {
                             finalcallback();
                         }
