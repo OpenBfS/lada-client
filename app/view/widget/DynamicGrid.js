@@ -89,17 +89,18 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         this.genericAddButton();
         this.genericDeleteButton();
         this.toolbarbuttons.push('->');
-        switch (this.rowtarget.dataType) {
-            case 'mpId':
-                this.addMessprogrammButtons();
-                break;
-            case 'probeId':
-                this.addProbeButtons();
-                break;
-            case 'messungId':
-                this.addMessungButtons();
-                break;
-            case 'ortId':
+        if (this.rowtarget.dataType === 'mpId') {
+            this.addMessprogrammButtons();
+        }
+        if (this.rowtarget.dataType === 'probeId') {
+            this.addProbeButtons();
+        }
+        if (this.rowtarget.dataType === 'messungId') {
+            this.addMessungButtons();
+        } else if (this.rowtarget.messungIdentifier){
+            this.addSetStatusButton();
+        }
+        if (this.rowtarget.dataType === 'ortId') {
                 this.addOrtButtons();
         }
         this.addExportButton();
@@ -958,6 +959,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     addMessungButtons: function() {
+        this.addSetStatusButton();
+        this.addAssignTagsButton();
+    },
+
+    addSetStatusButton: function() {
         if (!this.tbuttonExists('setstatus')) {
             //Disable status button if user has no status role
             var needsSelection = false;
@@ -974,7 +980,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 disabled: true
             });
         }
-        this.addAssignTagsButton();
     },
 
     addAssignTagsButton: function() {
