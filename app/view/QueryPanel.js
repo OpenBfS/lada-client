@@ -20,7 +20,7 @@ Ext.define('Lada.view.QueryPanel', {
         'Lada.store.GridColumnValue'
     ],
     gridColumnStore: null,
-    gridColumnValueStore: Ext.create('Lada.store.GridColumnValue'),
+    gridColumnValueStore: null,
     store: null,
     scrollable: true,
     layout: {
@@ -267,6 +267,7 @@ Ext.define('Lada.view.QueryPanel', {
     initComponent: function() {
 
         var i18n = Lada.getApplication().bundle;
+        this.gridColumnValueStore = Ext.create('Lada.store.GridColumnValue');
         this.title = i18n.getMsg('query.title');
         this.callParent(arguments);
         this.down('fieldset[name=filtervariables]').setTitle(
