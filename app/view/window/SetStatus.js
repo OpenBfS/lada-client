@@ -20,7 +20,7 @@ Ext.define('Lada.view.window.SetStatus', {
     store: Ext.create('Lada.store.StatusKombi'),
     grid: null,
     selection: null,
-    record: null,
+    dataId: null,
     sendIds: null,
     layout: {
         type: 'vbox',
@@ -43,15 +43,16 @@ Ext.define('Lada.view.window.SetStatus', {
             }
         });
         var possibleStatusStore;
-        if (this.selection) {
-            this.sendIds = [];
-            var dI = this.grid.rowtarget.messungIdentifier ||
+        if (this.grid) {
+            this.dataId = this.grid.rowtarget.messungIdentifier ||
                 this.grid.rowtarget.dataIndex;
-            for (var i=0; i< this.selection.length; i++) {
-                this.sendIds.push(this.selection[i].get(dI));
-            }
         } else {
-            this.sendIds = [this.record.get('id')];
+            // Assume a normal Messung record
+            this.dataId = 'id';
+        }
+        this.sendIds = [];
+        for (var i=0; i < this.selection.length; i++) {
+            this.sendIds.push(this.selection[i].get(this.dataId));
         }
         this.getPossibleStatus(this.sendIds);
         this.items = [{
@@ -239,6 +240,7 @@ Ext.define('Lada.view.window.SetStatus', {
                                 .length;
                         }
 
+                        // Print lists of errors, warnings and notifications
                         if (!json.success || numErrors > 0) {
                             var msgs;
                             out.push('<dl><dd>' +
@@ -343,38 +345,13 @@ Ext.define('Lada.view.window.SetStatus', {
                             out.push('</ul></dd>');
                         }
 
-                        out.push('<hr>');
-                        for ( var z = 0; z < me.selection.length; z++) {
-                            if (
-                                me.selection[z].get('id') ===
-                                    json.data.messungsId
-                            ) {
-                                me.resultMessage += '<strong>'
-                                    + i18n.getMsg('hauptprobenNr')
-                                    + ' - '
-                                    + i18n.getMsg('nebenprobenNr')
-                                    + ': </strong>';
-                                if (me.selection[z].get('hpNr')) {
-                                    me.resultMessage += me.selection[z].get(
-                                        'hpNr');
-                                } else {
-                                    me.resultMessage += '<i>HP-Nr. ' +
-                                        'nicht vergeben</i>';
-                                }
-                                me.resultMessage += ' - ';
-                                if ( me.selection[z].get('npNr')) {
-                                    me.resultMessage += me.selection[z].get(
-                                        'npNr');
-                                } else {
-                                    me.resultMessage += '<i><i>NP-Nr. ' +
-                                        'nicht vergeben</i></i>';
-                                }
-                                me.resultMessage += '<dl><dd>' +
-                                    i18n.getMsg('status-' + json.message) +
-                                    '</dd></dl>';
-                            }
+                        if (out.length > 0) {
+                            // Print delimiter between different requests
+                            out.push('<hr>');
+                            // Add generated HTML to overall output
+                            me.addLogItem(out.join(''), json.data.messungsId);
                         }
-                        me.resultMessage += out.join('');
+
                         count++;
                         progress.updateProgress(
                             count / me.selection.length,
@@ -385,11 +362,16 @@ Ext.define('Lada.view.window.SetStatus', {
                         me.fireEvent('statussetend');
                     },
                     // eslint-disable-next-line no-loop-func
-                    failure: function() {
-                        me.resultMessage += '<dl><dd>' +
-                            i18n.getMsg('errors') + '</dd><dd><ul><li>' +
-                            i18n.getMsg('err.msg.generic.body') +
-                            '</li></ul></dd></dl><hr>';
+                    failure: function(response, request) {
+                        me.addLogItem(
+                            '<dl><dd>' +
+                                i18n.getMsg('errors') + '</dd><dd><ul><li>' +
+                                i18n.getMsg('err.msg.generic.body') +
+                                '</li></ul></dd></dl><hr>',
+                            request.jsonData.messungsId
+                                ? request.jsonData.messungsId
+                                : null
+                        );
                         count++;
                         progress.updateProgress(
                             count / me.selection.length,
@@ -429,6 +411,28 @@ Ext.define('Lada.view.window.SetStatus', {
                 }
             }
         });
+    },
+
+    addLogItem: function(text, id) {
+        var i18n = Lada.getApplication().bundle;
+
+        // Print "HP-Nr." and "NP-Nr." if available
+        if (id) {
+            var item = Ext.Array.findBy(
+                this.selection, function(it) {
+                    return it.get(this.dataId) === id;
+                }, this);
+            if (item && item.get('hpNr') && item.get('npNr')) {
+                this.resultMessage +=
+                    '<strong>' + i18n.getMsg('hauptprobenNr') +
+                    ' - ' + i18n.getMsg('nebenprobenNr') +
+                    ': </strong> ' +
+                    item.get('hpNr') + ' - ' +
+                    item.get('npNr') + '<br>';
+            }
+        }
+
+        this.resultMessage += text;
     }
 });
 
