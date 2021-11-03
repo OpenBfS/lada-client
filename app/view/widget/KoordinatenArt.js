@@ -13,6 +13,7 @@ Ext.define('Lada.view.widget.KoordinatenArt', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.koordinatenart',
     store: 'KoordinatenArt',
+    requires: ['Lada.store.KoordinatenArt'],
     displayField: 'id',
     valueField: 'id',
     // Enable filtering of comboboxes
@@ -32,10 +33,13 @@ Ext.define('Lada.view.widget.KoordinatenArt', {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.koordinatenart');
 
-        this.store = Ext.data.StoreManager.get('koordinatenart');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.KoordinatenArt');
+        var store = Ext.data.StoreManager.get('koordinatenart');
+        if (!store) {
+            Ext.create('Lada.store.KoordinatenArt', {
+                storeId: 'koordinatenart'
+            });
         }
+        this.store = Ext.data.StoreManager.get('koordinatenart');
         this.callParent(arguments);
     }
 });

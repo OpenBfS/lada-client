@@ -13,7 +13,9 @@ Ext.define('Lada.view.grid.Status', {
     extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.statusgrid',
 
-    requires: ['Ext.grid.filters.Filters'],
+    requires: [
+        'Ext.grid.filters.Filters',
+        'Lada.store.Status'],
     plugins: 'gridfilters',
 
     maxHeight: 350,

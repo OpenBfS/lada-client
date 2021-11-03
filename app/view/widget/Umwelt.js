@@ -12,6 +12,7 @@
 Ext.define('Lada.view.widget.Umwelt', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.umwelt',
+    requires: ['Lada.store.Umwelt'],
     store: null,
     displayField: 'umweltBereich',
     valueField: 'id',

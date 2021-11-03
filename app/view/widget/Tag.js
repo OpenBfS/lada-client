@@ -13,7 +13,8 @@ Ext.define('Lada.view.widget.Tag', {
     extend: 'Ext.form.field.Tag',
     alias: 'widget.tagwidget',
     requires: [
-        'Lada.view.window.ReloadMask'
+        'Lada.view.window.ReloadMask',
+        'Lada.store.Tag'
     ],
     store: null,
     displayField: 'tag',

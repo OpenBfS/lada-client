@@ -42,34 +42,20 @@ Ext.application({
         'Ext.layout.container.Column',
         'Lada.query.QueryProxy',
         'Lada.store.LocalPagingStore',
-        'Lada.store.Deskriptoren',
-        'Lada.store.Ortszuordnung',
-        'Lada.store.OrtszuordnungMp',
-        'Lada.store.Messungen',
-        'Lada.store.Zusatzwerte',
-        'Lada.store.Status',
         'Lada.store.KtaGruppe',
-        'Lada.store.Messwerte',
-        'Lada.store.MKommentare',
         'Lada.store.Datenbasis',
         'Lada.store.Messeinheiten',
         'Lada.store.Messgroessen',
-        'Lada.store.Messmethoden',
         'Lada.store.Messstellen',
         'Lada.store.MessstellenKombi',
-        'Lada.store.Netzbetreiber',
-        'Lada.store.Orte',
-        'Lada.store.Pflichtmessgroessen',
         'Lada.store.Probenarten',
         'Lada.store.Probenzusaetze',
         'Lada.store.Staaten',
-        'Lada.store.Umwelt',
         'Lada.store.Verwaltungseinheiten',
         'Lada.store.VerwaltungseinheitenUnfiltered',
         'Lada.store.Bundesland',
         'Lada.store.Landkreis',
         'Lada.store.Regierungsbezirk',
-        'Lada.store.ReiProgpunktGruppe',
         'Lada.store.StatusWerte',
         'Lada.store.StatusStufe',
         'Lada.store.StatusKombi',
@@ -78,11 +64,8 @@ Ext.application({
         'Lada.store.DownloadQueue',
         'Lada.store.GenericResults',
         'Lada.store.MessprogrammKategorie',
-        'Lada.store.Ktas',
-        'Lada.store.OrtsZusatz',
-        'Lada.store.OrtszuordnungTyp',
-        'Lada.store.OrtTyp',
-        'Lada.store.KoordinatenArt',
+        'Lada.store.GridColumn',
+        'Lada.store.Query',
         'Lada.model.MessstelleLabor',
         'Lada.model.Messstelle',
         'Lada.model.GenericResults',
@@ -90,8 +73,6 @@ Ext.application({
         'Lada.model.QueryGroup',
         'Lada.model.Query',
         'Lada.model.DownloadQueue',
-        'Lada.store.GridColumn',
-        'Lada.store.Query',
         'Lada.view.widget.TimeZoneButton',
         'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.window.ElanScenarioWindow',
@@ -99,7 +80,6 @@ Ext.application({
         'Lada.util.Date',
         'Lada.util.FunctionScheduler',
         'Lada.util.WindowTracker',
-        'Lada.store.Tag',
         'Lada.util.LocalStorage',
         'Lada.util.WindowTracker',
         'Koala.util.DokpoolRequest'
@@ -272,12 +252,6 @@ Ext.application({
         Ext.create('Lada.store.Messgroessen', {
             storeId: 'messgroessen'
         });
-        Ext.create('Lada.store.Messgroessen', {
-            storeId: 'messgroessenunfiltered'
-        });
-        Ext.create('Lada.store.Messmethoden', {
-            storeId: 'messmethoden'
-        });
         Ext.create('Lada.store.GridColumn', {
             storeId: 'columnstore'
         });
@@ -295,7 +269,7 @@ Ext.application({
                             var displayCombi = item.get('messStelle');
                             if (item.get('messStelle')
                                 !== itemLabor.get('messStelle')
-                               ) {
+                            ) {
                                 displayCombi += '/'
                                     + itemLabor.get('messStelle');
                             }
@@ -311,16 +285,7 @@ Ext.application({
                 }
             }
         });
-        Ext.create('Lada.store.Netzbetreiber', {
-            storeId: 'netzbetreiber'
-        });
-        Ext.create('Lada.store.Orte', {
-            storeId: 'orte',
-            defaultPageSize: 0
-        });
-        Ext.create('Lada.store.Pflichtmessgroessen', {
-            storeId: 'pflichtmessgroessen'
-        });
+
         Ext.create('Lada.store.Probenarten', {
             storeId: 'probenarten'
         });
@@ -329,12 +294,6 @@ Ext.application({
         });
         Ext.create('Lada.store.Staaten', {
             storeId: 'staaten'
-        });
-        Ext.create('Lada.store.Staaten', {
-            storeId: 'staatenwidget'
-        });
-        Ext.create('Lada.store.Umwelt', {
-            storeId: 'umwelt'
         });
         Ext.create('Lada.store.VerwaltungseinheitenUnfiltered', {
             storeId: 'verwaltungseinheitenwidget'
@@ -387,6 +346,9 @@ Ext.application({
                 }
             }
         });
+        // TODO: usage of this store unclear: reloaded in probenehmer
+        // controller, but never used (probenehemr widget uses different
+        // instance)
         Ext.create('Lada.store.Probenehmer', {
             storeId: 'probenehmer',
             proxy: {
@@ -403,6 +365,9 @@ Ext.application({
             },
             autoLoad: true
         });
+        // TODO: usage of this store unclear: reloaded in Datensatzerzeuger
+        // controller, but never used. Details here should go into model or
+        // store definition
         Ext.create('Lada.store.DatensatzErzeuger', {
             storeId: 'datensatzerzeuger',
             proxy: {
@@ -419,6 +384,7 @@ Ext.application({
             },
             autoLoad: true
         });
+        // TODO: Similar to Datensatzerzeuger
         Ext.create('Lada.store.MessprogrammKategorie', {
             storeId: 'messprogrammkategorie',
             proxy: {
@@ -441,43 +407,19 @@ Ext.application({
         });
         Ext.create('Lada.store.StatusStufe', {
             storeId: 'statusstufe',
-            autoLoad: 'true'
+            autoLoad: true
         });
         Ext.create('Lada.store.StatusKombi', {
             storeId: 'statuskombi',
-            autoLoad: 'true'
-        });
-        Ext.create('Lada.store.Ktas', {
-            storeId: 'ktas',
-            autoLoad: 'true'
+            autoLoad: true
         });
         Ext.create('Lada.store.KtaGruppe', {
             storeId: 'ktaGruppe',
-            autoLoad: 'true'
-        });
-        Ext.create('Lada.store.OrtsZusatz', {
-            storeId: 'ortszusatz',
-            autoLoad: 'true'
-        });
-        Ext.create('Lada.store.OrtszuordnungTyp', {
-            storeId: 'ortszuordnungtyp',
-            autoLoad: 'true'
-        });
-        Ext.create('Lada.store.OrtTyp', {
-            storeId: 'orttyp',
-            autoLoad: 'true'
-        });
-        Ext.create('Lada.store.KoordinatenArt', {
-            storeId: 'koordinatenart',
-            autoLoad: 'true'
+            autoLoad: true
         });
         Ext.create('Lada.store.GenericResults', {
             storeId: 'genericresults',
             autoLoad: false
-        });
-        Ext.create('Lada.store.MmtMessprogramm', {
-            soreId: 'mmtstore',
-            autoLoad: true
         });
 
         //A Store containing all MST a User is allowed to set.
@@ -485,15 +427,6 @@ Ext.application({
             storeId: 'messstellenFiltered',
             filters: function(item) {
                 if (Ext.Array.contains(Lada.mst, item.get('id'))) {
-                    return true;
-                }
-                return false;
-            }
-        });
-        Ext.create('Lada.store.Netzbetreiber', {
-            storeId: 'netzbetreiberFiltered',
-            filters: function(item) {
-                if (Ext.Array.contains(Lada.netzbetreiber, item.get('id'))) {
                     return true;
                 }
                 return false;

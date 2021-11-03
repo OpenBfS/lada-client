@@ -18,6 +18,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         'Lada.model.Ortszuordnung',
         'Lada.model.OrtszuordnungMp',
         'Lada.view.form.Ortszuordnung',
+        'Lada.store.Orte',
         'Lada.view.form.Ort',
         'Lada.view.panel.Map',
         'Lada.view.grid.Orte',

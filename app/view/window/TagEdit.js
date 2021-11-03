@@ -13,7 +13,8 @@ Ext.define('Lada.view.window.TagEdit', {
     extend: 'Ext.window.Window',
     alias: 'widget.tageditwindow',
     requires: [
-        'Lada.view.window.TagCreate'
+        'Lada.view.window.TagCreate',
+        'Lada.store.Tag'
     ],
 
     layout: 'vbox',

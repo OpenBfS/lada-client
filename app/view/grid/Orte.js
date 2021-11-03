@@ -14,6 +14,9 @@ Ext.define('Lada.view.grid.Orte', {
     alias: 'widget.ortstammdatengrid',
 
     requires: [
+        'Lada.store.Netzbetreiber',
+        'Lada.store.KoordinatenArt',
+        'Lada.store.OrtTyp',
         'Lada.view.widget.KoordinatenArt',
         'Lada.view.widget.Kta',
         'Lada.view.widget.OrtsZusatz',
@@ -48,7 +51,24 @@ Ext.define('Lada.view.grid.Orte', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.ortegrid');
-
+        var netzbetreiberstore = Ext.data.StoreManager.get('netzbetreiber');
+        if (!netzbetreiberstore) {
+            Ext.create('Lada.store.Netzbetreiber', {
+                storeId: 'netzbetreiber'
+            });
+        }
+        var koordinatenstore = Ext.data.StoreManager.get('koordinatenart');
+        if (!koordinatenstore) {
+            Ext.create('Lada.store.KoordinatenArt', {
+                storeId: 'koordinatenart'
+            });
+        }
+        var orttypstore = Ext.data.StoreManager.get('orttyp');
+        if (!orttypstore) {
+            Ext.create('Lada.store.OrtTyp', {
+                storeId: 'orttyp'
+            });
+        }
         this.columns = [{
             xtype: 'actioncolumn',
             text: 'RW',

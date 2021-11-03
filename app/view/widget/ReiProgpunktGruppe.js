@@ -12,7 +12,8 @@
 Ext.define('Lada.view.widget.ReiProgpunktGruppe', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.reiprogpunktgruppe',
-    store: 'Lada.store.ReiProgpunktGruppe',
+    requires: ['Lada.store.ReiProgpunktGruppe'],
+    store: null,
     displayField: 'beschreibung',
     valueField: 'id',
     searchValueField: 'reiProgPunktGruppe',

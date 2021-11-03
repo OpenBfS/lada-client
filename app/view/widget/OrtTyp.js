@@ -11,8 +11,11 @@
  */
 Ext.define('Lada.view.widget.OrtTyp', {
     extend: 'Lada.view.widget.base.ComboBox',
+    requires: [
+        'Lada.store.OrtTyp'
+    ],
     alias: 'widget.orttyp',
-    store: 'OrtTyp',
+    store: null,
     displayField: 'id',
     valueField: 'id',
     editable: this.editable || false,
@@ -33,11 +36,12 @@ Ext.define('Lada.view.widget.OrtTyp', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.orttyp');
-
-        this.store = Ext.data.StoreManager.get('orttyp');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.OrtTyp');
+        var ot = Ext.data.StoreManager.get('orttyp');
+        if (!ot) {
+            Ext.create('Lada.store.OrtTyp', {
+                storeId: 'orttyp'});
         }
+        this.store = Ext.data.StoreManager.get('orttyp');
         this.callParent(arguments);
     }
 });
