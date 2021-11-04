@@ -33,7 +33,7 @@ CMD ["httpd-foreground"]
 #
 # httpd setup
 #
-RUN sed -i -e "/^#LoadModule proxy_module/s/#//;/^#LoadModule proxy_http_module/s/#//;/^#Include conf.*httpd-vhosts.conf/s/#//" $HTTPD_PREFIX/conf/httpd.conf
+RUN sed -i -e "/^#LoadModule proxy_module/s/#//;/^#LoadModule proxy_http_module/s/#//;/^#LoadModule deflate_module/s/#//;/^#Include conf.*httpd-vhosts.conf/s/#//" $HTTPD_PREFIX/conf/httpd.conf
 
 RUN mkdir /usr/local/lada
 RUN rm -rf /usr/local/apache2/htdocs && ln -s /usr/local/lada/ /usr/local/apache2/htdocs
