@@ -712,8 +712,13 @@ Ext.define('Lada.controller.Query', {
                         options.mouseWheelEnabled = false;
                         options.decimalPrecision = 10;
                         options.value = recs[i].get('filterValue') || null;
-                        field = Ext.create('Lada.view.widget.base.NumberRange',
-                            options);
+                        if (dt.format === '###########') {
+                            field = Ext.create('Lada.view.widget.base.IntegerRange',
+                                options);
+                        } else {
+                            field = Ext.create('Lada.view.widget.base.NumberRange',
+                                options);
+                        }
                         negateCheckbox = true;
                         field.setValue(recs[i].get('filterValue'));
                         break;
@@ -922,6 +927,14 @@ Ext.define('Lada.controller.Query', {
                             options);
                         negateCheckbox = true;
                         break;
+                    case 'intervall':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        field = Ext.create('Lada.view.widget.Probenintervall',
+                            options);
+                        negateCheckbox = true;
+                        break;
                     case 'tag':
                         options.multiSelect = true;
                         options.editable = true;
@@ -1010,6 +1023,8 @@ Ext.define('Lada.controller.Query', {
             this.multiValueChanged(box, newvalue, box.up('datetimerange'));
         } else if (box.xtype === 'expnumberfield' && box.up('numrangefield')) {
             this.multiValueChanged(box, newvalue, box.up('numrangefield'));
+        } else if (box.xtype === 'formatnumberfield' && box.up('intrangefield')) {
+            this.multiValueChanged(box, newvalue, box.up('intrangefield'));
         /*} else if (box.xtype === 'tagwidget') {
             var store = box.up('querypanel').gridColumnValueStore;
             var name = box.name;
