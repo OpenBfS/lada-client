@@ -12,7 +12,8 @@
 Ext.define('Lada.view.widget.Datenbasis', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.datenbasis',
-    store: 'Datenbasis',
+    requires: ['Lada.store.Datenbasis'],
+    store: null,
     displayField: 'datenbasis',
     valueField: 'id',
     // Enable filtering of comboboxes
@@ -23,13 +24,12 @@ Ext.define('Lada.view.widget.Datenbasis', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.datenbasis');
-
-        this.store = Ext.data.StoreManager.get('datenbasis');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.Datenbasis');
-        } else {
-            this.store.clearFilter();
+        var store = Ext.data.StoreManager.get('datenbasis');
+        if (!store) {
+            Ext.create('Lada.store.Datenbasis', {storeId: 'datenbasis'});
         }
+        this.store = Ext.data.StoreManager.get('datenbasis');
+        this.store.clearFilter();
         this.callParent(arguments);
     }
 });

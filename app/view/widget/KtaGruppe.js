@@ -12,7 +12,8 @@
 Ext.define('Lada.view.widget.KtaGruppe', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.ktagruppe',
-    store: 'Lada.store.KtaGruppe',
+    requires: ['Lada.store.KtaGruppe'],
+    store: null,
     displayField: 'beschreibung',
     valueField: 'id',
     //editable: this.editable || false,
@@ -40,10 +41,11 @@ Ext.define('Lada.view.widget.KtaGruppe', {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.kta_gruppe');
 
-        this.store = Ext.data.StoreManager.get('ktagruppe');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.KtaGruppe');
+        var store = Ext.data.StoreManager.get('ktagruppe');
+        if (!store) {
+            Ext.create('Lada.store.KtaGruppe', {storeId: 'ktagruppe'});
         }
+        this.store = Ext.data.StoreManager.get('ktagruppe');
         this.callParent(arguments);
 
         this.onAfter({

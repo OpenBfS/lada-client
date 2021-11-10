@@ -11,6 +11,7 @@
  */
 Ext.define('Lada.view.widget.Messgroesse', {
     extend: 'Lada.view.widget.base.ComboBox',
+    requires: ['Lada.store.Messgroessen'],
     alias: 'widget.messgroesse',
     store: 'Messgroessen',
     displayField: 'messgroesse',
@@ -25,10 +26,11 @@ Ext.define('Lada.view.widget.Messgroesse', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.messgroesse');
-        this.store = Ext.data.StoreManager.get('messgroessen');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.Messgroessen');
+        var store = Ext.data.StoreManager.get('messgroessen');
+        if (!store) {
+            Ext.create('Lada.store.Messgroessen', {storeId: 'messgroessen'});
         }
+        this.store = Ext.data.StoreManager.get('messgroessen');
         this.callParent(arguments);
     }
 });
