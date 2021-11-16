@@ -21,13 +21,13 @@ Ext.define('Lada.view.panel.FileUpload', {
         type: 'vbox',
         align: 'stretch'
     },
+    margin: '10',
 
     files: null,
     fileNames: null,
 
     defaults: {
-        width: 240,
-        labelAlign: 'top'
+        width: 240
     },
 
     /**
@@ -39,8 +39,9 @@ Ext.define('Lada.view.panel.FileUpload', {
             Ext.create('Ext.form.field.File', {
                 fieldLabel: i18n.getMsg('selectfile'),
                 allowBlank: false,
+                labelWidth: '30%',
                 buttonText: i18n.getMsg('search'),
-                margin: '3 3 3 3',
+                buttonOnly: true,
                 listeners: {
                     //Allow multiple files
                     afterRender: function(cmp) {
@@ -100,6 +101,7 @@ Ext.define('Lada.view.panel.FileUpload', {
             Ext.create('Ext.form.field.ComboBox', {
                 fieldLabel: i18n.getMsg('fileEncoding'),
                 allowBlank: false,
+                labelAlign: 'top',
                 displayField: 'name',
                 valueField: 'value',
                 name: 'encoding',
@@ -126,6 +128,7 @@ Ext.define('Lada.view.panel.FileUpload', {
                 displayField: 'messStelle',
                 valueField: 'id',
                 fieldLabel: i18n.getMsg('vorbelegung'),
+                labelAlign: 'top',
                 allowBlank: false,
                 matchFieldWidth: false,
                 triggers: {
