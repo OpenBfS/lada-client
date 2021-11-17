@@ -27,7 +27,13 @@ Ext.define('Lada.model.Ort', {
             return v;
         }
     }, {
-        name: 'nutsCode'
+        name: 'nutsCode',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
         name: 'ktaGruppeId',
         convert: function(v) {
@@ -73,19 +79,51 @@ Ext.define('Lada.model.Ort', {
     }, {
         name: 'ortTyp'
     }, {
-        name: 'mpArt'
+        name: 'mpArt',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
-        name: 'zone'
+        name: 'zone',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
-        name: 'sektor'
+        name: 'sektor',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
-        name: 'zustaendigkeit'
+        name: 'zustaendigkeit',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
-        name: 'berichtstext'
+        name: 'berichtstext',
+        convert: function(v) {
+            if (v === '') {
+                return null;
+            }
+            return v;
+        }
     }, {
         name: 'kurztext'
     }, {
         name: 'langtext'
+    }, {
+        name: 'reiProgpunktGrpId'
     }, {
         name: 'unscharf',
         type: 'boolean'

@@ -42,6 +42,9 @@ Ext.define('Lada.controller.form.Ort', {
             'ortform koordinatenart combobox': {
                 change: this.checkCommitEnabled
             },
+            'ortform orttyp combobox': {
+                change: this.checkorttyp
+            },
             'ortform tfield [name=koordXExtern]': {
                 change: this.checkCommitEnabled
             },
@@ -237,6 +240,24 @@ Ext.define('Lada.controller.form.Ort', {
     discard: function(button) {
         button.up('panel').getForm().reset();
         button.up('panel').down('netzbetreiber').down('combobox').reset();
+    },
+
+    checkorttyp: function(combo) {
+        var orttyp = combo.getValue();
+        if (orttyp === 3) {
+            combo.up('ortform').down('fieldset').expand();
+        } else {
+            var form = combo.up('ortform');
+            form.down('tfield[name=berichtstext]').setValue(null);
+            form.down('reiprogpunktgruppe[name=reiProgpunktGrpId]').setValue(null);
+            form.down('ktagruppe[name=ktaGruppeId]').setValue(null);
+            form.down('tfield[name=zone]').setValue(null);
+            form.down('tfield[name=sektor]').setValue(null);
+            form.down('tfield[name=mpArt]').setValue(null);
+            form.down('tfield[name=zustaendigkeit]').setValue(null);
+            form.down('chkbox[name=aktiv]').setValue(false);
+            form.down('fieldset').collapse();
+        }
     },
 
     /**

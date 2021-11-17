@@ -21,6 +21,8 @@ Ext.define('Lada.view.form.Ort', {
 
     margin: 5,
 
+    scrollable: true,
+
     mode: null,
 
     border: false,
@@ -89,7 +91,7 @@ Ext.define('Lada.view.form.Ort', {
             forceSelection: true,
             name: 'gemId'
         }, {
-            xtype: 'fieldset',
+            xtype: 'fset',
             collapsible: true,
             collapsed: true,
             title: i18n.getMsg('orte.prop'),
@@ -100,6 +102,12 @@ Ext.define('Lada.view.form.Ort', {
                 fieldLabel: i18n.getMsg('orte.berichtstext'),
                 name: 'berichtstext'
             }, {
+                xtype: 'reiprogpunktgruppe',
+                labelWidth: 125,
+                maxLength: 100,
+                name: 'reiProgpunktGrpId',
+                fieldLabel: i18n.getMsg('reiProgpunktGrpId')
+            },{
                 xtype: 'ktagruppe',
                 labelWidth: 125,
                 maxLength: 100,
