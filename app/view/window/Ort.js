@@ -19,6 +19,8 @@ Ext.define('Lada.view.window.Ort', {
 
     minWidth: 440,
 
+    maxHeight: 700,
+
     margin: 10,
 
     shadow: false,
@@ -58,7 +60,7 @@ Ext.define('Lada.view.window.Ort', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('title.loading.ort');
-
+        this.height = Ext.getBody().getViewSize().height - 30;
         this.tools = [{
             type: 'help',
             tooltip: i18n.getMsg('help.qtip'),
