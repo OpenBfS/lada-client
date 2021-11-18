@@ -106,29 +106,33 @@ Ext.define('Lada.view.window.Ort', {
             this.record = Ext.create('Lada.model.Ort');
         }
 
-        if (this.parentWindow !== null) {
-            if (
-                this.parentWindow.xtype === 'ortszuordnungwindow' ||
-                this.parentWindow.xtype === 'ortstammdatengrid'
-            ) {
-                this.record.set('readonly', true);
-            }
-        }
-
-        if (this.mode) {
-            this.setTitle(i18n.getMsg('orte.' + this.mode));
+        if (this.record.phantom) {
+            this.mode = 'new';
+            this.setTitle(i18n.getMsg('orte.new'));
         } else {
-            this.setTitle(
-                this.record.phantom?
-                    i18n.getMsg('orte.new') :
-                    this.record.get('readonly') ?
-                        i18n.getMsg('orte.show') + ' - ' +
-                          i18n.getMsg('orte.ortId') +
-                          ': ' + this.record.get('ortId') :
-                        (i18n.getMsg('orte.edit') + ' - '
-                    + i18n.getMsg('orte.ortId') + ': '
-                    + this.record.get('ortId'))
-            );
+            if (this.parentWindow !== null) {
+                if (
+                    this.parentWindow.xtype === 'ortszuordnungwindow' ||
+                    this.parentWindow.xtype === 'ortstammdatengrid'
+                ) {
+                    this.mode = 'show';
+                    this.setTitle(i18n.getMsg('orte.show') + ' - ' +
+                        i18n.getMsg('orte.ortId') + ': ' +
+                        this.record.get('ortId'));
+                }
+            } else {
+                if (this.record.get('readonly') === true) {
+                    this.mode = 'show';
+                    this.setTitle(i18n.getMsg('orte.show') + ' - ' +
+                        i18n.getMsg('orte.ortId') + ': ' +
+                        this.record.get('ortId'));
+                } else {
+                    this.mode = 'edit';
+                    this.setTitle(i18n.getMsg('orte.edit') + ' - ' +
+                        i18n.getMsg('orte.ortId') + ': ' +
+                        this.record.get('ortId'));
+                }
+            }
         }
 
         this.add([

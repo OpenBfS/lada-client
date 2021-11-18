@@ -45,7 +45,8 @@ Ext.define('Lada.view.form.Ort', {
             fieldLabel: i18n.getMsg('netzbetreiberId'),
             labelWidth: 125,
             filteredStore: true,
-            forceSelection: true,
+            editable: true,
+            allowBlank: false,
             value: this.record.get('netzbetreiberId')
         }, {
             xtype: 'tfield',
@@ -247,7 +248,11 @@ Ext.define('Lada.view.form.Ort', {
         this.callParent(arguments);
         this.getForm().loadRecord(this.record);
 
-        this.readOnly = this.record.readOnly;
+        if (this.mode === 'show') {
+            this.setReadOnly(true);
+        } else {
+            this.setReadOnly(false);
+        }
 
         //If plausible probe instances reference this ort, disable coordinate
         // fields, verwaltungseinheit, staat, koordiantenart, button change kda
@@ -314,5 +319,31 @@ Ext.define('Lada.view.form.Ort', {
         this.down('orttyp[name=ortTyp]').clearWarningOrError();
         this.down('staat[name=staatId]').clearWarningOrError();
         this.down('koordinatenart[name=kdaId]').clearWarningOrError();
+    },
+
+    setReadOnly: function(value) {
+        this.down('netzbetreiber').setReadOnly(value);
+        this.down('tfield[name=ortId]').setReadOnly(value);
+        this.down('ortszusatz[name=ozId]').setReadOnly(value);
+        this.down('orttyp[name=ortTyp]').setReadOnly(value);
+        this.down('tfield[name=kurztext]').setReadOnly(value);
+        this.down('tfield[name=langtext]').setReadOnly(value);
+        this.down('staat[name=staatId]').setReadOnly(value);
+        this.down('verwaltungseinheit[name=gemId]').setReadOnly(value);
+        this.down('koordinatenart[name=kdaId]').setReadOnly(value);
+        this.down('tfield[name=koordXExtern]').setReadOnly(value);
+        this.down('tfield[name=koordYExtern]').setReadOnly(value);
+        this.down('tfield[name=berichtstext]').setReadOnly(value);
+        this.down('reiprogpunktgruppe[name=reiProgpunktGrpId]').setReadOnly(value);
+        this.down('ktagruppe[name=ktaGruppeId]').setReadOnly(value);
+        this.down('tfield[name=zone]').setReadOnly(value);
+        this.down('tfield[name=sektor]').setReadOnly(value);
+        this.down('tfield[name=zustaendigkeit]').setReadOnly(value);
+        this.down('tfield[name=mpArt]').setReadOnly(value);
+        this.down('chkbox[name=unscharf]').setReadOnly(value);
+        this.down('chkbox[name=aktiv]').setReadOnly(value);
+        this.down('numfield[name=hoeheLand]').setReadOnly(value);
+        this.down('numfield[name=hoeheUeberNn]').setReadOnly(value);
+        this.down('tfield[name=nutsCode]').setReadOnly(value);
     }
 });
