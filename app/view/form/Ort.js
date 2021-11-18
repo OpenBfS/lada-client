@@ -250,13 +250,14 @@ Ext.define('Lada.view.form.Ort', {
         this.readOnly = this.record.readOnly;
 
         //If plausible probe instances reference this ort, disable coordinate
-        // fields, verwaltungseinheit, staat
+        // fields, verwaltungseinheit, staat, koordiantenart, button change kda
         if (this.record.get('plausibleReferenceCount') > 0 ||
-                this.record.get('referenceCountMp') >0) {
+                this.record.get('referenceCountMp') > 0) {
             this.down('tfield[name=koordXExtern]').setReadOnly(true);
             this.down('tfield[name=koordYExtern]').setReadOnly(true);
             this.down('verwaltungseinheit').setReadOnly(true);
             this.down('staat').setReadOnly(true);
+            this.down('koordinatenart').setReadOnly(true);
         }
 
         if (this.record.get('ortTyp') === 3) {

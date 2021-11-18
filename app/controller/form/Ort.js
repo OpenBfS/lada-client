@@ -408,7 +408,9 @@ Ext.define('Lada.controller.form.Ort', {
      */
     checkKDAchangeEnabled: function(panel) {
         var form = panel.getForm();
-        if (form.getRecord().get('readonly')) {
+        if (form.getRecord().get('readonly')||
+                form.getRecord().get('plausibleReferenceCount') > 0 ||
+                form.getRecord().get('referenceCountMp') > 0) {
             panel.down('button[action=changeKDA]').setDisabled(true);
             return;
         }
