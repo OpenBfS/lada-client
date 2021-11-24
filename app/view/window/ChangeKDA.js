@@ -17,6 +17,7 @@ Ext.define('Lada.view.window.ChangeKDA', {
     ],
     collapsible: false,
     maximizable: false,
+    width: 400,
     layout: {
         type: 'vbox',
         align: 'stretch'
@@ -65,7 +66,6 @@ Ext.define('Lada.view.window.ChangeKDA', {
             layout: {
                 type: 'hbox'
             },
-            width: '100%',
             name: 'messageContainer',
             hidden: true,
             items: [{
