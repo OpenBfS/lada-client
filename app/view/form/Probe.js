@@ -26,13 +26,11 @@ Ext.define('Lada.view.form.Probe', {
         'Lada.view.widget.KtaGruppe',
         'Lada.view.widget.Umwelt',
         'Lada.view.widget.Deskriptor',
-        'Lada.view.widget.Tag',
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.base.Datetime',
         'Lada.view.widget.base.FieldSet',
         'Lada.view.widget.base.DateField',
         'Lada.view.window.MessungCreate',
-        'Lada.view.window.TagCreate',
         'Lada.model.Probe',
         'Lada.model.MessstelleLabor'
     ],
@@ -557,48 +555,6 @@ Ext.define('Lada.view.form.Probe', {
                             items: this.buildDescriptors()
                         }]
                     }]
-                }, {
-                    //Tag widget
-                    xtype: 'fieldset',
-                    title: i18n.getMsg('title.tagfieldset'),
-                    name: 'tagfieldset',
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretchmax'
-                    },
-                    items: [{
-                        flex: 1,
-                        xtype: 'tagwidget',
-                        emptyText: i18n.getMsg('emptytext.tag'),
-                        parentWindow: this,
-                        maskTargetComponentType: 'fieldset',
-                        maskTargetComponentName: 'tagfieldset',
-                        margin: '5 5 5 5'
-                    }, {
-                        width: 25,
-                        height: 25,
-                        xtype: 'button',
-                        margin: '5 5 5 0',
-                        action: 'createtag',
-                        icon: 'resources/img/list-add.png',
-                        tooltip: i18n.getMsg('button.createtag.tooltip'),
-                        handler: function(button) {
-                            var win = Ext.create('Lada.view.window.TagCreate', {
-                                tagWidget: me.down('tagwidget'),
-                                probe: button.up('probeform').getForm()
-                                    .getRecord().get('hauptprobenNr'),
-                                recordType: 'probe'
-                            });
-                            //Close window if parent window is closed
-                            var parentWindow = button.up('probenedit') ?
-                                button.up('probenedit') :
-                                button.up('probecreate');
-                            parentWindow.on('close', function() {
-                                win.close();
-                            });
-                            win.show();
-                        }
-                    }]
                 }]
             }]
         }];
@@ -655,10 +611,6 @@ Ext.define('Lada.view.form.Probe', {
             this.down('messstellelabor').setValue(items.getAt(0));
         }
         this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
-        //Do not set tagwidget probe id if record is not saved
-        if (probeRecord.phantom === false) {
-            this.down('tagwidget').setProbe(probeRecord.data.id);
-        }
     },
 
     setMediaDesk: function(record) {

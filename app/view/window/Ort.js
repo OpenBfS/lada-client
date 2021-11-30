@@ -19,6 +19,8 @@ Ext.define('Lada.view.window.Ort', {
 
     minWidth: 440,
 
+    maxHeight: 700,
+
     margin: 10,
 
     shadow: false,
@@ -58,7 +60,7 @@ Ext.define('Lada.view.window.Ort', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('title.loading.ort');
-
+        this.height = Ext.getBody().getViewSize().height - 30;
         this.tools = [{
             type: 'help',
             tooltip: i18n.getMsg('help.qtip'),
@@ -104,31 +106,33 @@ Ext.define('Lada.view.window.Ort', {
             this.record = Ext.create('Lada.model.Ort');
         }
 
-        if (this.parentWindow !== null) {
-            if (
-                this.parentWindow.xtype === 'ortszuordnungwindow' ||
-                this.parentWindow.xtype === 'ortstammdatengrid'
-            ) {
-                this.record.set('readonly', true);
-            }
-        }
-
-        if (this.mode) {
-            this.setTitle(i18n.getMsg('orte.' + this.mode));
+        if (this.record.phantom) {
+            this.mode = 'new';
+            this.setTitle(i18n.getMsg('orte.new'));
         } else {
-            this.setTitle(
-                this.record.phantom?
-                    i18n.getMsg('orte.new') :
-                    i18n.getMsg('orte.edit') +
-                        ' <i>- Refs: ' +
-                        this.record.get('referenceCount') +
-                        ' /' +
-                        this.record.get('plausibleReferenceCount') +
-                        ' /' +
-                        this.record.get('referenceCountMp') +
-                        ' (Proben/plaus.Proben/MP)' +
-                        '</i>'
-            );
+            if (this.parentWindow !== null) {
+                if (
+                    this.parentWindow.xtype === 'ortszuordnungwindow' ||
+                    this.parentWindow.xtype === 'ortstammdatengrid'
+                ) {
+                    this.mode = 'show';
+                    this.setTitle(i18n.getMsg('orte.show') + ' - ' +
+                        i18n.getMsg('orte.ortId') + ': ' +
+                        this.record.get('ortId'));
+                }
+            } else {
+                if (this.record.get('readonly') === true) {
+                    this.mode = 'show';
+                    this.setTitle(i18n.getMsg('orte.show') + ' - ' +
+                        i18n.getMsg('orte.ortId') + ': ' +
+                        this.record.get('ortId'));
+                } else {
+                    this.mode = 'edit';
+                    this.setTitle(i18n.getMsg('orte.edit') + ' - ' +
+                        i18n.getMsg('orte.ortId') + ': ' +
+                        this.record.get('ortId'));
+                }
+            }
         }
 
         this.add([
@@ -149,7 +153,17 @@ Ext.define('Lada.view.window.Ort', {
         var i18n = Lada.getApplication().bundle;
         this.mode = mode;
         if (this.mode) {
-            this.title = i18n.getMsg('orte.' + this.mode);
+            this.setTitle(
+                this.record.phantom?
+                    i18n.getMsg('orte.new') :
+                    this.record.get('readonly') ?
+                        i18n.getMsg('orte.show') + ' - ' +
+                         i18n.getMsg('orte.ortId') + ': ' +
+                         this.record.get('ortId'):
+                        (i18n.getMsg('orte.edit') + ' - '
+                    + i18n.getMsg('orte.ortId') + ': '
+                    + this.record.get('ortId'))
+            );
         } else {
             this.title = this.record.phantom ?
                 i18n.getMsg('orte.new') :

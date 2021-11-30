@@ -13,6 +13,7 @@ Ext.define('Lada.view.widget.KoordinatenArt', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.koordinatenart',
     store: 'KoordinatenArt',
+    requires: ['Lada.store.KoordinatenArt'],
     displayField: 'id',
     valueField: 'id',
     // Enable filtering of comboboxes
@@ -24,20 +25,21 @@ Ext.define('Lada.view.widget.KoordinatenArt', {
     forceSelection: true,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{idfGeoKey} - {koordinatenart}</div></tpl>'),
+            '{id} - {koordinatenart}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{idfGeoKey} - {koordinatenart}</tpl>'),
+        '<tpl for=".">{id} - {koordinatenart}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.koordinatenart');
 
-        this.store = Ext.data.StoreManager.get('koordinatenart');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.KoordinatenArt');
-            this.store.setProxy(Ext.clone(this.store.getProxy()));
-            this.store.load();
+        var store = Ext.data.StoreManager.get('koordinatenart');
+        if (!store) {
+            Ext.create('Lada.store.KoordinatenArt', {
+                storeId: 'koordinatenart'
+            });
         }
+        this.store = Ext.data.StoreManager.get('koordinatenart');
         this.callParent(arguments);
     }
 });

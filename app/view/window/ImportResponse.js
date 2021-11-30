@@ -12,6 +12,9 @@ Ext.define('Lada.view.window.ImportResponse', {
     downloadPrefix: '',
     downloadPostfix: '',
 
+    // submitted generated tags, to be offered as "send to clipboard"
+    importtag: null,
+
     //Downloadable report content
     download: '',
 
@@ -58,6 +61,11 @@ Ext.define('Lada.view.window.ImportResponse', {
         var me = this;
         var i18n = Lada.getApplication().bundle;
 
+        this.on({
+            show: function() {
+                this.removeCls('x-unselectable');
+            }
+        });
         this.downloadPrefix = '<!DOCTYPE html>' +
                 '<head><meta charset="utf-8"></head><body>';
         this.downloadPostfix = '</body></html>';
@@ -65,9 +73,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         me.mstEncoding = i18n.getMsg('encoding') + ' ' + this.encoding;
         if (this.mst !== null) {
             me.mstEncoding += '&emsp;' +
-            i18n.getMsg('import.configMst') +
-            ': ' +
-            this.mst;
+            i18n.getMsg('import.configMst') + ': ' + this.mst;
         }
 
         this.bodyStyle = {background: '#fff'};
@@ -81,6 +87,7 @@ Ext.define('Lada.view.window.ImportResponse', {
             border: false
         }];
 
+        var isClip = ClipboardJS && ClipboardJS.isSupported();
         me.buttons = [{
             text: i18n.getMsg('close'),
             scope: this,
@@ -96,6 +103,24 @@ Ext.define('Lada.view.window.ImportResponse', {
                     me.downloadPostfix;
                 var blob = new Blob([downloadJoin], {type: 'text/html'});
                 saveAs(blob, 'report.html');
+            }
+        }, {
+            text: i18n.getMsg('button.tagToClipboard'),
+            name: 'tagclipboard',
+            hidden: !isClip,
+            disabled: true,
+            listeners: {
+                afterrender: function(cmp) {
+                    if (ClipboardJS && ClipboardJS.isSupported() && me.importtag) {
+                        var btnDom = cmp.getEl().dom;
+                        btnDom.setAttribute('data-clipboard-text', me.importtag);
+                        new ClipboardJS(btnDom);
+                    }
+                    else {
+                        cmp.setHidden(true);
+                    }
+
+                }
             }
         }];
         this.callParent(arguments);
@@ -117,123 +142,23 @@ Ext.define('Lada.view.window.ImportResponse', {
                     fileName +
                     ':</b><br/><ol>&#40' +
                     me.mstEncoding +
-                    '&#41</ol>';
+                    '&#41</ol>' +
+                    '<br/>Tag: ' +
+                    fileResult.tag+
+                    '<p/>';
                 html += i18n.getMsg('import.messages') + ':<br/><hr>';
                 html += me.parseResponse(fileResult, true);
                 me.download += html;
             });
             me.down('button[name=download]').enable();
+            if (me.importtag) {
+                me.down('button[name=tagclipboard]').enable();
+            }
         } else {
             html += i18n.getMsg(response.message) + ':<br/>'
                 + response.data;
         }
-        me.down('panel').setHtml(me.down('panel').html + html);
-    },
-
-    /**
-     * Update the result window after an error has occured during the upload.
-     * Updates the result text and the progress bar.
-     * @param status HTTP status code
-     * @param statusText Status text
-     * @param fileIndex Index of the file in the name array
-     */
-    updateOnError: function(status, statusText, fileIndex) {
-        var i18n = Lada.getApplication().bundle;
-        this.finished++;
-        this.down('progressbar').updateProgress(this.finished/this.fileCount);
-        var filename = this.fileNames[fileIndex];
-        var response = '<br/><hr><b>' +
-            filename +
-            ':</b><br/><ol>&#40' +
-            this.mstEncoding +
-            '&#41</ol>';
-        response += i18n.getMsg('import.messages') + ':<br/><hr>';
-        response += status + ' - ' + statusText;
-        this.down('panel').setHtml(this.down('panel').html + response);
-        this.download += response;
-        if (this.finished === this.fileCount) {
-            this.down('button[name=download]').enable();
-        }
-    },
-
-    /**
-     * Parse the response and create a summary of the result
-     * @param data
-     */
-    parseShortResponse: function(data) {
-        var i18n = Lada.getApplication().bundle;
-        var errors = data.errors;
-        var warnings = data.warnings;
-        var notifications = data.notifications;
-        var out = [];
-        // There is a entry for each imported proben in the errors dict
-        // (might be empty)
-
-        var numErrors;
-        var numWarnings;
-        var numNotifications;
-        if (!Ext.isObject(errors)) {
-            numErrors = 0;
-        } else {
-            numErrors = Object.keys(errors).length;
-        }
-        if (!Ext.isObject(warnings)) {
-            numWarnings = 0;
-        } else {
-            numWarnings = Object.keys(warnings).length;
-        }
-        if (!data.success) {
-            out.push(i18n.getMsg('importResponse.failure.server',
-                this.fileName));
-        } else {
-            if (numErrors > 0) {
-                if (errors.Parser) {
-                    out.push(
-                        i18n.getMsg('importResponse.failure', this.fileName));
-                } else {
-                    out.push(i18n.getMsg(
-                        'importResponse.failure.generic.partial', numErrors));
-                }
-                out.push('<br/>');
-                out.push('<br/>');
-            }
-            if (numWarnings > 0) {
-                if (warnings.Parser) {
-                    out.push(i18n.getMsg('importResponse.numWarnings',
-                        numWarnings - 1));
-                    out.push('<br/>');
-                    out.push(i18n.getMsg('importResponse.warnings'));
-                } else {
-                    out.push(i18n.getMsg('importResponse.numWarnings',
-                        numWarnings));
-                }
-                out.push('<br/>');
-                out.push('<br/>');
-            }
-
-            if (numNotifications > 0) {
-                if (notifications.Parser) {
-                    out.push(i18n.getMsg('importResponse.numNotifications',
-                        numNotifications - 1));
-                    out.push('<br/>');
-                    out.push(i18n.getMsg('importResponse.Notifications'));
-                } else {
-                    out.push(i18n.getMsg('importResponse.numNotifications',
-                        numNotifications));
-                }
-                out.push('<br/>');
-                out.push('<br/>');
-            }
-
-            if (numErrors > 0 || numWarnings > 0) {
-                out.push(i18n.getMsg('importResponse.failure.details'));
-                out.push('<hr>');
-            } else {
-                out.push(i18n.getMsg('importResponse.success', this.fileName));
-            }
-            out.push('<br/>');
-        }
-        return out.join('');
+        me.down('panel').setHtml(me.down('panel').html + me.download);
     },
 
     /**
@@ -267,7 +192,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         var numNotifications = Ext.isObject(notifications) ?
             Object.keys(notifications).length :
             0;
-        if (!data.success) {
+        if (!data.success && numErrors === 0) {
             if (divHtml) {
                 out.push(divStyle + i18n.getMsg(
                     'importResponse.failure.server', this.fileName) + '</DIV>');
@@ -283,10 +208,14 @@ Ext.define('Lada.view.window.ImportResponse', {
                 out.push(divStyle);
             }
             if (numErrors > 0) {
+                if (!data.success) {
+                    out.push(i18n.getMsg('importResponse.failure.mandatory'));
+                    out.push('<p/>');
+                }
                 out.push(i18n.getMsg('importResponse.failure.errorlist'));
                 out.push('<br/>');
                 out.push('<ol>');
-                var msgs, parts, str;
+                var msgs, parts, str, keySplit;
                 for (var key in errors) {
                     msgs = errors[key];
                     if (key !== 'parser') {
@@ -298,7 +227,8 @@ Ext.define('Lada.view.window.ImportResponse', {
                     validation.push(
                         i18n.getMsg('importResponse.failure.validations'));
                     for (var i = msgs.length - 1; i >= 0; i--) {
-                        if (msgs[i].key === 'validation') {
+                        keySplit = msgs[i].key.split('#');
+                        if (keySplit[0] === 'validation') {
                             validation.push('<ol>');
                             parts = msgs[i].value.split('#');
                             str = i18n.getMsg(parts[0]) +
@@ -355,7 +285,8 @@ Ext.define('Lada.view.window.ImportResponse', {
                     validation.push(i18n.getMsg(
                         'importResponse.warnings.validations'));
                     for (var i3 = msgs.length - 1; i3 >= 0; i3--) {
-                        if (msgs[i3].key === 'validation') {
+                        keySplit = msgs[i3].key.split('#');
+                        if (keySplit[0] === 'validation') {
                             validation.push('<ol>');
                             parts = msgs[i3].value.split('#');
                             str = i18n.getMsg(parts[0]) +
@@ -414,7 +345,8 @@ Ext.define('Lada.view.window.ImportResponse', {
                     validation.push(i18n.getMsg(
                         'importResponse.notifications.validations'));
                     for (var i5 = msgs.length - 1; i5 >= 0; i5--) {
-                        if (msgs[i5].key === 'validation') {
+                        keySplit = msgs[i5].key.split('#');
+                        if (keySplit[0] === 'validation') {
                             validation.push('<ol>');
                             parts = msgs[i5].value.split('#');
                             str = i18n.getMsg(parts[0]) +

@@ -31,6 +31,12 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             },
             'ortszuordnungform ortszuordnungtyp [name=ortszuordnungTyp]': {
                 change: this.dirtyChange
+            },
+            'ortszuordnungform ortszusatz [name=ozId]': {
+                change: this.dirtyChange
+            },
+            'ortszuordnungform tarea [name=ortszusatztext]': {
+                change: this.dirtyChange
             }
         });
     },
@@ -52,6 +58,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         record.set('ortId', data.ortId[0]);
         record.set('ortszuordnungTyp', data.ortszuordnungTyp);
         record.set('ortszusatztext', data.ortszusatztext);
+        record.set('ozId', data.ozId);
         if (!record.get('letzteAenderung')) {
             record.set('letzteAenderung', new Date());
         }
@@ -179,6 +186,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         }
         if (form.findField('ortszusatztext').isDirty()
             || form.findField('ortszuordnungTyp').isDirty()
+            || form.findField('ozId').isDirty()
             || ortIdIsDirty) {
             form.owner.down('button[action=revert]').setDisabled(false);
             if (valid && form.getValues().ortId !== '') {
@@ -193,16 +201,17 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         }
     },
 
-    dirtyChange: function(combo, value) {
+    dirtyChange: function(combo) {
         var ozf = combo.up('ortszuordnungform');
         ozf.form.owner.down('button[action=revert]').setDisabled(false);
         if (
             ozf.form.findField('ortId').getValue() !== '' &&
-            value !== null
+            ozf.form.isValid()
         ) {
             ozf.form.owner.down('button[action=save]').setDisabled(false);
             ozf.clearMessages();
         }
+
     },
 
     /**

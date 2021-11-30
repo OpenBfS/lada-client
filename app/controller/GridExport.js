@@ -38,14 +38,20 @@ Ext.define('Lada.controller.GridExport', {
             Ext.create('Ext.window.Window', {
                 title: i18n.getMsg('export.failed'),
                 modal: true,
-                layout: 'vbox',
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'
+                },
                 items: [{
                     xtype: 'container',
                     html: failmessage,
                     margin: '10, 5, 5, 5'
                 }, {
                     xtype: 'container',
-                    layout: 'hbox',
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch'
+                    },
                     defaults: {
                         margin: '5,5,5,5'
                     },

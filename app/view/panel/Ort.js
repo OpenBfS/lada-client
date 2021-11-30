@@ -4,6 +4,7 @@ Ext.define('Lada.view.panel.Ort', {
 
     requires: [
         'Lada.view.panel.Map',
+        'Lada.store.Orte',
         'Lada.view.grid.Orte'
     ],
 
@@ -102,6 +103,13 @@ Ext.define('Lada.view.panel.Ort', {
             me.ortstore = store;
         }
         if (!me.ortstore) {
+            var ortstore = Ext.data.StoreManager.get('orte');
+            if (!ortstore) {
+                Ext.create('Lada.store.Orte', {
+                    storeId: 'orte',
+                    defaultPageSize: 0
+                });
+            }
             me.ortstore = Ext.data.StoreManager.get('orte');
         }
         me.ortstore.clearFilter(true);

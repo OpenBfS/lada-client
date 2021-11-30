@@ -89,17 +89,23 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         this.genericAddButton();
         this.genericDeleteButton();
         this.toolbarbuttons.push('->');
-        switch (this.rowtarget.dataType) {
-            case 'mpId':
-                this.addMessprogrammButtons();
-                break;
-            case 'probeId':
-                this.addProbeButtons();
-                break;
-            case 'messungId':
-                this.addMessungButtons();
-                break;
-            case 'ortId':
+        if (this.rowtarget.dataType === 'mpId') {
+            this.addMessprogrammButtons();
+        }
+        if (this.rowtarget.dataType === 'probeId') {
+            this.addProbeButtons();
+        }
+        if (this.rowtarget.dataType === 'messungId') {
+            this.addMessungButtons();
+        } else if (this.rowtarget.messungIdentifier){
+            var mI = this.rowtarget.messungIdentifier;
+            if (this.getVisibleColumns().find(function(item){
+                return item.dataIndex === mI;
+            })) {
+                this.addSetStatusButton();
+            }
+        }
+        if (this.rowtarget.dataType === 'ortId') {
                 this.addOrtButtons();
         }
         this.addExportButton();
@@ -213,7 +219,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 koordXExtern: koord_x.toString(),
                 koordYExtern: koord_y.toString(),
                 kdaId: 4,
-                ortTyp: 1
+                ortTyp: 1,
+                plausibleReferenceCount: 0,
+                referenceCountMp: 0,
+                referenceCount: 0
             })
         }).show();
     },
@@ -661,7 +670,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         col.xtype = 'numbercolumn';
         col.format = orig_column.get('dataType').format;
         col.renderer = function(value) {
-            if (!value) {
+            if (value === null) {
                 return '';
             }
             var format = col.format;
@@ -949,28 +958,17 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
         };
     },
+
     addProbeButtons: function() {
-        if (!this.tbuttonExists('importprobe')) {
-            this.toolbarbuttons.push({
-                text: this.i18n.getMsg('button.import'),
-                icon: 'resources/img/svn-commit.png',
-                action: 'importprobe',
-                needsSelection: false,
-                disabled: false
-            });
-        }
-        if (!this.tbuttonExists('assigntags')) {
-            this.toolbarbuttons.push({
-                text: this.i18n.getMsg('tag.toolbarbutton.assigntags'),
-                iconCls: 'x-fa fa-tag',
-                action: 'assigntags',
-                needsSelection: true,
-                disabled: true
-            });
-        }
+        this.addAssignTagsButton();
     },
 
     addMessungButtons: function() {
+        this.addSetStatusButton();
+        this.addAssignTagsButton();
+    },
+
+    addSetStatusButton: function() {
         if (!this.tbuttonExists('setstatus')) {
             //Disable status button if user has no status role
             var needsSelection = false;
@@ -987,7 +985,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 disabled: true
             });
         }
-        if (!this.tbuttonExists('assigntags')) {
+    },
+
+    addAssignTagsButton: function() {
+        // Only users with associated Messstelle can (un)assign tags
+        if (Lada.mst.length > 0 && !this.tbuttonExists('assigntags')) {
             this.toolbarbuttons.push({
                 text: this.i18n.getMsg('tag.toolbarbutton.assigntags'),
                 iconCls: 'x-fa fa-tag',

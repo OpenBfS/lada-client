@@ -121,6 +121,7 @@ Ext.define('Lada.view.window.RecordWindow', {
                 if (!me.isVisible()) {
                     return false;
                 }
+                me.setLoading(false);
                 if (!success) {
                     me.showReloadMask();
                 } else {

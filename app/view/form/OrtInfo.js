@@ -32,9 +32,6 @@ Ext.define('Lada.view.form.OrtInfo', {
                 fieldLabel: i18n.getMsg('orte.ortId'),
                 name: 'ortId'
             }, {
-                fieldLabel: i18n.getMsg('orte.ozId'),
-                name: 'ozId'
-            }, {
                 fieldLabel: i18n.getMsg('orte.kurztext'),
                 name: 'kurztext'
             }, {
@@ -54,16 +51,6 @@ Ext.define('Lada.view.form.OrtInfo', {
                 label: i18n.getMsg('orte.verwaltungseinheit'),
                 firstitem: 'gemId',
                 seconditem: 'gemeinde'
-            }, {
-                xtype: 'ortinforow',
-                label: i18n.getMsg('orte.kda'),
-                firstitem: 'kdaId',
-                seconditem: 'koordinatenart'
-            }, {
-                xtype: 'ortinforow',
-                label: i18n.getMsg('orte.koords'),
-                firstitem: 'koordXExtern',
-                seconditem: 'koordYExtern'
             }]
         }];
         this.callParent(arguments);
@@ -93,7 +80,7 @@ Ext.define('Lada.view.form.OrtInfoRow', {
             xtype: 'label',
             html: this.label+':',
             width: 125,
-            padding: '4, 0, 5, 0'
+            padding: '2, 0, 2, 0'
         }, {
             name: this.firstitem,
             width: 80

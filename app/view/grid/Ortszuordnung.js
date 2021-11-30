@@ -12,6 +12,11 @@
 Ext.define('Lada.view.grid.Ortszuordnung', {
     extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.ortszuordnunggrid',
+    requires: [
+        'Lada.store.Ortszuordnung',
+        'Lada.store.OrtszuordnungMp',
+        'Lada.store.Orte'
+    ],
 
     maxHeight: 350,
     // minHeight and deferEmptyText are needed to be able to show the
@@ -34,8 +39,17 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     ignoreNextDblClick: false,
 
     lastClickTime: 0,
+    ortstore: null,
 
     initComponent: function() {
+        var ortstore = Ext.data.StoreManager.get('orte');
+        if (!ortstore){
+            Ext.create('Lada.store.Orte', {
+                storeId: 'orte',
+                defaultPageSize: 0
+            });
+        }
+        this.ortstore = Ext.data.StoreManager.get('orte');
         var me = this;
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.Ortszuordnung');
@@ -105,7 +119,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             dataIndex: 'ortId',
             flex: 3,
             renderer: function(value) {
-                var store = Ext.data.StoreManager.get('orte');
+                var store = me.ortstore;
                 var record = store.getById(value);
                 if (!record) {
                     record = Ext.create('Lada.model.Ort');
@@ -131,7 +145,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             dataIndex: 'ortId',
             width: 45,
             renderer: function(value) {
-                var store = Ext.data.StoreManager.get('orte');
+                var store = me.ortstore;
                 var staaten = Ext.data.StoreManager.get('staaten');
                 var ortRecord = store.getById(value);
                 if (!ortRecord) {
@@ -150,9 +164,9 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('orte.gemId'),
             dataIndex: 'ortId',
-            flex: 3,
+            width: 80,
             renderer: function(value) {
-                var store = Ext.data.StoreManager.get('orte');
+                var store = me.ortstore;
                 var record = store.getById(value);
                 if (!record || record.get('gemId') === '') {
                     return '';
@@ -164,7 +178,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             dataIndex: 'ortId',
             flex: 3,
             renderer: function(value) {
-                var store = Ext.data.StoreManager.get('orte');
+                var store = me.ortstore;
                 var gemeinden =
                     Ext.data.StoreManager.get('verwaltungseinheiten');
                 var record = store.getById(value);
@@ -180,26 +194,14 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             }
         }, {
             header: i18n.getMsg('orte.ozId'),
-            dataIndex: 'ortId',
-            width: 80,
-            renderer: function(value) {
-                var store = Ext.data.StoreManager.get('orte');
-                var record = store.getById(value);
-                if (!record) {
-                    return '';
-                }
-                var ozid = record.get('ozId');
-                if (ozid === undefined || ozid === null || ozid === '') {
-                    return '';
-                }
-                return ozid;
-            }
+            dataIndex: 'ozId',
+            width: 80
         }, {
             header: i18n.getMsg('orte.anlageId'),
             dataIndex: 'ortId',
             width: 60,
             renderer: function(value) {
-                var store = Ext.data.StoreManager.get('orte');
+                var store = me.ortstore;
                 var record = store.getById(value);
                 if (!record) {
                     return '';
@@ -221,7 +223,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             dataIndex: 'ortId',
             flex: 4,
             renderer: function(value) {
-                var store = Ext.data.StoreManager.get('orte');
+                var store = me.ortstore;
                 var record = store.getById(value);
                 if (!record) {
                     return '';

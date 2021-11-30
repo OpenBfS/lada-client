@@ -86,7 +86,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
             if (errorText) {
                 if (!this.tooltip) {
                     Ext.create('Ext.tip.ToolTip', {
-                        target: imgId,
+                        target: Ext.get(imgId),
                         html: errorText
                     });
                 } else {

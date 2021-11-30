@@ -47,10 +47,9 @@ Ext.define('Lada.view.window.PrintGrid', {
     dokPoolEnabled: true,
 
     constrain: true,
-
+    resizable: false,
     defaults: {
         margin: '5, 5, 5, 5',
-        width: '100%',
         border: false
     },
 
@@ -133,7 +132,6 @@ Ext.define('Lada.view.window.PrintGrid', {
                 xtype: 'panel',
                 name: 'generic-fieldset',
                 border: false,
-                width: '100%',
                 margin: '0 135 0 0'
             }, {
                 xtype: 'fieldset',
@@ -213,7 +211,6 @@ Ext.define('Lada.view.window.PrintGrid', {
             name: 'irix-fieldset-checkbox',
             boxLabel: 'DokPool:',
             boxLabelAlign: 'before',
-            width: '100%',
             border: false,
             checked: this.config.chartPrint,
             disabled: printDisabled,

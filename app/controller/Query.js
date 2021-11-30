@@ -12,6 +12,7 @@ Ext.define('Lada.controller.Query', {
         'Lada.view.widget.base.DateRange',
         'Lada.store.GridColumnValue',
         'Lada.store.GenericResults',
+        'Lada.store.Orte',
         'Lada.view.widget.Messstelle',
         'Lada.view.widget.Umwelt',
         'Lada.view.widget.Staat',
@@ -180,6 +181,7 @@ Ext.define('Lada.controller.Query', {
         var cbox = panel.down('combobox[name=selectedQuery]');
         var cquery = cbox.getStore().getById(cbox.getValue());
         var name = panel.down('textfield[name=name]').getValue();
+        var messStellesIds = panel.down('cbox[name=messStellesIds]').getValue();
         if (name.length > 70) {
             name = name.substring(0, 60) + '... ('+Lada.username+')';
         } else {
@@ -190,7 +192,7 @@ Ext.define('Lada.controller.Query', {
             name: name,
             userId: Lada.userId,
             description: cquery.get('description'),
-            messStellesIds: '',
+            messStellesIds: messStellesIds,
             clonedFrom: cquery.get('id')
         });
         panel.store.add(newrecord);
@@ -536,7 +538,8 @@ Ext.define('Lada.controller.Query', {
                         Lada.view.window.PrintGrid.getInstance()
                             .updateGrid(resultGrid);
                     } else {
-                        if (operation.error.response.timedout) {
+                        if (operation.error.response
+                                    && operation.error.response.timedout) {
                             Ext.Msg.alert(
                                 i18n.getMsg('query.error.search.title'),
                                 i18n.getMsg(
@@ -710,8 +713,13 @@ Ext.define('Lada.controller.Query', {
                         options.mouseWheelEnabled = false;
                         options.decimalPrecision = 10;
                         options.value = recs[i].get('filterValue') || null;
-                        field = Ext.create('Lada.view.widget.base.NumberRange',
-                            options);
+                        if (dt.format === '###########') {
+                            field = Ext.create('Lada.view.widget.base.IntegerRange',
+                                options);
+                        } else {
+                            field = Ext.create('Lada.view.widget.base.NumberRange',
+                                options);
+                        }
                         negateCheckbox = true;
                         field.setValue(recs[i].get('filterValue'));
                         break;
@@ -920,6 +928,14 @@ Ext.define('Lada.controller.Query', {
                             options);
                         negateCheckbox = true;
                         break;
+                    case 'intervall':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        field = Ext.create('Lada.view.widget.Probenintervall',
+                            options);
+                        negateCheckbox = true;
+                        break;
                     case 'tag':
                         options.multiSelect = true;
                         options.editable = true;
@@ -1008,6 +1024,8 @@ Ext.define('Lada.controller.Query', {
             this.multiValueChanged(box, newvalue, box.up('datetimerange'));
         } else if (box.xtype === 'expnumberfield' && box.up('numrangefield')) {
             this.multiValueChanged(box, newvalue, box.up('numrangefield'));
+        } else if (box.xtype === 'formatnumberfield' && box.up('intrangefield')) {
+            this.multiValueChanged(box, newvalue, box.up('intrangefield'));
         /*} else if (box.xtype === 'tagwidget') {
             var store = box.up('querypanel').gridColumnValueStore;
             var name = box.name;
@@ -1092,14 +1110,14 @@ Ext.define('Lada.controller.Query', {
      */
     setrowtarget: function() {
         var rowHierarchy = [
+            'id',
             'messungId',
             'probeId',
             'mpId',
             'ortId',
             'probenehmer',
             'dsatzerz',
-            'mprkat',
-            'id'
+            'mprkat'
         ];
         var result = {
             dataType: null,
@@ -1112,6 +1130,9 @@ Ext.define('Lada.controller.Query', {
             if (csdata[i].get('dataType').name === 'probeId') {
                 result.probeIdentifier = csdata[i].get('dataIndex');
             }
+            if (csdata[i].get('dataType').name === 'messungId') {
+                result.messungIdentifier = csdata[i].get('dataIndex');
+            }
             var idx = rowHierarchy.indexOf(csdata[i].get('dataType').name);
             if (idx > -1 && idx < result.idx) {
                 result.dataType = csdata[i].get('dataType').name;
@@ -1123,13 +1144,16 @@ Ext.define('Lada.controller.Query', {
             return {
                 dataType: result.dataType,
                 dataIndex: result.dataIndex,
-                probeIdentifier: result.probeIdentifier || null
+                probeIdentifier: result.probeIdentifier || null,
+                messungIdentifier: result.messungIdentifier || null
+
             };
         } else {
             return {
                 dataType: null,
                 dataIndex: null,
-                probeIdentifier: null
+                probeIdentifier: null,
+                messungIdentifier: null
             };
         }
     },

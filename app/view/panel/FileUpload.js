@@ -7,20 +7,22 @@
  */
 
 /**
- * This is a simple Fileupload Window, used to upload LAF-Files
+ * This is a the Fileupload panel, used to upload LAF-Files
  */
-Ext.define('Lada.view.window.FileUpload', {
-    extend: 'Ext.window.Window',
+Ext.define('Lada.view.panel.FileUpload', {
+    extend: 'Ext.form.Panel',
     requires: [
         'Ext.form.field.File',
         'Lada.view.window.ImportResponse',
         'Lada.controller.grid.Uploads'
     ],
+    alias: 'widget.fileupload',
 
     layout: {
         type: 'vbox',
         align: 'stretch'
     },
+    margin: '10',
 
     files: null,
     fileNames: null,
@@ -46,22 +48,22 @@ Ext.define('Lada.view.window.FileUpload', {
             Ext.create('Ext.form.field.File', {
                 fieldLabel: i18n.getMsg('selectfile'),
                 allowBlank: false,
+                labelWidth: '30%',
                 buttonText: i18n.getMsg('search'),
-                margin: '3 3 3 3',
+                buttonOnly: true,
                 listeners: {
                     //Allow multiple files
                     afterRender: function(cmp) {
                         cmp.fileInputEl.dom.setAttribute(
                             'multiple', 'multiple');
                     },
-                    //Remove 'C:\Fakepath' part of filenames and show a comma
-                    //separated list to increase readability
+                    //Remove 'C:\Fakepath' part of filenames
                     change: function(field) {
                         var node = Ext.DomQuery.selectNode(
                             'input[id='+ field.getInputId() + ']');
                         var files = field.fileInputEl.dom.files;
                         var fileNames = '';
-                        var fset = field.up('window').down('fieldset');
+                        var fset = field.up('panel').down('fieldset');
                         fset.removeAll();
                         for (var i = 0; i < files.length; i++) {
                             var fname = files[i].name.replace(
@@ -82,14 +84,14 @@ Ext.define('Lada.view.window.FileUpload', {
                             i18n.getMsg('import.filesSelected', files.length));
                         node.value = fileNames;
                         if (
-                            (field.up('window').down('combobox[name=mst]')
+                            (field.up('panel').down('combobox[name=mst]')
                                 .isValid()) &&
                             (files.length !== 0)
                         ) {
-                            field.up('window').down(
+                            field.up('panel').down(
                                 'button[name=save]').setDisabled(false);
                         } else {
-                            field.up('window').down(
+                            field.up('panel').down(
                                 'button[name=save]').setDisabled(true);
                         }
                     }
@@ -108,6 +110,7 @@ Ext.define('Lada.view.window.FileUpload', {
             Ext.create('Ext.form.field.ComboBox', {
                 fieldLabel: i18n.getMsg('fileEncoding'),
                 allowBlank: false,
+                labelAlign: 'top',
                 displayField: 'name',
                 valueField: 'value',
                 name: 'encoding',
@@ -134,28 +137,29 @@ Ext.define('Lada.view.window.FileUpload', {
                 displayField: 'messStelle',
                 valueField: 'id',
                 fieldLabel: i18n.getMsg('vorbelegung'),
+                labelAlign: 'top',
                 allowBlank: false,
                 matchFieldWidth: false,
                 triggers: {
                     clear: {
                         cls: 'x-form-clear-trigger',
                         handler: function() {
-                            this.up('window').down('button[name=save]')
+                            this.up('panel').down('button[name=save]')
                                 .setDisabled(true);
                             this.clearValue();
                         }
                     }
                 },
                 listeners: {
-                    afterrender: function(combo) {
+                    afterRender: function(combo) {
                         if (combo.getStore().getCount() === 1) {
                             var recordSelected = combo.getStore().getAt(0);
                             combo.setValue(recordSelected);
                         }
                     },
                     select: function(combo) {
-                        if (combo.up('window').down('filefield').isValid()) {
-                            combo.up('window').down('button[name=save]')
+                        if (combo.up('panel').down('filefield').isValid()) {
+                            combo.up('panel').down('button[name=save]')
                                 .setDisabled(false);
                         }
                     }
@@ -168,8 +172,9 @@ Ext.define('Lada.view.window.FileUpload', {
                 margin: 3
             }),
             Ext.create('Ext.container.Container', {
-                width: '100%',
-                layout: 'hbox',
+                layout: {
+                    type: 'hbox'
+                },
                 items: [{
                     xtype: 'button',
                     text: i18n.getMsg('save'),
@@ -187,6 +192,7 @@ Ext.define('Lada.view.window.FileUpload', {
         ];
         this.callParent(arguments);
         this.down('combobox[name=encoding]').setValue('iso-8859-15');
+        this.title = i18n.getMsg('title.dataimport');
     },
 
     /**
@@ -194,8 +200,8 @@ Ext.define('Lada.view.window.FileUpload', {
      * A handler for a Abort-Button
      */
     abort: function(button) {
-        var win = button.up('window');
-        win.close();
+        var win = button.up('panel');
+        win.clear();
     },
 
     /**
@@ -242,24 +248,11 @@ Ext.define('Lada.view.window.FileUpload', {
      * content as value
      */
     uploadFiles: function(button, binFiles) {
-        var win = button.up('window');
+        var win = button.up('panel');
         var cb = win.down('combobox[name=encoding]');
         var mstSelector = win.down('combobox[name=mst]').getValue();
         var filenames =[];
 
-        if (cb.getValue() === 'utf-8') {
-            Ext.Object.each(binFiles, function(fileName, fileContent) {
-                var x = new Uint8Array(fileContent.slice(0, 3));
-                if (
-                    x[0] === 0xEF &&
-                    x[1] === 0xBB &&
-                    x[2] === 0xBF
-                ) {
-                    fileContent = fileContent.slice(3);
-                }
-                filenames.push(fileName);
-            });
-        }
         var controller = Lada.app.getController(
             'Lada.controller.grid.Uploads');
         var queueItem = controller.addQueueItem(filenames);

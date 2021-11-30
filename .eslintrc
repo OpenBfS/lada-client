@@ -17,6 +17,8 @@
         "MouseEvent": true,
         "Uint8Array": true,
         "ClipboardJS": true,
+        "DOMParser": true,
+        "localStorage": true,
         "Koala": true
     },
     "rules": {
@@ -85,12 +87,13 @@
         "space-before-function-paren": [1, "never"],
         "brace-style": [1, "1tbs"],
         "eol-last": 1,
-        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "indent": [1, 4, { "SwitchCase": 1 }],
         "quotes": ["error", "single"],
         "linebreak-style": [2, "unix"],
         "no-mixed-spaces-and-tabs": 2,
         "no-nested-ternary": 0,
         "no-trailing-spaces": 2,
+        "no-warning-comments": 1,
         "semi": [2, "always"],
         "max-len": [1, 80, 4]
     }

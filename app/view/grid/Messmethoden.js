@@ -15,6 +15,8 @@ Ext.define('Lada.view.grid.Messmethoden', {
 
     requires: [
         'Lada.store.MmtMessprogramm',
+        'Lada.store.Messmethoden',
+        'Lada.store.Messgroessen',
         'Lada.view.widget.Messmethode',
         'Lada.view.widget.NuklidTagfield'
     ],
@@ -28,8 +30,22 @@ Ext.define('Lada.view.grid.Messmethoden', {
 
     recordId: null,
     allowDeselect: true,
+    mmtStore: null,
+    mmtUnfilteredStore: null,
 
     initComponent: function() {
+        var mmtstore = Ext.data.StoreManager.get('messmethoden');
+        if (!mmtstore) {
+            Ext.create('Lada.store.Messmethoden', {storeId: 'messmethoden'});
+        }
+        var mmustore = Ext.data.StoreManager.get('messgroessenunfiltered');
+        if (!mmustore) {
+            Ext.create('Lada.store.Messgroessen', {
+                storeId: 'messgroessenunfiltered'});
+        }
+        this.mmtStore = Ext.data.StoreManager.get('messmethoden');
+        this.mmtUnfilteredStore = Ext.data.StoreManager.get(
+            'messgroessenunfiltered');
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.mmtgrid');
         var me = this;
@@ -72,8 +88,6 @@ Ext.define('Lada.view.grid.Messmethoden', {
 
         this.plugins = [this.rowEditing];
 
-
-
         this.dockedItems = [{
             xtype: 'toolbar',
             dock: 'bottom',
@@ -96,16 +110,13 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 if (!value || value === '') {
                     return '';
                 }
-                var store = Ext.data.StoreManager.get('messmethoden');
-                if (!store) {
-                    store = Ext.create('Lada.store.Messmethoden');
-                }
+                var store = me.mmtStore;
                 return value + ' - ' + store.findRecord(
                     'id', value, 0, false, false, true).get('messmethode');
             },
             editor: {
                 xtype: 'combobox',
-                store: Ext.data.StoreManager.get('messmethoden'),
+                store: me.mmtStore,
                 valueField: 'id',
                 displayField: 'messmethode',
                 allowBlank: false,
@@ -135,11 +146,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 if (!value || value === '') {
                     return '';
                 }
-                var store = Ext.data.StoreManager.get('messgroessenunfiltered');
-                if (!store) {
-                    store = Ext.create('Lada.store.Messgroessen', {
-                        storeId: 'messgroessenunfiltered'});
-                }
+                var store = me.mmtUnfilteredStore;
                 var returnvalues = '';
                 for (var i = 0; i < value.length; i++) {
                     if (i) {

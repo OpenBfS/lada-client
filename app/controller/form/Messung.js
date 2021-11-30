@@ -29,7 +29,6 @@ Ext.define('Lada.controller.form.Messung', {
                 click: this.showAuditTrail
             },
             'messungform': {
-                tagdirtychange: this.dirtyTags,
                 dirtychange: this.dirtyForm,
                 save: this.saveHeadless,
                 validitychange: this.checkCommitEnabled
@@ -59,25 +58,13 @@ Ext.define('Lada.controller.form.Messung', {
         formPanel.setLoading(true);
         var record = formPanel.getForm().getRecord();
         var data = formPanel.getForm().getFieldValues();
-        var wasPhantom = record.phantom;
         for (var key in data) {
             record.set(key, data[key]);
         }
         if (record.phantom) {
             record.set('id', null);
         }
-        delete record.data[formPanel.down('tagwidget').getInputId()];
-        //If record is phantom, do not apply tags yet
-        if (!wasPhantom) {
-            formPanel.down('tagwidget').applyChanges();
-        }
-        //If form data is read only, exit after saving tags
-        if (formPanel.readOnly) {
-            //Reload the grid to display tag changes
-            Ext.getCmp('dynamicgridid').reload();
-            formPanel.setLoading(false);
-            return;
-        }
+
         formPanel.getForm().getRecord().save({
             success: function(newRecord, response) {
                 var json = Ext.decode(response.getResponse().responseText);
@@ -104,11 +91,6 @@ Ext.define('Lada.controller.form.Messung', {
                         parentGrid[0].reload();
                     }
                     if (response.action === 'create' && json.success) {
-                        if (wasPhantom) {
-                            var tagWidget = formPanel.down('tagwidget');
-                            tagWidget.setMessung(record.data.id);
-                            tagWidget.applyChanges();
-                        }
                         oldWin.close();
                         var win = Ext.create('Lada.view.window.MessungEdit', {
                             probe: probe,
@@ -163,19 +145,6 @@ Ext.define('Lada.controller.form.Messung', {
         });
     },
 
-    /**
-     * Enables/disabled the save/reset buttons if tags hast been altered.
-     * Only disables buttons if form is not dirty, too.
-     */
-    dirtyTags: function(form, dirty) {
-        var dirtyMessungForm = form.owner.isDirty();
-        if (dirty) {
-            this.enableButtons(form);
-        } else if (dirtyMessungForm === false) {
-            this.disableButtons(form);
-        }
-    },
-
     enableButtons: function(form) {
         form.owner.down('button[action=save]').setDisabled(false);
         form.owner.down('button[action=discard]').setDisabled(false);
@@ -203,7 +172,7 @@ Ext.define('Lada.controller.form.Messung', {
         if (record.phantom) {
             record.set('id', null);
         }
-        delete record.data[formPanel.down('tagwidget').getInputId()];
+
         formPanel.getForm().getRecord().save({
             success: function(newRecord, response) {
                 var json = Ext.decode(response.getResponse().responseText);
@@ -308,18 +277,13 @@ Ext.define('Lada.controller.form.Messung', {
       * flag, the function calls the embedding windows enableChilren() function
       */
     dirtyForm: function(form, dirty) {
-        var tagwidget = form.owner.down('tagwidget');
-        if (!tagwidget) {
-            Ext.log({msg: 'Unable to get messung tag widget', lvl: 'warn'});
-            return;
-        }
         if (dirty) {
             if (form.isValid()) {
                 form.owner.down('button[action=save]').setDisabled(false);
             }
             form.owner.down('button[action=discard]').setDisabled(false);
             form.owner.up('window').disableChildren();
-        } else if (!tagwidget.hasChanges()) {
+        } else {
             form.owner.down('button[action=save]').setDisabled(true);
             form.owner.down('button[action=discard]').setDisabled(true);
             //Only enable children if the form was not readOnly
@@ -345,8 +309,8 @@ Ext.define('Lada.controller.form.Messung', {
         var i18n = Lada.getApplication().bundle;
         var win = Ext.create('Lada.view.window.SetStatus', {
             title: i18n.getMsg('statusSetzen.win.title'),
-            record: button.up('window')
-                .down('messungform').getForm().getRecord(),
+            selection: [button.up('window')
+                .down('messungform').getForm().getRecord()],
             modal: true
         });
         var view = button.up('messungform');

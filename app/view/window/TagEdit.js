@@ -12,6 +12,10 @@
 Ext.define('Lada.view.window.TagEdit', {
     extend: 'Ext.window.Window',
     alias: 'widget.tageditwindow',
+    requires: [
+        'Lada.view.window.TagCreate',
+        'Lada.store.Tag'
+    ],
 
     layout: 'vbox',
 
@@ -20,6 +24,8 @@ Ext.define('Lada.view.window.TagEdit', {
     width: 400,
     selection: null,
 
+    // Set this to reload a Tag widget in it
+    parentWindow: null,
 
     /**
      * This function initialises the Window
@@ -35,8 +41,7 @@ Ext.define('Lada.view.window.TagEdit', {
             items: [{
                 xtype: 'tagwidget',
                 margin: '5 5 5 5',
-                width: '75%',
-                mode: 'bulk'
+                width: '75%'
             }, {
                 width: 25,
                 height: 25,
@@ -49,7 +54,6 @@ Ext.define('Lada.view.window.TagEdit', {
                     var win = Ext.create('Lada.view.window.TagCreate', {
                         tagWidget: me.down('tagwidget'),
                         recordType: me.recordType,
-                        mode: 'bulk',
                         tagEdit: me,
                         selection: me.selection,
                         probe: null
@@ -75,13 +79,17 @@ Ext.define('Lada.view.window.TagEdit', {
                 action: 'bulkaddtags',
                 margin: '5 5 5 5',
                 text: i18n.getMsg('tag.assignwindow.assignbutton.text'),
-                handler: this.assignToSelection
+                handler: function() {
+                    me.editSelection(this, 'POST');
+                }
             }, {
                 xtype: 'button',
                 action: 'bulkdeletetags',
                 margin: '5 5 5 5',
                 text: i18n.getMsg('tag.assignwindow.unassignbutton.text'),
-                handler: this.unassignFromSelection
+                handler: function() {
+                    me.editSelection(this, 'DELETE');
+                }
             }, {
                 xtype: 'button',
                 text: i18n.getMsg('cancel'),
@@ -92,9 +100,15 @@ Ext.define('Lada.view.window.TagEdit', {
                 }
             }]
         }];
-        this.callParent(arguments);
-        this.down('progressbar').updateProgress(0, '');
 
+        this.callParent(arguments);
+
+        // Pre-populate tag widget if only one item selected
+        if (me.selection.length === 1) {
+            me.down('tagwidget').setTagged(me.selection[0], me.recordType);
+        }
+
+        this.down('progressbar').updateProgress(0, '');
     },
 
     disableButtons: function() {
@@ -114,97 +128,48 @@ Ext.define('Lada.view.window.TagEdit', {
     },
 
     /**
-     * Eventhandler that unassigns the selected tag(s) from the selected probe
-     * instance(s)
+     * Eventhandler that (un)assigns the selected tag(s) from
+     * the selected objects
+     *
      * @param button Button that caused the event
+     * @param method 'POST' to assign or 'DELETE' to unassign tag
      */
-    unassignFromSelection: function(button) {
+    editSelection: function(button, method) {
         var me = button.up('tageditwindow');
         var i18n = Lada.getApplication().bundle;
         var tagwidget = me.down('tagwidget');
         var tags = tagwidget.getValue();
         var store = Ext.create('Lada.store.Tag', {
-            autoload: false
+            autoLoad: false
         });
         var tagCount = tags.length * me.selection.length;
         var tagsSet = 0;
+        var tagsFailed = '';
         me.down('progressbar').show();
         me.down('progressbar').updateProgress(
             0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
         me.disableButtons();
 
         for (var i = 0; i < me.selection.length; i++) {
-            switch (me.recordType) {
-                case 'messung':
-                    var messungId = me.selection[i].data.id;
-                    store.setMessung(messungId);
-                    break;
-                case 'probe':
-                    var probeId = me.selection[i].data.probeId;
-                    store.setProbe(probeId);
-                    break;
-                default:
-                    Ext.raise('Unkown record type: ' + me.recordType);
-            }
+            store.setTagged(me.selection[i], me.recordType);
             for (var j = 0; j < tags.length; j++) {
                 var tag = tags[j];
                 // eslint-disable-next-line no-loop-func
-                store.deleteZuordnung(tag, function() {
-                    tagsSet++;
-                    var ratio = tagsSet/tagCount;
-                    me.down('progressbar').updateProgress(
-                        ratio,
-                        i18n.getMsg(
-                            'tag.assignwindow.progress',
-                            tagsSet,
-                            tagCount,
-                            false));
-                    if (ratio === 1) {
-                        Ext.getCmp('dynamicgridid').reload();
-                        me.enableButtons();
+                store.editZuordnung(tag, method, function(opt, success, resp) {
+                    var tagId = resp.request.jsonData.tagId;
+                    if (!success) {
+                        tagsFailed = tagsFailed
+                            + tagwidget.store.getById(tagId).get('tag')
+                            + ': ' + resp.statusText + '<br><br>';
+                    } else {
+                        var respObj = Ext.decode(resp.responseText);
+                        if (!respObj.success) {
+                            tagsFailed = tagsFailed
+                                + tagwidget.store.getById(tagId).get('tag')
+                                + ': ' + i18n.getMsg(respObj.message)
+                                + '<br><br>';
+                        }
                     }
-                });
-            }
-        }
-    },
-
-    /**
-     * Eventhandler that assigns the selected tag(s) to the chosen probe
-     * instance(s)
-     * @param button Button that caused the event
-     */
-    assignToSelection: function(button) {
-        var me = button.up('tageditwindow');
-        var i18n = Lada.getApplication().bundle;
-        var tagwidget = me.down('tagwidget');
-        var tags = tagwidget.getValue();
-        var store = Ext.create('Lada.store.Tag', {
-            autoload: false
-        });
-        var tagCount = tags.length * me.selection.length;
-        var tagsSet = 0;
-        me.down('progressbar').show();
-        me.down('progressbar').updateProgress(
-            0, i18n.getMsg('tag.assignwindow.progress', 0, tagCount, false));
-        me.disableButtons();
-
-        for (var i = 0; i < me.selection.length; i++) {
-            switch (me.recordType) {
-                case 'messung':
-                    var messungId = me.selection[i].data.id;
-                    store.setMessung(messungId);
-                    break;
-                case 'probe':
-                    var probeId = me.selection[i].data.probeId;
-                    store.setProbe(probeId);
-                    break;
-                default:
-                    Ext.raise('Unkown record type: ' + me.recordType);
-            }
-            for (var j = 0; j < tags.length; j++) {
-                var tag = tags[j];
-                // eslint-disable-next-line no-loop-func
-                store.createZuordnung(tag, function() {
                     tagsSet++;
                     var ratio = tagsSet/tagCount;
                     me.down('progressbar').updateProgress(
@@ -215,8 +180,16 @@ Ext.define('Lada.view.window.TagEdit', {
                             tagCount,
                             false));
                     if (ratio === 1) {
+                        if (tagsFailed) {
+                            Ext.Msg.alert(
+                                i18n.getMsg('tag.widget.err.genericsavetitle'),
+                                tagsFailed);
+                        }
+                        if (me.parentWindow) {
+                            me.parentWindow.down('tagwidget').reload();
+                        }
                         Ext.getCmp('dynamicgridid').reload();
-                        me.enableButtons();
+                        me.close();
                     }
                 });
             }

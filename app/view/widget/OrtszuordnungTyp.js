@@ -12,7 +12,8 @@
 Ext.define('Lada.view.widget.OrtszuordnungTyp', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.ortszuordnungtyp',
-    store: 'OrtszuordnungTyp',
+    requires: ['Lada.store.OrtszuordnungTyp'],
+    store: 'ortszuordnungtyp',
     displayField: 'ortstyp',
     valueField: 'id',
     editable: this.editable || false,
@@ -23,16 +24,20 @@ Ext.define('Lada.view.widget.OrtszuordnungTyp', {
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
+    width: 350,
     allowBlank: this.allowBlank,
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.ortszuordnungtyp');
 
-        this.store = Ext.data.StoreManager.get('ortszuordnungtyp');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.OrtszuordnungTyp');
+        var store = Ext.data.StoreManager.get('ortszuordnungtyp');
+        if (!store){
+            Ext.create('Lada.store.OrtszuordnungTyp', {
+                storeId: 'ortszuordnungtyp'
+            });
         }
+        this.store = Ext.data.StoreManager.get('ortszuordnungtyp');
         this.store.sort();
         this.callParent(arguments);
     }

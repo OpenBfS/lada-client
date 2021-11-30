@@ -11,7 +11,10 @@
  */
 Ext.define('Lada.controller.form.Ort', {
     extend: 'Ext.app.Controller',
-    requires: ['Lada.view.window.ChangeKDA'],
+    requires: [
+        'Lada.view.window.ChangeKDA',
+        'Lada.store.Orte'
+    ],
 
     /**
      * Initialize the Controller
@@ -38,6 +41,9 @@ Ext.define('Lada.controller.form.Ort', {
             },
             'ortform koordinatenart combobox': {
                 change: this.checkCommitEnabled
+            },
+            'ortform orttyp combobox': {
+                change: this.checkorttyp
             },
             'ortform tfield [name=koordXExtern]': {
                 change: this.checkCommitEnabled
@@ -67,6 +73,7 @@ Ext.define('Lada.controller.form.Ort', {
         copy.set('ortId', null);
         copy.set('referenceCount', 0);
         copy.set('plausibleReferenceCount', 0);
+        copy.set('referenceCountMp', 0);
         var win = Ext.create('Lada.view.window.Ort', {
             record: copy,
             mode: 'copy',
@@ -235,6 +242,24 @@ Ext.define('Lada.controller.form.Ort', {
         button.up('panel').down('netzbetreiber').down('combobox').reset();
     },
 
+    checkorttyp: function(combo) {
+        var orttyp = combo.getValue();
+        if (orttyp === 3) {
+            combo.up('ortform').down('fieldset').expand();
+        } else {
+            var form = combo.up('ortform');
+            form.down('tfield[name=berichtstext]').setValue(null);
+            form.down('reiprogpunktgruppe[name=reiProgpunktGrpId]').setValue(null);
+            form.down('ktagruppe[name=ktaGruppeId]').setValue(null);
+            form.down('tfield[name=zone]').setValue(null);
+            form.down('tfield[name=sektor]').setValue(null);
+            form.down('tfield[name=mpArt]').setValue(null);
+            form.down('tfield[name=zustaendigkeit]').setValue(null);
+            form.down('chkbox[name=aktiv]').setValue(false);
+            form.down('fieldset').collapse();
+        }
+    },
+
     /**
      * checks if the Messpunkt can be committed.
      * Disables the save button if false
@@ -339,10 +364,6 @@ Ext.define('Lada.controller.form.Ort', {
         var savebutton = panel.down('button[action=save]');
 
         var form = panel.getForm();
-        if (form.getRecord().get('kdaId') === 3) {
-            panel.down('button[action=copy]').setDisabled(true);
-            return;
-        }
         if (!form.getRecord().phantom && form.getRecord().get('readonly')) {
             savebutton.setDisabled(true);
             return;
@@ -387,12 +408,13 @@ Ext.define('Lada.controller.form.Ort', {
      */
     checkKDAchangeEnabled: function(panel) {
         var form = panel.getForm();
-        if (form.getRecord().get('readonly')) {
+        if (form.getRecord().get('readonly')||
+                form.getRecord().get('plausibleReferenceCount') > 0 ||
+                form.getRecord().get('referenceCountMp') > 0) {
             panel.down('button[action=changeKDA]').setDisabled(true);
             return;
         }
         if (panel.down('koordinatenart').getValue()
-            && panel.down('koordinatenart').getValue() !== 3
             && panel.down('tfield[name=koordXExtern]').getValue()
             && panel.down('tfield[name=koordYExtern]').getValue()
         ) {
@@ -476,13 +498,12 @@ Ext.define('Lada.controller.form.Ort', {
                         var json = Ext.decode(response.responseText);
                         if (json.data) {
                             messageContainer.setHidden(true);
-                            var coords = Ext.decode(json.data);
                             win.down('koordinatenart[name=newKDA]')
                                 .setReadOnly(false);
                             win.down('selectabledisplayfield[name=newX]')
-                                .setValue(coords.x);
+                                .setValue(json.data.x);
                             win.down('selectabledisplayfield[name=newY]')
-                                .setValue(coords.y);
+                                .setValue(json.data.y);
                             win.down('button[action=apply]')
                                 .setDisabled(false);
                         } else {

@@ -42,34 +42,20 @@ Ext.application({
         'Ext.layout.container.Column',
         'Lada.query.QueryProxy',
         'Lada.store.LocalPagingStore',
-        'Lada.store.Deskriptoren',
-        'Lada.store.Ortszuordnung',
-        'Lada.store.OrtszuordnungMp',
-        'Lada.store.Messungen',
-        'Lada.store.Zusatzwerte',
-        'Lada.store.Status',
         'Lada.store.KtaGruppe',
-        'Lada.store.Messwerte',
-        'Lada.store.MKommentare',
         'Lada.store.Datenbasis',
         'Lada.store.Messeinheiten',
         'Lada.store.Messgroessen',
-        'Lada.store.Messmethoden',
         'Lada.store.Messstellen',
         'Lada.store.MessstellenKombi',
-        'Lada.store.Netzbetreiber',
-        'Lada.store.Orte',
-        'Lada.store.Pflichtmessgroessen',
         'Lada.store.Probenarten',
         'Lada.store.Probenzusaetze',
         'Lada.store.Staaten',
-        'Lada.store.Umwelt',
         'Lada.store.Verwaltungseinheiten',
         'Lada.store.VerwaltungseinheitenUnfiltered',
         'Lada.store.Bundesland',
         'Lada.store.Landkreis',
         'Lada.store.Regierungsbezirk',
-        'Lada.store.ReiProgpunktGruppe',
         'Lada.store.StatusWerte',
         'Lada.store.StatusStufe',
         'Lada.store.StatusKombi',
@@ -79,11 +65,8 @@ Ext.application({
         'Lada.store.UploadQueue',
         'Lada.store.GenericResults',
         'Lada.store.MessprogrammKategorie',
-        'Lada.store.Ktas',
-        'Lada.store.OrtsZusatz',
-        'Lada.store.OrtszuordnungTyp',
-        'Lada.store.OrtTyp',
-        'Lada.store.KoordinatenArt',
+        'Lada.store.GridColumn',
+        'Lada.store.Query',
         'Lada.model.MessstelleLabor',
         'Lada.model.Messstelle',
         'Lada.model.GenericResults',
@@ -92,8 +75,6 @@ Ext.application({
         'Lada.model.Query',
         'Lada.model.DownloadQueue',
         'Lada.model.UploadQueue',
-        'Lada.store.GridColumn',
-        'Lada.store.Query',
         'Lada.view.widget.TimeZoneButton',
         'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.window.ElanScenarioWindow',
@@ -101,7 +82,6 @@ Ext.application({
         'Lada.util.Date',
         'Lada.util.FunctionScheduler',
         'Lada.util.WindowTracker',
-        'Lada.store.Tag',
         'Lada.util.LocalStorage',
         'Lada.util.WindowTracker',
         'Koala.util.DokpoolRequest'
@@ -127,6 +107,14 @@ Ext.application({
         noCache: true
     },
 
+    beforeCloseHandler: function(evt) {
+        var i18n = Lada.getApplication().bundle;
+        // match different handling from different browsers
+        var confirmMessage = i18n.getMsg('window.confirmclose');
+        evt.returnValue = confirmMessage;
+        return confirmMessage;
+    },
+
     // Setting this variable to true triggers loading the Viewport.js
     // file which sets ob the viewport.
     //autoCreateViewport: true,
@@ -141,28 +129,12 @@ Ext.application({
             return '"' + Ext.Date.format(o, 'c') + '"';
         };
 
-        //Set up an event handler to handle session timeouts
-        Ext.Ajax.on('requestexception', function(conn, response) {
-            if (response.status === 0 && response.responseText === '') {
-                var i18n = Lada.getApplication().bundle;
-                Ext.MessageBox.confirm(
-                    i18n.getMsg('err.msg.sso.expired.title'),
-                    i18n.getMsg('err.msg.sso.expired.body'),
-                    function(btn) {
-                        if (btn === 'yes') {
-                            window.location.reload();
-                        }
-                    }
-                );
-            }
-        });
-
         Lada.username = '';
         Lada.userroles = '';
         Lada.logintime = '';
         Lada.mst = [];
         Lada.netzbetreiber = [];
-        Lada.clientVersion = '4.2.1-SNAPSHOT';
+        Lada.clientVersion = '4.4.0-SNAPSHOT';
         Lada.serverVersion = '';
         // paging sizes available for the client
         Lada.availablePagingSizes = [
@@ -200,13 +172,7 @@ Ext.application({
 
         // ask before closing/refreshing the window.
         // Not all browsers will respect this, depending on settings
-        window.addEventListener('beforeunload', function(evt) {
-            var i18n = Lada.getApplication().bundle;
-            // match different handling from different browsers
-            var confirmMessage = i18n.getMsg('window.confirmclose');
-            evt.returnValue = confirmMessage;
-            return confirmMessage;
-        });
+        window.addEventListener('beforeunload', this.beforeCloseHandler);
         Ext.create('Lada.store.GenericResults');
     },
 
@@ -245,9 +211,9 @@ Ext.application({
                     return;
                 }
             }
-        }
-        catch (e) {
-            // This is likely a 404 or some unknown error. Show general error then.
+        } catch (e) {
+            /* This is likely a 404 or some unknown error.
+             * Show general error then. */
         }
         Ext.MessageBox.alert(i18n.getMsg('err.init.generic.title'),
             i18n.getMsg('err.init.generic.msg'));
@@ -288,12 +254,6 @@ Ext.application({
         Ext.create('Lada.store.Messgroessen', {
             storeId: 'messgroessen'
         });
-        Ext.create('Lada.store.Messgroessen', {
-            storeId: 'messgroessenunfiltered'
-        });
-        Ext.create('Lada.store.Messmethoden', {
-            storeId: 'messmethoden'
-        });
         Ext.create('Lada.store.GridColumn', {
             storeId: 'columnstore'
         });
@@ -311,7 +271,7 @@ Ext.application({
                             var displayCombi = item.get('messStelle');
                             if (item.get('messStelle')
                                 !== itemLabor.get('messStelle')
-                               ) {
+                            ) {
                                 displayCombi += '/'
                                     + itemLabor.get('messStelle');
                             }
@@ -327,16 +287,7 @@ Ext.application({
                 }
             }
         });
-        Ext.create('Lada.store.Netzbetreiber', {
-            storeId: 'netzbetreiber'
-        });
-        Ext.create('Lada.store.Orte', {
-            storeId: 'orte',
-            defaultPageSize: 0
-        });
-        Ext.create('Lada.store.Pflichtmessgroessen', {
-            storeId: 'pflichtmessgroessen'
-        });
+
         Ext.create('Lada.store.Probenarten', {
             storeId: 'probenarten'
         });
@@ -345,12 +296,6 @@ Ext.application({
         });
         Ext.create('Lada.store.Staaten', {
             storeId: 'staaten'
-        });
-        Ext.create('Lada.store.Staaten', {
-            storeId: 'staatenwidget'
-        });
-        Ext.create('Lada.store.Umwelt', {
-            storeId: 'umwelt'
         });
         Ext.create('Lada.store.VerwaltungseinheitenUnfiltered', {
             storeId: 'verwaltungseinheitenwidget'
@@ -403,6 +348,9 @@ Ext.application({
                 }
             }
         });
+        // TODO: usage of this store unclear: reloaded in probenehmer
+        // controller, but never used (probenehemr widget uses different
+        // instance)
         Ext.create('Lada.store.Probenehmer', {
             storeId: 'probenehmer',
             proxy: {
@@ -419,6 +367,9 @@ Ext.application({
             },
             autoLoad: true
         });
+        // TODO: usage of this store unclear: reloaded in Datensatzerzeuger
+        // controller, but never used. Details here should go into model or
+        // store definition
         Ext.create('Lada.store.DatensatzErzeuger', {
             storeId: 'datensatzerzeuger',
             proxy: {
@@ -435,6 +386,7 @@ Ext.application({
             },
             autoLoad: true
         });
+        // TODO: Similar to Datensatzerzeuger
         Ext.create('Lada.store.MessprogrammKategorie', {
             storeId: 'messprogrammkategorie',
             proxy: {
@@ -457,43 +409,19 @@ Ext.application({
         });
         Ext.create('Lada.store.StatusStufe', {
             storeId: 'statusstufe',
-            autoLoad: 'true'
+            autoLoad: true
         });
         Ext.create('Lada.store.StatusKombi', {
             storeId: 'statuskombi',
-            autoLoad: 'true'
-        });
-        Ext.create('Lada.store.Ktas', {
-            storeId: 'ktas',
-            autoLoad: 'true'
+            autoLoad: true
         });
         Ext.create('Lada.store.KtaGruppe', {
             storeId: 'ktaGruppe',
-            autoLoad: 'true'
-        });
-        Ext.create('Lada.store.OrtsZusatz', {
-            storeId: 'ortszusatz',
-            autoLoad: 'true'
-        });
-        Ext.create('Lada.store.OrtszuordnungTyp', {
-            storeId: 'ortszuordnungtyp',
-            autoLoad: 'true'
-        });
-        Ext.create('Lada.store.OrtTyp', {
-            storeId: 'orttyp',
-            autoLoad: 'true'
-        });
-        Ext.create('Lada.store.KoordinatenArt', {
-            storeId: 'koordinatenart',
-            autoLoad: 'true'
+            autoLoad: true
         });
         Ext.create('Lada.store.GenericResults', {
             storeId: 'genericresults',
             autoLoad: false
-        });
-        Ext.create('Lada.store.MmtMessprogramm', {
-            soreId: 'mmtstore',
-            autoLoad: true
         });
 
         //A Store containing all MST a User is allowed to set.
@@ -501,15 +429,6 @@ Ext.application({
             storeId: 'messstellenFiltered',
             filters: function(item) {
                 if (Ext.Array.contains(Lada.mst, item.get('id'))) {
-                    return true;
-                }
-                return false;
-            }
-        });
-        Ext.create('Lada.store.Netzbetreiber', {
-            storeId: 'netzbetreiberFiltered',
-            filters: function(item) {
-                if (Ext.Array.contains(Lada.netzbetreiber, item.get('id'))) {
                     return true;
                 }
                 return false;
@@ -631,10 +550,10 @@ Ext.application({
     },
 
     /**
-     * Fix for odd behavior of some browsers in the toExponential(digits) function
-     * (MS Edge falsely rounds down some least significant digits
+     * Fix for odd behavior of some browsers in the toExponential(digits)
+     * function (MS Edge falsely rounds down some least significant digits).
      * @param {Number} value the numerical value to parse
-     * @param {Number} digits the amount of digits as in the toExponential fucntion
+     * @param {Number} digits the amount of digits as in toExponential()
      * @returns {String}
      */
     toExponentialString: function(value, digits) {

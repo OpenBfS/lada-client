@@ -21,6 +21,7 @@ Ext.define('Lada.view.grid.DownloadQueue', {
         deferEmptyText: true,
         markDirty: false
     },
+    maxHeight: 200,
     emptyText: 'emptygrid.downloadqueue',
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;

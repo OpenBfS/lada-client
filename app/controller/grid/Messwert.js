@@ -95,7 +95,7 @@ Ext.define('Lada.controller.grid.Messwert', {
                     Ext.data.StoreManager.get('messeinheiten').clearFilter();
                     Ext.data.StoreManager.get('messeinheiten').reload();
                 }
-                if (Ext.data.StoreManager.get('messeinheiten')) {
+                if (Ext.data.StoreManager.get('messgroessen')) {
                     Ext.data.StoreManager.get('messgroessen').clearFilter();
                     Ext.data.StoreManager.get('messgroessen').reload();
                 }

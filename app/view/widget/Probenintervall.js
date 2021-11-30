@@ -37,14 +37,13 @@ Ext.define('Lada.view.widget.Probenintervall', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.probenintervall');
-
-        this.store = Ext.data.StoreManager.get('Probenintervall');
-
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.Probenintervall');
-        } else {
-            this.store.clearFilter();
+        var store = Ext.data.StoreManager.get('probenintervall');
+        if (!store) {
+            Ext.create('Lada.store.Probenintervall', {
+                storeId: 'probenintervall'});
         }
+        this.store = Ext.data.StoreManager.get('probenintervall');
+        this.store.clearFilter();
         this.callParent(arguments);
     }
 });

@@ -35,7 +35,6 @@ Ext.define('Lada.controller.form.Probe', {
                 click: this.showAuditTrail
             },
             'probeform': {
-                tagdirtychange: this.dirtyTags,
                 validitychange: this.checkCommitEnabled,
                 dirtychange: this.handleDirtyChange,
                 save: this.saveHeadless
@@ -478,6 +477,7 @@ Ext.define('Lada.controller.form.Probe', {
             reiStore.proxy.extraParams.umwelt = umwId;
         }
         reiStore.load();
+
     },
 
     /**
@@ -611,7 +611,6 @@ Ext.define('Lada.controller.form.Probe', {
         var formPanel = button.up('form');
         var data = formPanel.getForm().getFieldValues(false);
         var record = formPanel.getForm().getRecord();
-        var wasPhantom = record.phantom;
         for (var key in data) {
             record.set(key, data[key]);
         }
@@ -622,37 +621,70 @@ Ext.define('Lada.controller.form.Probe', {
             record.set('id', null);
         }
 
-        //If record is phantom, do not apply tags yet
-        if (!wasPhantom) {
-            formPanel.down('tagwidget').applyChanges();
+        for (var key2 in data) {
+            record.set(key2, data[key2]);
+        }
+        if (!record.get('letzteAenderung')) {
+            record.set('letzteAenderung', new Date());
+        }
+        if (record.phantom) {
+            record.set('id', null);
         }
 
-        //If form data is read only, exit after saving tags
-        if (formPanel.readOnly) {
-            //Reload the grid to display tag changes
-            Ext.getCmp('dynamicgridid').reload();
-            return;
-        } else {
-            for (var key2 in data) {
-                //Only set existing fields, wait until record is saved before
-                //applying tags
-                if (record.get(key2) !== undefined &&
-                            key2 !== formPanel.down('tagwidget').getInputId()) {
-                    record.set(key2, data[key2]);
+        record.save({
+            success: function(newRecord, response) {
+                var json = Ext.decode(response.getResponse().responseText);
+                if (json) {
+                    button.setDisabled(true);
+                    button.up('toolbar').down('button[action=discard]')
+                        .setDisabled(true);
+                    var parentGrid = Ext.ComponentQuery.query(
+                        'dynamicgrid');
+                    if (parentGrid.length === 1) {
+                        parentGrid[0].reload();
+                    }
+                    formPanel.clearMessages();
+                    formPanel.setRecord(newRecord);
+                    formPanel.setMediaDesk(newRecord);
+                    formPanel.setMessages(
+                        json.errors,
+                        json.warnings,
+                        json.notifications);
+                    if (response.action === 'create' && json.success) {
+                        button.up('window').close();
+                        var win = Ext.create('Lada.view.window.ProbeEdit', {
+                            record: newRecord
+                        });
+                        win.initData();
+                        win.show();
+                        win.setPosition(30);
+                    }
                 }
-            }
-            if (!record.get('letzteAenderung')) {
-                record.set('letzteAenderung', new Date());
-            }
-            if (record.phantom) {
-                record.set('id', null);
-            }
-            delete record.data[formPanel.down('tagwidget').getInputId()];
-
-            record.save({
-                success: function(newRecord, response) {
-                    var json = Ext.decode(response.getResponse().responseText);
+            },
+            failure: function(newRecord, response) {
+                var i18n = Lada.getApplication().bundle;
+                if (response.error) {
+                    //TODO: check content of error.status (html error code)
+                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                        i18n.getMsg('err.msg.generic.body'));
+                } else {
+                    button.setDisabled(true);
+                    button.up('toolbar').down('button[action=discard]')
+                        .setDisabled(true);
+                    var rec = formPanel.getForm().getRecord();
+                    rec.dirty = false;
+                    formPanel.getForm().loadRecord(newRecord);
+                    var json = Ext.decode(
+                        response.getResponse().responseText);
                     if (json) {
+                        if (json.message) {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
+                                +' #'+json.message,
+                            i18n.getMsg(json.message));
+                        } else {
+                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                                i18n.getMsg('err.msg.generic.body'));
+                        }
                         button.setDisabled(true);
                         button.up('toolbar').down('button[action=discard]')
                             .setDisabled(true);
@@ -668,77 +700,22 @@ Ext.define('Lada.controller.form.Probe', {
                             json.warnings,
                             json.notifications);
                         if (response.action === 'create' && json.success) {
-                            if (wasPhantom) {
-                                var tagWidget = formPanel.down('tagwidget');
-                                tagWidget.setProbe(newRecord.data.id);
-                                tagWidget.applyChanges();
-                            }
                             button.up('window').close();
-                            var win = Ext.create('Lada.view.window.ProbeEdit', {
-                                record: newRecord
-                            });
-                            win.initData();
-                            win.show();
+                            var win = Ext.create(
+                                'Lada.view.window.ProbeEdit', {
+                                    record: newRecord
+                                });
                             win.setPosition(30);
+                            win.show();
+                            win.initData();
                         }
-                    }
-                },
-                failure: function(newRecord, response) {
-                    var i18n = Lada.getApplication().bundle;
-                    if (response.error) {
-                        //TODO: check content of error.status (html error code)
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.generic.body'));
                     } else {
-                        button.setDisabled(true);
-                        button.up('toolbar').down('button[action=discard]')
-                            .setDisabled(true);
-                        var rec = formPanel.getForm().getRecord();
-                        rec.dirty = false;
-                        formPanel.getForm().loadRecord(newRecord);
-                        var json = Ext.decode(
-                            response.getResponse().responseText);
-                        if (json) {
-                            if (json.message) {
-                                Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                    +' #'+json.message,
-                                i18n.getMsg(json.message));
-                            } else {
-                                Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                    i18n.getMsg('err.msg.generic.body'));
-                            }
-                            button.setDisabled(true);
-                            button.up('toolbar').down('button[action=discard]')
-                                .setDisabled(true);
-                            var parentGrid = Ext.ComponentQuery.query(
-                                'dynamicgrid');
-                            if (parentGrid.length === 1) {
-                                parentGrid[0].reload();
-                            }
-                            formPanel.clearMessages();
-                            formPanel.setRecord(newRecord);
-                            formPanel.setMessages(
-                                json.errors,
-                                json.warnings,
-                                json.notifications);
-                            if (response.action === 'create' && json.success) {
-                                button.up('window').close();
-                                var win = Ext.create(
-                                    'Lada.view.window.ProbeEdit', {
-                                        record: newRecord
-                                    });
-                                win.setPosition(30);
-                                win.show();
-                                win.initData();
-                            }
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.response.body'));
-                        }
+                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
+                            i18n.getMsg('err.msg.response.body'));
                     }
                 }
-            });
-        }
+            }
+        });
     },
 
     /**
@@ -748,6 +725,8 @@ Ext.define('Lada.controller.form.Probe', {
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
+        var record = formPanel.getForm().getRecord();
+        formPanel.setMediaDesk(record);
         formPanel.getForm().isValid();
         formPanel.down('button[action=discard]').setDisabled(true);
     },
@@ -784,19 +763,6 @@ Ext.define('Lada.controller.form.Probe', {
                     panel.down('button[action=discard]').setDisabled(false);
                 }
             }
-        }
-    },
-
-    /**
-     * Enables/disabled the save/reset buttons if tags hast been altered.
-     * Only disables buttons if form is not dirty, too.
-     */
-    dirtyTags: function(form, dirty) {
-        var dirtyProbeForm = form.owner.isDirty();
-        if (dirty) {
-            this.enableButtons(form);
-        } else if (dirtyProbeForm === false) {
-            this.disableButtons(form);
         }
     },
 
@@ -900,11 +866,8 @@ Ext.define('Lada.controller.form.Probe', {
 
     /**
      * Handle changes of the probe forms dirty state and (de-) activate form
-     * buttons accordingly. This function also checks the tag widget for
-     * changes as its not a regular form component. Buttons are only activated
-     * if probe form, tag widget or both have changes.
+     * buttons accordingly.
      * @param {Ext.Component} callingEl Component that fired the event
-     * @param {Boolean} dirty The new dirty state
      */
     handleDirtyChange: function(callingEl) {
         var panel;
@@ -913,18 +876,13 @@ Ext.define('Lada.controller.form.Probe', {
         } else { //called by the form
             panel = callingEl.owner;
         }
-        var tagWidget = panel.down('tagwidget');
-        if (!tagWidget) {
-            Ext.log({msg: 'Unable to get probe tag widget', lvl: 'warn'});
-        }
-        var dirtyTags = tagWidget.hasChanges();
         if (panel.getRecord().get('readonly')) {
             panel.down('button[action=save]').setDisabled(true);
             panel.down('button[action=discard]').setDisabled(true);
             panel.down('button[action=copy]').setDisabled(true);
         } else {
             if (panel.isValid()) {
-                if (panel.isDirty() || dirtyTags) {
+                if (panel.isDirty()) {
                     panel.down('button[action=discard]').setDisabled(false);
                     panel.down('button[action=save]').setDisabled(false);
                     panel.down('button[action=copy]').setDisabled(true);
@@ -998,7 +956,6 @@ Ext.define('Lada.controller.form.Probe', {
             current.splice(0, 1);
         }
         var mediatext = field.up('probeform').down('textfield[name="media"]');
-
         if ( (desk.layer === 0 ) && (records.get('sn') === 0) ) {
             mediatext.setValue('');
             media.setValue('');

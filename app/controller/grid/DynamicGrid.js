@@ -11,7 +11,10 @@
  */
 Ext.define('Lada.controller.grid.DynamicGrid', {
     extend: 'Ext.app.Controller',
-    requires: ['Lada.view.window.DeleteMultipleItems'],
+    requires: [
+        'Lada.view.window.DeleteMultipleItems',
+        'Lada.view.window.TagEdit'
+    ],
 
     /**
      * Initialize the Controller with listeners
@@ -371,7 +374,10 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     Ext.create('Lada.view.window.Ort', {
                         record: Ext.create('Lada.model.Ort', {
                             ortTyp: 1,
-                            readonly: false
+                            readonly: false,
+                            plausibleReferenceCount: 0,
+                            referenceCountMp: 0,
+                            referenceCount: 0
                         }),
                         parentWindow: grid
                     }).show();
@@ -391,7 +397,11 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             case 'probeId': recordType = 'probe'; break;
             default: break;
         }
-        var selection = grid.getView().getSelectionModel().getSelection();
+        var selection = [];
+        grid.getView().getSelectionModel().getSelection().forEach(
+            function(item, i) {
+                selection[i] = item.get(grid.rowtarget.dataIndex);
+            });
         var i18n = Lada.getApplication().bundle;
         var count = selection.length;
         var win = Ext.create('Lada.view.window.TagEdit', {

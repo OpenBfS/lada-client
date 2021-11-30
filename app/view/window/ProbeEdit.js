@@ -18,7 +18,9 @@ Ext.define('Lada.view.window.ProbeEdit', {
         'Lada.view.grid.Ortszuordnung',
         'Lada.view.grid.Probenzusatzwert',
         'Lada.view.grid.PKommentar',
-        'Lada.view.grid.Messung'
+        'Lada.view.grid.Messung',
+        'Lada.view.widget.Tag',
+        'Lada.view.window.TagEdit'
     ],
 
     collapsible: true,
@@ -28,6 +30,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
     constrain: true,
     recordType: 'probe',
     record: null,
+    pzStore: null,
 
     /**
      * This function initialises the Window
@@ -98,7 +101,17 @@ Ext.define('Lada.view.window.ProbeEdit', {
      * Initialize ui elements and replace placeholder panel
      */
     initializeUI: function() {
+        var me = this;
         var i18n = Lada.getApplication().bundle;
+
+        var store = Ext.create('Lada.store.Probenzusaetze');
+        var proxy = Ext.clone(store.getProxy());
+        proxy.extraParams = {};
+        store.setProxy(proxy);
+        this.zStore = store;
+        this.zStore.proxy.extraParams = {umwId: this.record.get('umwId')};
+        this.zStore.load();
+
         this.removeAll();
 
         if (this.record === null) {
@@ -112,6 +125,50 @@ Ext.define('Lada.view.window.ProbeEdit', {
             items: [{
                 xtype: 'probeform',
                 recordId: this.recordId
+            }, {
+                // Tags
+                xtype: 'fieldset',
+                title: i18n.getMsg('title.tagfieldset'),
+                name: 'tagfieldset',
+                padding: '5, 5',
+                margin: 5,
+                layout: {
+                    type: 'hbox',
+                    align: 'stretchmax'
+                },
+                items: [{
+                    flex: 1,
+                    xtype: 'tagwidget',
+                    readOnly: true,
+                    emptyText: i18n.getMsg('emptytext.tag'),
+                    parentWindow: this,
+                    maskTargetComponentType: 'fieldset',
+                    maskTargetComponentName: 'tagfieldset',
+                    margin: '5 5 5 5'
+                }, {
+                    width: 150,
+                    height: 25,
+                    xtype: 'button',
+                    margin: '5 5 5 0',
+                    text: i18n.getMsg('tag.toolbarbutton.assigntags'),
+                    iconCls: 'x-fa fa-tag',
+                    // Only users with associated Messstelle can (un)assign tags
+                    disabled: Lada.mst.length === 0,
+                    handler: function() {
+                        var win = Ext.create('Lada.view.window.TagEdit', {
+                            title: i18n.getMsg(
+                                'tag.assignwindow.title.probe', 1),
+                            parentWindow: me,
+                            recordType: 'probe',
+                            selection: [me.record.get('id')]
+                        });
+                        //Close window if parent window is closed
+                        me.on('close', function() {
+                            win.close();
+                        });
+                        win.show();
+                    }
+                }]
             }, {
                 xtype: 'fset',
                 name: 'orte',
@@ -144,7 +201,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 collapsed: false,
                 items: [{
                     xtype: 'probenzusatzwertgrid',
-                    recordId: this.recordId
+                    recordId: this.recordId,
+                    pzStore: this.zStore
                 }]
             }, {
                 xtype: 'fset',
@@ -188,6 +246,8 @@ Ext.define('Lada.view.window.ProbeEdit', {
         var loadCallBack = function(record, response) {
             me.initializeUI();
             me.record = record;
+            me.zStore.proxy.extraParams = {umwId: record.get('umwId')};
+            me.zStore.load();
             me.recordId = record.get('id');
             me.down('probeform').setRecord(record);
             var owner = record.get('owner');
@@ -233,6 +293,10 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 me.down('probeform').setReadOnly(false);
                 me.enableChildren();
             }
+
+            // Initialize Tag widget
+            me.down('tagwidget').setTagged(record.get('id'), 'probe');
+
             me.setLoading(false);
             me.down('probeform').isValid();
         };

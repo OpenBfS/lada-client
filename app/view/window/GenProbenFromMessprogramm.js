@@ -14,8 +14,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     alias: 'widget.genpfm',
 
     requires: [
-        'Lada.store.GridColumnValue',
-        'Lada.store.Proben'
+        'Lada.store.Proben',
+        'Lada.store.Umwelt'
     ],
 
     collapsible: true,
@@ -297,8 +297,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         var me = this;
         var dbIdentifier = 'externeProbeId';
         var newStore = Ext.create('Lada.store.Proben', {data: data});
-        var hidebuttons = ['importprobe', 'genericadd', 'assigntags',
-            'gridexport'];
+        var hidebuttons = ['genericadd', 'assigntags', 'gridexport'];
         if (request.dryrun) {
             // In dry runs, some additional actions need to stay unavailable:
             hidebuttons = hidebuttons.concat([

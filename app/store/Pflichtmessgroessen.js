@@ -8,6 +8,7 @@
 
 /**
  * Store for Pflichtmessgroessen
+ * TODO: unused as of 2021-10
  */
 Ext.define('Lada.store.Pflichtmessgroessen', {
     extend: 'Ext.data.Store',

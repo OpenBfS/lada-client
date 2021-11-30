@@ -12,7 +12,8 @@
 Ext.define('Lada.view.widget.Staat', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.staat',
-    store: 'staatenwidget',
+    requires: ['Lada.store.Staaten'],
+    store: null,
     displayField: 'staat',
     valueField: 'id',
     // Enable filtering of comboboxes
@@ -26,13 +27,16 @@ Ext.define('Lada.view.widget.Staat', {
     initComponent: function() {
         // This widget requires a separate store to not change the grid
         // during typing
+        var store = Ext.data.StoreManager.get('staatenwidget');
+        if (!store){
+            Ext.create('Lada.store.Staaten', {
+                storeId: 'staatenwidget'
+            });
+        }
         this.store = Ext.data.StoreManager.get('staatenwidget');
+        this.store.clearFilter();
         var i18n= Lada.getApplication().bundle;
         this.emptyText= i18n.getMsg('emptytext.staat');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.Staaten');
-        }
-        this.store.clearFilter();
         this.callParent(arguments);
     }
 });

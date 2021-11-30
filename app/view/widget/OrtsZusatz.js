@@ -12,6 +12,7 @@
 Ext.define('Lada.view.widget.OrtsZusatz', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.ortszusatz',
+    requires: ['Lada.store.OrtsZusatz'],
     store: 'OrtsZusatz',
     displayField: 'ortszusatz',
     valueField: 'ozsId',
@@ -34,10 +35,12 @@ Ext.define('Lada.view.widget.OrtsZusatz', {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.ortszusatz');
 
-        this.store = Ext.data.StoreManager.get('ortszusatz');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.OrtsZusatz');
+        var store = Ext.data.StoreManager.get('ortszusatz');
+        if (!store) {
+            Ext.create('Lada.store.OrtsZusatz', {
+                storeId: 'ortszusatz'});
         }
+        this.store = Ext.data.StoreManager.get('ortszusatz');
         this.store.sort();
         this.callParent(arguments);
     }

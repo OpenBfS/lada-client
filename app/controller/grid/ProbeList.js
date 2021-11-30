@@ -12,7 +12,6 @@
 Ext.define('Lada.controller.grid.ProbeList', {
     extend: 'Ext.app.Controller',
     requires: [
-        'Lada.view.window.FileUpload',
         'Lada.view.window.ProbeEdit'
     ],
 
@@ -23,9 +22,6 @@ Ext.define('Lada.controller.grid.ProbeList', {
         this.control({
             'dynamicgrid toolbar button[action=addProbe]': {
                 click: this.addProbeItem
-            },
-            'dynamicgrid toolbar button[action=importprobe]': {
-                click: this.uploadFile
             }
         });
         this.callParent(arguments);

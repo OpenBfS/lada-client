@@ -66,9 +66,11 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                 }]
             }],
             items: [{
-                layout: 'vbox',
+                layout: {
+                    type: 'vbox',
+                    align: 'stretch'
+                },
                 border: false,
-                align: 'stretch',
                 margin: 5,
                 defaults: {
                     labelWidth: 135,

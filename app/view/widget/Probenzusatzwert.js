@@ -12,7 +12,7 @@
 Ext.define('Lada.view.widget.Probenzusatzwert', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.probenzusatzwert',
-    store: 'Probenzusaetze',
+    store: 'probenzusaetze',
     displayField: 'beschreibung',
     valueField: 'id',
     // Enable filtering of comboboxes

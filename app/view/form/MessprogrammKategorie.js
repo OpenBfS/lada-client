@@ -17,10 +17,12 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
         'Lada.model.MessprogrammKategorie'
     ],
 
-    model: 'Lada.model.MessporgrammKategorie',
+    model: 'Lada.model.MessprogrammKategorie',
     border: false,
-    align: 'stretchmax',
-    layout: 'vbox',
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
     record: null,
 
     trackResetOnLoad: true,
@@ -29,6 +31,10 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
         var i18n = Lada.getApplication().bundle;
         this.items = [{
             border: false,
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
             dockedItems: [{
                 xtype: 'toolbar',
                 dock: 'bottom',
