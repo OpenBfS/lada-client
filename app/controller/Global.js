@@ -12,7 +12,7 @@
 Ext.define('Lada.controller.Global', {
     extend: 'Ext.app.Controller',
     routes: {
-        'lafimport': 'onLafImport'
+        'importer': 'onLafImport'
     },
 
     init: function() {
