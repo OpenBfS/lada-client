@@ -210,7 +210,7 @@ Ext.define('Lada.view.panel.FileUpload', {
      * form field
      */
     readFiles: function(button) {
-        var win = button.up('window');
+        var win = button.up('panel');
         var fileInput = win.down('filefield');
         var files = fileInput.fileInputEl.dom.files;
         var readers = new Array(files.length);
@@ -251,11 +251,10 @@ Ext.define('Lada.view.panel.FileUpload', {
         var win = button.up('panel');
         var cb = win.down('combobox[name=encoding]');
         var mstSelector = win.down('combobox[name=mst]').getValue();
-        var filenames =[];
 
         var controller = Lada.app.getController(
             'Lada.controller.grid.Uploads');
-        var queueItem = controller.addQueueItem(filenames);
+        var queueItem = controller.addQueueItem(win.fileNames);
         Ext.Ajax.request({
             url: 'lada-server/data/import/async/laf',
             method: 'POST',
