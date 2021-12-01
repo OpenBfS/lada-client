@@ -98,47 +98,6 @@ Ext.define('Lada.controller.grid.Uploads', {
     },
 
     /**
-     * @private
-     * Show result window after successfull uploaded
-     */
-    uploadSuccess: function(response) {
-        // refresh parent grid
-        // set to DONE
-        this.filesUploaded++;
-        var i18n = Lada.getApplication().bundle;
-        var responseText = response.responseBytes ?
-            String.fromCharCode.apply(null, response.responseBytes):
-            response.responseText;
-        var responseJson = Ext.JSON.decode(responseText);
-        var tag = '';
-        //Get the generated tag name
-        if (Object.keys(responseJson.data).length > 0) {
-            var firstImport = Object.keys(responseJson.data)[0];
-            tag = responseJson.data[firstImport].tag;
-        }
-        if (!this.resultWin) {
-            this.resultWin = Ext.create('Lada.view.window.ImportResponse', {
-                modal: true,
-                fileCount: this.fileCount,
-                fileNames: this.fileNames,
-                response: responseJson,
-                encoding: this.down('combobox[name=encoding]').getValue(),
-                mst: this.down('combobox[name=mst]').getValue(),
-                width: 500,
-                height: 350,
-                title: i18n.getMsg('title.importresult', tag)
-            });
-            //Show result, reload grid, close this window
-            this.resultWin.show();
-            var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-            if (parentGrid.length === 1) {
-                parentGrid[0].reload();
-            }
-            this.close();
-        }
-    },
-
-    /**
      * Add an entry to the upload queue.
      * @param filenames: Array of file names used for the import
      * @returns reference to the model item
@@ -169,19 +128,27 @@ Ext.define('Lada.controller.grid.Uploads', {
                 success: function(response) {
                     record.set('result', response);
                     record.set('resultFetched', true);
-                    me.showResult(response);
+                    me.showResult(response, {
+                        mst: record.get('mst'),
+                        encoding: record.get('encoding')
+                    });
                 }
             });
         } else {
-            this.showResult(record.get('result'));
+            this.showResult(record.get('result'),  {
+                mst: record.get('mst'),
+                encoding: record.get('encoding')
+            });
         }
     },
 
-    showResult: function(response) {
+    showResult: function(response, options) {
         var win = Ext.create('Lada.view.window.ImportResponse', {
             response: response,
             height: 550,
-            width: 450
+            width: 450,
+            mst: options.mst,
+            encoding: options.encoding
         });
         win.show();
     }
