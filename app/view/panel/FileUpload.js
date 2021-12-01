@@ -255,6 +255,8 @@ Ext.define('Lada.view.panel.FileUpload', {
         var controller = Lada.app.getController(
             'Lada.controller.grid.Uploads');
         var queueItem = controller.addQueueItem(win.fileNames);
+        queueItem.set('encoding', win.down('combobox[name=encoding]').getValue());
+        queueItem.set('mst',win.down('combobox[name=mst]').getValue());
         Ext.Ajax.request({
             url: 'lada-server/data/import/async/laf',
             method: 'POST',
