@@ -47,6 +47,7 @@ Ext.application({
         'Lada.store.Messeinheiten',
         'Lada.store.Messgroessen',
         'Lada.store.Messstellen',
+        'Lada.store.Leitstelle',
         'Lada.store.MessstellenKombi',
         'Lada.store.Probenarten',
         'Lada.store.Probenzusaetze',
@@ -255,11 +256,26 @@ Ext.application({
         Ext.create('Lada.store.GridColumn', {
             storeId: 'columnstore'
         });
+        Ext.create('Lada.store.Leitstelle', {
+            storeId: 'leitstellenwidget'
+        });
         Ext.create('Lada.store.Messstellen', {
             storeId: 'messstellen',
             listeners: {
                 load: {
                     fn: function(store) {
+                        var lst = Ext.data.StoreManager.get(
+                                     'leitstellenwidget');
+                        lst.removeAll(true);
+                        var reclst = [];
+                        var rec = [];
+                        this.each(function(rr) {
+                            rec.push(rr.copy());
+                            if (rr.get('id').match(/200.0/)) {
+                                reclst.push(rr.copy());
+                            }
+                        });
+                        lst.add(reclst);
                         for (var j = 0; j < mstLabor.length; j++) {
                             var item = store.getById(mstLabor[j].messstelle);
                             var itemLabor = store.getById(mstLabor[j].labor);

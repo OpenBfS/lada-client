@@ -743,6 +743,14 @@ Ext.define('Lada.controller.Query', {
                             options);
                         negateCheckbox = true;
                         break;
+                    case 'leitstelle':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        field = Ext.create(
+                            'Lada.view.widget.Leitstelle', options);
+                        negateCheckbox = true;
+                        break;
                     case 'boolean':
                         options.multiSelect = false;
                         options.value = this.getFilterValueMulti(recs[i]);
