@@ -43,6 +43,12 @@ Ext.define('Lada.model.UploadQueue', {
         name: 'done',
         type: 'boolean'
     }, {
+        name: 'errors',
+        type: 'boolean'
+    }, {
+        name: 'warnings',
+        type: 'boolean'
+    }, {
         name: 'mst'
     }, {
         'name': 'encoding'

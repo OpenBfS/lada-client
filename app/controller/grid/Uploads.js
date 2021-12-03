@@ -73,6 +73,8 @@ Ext.define('Lada.controller.grid.Uploads', {
                     success: function(response) {
                         var json = Ext.decode(response.responseText);
                         item.set('done', json.done);
+                        item.set('errors', json.errors);
+                        item.set('warnings', json.warnings);
                         item.set('status', json.status);
                         if (!json.error) {
                             if (json.message) {
@@ -108,7 +110,9 @@ Ext.define('Lada.controller.grid.Uploads', {
             startDate: new Date().valueOf(),
             status: 'preparation',
             resultFetched: false,
-            done: false
+            done: false,
+            warnings: false,
+            errors: false
         });
         var store = Ext.data.StoreManager.get('uploadqueue');
         store.add(storeItem);

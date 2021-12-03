@@ -50,6 +50,33 @@ Ext.define('Lada.view.grid.UploadQueue', {
             dataIndex: 'message',
             flex: 2
         }, {
+            xtype: 'actioncolumn',
+            text: ' ',
+            dataIndex: 'warningsAndErrors',
+            width: 20,
+            getTip: function(value, meta, rec) {
+                if (rec.get('status') === 'error') {
+                    return i18n.getMsg('importResponse.failure.true');
+                }
+                if (!rec.get('warnings') && !rec.get('errors')) {
+                    return ' ';
+                }
+                if (!rec.get('warnings')) {
+                    return i18n.getMsg('importResponse.failure.true');
+                }
+                if (!rec.get('errors')){
+                    return i18n.getMsg('importResponse.warnings.true');
+                }
+                return i18n.getMsg('importResponse.failureAndWarnings.true');
+            },
+            getClass: function (value, meta, rec) {
+                // see x.action-col-icon definitions at lada.css for img urls
+                if (rec.get('errors') || rec.get('status') === 'error'){
+                    return 'error';
+                }
+                return rec.get('warnings') ? 'warning' : ' ';
+            }
+        }, {
             // cancel/download icon
             xtype: 'actioncolumn',
             text: ' ',
