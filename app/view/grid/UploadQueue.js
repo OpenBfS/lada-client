@@ -81,7 +81,21 @@ Ext.define('Lada.view.grid.UploadQueue', {
             xtype: 'actioncolumn',
             text: ' ',
             dataIndex: 'status',
-            tooltip: i18n.getMsg('import.showresult'),
+            getTip: function(value, meta, rec) {
+                switch (rec.get('status')) {
+                    case 'finished':
+                        if (!rec.get('downloadRequested')) {
+                            return i18n.getMsg('import.showresult');
+                        } else {
+                            return false;
+                        }
+                    case 'running':
+                    case 'waiting':
+                        return i18n.getMsg('cancel');
+                    default:
+                        return ' ';
+                }
+            },
             width: 20,
             getClass: function(value, meta, rec) {
                 // see x.action-col-icon definitions at lada.css for img urls
