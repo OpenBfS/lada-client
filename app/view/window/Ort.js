@@ -55,8 +55,6 @@ Ext.define('Lada.view.window.Ort', {
 
     parentWindow: null,
 
-    modelClass: Lada.model.Ort,
-
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.title = i18n.getMsg('title.loading.ort');
@@ -87,6 +85,7 @@ Ext.define('Lada.view.window.Ort', {
             scope: this,
             handler: this.close
         }];
+        this.modelClass = Lada.model.Ort;
         this.callParent(arguments);
         if (this.record) {
             this.initData(this.record);
