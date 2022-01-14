@@ -394,28 +394,48 @@ Ext.define('Lada.controller.Query', {
         }
         qp.loadingMask.show();
         button.setDisabled(true);
-        var me = this;
         record.save({
             success: function(rec, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 var newId = json.data.id;
                 qp.getForm().loadRecord(rec);
 
+                // Visible columns for saving column width
+                var dgs = Ext.ComponentQuery.query('dynamicgrid');
+                var visibleCols;
+                if (dgs && dgs[0]) {
+                    visibleCols = dgs[0].getVisibleColumns();
+                }
+
                 var finalCallback = function() {
-                    me.persistColumnsWidth(rec).then(function() {
-                        qp.down('combobox[name=selectedQuery]')
-                            .setStore(qp.store);
-                        qp.down('combobox[name=selectedQuery]').select(newId);
-                        qp.loadGridColumnStore();
-                        qp.loadingMask.hide();
-                    });
+                    qp.down('combobox[name=selectedQuery]')
+                        .setStore(qp.store);
+                    qp.down('combobox[name=selectedQuery]').select(newId);
+                    qp.loadGridColumnStore();
+                    qp.loadingMask.hide();
                 };
                 if (!callback) {
                     var columns = qp.gridColumnValueStore.getData().items;
                     var saved = 0;
                     new Ext.Promise(function(resolve) {
                         for (var i2=0; i2 < columns.length; i2++) {
-                            columns[i2].save({
+                            var col = columns[i2];
+
+                            // Get width of visible columns
+                            var vcIdx;
+                            // eslint-disable-next-line no-loop-func
+                            if (visibleCols && visibleCols.some(function(vc, idx) {
+                                if (vc.dataIndex === col.get('dataIndex')) {
+                                    vcIdx = idx;
+                                    return true;
+                                }
+                                return false;
+                            })) {
+                                col.set('width', visibleCols[vcIdx].width);
+                            }
+
+                            // Save the column
+                            col.save({
                                 // eslint-disable-next-line no-loop-func
                                 callback: function() {
                                     saved++;
@@ -1213,58 +1233,6 @@ Ext.define('Lada.controller.Query', {
             qp.down('button[action=save]').setDisabled(true);
             qp.down('button[action=newquery]').setDisabled(true);
         }
-    },
-
-    /**
-     * tries to persist visible columns' width of the given record
-     * @async resolves true on success, false if there was an error
-     */
-    persistColumnsWidth: function(record) {
-        return new Ext.Promise(function(resolve) {
-
-            var dgs = Ext.ComponentQuery.query('dynamicgrid');
-            var dynamicgrid = null;
-            if (dgs) {
-                dynamicgrid = dgs[0];
-            }
-            if (!dynamicgrid || record.phantom ) {
-                resolve(true);
-                return;
-            }
-            if (dynamicgrid) {
-                var dcColumns = dynamicgrid.getVisibleColumns();
-                var qp = Ext.ComponentQuery.query('querypanel')[0];
-                var gcsColumns = qp.gridColumnValueStore.getData().items;
-                var len = 0;
-                var cur = 0;
-                var success = true;
-                dcColumns.forEach(function(dcCol) {
-                    var gridColumn;
-                    for (var i = 0; i < gcsColumns.length; i++) {
-                        var col = gcsColumns[i];
-                        if (col.get('dataIndex') === dcCol.dataIndex) {
-                            gridColumn = col;
-                            break;
-                        }
-                    }
-                    if (gridColumn) {
-                        gridColumn.set('width', dcCol.width);
-                        len++;
-                        gridColumn.save({
-                            callback: function(rec, op, suc) {
-                                cur++;
-                                if (!suc) {
-                                    success = false;
-                                }
-                                if (cur === len) {
-                                    resolve(success);
-                                }
-                            }
-                        });
-                    }
-                });
-            }
-        });
     },
 
 
