@@ -262,8 +262,9 @@ Ext.define('Lada.view.panel.FileUpload', {
         var controller = Lada.app.getController(
             'Lada.controller.grid.Uploads');
         var queueItem = controller.addQueueItem(win.fileNames);
-        queueItem.set('encoding', win.down('combobox[name=encoding]').getValue());
-        queueItem.set('mst',win.down('combobox[name=mst]').getValue());
+        queueItem.set(
+            'encoding', win.down('combobox[name=encoding]').getValue());
+        queueItem.set('mst', win.down('combobox[name=mst]').getValue());
         Ext.Ajax.request({
             url: 'lada-server/data/import/async/laf',
             method: 'POST',
@@ -299,5 +300,13 @@ Ext.define('Lada.view.panel.FileUpload', {
                 queueItem.set('done', true);
             }
         });
+    },
+
+    clear: function() {
+        var uploader = this.down('fileuploadfield');
+        uploader.reset();
+        uploader.fireEvent('change', uploader);
+        uploader.fireEvent('afterRender', uploader);
+        this.down('button[name=save]').setDisabled(true);
     }
 });
