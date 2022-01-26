@@ -22,10 +22,6 @@ Ext.define('Lada.view.window.SetStatus', {
     selection: null,
     dataId: null,
     sendIds: null,
-    layout: {
-        type: 'vbox',
-        align: 'stretch'
-    },
     modal: true,
     constrain: true,
     closable: false,
@@ -111,7 +107,7 @@ Ext.define('Lada.view.window.SetStatus', {
             }]
         }, {
             xtype: 'panel',
-            layout: 'fit',
+            scrollable: true,
             hidden: true,
             margin: '5, 5, 5, 5',
             scrollable: true,
@@ -344,7 +340,6 @@ Ext.define('Lada.view.window.SetStatus', {
                             }
                             out.push('</ul></dd>');
                         }
-
                         if (out.length > 0) {
                             // Print delimiter between different requests
                             out.push('<hr>');
@@ -416,20 +411,17 @@ Ext.define('Lada.view.window.SetStatus', {
     addLogItem: function(text, id) {
         var i18n = Lada.getApplication().bundle;
 
-        // Print "HP-Nr." and "NP-Nr." if available
         if (id) {
             var item = Ext.Array.findBy(
                 this.selection, function(it) {
                     return it.get(this.dataId) === id;
                 }, this);
-            if (item && item.get('hpNr') && item.get('npNr')) {
                 this.resultMessage +=
                     '<strong>' + i18n.getMsg('hauptprobenNr') +
                     ' - ' + i18n.getMsg('nebenprobenNr') +
                     ': </strong> ' +
                     item.get('hpNr') + ' - ' +
                     item.get('npNr') + '<br>';
-            }
         }
 
         this.resultMessage += text;

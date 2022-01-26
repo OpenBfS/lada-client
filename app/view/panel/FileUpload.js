@@ -54,11 +54,17 @@ Ext.define('Lada.view.panel.FileUpload', {
                 listeners: {
                     //Allow multiple files
                     afterRender: function(cmp) {
+                        if (!cmp.fileInputEl) {
+                            return;
+                        }
                         cmp.fileInputEl.dom.setAttribute(
                             'multiple', 'multiple');
                     },
                     //Remove 'C:\Fakepath' part of filenames
                     change: function(field) {
+                        if (!field.fileInputEl) {
+                            return;
+                        }
                         var node = Ext.DomQuery.selectNode(
                             'input[id='+ field.getInputId() + ']');
                         var files = field.fileInputEl.dom.files;
@@ -193,6 +199,7 @@ Ext.define('Lada.view.panel.FileUpload', {
         this.callParent(arguments);
         this.down('combobox[name=encoding]').setValue('iso-8859-15');
         this.title = i18n.getMsg('title.dataimport');
+        this.clear();
     },
 
     /**

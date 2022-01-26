@@ -711,9 +711,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         col.xtype='gridcolumn';
         col.renderer = function(value) {
             if (value === true) {
-                return this.i18n.getMsg('true');
+                return Lada.getApplication().bundle.getMsg('true');
             } else if (value === false) {
-                return this.i18n.getMsg('false');
+                return Lada.getApplication().bundle.getMsg('false');
             } else {
                 return '';
             }

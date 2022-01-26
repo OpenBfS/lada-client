@@ -11,6 +11,9 @@
  */
 Ext.define('Lada.controller.Global', {
     extend: 'Ext.app.Controller',
+    routes: {
+        'importer': 'onLafImport'
+    },
 
     init: function() {
         this.control({
@@ -73,5 +76,12 @@ Ext.define('Lada.controller.Global', {
         }
         //Fire event to notify components
         Ext.fireEvent('timezonetoggled', utc);
+    },
+
+    onLafImport: function() {
+        var viewport = Ext.ComponentQuery.query('viewport')[0];
+        if (viewport) {
+            viewport.down('tabpanel').setActiveTab(1);
+        }
     }
 });

@@ -436,7 +436,9 @@ Ext.define('Lada.controller.form.Probe', {
         if (!formPanel) {
             return true;
         }
-
+        if (!formPanel.isDirty()) {
+            return true;
+        }
         var umweltCombo = formPanel.down('umwelt').down('combobox');
         if (!umweltCombo) {
             return true;
@@ -465,7 +467,9 @@ Ext.define('Lada.controller.form.Probe', {
         if (!formPanel) {
             return true;
         }
-
+        if (!formPanel.isDirty()) {
+            return true;
+        }
         var reiCombo = formPanel.down('reiprogpunktgruppe').down('combobox');
         if (!reiCombo) {
             return true;

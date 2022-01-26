@@ -394,6 +394,11 @@ Ext.define('Lada.controller.Query', {
         }
         qp.loadingMask.show();
         button.setDisabled(true);
+        var failureCallback= function() {
+            qp.loadingMask.hide();
+            Ext.Msg.alert(i18n.getMsg('query.error.save.title'),
+                          i18n.getMsg('query.error.save.message'));
+        };
         record.save({
             success: function(rec, response) {
                 var json = Ext.decode(response.getResponse().responseText);
@@ -437,12 +442,13 @@ Ext.define('Lada.controller.Query', {
                             // Save the column
                             col.save({
                                 // eslint-disable-next-line no-loop-func
-                                callback: function() {
+                                success: function() {
                                     saved++;
                                     if (saved === columns.length) {
                                         resolve();
                                     }
-                                }
+                                },
+                                failure: failureCallback
                             });
                         }
                     }).then(function() {
@@ -454,10 +460,7 @@ Ext.define('Lada.controller.Query', {
                     });
                 }
             },
-            failure: function() {
-                Ext.Msg.alert(i18n.getMsg('query.error.save.title'),
-                    i18n.getMsg('query.error.save.message'));
-            }
+            failure: failureCallback
         });
     },
 
@@ -761,6 +764,14 @@ Ext.define('Lada.controller.Query', {
                         field = Ext.create(
                             'Lada.view.widget.Messstelle',
                             options);
+                        negateCheckbox = true;
+                        break;
+                    case 'leitstelle':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        field = Ext.create(
+                            'Lada.view.widget.Leitstelle', options);
                         negateCheckbox = true;
                         break;
                     case 'boolean':

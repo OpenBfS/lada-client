@@ -150,5 +150,10 @@ Ext.define('Lada.view.Viewport', {
             }]
         }];
         this.callParent(arguments);
+        Ext.onReady(function() {
+            if (window.location.hash === '#importer') {
+                this.down('tabpanel').setActiveTab(1);
+            }
+        }, this);
     }
 });

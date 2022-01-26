@@ -88,9 +88,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         });
                 } else {
                     var i18n = Lada.getApplication().bundle;
-                    var responseObj = Ext.decode(op.getResponse().responseText);
                     Ext.Msg.alert(i18n.getMsg('err.messprogramm.copy'),
-                        i18n.getMsg(responseObj.message));
+                        i18n.getMsg('err.msg.generic.body'));
                 }
             }
         });

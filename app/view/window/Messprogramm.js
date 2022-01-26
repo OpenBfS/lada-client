@@ -29,7 +29,6 @@ Ext.define('Lada.view.window.Messprogramm', {
 
     record: null,
     recordType: 'messprogramm',
-    modelClass: Lada.model.Messprogramm,
 
     /**
      * This function initialises the Window

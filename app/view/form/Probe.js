@@ -226,7 +226,7 @@ Ext.define('Lada.view.form.Probe', {
                         }, {
                             xtype: 'betriebsart',
                             name: 'baId',
-                            fieldLabel: 'Messregime',
+                            fieldLabel: i18n.getMsg('baId'),
                             margin: '0, 5, 5, 5',
                             width: '35%',
                             allowBlank: false,
@@ -235,7 +235,7 @@ Ext.define('Lada.view.form.Probe', {
                             xtype: 'probenart',
                             //editable: true,
                             name: 'probenartId',
-                            fieldLabel: 'Probenart',
+                            fieldLabel: i18n.getMsg('probenartId'),
                             margin: '0, 5, 5, 5',
                             width: '30%',
                             allowBlank: false,
