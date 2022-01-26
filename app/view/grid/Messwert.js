@@ -509,17 +509,59 @@ Ext.define('Lada.view.grid.Messwert', {
         var notifications = record.get('notifications');
         var validationResult = '';
         var validationResultCls = null;
-        if (warnings && warnings[dataIndex]) {
-            validationResult += i18n.getMsg(warnings[dataIndex]) + '<br>';
-            validationResultCls = 'x-lada-warning-grid-field';
+        if (warnings && (warnings[dataIndex] ||
+            Object.keys(warnings).filter(item => item.toString().startsWith(dataIndex))[0])) {
+            if (warnings[dataIndex]) {
+                validationResult += i18n.getMsg(warnings[dataIndex]) + '<br>';
+                validationResultCls = 'x-lada-warning-grid-field';
+            } else {
+                for (key in warnings) {
+                    tmp = key;
+                    if (tmp.indexOf('#') > 0) {
+                        tmp = tmp.split('#')[0];
+                    }
+                }
+                if (tmp === dataIndex) {
+                    validationResult += i18n.getMsg(warnings[key]);
+                    validationResultCls = 'x-lada-warning-grid-field';
+                }
+            }
         }
-        if (errors && errors[dataIndex]) {
-            validationResult += i18n.getMsg(errors[dataIndex]) + '<br>';
-            validationResultCls = 'x-lada-error-grid-field';
+        if (errors && (errors[dataIndex] ||
+            Object.keys(errors).filter(item => item.toString().startsWith(dataIndex))[0])) {
+            if (errors[dataIndex]) {
+                validationResult += i18n.getMsg(errors[dataIndex]) + '<br>';
+                validationResultCls = 'x-lada-error-grid-field';
+            } else {
+                for (key in errors) {
+                    tmp = key;
+                    if (tmp.indexOf('#') > 0) {
+                        tmp = tmp.split('#')[0];
+                    }
+                }
+                if (tmp === dataIndex) {
+                    validationResult += i18n.getMsg(errors[key]);
+                    validationResultCls = 'x-lada-error-grid-field';
+                }
+            }
         }
-        if (notifications && notifications[dataIndex]) {
-            validationResult += i18n.getMsg(notifications[dataIndex]) + '<br>';
-            validationResultCls = 'x-lada-notification-grid-field';
+        if (notifications && (notifications[dataIndex] ||
+            Object.keys(notifications).filter(item => item.toString().startsWith(dataIndex))[0])) {
+            if (notifications[dataIndex]) {
+                validationResult += i18n.getMsg(notifications[dataIndex]) + '<br>';
+                validationResultCls = 'x-lada-notification-grid-field';
+            } else {
+                for (key in notifications) {
+                    tmp = key;
+                    if (tmp.indexOf('#') > 0) {
+                        tmp = tmp.split('#')[0];
+                    }
+                }
+                if (tmp === dataIndex) {
+                    validationResult += i18n.getMsg(notifications[key]);
+                    validationResultCls = 'x-lada-notification-grid-field';
+                }
+            }
         }
         if (validationResultCls) {
             metaData.tdCls = validationResultCls;
