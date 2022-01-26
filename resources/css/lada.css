@@ -98,6 +98,11 @@
     background-size: 100%;
 }
 
+.x-action-col-icon.notification
+{
+  background-image: url(../img/dialog-notification.png);
+}
+
 .x-action-col-icon.warning
 {
   background-image: url(../img/dialog-warning.png);

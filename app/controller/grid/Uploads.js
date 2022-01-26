@@ -75,6 +75,7 @@ Ext.define('Lada.controller.grid.Uploads', {
                         item.set('done', json.done);
                         item.set('errors', json.errors);
                         item.set('warnings', json.warnings);
+                        item.set('notifications', json.notifications);
                         item.set('status', json.status);
                         if (!json.error) {
                             if (json.message) {
@@ -112,7 +113,8 @@ Ext.define('Lada.controller.grid.Uploads', {
             resultFetched: false,
             done: false,
             warnings: false,
-            errors: false
+            errors: false,
+            notifications: false
         });
         var store = Ext.data.StoreManager.get('uploadqueue');
         store.add(storeItem);

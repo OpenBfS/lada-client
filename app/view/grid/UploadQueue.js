@@ -30,24 +30,32 @@ Ext.define('Lada.view.grid.UploadQueue', {
         this.columns = [{
             header: i18n.getMsg('export.filename'),
             dataIndex: 'filename',
-            flex: 1
+            renderer: function(value) {
+                return '<div style="white-space: normal !important;">' +
+                    value + '</div>';
+            },
+            flex: 1.2
         }, {
             header: i18n.getMsg('print.startDate'),
             dataIndex: 'startDate',
-            width: 85,
+            width: 80,
             renderer: function(value) {
                 return Lada.util.Date.formatTimestamp(value, 'HH:mm:ss');
             }
         }, {
             header: i18n.getMsg('print.status'),
             dataIndex: 'status',
-            flex: 1,
+            width: 80,
             renderer: function(value) {
                 return i18n.getMsg( 'print.status.'+ value);
             }
         }, {
             header: i18n.getMsg('print.message'),
             dataIndex: 'message',
+            renderer: function(value) {
+                return '<div style="white-space: normal !important;">' +
+                    value + '</div>';
+            },
             flex: 2
         }, {
             xtype: 'actioncolumn',
@@ -58,23 +66,40 @@ Ext.define('Lada.view.grid.UploadQueue', {
                 if (rec.get('status') === 'error') {
                     return i18n.getMsg('importResponse.failure.true');
                 }
-                if (!rec.get('warnings') && !rec.get('errors')) {
+                if (!rec.get('warnings') && !rec.get('errors') && !rec.get('notifications')) {
                     return ' ';
                 }
-                if (!rec.get('warnings')) {
+                if (!rec.get('warnings') && !rec.get('notifications')) {
                     return i18n.getMsg('importResponse.failure.true');
                 }
-                if (!rec.get('errors')){
-                    return i18n.getMsg('importResponse.warnings.true');
+                if (!rec.get('errors') && !rec.get('warnings') && rec.get('notifications')) {
+                    return i18n.getMsg('importResponse.notifications.true');
                 }
-                return i18n.getMsg('importResponse.failureAndWarnings.true');
+                if (!rec.get('errors') && rec.get('warnings') && rec.get('notifications') ) {
+                    return i18n.getMsg('importResponse.warningsANDnotifications.true');
+                }
+                if (!rec.get('errors') && rec.get('warnings') && !rec.get('notifications')) {
+                    return i18n.getMsg('importResponse.warnings.warninglist');
+                }
+                if (rec.get('errors') && rec.get('warnings') && rec.get('notifications')) {
+                    return i18n.getMsg('importResponse.failureAndWarningsAndNotifications.true');
+                }
+                if (rec.get('errors') && !rec.get('warnings') && rec.get('notifications')) {
+                    return i18n.getMsg('importResponse.failureAndNotifications.true');
+                }
+                if (rec.get('errors') && rec.get('warnings') && !rec.get('notifications')) {
+                    return i18n.getMsg('importResponse.failureAndWarnings.true');
+                }
             },
             getClass: function (value, meta, rec) {
                 // see x.action-col-icon definitions at lada.css for img urls
                 if (rec.get('errors') || rec.get('status') === 'error'){
                     return 'error';
                 }
-                return rec.get('warnings') ? 'warning' : ' ';
+                if (rec.get('warnings')) {
+                    return 'warning';
+                }
+                return rec.get('notifications') ? 'notification' : ' ';
             }
         }, {
             // cancel/download icon
