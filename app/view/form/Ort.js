@@ -107,6 +107,7 @@ Ext.define('Lada.view.form.Ort', {
                 labelWidth: 125,
                 maxLength: 100,
                 name: 'reiProgpunktGrpId',
+                editable: true,
                 fieldLabel: i18n.getMsg('reiProgpunktGrpId')
             },{
                 xtype: 'ktagruppe',
@@ -319,6 +320,7 @@ Ext.define('Lada.view.form.Ort', {
         this.down('orttyp[name=ortTyp]').clearWarningOrError();
         this.down('staat[name=staatId]').clearWarningOrError();
         this.down('koordinatenart[name=kdaId]').clearWarningOrError();
+        this.down('fset[name=koordinaten]').clearMessages();
     },
 
     setReadOnly: function(value) {
