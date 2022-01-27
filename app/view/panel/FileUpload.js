@@ -33,12 +33,6 @@ Ext.define('Lada.view.panel.FileUpload', {
 
     width: 350,
 
-    defaults: {
-        // maxWidth: 240,
-        // width: 240,
-        labelAlign: 'top'
-    },
-
     /**
      * This function initialises the Window
      */
