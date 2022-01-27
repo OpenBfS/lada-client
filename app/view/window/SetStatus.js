@@ -127,17 +127,13 @@ Ext.define('Lada.view.window.SetStatus', {
         }];
 
         var title = '';
-        if (this.record) {
+        if (Ext.ComponentQuery.query('probeform').length !== 0) {
             var probenform = Ext.ComponentQuery.query('probeform');
-            if (probenform) {
-                var hauptprobennummer = probenform[0].getRecord().get(
-                    'hauptprobenNr');
-                if (hauptprobennummer) {
-                    title = i18n.getMsg('setStatus.hprnr',
-                        hauptprobennummer,
-                        me.record.get('nebenprobenNr'));
-                }
-            }
+            var probenumber = probenform[0].getRecord().get('hauptprobenNr') ? 'mit HP-Nr '+ probenform[0].getRecord().get('hauptprobenNr') : 'mit extPID '+ probenform[0].getRecord().get('externeProbeId');
+            var messungnumber = this.selection[0].get('nebenprobenNr')  ? 'mit NP-Nr '+ this.selection[0].get('nebenprobenNr') : 'mit extMId '+ this.selection[0].get('externeMessungsId');
+            title = i18n.getMsg('setStatus.hprnr',
+                    messungnumber,
+                    probenumber);
         } else {
             title = i18n.getMsg('setStatus.count', this.selection.length);
         }
@@ -203,6 +199,8 @@ Ext.define('Lada.view.window.SetStatus', {
                     me.down('button[name=abort]').hide();
                     me.down('button[name=close]').show();
                     result.setMaxHeight('400');
+                    var title = me.down('fieldset').title;
+                    me.resultMessage = '<h4>' + title + '</h4>' + me.resultMessage;
                     result.setHtml(me.resultMessage);
                     result.show();
                     values.hide();
@@ -273,6 +271,11 @@ Ext.define('Lada.view.window.SetStatus', {
                                 out.push(validation.join(''));
                             }
                             out.push('</ul></dd>');
+                        } else {
+                            out.push('<dl><dd>' +
+                                i18n.getMsg('status-'+json.message) +
+                                '</dd>');
+                            out.push('</dd></dl>');
                         }
 
                         if (numWarnings > 0) {
@@ -410,20 +413,23 @@ Ext.define('Lada.view.window.SetStatus', {
 
     addLogItem: function(text, id) {
         var i18n = Lada.getApplication().bundle;
-
         if (id) {
             var item = Ext.Array.findBy(
                 this.selection, function(it) {
                     return it.get(this.dataId) === id;
                 }, this);
-                this.resultMessage +=
-                    '<strong>' + i18n.getMsg('hauptprobenNr') +
-                    ' - ' + i18n.getMsg('nebenprobenNr') +
-                    ': </strong> ' +
-                    item.get('hpNr') + ' - ' +
-                    item.get('npNr') + '<br>';
+                if (item.get('nebenprobenNr') === undefined) {
+                    var probenumber = item.get('hpNr')  ? '<strong>' + i18n.getMsg('hauptprobenNr') + '</strong> ' + item.get('hpNr') :
+                        item.get('externeProbeId') ? '<strong>' + i18n.getMsg('extProbeId') + '</strong> ' + item.get('externeProbeId') :
+                        '<strong>' + i18n.getMsg('hauptprobenNr') + ' nicht definiert</strong> ';
+                    var messungsnumber = item.get('npNr')  ? '<strong>' + i18n.getMsg('nebenprobenNr') + '</strong> ' + item.get('npNr') :
+                        item.get('externeMessungsId') ? '<strong>' + i18n.getMsg('extMessungsId') + '</strong> ' + item.get('externeMessungsId') :
+                        '<strong>' + i18n.getMsg('nebenprobenNr') + ' nicht definiert</strong> ';
+                    this.resultMessage +=
+                        probenumber +
+                        ' - ' + messungsnumber;
+                }
         }
-
         this.resultMessage += text;
     }
 });
