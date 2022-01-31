@@ -19,8 +19,6 @@ Ext.define('Lada.model.Staat', {
         name: 'staat'
     }, {
         name: 'staatIso'
-    }, {
-        name: 'staatKurz'
     }],
 
     idProperty: 'id',
