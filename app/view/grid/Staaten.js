@@ -39,10 +39,6 @@ Ext.define('Lada.view.grid.Staaten', {
             },
             dataIndex: 'staatIso'
         }, {
-            header: i18n.getMsg('shortname'),
-            width: 100,
-            dataIndex: 'StaatKurz'
-        }, {
             header: i18n.getMsg('name'),
             dataIndex: 'staat',
             flex: 1,
