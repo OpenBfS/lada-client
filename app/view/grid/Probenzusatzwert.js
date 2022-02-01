@@ -26,6 +26,8 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
     },
     margin: '0, 5, 5, 5',
 
+    warnings: null,
+    errors: null,
     recordId: null,
     readOnly: true,
     allowDeselect: true,

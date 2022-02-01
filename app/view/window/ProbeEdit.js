@@ -447,6 +447,10 @@ Ext.define('Lada.view.window.ProbeEdit', {
         var errorOrt = false;
         var warningOrtText = '';
         var warningOrt = false;
+        var errorPZBText = '';
+        var errorPZB = false;
+        var warningPZBText = '';
+        var warningPZB = false;
         var key;
         var content;
         var i;
@@ -462,6 +466,15 @@ Ext.define('Lada.view.window.ProbeEdit', {
                         i18n.getMsg(content[i].toString()) + '\n';
                 }
             }
+            if (key && key.indexOf('zusatzwert') > -1) {
+                errorPZB = true;
+                content = errors[key];
+                keyText = i18n.getMsg(key);
+                for (i = 0; i < content.length; i++) {
+                    errorPZBText += keyText + ': ' +
+                        i18n.getMsg(content[i].toString()) + '\n';
+                }
+            }
         }
         for (key in warnings) {
             if (key && key.indexOf('Ort') > -1) {
@@ -473,12 +486,26 @@ Ext.define('Lada.view.window.ProbeEdit', {
                         i18n.getMsg(content[i].toString()) + '\n';
                 }
             }
+            if (key && key.indexOf('zusatzwert') > -1) {
+                warningPZB = true;
+                content = warnings[key];
+                keyText = i18n.getMsg(key);
+                for (i = 0; i < content.length; i++) {
+                    warningPZBText += keyText + ': ' +
+                        i18n.getMsg(content[i].toString()) + '\n';
+                }
+            }
         }
         this.down('fset[name=orte]').showWarningOrError(
             warningOrt,
             warningOrtText === '' ? null : warningOrtText,
             errorOrt,
             errorOrtText === '' ? null : errorOrtText);
+        this.down('fset[name=probenzusatzwerte]').showWarningOrError(
+            warningPZB,
+            warningPZBText === '' ? null : warningPZBText,
+            errorPZB,
+            errorPZBText === '' ? null : errorPZBText);
     },
 
     /**
@@ -491,6 +518,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         if (probeform && orteset) {
             this.down('probeform').clearMessages();
             this.down('fset[name=orte]').clearMessages();
+            this.down('fset[name=probenzusatzwerte]').clearMessages();
         }
     }
 });
