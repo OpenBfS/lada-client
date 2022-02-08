@@ -738,14 +738,14 @@ Ext.define('Lada.view.form.Messprogramm', {
             }
             try {
                 cbox.select(
-                    cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10)));
+                    cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10), 0, false, false, true));
             } catch (e) {
                 Ext.log({msg: 'Selecting media failed: ' + e, level: 'warn'});
                 Lada.view.form.Messprogramm.mediaSnScheduler.finished();
                 return;
             }
             var mediatext = cbox.store.findRecord(
-                'sn', parseInt(media[ndx + 1], 10));
+                'sn', parseInt(media[ndx + 1], 10), 0, false, false, true);
             if (mediatext !== null) {
                 if (
                     (ndx <= 3) &&
