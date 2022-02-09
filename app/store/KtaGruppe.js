@@ -14,7 +14,7 @@ Ext.define('Lada.store.KtaGruppe', {
     model: 'Lada.model.KtaGruppe',
     sorters: [
         {
-            property: 'id',
+            property: 'ktaGruppe',
             direction: 'ASC'
         }],
     autoLoad: true,
