@@ -138,7 +138,7 @@ Ext.define('Lada.view.window.ImportResponse', {
         var html = '';
         if (response.status === 200 && responsedata) {
             Ext.Object.each(responsedata, function(fileName, fileResult) {
-                html += '<br/><hr><b>' +
+                html = '<br/><hr><b>' +
                     fileName +
                     ':</b><br/><ol>&#40' +
                     me.mstEncoding +
