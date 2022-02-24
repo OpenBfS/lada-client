@@ -140,25 +140,26 @@ Ext.define('Lada.view.window.ImportResponse', {
             Ext.Object.each(responsedata, function(fileName, fileResult) {
                 html = '<br/><hr><b>' +
                     fileName +
-                    ':</b><br/><ol>&#40' +
-                    me.mstEncoding +
-                    '&#41</ol>' +
-                    '<br/>Tag: ' +
-                    fileResult.tag+
+                    ':</b>' +
                     '<p/>';
-                html += i18n.getMsg('import.messages') + ':<br/><hr>';
                 html += me.parseResponse(fileResult, true);
                 me.download += html;
             });
             me.down('button[name=download]').enable();
+            me.importtag = Object.values(responsedata)[0].tag;
             if (me.importtag) {
                 me.down('button[name=tagclipboard]').enable();
+                me.setTitle(i18n.getMsg('title.importresult', Object.values(responsedata)[0].tag));
             }
         } else {
             html += i18n.getMsg(response.message) + ':<br/>'
                 + response.data;
         }
-        me.down('panel').setHtml(me.down('panel').html + me.download);
+        me.download =  '<p>' + me.mstEncoding + '<p>' + me.download;
+        if (me.importtag) {
+            me.download =  'Tag: ' + me.importtag + me.download;
+        }
+        me.down('panel').setHtml(me.download);
     },
 
     /**
