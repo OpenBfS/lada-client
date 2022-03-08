@@ -99,7 +99,13 @@ Ext.define('Lada.view.widget.Tag', {
 
     initComponent: function() {
         var me = this;
-        this.store = Ext.create('Lada.store.Tag');
+        var store = Ext.data.StoreManager.get('tags');
+        if (!store){
+            Ext.create('Lada.store.Tag', {
+                storeId: 'tags'
+            });
+        }
+        this.store = Ext.data.StoreManager.get('tags');
 
         this.reloadMask = Ext.create('Lada.view.window.ReloadMask', {
             reloadButtonHandler: me.reloadButtonClicked,
@@ -107,7 +113,9 @@ Ext.define('Lada.view.widget.Tag', {
         });
 
         this.store.setLoadingCallback(
-            function(store, records, successful) {
+            // TODO check if broken. 'me' will now be 'the last tag widget that
+            // was initialized'
+            function(str, records, successful) {
                 //Skip if component is no longer visible
                 if (!me.isVisible()) {
                     return;
