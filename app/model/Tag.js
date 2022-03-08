@@ -21,6 +21,22 @@ Ext.define('Lada.model.Tag', {
     }, {
         name: 'mstId',
         type: 'string'
-    }],
+    },{
+        name: 'netzbetreiber',
+        type: 'string'
+    }, {
+        name: 'generatedAt',
+        type: 'string'
+    }, {
+        name: 'typ',
+        type: 'number'
+    }, {
+        name: 'gueltig_bis',
+        type: 'string'
+    }, {
+        name: 'readonly',
+        type: 'boolean'
+    }
+],
     idProperty: 'id'
 });
