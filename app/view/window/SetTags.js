@@ -7,11 +7,11 @@
  */
 
 /**
- * Window for assigning tags to multiple record items.
+ * Window for managing tags of multiple record items.
  */
-Ext.define('Lada.view.window.TagEdit', {
+Ext.define('Lada.view.window.SetTags', {
     extend: 'Ext.window.Window',
-    alias: 'widget.tageditwindow',
+    alias: 'widget.settags',
     requires: [
         'Lada.view.window.TagCreate',
         'Lada.store.Tag'
@@ -139,9 +139,14 @@ Ext.define('Lada.view.window.TagEdit', {
         var i18n = Lada.getApplication().bundle;
         var tagwidget = me.down('tagwidget');
         var tags = tagwidget.getValue();
-        var store = Ext.create('Lada.store.Tag', {
-            autoLoad: false
-        });
+        var store = Ext.data.StoreManager.get('tags');
+        if (!store){
+            Ext.create('Lada.store.Tag', {
+                storeId: 'tags'
+            });
+        }
+        store = Ext.data.StoreManager.get('tags');
+
         var tagCount = tags.length * me.selection.length;
         var tagsSet = 0;
         var tagsFailed = '';

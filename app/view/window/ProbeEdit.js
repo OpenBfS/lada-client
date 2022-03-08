@@ -20,7 +20,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         'Lada.view.grid.PKommentar',
         'Lada.view.grid.Messung',
         'Lada.view.widget.Tag',
-        'Lada.view.window.TagEdit'
+        'Lada.view.window.SetTags'
     ],
 
     collapsible: true,
@@ -155,7 +155,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                     // Only users with associated Messstelle can (un)assign tags
                     disabled: Lada.mst.length === 0,
                     handler: function() {
-                        var win = Ext.create('Lada.view.window.TagEdit', {
+                        var win = Ext.create('Lada.view.window.SetTags', {
                             title: i18n.getMsg(
                                 'tag.assignwindow.title.probe', 1),
                             parentWindow: me,

@@ -13,7 +13,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     extend: 'Ext.app.Controller',
     requires: [
         'Lada.view.window.DeleteMultipleItems',
-        'Lada.view.window.TagEdit'
+        'Lada.view.window.SetTags'
     ],
 
     /**
@@ -404,7 +404,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             });
         var i18n = Lada.getApplication().bundle;
         var count = selection.length;
-        var win = Ext.create('Lada.view.window.TagEdit', {
+        var win = Ext.create('Lada.view.window.SetTags', {
             title: i18n.getMsg('tag.assignwindow.title.' + recordType, count),
             recordType: recordType,
             selection: selection
