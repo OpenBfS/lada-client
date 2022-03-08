@@ -1,4 +1,7 @@
 {
+    "env": {
+        "es2016": true
+    },
     "globals": {
         "Ext": true,
         "ol": true,

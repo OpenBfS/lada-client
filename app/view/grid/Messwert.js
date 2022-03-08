@@ -515,7 +515,8 @@ Ext.define('Lada.view.grid.Messwert', {
                 validationResult += i18n.getMsg(warnings[dataIndex]) + '<br>';
                 validationResultCls = 'x-lada-warning-grid-field';
             } else {
-                for (key in warnings) {
+                var tmp;
+                for (var key in warnings) {
                     tmp = key;
                     if (tmp.indexOf('#') > 0) {
                         tmp = tmp.split('#')[0];
@@ -533,13 +534,14 @@ Ext.define('Lada.view.grid.Messwert', {
                 validationResult += i18n.getMsg(errors[dataIndex]) + '<br>';
                 validationResultCls = 'x-lada-error-grid-field';
             } else {
-                for (key in errors) {
-                    tmp = key;
-                    if (tmp.indexOf('#') > 0) {
-                        tmp = tmp.split('#')[0];
+                var tmp2;
+                for (var key2 in errors) {
+                    tmp2 = key2;
+                    if (tmp2.indexOf('#') > 0) {
+                        tmp2 = tmp2.split('#')[0];
                     }
                 }
-                if (tmp === dataIndex) {
+                if (tmp2 === dataIndex) {
                     validationResult += i18n.getMsg(errors[key]);
                     validationResultCls = 'x-lada-error-grid-field';
                 }
@@ -551,13 +553,14 @@ Ext.define('Lada.view.grid.Messwert', {
                 validationResult += i18n.getMsg(notifications[dataIndex]) + '<br>';
                 validationResultCls = 'x-lada-notification-grid-field';
             } else {
-                for (key in notifications) {
-                    tmp = key;
-                    if (tmp.indexOf('#') > 0) {
-                        tmp = tmp.split('#')[0];
+                var tmp3;
+                for (var key3 in notifications) {
+                    tmp3 = key3;
+                    if (tmp3.indexOf('#') > 0) {
+                        tmp3 = tmp.split('#')[0];
                     }
                 }
-                if (tmp === dataIndex) {
+                if (tmp3 === dataIndex) {
                     validationResult += i18n.getMsg(notifications[key]);
                     validationResultCls = 'x-lada-notification-grid-field';
                 }
