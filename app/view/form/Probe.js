@@ -170,6 +170,9 @@ Ext.define('Lada.view.form.Probe', {
                                             'messstelle[name=laborMstId]')
                                             .setValue(labor);
                                         combo.up('fieldset').down(
+                                            'datensatzerzeuger[name=erzeugerId]')
+                                            .setValue();
+                                        combo.up('fieldset').down(
                                             'messprogrammland[name=mplId]')
                                             .setValue();
                                     }
@@ -307,6 +310,9 @@ Ext.define('Lada.view.form.Probe', {
                                             var nId = combo.up('fieldset')
                                                 .down('netzbetreiber[name=netzbetreiber]')
                                                 .getValue();
+                                            var dId = combo.up('fieldset')
+                                                .down('messstelle[name=mstId]')
+                                                .getValue();
                                             if (!nId || nId.length === 0) {
                                                 store.filterBy(function(record) {
                                                     return Lada.netzbetreiber.indexOf(
@@ -315,11 +321,16 @@ Ext.define('Lada.view.form.Probe', {
                                                 });
                                             /*eslint-enable max-len*/
                                             } else {
-                                                store.filter({
-                                                    property: 'netzbetreiberId',
-                                                    value: nId,
-                                                    exactMatch: true
-                                                });
+                                                store.filter([
+                                                    {
+                                                        property: 'netzbetreiberId',
+                                                        value: nId,
+                                                        exactMatch: true
+                                                    }, {
+                                                        property: 'mstId',
+                                                        value: dId,
+                                                        exactMatch: true
+                                                }]);
                                             }
                                         }
                                     }
