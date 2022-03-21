@@ -1146,6 +1146,7 @@ Ext.define('Lada.controller.Query', {
             'probeId',
             'mpId',
             'ortId',
+            'tagId',
             'probenehmer',
             'dsatzerz',
             'mprkat'

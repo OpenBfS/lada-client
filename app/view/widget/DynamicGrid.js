@@ -1078,7 +1078,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     genericDeleteButton: function() {
         if (
-            ['probeId', 'mpId', 'ortId', 'messungId']
+            ['probeId', 'mpId', 'ortId', 'messungId', 'tagId']
                 .indexOf(this.rowtarget.dataType) >= 0 ||
             ( ['probenehmer', 'dsatzerz', 'mprkat'].indexOf(
                 this.rowtarget.dataType) >= 0

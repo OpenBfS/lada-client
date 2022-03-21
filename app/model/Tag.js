@@ -8,7 +8,7 @@
 
 /**
  * A Probe.
- * This class represents and defines the model of a 'Probe'
+ * This class represents and defines the model of a Tag
  **/
 Ext.define('Lada.model.Tag', {
     extend: 'Ext.data.Model',
@@ -25,14 +25,15 @@ Ext.define('Lada.model.Tag', {
         name: 'netzbetreiber',
         type: 'string'
     }, {
-        name: 'generatedAt',
-        type: 'string'
+        name: 'generatedAt'
+        // timestamp
     }, {
         name: 'typ',
-        type: 'number'
-    }, {
-        name: 'gueltig_bis',
         type: 'string'
+        // 'mst' | 'netzbetreiber', 'global', 'auto'
+    }, {
+        name: 'gueltigBis'
+        // timestamp
     }, {
         name: 'readonly',
         type: 'boolean'
