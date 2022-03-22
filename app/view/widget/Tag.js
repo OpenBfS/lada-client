@@ -138,7 +138,8 @@ Ext.define('Lada.view.widget.Tag', {
             '<li data-selectionIndex="{[xindex - 1]}"',
             ' data-recordId="{internalId}"',
             ' role="presentation" class="x-tagfield-item">',
-            '<div role="presentation" class="x-tagfield-item-text">',
+            '<div role="presentation" class="{[this.getItemCls(values.data)]}">',
+            '<div if="this.isAuto(values.data)>*</div>',
             '{[this.getItemLabel(values.data)]}',
             '</div>',
             '<tpl if ="!this.isReadOnly()">',
@@ -152,6 +153,22 @@ Ext.define('Lada.view.widget.Tag', {
                 },
                 isReadOnly: function() {
                     return me.readOnly;
+                },
+                getItemCls: function(value){  // TODO accessing record here?
+                    var result = 'x-tagfield-item-text';
+                    switch (value.get('typ')) {
+                        case 'global':
+                            return  result + ' bold-text italic-text';
+                        case 'netzbetreiber':
+                            return result + ' bold-text';
+                        case 'auto':
+                            return result + ' italic-text';
+                        default:
+                            return result;
+                    }
+                },
+                isAuto: function(value) { // TODO accessing record here?
+                    return value.get('typ') === 'auto';
                 },
                 strict: true
             }
