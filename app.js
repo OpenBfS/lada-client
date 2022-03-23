@@ -613,6 +613,7 @@ Ext.application({
         'Lada.controller.Global',
         'Lada.controller.Print',
         'Lada.controller.ElanScenario',
-        'Lada.controller.grid.Downloads'
+        'Lada.controller.grid.Downloads',
+        'Lada.controller.form.Tag'
     ]
 });
