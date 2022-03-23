@@ -40,7 +40,7 @@ Ext.define('Lada.store.Tag', {
 
     /**
      * Set the probe or messung ID as a filter param to get assigned tags
-     * @param id ID to use
+     * @param id ID to use // TODO allow list of ids
      * @param recordType 'probe' or 'messung'
      */
     setTagged: function(id, recordType) {
@@ -99,62 +99,6 @@ Ext.define('Lada.store.Tag', {
                 callback: callback
             });
         }
-    },
-
-    /**
-     * Creates a new to for a given Probe or Messung using a POST request
-     * @param tagName Tag name
-     * @param id ID of Probe or Messung to create tag for
-     * @param 'probe' or 'messung'
-     * @param callback Callback function to call after save
-     */
-    createTag: function(tagName, id, recordType, callback) {
-        var mstId = Lada.mst[0];
-        var tag = {
-            tag: tagName,
-            mstId: mstId
-        };
-        var zuordnung;
-        switch (recordType) {
-            case 'messung':
-                zuordnung = {
-                    messungId: id,
-                    tag: tag
-                };
-                break;
-            case 'probe':
-                zuordnung = {
-                    probeId: id,
-                    tag: tag
-                };
-                break;
-            default:
-                Ext.raise('Unkown record type: ' + recordType);
-        }
-        Ext.Ajax.request({
-            url: this.proxy.url,
-            method: 'POST',
-            jsonData: zuordnung,
-            success: callback,
-            failure: this.failureHandler
-        });
-    },
-
-    /**
-     * Creates or deletes a reference to the given tag ID.
-     */
-    editZuordnung: function(tag, method, callback) {
-        var zuordnung = {
-            probeId: this.pId,
-            messungId: this.mId,
-            tagId: tag
-        };
-        Ext.Ajax.request({
-            url: this.proxy.url,
-            method: method,
-            jsonData: zuordnung,
-            callback: callback
-        });
     },
 
     failureHandler: function() {
