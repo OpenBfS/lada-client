@@ -19,13 +19,16 @@ Ext.define('Lada.view.window.SetTags', {
 
     layout: 'vbox',
 
-    recordType: null,
+    recordType: null, //probe | messung
 
     width: 400,
-    selection: null,
+    selection: null, //list of ids according to recordtype
 
-    // Set this to reload a Tag widget in it
-    parentWindow: null,
+    parentWindow: null, // TODO
+
+    // TODO: show shared Tags
+
+    // TODO add tagCreate window possibility.
 
     /**
      * This function initialises the Window
@@ -51,13 +54,7 @@ Ext.define('Lada.view.window.SetTags', {
                 icon: 'resources/img/list-add.png',
                 tooltip: i18n.getMsg('button.createtag.tooltip'),
                 handler: function() {
-                    var win = Ext.create('Lada.view.window.TagCreate', {
-                        tagWidget: me.down('tagwidget'),
-                        recordType: me.recordType,
-                        tagEdit: me,
-                        selection: me.selection,
-                        probe: null
-                    });
+                    var win = Ext.create('Lada.view.window.TagCreate');
                     //Close window if parent window is closed
                     me.on('close', function() {
                         win.close();
@@ -199,5 +196,17 @@ Ext.define('Lada.view.window.SetTags', {
                 });
             }
         }
+    },
+    //TODO: button[action=remove]
+    //TODO: button[action=add]
+
+    collectCurrentTags: function() {
+        // recordType
+        // TODO: avoid lots of API calls?
+    },
+
+    actionCallBack: function(){
+        // reload tagStore, reset all widgets
+        // show feedback
     }
 });

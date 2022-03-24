@@ -83,16 +83,16 @@ Ext.define('Lada.controller.form.Tag', {
     addZuordnung: function(button){
         var win = button.up('settags');
         var selection = win.selection;
-        var recordname = win.recordType === 'messung' ? 'messungId' : 'probeId';
+        var recname = win.recordType === 'messung' ? 'messungId' : 'probeId';
         var taglist = []; // TODO
-        var zuordnung = {};
-        zuordnung[recordname] = selection;
-        zuordnung.tagId = taglist;
-        var record = [zuordnung];
+        var payload = {
+            tagId:  taglist
+        };
+        payload[recname] = selection;
         Ext.Ajax.request({
             url: this.zuordnungUrl,
             method: 'POST',
-            jsonData: JSON.stringify(record)
+            jsonData: JSON.stringify([payload])
         });
     },
 
@@ -100,10 +100,21 @@ Ext.define('Lada.controller.form.Tag', {
      * Removes (multiple) tags from a list of objects (e.g. Proben, Messungen).
      * Tags that are not on these objects will silently be ignored
      */
-    removeZuordnung: function() { // button){
-        // var win = button.up('settags');
-        //TODO:  this.zuordnungUrl, delete request: id of zuordnung required ?
-        // window has list of assigned tags
+    removeZuordnung: function(button) {
+        var win = button.up('settags');
+        var recname = win.recordType === 'messung' ? 'messungId' : 'probeId';
+        var tagIds = win.selectedTags; //TODO;
+        var objIds = win.selectedTags; //TODO;
+        var payload = {
+            tagId: tagIds
+        };
+        payload[recname] = objIds;
+        Ext.Ajax.request({
+            url: this.zuordnungUr + '/delete',
+            method: 'POST',
+            jsonData: JSON.stringify([payload])
+        });
+        //TODO callback
     },
 
     // TODO: add to all callbacks

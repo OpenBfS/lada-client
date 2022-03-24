@@ -315,7 +315,21 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                         });
                 }
                 break;
-        }
+            case 'tagId':
+                // TODO check
+                Ext.create('Lada.view.window.TagManagement');
+                if (win.show()) {
+                    win.loadRecord(
+                        id,
+                        this,
+                        function(newRecord, operation, success) {
+                            if (success) {
+                                win.initData(newRecord);
+                            }
+                        });
+                }
+                break;
+            }
     },
 
     deleteData: function(button) {
@@ -382,6 +396,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                         parentWindow: grid
                     }).show();
                     break;
+                case 'tagId':
+                    Ext.create('Lada.view.window.tagCreate').show();
+                    //TODO check
             }
         }
     },

@@ -40,9 +40,10 @@ Ext.define('Lada.store.Tag', {
 
     /**
      * Set the probe or messung ID as a filter param to get assigned tags
-     * @param id ID to use // TODO allow list of ids
+     * @param id ID to use
      * @param recordType 'probe' or 'messung'
      */
+    // TODO allow list of ids
     setTagged: function(id, recordType) {
         if (!this.assignedTagsStore) {
             this.assignedTagsStore = Ext.create('Lada.store.Tag', {

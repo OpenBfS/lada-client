@@ -30,7 +30,6 @@ Ext.define('Lada.model.Tag', {
     }, {
         name: 'typ',
         type: 'string'
-        // 'mst' | 'netzbetreiber', 'global', 'auto'
     }, {
         name: 'gueltigBis'
         // timestamp

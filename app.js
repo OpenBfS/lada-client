@@ -68,6 +68,7 @@ Ext.application({
         'Lada.store.MessprogrammKategorie',
         'Lada.store.GridColumn',
         'Lada.store.Query',
+        'Lada.store.TagTyp',
         'Lada.model.MessstelleLabor',
         'Lada.model.Messstelle',
         'Lada.model.GenericResults',
@@ -518,6 +519,9 @@ Ext.application({
         });
         Ext.create('Lada.store.UploadQueue', {
             storeId: 'uploadqueue'
+        });
+        Ext.create('Lada.store.TagTyp', {
+            storeId: 'tagtypstore'
         });
         Ext.create('Lada.view.Viewport');
         this.initElanScenarios();

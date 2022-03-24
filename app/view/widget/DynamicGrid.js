@@ -376,6 +376,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     case 'mprkat':
                         this.generateStammColumn(colImg, col, datatype);
                         break;
+                    case 'tagId':
+                    case 'tagtyp':
+                        //TODO
+                        break;
                     default:
                         col.xtype = 'gridcolumn';
                         col.renderer = function(value) {

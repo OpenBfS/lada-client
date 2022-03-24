@@ -11,25 +11,11 @@
  */
 Ext.define('Lada.view.window.TagCreate', {
     extend: 'Ext.window.Window',
-    alias: 'tagcreatewindow',
+    alias: 'widget.tagcreatewindow',
 
     layout: 'vbox',
     width: 300,
-
-    /**
-     * Tagwidget associated with this create window
-     */
-    tagWidget: null,
-
-    /**
-     * Tag edit window associated with this create window
-     */
-    tagEdit: null,
-
-    /**
-     * Array of IDs used if creating tags for a selection
-     */
-    selection: [],
+    record: null,
 
     /**
      * This function initialises the Window
@@ -37,106 +23,77 @@ Ext.define('Lada.view.window.TagCreate', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
-        this.title = i18n.getMsg(
-            'title.tagcreatewindowbulk.' + this.recordType,
-            this.selection.length);
-        this.items = [{
-            xtype: 'textfield',
-            width: '100%',
-            margin: '5 5 5 5',
-            msgTarget: 'under',
-            //validate that text is not empty and name does not already exists
-            validator: function(val) {
-                if (val.trim().length === 0) {
-                    return i18n.getMsg('tag.createwindow.err.invalidtagname');
-                }
-                if (val.length === 0) {
-                    return i18n.getMsg('tag.createwindow.err.emptytagname');
-                }
-                if (me.tagWidget.tagExists(val)) {
-                    return i18n.getMsg('tag.createwindow.err.tagalreadyexists');
-                }
-                return true;
-            }
-        }, {
-            xtype: 'container',
-            layout: 'hbox',
-            items: [{
-                xtype: 'button',
-                text: i18n.getMsg('save'),
-                margin: '5 5 5 5',
-                handler: this.handleSaveClicked
-            }, {
-                xtype: 'button',
-                text: i18n.getMsg('cancel'),
-                margin: '5 5 5 5',
-                handler: function() {
-                    me.close();
-                }
-            }]
-        }];
-        this.callParent(arguments);
-    },
-
-    /**
-     * Creates and saves a tag for a selection.
-     * As tags are only created if they are associated with an object,
-     * the first step is to create a tag for the first selected object.
-     * Then it is chosen in the tag widget combobox and saved via the TagEdit
-     * window.
-     */
-    save: function(textfield, recordType) {
-        var me = this;
-        if (!this.selection || this.selection.length === 0) {
-            return;
-        }
-        // Get the first ID
-        var firstId = this.selection[0];
-        if (!firstId) {
-            return;
-        }
-        var text = textfield.getValue();
-
-        // Save tag for first item. Should trigger itemadd event on tag widget.
-        this.tagWidget.store.createTag(text, firstId, recordType, function() {
-            var oldItems = Ext.clone(me.tagWidget.store.getData().items);
-            //Wait for the reload to finish
-            me.tagWidget.reload(function() {
-                var newItems = Ext.clone(me.tagWidget.store.getData().items);
-                //Look for the new item
-                var newItem = null;
-                for (var i = 0; i < newItems.length; i++) {
-                    var id = newItems[i].id;
-                    if (!Ext.Array.findBy(
-                        oldItems,
-                        // eslint-disable-next-line no-loop-func
-                        function(item) {
-                            return id === item.id;
-                        })
-                    ) {
-                        newItem = newItems[i];
-                        break;
+        this.title = i18n.getMsg('tag.createWindow.title');
+        this.items = [
+            {
+                xtype: 'fieldset',
+                layout: {
+                    type: 'vbox'
+                },
+                items: [{
+                    xtype: 'textfield',
+                    width: '100%',
+                    name: 'tag',
+                    margin: '5 5 5 5',
+                    msgTarget: 'under',
+                    //validate that text is not empty and name does not already exists
+                    validator: function(val) {
+                        if (val.trim().length === 0) {
+                            return i18n.getMsg('tag.createwindow.err.invalidtagname');
+                        }
+                        if (val.length === 0) {
+                            return i18n.getMsg('tag.createwindow.err.emptytagname');
+                        }
+                        if (me.tagWidget.tagExists(val)) {
+                            return i18n.getMsg('tag.createwindow.err.tagalreadyexists');
+                        }
+                        return true;
                     }
-                }
-                //Select new item in combobox and fire click event
-                me.tagWidget.clearValue();
-                me.tagWidget.select(newItem);
-                textfield.reset();
-                textfield.up('window').close();
-                me.tagEdit.down('button[action=bulkaddtags]').click();
-            });
-        });
-    },
+                },{
 
-    /**
-     * Handles click on save button:
-     * Validate textfield input, if valid call single or bulk create function
-     */
-    handleSaveClicked: function(button) {
-        var me = button.up('window');
-        var textfield = me.down('textfield');
-        if (textfield.validate()) {
-            me.save(textfield, me.recordType);
-        }
+                    name: 'mst',
+                    xtype: 'messstelle',
+                    readOnly: true
+                    //TODO check/filter list of Lada.mst []
+                }, {
+                    name: 'netzbetreiber',
+                    xtype: 'netzbetreiber',
+                    readOnly: true
+                    //TODO check/filter list of Lada.netzbetreiber []
+                }, {
+                    name: 'typ',
+                    readOnly: true
+                    // TODO validate if type: allowed.
+                    // TODO xtype tagTyp
+                }, {
+                    name: 'gueltigBis',
+                    xtype: 'datefield',
+                    readOnly: true
+                    // TODO optional, should be "infinite" for global tags
+                }]
+            } , {
+                xtype: 'container',
+                layout: 'hbox',
+                items: [{
+                    xtype: 'button',
+                    text: i18n.getMsg('save'),
+                    action: 'save',
+                    margin: '5 5 5 5'
+                }, {
+                    xtype: 'button',
+                    text: i18n.getMsg('cancel'),
+                    margin: '5 5 5 5',
+                    handler: function() {
+                        me.close();
+                    }
+                }]
+            }
+        ];
+        this.initData();
+        this.callParent(arguments);
+
+    },
+    initData: function() {
+        this.record = Ext.create('Lada.model.Tag');
     }
 });
