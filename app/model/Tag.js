@@ -28,7 +28,7 @@ Ext.define('Lada.model.Tag', {
         name: 'generatedAt'
         // timestamp
     }, {
-        name: 'typ',
+        name: 'typId',
         type: 'string'
     }, {
         name: 'gueltigBis'

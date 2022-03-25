@@ -51,30 +51,27 @@ Ext.define('Lada.view.widget.Tag', {
     //Dropdown
     tpl: Ext.create('Ext.XTemplate',
         '<ul class="x-list-plain"><tpl for=".">',
-        '<tpl if="this.isGlobal(mstId)">',
-        '<li role="option" class="x-boundlist-item"><b>*{tag}</b></li>',
+        '<li role="option" class="x-boundlist-item">',
+        '<tpl if="typId === `global`">',
+        '<div class="italic-text bold-text"> {tag}</div>',
+        '<tpl elseif="typId === `netzbetreiber`">',
+        '<div class="bold-text"> {tag}</div>',
+        '<tpl elseif="typId === `auto`">',
+        '<div class="italic-text"> {tag}*</div>',
         '<tpl else>',
-        '<li role="option" class="x-boundlist-item">{tag}</li>',
+        '<div> {tag}</div>',
         '</tpl>',
-        '</tpl></ul>',
-        {
-            isGlobal: function(mstId) {
-                return mstId === null || mstId === '';
-            }
-        }
+        '</li>',
+        '</tpl></ul>'
+
     ),
     //Tagfield
     labelTpl: Ext.create('Ext.XTemplate',
-        '<tpl if="this.isGlobal(mstId)">',
-        '*{tag}',
-        '<tpl else>',
-        '{tag}',
-        '</tpl>',
-        {
-            isGlobal: function(mstId) {
-                return mstId === null || mstId === '';
-            }
-        }
+        '<tpl if="typId === `global`"class="italic-text bold-text"> {tag}',
+        '<tpl elseif="typId === `netzbetreiber`" class="bold-text"> {tag}',
+        '<tpl elseif="typId === `auto`" class="italic-text"> {tag}*',
+        '<tpl else>{tag}',
+        '</tpl>'
     ),
 
     /**
@@ -139,8 +136,8 @@ Ext.define('Lada.view.widget.Tag', {
             ' data-recordId="{internalId}"',
             ' role="presentation" class="x-tagfield-item">',
             '<div role="presentation" class="{[this.getItemCls(values.data)]}">',
-            '<div if="this.isAuto(values.data)>*</div>',
             '{[this.getItemLabel(values.data)]}',
+            '{[this.getAutoStar(values.data)]}',
             '</div>',
             '<tpl if ="!this.isReadOnly()">',
             '<div role="presentation" class="x-tagfield-item-close"></div>',
@@ -154,9 +151,9 @@ Ext.define('Lada.view.widget.Tag', {
                 isReadOnly: function() {
                     return me.readOnly;
                 },
-                getItemCls: function(value){  // TODO accessing record here?
+                getItemCls: function(value){
                     var result = 'x-tagfield-item-text';
-                    switch (value.get('typ')) {
+                    switch (value.typId) {
                         case 'global':
                             return  result + ' bold-text italic-text';
                         case 'netzbetreiber':
@@ -167,8 +164,8 @@ Ext.define('Lada.view.widget.Tag', {
                             return result;
                     }
                 },
-                isAuto: function(value) { // TODO accessing record here?
-                    return value.get('typ') === 'auto';
+                getAutoStar: function(value) {
+                    return value.typId === 'auto' ? '*' : '';
                 },
                 strict: true
             }
