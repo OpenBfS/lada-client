@@ -1056,7 +1056,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     genericAddButton: function() {
         if (
-            this.rowtarget.dataType === 'probeId' ||
+            ['probeId', 'tagId'].indexOf(this.rowtarget.dataType) >= 0 ||
             ( ['mpId', 'probenehmer', 'dsatzerz', 'mprkat', 'ortId'].indexOf(
                 this.rowtarget.dataType) >= 0
                 && Ext.Array.contains(Lada.funktionen, 4)

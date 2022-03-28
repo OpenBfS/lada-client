@@ -13,7 +13,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     extend: 'Ext.app.Controller',
     requires: [
         'Lada.view.window.DeleteMultipleItems',
-        'Lada.view.window.SetTags'
+        'Lada.view.window.SetTags',
+        'Lada.view.window.TagCreate'
     ],
 
     /**
@@ -317,7 +318,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 break;
             case 'tagId':
                 // TODO check
-                Ext.create('Lada.view.window.TagManagement');
+                Ext.create('Lada.view.window.TagManagement', {
+                    recordId: id
+                });
                 if (win.show()) {
                     win.loadRecord(
                         id,
@@ -397,8 +400,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     }).show();
                     break;
                 case 'tagId':
-                    Ext.create('Lada.view.window.tagCreate').show();
-                    //TODO check
+                    Ext.create('Lada.view.window.TagCreate').show();
             }
         }
     },
