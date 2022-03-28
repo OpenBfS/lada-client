@@ -24,6 +24,7 @@ Ext.define('Lada.view.widget.Messstelle', {
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
+    filteredStore: false,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
             '{id} - {messStelle}</div></tpl>'),
@@ -35,11 +36,15 @@ Ext.define('Lada.view.widget.Messstelle', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.messstelle');
-        this.store = Ext.data.StoreManager.get('messstellen');
-        if (!this.store) {
-            this.store = Ext.create('Lada.store.Messstellen');
+        if (this.filteredStore) {
+            this.store = Ext.data.StoreManager.get('messstellenFiltered');
+        } else {
+            this.store = Ext.data.StoreManager.get('messstellen');
+            if (!this.store) {
+                this.store = Ext.create('Lada.store.Messstellen');
+            }
+            this.store.clearFilter(true);
         }
-        this.store.clearFilter(true);
         this.callParent(arguments);
         var child =
             this.multiSelect? this.down('tagfield'): this.down('combobox');
