@@ -6,8 +6,6 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-//TODO: non-functional yet
-
 /**
 * This is a controller for Tag management, create and assign forms
 */
@@ -27,10 +25,10 @@ Ext.define('Lada.controller.form.Tag', {
             'tagmanagementwindow button[action=delete]': {
                 click: this.deleteTag
             },
-            'settags button[action=add]': {
+            'settags button[action=bulkaddzuordnung]': {
                 click: this.addZuordnung
             },
-            'settags button[action=remove]': {
+            'settags button[action=bulkdeletezuordnung]': {
                 click: this.removeZuordnung
             }
         });
@@ -48,12 +46,9 @@ Ext.define('Lada.controller.form.Tag', {
             url: this.tagUrl,
             jsonData: JSON.stringify(record),
             method: 'POST',
-            success: function() { //response) {
-                // win: success/failure
-                // win: open tag management with resulting record ?
-            }
+            success: win.saveCallBack,
+            failure: win.failureCallBack
         });
-        // tags: [ { $TAG_DEF }
     },
 
     saveTag: function(button) {
@@ -62,8 +57,9 @@ Ext.define('Lada.controller.form.Tag', {
         Ext.Ajax.request({
             url: this.tagUrl + '/' + record.get('id'),
             jsonData: JSON.stringify(record),
-            method: 'PUT'
-            //TODO callbacks
+            method: 'PUT',
+            success: win.saveCallBack,
+            failure: win.failureCallBack
         });
     },
     deleteTag: function(button){
@@ -71,8 +67,9 @@ Ext.define('Lada.controller.form.Tag', {
         var record = win.record;
         Ext.Ajax.request({
             url: this.tagUrl + '/' + record.get('id'),
-            method: 'DELETE'
-            //TODO callbacks
+            method: 'DELETE',
+            success: win.deleteCallBack,
+            failure: win.failureCallBack
         });
     },
 
@@ -84,15 +81,19 @@ Ext.define('Lada.controller.form.Tag', {
         var win = button.up('settags');
         var selection = win.selection;
         var recname = win.recordType === 'messung' ? 'messungId' : 'probeId';
-        var taglist = []; // TODO
-        var payload = {
-            tagId:  taglist
-        };
+        var taglist = win.down('tagwidget').getValue();
+        if (!taglist.length) {
+            win.failureCallBack({ error: 'noselection'});
+            return;
+        }
+        var payload = { tagId: taglist };
         payload[recname] = selection;
         Ext.Ajax.request({
             url: this.zuordnungUrl,
             method: 'POST',
-            jsonData: JSON.stringify([payload])
+            jsonData: JSON.stringify([payload]),
+            success: win.actionCallBack,
+            failure: win.failureCallBack
         });
     },
 
@@ -103,24 +104,19 @@ Ext.define('Lada.controller.form.Tag', {
     removeZuordnung: function(button) {
         var win = button.up('settags');
         var recname = win.recordType === 'messung' ? 'messungId' : 'probeId';
-        var tagIds = win.selectedTags; //TODO;
-        var objIds = win.selectedTags; //TODO;
-        var payload = {
-            tagId: tagIds
-        };
-        payload[recname] = objIds;
+        var tagIds = win.down('tagwidget').getValue();
+        if (!tagIds.length) {
+            win.failureCallBack({ error: 'noselection'});
+            return;
+        }
+        var payload = { tagId: tagIds };
+        payload[recname] = win.selection;
         Ext.Ajax.request({
-            url: this.zuordnungUr + '/delete',
+            url: this.zuordnungUrl + '/delete',
             method: 'POST',
-            jsonData: JSON.stringify([payload])
+            jsonData: JSON.stringify([payload]),
+            success: win.actionCallBack,
+            failure: win.failureCallBack
         });
-        //TODO callback
-    },
-
-    // TODO: add to all callbacks
-    refreshTagStore: function(){
-        //TODO check if filtered?
-        var store = Ext.data.StoreManager.get('tags');
-        store.reload();
     }
 });
