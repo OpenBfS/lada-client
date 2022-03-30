@@ -13,22 +13,28 @@ Ext.define('Lada.store.TagTyp', {
     extend: 'Ext.data.Store',
     model: Ext.create('Ext.data.Model', {
         fields: [
-        { name: 'value', type: 'string' },
-        { name: 'label', type: 'string' }
+        { name: 'value', type: 'string' }, // as defined by server
+        { name: 'label', type: 'string' }, //display value
+        // default gueltigBis (-1: infinite)
+        { name: 'validity', type: 'number' }
         ]
     }),
     data: [{
         value: 'auto',
-        label: 'Auto'
+        label: 'Auto',
+        validity: 548
     }, {
         value: 'mst',
-        label: 'Messstelle'
+        label: 'Messstelle',
+        validity: 365
     }, {
         value: 'netzbetreiber',
-        label: 'Netzbetreiber'
+        label: 'Netzbetreiber',
+        validity: -1
     }, {
         value: 'global',
-        label: 'Global'
+        label: 'Global',
+        validity: -1
     }],
     proxy: {
         type: 'memory',
