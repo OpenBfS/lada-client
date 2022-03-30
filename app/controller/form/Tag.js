@@ -16,9 +16,6 @@ Ext.define('Lada.controller.form.Tag', {
 
     init: function() {
         this.control({
-            'tagcreatewindow button[action=save]': {
-                click: this.saveNewTag
-            },
             'tagmanagementwindow button[action=save]': {
                 click: this.saveTag
             },
@@ -34,30 +31,21 @@ Ext.define('Lada.controller.form.Tag', {
         });
     },
 
-    /**
-     * Creates a new Tag
-     */
-    saveNewTag: function(button){
-        var win = button.up('tagcreatewindow');
-        var record = win.record;
-        record.set('id', null);
-        record.set('readonly', false);
-        Ext.Ajax.request({
-            url: this.tagUrl,
-            jsonData: JSON.stringify(record),
-            method: 'POST',
-            success: win.saveCallBack,
-            failure: win.failureCallBack
-        });
-    },
-
     saveTag: function(button) {
         var win = button.up('tagmanagementwindow');
         var record = win.record;
+        var method = record.phantom ? 'POST': 'PUT';
+        var url = record.phantom ?
+            this.tagUrl :
+            this.tagUrl + '/' + record.get('id');
+        if (record.phantom) {
+            record.set('id', null);
+            record.set('readonly', false);
+        }
         Ext.Ajax.request({
-            url: this.tagUrl + '/' + record.get('id'),
+            url: url,
             jsonData: JSON.stringify(record),
-            method: 'PUT',
+            method: method,
             success: win.saveCallBack,
             failure: win.failureCallBack
         });

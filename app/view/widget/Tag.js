@@ -234,14 +234,18 @@ Ext.define('Lada.view.widget.Tag', {
     /**
      * Check if a tag with the given name already exists.
      * @param {String} tagName Tagname to check
+     * @param {Integer} id (optional) don't return true if the only match is
+     * the tag with the given id
      * @return {Boolean} true if a tag with the given name exists
      */
-    tagExists: function(tagName) {
+    tagExists: function(tagName, id) {
         //Find record: case sensitive and exact match
-        if (this.store.find('tag', tagName, 0, false, true, true) !== -1) {
-            return true;
+        if (id === undefined) {
+            return this.store.find('tag', tagName, 0, false, true, true) > -1;
         } else {
-            return false;
+            return this.store.findBy(function(obj){
+                return obj.get('tag') === tagName && obj.get('id') !== id;
+            });
         }
     },
 

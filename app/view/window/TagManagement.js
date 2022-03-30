@@ -7,18 +7,16 @@
  */
 
 /**
- * Window for managing a tag, it's organisation level and expiration date
+ * Window for creating and managing tags.
  */
-// TODO
-
 Ext.define('Lada.view.window.TagManagement', {
     extend: 'Ext.window.Window',
-    alias: 'tagmanagementwindow',
-
     layout: 'vbox',
-    width: 300,
-    store: null,
+    recordId: null,
     record: null,
+    alias: 'windget.tagmanagementwindow',
+    collapsible: true,
+    maximizable: true,
 
     /**
      * This function initialises the Window
@@ -26,56 +24,141 @@ Ext.define('Lada.view.window.TagManagement', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
-        this.title = i18n.getMsg(
-            'title.manageTag' + this.record.get('tag'));
-        this.items = [{
-            xtype: 'textfield',
-            width: '100%',
-            name: 'tag',
-            margin: '5 5 5 5',
-            msgTarget: 'under'
-        }, {
-            // editing name possible ? validate for uniqueness
-            // xtype: 'tagTyp'
-            //name: 'typ'
-        }, {
-            // editable ?
-            // expiration gueltig_bis
-            // show/editing gueltigbis -> if -1 "unendlich", if < today "disabled"
-        },
-        // TODO:
-        // check if editable
-        // enable save if edited
-        // check if deletable
-        // upgrading a tag
-        {
-            xtype: 'container',
-            layout: 'hbox',
-            items: [{
-                xtype: 'button',
-                action: 'save',
-                text: i18n.getMsg('save'),
-                margin: '5 5 5 5'
-            }, {
-                xtype: 'button',
-                action: 'delete',
-                text: i18n.getMsg('delete'),
-                margin: '5 5 5 5'
-            },
+        this.items = [
             {
-                xtype: 'button',
-                text: i18n.getMsg('cancel'),
-                margin: '5 5 5 5',
-                handler: function() {
-                    me.close();
-                }
-            }]
-        }];
+                xtype: 'fieldset',
+                layout: {
+                    type: 'vbox'
+                },
+                items: [{
+                    xtype: 'textfield',
+                    name: 'tag',
+                    fieldLabel: i18n.getMsg('name'),
+                    msgTarget: 'under',
+                    validator: function(val) {
+                        if (val.trim().length === 0) {
+                            return i18n.getMsg(
+                                'tag.createwindow.err.invalidtagname');
+                        }
+                        if (val.length === 0) {
+                            return i18n.getMsg(
+                                'tag.createwindow.err.emptytagname');
+                        }
+                        if (me.tagWidget.tagExists(val)) {
+                            // TODO don't check against itself
+                            return i18n.getMsg(
+                                'tag.createwindow.err.tagalreadyexists');
+                        }
+                        return true;
+                    }
+                }, {
+                    name: 'mst',
+                    xtype: 'messstelle',
+                    fieldLabel: i18n.getMsg('messtelle'),
+                    filteredStore: true
+                }, {
+                    name: 'netzbetreiber',
+                    xtype: 'netzbetreiber',
+                    fieldLabel: i18n.getMsg('netzbetreiber'),
+                    filteredStore: true
+                }, {
+                    name: 'typId',
+                    readOnly: true,
+                    fieldLabel: i18n.getMsg('tagtyp'),
+                    xtype: 'tagtyp'
+                    // TODO validate if typ: allowed.
+                    // TODO on change: set me.setGueltigBis
+                }, {
+                    name: 'gueltigBis',
+                    xtype: 'datefield',
+                    fieldLabel: i18n.getMsg('tag.gueltigBis')
+                }, {
+                    // TODO "infinite" display for validity -1 tags
+                    xtype: 'displayfield', // TODO: no label text field
+                    hidden: true,
+                    name: 'infinitegueltigBis',
+                    value: i18n.getMsg('tag.gueltigBis.infinite')
+                }]
+            }, {
+                xtype: 'container',
+                layout: 'hbox',
+                items: [{
+                    xtype: 'button',
+                    text: i18n.getMsg('save'),
+                    action: 'save',
+                    margin: '5 5 5 5'
+                }, {
+                    xtype: 'button',
+                    action: 'delete',
+                    text: i18n.getMsg('delete'),
+                    margin: '5 5 5 5',
+                    hidden: true
+                }, {
+                    xtype: 'button',
+                    text: i18n.getMsg('cancel'),
+                    margin: '5 5 5 5',
+                    handler: function() {
+                        me.close();
+                    }
+                }]
+            }
+        ];
+        this.initData();
         this.callParent(arguments);
+
+    },
+    initData: function() {
+        var i18n = Lada.getApplication().bundle;
+        if (!this.recordId) {
+            this.title = i18n.getMsg('tag.createWindow.title');
+            this.record = Ext.create('Lada.model.Tag', {
+                mst: Lada.mst[0],
+                netzbetreiber: Lada.netzbetreiber[0],
+                readonly: false
+            });
+        } else {
+            this.loadRecord(this.recordId); //TODO check if correctly used here
+            this.title = i18n.getMsg(
+                'tag.manageWindow.title', this.record.get('tag'));
+        }
+        var ro = this.record.get('readonly');
+        this.down('textfield[name=tag]').setReadOnly(ro);
+        this.down('messtelle').setReadOnly(ro);
+        this.down('netzbetreiber').setReadOnly(ro);
+        this.down('tagtyp').setReadOnly(ro);
+        this.down('gueltigBis').setReadOnly(ro);
+        this.down('button[action=delete]').setDisabled(ro);
+        // this.down('[name=infinitegueltigBis]').setHidden() for some tags
+    },
+    /**
+     * (re)sets the default validity at change of tag type.
+     * @param {*} tagtyp
+     */
+    setGueltigBis: function() {
+        var validity = this.down('tagtyp').getStore().get('validity');
+        if (validity === -1) {
+            this.down('infinitegueltigBis').setHidden(false);
+            this.down('gueltigBis').setDisabled(true);
+            this.down('gueltigBis').clearValue();
+            this.record.set('gueltigBis', -1); //TODO must not affect datefield
+        } else {
+            var until = new Date().valueOf() + ( 24 * 3600000 * validity );
+            this.down('gueltigBis').setValue(new Date(until));
+            this.down('gueltigBis').setDisabled(false);
+            this.down('infinitegueltigBis').setHidden(true);
+        }
+    },
+
+    saveCallBack: function() {
+        //TODO
+        //(re)load record; reload store
+        //reset save button
+    }, // TODO
+    deleteCallBack: function() {
+        // TODO announce success/failure
+    },
+    failureCallBack: function() {
+        // TODO reload record, show errors
     }
-
-// TODO link tagcreatewindow
-// TODO check loadRecord;
-// TODO check initData
-
+    // TODO enable save if dirty
 });
