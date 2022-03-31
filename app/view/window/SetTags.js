@@ -13,7 +13,7 @@ Ext.define('Lada.view.window.SetTags', {
     extend: 'Ext.window.Window',
     alias: 'widget.settags',
     requires: [
-        'Lada.view.window.TagCreate',
+        'Lada.view.window.TagManagement',
         'Lada.store.Tag'
     ],
 
@@ -52,7 +52,7 @@ Ext.define('Lada.view.window.SetTags', {
                 icon: 'resources/img/list-add.png',
                 tooltip: i18n.getMsg('button.createtag.tooltip'),
                 handler: function() {
-                    var win = Ext.create('Lada.view.window.TagCreate');
+                    var win = Ext.create('Lada.view.window.TagManagement');
                     //Close window if parent window is closed
                     me.on('close', function() {
                         win.close();
