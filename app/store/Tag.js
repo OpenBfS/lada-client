@@ -13,9 +13,9 @@ Ext.define('Lada.store.Tag', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Tag',
     autoLoad: true,
-    //Probe id used for filtering for selected tags
+    //Probe ids used for filtering for selected tags
     pId: null,
-    //Probe id used for filtering for selected tags
+    //Messung ids used for filtering for selected tags
     mId: null,
 
     /**
@@ -40,11 +40,12 @@ Ext.define('Lada.store.Tag', {
 
     /**
      * Set the probe or messung ID as a filter param to get assigned tags
-     * @param id ID to use
+     * @param ids list of IDs to use. If several ids are given, the display
+     * will show the tags shared by all ids
      * @param recordType 'probe' or 'messung'
      */
-    // TODO allow list of ids
-    setTagged: function(id, recordType) {
+    // TODO further tests
+    setTagged: function(ids, recordType) {
         if (!this.assignedTagsStore) {
             this.assignedTagsStore = Ext.create('Lada.store.Tag', {
                 autoLoad: false
@@ -56,16 +57,16 @@ Ext.define('Lada.store.Tag', {
         switch (recordType) {
             case 'messung':
                 this.pId = null;
-                this.mId = id;
+                this.mId = ids;
                 this.assignedTagsStore.proxy.extraParams = {
-                    mid: id
+                    mid: ids.join(',')
                 };
                 break;
             case 'probe':
-                this.pId = id;
+                this.pId = ids;
                 this.mId = null;
                 this.assignedTagsStore.proxy.extraParams = {
-                    pid: id
+                    pid: ids.join(',')
                 };
                 break;
             default:

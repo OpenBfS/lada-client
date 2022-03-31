@@ -287,7 +287,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             }
 
             // Initialize Tag widget
-            me.down('tagwidget').setTagged(record.get('id'), 'messung');
+            me.down('tagwidget').setTagged([record.get('id')], 'messung');
 
             me.setLoading(false);
         };

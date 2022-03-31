@@ -24,9 +24,7 @@ Ext.define('Lada.view.window.SetTags', {
     width: 400,
     selection: null, //list of ids according to recordtype
 
-    parentWindow: null, // TODO
-
-    // TODO: show shared Tags
+    parentWindow: null,
 
     /**
      * This function initialises the Window
@@ -91,10 +89,7 @@ Ext.define('Lada.view.window.SetTags', {
         }];
         this.callParent(arguments);
 
-        // Pre-populate tag widget if only one item selected
-        if (me.selection.length === 1) {
-            me.down('tagwidget').setTagged(me.selection[0], me.recordType);
-        }
+        this.down('tagwidget').setTagged(me.selection, me.recordType);
 
         this.down('progressbar').updateProgress(0, '');
     },
@@ -116,9 +111,8 @@ Ext.define('Lada.view.window.SetTags', {
     },
 
     collectCurrentTags: function() {
-        // TODO: avoid lots of API calls?
-        // TODO enable setTagged for multiselect
-        // TODO this.down('tagwidget').preselectTags
+        // TODO (re-)call tagstore:setTagged
+        // TODO this.down('tagwidget').preselectTags ?
     },
 
     actionCallBack: function(){
