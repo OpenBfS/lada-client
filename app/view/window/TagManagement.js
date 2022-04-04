@@ -74,7 +74,6 @@ Ext.define('Lada.view.window.TagManagement', {
                     readOnly: true,
                     fieldLabel: i18n.getMsg('tagtyp'),
                     xtype: 'tagtyp'
-                    // TODO validate if typ: allowed.
                     // TODO on change: set me.setGueltigBis
                 }, {
                     name: 'gueltigBis',
@@ -138,8 +137,9 @@ Ext.define('Lada.view.window.TagManagement', {
         } else {
             this.down('tagtyp').setReadOnly(true);
         }
+        this.down('datefield[name=gueltigBis]').setReadOnly(ro);
         this.down('button[action=delete]').setDisabled(ro);
-        // this.down('[name=infinitegueltigBis]').setHidden() for some tags
+        // TODO this.down('[name=infinitegueltigBis]').setHidden() for some tags
     },
     /**
      * (re)sets the default validity at change of tag type.
@@ -149,13 +149,13 @@ Ext.define('Lada.view.window.TagManagement', {
         var validity = this.down('tagtyp').getStore().get('validity');
         if (validity === -1) {
             this.down('infinitegueltigBis').setHidden(false);
-            this.down('gueltigBis').setDisabled(true);
-            this.down('gueltigBis').clearValue();
+            this.down('datefield[name=gueltigBis]').setDisabled(true);
+            this.down('datefield[name=gueltigBis]').clearValue();
             this.record.set('gueltigBis', -1); //TODO must not affect datefield
         } else {
             var until = new Date().valueOf() + ( 24 * 3600000 * validity );
-            this.down('gueltigBis').setValue(new Date(until));
-            this.down('gueltigBis').setDisabled(false);
+            this.down('datefield[name=gueltigBis]').setValue(new Date(until));
+            this.down('datefield[name=gueltigBis]').setDisabled(false);
             this.down('infinitegueltigBis').setHidden(true);
         }
     },
