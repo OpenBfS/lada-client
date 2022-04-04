@@ -555,6 +555,11 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     handler: function(button) {
                         button.up('window').close();
                     }
+                },
+                {
+                    xtype: 'button',
+                    text: i18n.getMsg('button.tagToClipboard'),
+                    name: 'tagclipboard'
                 }]
             }],
             onFocusEnter: function(event) {
@@ -585,12 +590,18 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             Lada.util.Date.formatTimestamp(request.end, 'd.m.Y H:i', true)
         );
         resultHtml += '<br>';
-        if (genTagName) {
+        if (genTagName.length !== 0)  {
             resultHtml += i18n.getMsg('gpfm.generated.tag', genTagName)
                 + '<br>';
             win.down('tbtext').setText(i18n.getMsg(
                 'gpfm.generated.tag', genTagName));
+            btn = win.down('button[name=tagclipboard]').getEl().dom;
+            btn.setAttribute('data-clipboard-text', genTagName);
+            new ClipboardJS(btn);
+        } else {
+            win.down('button[name=tagclipboard]').setHidden(true);
         }
+
         win.down('panel[name=genresultinfo]').setHtml(resultHtml);
         win.down('dynamicgrid').setToolbar();
     },
