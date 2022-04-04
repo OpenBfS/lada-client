@@ -132,11 +132,7 @@ Ext.define('Lada.view.window.TagManagement', {
         this.down('textfield[name=tag]').setReadOnly(ro);
         this.down('messstelle').setReadOnly(ro);
         this.down('netzbetreiber').setReadOnly(ro);
-        if (!ro && this.down('tagtyp').getStore().getCount() > 1){
-            this.down('tagtyp').setReadOnly(false);
-        } else {
-            this.down('tagtyp').setReadOnly(true);
-        }
+        this.down('tagtyp').setReadOnly(ro);
         this.down('datefield[name=gueltigBis]').setReadOnly(ro);
         this.down('button[action=delete]').setDisabled(ro);
         // TODO this.down('[name=infinitegueltigBis]').setHidden() for some tags
