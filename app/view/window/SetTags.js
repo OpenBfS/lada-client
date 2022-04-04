@@ -111,18 +111,15 @@ Ext.define('Lada.view.window.SetTags', {
     },
 
     collectCurrentTags: function() {
-        // TODO (re-)call tagstore:setTagged
-        // TODO this.down('tagwidget').preselectTags ?
+        this.down('tagwidget').setTagged(this.selection, this.recordType);
     },
 
     actionCallBack: function(){
         Ext.data.StoreManager.get('tags').reload();
         this.collectCurrentTags();
-        // TODO show feedback
     },
     failureCallBack: function(){
         Ext.data.StoreManager.get('tags').reload();
         this.collectCurrentTags();
-        // TODO error message
     }
 });

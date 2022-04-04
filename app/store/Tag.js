@@ -58,16 +58,14 @@ Ext.define('Lada.store.Tag', {
             case 'messung':
                 this.pId = null;
                 this.mId = ids;
-                this.assignedTagsStore.proxy.extraParams = {
-                    mid: ids.join(',')
-                };
+                this.assignedTagsStore.proxy.url =
+                    'lada-server/rest/tag?' + 'mid=' + this.mId.join('&mid=');
                 break;
             case 'probe':
                 this.pId = ids;
                 this.mId = null;
-                this.assignedTagsStore.proxy.extraParams = {
-                    pid: ids.join(',')
-                };
+                this.assignedTagsStore.proxy.url =
+                    'lada-server/rest/tag?' + 'pid=' + this.pId.join('&pid=');
                 break;
             default:
                 Ext.raise('Unkown record type: ' + recordType);
