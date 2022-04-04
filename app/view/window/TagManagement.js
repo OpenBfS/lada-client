@@ -17,12 +17,20 @@ Ext.define('Lada.view.window.TagManagement', {
     alias: 'widget.tagmanagementwindow',
     collapsible: true,
     maximizable: true,
+    store: null,
 
     /**
      * This function initialises the Window
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        var store = Ext.data.StoreManager.get('tags');
+        if (!store){
+            Ext.create('Lada.store.Tag', {
+                storeId: 'tags'
+            });
+        }
+        this.store = Ext.data.StoreManager.get('tags');
         var me = this;
         this.items = [
             {
@@ -44,7 +52,7 @@ Ext.define('Lada.view.window.TagManagement', {
                             return i18n.getMsg(
                                 'tag.createwindow.err.emptytagname');
                         }
-                        if (me.tagWidget.tagExists(val)) {
+                        if (me.store.tagExists(val)) {
                             // TODO don't check against itself
                             return i18n.getMsg(
                                 'tag.createwindow.err.tagalreadyexists');
@@ -112,8 +120,6 @@ Ext.define('Lada.view.window.TagManagement', {
         if (!this.recordId) {
             this.title = i18n.getMsg('tag.createWindow.title');
             this.record = Ext.create('Lada.model.Tag', {
-                mst: Lada.mst[0],
-                netzbetreiber: Lada.netzbetreiber[0],
                 readonly: false
             });
             this.down('messstelle').setValue(Lada.mst[0]);

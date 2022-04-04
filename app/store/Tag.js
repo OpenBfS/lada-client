@@ -106,5 +106,24 @@ Ext.define('Lada.store.Tag', {
         Ext.Msg.alert(
             i18n.getMsg('tag.widget.err.genericsavetitle'),
             i18n.getMsg('tag.widget.err.genericsave'));
+    },
+
+    /**
+     * Check if a tag with the given name already exists.
+     * @param {String} tagName Tagname to check
+     * @param {Integer} id (optional) don't return true if the only match is
+     * the tag with the given id
+     * @return {Boolean} true if a tag with the given name exists
+     */
+        tagExists: function(tagName, id) {
+            var store = Ext.data.StoreManager.get('tags');
+            if (id === undefined) {
+            //Find record: case sensitive and exact match
+            return store.find('tag', tagName, 0, false, true, true) > -1;
+        } else {
+            return store.findBy(function(obj){
+                return obj.get('tag') === tagName && obj.get('id') !== id;
+            });
+        }
     }
 });
