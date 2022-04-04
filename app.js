@@ -520,9 +520,6 @@ Ext.application({
         Ext.create('Lada.store.UploadQueue', {
             storeId: 'uploadqueue'
         });
-        Ext.create('Lada.store.TagTyp', {
-            storeId: 'tagtypstore'
-        });
         Ext.create('Lada.view.Viewport');
         this.initElanScenarios();
     },

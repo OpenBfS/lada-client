@@ -25,9 +25,12 @@ Ext.define('Lada.view.widget.TagTyp', {
     listConfig: {minWidth: 110},
 
     initComponent: function() {
-        if (!this.store) {
-            this.store = Ext.data.StoreManager.get('tagtypstore');
-        }
+        this.store = Ext.create('Lada.store.TagTyp');
+        this.store.filterBy(function(record) {
+            return (record.get('canSelect'))();
+                // TODO on (re)load store: only existing and "higher" levels might be
+                // available and only if Ext.Array.contains(Lada.funktionen, 4)
+        });
         this.callParent(arguments);
     }
 });

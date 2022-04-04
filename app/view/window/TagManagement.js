@@ -14,7 +14,7 @@ Ext.define('Lada.view.window.TagManagement', {
     layout: 'vbox',
     recordId: null,
     record: null,
-    alias: 'windget.tagmanagementwindow',
+    alias: 'widget.tagmanagementwindow',
     collapsible: true,
     maximizable: true,
 
@@ -54,12 +54,12 @@ Ext.define('Lada.view.window.TagManagement', {
                 }, {
                     name: 'mst',
                     xtype: 'messstelle',
-                    fieldLabel: i18n.getMsg('messtelle'),
+                    fieldLabel: i18n.getMsg('mst_id'),
                     filteredStore: true
                 }, {
                     name: 'netzbetreiber',
                     xtype: 'netzbetreiber',
-                    fieldLabel: i18n.getMsg('netzbetreiber'),
+                    fieldLabel: i18n.getMsg('netzbetreiberId'),
                     filteredStore: true
                 }, {
                     name: 'typId',
@@ -103,8 +103,8 @@ Ext.define('Lada.view.window.TagManagement', {
                 }]
             }
         ];
-        this.initData();
         this.callParent(arguments);
+        this.initData();
 
     },
     initData: function() {
@@ -116,6 +116,8 @@ Ext.define('Lada.view.window.TagManagement', {
                 netzbetreiber: Lada.netzbetreiber[0],
                 readonly: false
             });
+            this.down('messstelle').setValue(Lada.mst[0]);
+            this.down('netzbetreiber').setValue(Lada.netzbetreiber[0]);
         } else {
             this.loadRecord(this.recordId); //TODO check if correctly used here
             this.title = i18n.getMsg(
@@ -123,10 +125,13 @@ Ext.define('Lada.view.window.TagManagement', {
         }
         var ro = this.record.get('readonly');
         this.down('textfield[name=tag]').setReadOnly(ro);
-        this.down('messtelle').setReadOnly(ro);
+        this.down('messstelle').setReadOnly(ro);
         this.down('netzbetreiber').setReadOnly(ro);
-        this.down('tagtyp').setReadOnly(ro);
-        this.down('gueltigBis').setReadOnly(ro);
+        if (!ro && this.down('tagtyp').getStore().getCount() > 1){
+            this.down('tagtyp').setReadOnly(false);
+        } else {
+            this.down('tagtyp').setReadOnly(true);
+        }
         this.down('button[action=delete]').setDisabled(ro);
         // this.down('[name=infinitegueltigBis]').setHidden() for some tags
     },
