@@ -22,7 +22,7 @@ Ext.define('Lada.model.Tag', {
         name: 'mstId',
         type: 'string'
     },{
-        name: 'netzbetreiber',
+        name: 'netzbetreiberId',
         type: 'string'
     }, {
         name: 'generatedAt'
@@ -38,5 +38,18 @@ Ext.define('Lada.model.Tag', {
         type: 'boolean'
     }
 ],
-    idProperty: 'id'
+    idProperty: 'id',
+
+    proxy: {
+        type: 'rest',
+        url: 'lada-server/rest/tag',
+        reader: {
+            type: 'json',
+            rootProperty: 'data'
+        },
+        writer: {
+            type: 'json',
+            writeAllFields: true
+        }
+    }
 });

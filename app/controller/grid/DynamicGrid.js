@@ -317,19 +317,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 }
                 break;
             case 'tagId':
-                Ext.create('Lada.view.window.TagManagement', {
+                win = Ext.create('Lada.view.window.TagManagement', {
                     recordId: id
-                });
-                if (win.show()) {
-                    win.loadRecord(
-                        id,
-                        this,
-                        function(newRecord, operation, success) {
-                            if (success) {
-                                win.initData(newRecord);
-                            }
-                        });
-                }
+                }).show();
                 break;
             }
     },

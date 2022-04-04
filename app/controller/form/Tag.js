@@ -33,7 +33,7 @@ Ext.define('Lada.controller.form.Tag', {
 
     saveTag: function(button) {
         var win = button.up('tagmanagementwindow');
-        var record = win.record;
+        var record = win.down('tagform').getForm().getRecord();
         var method = record.phantom ? 'POST': 'PUT';
         var url = record.phantom ?
             this.tagUrl :
@@ -44,20 +44,20 @@ Ext.define('Lada.controller.form.Tag', {
         }
         Ext.Ajax.request({
             url: url,
-            jsonData: JSON.stringify(record),
+            jsonData: record.data,
             method: method,
-            success: win.saveCallBack,
-            failure: win.failureCallBack
+            success: win.actionCallback,
+            failure: win.actionCallback
         });
     },
     deleteTag: function(button){
         var win = button.up('tagmanagementwindow');
-        var record = win.record;
+        var record = win.down('tagform').getForm().getRecord();
         Ext.Ajax.request({
             url: this.tagUrl + '/' + record.get('id'),
             method: 'DELETE',
-            success: win.deleteCallBack,
-            failure: win.failureCallBack
+            success: win.actionCallback,
+            failure: win.actionCallback
         });
     },
 

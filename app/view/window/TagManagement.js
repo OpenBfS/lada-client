@@ -15,77 +15,18 @@ Ext.define('Lada.view.window.TagManagement', {
     recordId: null,
     record: null,
     alias: 'widget.tagmanagementwindow',
+    requires: ['Lada.view.form.Tag'],
     collapsible: true,
-    maximizable: true,
-    store: null,
 
     /**
      * This function initialises the Window
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        var store = Ext.data.StoreManager.get('tags');
-        if (!store){
-            Ext.create('Lada.store.Tag', {
-                storeId: 'tags'
-            });
-        }
-        this.store = Ext.data.StoreManager.get('tags');
         var me = this;
         this.items = [
             {
-                xtype: 'fieldset',
-                layout: {
-                    type: 'vbox'
-                },
-                items: [{
-                    xtype: 'textfield',
-                    name: 'tag',
-                    fieldLabel: i18n.getMsg('name'),
-                    msgTarget: 'under',
-                    validator: function(val) {
-                        if (val.trim().length === 0) {
-                            return i18n.getMsg(
-                                'tag.createwindow.err.invalidtagname');
-                        }
-                        if (val.length === 0) {
-                            return i18n.getMsg(
-                                'tag.createwindow.err.emptytagname');
-                        }
-                        if (me.store.tagExists(val)) {
-                            // TODO don't check against itself
-                            return i18n.getMsg(
-                                'tag.createwindow.err.tagalreadyexists');
-                        }
-                        return true;
-                    }
-                }, {
-                    name: 'mst',
-                    xtype: 'messstelle',
-                    fieldLabel: i18n.getMsg('mst_id'),
-                    filteredStore: true
-                }, {
-                    name: 'netzbetreiber',
-                    xtype: 'netzbetreiber',
-                    fieldLabel: i18n.getMsg('netzbetreiberId'),
-                    filteredStore: true
-                }, {
-                    name: 'typId',
-                    readOnly: true,
-                    fieldLabel: i18n.getMsg('tagtyp'),
-                    xtype: 'tagtyp'
-                    // TODO on change: set me.setGueltigBis
-                }, {
-                    name: 'gueltigBis',
-                    xtype: 'datefield',
-                    fieldLabel: i18n.getMsg('tag.gueltigBis')
-                }, {
-                    // TODO "infinite" display for validity -1 tags
-                    xtype: 'displayfield', // TODO: no label text field
-                    hidden: true,
-                    name: 'infinitegueltigBis',
-                    value: i18n.getMsg('tag.gueltigBis.infinite')
-                }]
+                xtype: 'tagform'
             }, {
                 xtype: 'container',
                 layout: 'hbox',
@@ -116,56 +57,47 @@ Ext.define('Lada.view.window.TagManagement', {
     },
     initData: function() {
         var i18n = Lada.getApplication().bundle;
+        var me = this;
+        var callback = function() {
+            if (me.record) {
+                me.down('tagform').setRecord(me.record);
+            }
+            me.setLoading(false);
+        };
         if (!this.recordId) {
-            this.title = i18n.getMsg('tag.createWindow.title');
+            this.title = i18n.getMsg('TODO'); //TODO
             this.record = Ext.create('Lada.model.Tag', {
-                readonly: false
+                readonly: false,
+                mstId: Lada.mst[0],
+                netzbetreiber: Lada.netzbetreiber[0]
             });
-            this.down('messstelle').setValue(Lada.mst[0]);
-            this.down('netzbetreiber').setValue(Lada.netzbetreiber[0]);
+            callback();
         } else {
-            this.loadRecord(this.recordId); //TODO check if correctly used here
-            this.title = i18n.getMsg(
-                'tag.manageWindow.title', this.record.get('tag'));
-        }
-        var ro = this.record.get('readonly');
-        this.down('textfield[name=tag]').setReadOnly(ro);
-        this.down('messstelle').setReadOnly(ro);
-        this.down('netzbetreiber').setReadOnly(ro);
-        this.down('tagtyp').setReadOnly(ro);
-        this.down('datefield[name=gueltigBis]').setReadOnly(ro);
-        this.down('button[action=delete]').setDisabled(ro);
-        // TODO this.down('[name=infinitegueltigBis]').setHidden() for some tags
-    },
-    /**
-     * (re)sets the default validity at change of tag type.
-     * @param {*} tagtyp
-     */
-    setGueltigBis: function() {
-        var validity = this.down('tagtyp').getStore().get('validity');
-        if (validity === -1) {
-            this.down('infinitegueltigBis').setHidden(false);
-            this.down('datefield[name=gueltigBis]').setDisabled(true);
-            this.down('datefield[name=gueltigBis]').clearValue();
-            this.record.set('gueltigBis', -1); //TODO must not affect datefield
-        } else {
-            var until = new Date().valueOf() + ( 24 * 3600000 * validity );
-            this.down('datefield[name=gueltigBis]').setValue(new Date(until));
-            this.down('datefield[name=gueltigBis]').setDisabled(false);
-            this.down('infinitegueltigBis').setHidden(true);
+            this.setLoading(true);
+            Ext.ClassManager.get('Lada.model.Tag').load(this.recordId, {
+                    failure: function() {
+                        me.title = i18n.getMsg('TODO'); //TODO
+                        callback();
+                    },
+                    success: function(record){
+                        me.record = record;
+                        me.title = i18n.getMsg(
+                            'tag.manageWindow.title', record.get('tag'));
+                        callback();
+                    }
+                });
         }
     },
-
-    saveCallBack: function() {
-        //TODO
-        //(re)load record; reload store
-        //reset save button
-    }, // TODO
-    deleteCallBack: function() {
-        // TODO announce success/failure
-    },
-    failureCallBack: function() {
-        // TODO reload record, show errors
+    actionCallback: function(response){
+        //TODO: message and close if deleted
+        this.initData();
+        var i18n = Lada.getApplication().bundle;
+        if (response.responseText) {
+            var json = Ext.decode(response.responseText);
+            if (!json.success) {
+                //TODO: show error somewhere
+                console.log(i18n.getMsg(json.message));
+            }
+        }
     }
-    // TODO enable save if dirty
 });
