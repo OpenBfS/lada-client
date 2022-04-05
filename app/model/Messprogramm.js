@@ -13,6 +13,11 @@
 Ext.define('Lada.model.Messprogramm', {
     extend: 'Ext.data.Model',
 
+    hasMany: [{
+        model: 'Lada.model.Probenzusatz',
+        name: 'pzusatzWerts'
+    }],
+
     fields: [{
         name: 'id'
     }, {
@@ -108,9 +113,18 @@ Ext.define('Lada.model.Messprogramm', {
             type: 'json',
             rootProperty: 'data'
         },
+        partialDataOptions: {
+            changes: false,
+            critical: true,
+            associated: true
+        },
         writer: {
             type: 'json',
-            writeAllFields: true
+            writeAllFields: true,
+            allDataOptions: {
+                persist: true,
+                associated: true
+            },
         }
     }
 });

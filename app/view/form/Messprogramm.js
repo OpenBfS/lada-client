@@ -522,10 +522,51 @@ Ext.define('Lada.view.form.Messprogramm', {
                             border: false
                         }]
                     }]
+                //Zusatzwert-Fieldset
+                }, {
+                    xtype: 'fset',
+                    name: 'zusatzwertFieldset',
+                    title: i18n.getMsg('zusatzwertFieldset'),
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch'
+                    },
+                    border: true,
+                    margin: '10, 10, 5, 5',
+                    defaults: {
+                        margin: '5,5,5,5'
+                    },
+                    items: [{
+                        xtype: 'tagfield',
+                        width: '100%',
+                        name: 'pzusatzWerts',
+                        store: Ext.create('Lada.store.Probenzusaetze'),
+                        valueField: 'id',
+                        displayField: 'beschreibung',
+                        tpl: Ext.create('Ext.XTemplate',
+                        '<ul class="x-list-plain"><tpl for=".">',
+                        '<li role="option" class="x-boundlist-item">',
+                        '{id} - {beschreibung}',
+                        '</li>',
+                        '</tpl></ul>',
+                    ),
+                        labelTpl: Ext.create('Ext.XTemplate',
+                        '<tpl for=".">{id} - {beschreibung}</tpl>')
+                    }]
                 }]
             }]
         }];
         this.callParent(arguments);
+    },
+
+    filterProbenzusatzs: function(umwId) {
+        var me = this;
+        //Filter ProbenZusatzs
+        me.down('tagfield[name=pzusatzWerts]').store.load({
+            params: {
+                'umwId': umwId
+            }
+        })
     },
 
     populateIntervall: function(record, intervall) {
@@ -694,7 +735,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         }
         this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
         this.down('netzbetreiber').down('combobox').resetOriginalValue();
-
+        this.filterProbenzusatzs(messRecord.get('umwId'));
     },
 
     setMediaDesk: function(record) {
@@ -848,6 +889,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('cbox[name=mehId]').setReadOnly(value);
         this.down('cbox[name=probeNehmerId]').setReadOnly(value);
         this.down('messprogrammland[name=mplId]').setReadOnly(value);
+        this.down('tagfield[name=pzusatzWerts]').setReadOnly(value);
         for (var i = 0; i < 12; i++) {
             this.down('deskriptor[layer='+i+']').setReadOnly(value);
         }

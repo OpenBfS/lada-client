@@ -674,6 +674,9 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 });
             }
         });
+
+        //Filter ProbenZusatz tagfield
+        formPanel.filterProbenzusatzs(umwId);
     },
 
     /* Called if Datenbasis value changed. Changes visibility of REI specific
