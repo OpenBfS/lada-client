@@ -113,11 +113,6 @@ Ext.define('Lada.model.Messprogramm', {
             type: 'json',
             rootProperty: 'data'
         },
-        partialDataOptions: {
-            changes: false,
-            critical: true,
-            associated: true
-        },
         writer: {
             type: 'json',
             writeAllFields: true,
