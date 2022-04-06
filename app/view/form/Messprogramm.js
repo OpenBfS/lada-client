@@ -543,13 +543,14 @@ Ext.define('Lada.view.form.Messprogramm', {
                         store: Ext.create('Lada.store.Probenzusaetze'),
                         valueField: 'id',
                         displayField: 'beschreibung',
-                        tpl: Ext.create('Ext.XTemplate',
-                        '<ul class="x-list-plain"><tpl for=".">',
-                        '<li role="option" class="x-boundlist-item">',
-                        '{id} - {beschreibung}',
-                        '</li>',
-                        '</tpl></ul>',
-                    ),
+                        tpl: Ext.create(
+                            'Ext.XTemplate',
+                            '<ul class="x-list-plain"><tpl for=".">',
+                            '<li role="option" class="x-boundlist-item">',
+                            '{id} - {beschreibung}',
+                            '</li>',
+                            '</tpl></ul>',
+                        ),
                         labelTpl: Ext.create('Ext.XTemplate',
                         '<tpl for=".">{id} - {beschreibung}</tpl>')
                     }]
