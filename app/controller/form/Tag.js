@@ -27,6 +27,9 @@ Ext.define('Lada.controller.form.Tag', {
             },
             'settags button[action=bulkdeletezuordnung]': {
                 click: this.removeZuordnung
+            },
+                'tagform tagtyp combobox': {
+                change: this.setGueltigBis
             }
         });
     },
@@ -106,5 +109,22 @@ Ext.define('Lada.controller.form.Tag', {
             success: win.actionCallBack,
             failure: win.failureCallBack
         });
+    },
+    setGueltigBis: function(tagtypwidget, newVal) {
+        var form = tagtypwidget.up('tagform');
+        var rec = tagtypwidget.store.findRecord('value', newVal);
+        var validity = rec.data.validity;
+            if (validity === -1) {
+                form.down('[name=infinitegueltigBis]').setHidden(false);
+                form.down('datefield[name=gueltigBis]').setDisabled(true);
+                form.down('datefield[name=gueltigBis]').setValue(null);
+                form.getRecord().set('gueltigBis', null);
+                form.down('[name=infinitegueltigBis]').setHidden(false);
+            } else {
+                var until = new Date().valueOf() + ( 24 * 3600000 * validity );
+                form.down('datefield[name=gueltigBis]').setValue(new Date(until));
+                form.down('datefield[name=gueltigBis]').setDisabled(false);
+                form.down('[name=infinitegueltigBis]').setHidden(true);
+            }
     }
 });
