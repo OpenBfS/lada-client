@@ -590,12 +590,12 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             Lada.util.Date.formatTimestamp(request.end, 'd.m.Y H:i', true)
         );
         resultHtml += '<br>';
-        if (genTagName.length !== 0)  {
+        if (genTagName.length !== 0) {
             resultHtml += i18n.getMsg('gpfm.generated.tag', genTagName)
                 + '<br>';
             win.down('tbtext').setText(i18n.getMsg(
                 'gpfm.generated.tag', genTagName));
-            btn = win.down('button[name=tagclipboard]').getEl().dom;
+            var btn = win.down('button[name=tagclipboard]').getEl().dom;
             btn.setAttribute('data-clipboard-text', genTagName);
             new ClipboardJS(btn);
         } else {
