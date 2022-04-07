@@ -150,6 +150,9 @@ Ext.define('Lada.view.widget.ColumnChoser', {
         } else {
             data = this.getComponent(source).getStore().getRange();
         }
+        if (data[0] === undefined) {
+            return;
+        }
         this.getComponent(source).getStore().remove(data);
         this.getComponent(target).getStore().add(data);
         if (target === 'sourceGrid') {

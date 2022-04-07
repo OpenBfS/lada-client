@@ -61,6 +61,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
             xtype: 'actioncolumn',
             text: ' ',
             dataIndex: 'warningsAndErrors',
+            menuText: i18n.getMsg('note'),
             width: 20,
             getTip: function(value, meta, rec) {
                 if (rec.get('status') === 'error') {
@@ -106,6 +107,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
             xtype: 'actioncolumn',
             text: ' ',
             dataIndex: 'status',
+            menuText: i18n.getMsg('save'),
             getTip: function(value, meta, rec) {
                 switch (rec.get('status')) {
                     case 'finished':
@@ -153,6 +155,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
             // remove from list icon (available for finished jobs)
             xtype: 'actioncolumn',
             text: ' ',
+            menuText: i18n.getMsg('delete'),
             dataIndex: 'status',
             tooltip: i18n.getMsg('downloadqueue.delete'),
             width: 20,
