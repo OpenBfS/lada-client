@@ -12,7 +12,7 @@
 Ext.define('Lada.view.widget.TagTyp', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.tagtyp',
-    requires: ['Lada.Store.TagTyp'],
+    requires: ['Lada.store.TagTyp'],
     store: null,
     displayField: 'label',
     valueField: 'value',
