@@ -23,8 +23,6 @@ Ext.application({
     // references!
     name: 'Lada',
 
-    // Setting up translations. This is done using a ext-plgin which can be
-    // found on https://github.com/elmasse/Ext.i18n.Bundle
     requires: [
         'Lada.view.Viewport',
         'Lada.override.Table',
@@ -92,6 +90,9 @@ Ext.application({
         applicationUpdateText: 'Für diese Anwendung steht ein Update zur Verfügung. Jetzt neu laden?',
         dblClickTimeout: 500
     },
+
+    // Setting up translations. This is done using a ext-plugin which can be
+    // found on https://github.com/elmasse/Ext.i18n.Bundle
     bundle: {
         bundle: 'Lada',
         language: (function() {
