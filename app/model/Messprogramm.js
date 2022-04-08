@@ -14,7 +14,7 @@ Ext.define('Lada.model.Messprogramm', {
     extend: 'Ext.data.Model',
 
     hasMany: [{
-        model: 'Lada.model.Probenzusatz',
+        model: 'Lada.model.ProbenZusatz',
         name: 'pzusatzWerts'
     }],
 

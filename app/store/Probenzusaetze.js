@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.store.Probenzusaetze', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Probenzusatz',
+    model: 'Lada.model.ProbenZusatz',
     sorters: [{
         property: 'zusatzwert',
         transform: function(val) {
