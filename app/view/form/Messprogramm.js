@@ -676,7 +676,6 @@ Ext.define('Lada.view.form.Messprogramm', {
         var field = this.down('tagfield[name=pzusatzWerts]');
         field.value = messRecord._pzusatzWerts.getData().items;
         this.filterProbenzusatzs(messRecord.get('umwId'));
-        debugger;
 
         var mstStore = Ext.data.StoreManager.get('messstellen');
         var mstId = mstStore.getById(messRecord.get('mstId'));
