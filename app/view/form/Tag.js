@@ -33,6 +33,11 @@ Ext.define('Lada.view.form.Tag', {
             layout: {
                 type: 'vbox'
             },
+            defaults: {
+                margin: '5,5,5,5',
+                labelWidth: 80,
+                minWidth: 300
+            },
             items: [{
                 name: 'tag',
                 xtype: 'tfield',
@@ -58,8 +63,7 @@ Ext.define('Lada.view.form.Tag', {
                 xtype: 'datefield',
                 fieldLabel: i18n.getMsg('tag.gueltigBis')
             }, {
-                // TODO "infinite" display for validity -1 tags
-                xtype: 'displayfield', // TODO: no label text field
+                xtype: 'selectabledisplayfield',
                 hidden: true,
                 name: 'infinitegueltigBis',
                 value: i18n.getMsg('tag.gueltigBis.infinite')

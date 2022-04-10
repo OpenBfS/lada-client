@@ -34,13 +34,15 @@ Ext.define('Lada.view.window.TagManagement', {
                     xtype: 'button',
                     text: i18n.getMsg('save'),
                     action: 'save',
-                    margin: '5 5 5 5'
+                    margin: '5 5 5 5',
+                    disabled: true
                 }, {
                     xtype: 'button',
                     action: 'delete',
                     text: i18n.getMsg('delete'),
                     margin: '5 5 5 5',
-                    hidden: true
+                    hidden: true,
+                    disabled: true
                 }, {
                     xtype: 'button',
                     text: i18n.getMsg('cancel'),
@@ -61,28 +63,33 @@ Ext.define('Lada.view.window.TagManagement', {
         var callback = function() {
             if (me.record) {
                 me.down('tagform').setRecord(me.record);
+                if (me.record.get('readonly') || me.record.phantom) {
+                    me.down('button[action=delete]').setHidden(true);
+                } else {
+                    me.down('button[action=delete]').setHidden(false);
+                }
             }
             me.setLoading(false);
         };
         if (!this.recordId) {
-            this.title = i18n.getMsg('TODO'); //TODO
+            this.setTitle(i18n.getMsg('tag.createWindow.title'));
             this.record = Ext.create('Lada.model.Tag', {
                 readonly: false,
                 mstId: Lada.mst[0],
-                netzbetreiber: Lada.netzbetreiber[0]
+                netzbetreiberId: Lada.netzbetreiber[0]
             });
             callback();
         } else {
             this.setLoading(true);
             Ext.ClassManager.get('Lada.model.Tag').load(this.recordId, {
                     failure: function() {
-                        me.title = i18n.getMsg('TODO'); //TODO
+                        // TODO show error window. Failed to load
                         callback();
                     },
                     success: function(record){
                         me.record = record;
-                        me.title = i18n.getMsg(
-                            'tag.manageWindow.title', record.get('tag'));
+                        me.setTitle(i18n.getMsg(
+                            'tag.manageWindow.title', record.get('tag')));
                         callback();
                     }
                 });
