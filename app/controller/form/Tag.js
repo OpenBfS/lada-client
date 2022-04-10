@@ -28,8 +28,20 @@ Ext.define('Lada.controller.form.Tag', {
             'settags button[action=bulkdeletezuordnung]': {
                 click: this.removeZuordnung
             },
+            'tagform textfield[name=tag]': {
+                change: this.checkTagCommitEnabled
+            },
+            'tagform messstelle combobox': {
+                change: this.checkTagCommitEnabled
+            },
+                'tagform netzbetreiber combobox': {
+                change: this.checkTagCommitEnabled
+            },
                 'tagform tagtyp combobox': {
                 change: this.setGueltigBis
+            },
+                'tagform datefield[name=gueltigBis]': {
+                change: this.checkTagCommitEnabled
             }
         });
     },
@@ -110,6 +122,104 @@ Ext.define('Lada.controller.form.Tag', {
             failure: win.failureCallBack
         });
     },
+
+    /**
+     * Validates the tag form
+     * @param {*} formEl any calling input box inside thre tag form
+     * @returns
+     */
+    checkTagCommitEnabled: function(formEl) {
+        var problemExists = false;
+        var form = formEl.up('tagform').getForm();
+        var rec = form.getRecord();
+
+        // form should be changed from initial values
+        if (!form.isDirty()) {
+            formEl.up('tagmanagementwindow').down(
+                'button[action=save]').setDisabled(true);
+            return false;
+        }
+        var data = form.getFieldValues(false);
+
+        // the tag should have a name
+
+        if (!data.tag) {
+            problemExists = true;
+            // set message on 'tag' widget
+            // i18n.getMsg('tag.createwindow.err.emptytagname');
+        }
+        var id = rec.phantom ? undefined: rec.get('id');
+
+        // the tag name should be unique.
+
+        if (formEl.up('tagform').store.tagExists(data.tag, id)) {
+            // set message on 'tag' widget
+            // i18n.getMsg('tag.createwindow.err.tagalreadyexists');
+            problemExists = true;
+        }
+
+        // messtelle and netzbetreiber must be set
+
+        if (!data.mstId || !data.netzbetreiberId) {
+            problemExists = true;
+            // set message(s)
+            // TODO: needs to be own?
+        }
+
+        //tagtyp permissions
+
+        if (!data.typId) {
+            // set message(s)
+            problemExists = true;
+        } else {
+            var oldTyp = rec.get('typId');
+            switch(data.typId) {
+                case 'mst':
+                    if (oldTyp !== 'mst') {
+                        //not allowed to downgrade
+                        problemExists = true;
+                    }
+                    //TODO: validUntil should be unchanged or in the future
+                    break;
+                case 'netzbetreiber':
+                    if (!Ext.Array.contains(Lada.funktionen, 4)){
+                        // message: not allowed to set netzbetreiber tags
+                        problemExists = true;
+                    }
+                    if (oldTyp !== 'mst' && oldTyp !== 'netzbetreiber' ) {
+                        // message: not allowed to downgrade
+                        problemExists = true;
+                    }
+                    break;
+                case 'global':
+                    if (!Ext.Array.contains(Lada.funktionen, 4)){
+                        // message: not allowed to set netzbetreiber tags
+                        problemExists = true;
+                    }
+                    if (
+                        ['mst', 'netzbetreiber', 'global'].indexOf(oldTyp) <0
+                    ) {
+                        // message: not allowed to downgrade
+                        problemExists = true;
+                    }
+                    break;
+                case 'auto':
+                    problemExists = true;
+                    // message: not allowed to edit auto tags
+                    break;
+            }
+        }
+        formEl.up('tagmanagementwindow').down(
+            'button[action=save]').setDisabled(problemExists);
+    },
+
+    /**
+     * (Re-) sets the default validity given for a tag type as the tag type is
+     * being changed. (refer tagtyp store for types and defaults being defined
+     * in days )
+     * @param tagtypwidget the calling widget
+     * @param newVal the new widget's value
+     */
     setGueltigBis: function(tagtypwidget, newVal) {
         var form = tagtypwidget.up('tagform');
         var rec = tagtypwidget.store.findRecord('value', newVal);
@@ -126,5 +236,6 @@ Ext.define('Lada.controller.form.Tag', {
                 form.down('datefield[name=gueltigBis]').setDisabled(false);
                 form.down('[name=infinitegueltigBis]').setHidden(true);
             }
+            this.checkTagCommitEnabled(tagtypwidget);
     }
 });
