@@ -10,7 +10,7 @@
  * Model for Queued uploads.
  */
 Ext.define('Lada.model.UploadQueue', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      */

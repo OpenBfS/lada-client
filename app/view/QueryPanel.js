@@ -166,7 +166,11 @@ Ext.define('Lada.view.QueryPanel', {
             fieldLabel: 'query.groups',
             queryMode: 'local',
             store: Ext.create('Ext.data.Store', {
-                model: 'Lada.model.QueryGroup',
+                fields: [{
+                    name: 'messStellesIds'
+                }, {
+                    name: 'mst_name', persist: false
+                }],
                 sorters: [{
                     property: 'messStellesIds',
                     direction: 'ASC'
@@ -189,12 +193,6 @@ Ext.define('Lada.view.QueryPanel', {
             xtype: 'cbox',
             name: 'activefilters',
             labelWidth: 125,
-            // Needs to be different from Ext.getStore('columnstore')
-            // because of extra filters:
-            store: Ext.create('Ext.data.Store', {
-                model: 'Lada.model.GridColumn',
-                autoLoad: true
-            }),
             multiSelect: true,
             queryMode: 'local',
             valueField: 'dataIndex',
@@ -352,12 +350,10 @@ Ext.define('Lada.view.QueryPanel', {
                 var groupstore = qp.down('cbox[name=messStellesIds]').down(
                     'tagfield').getStore();
                 for ( var i = 0; i < records.length; i++) {
-                    groupstore.add(
-                        Ext.create('Lada.model.QueryGroup', {
-                            messStellesIds: records[i].get('id'),
-                            mst_name: records[i].get('messStelle')
-                        })
-                    );
+                    groupstore.add({
+                        messStellesIds: records[i].get('id'),
+                        mst_name: records[i].get('messStelle')
+                    });
                 }
             }
         });
@@ -374,6 +370,13 @@ Ext.define('Lada.view.QueryPanel', {
             }
 
             this.down('columnsort').setStore(null);
+            this.down('cbox[name=activefilters]').setStore(
+                // Needs to be different from Ext.getStore('columnstore')
+                // because of extra filters:
+                Ext.create('Ext.data.Store', {
+                    model: 'Lada.model.GridColumn',
+                    autoLoad: true
+                }));
             this.down('cbox[name=activefilters]').store.filter(function() {
                 // don't show any items, as there is no baseQuery
                 return false;

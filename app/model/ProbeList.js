@@ -11,7 +11,7 @@
  * This class represents the result list of 'Proben' in the search query
  * */
 Ext.define('Lada.model.ProbeList', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'pid',

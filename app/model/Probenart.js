@@ -10,7 +10,7 @@
  * Model class for Probenart Stammdaten.
  */
 Ext.define('Lada.model.Probenart', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:

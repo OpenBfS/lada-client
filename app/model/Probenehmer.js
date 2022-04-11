@@ -10,7 +10,7 @@
  * Model class for Probenehmer Stammdaten
  */
 Ext.define('Lada.model.Probenehmer', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'

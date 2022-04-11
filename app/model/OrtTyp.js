@@ -10,7 +10,7 @@
  * Model for OrtTyp Stammdaten.
  */
 Ext.define('Lada.model.OrtTyp', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:

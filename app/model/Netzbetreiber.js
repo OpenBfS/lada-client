@@ -10,7 +10,7 @@
  * Model for Netzbetreiber Stammdaten.
  */
 Ext.define('Lada.model.Netzbetreiber', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:

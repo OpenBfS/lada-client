@@ -10,7 +10,7 @@
  * Model for Kta Stammdaten.
  */
 Ext.define('Lada.model.Kta', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:

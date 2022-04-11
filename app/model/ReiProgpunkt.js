@@ -10,7 +10,7 @@
  * Model class representing a Rei-Programmpunkt
  */
 Ext.define('Lada.model.ReiProgpunkt', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'

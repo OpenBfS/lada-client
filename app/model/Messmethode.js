@@ -10,7 +10,7 @@
  * Model for Messmethode Stammdaten.
  */
 Ext.define('Lada.model.Messmethode', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:

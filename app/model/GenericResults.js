@@ -10,6 +10,6 @@
  * Model for Datenbasis Stammdaten.
  */
 Ext.define('Lada.model.GenericResults', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
     idProperty: 'extjs_id'
 });

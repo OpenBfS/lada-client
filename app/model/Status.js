@@ -10,7 +10,7 @@
  * Model class for Status
  */
 Ext.define('Lada.model.Status', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'

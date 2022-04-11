@@ -10,7 +10,7 @@
  * Model for MessstellenKombi aus den Stammdaten.
  */
 Ext.define('Lada.model.MessstellenKombi', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:

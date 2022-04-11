@@ -10,7 +10,7 @@
  * Model class for Kommentare
  */
 Ext.define('Lada.model.PKommentar', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'

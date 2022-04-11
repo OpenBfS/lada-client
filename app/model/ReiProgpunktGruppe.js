@@ -11,7 +11,7 @@
  */
 
 Ext.define('Lada.model.ReiProgpunktGruppe', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'

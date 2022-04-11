@@ -10,7 +10,7 @@
  * Model for Messeinheit Stammdaten.
  */
 Ext.define('Lada.model.Messeinheit', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:

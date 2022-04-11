@@ -10,7 +10,7 @@
  * Model for Queued Downloads and print jobs.
  */
 Ext.define('Lada.model.DownloadQueue', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      */

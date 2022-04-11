@@ -10,7 +10,7 @@
  * Model for KoordinatenArt Stammdaten.
  */
 Ext.define('Lada.model.KoordinatenArt', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:

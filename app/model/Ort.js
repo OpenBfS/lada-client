@@ -10,7 +10,7 @@
  * Model class for Ort Stammdaten
  */
 Ext.define('Lada.model.Ort', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id',

@@ -11,7 +11,7 @@
  * This class represents and defines the model of a 'Messprogramm'
  **/
 Ext.define('Lada.model.Messprogramm', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     hasMany: [{
         model: 'Lada.model.ProbenZusatz',

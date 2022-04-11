@@ -11,7 +11,7 @@
  * This class represents and defines the model of a 'MmtMessprogramm'
  **/
 Ext.define('Lada.model.MmtMessprogramm', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'

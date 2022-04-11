@@ -10,7 +10,7 @@
  * Model for Datenbasis Stammdaten.
  */
 Ext.define('Lada.model.Datenbasis', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:

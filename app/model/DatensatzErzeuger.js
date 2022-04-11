@@ -10,7 +10,7 @@
  * Model class for DatensatzErzeuger Stammdaten
  */
 Ext.define('Lada.model.DatensatzErzeuger', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'

@@ -11,7 +11,7 @@
  * This class represents the result list of 'Messprogramme' in the search query
  * */
 Ext.define('Lada.model.MessprogrammList', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'readonly'

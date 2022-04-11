@@ -10,7 +10,7 @@
  * Model class for ProbenZusatz Stammdaten.
  */
 Ext.define('Lada.model.ProbenZusatz', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:

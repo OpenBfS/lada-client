@@ -10,7 +10,7 @@
  * Model class for Zusatzwerte
  */
 Ext.define('Lada.model.Zusatzwert', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'
