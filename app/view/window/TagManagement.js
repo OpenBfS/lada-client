@@ -97,13 +97,17 @@ Ext.define('Lada.view.window.TagManagement', {
     },
     actionCallback: function(response){
         //TODO: message and close if deleted
-        this.initData();
         var i18n = Lada.getApplication().bundle;
         if (response.responseText) {
             var json = Ext.decode(response.responseText);
             if (!json.success) {
                 //TODO: show error somewhere
                 console.log(i18n.getMsg(json.message));
+            } else {
+                if (json.data && json.data.id) {
+                    this.recordId = json.data.id;
+                    this.initData();
+                }
             }
         }
     }

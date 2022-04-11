@@ -49,6 +49,7 @@ Ext.define('Lada.controller.form.Tag', {
     saveTag: function(button) {
         var win = button.up('tagmanagementwindow');
         var record = win.down('tagform').getForm().getRecord();
+        var data = win.down('tagform').getForm().getFieldValues(false);
         var method = record.phantom ? 'POST': 'PUT';
         var url = record.phantom ?
             this.tagUrl :
@@ -57,12 +58,23 @@ Ext.define('Lada.controller.form.Tag', {
             record.set('id', null);
             record.set('readonly', false);
         }
+        record.set('mstId', data.mstId);
+
+        var netzbetreiber = win.down('netzbetreiber').getValue()[0];
+        record.set('netzbetreiberId', netzbetreiber);
+        record.set('tag', data.tag);
+        record.set('typId', data.typId);
+        record.set('gueltigBis', data.gueltigBis);
         Ext.Ajax.request({
             url: url,
             jsonData: record.data,
             method: method,
-            success: win.actionCallback,
-            failure: win.actionCallback
+            success: function (response) {
+                win.actionCallback(response);
+            },
+            failure:  function (response) {
+                win.actionCallback(response);
+            }
         });
     },
     deleteTag: function(button){
@@ -71,8 +83,12 @@ Ext.define('Lada.controller.form.Tag', {
         Ext.Ajax.request({
             url: this.tagUrl + '/' + record.get('id'),
             method: 'DELETE',
-            success: win.actionCallback,
-            failure: win.actionCallback
+            success:  function (response) {
+                win.actionCallback(response);
+            },
+            failure: function (response) {
+                win.actionCallback(response);
+            }
         });
     },
 
@@ -95,8 +111,12 @@ Ext.define('Lada.controller.form.Tag', {
             url: this.zuordnungUrl,
             method: 'POST',
             jsonData: JSON.stringify([payload]),
-            success: win.actionCallBack,
-            failure: win.failureCallBack
+            success:   function (response) {
+                win.actionCallback(response);
+            },
+            failure:   function (response) {
+                win.failureCallBack(response);
+            }
         });
     },
 
@@ -118,8 +138,12 @@ Ext.define('Lada.controller.form.Tag', {
             url: this.zuordnungUrl + '/delete',
             method: 'POST',
             jsonData: JSON.stringify([payload]),
-            success: win.actionCallBack,
-            failure: win.failureCallBack
+            success:   function (response) {
+                win.actionCallback(response);
+            },
+            failure:   function (response) {
+                win.actionCallback(response);
+            }
         });
     },
 
@@ -189,7 +213,7 @@ Ext.define('Lada.controller.form.Tag', {
             var oldTyp = rec.get('typId');
             switch(data.typId) {
                 case 'mst':
-                    if (oldTyp !== 'mst') {
+                    if (oldTyp && oldTyp !== 'mst') {
                         // win.down('tagtyp').showErrors(
                         //     i18n.getMsg('tag.tagtyp.err.downgrade'));
                         problemExists = true;
@@ -202,7 +226,10 @@ Ext.define('Lada.controller.form.Tag', {
                         //     i18n.getMsg('tag.tagtyp.err.permission'));
                         problemExists = true;
                     }
-                    if (oldTyp !== 'mst' && oldTyp !== 'netzbetreiber' ) {
+                    if (
+                        oldTyp &&
+                        ['mst', 'netzbetreiber'].indexOf(oldTyp) <0
+                    ) {
                         // win.down('tagtyp').showErrors(
                         //     i18n.getMsg('tag.tagtyp.err.downgrade'));
                         problemExists = true;
@@ -215,6 +242,7 @@ Ext.define('Lada.controller.form.Tag', {
                         problemExists = true;
                     }
                     if (
+                        oldTyp &&
                         ['mst', 'netzbetreiber', 'global'].indexOf(oldTyp) <0
                     ) {
                         // win.down('tagtyp').showErrors(
@@ -243,6 +271,10 @@ Ext.define('Lada.controller.form.Tag', {
     setGueltigBis: function(tagtypwidget, newVal) {
         var form = tagtypwidget.up('tagform');
         var rec = tagtypwidget.store.findRecord('value', newVal);
+        if (!rec) {
+            this.checkTagCommitEnabled(tagtypwidget);
+            return;
+        }
         var validity = rec.data.validity;
             if (validity === -1) {
                 form.down('[name=infinitegueltigBis]').setHidden(false);
@@ -258,4 +290,5 @@ Ext.define('Lada.controller.form.Tag', {
             }
             this.checkTagCommitEnabled(tagtypwidget);
     }
+
 });
