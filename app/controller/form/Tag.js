@@ -129,9 +129,13 @@ Ext.define('Lada.controller.form.Tag', {
      * @returns
      */
     checkTagCommitEnabled: function(formEl) {
+
+        //TODO clear Warnings and errors
         var problemExists = false;
-        var form = formEl.up('tagform').getForm();
+        var win = formEl.up('tagform');
+        var form = win.getForm();
         var rec = form.getRecord();
+        // var i18n = Lada.getApplication().bundle;
 
         // form should be changed from initial values
         if (!form.isDirty()) {
@@ -140,72 +144,88 @@ Ext.define('Lada.controller.form.Tag', {
             return false;
         }
         var data = form.getFieldValues(false);
+        var netzbetreiber = win.down('netzbetreiber').getValue()[0];
+        // TODO netzbetreiber somehow is not part of the form ?
 
         // the tag should have a name
 
         if (!data.tag) {
             problemExists = true;
-            // set message on 'tag' widget
-            // i18n.getMsg('tag.createwindow.err.emptytagname');
+            // win.down('textfield[name=tag]').showErrors(
+            //     i18n.getMsg('tag.createwindow.err.emptytagname'));
         }
         var id = rec.phantom ? undefined: rec.get('id');
 
         // the tag name should be unique.
 
         if (formEl.up('tagform').store.tagExists(data.tag, id)) {
-            // set message on 'tag' widget
-            // i18n.getMsg('tag.createwindow.err.tagalreadyexists');
+            // win.down('textfield[name=tag]').showErrors(
+            //     i18n.getMsg('tag.createwindow.err.tagalreadyexists'));
             problemExists = true;
         }
 
         // messtelle and netzbetreiber must be set
 
-        if (!data.mstId || !data.netzbetreiberId) {
+        if (!data.mstId) {
+            // win.down('messstelle').showErrors(
+            //     i18n.getMsg('tag.createwindow.err.noemptyField'));
             problemExists = true;
-            // set message(s)
+        }
+
+        if (!netzbetreiber) {
+            // win.down('netzbetreiber').showErrors(
+            //     i18n.getMsg('tag.createwindow.err.noemptyField'));
+            problemExists = true;
             // TODO: needs to be own?
         }
 
         //tagtyp permissions
 
         if (!data.typId) {
-            // set message(s)
+            // win.down('tagtyp').showErrors(
+            //     i18n.getMsg('tag.createwindow.err.noemptyField'));
             problemExists = true;
         } else {
             var oldTyp = rec.get('typId');
             switch(data.typId) {
                 case 'mst':
                     if (oldTyp !== 'mst') {
-                        //not allowed to downgrade
+                        // win.down('tagtyp').showErrors(
+                        //     i18n.getMsg('tag.tagtyp.err.downgrade'));
                         problemExists = true;
                     }
                     //TODO: validUntil should be unchanged or in the future
                     break;
                 case 'netzbetreiber':
                     if (!Ext.Array.contains(Lada.funktionen, 4)){
-                        // message: not allowed to set netzbetreiber tags
+                        // win.down('tagtyp').showErrors(
+                        //     i18n.getMsg('tag.tagtyp.err.permission'));
                         problemExists = true;
                     }
                     if (oldTyp !== 'mst' && oldTyp !== 'netzbetreiber' ) {
-                        // message: not allowed to downgrade
+                        // win.down('tagtyp').showErrors(
+                        //     i18n.getMsg('tag.tagtyp.err.downgrade'));
                         problemExists = true;
                     }
                     break;
                 case 'global':
                     if (!Ext.Array.contains(Lada.funktionen, 4)){
-                        // message: not allowed to set netzbetreiber tags
+                        // win.down('tagtyp').showErrors(
+                        //     i18n.getMsg('tag.tagtyp.err.permission'));
                         problemExists = true;
                     }
                     if (
                         ['mst', 'netzbetreiber', 'global'].indexOf(oldTyp) <0
                     ) {
-                        // message: not allowed to downgrade
+                        // win.down('tagtyp').showErrors(
+                        //     i18n.getMsg('tag.tagtyp.err.downgrade'));
                         problemExists = true;
                     }
                     break;
                 case 'auto':
                     problemExists = true;
-                    // message: not allowed to edit auto tags
+                    // win.down('tagtyp').showErrors(
+                    //     i18n.getMsg('tag.tagtyp.err.permission'));
                     break;
             }
         }

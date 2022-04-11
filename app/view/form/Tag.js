@@ -66,7 +66,8 @@ Ext.define('Lada.view.form.Tag', {
                 xtype: 'selectabledisplayfield',
                 hidden: true,
                 name: 'infinitegueltigBis',
-                value: i18n.getMsg('tag.gueltigBis.infinite')
+                value: i18n.getMsg('tag.gueltigBis.infinite'),
+                submitValue: false
             }]
         }];
         this.callParent(arguments);
