@@ -549,7 +549,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             '<li role="option" class="x-boundlist-item">',
                             '{id} - {beschreibung}',
                             '</li>',
-                            '</tpl></ul>',
+                            '</tpl></ul>'
                         ),
                         labelTpl: Ext.create('Ext.XTemplate',
                         '<tpl for=".">{id} - {beschreibung}</tpl>')

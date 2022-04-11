@@ -119,7 +119,7 @@ Ext.define('Lada.model.Messprogramm', {
             allDataOptions: {
                 persist: true,
                 associated: true
-            },
+            }
         }
     }
 });

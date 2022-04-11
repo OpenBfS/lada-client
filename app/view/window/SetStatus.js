@@ -32,7 +32,6 @@ Ext.define('Lada.view.window.SetStatus', {
      */
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
-        var me = this;
         this.on({
             show: function() {
                 this.removeCls('x-unselectable');
@@ -110,7 +109,6 @@ Ext.define('Lada.view.window.SetStatus', {
             scrollable: true,
             hidden: true,
             margin: '5, 5, 5, 5',
-            scrollable: true,
             name: 'result'
         }, {
             xtype: 'progressbar',
