@@ -318,7 +318,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 break;
             case 'tagId':
                 win = Ext.create('Lada.view.window.TagManagement', {
-                    recordId: id
+                    recordId: id,
+                    parentGrid: row.grid
                 }).show();
                 break;
             }
@@ -389,7 +390,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     }).show();
                     break;
                 case 'tagId':
-                    Ext.create('Lada.view.window.TagManagement').show();
+                    Ext.create('Lada.view.window.TagManagement', {
+                        parentGrid: grid }
+                    ).show();
             }
         }
     },

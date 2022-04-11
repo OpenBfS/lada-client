@@ -17,6 +17,7 @@ Ext.define('Lada.view.window.TagManagement', {
     alias: 'widget.tagmanagementwindow',
     requires: ['Lada.view.form.Tag'],
     collapsible: true,
+    parentGrid: null,
 
     /**
      * This function initialises the Window
@@ -97,6 +98,11 @@ Ext.define('Lada.view.window.TagManagement', {
     },
     actionCallback: function(response){
         //TODO: message and close if deleted
+        if (this.parentGrid) {
+            this.parentGrid.reload();
+        }
+        var store = Ext.data.StoreManager.get('tags');
+        store.reload();
         var i18n = Lada.getApplication().bundle;
         if (response.responseText) {
             var json = Ext.decode(response.responseText);
