@@ -115,15 +115,17 @@ Ext.define('Lada.store.Tag', {
      * the tag with the given id
      * @return {Boolean} true if a tag with the given name exists
      */
-        tagExists: function(tagName, id) {
-            var store = Ext.data.StoreManager.get('tags');
-            if (id === undefined) {
+    tagExists: function(tagName, id) {
+        var store = Ext.data.StoreManager.get('tags');
+        var res;
+        if (id === undefined) {
             //Find record: case sensitive and exact match
-            return store.find('tag', tagName, 0, false, true, true) > -1;
+            res = store.find('tag', tagName, 0, false, true, true);
         } else {
-            return store.findBy(function(obj){
+            res = store.findBy(function(obj){
                 return obj.get('tag') === tagName && obj.get('id') !== id;
             });
         }
+        return res > -1;
     }
 });
