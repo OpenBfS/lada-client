@@ -177,16 +177,26 @@ Ext.define('Lada.controller.Query', {
     },
 
     cloneQuery: function(button) {
+        var me = this;
         var panel = button.up('panel');
         var cbox = panel.down('combobox[name=selectedQuery]');
         var cquery = cbox.getStore().getById(cbox.getValue());
         var name = panel.down('textfield[name=name]').getValue();
         var messStellesIds = panel.down('cbox[name=messStellesIds]').getValue();
+        var qp = button.up('querypanel');
         if (name.length > 70) {
             name = name.substring(0, 60) + '... ('+Lada.username+')';
         } else {
             name = name+ '('+Lada.username+')';
         }
+
+        //Store column widths
+        var columnWidths = {};
+        var columns = qp.gridColumnValueStore.getData().items;
+        Ext.Array.each(columns, function(item) {
+            columnWidths[item.get('dataIndex')] = me.getVisibleColumnWidth(item);
+        });
+
         var newrecord = Ext.create('Lada.model.Query', {
             baseQuery: cquery.get('baseQuery'),
             name: name,
@@ -223,7 +233,7 @@ Ext.define('Lada.controller.Query', {
                         filterNegate: item.get('filterNegate'),
                         filterRegex: item.get('filterRegex'),
                         filterValue: item.get('filterValue'),
-                        width: item.get('width')
+                        width: columnWidths[item.get('dataIndex')]
                     });
                     clonedModel.set('id', null);
                     clonedModel.set('queryUserId', savedQuery.get('id'));
@@ -361,6 +371,7 @@ Ext.define('Lada.controller.Query', {
      *     If present, it will replace the saving of gridColumns
      */
     saveQuery: function(button, callback) {
+        var me = this;
         var i18n = Lada.getApplication().bundle;
         var qp = button.up('querypanel');
 
@@ -405,13 +416,6 @@ Ext.define('Lada.controller.Query', {
                 var newId = json.data.id;
                 qp.getForm().loadRecord(rec);
 
-                // Visible columns for saving column width
-                var dgs = Ext.ComponentQuery.query('dynamicgrid');
-                var visibleCols;
-                if (dgs && dgs[0]) {
-                    visibleCols = dgs[0].getVisibleColumns();
-                }
-
                 var finalCallback = function() {
                     qp.down('combobox[name=selectedQuery]')
                         .setStore(qp.store);
@@ -425,19 +429,8 @@ Ext.define('Lada.controller.Query', {
                     new Ext.Promise(function(resolve) {
                         for (var i2=0; i2 < columns.length; i2++) {
                             var col = columns[i2];
-
-                            // Get width of visible columns
-                            var vcIdx;
-                            // eslint-disable-next-line no-loop-func
-                            if (visibleCols && visibleCols.some(function(vc, idx) {
-                                if (vc.dataIndex === col.get('dataIndex')) {
-                                    vcIdx = idx;
-                                    return true;
-                                }
-                                return false;
-                            })) {
-                                col.set('width', visibleCols[vcIdx].width);
-                            }
+                            //Set column width
+                            col.set('width', me.getVisibleColumnWidth(col));
 
                             // Save the column
                             col.save({
@@ -1299,5 +1292,32 @@ Ext.define('Lada.controller.Query', {
             columnIndex: options.columnIndex,
             items: [field, checkboxRow]
         });
+    },
+
+    /**
+     * Get the width of the given column in the grid.
+     * @param {Lada.model.GridColumnValue} col Column
+     * @returns Grid column width if visible, else width store in the column record
+     */
+    getVisibleColumnWidth: function(col) {
+        // Visible columns for saving column width
+        var dgs = Ext.ComponentQuery.query('dynamicgrid');
+        var visibleCols;
+        if (dgs && dgs[0]) {
+            visibleCols = dgs[0].getVisibleColumns();
+        }
+        // Get width of visible columns
+        var vcIdx;
+        // eslint-disable-next-line no-loop-func
+        if (visibleCols && visibleCols.some(function(vc, idx) {
+            if (vc.dataIndex === col.get('dataIndex')) {
+                vcIdx = idx;
+                return true;
+            }
+            return false;
+        })) {
+            return visibleCols[vcIdx].width;
+        }
+        return col.get('width');
     }
 });

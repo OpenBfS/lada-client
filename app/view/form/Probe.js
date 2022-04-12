@@ -513,13 +513,7 @@ Ext.define('Lada.view.form.Probe', {
                             fieldLabel: 'Umweltbereich',
                             labelWidth: 100,
                             allowBlank: true,
-                            editable: true,
-                            listeners: {
-                                dirtychange: {
-                                    fn: this.updateOnChange,
-                                    scope: me
-                                }
-                            }
+                            editable: true
                         }, {
                             border: false,
                             layout: {
@@ -537,13 +531,7 @@ Ext.define('Lada.view.form.Probe', {
                                 labelWidth: 100,
                                 fieldLabel: i18n.getMsg('mediaDesk'),
                                 editable: false,
-                                readOnly: true,
-                                listeners: {
-                                    dirtychange: {
-                                        fn: this.updateOnChange,
-                                        scope: me
-                                    }
-                                }
+                                readOnly: true
                             }, {
                                 xtype: 'textfield',
                                 margin: '0 0 0 5',
