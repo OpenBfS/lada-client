@@ -114,11 +114,11 @@ Ext.define('Lada.view.window.SetTags', {
         this.down('tagwidget').setTagged(this.selection, this.recordType);
     },
 
-    actionCallBack: function(){
+    actionCallBack: function() {
         Ext.data.StoreManager.get('tags').reload();
         this.collectCurrentTags();
     },
-    failureCallBack: function(){
+    failureCallBack: function() {
         Ext.data.StoreManager.get('tags').reload();
         this.collectCurrentTags();
     }

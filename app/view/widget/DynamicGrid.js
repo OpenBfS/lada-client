@@ -97,9 +97,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         }
         if (this.rowtarget.dataType === 'messungId') {
             this.addMessungButtons();
-        } else if (this.rowtarget.messungIdentifier){
+        } else if (this.rowtarget.messungIdentifier) {
             var mI = this.rowtarget.messungIdentifier;
-            if (this.getVisibleColumns().find(function(item){
+            if (this.getVisibleColumns().find(function(item) {
                 return item.dataIndex === mI;
             })) {
                 this.addSetStatusButton();

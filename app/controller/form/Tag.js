@@ -34,13 +34,13 @@ Ext.define('Lada.controller.form.Tag', {
             'tagform messstelle combobox': {
                 change: this.checkTagCommitEnabled
             },
-                'tagform netzbetreiber combobox': {
+            'tagform netzbetreiber combobox': {
                 change: this.checkTagCommitEnabled
             },
-                'tagform tagtyp combobox': {
+            'tagform tagtyp combobox': {
                 change: this.setGueltigBis
             },
-                'tagform datefield[name=gueltigBis]': {
+            'tagform datefield[name=gueltigBis]': {
                 change: this.checkTagCommitEnabled
             }
         });
@@ -69,24 +69,24 @@ Ext.define('Lada.controller.form.Tag', {
             url: url,
             jsonData: record.data,
             method: method,
-            success: function (response) {
+            success: function(response) {
                 win.actionCallback(response);
             },
-            failure:  function (response) {
+            failure: function(response) {
                 win.actionCallback(response);
             }
         });
     },
-    deleteTag: function(button){
+    deleteTag: function(button) {
         var win = button.up('tagmanagementwindow');
         var record = win.down('tagform').getForm().getRecord();
         Ext.Ajax.request({
             url: this.tagUrl + '/' + record.get('id'),
             method: 'DELETE',
-            success:  function (response) {
+            success: function(response) {
                 win.actionCallback(response);
             },
-            failure: function (response) {
+            failure: function(response) {
                 win.actionCallback(response);
             }
         });
@@ -96,7 +96,7 @@ Ext.define('Lada.controller.form.Tag', {
      * Adds (multiple) tags to a list of objects (e.g. Proben, Messungen).
      * Tags already assigned should not result in errors
      */
-    addZuordnung: function(button){
+    addZuordnung: function(button) {
         var win = button.up('settags');
         var selection = win.selection;
         var recname = win.recordType === 'messung' ? 'messungId' : 'probeId';
@@ -111,10 +111,10 @@ Ext.define('Lada.controller.form.Tag', {
             url: this.zuordnungUrl,
             method: 'POST',
             jsonData: JSON.stringify([payload]),
-            success:   function (response) {
+            success: function(response) {
                 win.actionCallback(response);
             },
-            failure:   function (response) {
+            failure: function(response) {
                 win.failureCallBack(response);
             }
         });
@@ -138,10 +138,10 @@ Ext.define('Lada.controller.form.Tag', {
             url: this.zuordnungUrl + '/delete',
             method: 'POST',
             jsonData: JSON.stringify([payload]),
-            success:   function (response) {
+            success: function(response) {
                 win.actionCallback(response);
             },
-            failure:   function (response) {
+            failure: function(response) {
                 win.actionCallback(response);
             }
         });
@@ -211,7 +211,7 @@ Ext.define('Lada.controller.form.Tag', {
             problemExists = true;
         } else {
             var oldTyp = rec.get('typId');
-            switch(data.typId) {
+            switch (data.typId) {
                 case 'mst':
                     if (oldTyp && oldTyp !== 'mst') {
                         // win.down('tagtyp').showErrors(
@@ -221,7 +221,7 @@ Ext.define('Lada.controller.form.Tag', {
                     //TODO: validUntil should be unchanged or in the future
                     break;
                 case 'netzbetreiber':
-                    if (!Ext.Array.contains(Lada.funktionen, 4)){
+                    if (!Ext.Array.contains(Lada.funktionen, 4)) {
                         // win.down('tagtyp').showErrors(
                         //     i18n.getMsg('tag.tagtyp.err.permission'));
                         problemExists = true;
@@ -236,7 +236,7 @@ Ext.define('Lada.controller.form.Tag', {
                     }
                     break;
                 case 'global':
-                    if (!Ext.Array.contains(Lada.funktionen, 4)){
+                    if (!Ext.Array.contains(Lada.funktionen, 4)) {
                         // win.down('tagtyp').showErrors(
                         //     i18n.getMsg('tag.tagtyp.err.permission'));
                         problemExists = true;
@@ -276,19 +276,20 @@ Ext.define('Lada.controller.form.Tag', {
             return;
         }
         var validity = rec.data.validity;
-            if (validity === -1) {
-                form.down('[name=infinitegueltigBis]').setHidden(false);
-                form.down('datefield[name=gueltigBis]').setDisabled(true);
-                form.down('datefield[name=gueltigBis]').setValue(null);
-                form.getRecord().set('gueltigBis', null);
-                form.down('[name=infinitegueltigBis]').setHidden(false);
-            } else {
-                var until = new Date().valueOf() + ( 24 * 3600000 * validity );
-                form.down('datefield[name=gueltigBis]').setValue(new Date(until));
-                form.down('datefield[name=gueltigBis]').setDisabled(false);
-                form.down('[name=infinitegueltigBis]').setHidden(true);
-            }
-            this.checkTagCommitEnabled(tagtypwidget);
+        if (validity === -1) {
+            form.down('[name=infinitegueltigBis]').setHidden(false);
+            form.down('datefield[name=gueltigBis]').setDisabled(true);
+            form.down('datefield[name=gueltigBis]').setValue(null);
+            form.getRecord().set('gueltigBis', null);
+            form.down('[name=infinitegueltigBis]').setHidden(false);
+        } else {
+            var until = new Date().valueOf() + ( 24 * 3600000 * validity );
+            form.down('datefield[name=gueltigBis]').setValue(
+                new Date(until));
+            form.down('datefield[name=gueltigBis]').setDisabled(false);
+            form.down('[name=infinitegueltigBis]').setHidden(true);
+        }
+        this.checkTagCommitEnabled(tagtypwidget);
     }
 
 });

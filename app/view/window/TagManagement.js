@@ -83,20 +83,20 @@ Ext.define('Lada.view.window.TagManagement', {
         } else {
             this.setLoading(true);
             Ext.ClassManager.get('Lada.model.Tag').load(this.recordId, {
-                    failure: function() {
-                        // TODO show error window. Failed to load
-                        callback();
-                    },
-                    success: function(record){
-                        me.record = record;
-                        me.setTitle(i18n.getMsg(
-                            'tag.manageWindow.title', record.get('tag')));
-                        callback();
-                    }
-                });
+                failure: function() {
+                    // TODO show error window. Failed to load
+                    callback();
+                },
+                success: function(record) {
+                    me.record = record;
+                    me.setTitle(i18n.getMsg(
+                        'tag.manageWindow.title', record.get('tag')));
+                    callback();
+                }
+            });
         }
     },
-    actionCallback: function(response){
+    actionCallback: function(response) {
         //TODO: message and close if deleted
         if (this.parentGrid) {
             this.parentGrid.reload();

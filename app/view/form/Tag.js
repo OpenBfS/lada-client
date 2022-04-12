@@ -21,7 +21,7 @@ Ext.define('Lada.view.form.Tag', {
 
     initComponent: function() {
         var store = Ext.data.StoreManager.get('tags');
-        if (!store){
+        if (!store) {
             Ext.create('Lada.store.Tag', {
                 storeId: 'tags'
             });
@@ -81,7 +81,7 @@ Ext.define('Lada.view.form.Tag', {
         this.setReadOnly();
     },
 
-    setReadOnly: function(){
+    setReadOnly: function() {
         var ro = this.getForm().getRecord().get('readonly');
         this.down('textfield[name=tag]').setReadOnly(ro);
         this.down('messstelle').setReadOnly(ro);

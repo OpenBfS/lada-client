@@ -97,7 +97,7 @@ Ext.define('Lada.view.widget.Tag', {
     initComponent: function() {
         var me = this;
         var store = Ext.data.StoreManager.get('tags');
-        if (!store){
+        if (!store) {
             Ext.create('Lada.store.Tag', {
                 storeId: 'tags'
             });
@@ -110,8 +110,6 @@ Ext.define('Lada.view.widget.Tag', {
         });
 
         this.store.setLoadingCallback(
-            // TODO check if broken. 'me' will now be 'the last tag widget that
-            // was initialized'
             function(str, records, successful) {
                 //Skip if component is no longer visible
                 if (!me.isVisible()) {
@@ -151,11 +149,11 @@ Ext.define('Lada.view.widget.Tag', {
                 isReadOnly: function() {
                     return me.readOnly;
                 },
-                getItemCls: function(value){
+                getItemCls: function(value) {
                     var result = 'x-tagfield-item-text';
                     switch (value.typId) {
                         case 'global':
-                            return  result + ' bold-text italic-text';
+                            return result + ' bold-text italic-text';
                         case 'netzbetreiber':
                             return result + ' bold-text';
                         case 'auto':

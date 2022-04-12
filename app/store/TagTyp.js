@@ -13,11 +13,11 @@ Ext.define('Lada.store.TagTyp', {
     extend: 'Ext.data.Store',
     model: Ext.create('Ext.data.Model', {
         fields: [
-        { name: 'value', type: 'string' }, // as defined by server
-        { name: 'label', type: 'string' }, //display value
-        // default gueltigBis (-1: infinite)
-        { name: 'validity', type: 'number' },
-        { name: 'canSelect'}
+            { name: 'value', type: 'string' }, // as defined by server
+            { name: 'label', type: 'string' }, //display value
+            // default gueltigBis (-1: infinite)
+            { name: 'validity', type: 'number' },
+            { name: 'canSelect'}
         ]
     }),
     data: [{
