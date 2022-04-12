@@ -539,7 +539,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     items: [{
                         xtype: 'tagfield',
                         width: '100%',
-                        name: 'pzusatzWerts',
+                        name: 'probenZusatzs',
                         store: Ext.create('Lada.store.Probenzusaetze'),
                         valueField: 'id',
                         displayField: 'beschreibung',
@@ -565,9 +565,9 @@ Ext.define('Lada.view.form.Messprogramm', {
      *
      * @param {*} umwId UmwId for filtering
      */
-    filterProbenzusatzs: function(umwId) {
+    filterProbenZusatzs: function(umwId) {
         var me = this;
-        var pzStore = me.down('tagfield[name=pzusatzWerts]').store;
+        var pzStore = me.down('tagfield[name=probenZusatzs]').store;
         //Filter ProbenZusatzs
         pzStore.load({
             params: {
@@ -673,9 +673,9 @@ Ext.define('Lada.view.form.Messprogramm', {
         }
 
         this.populateIntervall(messRecord);
-        var field = this.down('tagfield[name=pzusatzWerts]');
-        field.value = messRecord._pzusatzWerts.getData().items;
-        this.filterProbenzusatzs(messRecord.get('umwId'));
+        var field = this.down('tagfield[name=probenZusatzs]');
+        field.value = messRecord.probenZusatzs().getData().items;
+        this.filterProbenZusatzs(messRecord.get('umwId'));
 
         var mstStore = Ext.data.StoreManager.get('messstellen');
         var mstId = mstStore.getById(messRecord.get('mstId'));
@@ -898,7 +898,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('cbox[name=mehId]').setReadOnly(value);
         this.down('cbox[name=probeNehmerId]').setReadOnly(value);
         this.down('messprogrammland[name=mplId]').setReadOnly(value);
-        this.down('tagfield[name=pzusatzWerts]').setReadOnly(value);
+        this.down('tagfield[name=probenZusatzs]').setReadOnly(value);
         for (var i = 0; i < 12; i++) {
             this.down('deskriptor[layer='+i+']').setReadOnly(value);
         }

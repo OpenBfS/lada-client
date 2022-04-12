@@ -301,14 +301,14 @@ Ext.define('Lada.controller.form.Messprogramm', {
             record.set('id', null);
         }
         //Update selected ProbeZusatz objects
-        var pzwField = formPanel.down('tagfield[name=pzusatzWerts]');
+        var pzwField = formPanel.down('tagfield[name=probenZusatzs]');
         var pzwStore = Ext.getStore('probenzusaetze');
         var selectedPZW = pzwField.getValue();
         var selectObjects = [];
         Ext.Array.forEach(selectedPZW, function(item) {
             selectObjects.push(pzwStore.getById(item));
         });
-        var asocStore = record._pzusatzWerts;
+        var asocStore = record.probenZusatzs();
         asocStore.clearData();
         if (selectObjects.length > 0) {
             asocStore.add(selectObjects);
@@ -472,9 +472,9 @@ Ext.define('Lada.controller.form.Messprogramm', {
         formPanel.getForm().owner.populateIntervall(
             formPanel.getForm().getRecord());
         formPanel.setMediaDesk(record);
-        var field = formPanel.down('tagfield[name=pzusatzWerts]');
-        field.value = record._pzusatzWerts.getData().items;
-        formPanel.filterProbenzusatzs(record.get('umwId'));
+        var field = formPanel.down('tagfield[name=probenZusatzs]');
+        field.value = record.probenZusatzs().getData().items;
+        formPanel.filterProbenZusatzs(record.get('umwId'));
     },
 
     /**
@@ -691,7 +691,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         });
 
         //Filter ProbenZusatz tagfield
-        formPanel.filterProbenzusatzs(umwId);
+        formPanel.filterProbenZusatzs(umwId);
     },
 
     /* Called if Datenbasis value changed. Changes visibility of REI specific
