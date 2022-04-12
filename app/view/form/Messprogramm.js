@@ -47,7 +47,6 @@ Ext.define('Lada.view.form.Messprogramm', {
             Lada.view.form.Messprogramm.mediaSnScheduler = Ext.create(
                 'Lada.util.FunctionScheduler');
         }
-        var me = this;
         var i18n = Lada.getApplication().bundle;
         this.items = [{
             xtype: 'fieldset',
