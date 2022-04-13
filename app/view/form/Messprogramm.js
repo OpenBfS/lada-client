@@ -649,14 +649,26 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('button[action=copy]').setDisabled(
             messRecord.get('readonly'));
         this.clearMessages();
+
+        // Add probenZusatzs as an array of model instances to the record.
+        // This is necessary, because loadRecord() calls setValue() on
+        // matching fields internally and that won't work for the matching
+        // tagfield if probenZusatzs is just an array of ordinary objects
+        // (such as returned by `messRecord.getData(true)') or just
+        // internally available as associated data.
+        // Note that setting the value directly at the tagfield, e.g. using
+        // setValue(), is not an option because that prevents any
+        // dirtychange events from occurring once any value has been chosen
+        // in the tagfield.
+        messRecord.set(
+            'probenZusatzs', messRecord.probenZusatzs().getData().items);
         this.getForm().loadRecord(messRecord);
         if (!messRecord.data || messRecord.data.id === null) {
             return;
         }
 
         this.populateIntervall(messRecord);
-        var field = this.down('tagfield[name=probenZusatzs]');
-        field.value = messRecord.probenZusatzs().getData().items;
+
         this.filterProbenZusatzs(messRecord.get('umwId'));
 
         var mstStore = Ext.data.StoreManager.get('messstellen');
