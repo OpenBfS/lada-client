@@ -523,7 +523,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                         name: 'probenZusatzs',
                         store: Ext.create('Lada.store.Probenzusaetze'),
                         valueField: 'id',
-                        displayField: 'beschreibung',
                         tpl: Ext.create(
                             'Ext.XTemplate',
                             '<ul class="x-list-plain"><tpl for=".">',
