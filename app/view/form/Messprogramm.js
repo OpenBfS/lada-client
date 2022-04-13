@@ -519,6 +519,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                     },
                     items: [{
                         xtype: 'tagfield',
+                        autoSelect: false,
+                        queryMode: 'local',
                         width: '100%',
                         name: 'probenZusatzs',
                         store: Ext.create('Lada.store.Probenzusaetze'),

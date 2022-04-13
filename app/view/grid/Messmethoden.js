@@ -17,8 +17,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
         'Lada.store.MmtMessprogramm',
         'Lada.store.Messmethoden',
         'Lada.store.Messgroessen',
-        'Lada.view.widget.Messmethode',
-        'Lada.view.widget.NuklidTagfield'
+        'Lada.view.widget.Messmethode'
     ],
 
     maxHeight: 150,
@@ -158,9 +157,12 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 return returnvalues;
             },
             editor: {
-                xtype: 'nuklidtags',
-                multiSelect: true,
-                editable: true
+                xtype: 'tagfield',
+                store: 'messgroessen',
+                displayField: 'messgroesse',
+                valueField: 'id',
+                autoSelect: false,
+                queryMode: 'local'
             }
         }];
         this.initData();
