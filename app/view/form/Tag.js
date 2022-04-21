@@ -89,6 +89,6 @@ Ext.define('Lada.view.form.Tag', {
         this.down('tagtyp').setReadOnly(ro);
         this.down('datefield[name=gueltigBis]').setReadOnly(ro);
         this.up('window').down('button[action=delete]').setDisabled(ro);
-        this.up('window').down('button[action=save]').setDisabled(ro);
+        // note: See controller/form/Tag for save button enabling
     }
 });

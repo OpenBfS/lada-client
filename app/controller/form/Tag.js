@@ -69,8 +69,8 @@ Ext.define('Lada.controller.form.Tag', {
             url: url,
             jsonData: record.data,
             method: method,
-            success: function(response) {
-                win.actionCallback(response);
+            success: function() {
+                win.close();
             },
             failure: function(response) {
                 win.actionCallback(response);
@@ -83,8 +83,8 @@ Ext.define('Lada.controller.form.Tag', {
         Ext.Ajax.request({
             url: this.tagUrl + '/' + record.get('id'),
             method: 'DELETE',
-            success: function(response) {
-                win.actionCallback(response);
+            success: function() {
+                win.close();
             },
             failure: function(response) {
                 win.actionCallback(response);
@@ -162,7 +162,7 @@ Ext.define('Lada.controller.form.Tag', {
         // var i18n = Lada.getApplication().bundle;
 
         // form should be changed from initial values
-        if (!form.isDirty()) {
+        if (!form.isDirty() || rec.get('readonly')) {
             formEl.up('tagmanagementwindow').down(
                 'button[action=save]').setDisabled(true);
             return false;
