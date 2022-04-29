@@ -27,10 +27,23 @@ Ext.define('Lada.view.widget.TagTyp', {
 
     initComponent: function() {
         this.store = Ext.create('Lada.store.TagTyp');
-        // this.store.filterBy(function(record) {
-        //     return (record.get('canSelect'))();
-        // });
-        // TODO: above hinders display in readonly cases
         this.callParent(arguments);
+        this.down('combobox').on({
+            focus: function(combo) {
+                var store = combo.getStore();
+                store.clearFilter();
+                var tagform = combo.up('tagform');
+                var typId = null;
+                if (tagform) {
+                    typId = tagform.getForm().getRecord().get('typId');
+                }
+                store.filterBy(function(record) {
+                    return (
+                        record.get('canSelect')() ||
+                        record.get('value') === typId
+                        );
+                });
+            }
+        });
     }
 });
