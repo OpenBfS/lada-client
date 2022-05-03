@@ -47,7 +47,6 @@ Ext.define('Lada.view.form.Messprogramm', {
             Lada.view.form.Messprogramm.mediaSnScheduler = Ext.create(
                 'Lada.util.FunctionScheduler');
         }
-        var me = this;
         var i18n = Lada.getApplication().bundle;
         this.items = [{
             xtype: 'fieldset',
@@ -342,13 +341,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 fieldLabel: i18n.getMsg('umwId'),
                                 labelWidth: 100,
                                 width: '58%',
-                                editable: true,
-                                listeners: {
-                                    dirtychange: {
-                                        fn: this.updateOnChange,
-                                        scope: me
-                                    }
-                                }
+                                editable: true
                             }, {
                                 xtype: 'messeinheit',
                                 name: 'mehId',
@@ -374,13 +367,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 labelWidth: 100,
                                 fieldLabel: i18n.getMsg('mediaDesk'),
                                 editable: false,
-                                readOnly: true,
-                                listeners: {
-                                    dirtychange: {
-                                        fn: this.updateOnChange,
-                                        scope: me
-                                    }
-                                }
+                                readOnly: true
                             }, {
                                 xtype: 'textfield',
                                 name: 'media',
@@ -403,13 +390,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 type: 'vbox',
                                 align: 'stretch'
                             },
-                            items: this.buildDescriptors(),
-                            listeners: {
-                                dirtychange: {
-                                    fn: this.updateOnChange,
-                                    scope: me
-                                }
-                            }
+                            items: this.buildDescriptors()
                         }]
                     }]
                 }, {
