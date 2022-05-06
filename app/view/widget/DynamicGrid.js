@@ -284,7 +284,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 } else if (rec.get('readonly') === true &&
                     rec.get('statusEdit')) {
                     return 'noeditstatus';
-                } else if (rec.store.data.length > 2000) {
+                } else if (rec.store.data.length > 500) {
                     return 'noauthorisation';
                 }
                 return 'noedit';
