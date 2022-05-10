@@ -269,6 +269,7 @@ Ext.define('Lada.controller.form.Tag', {
      * @param newVal the new widget's value
      */
     setGueltigBis: function(tagtypwidget, newVal) {
+        var i18n = Lada.getApplication().bundle;
         var form = tagtypwidget.up('tagform');
         var rec = tagtypwidget.store.findRecord('value', newVal);
         if (!rec) {
@@ -277,17 +278,17 @@ Ext.define('Lada.controller.form.Tag', {
         }
         var validity = rec.data.validity;
         if (validity === -1) {
-            form.down('[name=infinitegueltigBis]').setHidden(false);
+            form.down('datefield[name=gueltigBis]').setEmptyText(
+                i18n.getMsg('tag.gueltigBis.infinite'));
             form.down('datefield[name=gueltigBis]').setDisabled(true);
             form.down('datefield[name=gueltigBis]').setValue(null);
             form.getRecord().set('gueltigBis', null);
-            form.down('[name=infinitegueltigBis]').setHidden(false);
         } else {
             var until = new Date().valueOf() + ( 24 * 3600000 * validity );
             form.down('datefield[name=gueltigBis]').setValue(
                 new Date(until));
             form.down('datefield[name=gueltigBis]').setDisabled(false);
-            form.down('[name=infinitegueltigBis]').setHidden(true);
+            form.down('datefield[name=gueltigBis]').setEmptyText('');
         }
         this.checkTagCommitEnabled(tagtypwidget);
     }
