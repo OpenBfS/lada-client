@@ -49,46 +49,18 @@ Ext.define('Lada.controller.form.Tag', {
     saveTag: function(button) {
         var win = button.up('tagmanagementwindow');
         var record = win.down('tagform').getForm().getRecord();
-        var data = win.down('tagform').getForm().getFieldValues(false);
-        var method = record.phantom ? 'POST': 'PUT';
-        var url = record.phantom ?
-            this.tagUrl :
-            this.tagUrl + '/' + record.get('id');
-        if (record.phantom) {
-            record.set('id', null);
-            record.set('readonly', false);
-        }
-        record.set('mstId', data.mstId);
-
-        var netzbetreiber = win.down('netzbetreiber').getValue()[0];
-        record.set('netzbetreiberId', netzbetreiber);
-        record.set('tag', data.tag);
-        record.set('typId', data.typId);
-        record.set('gueltigBis', data.gueltigBis);
-        Ext.Ajax.request({
-            url: url,
-            jsonData: record.data,
-            method: method,
-            success: function() {
-                win.close();
-            },
-            failure: function(response) {
-                win.actionCallback(response);
-            }
+        record.set(win.down('tagform').getForm().getFieldValues());
+        record.save({
+            // TODO: Adapt callback function
+            callback: win.actionCallback
         });
     },
+
     deleteTag: function(button) {
         var win = button.up('tagmanagementwindow');
-        var record = win.down('tagform').getForm().getRecord();
-        Ext.Ajax.request({
-            url: this.tagUrl + '/' + record.get('id'),
-            method: 'DELETE',
-            success: function() {
-                win.close();
-            },
-            failure: function(response) {
-                win.actionCallback(response);
-            }
+        win.down('tagform').getForm().getRecord().erase({
+            // TODO: Adapt callback function
+            callback: win.actionCallback
         });
     },
 
