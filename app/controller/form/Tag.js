@@ -51,17 +51,49 @@ Ext.define('Lada.controller.form.Tag', {
         var record = win.down('tagform').getForm().getRecord();
         record.set(win.down('tagform').getForm().getFieldValues());
         record.save({
-            // TODO: Adapt callback function
-            callback: win.actionCallback
+            success: function(rec) {
+                var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                if (parentGrid.length === 1) {
+                    parentGrid[0].reload();
+                }
+                Ext.getStore('tags').add(rec);
+                win.close();
+            },
+            failure: this.handleTagFailure
         });
     },
 
     deleteTag: function(button) {
         var win = button.up('tagmanagementwindow');
         win.down('tagform').getForm().getRecord().erase({
-            // TODO: Adapt callback function
-            callback: win.actionCallback
+            success: function(rec) {
+                var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                if (parentGrid.length === 1) {
+                    parentGrid[0].reload();
+                }
+                Ext.getStore('tags').remove(rec);
+                win.close();
+            },
+            failure: this.handleTagFailure
         });
+    },
+
+    /**
+     * Failure callback for Model's save() and erase().
+     */
+    handleTagFailure: function(record, operation) {
+        var i18n = Lada.getApplication().bundle;
+        var err = operation.getError();
+        if (err && !(err instanceof String)) {
+            err = err.response.responseText;
+        } else {
+            err = i18n.getMsg(
+                Ext.decode(operation.getResponse().responseText).message);
+        }
+        Ext.Msg.alert(
+            i18n.getMsg('tag.widget.err.genericsavetitle'),
+            err
+        );
     },
 
     /**
@@ -131,7 +163,6 @@ Ext.define('Lada.controller.form.Tag', {
         var win = formEl.up('tagform');
         var form = win.getForm();
         var rec = form.getRecord();
-        // var i18n = Lada.getApplication().bundle;
 
         // form should be changed from initial values
         if (!form.isDirty() || rec.get('readonly')) {

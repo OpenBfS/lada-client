@@ -322,7 +322,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     parentGrid: row.grid
                 }).show();
                 break;
-            }
+        }
     },
 
     deleteData: function(button) {
