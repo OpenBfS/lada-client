@@ -68,9 +68,6 @@ Ext.define('Lada.view.form.Tag', {
 
     setRecord: function(tagRecord) {
         this.getForm().loadRecord(tagRecord);
-        this.down('messstelle').setValue(tagRecord.get('mstId'));
-        this.down('tagtyp').setValue(tagRecord.get('typId'));
-        this.down('netzbetreiber').setValue(tagRecord.get('netzbetreiberId'));
         this.setReadOnly();
     },
 

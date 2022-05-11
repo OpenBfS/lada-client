@@ -171,11 +171,8 @@ Ext.define('Lada.controller.form.Tag', {
             return false;
         }
         var data = form.getFieldValues(false);
-        var netzbetreiber = win.down('netzbetreiber').getValue()[0];
-        // TODO netzbetreiber somehow is not part of the form ?
 
         // the tag should have a name
-
         if (!data.tag) {
             problemExists = true;
             // win.down('textfield[name=tag]').showErrors(
@@ -192,14 +189,12 @@ Ext.define('Lada.controller.form.Tag', {
         }
 
         // messtelle and netzbetreiber must be set
-
         if (!data.mstId) {
             // win.down('messstelle').showErrors(
             //     i18n.getMsg('tag.createwindow.err.noemptyField'));
             problemExists = true;
         }
-
-        if (!netzbetreiber) {
+        if (!data.netzbetreiberId) {
             // win.down('netzbetreiber').showErrors(
             //     i18n.getMsg('tag.createwindow.err.noemptyField'));
             problemExists = true;
@@ -207,7 +202,6 @@ Ext.define('Lada.controller.form.Tag', {
         }
 
         //tagtyp permissions
-
         if (!data.typId) {
             // win.down('tagtyp').showErrors(
             //     i18n.getMsg('tag.createwindow.err.noemptyField'));
