@@ -510,28 +510,6 @@ Ext.define('Lada.controller.form.Probe', {
         this.checkCommitEnabled(combo);
     },
 
-
-    /**
-     * The Messtellen Store contains ALL Messtellen.
-     * Filter the store in this combobox to reduce the choices
-     * to the subset which the user is allowed to use.
-     *
-     * The app.js also creates a messstellenFiltered store,
-     * which contains this selection. Maybe this can be used here in future
-     * TODO
-     */
-    filter: function(field) {
-        var fil = Ext.create('Ext.util.Filter', {
-            filterFn: function(item) {
-                if (Ext.Array.contains(Lada.mst, item.get('id'))) {
-                    return true;
-                }
-                return false;
-            }
-        });
-        field.getStore().filter(fil);
-    },
-
     /**
      * When a Messtelle is selected, modify the Netzbetreiber
      * according to the Messstelle
