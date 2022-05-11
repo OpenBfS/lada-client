@@ -244,6 +244,18 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         this.down('combobox').clearValue();
     },
 
+    resetOriginalValue: function() {
+        this.down('combobox').resetOriginalValue();
+    },
+
+    getModelData: function() {
+        this.down('combobox').getModelData();
+    },
+
+    validate: function() {
+        this.down('combobox').validate();
+    },
+
     getName: function() {
         return this.name;
     },
