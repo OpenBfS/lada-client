@@ -11,7 +11,6 @@
 */
 Ext.define('Lada.controller.form.Tag', {
     extend: 'Ext.app.Controller',
-    tagUrl: 'lada-server/rest/tag',
     zuordnungUrl: 'lada-server/rest/tag/zuordnung',
 
     init: function() {
