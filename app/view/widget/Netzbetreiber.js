@@ -18,8 +18,7 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
     valueField: 'id',
     filteredStore: false,
     readOnly: this.readOnly,
-    isFormField: this.isFormField,
-    submitValue: this.submitValue,
+
     // Enable filtering of comboboxes
     queryMode: 'local',
     lastQuery: '',
@@ -34,6 +33,7 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
         '<tpl for=".">{id} - {netzbetreiber}</tpl>'),
     labelTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">{id} - {netzbetreiber}</tpl>'),
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.netzbetreiber');
@@ -46,8 +46,7 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
         this.store = Ext.data.StoreManager.get('netzbetreiber');
         this.store.clearFilter();
         this.callParent(arguments);
-        this.down('combobox').isFormField = this.isFormField;
-        this.down('combobox').submitValue = this.submitValue;
+
         var me = this;
         this.down('combobox').on('focus', function(combobox) {
             var netzstore = combobox.getStore();
