@@ -14,8 +14,6 @@ Ext.define('Lada.view.form.Tag', {
     alias: 'widget.tagform',
     store: null,
 
-    model: 'Lada.model.Tag',
-
     readOnly: false,
     trackResetOnLoad: true,
 

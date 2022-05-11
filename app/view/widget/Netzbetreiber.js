@@ -45,6 +45,7 @@ Ext.define('Lada.view.widget.Netzbetreiber', {
         }
         this.store = Ext.data.StoreManager.get('netzbetreiber');
         this.store.clearFilter();
+
         this.callParent(arguments);
 
         var me = this;
