@@ -12,7 +12,7 @@
 Ext.define('Lada.view.widget.Messstelle', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.messstelle',
-    store: 'Messstellen',
+    store: 'messstellen',
     displayField: 'messStelle',
     valueField: 'id',
     editable: this.editable || false,
@@ -36,20 +36,26 @@ Ext.define('Lada.view.widget.Messstelle', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.messstelle');
-        if (this.filteredStore) {
-            this.store = Ext.data.StoreManager.get('messstellenFiltered');
-        } else {
-            this.store = Ext.data.StoreManager.get('messstellen');
-            if (!this.store) {
-                this.store = Ext.create('Lada.store.Messstellen');
-            }
-            this.store.clearFilter(true);
+
+        this.store = Ext.data.StoreManager.get('messstellen');
+        if (!this.store) {
+            this.store = Ext.create('Lada.store.Messstellen', {
+                storeId: 'messstellen'
+            });
         }
+        this.store.clearFilter(true);
+
         this.callParent(arguments);
-        var child =
-            this.multiSelect? this.down('tagfield'): this.down('combobox');
-        if (this.value && child) {
-            child.setValue(this.value);
-        }
+
+        var me = this;
+        this.down('combobox').on('focus', function(combobox) {
+            var store = combobox.getStore();
+            store.clearFilter();
+            if (me.filteredStore) {
+                store.filter(function(item) {
+                    return Lada.mst.indexOf(item.get('id')) >= 0;
+                });
+            }
+        });
     }
 });
