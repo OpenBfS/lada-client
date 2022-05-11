@@ -11,7 +11,10 @@
  */
 Ext.define('Lada.view.window.TagManagement', {
     extend: 'Ext.window.Window',
-    layout: 'vbox',
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
     recordId: null,
     record: null,
     alias: 'widget.tagmanagementwindow',

@@ -31,7 +31,8 @@ Ext.define('Lada.view.form.Tag', {
         this.items = [{
             xtype: 'fieldset',
             layout: {
-                type: 'vbox'
+                type: 'vbox',
+                align: 'stretch'
             },
             defaults: {
                 margin: '5,5,5,5',
