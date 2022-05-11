@@ -44,7 +44,6 @@ Ext.define('Lada.view.window.TagManagement', {
                     action: 'delete',
                     text: i18n.getMsg('delete'),
                     margin: '5 5 5 5',
-                    hidden: true,
                     disabled: true
                 }, {
                     xtype: 'button',
@@ -60,17 +59,16 @@ Ext.define('Lada.view.window.TagManagement', {
         this.initData();
 
     },
+
     initData: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
         var callback = function() {
             if (me.record) {
                 me.down('tagform').setRecord(me.record);
-                if (me.record.get('readonly') || me.record.phantom) {
-                    me.down('button[action=delete]').setHidden(true);
-                } else {
-                    me.down('button[action=delete]').setHidden(false);
-                }
+                me.down('button[action=delete]').setDisabled(
+                    me.record.get('readonly') || me.record.phantom);
+                // See controller/form/Tag for save button enabling
             }
             me.setLoading(false);
         };

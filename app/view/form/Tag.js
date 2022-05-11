@@ -83,7 +83,5 @@ Ext.define('Lada.view.form.Tag', {
         this.down('netzbetreiber').setReadOnly(ro);
         this.down('tagtyp').setReadOnly(ro);
         this.down('datefield[name=gueltigBis]').setReadOnly(ro);
-        this.up('window').down('button[action=delete]').setDisabled(ro);
-        // note: See controller/form/Tag for save button enabling
     }
 });
