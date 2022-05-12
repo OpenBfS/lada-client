@@ -249,7 +249,10 @@ Ext.define('Lada.view.widget.base.ComboBox', {
     },
 
     getModelData: function() {
-        return this.down('combobox').getModelData();
+        // Since this is called from Ext.form.Basic.getFieldValues() and the
+        // internal field is also part of the form under the same name,
+        // prevent multiple field values under the same name:
+        return null;
     },
 
     validate: function() {
