@@ -249,11 +249,11 @@ Ext.define('Lada.view.widget.base.ComboBox', {
     },
 
     getModelData: function() {
-        this.down('combobox').getModelData();
+        return this.down('combobox').getModelData();
     },
 
     validate: function() {
-        this.down('combobox').validate();
+        return this.down('combobox').validate();
     },
 
     getName: function() {
