@@ -80,16 +80,21 @@ Ext.define('Lada.controller.form.Tag', {
     handleTagFailure: function(record, operation) {
         var i18n = Lada.getApplication().bundle;
         var err = operation.getError();
-        if (err && !(err instanceof String)) {
-            err = err.response.responseText;
+        var msg = i18n.getMsg('err.msg.generic.body');
+        if (err) {
+            if (err instanceof String) {
+                msg = err;
+            } else {
+                msg = err.response.responseText;
+                if (!msg && err.response.timedout) {
+                    msg = i18n.getMsg('err.msg.timeout');
+                }
+            }
         } else {
-            err = i18n.getMsg(
+            msg = i18n.getMsg(
                 Ext.decode(operation.getResponse().responseText).message);
         }
-        Ext.Msg.alert(
-            i18n.getMsg('tag.widget.err.genericsavetitle'),
-            err
-        );
+        Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'), msg);
     },
 
     /**
