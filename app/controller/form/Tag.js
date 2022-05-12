@@ -36,9 +36,6 @@ Ext.define('Lada.controller.form.Tag', {
             'tagform netzbetreiber combobox': {
                 change: this.checkTagCommitEnabled
             },
-            'tagform tagtyp combobox': {
-                change: this.setGueltigBis
-            },
             'tagform datefield[name=gueltigBis]': {
                 change: this.checkTagCommitEnabled
             }
@@ -255,38 +252,5 @@ Ext.define('Lada.controller.form.Tag', {
         }
         formEl.up('tagmanagementwindow').down(
             'button[action=save]').setDisabled(problemExists);
-    },
-
-    /**
-     * (Re-) sets the default validity given for a tag type as the tag type is
-     * being changed. (refer tagtyp store for types and defaults being defined
-     * in days )
-     * @param tagtypwidget the calling widget
-     * @param newVal the new widget's value
-     */
-    setGueltigBis: function(tagtypwidget, newVal) {
-        var i18n = Lada.getApplication().bundle;
-        var form = tagtypwidget.up('tagform');
-        var rec = tagtypwidget.store.findRecord('value', newVal);
-        if (!rec) {
-            this.checkTagCommitEnabled(tagtypwidget);
-            return;
-        }
-        var validity = rec.data.validity;
-        if (validity === -1) {
-            form.down('datefield[name=gueltigBis]').setEmptyText(
-                i18n.getMsg('tag.gueltigBis.infinite'));
-            form.down('datefield[name=gueltigBis]').setDisabled(true);
-            form.down('datefield[name=gueltigBis]').setValue(null);
-            form.getRecord().set('gueltigBis', null);
-        } else {
-            var until = new Date().valueOf() + ( 24 * 3600000 * validity );
-            form.down('datefield[name=gueltigBis]').setValue(
-                new Date(until));
-            form.down('datefield[name=gueltigBis]').setDisabled(false);
-            form.down('datefield[name=gueltigBis]').setEmptyText('');
-        }
-        this.checkTagCommitEnabled(tagtypwidget);
     }
-
 });
