@@ -25,7 +25,10 @@ Ext.define('Lada.view.form.Tag', {
             });
         }
         this.store = Ext.data.StoreManager.get('tags');
+        this.store.reload();
+
         var i18n = Lada.getApplication().bundle;
+        var me = this;
         this.items = [{
             xtype: 'fieldset',
             layout: {
@@ -42,11 +45,37 @@ Ext.define('Lada.view.form.Tag', {
                 xtype: 'tfield',
                 fieldLabel: i18n.getMsg('name'),
                 allowBlank: false,
-                msgTarget: 'under'
+                validator: function(val) {
+                    var mstId = me.down('messstelle').getValue();
+                    var foundIdx = me.store.findBy(function(obj) {
+                        return val === obj.get('tag')
+                            && mstId === obj.get('mstId')
+                            && me.getRecord().get('id') !== obj.get('id');
+                    });
+                    if (foundIdx > -1) {
+                        return i18n.getMsg(
+                            'tag.createwindow.err.tagalreadyexists');
+                    }
+                    return true;
+                }
             }, {
                 name: 'mstId',
                 xtype: 'messstelle',
                 fieldLabel: i18n.getMsg('mst_id'),
+                validator: function() {
+                    var mstId = me.down('messstelle').getValue();
+                    var tag = me.down('textfield[name=tag]').getValue();
+                    var foundIdx = me.store.findBy(function(obj) {
+                        return mstId === obj.get('mstId')
+                            && tag === obj.get('tag')
+                            && me.getRecord().get('id') !== obj.get('id');
+                    });
+                    if (foundIdx > -1) {
+                        return i18n.getMsg(
+                            'tag.createwindow.err.tagalreadyexists');
+                    }
+                    return true;
+                },
                 filteredStore: true
             }, {
                 name: 'netzbetreiberId',
@@ -56,6 +85,7 @@ Ext.define('Lada.view.form.Tag', {
             }, {
                 name: 'typId',
                 fieldLabel: i18n.getMsg('tagtyp'),
+                allowBlank: false,
                 xtype: 'tagtyp'
             }, {
                 name: 'gueltigBis',

@@ -7,7 +7,6 @@
  */
 
 /**
- * A Probe.
  * This class represents and defines the model of a Tag
  **/
 Ext.define('Lada.model.Tag', {

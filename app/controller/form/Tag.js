@@ -27,17 +27,9 @@ Ext.define('Lada.controller.form.Tag', {
             'settags button[action=bulkdeletezuordnung]': {
                 click: this.removeZuordnung
             },
-            'tagform textfield[name=tag]': {
-                change: this.checkTagCommitEnabled
-            },
-            'tagform messstelle combobox': {
-                change: this.checkTagCommitEnabled
-            },
-            'tagform netzbetreiber combobox': {
-                change: this.checkTagCommitEnabled
-            },
-            'tagform datefield[name=gueltigBis]': {
-                change: this.checkTagCommitEnabled
+            'tagform': {
+                validitychange: this.checkTagCommitEnabled,
+                dirtychange: this.checkTagCommitEnabled
             }
         });
     },
@@ -153,109 +145,14 @@ Ext.define('Lada.controller.form.Tag', {
     },
 
     /**
-     * Validates the tag form
-     * @param {*} formEl any calling input box inside thre tag form
-     * @returns
+     * Enable/disable save button in TagManagement window.
      */
-    checkTagCommitEnabled: function(formEl) {
-
-        //TODO clear Warnings and errors
-        var problemExists = false;
-        var win = formEl.up('tagform');
-        var form = win.getForm();
-        var rec = form.getRecord();
-
-        // form should be changed from initial values
-        if (!form.isDirty() || rec.get('readonly')) {
-            formEl.up('tagmanagementwindow').down(
-                'button[action=save]').setDisabled(true);
-            return false;
-        }
-        var data = form.getFieldValues(false);
-
-        // the tag should have a name
-        if (!data.tag) {
-            problemExists = true;
-            // win.down('textfield[name=tag]').showErrors(
-            //     i18n.getMsg('tag.createwindow.err.emptytagname'));
-        }
-        var id = rec.phantom ? undefined: rec.get('id');
-
-        // the tag name should be unique.
-
-        if (formEl.up('tagform').store.tagExists(data.tag, id)) {
-            // win.down('textfield[name=tag]').showErrors(
-            //     i18n.getMsg('tag.createwindow.err.tagalreadyexists'));
-            problemExists = true;
-        }
-
-        // messtelle and netzbetreiber must be set
-        if (!data.mstId) {
-            // win.down('messstelle').showErrors(
-            //     i18n.getMsg('tag.createwindow.err.noemptyField'));
-            problemExists = true;
-        }
-        if (!data.netzbetreiberId) {
-            // win.down('netzbetreiber').showErrors(
-            //     i18n.getMsg('tag.createwindow.err.noemptyField'));
-            problemExists = true;
-            // TODO: needs to be own?
-        }
-
-        //tagtyp permissions
-        if (!data.typId) {
-            // win.down('tagtyp').showErrors(
-            //     i18n.getMsg('tag.createwindow.err.noemptyField'));
-            problemExists = true;
-        } else {
-            var oldTyp = rec.get('typId');
-            switch (data.typId) {
-                case 'mst':
-                    if (oldTyp && oldTyp !== 'mst') {
-                        // win.down('tagtyp').showErrors(
-                        //     i18n.getMsg('tag.tagtyp.err.downgrade'));
-                        problemExists = true;
-                    }
-                    //TODO: validUntil should be unchanged or in the future
-                    break;
-                case 'netzbetreiber':
-                    if (!Ext.Array.contains(Lada.funktionen, 4)) {
-                        // win.down('tagtyp').showErrors(
-                        //     i18n.getMsg('tag.tagtyp.err.permission'));
-                        problemExists = true;
-                    }
-                    if (
-                        oldTyp &&
-                        ['mst', 'netzbetreiber'].indexOf(oldTyp) <0
-                    ) {
-                        // win.down('tagtyp').showErrors(
-                        //     i18n.getMsg('tag.tagtyp.err.downgrade'));
-                        problemExists = true;
-                    }
-                    break;
-                case 'global':
-                    if (!Ext.Array.contains(Lada.funktionen, 4)) {
-                        // win.down('tagtyp').showErrors(
-                        //     i18n.getMsg('tag.tagtyp.err.permission'));
-                        problemExists = true;
-                    }
-                    if (
-                        oldTyp &&
-                        ['mst', 'netzbetreiber', 'global'].indexOf(oldTyp) <0
-                    ) {
-                        // win.down('tagtyp').showErrors(
-                        //     i18n.getMsg('tag.tagtyp.err.downgrade'));
-                        problemExists = true;
-                    }
-                    break;
-                case 'auto':
-                    problemExists = true;
-                    // win.down('tagtyp').showErrors(
-                    //     i18n.getMsg('tag.tagtyp.err.permission'));
-                    break;
-            }
-        }
-        formEl.up('tagmanagementwindow').down(
-            'button[action=save]').setDisabled(problemExists);
+    checkTagCommitEnabled: function(form) {
+        form.owner.up('tagmanagementwindow').down('button[action=save]')
+            .setDisabled(
+                !form.isDirty()
+                    || !form.isValid()
+                    || form.getRecord().get('readonly')
+            );
     }
 });

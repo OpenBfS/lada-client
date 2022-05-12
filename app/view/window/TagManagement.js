@@ -70,6 +70,7 @@ Ext.define('Lada.view.window.TagManagement', {
                     me.record.get('readonly') || me.record.phantom);
                 // See controller/form/Tag for save button enabling
             }
+            me.down('tagform').isValid();
             me.setLoading(false);
         };
         if (!this.recordId) {

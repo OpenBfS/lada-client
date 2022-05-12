@@ -65,6 +65,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             editable: this.editable,
             readOnly: this.readOnly,
             allowBlank: this.allowBlank,
+            validator: this.validator,
             forceSelection: this.forceSelection || false,
             msgTarget: 'none',
             value: this.value,
