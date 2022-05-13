@@ -51,10 +51,17 @@ Ext.define('Lada.view.window.SetTags', {
                 tooltip: i18n.getMsg('button.createtag.tooltip'),
                 handler: function() {
                     var win = Ext.create('Lada.view.window.TagManagement');
-                    //Close window if parent window is closed
+
+                    // When new tag is added, select it
+                    win.down('tagform').store.on('add', function(store, rec) {
+                        me.down('tagwidget').addValue(rec);
+                    });
+
+                    // Close window if parent window is closed
                     me.on('close', function() {
                         win.close();
                     });
+
                     win.show();
                 }
             }]
