@@ -31,12 +31,10 @@ Ext.define('Lada.controller.form.Tag', {
         var win = button.up('tagmanagementwindow');
         var record = win.down('tagform').getForm().getRecord();
         record.set(win.down('tagform').getForm().getFieldValues());
+        var me = this;
         record.save({
             success: function(rec) {
-                var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                if (parentGrid.length === 1) {
-                    parentGrid[0].reload();
-                }
+                me.reloadParentGrid();
                 Ext.getStore('tags').add(rec);
                 win.close();
             },
@@ -46,17 +44,24 @@ Ext.define('Lada.controller.form.Tag', {
 
     deleteTag: function(button) {
         var win = button.up('tagmanagementwindow');
+        var me = this;
         win.down('tagform').getForm().getRecord().erase({
             success: function(rec) {
-                var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                if (parentGrid.length === 1) {
-                    parentGrid[0].reload();
-                }
+                me.reloadParentGrid();
                 Ext.getStore('tags').remove(rec);
                 win.close();
             },
             failure: this.handleTagFailure
         });
+    },
+
+    reloadParentGrid: function() {
+        var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+        if (parentGrid.length === 1
+            && parentGrid[0].rowtarget.dataType === 'tagId'
+        ) {
+            parentGrid[0].reload();
+        }
     },
 
     /**
