@@ -83,11 +83,13 @@ Ext.define('Lada.view.window.SetTags', {
                 xtype: 'button',
                 action: 'bulkaddzuordnung',
                 margin: '5 5 5 5',
+                disabled: true,
                 text: i18n.getMsg('tag.assignwindow.assignbutton.text')
             }, {
                 xtype: 'button',
                 action: 'bulkdeletezuordnung',
                 margin: '5 5 5 5',
+                disabled: true,
                 text: i18n.getMsg('tag.assignwindow.unassignbutton.text')
             }, {
                 xtype: 'button',
@@ -104,22 +106,6 @@ Ext.define('Lada.view.window.SetTags', {
         this.down('tagwidget').setTagged(me.selection, me.recordType);
 
         this.down('progressbar').updateProgress(0, '');
-    },
-
-    disableButtons: function() {
-        this.down('button[action=createtag]').disable();
-        this.down('button[action=bulkaddtags]').disable();
-        this.down('button[action=bulkdeletetags]').disable();
-        this.down('button[action=cancel]').disable();
-        this.down('tagwidget').disable();
-    },
-
-    enableButtons: function() {
-        this.down('button[action=createtag]').enable();
-        this.down('button[action=bulkaddtags]').enable();
-        this.down('button[action=bulkdeletetags]').enable();
-        this.down('button[action=cancel]').enable();
-        this.down('tagwidget').enable();
     },
 
     collectCurrentTags: function() {

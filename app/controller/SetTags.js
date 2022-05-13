@@ -15,6 +15,9 @@ Ext.define('Lada.controller.SetTags', {
 
     init: function() {
         this.control({
+            'settags tagwidget': {
+                dirtychange: this.checkCommitEnabled
+            },
             'settags button[action=bulkaddzuordnung]': {
                 click: this.addZuordnung
             },
@@ -77,5 +80,12 @@ Ext.define('Lada.controller.SetTags', {
                 win.actionCallback(response);
             }
         });
+    },
+
+    checkCommitEnabled: function(tagfield) {
+        var disable = !tagfield.isDirty();
+        var win = tagfield.up('settags');
+        win.down('button[action=bulkaddzuordnung]').setDisabled(disable);
+        win.down('button[action=bulkdeletezuordnung]').setDisabled(disable);
     }
 });
