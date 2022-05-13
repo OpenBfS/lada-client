@@ -7,11 +7,10 @@
  */
 
 /**
-* This is a controller for Tag management, create and assign forms
+* This is a controller for Tag management, create and edit form
 */
 Ext.define('Lada.controller.form.Tag', {
     extend: 'Ext.app.Controller',
-    zuordnungUrl: 'lada-server/rest/tag/zuordnung',
 
     init: function() {
         this.control({
@@ -20,12 +19,6 @@ Ext.define('Lada.controller.form.Tag', {
             },
             'tagmanagementwindow button[action=delete]': {
                 click: this.deleteTag
-            },
-            'settags button[action=bulkaddzuordnung]': {
-                click: this.addZuordnung
-            },
-            'settags button[action=bulkdeletezuordnung]': {
-                click: this.removeZuordnung
             },
             'tagform': {
                 validitychange: this.checkTagCommitEnabled,
@@ -87,61 +80,6 @@ Ext.define('Lada.controller.form.Tag', {
                 Ext.decode(operation.getResponse().responseText).message);
         }
         Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'), msg);
-    },
-
-    /**
-     * Adds (multiple) tags to a list of objects (e.g. Proben, Messungen).
-     * Tags already assigned should not result in errors
-     */
-    addZuordnung: function(button) {
-        var win = button.up('settags');
-        var selection = win.selection;
-        var recname = win.recordType === 'messung' ? 'messungId' : 'probeId';
-        var taglist = win.down('tagwidget').getValue();
-        if (!taglist.length) {
-            win.failureCallBack({ error: 'noselection'});
-            return;
-        }
-        var payload = { tagId: taglist };
-        payload[recname] = selection;
-        Ext.Ajax.request({
-            url: this.zuordnungUrl,
-            method: 'POST',
-            jsonData: JSON.stringify([payload]),
-            success: function(response) {
-                win.actionCallback(response);
-            },
-            failure: function(response) {
-                win.failureCallBack(response);
-            }
-        });
-    },
-
-    /**
-     * Removes (multiple) tags from a list of objects (e.g. Proben, Messungen).
-     * Tags that are not on these objects will silently be ignored
-     */
-    removeZuordnung: function(button) {
-        var win = button.up('settags');
-        var recname = win.recordType === 'messung' ? 'messungId' : 'probeId';
-        var tagIds = win.down('tagwidget').getValue();
-        if (!tagIds.length) {
-            win.failureCallBack({ error: 'noselection'});
-            return;
-        }
-        var payload = { tagId: tagIds };
-        payload[recname] = win.selection;
-        Ext.Ajax.request({
-            url: this.zuordnungUrl + '/delete',
-            method: 'POST',
-            jsonData: JSON.stringify([payload]),
-            success: function(response) {
-                win.actionCallback(response);
-            },
-            failure: function(response) {
-                win.actionCallback(response);
-            }
-        });
     },
 
     /**

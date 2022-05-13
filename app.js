@@ -614,6 +614,7 @@ Ext.application({
         'Lada.controller.Print',
         'Lada.controller.ElanScenario',
         'Lada.controller.grid.Downloads',
+        'Lada.controller.SetTags',
         'Lada.controller.form.Tag'
     ]
 });
