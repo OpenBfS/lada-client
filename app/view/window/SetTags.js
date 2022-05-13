@@ -53,9 +53,14 @@ Ext.define('Lada.view.window.SetTags', {
                     var win = Ext.create('Lada.view.window.TagManagement');
 
                     // When new tag is added, select it
-                    win.down('tagform').store.on('add', function(store, rec) {
-                        me.down('tagwidget').addValue(rec);
-                    });
+                    win.down('tagform').store.on(
+                        'add',
+                        function(store, rec) {
+                            me.down('tagwidget').addValue(rec);
+                        },
+                        me,
+                        {single: true}
+                    );
 
                     // Close window if parent window is closed
                     me.on('close', function() {
