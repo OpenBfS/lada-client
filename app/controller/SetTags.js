@@ -11,7 +11,6 @@
 */
 Ext.define('Lada.controller.SetTags', {
     extend: 'Ext.app.Controller',
-    zuordnungUrl: 'lada-server/rest/tag/zuordnung',
 
     init: function() {
         this.control({
@@ -32,17 +31,7 @@ Ext.define('Lada.controller.SetTags', {
      * Tags already assigned should not result in errors
      */
     addZuordnung: function(button) {
-        Ext.Ajax.request({
-            url: this.zuordnungUrl,
-            method: 'POST',
-            jsonData: this.getPayload(button),
-            success: function(response) {
-                win.actionCallback(response);
-            },
-            failure: function(response) {
-                win.failureCallBack(response);
-            }
-        });
+        this.editZuordnung(button, false);
     },
 
     /**
@@ -50,20 +39,11 @@ Ext.define('Lada.controller.SetTags', {
      * Tags that are not on these objects will silently be ignored
      */
     removeZuordnung: function(button) {
-        Ext.Ajax.request({
-            url: this.zuordnungUrl + '/delete',
-            method: 'POST',
-            jsonData: this.getPayload(button),
-            success: function(response) {
-                win.actionCallback(response);
-            },
-            failure: function(response) {
-                win.actionCallback(response);
-            }
-        });
+        this.editZuordnung(button, true);
     },
 
-    getPayload: function(button) {
+    editZuordnung: function(button, isDelete) {
+        var i18n = Lada.getApplication().bundle;
         var win = button.up('settags');
         var selection = win.selection;
         var taglist = win.down('tagwidget').getValue();
@@ -78,7 +58,46 @@ Ext.define('Lada.controller.SetTags', {
                 }
             });
         });
-        return payload;
+        Ext.Ajax.request({
+            url: 'lada-server/rest/tag/zuordnung' + (isDelete ? '/delete' : ''),
+            method: 'POST',
+            jsonData: payload,
+            success: function(response) {
+                var json = Ext.decode(response.responseText);
+                if (json.success) {
+                    // Reload tagwidget in edit form or parent grid
+                    if (win.parentWindow) {
+                        win.parentWindow.down('tagwidget').reload();
+                    } else {
+                        var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                        if (parentGrid.length === 1) {
+                            parentGrid[0].reload();
+                        }
+                    }
+
+                    // Check for errors per assignment
+                    var msgs = '';
+                    var tagStore = Ext.getStore('tags');
+                    json.data.forEach(function(item) {
+                        if (!item.success) {
+                            msgs += tagStore.getById(item.data.tagId).get('tag')
+                                + ': ' + i18n.getMsg(item.message) + '<br>';
+                        }
+                    });
+                    if (msgs) {
+                        Ext.Msg.alert(
+                            i18n.getMsg('tag.widget.err.genericsave'), msgs);
+                    }
+                } else {
+                    Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                                  i18n.getMsg(json.message));
+                }
+            },
+            failure: function() {
+                Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'),
+                              i18n.getMsg('err.msg.generic.body'));
+            }
+        });
     },
 
     checkCommitEnabled: function(tagfield) {

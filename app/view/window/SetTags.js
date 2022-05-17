@@ -18,10 +18,9 @@ Ext.define('Lada.view.window.SetTags', {
     ],
 
     layout: 'vbox',
+    width: 400,
 
     recordType: null, //probe | messung
-
-    width: 400,
     selection: null, //list of ids according to recordtype
 
     parentWindow: null,
@@ -71,11 +70,6 @@ Ext.define('Lada.view.window.SetTags', {
                 }
             }]
         }, {
-            xtype: 'progressbar',
-            width: '100%',
-            hidden: true,
-            margin: '5 10 10 5'
-        }, {
             xtype: 'container',
             layout: 'hbox',
             name: 'buttoncontainer',
@@ -104,20 +98,5 @@ Ext.define('Lada.view.window.SetTags', {
         this.callParent(arguments);
 
         this.down('tagwidget').setTagged(me.selection, me.recordType);
-
-        this.down('progressbar').updateProgress(0, '');
-    },
-
-    collectCurrentTags: function() {
-        this.down('tagwidget').setTagged(this.selection, this.recordType);
-    },
-
-    actionCallBack: function() {
-        Ext.data.StoreManager.get('tags').reload();
-        this.collectCurrentTags();
-    },
-    failureCallBack: function() {
-        Ext.data.StoreManager.get('tags').reload();
-        this.collectCurrentTags();
     }
 });
