@@ -32,20 +32,10 @@ Ext.define('Lada.controller.SetTags', {
      * Tags already assigned should not result in errors
      */
     addZuordnung: function(button) {
-        var win = button.up('settags');
-        var selection = win.selection;
-        var recname = win.recordType === 'messung' ? 'messungId' : 'probeId';
-        var taglist = win.down('tagwidget').getValue();
-        if (!taglist.length) {
-            win.failureCallBack({ error: 'noselection'});
-            return;
-        }
-        var payload = { tagId: taglist };
-        payload[recname] = selection;
         Ext.Ajax.request({
             url: this.zuordnungUrl,
             method: 'POST',
-            jsonData: JSON.stringify([payload]),
+            jsonData: this.getPayload(button),
             success: function(response) {
                 win.actionCallback(response);
             },
@@ -60,19 +50,10 @@ Ext.define('Lada.controller.SetTags', {
      * Tags that are not on these objects will silently be ignored
      */
     removeZuordnung: function(button) {
-        var win = button.up('settags');
-        var recname = win.recordType === 'messung' ? 'messungId' : 'probeId';
-        var tagIds = win.down('tagwidget').getValue();
-        if (!tagIds.length) {
-            win.failureCallBack({ error: 'noselection'});
-            return;
-        }
-        var payload = { tagId: tagIds };
-        payload[recname] = win.selection;
         Ext.Ajax.request({
             url: this.zuordnungUrl + '/delete',
             method: 'POST',
-            jsonData: JSON.stringify([payload]),
+            jsonData: this.getPayload(button),
             success: function(response) {
                 win.actionCallback(response);
             },
@@ -80,6 +61,24 @@ Ext.define('Lada.controller.SetTags', {
                 win.actionCallback(response);
             }
         });
+    },
+
+    getPayload: function(button) {
+        var win = button.up('settags');
+        var selection = win.selection;
+        var taglist = win.down('tagwidget').getValue();
+
+        var payload = [];
+        selection.forEach(function(selected) {
+            taglist.forEach(function(tag) {
+                if (win.recordType === 'messung') {
+                    payload.push({messungId: selected, tagId: tag});
+                } else {
+                    payload.push({probeId: selected, tagId: tag});
+                }
+            });
+        });
+        return payload;
     },
 
     checkCommitEnabled: function(tagfield) {
