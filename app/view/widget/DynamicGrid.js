@@ -106,7 +106,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
         }
         if (this.rowtarget.dataType === 'ortId') {
-                this.addOrtButtons();
+            this.addOrtButtons();
         }
         this.addExportButton();
         this.addPrintButton();
@@ -1137,16 +1137,43 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      * reloading
      */
     reload: function(callback) {
+        var selection = this.getSelection();
         var store = this.getStore();
         var options = store.lastOptions;
         options.scope = this;
         options.callback = function() {
             this.setStore(store);
+            this.select(selection);
             if (callback) {
                 callback();
             }
         };
         store.load(options);
+    },
+
+    /**
+     * Get array of IDs of selected rows.
+     */
+    getSelection: function() {
+        var selection = [];
+        var me = this;
+        this.getSelectionModel().getSelection().forEach(function(item) {
+            selection.push(item.get(me.rowtarget.dataIndex));
+        });
+        return selection;
+    },
+
+    /**
+     * Select rows by given IDs.
+     */
+    select: function(ids) {
+        var records = [];
+        var me = this;
+        ids.forEach(function(id) {
+            records.push(me.store.findRecord(
+                me.rowtarget.dataIndex, id, false, false, false, true));
+        });
+        this.getSelectionModel().select(records);
     },
 
     addRowExpanderButton: function() {

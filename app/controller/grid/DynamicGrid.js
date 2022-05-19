@@ -421,7 +421,6 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             selection: selection
         });
         win.show();
-
     },
 
     /**
