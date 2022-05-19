@@ -15,6 +15,7 @@ Ext.define('Lada.controller.SetTags', {
     init: function() {
         this.control({
             'settags tagwidget': {
+                change: this.checkEmpty,
                 dirtychange: this.checkCommitEnabled
             },
             'settags button[action=bulkaddzuordnung]': {
@@ -100,10 +101,20 @@ Ext.define('Lada.controller.SetTags', {
         });
     },
 
-    checkCommitEnabled: function(tagfield) {
-        var disable = !tagfield.isDirty();
+    checkEmpty: function(tagfield) {
+        var disable = !tagfield.getValue().length;
         var win = tagfield.up('settags');
         win.down('button[action=bulkaddzuordnung]').setDisabled(disable);
         win.down('button[action=bulkdeletezuordnung]').setDisabled(disable);
+    },
+
+    checkCommitEnabled: function(tagfield) {
+        var win = tagfield.up('settags');
+        win.down('button[action=bulkaddzuordnung]').setDisabled(
+            !tagfield.getValue().length
+            // Keep enabled if working on grid selection because
+            // the latter might change and then posting an unchanged
+            // tag selection can make sense.
+                || (win.parentWindow && !tagfield.isDirty()));
     }
 });

@@ -22,6 +22,7 @@ Ext.define('Lada.view.window.SetTags', {
 
     recordType: null, //probe | messung
 
+    // One and only one of both has to be set:
     parentGrid: null,
     parentWindow: null,
 
@@ -77,13 +78,12 @@ Ext.define('Lada.view.window.SetTags', {
                 xtype: 'button',
                 action: 'bulkaddzuordnung',
                 margin: '5 5 5 5',
-                disabled: true,
+                disabled: true, // Initially disabled because nothing changed
                 text: i18n.getMsg('tag.assignwindow.assignbutton.text')
             }, {
                 xtype: 'button',
                 action: 'bulkdeletezuordnung',
                 margin: '5 5 5 5',
-                disabled: true,
                 text: i18n.getMsg('tag.assignwindow.unassignbutton.text')
             }, {
                 xtype: 'button',
@@ -98,6 +98,10 @@ Ext.define('Lada.view.window.SetTags', {
         this.callParent(arguments);
 
         this.down('tagwidget').setTagged(me.getSelection(), me.recordType);
+
+        // Initially enabled to delete existing, but disable if no tags selected
+        this.down('button[action=bulkdeletezuordnung]').setDisabled(
+            !this.down('tagwidget').getValue().length);
     },
 
     getSelection: function() {
