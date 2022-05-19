@@ -159,8 +159,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                             title: i18n.getMsg(
                                 'tag.assignwindow.title.probe', 1),
                             parentWindow: me,
-                            recordType: 'probe',
-                            selection: [me.record.get('id')]
+                            recordType: 'probe'
                         });
                         //Close window if parent window is closed
                         me.on('close', function() {

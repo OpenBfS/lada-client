@@ -165,8 +165,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                             title: i18n.getMsg(
                                 'tag.assignwindow.title.messung', 1),
                             parentWindow: me,
-                            recordType: 'messung',
-                            selection: [me.record.get('id')]
+                            recordType: 'messung'
                         });
                         //Close window if parent window is closed
                         me.on('close', function() {

@@ -418,7 +418,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         var win = Ext.create('Lada.view.window.SetTags', {
             title: i18n.getMsg('tag.assignwindow.title.' + recordType, count),
             recordType: recordType,
-            selection: selection
+            parentGrid: grid
         });
         win.show();
     },

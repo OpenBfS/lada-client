@@ -21,8 +21,8 @@ Ext.define('Lada.view.window.SetTags', {
     width: 400,
 
     recordType: null, //probe | messung
-    selection: null, //list of ids according to recordtype
 
+    parentGrid: null,
     parentWindow: null,
 
     /**
@@ -97,6 +97,12 @@ Ext.define('Lada.view.window.SetTags', {
         }];
         this.callParent(arguments);
 
-        this.down('tagwidget').setTagged(me.selection, me.recordType);
+        this.down('tagwidget').setTagged(me.getSelection(), me.recordType);
+    },
+
+    getSelection: function() {
+        return this.parentWindow
+            ? [this.parentWindow.record.get('id')]
+            : this.parentGrid.getSelection();
     }
 });

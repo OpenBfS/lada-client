@@ -45,7 +45,7 @@ Ext.define('Lada.controller.SetTags', {
     editZuordnung: function(button, isDelete) {
         var i18n = Lada.getApplication().bundle;
         var win = button.up('settags');
-        var selection = win.selection;
+        var selection = win.getSelection();
         var taglist = win.down('tagwidget').getValue();
 
         var payload = [];
