@@ -31,7 +31,7 @@ Ext.define('Lada.store.TagTyp', {
     }, {
         value: 'netzbetreiber',
         label: 'Netzbetreiber',
-        canSelect: () => Ext.Array.contains(Lada.funktionen, 4)
+        canSelect: () => true
     }, {
         value: 'global',
         label: 'Global',
