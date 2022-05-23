@@ -972,6 +972,13 @@ Ext.define('Lada.controller.Query', {
                             options);
                         negateCheckbox = false;
                         break;
+                    case 'tagTyp':
+                        options.multiSelect = true;
+                        options.value = recs[i].get('filterValue');
+                        field = Ext.create('Lada.view.widget.TagTyp',
+                            options);
+                        negateCheckbox = true;
+                        break;
                     default:
                         options.value = recs[i].get('filterValue');
                         field = Ext.create('Lada.view.widget.base.TextField',

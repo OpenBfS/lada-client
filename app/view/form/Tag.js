@@ -84,9 +84,10 @@ Ext.define('Lada.view.form.Tag', {
                 filteredStore: true
             }, {
                 name: 'typId',
+                xtype: 'tagtyp',
                 fieldLabel: i18n.getMsg('tagtyp'),
                 allowBlank: false,
-                xtype: 'tagtyp'
+                filteredStore: true
             }, {
                 name: 'gueltigBis',
                 xtype: 'datefield',

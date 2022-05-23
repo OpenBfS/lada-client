@@ -23,26 +23,22 @@ Ext.define('Lada.view.widget.TagTyp', {
     typeAhead: false,
     forceSelection: true,
     minChars: 0,
+    filteredStore: false,
     listConfig: {minWidth: 110},
 
     initComponent: function() {
         this.store = Ext.create('Lada.store.TagTyp');
         this.callParent(arguments);
+        var me = this;
         this.down('combobox').on({
             focus: function(combo) {
                 var store = combo.getStore();
                 store.clearFilter();
-                var tagform = combo.up('tagform');
-                var typId = null;
-                if (tagform) {
-                    typId = tagform.getForm().getRecord().get('typId');
+                if (me.filteredStore) {
+                    store.filterBy(function(record) {
+                        return record.get('canSelect')();
+                    });
                 }
-                store.filterBy(function(record) {
-                    return (
-                        record.get('canSelect')() ||
-                        record.get('value') === typId
-                        );
-                });
             }
         });
     }
