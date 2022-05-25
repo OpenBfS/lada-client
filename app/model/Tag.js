@@ -30,6 +30,9 @@ Ext.define('Lada.model.Tag', {
         name: 'typId',
         type: 'string'
     }, {
+        name: 'generated',
+        type: 'boolean'
+    }, {
         name: 'gueltigBis',
         type: 'date',
         dateFormat: 'time',

@@ -52,12 +52,12 @@ Ext.define('Lada.view.widget.Tag', {
     tpl: Ext.create('Ext.XTemplate',
         '<ul class="x-list-plain"><tpl for=".">',
         '<li role="option" class="x-boundlist-item">',
-        '<tpl if="typId === `global`">',
+        '<tpl if="generated">',
+        '<div class="italic-text"> {tag}*</div>',
+        '<tpl elseif="typId === `global`">',
         '<div class="italic-text bold-text"> {tag}</div>',
         '<tpl elseif="typId === `netzbetreiber`">',
         '<div class="bold-text"> {tag}</div>',
-        '<tpl elseif="typId === `auto`">',
-        '<div class="italic-text"> {tag}*</div>',
         '<tpl else>',
         '<div> {tag}</div>',
         '</tpl>',
@@ -66,13 +66,7 @@ Ext.define('Lada.view.widget.Tag', {
 
     ),
     //Tagfield
-    labelTpl: Ext.create('Ext.XTemplate',
-        '<tpl if="typId === `global`"class="italic-text bold-text"> {tag}',
-        '<tpl elseif="typId === `netzbetreiber`" class="bold-text"> {tag}',
-        '<tpl elseif="typId === `auto`" class="italic-text"> {tag}*',
-        '<tpl else>{tag}',
-        '</tpl>'
-    ),
+    labelTpl: Ext.create('Ext.XTemplate', '{tag}<tpl if="generated">*</tpl>'),
 
     /**
      * Get the component to render the loading/reloading mask to.
@@ -135,7 +129,6 @@ Ext.define('Lada.view.widget.Tag', {
             ' role="presentation" class="x-tagfield-item">',
             '<div role="presentation" class="{[this.getItemCls(values.data)]}">',
             '{[this.getItemLabel(values.data)]}',
-            '{[this.getAutoStar(values.data)]}',
             '</div>',
             '<tpl if ="!this.isReadOnly()">',
             '<div role="presentation" class="x-tagfield-item-close"></div>',
@@ -151,19 +144,17 @@ Ext.define('Lada.view.widget.Tag', {
                 },
                 getItemCls: function(value) {
                     var result = 'x-tagfield-item-text';
+                    if (value.generated) {
+                        return result + ' italic-text';
+                    }
                     switch (value.typId) {
                         case 'global':
                             return result + ' bold-text italic-text';
                         case 'netzbetreiber':
                             return result + ' bold-text';
-                        case 'auto':
-                            return result + ' italic-text';
                         default:
                             return result;
                     }
-                },
-                getAutoStar: function(value) {
-                    return value.typId === 'auto' ? '*' : '';
                 },
                 strict: true
             }

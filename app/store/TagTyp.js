@@ -21,10 +21,6 @@ Ext.define('Lada.store.TagTyp', {
     }),
 
     data: [{
-        value: 'auto',
-        label: 'Auto',
-        canSelect: () => false
-    }, {
         value: 'mst',
         label: 'Messstelle',
         canSelect: () => true
