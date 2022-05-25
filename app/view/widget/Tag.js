@@ -169,6 +169,28 @@ Ext.define('Lada.view.widget.Tag', {
             }
         );
 
+        // Filter selectable tags in dropdown
+        this.on({
+            focus: function(tagwidget) {
+                var tagStore = tagwidget.getStore();
+                tagStore.clearFilter();
+                tagStore.filterBy(function(record) {
+                    return record.get('typId') === 'global'
+                        || record.get('typId') === 'netzbetreiber'
+                        && Ext.Array.contains(
+                            Lada.netzbetreiber,
+                            record.get('netzbetreiberId'))
+                        || record.get('typId') === 'mst'
+                        && Ext.Array.contains(
+                            Lada.mst,
+                            record.get('mstId'));
+                });
+            },
+            focusleave: function(tagwidget) {
+                tagwidget.getStore().clearFilter();
+            }
+        });
+
         this.callParent(arguments);
     },
 
@@ -219,6 +241,10 @@ Ext.define('Lada.view.widget.Tag', {
 
             //Set tags, received from the server
             if (records) {
+                // Add assigned tags to global store so they appear in widget
+                // if their ID is used in setValue().
+                this.store.add(records);
+
                 for (var j = 0; j < records.length; j++) {
                     ids.push(records[j].id);
                 }
