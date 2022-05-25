@@ -22,14 +22,18 @@ Ext.define('Lada.model.Tag', {
         name: 'netzbetreiberId',
         type: 'string'
     }, {
-        name: 'generatedAt'
-        // timestamp
+        name: 'generatedAt',
+        type: 'date',
+        dateFormat: 'time',
+        convert: Lada.util.Date.convertTimeFn
     }, {
         name: 'typId',
         type: 'string'
     }, {
-        name: 'gueltigBis'
-        // timestamp
+        name: 'gueltigBis',
+        type: 'date',
+        dateFormat: 'time',
+        convert: Lada.util.Date.convertTimeFn
     }, {
         name: 'readonly',
         type: 'boolean'
