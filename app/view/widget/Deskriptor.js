@@ -67,16 +67,13 @@ Ext.define('Lada.view.widget.Deskriptor', {
     getParents: function(field) {
         var set = field.up('fieldset');
         var allS = set.items.items;
-        var p = '';
+        var p = [];
         for (var i = 0; i < field.up('deskriptor').layer; i++) {
             if (allS[i].getValue() > 0) {
-                p += allS[i].getValue();
-                if (i < field.up('deskriptor').layer - 1) {
-                    p += ', ';
-                }
+                p.push(allS[i].getValue());
             }
         }
-        return p;
+        return p.join(', ');
     },
 
     focusfn: function(field) {

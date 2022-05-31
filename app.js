@@ -81,7 +81,6 @@ Ext.application({
         'Lada.view.window.ElanScenarioWindow',
         'Lada.view.window.TrackedWindow',
         'Lada.util.Date',
-        'Lada.util.FunctionScheduler',
         'Lada.util.WindowTracker',
         'Lada.util.LocalStorage',
         'Lada.util.WindowTracker',

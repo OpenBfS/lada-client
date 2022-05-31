@@ -13,6 +13,7 @@ Ext.define('Lada.view.form.Probe', {
     extend: 'Ext.form.Panel',
     alias: 'widget.probeform',
     requires: [
+        'Lada.view.form.mixins.DeskriptorFieldset',
         'Lada.view.widget.Datenbasis',
         'Lada.view.widget.DatensatzErzeuger',
         'Lada.view.widget.Probenehmer',
@@ -49,6 +50,8 @@ Ext.define('Lada.view.form.Probe', {
     statics: {
         mediaSnScheduler: null
     },
+
+    mixins: ['Lada.view.form.mixins.DeskriptorFieldset'],
 
     initComponent: function() {
         if (Lada.view.form.Probe.mediaSnScheduler === null) {
@@ -329,7 +332,8 @@ Ext.define('Lada.view.form.Probe', {
                                                         property: 'mstId',
                                                         value: dId,
                                                         exactMatch: true
-                                                }]);
+                                                    }
+                                                ]);
                                             }
                                         }
                                     }
@@ -612,74 +616,10 @@ Ext.define('Lada.view.form.Probe', {
     },
 
     setMediaDesk: function(record) {
-        var media = record.get('mediaDesk');
-        if (media) {
-            var mediaParts = media.split(' ');
-            Lada.view.form.Probe.mediaSnScheduler.enqueue(
-                this.setMediaSN, [0, mediaParts], this);
-        } else {
-            Lada.view.form.Probe.mediaSnScheduler.enqueue(
-                this.setMediaSN, [0, '0'], this);
-        }
-        Lada.view.form.Probe.mediaSnScheduler.next();
-    },
-
-    setMediaSN: function(ndx, media, beschreibung) {
-        var mediabeschreibung = this.getForm().findField('media');
-        if (ndx >= 12) {
-            Lada.view.form.Probe.mediaSnScheduler.finished();
-            mediabeschreibung.setValue(beschreibung);
-            return;
-        }
-        var me = this;
-        var current = this.down('deskriptor[layer=' + ndx + ']');
-        var cbox = current.down('combobox');
-        cbox.store.proxy.extraParams = {
-            'layer': ndx
-        };
-        if (ndx >= 1) {
-            var parents = current.getParents(cbox);
-            if (parents.length === 0) {
-                Lada.view.form.Probe.mediaSnScheduler.finished();
-                return;
-            }
-            cbox.store.proxy.extraParams.parents = parents;
-        }
-        cbox.store.load(function(records, op, success) {
-            if (!success) {
-                Lada.view.form.Probe.mediaSnScheduler.finished();
-                return;
-            }
-            try {
-                cbox.select(cbox.store.findRecord(
-                    'sn', parseInt(media[ndx + 1], 10), 0, false, false, true));
-            } catch (e) {
-                Ext.log({msg: 'Selecting media failed: ' + e, level: 'warn'});
-                Lada.view.form.Probe.mediaSnScheduler.finished();
-                return;
-            }
-            var mediatext = cbox.store.findRecord(
-                'sn', parseInt(media[ndx + 1], 10), 0, false, false, true);
-            if (mediatext !== null) {
-                if (
-                    (ndx <= 3) &&
-                    (media[1] === '01') &&
-                    (mediatext.data.beschreibung !== 'leer')
-                ) {
-                    beschreibung = mediatext.data.beschreibung;
-                } else if (
-                    (media[1] !== '01') &&
-                    (mediatext.data.beschreibung !== 'leer') &&
-                    (ndx <= 1)
-                ) {
-                    beschreibung = mediatext.data.beschreibung;
-                }
-            }
-            var nextNdx = ++ndx;
-            Lada.view.form.Probe.mediaSnScheduler.enqueue(
-                me.setMediaSN, [nextNdx, media, beschreibung], me);
-            Lada.view.form.Probe.mediaSnScheduler.finished();
-        });
+        this.setMediaDeskImpl(
+            Lada.view.form.Probe.mediaSnScheduler,
+            record
+        );
     },
 
     setMessages: function(errors, warnings, notifications) {
@@ -794,21 +734,5 @@ Ext.define('Lada.view.form.Probe', {
         for (var i = 0; i < 12; i++) {
             this.down('deskriptor[layer='+i+']').setReadOnly(value);
         }
-    },
-
-    buildDescriptors: function() {
-        var fields = [];
-        for (var i = 0; i < 12; i++) {
-            fields[i] = {
-                xtype: 'deskriptor',
-                fieldLabel: 'S' + i,
-                name: 's' + i,
-                labelWidth: 25,
-                width: 190,
-                layer: i,
-                margin: '0, 10, 5, 0'
-            };
-        }
-        return fields;
     }
 });
