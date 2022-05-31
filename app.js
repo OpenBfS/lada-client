@@ -454,10 +454,13 @@ Ext.application({
             storeId: 'messstellenkombi',
             autoLoad: true,
             listeners: {
-                beforeload: function(store, operation) {
-                    operation.setParams(Ext.apply(operation.getParams()||{}, {
-                        netzbetreiberId: Lada.netzbetreiber.toString()
-                    }));
+                beforeload: function(store) {
+                    var proxy = store.getProxy();
+                    var url = proxy.url;
+                    Lada.netzbetreiber.forEach(function(id) {
+                        url = Ext.String.urlAppend(url, 'netzbetreiberId=' + id);
+                    });
+                    proxy.setUrl(url);
                 },
                 load: {
                     fn: function(store) {
