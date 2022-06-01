@@ -44,7 +44,6 @@ Ext.define('Lada.store.Tag', {
      * will show the tags shared by all ids
      * @param recordType 'probe' or 'messung'
      */
-    // TODO further tests
     setTagged: function(ids, recordType) {
         if (!this.assignedTagsStore) {
             this.assignedTagsStore = Ext.create('Lada.store.Tag', {
@@ -58,14 +57,16 @@ Ext.define('Lada.store.Tag', {
             case 'messung':
                 this.pId = null;
                 this.mId = ids;
-                this.assignedTagsStore.proxy.url =
-                    'lada-server/rest/tag?' + 'mid=' + this.mId.join('&mid=');
+                this.assignedTagsStore.proxy.extraParams = {
+                    mid: ids
+                };
                 break;
             case 'probe':
                 this.pId = ids;
                 this.mId = null;
-                this.assignedTagsStore.proxy.url =
-                    'lada-server/rest/tag?' + 'pid=' + this.pId.join('&pid=');
+                this.assignedTagsStore.proxy.extraParams = {
+                    pid: ids
+                };
                 break;
             default:
                 Ext.raise('Unkown record type: ' + recordType);
