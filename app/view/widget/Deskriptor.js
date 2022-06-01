@@ -69,8 +69,9 @@ Ext.define('Lada.view.widget.Deskriptor', {
         var allS = set.items.items;
         var p = [];
         for (var i = 0; i < field.up('deskriptor').layer; i++) {
-            if (allS[i].getValue() > 0) {
-                p.push(allS[i].getValue());
+            var v = allS[i].getValue();
+            if (v > 0) {
+                p.push(v);
             }
         }
         return p.join(', ');
