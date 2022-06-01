@@ -38,9 +38,12 @@ Ext.define('Lada.view.widget.Deskriptor', {
         this.store = Ext.create('Lada.store.Deskriptoren');
         var me = this;
         this.store.on('load', function() {
+            // Entry to be selected by clear handler
             this.insert(0, {sn: 0, beschreibung: 'leer'});
-            if (this.proxy.extraParams.layer > 0 &&
-                !this.proxy.extraParams.parents) {
+            var params = this.proxy.getExtraParams();
+            if (params.layer > 0
+                && (!params.parents || !params.parents.length)
+            ) {
                 this.removeAll();
             }
             me.down('combobox').setStore(this);
@@ -68,7 +71,7 @@ Ext.define('Lada.view.widget.Deskriptor', {
                 p.push(v);
             }
         }
-        return p.join(', ');
+        return p;
     },
 
     focusfn: function(field) {
@@ -76,19 +79,11 @@ Ext.define('Lada.view.widget.Deskriptor', {
         if (deskriptor.layer === 0) {
             deskriptor.store.proxy.extraParams = {'layer': deskriptor.layer};
         } else {
-            var parents = deskriptor.getParents(field);
-            if (parents !== '' || parents !== undefined) {
-                deskriptor.store.proxy.extraParams = {
-                    'layer': deskriptor.layer,
-                    'parents': parents
-                };
-                deskriptor.store.load();
-            } else {
-                deskriptor.store.proxy.extraParams = {
-                    'layer': deskriptor.layer
-                };
-                deskriptor.store.load();
-            }
+            deskriptor.store.proxy.extraParams = {
+                layer: deskriptor.layer,
+                parents: deskriptor.getParents(field)
+            };
+            deskriptor.store.load();
         }
     }
 });
