@@ -1170,8 +1170,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         var records = [];
         var me = this;
         ids.forEach(function(id) {
-            records.push(me.store.findRecord(
-                me.rowtarget.dataIndex, id, false, false, false, true));
+            var rec = me.store.findRecord(
+                me.rowtarget.dataIndex, id, false, false, false, true);
+            if (rec) {
+                records.push(rec);
+            }
         });
         this.getSelectionModel().select(records);
     },
