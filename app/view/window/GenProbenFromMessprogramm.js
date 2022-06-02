@@ -595,7 +595,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 + '<br>';
             win.down('tbtext').setText(i18n.getMsg(
                 'gpfm.generated.tag', genTagName));
-            btn = win.down('button[name=tagclipboard]').getEl().dom;
+            var btn = win.down('button[name=tagclipboard]').getEl().dom;
             btn.setAttribute('data-clipboard-text', genTagName);
             new ClipboardJS(btn);
         } else {
