@@ -32,8 +32,8 @@ Ext.define('Lada.view.widget.Regierungsbezirk', {
     forceSelection: this.forceSelection || false,
 
     initComponent: function() {
-        var i18n= Lada.getApplication().bundle;
-        this.emptyText= i18n.getMsg('emptytext.regierungsbezirk');
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.regierungsbezirk');
         this.store = Ext.data.StoreManager.get('regierungsbezirkwidget');
         this.callParent(arguments);
     }

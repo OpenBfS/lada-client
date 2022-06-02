@@ -94,7 +94,7 @@ Ext.define('Lada.view.panel.Map', {
         var zoomFeats = this.selectedFeatureLayer.getSource().getFeatures();
         if (zoomFeats.length > 1) {
             var zf_geoms = [];
-            for (var i=0; i < zoomFeats.length;i++) {
+            for (var i = 0; i < zoomFeats.length;i++) {
                 zf_geoms.push(zoomFeats[i].getGeometry().getCoordinates());
             }
             var ext = ol.extent.boundingExtent(zf_geoms);
@@ -171,10 +171,10 @@ Ext.define('Lada.view.panel.Map', {
             var nId = mst.getAt(ndx).get('netzbetreiberId');
             var koord_x = Math.round(
                 clone.getGeometry().getCoordinates()[0] * 100000)
-                /100000;
+                / 100000;
             var koord_y = Math.round(
                 clone.getGeometry().getCoordinates()[1] * 100000)
-                /100000;
+                / 100000;
             var ortWin = Ext.create('Lada.view.window.Ort', {
                 record: Ext.create('Lada.model.Ort', {
                     netzbetreiberId: nId,
@@ -268,7 +268,7 @@ Ext.define('Lada.view.panel.Map', {
         var target = null;
         var parent = this.up('ortszuordnungwindow');
         if (parent) {
-            target = this.getTargetEl()? this.getTargetEl() : this.element;
+            target = this.getTargetEl() ? this.getTargetEl() : this.element;
         } else {
             target = this.getTargetEl();
         }
@@ -329,7 +329,7 @@ Ext.define('Lada.view.panel.Map', {
                 })
             });
         };
-        this.newFeatureStyle= function() {
+        this.newFeatureStyle = function() {
             return new ol.style.Style({
                 image: new ol.style.Icon({
                     src: 'resources/img/marker-blue.png',
@@ -433,7 +433,7 @@ Ext.define('Lada.view.panel.Map', {
         this.selectControl.on('select', me.selectedFeature);
         this.map.addInteraction(this.selectControl);
 
-        this.selectedFeatureLayer= new ol.layer.Vector({
+        this.selectedFeatureLayer = new ol.layer.Vector({
             title: 'gewählter Ort',
             source: new ol.source.Vector({
                 features: []

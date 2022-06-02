@@ -35,8 +35,8 @@ Ext.define('Lada.view.widget.SollIstUmwGruppe', {
     allowBlank: true,
 
     initComponent: function() {
-        var i18n= Lada.getApplication().bundle;
-        this.emptyText= i18n.getMsg('emptytext.sollistumwgrp');
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.sollistumwgrp');
         this.store = Ext.create('Lada.store.SollIstUmwGruppe');
         this.callParent(arguments);
     }

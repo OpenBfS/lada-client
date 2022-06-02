@@ -78,7 +78,7 @@ Ext.define('Lada.view.form.OrtInfoRow', {
     initComponent: function() {
         this.items = [{
             xtype: 'label',
-            html: this.label+':',
+            html: this.label + ':',
             width: 125,
             padding: '2, 0, 2, 0'
         }, {

@@ -37,7 +37,7 @@ Ext.define('Lada.view.widget.Kta', {
 
         var store = Ext.data.StoreManager.get('ktas');
         if (!store) {
-            Ext.create('Lada.store.Ktas',{
+            Ext.create('Lada.store.Ktas', {
                 storeId: 'ktas'
             });
         }

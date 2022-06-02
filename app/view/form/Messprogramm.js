@@ -594,7 +594,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                 i.setMaxValue(27);
                 break;
             default:
-                return i.setMaxValue(max-1);
+                return i.setMaxValue(max - 1);
         }
     },
 
@@ -768,7 +768,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('cbox[name=probeNehmerId]').setReadOnly(value);
         this.down('messprogrammland[name=mplId]').setReadOnly(value);
         for (var i = 0; i < 12; i++) {
-            this.down('deskriptor[layer='+i+']').setReadOnly(value);
+            this.down('deskriptor[layer=' + i + ']').setReadOnly(value);
         }
     }
 });

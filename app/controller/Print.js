@@ -188,7 +188,7 @@ Ext.define('Lada.controller.Print', {
                                 listOfItems.push({
                                     xtype: 'textarea',
                                     fieldLabel: i18n.getMsg(attributes[i].name),
-                                    emptyText: i18n.getMsg('emptyText.'+
+                                    emptyText: i18n.getMsg('emptyText.' +
                                         attributes[i].name),
                                     name: attributes[i].name,
                                     labelWidth: 105,
@@ -251,13 +251,13 @@ Ext.define('Lada.controller.Print', {
                 win.setDisabled(true);
                 return;
             }
-            for (var i=0; i < capabilities.layouts.length; i++) {
+            for (var i = 0; i < capabilities.layouts.length; i++) {
                 layoutData.push({
                     id: i,
                     name: capabilities.layouts[i].name
                 });
             }
-            for (var f=0; f < capabilities.formats.length; f++ ) {
+            for (var f = 0; f < capabilities.formats.length; f++ ) {
                 formatData.push({name: capabilities.formats[f]});
             }
             win.formatStore.removeAll();
@@ -290,7 +290,7 @@ Ext.define('Lada.controller.Print', {
         var resultData = {};
         var fieldselector = '';
         var field = '';
-        for (var i=0; i < attributes.length; i++) {
+        for (var i = 0; i < attributes.length; i++) {
             switch (attributes[i].type) {
                 case 'String':
                     fieldselector = 'textfield[name='
@@ -372,7 +372,7 @@ Ext.define('Lada.controller.Print', {
 
     fillTemplateItem: function( attributes, modelEntry, window) {
         var resultData = {};
-        for (var i=0; i < attributes.length; i ++) {
+        for (var i = 0; i < attributes.length; i ++) {
             switch (attributes[i].type) {
                 case 'String':
                     if (modelEntry.get(attributes[i].name)) {
@@ -399,7 +399,7 @@ Ext.define('Lada.controller.Print', {
                     // considering the items of the model to be one or more
                     // models. currently, there is no known case for it
                     if (subitems && subitems.length) {
-                        for (var j=0;j< subitems.length; j++) {
+                        for (var j = 0;j < subitems.length; j++) {
                             resultData[attributes[i].name].push(
                                 this.fillTemplate(
                                     attributes[i].clientParams,
@@ -434,9 +434,9 @@ Ext.define('Lada.controller.Print', {
         // create array of column definitions from visible columns
         // columns in the array 'ignored' will not be printed
         var ignored = ['owner', 'readonly', 'id', 'probeId'];
-        var visibleColumns =[];
+        var visibleColumns = [];
         var cols = grid.getVisibleColumns();
-        for (var i=0; i <cols.length; i++) {
+        for (var i = 0; i < cols.length; i++) {
             if (
                 cols[i].dataIndex &&
                 cols[i].text &&
@@ -445,7 +445,7 @@ Ext.define('Lada.controller.Print', {
                 visibleColumns.push({
                     dataIndex: cols[i].dataIndex,
                     renderer: (cols[i].renderer.$name === 'defaultRenderer') ?
-                        null:
+                        null :
                         cols[i].renderer
                 });
                 columnNames.push(cols[i].text);
@@ -759,8 +759,8 @@ Ext.define('Lada.controller.Print', {
             for (var o in ortszuordnung) {
                 var oz = ortszuordnung[o];
                 for (var e in oz.ort) {
-                    prep[i].ortszuordnung[o]['ort']=null;
-                    prep[i].ortszuordnung[o]['ort.'+e]=oz.ort[e];
+                    prep[i].ortszuordnung[o]['ort'] = null;
+                    prep[i].ortszuordnung[o]['ort.' + e] = oz.ort[e];
                 }
             }
         }
@@ -788,7 +788,7 @@ Ext.define('Lada.controller.Print', {
         }
         //basically, thats the same as the downloadFile
         // code does.
-        var data = '{ "proben": ['+ids.toString()+'] }';
+        var data = '{ "proben": [' + ids.toString() + '] }';
         var me = this;
         Ext.Ajax.request({
             url: 'lada-server/data/export/json',
@@ -821,7 +821,7 @@ Ext.define('Lada.controller.Print', {
                     // TODO filter by availableTemplates for this query
                     var grid = window.parentGrid;
                     if (Array.isArray(json)) {
-                        for (var i=0; i < json.length; i++) {
+                        for (var i = 0; i < json.length; i++) {
                             if (json[i] !== 'lada_erfassungsbogen') {
                                 data.push({name: json[i]});
                             } else if (grid.rowtarget.probeIdentifier) {

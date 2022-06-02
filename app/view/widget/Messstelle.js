@@ -42,7 +42,7 @@ Ext.define('Lada.view.widget.Messstelle', {
         this.store.clearFilter(true);
         this.callParent(arguments);
         var child =
-            this.multiSelect? this.down('tagfield'): this.down('combobox');
+            this.multiSelect ? this.down('tagfield') : this.down('combobox');
         if (this.value && child) {
             child.setValue(this.value);
         }

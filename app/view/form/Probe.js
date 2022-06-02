@@ -707,7 +707,7 @@ Ext.define('Lada.view.form.Probe', {
         this.down('fset[name=ursprung]').clearMessages();
         //Deskriptoren
         for (var i = 0; i < 12; i++) {
-            this.down('deskriptor[layer='+i+']').clearWarningOrError();
+            this.down('deskriptor[layer=' + i + ']').clearWarningOrError();
         }
     },
 
@@ -732,7 +732,7 @@ Ext.define('Lada.view.form.Probe', {
 
         //Deskriptoren
         for (var i = 0; i < 12; i++) {
-            this.down('deskriptor[layer='+i+']').setReadOnly(value);
+            this.down('deskriptor[layer=' + i + ']').setReadOnly(value);
         }
     }
 });

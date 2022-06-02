@@ -60,7 +60,7 @@ Ext.define('Lada.view.panel.FileUpload', {
                             return;
                         }
                         var node = Ext.DomQuery.selectNode(
-                            'input[id='+ field.getInputId() + ']');
+                            'input[id=' + field.getInputId() + ']');
                         var files = field.fileInputEl.dom.files;
                         var fileNames = '';
                         var fset = field.up('panel').down('fieldset');

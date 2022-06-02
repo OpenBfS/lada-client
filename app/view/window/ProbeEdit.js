@@ -265,7 +265,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             title += record.get('externeProbeId');
             if (record.get('hauptprobenNr')) {
                 //title += ' - extPID/Hauptprobennr.: ';
-                title += ' / '+ record.get('hauptprobenNr');
+                title += ' / ' + record.get('hauptprobenNr');
             }
             if (messstelle) {
                 title += '    -    Mst: ';

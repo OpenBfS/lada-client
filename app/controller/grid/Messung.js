@@ -57,7 +57,7 @@ Ext.define('Lada.controller.grid.Messung', {
             win.show();
             probeWindow.addChild(win);
             if (win.isVisible()) {
-                win.setPosition(window.innerWidth - 30 -win.width);
+                win.setPosition(window.innerWidth - 30 - win.width);
             }
 
             return;
@@ -95,7 +95,7 @@ Ext.define('Lada.controller.grid.Messung', {
         });
         win.initData();
         win.show();
-        win.setPosition(window.innerWidth - 30 -win.width);
+        win.setPosition(window.innerWidth - 30 - win.width);
     },
 
     /**
@@ -135,7 +135,7 @@ Ext.define('Lada.controller.grid.Messung', {
                                     if (json.message) {
                                         Ext.Msg.alert(i18n.getMsg(
                                             'err.msg.delete.title')
-                                        +' #' + json.message,
+                                        + ' #' + json.message,
                                         i18n.getMsg(json.message));
                                     } else {
                                         Ext.Msg.alert(i18n.getMsg(

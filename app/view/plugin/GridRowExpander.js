@@ -78,7 +78,7 @@ Ext.define('Lada.view.plugin.GridRowExpander', {
     toggleAllRows: function() {
         var me = this;
         var nodes = this.view.getNodes();
-        for (var i=0; i < nodes.length; i++) {
+        for (var i = 0; i < nodes.length; i++) {
             var node = Ext.fly(nodes[i]);
             if (node.hasCls(me.rowCollapsedCls) === true && !this.expandedAll) {
                 me.toggleRow(i);

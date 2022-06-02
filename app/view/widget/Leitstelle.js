@@ -32,9 +32,9 @@ Ext.define('Lada.view.widget.Leitstelle', {
         '<tpl for=".">{id} - {messStelle}</tpl>'),
 
     initComponent: function() {
-         var i18n= Lada.getApplication().bundle;
-         this.emptyText= i18n.getMsg('emptytext.leitstelle');
-         this.store = Ext.data.StoreManager.get('leitstellenwidget');
-         this.callParent(arguments);
-     }
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.leitstelle');
+        this.store = Ext.data.StoreManager.get('leitstellenwidget');
+        this.callParent(arguments);
+    }
 });

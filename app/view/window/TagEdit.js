@@ -171,7 +171,7 @@ Ext.define('Lada.view.window.TagEdit', {
                         }
                     }
                     tagsSet++;
-                    var ratio = tagsSet/tagCount;
+                    var ratio = tagsSet / tagCount;
                     me.down('progressbar').updateProgress(
                         ratio,
                         i18n.getMsg(

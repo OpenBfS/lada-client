@@ -191,7 +191,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             }, {
                 xtype: 'ortszuordnungform',
                 region: 'east',
-                type: this.probe? 'probe': 'mpr',
+                type: this.probe ? 'probe' : 'mpr',
                 datenbasis: this.datenbasis
             }, {
                 xtype: 'tabpanel',
@@ -203,7 +203,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 items: [{
                     xtype: 'ortstammdatengrid',
                     title: i18n.getMsg('title.orte'),
-                    isMessprogramm: this.messprogramm? true: false
+                    isMessprogramm: this.messprogramm ? true : false
                 }, {
                     xtype: 'verwaltungseinheitengrid',
                     title: i18n.getMsg('title.verwaltungseinheiten')
@@ -258,7 +258,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 this.record.set('messprogrammId', this.messprogramm.get('id'));
             }
         }
-        var mstId = this.probe?
+        var mstId = this.probe ?
             this.probe.get('mstId') :
             this.messprogramm.get('mstId');
         var mst = Ext.data.StoreManager.get('messstellen');

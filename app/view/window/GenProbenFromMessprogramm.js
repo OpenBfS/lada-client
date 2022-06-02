@@ -160,7 +160,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         me.down('toolbar').down('button').setDisabled(false);
                         me.processResults(
                             results,
-                            json.data.tag? json.data.tag: '',
+                            json.data.tag ? json.data.tag : '',
                             reqJsondata);
                     },
                     failure: function(response) {
@@ -534,7 +534,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     header: i18n.getMsg('probenehmer'),
                     dataIndex: 'probeNehmerId'
                 }],
-                plugins: request.dryrun? false : Ext.create(
+                plugins: request.dryrun ? false : Ext.create(
                     'Lada.view.plugin.GridRowExpander', {
                         gridType: 'Lada.view.grid.Messung',
                         idRow: 'id',
@@ -556,11 +556,11 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         button.up('window').close();
                     }
                 },
-                {
-                    xtype: 'button',
-                    text: i18n.getMsg('button.tagToClipboard'),
-                    name: 'tagclipboard'
-                }]
+                    {
+                        xtype: 'button',
+                        text: i18n.getMsg('button.tagToClipboard'),
+                        name: 'tagclipboard'
+                    }]
             }],
             onFocusEnter: function(event) {
                 var resultWin = event.toComponent.up('window') ||
@@ -590,7 +590,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             Lada.util.Date.formatTimestamp(request.end, 'd.m.Y H:i', true)
         );
         resultHtml += '<br>';
-        if (genTagName.length !== 0)  {
+        if (genTagName.length !== 0) {
             resultHtml += i18n.getMsg('gpfm.generated.tag', genTagName)
                 + '<br>';
             win.down('tbtext').setText(i18n.getMsg(

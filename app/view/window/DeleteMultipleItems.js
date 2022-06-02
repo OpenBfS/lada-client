@@ -213,7 +213,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 datatype = 'Ort';
                 break;
         }
-        for (var i = 0; i< me.selection.length; i++) {
+        for (var i = 0; i < me.selection.length; i++) {
             var id = me.selection[i].get(me.parentGrid.rowtarget.dataIndex);
             Ext.Ajax.request({
                 url: url + id,
@@ -250,7 +250,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                     }
                     me.currentProgress += 1;
                     me.down('progressbar').updateProgress(
-                        me.currentProgress/me.maxSteps);
+                        me.currentProgress / me.maxSteps);
                     if (me.currentProgress === me.maxSteps) {
                         me.finishDelete();
                     }
@@ -261,7 +261,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                     var html = me.down('panel').html;
                     me.currentProgress += 1;
                     me.down('progressbar').updateProgress(
-                        me.currentProgress/me.maxSteps);
+                        me.currentProgress / me.maxSteps);
                     html += i18n.getMsg(
                         'deleteItems.callback.failure', datatype, delId)
                         + i18n.getMsg('200') + '<br>';

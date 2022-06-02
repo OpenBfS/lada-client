@@ -61,7 +61,7 @@ Ext.define('Lada.controller.grid.MKommentar', {
                     if (json) {
                         if (json.message) {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                            +' #'+json.message,
+                            + ' #' + json.message,
                             i18n.getMsg(json.message));
                         } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -122,7 +122,7 @@ Ext.define('Lada.controller.grid.MKommentar', {
                                 if (json.message) {
                                     Ext.Msg.alert(i18n.getMsg(
                                         'err.msg.delete.title')
-                                    +' #'+json.message,
+                                    + ' #' + json.message,
                                     i18n.getMsg(json.message));
                                 } else {
                                     Ext.Msg.alert(i18n.getMsg(

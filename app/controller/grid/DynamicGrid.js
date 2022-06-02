@@ -76,7 +76,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
      **/
     buttonToggle: function(enabled, grid) {
         var buttons = grid.down('toolbar').items;
-        for (var i=0; i < buttons.items.length; i++) {
+        for (var i = 0; i < buttons.items.length; i++) {
             if (buttons.items[i].config.needsSelection === true) {
                 if (enabled === true) {
                     buttons.items[i].enable();
@@ -321,9 +321,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     deleteData: function(button) {
         var grid = button.up('dynamicgrid');
         if (grid.rowtarget.hasOwnProperty('dataType')) {
-            var selection =grid.getView().getSelectionModel().getSelection();
+            var selection = grid.getView().getSelectionModel().getSelection();
             var ids = [];
-            for (var i=0; i < selection.length; i++) {
+            for (var i = 0; i < selection.length; i++) {
                 ids.push(selection[i].get(grid.rowtarget.dataIndex));
             }
             var win = Ext.create('Lada.view.window.DeleteMultipleItems', {

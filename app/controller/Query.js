@@ -124,7 +124,7 @@ Ext.define('Lada.controller.Query', {
                 ) {
                     var data = dgrid.getStore().getData().items;
                     var request = [];
-                    for (var i=0; i< data.length; i++) {
+                    for (var i = 0; i < data.length; i++) {
                         request.push(data[i].get(dgrid.rowtarget.dataIndex));
                     }
                     if (request.length) {
@@ -185,9 +185,9 @@ Ext.define('Lada.controller.Query', {
         var messStellesIds = panel.down('cbox[name=messStellesIds]').getValue();
         var qp = button.up('querypanel');
         if (name.length > 70) {
-            name = name.substring(0, 60) + '... ('+Lada.username+')';
+            name = name.substring(0, 60) + '... (' + Lada.username + ')';
         } else {
-            name = name+ '('+Lada.username+')';
+            name = name + '(' + Lada.username + ')';
         }
 
         //Store column widths
@@ -380,7 +380,7 @@ Ext.define('Lada.controller.Query', {
         var fv = Object.keys(values);
 
         var queryUserFields = Ext.create('Lada.model.Query').fields;
-        for (var i=0; i< fv.length; i++) {
+        for (var i = 0; i < fv.length; i++) {
             //If field is in query model, append key and value to record
             // eslint-disable-next-line no-loop-func
             queryUserFields.forEach(function(element) {
@@ -405,7 +405,7 @@ Ext.define('Lada.controller.Query', {
         }
         qp.loadingMask.show();
         button.setDisabled(true);
-        var failureCallback= function() {
+        var failureCallback = function() {
             qp.loadingMask.hide();
             Ext.Msg.alert(i18n.getMsg('query.error.save.title'),
                           i18n.getMsg('query.error.save.message'));
@@ -427,7 +427,7 @@ Ext.define('Lada.controller.Query', {
                     var columns = qp.gridColumnValueStore.getData().items;
                     var saved = 0;
                     new Ext.Promise(function(resolve) {
-                        for (var i2=0; i2 < columns.length; i2++) {
+                        for (var i2 = 0; i2 < columns.length; i2++) {
                             var col = columns[i2];
                             //Set column width
                             col.set('width', me.getVisibleColumnWidth(col));
@@ -617,7 +617,7 @@ Ext.define('Lada.controller.Query', {
             return null;
         }
         var jsonData = {columns: []};
-        for (var i=0; i < csdata.length; i++ ) {
+        for (var i = 0; i < csdata.length; i++ ) {
             var columnObj = {
                 gridColumnId: csdata[i].get('gridColumnId'),
                 filterActive: csdata[i].get('filterActive'),
@@ -654,7 +654,7 @@ Ext.define('Lada.controller.Query', {
         fvpanel.removeAll();
         var recs = panel.gridColumnValueStore.getData().items;
         var filters = [];
-        for (var i= 0; i < recs.length; i++) {
+        for (var i = 0; i < recs.length; i++) {
             if (recs[i].get('filterActive') !== true) {
                 continue;
             }
@@ -1006,9 +1006,9 @@ Ext.define('Lada.controller.Query', {
 
     activeFiltersChanged: function(box, newvalue, oldvalue) {
         var qp = box.up('querypanel');
-        var store =qp.gridColumnValueStore;
+        var store = qp.gridColumnValueStore;
         var cs = Ext.data.StoreManager.get('columnstore');
-        for (var i=0; i < oldvalue.length; i++) {
+        for (var i = 0; i < oldvalue.length; i++) {
             if (newvalue.indexOf(oldvalue[i]) < 0) {
                 var rec = store.findRecord('dataIndex', oldvalue[i],
                     false, false, false, true);
@@ -1017,7 +1017,7 @@ Ext.define('Lada.controller.Query', {
                 }
             }
         }
-        for (var j= 0 ; j < newvalue.length; j++) {
+        for (var j = 0 ; j < newvalue.length; j++) {
             var nrec = store.findRecord('dataIndex', newvalue[j],
                 false, false, false, true);
             if (!nrec) {
@@ -1150,7 +1150,7 @@ Ext.define('Lada.controller.Query', {
             probeIdentifier: null // used to check if a grid contains a probe
         };
         var csdata = Ext.getStore('columnstore').getData().items;
-        for (var i=0; i < csdata.length; i++ ) {
+        for (var i = 0; i < csdata.length; i++ ) {
             if (csdata[i].get('dataType').name === 'probeId') {
                 result.probeIdentifier = csdata[i].get('dataIndex');
             }

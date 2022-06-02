@@ -79,11 +79,11 @@ Ext.define('Lada.view.window.About', {
                     Lada.logintime, 'd.m.y h:i:s P', true)
                 + '</p>'
                 + '<p>'
-                + i18n.getMsg('about.window.text.serverversion')+ ' '
+                + i18n.getMsg('about.window.text.serverversion') + ' '
                 + Lada.serverVersion
                 + '</p>'
                 + '<p>'
-                + i18n.getMsg('about.window.text.clientversion')+' '
+                + i18n.getMsg('about.window.text.clientversion') + ' '
                 + Lada.clientVersion
                 + '</p>';
     },
