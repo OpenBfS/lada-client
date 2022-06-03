@@ -35,6 +35,8 @@ Ext.define('Lada.view.widget.Deskriptor', {
         '</tpl>'),
 
     initComponent: function() {
+        this.callParent(arguments);
+
         this.store = Ext.create('Lada.store.Deskriptoren');
         var me = this;
         this.store.on('load', function() {
@@ -49,7 +51,6 @@ Ext.define('Lada.view.widget.Deskriptor', {
             me.down('combobox').setStore(this);
         }, this.store);
 
-        this.callParent(arguments);
         var combobox = this.down('combobox');
         combobox.isFormField = false;
         combobox.on('focus', this.focusfn);
