@@ -226,8 +226,7 @@ Ext.define('Lada.view.form.Probe', {
                             margin: '0, 5, 5, 5',
                             width: '35%',
                             labelWidth: 95,
-                            maxLength: 20,
-                            allowBlank: true
+                            maxLength: 20
                         }, {
                             xtype: 'betriebsart',
                             name: 'baId',

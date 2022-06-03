@@ -21,146 +21,105 @@ Ext.define('Lada.model.Probe', {
     fields: [{
         name: 'id',
         allowNull: true
-        //persist: false
     }, {
         name: 'owner',
         type: 'boolean',
         persist: false
     }, {
-        name: 'externeProbeId',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        name: 'externeProbeId'
     }, {
-        name: 'hauptprobenNr'
+        name: 'hauptprobenNr',
+        allowNull: true
     }, {
         name: 'test',
         type: 'boolean'
     }, {
-        name: 'mstId',
-        persist: true
+        name: 'mstId'
     }, {
-        name: 'laborMstId',
-        persist: true
+        name: 'laborMstId'
     }, {
-        name: 'datenbasisId'
+        name: 'datenbasisId',
+        type: 'int',
+        allowNull: true
     }, {
-        name: 'baId'
+        name: 'baId',
+        type: 'int',
+        allowNull: true
     }, {
-        name: 'probenartId'
+        name: 'probenartId',
+        type: 'int',
+        allowNull: true
     }, {
         name: 'mediaDesk',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        allowNull: true
     }, {
         name: 'media',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        allowNull: true
     }, {
         name: 'umwId',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        allowNull: true
     }, {
         name: 'probeentnahmeBeginn',
         type: 'date',
-        allowNull: true,
-        convert: Lada.util.Date.convertTimeFn,
-        serialize: function(v) {
-            if (v === '' || v === null) {
-                return null;
-            }
-            var formatted = Ext.Date.format(v, 'Y-m-d\\TH:i:sP');
-            return formatted;
-        }
+        dateFormat: 'time'
     }, {
         name: 'probeentnahmeEnde',
         type: 'date',
-        allowNull: true,
-        convert: Lada.util.Date.convertTimeFn,
-        serialize: function(v) {
-            if (v === '' || v === null) {
-                return null;
-            }
-            var formatted = Ext.Date.format(v, 'Y-m-d\\TH:i:sP');
-            return formatted;
-        }
+        dateFormat: 'time'
     }, {
-        name: 'mittelungsdauer'
+        name: 'mittelungsdauer',
+        type: 'int',
+        allowNull: true
     }, {
         name: 'letzteAenderung',
         type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFn
+        dateFormat: 'time'
     }, {
-        name: 'erzeugerId'
+        name: 'erzeugerId',
+        type: 'int',
+        allowNull: true
     }, {
-        name: 'probeNehmerId'
+        name: 'probeNehmerId',
+        type: 'int',
+        allowNull: true
     }, {
-        name: 'mplId'
+        name: 'mplId',
+        type: 'int',
+        allowNull: true
     }, {
-        name: 'mprId'
+        name: 'mprId',
+        type: 'int',
+        allowNull: true
     }, {
-        name: 'reiProgpunktGrpId'
+        name: 'reiProgpunktGrpId',
+        type: 'int',
+        allowNull: true
     }, {
-        name: 'ktaGruppeId'
+        name: 'ktaGruppeId',
+        type: 'int',
+        allowNull: true
     }, {
         name: 'solldatumBeginn',
         type: 'date',
-        convert: Lada.util.Date.convertTimeFn,
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        dateFormat: 'time'
     }, {
         name: 'solldatumEnde',
         type: 'date',
-        convert: Lada.util.Date.convertTimeFn,
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        dateFormat: 'time'
     }, {
         name: 'ursprungszeit',
         type: 'date',
-        convert: Lada.util.Date.convertTimeFn,
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        dateFormat: 'time'
     }, {
         name: 'readonly',
         type: 'boolean',
         persist: false
     }, {
         name: 'treeModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        type: 'date',
+        dateFormat: 'time'
     }],
+
     idProperty: 'id',
 
     proxy: {
