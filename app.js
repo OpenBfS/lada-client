@@ -64,7 +64,6 @@ Ext.application({
         'Lada.store.DatensatzErzeuger',
         'Lada.store.DownloadQueue',
         'Lada.store.UploadQueue',
-        'Lada.store.GenericResults',
         'Lada.store.MessprogrammKategorie',
         'Lada.store.GridColumn',
         'Lada.store.Query',
@@ -173,7 +172,6 @@ Ext.application({
         // ask before closing/refreshing the window.
         // Not all browsers will respect this, depending on settings
         window.addEventListener('beforeunload', this.beforeCloseHandler);
-        Ext.create('Lada.store.GenericResults');
     },
 
     /*
@@ -433,10 +431,6 @@ Ext.application({
         Ext.create('Lada.store.KtaGruppe', {
             storeId: 'ktaGruppe',
             autoLoad: true
-        });
-        Ext.create('Lada.store.GenericResults', {
-            storeId: 'genericresults',
-            autoLoad: false
         });
 
         //A Store containing all MST a User is allowed to set.

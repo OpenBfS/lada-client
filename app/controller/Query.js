@@ -112,7 +112,7 @@ Ext.define('Lada.controller.Query', {
 
     createResultStore: function() {
         if (!this.resultStore) {
-            this.resultStore = Ext.StoreManager.get('genericresults');
+            this.resultStore = Ext.create('Lada.store.GenericResults');
 
             // map <-> dynamic grid data exchange listener
             this.resultStore.addListener('load', function() {
