@@ -13,6 +13,7 @@ Ext.define('Lada.view.panel.FileUpload', {
     extend: 'Ext.form.Panel',
     requires: [
         'Ext.form.field.File',
+        'Lada.view.grid.UploadQueue',
         'Lada.view.window.ImportResponse',
         'Lada.controller.grid.Uploads'
     ],

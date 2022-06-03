@@ -14,8 +14,7 @@
 
 Ext.define('Lada.view.grid.UploadQueue', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.uploadueuegrid',
-    // requires: ['Lada.controller.grid.Uploads'],
+    alias: 'widget.uploadqueuegrid',
     store: null, //TODO needs to be set
     viewConfig: {
         deferEmptyText: true,
