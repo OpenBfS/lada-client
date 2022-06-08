@@ -57,15 +57,13 @@ Ext.define('Lada.controller.form.Messung', {
         var probe = oldWin.record;
         formPanel.setLoading(true);
         var record = formPanel.getForm().getRecord();
-        var data = formPanel.getForm().getFieldValues();
-        for (var key in data) {
-            record.set(key, data[key]);
-        }
+        // Update record with values changed in the form
+        record.set(formPanel.getForm().getFieldValues(false));
         if (record.phantom) {
             record.set('id', null);
         }
 
-        formPanel.getForm().getRecord().save({
+        record.save({
             success: function(newRecord, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
@@ -76,7 +74,6 @@ Ext.define('Lada.controller.form.Messung', {
                     formPanel.setRecord(newRecord);
                     formPanel.setMessages(json.errors, json.warnings,
                         json.notifications);
-                    //formPanel.up('window').initData(newRecord);
 
                     if (parentWin) {
                         parentWin.initData();

@@ -26,54 +26,47 @@ Ext.define('Lada.model.Messung', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'probeId'
+        name: 'probeId',
+        type: 'int'
     }, {
         name: 'mmtId'
     }, {
-        name: 'nebenprobenNr'
+        name: 'nebenprobenNr',
+        allowNull: true
     }, {
-        name: 'messdauer'
+        name: 'messdauer',
+        type: 'int',
+        allowNull: true
     }, {
         name: 'messzeitpunkt',
         type: 'date',
-        convert: Lada.util.Date.convertTimeFn,
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        dateFormat: 'time'
     }, {
-        name: 'status'
+        name: 'status',
+        type: 'int',
+        allowNull: true
     }, {
         name: 'fertig',
         type: 'boolean'
     }, {
         name: 'letzteAenderung',
         type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFnDefaultNow
+        dateFormat: 'time'
     }, {
         name: 'geplant',
         type: 'boolean'
     }, {
-        name: 'externeMessungsId'
+        name: 'externeMessungsId',
+        type: 'int',
+        allowNull: true
     }, {
         name: 'treeModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        type: 'date',
+        dateFormat: 'time'
     }, {
         name: 'parentModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        type: 'date',
+        dateFormat: 'time'
     }, {
         name: 'statusWert',
         persist: false
