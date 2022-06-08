@@ -183,13 +183,14 @@ Ext.define('Lada.view.window.SetStatus', {
         for (var i = 0; i < this.sendIds.length; i++) {
             if (!done.includes(this.sendIds[i])) {
                 done.push(this.sendIds[i]);
-                data = {
+                data = Ext.create('Lada.model.Status', {
                     messungsId: this.sendIds[i],
                     mstId: this.down('combobox').getValue(),
                     datum: new Date(),
                     statusKombi: kombi,
                     text: this.down('textarea').getValue()
-                };
+                });
+                data.set('id', null);
                 var finalcallback = function() {
                     var result = me.down('panel[name=result]');
                     var values = me.down('panel[name=valueselection]');
@@ -203,149 +204,166 @@ Ext.define('Lada.view.window.SetStatus', {
                     result.show();
                     values.hide();
                 };
-                Ext.Ajax.request({
-                    url: 'lada-server/rest/status',
-                    method: 'POST',
-                    jsonData: data,
+                data.save({
                     // eslint-disable-next-line no-loop-func
-                    success: function(response) {
-                        var json = Ext.JSON.decode(response.responseText);
-                        var errors = json.errors;
-                        var warnings = json.warnings;
-                        var notifications = json.notifications;
-                        var out = [];
-                        var numErrors, numWarnings, numNotifications, j;
-                        if (!Ext.isObject(errors)) {
-                            numErrors = 0;
-                        } else {
-                            numErrors = Object.keys(errors).length;
-                        }
-                        if (!Ext.isObject(warnings)) {
-                            numWarnings = 0;
-                        } else {
-                            numWarnings = Object.keys(warnings).length;
-                        }
-                        if (!Ext.isObject(notifications)) {
-                            numNotifications = 0;
-                        } else {
-                            numNotifications = Object.keys(notifications)
-                                .length;
-                        }
+                    callback: function(record, operation, success) {
+                        var json = Ext.JSON.decode(
+                            operation.getResponse().responseText, true);
+                        if (json) {
+                            var errors = json.errors;
+                            var warnings = json.warnings;
+                            var notifications = json.notifications;
+                            var out = [];
+                            var numErrors, numWarnings, numNotifications, j;
+                            if (!Ext.isObject(errors)) {
+                                numErrors = 0;
+                            } else {
+                                numErrors = Object.keys(errors).length;
+                            }
+                            if (!Ext.isObject(warnings)) {
+                                numWarnings = 0;
+                            } else {
+                                numWarnings = Object.keys(warnings).length;
+                            }
+                            if (!Ext.isObject(notifications)) {
+                                numNotifications = 0;
+                            } else {
+                                numNotifications = Object.keys(notifications)
+                                    .length;
+                            }
 
-                        // Print lists of errors, warnings and notifications
-                        if (!json.success || numErrors > 0) {
-                            var msgs;
-                            out.push('<dl><dd>' +
-                                i18n.getMsg('errors') +
-                                '</dd>');
-                            out.push('<dd><ul>');
-                            if (!json.success) {
-                                out.push('<li>' +
-                                    i18n.getMsg(json.message) + '</li>');
-                            }
-                            for (var key in errors) {
-                                msgs = errors[key];
-                                var validation = [];
-                                if (key.indexOf('#') > -1) {
-                                    var keyParts = key.split('#');
-                                    for (j = msgs.length - 1; j >= 0; j--) {
-                                        validation.push('<li><b>' +
-                                            i18n.getMsg(keyParts[0]) +
-                                            '</b><i> ' +
-                                            keyParts[1].toString() +
-                                            '</i>: ' +
-                                            i18n.getMsg(msgs[j].toString()) +
-                                            '</li>');
-                                    }
-                                } else {
-                                    for (j = msgs.length - 1; j >= 0; j--) {
-                                        validation.push('<li><b>' +
-                                            i18n.getMsg(key) +
-                                            ':</b> ' +
-                                            i18n.getMsg(msgs[j].toString()) +
-                                            '</li>');
-                                    }
+                            // Print lists of errors, warnings and notifications
+                            if (!success || numErrors > 0) {
+                                var msgs;
+                                out.push('<dl><dd>' +
+                                         i18n.getMsg('errors') +
+                                         '</dd>');
+                                out.push('<dd><ul>');
+                                if (!success) {
+                                    out.push('<li>' +
+                                             i18n.getMsg(json.message) +
+                                             '</li>');
                                 }
-                                out.push(validation.join(''));
+                                for (var key in errors) {
+                                    msgs = errors[key];
+                                    var validation = [];
+                                    if (key.indexOf('#') > -1) {
+                                        var keyParts = key.split('#');
+                                        for (j = msgs.length - 1; j >= 0; j--) {
+                                            validation.push(
+                                                '<li><b>' +
+                                                    i18n.getMsg(keyParts[0]) +
+                                                    '</b><i> ' +
+                                                    keyParts[1].toString() +
+                                                    '</i>: ' +
+                                                    i18n.getMsg(msgs[j].toString()) +
+                                                    '</li>');
+                                        }
+                                    } else {
+                                        for (j = msgs.length - 1; j >= 0; j--) {
+                                            validation.push(
+                                                '<li><b>' +
+                                                    i18n.getMsg(key) +
+                                                    ':</b> ' +
+                                                    i18n.getMsg(msgs[j].toString()) +
+                                                    '</li>');
+                                        }
+                                    }
+                                    out.push(validation.join(''));
+                                }
+                                out.push('</ul></dd>');
+                            } else {
+                                out.push('<dl><dd>' +
+                                         i18n.getMsg('status-' + json.message) +
+                                         '</dd>');
+                                out.push('</dd></dl>');
                             }
-                            out.push('</ul></dd>');
+
+                            if (numWarnings > 0) {
+                                out.push('<dl><dd>' +
+                                         i18n.getMsg('warns') +
+                                         '</dd>');
+                                out.push('<dd><ul>');
+                                for (var key2 in warnings) {
+                                    msgs = warnings[key2];
+                                    validation = [];
+                                    if (key2.indexOf('#') > -1) {
+                                        keyParts = key2.split('#');
+                                        for (j = msgs.length - 1; j >= 0; j--) {
+                                            validation.push(
+                                                '<li><b>' +
+                                                    i18n.getMsg(keyParts[0]) +
+                                                    '</b><i> ' +
+                                                    keyParts[1].toString() +
+                                                    '</i>: ' +
+                                                    i18n.getMsg(msgs[j].toString()) +
+                                                    '</li>');
+                                        }
+                                    } else {
+                                        for (j = msgs.length - 1; j >= 0; j--) {
+                                            validation.push(
+                                                '<li><b>' +
+                                                    i18n.getMsg(key2) +
+                                                    ':</b> ' +
+                                                    i18n.getMsg(msgs[j].toString()) +
+                                                    '</li>');
+                                        }
+                                    }
+                                    out.push(validation.join(''));
+                                }
+                                out.push('</ul></dd>');
+                            }
+
+                            if (numNotifications > 0) {
+                                out.push('<dl><dd>' +
+                                         i18n.getMsg('notes') +
+                                         '</dd>');
+                                out.push('<dd><ul>');
+                                for (var key3 in notifications) {
+                                    msgs = notifications[key3];
+                                    validation = [];
+                                    if (key3.indexOf('#') > -1) {
+                                        keyParts = key3.split('#');
+                                        for (j = msgs.length - 1; j >= 0; j--) {
+                                            validation.push(
+                                                '<li><b>' +
+                                                    i18n.getMsg(keyParts[0]) +
+                                                    '</b><i> ' +
+                                                    keyParts[1].toString() +
+                                                    '</i>: ' +
+                                                    i18n.getMsg(msgs[j].toString()) +
+                                                    '</li>');
+                                        }
+                                    } else {
+                                        for (j = msgs.length - 1; j >= 0; j--) {
+                                            validation.push(
+                                                '<li><b>' +
+                                                    i18n.getMsg(key3) +
+                                                    ':</b> ' +
+                                                    i18n.getMsg(msgs[j].toString()) +
+                                                    '</li>');
+                                        }
+                                    }
+                                    out.push(validation.join(''));
+                                }
+                                out.push('</ul></dd>');
+                            }
+                            if (out.length > 0) {
+                                // Print delimiter between different requests
+                                out.push('<hr>');
+                                // Add generated HTML to overall output
+                                me.addLogItem(
+                                    out.join(''), record.get('messungsId'));
+                            }
                         } else {
-                            out.push('<dl><dd>' +
-                                i18n.getMsg('status-' + json.message) +
-                                '</dd>');
-                            out.push('</dd></dl>');
-                        }
-
-                        if (numWarnings > 0) {
-                            out.push('<dl><dd>' +
-                                i18n.getMsg('warns') +
-                                '</dd>');
-                            out.push('<dd><ul>');
-                            for (var key2 in warnings) {
-                                msgs = warnings[key2];
-                                validation = [];
-                                if (key2.indexOf('#') > -1) {
-                                    keyParts = key2.split('#');
-                                    for (j = msgs.length - 1; j >= 0; j--) {
-                                        validation.push('<li><b>' +
-                                            i18n.getMsg(keyParts[0]) +
-                                            '</b><i> ' +
-                                            keyParts[1].toString() +
-                                            '</i>: ' +
-                                            i18n.getMsg(msgs[j].toString()) +
-                                            '</li>');
-                                    }
-                                } else {
-                                    for (j = msgs.length - 1; j >= 0; j--) {
-                                        validation.push('<li><b>' +
-                                            i18n.getMsg(key2) +
-                                            ':</b> ' +
-                                            i18n.getMsg(msgs[j].toString()) +
-                                            '</li>');
-                                    }
-                                }
-                                out.push(validation.join(''));
-                            }
-                            out.push('</ul></dd>');
-                        }
-
-                        if (numNotifications > 0) {
-                            out.push('<dl><dd>' +
-                                i18n.getMsg('notes') +
-                                '</dd>');
-                            out.push('<dd><ul>');
-                            for (var key3 in notifications) {
-                                msgs = notifications[key3];
-                                validation = [];
-                                if (key3.indexOf('#') > -1) {
-                                    keyParts = key3.split('#');
-                                    for (j = msgs.length - 1; j >= 0; j--) {
-                                        validation.push('<li><b>' +
-                                            i18n.getMsg(keyParts[0]) +
-                                            '</b><i> ' +
-                                            keyParts[1].toString() +
-                                            '</i>: ' +
-                                            i18n.getMsg(msgs[j].toString()) +
-                                            '</li>');
-                                    }
-                                } else {
-                                    for (j = msgs.length - 1; j >= 0; j--) {
-                                        validation.push('<li><b>' +
-                                            i18n.getMsg(key3) +
-                                            ':</b> ' +
-                                            i18n.getMsg(msgs[j].toString()) +
-                                            '</li>');
-                                    }
-                                }
-                                out.push(validation.join(''));
-                            }
-                            out.push('</ul></dd>');
-                        }
-                        if (out.length > 0) {
-                            // Print delimiter between different requests
-                            out.push('<hr>');
-                            // Add generated HTML to overall output
-                            me.addLogItem(out.join(''), json.data.messungsId);
+                            me.addLogItem(
+                                '<dl><dd>' +
+                                    i18n.getMsg('errors') +
+                                    '</dd><dd><ul><li>' +
+                                    i18n.getMsg('err.msg.generic.body') +
+                                    '</li></ul></dd></dl><hr>',
+                                record.get('messungsId')
+                            );
                         }
 
                         count++;
@@ -356,25 +374,6 @@ Ext.define('Lada.view.window.SetStatus', {
                             finalcallback();
                         }
                         me.fireEvent('statussetend');
-                    },
-                    // eslint-disable-next-line no-loop-func
-                    failure: function(response, request) {
-                        me.addLogItem(
-                            '<dl><dd>' +
-                                i18n.getMsg('errors') + '</dd><dd><ul><li>' +
-                                i18n.getMsg('err.msg.generic.body') +
-                                '</li></ul></dd></dl><hr>',
-                            request.jsonData.messungsId
-                                ? request.jsonData.messungsId
-                                : null
-                        );
-                        count++;
-                        progress.updateProgress(
-                            count / me.selection.length,
-                            progressText + ' (' + count + ')');
-                        if (count === me.selection.length) {
-                            finalcallback();
-                        }
                     }
                 });
             } else {

@@ -22,7 +22,8 @@ Ext.define('Lada.model.Status', {
         name: 'owner',
         type: 'boolean'
     }, {
-        name: 'messungsId'
+        name: 'messungsId',
+        type: 'int'
     }, {
         name: 'mstId'
     }, {
@@ -36,25 +37,16 @@ Ext.define('Lada.model.Status', {
         persist: false
     }, {
         name: 'treeModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        type: 'date',
+        dateFormat: 'time'
     }, {
         name: 'parentModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        type: 'date',
+        dateFormat: 'time'
     }, {
         name: 'datum',
         type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFn
+        dateFormat: 'time'
     }, {
         name: 'text'
     }],
