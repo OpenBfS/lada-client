@@ -31,7 +31,6 @@ Ext.define('Lada.view.form.mixins.DeskriptorFieldset', {
             mediabeschreibung.setValue(beschreibung);
             return;
         }
-        var me = this;
         var current = this.down('deskriptor[layer=' + ndx + ']');
         var cbox = current.down('combobox');
         cbox.store.proxy.extraParams = {
@@ -45,21 +44,17 @@ Ext.define('Lada.view.form.mixins.DeskriptorFieldset', {
             }
             cbox.store.proxy.extraParams.parents = parents;
         }
+
+        var me = this;
         cbox.store.load(function(records, op, success) {
             if (!success) {
                 scheduler.finished();
                 return;
             }
             var mediatext;
-            try {
-                mediatext = cbox.store.findRecord(
-                    'sn', parseInt(media[ndx + 1], 10), 0, false, false, true);
-                cbox.select(mediatext);
-            } catch (e) {
-                Ext.log({msg: 'Selecting media failed: ' + e, level: 'warn'});
-                scheduler.finished();
-                return;
-            }
+            mediatext = cbox.store.findRecord(
+                'sn', parseInt(media[ndx + 1], 10), 0, false, false, true);
+            cbox.select(mediatext);
             if (mediatext !== null) {
                 if (mediatext.data.beschreibung !== 'leer'
                     && (ndx <= 3 && media[1] === '01'
