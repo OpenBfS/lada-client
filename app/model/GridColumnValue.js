@@ -14,34 +14,47 @@ Ext.define('Lada.model.GridColumnValue', {
     fields: [{
         name: 'id'
     }, {
-        name: 'columnIndex'
+        name: 'columnIndex',
+        type: 'int'
     }, {
-        name: 'filterActive'
+        name: 'filterActive',
+        type: 'boolean'
     }, {
-        name: 'filterValue'
+        name: 'filterValue',
+        allowNull: true
     }, {
-        name: 'sort'
+        name: 'sort',
+        allowNull: true
     }, {
-        name: 'sortIndex'
+        name: 'sortIndex',
+        type: 'int',
+        allowNull: true
     }, {
-        name: 'userId'
+        name: 'userId',
+        type: 'int',
+        allowNull: true
     }, {
-        name: 'qid'
+        name: 'visible',
+        type: 'boolean'
     }, {
-        name: 'visible'
+        name: 'width',
+        type: 'int',
+        allowNull: true
     }, {
-        name: 'width'
-    }, {
-        name: 'gridColumnId'
+        name: 'gridColumnId',
+        type: 'int'
     }, {
         name: 'dataIndex',
         persist: false
     }, {
-        name: 'filterNegate'
+        name: 'filterNegate',
+        type: 'boolean'
     }, {
-        name: 'filterRegex'
+        name: 'filterRegex',
+        type: 'boolean'
     }, {
-        name: 'filterIsNull'
+        name: 'filterIsNull',
+        type: 'boolean'
     }, {
         name: 'name',
         persist: false
