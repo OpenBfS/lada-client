@@ -216,9 +216,18 @@ Ext.define('Lada.controller.Query', {
         }
         panel.loadingMask.show();
 
+        cbox.setStore(panel.store);
+        cbox.select(newrecord);
+        // Before changing query, set "own filter" to ensure that the new query
+        // can be shown
+        cbox.up('querypanel').down('checkbox[name=filterQueriesOwn]')
+            .setValue(true);
+        this.changeCurrentQuery(cbox);
+        panel.down('fieldset[name=querydetails]').setCollapsed(false);
+
         //Clone columns after query is saved
         var saveCallback = function(savedQuery) {
-            return new Ext.Promise(function(resolve) {
+            return new Ext.Promise(function(resolve, reject) {
                 var len = columnValues.length;
                 var cur = 0;
                 var success = true;
@@ -245,22 +254,17 @@ Ext.define('Lada.controller.Query', {
                                 success = false;
                             }
                             if (cur === len) {
-                                resolve(success);
+                                if (success) {
+                                    resolve();
+                                } else {
+                                    reject();
+                                }
                             }
                         }
                     });
                 });
             });
         };
-
-        cbox.setStore(panel.store);
-        cbox.select(newrecord);
-        // Before changing query, set "own filter" to ensure that the new query
-        // can be shown
-        cbox.up('querypanel').down('checkbox[name=filterQueriesOwn]')
-            .setValue(true);
-        this.changeCurrentQuery(cbox);
-        panel.down('fieldset[name=querydetails]').setCollapsed(false);
         this.saveQuery(button, saveCallback);
     },
 
@@ -448,9 +452,7 @@ Ext.define('Lada.controller.Query', {
                         finalCallback();
                     });
                 } else {
-                    callback(rec).then(function() {
-                        finalCallback();
-                    });
+                    callback(rec).then(finalCallback, failureCallback);
                 }
             },
             failure: failureCallback
