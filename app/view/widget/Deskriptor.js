@@ -42,12 +42,6 @@ Ext.define('Lada.view.widget.Deskriptor', {
         this.store.on('load', function() {
             // Entry to be selected by clear handler
             this.insert(0, {sn: 0, beschreibung: 'leer'});
-            var params = this.proxy.getExtraParams();
-            if (params.layer > 0
-                && (!params.parents || !params.parents.length)
-            ) {
-                this.removeAll();
-            }
             me.down('combobox').setStore(this);
         }, this.store);
 
@@ -77,14 +71,10 @@ Ext.define('Lada.view.widget.Deskriptor', {
 
     focusfn: function(field) {
         var deskriptor = field.up('deskriptor');
-        if (deskriptor.layer === 0) {
-            deskriptor.store.proxy.extraParams = {'layer': deskriptor.layer};
-        } else {
-            deskriptor.store.proxy.extraParams = {
-                layer: deskriptor.layer,
-                parents: deskriptor.getParents(field)
-            };
-            deskriptor.store.load();
-        }
+        deskriptor.store.proxy.extraParams = {
+            layer: deskriptor.layer,
+            parents: deskriptor.getParents(field)
+        };
+        deskriptor.store.load();
     }
 });
