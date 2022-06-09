@@ -25,9 +25,11 @@ Ext.define('Lada.model.GridColumn', {
     }, {
         name: 'name'
     }, {
-        name: 'position'
+        name: 'position',
+        type: 'int'
     }, {
-        name: 'baseQuery'
+        name: 'baseQuery',
+        type: 'int'
     }],
     idProperty: 'id',
     proxy: {

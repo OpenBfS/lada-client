@@ -25,8 +25,7 @@ Ext.define('Lada.model.DatensatzErzeuger', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFn
+        dateFormat: 'time'
     }, {
         name: 'readonly',
         type: 'boolean',

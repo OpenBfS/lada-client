@@ -9,17 +9,25 @@ Ext.define('Lada.model.Deskriptor', {
      *  - ...
      */
     fields: [{
-        name: 'bedeutung'
+        name: 'bedeutung',
+        allowNull: true
     }, {
-        name: 'beschreibung'
+        name: 'beschreibung',
+        allowNull: true
     }, {
-        name: 'ebene'
+        name: 'ebene',
+        type: 'int',
+        allowNull: true
     }, {
         name: 'id'
     }, {
-        name: 'sn'
+        name: 'sn',
+        type: 'int',
+        allowNull: true
     }, {
-        name: 'sXx'
+        name: 'sXx',
+        type: 'int',
+        allowNull: true
     }],
 
     idProperty: 'id',
