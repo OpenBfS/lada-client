@@ -21,7 +21,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         'Lada.view.window.DatensatzErzeuger',
         'Lada.view.window.MessprogrammKategorie',
         'Lada.view.panel.Map'
-
     ],
 
     store: null,
@@ -320,22 +319,21 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     dataIndex: dataIndex,
                     name: orig_column.get('name')
                 };
-                var colImg = null;
                 switch (datatype.name) {
                     case 'probeId':
-                        this.generateProbeColumn(colImg, col);
+                        this.generateProbeColumn(col);
                         break;
                     case 'messungId':
-                        this.generateMessungColumns(colImg, col);
+                        this.generateMessungColumns(col);
                         break;
                     case 'mpId':
-                        this.generateMessprogrammColumns(colImg, col);
+                        this.generateMessprogrammColumns(col);
                         break;
                     case 'ortId':
-                        this.generateOrtColumns(colImg, col);
+                        this.generateOrtColumns(col);
                         break;
                     case 'geom':
-                        this.generateGeomColumns(colImg, col);
+                        this.generateGeomColumns(col);
                         break;
                     case 'date':
                         this.generateDateColumns(curField, orig_column, col);
@@ -376,7 +374,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     case 'probenehmer':
                     case 'dsatzerz':
                     case 'mprkat':
-                        this.generateStammColumn(colImg, col, datatype);
+                        this.generateStammColumn(col, datatype);
                         break;
                     default:
                         col.xtype = 'gridcolumn';
@@ -422,12 +420,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         return caf;
     },
 
-    generateProbeColumn: function(colImg, col) {
-        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+    generateProbeColumn: function(col) {
         col.xtype = 'widgetcolumn';
         col.widget = {
             xtype: 'button',
-            icon: colImg,
+            icon: Ext.getResourcePath(this.openIconPath, null, null),
             width: '16px',
             height: '16px',
             userCls: 'widget-column-button',
@@ -463,12 +460,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
         };
     },
-    generateMessungColumns: function(colImg, col) {
-        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+    generateMessungColumns: function(col) {
         col.xtype = 'widgetcolumn';
         col.widget = {
             xtype: 'button',
-            icon: colImg,
+            icon: Ext.getResourcePath(this.openIconPath, null, null),
             width: '16px',
             height: '16px',
             userCls: 'widget-column-button',
@@ -533,12 +529,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
     },
 
-    generateMessprogrammColumns: function(colImg, col) {
-        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+    generateMessprogrammColumns: function(col) {
         col.xtype = 'widgetcolumn';
         col.widget = {
             xtype: 'button',
-            icon: colImg,
+            icon: Ext.getResourcePath(this.openIconPath, null, null),
             width: '16px',
             height: '16px',
             userCls: 'widget-column-button',
@@ -575,12 +570,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
     },
 
-    generateOrtColumns: function(colImg, col) {
-        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+    generateOrtColumns: function(col) {
         col.xtype = 'widgetcolumn';
         col.widget = {
             xtype: 'button',
-            icon: colImg,
+            icon: Ext.getResourcePath(this.openIconPath, null, null),
             width: '16px',
             height: '16px',
             userCls: 'widget-column-button',
@@ -616,12 +610,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
     },
 
-    generateGeomColumns: function(colImg, col) {
-        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+    generateGeomColumns: function(col) {
         col.xtype = 'widgetcolumn';
         col.widget = {
             xtype: 'button',
-            icon: colImg,
+            icon: Ext.getResourcePath(this.openIconPath, null, null),
             width: '16px',
             height: '16px',
             userCls: 'widget-column-button',
@@ -870,7 +863,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
     },
 
-    generateStammColumn: function(colImg, col, datatype) {
+    generateStammColumn: function(col, datatype) {
         var clicklistener = null;
         var tooltip = '';
 
@@ -939,11 +932,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
             };
         }
-        colImg = Ext.getResourcePath(this.openIconPath, null, null);
         col.xtype = 'widgetcolumn';
         col.widget = {
             xtype: 'button',
-            icon: colImg,
+            icon: Ext.getResourcePath(this.openIconPath, null, null),
             width: '16px',
             height: '16px',
             userCls: 'widget-column-button',
