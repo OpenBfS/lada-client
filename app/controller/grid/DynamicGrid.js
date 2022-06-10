@@ -38,6 +38,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             },
             'button[action=genericadd]': {
                 click: this.addData
+            },
+            'button[action=addMap]': {
+                click: this.activateDraw
             }
         });
         this.callParent(arguments);
@@ -384,6 +387,12 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     break;
             }
         }
+    },
+
+    activateDraw: function(button) {
+        var map = button.up('dynamicgrid').down('map');
+        var record = Ext.create('Lada.model.Ort');
+        map.activateDraw(record);
     },
 
     /**
