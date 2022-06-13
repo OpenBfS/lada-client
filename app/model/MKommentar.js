@@ -22,14 +22,14 @@ Ext.define('Lada.model.MKommentar', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'messungsId'
+        name: 'messungsId',
+        type: 'int'
     }, {
         name: 'mstId'
     }, {
         name: 'datum',
         type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFn
+        dateFormat: 'time'
     }, {
         name: 'text'
     }],

@@ -22,11 +22,15 @@ Ext.define('Lada.model.Messwert', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'messungsId'
+        name: 'messungsId',
+        type: 'int'
     }, {
-        name: 'messgroesseId'
+        name: 'messgroesseId',
+        type: 'int'
     }, {
-        name: 'messwert'
+        name: 'messwert',
+        type: 'float',
+        allowNull: true
     }, {
         name: 'messwertNwg',
         convert: function(v) {
@@ -38,43 +42,26 @@ Ext.define('Lada.model.Messwert', {
     }, {
         name: 'messfehler',
         type: 'float',
-        convert: function(v) {
-            if (!v) {
-                return null;
-            }
-            return v;
-        },
-        serialize: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
-        name: 'nwgZuMesswert'
+        name: 'nwgZuMesswert',
+        type: 'float',
+        allowNull: true
     }, {
-        name: 'mehId'
+        name: 'mehId',
+        type: 'int'
     }, {
         name: 'letzteAenderung',
         type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFnDefaultNow
+        dateFormat: 'time'
     }, {
         name: 'treeModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        type: 'date',
+        dateFormat: 'time'
     }, {
         name: 'parentModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        type: 'date',
+        dateFormat: 'time'
     }, {
         name: 'warnings',
         persist: false

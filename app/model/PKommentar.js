@@ -22,14 +22,14 @@ Ext.define('Lada.model.PKommentar', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'probeId'
+        name: 'probeId',
+        type: 'int'
     }, {
         name: 'mstId'
     }, {
         name: 'datum',
         type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFn
+        dateFormat: 'time'
     }, {
         name: 'text'
     }],
