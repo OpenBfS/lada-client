@@ -43,7 +43,6 @@ Ext.define('Lada.view.panel.Map', {
      * Initialize the map panel.
      */
     initComponent: function() {
-        this.initData();
         this.on({
             selectfeature: {
                 fn: this.selectFeature,
@@ -58,13 +57,6 @@ Ext.define('Lada.view.panel.Map', {
             }
         });
         this.callParent(arguments);
-    },
-
-    /**
-     * Initialise the Data.
-     * currently only stub remaining
-     */
-    initData: function() {
     },
 
     /**
