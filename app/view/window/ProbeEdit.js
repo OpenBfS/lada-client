@@ -30,7 +30,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
     constrain: true,
     recordType: 'probe',
     record: null,
-    pzStore: null,
+    zStore: null,
 
     /**
      * This function initialises the Window
@@ -109,7 +109,12 @@ Ext.define('Lada.view.window.ProbeEdit', {
         proxy.extraParams = {};
         store.setProxy(proxy);
         this.zStore = store;
-        this.zStore.proxy.extraParams = {umwId: this.record.get('umwId')};
+        var umwId = this.record.get('umwId');
+        if (umwId) {
+            this.zStore.proxy.setExtraParams({
+                umwId: umwId
+            });
+        }
         this.zStore.load();
 
         this.removeAll();
@@ -246,8 +251,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
         var loadCallBack = function(record, response) {
             me.initializeUI();
             me.record = record;
-            me.zStore.proxy.extraParams = {umwId: record.get('umwId')};
-            me.zStore.load();
             me.recordId = record.get('id');
             me.down('probeform').setRecord(record);
             var owner = record.get('owner');
