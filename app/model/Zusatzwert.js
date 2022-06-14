@@ -23,7 +23,8 @@ Ext.define('Lada.model.Zusatzwert', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'probeId'
+        name: 'probeId',
+        type: 'int'
     }, {
         name: 'pzsId'
     }, {
@@ -35,44 +36,25 @@ Ext.define('Lada.model.Zusatzwert', {
             return '<';
         }
     }, {
-        name: 'messwertPzs'
+        name: 'messwertPzs',
+        type: 'float',
+        allowNull: true
     }, {
         name: 'messfehler',
         type: 'float',
-        convert: function(v) {
-            if (!v) {
-                return null;
-            }
-            return v;
-        },
-        serialize: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'letzteAenderung',
         type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFn,
-        defaultValue: new Date()
+        dateFormat: 'time'
     }, {
         name: 'treeModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        type: 'date',
+        dateFormat: 'time'
     }, {
         name: 'parentModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        type: 'date',
+        dateFormat: 'time'
     }],
 
     idProperty: 'id',
