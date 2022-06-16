@@ -88,6 +88,7 @@
         }],
         "space-before-blocks": 1,
         "space-before-function-paren": [1, "never"],
+        "space-infix-ops": 2,
         "brace-style": [1, "1tbs"],
         "eol-last": 1,
         "indent": [1, 4, { "SwitchCase": 1 }],

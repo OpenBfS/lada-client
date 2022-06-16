@@ -108,8 +108,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         }
         var win = Ext.create('Lada.view.window.Ortszuordnung', {
             parentWindow: parentWin,
-            probe: parentisMp ? null: parent,
-            messprogramm: parentisMp ? parent: null,
+            probe: parentisMp ? null : parent,
+            messprogramm: parentisMp ? parent : null,
             record: record,
             grid: grid
         });
@@ -130,8 +130,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         }
         var win = Ext.create('Lada.view.window.Ortszuordnung', {
             parentWindow: button.up('window'),
-            probe: parentisMp ? null: parent,
-            messprogramm: parentisMp ? parent: null,
+            probe: parentisMp ? null : parent,
+            messprogramm: parentisMp ? parent : null,
             record: null,
             grid: button.up('ortszuordnunggrid')
         });
@@ -257,7 +257,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     execSearch: function(requestingCmp, filter) {
         var ozw = requestingCmp.up('ortszuordnungwindow');
         var verwgrid = ozw.down('verwaltungseinheitengrid');
-        var staatgrid= ozw.down('staatengrid');
+        var staatgrid = ozw.down('staatengrid');
         // Filter stores
         var verwaltungseinheiten = verwgrid.getStore();
         var staaten = staatgrid.getStore();
@@ -363,7 +363,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      * @param filterstring (optional): The string to filter
      */
     doOrtFilter: function(ozw, filterstring) {
-        var ortgrid= ozw.down('ortstammdatengrid');
+        var ortgrid = ozw.down('ortstammdatengrid');
         ozw.ortstore.clearFilter();
         var netzfilter = null;
         var mst_store = Ext.data.StoreManager.get('messstellen');

@@ -80,7 +80,7 @@ Ext.define('Lada.util.LocalStorage', {
          */
         getDokpoolEvents: function() {
             var events = this.getProperty(this.DOKPOOL_EVENT_KEY);
-            return events? Ext.clone(events): {};
+            return events ? Ext.clone(events) : {};
         },
 
         /**

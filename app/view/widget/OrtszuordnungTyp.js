@@ -32,7 +32,7 @@ Ext.define('Lada.view.widget.OrtszuordnungTyp', {
         this.emptyText = i18n.getMsg('emptytext.ortszuordnungtyp');
 
         var store = Ext.data.StoreManager.get('ortszuordnungtyp');
-        if (!store){
+        if (!store) {
             Ext.create('Lada.store.OrtszuordnungTyp', {
                 storeId: 'ortszuordnungtyp'
             });

@@ -155,9 +155,9 @@ Ext.define('Lada.view.window.ImportResponse', {
             html += i18n.getMsg(response.message) + ':<br/>'
                 + response.data;
         }
-        me.download =  '<p>' + me.mstEncoding + '<p>' + me.download;
+        me.download = '<p>' + me.mstEncoding + '<p>' + me.download;
         if (me.importtag) {
-            me.download =  'Tag: ' + me.importtag + me.download;
+            me.download = 'Tag: ' + me.importtag + me.download;
         }
         me.down('panel').setHtml(me.download);
     },

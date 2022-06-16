@@ -28,7 +28,7 @@ Ext.define('Lada.store.LocalPagingStore', {
         this.pageSize = Lada.pagingSize;
         var maxpages = Math.ceil(count / this.pageSize);
         page = (page > maxpages) ? maxpages : page;
-        page = !page ? 1: page;
+        page = !page ? 1 : page;
         this.currentPage = page;
         this.applyPaging();
     },
@@ -63,7 +63,7 @@ Ext.define('Lada.store.LocalPagingStore', {
         if (!tbs.length) {
             return;
         }
-        for (var i= 0; i< tbs.length; i++) {
+        for (var i = 0; i < tbs.length; i++) {
             var grid = tbs[i].up('grid');
             if (
                 !grid ||
@@ -76,8 +76,8 @@ Ext.define('Lada.store.LocalPagingStore', {
             this.changeToolbar();
             this.pageFilter = new Ext.util.Filter({
                 filterFn: function(record) {
-                    var low = (me.currentPage -1) * me.pageSize;
-                    var high = (me.currentPage) * me.pageSize -1;
+                    var low = (me.currentPage - 1) * me.pageSize;
+                    var high = (me.currentPage) * me.pageSize - 1;
                     if (me.getRange(low, high).indexOf(record) > -1) {
                         return true;
                     }
@@ -91,9 +91,9 @@ Ext.define('Lada.store.LocalPagingStore', {
     },
 
     changeToolbar: function() {
-        var i18n= Lada.getApplication().bundle;
+        var i18n = Lada.getApplication().bundle;
         var tbs = Ext.ComponentQuery.query('pagingtoolbar');
-        for (var i= 0; i< tbs.length; i++) {
+        for (var i = 0; i < tbs.length; i++) {
             var grid = tbs[i].up('grid');
             if (!grid || !grid.store.model ||
                 grid.store.model !== this.model ) {

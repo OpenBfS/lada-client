@@ -126,7 +126,7 @@ Ext.define('Lada.controller.form.Ort', {
                     }
                     var ozw = formpanel.up('panel').parentWindow;
                     if (ozw && ozw.down('tabpanel')) {
-                        var ortgrid= ozw.down('tabpanel')
+                        var ortgrid = ozw.down('tabpanel')
                             .down('ortstammdatengrid');
                         if (ortgrid) {
                             if (ortgrid.store.storeId === 'ext-empty-store') {
@@ -151,7 +151,7 @@ Ext.define('Lada.controller.form.Ort', {
                         if (json) {
                             if (json.message) {
                                 Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                +' #'+ json.message,
+                                + ' #' + json.message,
                                 i18n.getMsg(json.message));
                             } else {
                                 Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -317,8 +317,8 @@ Ext.define('Lada.controller.form.Ort', {
         //As empty form values are saved as "" and empty record values as null,
         //the == operator will fail to compare them
         var equals = function(first, second) {
-            first = first === '' ? null: first;
-            second = second === '' ? null: second;
+            first = first === '' ? null : first;
+            second = second === '' ? null : second;
             return first === second;
         };
         if (
@@ -408,7 +408,7 @@ Ext.define('Lada.controller.form.Ort', {
      */
     checkKDAchangeEnabled: function(panel) {
         var form = panel.getForm();
-        if (form.getRecord().get('readonly')||
+        if (form.getRecord().get('readonly') ||
                 form.getRecord().get('plausibleReferenceCount') > 0 ||
                 form.getRecord().get('referenceCountMp') > 0) {
             panel.down('button[action=changeKDA]').setDisabled(true);

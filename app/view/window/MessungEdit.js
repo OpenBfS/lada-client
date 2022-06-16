@@ -259,7 +259,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             }
             title += ' zu Probe ' + me.probe.get('externeProbeId') ;
             if (me.probe.get('hauptprobenNr')) {
-                title += ' / '+ me.probe.get('hauptprobenNr');
+                title += ' / ' + me.probe.get('hauptprobenNr');
             }
             title += ' -  Mst: ' + messstelle.get('messStelle') +
                 ' editieren.';

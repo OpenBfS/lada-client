@@ -32,8 +32,8 @@ Ext.define('Lada.view.widget.Bundesland', {
     forceSelection: this.forceSelection || false,
 
     initComponent: function() {
-        var i18n= Lada.getApplication().bundle;
-        this.emptyText= i18n.getMsg('emptytext.bundesland');
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.bundesland');
         this.store = Ext.data.StoreManager.get('bundeslandwidget');
         this.callParent(arguments);
     }

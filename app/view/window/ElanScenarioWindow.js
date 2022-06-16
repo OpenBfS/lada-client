@@ -210,7 +210,7 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
 
         //Check for changes since last update
         var changedFields = Ext.Array.contains(me.changes, scenario.id) ?
-            me.getChanges(scenario): [];
+            me.getChanges(scenario) : [];
 
         //Add display values
         Ext.Array.each(this.displayValues, function(key) {
@@ -220,7 +220,7 @@ Ext.define('Lada.view.window.ElanScenarioWindow', {
             }
             var keyString = i18n.getMsg('elan.' + key);
             if (typeof value === 'boolean') {
-                value = value? i18n.getMsg('true'): i18n.getMsg('false');
+                value = value ? i18n.getMsg('true') : i18n.getMsg('false');
             }
 
             //Choose template

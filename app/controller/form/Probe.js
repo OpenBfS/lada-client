@@ -175,7 +175,7 @@ Ext.define('Lada.controller.form.Probe', {
                                     rec.get('copyOf'),
                                     i18n.getMsg(responseObj2.message));
                                 saveErrors = saveErrors ?
-                                    saveErrors + errString:
+                                    saveErrors + errString :
                                     errString;
                             }
                             if (savedOZ === fetchedOZ) {
@@ -253,7 +253,7 @@ Ext.define('Lada.controller.form.Probe', {
                             savedMessungenCopies++;
                             if (!success) {
                                 saveErrors = saveErrors ?
-                                    saveErrors + rec.get('id') + ' failed. ':
+                                    saveErrors + rec.get('id') + ' failed. ' :
                                     '' + rec.get('id') + ' failed. ';
                             }
                             if (savedMessungenCopies === fetchedMessungen) {
@@ -358,7 +358,7 @@ Ext.define('Lada.controller.form.Probe', {
                             messwertArr[j].messungsId);
 
                         var cpy = Ext.create('Lada.model.Messwert', messwert);
-                        cpy.data['id']= null;
+                        cpy.data['id'] = null;
                         cpy.phantom = true;
                         messwertCopyArr.push(cpy);
                         messwertRecArr.push(messwertRec);
@@ -569,7 +569,7 @@ Ext.define('Lada.controller.form.Probe', {
                     if (json) {
                         if (json.message) {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                +' #'+json.message,
+                                + ' #' + json.message,
                             i18n.getMsg(json.message));
                         } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -661,7 +661,7 @@ Ext.define('Lada.controller.form.Probe', {
                     if (json) {
                         if (json.message) {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                +' #'+json.message,
+                                + ' #' + json.message,
                             i18n.getMsg(json.message));
                         } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),

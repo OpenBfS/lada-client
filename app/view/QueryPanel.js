@@ -432,7 +432,7 @@ Ext.define('Lada.view.QueryPanel', {
                 }
                 var activeFilters = [];
                 if (items.length) {
-                    for (var i=0; i < items.length; i++) {
+                    for (var i = 0; i < items.length; i++) {
                         var gridColumn = me.gridColumnStore.findRecord(
                             'id',
                             items[i].get('gridColumnId'),

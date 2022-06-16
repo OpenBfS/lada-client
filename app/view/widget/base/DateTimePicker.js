@@ -113,7 +113,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
 
     beforeRender: function() {
         var i18n = Lada.getApplication().bundle;
-        this.todayText= i18n.getMsg('now');
+        this.todayText = i18n.getMsg('now');
         var me = this;
         me.callParent(arguments);
         me.hourField = new Ext.form.field.Number({

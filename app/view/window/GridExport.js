@@ -119,9 +119,9 @@ Ext.define('Lada.view.window.GridExport', {
             }]
         });
 
-        var columnslist= [];
-        var preselected= [];
-        for (var i =0; i < columns.length; i++) {
+        var columnslist = [];
+        var preselected = [];
+        for (var i = 0; i < columns.length; i++) {
             if (columns[i].dataIndex &&
                 columns[i].dataIndex !== 'readonly' &&
                 columns[i].text.length) {
@@ -212,7 +212,7 @@ Ext.define('Lada.view.window.GridExport', {
                 xtype: 'checkbox',
                 name: 'secondarycolumns',
                 fieldLabel: i18n.getMsg('export.secondarycolumns'),
-                checked: this.grid.exportRowexp ? true: false,
+                checked: this.grid.exportRowexp ? true : false,
                 listeners: {
                     change: me.exportsecondarytoggle
                 },
@@ -384,7 +384,7 @@ Ext.define('Lada.view.window.GridExport', {
             return;
         }
         var preselectedEx = [];
-        for (var j=0; j < this.grid.plugins.length; j++) {
+        for (var j = 0; j < this.grid.plugins.length; j++) {
             if (this.grid.plugins[j].ptype === 'gridrowexpander') {
                 this.down('checkbox[name=secondarycolumns]').setHidden(false);
                 this.rowexp = this.grid.plugins[j];
@@ -400,7 +400,7 @@ Ext.define('Lada.view.window.GridExport', {
                     toggled = true;
                 }
                 this.expcolumns = this.rowexp.cmps.items[0].getColumns();
-                for (var col =0; col < this.expcolumns.length; col++) {
+                for (var col = 0; col < this.expcolumns.length; col++) {
                     if (this.expcolumns[col].dataIndex &&
                       this.expcolumns[col].dataIndex !== 'readonly') {
 
@@ -419,7 +419,7 @@ Ext.define('Lada.view.window.GridExport', {
             }
         }
 
-        this.down('button[action=export]').text= i18n.getMsg('export.button');
+        this.down('button[action=export]').text = i18n.getMsg('export.button');
         this.down('tagfield[name=exportexpcolumns]').select(preselectedEx);
     },
 
@@ -463,7 +463,7 @@ Ext.define('Lada.view.window.GridExport', {
         var data = this.getDataSets();
         var prm = [];
         var di = this.grid.rowtarget.dataIndex;
-        for (var i = 0; i< data.length; i++) {
+        for (var i = 0; i < data.length; i++) {
             var urlString = '';
             switch (this.rowexp.type) {
                 case 'Lada.view.grid.Messung':
@@ -478,7 +478,7 @@ Ext.define('Lada.view.window.GridExport', {
                     // eslint-disable-next-line no-loop-func
                     new Ext.Promise(function(resolve, reject) {
                         Ext.Ajax.request({
-                            url: 'lada-server/rest/'+ urlString,
+                            url: 'lada-server/rest/' + urlString,
                             timeout: 30 * 1000,
                             success: function(response) {
                                 resolve(JSON.parse(response.responseText).data);
@@ -579,7 +579,7 @@ Ext.define('Lada.view.window.GridExport', {
             return false;
         }
         var expcolumns = this.getColumns(true);
-        for (var row=0; row < data.length; row++) {
+        for (var row = 0; row < data.length; row++) {
             var iresult = {
                 type: 'Feature',
                 properties: {},
@@ -663,7 +663,7 @@ Ext.define('Lada.view.window.GridExport', {
             for (var i = 0; i < dataset.length; i++) {
                 var mid = dataset[i].get(this.hasMessung);
                 if (Array.isArray(mid)) {
-                    for (var j=0; j < mid.length; j++) {
+                    for (var j = 0; j < mid.length; j++) {
                         jsondata.messungen.push(mid[j]);
                     }
                 } else {
@@ -676,7 +676,7 @@ Ext.define('Lada.view.window.GridExport', {
             }
         } else if (this.hasProbe) {
             jsondata.proben = [];
-            for (var k= 0; k < dataset.length; k++) {
+            for (var k = 0; k < dataset.length; k++) {
                 var pid = dataset[k].get(this.hasProbe);
                 jsondata.proben.push(pid);
             }
@@ -744,7 +744,7 @@ Ext.define('Lada.view.window.GridExport', {
     changeFormat: function(box, newValue) {
         var win = box.up('window');
         win.down('fieldset[name=csvoptions]').setVisible(
-            newValue === 'csv' ? true: false
+            newValue === 'csv' ? true : false
         );
         win.resetCopyButton(win);
         if (newValue === 'geojson') {
@@ -755,7 +755,7 @@ Ext.define('Lada.view.window.GridExport', {
             win.down('button[action=copyGeoJson]').setVisible(false);
         }
         win.down('combobox[name=encoding]').setVisible(
-            newValue === 'csv' || newValue === 'laf' ? true: false
+            newValue === 'csv' || newValue === 'laf' ? true : false
         );
         win.down('checkbox[name=allrows]').setVisible(newValue !== 'laf');
         var ecolVisible = true;
@@ -832,7 +832,7 @@ Ext.define('Lada.view.window.GridExport', {
         } else {
             exportcols = this.down('tagfield[name=exportcolumns]').getValue();
         }
-        for (var i=0; i < cols.length; i ++) {
+        for (var i = 0; i < cols.length; i ++) {
             if (!cols[i].dataIndex || cols[i].dataIndex === 'readonly') {
                 continue;
             }
@@ -853,7 +853,7 @@ Ext.define('Lada.view.window.GridExport', {
             text = i18n.getMsg(message);
         }
 
-        var window = Ext.ComponentQuery.query('window[title='+ title+ ']');
+        var window = Ext.ComponentQuery.query('window[title=' + title + ']');
         if (window.length) {
             return;
         }
@@ -1037,11 +1037,11 @@ Ext.define('Lada.view.window.GridExport', {
                 });
         }
         var content = [];
-        for (var j=0; j< secondaryData.length; j++) {
+        for (var j = 0; j < secondaryData.length; j++) {
             var item = {};
             // eslint-disable-next-line no-loop-func
             Object.keys(secondaryData[j]).forEach(function() {
-                for (var i=0; i< columns.length; i++) {
+                for (var i = 0; i < columns.length; i++) {
                     var di = columns[i].dataIndex;
                     if (di) {
                         item[di] = secondaryData[j][di];

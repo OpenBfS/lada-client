@@ -153,12 +153,12 @@ Ext.define('Lada.view.window.Ort', {
         this.mode = mode;
         if (this.mode) {
             this.setTitle(
-                this.record.phantom?
+                this.record.phantom ?
                     i18n.getMsg('orte.new') :
                     this.record.get('readonly') ?
                         i18n.getMsg('orte.show') + ' - ' +
                          i18n.getMsg('orte.ortId') + ': ' +
-                         this.record.get('ortId'):
+                         this.record.get('ortId') :
                         (i18n.getMsg('orte.edit') + ' - '
                     + i18n.getMsg('orte.ortId') + ': '
                     + this.record.get('ortId'))

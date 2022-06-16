@@ -13,6 +13,7 @@ Ext.define('Lada.view.panel.FileUpload', {
     extend: 'Ext.form.Panel',
     requires: [
         'Ext.form.field.File',
+        'Lada.view.grid.UploadQueue',
         'Lada.view.window.ImportResponse',
         'Lada.controller.grid.Uploads'
     ],
@@ -60,7 +61,7 @@ Ext.define('Lada.view.panel.FileUpload', {
                             return;
                         }
                         var node = Ext.DomQuery.selectNode(
-                            'input[id='+ field.getInputId() + ']');
+                            'input[id=' + field.getInputId() + ']');
                         var files = field.fileInputEl.dom.files;
                         var fileNames = '';
                         var fset = field.up('panel').down('fieldset');

@@ -22,8 +22,8 @@ Ext.define('Lada.view.widget.StatusStufe', {
     minChars: 0,
 
     initComponent: function() {
-        var i18n= Lada.getApplication().bundle;
-        this.emptyText= i18n.getMsg('emptytext.statusstufe');
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.statusstufe');
         this.callParent(arguments);
     }
 });

@@ -21,7 +21,7 @@ Ext.define('Lada.store.Leitstelle', {
     },
     sorters: [{
         property: 'id',
-       direction: 'ASC'
+        direction: 'ASC'
     }],
     sortOnLoad: true
 });

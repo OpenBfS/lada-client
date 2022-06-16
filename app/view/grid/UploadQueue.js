@@ -14,8 +14,7 @@
 
 Ext.define('Lada.view.grid.UploadQueue', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.uploadueuegrid',
-    // requires: ['Lada.controller.grid.Uploads'],
+    alias: 'widget.uploadqueuegrid',
     store: null, //TODO needs to be set
     viewConfig: {
         deferEmptyText: true,
@@ -47,7 +46,7 @@ Ext.define('Lada.view.grid.UploadQueue', {
             dataIndex: 'status',
             width: 80,
             renderer: function(value) {
-                return i18n.getMsg( 'print.status.'+ value);
+                return i18n.getMsg( 'print.status.' + value);
             }
         }, {
             header: i18n.getMsg('print.message'),
@@ -92,9 +91,9 @@ Ext.define('Lada.view.grid.UploadQueue', {
                     return i18n.getMsg('importResponse.failureAndWarnings.true');
                 }
             },
-            getClass: function (value, meta, rec) {
+            getClass: function(value, meta, rec) {
                 // see x.action-col-icon definitions at lada.css for img urls
-                if (rec.get('errors') || rec.get('status') === 'error'){
+                if (rec.get('errors') || rec.get('status') === 'error') {
                     return 'error';
                 }
                 if (rec.get('warnings')) {

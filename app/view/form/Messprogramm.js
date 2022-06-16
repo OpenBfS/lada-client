@@ -13,6 +13,7 @@ Ext.define('Lada.view.form.Messprogramm', {
     extend: 'Ext.form.Panel',
     alias: 'widget.messprogrammform',
     requires: [
+        'Lada.view.form.mixins.DeskriptorFieldset',
         'Lada.view.widget.Datenbasis',
         'Lada.view.widget.base.CheckBox',
         'Lada.view.widget.Messstelle',
@@ -41,6 +42,8 @@ Ext.define('Lada.view.form.Messprogramm', {
     statics: {
         mediaSnScheduler: null
     },
+
+    mixins: ['Lada.view.form.mixins.DeskriptorFieldset'],
 
     initComponent: function() {
         if (Lada.view.form.Messprogramm.mediaSnScheduler === null) {
@@ -591,7 +594,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                 i.setMaxValue(27);
                 break;
             default:
-                return i.setMaxValue(max-1);
+                return i.setMaxValue(max - 1);
         }
     },
 
@@ -679,74 +682,10 @@ Ext.define('Lada.view.form.Messprogramm', {
     },
 
     setMediaDesk: function(record) {
-        var media = record.get('mediaDesk');
-        if (media) {
-            var mediaParts = media.split(' ');
-            Lada.view.form.Messprogramm.mediaSnScheduler.enqueue(
-                this.setMediaSN, [0, mediaParts], this);
-        } else {
-            Lada.view.form.Messprogramm.mediaSnScheduler.enqueue(
-                this.setMediaSN, [0, '0'], this);
-        }
-        Lada.view.form.Messprogramm.mediaSnScheduler.next();
-    },
-
-    setMediaSN: function(ndx, media, beschreibung) {
-        var mediabeschreibung = this.getForm().findField('media');
-        if (ndx >= 12) {
-            Lada.view.form.Messprogramm.mediaSnScheduler.finished();
-            mediabeschreibung.setValue(beschreibung);
-            return;
-        }
-        var me = this;
-        var current = this.down('deskriptor[layer=' + ndx + ']');
-        var cbox = current.down('combobox');
-        cbox.store.proxy.extraParams = {
-            'layer': ndx
-        };
-        if (ndx >= 1) {
-            var parents = current.getParents(cbox);
-            if (parents.length === 0) {
-                Lada.view.form.Messprogramm.mediaSnScheduler.finished();
-                return;
-            }
-            cbox.store.proxy.extraParams.parents = parents;
-        }
-        cbox.store.load(function(records, op, success) {
-            if (!success) {
-                Lada.view.form.Messprogramm.mediaSnScheduler.finished();
-                return;
-            }
-            try {
-                cbox.select(
-                    cbox.store.findRecord('sn', parseInt(media[ndx + 1], 10), 0, false, false, true));
-            } catch (e) {
-                Ext.log({msg: 'Selecting media failed: ' + e, level: 'warn'});
-                Lada.view.form.Messprogramm.mediaSnScheduler.finished();
-                return;
-            }
-            var mediatext = cbox.store.findRecord(
-                'sn', parseInt(media[ndx + 1], 10), 0, false, false, true);
-            if (mediatext !== null) {
-                if (
-                    (ndx <= 3) &&
-                    (media[1] === '01') &&
-                    (mediatext.data.beschreibung !== 'leer')
-                ) {
-                    beschreibung = mediatext.data.beschreibung;
-                } else if (
-                    (media[1] !== '01') &&
-                    (mediatext.data.beschreibung !== 'leer') &&
-                    (ndx <= 1)
-                ) {
-                    beschreibung = mediatext.data.beschreibung;
-                }
-            }
-            var nextNdx = ++ndx;
-            Lada.view.form.Messprogramm.mediaSnScheduler.enqueue(
-                me.setMediaSN, [nextNdx, media, beschreibung], me);
-            Lada.view.form.Messprogramm.mediaSnScheduler.finished();
-        });
+        this.setMediaDeskImpl(
+            Lada.view.form.Messprogramm.mediaSnScheduler,
+            record
+        );
     },
 
     setMessages: function(errors, warnings) {
@@ -785,7 +724,6 @@ Ext.define('Lada.view.form.Messprogramm', {
     },
 
     clearMessages: function() {
-        // TODO
         this.down('cbox[name=mstlabor]').clearWarningOrError();
         //no clearmsg for probeKommentar
         this.down('cbox[name=datenbasisId]').clearWarningOrError();
@@ -830,22 +768,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('cbox[name=probeNehmerId]').setReadOnly(value);
         this.down('messprogrammland[name=mplId]').setReadOnly(value);
         for (var i = 0; i < 12; i++) {
-            this.down('deskriptor[layer='+i+']').setReadOnly(value);
+            this.down('deskriptor[layer=' + i + ']').setReadOnly(value);
         }
-    },
-
-    buildDescriptors: function() {
-        var fields = [];
-        for (var i = 0; i < 12; i++) {
-            fields[i] = {
-                xtype: 'deskriptor',
-                fieldLabel: 'S' + i,
-                labelWidth: 25,
-                width: 190,
-                layer: i,
-                margin: '0, 10, 5, 0'
-            };
-        }
-        return fields;
     }
 });

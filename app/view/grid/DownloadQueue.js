@@ -44,7 +44,7 @@ Ext.define('Lada.view.grid.DownloadQueue', {
             dataIndex: 'status',
             flex: 1,
             renderer: function(value) {
-                return i18n.getMsg( 'print.status.'+ value);
+                return i18n.getMsg( 'print.status.' + value);
             }
         }, {
             header: i18n.getMsg('print.message'),

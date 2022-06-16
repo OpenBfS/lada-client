@@ -149,7 +149,7 @@ Ext.define('Lada.controller.grid.Uploads', {
                 }
             });
         } else {
-            this.showResult(record.get('result'),  {
+            this.showResult(record.get('result'), {
                 mst: record.get('mst'),
                 encoding: record.get('encoding')
             });

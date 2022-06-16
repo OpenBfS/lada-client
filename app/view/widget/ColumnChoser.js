@@ -166,7 +166,7 @@ Ext.define('Lada.view.widget.ColumnChoser', {
         //If visibility changes, apply new value
         if (data[0].get('visible') !== visible) {
             var gcv_store = this.up('querypanel').gridColumnValueStore;
-            for (var i=0; i < data.length; i++) {
+            for (var i = 0; i < data.length; i++) {
                 data[i].set('visible', visible);
                 var origindata = gcv_store.getById(data[i].get('id'));
                 if (!origindata) {
@@ -221,7 +221,7 @@ Ext.define('Lada.view.widget.ColumnChoser', {
         if (store && fixedcolumnstore) {
             // var data = store.getData().items;
             var fixeddata = fixedcolumnstore.getData().items;
-            for (var i=0; i < fixeddata.length; i++) {
+            for (var i = 0; i < fixeddata.length; i++) {
                 var col = store.findRecord(
                     'gridColumnId', fixeddata[i].get('id'));
                 if (col) {

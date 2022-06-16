@@ -55,7 +55,7 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection();
         var ids = [];
-        for (var i= 0; i < selection.length; i++) {
+        for (var i = 0; i < selection.length; i++) {
             ids.push(selection[i].data[grid.rowtarget.dataIndex]);
         }
         var win = Ext.create('Lada.view.window.GenProbenFromMessprogramm', {
@@ -75,7 +75,7 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
         var ids = [];
         var grid = button.up('grid');
         var selection = grid.getView().getSelectionModel().getSelection();
-        for (var i= 0; i < selection.length; i++) {
+        for (var i = 0; i < selection.length; i++) {
             ids.push(selection[i].data[grid.rowtarget.dataIndex]);
         }
         if (ids.length) {
@@ -89,7 +89,7 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
                 success: function(response) {
                     var json = Ext.JSON.decode(response.responseText);
                     var resultMessage = '';
-                    for (var j=0; j< json.data.length; j++) {
+                    for (var j = 0; j < json.data.length; j++) {
                         if (json.data[j].success !== 200) {
                             resultMessage += '<strong>'
                                 + i18n.getMsg('messprogramm') + ': '

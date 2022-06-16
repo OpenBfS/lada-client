@@ -32,8 +32,8 @@ Ext.define('Lada.view.widget.Landkreis', {
     forceSelection: this.forceSelection || false,
 
     initComponent: function() {
-        var i18n= Lada.getApplication().bundle;
-        this.emptyText= i18n.getMsg('emptytext.landkreis');
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.landkreis');
         this.store = Ext.data.StoreManager.get('landkreiswidget');
         this.callParent(arguments);
     }

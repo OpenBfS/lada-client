@@ -41,7 +41,7 @@ Ext.define('Lada.view.window.TrackedWindow', {
      * @return True if window will be shown, else false
      */
     show: function() {
-        var id = this.record? this.record.get('id'): this.recordId;
+        var id = this.record ? this.record.get('id') : this.recordId;
         if (!id) {
             //This is a new record
             this.callParent();
@@ -59,7 +59,7 @@ Ext.define('Lada.view.window.TrackedWindow', {
 
 
     close: function() {
-        var id = this.record? this.record.get('id'): this.recordId;
+        var id = this.record ? this.record.get('id') : this.recordId;
         Lada.util.WindowTracker.close(this.recordType, id, this);
         this.callParent();
     }
