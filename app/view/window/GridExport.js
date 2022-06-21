@@ -484,7 +484,7 @@ Ext.define('Lada.view.window.GridExport', {
                                 resolve(JSON.parse(response.responseText).data);
                             },
                             failure: function() {
-                                reject('export.datatimeout');
+                                reject('err.msg.timeout');
                             }
                         });
                     })

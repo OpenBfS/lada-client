@@ -51,31 +51,22 @@ Ext.define('Lada.view.widget.Tag', {
     //Dropdown
     tpl: Ext.create('Ext.XTemplate',
         '<ul class="x-list-plain"><tpl for=".">',
-        '<tpl if="this.isGlobal(mstId)">',
-        '<li role="option" class="x-boundlist-item"><b>*{tag}</b></li>',
+        '<li role="option" class="x-boundlist-item">',
+        '<tpl if="generated">',
+        '<div class="italic-text"> {tag}*</div>',
+        '<tpl elseif="typId === `global`">',
+        '<div class="italic-text bold-text"> {tag}</div>',
+        '<tpl elseif="typId === `netzbetreiber`">',
+        '<div class="bold-text"> {tag}</div>',
         '<tpl else>',
-        '<li role="option" class="x-boundlist-item">{tag}</li>',
+        '<div> {tag}</div>',
         '</tpl>',
-        '</tpl></ul>',
-        {
-            isGlobal: function(mstId) {
-                return mstId === null || mstId === '';
-            }
-        }
+        '</li>',
+        '</tpl></ul>'
+
     ),
     //Tagfield
-    labelTpl: Ext.create('Ext.XTemplate',
-        '<tpl if="this.isGlobal(mstId)">',
-        '*{tag}',
-        '<tpl else>',
-        '{tag}',
-        '</tpl>',
-        {
-            isGlobal: function(mstId) {
-                return mstId === null || mstId === '';
-            }
-        }
-    ),
+    labelTpl: Ext.create('Ext.XTemplate', '{tag}<tpl if="generated">*</tpl>'),
 
     /**
      * Get the component to render the loading/reloading mask to.
@@ -99,7 +90,13 @@ Ext.define('Lada.view.widget.Tag', {
 
     initComponent: function() {
         var me = this;
-        this.store = Ext.create('Lada.store.Tag');
+        var store = Ext.data.StoreManager.get('tags');
+        if (!store) {
+            Ext.create('Lada.store.Tag', {
+                storeId: 'tags'
+            });
+        }
+        this.store = Ext.data.StoreManager.get('tags');
 
         this.reloadMask = Ext.create('Lada.view.window.ReloadMask', {
             reloadButtonHandler: me.reloadButtonClicked,
@@ -107,7 +104,7 @@ Ext.define('Lada.view.widget.Tag', {
         });
 
         this.store.setLoadingCallback(
-            function(store, records, successful) {
+            function(str, records, successful) {
                 //Skip if component is no longer visible
                 if (!me.isVisible()) {
                     return;
@@ -130,7 +127,7 @@ Ext.define('Lada.view.widget.Tag', {
             '<li data-selectionIndex="{[xindex - 1]}"',
             ' data-recordId="{internalId}"',
             ' role="presentation" class="x-tagfield-item">',
-            '<div role="presentation" class="x-tagfield-item-text">',
+            '<div role="presentation" class="{[this.getItemCls(values.data)]}">',
             '{[this.getItemLabel(values.data)]}',
             '</div>',
             '<tpl if ="!this.isReadOnly()">',
@@ -145,18 +142,54 @@ Ext.define('Lada.view.widget.Tag', {
                 isReadOnly: function() {
                     return me.readOnly;
                 },
+                getItemCls: function(value) {
+                    var result = 'x-tagfield-item-text';
+                    if (value.generated) {
+                        return result + ' italic-text';
+                    }
+                    switch (value.typId) {
+                        case 'global':
+                            return result + ' bold-text italic-text';
+                        case 'netzbetreiber':
+                            return result + ' bold-text';
+                        default:
+                            return result;
+                    }
+                },
                 strict: true
             }
         );
+
+        // Filter selectable tags in dropdown
+        this.on({
+            focus: function(tagwidget) {
+                var tagStore = tagwidget.getStore();
+                tagStore.clearFilter();
+                tagStore.filterBy(function(record) {
+                    return record.get('typId') === 'global'
+                        || record.get('typId') === 'netzbetreiber'
+                        && Ext.Array.contains(
+                            Lada.netzbetreiber,
+                            record.get('netzbetreiberId'))
+                        || record.get('typId') === 'mst'
+                        && Ext.Array.contains(
+                            Lada.mst,
+                            record.get('mstId'));
+                });
+            },
+            focusleave: function(tagwidget) {
+                tagwidget.getStore().clearFilter();
+            }
+        });
 
         this.callParent(arguments);
     },
 
     /**
-     * Sets the current Probe or Messung and triggers the preselection
+     * Sets the current Proben or Messungen and triggers the preselection
      */
-    setTagged: function(id, recordType) {
-        this.store.setTagged(id, recordType);
+    setTagged: function(ids, recordType) {
+        this.store.setTagged(ids, recordType);
         this.preselectTags();
     },
 
@@ -199,6 +232,10 @@ Ext.define('Lada.view.widget.Tag', {
 
             //Set tags, received from the server
             if (records) {
+                // Add assigned tags to global store so they appear in widget
+                // if their ID is used in setValue().
+                this.store.add(records);
+
                 for (var j = 0; j < records.length; j++) {
                     ids.push(records[j].id);
                 }
@@ -207,20 +244,6 @@ Ext.define('Lada.view.widget.Tag', {
             this.resetOriginalValue();
             this.setLoading(false);
         });
-    },
-
-    /**
-     * Check if a tag with the given name already exists.
-     * @param {String} tagName Tagname to check
-     * @return {Boolean} true if a tag with the given name exists
-     */
-    tagExists: function(tagName) {
-        //Find record: case sensitive and exact match
-        if (this.store.find('tag', tagName, 0, false, true, true) !== -1) {
-            return true;
-        } else {
-            return false;
-        }
     },
 
     /**

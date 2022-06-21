@@ -10,7 +10,7 @@
  * Model class for Staat Stammdaten
  */
 Ext.define('Lada.model.Staat', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id',

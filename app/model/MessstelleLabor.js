@@ -10,7 +10,7 @@
  * Model for Messstelle Stammdaten.
  */
 Ext.define('Lada.model.MessstelleLabor', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:

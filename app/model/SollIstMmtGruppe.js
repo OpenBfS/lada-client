@@ -10,7 +10,7 @@
  * Model class representing a SollIstMmtGruppe
  */
 Ext.define('Lada.model.SollIstMmtGruppe', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'

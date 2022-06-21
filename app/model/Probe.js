@@ -11,7 +11,7 @@
  * This class represents and defines the model of a 'Probe'
  **/
 Ext.define('Lada.model.Probe', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Save original record if probe is a copy of another

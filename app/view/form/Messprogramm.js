@@ -506,10 +506,59 @@ Ext.define('Lada.view.form.Messprogramm', {
                             border: false
                         }]
                     }]
+                //Zusatzwert-Fieldset
+                }, {
+                    xtype: 'fset',
+                    name: 'zusatzwertFieldset',
+                    title: i18n.getMsg('zusatzwertFieldset'),
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch'
+                    },
+                    border: true,
+                    margin: '10, 10, 5, 5',
+                    defaults: {
+                        margin: '5,5,5,5'
+                    },
+                    items: [{
+                        xtype: 'tagfield',
+                        autoSelect: false,
+                        queryMode: 'local',
+                        width: '100%',
+                        name: 'probenZusatzs',
+                        store: Ext.create('Lada.store.Probenzusaetze'),
+                        valueField: 'id',
+                        tpl: Ext.create(
+                            'Ext.XTemplate',
+                            '<ul class="x-list-plain"><tpl for=".">',
+                            '<li role="option" class="x-boundlist-item">',
+                            '{id} - {beschreibung}',
+                            '</li>',
+                            '</tpl></ul>'
+                        ),
+                        labelTpl: Ext.create('Ext.XTemplate',
+                        '<tpl for=".">{id} - {beschreibung}</tpl>')
+                    }]
                 }]
             }]
         }];
         this.callParent(arguments);
+    },
+
+    /**
+     * Filter ProbenZusatz tagfield by umwId
+     *
+     * @param {*} umwId UmwId for filtering
+     */
+    filterProbenZusatzs: function(umwId) {
+        var me = this;
+        var pzStore = me.down('tagfield[name=probenZusatzs]').store;
+        //Filter ProbenZusatzs
+        pzStore.load({
+            params: {
+                'umwId': umwId
+            }
+        });
     },
 
     populateIntervall: function(record, intervall) {
@@ -603,12 +652,27 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('button[action=copy]').setDisabled(
             messRecord.get('readonly'));
         this.clearMessages();
+
+        // Add probenZusatzs as an array of model instances to the record.
+        // This is necessary, because loadRecord() calls setValue() on
+        // matching fields internally and that won't work for the matching
+        // tagfield if probenZusatzs is just an array of ordinary objects
+        // (such as returned by `messRecord.getData(true)') or just
+        // internally available as associated data.
+        // Note that setting the value directly at the tagfield, e.g. using
+        // setValue(), is not an option because that prevents any
+        // dirtychange events from occurring once any value has been chosen
+        // in the tagfield.
+        messRecord.set(
+            'probenZusatzs', messRecord.probenZusatzs().getData().items);
         this.getForm().loadRecord(messRecord);
         if (!messRecord.data || messRecord.data.id === null) {
             return;
         }
 
         this.populateIntervall(messRecord);
+
+        this.filterProbenZusatzs(messRecord.get('umwId'));
 
         var mstStore = Ext.data.StoreManager.get('messstellen');
         var mstId = mstStore.getById(messRecord.get('mstId'));
@@ -678,7 +742,6 @@ Ext.define('Lada.view.form.Messprogramm', {
         }
         this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
         this.down('netzbetreiber').down('combobox').resetOriginalValue();
-
     },
 
     setMediaDesk: function(record) {
@@ -767,6 +830,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('cbox[name=mehId]').setReadOnly(value);
         this.down('cbox[name=probeNehmerId]').setReadOnly(value);
         this.down('messprogrammland[name=mplId]').setReadOnly(value);
+        this.down('tagfield[name=probenZusatzs]').setReadOnly(value);
         for (var i = 0; i < 12; i++) {
             this.down('deskriptor[layer=' + i + ']').setReadOnly(value);
         }

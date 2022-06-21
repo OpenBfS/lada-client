@@ -10,7 +10,7 @@
  * Model class representing a Kta Gruppe
  */
 Ext.define('Lada.model.KtaGruppe', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'

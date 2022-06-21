@@ -10,7 +10,7 @@
  * Model class for Messwerte
  */
 Ext.define('Lada.model.Messwert', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'

@@ -85,6 +85,10 @@ Ext.define('Lada.controller.grid.Uploads', {
                             item.set('message', json.error);
                             item.set('status', 'error');
                         }
+                        var store = Ext.data.StoreManager.get('tags');
+                        if (store) {
+                            store.reload();
+                        }
                     },
                     failure: function(response) {
                         item.set('done', true);
@@ -93,6 +97,10 @@ Ext.define('Lada.controller.grid.Uploads', {
                             item.set('message', 'URL not found');
                         } else {
                             item.set('message', 'bad server answer');
+                        }
+                        var store = Ext.data.StoreManager.get('tags');
+                        if (store) {
+                            store.reload();
                         }
                     }
                 });

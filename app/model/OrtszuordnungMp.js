@@ -10,7 +10,7 @@
  * Model class for Ortszuordnung of Messprogramme
  */
 Ext.define('Lada.model.OrtszuordnungMp', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'

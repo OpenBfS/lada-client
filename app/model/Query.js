@@ -10,7 +10,7 @@
  * Model class for Queries
  */
 Ext.define('Lada.model.Query', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
     autoLoad: true,
     proxy: {
         type: 'rest',

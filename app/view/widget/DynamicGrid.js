@@ -1046,7 +1046,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     genericAddButton: function() {
         if (
-            this.rowtarget.dataType === 'probeId' ||
+            ['probeId', 'tagId'].indexOf(this.rowtarget.dataType) >= 0 ||
             ( ['mpId', 'probenehmer', 'dsatzerz', 'mprkat', 'ortId'].indexOf(
                 this.rowtarget.dataType) >= 0
                 && Ext.Array.contains(Lada.funktionen, 4)
@@ -1072,7 +1072,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     genericDeleteButton: function() {
         if (
-            ['probeId', 'mpId', 'ortId', 'messungId']
+            ['probeId', 'mpId', 'ortId', 'messungId', 'tagId']
                 .indexOf(this.rowtarget.dataType) >= 0 ||
             ( ['probenehmer', 'dsatzerz', 'mprkat'].indexOf(
                 this.rowtarget.dataType) >= 0
@@ -1129,16 +1129,46 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      * reloading
      */
     reload: function(callback) {
+        var selection = this.getSelection();
         var store = this.getStore();
         var options = store.lastOptions;
         options.scope = this;
         options.callback = function() {
             this.setStore(store);
+            this.select(selection);
             if (callback) {
                 callback();
             }
         };
         store.load(options);
+    },
+
+    /**
+     * Get array of IDs of selected rows.
+     */
+    getSelection: function() {
+        var selection = [];
+        var me = this;
+        this.getSelectionModel().getSelection().forEach(function(item) {
+            selection.push(item.get(me.rowtarget.dataIndex));
+        });
+        return selection;
+    },
+
+    /**
+     * Select rows by given IDs.
+     */
+    select: function(ids) {
+        var records = [];
+        var me = this;
+        ids.forEach(function(id) {
+            var rec = me.store.findRecord(
+                me.rowtarget.dataIndex, id, false, false, false, true);
+            if (rec) {
+                records.push(rec);
+            }
+        });
+        this.getSelectionModel().select(records);
     },
 
     addRowExpanderButton: function() {

@@ -10,7 +10,7 @@
  * Model class for MessprogrammKategorie Stammdaten
  */
 Ext.define('Lada.model.MessprogrammKategorie', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'

@@ -10,7 +10,7 @@
  * Model class for Pflichtmessgroesse Stammdaten.
  */
 Ext.define('Lada.model.Pflichtmessgroesse', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:

@@ -10,7 +10,7 @@
  * Model for Messgroesse Stammdaten.
  */
 Ext.define('Lada.model.Messgroesse', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:

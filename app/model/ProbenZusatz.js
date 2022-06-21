@@ -7,10 +7,10 @@
  */
 
 /**
- * Model class for Probenzusatz Stammdaten.
+ * Model class for ProbenZusatz Stammdaten.
  */
-Ext.define('Lada.model.Probenzusatz', {
-    extend: 'Ext.data.Model',
+Ext.define('Lada.model.ProbenZusatz', {
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:
@@ -24,7 +24,8 @@ Ext.define('Lada.model.Probenzusatz', {
         name: 'id'
     }, {
         name: 'owner',
-        type: 'boolean'
+        type: 'boolean',
+        persist: false
     }, {
         name: 'readonly',
         type: 'boolean',

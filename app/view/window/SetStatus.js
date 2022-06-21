@@ -108,7 +108,6 @@ Ext.define('Lada.view.window.SetStatus', {
             xtype: 'panel',
             hidden: true,
             margin: '5, 5, 5, 5',
-            scrollable: true,
             name: 'result'
         }, {
             xtype: 'progressbar',

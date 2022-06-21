@@ -938,6 +938,14 @@ Ext.define('Lada.controller.Query', {
                             options);
                         negateCheckbox = true;
                         break;
+                    case 'ortszusatz':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        field = Ext.create('Lada.view.widget.OrtsZusatz',
+                            options);
+                        negateCheckbox = true;
+                        break;
                     case 'sollistUmwGr':
                         options.multiSelect = true;
                         options.editable = true;
@@ -973,6 +981,13 @@ Ext.define('Lada.controller.Query', {
                         field = Ext.create('Lada.view.widget.Tag',
                             options);
                         negateCheckbox = false;
+                        break;
+                    case 'tagTyp':
+                        options.multiSelect = true;
+                        options.value = recs[i].get('filterValue');
+                        field = Ext.create('Lada.view.widget.TagTyp',
+                            options);
+                        negateCheckbox = true;
                         break;
                     default:
                         options.value = recs[i].get('filterValue');
@@ -1141,6 +1156,7 @@ Ext.define('Lada.controller.Query', {
             'probeId',
             'mpId',
             'ortId',
+            'tagId',
             'probenehmer',
             'dsatzerz',
             'mprkat'

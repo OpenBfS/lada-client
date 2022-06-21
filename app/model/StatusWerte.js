@@ -10,7 +10,7 @@
  * Model class for StatusWerte
  */
 Ext.define('Lada.model.StatusWerte', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id',

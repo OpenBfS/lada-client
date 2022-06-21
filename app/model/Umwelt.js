@@ -10,7 +10,7 @@
  * Model class for Umweltbereich Stammdaten.
  */
 Ext.define('Lada.model.Umwelt', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:

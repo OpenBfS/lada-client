@@ -89,6 +89,10 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 title = i18n.getMsg('delete.multiple_messung.window.title');
                 dialog1 = i18n.getMsg('delete.multiple_messung');
                 break;
+            case 'tagId':
+                title = i18n.getMsg('delete.multiple_tag.window.title');
+                dialog1 = i18n.getMsg('delete.multiple_tag');
+                break;
 
 
         }
@@ -211,6 +215,10 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
             case 'ortId':
                 url = 'lada-server/rest/ort/';
                 datatype = 'Ort';
+                break;
+            case 'tagId':
+                url = 'lada-server/rest/tag/';
+                datatype = 'Tag';
                 break;
         }
         for (var i = 0; i < me.selection.length; i++) {

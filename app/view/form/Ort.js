@@ -96,6 +96,7 @@ Ext.define('Lada.view.form.Ort', {
             collapsible: true,
             collapsed: true,
             title: i18n.getMsg('orte.prop'),
+            name: 'reiProperties',
             items: [{
                 xtype: 'tfield',
                 labelWidth: 125,
@@ -321,6 +322,9 @@ Ext.define('Lada.view.form.Ort', {
         this.down('staat[name=staatId]').clearWarningOrError();
         this.down('koordinatenart[name=kdaId]').clearWarningOrError();
         this.down('fset[name=koordinaten]').clearMessages();
+        this.down('fset[name=reiProperties]').clearMessages();
+        this.down('tfield[name=ortId]').clearWarningOrError();
+        this.down('ktagruppe[name=ktaGruppeId]').clearWarningOrError();
     },
 
     setReadOnly: function(value) {

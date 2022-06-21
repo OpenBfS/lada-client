@@ -11,7 +11,9 @@
  * This class represents and defines the model of a 'Messprogramm'
  **/
 Ext.define('Lada.model.Messprogramm', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
+
+    hasMany: 'ProbenZusatz',
 
     fields: [{
         name: 'id'
@@ -110,7 +112,11 @@ Ext.define('Lada.model.Messprogramm', {
         },
         writer: {
             type: 'json',
-            writeAllFields: true
+            writeAllFields: true,
+            allDataOptions: {
+                persist: true,
+                associated: true
+            }
         }
     }
 });

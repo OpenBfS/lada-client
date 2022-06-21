@@ -1,4 +1,4 @@
-/* Copyright (C) 2013 by Bundesamt fuer Strahlenschutz
+/* Copyright (C) 2022 by Bundesamt fuer Strahlenschutz
  * Software engineering by Intevation GmbH
  *
  * This file is Free Software under the GNU GPL (v>=3)
@@ -7,12 +7,12 @@
  */
 
 /**
- * Model class for query Groups
- */
-Ext.define('Lada.model.QueryGroup', {
+ * Base class for all other model classes.
+ **/
+Ext.define('Lada.model.LadaBase', {
     extend: 'Ext.data.Model',
-    fields: [
-        {name: 'messStellesIds'},
-        {name: 'mst_name', persist: false}
-    ]
+
+    schema: {
+        namespace: 'Lada.model'
+    }
 });

@@ -2,7 +2,7 @@
  *
  */
 Ext.define('Lada.model.Deskriptor', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:

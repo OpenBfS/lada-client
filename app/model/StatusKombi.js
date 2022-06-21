@@ -10,7 +10,7 @@
  * Model class for StatusKombi
  */
 Ext.define('Lada.model.StatusKombi', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'

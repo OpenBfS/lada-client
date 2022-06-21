@@ -10,7 +10,7 @@
  * Model for OrtsZusatz Stammdaten.
  */
 Ext.define('Lada.model.OrtszuordnungTyp', {
-    extend: 'Ext.data.Model',
+    extend: 'Lada.model.LadaBase',
 
     /**
      * Fields are:

@@ -13,9 +13,9 @@ Ext.define('Lada.store.Tag', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Tag',
     autoLoad: true,
-    //Probe id used for filtering for selected tags
+    //Probe ids used for filtering for selected tags
     pId: null,
-    //Probe id used for filtering for selected tags
+    //Messung ids used for filtering for selected tags
     mId: null,
 
     /**
@@ -40,10 +40,11 @@ Ext.define('Lada.store.Tag', {
 
     /**
      * Set the probe or messung ID as a filter param to get assigned tags
-     * @param id ID to use
+     * @param ids list of IDs to use. If several ids are given, the display
+     * will show the tags shared by all ids
      * @param recordType 'probe' or 'messung'
      */
-    setTagged: function(id, recordType) {
+    setTagged: function(ids, recordType) {
         if (!this.assignedTagsStore) {
             this.assignedTagsStore = Ext.create('Lada.store.Tag', {
                 autoLoad: false
@@ -55,16 +56,16 @@ Ext.define('Lada.store.Tag', {
         switch (recordType) {
             case 'messung':
                 this.pId = null;
-                this.mId = id;
+                this.mId = ids;
                 this.assignedTagsStore.proxy.extraParams = {
-                    mid: id
+                    mid: ids
                 };
                 break;
             case 'probe':
-                this.pId = id;
+                this.pId = ids;
                 this.mId = null;
                 this.assignedTagsStore.proxy.extraParams = {
-                    pid: id
+                    pid: ids
                 };
                 break;
             default:
@@ -99,68 +100,5 @@ Ext.define('Lada.store.Tag', {
                 callback: callback
             });
         }
-    },
-
-    /**
-     * Creates a new to for a given Probe or Messung using a POST request
-     * @param tagName Tag name
-     * @param id ID of Probe or Messung to create tag for
-     * @param 'probe' or 'messung'
-     * @param callback Callback function to call after save
-     */
-    createTag: function(tagName, id, recordType, callback) {
-        var mstId = Lada.mst[0];
-        var tag = {
-            tag: tagName,
-            mstId: mstId
-        };
-        var zuordnung;
-        switch (recordType) {
-            case 'messung':
-                zuordnung = {
-                    messungId: id,
-                    tag: tag
-                };
-                break;
-            case 'probe':
-                zuordnung = {
-                    probeId: id,
-                    tag: tag
-                };
-                break;
-            default:
-                Ext.raise('Unkown record type: ' + recordType);
-        }
-        Ext.Ajax.request({
-            url: this.proxy.url,
-            method: 'POST',
-            jsonData: zuordnung,
-            success: callback,
-            failure: this.failureHandler
-        });
-    },
-
-    /**
-     * Creates or deletes a reference to the given tag ID.
-     */
-    editZuordnung: function(tag, method, callback) {
-        var zuordnung = {
-            probeId: this.pId,
-            messungId: this.mId,
-            tagId: tag
-        };
-        Ext.Ajax.request({
-            url: this.proxy.url,
-            method: method,
-            jsonData: zuordnung,
-            callback: callback
-        });
-    },
-
-    failureHandler: function() {
-        var i18n = Lada.getApplication().bundle;
-        Ext.Msg.alert(
-            i18n.getMsg('tag.widget.err.genericsavetitle'),
-            i18n.getMsg('tag.widget.err.genericsave'));
     }
 });
