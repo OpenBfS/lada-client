@@ -62,7 +62,6 @@ Ext.application({
         'Lada.store.DatensatzErzeuger',
         'Lada.store.DownloadQueue',
         'Lada.store.UploadQueue',
-        'Lada.store.GenericResults',
         'Lada.store.MessprogrammKategorie',
         'Lada.store.GridColumn',
         'Lada.store.Query',
@@ -78,7 +77,6 @@ Ext.application({
         'Lada.view.window.ElanScenarioWindow',
         'Lada.view.window.TrackedWindow',
         'Lada.util.Date',
-        'Lada.util.FunctionScheduler',
         'Lada.util.WindowTracker',
         'Lada.util.LocalStorage',
         'Lada.util.WindowTracker',
@@ -174,7 +172,6 @@ Ext.application({
         // ask before closing/refreshing the window.
         // Not all browsers will respect this, depending on settings
         window.addEventListener('beforeunload', this.beforeCloseHandler);
-        Ext.create('Lada.store.GenericResults');
     },
 
     /*
@@ -435,10 +432,6 @@ Ext.application({
             storeId: 'ktaGruppe',
             autoLoad: true
         });
-        Ext.create('Lada.store.GenericResults', {
-            storeId: 'genericresults',
-            autoLoad: false
-        });
 
         //A Store containing all MST a User is allowed to set.
         Ext.create('Lada.store.Messstellen', {
@@ -455,9 +448,9 @@ Ext.application({
             autoLoad: true,
             listeners: {
                 beforeload: function(store, operation) {
-                    operation.setParams(Ext.apply(operation.getParams()||{}, {
-                        netzbetreiberId: Lada.netzbetreiber.toString()
-                    }));
+                    operation.setParams({
+                        netzbetreiberId: Lada.netzbetreiber
+                    });
                 },
                 load: {
                     fn: function(store) {
@@ -588,7 +581,6 @@ Ext.application({
     // Define the controllers of the application. They will be initialized
     // first before the application "launch" function is called.
     controllers: [
-        'Lada.controller.Ort',
         'Lada.controller.grid.ProbeList',
         'Lada.controller.grid.MessprogrammeList',
         'Lada.controller.grid.MessungList',
@@ -613,6 +605,8 @@ Ext.application({
         'Lada.controller.Global',
         'Lada.controller.Print',
         'Lada.controller.ElanScenario',
-        'Lada.controller.grid.Downloads'
+        'Lada.controller.grid.Downloads',
+        'Lada.controller.SetTags',
+        'Lada.controller.form.Tag'
     ]
 });

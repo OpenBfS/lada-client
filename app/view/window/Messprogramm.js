@@ -41,7 +41,7 @@ Ext.define('Lada.view.window.Messprogramm', {
             text: i18n.getMsg('generateproben'),
             action: 'generateproben',
             scope: this,
-            disabled: this.record? false : true,
+            disabled: this.record ? false : true,
             // further disabling/enabling logic in the controller
             handler: function() {
                 //Make the Window a "singleton"
@@ -188,8 +188,8 @@ Ext.define('Lada.view.window.Messprogramm', {
                     me.setTitle(
                         i18n.getMsg(
                             'messprogramm.window.edit.title') +
-                            ' <i>(Referenzierte Proben '+
-                            me.record.get('referenceCount')+
+                            ' <i>(Referenzierte Proben ' +
+                            me.record.get('referenceCount') +
                             ')</i>');
                 }
             };

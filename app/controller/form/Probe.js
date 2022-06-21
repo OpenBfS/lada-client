@@ -175,7 +175,7 @@ Ext.define('Lada.controller.form.Probe', {
                                     rec.get('copyOf'),
                                     i18n.getMsg(responseObj2.message));
                                 saveErrors = saveErrors ?
-                                    saveErrors + errString:
+                                    saveErrors + errString :
                                     errString;
                             }
                             if (savedOZ === fetchedOZ) {
@@ -253,7 +253,7 @@ Ext.define('Lada.controller.form.Probe', {
                             savedMessungenCopies++;
                             if (!success) {
                                 saveErrors = saveErrors ?
-                                    saveErrors + rec.get('id') + ' failed. ':
+                                    saveErrors + rec.get('id') + ' failed. ' :
                                     '' + rec.get('id') + ' failed. ';
                             }
                             if (savedMessungenCopies === fetchedMessungen) {
@@ -358,7 +358,7 @@ Ext.define('Lada.controller.form.Probe', {
                             messwertArr[j].messungsId);
 
                         var cpy = Ext.create('Lada.model.Messwert', messwert);
-                        cpy.data['id']= null;
+                        cpy.data['id'] = null;
                         cpy.phantom = true;
                         messwertCopyArr.push(cpy);
                         messwertRecArr.push(messwertRec);
@@ -510,28 +510,6 @@ Ext.define('Lada.controller.form.Probe', {
         this.checkCommitEnabled(combo);
     },
 
-
-    /**
-     * The Messtellen Store contains ALL Messtellen.
-     * Filter the store in this combobox to reduce the choices
-     * to the subset which the user is allowed to use.
-     *
-     * The app.js also creates a messstellenFiltered store,
-     * which contains this selection. Maybe this can be used here in future
-     * TODO
-     */
-    filter: function(field) {
-        var fil = Ext.create('Ext.util.Filter', {
-            filterFn: function(item) {
-                if (Ext.Array.contains(Lada.mst, item.get('id'))) {
-                    return true;
-                }
-                return false;
-            }
-        });
-        field.getStore().filter(fil);
-    },
-
     /**
      * When a Messtelle is selected, modify the Netzbetreiber
      * according to the Messstelle
@@ -591,7 +569,7 @@ Ext.define('Lada.controller.form.Probe', {
                     if (json) {
                         if (json.message) {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                +' #'+json.message,
+                                + ' #' + json.message,
                             i18n.getMsg(json.message));
                         } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -683,7 +661,7 @@ Ext.define('Lada.controller.form.Probe', {
                     if (json) {
                         if (json.message) {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                +' #'+json.message,
+                                + ' #' + json.message,
                             i18n.getMsg(json.message));
                         } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),

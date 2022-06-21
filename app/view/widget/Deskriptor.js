@@ -35,24 +35,14 @@ Ext.define('Lada.view.widget.Deskriptor', {
         '</tpl>'),
 
     initComponent: function() {
-        this.store = Ext.create('Lada.store.Deskriptoren');
-        var me = this;
+        this.callParent(arguments);
+
+        this.setStore(Ext.create('Lada.store.Deskriptoren'));
         this.store.on('load', function() {
+            // Entry to be selected by clear handler
             this.insert(0, {sn: 0, beschreibung: 'leer'});
-            if (this.proxy.extraParams.layer > 0 &&
-                !this.proxy.extraParams.parents) {
-                this.removeAll();
-            }
-            try {
-                me.down('combobox').setStore(this);
-            } catch (e) {
-                Ext.log({
-                    msg: 'Initializing deskriptor widget failed: ' + e,
-                    level: 'warn'});
-            }
         }, this.store);
 
-        this.callParent(arguments);
         var combobox = this.down('combobox');
         combobox.isFormField = false;
         combobox.on('focus', this.focusfn);
@@ -67,13 +57,11 @@ Ext.define('Lada.view.widget.Deskriptor', {
     getParents: function(field) {
         var set = field.up('fieldset');
         var allS = set.items.items;
-        var p = '';
+        var p = [];
         for (var i = 0; i < field.up('deskriptor').layer; i++) {
-            if (allS[i].getValue() > 0) {
-                p += allS[i].getValue();
-                if (i < field.up('deskriptor').layer - 1) {
-                    p += ', ';
-                }
+            var v = allS[i].getValue();
+            if (v > 0) {
+                p.push(v);
             }
         }
         return p;
@@ -81,111 +69,10 @@ Ext.define('Lada.view.widget.Deskriptor', {
 
     focusfn: function(field) {
         var deskriptor = field.up('deskriptor');
-        if (deskriptor.layer === 0) {
-            deskriptor.store.proxy.extraParams = {'layer': deskriptor.layer};
-        } else {
-            var parents = deskriptor.getParents(field);
-            if (parents !== '' || parents !== undefined) {
-                deskriptor.store.proxy.extraParams = {
-                    'layer': deskriptor.layer,
-                    'parents': parents
-                };
-                deskriptor.store.load();
-            } else {
-                deskriptor.store.proxy.extraParams = {
-                    'layer': deskriptor.layer
-                };
-                deskriptor.store.load();
-            }
-        }
-    },
-
-    setValue: function(value) {
-        this.down('combobox').setValue(value);
-    },
-
-    setStore: function(store) {
-        this.down('combobox').setStore(store);
-    },
-
-    showWarnings: function(warnings) {
-        this.clearWarningOrError();
-        var img = this.down('image[name=warnImg]');
-        var tt = Ext.create('Ext.tip.ToolTip', {
-            target: img.getEl(),
-            html: warnings
-        });
-        this.warning = tt;
-        var cb = this.down('combobox');
-        if (cb.inputWrap && cb.inputEl) {
-            cb.inputWrap.addCls('x-lada-warning-field');
-            cb.inputEl.addCls('x-lada-warning-field');
-        } else {
-            cb.onAfter({
-                render: {
-                    fn: function(el) {
-                        el.inputWrap.addCls('x-lada-warning-field');
-                        el.inputEl.addCls('x-lada-warning-field');
-                    },
-                    single: true
-                }
-            });
-        }
-        img.show();
-        var fieldset = this.up('fieldset[collapsible=true]');
-        if (fieldset) {
-            var warningText = this.name + ': ' + warnings;
-            fieldset.showWarningOrError(true, warningText);
-        }
-    },
-
-    showErrors: function(errors) {
-        this.clearWarningOrError();
-        var img = this.down('image[name=errorImg]');
-        var warnImg = this.down('image[name=warnImg]');
-        warnImg.hide();
-        this.error = Ext.create('Ext.tip.ToolTip', {
-            target: img.getEl(),
-            html: errors
-        });
-        this.down('combobox').markInvalid('');
-        img.show();
-        var fieldset = this.up('fieldset[collapsible=true]');
-        if (fieldset) {
-            var i18n = Lada.getApplication().bundle;
-            var errorText = i18n.getMsg(this.name) + ': ' + errors;
-            fieldset.showWarningOrError(false, '', true, errorText);
-        }
-    },
-
-    clearWarningOrError: function() {
-        if (this.warning) {
-            this.warning.destroy();
-        }
-        if (this.error) {
-            this.error.destroy();
-        }
-        this.down('image[name=errorImg]').hide();
-        this.down('image[name=warnImg]').hide();
-        var cb = this.down('combobox');
-        if (cb.inputWrap && cb.inputEl) {
-            cb.inputWrap.removeCls('x-lada-warning-field');
-            cb.inputWrap.removeCls('x-lada-error-field');
-            cb.inputEl.removeCls('x-lada-warning-field');
-            cb.inputEl.removeCls('x-lada-error-field');
-        } else {
-            cb.onAfter({
-                render: {
-                    fn: function(el) {
-                        el.inputWrap.removeCls('x-lada-warning-field');
-                        el.inputWrap.removeCls('x-lada-error-field');
-                        el.inputEl.removeCls('x-lada-warning-field');
-                        el.inputEl.removeCls('x-lada-error-field');
-                    },
-                    single: true
-                }
-            });
-        }
-        cb.clearInvalid();
+        deskriptor.store.proxy.extraParams = {
+            layer: deskriptor.layer,
+            parents: deskriptor.getParents(field)
+        };
+        deskriptor.store.load();
     }
 });

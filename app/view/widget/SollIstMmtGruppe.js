@@ -35,8 +35,8 @@ Ext.define('Lada.view.widget.SollIstMmtGruppe', {
     allowBlank: true,
 
     initComponent: function() {
-        var i18n= Lada.getApplication().bundle;
-        this.emptyText= i18n.getMsg('emptytext.sollistmmtgrp');
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.sollistmmtgrp');
         this.store = Ext.create('Lada.store.SollIstMmtGruppe');
         this.callParent(arguments);
     }

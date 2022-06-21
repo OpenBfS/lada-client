@@ -14,17 +14,15 @@ Ext.define('Lada.view.widget.base.ComboBox', {
     alias: 'widget.cbox',
 
     layout: 'hbox',
-
     border: false,
-
     margin: '0, 0, 5, 0',
 
     warning: null,
-
     error: null,
-
     notification: null,
 
+    isFormField: true,
+    submitValue: true,
     defaultInputWrapCls: null,
 
     initComponent: function() {
@@ -41,7 +39,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             ta = this.disableKeyFilter ? 'all' : 'query';
         }
         this.items = [{
-            xtype: this.multiSelect? 'tagfield':'combobox',
+            xtype: this.multiSelect ? 'tagfield' : 'combobox',
             flex: 1,
             name: this.name,
             maxLength: this.maxLength,
@@ -62,9 +60,12 @@ Ext.define('Lada.view.widget.base.ComboBox', {
             minChars: this.minChars,
             maxChars: this.maxChars,
             multiSelect: this.multiSelect,
+            isFormField: this.isFormField,
+            submitValue: this.submitValue,
             editable: this.editable,
             readOnly: this.readOnly,
             allowBlank: this.allowBlank,
+            validator: this.validator,
             forceSelection: this.forceSelection || false,
             msgTarget: 'none',
             value: this.value,
@@ -100,6 +101,7 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         }];
 
         this.callParent(arguments);
+
         /* listeners have been passed to combobox. Thus, clear them on panel
          * to avoid double effects of events fired on combobox and panel. */
         this.clearListeners();
@@ -241,6 +243,21 @@ Ext.define('Lada.view.widget.base.ComboBox', {
 
     clearValue: function() {
         this.down('combobox').clearValue();
+    },
+
+    resetOriginalValue: function() {
+        this.down('combobox').resetOriginalValue();
+    },
+
+    getModelData: function() {
+        // Since this is called from Ext.form.Basic.getFieldValues() and the
+        // internal field is also part of the form under the same name,
+        // prevent multiple field values under the same name:
+        return null;
+    },
+
+    validate: function() {
+        return this.down('combobox').validate();
     },
 
     getName: function() {

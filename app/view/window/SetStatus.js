@@ -46,7 +46,7 @@ Ext.define('Lada.view.window.SetStatus', {
             this.dataId = 'id';
         }
         this.sendIds = [];
-        for (var i=0; i < this.selection.length; i++) {
+        for (var i = 0; i < this.selection.length; i++) {
             this.sendIds.push(this.selection[i].get(this.dataId));
         }
         this.getPossibleStatus(this.sendIds);
@@ -106,7 +106,6 @@ Ext.define('Lada.view.window.SetStatus', {
             }]
         }, {
             xtype: 'panel',
-            scrollable: true,
             hidden: true,
             margin: '5, 5, 5, 5',
             name: 'result'
@@ -127,8 +126,8 @@ Ext.define('Lada.view.window.SetStatus', {
         var title = '';
         if (Ext.ComponentQuery.query('probeform').length !== 0) {
             var probenform = Ext.ComponentQuery.query('probeform');
-            var probenumber = probenform[0].getRecord().get('hauptprobenNr') ? 'mit HP-Nr '+ probenform[0].getRecord().get('hauptprobenNr') : 'mit extPID '+ probenform[0].getRecord().get('externeProbeId');
-            var messungnumber = this.selection[0].get('nebenprobenNr')  ? 'mit NP-Nr '+ this.selection[0].get('nebenprobenNr') : 'mit extMId '+ this.selection[0].get('externeMessungsId');
+            var probenumber = probenform[0].getRecord().get('hauptprobenNr') ? 'mit HP-Nr ' + probenform[0].getRecord().get('hauptprobenNr') : 'mit extPID ' + probenform[0].getRecord().get('externeProbeId');
+            var messungnumber = this.selection[0].get('nebenprobenNr') ? 'mit NP-Nr ' + this.selection[0].get('nebenprobenNr') : 'mit extMId ' + this.selection[0].get('externeMessungsId');
             title = i18n.getMsg('setStatus.hprnr',
                     messungnumber,
                     probenumber);
@@ -248,7 +247,7 @@ Ext.define('Lada.view.window.SetStatus', {
                                 var validation = [];
                                 if (key.indexOf('#') > -1) {
                                     var keyParts = key.split('#');
-                                    for (j = msgs.length -1; j >= 0; j--) {
+                                    for (j = msgs.length - 1; j >= 0; j--) {
                                         validation.push('<li><b>' +
                                             i18n.getMsg(keyParts[0]) +
                                             '</b><i> ' +
@@ -271,7 +270,7 @@ Ext.define('Lada.view.window.SetStatus', {
                             out.push('</ul></dd>');
                         } else {
                             out.push('<dl><dd>' +
-                                i18n.getMsg('status-'+json.message) +
+                                i18n.getMsg('status-' + json.message) +
                                 '</dd>');
                             out.push('</dd></dl>');
                         }
@@ -286,7 +285,7 @@ Ext.define('Lada.view.window.SetStatus', {
                                 validation = [];
                                 if (key2.indexOf('#') > -1) {
                                     keyParts = key2.split('#');
-                                    for (j = msgs.length -1; j >= 0; j--) {
+                                    for (j = msgs.length - 1; j >= 0; j--) {
                                         validation.push('<li><b>' +
                                             i18n.getMsg(keyParts[0]) +
                                             '</b><i> ' +
@@ -319,7 +318,7 @@ Ext.define('Lada.view.window.SetStatus', {
                                 validation = [];
                                 if (key3.indexOf('#') > -1) {
                                     keyParts = key3.split('#');
-                                    for (j = msgs.length -1; j >= 0; j--) {
+                                    for (j = msgs.length - 1; j >= 0; j--) {
                                         validation.push('<li><b>' +
                                             i18n.getMsg(keyParts[0]) +
                                             '</b><i> ' +
@@ -416,17 +415,17 @@ Ext.define('Lada.view.window.SetStatus', {
                 this.selection, function(it) {
                     return it.get(this.dataId) === id;
                 }, this);
-                if (item.get('nebenprobenNr') === undefined) {
-                    var probenumber = item.get('hpNr')  ? '<strong>' + i18n.getMsg('hauptprobenNr') + '</strong> ' + item.get('hpNr') :
+            if (item.get('nebenprobenNr') === undefined) {
+                var probenumber = item.get('hpNr') ? '<strong>' + i18n.getMsg('hauptprobenNr') + '</strong> ' + item.get('hpNr') :
                         item.get('externeProbeId') ? '<strong>' + i18n.getMsg('extProbeId') + '</strong> ' + item.get('externeProbeId') :
                         '<strong>' + i18n.getMsg('hauptprobenNr') + ' nicht definiert</strong> ';
-                    var messungsnumber = item.get('npNr')  ? '<strong>' + i18n.getMsg('nebenprobenNr') + '</strong> ' + item.get('npNr') :
+                var messungsnumber = item.get('npNr') ? '<strong>' + i18n.getMsg('nebenprobenNr') + '</strong> ' + item.get('npNr') :
                         item.get('externeMessungsId') ? '<strong>' + i18n.getMsg('extMessungsId') + '</strong> ' + item.get('externeMessungsId') :
                         '<strong>' + i18n.getMsg('nebenprobenNr') + ' nicht definiert</strong> ';
-                    this.resultMessage +=
+                this.resultMessage +=
                         probenumber +
                         ' - ' + messungsnumber;
-                }
+            }
         }
         this.resultMessage += text;
     }

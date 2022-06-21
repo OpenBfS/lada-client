@@ -29,7 +29,7 @@ Ext.define('Lada.view.widget.StatuskombiSelect', {
     minChars: 0,
 
     initComponent: function() {
-        var i18n= Lada.getApplication().bundle;
+        var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.statuskombi');
         // If no store is provided, create one to prevent filter side effects
         this.store = Ext.create('Lada.store.StatusKombi');

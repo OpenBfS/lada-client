@@ -28,6 +28,5 @@ Ext.define('Lada.store.GenericResults', {
         }
     },
 
-    //    autoLoad: true,
     pageSize: Lada.pagingSize
 });

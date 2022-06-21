@@ -66,8 +66,8 @@ Ext.define('Lada.view.widget.base.IntegerRange', {
     },
 
     setReadOnly: function(value) {
-        this.down('[name='+this.name+'From]').setReadOnly(value);
-        this.down('[name='+this.name+'To]').setReadOnly(value);
+        this.down('[name=' + this.name + 'From]').setReadOnly(value);
+        this.down('[name=' + this.name + 'To]').setReadOnly(value);
     },
 
     getValue: function() {
@@ -75,7 +75,7 @@ Ext.define('Lada.view.widget.base.IntegerRange', {
         if (val0 === null) {
             val0 = '';
         }
-        var val1 = this.down('[name='+ this.name + 'To]').getValue();
+        var val1 = this.down('[name=' + this.name + 'To]').getValue();
         if (val0 === null) {
             val1 = '';
         }
@@ -92,12 +92,12 @@ Ext.define('Lada.view.widget.base.IntegerRange', {
             if (!isNaN(val0)) {
                 this.down('[name=' + this.name + 'From]').setValue(val0);
             } else {
-                this.down('[name='+ this.name + 'From]').setValue();
+                this.down('[name=' + this.name + 'From]').setValue();
             }
             if (!isNaN(val1)) {
-                this.down('[name='+ this.name + 'To]').setValue(val1);
+                this.down('[name=' + this.name + 'To]').setValue(val1);
             } else {
-                this.down('[name='+ this.name + 'To]').setValue();
+                this.down('[name=' + this.name + 'To]').setValue();
             }
         } else {
             this.down('[name=' + this.name + 'From]').setValue();

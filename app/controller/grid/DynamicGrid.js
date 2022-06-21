@@ -13,7 +13,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     extend: 'Ext.app.Controller',
     requires: [
         'Lada.view.window.DeleteMultipleItems',
-        'Lada.view.window.TagEdit'
+        'Lada.view.window.SetTags',
+        'Lada.view.window.TagManagement'
     ],
 
     /**
@@ -38,6 +39,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             },
             'button[action=genericadd]': {
                 click: this.addData
+            },
+            'button[action=addMap]': {
+                click: this.activateDraw
             }
         });
         this.callParent(arguments);
@@ -76,7 +80,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
      **/
     buttonToggle: function(enabled, grid) {
         var buttons = grid.down('toolbar').items;
-        for (var i=0; i < buttons.items.length; i++) {
+        for (var i = 0; i < buttons.items.length; i++) {
             if (buttons.items[i].config.needsSelection === true) {
                 if (enabled === true) {
                     buttons.items[i].enable();
@@ -315,15 +319,21 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                         });
                 }
                 break;
+            case 'tagId':
+                win = Ext.create('Lada.view.window.TagManagement', {
+                    recordId: id,
+                    parentGrid: row.grid
+                }).show();
+                break;
         }
     },
 
     deleteData: function(button) {
         var grid = button.up('dynamicgrid');
         if (grid.rowtarget.hasOwnProperty('dataType')) {
-            var selection =grid.getView().getSelectionModel().getSelection();
+            var selection = grid.getView().getSelectionModel().getSelection();
             var ids = [];
-            for (var i=0; i < selection.length; i++) {
+            for (var i = 0; i < selection.length; i++) {
                 ids.push(selection[i].get(grid.rowtarget.dataIndex));
             }
             var win = Ext.create('Lada.view.window.DeleteMultipleItems', {
@@ -382,8 +392,18 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                         parentWindow: grid
                     }).show();
                     break;
+                case 'tagId':
+                    Ext.create('Lada.view.window.TagManagement', {
+                        parentGrid: grid }
+                    ).show();
             }
         }
+    },
+
+    activateDraw: function(button) {
+        var map = button.up('dynamicgrid').down('map');
+        var record = Ext.create('Lada.model.Ort');
+        map.activateDraw(record);
     },
 
     /**
@@ -404,13 +424,12 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             });
         var i18n = Lada.getApplication().bundle;
         var count = selection.length;
-        var win = Ext.create('Lada.view.window.TagEdit', {
+        var win = Ext.create('Lada.view.window.SetTags', {
             title: i18n.getMsg('tag.assignwindow.title.' + recordType, count),
             recordType: recordType,
-            selection: selection
+            parentGrid: grid
         });
         win.show();
-
     },
 
     /**

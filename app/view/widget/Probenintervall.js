@@ -31,7 +31,7 @@ Ext.define('Lada.view.widget.Probenintervall', {
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
             '{probenintervall} - {piTexti18nId}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{probenintervall} -'+
+        '<tpl for=".">{probenintervall} -' +
          '{piTexti18nId}</tpl>'),
 
     initComponent: function() {

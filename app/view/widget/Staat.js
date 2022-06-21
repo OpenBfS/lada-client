@@ -28,15 +28,15 @@ Ext.define('Lada.view.widget.Staat', {
         // This widget requires a separate store to not change the grid
         // during typing
         var store = Ext.data.StoreManager.get('staatenwidget');
-        if (!store){
+        if (!store) {
             Ext.create('Lada.store.Staaten', {
                 storeId: 'staatenwidget'
             });
         }
         this.store = Ext.data.StoreManager.get('staatenwidget');
         this.store.clearFilter();
-        var i18n= Lada.getApplication().bundle;
-        this.emptyText= i18n.getMsg('emptytext.staat');
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.staat');
         this.callParent(arguments);
     }
 });

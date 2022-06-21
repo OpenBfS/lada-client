@@ -126,7 +126,7 @@ Ext.define('Lada.view.window.AuditTrail', {
                 this.setTitle(title);
             } else if (this.type === 'messung') {
                 container.update(this.createHtmlMessung(json));
-                title = i18n.getMsg('audit.title') + ' '+ this.titleText;
+                title = i18n.getMsg('audit.title') + ' ' + this.titleText;
                 this.setTitle(title);
             }
         }

@@ -23,8 +23,8 @@ Ext.define('Lada.view.widget.Status', {
     minChars: 0,
 
     initComponent: function() {
-        var i18n= Lada.getApplication().bundle;
-        this.emptyText= i18n.getMsg('emptytext.status');
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.status');
         this.callParent(arguments);
     }
 });

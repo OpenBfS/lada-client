@@ -380,15 +380,6 @@ Ext.define('Lada.view.grid.Orte', {
                 }
             });
         }
-        if (Ext.Array.contains(Lada.funktionen, 4)) {
-            var panel = this.up('ortpanel');
-            // We are not in stammdaten editor.
-            if (!panel) {
-                return;
-            }
-            panel.down('button[action=add]').enable();
-            panel.down('button[action=addMap]').enable();
-        }
     },
 
     /**
@@ -410,7 +401,7 @@ Ext.define('Lada.view.grid.Orte', {
     selectOrt: function(map, feature) {
         if (feature) {
             var id = Array.isArray(feature) ?
-                feature[0].get('id'): feature.get('id');
+                feature[0].get('id') : feature.get('id');
             var record = this.store.getById(id);
             if (record) {
                 //TODO paging: jump to page

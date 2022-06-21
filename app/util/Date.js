@@ -65,12 +65,12 @@ Ext.define('Lada.util.Date', {
                 return null;
             }
             var me = this;
-            var timezone = this.utc? 'UTC': moment.tz.guess();
+            var timezone = this.utc ? 'UTC' : moment.tz.guess();
             var date = moment(timestamp);
             if (extFormat) {
                 var converted = [];
                 var chars = format.split('');
-                for (var i=0; i < chars.length; i++ ) {
+                for (var i = 0; i < chars.length; i++ ) {
                     if (me.extFormatMap[chars[i]]) {
                         converted.push(me.extFormatMap[chars[i]]);
                     } else {
@@ -97,7 +97,7 @@ Ext.define('Lada.util.Date', {
          * (e.g. to be used used for print templates)
          */
         getCurrentTimeZone: function() {
-            return this.utc? 'UTC': moment.tz.guess();
+            return this.utc ? 'UTC' : moment.tz.guess();
         },
 
         /**
@@ -134,7 +134,7 @@ Ext.define('Lada.util.Date', {
          * @param {*} v
          */
         convertTimeFnDefaultNow: function(v) {
-            return v ? new Date(v): new Date();
+            return v ? new Date(v) : new Date();
         }
     }
 });

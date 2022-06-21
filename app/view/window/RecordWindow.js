@@ -114,7 +114,7 @@ Ext.define('Lada.view.window.RecordWindow', {
         this.loadScope = scope;
         this.recordId = id;
         this.loadingModel = this.modelClass.load(id, {
-            scope: scope? scope: this,
+            scope: scope ? scope : this,
             callback: function(record, operation, success) {
                 //Check if window is still visible
                 if (!me.isVisible()) {

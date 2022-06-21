@@ -60,8 +60,8 @@ Ext.define('Lada.view.widget.Statuskombi', {
      * defaults to false
      */
     setValue: function(value, reset, statusEdit) {
-        this.reset = reset !== undefined ? reset: false;
-        this.statusEdit = statusEdit !== undefined ? statusEdit: false;
+        this.reset = reset !== undefined ? reset : false;
+        this.statusEdit = statusEdit !== undefined ? statusEdit : false;
         var me = this;
         Ext.ClassManager.get('Lada.model.Status').load(value, {
             success: function(record) {

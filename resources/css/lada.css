@@ -58,6 +58,11 @@
   background-image: url(../img/view-time-schedule-baselined.png);
 }
 
+.x-action-col-icon.noauthorisation
+{
+  background-image: url(../img/view-time-unknown.png);
+}
+
 .x-action-col-icon.noeditstatus
 {
   background-image: url(../img/view-time-schedule-baselined-status.png);
@@ -227,4 +232,12 @@ span.x-grid-checkcolumn {
 
 .textAreaCls .x-form-empty-field{
     font-style : italic;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+.italic-text {
+  font-style: italic;
 }

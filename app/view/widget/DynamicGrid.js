@@ -21,7 +21,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         'Lada.view.window.DatensatzErzeuger',
         'Lada.view.window.MessprogrammKategorie',
         'Lada.view.panel.Map'
-
     ],
 
     store: null,
@@ -97,22 +96,22 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         }
         if (this.rowtarget.dataType === 'messungId') {
             this.addMessungButtons();
-        } else if (this.rowtarget.messungIdentifier){
+        } else if (this.rowtarget.messungIdentifier) {
             var mI = this.rowtarget.messungIdentifier;
-            if (this.getVisibleColumns().find(function(item){
+            if (this.getVisibleColumns().find(function(item) {
                 return item.dataIndex === mI;
             })) {
                 this.addSetStatusButton();
             }
         }
         if (this.rowtarget.dataType === 'ortId') {
-                this.addOrtButtons();
+            this.addOrtButtons();
         }
         this.addExportButton();
         this.addPrintButton();
 
         if (this.toolbarbuttons && this.toolbarbuttons.length) {
-            for (var i= 0; i < this.toolbarbuttons.length; i++) {
+            for (var i = 0; i < this.toolbarbuttons.length; i++) {
                 if (this.hidebuttons.indexOf(
                     this.toolbarbuttons[i].action) < 0) {
                     tbcontent.push(this.toolbarbuttons[i]);
@@ -195,7 +194,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             features = [features];
         }
         var records = [];
-        for (var i=0; i < features.length;i++) {
+        for (var i = 0; i < features.length;i++) {
             var id = features[i].get ? features[i].get('id') : features[i];
             if (id !== undefined) {
                 records.push(this.store.findRecord(
@@ -210,10 +209,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         clone.getGeometry().transform('EPSG:3857', 'EPSG:4326');
         var koord_x = Math.round(
             clone.getGeometry().getCoordinates()[0] * 100000)
-            /100000;
+            / 100000;
         var koord_y = Math.round(
             clone.getGeometry().getCoordinates()[1] * 100000)
-            /100000;
+            / 100000;
         Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Ort', {
                 koordXExtern: koord_x.toString(),
@@ -284,6 +283,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 } else if (rec.get('readonly') === true &&
                     rec.get('statusEdit')) {
                     return 'noeditstatus';
+                } else if (rec.store.data.length > 500) {
+                    return 'noauthorisation';
                 }
                 return 'noedit';
             },
@@ -318,22 +319,21 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     dataIndex: dataIndex,
                     name: orig_column.get('name')
                 };
-                var colImg = null;
                 switch (datatype.name) {
                     case 'probeId':
-                        this.generateProbeColumn(colImg, col);
+                        this.generateProbeColumn(col);
                         break;
                     case 'messungId':
-                        this.generateMessungColumns(colImg, col);
+                        this.generateMessungColumns(col);
                         break;
                     case 'mpId':
-                        this.generateMessprogrammColumns(colImg, col);
+                        this.generateMessprogrammColumns(col);
                         break;
                     case 'ortId':
-                        this.generateOrtColumns(colImg, col);
+                        this.generateOrtColumns(col);
                         break;
                     case 'geom':
-                        this.generateGeomColumns(colImg, col);
+                        this.generateGeomColumns(col);
                         break;
                     case 'date':
                         this.generateDateColumns(curField, orig_column, col);
@@ -374,7 +374,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     case 'probenehmer':
                     case 'dsatzerz':
                     case 'mprkat':
-                        this.generateStammColumn(colImg, col, datatype);
+                        this.generateStammColumn(col, datatype);
                         break;
                     default:
                         col.xtype = 'gridcolumn';
@@ -420,12 +420,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         return caf;
     },
 
-    generateProbeColumn: function(colImg, col) {
-        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+    generateProbeColumn: function(col) {
         col.xtype = 'widgetcolumn';
         col.widget = {
             xtype: 'button',
-            icon: colImg,
+            icon: Ext.getResourcePath(this.openIconPath, null, null),
             width: '16px',
             height: '16px',
             userCls: 'widget-column-button',
@@ -461,12 +460,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
         };
     },
-    generateMessungColumns: function(colImg, col) {
-        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+    generateMessungColumns: function(col) {
         col.xtype = 'widgetcolumn';
         col.widget = {
             xtype: 'button',
-            icon: colImg,
+            icon: Ext.getResourcePath(this.openIconPath, null, null),
             width: '16px',
             height: '16px',
             userCls: 'widget-column-button',
@@ -531,12 +529,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
     },
 
-    generateMessprogrammColumns: function(colImg, col) {
-        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+    generateMessprogrammColumns: function(col) {
         col.xtype = 'widgetcolumn';
         col.widget = {
             xtype: 'button',
-            icon: colImg,
+            icon: Ext.getResourcePath(this.openIconPath, null, null),
             width: '16px',
             height: '16px',
             userCls: 'widget-column-button',
@@ -573,12 +570,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
     },
 
-    generateOrtColumns: function(colImg, col) {
-        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+    generateOrtColumns: function(col) {
         col.xtype = 'widgetcolumn';
         col.widget = {
             xtype: 'button',
-            icon: colImg,
+            icon: Ext.getResourcePath(this.openIconPath, null, null),
             width: '16px',
             height: '16px',
             userCls: 'widget-column-button',
@@ -614,12 +610,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
     },
 
-    generateGeomColumns: function(colImg, col) {
-        colImg = Ext.getResourcePath(this.openIconPath, null, null);
+    generateGeomColumns: function(col) {
         col.xtype = 'widgetcolumn';
         col.widget = {
             xtype: 'button',
-            icon: colImg,
+            icon: Ext.getResourcePath(this.openIconPath, null, null),
             width: '16px',
             height: '16px',
             userCls: 'widget-column-button',
@@ -658,7 +653,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 return '';
             }
             var format = col.format;
-            var dt='';
+            var dt = '';
             if (!isNaN(value)) {
                 dt = Lada.util.Date.formatTimestamp(value, format, true);
             }
@@ -708,7 +703,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
     },
     generateBooleanColumns: function(col) {
-        col.xtype='gridcolumn';
+        col.xtype = 'gridcolumn';
         col.renderer = function(value) {
             if (value === true) {
                 return Lada.getApplication().bundle.getMsg('true');
@@ -720,7 +715,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
     },
     generateStatusStufeColumns: function(col) {
-        col.xtype='gridcolumn';
+        col.xtype = 'gridcolumn';
         col.renderer = function(value) {
             if (!value) {
                 return '';
@@ -738,7 +733,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
     },
     generateUmweltbereichColumns: function(col) {
-        col.xtype='gridcolumn';
+        col.xtype = 'gridcolumn';
         col.renderer = function(value) {
             if (!value) {
                 return '';
@@ -748,7 +743,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
     },
     generateStatusWertColumns: function(col) {
-        col.xtype='gridcolumn';
+        col.xtype = 'gridcolumn';
         col.renderer = function(value) {
             if (!value) {
                 return '';
@@ -767,7 +762,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     generateStatusKombiColumns: function(col) {
-        col.xtype='gridcolumn';
+        col.xtype = 'gridcolumn';
         col.renderer = function(value) {
             if (!value) {
                 return '';
@@ -789,7 +784,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     generateEgemColumns: function(col) {
-        col.xtype='gridcolumn';
+        col.xtype = 'gridcolumn';
         col.renderer = function(value) {
             if (!value) {
                 return '';
@@ -800,7 +795,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     generateNetzbetreiberColumns: function(col) {
-        col.xtype='gridcolumn';
+        col.xtype = 'gridcolumn';
         col.renderer = function(value) {
             if (!value) {
                 return '';
@@ -811,7 +806,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     generateDatenbasisColumns: function(col) {
-        col.xtype='gridcolumn';
+        col.xtype = 'gridcolumn';
         col.renderer = function(value) {
             if (!value) {
                 return '';
@@ -830,7 +825,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     generateProbenartColumns: function(col) {
-        col.xtype='gridcolumn';
+        col.xtype = 'gridcolumn';
         col.renderer = function(value) {
             if (!value) {
                 return '';
@@ -849,7 +844,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     generateStaatColumns: function(col) {
-        col.xtype='gridcolumn';
+        col.xtype = 'gridcolumn';
 
         col.renderer = function(value) {
             if (!value) {
@@ -868,7 +863,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
     },
 
-    generateStammColumn: function(colImg, col, datatype) {
+    generateStammColumn: function(col, datatype) {
         var clicklistener = null;
         var tooltip = '';
 
@@ -937,11 +932,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
             };
         }
-        colImg = Ext.getResourcePath(this.openIconPath, null, null);
         col.xtype = 'widgetcolumn';
         col.widget = {
             xtype: 'button',
-            icon: colImg,
+            icon: Ext.getResourcePath(this.openIconPath, null, null),
             width: '16px',
             height: '16px',
             userCls: 'widget-column-button',
@@ -1052,7 +1046,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     genericAddButton: function() {
         if (
-            this.rowtarget.dataType === 'probeId' ||
+            ['probeId', 'tagId'].indexOf(this.rowtarget.dataType) >= 0 ||
             ( ['mpId', 'probenehmer', 'dsatzerz', 'mprkat', 'ortId'].indexOf(
                 this.rowtarget.dataType) >= 0
                 && Ext.Array.contains(Lada.funktionen, 4)
@@ -1078,7 +1072,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     genericDeleteButton: function() {
         if (
-            ['probeId', 'mpId', 'ortId', 'messungId']
+            ['probeId', 'mpId', 'ortId', 'messungId', 'tagId']
                 .indexOf(this.rowtarget.dataType) >= 0 ||
             ( ['probenehmer', 'dsatzerz', 'mprkat'].indexOf(
                 this.rowtarget.dataType) >= 0
@@ -1121,7 +1115,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     tbuttonExists: function(action) {
-        for (var i=0; i< this.toolbarbuttons.length; i++) {
+        for (var i = 0; i < this.toolbarbuttons.length; i++) {
             if (this.toolbarbuttons[i].action === action) {
                 return true;
             }
@@ -1135,16 +1129,46 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      * reloading
      */
     reload: function(callback) {
+        var selection = this.getSelection();
         var store = this.getStore();
         var options = store.lastOptions;
         options.scope = this;
         options.callback = function() {
             this.setStore(store);
+            this.select(selection);
             if (callback) {
                 callback();
             }
         };
         store.load(options);
+    },
+
+    /**
+     * Get array of IDs of selected rows.
+     */
+    getSelection: function() {
+        var selection = [];
+        var me = this;
+        this.getSelectionModel().getSelection().forEach(function(item) {
+            selection.push(item.get(me.rowtarget.dataIndex));
+        });
+        return selection;
+    },
+
+    /**
+     * Select rows by given IDs.
+     */
+    select: function(ids) {
+        var records = [];
+        var me = this;
+        ids.forEach(function(id) {
+            var rec = me.store.findRecord(
+                me.rowtarget.dataIndex, id, false, false, false, true);
+            if (rec) {
+                records.push(rec);
+            }
+        });
+        this.getSelectionModel().select(records);
     },
 
     addRowExpanderButton: function() {
@@ -1181,7 +1205,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         if (!this.plugins) {
             return;
         }
-        for (var i=0; i < this.plugins.length; i++) {
+        for (var i = 0; i < this.plugins.length; i++) {
             if (this.plugins[i].ptype === 'gridrowexpander') {
                 return this.plugins[i];
             }

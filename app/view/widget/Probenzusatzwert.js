@@ -24,8 +24,8 @@ Ext.define('Lada.view.widget.Probenzusatzwert', {
 
     initComponent: function() {
         this.store = Ext.data.StoreManager.get('probenzusaetze');
-        var i18n= Lada.getApplication().bundle;
-        this.emptyText= i18n.getMsg('emptytext.pzw.widget');
+        var i18n = Lada.getApplication().bundle;
+        this.emptyText = i18n.getMsg('emptytext.pzw.widget');
         if (!this.store) {
             this.store = Ext.create('Lada.store.Probenzusaetze');
         }

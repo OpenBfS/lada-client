@@ -19,7 +19,7 @@ Ext.define('Lada.view.window.MessungEdit', {
         'Lada.view.grid.Status',
         'Lada.view.grid.MKommentar',
         'Lada.view.widget.Tag',
-        'Lada.view.window.TagEdit'
+        'Lada.view.window.SetTags'
     ],
 
     collapsible: true,
@@ -161,12 +161,11 @@ Ext.define('Lada.view.window.MessungEdit', {
                     // Only users with associated Messstelle can (un)assign tags
                     disabled: Lada.mst.length === 0,
                     handler: function() {
-                        var win = Ext.create('Lada.view.window.TagEdit', {
+                        var win = Ext.create('Lada.view.window.SetTags', {
                             title: i18n.getMsg(
                                 'tag.assignwindow.title.messung', 1),
                             parentWindow: me,
-                            recordType: 'messung',
-                            selection: [me.record.get('id')]
+                            recordType: 'messung'
                         });
                         //Close window if parent window is closed
                         me.on('close', function() {
@@ -260,7 +259,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             }
             title += ' zu Probe ' + me.probe.get('externeProbeId') ;
             if (me.probe.get('hauptprobenNr')) {
-                title += ' / '+ me.probe.get('hauptprobenNr');
+                title += ' / ' + me.probe.get('hauptprobenNr');
             }
             title += ' -  Mst: ' + messstelle.get('messStelle') +
                 ' editieren.';
@@ -287,7 +286,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             }
 
             // Initialize Tag widget
-            me.down('tagwidget').setTagged(record.get('id'), 'messung');
+            me.down('tagwidget').setTagged([record.get('id')], 'messung');
 
             me.setLoading(false);
         };

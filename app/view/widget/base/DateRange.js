@@ -88,7 +88,7 @@ Ext.define('Lada.view.widget.base.DateRange', {
         } else {
             val0 = val0.valueOf();
         }
-        var val1 = this.down('[name='+ this.name + 'To]').getValue();
+        var val1 = this.down('[name=' + this.name + 'To]').getValue();
         if (!val1) {
             val1 = '';
         } else {
@@ -107,12 +107,12 @@ Ext.define('Lada.view.widget.base.DateRange', {
             if (!isNaN(val0)) {
                 this.down('[name=' + this.name + 'From]').setValue(val0);
             } else {
-                this.down('[name='+ this.name + 'From]').setValue(null);
+                this.down('[name=' + this.name + 'From]').setValue(null);
             }
             if (!isNaN(val1)) {
-                this.down('[name='+ this.name + 'To]').setValue(val1);
+                this.down('[name=' + this.name + 'To]').setValue(val1);
             } else {
-                this.down('[name='+ this.name + 'To]').setValue(null);
+                this.down('[name=' + this.name + 'To]').setValue(null);
             }
         } else {
             this.down('[name=' + this.name + 'From]').setValue(null);

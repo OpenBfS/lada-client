@@ -12,7 +12,6 @@
 Ext.define('Lada.store.Deskriptoren', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.Deskriptor',
-    autoLoad: true,
     sorters: [{
         property: 'sn',
         direction: 'ASC'

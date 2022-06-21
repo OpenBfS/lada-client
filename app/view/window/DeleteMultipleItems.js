@@ -89,6 +89,10 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 title = i18n.getMsg('delete.multiple_messung.window.title');
                 dialog1 = i18n.getMsg('delete.multiple_messung');
                 break;
+            case 'tagId':
+                title = i18n.getMsg('delete.multiple_tag.window.title');
+                dialog1 = i18n.getMsg('delete.multiple_tag');
+                break;
 
 
         }
@@ -212,8 +216,12 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 url = 'lada-server/rest/ort/';
                 datatype = 'Ort';
                 break;
+            case 'tagId':
+                url = 'lada-server/rest/tag/';
+                datatype = 'Tag';
+                break;
         }
-        for (var i = 0; i< me.selection.length; i++) {
+        for (var i = 0; i < me.selection.length; i++) {
             var id = me.selection[i].get(me.parentGrid.rowtarget.dataIndex);
             Ext.Ajax.request({
                 url: url + id,
@@ -250,7 +258,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                     }
                     me.currentProgress += 1;
                     me.down('progressbar').updateProgress(
-                        me.currentProgress/me.maxSteps);
+                        me.currentProgress / me.maxSteps);
                     if (me.currentProgress === me.maxSteps) {
                         me.finishDelete();
                     }
@@ -261,7 +269,7 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                     var html = me.down('panel').html;
                     me.currentProgress += 1;
                     me.down('progressbar').updateProgress(
-                        me.currentProgress/me.maxSteps);
+                        me.currentProgress / me.maxSteps);
                     html += i18n.getMsg(
                         'deleteItems.callback.failure', datatype, delId)
                         + i18n.getMsg('200') + '<br>';

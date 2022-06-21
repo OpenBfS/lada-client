@@ -111,7 +111,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                         }
                         if (json.message) {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                +' #'+json.message,
+                                + ' #' + json.message,
                             i18n.getMsg(json.message));
                         } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),

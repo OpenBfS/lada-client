@@ -43,7 +43,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
 
     initComponent: function() {
         var ortstore = Ext.data.StoreManager.get('orte');
-        if (!ortstore){
+        if (!ortstore) {
             Ext.create('Lada.store.Orte', {
                 storeId: 'orte',
                 defaultPageSize: 0

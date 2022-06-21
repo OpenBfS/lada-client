@@ -43,7 +43,7 @@ Ext.define('Lada.util.FunctionScheduler', {
     },
 
     /**
-     * Start the sheduled functions
+     * Start the scheduled functions
      */
     next: function() {
         if (!this.running && this.queue.length >= 1) {

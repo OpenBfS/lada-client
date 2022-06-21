@@ -81,7 +81,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
         if (error) {
             this.getEl().dom.style['border-color'] = '#FF0000';
             // eslint-disable-next-line max-len
-            this.setTitle('<img src="resources/img/emblem-important.png" width="13" height="13" id="'+ imgId +'"/>  '+
+            this.setTitle('<img src="resources/img/emblem-important.png" width="13" height="13" id="' + imgId + '"/>  ' +
                     this.plainTitle);
             if (errorText) {
                 if (!this.tooltip) {
@@ -98,7 +98,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
         if (warning) {
             this.getEl().dom.style['border-color'] = '#FFE25D';
             // eslint-disable-next-line max-len
-            this.setTitle('<img src="resources/img/dialog-warning.png" width="13" height="13"  id="'+ imgId +'"/>  '+
+            this.setTitle('<img src="resources/img/dialog-warning.png" width="13" height="13"  id="' + imgId + '"/>  ' +
                     this.plainTitle);
             if (warningText) {
                 if (!this.tooltip) {
@@ -115,7 +115,7 @@ Ext.define('Lada.view.widget.base.FieldSet', {
         if (notification) {
             this.getEl().dom.style['border-color'] = '#FFE25D';
             // eslint-disable-next-line max-len
-            this.setTitle('<img src="resources/img/dialog-warning.png" width="13" height="13"  id="'+ imgId +'"/>  '+
+            this.setTitle('<img src="resources/img/dialog-warning.png" width="13" height="13"  id="' + imgId + '"/>  ' +
                     this.plainTitle);
             if (notificationText) {
                 if (!this.tooltip) {
