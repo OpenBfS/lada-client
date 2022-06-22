@@ -12,43 +12,44 @@
 Ext.define('Lada.model.Verwaltungseinheit', {
     extend: 'Lada.model.LadaBase',
 
-    /**
-     * Fields are:
-     *  - id: The unique identifer (Primary key)
-     *  - bezeichnung: The long description.
-     */
     fields: [{
         name: 'id'
     }, {
         name: 'bundesland'
     }, {
-        name: 'kdaId'
+        name: 'kreis',
+        allowNull: true
     }, {
-        name: 'kreis'
+        name: 'nuts',
+        allowNull: true
     }, {
-        name: 'nuts'
-    }, {
-        name: 'regbezirk'
+        name: 'regbezirk',
+        allowNull: true
     }, {
         name: 'bezeichnung'
     }, {
-        name: 'isBundeland'
+        name: 'isBundeland',
+        type: 'boolean'
     }, {
-        name: 'isGemeinde'
+        name: 'isGemeinde',
+        type: 'boolean'
     }, {
-        name: 'isLandkreis'
+        name: 'isLandkreis',
+        type: 'boolean'
     }, {
-        name: 'isRegbezirk'
+        name: 'isRegbezirk',
+        type: 'boolean'
     }, {
-        name: 'koordXExtern'
+        name: 'plz',
+        allowNull: true
     }, {
-        name: 'koordYExtern'
+        name: 'longitude',
+        type: 'float',
+        allowNull: true
     }, {
-        name: 'plz'
-    }, {
-        name: 'longitude'
-    }, {
-        name: 'latitude'
+        name: 'latitude',
+        type: 'float',
+        allowNull: true
     }],
 
     idProperty: 'id',

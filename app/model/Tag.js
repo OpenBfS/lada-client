@@ -26,8 +26,7 @@ Ext.define('Lada.model.Tag', {
     }, {
         name: 'generatedAt',
         type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFn
+        dateFormat: 'time'
     }, {
         name: 'typId',
         type: 'string'
@@ -37,8 +36,7 @@ Ext.define('Lada.model.Tag', {
     }, {
         name: 'gueltigBis',
         type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFn
+        dateFormat: 'time'
     }, {
         name: 'readonly',
         type: 'boolean'

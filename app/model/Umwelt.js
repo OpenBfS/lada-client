@@ -22,11 +22,16 @@ Ext.define('Lada.model.Umwelt', {
     fields: [{
         name: 'id'
     }, {
-        name: 'beschreibung'
+        name: 'beschreibung',
+        allowNull: true
     }, {
-        name: 'mehId'
+        name: 'mehId',
+        type: 'int',
+        allowNull: true
     }, {
-        name: 'secMehId'
+        name: 'secMehId',
+        type: 'int',
+        allowNull: true
     }, {
         name: 'umweltBereich'
     }],

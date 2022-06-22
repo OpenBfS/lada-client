@@ -14,7 +14,6 @@ Ext.define('Lada.model.StatusKombi', {
 
     fields: [{
         name: 'id'
-        //persist: false
     }, {
         name: 'statusStufe'
     }, {

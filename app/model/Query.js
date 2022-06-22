@@ -24,20 +24,19 @@ Ext.define('Lada.model.Query', {
             writeAllFields: true
         }
     },
+
     fields: [{
         name: 'id'
     }, {
         name: 'name'
     }, {
-        name: 'userId'
+        name: 'userId',
+        type: 'int'
     }, {
         name: 'description'
     }, {
-        name: 'baseQuery'
-        // the linked stamm.query in the database.
-    }, {
-        name: 'printTemplates'
-        // string of (comma-separated) templates this query is able to fill in
+        name: 'baseQuery',
+        type: 'int'
     }, {
         name: 'messStellesIds'
     }, {
