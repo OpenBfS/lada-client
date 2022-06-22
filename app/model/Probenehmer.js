@@ -20,85 +20,39 @@ Ext.define('Lada.model.Probenehmer', {
         name: 'prnId'
     }, {
         name: 'bearbeiter',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'bemerkung',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'bezeichnung'
     }, {
         name: 'kurzBezeichnung'
     }, {
         name: 'ort',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'plz',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'betrieb',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'strasse',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'telefon',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'tourenplan',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'typ',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'letzteAenderung',
         type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFn
+        dateFormat: 'time'
     }, {
         name: 'readonly',
         type: 'boolean',

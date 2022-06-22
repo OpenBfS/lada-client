@@ -39,11 +39,9 @@ Ext.define('Lada.controller.form.Probenehmer', {
 
     save: function(button) {
         var formPanel = button.up('form');
-        var data = formPanel.getForm().getFieldValues(false);
         var record = formPanel.getForm().getRecord();
-        for (var key in data) {
-            record.set(key, data[key]);
-        }
+        // Update record with values changed in the form
+        record.set(formPanel.getForm().getFieldValues(true));
         record.set('netzbetreiberId',
             formPanel.down('netzbetreiber').getValue()[0]);
         if (!record.get('letzteAenderung')) {
