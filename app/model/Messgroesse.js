@@ -25,19 +25,26 @@ Ext.define('Lada.model.Messgroesse', {
     fields: [{
         name: 'id'
     }, {
-        name: 'beschreibung'
+        name: 'beschreibung',
+        allowNull: true
     }, {
         name: 'messgroesse'
     }, {
-        name: 'defaultFarbe'
+        name: 'defaultFarbe',
+        allowNull: true
     }, {
-        name: 'idfNuklidKey'
+        name: 'idfNuklidKey',
+        allowNull: true
     }, {
-        name: 'istLeitNuklid'
+        name: 'istLeitNuklid',
+        type: 'boolean'
     }, {
-        name: 'eudfNuklidId'
+        name: 'eudfNuklidId',
+        type: 'int',
+        allowNull: true
     }, {
-        name: 'kennungBvl'
+        name: 'kennungBvl',
+        allowNull: true
     }],
 
     idProperty: 'id'

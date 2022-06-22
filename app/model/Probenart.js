@@ -22,7 +22,8 @@ Ext.define('Lada.model.Probenart', {
     fields: [{
         name: 'id'
     }, {
-        name: 'beschreibung'
+        name: 'beschreibung',
+        allowNull: true
     }, {
         name: 'probenart'
     }, {

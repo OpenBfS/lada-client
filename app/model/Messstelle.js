@@ -25,15 +25,19 @@ Ext.define('Lada.model.Messstelle', {
         name: 'id',
         persist: true
     }, {
-        name: 'beschreibung'
+        name: 'beschreibung',
+        allowNull: true
     }, {
         name: 'netzbetreiberId'
     }, {
-        name: 'messStelle'
+        name: 'messStelle',
+        allowNull: true
     }, {
-        name: 'mstTyp'
+        name: 'mstTyp',
+        allowNull: true
     }, {
-        name: 'amtskennung'
+        name: 'amtskennung',
+        allowNull: true
     }],
 
     idProperty: 'id',

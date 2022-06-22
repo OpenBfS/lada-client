@@ -12,16 +12,6 @@
 Ext.define('Lada.model.Netzbetreiber', {
     extend: 'Lada.model.LadaBase',
 
-    /**
-     * Fields are:
-     *  - id: The unique identifier (Primary key).
-     *  - netzbetreiber:
-     *  - idfNetzbetreiber:
-     *  - isBmn:
-     *  - mailverteiler:
-     *  - aktiv:
-     *  - zustMstId:
-     */
     fields: [{
         name: 'id'
     }, {
@@ -29,13 +19,13 @@ Ext.define('Lada.model.Netzbetreiber', {
     }, {
         name: 'idfNetzbetreiber'
     }, {
-        name: 'isBmn'
+        name: 'isBmn',
+        type: 'boolean'
     }, {
         name: 'mailverteiler'
     }, {
-        name: 'aktiv'
-    }, {
-        name: 'zustMstId'
+        name: 'aktiv',
+        type: 'boolean'
     }],
 
     idProperty: 'id',

@@ -21,15 +21,20 @@ Ext.define('Lada.model.MessstellenKombi', {
     fields: [{
         name: 'id'
     }, {
-        name: 'funktionId'
+        name: 'funktionId',
+        type: 'int',
+        allowNull: true
     }, {
-        name: 'laborMstId'
+        name: 'laborMstId',
+        allowNull: true
     }, {
         name: 'ladaGroup'
     }, {
-        name: 'mstId'
+        name: 'mstId',
+        allowNull: true
     }, {
-        name: 'netzbetreiberId'
+        name: 'netzbetreiberId',
+        allowNull: true
     }],
 
     idProperty: 'id',

@@ -30,9 +30,11 @@ Ext.define('Lada.model.Messeinheit', {
     }, {
         name: 'eudfMesseinheitId'
     }, {
-        name: 'umrechnungsFaktorEudf'
+        name: 'umrechnungsFaktorEudf',
+        type: 'float'
     }, {
         name: 'primary',
+        type: 'boolean',
         persist: false
     }],
 
