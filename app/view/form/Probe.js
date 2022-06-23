@@ -575,14 +575,14 @@ Ext.define('Lada.view.form.Probe', {
         }
         var mstStore = Ext.data.StoreManager.get('messstellen');
         var mstId = mstStore.getById(probeRecord.get('mstId'));
-        if (!probeRecord.get('owner')) {
+        if (mstId && !probeRecord.get('owner')) {
             var laborMstId = mstStore.getById(probeRecord.get('laborMstId'));
             if (laborMstId) {
                 laborMstId = laborMstId.get('messStelle');
             } else {
                 laborMstId = '';
             }
-            var id = this.down('messstellelabor').store.count() + 1;
+
             var displayCombi;
             if ( mstId.get('messStelle') === laborMstId ) {
                 displayCombi = mstId.get('messStelle');
@@ -590,6 +590,7 @@ Ext.define('Lada.view.form.Probe', {
                 displayCombi = mstId.get('messStelle') + '/' + laborMstId;
             }
 
+            var id = this.down('messstellelabor').store.count() + 1;
             var rec = Ext.create('Lada.model.MessstelleLabor', {
                 id: id,
                 laborMst: probeRecord.get('laborMstId'),
@@ -612,7 +613,9 @@ Ext.define('Lada.view.form.Probe', {
             });
             this.down('messstellelabor').setValue(items.getAt(0));
         }
-        this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
+        if (mstId) {
+            this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
+        }
     },
 
     setMediaDesk: function(record) {
