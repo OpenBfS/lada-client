@@ -372,6 +372,7 @@ Ext.define('Lada.view.window.Messprogramm', {
     enableChildren: function() {
         this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(
             false);
+        this.down('messmethodengrid').setReadOnly(false);
     },
 
     /**

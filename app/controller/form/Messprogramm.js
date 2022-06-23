@@ -327,16 +327,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     formPanel.clearMessages();
                     formPanel.setRecord(rec);
                     formPanel.setMediaDesk(rec);
-                    button.up('window').record = rec;
                     formPanel.setMessages(json.errors, json.warnings);
-                    if (response.action === 'create' && json.success) {
-                        button.up('window').close();
-                        var win = Ext.create('Lada.view.window.Messprogramm', {
-                            record: rec
-                        });
-                        win.initData(rec);
-                        win.show();
-                    }
+                    var win = button.up('window');
+                    win.record = rec;
+                    win.enableChildren();
                 }
             },
             failure: function(newRecord, response) {
