@@ -671,9 +671,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
             success: function(rec) {
                 var defaultMehId = rec.get('mehId');
                 var secMehId = rec.get('secMehId');
-                var params = {
-                    mehId: defaultMehId
-                };
+                var params = {};
+                if (defaultMehId) {
+                    params['mehId'] = defaultMehId;
+                }
                 if (secMehId) {
                     params['secMehId'] = secMehId;
                 }

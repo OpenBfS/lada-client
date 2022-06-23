@@ -551,13 +551,12 @@ Ext.define('Lada.view.form.Messprogramm', {
      * @param {*} umwId UmwId for filtering
      */
     filterProbenZusatzs: function(umwId) {
-        var me = this;
-        var pzStore = me.down('tagfield[name=probenZusatzs]').store;
-        //Filter ProbenZusatzs
-        pzStore.load({
-            params: {
-                'umwId': umwId
-            }
+        var params = {};
+        if (umwId) {
+            params['umwId'] = umwId;
+        }
+        this.down('tagfield[name=probenZusatzs]').getStore().load({
+            params: params
         });
     },
 
