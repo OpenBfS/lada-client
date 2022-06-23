@@ -256,6 +256,10 @@ Ext.define('Lada.view.widget.base.ComboBox', {
         return null;
     },
 
+    getSubmitData: function() {
+        return this.down('combobox').getSubmitData();
+    },
+
     validate: function() {
         return this.down('combobox').validate();
     },
