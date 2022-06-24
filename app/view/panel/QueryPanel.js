@@ -13,7 +13,6 @@ Ext.define('Lada.view.panel.QueryPanel', {
     extend: 'Ext.form.Panel',
     alias: 'widget.querypanel',
     id: 'querypanelid',
-    model: 'Lada.model.Query',
     requires: [
         'Lada.view.widget.ColumnChoser',
         'Lada.view.widget.ColumnSort',
