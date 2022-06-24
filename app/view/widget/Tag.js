@@ -52,11 +52,11 @@ Ext.define('Lada.view.widget.Tag', {
     tpl: Ext.create('Ext.XTemplate',
         '<ul class="x-list-plain"><tpl for=".">',
         '<li role="option" class="x-boundlist-item">',
-        '<tpl if="generated">',
+        '<tpl if="autoTag">',
         '<div class="italic-text"> {tag}*</div>',
         '<tpl elseif="typId === `global`">',
         '<div class="italic-text bold-text"> {tag}</div>',
-        '<tpl elseif="typId === `netzbetreiber`">',
+        '<tpl elseif="typId === `netz`">',
         '<div class="bold-text"> {tag}</div>',
         '<tpl else>',
         '<div> {tag}</div>',
@@ -66,7 +66,7 @@ Ext.define('Lada.view.widget.Tag', {
 
     ),
     //Tagfield
-    labelTpl: Ext.create('Ext.XTemplate', '{tag}<tpl if="generated">*</tpl>'),
+    labelTpl: Ext.create('Ext.XTemplate', '{tag}<tpl if="autoTag">*</tpl>'),
 
     /**
      * Get the component to render the loading/reloading mask to.
@@ -144,7 +144,7 @@ Ext.define('Lada.view.widget.Tag', {
                 },
                 getItemCls: function(value) {
                     var result = 'x-tagfield-item-text';
-                    if (value.generated) {
+                    if (value.autoTag) {
                         return result + ' italic-text';
                     }
                     switch (value.typId) {

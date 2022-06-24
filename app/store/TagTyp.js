@@ -25,7 +25,7 @@ Ext.define('Lada.store.TagTyp', {
         label: 'Messstelle',
         canSelect: () => true
     }, {
-        value: 'netzbetreiber',
+        value: 'netz',
         label: 'Netzbetreiber',
         canSelect: () => true
     }, {

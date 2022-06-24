@@ -24,7 +24,7 @@ Ext.define('Lada.model.Tag', {
         type: 'string',
         allowNull: true
     }, {
-        name: 'generatedAt',
+        name: 'createdAt',
         type: 'date',
         dateFormat: 'time',
         convert: Lada.util.Date.convertTimeFn
@@ -32,7 +32,7 @@ Ext.define('Lada.model.Tag', {
         name: 'typId',
         type: 'string'
     }, {
-        name: 'generated',
+        name: 'autoTag',
         type: 'boolean'
     }, {
         name: 'gueltigBis',
