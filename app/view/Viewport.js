@@ -16,7 +16,7 @@
 Ext.define('Lada.view.Viewport', {
     extend: 'Ext.container.Viewport',
     requires: [
-        'Lada.view.QueryPanel',
+        'Lada.view.panel.QueryPanel',
         'Lada.view.panel.FileUpload',
         'Lada.view.widget.ElanScenarioButton'
     ],

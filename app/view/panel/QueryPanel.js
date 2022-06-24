@@ -9,7 +9,7 @@
 /**
  * Panel to show and manipulate queries and their filters
  */
-Ext.define('Lada.view.QueryPanel', {
+Ext.define('Lada.view.panel.QueryPanel', {
     extend: 'Ext.form.Panel',
     alias: 'widget.querypanel',
     id: 'querypanelid',
