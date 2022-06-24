@@ -28,273 +28,253 @@ Ext.define('Lada.view.panel.QueryPanel', {
     },
     margin: '5,5,5,5',
     header: false,
-    items: [{
-        xtype: 'container',
-        layout: {
-            type: 'vbox'
-        },
-        margin: 10,
-        items: [
-            {
-                layout: {
-                    type: 'hbox',
-                    align: 'stretch'
-                },
-                width: '100%',
-                border: false,
-                margin: 0,
-                items: [{
-                    xtype: 'combobox',
-                    shadow: false,
-                    margin: 5,
-                    fieldLabel: 'query.query',
-                    name: 'selectedQuery',
-                    displayField: 'name',
-                    queryMode: 'local',
-                    valueField: 'id',
-                    tpl: Ext.create('Ext.XTemplate',
-                        '<tpl for=".">' +
-                        '<div class="x-combo-list-item x-boundlist-item" >' +
-                        '{name}</div></tpl>'),
-                    displayTpl: Ext.create('Ext.XTemplate',
-                        '<tpl for=".">{name}</tpl>'),
-                    flex: 1,
-                    matchFieldWidth: false,
-                    labelWidth: 90,
-                    submitValue: false
-                }, {
-                    xtype: 'button',
-                    name: 'queryreload',
-                    action: 'reload',
-                    maxWidth: 100,
-                    minWidth: 100,
-                    text: 'query.button.reload',
-                    margin: '5 5 0 3',
-                    submitValue: false
-                }]
-            }, {
-                layout: {
-                    type: 'hbox',
-                    align: 'stretch'
-                },
-                width: '100%',
-                margin: '10 0 10 15',
-                border: false,
-                items: [{
-                    xtype: 'checkbox',
-                    name: 'filterQueriesGlobal',
-                    submitValue: false,
-                    boxLabel: 'query.showglobal',
-                    flex: 0.3
-                }, {
-                    xtype: 'checkbox',
-                    name: 'filterQueriesAvail',
-                    submitValue: false,
-                    boxLabel: 'query.showavail',
-                    flex: 0.3
-                }, {
-                    xtype: 'checkbox',
-                    name: 'filterQueriesOwn',
-                    submitValue: false,
-                    boxLabel: 'query.showown',
-                    checked: true,
-                    flex: 0.3
-                }]
-            }, {
-                xtype: 'textarea',
-                name: 'description',
-                width: '100%',
-                allowBlank: false,
-                fieldLabel: 'query.comment',
-                labelWidth: 90,
-                margin: '15 5 5 5'
-            }]
-    }, {
-        xtype: 'container',
-        margin: '10,10',
-        layout: {
-            type: 'hbox',
-            align: 'stretch'
-        },
-        defaults: {
-            xtype: 'button',
-            margin: '5,10,5,10'
-        },
-        items: [{
-            action: 'newquery',
-            text: 'query.new',
-            flex: 1
-        }, {
-            action: 'delquery',
-            text: 'delete',
-            flex: 1,
-            disabled: true
-        }]
-    }, {
-        xtype: 'fieldset',
-        name: 'querydetails',
-        title: 'query.details',
-        style: {'border': '2px solid grey;'},
-        margin: 15,
-        collapsible: true,
-        collapsed: true,
-        layout: {
-            type: 'vbox',
-            align: 'stretch'
-        },
-        items: [{
-            xtype: 'textfield',
-            name: 'name',
-            fieldLabel: 'query.name',
-            maxLength: 80,
-            labelWidth: 125,
-            flex: 1,
-            triggers: {
-                clear: {
-                    extraCls: 'x-form-clear-trigger',
-                    handler: function() {
-                        this.setValue('');
-                    }
-                }
-            }
-        }, {
-            xtype: 'cbox',
-            name: 'messStellesIds',
-            multiSelect: true,
-            labelWidth: 125,
-            fieldLabel: 'query.groups',
-            queryMode: 'local',
-            store: Ext.create('Ext.data.Store', {
-                fields: [{
-                    name: 'messStellesIds'
-                }, {
-                    name: 'mst_name', persist: false
-                }],
-                sorters: [{
-                    property: 'messStellesIds',
-                    direction: 'ASC'
-                }]
-            }),
-            valueField: 'messStellesIds',
-            displayField: 'messStellesIds',
-            searchValueField: 'mst_name',
-            tpl: Ext.create('Ext.XTemplate',
-                '<tpl for=".">' +
-                '<div class="x-combo-list-item  x-boundlist-item" >' +
-                '{messStellesIds} - {mst_name}</div></tpl>'),
-            displayTpl: Ext.create('Ext.XTemplate',
-                '<tpl for=".">{messStellesIds} - {mst_name}</tpl>')
-        }, {
-            xtype: 'columnchoser'
-        }, {
-            xtype: 'columnsort'
-        }, {
-            xtype: 'cbox',
-            name: 'activefilters',
-            labelWidth: 125,
-            multiSelect: true,
-            queryMode: 'local',
-            valueField: 'dataIndex',
-            displayField: 'name',
-            fieldLabel: 'title.filter',
-            tpl: Ext.create('Ext.XTemplate',
-                '<tpl for=".">' +
-                '<div class="x-combo-list-item  x-boundlist-item" >' +
-                '{name}</div></tpl>'),
-            displayTpl: Ext.create('Ext.XTemplate',
-                '<tpl for=".">{name}</tpl>'),
-            persist: false
-
-        }, {
-            xtype: 'button',
-            action: 'showsql',
-            margin: '5,0,5,0',
-            flex: 1,
-            text: 'button.showsql',
-            disabled: true
-        }]
-    }, {
-        xtype: 'fieldset',
-        name: 'filtervariables',
-        title: 'query.filters.visible',
-        style: {'border': '2px solid grey;'},
-        margin: '10 15 10 15',
-        minHeight: 20,
-        layout: {
-            type: 'hbox',
-            align: 'stretchmax'
-        },
-
-        items: [{
-            xtype: 'panel',
-            margin: '5',
-            border: false,
-            layout: 'vbox',
-            name: 'filtervalues',
-            items: [],
-            flex: 1,
-            padding: '5, 0, 5, 0',
-            defaults: {
-                margin: '5, 0, 5, 0'
-            }
-        }]
-    }, {
-        xtype: 'container',
-        layout: {
-            type: 'hbox',
-            align: 'stretchmax'
-        },
-        margin: '5 10 0 10',
-        items: [{
-            xtype: 'button',
-            action: 'save',
-            flex: 1,
-            margin: '5,0,5,0',
-            text: 'save',
-            disabled: true
-        }, {
-            xtype: 'button',
-            action: 'reset',
-            margin: '5,0,5,0',
-            flex: 1,
-            text: 'reset'
-        }]
-    }],
 
     initComponent: function() {
-
         var i18n = Lada.getApplication().bundle;
-        this.gridColumnValueStore = Ext.create('Lada.store.GridColumnValue');
         this.title = i18n.getMsg('query.title');
+        this.items = [{
+            xtype: 'container',
+            layout: {
+                type: 'vbox'
+            },
+            margin: 10,
+            items: [
+                {
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch'
+                    },
+                    width: '100%',
+                    border: false,
+                    margin: 0,
+                    items: [{
+                        xtype: 'combobox',
+                        shadow: false,
+                        margin: 5,
+                        fieldLabel: 'query.query',
+                        name: 'selectedQuery',
+                        displayField: 'name',
+                        queryMode: 'local',
+                        valueField: 'id',
+                        tpl: Ext.create(
+                            'Ext.XTemplate',
+                            '<tpl for=".">' +
+                            '<div class=' +
+                            '"x-combo-list-item x-boundlist-item"' +
+                            '>{name}</div></tpl>'),
+                        displayTpl: Ext.create(
+                            'Ext.XTemplate',
+                            '<tpl for=".">{name}</tpl>'),
+                        flex: 1,
+                        matchFieldWidth: false,
+                        labelWidth: 90,
+                        submitValue: false
+                    }, {
+                        xtype: 'button',
+                        name: 'queryreload',
+                        action: 'reload',
+                        maxWidth: 100,
+                        minWidth: 100,
+                        text: i18n.getMsg('query.button.reload'),
+                        margin: '5 5 0 3',
+                        submitValue: false
+                    }]
+                }, {
+                    layout: {
+                        type: 'hbox',
+                        align: 'stretch'
+                    },
+                    width: '100%',
+                    margin: '10 0 10 15',
+                    border: false,
+                    items: [{
+                        xtype: 'checkbox',
+                        name: 'filterQueriesGlobal',
+                        submitValue: false,
+                        boxLabel: i18n.getMsg('query.showglobal'),
+                        flex: 0.3
+                    }, {
+                        xtype: 'checkbox',
+                        name: 'filterQueriesAvail',
+                        submitValue: false,
+                        boxLabel: i18n.getMsg('query.showavailable'),
+                        flex: 0.3
+                    }, {
+                        xtype: 'checkbox',
+                        name: 'filterQueriesOwn',
+                        submitValue: false,
+                        boxLabel: i18n.getMsg('query.showown'),
+                        checked: true,
+                        flex: 0.3
+                    }]
+                }, {
+                    xtype: 'textarea',
+                    name: 'description',
+                    width: '100%',
+                    allowBlank: false,
+                    fieldLabel: i18n.getMsg('query.comment'),
+                    labelWidth: 90,
+                    margin: '15 5 5 5'
+                }]
+        }, {
+            xtype: 'container',
+            margin: '10,10',
+            layout: {
+                type: 'hbox',
+                align: 'stretch'
+            },
+            defaults: {
+                xtype: 'button',
+                margin: '5,10,5,10'
+            },
+            items: [{
+                action: 'newquery',
+                text: i18n.getMsg('query.new'),
+                flex: 1
+            }, {
+                action: 'delquery',
+                text: i18n.getMsg('delete'),
+                flex: 1,
+                disabled: true
+            }]
+        }, {
+            xtype: 'fieldset',
+            name: 'querydetails',
+            title: i18n.getMsg('query.details'),
+            style: {'border': '2px solid grey;'},
+            margin: 15,
+            collapsible: true,
+            collapsed: true,
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
+            items: [{
+                xtype: 'textfield',
+                name: 'name',
+                fieldLabel: i18n.getMsg('query.name'),
+                maxLength: 80,
+                labelWidth: 125,
+                flex: 1,
+                triggers: {
+                    clear: {
+                        extraCls: 'x-form-clear-trigger',
+                        handler: function() {
+                            this.setValue('');
+                        }
+                    }
+                }
+            }, {
+                xtype: 'cbox',
+                name: 'messStellesIds',
+                multiSelect: true,
+                labelWidth: 125,
+                fieldLabel: i18n.getMsg('query.groups'),
+                queryMode: 'local',
+                store: Ext.create('Ext.data.Store', {
+                    fields: [{
+                        name: 'messStellesIds'
+                    }, {
+                        name: 'mst_name', persist: false
+                    }],
+                    sorters: [{
+                        property: 'messStellesIds',
+                        direction: 'ASC'
+                    }]
+                }),
+                valueField: 'messStellesIds',
+                displayField: 'messStellesIds',
+                searchValueField: 'mst_name',
+                tpl: Ext.create(
+                    'Ext.XTemplate',
+                    '<tpl for=".">' +
+                    '<div class="x-combo-list-item  x-boundlist-item" >' +
+                    '{messStellesIds} - {mst_name}</div></tpl>'),
+                displayTpl: Ext.create(
+                    'Ext.XTemplate',
+                    '<tpl for=".">{messStellesIds} - {mst_name}</tpl>')
+            }, {
+                xtype: 'columnchoser'
+            }, {
+                xtype: 'columnsort'
+            }, {
+                xtype: 'cbox',
+                name: 'activefilters',
+                labelWidth: 125,
+                multiSelect: true,
+                queryMode: 'local',
+                valueField: 'dataIndex',
+                displayField: 'name',
+                fieldLabel: i18n.getMsg('title.filter'),
+                tpl: Ext.create(
+                    'Ext.XTemplate',
+                    '<tpl for=".">' +
+                    '<div class="x-combo-list-item  x-boundlist-item" >' +
+                    '{name}</div></tpl>'),
+                displayTpl: Ext.create(
+                    'Ext.XTemplate',
+                    '<tpl for=".">{name}</tpl>'),
+                persist: false
+
+            }, {
+                xtype: 'button',
+                action: 'showsql',
+                margin: '5,0,5,0',
+                flex: 1,
+                text: i18n.getMsg('button.showsql'),
+                disabled: true
+            }]
+        }, {
+            xtype: 'fieldset',
+            name: 'filtervariables',
+            title: i18n.getMsg('query.filters.visible'),
+            style: {'border': '2px solid grey;'},
+            margin: '10 15 10 15',
+            minHeight: 20,
+            layout: {
+                type: 'hbox',
+                align: 'stretchmax'
+            },
+
+            items: [{
+                xtype: 'panel',
+                margin: '5',
+                border: false,
+                layout: 'vbox',
+                name: 'filtervalues',
+                items: [],
+                flex: 1,
+                padding: '5, 0, 5, 0',
+                defaults: {
+                    margin: '5, 0, 5, 0'
+                }
+            }]
+        }, {
+            xtype: 'container',
+            layout: {
+                type: 'hbox',
+                align: 'stretchmax'
+            },
+            margin: '5 10 0 10',
+            items: [{
+                xtype: 'button',
+                action: 'save',
+                flex: 1,
+                margin: '5,0,5,0',
+                text: i18n.getMsg('save'),
+                disabled: true
+            }, {
+                xtype: 'button',
+                action: 'reset',
+                margin: '5,0,5,0',
+                flex: 1,
+                text: i18n.getMsg('reset')
+            }]
+        }];
+
+        this.gridColumnValueStore = Ext.create('Lada.store.GridColumnValue');
         this.callParent(arguments);
-        this.down('fieldset[name=filtervariables]').setTitle(
-            i18n.getMsg('query.filters.visible'));
         this.down('button[action=search]').text = i18n.getMsg('query.search');
-        this.down('button[action=save]').text = i18n.getMsg('save');
-        this.down('button[action=reset]').text = i18n.getMsg('reset');
-        this.down('button[action=showsql]').text = i18n.getMsg(
-            'button.showsql');
-        this.down('checkbox[name=filterQueriesAvail]').boxLabel = i18n.getMsg(
-            'query.showavailable');
-        this.down('checkbox[name=filterQueriesOwn]').boxLabel = i18n.getMsg(
-            'query.showown');
-        this.down('checkbox[name=filterQueriesGlobal]').boxLabel = i18n.getMsg(
-            'query.showglobal');
-        this.down('fieldset[name=querydetails]').setTitle(i18n.getMsg(
-            'query.details'));
-        this.down('button[action=newquery]').text = i18n.getMsg('query.new');
-        this.down('button[action=delquery]').text = i18n.getMsg('delete');
-        this.down('textfield[name=name]').fieldLabel = i18n.getMsg(
-            'query.name');
-        this.down('textarea[name=description]').fieldLabel = i18n.getMsg(
-            'query.comment');
-        //TODO these two are ugly hacks:
-        this.down('cbox[name=messStellesIds]').down().fieldLabel = i18n.getMsg(
-            'query.groups');
-        this.down('cbox[name=activefilters]').down().fieldLabel = i18n.getMsg(
-            'title.filter');
-        this.down('button[name=queryreload]').text = i18n.getMsg(
-            'query.button.reload');
 
         var selquery = this.down('combobox[name=selectedQuery]');
         selquery.fieldLabel = i18n.getMsg('query.query');
