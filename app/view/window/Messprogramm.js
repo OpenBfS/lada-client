@@ -138,9 +138,8 @@ Ext.define('Lada.view.window.Messprogramm', {
         var me = this;
         var i18n = Lada.getApplication().bundle;
 
-        // If a record was passed to this window,
-        // create a Edit window
         if (this.record) {
+            // If a record was passed to this window, load it for editing
             this.setLoading(true);
             var loadCallback = function(record, response) {
                 me.down('messprogrammform').setRecord(record);
@@ -206,7 +205,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                 loadCallback(loadedRecord);
             }
         } else {
-            // Create a Create Window
+            // Create a new record
             var record = Ext.create('Lada.model.Messprogramm', {
                 gueltigVon: 1,
                 gueltigBis: 365});
