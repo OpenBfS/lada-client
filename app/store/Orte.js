@@ -16,6 +16,6 @@ Ext.define('Lada.store.Orte', {
         property: 'ortId',
         direction: 'ASC'
     }],
-    remoteFilter: true, // TODO true,
+    remoteFilter: true,
     autoLoad: false
 });
