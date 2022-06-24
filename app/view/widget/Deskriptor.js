@@ -23,7 +23,6 @@ Ext.define('Lada.view.widget.Deskriptor', {
     lastQuery: null,
     queryMode: 'local',
     allowBlank: true,
-    remoteFilter: false,
     forceSelection: true,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
