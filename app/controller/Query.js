@@ -293,7 +293,6 @@ Ext.define('Lada.controller.Query', {
                                         // eslint-disable-next-line max-len
                                         var globalCB = qp.down('checkbox[name=filterQueriesGlobal]');
                                         globalCB.setValue(true);
-                                        globalCB.fireEvent('change', globalCB);
                                     }
                                     combobox.setValue(qp.store.getAt(0));
                                     me.changeCurrentQuery(combobox);
