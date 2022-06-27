@@ -16,11 +16,14 @@ Ext.define('Lada.view.panel.QueryPanel', {
     requires: [
         'Lada.view.widget.ColumnChoser',
         'Lada.view.widget.ColumnSort',
-        'Lada.store.GridColumnValue'
+        'Lada.store.GridColumnValue',
+        'Lada.store.Query'
     ],
     gridColumnStore: null,
     gridColumnValueStore: null,
-    store: null,
+
+    trackResetOnLoad: true,
+
     scrollable: true,
     layout: {
         type: 'vbox',
@@ -51,8 +54,10 @@ Ext.define('Lada.view.panel.QueryPanel', {
                         xtype: 'combobox',
                         shadow: false,
                         margin: 5,
-                        fieldLabel: 'query.query',
+                        fieldLabel: i18n.getMsg('query.query'),
                         name: 'selectedQuery',
+                        isFormField: false,
+                        store: Ext.create('Lada.store.Query'),
                         displayField: 'name',
                         queryMode: 'local',
                         valueField: 'id',
@@ -90,18 +95,21 @@ Ext.define('Lada.view.panel.QueryPanel', {
                     items: [{
                         xtype: 'checkbox',
                         name: 'filterQueriesGlobal',
+                        isFormField: false,
                         submitValue: false,
                         boxLabel: i18n.getMsg('query.showglobal'),
                         flex: 0.3
                     }, {
                         xtype: 'checkbox',
                         name: 'filterQueriesAvail',
+                        isFormField: false,
                         submitValue: false,
                         boxLabel: i18n.getMsg('query.showavailable'),
                         flex: 0.3
                     }, {
                         xtype: 'checkbox',
                         name: 'filterQueriesOwn',
+                        isFormField: false,
                         submitValue: false,
                         boxLabel: i18n.getMsg('query.showown'),
                         checked: true,
@@ -135,7 +143,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 action: 'delquery',
                 text: i18n.getMsg('delete'),
                 flex: 1,
-                disabled: true
+                disabled: false
             }]
         }, {
             xtype: 'fieldset',
@@ -203,6 +211,12 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 labelWidth: 125,
                 multiSelect: true,
                 queryMode: 'local',
+                isFormField: false,
+                // Needs to be different from Ext.getStore('columnstore')
+                // because of extra filters:
+                store: Ext.create('Ext.data.Store', {
+                    model: 'Lada.model.GridColumn',
+                    autoLoad: true}),
                 valueField: 'dataIndex',
                 displayField: 'name',
                 fieldLabel: i18n.getMsg('title.filter'),
@@ -276,9 +290,6 @@ Ext.define('Lada.view.panel.QueryPanel', {
         this.callParent(arguments);
         this.down('button[action=search]').text = i18n.getMsg('query.search');
 
-        var selquery = this.down('combobox[name=selectedQuery]');
-        selquery.fieldLabel = i18n.getMsg('query.query');
-
         var activefilterFilter = function(tagfield) {
             tagfield.getStore().filter(function(item) {
                 if (item.get('filter')) {
@@ -296,25 +307,29 @@ Ext.define('Lada.view.panel.QueryPanel', {
         };
 
         // Load query store
-        this.store = Ext.data.StoreManager.get('querystore');
-        this.store.load({
-            scope: this,
-            callback: function() {
-                this.store.clearFilter();
-                var fq = this.down('checkbox[name=filterQueriesOwn]');
-                fq.fireEvent('change', fq);
-                var record0 = this.store.getAt(0);
-                if (!record0) {
-                    this.down('button[action=delquery]').setDisabled(true);
-                    this.down('checkbox[name=filterQueriesGlobal]')
-                        .setValue(true);
-                    record0 = this.store.getAt(0);
-                } else {
-                    this.down('button[action=delquery]').setDisabled(false);
+        var selquery = this.down('combobox[name=selectedQuery]');
+        var me = this;
+        selquery.getStore().load({
+            callback: function(records, operation, success) {
+                if (!success) {
+                    Ext.Msg.alert(
+                        i18n.getMsg('query.error.load.title'),
+                        i18n.getMsg('query.error.load.message'));
                 }
-                selquery.setStore(this.store);
+
+                // Select first query that belongs to the user
+                var hasUserQuery = true;
+                var record0 = this.findRecord('userId', Lada.userId);
+                if (!record0) {
+                    hasUserQuery = false;
+                    record0 = this.getAt(0);
+                    me.down('button[action=delquery]').setDisabled(true);
+                }
                 selquery.select(record0);
-                selquery.fireEvent('select', selquery);
+
+                // Trigger filtering the store and loading columns
+                me.down('checkbox[name=filterQueriesGlobal]').setValue(
+                    !hasUserQuery);
             }
         });
 
@@ -347,13 +362,6 @@ Ext.define('Lada.view.panel.QueryPanel', {
             }
 
             this.down('columnsort').setStore(null);
-            this.down('cbox[name=activefilters]').setStore(
-                // Needs to be different from Ext.getStore('columnstore')
-                // because of extra filters:
-                Ext.create('Ext.data.Store', {
-                    model: 'Lada.model.GridColumn',
-                    autoLoad: true
-                }));
             this.down('cbox[name=activefilters]').store.filter(function() {
                 // don't show any items, as there is no baseQuery
                 return false;
@@ -466,7 +474,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
         });
     },
 
-    //checks checks if a query is editable by the current user
+    // Checks if a query is editable by the current user
     isQueryReadonly: function() {
         var query = this.getForm().getRecord();
         if (query.phantom && (query.get('clonedFrom') === 'empty')) {

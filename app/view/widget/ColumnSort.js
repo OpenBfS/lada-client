@@ -85,6 +85,7 @@ Ext.define('Lada.view.widget.ColumnSort', {
                     minWidth: 150,
                     widget: {
                         xtype: 'combobox',
+                        isFormField: false,
                         dataIndex: 'sort',
                         model: cboxmodel,
                         store: comboboxstore,

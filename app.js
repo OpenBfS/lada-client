@@ -500,9 +500,6 @@ Ext.application({
             }),
             data: Lada.availablePagingSizes
         });
-        Ext.create('Lada.store.Query', {
-            storeId: 'querystore'
-        });
         Ext.create('Lada.store.DownloadQueue', {
             storeId: 'downloadqueue-print'
         });
