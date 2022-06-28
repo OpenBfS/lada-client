@@ -72,8 +72,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                             '<tpl for=".">{name}</tpl>'),
                         flex: 1,
                         matchFieldWidth: false,
-                        labelWidth: 90,
-                        submitValue: false
+                        labelWidth: 90
                     }, {
                         xtype: 'button',
                         name: 'queryreload',
@@ -81,8 +80,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                         maxWidth: 100,
                         minWidth: 100,
                         text: i18n.getMsg('query.button.reload'),
-                        margin: '5 5 0 3',
-                        submitValue: false
+                        margin: '5 5 0 3'
                     }]
                 }, {
                     layout: {
@@ -96,21 +94,18 @@ Ext.define('Lada.view.panel.QueryPanel', {
                         xtype: 'checkbox',
                         name: 'filterQueriesGlobal',
                         isFormField: false,
-                        submitValue: false,
                         boxLabel: i18n.getMsg('query.showglobal'),
                         flex: 0.3
                     }, {
                         xtype: 'checkbox',
                         name: 'filterQueriesAvail',
                         isFormField: false,
-                        submitValue: false,
                         boxLabel: i18n.getMsg('query.showavailable'),
                         flex: 0.3
                     }, {
                         xtype: 'checkbox',
                         name: 'filterQueriesOwn',
                         isFormField: false,
-                        submitValue: false,
                         boxLabel: i18n.getMsg('query.showown'),
                         checked: true,
                         flex: 0.3
