@@ -144,8 +144,10 @@ Ext.define('Lada.view.form.Messprogramm', {
                         },
                         border: false,
                         items: [{
-                            xtype: 'messstellelaborkombi',
+                            xtype: 'messstellelabor',
                             name: 'mstlabor',
+                            store: Ext.data.StoreManager.get(
+                                'messstellelaborkombi'),
                             fieldLabel: i18n.getMsg('labor_mst_id'),
                             margin: '0, 5, 5, 5',
                             width: '50%',
@@ -712,15 +714,15 @@ Ext.define('Lada.view.form.Messprogramm', {
                         displayCombi: displayCombi
                     }]
                 });
-                this.down('messstellelaborkombi').setStore(newStore);
-                this.down('messstellelaborkombi').down('combobox').setValue(1);
-                this.down('messstellelaborkombi').down('combobox')
+                this.down('messstellelabor').setStore(newStore);
+                this.down('messstellelabor').down('combobox').setValue(1);
+                this.down('messstellelabor').down('combobox')
                     .resetOriginalValue();
             } else {
-                this.down('messstellelaborkombi').setStore(mstLaborKombiStore);
-                this.down('messstellelaborkombi').down('combobox')
+                this.down('messstellelabor').setStore(mstLaborKombiStore);
+                this.down('messstellelabor').down('combobox')
                     .setValue(recordIndex);
-                this.down('messstellelaborkombi').down('combobox')
+                this.down('messstellelabor').down('combobox')
                     .resetOriginalValue();
             }
         } else {
@@ -733,10 +735,10 @@ Ext.define('Lada.view.form.Messprogramm', {
             var newStore2 = Ext.create('Ext.data.Store', {
                 model: 'Lada.model.MessstelleLabor',
                 data: availableitems.items});
-            this.down('messstellelaborkombi').setStore(newStore2);
-            this.down('messstellelaborkombi').setValue(
+            this.down('messstellelabor').setStore(newStore2);
+            this.down('messstellelabor').setValue(
                 messRecord.get('messstellelabor'));
-            this.down('messstellelaborkombi').down('combobox')
+            this.down('messstellelabor').down('combobox')
                 .resetOriginalValue();
         }
         this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));

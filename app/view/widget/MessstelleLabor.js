@@ -12,12 +12,12 @@
 Ext.define('Lada.view.widget.MessstelleLabor', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.messstellelabor',
-    store: 'MessstelleLabor',
     displayField: 'displayCombi',
     searchValueField: 'messStelle',
     valueField: 'id',
     editable: this.editable || false,
     forceSelection: true,
+    isFormField: false,
 
     // Enable filtering of comboboxes
     autoSelect: true,
@@ -29,19 +29,6 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.messstellelabor');
-        this.store = Ext.data.StoreManager.get('messstellelabor');
         this.callParent(arguments);
-        this.down('combobox').isFormField = false;
-
-    },
-    setStore: function(store) {
-        if (store) {
-            this.store = store;
-            this.down('combobox').setStore(store);
-        }
-    },
-
-    setValue: function(value) {
-        this.down('combobox').setValue(value);
     }
 });

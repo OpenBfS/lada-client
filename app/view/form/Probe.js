@@ -154,6 +154,7 @@ Ext.define('Lada.view.form.Probe', {
                         items: [{
                             xtype: 'messstellelabor',
                             name: 'mstlabor',
+                            store: Ext.data.StoreManager.get('messstellelabor'),
                             fieldLabel: i18n.getMsg('labor_mst_id'),
                             margin: '0, 5, 5, 5',
                             width: '50%',

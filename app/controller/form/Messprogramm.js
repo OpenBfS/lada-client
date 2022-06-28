@@ -30,7 +30,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 dirtychange: this.dirtyForm,
                 save: this.saveHeadless
             },
-            'messprogrammform messstellelaborkombi combobox': {
+            'messprogrammform messstellelabor combobox': {
                 select: this.setNetzbetreiber
             },
             'messprogrammform numfield numberfield': {
@@ -455,12 +455,12 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 'messstellelaborkombi');
             var recordIndex = mstLaborKombiStore.findExact(
                 'displayCombi', displayCombi);
-            formPanel.down('messstellelaborkombi').setValue(recordIndex);
+            formPanel.down('messstellelabor').setValue(recordIndex);
             formPanel.down('netzbetreiber').setValue(
                 mstLaborKombiStore.getById(recordIndex)
                     .get('netzbetreiberId'));
         } else {
-            formPanel.down('messstellelaborkombi').clearValue();
+            formPanel.down('messstellelabor').clearValue();
             formPanel.down('netzbetreiber').clearValue();
         }
         formPanel.getForm().owner.populateIntervall(
