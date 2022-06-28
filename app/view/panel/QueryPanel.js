@@ -95,6 +95,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                         name: 'filterQueriesGlobal',
                         isFormField: false,
                         boxLabel: i18n.getMsg('query.showglobal'),
+                        checked: true,
                         flex: 0.3
                     }, {
                         xtype: 'checkbox',
@@ -322,9 +323,15 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 }
                 selquery.select(record0);
 
-                // Trigger filtering the store and loading columns
-                me.down('checkbox[name=filterQueriesGlobal]').setValue(
-                    !hasUserQuery);
+                // To trigger filtering the store and loading columns,
+                // change a checkbox value
+                if (hasUserQuery) {
+                    me.down('checkbox[name=filterQueriesGlobal]')
+                        .setValue(false);
+                } else {
+                    me.down('checkbox[name=filterQueriesOwn]')
+                        .setValue(false);
+                }
             }
         });
 
