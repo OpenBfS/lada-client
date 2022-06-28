@@ -213,23 +213,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
     },
 
     /**
-     * The Messtellen Store contains ALL Messtellen.
-     * Filter the store in this combobox to reduce the choices
-     * to the subset which the user is allowed to use.
-     */
-    filter: function(field) {
-        var fil = Ext.create('Ext.util.Filter', {
-            filterFn: function(item) {
-                if (Ext.Array.contains(Lada.mst, item.get('id'))) {
-                    return true;
-                }
-                return false;
-            }
-        });
-        field.getStore().filter(fil);
-    },
-
-    /**
      * When a Messtelle is selected, modify the Netzbetreiber
      * according to the Messstelle
      */
