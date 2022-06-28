@@ -600,6 +600,7 @@ Ext.define('Lada.controller.Query', {
                     width: '100%',
                     editable: true,
                     border: false,
+                    isFormField: false,
                     triggers: {
                         clear: {
                             extraCls: 'x-form-clear-trigger',
