@@ -21,6 +21,9 @@ Ext.define('Lada.view.widget.base.DateTimeRange', {
         align: 'stretchmax'
     },
     border: false,
+
+    isFormField: true,
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.items = [
@@ -40,6 +43,7 @@ Ext.define('Lada.view.widget.base.DateTimeRange', {
                 margin: '5,0,5,0',
                 border: false,
                 name: this.name + 'From',
+                isFormField: this.isFormField,
                 readOnly: this.readOnly || false,
                 period: 'start', //TODO state of this Start/End indicator?
                 triggers: {
@@ -61,6 +65,7 @@ Ext.define('Lada.view.widget.base.DateTimeRange', {
                 margin: '5,0,5,0',
                 border: false,
                 name: this.name + 'To',
+                isFormField: this.isFormField,
                 readOnly: this.readOnly || false,
                 period: 'end', //TODO state of this Start/End indicator?
                 triggers: {

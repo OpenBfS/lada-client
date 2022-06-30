@@ -18,6 +18,8 @@ Ext.define('Lada.view.widget.base.NumberRange', {
     border: false,
     margin: '0, 0, 5, 0',
 
+    isFormField: true,
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var numberOptions = {
@@ -31,6 +33,7 @@ Ext.define('Lada.view.widget.base.NumberRange', {
             labelWidth: 30,
             margin: 5,
             width: '38%',
+            isFormField: this.isFormField,
             readOnly: this.readOnly || false,
             hideTrigger: this.hideTrigger || false,
             keyNavEnabled: this.keyNavEnabled || false,
