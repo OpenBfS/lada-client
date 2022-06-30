@@ -167,7 +167,7 @@ Ext.define('Lada.view.widget.Tag', {
                 tagStore.clearFilter();
                 tagStore.filterBy(function(record) {
                     return record.get('typId') === 'global'
-                        || record.get('typId') === 'netzbetreiber'
+                        || record.get('typId') === 'netz'
                         && Ext.Array.contains(
                             Lada.netzbetreiber,
                             record.get('netzbetreiberId'))
