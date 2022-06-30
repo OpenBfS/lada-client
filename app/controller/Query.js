@@ -251,6 +251,7 @@ Ext.define('Lada.controller.Query', {
         }
         if ( (Lada.userId === query.get('userId'))) {
             var i18n = Lada.getApplication().bundle;
+            var me = this;
             Ext.MessageBox.confirm(i18n.getMsg('delete'),
                 i18n.getMsg('delete.query'), function(btn) {
                     if (btn === 'yes') {
@@ -266,16 +267,20 @@ Ext.define('Lada.controller.Query', {
                                 var queryStore = combobox.getStore();
                                 queryStore.remove(rec);
 
-                                // Trigger filtering store and loading columns
+                                // Trigger filtering store
                                 if (queryStore.getData().count() === 0) {
                                     queryStore.clearFilter();
-                                    combobox.select(queryStore.getAt(0));
                                     qp.down(
                                         'checkbox[name=filterQueriesGlobal]')
                                         .setValue(true);
-                                } else {
-                                    combobox.setValue(queryStore.getAt(0));
                                 }
+
+                                // Select a query and load columns.
+                                // Note that calling select() does not fire
+                                // a 'select' event!
+                                combobox.select(queryStore.getAt(0));
+                                me.changeCurrentQuery(combobox);
+
                                 qp.down('fieldset[name=querydetails]')
                                     .collapse();
                             }
@@ -360,6 +365,7 @@ Ext.define('Lada.controller.Query', {
     saveQuery: function(record, callback) {
         var qp = Ext.ComponentQuery.query('querypanel')[0];
         record.set(qp.getForm().getFieldValues(true));
+        var me = this;
         record.save({
             success: function(rec, op) {
                 callback(rec).then(function() {
@@ -367,16 +373,19 @@ Ext.define('Lada.controller.Query', {
                     var cstore = cbox.getStore();
                     cstore.add(rec);
 
-                    // Trigger filtering the store and loading columns
+                    // Trigger filtering the store
                     if (op.getRequest().getAction() === 'create') {
                         cstore.clearFilter();
-                        cbox.select(rec);
                         cbox.up('querypanel')
                             .down('checkbox[name=filterQueriesOwn]')
                             .setValue(true);
-                    } else {
-                        cbox.setValue(rec);
                     }
+
+                    // Select new query and load columns.
+                    // Note that calling select() does not fire
+                    // a 'select' event!
+                    cbox.select(rec);
+                    me.changeCurrentQuery(cbox);
 
                     qp.loadingMask.hide();
                 });
