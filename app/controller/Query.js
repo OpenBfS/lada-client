@@ -56,7 +56,9 @@ Ext.define('Lada.controller.Query', {
                 click: me.deleteQuery
             },
             'querypanel combobox[name=selectedQuery]': {
-                change: me.changeCurrentQuery
+                // Do not use 'change' event here, because that destroys
+                // user experience when typing into the combobox field
+                select: me.changeCurrentQuery
             },
             'querypanel button[action=save]': {
                 click: me.handleSaveClicked

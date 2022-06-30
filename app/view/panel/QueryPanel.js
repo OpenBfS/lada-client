@@ -304,18 +304,21 @@ Ext.define('Lada.view.panel.QueryPanel', {
                         i18n.getMsg('query.error.load.message'));
                 }
 
-                // Select first query that belongs to the user
+                // Select first query that belongs to the user, if any, ...
                 var hasUserQuery = true;
                 var record0 = this.findRecord('userId', Lada.userId);
                 if (!record0) {
+                    // ... else select first in store
                     hasUserQuery = false;
                     record0 = this.getAt(0);
                     me.down('button[action=delquery]').setDisabled(true);
                 }
                 selquery.select(record0);
+                // Trigger loading columns.
+                // Do not expect ExtJS to do that for you:
+                selquery.fireEvent('select', selquery);
 
-                // To trigger filtering the store and loading columns,
-                // change a checkbox value
+                // To trigger filtering the store, change a checkbox value
                 if (hasUserQuery) {
                     me.down('checkbox[name=filterQueriesGlobal]')
                         .setValue(false);
