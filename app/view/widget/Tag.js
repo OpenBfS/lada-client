@@ -150,7 +150,7 @@ Ext.define('Lada.view.widget.Tag', {
                     switch (value.typId) {
                         case 'global':
                             return result + ' bold-text italic-text';
-                        case 'netzbetreiber':
+                        case 'netz':
                             return result + ' bold-text';
                         default:
                             return result;
