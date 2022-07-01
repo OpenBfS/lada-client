@@ -665,7 +665,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         // dirtychange events from occurring once any value has been chosen
         // in the tagfield.
         messRecord.set(
-            'probenZusatzs', messRecord.probenZusatzs().getData().items);
+            'probenZusatzs', messRecord.probenZusatzs().getRange());
         this.getForm().loadRecord(messRecord);
         if (!messRecord.data || messRecord.data.id === null) {
             return;
