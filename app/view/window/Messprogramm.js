@@ -209,8 +209,8 @@ Ext.define('Lada.view.window.Messprogramm', {
             var record = Ext.create('Lada.model.Messprogramm', {
                 gueltigVon: 1,
                 gueltigBis: 365});
-            this.record = record;
-            this.disableChildren();
+            record.set('owner', true);
+            record.set('id', null);
             var mstLaborKombiStore = Ext.data.StoreManager.get(
                 'messstellelaborkombi');
             mstLaborKombiStore.clearFilter(true);
@@ -220,8 +220,6 @@ Ext.define('Lada.view.window.Messprogramm', {
                     return true;
                 }
             });
-            record.set('owner', true);
-            record.set('id', null);
             var defaultentry = items.items[0];
             if (defaultentry) {
                 record.set('mstId', defaultentry.get('messStelle'));
@@ -234,9 +232,13 @@ Ext.define('Lada.view.window.Messprogramm', {
                         .setValue(netzbetreiber);
                 }
             }
-            this.down('button[name=reload]').setDisabled(true);
+            this.record = record;
+
             this.down('messprogrammform').setRecord(record);
             this.down('messprogrammform').setMediaDesk(record);
+
+            this.disableChildren();
+            this.down('button[name=reload]').setDisabled(true);
         }
         this.down('messprogrammform').isValid();
     },

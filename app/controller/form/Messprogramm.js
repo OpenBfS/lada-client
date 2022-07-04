@@ -412,43 +412,14 @@ Ext.define('Lada.controller.form.Messprogramm', {
       */
     discard: function(button) {
         var formPanel = button.up('form');
-        formPanel.getForm().reset();
-        var record = formPanel.getForm().getRecord();
-        var mstStore = Ext.data.StoreManager.get('messstellen');
-        var mstId = mstStore.getById(
-            formPanel.getForm().getRecord().get('mstId'));
-        if (mstId !== null) {
-            var laborMstId = mstStore.getById(
-                formPanel.getForm().getRecord().get('laborMstId'));
-            if (laborMstId) {
-                laborMstId = laborMstId.get('messStelle');
-            } else {
-                laborMstId = '';
-            }
-            var displayCombi;
-            if (
-                formPanel.getForm().getRecord().get('mstId') ===
-                formPanel.getForm().getRecord().get('laborMstId')
-            ) {
-                displayCombi = mstId.get('messStelle');
-            } else {
-                displayCombi = mstId.get('messStelle') + '/' + laborMstId;
-            }
-            var mstLaborKombiStore = Ext.data.StoreManager.get(
-                'messstellelaborkombi');
-            var recordIndex = mstLaborKombiStore.findExact(
-                'displayCombi', displayCombi);
-            formPanel.down('messstellelabor').setValue(recordIndex);
-            formPanel.down('netzbetreiber').setValue(
-                mstLaborKombiStore.getById(recordIndex)
-                    .get('netzbetreiberId'));
-        } else {
-            formPanel.down('messstellelabor').clearValue();
-            formPanel.down('netzbetreiber').clearValue();
-        }
-        formPanel.getForm().owner.populateIntervall(
-            formPanel.getForm().getRecord());
+        var form = formPanel.getForm();
+        form.reset();
+        var record = form.getRecord();
+
+        formPanel.setLaborMst(record);
+        formPanel.getForm().owner.populateIntervall(record);
         formPanel.setMediaDesk(record);
+
         var field = formPanel.down('tagfield[name=probenZusatzs]');
         field.value = record.probenZusatzs().getData().items;
         formPanel.filterProbenZusatzs(record.get('umwId'));

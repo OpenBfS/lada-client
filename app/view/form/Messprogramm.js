@@ -671,82 +671,31 @@ Ext.define('Lada.view.form.Messprogramm', {
         messRecord.set(
             'probenZusatzs', messRecord.probenZusatzs().getRange());
         this.getForm().loadRecord(messRecord);
-        if (!messRecord.data || messRecord.data.id === null) {
-            return;
-        }
 
         this.populateIntervall(messRecord);
 
         this.filterProbenZusatzs(messRecord.get('umwId'));
 
-        var mstStore = Ext.data.StoreManager.get('messstellen');
-        var mstId = mstStore.getById(messRecord.get('mstId'));
-        var netzId = mstId.get('netzbetreiberId');
-        var mstLaborKombiStore = Ext.data.StoreManager.get(
-            'messstellelaborkombi');
-        if (!messRecord.get('owner')) {
-            var laborMstId = mstStore.getById(messRecord.get('laborMstId'));
-            if (laborMstId) {
-                laborMstId = laborMstId.get('messStelle');
-            } else {
-                laborMstId = '';
-            }
-            var displayCombi;
-            if ( messRecord.get('mstId') === messRecord.get('laborMstId') ) {
-                displayCombi = mstId.get('messStelle');
-            } else {
-                displayCombi = mstId.get('messStelle') + '/' + laborMstId;
-            }
-
-            mstLaborKombiStore.clearFilter(true);
-            var recordIndex = mstLaborKombiStore.findExact(
-                'displayCombi', displayCombi);
-
-            mstLaborKombiStore.filter({
-                property: 'netzbetreiberId',
-                anyMatch: true,
-                value: netzId,
-                caseSensitive: false
-            });
-            if (recordIndex === -1) {
-                var newStore = Ext.create('Ext.data.Store', {
-                    model: 'Lada.model.MessstelleLabor',
-                    data: [{
-                        id: 1,
-                        laborMst: messRecord.get('laborMstId'),
-                        messStelle: messRecord.get('mstId'),
-                        displayCombi: displayCombi
-                    }]
-                });
-                this.down('messstellelabor').setStore(newStore);
-                this.down('messstellelabor').down('combobox').setValue(1);
-                this.down('messstellelabor').down('combobox')
-                    .resetOriginalValue();
-            } else {
-                this.down('messstellelabor').setStore(mstLaborKombiStore);
-                this.down('messstellelabor').down('combobox')
-                    .setValue(recordIndex);
-                this.down('messstellelabor').down('combobox')
-                    .resetOriginalValue();
-            }
-        } else {
-            var availableitems = mstLaborKombiStore.queryBy(function(record) {
-                if (record.get('messStelle') === messRecord.get('mstId') &&
-                    record.get('laborMst') === messRecord.get('laborMstId')) {
-                    return true;
-                }
-            });
-            var newStore2 = Ext.create('Ext.data.Store', {
-                model: 'Lada.model.MessstelleLabor',
-                data: availableitems.items});
-            this.down('messstellelabor').setStore(newStore2);
-            this.down('messstellelabor').setValue(
-                messRecord.get('messstellelabor'));
-            this.down('messstellelabor').down('combobox')
-                .resetOriginalValue();
-        }
-        this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
+        this.setLaborMst(messRecord);
+        this.down('messstellelabor').down('combobox').resetOriginalValue();
         this.down('netzbetreiber').down('combobox').resetOriginalValue();
+    },
+
+    /**
+     * Set value in Messstelle/Labor combination and Netzbetreiber combobox.
+     */
+    setLaborMst: function(record) {
+        var mstLaborWidget = this.down('messstellelabor').down('combobox');
+        var mstLaborStore = mstLaborWidget.getStore();
+        var mstLaborIdx = mstLaborStore.findBy(function(rec) {
+            return rec.get('messStelle') === record.get('mstId')
+                && rec.get('laborMst') === record.get('laborMstId');
+        });
+        mstLaborWidget.setValue(mstLaborStore.getAt(mstLaborIdx));
+
+        var mstStore = Ext.data.StoreManager.get('messstellen');
+        var mstId = mstStore.getById(record.get('mstId'));
+        this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
     },
 
     setMediaDesk: function(record) {
