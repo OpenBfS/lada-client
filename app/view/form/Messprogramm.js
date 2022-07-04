@@ -538,8 +538,12 @@ Ext.define('Lada.view.form.Messprogramm', {
                             '</li>',
                             '</tpl></ul>'
                         ),
-                        labelTpl: Ext.create('Ext.XTemplate',
-                        '<tpl for=".">{id} - {beschreibung}</tpl>')
+                        labelTpl: Ext.create(
+                            'Ext.XTemplate',
+                            '<tpl for=".">{id} - {beschreibung}</tpl>'),
+                        // See Lada.override.FilteredComboBox:
+                        displayField: 'id',
+                        searchValueField: 'beschreibung'
                     }]
                 }]
             }]
