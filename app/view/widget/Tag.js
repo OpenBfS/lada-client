@@ -103,21 +103,6 @@ Ext.define('Lada.view.widget.Tag', {
             reloadButtonHandlerScope: me
         });
 
-        this.store.setLoadingCallback(
-            function(str, records, successful) {
-                //Skip if component is no longer visible
-                if (!me.isVisible()) {
-                    return;
-                }
-                if (!successful) {
-                    me.setLoading(false);
-                    me.reloadMask.renderTo = me.getMaskTarget();
-                    me.mask();
-                    me.showReloadMask();
-                }
-            }
-        );
-
         // This is a hack to render the close icon at field items conditionally.
         // multiSelectItemTpl is not a documented config, but see
         // https://docs.sencha.com/extjs/6.2.0/classic/src/Tag.js.html
@@ -186,11 +171,41 @@ Ext.define('Lada.view.widget.Tag', {
     },
 
     /**
-     * Sets the current Proben or Messungen and triggers the preselection
+     * Load initial tag selection based on recordType ('probe' or 'messung')
+     * and respective IDs.
      */
     setTagged: function(ids, recordType) {
-        this.store.setTagged(ids, recordType);
-        this.preselectTags();
+        this.setLoading(true);
+
+        // Store arguments for potential reload
+        this.ids = ids;
+        this.recordType = recordType;
+
+        var params = {};
+        switch (recordType) {
+            case 'messung':
+                params.mid = ids;
+                break;
+            case 'probe':
+                params.pid = ids;
+                break;
+            default:
+                Ext.raise('Unkown record type: ' + recordType);
+        }
+
+        var me = this;
+        Ext.create('Lada.store.Tag', {
+            autoLoad: false
+        }).load({
+            params: params,
+            callback: function(records, operation, success) {
+                if (!success) {
+                    me.showReloadMask();
+                }
+                me.setValue(records);
+                me.setLoading(false);
+            }
+        });
     },
 
     /**
@@ -198,51 +213,13 @@ Ext.define('Lada.view.widget.Tag', {
      * Calls reload function
      */
     reloadButtonClicked: function() {
-        this.reload();
-    },
-
-    /**
-     *  Reloads the current store.
-     *  @param silent If true, no tags are preselected.
-     *  @param callback Callback function to call after reload
-     */
-    reload: function(callback) {
         var me = this;
         me.hideReloadMask();
         me.setLoading(true);
         this.store.load({
             callback: function() {
-                me.preselectTags();
-                if (callback) {
-                    callback.call();
-                }
-                me.setLoading(false);
+                me.setTagged(me.ids, me.recordType);
             }
-        });
-    },
-
-    /**
-     * Loads and preselects assigned tags, if any.
-     */
-    preselectTags: function() {
-        this.setLoading(true);
-
-        this.store.loadAssignedTags(this, function(records) {
-            var ids = [];
-
-            //Set tags, received from the server
-            if (records) {
-                // Add assigned tags to global store so they appear in widget
-                // if their ID is used in setValue().
-                this.store.add(records);
-
-                for (var j = 0; j < records.length; j++) {
-                    ids.push(records[j].id);
-                }
-            }
-            this.setValue(ids);
-            this.resetOriginalValue();
-            this.setLoading(false);
         });
     },
 
@@ -251,6 +228,7 @@ Ext.define('Lada.view.widget.Tag', {
      */
     showReloadMask: function() {
         if (this.reloadMask.isHidden()) {
+            this.reloadMask.renderTo = this.getMaskTarget();
             this.mask();
             this.reloadMask.show();
         }

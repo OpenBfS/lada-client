@@ -66,9 +66,28 @@ Ext.define('Lada.controller.SetTags', {
             success: function(response) {
                 var json = Ext.decode(response.responseText);
                 if (json.success) {
-                    // Reload tagwidget in edit form or parent grid
+                    var tagStore = Ext.getStore('tags');
+
+                    // Check for errors per assignment
+                    var msgs = '';
+                    var successTags = [];
+                    json.data.forEach(function(item) {
+                        if (!item.success) {
+                            msgs += tagStore.getById(item.data.tagId).get('tag')
+                                + ': ' + i18n.getMsg(item.message) + '<br>';
+                        } else {
+                            successTags.push(item.data.tagId);
+                        }
+                    });
+
+                    // Update parent grid or tagwidget in edit form
                     if (win.parentWindow) {
-                        win.parentWindow.down('tagwidget').reload();
+                        var widget = win.parentWindow.down('tagwidget');
+                        var oldSelection = widget.getValue();
+                        var newSelection = isDelete
+                            ? Ext.Array.difference(oldSelection, successTags)
+                            : Ext.Array.merge(oldSelection, successTags);
+                        widget.setValue(newSelection);
                     } else {
                         var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                         if (parentGrid.length === 1) {
@@ -76,15 +95,6 @@ Ext.define('Lada.controller.SetTags', {
                         }
                     }
 
-                    // Check for errors per assignment
-                    var msgs = '';
-                    var tagStore = Ext.getStore('tags');
-                    json.data.forEach(function(item) {
-                        if (!item.success) {
-                            msgs += tagStore.getById(item.data.tagId).get('tag')
-                                + ': ' + i18n.getMsg(item.message) + '<br>';
-                        }
-                    });
                     if (msgs) {
                         Ext.Msg.alert(
                             i18n.getMsg('tag.widget.err.genericsave'), msgs);
