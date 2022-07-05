@@ -317,20 +317,20 @@ Ext.define('Lada.controller.form.Messung', {
         var messwertGrid = button.up('messungedit').down('messwertgrid');
         win.on('statussetend', function() {
             view.record.load({
-                success: function() {
+                success: function(record) {
                     // Update Messung form
-                    view.setRecord(view.record);
+                    view.setRecord(record);
 
                     // Update status grid
                     var editWin = view.up('messungedit');
                     editWin.down('statusgrid').initData();
 
                     // Enable/disable form and grids
-                    view.setReadOnly(view.record.get('readonly'));
+                    view.setReadOnly(record.get('readonly'));
                     editWin.down('messwertgrid')
-                        .setReadOnly(view.record.get('readonly'));
+                        .setReadOnly(record.get('readonly'));
                     editWin.down('mkommentargrid')
-                        .setReadOnly(view.record.get('readonly'));
+                        .setReadOnly(record.get('readonly'));
 
                     // Update Probe window
                     var parentWin = editWin.parentWindow;
