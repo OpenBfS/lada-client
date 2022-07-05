@@ -6,9 +6,6 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Store for Status-Werte
- */
 Ext.define('Lada.store.StatusStufe', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.StatusStufe',
