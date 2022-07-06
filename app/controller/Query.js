@@ -1204,6 +1204,7 @@ Ext.define('Lada.controller.Query', {
 
                     name: options.name + '_filterNegate',
                     boxLabel: i18n.getMsg('query.negate'),
+                    isFormField: false,
                     value: options.negateValue
                 })
             );
@@ -1213,6 +1214,7 @@ Ext.define('Lada.controller.Query', {
                 Ext.create('Ext.form.field.Checkbox', {
                     name: options.name + '_filterRegex',
                     boxLabel: i18n.getMsg('query.regex'),
+                    isFormField: false,
                     value: options.regexValue
                 })
             );
@@ -1221,6 +1223,7 @@ Ext.define('Lada.controller.Query', {
             Ext.create('Ext.form.field.Checkbox', {
                 name: options.name + '_filterIsNull',
                 boxLabel: i18n.getMsg('query.isNull'),
+                isFormField: false,
                 value: options.isNullValue
             })
         );
