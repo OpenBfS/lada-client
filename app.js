@@ -6,16 +6,6 @@
  * and comes with ABSOLUTELY NO WARRANTY! Check out
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
-/*Ext.Loader.setConfig({
-    enabled: true,
-    paths: {
-        'Ext.i18n': 'resources/lib/ext/i18n/',
-        'Ext.ux.upload': 'resources/lib/ext/upload',
-        'Ext.ux.util': 'resources/lib/ext/util',
-        'Ext.ux.grid': 'resources/lib/ext/grid'
-    }
-});*/
-
 
 Ext.application({
 
@@ -224,7 +214,7 @@ Ext.application({
         Lada.userId = json.data.userId;
         Lada.userroles = json.data.roles;
         Lada.logintime = json.data.servertime;
-        Lada.mst = []; //Store Messstellen this user may select
+        Lada.mst = []; // Messstellen this user may select
         Lada.funktionen = json.data.funktionen;
         Lada.netzbetreiber = json.data.netzbetreiber;
         //Lada.serverVersion
@@ -235,14 +225,24 @@ Ext.application({
             Lada.mst.push(mstLabor[i].labor);
         }
 
+        // Used for widget.MessstelleLabor in form.Probe and
+        // respective windows and controller
         var mstLaborStore = Ext.create('Ext.data.Store', {
             storeId: 'messstellelabor',
+            // Model without proxy. Data added in load-callback
+            // on store 'messstellen' created further down.
             model: 'Lada.model.MessstelleLabor'
         });
+
+        // Used for widget.MessstelleLabor in form.Messprogramm,
+        // window.Messprogramm and respective controller
         var mstLaborKombiStore = Ext.create('Ext.data.Store', {
             storeId: 'messstellelaborkombi',
+            // Model without proxy. Data added in load-callback
+            // on store 'messstellenkombi' created further down.
             model: 'Lada.model.MessstelleLabor'
         });
+
         Ext.create('Lada.store.Datenbasis', {
             storeId: 'datenbasis'
         });
@@ -255,9 +255,24 @@ Ext.application({
         Ext.create('Lada.store.GridColumn', {
             storeId: 'columnstore'
         });
+
+        // Used in: widget.Leitstelle (used in query panel)
+        // Extends store.Messstellen and uses proxy.type: 'memory'.
+        // Data added in load-callback on store 'messstellen' (an instance
+        // of store.Messstellen) created further down.
         Ext.create('Lada.store.Leitstelle', {
             storeId: 'leitstellenwidget'
         });
+
+        // Used in: widget.Messstelle, form.Messprogramm, form.Datensatzerzeuger,
+        // form.Probe, window.Messprogramm, window.MessungEdit,
+        // window.Ortszuordnung, window.GenProbenFromMessprogramm,
+        // window.ProbeEdit, window.MessungCreate, panel.Map, panel.QueryPanel,
+        // grid.PKommentar, ...
+        // Also used in load-callback on store 'messstellenkombi'.
+        // Load-callback here fills data into stores 'leitstellenwidget'
+        // and 'messstellelabor'.
+        // Server service: MessstelleService via model.Messstelle
         Ext.create('Lada.store.Messstellen', {
             storeId: 'messstellen',
             listeners: {
@@ -433,7 +448,12 @@ Ext.application({
             autoLoad: true
         });
 
-        //A Store containing all MST a User is allowed to set.
+        // Store containing all MST a User is allowed to set.
+        // Used in: Ext.form.field.ComboBox instances in window.SetStatus,
+        // panel.FileUpload, grid.PKommentar, grid.MKommentar.
+        // widget.Messstelle (a widget.base.ComboBox) uses store 'messstellen'
+        // and filters locally in exactly the same way.
+        // Server service: MessstelleService via model.Messstelle
         Ext.create('Lada.store.Messstellen', {
             storeId: 'messstellenFiltered',
             filters: function(item) {
@@ -443,6 +463,10 @@ Ext.application({
                 return false;
             }
         });
+
+        // Only used to fill data into store 'messstellelaborkombi' via
+        // load-callback.
+        // Server service: MessstellenkombiService via model.MessstellenKombi
         Ext.create('Lada.store.MessstellenKombi', {
             storeId: 'messstellenkombi',
             autoLoad: true,
@@ -466,9 +490,7 @@ Ext.application({
                                 continue;
                             }
                             var displayCombi = item.get('messStelle');
-                            if (item.get('messStelle')
-                                !== itemLabor.get('messStelle')
-                               ) {
+                            if (displayCombi !== itemLabor.get('messStelle')) {
                                 displayCombi += '/'
                                     + itemLabor.get('messStelle');
                             }

@@ -12,12 +12,6 @@
 Ext.define('Lada.model.MessstelleLabor', {
     extend: 'Lada.model.LadaBase',
 
-    /**
-     * Fields are:
-     *  - id: The unique identifier (Primary key).
-     *  - messStelle
-     *  - laborMst
-     */
     fields: [{
         name: 'id'
     }, {

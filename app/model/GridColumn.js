@@ -20,6 +20,7 @@ Ext.define('Lada.model.GridColumn', {
         name: 'dataType'
     }, {
         name: 'filter'
+        // TODO: use proper model class
         // Object with: id, name, parameter, sql, filterType.id,
         // filterType.multiselect, filterType.type
     }, {
