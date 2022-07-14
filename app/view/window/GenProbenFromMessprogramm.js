@@ -119,6 +119,13 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                             );
                         }
                         if (json.success && json.data.proben) {
+                            // Reload tag store to have generated tag available
+                            var store = Ext.data.StoreManager.get('tags');
+                            if (store) {
+                                store.reload();
+                            }
+
+                            // Process response data
                             Ext.Object.each(json.data.proben,
                                 function(key, result) {
                                     if (result.success) {
