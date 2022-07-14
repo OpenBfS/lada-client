@@ -129,6 +129,22 @@ Ext.define('Lada.view.widget.Tag', {
                 },
                 getItemCls: function(value) {
                     var result = 'x-tagfield-item-text';
+
+                    // Mark tags the user cannot (un)assign
+                    switch (value.typId) {
+                        case 'netz':
+                            if (Ext.Array.contains(
+                                Lada.netzbetreiber, value.netzbetreiberId)
+                            ) {
+                                break;
+                            }
+                        case 'mst':
+                            if (Ext.Array.contains(Lada.mst, value.mstId)) {
+                                break;
+                            }
+                            result += ' disabled';
+                    }
+
                     if (value.autoTag) {
                         return result + ' italic-text';
                     }

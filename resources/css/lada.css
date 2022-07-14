@@ -241,3 +241,7 @@ span.x-grid-checkcolumn {
 .italic-text {
   font-style: italic;
 }
+
+.x-tagfield-item-text.disabled {
+  opacity: 0.5;
+}
