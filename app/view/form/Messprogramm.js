@@ -512,7 +512,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                 }, {
                     xtype: 'fset',
                     name: 'zusatzwertFieldset',
-                    title: i18n.getMsg('zusatzwertFieldset'),
+                    title: i18n.getMsg('title.zusatzwerte'),
                     layout: {
                         type: 'hbox',
                         align: 'stretch'
@@ -528,6 +528,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         queryMode: 'local',
                         width: '100%',
                         name: 'probenZusatzs',
+                        emptyText: i18n.getMsg('emptytext.pzw.widget'),
                         store: Ext.create('Lada.store.Probenzusaetze'),
                         valueField: 'id',
                         tpl: Ext.create(
