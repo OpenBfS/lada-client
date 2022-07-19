@@ -412,7 +412,6 @@ Ext.define('Lada.controller.Query', {
 
     search: function(button) {
         this.createResultStore();
-        var i18n = Lada.getApplication().bundle;
         var qp = button.up('querypanel');
         var gcs = qp.gridColumnValueStore;
         var rowtarget = this.setrowtarget();
@@ -489,17 +488,14 @@ Ext.define('Lada.controller.Query', {
                             .updateGrid(resultGrid);
                     } else {
                         var i18n = Lada.getApplication().bundle;
-                        if (operation.error === undefined && operation.getResponse()) {
-                            var json = Ext.decode(operation.getResponse().responseText);
+                        if (operation.error === undefined
+                            && operation.getResponse()
+                        ) {
+                            var json = Ext.decode(
+                                operation.getResponse().responseText);
                             if (json.message) {
                                 var out = [];
                                 var errors = json.errors;
-                                var numErrors;
-                                if (!Ext.isObject(errors)) {
-                                    numErrors = 0;
-                                } else {
-                                    numErrors = Object.keys(errors).length;
-                                }
                                 for (var key in errors) {
                                     out.push(key);
                                 }
@@ -553,12 +549,6 @@ Ext.define('Lada.controller.Query', {
                         var i18n = Lada.getApplication().bundle;
                         var errors = json.errors;
                         var out = [];
-                        var numErrors;
-                        if (!Ext.isObject(errors)) {
-                            numErrors = 0;
-                        } else {
-                            numErrors = Object.keys(errors).length;
-                        }
                         for (var key in errors) {
                             out.push(key);
                         }
