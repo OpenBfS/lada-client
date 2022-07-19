@@ -488,20 +488,40 @@ Ext.define('Lada.controller.Query', {
                         Lada.view.window.PrintGrid.getInstance()
                             .updateGrid(resultGrid);
                     } else {
-                        if (operation.error.response
-                                    && operation.error.response.timedout) {
-                            Ext.Msg.alert(
-                                i18n.getMsg('query.error.search.title'),
-                                i18n.getMsg(
-                                    'query.error.search.querytimeout.message')
-                            );
-                        } else if (operation.error.status !== 0) {
-                            /* Server response has HTTP error code.
-                               If it's 0, we probably got a 302 from SSO,
-                               which is handled elsewhere. */
-                            Ext.Msg.alert(
-                                i18n.getMsg('query.error.search.title'),
-                                i18n.getMsg('query.error.search.message'));
+                        var i18n = Lada.getApplication().bundle;
+                        if (operation.error === undefined && operation.getResponse()) {
+                            var json = Ext.decode(operation.getResponse().responseText);
+                            if (json.message) {
+                                var out = [];
+                                var errors = json.errors;
+                                var numErrors;
+                                if (!Ext.isObject(errors)) {
+                                    numErrors = 0;
+                                } else {
+                                    numErrors = Object.keys(errors).length;
+                                }
+                                for (var key in errors) {
+                                    out.push(key);
+                                }
+                                Ext.Msg.alert(i18n.getMsg(json.message),
+                                    out);
+                            }
+                        } else {
+                            if (operation.error.response
+                                        && operation.error.response.timedout) {
+                                Ext.Msg.alert(
+                                    i18n.getMsg('query.error.search.title'),
+                                    i18n.getMsg(
+                                        'query.error.search.querytimeout.message')
+                                );
+                            } else if (operation.error.status !== 0) {
+                                /* Server response has HTTP error code.
+                                   If it's 0, we probably got a 302 from SSO,
+                                   which is handled elsewhere. */
+                                Ext.Msg.alert(
+                                    i18n.getMsg('query.error.search.title'),
+                                    i18n.getMsg('query.error.search.message'));
+                            }
                         }
                     }
                 }
@@ -529,6 +549,20 @@ Ext.define('Lada.controller.Query', {
                         Ext.create('Lada.view.window.SqlDisplay', {
                             sql: json.data
                         }).show();
+                    } else {
+                        var i18n = Lada.getApplication().bundle;
+                        var errors = json.errors;
+                        var out = [];
+                        var numErrors;
+                        if (!Ext.isObject(errors)) {
+                            numErrors = 0;
+                        } else {
+                            numErrors = Object.keys(errors).length;
+                        }
+                        for (var key in errors) {
+                            out.push(key);
+                        }
+                        Ext.Msg.alert(i18n.getMsg(json.message), out);
                     }
                 }
             },
