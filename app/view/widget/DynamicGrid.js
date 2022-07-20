@@ -1258,8 +1258,17 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         filterMap.add(item.dataIndex, fromValue);
                     }
                     break;
-                case 'Lada.view.widget.Tag':
-                    value = widget.getDisplayValue();
+                case 'Lada.view.widget.TagFilter':
+                    // Join values of both tagwidgets
+                    value = widget.down('tagwidget[name=' + item.dataIndex + ']')
+                        .getDisplayValue();
+                    var readonly = widget.down('tagwidget[name=readonly]')
+                        .getDisplayValue();
+                    if (value) {
+                        value += readonly ? ',' + readonly : '';
+                    } else {
+                        value = readonly;
+                    }
                     filterMap.add(item.dataIndex, value);
                     break;
                 default:

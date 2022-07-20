@@ -27,6 +27,7 @@ Ext.define('Lada.controller.Query', {
         'Lada.view.widget.Netzbetreiber',
         'Lada.view.widget.Datenbasis',
         'Lada.view.widget.Betriebsart',
+        'Lada.view.widget.TagFilter',
         'Lada.view.plugin.GridRowExpander',
         'Lada.view.widget.DynamicGrid',
         'Lada.view.window.SqlDisplay'
@@ -935,8 +936,8 @@ Ext.define('Lada.controller.Query', {
                         options.emptyText = '';
                         options.monitorChanges = false;
                         options.value = recs[i].get('filterValue');
-                        field = Ext.create('Lada.view.widget.Tag',
-                            options);
+                        field = Ext.create(
+                            'Lada.view.widget.TagFilter', options);
                         negateCheckbox = false;
                         break;
                     case 'tagTyp':
@@ -1025,10 +1026,20 @@ Ext.define('Lada.controller.Query', {
         } else if (box.xtype === 'formatnumberfield' && box.up('intrangefield')) {
             this.multiValueChanged(box, newvalue, box.up('intrangefield'));
         } else {
+            // Find matching GridColumnValue
             var store = box.up('querypanel').gridColumnValueStore;
             var name = box.name;
             var rec = store.findRecord('dataIndex', name, false, false, false,
                 true);
+
+            if (box.xtype === 'tagwidget') {
+                // Add tags the user cannot un-select
+                newvalue = newvalue.concat(
+                    box.up('tagfilterwidget')
+                        .down('tagwidget[name=readonly]').getValue());
+            }
+
+            // Set new filter value in GridColumnValue
             if (newvalue && Array.isArray(newvalue)) {
                 newvalue = newvalue.join(',');
             }
