@@ -379,10 +379,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     default:
                         col.xtype = 'gridcolumn';
                         col.renderer = function(value) {
-                            if (value === 0) {
+                            if (value === 0 || value == null)  {
                                 return value;
                             }
-                            return value || '';
+                            return '<div style="white-space: normal !important;">' +
+                                value + '</div>' || '';
                         };
                 }
                 fields.push(curField);
