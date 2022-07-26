@@ -14,6 +14,7 @@ Ext.define('Lada.view.widget.Tag', {
     alias: 'widget.tagwidget',
     requires: [
         'Lada.view.window.ReloadMask',
+        'Lada.model.Tag',
         'Lada.store.Tag'
     ],
     store: null,
@@ -131,7 +132,7 @@ Ext.define('Lada.view.widget.Tag', {
                     var result = 'x-tagfield-item-text';
 
                     // Mark tags the user cannot (un)assign
-                    if (!me.isTagAssignable(value)) {
+                    if (!Lada.model.Tag.isTagAssignable(value)) {
                         result += ' disabled';
                     }
 
@@ -157,15 +158,7 @@ Ext.define('Lada.view.widget.Tag', {
                 var tagStore = tagwidget.getStore();
                 tagStore.clearFilter();
                 tagStore.filterBy(function(record) {
-                    return record.get('typId') === 'global'
-                        || record.get('typId') === 'netz'
-                        && Ext.Array.contains(
-                            Lada.netzbetreiber,
-                            record.get('netzbetreiberId'))
-                        || record.get('typId') === 'mst'
-                        && Ext.Array.contains(
-                            Lada.mst,
-                            record.get('mstId'));
+                    return record.isAssignable();
                 });
             },
             focusleave: function(tagwidget) {
@@ -211,28 +204,13 @@ Ext.define('Lada.view.widget.Tag', {
                 }
                 if (assignable) {
                     records = Ext.Array.filter(records, function(rec) {
-                        return me.isTagAssignable(rec.getData());
+                        return rec.isAssignable();
                     });
                 }
                 me.setValue(records);
                 me.setLoading(false);
             }
         });
-    },
-
-    /**
-     * Check whether the user might assign the given tag.
-     */
-    isTagAssignable: function(tag) {
-        switch (tag.typId) {
-            case 'netz':
-                return Ext.Array.contains(
-                    Lada.netzbetreiber, tag.netzbetreiberId);
-            case 'mst':
-                return Ext.Array.contains(Lada.mst, tag.mstId);
-            default:
-                return true;
-        }
     },
 
     /**

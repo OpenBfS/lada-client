@@ -66,5 +66,26 @@ Ext.define('Lada.model.Tag', {
                 return data;
             }
         }
+    },
+
+    isAssignable: function() {
+        return Lada.model.Tag.isTagAssignable(this.getData());
+    },
+
+    statics: {
+        /**
+         * Check whether the user might assign the tag, given as plain object.
+         */
+        isTagAssignable: function(tag) {
+            switch (tag.typId) {
+                case 'netz':
+                    return Ext.Array.contains(
+                        Lada.netzbetreiber, tag.netzbetreiberId);
+                case 'mst':
+                    return Ext.Array.contains(Lada.mst, tag.mstId);
+                default:
+                    return true;
+            }
+        }
     }
 });
