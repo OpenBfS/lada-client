@@ -152,8 +152,13 @@ Ext.define('Lada.view.form.Probe', {
                         items: [{
                             xtype: 'messstellelabor',
                             name: 'mstlabor',
-                            width: '100%'
-                            // TODO: filter on focus
+                            width: '100%',
+                            focusFilters: [
+                                function(item) {
+                                    return Ext.Array.contains(
+                                        Lada.userroles, item.get('ldapGroup'));
+                                }
+                            ]
                         }]
                     }, {
                         layout: {

@@ -29,6 +29,15 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
         margin: '0, 5, 5, 5'
     },
 
+    config: {
+        /**
+         * Filter combobox's MessstellenKombi store on focus to reduce entries
+         * in select list.
+         * Passed to Ext.data.Store.setFilters().
+         */
+        focusFilters: null
+    },
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         var me = this;
@@ -57,9 +66,14 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
             displayField: 'displayCombi',
             emptyText: i18n.getMsg('emptytext.messstellelabor'),
 
-            // On selection, set other fields in container and assorted
-            // other fields, if available in outer fieldset.
             listenersJson: {
+                focus: {
+                    fn: function(combo) {
+                        combo.getStore().setFilters(me.focusFilters);
+                    }
+                },
+                // On selection, set other fields in container and assorted
+                // other fields, if available in outer fieldset.
                 select: {
                     fn: function(combo, newValue) {
                         var container = combo.up('fieldcontainer');

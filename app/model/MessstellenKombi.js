@@ -25,7 +25,7 @@ Ext.define('Lada.model.MessstellenKombi', {
     }, {
         name: 'laborMstId'
     }, {
-        name: 'ladaGroup'
+        name: 'ldapGroup'
     }, {
         name: 'mstId'
     }, {
