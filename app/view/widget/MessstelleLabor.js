@@ -53,21 +53,8 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
             minChars: 0,
             editable: true,
             forceSelection: true,
-            searchValueField: 'mstId',
             valueField: 'id',
-            // TODO: Restore displaying names instead of IDs
-            //displayField: 'displayCombi',
-            tpl: Ext.create(
-                'Ext.XTemplate',
-                '<ul class="x-list-plain"><tpl for=".">',
-                '<li role="option" class="x-boundlist-item">',
-                '{mstId}/{laborMstId}',
-                '</li>',
-                '</tpl></ul>'
-            ),
-            displayTpl: Ext.create(
-                'Ext.XTemplate',
-                '<tpl for=".">{mstId}/{laborMstId}</tpl>'),
+            displayField: 'displayCombi',
             emptyText: i18n.getMsg('emptytext.messstellelabor'),
 
             // On selection, set other fields in container and assorted
