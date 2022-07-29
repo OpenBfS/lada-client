@@ -145,8 +145,15 @@ Ext.define('Lada.view.form.Messprogramm', {
                         items: [{
                             xtype: 'messstellelabor',
                             name: 'mstlabor',
-                            width: '100%'
-                            // TODO: filter on focus
+                            width: '100%',
+                            focusFilters: [
+                                function(item) {
+                                    var functions = Lada.netzbetreiberFunktionen[
+                                        item.get('netzbetreiberId')];
+                                    return functions
+                                        && Ext.Array.contains(functions, 4);
+                                }
+                            ]
                         }]
                     }, {
                         layout: {

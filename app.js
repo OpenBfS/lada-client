@@ -215,6 +215,7 @@ Ext.application({
         Lada.mst = []; // Messstellen this user may select
         Lada.funktionen = json.data.funktionen;
         Lada.netzbetreiber = json.data.netzbetreiber;
+        Lada.netzbetreiberFunktionen = json.data.netzbetreiberFunktionen;
         //Lada.serverVersion
         this.getServerVersion();
         var mstLabor = json.data.messstelleLabor;
