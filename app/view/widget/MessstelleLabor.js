@@ -69,7 +69,17 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
             listenersJson: {
                 focus: {
                     fn: function(combo) {
-                        combo.getStore().setFilters(me.focusFilters);
+                        var store = combo.getStore();
+                        store.setFilters(me.focusFilters);
+                        // Do not show duplicate displayCombi values associated
+                        // with different ldapGroups
+                        store.filterBy(function(record) {
+                            return store.findBy(function(rec, id) {
+                                return record.get('displayCombi')
+                                    === rec.get('displayCombi')
+                                    && record.get('id') > id;
+                            }) < 0;
+                        });
                     }
                 },
                 // On selection, set other fields in container and assorted
