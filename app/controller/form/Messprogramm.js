@@ -30,9 +30,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 dirtychange: this.dirtyForm,
                 save: this.saveHeadless
             },
-            'messprogrammform messstellelabor combobox': {
-                select: this.setNetzbetreiber
-            },
             'messprogrammform numfield numberfield': {
                 change: this.checkPeriod
             },
@@ -210,28 +207,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 }
             }
         });
-    },
-
-    /**
-     * When a Messtelle is selected, modify the Netzbetreiber
-     * according to the Messstelle
-     */
-    setNetzbetreiber: function(combo, records) {
-        var netzbetreiber = combo.up().up('form')
-            .down('netzbetreiber').down('combobox');
-        var nbId = records.get('netzbetreiberId');
-        if (nbId !== null) {
-            //select the NB in the NB-Combobox
-            netzbetreiber.select(nbId);
-        }
-        var mst = records.get('messStelle');
-        var labor = records.get('laborMst');
-        combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
-        combo.up('fieldset').down('messstelle[name=laborMstId]')
-            .setValue(labor);
-        combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
-        combo.up('fieldset').down('netzbetreiber[name=netzbetreiber]')
-            .setValue(nbId);
     },
 
     /**
@@ -414,9 +389,9 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var formPanel = button.up('form');
         var form = formPanel.getForm();
         form.reset();
-        var record = form.getRecord();
+        formPanel.down('messstellelabor').setMessstelleLabor();
 
-        formPanel.setLaborMst(record);
+        var record = form.getRecord();
         formPanel.getForm().owner.populateIntervall(record);
         formPanel.setMediaDesk(record);
 

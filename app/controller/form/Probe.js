@@ -47,9 +47,6 @@ Ext.define('Lada.controller.form.Probe', {
             'probeform datenbasis combobox': {
                 change: this.datenbasisChanged
             },
-            'probeform messstellelabor combobox': {
-                select: this.setNetzbetreiber
-            },
             'probeform netzbetreiber combobox': {
                 change: this.checkCommitEnabled
             },
@@ -510,26 +507,6 @@ Ext.define('Lada.controller.form.Probe', {
     },
 
     /**
-     * When a Messtelle is selected, modify the Netzbetreiber
-     * according to the Messstelle
-     */
-    setNetzbetreiber: function(combo, records) {
-        var netzbetreiber = combo.up().up('form')
-            .down('netzbetreiber').down('combobox');
-        var nbId = records.get('netzbetreiberId');
-        if (nbId !== null) {
-            //select the NB in the NB-Combobox
-            netzbetreiber.select(nbId);
-        }
-        var mst = records.get('messStelle');
-        var labor = records.get('laborMst');
-        combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
-        combo.up('fieldset').down('messstelle[name=laborMstId]')
-            .setValue(labor);
-        combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
-    },
-
-    /**
      * Saves the current form without manipulating the GUI.
      */
     saveHeadless: function(panel) {
@@ -710,6 +687,8 @@ Ext.define('Lada.controller.form.Probe', {
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
+        formPanel.down('messstellelabor').setMessstelleLabor();
+
         var record = formPanel.getForm().getRecord();
         formPanel.setMediaDesk(record);
         formPanel.getForm().isValid();

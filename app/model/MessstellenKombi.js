@@ -25,11 +25,27 @@ Ext.define('Lada.model.MessstellenKombi', {
     }, {
         name: 'laborMstId'
     }, {
-        name: 'ladaGroup'
+        name: 'ldapGroup'
     }, {
         name: 'mstId'
     }, {
         name: 'netzbetreiberId'
+    }, {
+        name: 'displayCombi',
+        calculate: function(record) {
+            if (record.mstId || record.laborMstId) {
+                var mstStore = Ext.data.StoreManager.get('messstellen');
+                var mst = mstStore.getById(record.mstId);
+                var mstName = mst ? mst.get('messStelle') : '';
+                if (record.mstId === record.laborMstId) {
+                    return mstName;
+                }
+                var laborMst = mstStore.getById(record.laborMstId);
+                var laborMstName = laborMst ? laborMst.get('messStelle') : '';
+                return mstName + (laborMstName ? '/' + laborMstName : '');
+            }
+            return '';
+        }
     }],
 
     idProperty: 'id',

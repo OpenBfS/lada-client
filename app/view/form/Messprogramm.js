@@ -16,11 +16,10 @@ Ext.define('Lada.view.form.Messprogramm', {
         'Lada.view.form.mixins.DeskriptorFieldset',
         'Lada.view.widget.Datenbasis',
         'Lada.view.widget.base.CheckBox',
-        'Lada.view.widget.Messstelle',
-        'Lada.view.widget.Netzbetreiber',
         'Lada.view.widget.Betriebsart',
         'Lada.view.widget.Probenart',
         'Lada.view.widget.MessprogrammLand',
+        'Lada.view.widget.MessstelleLabor',
         'Lada.view.widget.Umwelt',
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.base.NumberField',
@@ -146,60 +145,15 @@ Ext.define('Lada.view.form.Messprogramm', {
                         items: [{
                             xtype: 'messstellelabor',
                             name: 'mstlabor',
-                            store: Ext.data.StoreManager.get(
-                                'messstellelaborkombi'),
-                            fieldLabel: i18n.getMsg('labor_mst_id'),
-                            margin: '0, 5, 5, 5',
-                            width: '50%',
-                            labelWidth: 100,
-                            allowBlank: false,
-                            editable: true,
-                            listenersJson: {
-                                select: {
-                                    fn: function(combo, newValue) {
-                                        var mst = newValue.get('messStelle');
-                                        var labor = newValue.get('laborMst');
-                                        combo.up('fieldset')
-                                            .down('messstelle[name=mstId]')
-                                            .setValue(mst);
-                                        combo.up('fieldset')
-                                            .down('messstelle[name=laborMstId]')
-                                            .setValue(labor);
-                                        combo.up('fieldset')
-                                            .down(
-                                                'messprogrammland[name=mplId]')
-                                            .setValue();
-                                    }
+                            width: '100%',
+                            focusFilters: [
+                                function(item) {
+                                    var functions = Lada.netzbetreiberFunktionen[
+                                        item.get('netzbetreiberId')];
+                                    return functions
+                                        && Ext.Array.contains(functions, 4);
                                 }
-                            }
-                        }, {
-                            xtype: 'messstelle',
-                            name: 'mstId',
-                            fieldLabel: i18n.getMsg('mst_id'),
-                            allowBlank: false,
-                            editable: true,
-                            hidden: true,
-                            width: '0%'
-                        }, {
-                            xtype: 'messstelle',
-                            name: 'laborMstId',
-                            fieldLabel: i18n.getMsg('labor_mst_id'),
-                            labelWidth: 100,
-                            allowBlank: false,
-                            editable: true,
-                            hidden: true,
-                            width: '0%'
-                        }, {
-                            xtype: 'netzbetreiber',
-                            name: 'netzbetreiber',
-                            editable: false,
-                            readOnly: true,
-                            isFormField: false,
-                            submitValue: false,
-                            fieldLabel: i18n.getMsg('netzbetreiberId'),
-                            margin: '0, 5, 5, 5',
-                            width: '50%',
-                            labelWidth: 80
+                            ]
                         }]
                     }, {
                         layout: {
@@ -676,27 +630,6 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.populateIntervall(messRecord);
 
         this.filterProbenZusatzs(messRecord.get('umwId'));
-
-        this.setLaborMst(messRecord);
-        this.down('messstellelabor').down('combobox').resetOriginalValue();
-        this.down('netzbetreiber').down('combobox').resetOriginalValue();
-    },
-
-    /**
-     * Set value in Messstelle/Labor combination and Netzbetreiber combobox.
-     */
-    setLaborMst: function(record) {
-        var mstLaborWidget = this.down('messstellelabor').down('combobox');
-        var mstLaborStore = mstLaborWidget.getStore();
-        var mstLaborIdx = mstLaborStore.findBy(function(rec) {
-            return rec.get('messStelle') === record.get('mstId')
-                && rec.get('laborMst') === record.get('laborMstId');
-        });
-        mstLaborWidget.setValue(mstLaborStore.getAt(mstLaborIdx));
-
-        var mstStore = Ext.data.StoreManager.get('messstellen');
-        var mstId = mstStore.getById(record.get('mstId'));
-        this.down('netzbetreiber').setValue(mstId.get('netzbetreiberId'));
     },
 
     setMediaDesk: function(record) {

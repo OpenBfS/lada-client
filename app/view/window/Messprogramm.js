@@ -156,15 +156,8 @@ Ext.define('Lada.view.window.Messprogramm', {
                 }
                 me.down('button[action=generateproben]').setDisabled(false);
                 me.down('button[name=reload]').setDisabled(false);
-                var mstLaborKombiStore = Ext.data.StoreManager.get(
-                    'messstellelaborkombi');
-                var recordIndex = mstLaborKombiStore.findExact(
-                    'messStelle', record.get('mstId'));
                 // If Messprogramm is ReadOnly, disable Inputfields and grids
-                if (
-                    (me.record.get('readonly') === true) ||
-                    (recordIndex === -1)
-                ) {
+                if (me.record.get('readonly') === true) {
                     me.down('messprogrammform').setReadOnly(true);
                     me.disableChildren();
                 } else {
@@ -208,30 +201,12 @@ Ext.define('Lada.view.window.Messprogramm', {
             // Create a new record
             var record = Ext.create('Lada.model.Messprogramm', {
                 gueltigVon: 1,
-                gueltigBis: 365});
-            record.set('owner', true);
-            record.set('id', null);
-            var mstLaborKombiStore = Ext.data.StoreManager.get(
-                'messstellelaborkombi');
-            mstLaborKombiStore.clearFilter(true);
-            var items = mstLaborKombiStore.queryBy(function(newRecord) {
-                if ( (Lada.mst.indexOf(newRecord.get('messStelle')) > -1) &&
-                   (Lada.mst.indexOf(newRecord.get('laborMst')) > -1)) {
-                    return true;
-                }
+                gueltigBis: 365,
+                owner: true,
+                mstId: Lada.mst[0],
+                laborMstId: Lada.mst[0]
             });
-            var defaultentry = items.items[0];
-            if (defaultentry) {
-                record.set('mstId', defaultentry.get('messStelle'));
-                record.set('laborMstId', defaultentry.get('laborMst'));
-                var mstStore = Ext.data.StoreManager.get('messstellen');
-                var netzbetreiber = mstStore.getById(
-                    defaultentry.get('messStelle')).get('netzbetreiberId');
-                if (Lada.netzbetreiber.length <= 1) {
-                    this.down('messprogrammform').down('netzbetreiber')
-                        .setValue(netzbetreiber);
-                }
-            }
+            record.set('id', null);
             this.record = record;
 
             this.down('messprogrammform').setRecord(record);
