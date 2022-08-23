@@ -477,6 +477,12 @@ Ext.define('Lada.controller.form.Probe', {
             reiStore.proxy.extraParams.umwelt = umwId;
         }
         reiStore.load();
+        if (formPanel.up('window').down('fset[name=probenzusatzwerte]') !== null) {
+            var pzStore = formPanel.up('window').down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').pzStore;
+            pzStore.proxy.extraParams = {};
+            pzStore.proxy.extraParams.umwId = umwId;
+            pzStore.load();
+        }
 
     },
 
