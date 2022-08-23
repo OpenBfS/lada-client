@@ -36,7 +36,6 @@ Ext.application({
         'Lada.store.Messgroessen',
         'Lada.store.Messstellen',
         'Lada.store.Leitstelle',
-        'Lada.store.MessstellenKombi',
         'Lada.store.Probenarten',
         'Lada.store.Probenzusaetze',
         'Lada.store.Staaten',
@@ -55,7 +54,6 @@ Ext.application({
         'Lada.store.MessprogrammKategorie',
         'Lada.store.GridColumn',
         'Lada.store.Query',
-        'Lada.model.MessstelleLabor',
         'Lada.model.Messstelle',
         'Lada.model.GenericResults',
         'Lada.model.GridColumn',
@@ -217,6 +215,7 @@ Ext.application({
         Lada.mst = []; // Messstellen this user may select
         Lada.funktionen = json.data.funktionen;
         Lada.netzbetreiber = json.data.netzbetreiber;
+        Lada.netzbetreiberFunktionen = json.data.netzbetreiberFunktionen;
         //Lada.serverVersion
         this.getServerVersion();
         var mstLabor = json.data.messstelleLabor;
@@ -224,24 +223,6 @@ Ext.application({
             Lada.mst.push(mstLabor[i].messstelle);
             Lada.mst.push(mstLabor[i].labor);
         }
-
-        // Used for widget.MessstelleLabor in form.Probe and
-        // respective windows and controller
-        var mstLaborStore = Ext.create('Ext.data.Store', {
-            storeId: 'messstellelabor',
-            // Model without proxy. Data added in load-callback
-            // on store 'messstellen' created further down.
-            model: 'Lada.model.MessstelleLabor'
-        });
-
-        // Used for widget.MessstelleLabor in form.Messprogramm,
-        // window.Messprogramm and respective controller
-        var mstLaborKombiStore = Ext.create('Ext.data.Store', {
-            storeId: 'messstellelaborkombi',
-            // Model without proxy. Data added in load-callback
-            // on store 'messstellenkombi' created further down.
-            model: 'Lada.model.MessstelleLabor'
-        });
 
         Ext.create('Lada.store.Datenbasis', {
             storeId: 'datenbasis'
@@ -269,15 +250,13 @@ Ext.application({
         // window.Ortszuordnung, window.GenProbenFromMessprogramm,
         // window.ProbeEdit, window.MessungCreate, panel.Map, panel.QueryPanel,
         // grid.PKommentar, ...
-        // Also used in load-callback on store 'messstellenkombi'.
-        // Load-callback here fills data into stores 'leitstellenwidget'
-        // and 'messstellelabor'.
+        // Load-callback here fills data into store 'leitstellenwidget'.
         // Server service: MessstelleService via model.Messstelle
         Ext.create('Lada.store.Messstellen', {
             storeId: 'messstellen',
             listeners: {
                 load: {
-                    fn: function(store) {
+                    fn: function() {
                         var lst = Ext.data.StoreManager.get(
                                      'leitstellenwidget');
                         lst.removeAll(true);
@@ -290,27 +269,6 @@ Ext.application({
                             }
                         });
                         lst.add(reclst);
-                        for (var j = 0; j < mstLabor.length; j++) {
-                            var item = store.getById(mstLabor[j].messstelle);
-                            var itemLabor = store.getById(mstLabor[j].labor);
-                            if (!itemLabor) {
-                                continue;
-                            }
-                            var displayCombi = item.get('messStelle');
-                            if (item.get('messStelle')
-                                !== itemLabor.get('messStelle')
-                            ) {
-                                displayCombi += '/'
-                                    + itemLabor.get('messStelle');
-                            }
-                            mstLaborStore.add({
-                                id: j,
-                                messStelle: mstLabor[j].messstelle,
-                                netzbetreiberId: item.get('netzbetreiberId'),
-                                laborMst: mstLabor[j].labor,
-                                displayCombi: displayCombi
-                            });
-                        }
                     }
                 }
             }
@@ -464,54 +422,6 @@ Ext.application({
             }
         });
 
-        // Only used to fill data into store 'messstellelaborkombi' via
-        // load-callback.
-        // Server service: MessstellenkombiService via model.MessstellenKombi
-        Ext.create('Lada.store.MessstellenKombi', {
-            storeId: 'messstellenkombi',
-            autoLoad: true,
-            listeners: {
-                beforeload: function(store, operation) {
-                    operation.setParams({
-                        netzbetreiberId: Lada.netzbetreiber
-                    });
-                },
-                load: {
-                    fn: function(store) {
-                        var z = 0;
-                        for (var j = 0; j < store.getCount(); j++) {
-                            var item = Ext.data.StoreManager.get(
-                                'messstellen').getById(
-                                    store.getAt(j).getData().mstId);
-                            var itemLabor = Ext.data.StoreManager.get(
-                                'messstellen').getById(
-                                    store.getAt(j).getData().laborMstId);
-                            if (!itemLabor) {
-                                continue;
-                            }
-                            var displayCombi = item.get('messStelle');
-                            if (displayCombi !== itemLabor.get('messStelle')) {
-                                displayCombi += '/'
-                                    + itemLabor.get('messStelle');
-                            }
-                            var recordIndex = mstLaborKombiStore.findExact(
-                                'displayCombi', displayCombi);
-                            if (recordIndex === -1) {
-                                mstLaborKombiStore.add({
-                                    id: z,
-                                    messStelle: store.getAt(j).getData().mstId,
-                                    netzbetreiberId: item.get('netzbetreiberId'),
-                                    laborMst: store.getAt(
-                                        j).getData().laborMstId,
-                                    displayCombi: displayCombi
-                                });
-                                z++;
-                            }
-                        }
-                    }
-                }
-            }
-        });
         Ext.create('Ext.data.Store', {
             storeId: 'pagingSizes',
             model: Ext.create('Ext.data.Model', {
