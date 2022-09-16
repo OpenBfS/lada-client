@@ -63,6 +63,9 @@ Ext.define('Lada.view.panel.Map', {
      * Select a feature by record (a Lada.model.Ort)
      * @param record Record
      */
+    // TODO: needs adaptation if no longer bound to Ort records
+    // Beware that it still needs to work with Ort records as well for
+    // Ortszuordnung window!?
     selectFeature: function(model, record) {
         if (!record || !record.get('id') || record.get('id') === '') {
             return;
@@ -109,6 +112,9 @@ Ext.define('Lada.view.panel.Map', {
      * Deselects the feature of a given record on the map
      * @param record Record
      */
+    // TODO: needs adaptation if no longer bound to Ort records
+    // Beware that it still needs to work with Ort records as well for
+    // Ortszuordnung window!?
     deselectFeature: function(record) {
         if (!record || !record.get('id') || record.get('id') === '') {
             return;
@@ -217,11 +223,9 @@ Ext.define('Lada.view.panel.Map', {
         if (!json) {
             return;
         }
-        var style = new ol.style.Style({
-            image: new ol.style.Icon({
-                src: 'resources/img/marker-blue.png'
-            })
-        });
+        if (!this.featureLayer) {
+            this.initFeatureLayer();
+        }
         var format = new ol.format.GeoJSON({
             dataProjection: 'EPSG:4326',
             featureProjection: 'EPSG:3857'
@@ -231,13 +235,8 @@ Ext.define('Lada.view.panel.Map', {
             features: features
         });
         var extent = vectorSource.getExtent();
-
-        var vectorLayer = new ol.layer.Vector({
-            source: vectorSource,
-            style: style,
-            visible: true
-        });
-        this.map.addLayer(vectorLayer);
+        //this.map.addLayer(vectorLayer);
+        this.featureLayer.setSource(vectorSource);
         this.map.getView().fit(extent, {maxZoom: 12});
     },
 
@@ -355,6 +354,7 @@ Ext.define('Lada.view.panel.Map', {
         }
     },
 
+    // TODO: Remove no-op?
     beforeDestroy: function() {
         //         delete this.map;
         //         this.callParent(arguments);

@@ -26,6 +26,7 @@ Ext.define('Lada.view.window.Map', {
     map: null,
 
     initComponent: function() {
+        // TODO: Creates small window with map for single geom
         this.map = Ext.create('Lada.view.panel.Map', {
             resizable: false,
             layout: 'fit',

@@ -118,6 +118,8 @@ Ext.define('Lada.controller.Query', {
             this.resultStore = Ext.create('Lada.store.GenericResults');
 
             // map <-> dynamic grid data exchange listener
+            // TODO: Take necessary data from geom in resultStore?
+            // TODO: What does ortstore do and where does it come from?
             this.resultStore.addListener('load', function() {
                 var dgrid = Ext.getCmp('dynamicgridid');
                 if (
@@ -478,11 +480,62 @@ Ext.define('Lada.controller.Query', {
                                 rowtarget: rowtarget
                             });
                         resultGrid.setup(gcs, Ext.getStore('columnstore'));
+                        var geomColIdx = this.getGeomColumnIndex();
+                        resultGrid.showMap(geomColIdx > -1);
                         resultGrid.setStore(this.resultStore);
                         contentPanel.add(resultGrid);
                         contentPanel.show();
-                        if (rowtarget.dataType === 'ortId') {
-                            this.setMapOrte(resultGrid);
+                        // if (rowtarget.dataType === 'ortId') {
+                        //     // TODO: Here's where ortstore comes from
+                        //     resultGrid.ortstore = Ext.create(
+                        //         'Lada.store.Orte', {
+                        //             autoLoad: false,
+                        //             remoteFilter: true
+                        //         });
+                        //     // Could be added as config directly:
+                        //     resultGrid.ortstore.addListener(
+                        //         'datachanged', function() {
+                        //             // dgrid equals resultGrid?
+                        //             var dgrid = Ext.getCmp('dynamicgridid');
+                        //             // TODO: Add items from store to map
+                        //             dgrid.down('map').addLocations(
+                        //                 dgrid.ortstore);
+                        //         });
+                        //     // What should that event trigger?
+                        //     // See resultStore.addListener() above?
+                        //     // Couldn't we just use 'datachanged' there?
+                        //     resultGrid.getStore().fireEvent('load');
+                        // }
+                        // TODO: Misses that the column might not be selected
+                        // and therefore not in resultStore
+                        // If result contains a geometry column
+                        // Create and draw feature collection
+                        if (geomColIdx > -1) {
+                            //Update geom column index as it may have changed
+                            geomColIdx = this.getGeomColumnIndex();
+                            var dataIdx = this.getVisibleColumns()[geomColIdx].dataIndex;
+                            var featureTextDataIdx = this.getFeatureTextDataIndex();
+                            var featuresJson = {
+                                type: "FeatureCollection",
+                                features: []
+                            };
+                            //For each geometry, construct a geojson feature
+                            //containing the needed properties
+                            this.resultStore.getData().each(function(item) {
+                                var feature = {
+                                    type: 'Feature',
+                                    properties: {}
+                                }
+                                var geomString = item.get(dataIdx);
+                                var geomJson = Ext.decode(geomString);
+                                feature.properties.id = item.get('id');
+                                if (featureTextDataIdx) {
+                                    item.get(featureTextDataIdx);
+                                }
+                                feature.geometry = geomJson;
+                                featuresJson.features.push(feature);
+                            });
+                            resultGrid.down('map').drawGeoJson(featuresJson);
                         }
                         //Update print window instance
                         Lada.view.window.PrintGrid.getInstance()
@@ -1187,19 +1240,6 @@ Ext.define('Lada.controller.Query', {
         }
     },
 
-    setMapOrte: function(grid) {
-        grid.ortstore = Ext.create(
-            'Lada.store.Orte', {
-                autoLoad: false,
-                remoteFilter: true
-            });
-        grid.ortstore.addListener('datachanged', function() {
-            var dgrid = Ext.getCmp('dynamicgridid');
-            dgrid.down('map').addLocations(dgrid.ortstore);
-        });
-        grid.getStore().fireEvent('load');
-    },
-
     dataChanged: function() {
         var qp = Ext.ComponentQuery.query('querypanel')[0];
         var savedisabled = qp.isQueryReadonly();
@@ -1275,12 +1315,7 @@ Ext.define('Lada.controller.Query', {
      * in the column record
      */
     getVisibleColumnWidth: function(col) {
-        // Visible columns for saving column width
-        var dgs = Ext.ComponentQuery.query('dynamicgrid');
-        var visibleCols;
-        if (dgs && dgs[0]) {
-            visibleCols = dgs[0].getVisibleColumns();
-        }
+        var visibleCols = this.getVisibleColumns();
         // Get width of visible columns
         var vcIdx;
         // eslint-disable-next-line no-loop-func
@@ -1311,5 +1346,46 @@ Ext.define('Lada.controller.Query', {
         Ext.ComponentQuery.query('querypanel')[0].loadingMask.hide();
         Ext.Msg.alert(i18n.getMsg('query.error.save.title'),
                       i18n.getMsg('query.error.save.message'));
+    },
+
+    /**
+     * Get visible grid columns
+     * @returns {Lada.model.GridColumn} Array of column models
+     */
+    getVisibleColumns: function() {
+        var dgs = Ext.ComponentQuery.query('dynamicgrid');
+        var visibleCols;
+        if (dgs && dgs[0]) {
+            visibleCols = dgs[0].getVisibleColumns();
+        }
+        return visibleCols;
+    },
+
+    /**
+     * Get the array index of the geometry column in the visible columns.
+     * @returns Index or -1 if not visible
+     */
+    getGeomColumnIndex: function() {
+        return this.getVisibleColumns().findIndex(
+            function(i) {
+                return i.dataType ?
+                    i.dataType.name === 'geom':
+                    false;
+            });
+    },
+
+    /**
+     * Get the dataindex for the column used for geojson feature texts for the given columns.
+     *
+     * The dataIndex is guessed based upon the given rowtarget and picked from the visible columns.
+     * @return {String} dataIndex or null if no suitable column could be found
+     */
+    getFeatureTextDataIndex: function() {
+        var columns = this.getVisibleColumns();
+        switch (this.setrowtarget().dataType) {
+            case "ortId":
+                return "ortId";
+            default: return null;
+        }
     }
 });

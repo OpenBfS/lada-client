@@ -58,6 +58,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     isDynamic: true,
 
+    showMap: false,
+
     viewConfig: {
         deferEmptyText: false
     },
@@ -146,7 +148,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         if (this.down('map') !== null) {
             this.removeDocked(this.down('map'));
         }
-        if (this.rowtarget.dataType === 'ortId') {
+        if (this.showMap) {
             this.i18n = Lada.getApplication().bundle;
             var map = Ext.create('Lada.view.panel.Map', {
                 collapsible: true,
@@ -333,6 +335,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         this.generateOrtColumns(col);
                         break;
                     case 'geom':
+                        // Map instead of column?
                         this.generateGeomColumns(col);
                         break;
                     case 'date':
@@ -623,6 +626,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             hidden: true,
             listeners: {
                 click: function(button) {
+                    // TODO: Creates small window with map for single geom
                     button.getEl().swallowEvent(['click', 'dblclick'], true);
                     var geom = button.geom;
                     var mapWin = Ext.create('Lada.view.window.Map', {
@@ -1285,6 +1289,14 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
         });
         return filterMap;
+    },
+
+    /**
+     * Set to show/hide the docked map.
+     * @param {*} showMap True if map should be shown, else false
+     */
+    showMap: function(showMap) {
+        this.showMap = showMap;
     }
 });
 
