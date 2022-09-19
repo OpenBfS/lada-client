@@ -219,7 +219,8 @@ Ext.define('Lada.view.window.AuditTrail', {
 
     createHtmlMessprogramm: function(json) {
         var i18n = Lada.getApplication().bundle;
-        var html = '<p><strong>Messprogramm: ' + json.data.id + '</strong><br></p>';
+        var html = '<p><strong>Messprogramm: '
+                + json.data.id + '</strong><br></p>';
         var audit = json.data.audit;
         if (audit.length === 0) {
             html += '<p>Keine Änderungen</p>';
@@ -230,8 +231,11 @@ Ext.define('Lada.view.window.AuditTrail', {
                 });
             }
             for (var i = 0; i < audit.length; i++) {
-                html += '<p style="margin-bottom:0"><b>' + i18n.getMsg('date') + ': ' +
-                (Ext.Date.format(new Date(audit[i].timestamp), 'd.m.Y H:i')) + '</b>';
+                html += '<p style="margin-bottom:0"><b>' + i18n.getMsg('date')
+                        + ': '
+                        + (Ext.Date.format(
+                            new Date(audit[i].timestamp), 'd.m.Y H:i'))
+                        + '</b>';
                 if (audit[i].type !== 'messprogramm') {
                     html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
                     html += audit[i].identifier;
