@@ -1266,14 +1266,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
         });
         return filterMap;
-    },
-
-    /**
-     * Set to show/hide the docked map.
-     * @param {*} showMap True if map should be shown, else false
-     */
-    showMap: function(showMap) {
-        this.showMap = showMap;
     }
 });
 
