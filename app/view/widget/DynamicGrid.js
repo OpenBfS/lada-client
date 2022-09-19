@@ -261,6 +261,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         var resultColumns = [];
         var fields = [];
         this.i18n = Lada.getApplication().bundle;
+        this.showMap = false;
         fields.push(new Ext.data.Field({
             name: 'readonly'
         }));
@@ -335,7 +336,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         this.generateOrtColumns(col);
                         break;
                     case 'geom':
-                        // Map instead of column?
                         this.generateGeomColumns(col);
                         break;
                     case 'date':
@@ -615,36 +615,13 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     generateGeomColumns: function(col) {
-        col.xtype = 'widgetcolumn';
-        col.widget = {
-            xtype: 'button',
-            icon: Ext.getResourcePath(this.openIconPath, null, null),
-            width: '16px',
-            height: '16px',
-            userCls: 'widget-column-button',
-            tooltip: this.i18n.getMsg('typedgrid.tooltip.geometry'),
-            hidden: true,
-            listeners: {
-                click: function(button) {
-                    // TODO: Creates small window with map for single geom
-                    button.getEl().swallowEvent(['click', 'dblclick'], true);
-                    var geom = button.geom;
-                    var mapWin = Ext.create('Lada.view.window.Map', {
-                        geom: geom
-                    });
-                    mapWin.show();
-                },
-                textchange: function(button, oldval, newval) {
-                    button.geom = newval;
-                    button.text = '';
-                    button.tooltip = newval;
-                    if (!newval || newval === '') {
-                        button.hide();
-                    } else {
-                        button.show();
-                    }
-                }
+        this.showMap = true;
+        col.xtype = 'gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
             }
+            return value;
         };
     },
 
