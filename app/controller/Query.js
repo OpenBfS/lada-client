@@ -481,42 +481,20 @@ Ext.define('Lada.controller.Query', {
                             });
                         resultGrid.setup(gcs, Ext.getStore('columnstore'));
                         var geomColIdx = this.getGeomColumnIndex();
-                        resultGrid.showMap(geomColIdx > -1);
                         resultGrid.setStore(this.resultStore);
                         contentPanel.add(resultGrid);
                         contentPanel.show();
-                        // if (rowtarget.dataType === 'ortId') {
-                        //     // TODO: Here's where ortstore comes from
-                        //     resultGrid.ortstore = Ext.create(
-                        //         'Lada.store.Orte', {
-                        //             autoLoad: false,
-                        //             remoteFilter: true
-                        //         });
-                        //     // Could be added as config directly:
-                        //     resultGrid.ortstore.addListener(
-                        //         'datachanged', function() {
-                        //             // dgrid equals resultGrid?
-                        //             var dgrid = Ext.getCmp('dynamicgridid');
-                        //             // TODO: Add items from store to map
-                        //             dgrid.down('map').addLocations(
-                        //                 dgrid.ortstore);
-                        //         });
-                        //     // What should that event trigger?
-                        //     // See resultStore.addListener() above?
-                        //     // Couldn't we just use 'datachanged' there?
-                        //     resultGrid.getStore().fireEvent('load');
-                        // }
-                        // TODO: Misses that the column might not be selected
-                        // and therefore not in resultStore
                         // If result contains a geometry column
                         // Create and draw feature collection
                         if (geomColIdx > -1) {
                             //Update geom column index as it may have changed
                             geomColIdx = this.getGeomColumnIndex();
-                            var dataIdx = this.getVisibleColumns()[geomColIdx].dataIndex;
-                            var featureTextDataIdx = this.getFeatureTextDataIndex();
+                            var dataIdx = this.getVisibleColumns()[geomColIdx]
+                                .dataIndex;
+                            var featureTextDataIdx
+                                = this.getFeatureTextDataIndex();
                             var featuresJson = {
-                                type: "FeatureCollection",
+                                type: 'FeatureCollection',
                                 features: []
                             };
                             //For each geometry, construct a geojson feature
@@ -525,12 +503,13 @@ Ext.define('Lada.controller.Query', {
                                 var feature = {
                                     type: 'Feature',
                                     properties: {}
-                                }
+                                };
                                 var geomString = item.get(dataIdx);
                                 var geomJson = Ext.decode(geomString);
                                 feature.properties.id = item.get('id');
                                 if (featureTextDataIdx) {
-                                    item.get(featureTextDataIdx);
+                                    feature.properties.bez
+                                        = item.get(featureTextDataIdx);
                                 }
                                 feature.geometry = geomJson;
                                 featuresJson.features.push(feature);
@@ -1369,22 +1348,26 @@ Ext.define('Lada.controller.Query', {
         return this.getVisibleColumns().findIndex(
             function(i) {
                 return i.dataType ?
-                    i.dataType.name === 'geom':
+                    i.dataType.name === 'geom' :
                     false;
             });
     },
 
     /**
-     * Get the dataindex for the column used for geojson feature texts for the given columns.
+     * Get the dataindex for the column used for geojson feature texts for the
+     * given columns.
      *
-     * The dataIndex is guessed based upon the given rowtarget and picked from the visible columns.
+     * The dataIndex is guessed based upon the given rowtarget and picked from
+     * the visible columns.
      * @return {String} dataIndex or null if no suitable column could be found
      */
     getFeatureTextDataIndex: function() {
         var columns = this.getVisibleColumns();
         switch (this.setrowtarget().dataType) {
-            case "ortId":
-                return "ortId";
+            case 'ortId':
+                return 'ortId';
+            case 'messungId':
+                return 'id';
             default: return null;
         }
     }
