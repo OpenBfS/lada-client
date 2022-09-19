@@ -118,7 +118,6 @@ Ext.define('Lada.controller.Query', {
             this.resultStore = Ext.create('Lada.store.GenericResults');
 
             // map <-> dynamic grid data exchange listener
-            // TODO: Take necessary data from geom in resultStore?
             // TODO: What does ortstore do and where does it come from?
             this.resultStore.addListener('load', function() {
                 var dgrid = Ext.getCmp('dynamicgridid');
@@ -781,7 +780,7 @@ Ext.define('Lada.controller.Query', {
                         field = Ext.create('Lada.view.widget.Status', options);
                         negateCheckbox = true;
                         break;
-                    case 'geom':// TODO: how/if to implement
+                    case 'geom':
                         break;
                     case 'egem':
                         options.multiSelect = true;
@@ -1341,6 +1340,22 @@ Ext.define('Lada.controller.Query', {
     },
 
     /**
+     * Check if the given column is visible.
+     * @param {String} dataIndex
+     * @return True if visible
+     */
+    isColumnVisible: function(dataIndex) {
+        var columns = this.getVisibleColumns();
+        var foundCol = Ext.Array.findBy(columns, function(col) {
+            if (col.dataIndex) {
+                return col.dataIndex === dataIndex;
+            }
+            return false;
+        });
+        return foundCol !== null;
+    },
+
+    /**
      * Get the array index of the geometry column in the visible columns.
      * @returns Index or -1 if not visible
      */
@@ -1362,12 +1377,10 @@ Ext.define('Lada.controller.Query', {
      * @return {String} dataIndex or null if no suitable column could be found
      */
     getFeatureTextDataIndex: function() {
-        var columns = this.getVisibleColumns();
         switch (this.setrowtarget().dataType) {
+            //For ort queries: Show ortId
             case 'ortId':
-                return 'ortId';
-            case 'messungId':
-                return 'id';
+                return this.isColumnVisible('ortId') ? 'ortId' : null;
             default: return null;
         }
     }
