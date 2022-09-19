@@ -60,7 +60,7 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     /**
-     * Select a feature by record (a Lada.model.Ort)
+     * Select a feature by record (Lada.model.Ort | Lada.model.GenericResults)
      * @param record Record
      */
     selectFeature: function(model, record) {
@@ -109,9 +109,6 @@ Ext.define('Lada.view.panel.Map', {
      * Deselects the feature of a given record on the map
      * @param record Record
      */
-    // TODO: needs adaptation if no longer bound to Ort records
-    // Beware that it still needs to work with Ort records as well for
-    // Ortszuordnung window!?
     deselectFeature: function(record) {
         if (!record || !record.get('id') || record.get('id') === '') {
             return;
@@ -353,12 +350,6 @@ Ext.define('Lada.view.panel.Map', {
             var me = Ext.ComponentQuery.query('map')[0];
             me.fireEvent('featureselected', me, feature, arguments, true);
         }
-    },
-
-    // TODO: Remove no-op?
-    beforeDestroy: function() {
-        //         delete this.map;
-        //         this.callParent(arguments);
     },
 
     /**
