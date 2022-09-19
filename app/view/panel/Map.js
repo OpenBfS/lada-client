@@ -63,9 +63,6 @@ Ext.define('Lada.view.panel.Map', {
      * Select a feature by record (a Lada.model.Ort)
      * @param record Record
      */
-    // TODO: needs adaptation if no longer bound to Ort records
-    // Beware that it still needs to work with Ort records as well for
-    // Ortszuordnung window!?
     selectFeature: function(model, record) {
         if (!record || !record.get('id') || record.get('id') === '') {
             return;
@@ -217,7 +214,7 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     /**
-     * Draws the content of a given GeoJSON Object
+     * Draws the content of a given GeoJSON Object.
      */
     drawGeoJson: function(json) {
         if (!json) {
@@ -231,6 +228,10 @@ Ext.define('Lada.view.panel.Map', {
             featureProjection: 'EPSG:3857'
         });
         var features = format.readFeatures(json);
+        //Set feature id from properties
+        Ext.Array.each(features, function(feat) {
+            feat.setId(feat.get('id'));
+        });
         var vectorSource = new ol.source.Vector({
             features: features
         });
