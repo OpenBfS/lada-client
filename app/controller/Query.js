@@ -93,7 +93,7 @@ Ext.define('Lada.controller.Query', {
             },
             'dynamicgrid': {
                 columnresize: me.dataChanged,
-                gridreload: me.handleGridReload
+                gridreload: me.drawGeometryColumns
             },
             'querypanel textarea[name=description]': {
                 change: me.dataChanged
@@ -117,37 +117,6 @@ Ext.define('Lada.controller.Query', {
     createResultStore: function() {
         if (!this.resultStore) {
             this.resultStore = Ext.create('Lada.store.GenericResults');
-
-            // map <-> dynamic grid data exchange listener
-            // TODO: What does ortstore do and where does it come from?
-            this.resultStore.addListener('load', function() {
-                var dgrid = Ext.getCmp('dynamicgridid');
-                if (
-                    dgrid &&
-                    dgrid.rowtarget.dataType === 'ortId' &&
-                    dgrid.ortstore
-                ) {
-                    var data = dgrid.getStore().getData().items;
-                    var request = [];
-                    for (var i = 0; i < data.length; i++) {
-                        request.push(data[i].get(dgrid.rowtarget.dataIndex));
-                    }
-                    if (request.length) {
-                        Ext.Ajax.request({
-                            url: 'lada-server/rest/ort/getbyids',
-                            jsonData: JSON.stringify(request),
-                            method: 'POST',
-                            success: function(response) {
-                                var json = Ext.JSON.decode(
-                                    response.responseText);
-                                if (json.data && dgrid.ortstore) {
-                                    dgrid.ortstore.setData(json.data);
-                                }
-                            }
-                        });
-                    }
-                }
-            });
         }
     },
 
@@ -1096,10 +1065,6 @@ Ext.define('Lada.controller.Query', {
             rec.set(model, checkbox.getValue());
             this.dataChanged();
         }
-    },
-
-    handleGridReload: function() {
-        this.drawGeometryColumns();
     },
 
     /*

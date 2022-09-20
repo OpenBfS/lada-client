@@ -1133,7 +1133,9 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         this,
                         {
                             single: true,
-                            priority: -1000
+                            //Set to minimum priority to ensure the handler is
+                            //called after map panel afterrender handler
+                            priority: -999
                         }
                     );
                 }
