@@ -1118,6 +1118,24 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         options.callback = function() {
             this.setStore(store);
             this.select(selection);
+            //If map is not already rendered:
+            //Wait for render, then fire reload event
+            var map = this.down('map');
+            if (map.rendered) {
+                this.fireEvent('gridreload');
+            } else {
+                map.onAfter(
+                    'afterrender',
+                    function() {
+                        this.fireEvent('gridreload');
+                    },
+                    this,
+                    {
+                        single: true,
+                        priority: -1000
+                    }
+                );
+            }
             if (callback) {
                 callback();
             }

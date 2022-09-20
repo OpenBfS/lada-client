@@ -233,7 +233,6 @@ Ext.define('Lada.view.panel.Map', {
             features: features
         });
         var extent = vectorSource.getExtent();
-        //this.map.addLayer(vectorLayer);
         this.featureLayer.setSource(vectorSource);
         this.map.getView().fit(extent, {maxZoom: 12});
     },

@@ -92,7 +92,8 @@ Ext.define('Lada.controller.Query', {
                 click: me.reloadQuery
             },
             'dynamicgrid': {
-                columnresize: me.dataChanged
+                columnresize: me.dataChanged,
+                gridreload: me.handleGridReload
             },
             'querypanel textarea[name=description]': {
                 change: me.dataChanged
@@ -479,42 +480,10 @@ Ext.define('Lada.controller.Query', {
                                 rowtarget: rowtarget
                             });
                         resultGrid.setup(gcs, Ext.getStore('columnstore'));
-                        var geomColIdx = this.getGeomColumnIndex();
                         resultGrid.setStore(this.resultStore);
                         contentPanel.add(resultGrid);
                         contentPanel.show();
-                        // If result contains a geometry column
-                        // Create and draw feature collection
-                        if (geomColIdx > -1) {
-                            //Update geom column index as it may have changed
-                            geomColIdx = this.getGeomColumnIndex();
-                            var dataIdx = this.getVisibleColumns()[geomColIdx]
-                                .dataIndex;
-                            var featureTextDataIdx
-                                = this.getFeatureTextDataIndex();
-                            var featuresJson = {
-                                type: 'FeatureCollection',
-                                features: []
-                            };
-                            //For each geometry, construct a geojson feature
-                            //containing the needed properties
-                            this.resultStore.getData().each(function(item) {
-                                var feature = {
-                                    type: 'Feature',
-                                    properties: {}
-                                };
-                                var geomString = item.get(dataIdx);
-                                var geomJson = Ext.decode(geomString);
-                                feature.properties.id = item.get('id');
-                                if (featureTextDataIdx) {
-                                    feature.properties.bez
-                                        = item.get(featureTextDataIdx);
-                                }
-                                feature.geometry = geomJson;
-                                featuresJson.features.push(feature);
-                            });
-                            resultGrid.down('map').drawGeoJson(featuresJson);
-                        }
+                        this.drawGeometryColumns();
                         //Update print window instance
                         Lada.view.window.PrintGrid.getInstance()
                             .updateGrid(resultGrid);
@@ -1129,6 +1098,10 @@ Ext.define('Lada.controller.Query', {
         }
     },
 
+    handleGridReload: function() {
+        this.drawGeometryColumns();
+    },
+
     /*
      * Guess the type of data represented by a query result row based on
      * the existence of columns with specific data types, the latter being
@@ -1284,6 +1257,44 @@ Ext.define('Lada.controller.Query', {
             columnIndex: options.columnIndex,
             items: [field, checkboxRow]
         });
+    },
+
+    /**
+     * Draw the content of the geometry column if available.
+     */
+    drawGeometryColumns: function() {
+        var resultGrid = Ext.getCmp('dynamicgridid');
+        //Get geom column index
+        var geomColIdx = this.getGeomColumnIndex();
+        if (geomColIdx <= -1) {
+            return;
+        }
+        var dataIdx = this.getVisibleColumns()[geomColIdx]
+            .dataIndex;
+        var featureTextDataIdx
+            = this.getFeatureTextDataIndex();
+        var featuresJson = {
+            type: 'FeatureCollection',
+            features: []
+        };
+        //For each geometry, construct a geojson feature
+        //containing the needed properties
+        this.resultStore.getData().each(function(item) {
+            var feature = {
+                type: 'Feature',
+                properties: {}
+            };
+            var geomString = item.get(dataIdx);
+            var geomJson = Ext.decode(geomString);
+            feature.properties.id = item.get('id');
+            if (featureTextDataIdx) {
+                feature.properties.bez
+                    = item.get(featureTextDataIdx);
+            }
+            feature.geometry = geomJson;
+            featuresJson.features.push(feature);
+        });
+        resultGrid.down('map').drawGeoJson(featuresJson);
     },
 
     /**
