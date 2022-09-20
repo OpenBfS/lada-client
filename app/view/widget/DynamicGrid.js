@@ -382,7 +382,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     default:
                         col.xtype = 'gridcolumn';
                         col.renderer = function(value) {
-                            if (value === 0 || value == null)  {
+                            if (value === 0 || value === null) {
                                 return value;
                             }
                             return '<div style="white-space: normal !important;">' +
@@ -1121,20 +1121,22 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             //If map is not already rendered:
             //Wait for render, then fire reload event
             var map = this.down('map');
-            if (map.rendered) {
-                this.fireEvent('gridreload');
-            } else {
-                map.onAfter(
-                    'afterrender',
-                    function() {
-                        this.fireEvent('gridreload');
-                    },
-                    this,
-                    {
-                        single: true,
-                        priority: -1000
-                    }
-                );
+            if (map) {
+                if (map.rendered) {
+                    this.fireEvent('gridreload');
+                } else {
+                    map.onAfter(
+                        'afterrender',
+                        function() {
+                            this.fireEvent('gridreload');
+                        },
+                        this,
+                        {
+                            single: true,
+                            priority: -1000
+                        }
+                    );
+                }
             }
             if (callback) {
                 callback();
