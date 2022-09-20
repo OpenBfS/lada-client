@@ -203,7 +203,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     this.rowtarget.dataIndex, id, false, false, false, true));
             }
         }
-        this.getSelectionModel().select(records);
+        this.getSelectionModel().select(records, map.multiSelect);
     },
 
     addOrt: function(event) {
