@@ -365,7 +365,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         xtype: 'textfield',
                         name: 'probenahmeMenge',
                         labelAlign: 'top',
-                        fieldLabel: i18n.getMsg('probenahmeMenge'),
+                        fieldLabel: i18n.getMsg('probenahmemenge'),
                         width: '100%',
                         labelwidth: 135
                     }]
