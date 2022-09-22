@@ -120,6 +120,10 @@ Ext.define('Lada.view.panel.Map', {
         }
         this.selectedFeatureLayer.getSource().removeFeature(feature);
         this.featureLayer.getSource().addFeature(feature);
+        //Clear selection interaction feature list
+        if (this.selectControl.getFeatures()) {
+            this.selectControl.getFeatures().clear();
+        }
     },
 
     activateDraw: function() {
