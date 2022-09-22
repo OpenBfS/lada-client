@@ -659,13 +659,15 @@ Ext.define('Lada.controller.form.Messprogramm', {
             callback();
         }
     },
+
     showAuditTrail: function(button) {
-        Ext.create('Lada.view.window.AuditTrail', {
+        var trail = Ext.create('Lada.view.window.AuditTrail', {
             autoShow: true,
             closeAction: 'destroy',
             type: 'messprogramm',
             objectId: button.up('form').recordId
         });
+        button.up('window').addChild(trail);
     }
 
 });
