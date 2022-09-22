@@ -292,6 +292,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     var win = button.up('window');
                     win.record = rec;
                     win.enableChildren();
+                    button.up('toolbar').down('button[action=audit]')
+                        .setDisabled(false);
                 }
             },
             failure: function(newRecord, response) {
@@ -665,7 +667,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
             autoShow: true,
             closeAction: 'destroy',
             type: 'messprogramm',
-            objectId: button.up('form').recordId
+            objectId: button.up('form').getRecord().get('id')
         });
         button.up('window').addChild(trail);
     }
