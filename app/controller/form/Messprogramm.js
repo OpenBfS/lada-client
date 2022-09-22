@@ -33,9 +33,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
             'messprogrammform button[action=audit]': {
                 click: this.showAuditTrail
             },
-            'messprogrammform messstellelabor combobox': {
-                select: this.setNetzbetreiber
-            },
             'messprogrammform numfield numberfield': {
                 change: this.checkPeriod
             },
