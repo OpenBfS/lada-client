@@ -73,7 +73,20 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         this.emptyText = this.i18n.getMsg(this.emptyText);
         this.selModel = Ext.create('Ext.selection.CheckboxModel', {
             checkOnly: true,
-            injectCheckbox: 1
+            injectCheckbox: 1,
+            // Handle header checkbox clicks to only send one select event
+            onHeaderClick: function() {
+                var selectionCount = this.getCount();
+                var grid = Ext.getCmp('dynamicgridid');
+                var recordCount = grid.getStore().getData().length;
+                if (recordCount === selectionCount) {
+                    this.deselectAll();
+                } else {
+                    this.selectAll(true);
+                    var records = this.getSelection();
+                    grid.fireEvent('selectall', grid, records);
+                }
+            }
         });
         this.callParent(arguments);
     },

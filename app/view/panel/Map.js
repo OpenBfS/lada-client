@@ -51,6 +51,13 @@ Ext.define('Lada.view.panel.Map', {
                     args: [true]
                 }
             },
+            selectmultiplefeatures: {
+                fn: this.selectMultipleFeatures,
+                scope: this,
+                options: {
+                    args: [true]
+                }
+            },
             deselectfeature: {
                 fn: this.deselectFeature,
                 scope: this
@@ -60,10 +67,24 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     /**
+     * Select multiple features by records
+     * @param {*} records Records
+     */
+    selectMultipleFeatures: function(records) {
+        var me = this;
+        Ext.Array.each(records, function(record) {
+            me.selectFeature(null, record, false);
+        });
+        this.zoomToSelectedFeatures();
+    },
+
+    /**
      * Select a feature by record (Lada.model.Ort | Lada.model.GenericResults)
      * @param record Record
+     * @param zoom If true, the map will be zoomed to show all selected
+     *             features
      */
-    selectFeature: function(model, record) {
+    selectFeature: function(model, record, zoom) {
         if (!record || !record.get('id') || record.get('id') === '') {
             return;
         }
@@ -83,6 +104,16 @@ Ext.define('Lada.view.panel.Map', {
         this.selectedFeatureLayer.getSource().addFeature(feature);
         currentFeatures.push(feature);
         this.fireEvent('featureselected', this, currentFeatures);
+        if (zoom === true) {
+            this.zoomToSelectedFeatures();
+        }
+        //TODO: hideable main layer/make all except selected invisible
+    },
+
+    /**
+     * Zoom to all selected features on the map.
+     */
+    zoomToSelectedFeatures: function() {
         var zoomFeats = this.selectedFeatureLayer.getSource().getFeatures();
         if (zoomFeats.length > 1) {
             var zf_geoms = [];
@@ -102,7 +133,6 @@ Ext.define('Lada.view.panel.Map', {
                 { zoom: 10,
                     duration: 1000});
         }
-        //TODO: hideable main layer/make all except selected invisible
     },
 
     /**
