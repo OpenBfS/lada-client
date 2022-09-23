@@ -132,6 +132,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     grid.i18n.getMsg('grid.expandDetails'));
             }
         }
+        //Fire gridreload event to update map after page change
+        grid.fireEvent('gridreload');
     },
 
 
