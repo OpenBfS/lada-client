@@ -107,7 +107,6 @@ Ext.define('Lada.view.panel.Map', {
         if (zoom === true) {
             this.zoomToSelectedFeatures();
         }
-        //TODO: hideable main layer/make all except selected invisible
     },
 
     /**
@@ -184,7 +183,7 @@ Ext.define('Lada.view.panel.Map', {
         event.feature.set('bez', 'neuer Ort');
         var clone = event.feature.clone();
         clone.getGeometry().transform('EPSG:3857', 'EPSG:4326');
-        var parent = me.up('ortszuordnungwindow'); //TODO changed queryui
+        var parent = me.up('ortszuordnungwindow');
 
         //Use probe or messprogramm to get the mstId
         if (parent && (parent.probe || parent.messprogramm)) {
