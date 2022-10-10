@@ -266,7 +266,9 @@ Ext.define('Lada.view.panel.Map', {
             features: features
         });
         var extent = vectorSource.getExtent();
+        //Clear the map of selected features
         this.selectedFeatureLayer.getSource().clear();
+        this.selectControl.getFeatures().clear();
         this.featureLayer.setSource(vectorSource);
         this.map.getView().fit(extent, {maxZoom: 12});
     },
