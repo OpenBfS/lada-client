@@ -1250,16 +1250,20 @@ Ext.define('Lada.controller.Query', {
                 properties: {}
             };
             var geomString = item.get(dataIdx);
-            var geomJson = Ext.decode(geomString);
-            feature.properties.id = item.get('id');
-            if (featureTextDataIdx) {
-                feature.properties.bez
-                    = item.get(featureTextDataIdx);
+            if (geomString) {
+                var geomJson = Ext.decode(geomString);
+                feature.properties.id = item.get('id');
+                if (featureTextDataIdx) {
+                    feature.properties.bez
+                        = item.get(featureTextDataIdx);
+                }
+                feature.geometry = geomJson;
+                featuresJson.features.push(feature);
             }
-            feature.geometry = geomJson;
-            featuresJson.features.push(feature);
         });
-        resultGrid.down('map').drawGeoJson(featuresJson);
+        if (featuresJson.features.length > 0) {
+            resultGrid.down('map').drawGeoJson(featuresJson);
+        }
     },
 
     /**

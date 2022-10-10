@@ -1129,18 +1129,19 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         options.scope = this;
         options.callback = function() {
             this.setStore(store);
-            this.select(selection);
             //If map is not already rendered:
             //Wait for render, then fire reload event
             var map = this.down('map');
             if (map) {
                 if (map.rendered) {
                     this.fireEvent('gridreload');
+                    this.select(selection);
                 } else {
                     map.onAfter(
                         'afterrender',
                         function() {
                             this.fireEvent('gridreload');
+                            this.select(selection);
                         },
                         this,
                         {
@@ -1151,6 +1152,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         }
                     );
                 }
+            } else {
+                this.select(selection);
             }
             if (callback) {
                 callback();
