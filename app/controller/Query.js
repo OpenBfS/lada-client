@@ -422,6 +422,13 @@ Ext.define('Lada.controller.Query', {
                     }
                 });
             }
+            //If grid still exists suspend paging toolbar events to prevent
+            //eventhandler from accessing a grid that may already have been
+            //cleared and will be destroyed after loading
+            var resultGrid = Ext.getCmp('dynamicgridid');
+            if (resultGrid) {
+                resultGrid.down('pagingtoolbar').suspendEvent('change');
+            }
             this.resultStore.loadPage(1, {
                 scope: this,
                 callback: function(responseData, operation, success) {
@@ -430,7 +437,6 @@ Ext.define('Lada.controller.Query', {
                         var contentPanel = button.up('panel[name=main]').down(
                             'panel[name=contentpanel]');
                         contentPanel.removeAll();
-                        var resultGrid = Ext.getCmp('dynamicgridid');
                         if (resultGrid) {
                             resultGrid.destroy();
                         }
@@ -457,6 +463,11 @@ Ext.define('Lada.controller.Query', {
                         Lada.view.window.PrintGrid.getInstance()
                             .updateGrid(resultGrid);
                     } else {
+                        //If loading failed, resume paging events
+                        if (resultGrid) {
+                            resultGrid.down('pagingtoolbar')
+                                .resumeEvent('change');
+                        }
                         var i18n = Lada.getApplication().bundle;
                         if (operation.error === undefined
                             && operation.getResponse()
