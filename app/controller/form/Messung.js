@@ -313,7 +313,38 @@ Ext.define('Lada.controller.form.Messung', {
         var view = button.up('messungform');
         var messwertGrid = button.up('messungedit').down('messwertgrid');
         win.on('statussetend', function() {
-            view.updateStatusTextAndFertigFlag();
+            view.record.load({
+                success: function(record) {
+                    // Update Messung form
+                    view.setRecord(record);
+
+                    // Update status grid
+                    var editWin = view.up('messungedit');
+                    editWin.down('statusgrid').initData();
+
+                    // Enable/disable form and grids
+                    view.setReadOnly(record.get('readonly'));
+                    editWin.down('messwertgrid')
+                        .setReadOnly(record.get('readonly'));
+                    editWin.down('mkommentargrid')
+                        .setReadOnly(record.get('readonly'));
+
+                    // Update Probe window
+                    var parentWin = editWin.parentWindow;
+                    if (parentWin) {
+                        parentWin.initData();
+                        var messunggrid = parentWin.down('messunggrid');
+                        if (messunggrid) {
+                            messunggrid.getStore().reload();
+                        }
+                        var ortszuordnunggrid = parentWin.down(
+                            'ortszuordnunggrid');
+                        if (ortszuordnunggrid) {
+                            ortszuordnunggrid.getStore().reload();
+                        }
+                    }
+                }
+            });
             messwertGrid.getStore().reload();
         });
         win.show();

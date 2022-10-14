@@ -47,26 +47,30 @@ Ext.define('Lada.view.form.mixins.DeskriptorFieldset', {
 
         var me = this;
         cbox.store.load(function(records, op, success) {
-            if (!success) {
-                scheduler.finished();
-                return;
-            }
-            var mediatext;
-            mediatext = cbox.store.findRecord(
-                'sn', parseInt(media[ndx + 1], 10), 0, false, false, true);
-            cbox.select(mediatext);
-            if (mediatext !== null) {
-                if (mediatext.data.beschreibung !== 'leer'
-                    && (ndx <= 3 && media[1] === '01'
-                        || ndx <= 1 && media[1] !== '01')
-                ) {
-                    beschreibung = mediatext.data.beschreibung;
+            try {
+                if (success) {
+                    var mediatext;
+                    mediatext = cbox.store.findRecord(
+                        'sn', parseInt(media[ndx + 1], 10), 0,
+                        false, false, true);
+                    cbox.select(mediatext);
+                    if (mediatext !== null) {
+                        if (mediatext.data.beschreibung !== 'leer'
+                            && (ndx <= 3 && media[1] === '01'
+                                || ndx <= 1 && media[1] !== '01')
+                           ) {
+                            beschreibung = mediatext.data.beschreibung;
+                        }
+                    }
+                    var nextNdx = ++ndx;
+                    scheduler.enqueue(
+                        me.setMediaSN,
+                        [scheduler, nextNdx, media, beschreibung],
+                        me);
                 }
+            } finally {
+                scheduler.finished();
             }
-            var nextNdx = ++ndx;
-            scheduler.enqueue(
-                me.setMediaSN, [scheduler, nextNdx, media, beschreibung], me);
-            scheduler.finished();
         });
     },
 

@@ -227,34 +227,6 @@ Ext.define('Lada.view.form.Messung', {
         });
     },
 
-
-    updateStatusTextAndFertigFlag: function() {
-        this.record.load({
-            scope: this,
-            success: function() {
-                this.setRecord(this.record);
-                this.setReadOnly(this.record.get('readonly'));
-                this.up('messungedit').down('messwertgrid')
-                    .setReadOnly(this.record.get('readonly'));
-                this.up('messungedit').down('mkommentargrid')
-                    .setReadOnly(this.record.get('readonly'));
-
-                var parentWin = this.up('window').parentWindow;
-                if (parentWin) {
-                    parentWin.initData();
-                    var messunggrid = parentWin.down('messunggrid');
-                    if (messunggrid) {
-                        messunggrid.getStore().reload();
-                    }
-                    var ortszuordnunggrid = parentWin.down('ortszuordnunggrid');
-                    if (ortszuordnunggrid) {
-                        ortszuordnunggrid.getStore().reload();
-                    }
-                }
-            }
-        });
-    },
-
     getCurrentStatus: function() {
         return this.currentStatus;
     },

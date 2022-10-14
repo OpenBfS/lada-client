@@ -23,6 +23,15 @@ Ext.define('Lada.controller.form.Tag', {
             'tagform': {
                 validitychange: this.checkTagCommitEnabled,
                 dirtychange: this.checkTagCommitEnabled
+            },
+            'tagform tagtyp combobox': {
+                change: this.checkTagCommitEnabled
+            },
+            'tagform messstelle combobox': {
+                change: this.checkTagCommitEnabled
+            },
+            'tagform netzbetreiber combobox': {
+                change: this.checkTagCommitEnabled
             }
         });
     },
@@ -90,12 +99,22 @@ Ext.define('Lada.controller.form.Tag', {
     /**
      * Enable/disable save button in TagManagement window.
      */
-    checkTagCommitEnabled: function(form) {
-        form.owner.up('tagmanagementwindow').down('button[action=save]')
+    checkTagCommitEnabled: function(callingEl) {
+        var form;
+        if (callingEl.up) { //called by a field in the form
+            form = callingEl.up('tagform');
+        } else { //called by the form
+            form = callingEl.owner;
+        }
+        form.up('tagmanagementwindow').down('button[action=save]')
             .setDisabled(
                 !form.isDirty()
                     || !form.isValid()
                     || form.getRecord().get('readonly')
+                    || ((form.getForm().getFieldValues().typId === 'mst') &&
+                        (form.getForm().getFieldValues().mstId === null))
+                    || ((form.getForm().getFieldValues().typId === 'netz') &&
+                        (form.getForm().getFieldValues().netzbetreiberId === null))
             );
     }
 });

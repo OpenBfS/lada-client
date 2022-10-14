@@ -97,7 +97,8 @@ Ext.define('Lada.view.window.SetTags', {
         }];
         this.callParent(arguments);
 
-        this.down('tagwidget').setTagged(me.getSelection(), me.recordType);
+        this.down('tagwidget').setTagged(
+            me.getSelection(), me.recordType, true);
 
         // Initially enabled to delete existing, but disable if no tags selected
         this.down('button[action=bulkdeletezuordnung]').setDisabled(

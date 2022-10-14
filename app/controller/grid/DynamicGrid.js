@@ -25,6 +25,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             'dynamicgrid': {
                 itemdblclick: this.openItem,
                 select: this.handleSelect,
+                selectall: this.handleSelectAll,
                 deselect: this.handleDeselect,
                 selectionchange: this.selectionChanged
             },
@@ -55,7 +56,19 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         var grid = rowModel.view.up('grid');
         var map = Ext.ComponentQuery.query('map')[0];
         if (map) {
-            map.fireEvent('selectfeature', null, record);
+            map.fireEvent('selectfeature', null, record, true);
+        }
+        this.buttonToggle(true, grid);
+    },
+
+    /**
+     * Handle selection of all records at once.
+     * @param {*} records List of selected records
+     */
+    handleSelectAll: function(grid, records) {
+        var map = Ext.ComponentQuery.query('map')[0];
+        if (map) {
+            map.fireEvent('selectmultiplefeatures', records);
         }
         this.buttonToggle(true, grid);
     },
@@ -119,6 +132,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     grid.i18n.getMsg('grid.expandDetails'));
             }
         }
+        //Fire gridreload event to update map after page change
+        grid.fireEvent('gridreload');
     },
 
 

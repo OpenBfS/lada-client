@@ -18,7 +18,6 @@ Ext.define('Lada.controller.form.Probe', {
 
     /**
      * Initialize the Controller
-     * It has 4 listeners
      */
     init: function() {
         this.control({
@@ -47,9 +46,6 @@ Ext.define('Lada.controller.form.Probe', {
             },
             'probeform datenbasis combobox': {
                 change: this.datenbasisChanged
-            },
-            'probeform messstellelabor combobox': {
-                select: this.setNetzbetreiber
             },
             'probeform netzbetreiber combobox': {
                 change: this.checkCommitEnabled
@@ -481,6 +477,12 @@ Ext.define('Lada.controller.form.Probe', {
             reiStore.proxy.extraParams.umwelt = umwId;
         }
         reiStore.load();
+        if (formPanel.up('window').down('fset[name=probenzusatzwerte]') !== null) {
+            var pzStore = formPanel.up('window').down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').pzStore;
+            pzStore.proxy.extraParams = {};
+            pzStore.proxy.extraParams.umwId = umwId;
+            pzStore.load();
+        }
 
     },
 
@@ -508,26 +510,6 @@ Ext.define('Lada.controller.form.Probe', {
             ktaCombo.setValue(null);
         }
         this.checkCommitEnabled(combo);
-    },
-
-    /**
-     * When a Messtelle is selected, modify the Netzbetreiber
-     * according to the Messstelle
-     */
-    setNetzbetreiber: function(combo, records) {
-        var netzbetreiber = combo.up().up('form')
-            .down('netzbetreiber').down('combobox');
-        var nbId = records.get('netzbetreiberId');
-        if (nbId !== null) {
-            //select the NB in the NB-Combobox
-            netzbetreiber.select(nbId);
-        }
-        var mst = records.get('messStelle');
-        var labor = records.get('laborMst');
-        combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
-        combo.up('fieldset').down('messstelle[name=laborMstId]')
-            .setValue(labor);
-        combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
     },
 
     /**
@@ -585,9 +567,9 @@ Ext.define('Lada.controller.form.Probe', {
     },
 
     /**
-     * The save function saves the content of the Messung form.
-     * On success it will reload the Store,
-     * on failure, it will display an Errormessage
+     * The save function saves the content of the form.
+     * On success it will reload the store,
+     * on failure, it will display an error message.
      */
     save: function(button) {
         var formPanel = button.up('form');
@@ -613,14 +595,9 @@ Ext.define('Lada.controller.form.Probe', {
                     if (parentGrid.length === 1) {
                         parentGrid[0].reload();
                     }
-                    formPanel.clearMessages();
-                    formPanel.setRecord(newRecord);
-                    formPanel.setMediaDesk(newRecord);
-                    formPanel.setMessages(
-                        json.errors,
-                        json.warnings,
-                        json.notifications);
                     if (response.action === 'create' && json.success) {
+                        // Close ProbeCreate window and show the new record
+                        // in a new ProbeEdit window
                         button.up('window').close();
                         var win = Ext.create('Lada.view.window.ProbeEdit', {
                             record: newRecord
@@ -628,6 +605,15 @@ Ext.define('Lada.controller.form.Probe', {
                         win.initData();
                         win.show();
                         win.setPosition(30);
+                    } else {
+                        // Update form in existing window
+                        formPanel.clearMessages();
+                        formPanel.setRecord(newRecord);
+                        formPanel.setMediaDesk(newRecord);
+                        formPanel.setMessages(
+                            json.errors,
+                            json.warnings,
+                            json.notifications);
                     }
                 }
             },
@@ -695,6 +681,8 @@ Ext.define('Lada.controller.form.Probe', {
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
+        formPanel.down('messstellelabor').setMessstelleLabor();
+
         var record = formPanel.getForm().getRecord();
         formPanel.setMediaDesk(record);
         formPanel.getForm().isValid();

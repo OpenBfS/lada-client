@@ -87,7 +87,33 @@ Ext.define('Lada.view.form.Tag', {
                 xtype: 'tagtyp',
                 fieldLabel: i18n.getMsg('tagtyp'),
                 allowBlank: false,
-                filteredStore: true
+                filteredStore: true,
+                listenersJson: {
+                    select: {
+                        fn: function(combo, newValue) {
+                            var tagtyp = newValue.get('value');
+                            if (tagtyp === 'mst') {
+                                if (combo.up('fieldset').down('datefield[name=gueltigBis]').getValue() !== null) {
+                                    var dateToday = moment(new Date(), 'DD-MM-YYYY');
+                                    var dateFieldValue = moment(combo.up('fieldset').down('datefield[name=gueltigBis]')
+                                        .getValue(), 'DD-MM-YYYY');
+                                    if (dateFieldValue.diff(dateToday,'days') < i18n.getMsg('tag.defaultValue.gueltigBis')) {
+                                        combo.up('fieldset').down('datefield[name=gueltigBis]')
+                                            .setValue(moment().add(i18n.getMsg('tag.defaultValue.gueltigBis'),'days'));
+                                    }
+                                } else {
+                                    combo.up('fieldset').down(
+                                    'datefield[name=gueltigBis]')
+                                    .setValue(moment().add(i18n.getMsg('tag.defaultValue.gueltigBis'),'days'));
+                                }
+                            }
+                            if (tagtyp === 'netz' &&
+                                combo.up('fieldset').down('datefield[name=gueltigBis]').getValue() !== null) {
+                                    combo.up('fieldset').down('datefield[name=gueltigBis]').setValue();
+                            }
+                        }
+                    }
+                }
             }, {
                 name: 'gueltigBis',
                 xtype: 'datefield',

@@ -138,9 +138,8 @@ Ext.define('Lada.view.window.Messprogramm', {
         var me = this;
         var i18n = Lada.getApplication().bundle;
 
-        // If a record was passed to this window,
-        // create a Edit window
         if (this.record) {
+            // If a record was passed to this window, load it for editing
             this.setLoading(true);
             var loadCallback = function(record, response) {
                 me.down('messprogrammform').setRecord(record);
@@ -157,15 +156,8 @@ Ext.define('Lada.view.window.Messprogramm', {
                 }
                 me.down('button[action=generateproben]').setDisabled(false);
                 me.down('button[name=reload]').setDisabled(false);
-                var mstLaborKombiStore = Ext.data.StoreManager.get(
-                    'messstellelaborkombi');
-                var recordIndex = mstLaborKombiStore.findExact(
-                    'messStelle', record.get('mstId'));
                 // If Messprogramm is ReadOnly, disable Inputfields and grids
-                if (
-                    (me.record.get('readonly') === true) ||
-                    (recordIndex === -1)
-                ) {
+                if (me.record.get('readonly') === true) {
                     me.down('messprogrammform').setReadOnly(true);
                     me.disableChildren();
                 } else {
@@ -206,38 +198,22 @@ Ext.define('Lada.view.window.Messprogramm', {
                 loadCallback(loadedRecord);
             }
         } else {
-            // Create a Create Window
+            // Create a new record
             var record = Ext.create('Lada.model.Messprogramm', {
                 gueltigVon: 1,
-                gueltigBis: 365});
-            this.record = record;
-            this.disableChildren();
-            var mstLaborKombiStore = Ext.data.StoreManager.get(
-                'messstellelaborkombi');
-            mstLaborKombiStore.clearFilter(true);
-            var items = mstLaborKombiStore.queryBy(function(newRecord) {
-                if ( (Lada.mst.indexOf(newRecord.get('messStelle')) > -1) &&
-                   (Lada.mst.indexOf(newRecord.get('laborMst')) > -1)) {
-                    return true;
-                }
+                gueltigBis: 365,
+                owner: true,
+                mstId: Lada.mst[0],
+                laborMstId: Lada.mst[0]
             });
-            record.set('owner', true);
             record.set('id', null);
-            var defaultentry = items.items[0];
-            if (defaultentry) {
-                record.set('mstId', defaultentry.get('messStelle'));
-                record.set('laborMstId', defaultentry.get('laborMst'));
-                var mstStore = Ext.data.StoreManager.get('messstellen');
-                var netzbetreiber = mstStore.getById(
-                    defaultentry.get('messStelle')).get('netzbetreiberId');
-                if (Lada.netzbetreiber.length <= 1) {
-                    this.down('messprogrammform').down('netzbetreiber')
-                        .setValue(netzbetreiber);
-                }
-            }
-            this.down('button[name=reload]').setDisabled(true);
+            this.record = record;
+
             this.down('messprogrammform').setRecord(record);
             this.down('messprogrammform').setMediaDesk(record);
+
+            this.disableChildren();
+            this.down('button[name=reload]').setDisabled(true);
         }
         this.down('messprogrammform').isValid();
     },
@@ -372,6 +348,7 @@ Ext.define('Lada.view.window.Messprogramm', {
     enableChildren: function() {
         this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(
             false);
+        this.down('messmethodengrid').setReadOnly(false);
     },
 
     /**

@@ -24,14 +24,14 @@ Ext.define('Lada.model.Tag', {
         type: 'string',
         allowNull: true
     }, {
-        name: 'generatedAt',
+        name: 'createdAt',
         type: 'date',
         dateFormat: 'time'
     }, {
         name: 'typId',
         type: 'string'
     }, {
-        name: 'generated',
+        name: 'autoTag',
         type: 'boolean'
     }, {
         name: 'gueltigBis',
@@ -62,6 +62,27 @@ Ext.define('Lada.model.Tag', {
                     delete data[model.idProperty];
                 }
                 return data;
+            }
+        }
+    },
+
+    isAssignable: function() {
+        return Lada.model.Tag.isTagAssignable(this.getData());
+    },
+
+    statics: {
+        /**
+         * Check whether the user might assign the tag, given as plain object.
+         */
+        isTagAssignable: function(tag) {
+            switch (tag.typId) {
+                case 'netz':
+                    return Ext.Array.contains(
+                        Lada.netzbetreiber, tag.netzbetreiberId);
+                case 'mst':
+                    return Ext.Array.contains(Lada.mst, tag.mstId);
+                default:
+                    return true;
             }
         }
     }

@@ -51,6 +51,13 @@ Ext.define('Lada.view.panel.Map', {
                     args: [true]
                 }
             },
+            selectmultiplefeatures: {
+                fn: this.selectMultipleFeatures,
+                scope: this,
+                options: {
+                    args: [true]
+                }
+            },
             deselectfeature: {
                 fn: this.deselectFeature,
                 scope: this
@@ -60,10 +67,24 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     /**
-     * Select a feature by record (a Lada.model.Ort)
-     * @param record Record
+     * Select multiple features by records
+     * @param {*} records Records
      */
-    selectFeature: function(model, record) {
+    selectMultipleFeatures: function(records) {
+        var me = this;
+        Ext.Array.each(records, function(record) {
+            me.selectFeature(null, record, false);
+        });
+        this.zoomToSelectedFeatures();
+    },
+
+    /**
+     * Select a feature by record (Lada.model.Ort | Lada.model.GenericResults)
+     * @param record Record
+     * @param zoom If true, the map will be zoomed to show all selected
+     *             features
+     */
+    selectFeature: function(model, record, zoom) {
         if (!record || !record.get('id') || record.get('id') === '') {
             return;
         }
@@ -83,6 +104,15 @@ Ext.define('Lada.view.panel.Map', {
         this.selectedFeatureLayer.getSource().addFeature(feature);
         currentFeatures.push(feature);
         this.fireEvent('featureselected', this, currentFeatures);
+        if (zoom === true) {
+            this.zoomToSelectedFeatures();
+        }
+    },
+
+    /**
+     * Zoom to all selected features on the map.
+     */
+    zoomToSelectedFeatures: function() {
         var zoomFeats = this.selectedFeatureLayer.getSource().getFeatures();
         if (zoomFeats.length > 1) {
             var zf_geoms = [];
@@ -102,7 +132,6 @@ Ext.define('Lada.view.panel.Map', {
                 { zoom: 10,
                     duration: 1000});
         }
-        //TODO: hideable main layer/make all except selected invisible
     },
 
     /**
@@ -120,6 +149,10 @@ Ext.define('Lada.view.panel.Map', {
         }
         this.selectedFeatureLayer.getSource().removeFeature(feature);
         this.featureLayer.getSource().addFeature(feature);
+        //Clear selection interaction feature list
+        if (this.selectControl.getFeatures()) {
+            this.selectControl.getFeatures().clear();
+        }
     },
 
     activateDraw: function() {
@@ -150,7 +183,7 @@ Ext.define('Lada.view.panel.Map', {
         event.feature.set('bez', 'neuer Ort');
         var clone = event.feature.clone();
         clone.getGeometry().transform('EPSG:3857', 'EPSG:4326');
-        var parent = me.up('ortszuordnungwindow'); //TODO changed queryui
+        var parent = me.up('ortszuordnungwindow');
 
         //Use probe or messprogramm to get the mstId
         if (parent && (parent.probe || parent.messprogramm)) {
@@ -211,33 +244,32 @@ Ext.define('Lada.view.panel.Map', {
     },
 
     /**
-     * Draws the content of a given GeoJSON Object
+     * Draws the content of a given GeoJSON Object.
      */
     drawGeoJson: function(json) {
         if (!json) {
             return;
         }
-        var style = new ol.style.Style({
-            image: new ol.style.Icon({
-                src: 'resources/img/marker-blue.png'
-            })
-        });
+        if (!this.featureLayer) {
+            this.initFeatureLayer();
+        }
         var format = new ol.format.GeoJSON({
             dataProjection: 'EPSG:4326',
             featureProjection: 'EPSG:3857'
         });
         var features = format.readFeatures(json);
+        //Set feature id from properties
+        Ext.Array.each(features, function(feat) {
+            feat.setId(feat.get('id'));
+        });
         var vectorSource = new ol.source.Vector({
             features: features
         });
         var extent = vectorSource.getExtent();
-
-        var vectorLayer = new ol.layer.Vector({
-            source: vectorSource,
-            style: style,
-            visible: true
-        });
-        this.map.addLayer(vectorLayer);
+        //Clear the map of selected features
+        this.selectedFeatureLayer.getSource().clear();
+        this.selectControl.getFeatures().clear();
+        this.featureLayer.setSource(vectorSource);
         this.map.getView().fit(extent, {maxZoom: 12});
     },
 
@@ -353,11 +385,6 @@ Ext.define('Lada.view.panel.Map', {
             var me = Ext.ComponentQuery.query('map')[0];
             me.fireEvent('featureselected', me, feature, arguments, true);
         }
-    },
-
-    beforeDestroy: function() {
-        //         delete this.map;
-        //         this.callParent(arguments);
     },
 
     /**

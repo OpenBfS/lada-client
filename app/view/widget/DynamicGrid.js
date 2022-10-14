@@ -13,7 +13,6 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.dynamicgrid',
     requires: [
-        'Lada.view.window.Map',
         'Ext.grid.column.Widget',
         'Lada.view.grid.Messung',
         'Lada.view.grid.Messwert',
@@ -58,6 +57,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     isDynamic: true,
 
+    showMap: false,
+
     viewConfig: {
         deferEmptyText: false
     },
@@ -72,7 +73,20 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         this.emptyText = this.i18n.getMsg(this.emptyText);
         this.selModel = Ext.create('Ext.selection.CheckboxModel', {
             checkOnly: true,
-            injectCheckbox: 1
+            injectCheckbox: 1,
+            // Handle header checkbox clicks to only send one select event
+            onHeaderClick: function() {
+                var selectionCount = this.getCount();
+                var grid = Ext.getCmp('dynamicgridid');
+                var recordCount = grid.getStore().getData().length;
+                if (recordCount === selectionCount) {
+                    this.deselectAll();
+                } else {
+                    this.selectAll(true);
+                    var records = this.getSelection();
+                    grid.fireEvent('selectall', grid, records);
+                }
+            }
         });
         this.callParent(arguments);
     },
@@ -146,7 +160,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         if (this.down('map') !== null) {
             this.removeDocked(this.down('map'));
         }
-        if (this.rowtarget.dataType === 'ortId') {
+        if (this.showMap) {
             this.i18n = Lada.getApplication().bundle;
             var map = Ext.create('Lada.view.panel.Map', {
                 collapsible: true,
@@ -201,7 +215,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     this.rowtarget.dataIndex, id, false, false, false, true));
             }
         }
-        this.getSelectionModel().select(records);
+        this.getSelectionModel().select(records, map.multiSelect);
     },
 
     addOrt: function(event) {
@@ -259,6 +273,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         var resultColumns = [];
         var fields = [];
         this.i18n = Lada.getApplication().bundle;
+        this.showMap = false;
         fields.push(new Ext.data.Field({
             name: 'readonly'
         }));
@@ -379,10 +394,11 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     default:
                         col.xtype = 'gridcolumn';
                         col.renderer = function(value) {
-                            if (value === 0) {
+                            if (value === 0 || value === null) {
                                 return value;
                             }
-                            return value || '';
+                            return '<div style="white-space: normal !important;">' +
+                                value + '</div>' || '';
                         };
                 }
                 fields.push(curField);
@@ -611,35 +627,13 @@ Ext.define('Lada.view.widget.DynamicGrid', {
     },
 
     generateGeomColumns: function(col) {
-        col.xtype = 'widgetcolumn';
-        col.widget = {
-            xtype: 'button',
-            icon: Ext.getResourcePath(this.openIconPath, null, null),
-            width: '16px',
-            height: '16px',
-            userCls: 'widget-column-button',
-            tooltip: this.i18n.getMsg('typedgrid.tooltip.geometry'),
-            hidden: true,
-            listeners: {
-                click: function(button) {
-                    button.getEl().swallowEvent(['click', 'dblclick'], true);
-                    var geom = button.geom;
-                    var mapWin = Ext.create('Lada.view.window.Map', {
-                        geom: geom
-                    });
-                    mapWin.show();
-                },
-                textchange: function(button, oldval, newval) {
-                    button.geom = newval;
-                    button.text = '';
-                    button.tooltip = newval;
-                    if (!newval || newval === '') {
-                        button.hide();
-                    } else {
-                        button.show();
-                    }
-                }
+        this.showMap = true;
+        col.xtype = 'gridcolumn';
+        col.renderer = function(value) {
+            if (!value) {
+                return '';
             }
+            return value;
         };
     },
 
@@ -1135,7 +1129,32 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         options.scope = this;
         options.callback = function() {
             this.setStore(store);
-            this.select(selection);
+            //If map is not already rendered:
+            //Wait for render, then fire reload event
+            var map = this.down('map');
+            if (map) {
+                if (map.rendered) {
+                    this.fireEvent('gridreload');
+                    this.select(selection);
+                } else {
+                    map.onAfter(
+                        'afterrender',
+                        function() {
+                            this.fireEvent('gridreload');
+                            this.select(selection);
+                        },
+                        this,
+                        {
+                            single: true,
+                            //Set to minimum priority to ensure the handler is
+                            //called after map panel afterrender handler
+                            priority: -999
+                        }
+                    );
+                }
+            } else {
+                this.select(selection);
+            }
             if (callback) {
                 callback();
             }
@@ -1258,8 +1277,17 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         filterMap.add(item.dataIndex, fromValue);
                     }
                     break;
-                case 'Lada.view.widget.Tag':
-                    value = widget.getDisplayValue();
+                case 'Lada.view.widget.TagFilter':
+                    // Join values of both tagwidgets
+                    value = widget.down('tagwidget[name=' + item.dataIndex + ']')
+                        .getDisplayValue();
+                    var readonly = widget.down('tagwidget[name=readonly]')
+                        .getDisplayValue();
+                    if (value) {
+                        value += readonly ? ',' + readonly : '';
+                    } else {
+                        value = readonly;
+                    }
                     filterMap.add(item.dataIndex, value);
                     break;
                 default:

@@ -13,7 +13,8 @@ Ext.define('Lada.store.Probenzusaetze', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.ProbenZusatz',
     sorters: [{
-        property: 'zusatzwert',
+        property: 'id',
+        direction: 'ASC',
         transform: function(val) {
             if (val) {
                 return val.toLowerCase();

@@ -30,9 +30,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 dirtychange: this.dirtyForm,
                 save: this.saveHeadless
             },
-            'messprogrammform messstellelaborkombi combobox': {
-                select: this.setNetzbetreiber
-            },
             'messprogrammform numfield numberfield': {
                 change: this.checkPeriod
             },
@@ -213,45 +210,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
     },
 
     /**
-     * The Messtellen Store contains ALL Messtellen.
-     * Filter the store in this combobox to reduce the choices
-     * to the subset which the user is allowed to use.
-     */
-    filter: function(field) {
-        var fil = Ext.create('Ext.util.Filter', {
-            filterFn: function(item) {
-                if (Ext.Array.contains(Lada.mst, item.get('id'))) {
-                    return true;
-                }
-                return false;
-            }
-        });
-        field.getStore().filter(fil);
-    },
-
-    /**
-     * When a Messtelle is selected, modify the Netzbetreiber
-     * according to the Messstelle
-     */
-    setNetzbetreiber: function(combo, records) {
-        var netzbetreiber = combo.up().up('form')
-            .down('netzbetreiber').down('combobox');
-        var nbId = records.get('netzbetreiberId');
-        if (nbId !== null) {
-            //select the NB in the NB-Combobox
-            netzbetreiber.select(nbId);
-        }
-        var mst = records.get('messStelle');
-        var labor = records.get('laborMst');
-        combo.up('fieldset').down('messstelle[name=mstId]').setValue(mst);
-        combo.up('fieldset').down('messstelle[name=laborMstId]')
-            .setValue(labor);
-        combo.up('fieldset').down('messprogrammland[name=mplId]').setValue();
-        combo.up('fieldset').down('netzbetreiber[name=netzbetreiber]')
-            .setValue(nbId);
-    },
-
-    /**
      * When the Probenintervall was changed, update the numberfield.
      */
     updateIntervalls: function(field, newval, oldval) {
@@ -327,16 +285,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     formPanel.clearMessages();
                     formPanel.setRecord(rec);
                     formPanel.setMediaDesk(rec);
-                    button.up('window').record = rec;
                     formPanel.setMessages(json.errors, json.warnings);
-                    if (response.action === 'create' && json.success) {
-                        button.up('window').close();
-                        var win = Ext.create('Lada.view.window.Messprogramm', {
-                            record: rec
-                        });
-                        win.initData(rec);
-                        win.show();
-                    }
+                    var win = button.up('window');
+                    win.record = rec;
+                    win.enableChildren();
                 }
             },
             failure: function(newRecord, response) {
@@ -435,43 +387,14 @@ Ext.define('Lada.controller.form.Messprogramm', {
       */
     discard: function(button) {
         var formPanel = button.up('form');
-        formPanel.getForm().reset();
-        var record = formPanel.getForm().getRecord();
-        var mstStore = Ext.data.StoreManager.get('messstellen');
-        var mstId = mstStore.getById(
-            formPanel.getForm().getRecord().get('mstId'));
-        if (mstId !== null) {
-            var laborMstId = mstStore.getById(
-                formPanel.getForm().getRecord().get('laborMstId'));
-            if (laborMstId) {
-                laborMstId = laborMstId.get('messStelle');
-            } else {
-                laborMstId = '';
-            }
-            var displayCombi;
-            if (
-                formPanel.getForm().getRecord().get('mstId') ===
-                formPanel.getForm().getRecord().get('laborMstId')
-            ) {
-                displayCombi = mstId.get('messStelle');
-            } else {
-                displayCombi = mstId.get('messStelle') + '/' + laborMstId;
-            }
-            var mstLaborKombiStore = Ext.data.StoreManager.get(
-                'messstellelaborkombi');
-            var recordIndex = mstLaborKombiStore.findExact(
-                'displayCombi', displayCombi);
-            formPanel.down('messstellelaborkombi').setValue(recordIndex);
-            formPanel.down('netzbetreiber').setValue(
-                mstLaborKombiStore.getById(recordIndex)
-                    .get('netzbetreiberId'));
-        } else {
-            formPanel.down('messstellelaborkombi').clearValue();
-            formPanel.down('netzbetreiber').clearValue();
-        }
-        formPanel.getForm().owner.populateIntervall(
-            formPanel.getForm().getRecord());
+        var form = formPanel.getForm();
+        form.reset();
+        formPanel.down('messstellelabor').setMessstelleLabor();
+
+        var record = form.getRecord();
+        formPanel.getForm().owner.populateIntervall(record);
         formPanel.setMediaDesk(record);
+
         var field = formPanel.down('tagfield[name=probenZusatzs]');
         field.value = record.probenZusatzs().getData().items;
         formPanel.filterProbenZusatzs(record.get('umwId'));
@@ -677,9 +600,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
             success: function(rec) {
                 var defaultMehId = rec.get('mehId');
                 var secMehId = rec.get('secMehId');
-                var params = {
-                    mehId: defaultMehId
-                };
+                var params = {};
+                if (defaultMehId) {
+                    params['mehId'] = defaultMehId;
+                }
                 if (secMehId) {
                     params['secMehId'] = secMehId;
                 }

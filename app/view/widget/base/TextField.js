@@ -38,6 +38,9 @@ Ext.define('Lada.view.widget.base.TextField', {
             enforceMaxLength: this.enforceMaxLength || true,
             fieldLabel: this.fieldLabel,
             labelWidth: this.labelWidth,
+            isFormField: this.isFormField === undefined
+                ? true
+                : this.isFormField,
             readOnly: this.readOnly || false,
             validator: this.validator,
             listeners: this.listeners,
