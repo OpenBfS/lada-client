@@ -16,7 +16,8 @@ Ext.define('Lada.model.MmtMessprogramm', {
     fields: [{
         name: 'id'
     }, {
-        name: 'messprogrammId'
+        name: 'messprogrammId',
+        type: 'int'
     }, {
         name: 'mmtId'
     }, {
@@ -25,8 +26,7 @@ Ext.define('Lada.model.MmtMessprogramm', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFn
+        dateFormat: 'time'
     }, {
         name: 'copyOf',
         persist: false
