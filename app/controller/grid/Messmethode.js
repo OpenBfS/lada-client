@@ -100,8 +100,11 @@ Ext.define('Lada.controller.grid.Messmethode', {
         if (!record.get('letzteAenderung')) {
             record.data.letzteAenderung = new Date();
         }
+        record.set(
+            'messprogrammId',
+            button.up('messprogramm').down('messprogrammform')
+                .getRecord().get('id'));
         var grid = button.up('messmethodengrid');
-        record.set('messprogrammId', grid.recordId);
         grid.store.insert(0, record);
         grid.rowEditing.startEdit(0, 0);
         var mp_win = grid.up('messprogramm');

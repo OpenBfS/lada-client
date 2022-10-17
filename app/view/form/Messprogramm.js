@@ -25,7 +25,6 @@ Ext.define('Lada.view.form.Messprogramm', {
         'Lada.view.widget.base.NumberField',
         'Lada.view.widget.base.FieldSet',
         'Lada.model.Messprogramm',
-        'Lada.model.MmtMessprogramm',
         'Lada.view.widget.Probenintervall',
         'Lada.view.widget.DayOfYear'
     ],
