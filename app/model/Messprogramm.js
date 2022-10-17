@@ -25,69 +25,71 @@ Ext.define('Lada.model.Messprogramm', {
     }, {
         name: 'laborMstId'
     }, {
-        name: 'kommentar'
+        name: 'kommentar',
+        allowNull: true
     }, {
-        name: 'datenbasisId'
+        name: 'datenbasisId',
+        type: 'int'
     }, {
-        name: 'mplId'
+        name: 'mplId',
+        type: 'int',
+        allowNull: true
     }, {
         name: 'aktiv',
         type: 'boolean'
     }, {
-        name: 'baId'
+        name: 'baId',
+        type: 'int',
+        allowNull: true
     }, {
         name: 'mediaDesk',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        allowNull: true
     }, {
         name: 'umwId',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        allowNull: true
     }, {
-        name: 'mehId'
+        name: 'mehId',
+        type: 'int',
+        allowNull: true
     }, {
-        name: 'probenartId'
+        name: 'probenartId',
+        type: 'int'
     }, {
         name: 'probenintervall'
     }, {
-        name: 'teilintervallVon'
+        name: 'teilintervallVon',
+        type: 'int'
     }, {
-        name: 'teilintervallBis'
+        name: 'teilintervallBis',
+        type: 'int'
     }, {
-        name: 'intervallOffset'
+        name: 'intervallOffset',
+        type: 'int'
     }, {
         /* day of year is 0-base in ExtJS, but 1-based in Java.
          * Thus, we expect 1-based values here. */
-        name: 'gueltigVon'
+        name: 'gueltigVon',
+        type: 'int'
     }, {
-        name: 'gueltigBis'
+        name: 'gueltigBis',
+        type: 'int'
     }, {
-        name: 'probeNehmerId'
+        name: 'probeNehmerId',
+        type: 'int',
+        allowNull: true
     }, {
-        name: 'probeKommentar'
+        name: 'probeKommentar',
+        allowNull: true
     }, {
-        name: 'probenahmeMenge'
+        name: 'probenahmeMenge',
+        allowNull: true
     }, {
         name: 'referenceCount',
-        convert: function(value) {
-            if (value === null) {
-                return 0;
-            }
-            return value;
-        }
+        type: 'int'
     }, {
         name: 'letzteAenderung',
         type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFn
+        dateFormat: 'time'
     }, {
         name: 'media',
         persist: false
