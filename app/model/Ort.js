@@ -17,136 +17,72 @@ Ext.define('Lada.model.Ort', {
         type: 'int'
     }, {
         name: 'aktiv',
-        type: 'boolean'
+        type: 'boolean',
+        allowNull: true
     }, {
-        name: 'ortId',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        name: 'ortId'
     }, {
         name: 'nutsCode',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'ktaGruppeId',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        type: 'int',
+        allowNull: true
     }, {
         name: 'netzbetreiberId'
     }, {
         name: 'gemId',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'staatId',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        type: 'int',
+        allowNull: true
     }, {
         name: 'kdaId',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        type: 'int'
     }, {
         name: 'ozId',
-        serialize: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
-        name: 'ortTyp'
+        name: 'ortTyp',
+        type: 'int',
+        allowNull: true
     }, {
         name: 'mpArt',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'zone',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'sektor',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'zustaendigkeit',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'berichtstext',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        allowNull: true
     }, {
         name: 'kurztext'
     }, {
         name: 'langtext'
     }, {
-        name: 'reiProgpunktGrpId'
+        name: 'reiProgpunktGrpId',
+        type: 'int',
+        allowNull: true
     }, {
         name: 'unscharf',
         type: 'boolean'
     }, {
-        name: 'hoeheLand'
+        name: 'hoeheLand',
+        type: 'float'
     }, {
-        name: 'hoeheUeberNn'
+        name: 'hoeheUeberNn',
+        type: 'float'
     }, {
-        name: 'koordXExtern',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        name: 'koordXExtern'
     }, {
-        name: 'koordYExtern',
-        convert: function(v) {
-            if (v === '') {
-                return null;
-            }
-            return v;
-        }
+        name: 'koordYExtern'
     }, {
         name: 'longitude',
         type: 'float'
@@ -156,14 +92,16 @@ Ext.define('Lada.model.Ort', {
     }, {
         name: 'letzteAenderung',
         type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFn
+        dateFormat: 'time'
     }, {
-        name: 'referenceCount'
+        name: 'referenceCount',
+        type: 'int'
     }, {
-        name: 'plausibleReferenceCount'
+        name: 'plausibleReferenceCount',
+        type: 'int'
     }, {
-        name: 'referenceCountMp'
+        name: 'referenceCountMp',
+        type: 'int'
     }, {
         name: 'readonly',
         type: 'boolean'

@@ -91,10 +91,10 @@ Ext.define('Lada.controller.form.Ort', {
         var formpanel = button.up('ortform');
         var form = formpanel.getForm();
         var record = form.getRecord();
-        var data = form.getFieldValues(false);
-        for (var key in data) {
-            record.set(key, data[key]);
-        }
+
+        // Update record with values changed in the form
+        record.set(form.getFieldValues(true));
+
         record.set('netzbetreiberId',
             formpanel.down('netzbetreiber').getValue()[0]);
 
