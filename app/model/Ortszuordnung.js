@@ -22,36 +22,32 @@ Ext.define('Lada.model.Ortszuordnung', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'ortId'
+        name: 'ortId',
+        type: 'int'
     }, {
-        name: 'probeId'
+        name: 'probeId',
+        type: 'int'
     }, {
-        name: 'ortszuordnungTyp'
+        name: 'ortszuordnungTyp',
+        allowNull: true
     }, {
-        name: 'ortszusatztext'
+        name: 'ortszusatztext',
+        allowNull: true
     }, {
-        name: 'ozId'
+        name: 'ozId',
+        allowNull: true
     }, {
         name: 'letzteAenderung',
         type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFn
+        dateFormat: 'time'
     }, {
         name: 'treeModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        type: 'date',
+        dateFormat: 'time'
     }, {
         name: 'parentModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        type: 'date',
+        dateFormat: 'time'
     }],
 
     idProperty: 'id',

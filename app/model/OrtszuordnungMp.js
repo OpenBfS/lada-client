@@ -19,26 +19,28 @@ Ext.define('Lada.model.OrtszuordnungMp', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'ortId'
+        name: 'ortId',
+        type: 'int'
     }, {
-        name: 'messprogrammId'
+        name: 'messprogrammId',
+        type: 'int'
     }, {
-        name: 'ortszuordnungTyp'
+        name: 'ortszuordnungTyp',
+        allowNull: true
     }, {
-        name: 'ortszusatztext'
+        name: 'ortszusatztext',
+        allowNull: true
+    }, {
+        name: 'ozId',
+        allowNull: true
     }, {
         name: 'letzteAenderung',
         type: 'date',
-        dateFormat: 'time',
-        convert: Lada.util.Date.convertTimeFn
+        dateFormat: 'time'
     }, {
         name: 'treeModified',
-        serialize: function(value) {
-            if (value === '') {
-                return null;
-            }
-            return value;
-        }
+        type: 'date',
+        dateFormat: 'time'
     }, {
         name: 'copyOf',
         persist: false

@@ -275,7 +275,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         // TODO check when changing filter method to remote/local
         this.ortstore.removeAll();
         var ortId = this.record.get('ortId');
-        if (ortId || ortId === 0) {
+        if (ortId) {
             Lada.model.Ort.load(ortId, {
                 success: function(rec) {
                     me.down('ortszuordnungform').setFirstOrt(rec);
