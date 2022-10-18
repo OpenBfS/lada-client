@@ -115,26 +115,6 @@ Ext.define('Lada.util.Date', {
                 var offset = moment.tz.zone(tz).utcOffset(date.valueOf());
                 return new Date(date.valueOf() - offset * 60000);
             }
-        },
-
-        /**
-         * centralized 'convert' function for time-based model entries.
-         * @param {*} v
-         */
-        convertTimeFn: function(v) {
-            if (!v) {
-                return null;
-            }
-            return new Date(v);
-        },
-
-        /**
-         * centralized 'convert' function for time-based model entries with
-         * defaults set to 'now'
-         * @param {*} v
-         */
-        convertTimeFnDefaultNow: function(v) {
-            return v ? new Date(v) : new Date();
         }
     }
 });
