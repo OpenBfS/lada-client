@@ -13,6 +13,7 @@ Ext.define('Lada.controller.Query', {
         'Lada.store.GridColumnValue',
         'Lada.store.GenericResults',
         'Lada.store.Orte',
+        'Lada.view.widget.base.DateTimeRange',
         'Lada.view.widget.Messstelle',
         'Lada.view.widget.Umwelt',
         'Lada.view.widget.Staat',
