@@ -265,18 +265,18 @@ Ext.define('Lada.view.widget.DynamicGrid', {
      *   of fields
      **/
     generateColumnsAndFields: function(current_columns, fixedColumnStore) {
-        this.currentParams = {
-            sorting: [],
-            filters: []
-        };
-        this.toolbarbuttons = [];
-        var resultColumns = [];
-        var fields = [];
         this.i18n = Lada.getApplication().bundle;
+
         this.showMap = false;
+
+        // Initialize first field
+        var fields = [];
         fields.push(new Ext.data.Field({
             name: 'readonly'
         }));
+
+        // Initialize column for first field as 'actioncolumn'
+        var resultColumns = [];
         resultColumns.push({
             xtype: 'actioncolumn',
             text: 'RW',
@@ -309,22 +309,28 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             }
         });
 
-        current_columns.sort('columnIndex', 'ASC');
-        var cc = current_columns.getData().items;
+        this.currentParams = {
+            sorting: [],
+            filters: []
+        };
+        this.toolbarbuttons = [];
 
         var filterMap = this.getFilterValues();
 
+        current_columns.sort('columnIndex', 'ASC');
+        var cc = current_columns.getData().items;
         for (var i = 0; i < cc.length; i++) {
             var orig_column = fixedColumnStore.findRecord(
                 'id', cc[i].get('gridColumnId'), false, false, false, true);
             var dataIndex = orig_column.get('dataIndex');
             if (cc[i].get('visible') === true) {
-                var col = {};
-                col.dataIndex = dataIndex;
-                col.dataType = orig_column.get('dataType');
-                col.text = orig_column.get('name');
-                col.width = cc[i].get('width');
-                col.sortable = false;
+                var col = {
+                    dataIndex: dataIndex,
+                    dataType: orig_column.get('dataType'),
+                    text: orig_column.get('name'),
+                    width: cc[i].get('width'),
+                    sortable: false
+                };
                 //Check column type and set to string if unknown
                 var datatype = orig_column.get('dataType');
                 if (!datatype) {
@@ -401,13 +407,16 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 value + '</div>' || '';
                         };
                 }
+
                 fields.push(curField);
+
                 if (cc[i].sort) {
                     this.currentParams.sorting.push({
                         name: dataIndex,
                         sort: cc[i].get('sort')
                     });
                 }
+
                 col.hideable = false;
                 col.draggable = false;
                 resultColumns.push(col);

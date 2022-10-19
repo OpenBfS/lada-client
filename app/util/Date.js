@@ -64,15 +64,14 @@ Ext.define('Lada.util.Date', {
             if (!timestamp) {
                 return null;
             }
-            var me = this;
             var timezone = this.utc ? 'UTC' : moment.tz.guess();
             var date = moment(timestamp);
             if (extFormat) {
                 var converted = [];
                 var chars = format.split('');
                 for (var i = 0; i < chars.length; i++ ) {
-                    if (me.extFormatMap[chars[i]]) {
-                        converted.push(me.extFormatMap[chars[i]]);
+                    if (this.extFormatMap[chars[i]]) {
+                        converted.push(this.extFormatMap[chars[i]]);
                     } else {
                         converted.push(chars[i]);
                     }

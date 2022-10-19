@@ -19,6 +19,7 @@ Ext.define('Lada.override.Date', {
         }
         return date;
     },
+
     valueToRaw: function(val) {
         if (!val) {
             return '';
@@ -26,6 +27,7 @@ Ext.define('Lada.override.Date', {
         return Lada.util.Date.formatTimestamp(
             val.valueOf(), this.format, true);
     },
+
     rawToValue: function(raw) {
         var val = this.parseDate(raw);
         if (!val) {
