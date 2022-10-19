@@ -26,15 +26,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     margin: '5, 5, 0, 5',
     border: false,
 
-    /**
-     * @cfg: the type of the record to be passed. Should be either 'probe' or
-     * 'mpr'. Variable naming of these differ slightly (see function
-     * initComponent and the two lada.data.model.ortszuordnung* )
-     */
-    type: null,
-
-    record: null,
-
     currentOrt: null, // the record of the currently set Ort
 
     trackResetOnLoad: true,
@@ -156,7 +147,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
     setRecord: function(record) {
         this.getForm().loadRecord(record);
-        this.record = record;
         if (!record.get('readonly')) {
             this.setReadOnly(false);
         } else {
@@ -225,12 +215,14 @@ Ext.define('Lada.view.form.Ortszuordnung', {
             if (dirtyForm) {
                 this.down('ortszusatz').setValue(ozid.get('ozsId'));
             } else {
-                if (this.record.get('ozId') === undefined) {
+                if (this.getRecord().get('ozId') === undefined) {
                     this.down('ortszusatz').setValue(ozid.get('ozsId'));
                 }
             }
         } else {
-            if (this.record.get('ozId') === undefined || dirtyForm === true) {
+            if (this.getRecord().get('ozId') === undefined
+                || dirtyForm === true
+            ) {
                 this.down('ortszusatz').setValue('');
             }
         }
