@@ -7,7 +7,7 @@
  */
 
 /**
- * This Widget extends a Datefield in order to create a
+ * This Widget extends a Datefield in order to create
  * something like a DateTimePicker
  */
 Ext.define('Lada.view.widget.base.DateTimeField', {
