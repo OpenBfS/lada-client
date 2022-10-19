@@ -12,11 +12,11 @@
 Ext.define('Lada.view.form.OrtInfo', {
     extend: 'Ext.form.Panel',
     alias: 'widget.ortinfo',
-    model: 'Lada.model.Ort',
+
     border: false,
     flex: 1,
     margin: '0, 10, 0, 0',
-    record: null,
+
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.items = [{
