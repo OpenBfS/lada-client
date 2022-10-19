@@ -146,12 +146,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     },
 
     setRecord: function(record) {
-        this.getForm().loadRecord(record);
-        if (!record.get('readonly')) {
-            this.setReadOnly(false);
-        } else {
-            this.setReadOnly(true);
-        }
+        this.loadRecord(record);
+        this.setReadOnly(record.get('readonly'));
     },
 
     /**
@@ -184,33 +180,38 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
     setOrtInfo: function(ortrecord) {
         this.currentOrt = ortrecord;
+
         var dirtyForm = false;
-        var verwStore = Ext.StoreManager.get('verwaltungseinheiten');
-        var verw = verwStore.getById(ortrecord.get('gemId'));
-        var staatStore = Ext.StoreManager.get('staaten');
         if (this.down('ortinfo').getForm().getRecord() !== undefined) {
             if (ortrecord.get('ortId') !==
                 this.down('ortinfo').getForm().getRecord().get('ortId') ) {
                 dirtyForm = true;
             }
         }
-        var staat = staatStore.getById(ortrecord.get('staatId'));
-        var ozStore = Ext.StoreManager.get('ortszusatz');
-        var ozid = ozStore.getById(ortrecord.get('ozId'));
-        var ortinfo = this.down('ortinfo');
+
+        var ortinfo = this.down('ortinfo').getForm();
         ortinfo.loadRecord(ortrecord);
+
+        var verw = Ext.StoreManager.get('verwaltungseinheiten')
+            .getById(ortrecord.get('gemId'));
         if (verw !== null) {
-            ortinfo.getForm().setValues({gemeinde: verw.get('bezeichnung')});
+            ortinfo.setValues({gemeinde: verw.get('bezeichnung')});
         } else {
-            ortinfo.getForm().setValues({gemeinde: ''});
+            ortinfo.setValues({gemeinde: ''});
         }
+
+        var staat = Ext.StoreManager.get('staaten')
+            .getById(ortrecord.get('staatId'));
         if (staat !== null) {
-            ortinfo.getForm().setValues({
+            ortinfo.setValues({
                 staatISO: staat.get('staatIso'),
                 staat: staat.get('staat')});
         } else {
-            ortinfo.getForm().setValues({staat: '', staatISO: ''});
+            ortinfo.setValues({staat: '', staatISO: ''});
         }
+
+        var ozid = Ext.StoreManager.get('ortszusatz')
+            .getById(ortrecord.get('ozId'));
         if (ozid !== null) {
             if (dirtyForm) {
                 this.down('ortszusatz').setValue(ozid.get('ozsId'));
