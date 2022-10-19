@@ -357,7 +357,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         this.generateGeomColumns(col);
                         break;
                     case 'date':
-                        this.generateDateColumns(curField, orig_column, col);
+                        this.generateDateColumns(orig_column, col);
                         break;
                     case 'number':
                         this.generateNumberColumns(orig_column, col);
@@ -646,21 +646,13 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         };
     },
 
-    generateDateColumns: function(curField, orig_column, col) {
-        curField.depends = orig_column.dataIndex;
-
+    generateDateColumns: function(orig_column, col) {
         col.xtype = 'datecolumn';
         col.format = orig_column.get('dataType').format;
         col.renderer = function(value) {
-            if (!value || value === '') {
-                return '';
-            }
-            var format = col.format;
-            var dt = '';
-            if (!isNaN(value)) {
-                dt = Lada.util.Date.formatTimestamp(value, format, true);
-            }
-            return dt;
+            // Convert string representing milliseconds since epoch
+            return Lada.util.Date.formatTimestamp(
+                parseInt(value, 10), col.format, true);
         };
     },
 
