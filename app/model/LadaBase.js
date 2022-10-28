@@ -14,10 +14,10 @@ Ext.define('Lada.model.LadaBase', {
 
     schema: {
         namespace: 'Lada.model',
-        urlPrefix: 'lada-server/rest',
+        urlPrefix: 'lada-server/rest/',
         proxy: {
             type: 'rest',
-            url: '{prefix}/{entityName:lowercase}',
+            url: '{prefix}{entityName:lowercase}',
             reader: {
                 type: 'json',
                 rootProperty: 'data'
