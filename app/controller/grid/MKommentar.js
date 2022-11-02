@@ -88,7 +88,8 @@ Ext.define('Lada.controller.grid.MKommentar', {
      */
     add: function(button) {
         var record = Ext.create('Lada.model.MKommentar');
-        record.data.datum = new Date();
+        record.data.datum = Lada.util.Date.formatTimestamp(new Date(),
+            'd.m.Y H:i', true);
         record.set('messungsId', button.up('mkommentargrid').recordId);
         button.up('mkommentargrid').store.insert(0, record);
         button.up('mkommentargrid').rowEditing.startEdit(0, 1);
