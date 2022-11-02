@@ -98,6 +98,7 @@ Ext.define('Lada.view.window.AuditTrail', {
         if (this.type === null || this.objectId === null) {
             return;
         }
+        this.showLoadingMask();
         Ext.Ajax.request({
             url: 'lada-server/rest/audit/' + this.type + '/' + this.objectId,
             method: 'GET',
@@ -130,6 +131,8 @@ Ext.define('Lada.view.window.AuditTrail', {
                 this.setTitle(title);
             }
         }
+        Ext.ComponentQuery.query('panel#'+this.down('panel')
+            .getId())[0].loadingMask.hide();
     },
 
     loadFailure: function() {
@@ -278,5 +281,16 @@ Ext.define('Lada.view.window.AuditTrail', {
             this.pendingRequest.abort();
         }
         this.callParent(arguments);
+    },
+
+    showLoadingMask: function() {
+        var Id = this.getId();
+        var at = this.down('panel');
+        if (!at.loadingMask) {
+            at.loadingMask = Ext.create('Ext.LoadMask', {
+                target: at
+            });
+        }
+        at.loadingMask.show();
     }
 });
