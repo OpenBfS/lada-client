@@ -156,7 +156,12 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 if (btn === 'yes') {
                     selection.erase({
                         success: function() {
-                            grid.store.reload();
+                            button.up('window').initData();
+                            var parentGrid = Ext.ComponentQuery.query(
+                                'dynamicgrid');
+                            if (parentGrid.length === 1) {
+                                parentGrid[0].reload();
+                            }
                         },
                         failure: function(request, response) {
                             if (response.error) {
