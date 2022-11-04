@@ -397,14 +397,23 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     case 'mprkat':
                         this.generateStammColumn(col, datatype);
                         break;
-                    default:
+                    case 'textLineBr':
                         col.xtype = 'gridcolumn';
                         col.renderer = function(value) {
                             if (value === 0 || value === null) {
-                                return value;
+                                return '';
                             }
                             return '<div style="white-space: normal !important;">' +
                                 value + '</div>' || '';
+                        };
+                        break;
+                    default:
+                        col.xtype = 'gridcolumn';
+                        col.renderer = function(value) {
+                            if (value === 0)  {
+                                return value;
+                            }
+                            return value || '';
                         };
                 }
 
