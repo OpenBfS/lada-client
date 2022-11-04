@@ -203,7 +203,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 // because of extra filters:
                 store: Ext.create('Ext.data.Store', {
                     model: 'Lada.model.GridColumn',
-                    autoLoad: true}),
+                    autoLoad: false}),
                 valueField: 'dataIndex',
                 displayField: 'name',
                 fieldLabel: i18n.getMsg('title.filter'),
@@ -386,6 +386,13 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 scope: this,
                 callback: this.loadGridColumnValueStore
             });
+
+            // Load filter widget columns
+            var filterwidget = this.down('cbox[name=activefilters]');
+            filterwidget.store.proxy.extraParams = {
+                'qid': record.get('baseQuery')
+            };
+            filterwidget.store.load();
         }
     },
 
@@ -443,11 +450,6 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 var record = me.getForm().getRecord();
                 var filterwidget = me.down('cbox[name=activefilters]');
                 filterwidget.store.clearFilter();
-                filterwidget.store.filter({
-                    property: 'baseQuery',
-                    value: record.get('baseQuery'),
-                    exactMatch: true
-                });
                 filterwidget.store.filter(function(item) {
                     if (item.get('filter')) {
                         return true;
