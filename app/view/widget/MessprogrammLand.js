@@ -27,6 +27,7 @@ Ext.define('Lada.view.widget.MessprogrammLand', {
     triggerAction: 'all',
     typeAhead: false,
     minChars: 0,
+    listConfig: {maxWidth: 800},
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
             '{code} - {bezeichnung}</div></tpl>'),

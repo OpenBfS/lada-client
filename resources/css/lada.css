@@ -245,3 +245,9 @@ span.x-grid-checkcolumn {
 .x-tagfield-item-text.disabled {
   opacity: 0.5;
 }
+
+.x-boundlist-item {
+     white-space: nowrap;
+     overflow: hidden;
+     padding: 0 20px 0 6px;
+}
