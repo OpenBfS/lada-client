@@ -71,7 +71,18 @@ Ext.define('Lada.view.grid.MKommentar', {
             dataIndex: 'datum',
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
-            width: 110
+            width: 110,
+            renderer: function(value) {
+                if (!value || value === '') {
+                    return '';
+                }
+                var format = 'd.m.Y H:i';
+                var dt = '';
+                if (!isNaN(value)) {
+                    dt = Lada.util.Date.formatTimestamp(value, format, true);
+                }
+                return dt;
+            }
         }, {
             header: i18n.getMsg('erzeuger'),
             dataIndex: 'mstId',
@@ -135,6 +146,16 @@ Ext.define('Lada.view.grid.MKommentar', {
         this.store.load({
             params: {
                 messungsId: this.recordId
+            }
+        });
+        Ext.on('timezonetoggled', function() {
+            var grid = Ext.ComponentQuery.query('mkommentargrid');
+            for (i=0; i<grid.length; i++) {
+                grid[i].reload(function() {
+                    Ext.ComponentQuery.query(
+                        'timezonebutton[action=toggletimezone]')[0]
+                        .requestFinished();
+                });
             }
         });
     },
