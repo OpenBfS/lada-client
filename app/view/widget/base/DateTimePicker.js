@@ -296,8 +296,7 @@ Ext.define('Lada.view.widget.base.DateTimePicker', {
         ) {
             me.doCancelFocus = me.focusOnSelect === false;
             auxDate.setHours(hourSet, minuteSet, 0);
-            me.setValue(
-                Lada.util.Date.shiftDateObject(auxDate));
+            me.setValue(auxDate);
             delete me.doCancelFocus;
             if (handler) {
                 handler.call(me.scope || me, me, me.value);
