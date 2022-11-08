@@ -885,6 +885,14 @@ Ext.define('Lada.controller.Query', {
                             options);
                         negateCheckbox = true;
                         break;
+                    case 'ortTyp':
+                        options.multiSelect = true;
+                        options.editable = true;
+                        options.value = this.getFilterValueMulti(recs[i]);
+                        field = Ext.create('Lada.view.widget.OrtTyp',
+                            options);
+                        negateCheckbox = true;
+                        break;
                     case 'sollistUmwGr':
                         options.multiSelect = true;
                         options.editable = true;

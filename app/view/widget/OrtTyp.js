@@ -16,7 +16,7 @@ Ext.define('Lada.view.widget.OrtTyp', {
     ],
     alias: 'widget.orttyp',
     store: null,
-    displayField: 'id',
+    displayField: 'ortTyp',
     valueField: 'id',
     editable: this.editable || false,
     disableKeyFilter: true,
@@ -32,7 +32,8 @@ Ext.define('Lada.view.widget.OrtTyp', {
             '{code} - {ortTyp}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">{code} - {ortTyp}</tpl>'),
-
+    labelTpl: Ext.create('Ext.XTemplate',
+        '<tpl for=".">{code} - {ortTyp}</tpl>'),
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.orttyp');
