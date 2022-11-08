@@ -104,7 +104,8 @@ Ext.define('Lada.view.grid.MKommentar', {
                 displayField: 'messStelle',
                 valueField: 'id',
                 allowBlank: false,
-                editable: false
+                editable: false,
+                matchFieldWidth: false
             }
         }, {
             header: i18n.getMsg('text'),

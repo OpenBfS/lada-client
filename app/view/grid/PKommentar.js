@@ -109,7 +109,8 @@ Ext.define('Lada.view.grid.PKommentar', {
                 store: Ext.data.StoreManager.get('messstellenFiltered'),
                 displayField: 'messStelle',
                 valueField: 'id',
-                allowBlank: false
+                allowBlank: false,
+                matchFieldWidth: false
             }
         }, {
             header: i18n.getMsg('text'),
