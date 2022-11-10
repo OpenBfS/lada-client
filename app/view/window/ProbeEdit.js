@@ -133,7 +133,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }, {
                 // Tags
                 xtype: 'fieldset',
-                title: i18n.getMsg('title.tagfieldset'),
+                title: i18n.getMsg('title.tagprobenfieldset'),
                 name: 'tagfieldset',
                 padding: '5, 5',
                 margin: 5,

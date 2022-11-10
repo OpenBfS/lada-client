@@ -134,7 +134,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             }, {
                 // Tags
                 xtype: 'fieldset',
-                title: i18n.getMsg('title.tagfieldset'),
+                title: i18n.getMsg('title.tagmessungenfieldset'),
                 name: 'tagfieldset',
                 padding: '5, 5',
                 margin: 5,
