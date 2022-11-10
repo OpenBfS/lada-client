@@ -206,12 +206,6 @@ Ext.define('Lada.view.grid.Orte', {
                 return record.get('staat');
             }
         }, {
-            header: i18n.getMsg('orte.nutsCode'),
-            filter: {
-                type: 'string'
-            },
-            dataIndex: 'nutsCode'
-        }, {
             header: i18n.getMsg('orte.ozIdS'),
             filter: {
                 type: 'string'

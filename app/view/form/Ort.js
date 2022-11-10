@@ -197,12 +197,6 @@ Ext.define('Lada.view.form.Ort', {
             maxLength: 10,
             allowDecimals: true
         }, {
-            xtype: 'tfield',
-            labelWidth: 125,
-            maxLength: 10,
-            name: 'nutsCode',
-            fieldLabel: i18n.getMsg('orte.nutsCode')
-        }, {
             xtype: 'label',
             style: 'font-style: italic',
             border: 10,
@@ -350,6 +344,5 @@ Ext.define('Lada.view.form.Ort', {
         this.down('chkbox[name=aktiv]').setReadOnly(value);
         this.down('numfield[name=hoeheLand]').setReadOnly(value);
         this.down('numfield[name=hoeheUeberNn]').setReadOnly(value);
-        this.down('tfield[name=nutsCode]').setReadOnly(value);
     }
 });

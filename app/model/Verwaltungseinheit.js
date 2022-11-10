@@ -20,9 +20,6 @@ Ext.define('Lada.model.Verwaltungseinheit', {
         name: 'kreis',
         allowNull: true
     }, {
-        name: 'nuts',
-        allowNull: true
-    }, {
         name: 'regbezirk',
         allowNull: true
     }, {

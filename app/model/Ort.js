@@ -22,9 +22,6 @@ Ext.define('Lada.model.Ort', {
     }, {
         name: 'ortId'
     }, {
-        name: 'nutsCode',
-        allowNull: true
-    }, {
         name: 'ktaGruppeId',
         type: 'int',
         allowNull: true
