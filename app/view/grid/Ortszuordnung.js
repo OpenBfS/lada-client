@@ -50,6 +50,14 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             });
         }
         this.ortstore = Ext.data.StoreManager.get('orte');
+
+        var ozsstore = Ext.data.StoreManager.get('ortszusatz');
+        if (!ozsstore) {
+            Ext.create('Lada.store.OrtsZusatz', {
+                storeId: 'ortszusatz'});
+        }
+        this.ozsstore = Ext.data.StoreManager.get('ortszusatz');
+
         var me = this;
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.Ortszuordnung');
@@ -195,7 +203,25 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         }, {
             header: i18n.getMsg('orte.ozId'),
             dataIndex: 'ozId',
-            width: 80
+            width: 80,
+            renderer: function(value) {
+                var store = me.ortstore;
+                var ozs = me.ozsstore;
+                var record = ozs.getById(value);
+                if (!record) {
+                    return '';
+                }
+                var ozid = record.get('ozsId');
+                if (
+                    ozid === undefined ||
+                    ozid === null ||
+                    ozid === ''
+                ) {
+                    return '';
+                }
+                var record2 = ozs.getById(ozid);
+                return value + '<br>' + record2.get('ortszusatz');
+            }
         }, {
             header: i18n.getMsg('orte.anlageId'),
             dataIndex: 'ortId',
