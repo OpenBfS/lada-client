@@ -32,10 +32,12 @@ Ext.define('Lada.view.widget.base.DateField', {
             labelWidth: this.labelWidth,
             listeners: this.listeners,
             triggerAction: this.triggerAction,
+            emptyText: this.emptyText,
             format: this.format,
             formatText: this.formatText,
             msgTarget: 'none',
-            tpl: this.tpl
+            tpl: this.tpl,
+            triggers: this.triggers || null
         }, {
             xtype: 'image',
             name: 'warnImg',

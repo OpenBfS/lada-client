@@ -31,11 +31,11 @@ Ext.define('Lada.view.widget.base.DateRange', {
             },
             Ext.create('Lada.view.widget.base.DateField', {
                 format: this.format || 'd.m.Y',
-                emptyText: i18n.getMsg('datetimepicker.chosetime'),
+                emptyText: i18n.getMsg('datepicker.chosetime'),
                 fieldLabel: i18n.getMsg('from'),
-                labelWidth: 30,
-                margin: 5,
-                width: '39%',
+                labelWidth: 20,
+                margin: '5,0,5,0',
+                flex: 1,
                 name: this.name + 'From',
                 readOnly: this.readOnly || false,
                 period: 'start', //TODO state of this Start/End indicator?
@@ -50,11 +50,11 @@ Ext.define('Lada.view.widget.base.DateRange', {
             }),
             Ext.create('Lada.view.widget.base.DateField', {
                 format: this.format || 'd.m.Y',
-                emptyText: i18n.getMsg('datetimepicker.chosetime'),
+                emptyText: i18n.getMsg('datepicker.chosetime'),
                 fieldLabel: i18n.getMsg('to'),
-                labelWidth: 30,
-                margin: 5,
-                width: '39%',
+                labelWidth: 20,
+                margin: '5,0,5,0',
+                flex: 1,
                 name: this.name + 'To',
                 readOnly: this.readOnly || false,
                 period: 'end', //TODO state of this Start/End indicator?

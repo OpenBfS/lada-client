@@ -657,9 +657,15 @@ Ext.define('Lada.controller.Query', {
                                 }
                             }
                         };
-                        field = Ext.create(
-                            'Lada.view.widget.base.DateTimeRange',
+                        if (dt.format === 'd.m.Y') {
+                            field = Ext.create(
+                                'Lada.view.widget.base.DateRange',
                             options);
+                        } else {
+                            field = Ext.create(
+                                'Lada.view.widget.base.DateTimeRange',
+                            options);
+                        }
                         negateCheckbox = true;
                         field.setValue(recs[i].get('filterValue'));
                         break;
