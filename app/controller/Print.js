@@ -779,16 +779,24 @@ Ext.define('Lada.controller.Print', {
         var selection = grid.getView().getSelectionModel().getSelection();
         var ids = [];
         for (var item in selection) {
-            var probeId = selection[item].get(grid.rowtarget.probeIdentifier);
+            if (selection[item].get(grid.rowtarget.probeIdentifier)) {
+                var Id = selection[item].get(grid.rowtarget.probeIdentifier);
+            } else {
+                var Id = selection[item].get(grid.rowtarget.messungIdentifier)
+            }
 
             // avoids printing more than one sheet per probe
-            if (ids.indexOf(probeId < 0)) {
-                ids.push(probeId);
+            if (ids.indexOf(Id < 0)) {
+                ids.push(Id);
             }
         }
         //basically, thats the same as the downloadFile
         // code does.
-        var data = '{ "proben": [' + ids.toString() + '] }';
+        if (selection[item].get(grid.rowtarget.probeIdentifier)) {
+             var data = '{ "proben": [' + ids.toString() + '] }';
+        } else {
+            var data = '{ "messungen": [' + ids.toString() + '] }';
+        }
         var me = this;
         Ext.Ajax.request({
             url: 'lada-server/data/export/json',
@@ -824,7 +832,8 @@ Ext.define('Lada.controller.Print', {
                         for (var i = 0; i < json.length; i++) {
                             if (json[i] !== 'lada_erfassungsbogen') {
                                 data.push({name: json[i]});
-                            } else if (grid.rowtarget.probeIdentifier) {
+                            } else if (grid.rowtarget.probeIdentifier
+                                || grid.rowtarget.messungIdentifier) {
                             // special handling for "lada_erfassungsbogen":
                             // only usable if we have some non-null probe
                             // identifier
@@ -834,6 +843,9 @@ Ext.define('Lada.controller.Print', {
                                     selection &&
                                     selection.data[
                                         grid.rowtarget.probeIdentifier] !==
+                                            undefined ||
+                                     selection.data[
+                                        grid.rowtarget.messungIdentifier] !==
                                             undefined
                                 ) {
                                     data.push({name: json[i]});
