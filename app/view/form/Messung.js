@@ -205,10 +205,10 @@ Ext.define('Lada.view.form.Messung', {
         }
 
         //Get the connected Probe instance and Datenbasis
-        Lada.model.Probe.load(this.record.get('probeId'), {
+        Lada.model.Sample.load(this.record.get('probeId'), {
             success: function(proberecord) {
                 me.probe = proberecord;
-                var dbid = proberecord.get('datenbasisId');
+                var dbid = proberecord.get('regulationId');
                 if (!dbid) {
                     return;
                 }

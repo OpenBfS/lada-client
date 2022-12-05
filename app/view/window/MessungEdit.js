@@ -184,7 +184,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                     xtype: 'messwertgrid',
                     minHeight: 130,
                     recordId: this.record.get('id'),
-                    umwId: this.probe.get('umwId'),
+                    umwId: this.probe.get('envMediumId'),
                     messgroesseStore: this.mStore
                 }]
             }, {
@@ -225,7 +225,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             me.mStore.load();
             if (
                 me.parentWindow &&
-                me.parentWindow.record.get('treeModified') <
+                me.parentWindow.record.get('treeMod') <
                     record.get('parentModified')
             ) {
                 var i18n = Lada.getApplication().bundle;
@@ -241,7 +241,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                             me.parentWindow.initData();
                         } else {
                             me.record.set(
-                                'treeModified', me.probe.get('treeModified'));
+                                'treeModified', me.probe.get('treeMod'));
                             me.disableForm();
                         }
                     }
@@ -251,15 +251,15 @@ Ext.define('Lada.view.window.MessungEdit', {
             me.down('messungform').setRecord(record);
             me.record = record;
             var messstelle = Ext.data.StoreManager.get('messstellen')
-                .getById(me.probe.get('mstId'));
+                .getById(me.probe.get('measFacilId'));
             var title = '';
             title += 'Messung: ';
             if (me.record.get('nebenprobenNr')) {
                 title += me.record.get('nebenprobenNr');
             }
-            title += ' zu Probe ' + me.probe.get('externeProbeId') ;
-            if (me.probe.get('hauptprobenNr')) {
-                title += ' / ' + me.probe.get('hauptprobenNr');
+            title += ' zu Probe ' + me.probe.get('extId') ;
+            if (me.probe.get('mainSampleId')) {
+                title += ' / ' + me.probe.get('mainSampleId');
             }
             title += ' -  Mst: ' + messstelle.get('messStelle') +
                 ' editieren.';
@@ -459,7 +459,7 @@ Ext.define('Lada.view.window.MessungEdit', {
 
     /**
      * Set the current ProbeRecord
-     * @param {Lada.model.Probe} probeRecord New probe record
+     * @param {Lada.model.Sample} probeRecord New probe record
      */
     setProbe: function(probeRecord) {
         this.probe = probeRecord;

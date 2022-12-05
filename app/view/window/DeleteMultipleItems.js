@@ -184,47 +184,47 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
         var i18n = Lada.getApplication().bundle;
         me.maxSteps = me.selection.length;
         me.down('progressbar').show();
-        var url = '';
+        var url = Lada.model.LadaBase.schema.getUrlPrefix();
         var datatype = '';
 
         switch (me.parentGrid.rowtarget.dataType) {
             case 'probeId':
-                url = 'lada-server/rest/probe/';
+                url += Lada.model.Sample.entityName.toLowerCase();
                 datatype = 'Probe ';
                 break;
             case 'messungId':
-                url = 'lada-server/rest/messung/';
+                url += 'messung';
                 datatype = 'Messung ';
                 break;
             case 'mpId':
-                url = 'lada-server/rest/messprogramm/';
+                url += 'messprogramm';
                 datatype = i18n.getMsg('messprogramm');
                 break;
             case 'probenehmer':
-                url = 'lada-server/rest/probenehmer/';
+                url += 'probenehmer';
                 datatype = i18n.getMsg('probenehmer');
                 break;
             case 'dsatzerz':
-                url = 'lada-server/rest/datensatzerzeuger/';
+                url += 'datensatzerzeuger';
                 datatype = i18n.getMsg('datensatzerzeuger');
                 break;
             case 'mprkat':
-                url = 'lada-server/rest/messprogrammkategorie/';
+                url += 'messprogrammkategorie';
                 datatype = i18n.getMsg('messprogrammkategorie');
                 break;
             case 'ortId':
-                url = 'lada-server/rest/ort/';
+                url += 'ort';
                 datatype = 'Ort';
                 break;
             case 'tagId':
-                url = 'lada-server/rest/tag/';
+                url += 'tag';
                 datatype = 'Tag';
                 break;
         }
         for (var i = 0; i < me.selection.length; i++) {
             var id = me.selection[i].get(me.parentGrid.rowtarget.dataIndex);
             Ext.Ajax.request({
-                url: url + id,
+                url: url + '/' + id,
                 method: 'DELETE',
                 success: function(resp) {
                     var json = Ext.JSON.decode(resp.responseText);

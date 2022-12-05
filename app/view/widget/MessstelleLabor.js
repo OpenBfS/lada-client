@@ -89,7 +89,7 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
                         var container = combo.up('fieldcontainer');
 
                         // Set hidden form fields
-                        ['mstId', 'laborMstId'].forEach(function(id) {
+                        ['measFacilId', 'apprLabId'].forEach(function(id) {
                             var field = container.down(
                                 'textfield[name=' + id + ']');
                             field.setValue(newValue.get(id));
@@ -102,12 +102,12 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
                         var fieldset = combo.up('fieldset');
                         if (fieldset) {
                             var mplId = fieldset.down(
-                                'messprogrammland[name=mplId]');
+                                'messprogrammland[name=stateMpgId]');
                             if (mplId) {
                                 mplId.setValue();
                             }
                             var erzeugerId = fieldset.down(
-                                'datensatzerzeuger[name=erzeugerId]');
+                                'datensatzerzeuger[name=datasetCreatorId]');
                             if (erzeugerId) {
                                 erzeugerId.setValue();
                             }
@@ -128,12 +128,12 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
             items: [{
                 // Hidden form field for Messstelle
                 xtype: 'textfield',
-                name: 'mstId',
+                name: 'measFacilId',
                 allowBlank: false
             }, {
                 // Hidden form field for Labor
                 xtype: 'textfield',
-                name: 'laborMstId',
+                name: 'apprLabId',
                 allowBlank: false
             }],
             listeners: {
@@ -172,8 +172,8 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
     },
 
     setMessstelleLabor: function() {
-        var mstId = this.down('textfield[name=mstId]').getValue();
-        var laborMstId = this.down('textfield[name=laborMstId]').getValue();
+        var mstId = this.down('textfield[name=measFacilId]').getValue();
+        var laborMstId = this.down('textfield[name=apprLabId]').getValue();
 
         this.setNetzbetreiber(mstId);
 

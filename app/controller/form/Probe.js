@@ -38,8 +38,8 @@ Ext.define('Lada.controller.form.Probe', {
                 dirtychange: this.handleDirtyChange,
                 save: this.saveHeadless
             },
-            'probeform tfield [name=hauptprobenNr]': {
-                change: this.hauptprobenNrChanged
+            'probeform tfield [name=mainSampleId]': {
+                change: this.mainSampleIdChanged
             },
             'probeform umwelt combobox': {
                 change: this.umweltChanged
@@ -107,10 +107,10 @@ Ext.define('Lada.controller.form.Probe', {
         var me = this;
         //Copy probe and reset fields not to be copied
         var fieldsToReset = [
-            'id', 'mprId', 'externeProbeId',
-            'probeentnahmeBeginn', 'probeentnahmeEnde',
-            'solldatumBeginn', 'solldatumEnde', 'hauptprobenNr',
-            'ursprungszeit'];
+            'id', 'mpgId', 'extId',
+            'sampleStartDate', 'sampleEndDate',
+            'schedStartDate', 'schedEndDate', 'mainSampleId',
+            'origDate'];
         var copy = probe.copy(null);
         for (var i = 0; i < fieldsToReset.length; i++) {
             copy.set(fieldsToReset[i], null);
@@ -424,7 +424,7 @@ Ext.define('Lada.controller.form.Probe', {
      */
     reiProgpunktGruppeChanged: function(combo) {
         // avoids endless loop
-        if (combo.name !== 'reiProgpunktGrpId') {
+        if (combo.name !== 'reiAgGrId') {
             return true;
         }
         //Check if reiprogpunktgruppe widget is contained in a probeform
@@ -440,7 +440,7 @@ Ext.define('Lada.controller.form.Probe', {
             return true;
         }
         var umweltStore = umweltCombo.store;
-        var reiId = combo.getModelData().reiProgpunktGrpId;
+        var reiId = combo.getModelData().reiAgGrId;
         umweltStore.proxy.extraParams = {};
         if (reiId || reiId === 0) {
             umweltStore.proxy.extraParams.reiprogpunktgruppe = reiId;
@@ -454,7 +454,7 @@ Ext.define('Lada.controller.form.Probe', {
      */
     umweltChanged: function(combo) {
         // avoids endless loop
-        if (combo.name !== 'umwId') {
+        if (combo.name !== 'envMediumId') {
             return true;
         }
         //Check if umwelt widget is contained in a probeform
@@ -472,7 +472,7 @@ Ext.define('Lada.controller.form.Probe', {
         }
         var reiStore = reiCombo.store;
         reiStore.proxy.extraParams = {};
-        var umwId = combo.getModelData().umwId;
+        var umwId = combo.getModelData().envMediumId;
         if (umwId || umwId === 0) {
             reiStore.proxy.extraParams.umwelt = umwId;
         }
@@ -496,16 +496,16 @@ Ext.define('Lada.controller.form.Probe', {
             .down('container[name=reiComboContainer]');
         if ( datenbasis === 'REI-E' || datenbasis === 'REI-I') {
             reiComboContainer
-                .down('reiprogpunktgruppe[name=reiProgpunktGrpId]')
+                .down('reiprogpunktgruppe[name=reiAgGrId]')
                 .setHidden(false);
-            reiComboContainer.down('ktagruppe[name=ktaGruppeId]').show();
+            reiComboContainer.down('ktagruppe[name=nuclFacilGrId]').show();
         } else {
             var reiCombo = reiComboContainer
-                .down('reiprogpunktgruppe[name=reiProgpunktGrpId]');
+                .down('reiprogpunktgruppe[name=reiAgGrId]');
             reiCombo.setHidden(true);
             reiCombo.setValue(null);
             var ktaCombo = reiComboContainer
-                .down('ktagruppe[name=ktaGruppeId]');
+                .down('ktagruppe[name=nuclFacilGrId]');
             ktaCombo.hide();
             ktaCombo.setValue(null);
         }
@@ -522,8 +522,8 @@ Ext.define('Lada.controller.form.Probe', {
         for (var key in data) {
             record.set(key, data[key]);
         }
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
+        if (!record.get('lastMod')) {
+            record.set('lastMod', new Date());
         }
         if (record.phantom) {
             record.set('id', null);
@@ -576,8 +576,8 @@ Ext.define('Lada.controller.form.Probe', {
         var record = formPanel.getForm().getRecord();
         // Update record with values changed in the form
         record.set(formPanel.getForm().getFieldValues(true));
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
+        if (!record.get('lastMod')) {
+            record.set('lastMod', new Date());
         }
         if (record.phantom) {
             record.set('id', null);
@@ -781,10 +781,10 @@ Ext.define('Lada.controller.form.Probe', {
             }
             if (
                 partners[0] && field.up('fieldset[name=zeit]')
-                    .down('datetime[name=ursprungszeit]').getValue()
+                    .down('datetime[name=origDate]').getValue()
             ) {
                 if (partners[0] < field.up('fieldset[name=zeit]')
-                    .down('datetime[name=ursprungszeit]').getValue()
+                    .down('datetime[name=origDate]').getValue()
                 ) {
                     msg = Lada.getApplication().bundle.getMsg('663');
                     field.up('fieldset[name=zeit]')
@@ -797,7 +797,7 @@ Ext.define('Lada.controller.form.Probe', {
                 }
             }
         }
-        if (field.name === 'ursprungszeit') {
+        if (field.name === 'origDate') {
             var partners2 = new Array();
             partners2[0] = field.up('fieldset[name=zeit]')
                 .down('datetime[period=start]').getValue();
@@ -859,21 +859,21 @@ Ext.define('Lada.controller.form.Probe', {
         this.checkCommitEnabled(callingEl);
     },
 
-    hauptprobenNrChanged: function(field) {
+    mainSampleIdChanged: function(field) {
         if (field.getValue() !== '') {
             field.up().clearWarningOrError();
         } else {
             var errors = [];
             var warnings = [];
-            var notifications = { hauptprobenNr: [631] };
+            var notifications = { mainSampleId: [631] };
             field.up('probeform').setMessages(errors, warnings, notifications);
         }
     },
 
     deskriptorSelect: function(field, records) {
-        field.up('probeform').down('umwelt[name="umwId"]').clearValue();
+        field.up('probeform').down('umwelt[name="envMediumId"]').clearValue();
         var desk = field.up('deskriptor');
-        var media = field.up('probeform').down('textfield[name="mediaDesk"]');
+        var media = field.up('probeform').down('textfield[name="envDescripDisplay"]');
         var current = media.getValue().split(' ');
         var value;
         if (current.length < 12) {
@@ -913,7 +913,7 @@ Ext.define('Lada.controller.form.Probe', {
         if (current[0].length === 0) {
             current.splice(0, 1);
         }
-        var mediatext = field.up('probeform').down('textfield[name="media"]');
+        var mediatext = field.up('probeform').down('textfield[name="envDescripName"]');
         if ( (desk.layer === 0 ) && (records.get('sn') === 0) ) {
             mediatext.setValue('');
             media.setValue('');
@@ -951,11 +951,11 @@ Ext.define('Lada.controller.form.Probe', {
         var formPanel = button.up('form');
         var record = formPanel.getForm().getRecord();
         var titleText;
-        if (record.get('hauptprobenNr')) {
-            titleText = record.get('externeProbeId') + ' / '
-                + record.get('hauptprobenNr');
+        if (record.get('mainSampleId')) {
+            titleText = record.get('extId') + ' / '
+                + record.get('mainSampleId');
         } else {
-            titleText = record.get('externeProbeId');
+            titleText = record.get('extId');
         }
         var trail = Ext.create('Lada.view.window.AuditTrail', {
             autoShow: true,

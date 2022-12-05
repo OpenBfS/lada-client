@@ -103,7 +103,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var parent = parentWin.record;
         // parent is either probe or messprogramm.
         var parentisMp = false;
-        if (parent.data.hauptprobenNr === undefined) {
+        if (parent.data.mainSampleId === undefined) {
             parentisMp = true;
         }
         var win = Ext.create('Lada.view.window.Ortszuordnung', {
@@ -125,7 +125,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     add: function(button) {
         var parent = button.up('window').record;
         var parentisMp = false;
-        if (parent.data.hauptprobenNr === undefined) {
+        if (parent.data.mainSampleId === undefined) {
             parentisMp = true;
         }
         var win = Ext.create('Lada.view.window.Ortszuordnung', {
@@ -373,7 +373,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var netzfilter = null;
         var mst_store = Ext.data.StoreManager.get('messstellen');
         if (ozw.probe) {
-            netzfilter = ozw.probe.get('mstId');
+            netzfilter = ozw.probe.get('measFacilId');
 
         } else if (ozw.messprogramm) {
             netzfilter = ozw.messprogramm.get('mstId');

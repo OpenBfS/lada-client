@@ -57,12 +57,12 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                     load: {
                         scope: this,
                         fn: function(store) {
-                            var id = this.probe.get('datenbasisId');
+                            var id = this.probe.get('regulationId');
                             if (!id) {
                                 this.datenbasis = null;
                             } else {
                                 this.datenbasis = store.getById(
-                                    this.probe.get('datenbasisId'))
+                                    this.probe.get('regulationId'))
                                     .get('datenbasis');
                             }
                         }
@@ -77,7 +77,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             + ' '
                             + i18n.getMsg('probe')
                             + ' '
-                            + this.probe.get('hauptprobenNr')
+                            + this.probe.get('mainSampleId')
                             + ' '
                             + i18n.getMsg('edit');
             } else {
@@ -88,7 +88,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                             + ' '
                             + i18n.getMsg('probe')
                             + ' '
-                            + this.probe.get('hauptprobenNr')
+                            + this.probe.get('mainSampleId')
                             + ' '
                             + i18n.getMsg('create');
             }
@@ -257,7 +257,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
             }
         }
         var mstId = this.probe ?
-            this.probe.get('mstId') :
+            this.probe.get('measFacilId') :
             this.messprogramm.get('mstId');
         var mst = Ext.data.StoreManager.get('messstellen');
         var ndx = mst.findExact('id', mstId);

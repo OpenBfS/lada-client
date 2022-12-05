@@ -41,11 +41,11 @@ Ext.define('Lada.view.window.MessungCreate', {
         }
 
         var messstelle = Ext.data.StoreManager.get('messstellen')
-            .getById(this.probe.get('mstId'));
+            .getById(this.probe.get('measFacilId'));
 
         this.title = i18n.getMsg('messung.new.title',
-            this.probe.get('externeProbeId'),
-            this.probe.get('hauptprobenNr'),
+            this.probe.get('extId'),
+            this.probe.get('mainSampleId'),
             messstelle.get('messStelle'));
         this.buttons = [{
             text: i18n.getMsg('close'),

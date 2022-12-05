@@ -103,7 +103,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     dryrun: dryrun
                 };
                 Ext.Ajax.request({
-                    url: 'lada-server/rest/probe/messprogramm',
+                    url: Lada.model.LadaBase.schema.getUrlPrefix() + '/'
+                        + Lada.model.Sample.entityName.toLowerCase()
+                        + '/messprogramm',
                     method: 'POST',
                     timeout: 2 * 60 * 1000,
                     jsonData: reqJsondata,
@@ -471,7 +473,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 }, {
                     xtype: 'datecolumn',
                     header: i18n.getMsg('sollVon'),
-                    dataIndex: 'solldatumBeginn'
+                    dataIndex: 'solldatumBeginn',
+                    renderer: this.renderTimestamp
                 }, {
                     xtype: 'datecolumn',
                     header: i18n.getMsg('sollBis'),

@@ -6,15 +6,11 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * A Probe.
- * This class represents and defines the model of a 'Probe'
- **/
-Ext.define('Lada.model.Probe', {
+Ext.define('Lada.model.Sample', {
     extend: 'Lada.model.LadaBase',
 
     /**
-     * Save original record if probe is a copy of another
+     * Save original record if sample is a copy of another
      */
     copiedFrom: null,
 
@@ -26,88 +22,88 @@ Ext.define('Lada.model.Probe', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'externeProbeId'
+        name: 'extId'
     }, {
-        name: 'hauptprobenNr',
+        name: 'mainSampleId',
         allowNull: true
     }, {
-        name: 'test',
+        name: 'isTest',
         type: 'boolean'
     }, {
-        name: 'mstId'
+        name: 'measFacilId'
     }, {
-        name: 'laborMstId'
+        name: 'apprLabId'
     }, {
-        name: 'datenbasisId',
+        name: 'regulationId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'baId',
+        name: 'oprModeId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'probenartId',
+        name: 'sampleMethId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'mediaDesk',
+        name: 'envDescripDisplay',
         allowNull: true
     }, {
-        name: 'media',
+        name: 'envDescripName',
         allowNull: true
     }, {
-        name: 'umwId',
+        name: 'envMediumId',
         allowNull: true
     }, {
-        name: 'probeentnahmeBeginn',
+        name: 'sampleStartDate',
         type: 'date',
         dateFormat: 'time'
     }, {
-        name: 'probeentnahmeEnde',
+        name: 'sampleEndDate',
         type: 'date',
         dateFormat: 'time'
     }, {
-        name: 'mittelungsdauer',
+        name: 'midSampleDate',
         type: 'int',
         allowNull: true
     }, {
-        name: 'letzteAenderung',
+        name: 'lastMod',
         type: 'date',
         dateFormat: 'time'
     }, {
-        name: 'erzeugerId',
+        name: 'datasetCreatorId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'probeNehmerId',
+        name: 'samplerId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'mplId',
+        name: 'stateMpgId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'mprId',
+        name: 'mpgId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'reiProgpunktGrpId',
+        name: 'reiAgGrId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'ktaGruppeId',
+        name: 'nuclFacilGrId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'solldatumBeginn',
+        name: 'schedStartDate',
         type: 'date',
         dateFormat: 'time'
     }, {
-        name: 'solldatumEnde',
+        name: 'schedEndDate',
         type: 'date',
         dateFormat: 'time'
     }, {
-        name: 'ursprungszeit',
+        name: 'origDate',
         type: 'date',
         dateFormat: 'time'
     }, {
@@ -115,23 +111,8 @@ Ext.define('Lada.model.Probe', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'treeModified',
+        name: 'treeMod',
         type: 'date',
         dateFormat: 'time'
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/probe',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true
-        }
-    }
+    }]
 });

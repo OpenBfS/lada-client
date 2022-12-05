@@ -190,7 +190,7 @@ Ext.define('Lada.view.panel.Map', {
             var parentRecord = parent.probe ?
                 parent.probe :
                 parent.messprogramm;
-            var mstId = parentRecord.get('mstId');
+            var mstId = parentRecord.get('measFacilId');
             var mst = Ext.data.StoreManager.get('messstellen');
             var ndx = mst.findExact('id', mstId);
             var nId = mst.getAt(ndx).get('netzbetreiberId');

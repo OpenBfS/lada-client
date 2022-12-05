@@ -905,7 +905,7 @@ Ext.define('Lada.view.window.GridExport', {
                 return new Date(value);
             }
             var store, record, r;
-            if (column.dataIndex === 'probenartId') {
+            if (column.dataIndex === 'sampleMethId') {
                 store = Ext.data.StoreManager.get('probenarten');
                 record = store.getById(value);
                 if (record) {

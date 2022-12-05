@@ -90,7 +90,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 }
             }
         }];
-        this.modelClass = Lada.model.Probe;
+        this.modelClass = Lada.model.Sample;
         if (this.record) {
             this.recordId = this.record.get('id');
         }
@@ -109,7 +109,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         proxy.extraParams = {};
         store.setProxy(proxy);
         this.zStore = store;
-        var umwId = this.record.get('umwId');
+        var umwId = this.record.get('envMediumId');
         if (umwId) {
             this.zStore.proxy.setExtraParams({
                 umwId: umwId
@@ -255,19 +255,19 @@ Ext.define('Lada.view.window.ProbeEdit', {
             var owner = record.get('owner');
             var readonly = record.get('readonly');
             var messstelle = Ext.data.StoreManager.get('messstellen')
-                .getById(record.get('mstId'));
+                .getById(record.get('measFacilId'));
             var datenbasis = Ext.data.StoreManager.get('datenbasis')
-                .getById(record.get('datenbasisId'));
+                .getById(record.get('regulationId'));
             var title = '';
             if (datenbasis) {
                 title += datenbasis.get('datenbasis');
                 title += ' ';
             }
             title += 'Probe: ';
-            title += record.get('externeProbeId');
-            if (record.get('hauptprobenNr')) {
+            title += record.get('extId');
+            if (record.get('mainSampleId')) {
                 //title += ' - extPID/Hauptprobennr.: ';
-                title += ' / ' + record.get('hauptprobenNr');
+                title += ' / ' + record.get('mainSampleId');
             }
             if (messstelle) {
                 title += '    -    Mst: ';
@@ -303,7 +303,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             me.down('probeform').isValid();
         };
         if (!loadedRecord) {
-            Ext.ClassManager.get('Lada.model.Probe').load(
+            Ext.ClassManager.get('Lada.model.Sample').load(
                 this.record.get('id'), {
                     failure: function() {
                         me.setLoading(false);

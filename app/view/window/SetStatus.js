@@ -127,8 +127,12 @@ Ext.define('Lada.view.window.SetStatus', {
         var title = '';
         if (Ext.ComponentQuery.query('probeform').length !== 0) {
             var probenform = Ext.ComponentQuery.query('probeform');
-            var probenumber = probenform[0].getRecord().get('hauptprobenNr') ? 'mit HP-Nr ' + probenform[0].getRecord().get('hauptprobenNr') : 'mit extPID ' + probenform[0].getRecord().get('externeProbeId');
-            var messungnumber = this.selection[0].get('nebenprobenNr') ? 'mit NP-Nr ' + this.selection[0].get('nebenprobenNr') : 'mit extMId ' + this.selection[0].get('externeMessungsId');
+            var probenumber = probenform[0].getRecord().get('mainSampleId')
+                ? 'mit HP-Nr ' + probenform[0].getRecord().get('mainSampleId')
+                : 'mit extPID ' + probenform[0].getRecord().get('extId');
+            var messungnumber = this.selection[0].get('nebenprobenNr')
+                ? 'mit NP-Nr ' + this.selection[0].get('nebenprobenNr')
+                : 'mit extMId ' + this.selection[0].get('externeMessungsId');
             title = i18n.getMsg('setStatus.hprnr',
                     messungnumber,
                     probenumber);
@@ -416,12 +420,22 @@ Ext.define('Lada.view.window.SetStatus', {
                     return it.get(this.dataId) === id;
                 }, this);
             if (item.get('nebenprobenNr') === undefined) {
-                var probenumber = item.get('hpNr') ? '<strong>' + i18n.getMsg('hauptprobenNr') + '</strong> ' + item.get('hpNr') :
-                        item.get('externeProbeId') ? '<strong>' + i18n.getMsg('extProbeId') + '</strong> ' + item.get('externeProbeId') :
-                        '<strong>' + i18n.getMsg('hauptprobenNr') + ' nicht definiert</strong> ';
-                var messungsnumber = item.get('npNr') ? '<strong>' + i18n.getMsg('nebenprobenNr') + '</strong> ' + item.get('npNr') :
-                        item.get('externeMessungsId') ? '<strong>' + i18n.getMsg('extMessungsId') + '</strong> ' + item.get('externeMessungsId') :
-                        '<strong>' + i18n.getMsg('nebenprobenNr') + ' nicht definiert</strong> ';
+                var probenumber = item.get('hpNr')
+                    ? '<strong>' + i18n.getMsg('mainSampleId') + '</strong> '
+                    + item.get('hpNr')
+                    : item.get('extId')
+                    ? '<strong>' + i18n.getMsg('extProbeId') + '</strong> '
+                    + item.get('extId')
+                    : '<strong>' + i18n.getMsg('mainSampleId')
+                    + ' nicht definiert</strong> ';
+                var messungsnumber = item.get('npNr')
+                    ? '<strong>' + i18n.getMsg('nebenprobenNr') + '</strong> '
+                    + item.get('npNr')
+                    : item.get('externeMessungsId')
+                    ? '<strong>' + i18n.getMsg('extMessungsId') + '</strong> '
+                    + item.get('externeMessungsId')
+                    : '<strong>' + i18n.getMsg('nebenprobenNr')
+                    + ' nicht definiert</strong> ';
                 this.resultMessage +=
                         probenumber +
                         ' - ' + messungsnumber;

@@ -156,7 +156,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
       * Initialise the Data of this Window
       */
     initData: function() {
-        var record = Ext.create('Lada.model.Probe');
+        var record = Ext.create('Lada.model.Sample');
         var mstLabCb = this.down('probeform').down('messstellelabor').down(
             'combobox');
         var mstLabRecs = mstLabCb.store.getData();
@@ -164,13 +164,13 @@ Ext.define('Lada.view.window.ProbeCreate', {
         if (mstLabRecs.length >= 1) {
             var labRec = mstLabRecs.getAt(0);
             record.set('owner', true);
-            record.set('mstId', labRec.get('messStelle'));
-            record.set('laborMstId', labRec.get('laborMst'));
+            record.set('measFacilId', labRec.get('messStelle'));
+            record.set('apprLabId', labRec.get('laborMst'));
         }
         var errors = [];
-        var notifications = { hauptprobenNr: [631] };
-        var warnings = { probeentnahmeBeginn: [631],
-            umwId: [631]
+        var notifications = { mainSampleId: [631] };
+        var warnings = { sampleStartDate: [631],
+            envMediumId: [631]
         };
         this.down('probeform').setRecord(record);
         this.down('probeform').setMediaDesk(record);

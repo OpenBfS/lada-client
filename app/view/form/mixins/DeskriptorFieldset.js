@@ -12,7 +12,7 @@
 Ext.define('Lada.view.form.mixins.DeskriptorFieldset', {
 
     setMediaDeskImpl: function(scheduler, record) {
-        var media = record.get('mediaDesk');
+        var media = record.get('envDescripDisplay');
         if (media) {
             var mediaParts = media.split(' ');
             scheduler.enqueue(
@@ -25,7 +25,7 @@ Ext.define('Lada.view.form.mixins.DeskriptorFieldset', {
     },
 
     setMediaSN: function(scheduler, ndx, media, beschreibung) {
-        var mediabeschreibung = this.getForm().findField('media');
+        var mediabeschreibung = this.getForm().findField('envDescripName');
         if (ndx >= 12) {
             scheduler.finished();
             mediabeschreibung.setValue(beschreibung);
