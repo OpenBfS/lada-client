@@ -13,6 +13,7 @@ Ext.define('Lada.view.form.Messprogramm', {
     extend: 'Ext.form.Panel',
     alias: 'widget.messprogrammform',
     requires: [
+        'Lada.util.FunctionScheduler',
         'Lada.view.form.mixins.DeskriptorFieldset',
         'Lada.view.widget.Datenbasis',
         'Lada.view.widget.base.CheckBox',
