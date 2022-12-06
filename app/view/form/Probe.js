@@ -479,16 +479,14 @@ Ext.define('Lada.view.form.Probe', {
                                 margin: '0 5 0 0',
                                 labelWidth: 100,
                                 fieldLabel: i18n.getMsg('mediaDesk'),
-                                editable: false,
-                                readOnly: true
+                                editable: false
                             }, {
                                 xtype: 'textfield',
                                 margin: '0 0 0 5',
                                 name: 'media',
                                 width: '42%',
                                 enforceMaxLength: true,
-                                editable: false,
-                                readOnly: true
+                                editable: false
                             }]
                         }, {
                             xtype: 'fset',
