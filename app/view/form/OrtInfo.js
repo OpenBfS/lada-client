@@ -13,6 +13,10 @@ Ext.define('Lada.view.form.OrtInfo', {
     extend: 'Ext.form.Panel',
     alias: 'widget.ortinfo',
 
+    requires: [
+        'Lada.view.widget.base.SelectableDisplayField'
+    ],
+
     border: false,
     flex: 1,
     margin: '0, 10, 0, 0',

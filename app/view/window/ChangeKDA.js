@@ -13,6 +13,7 @@ Ext.define('Lada.view.window.ChangeKDA', {
     extend: 'Ext.window.Window',
     alias: 'widget.changeKDA',
     requires: [
+        'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.widget.KoordinatenArt'
     ],
     collapsible: false,

@@ -20,6 +20,7 @@ Ext.define('Lada.view.form.Messung', {
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.base.Datetime',
         'Lada.view.widget.base.NumberField',
+        'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.widget.Statuskombi'
     ],
 
