@@ -372,29 +372,27 @@ Ext.define('Lada.view.form.Probe', {
                             type: 'hbox'
                         },
                         items: [{
-                            xtype: 'datefield',
-                            emptyText: ' ',
+                            xtype: 'selectabledisplayfield',
                             fieldLabel: i18n.getMsg('sollVon'),
                             labelWidth: 130,
                             margin: '0, 5, 5, 5',
                             name: 'solldatumBeginn',
-                            format: 'd.m.Y',
-                            formatText: '',
                             width: '50%',
-                            period: 'start',
-                            readOnly: true
+                            renderer: function(v) {
+                                return Lada.util.Date.formatTimestamp(
+                                    v, 'd.m.Y', true);
+                            }
                         }, {
-                            xtype: 'datefield',
-                            emptyText: ' ',
+                            xtype: 'selectabledisplayfield',
                             fieldLabel: i18n.getMsg('sollBis'),
-                            labelWidth: 17,
+                            labelWidth: 25,
                             margin: '0, 5, 5, 5',
                             name: 'solldatumEnde',
-                            format: 'd.m.Y',
-                            formatText: '',
                             width: '50%',
-                            period: 'end',
-                            readOnly: true
+                            renderer: function(v) {
+                                return Lada.util.Date.formatTimestamp(
+                                    v, 'd.m.Y', true);
+                            }
                         }]
                     }, {
                         xtype: 'fset',
