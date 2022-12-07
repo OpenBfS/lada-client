@@ -11,7 +11,6 @@
  */
 Ext.define('Lada.view.widget.Statuskombi', {
     extend: 'Lada.view.widget.base.TextField',
-    readOnly: true,
     editable: false,
     alias: 'widget.statuskombi',
     layout: 'hbox',
