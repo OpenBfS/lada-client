@@ -325,8 +325,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 width: '58%',
                                 labelWidth: 100,
                                 fieldLabel: i18n.getMsg('mediaDesk'),
-                                editable: false,
-                                readOnly: true
+                                editable: false
                             }, {
                                 xtype: 'textfield',
                                 name: 'media',
@@ -334,7 +333,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 width: '42%',
                                 enforceMaxLength: true,
                                 editable: false,
-                                readOnly: true,
                                 isDirty: function() {
                                     return false;
                                 }
