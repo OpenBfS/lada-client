@@ -449,7 +449,8 @@ Ext.define('Lada.controller.form.Probe', {
     },
 
     /**
-     * Called if umweltBereich value has changed. filters reiProgpunktgruppe
+     * Called if umweltBereich value has changed.
+     * Filters reiProgpunktgruppe and probenzusatzwerte
      * values according to the new value.
      */
     umweltChanged: function(combo) {
@@ -477,11 +478,18 @@ Ext.define('Lada.controller.form.Probe', {
             reiStore.proxy.extraParams.umwelt = umwId;
         }
         reiStore.load();
-        if (formPanel.up('window').down('fset[name=probenzusatzwerte]') !== null) {
-            var pzStore = formPanel.up('window').down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').pzStore;
-            pzStore.proxy.extraParams = {};
-            pzStore.proxy.extraParams.umwId = umwId;
-            pzStore.load();
+
+        // Filter probenzusatzwerte
+        var pzwFset = formPanel.up('window').down(
+            'fset[name=probenzusatzwerte]');
+        if (pzwFset !== null) {
+            var params = {};
+            if (umwId) {
+                params['umwId'] = umwId;
+            }
+            pzwFset.down('probenzusatzwertgrid').pzStore.load({
+                params: params
+            });
         }
 
     },
