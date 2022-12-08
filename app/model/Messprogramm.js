@@ -43,6 +43,7 @@ Ext.define('Lada.model.Messprogramm', {
         allowNull: true
     }, {
         name: 'mediaDesk',
+        type: 'nonblankstring',
         allowNull: true
     }, {
         name: 'umwId',
