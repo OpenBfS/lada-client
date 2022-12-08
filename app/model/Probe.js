@@ -51,7 +51,13 @@ Ext.define('Lada.model.Probe', {
         allowNull: true
     }, {
         name: 'mediaDesk',
-        allowNull: true
+        allowNull: true,
+        serialize: function(value) {
+            if (!value) {
+                return null;
+            }
+            return value;
+        }
     }, {
         name: 'media',
         allowNull: true
