@@ -41,6 +41,7 @@ Ext.define('Lada.model.HelpprintModel', {
     stores: {
         imprintNavItems: {
             type: 'tree',
+            model: 'Lada.model.HelpNode',
             root: {
                 children: [{
                     id: 'intro',
