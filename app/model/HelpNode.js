@@ -1,4 +1,4 @@
-/* Copyright (C) 2018 by Bundesamt fuer Strahlenschutz
+/* Copyright (C) 2022 by Bundesamt fuer Strahlenschutz
  * Software engineering by Intevation GmbH
  *
  * This file is Free Software under the GNU GPL (v>=3)
@@ -13,10 +13,9 @@ Ext.define('Lada.model.HelpNode', {
     extend: 'Ext.data.TreeModel',
 
     fields: ['id', 'text', 'content'],
-    idProperty: 'id',
 
-    //Define a custom proxy as the Lada.model.LadaBase proxy seems to intefere
-    //with this model even though it does not extends LadaBase
+    // Define a custom proxy as the Lada.model.LadaBase proxy seems to interfere
+    // with this model even though it does not extend LadaBase
     proxy: {
         type: 'memory',
         url: undefined,

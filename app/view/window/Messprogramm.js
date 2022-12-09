@@ -15,6 +15,7 @@ Ext.define('Lada.view.window.Messprogramm', {
 
     requires: [
         'Lada.view.form.Messprogramm',
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.grid.Messmethoden'
     ],
 

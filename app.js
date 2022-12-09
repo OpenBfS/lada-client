@@ -58,7 +58,6 @@ Ext.application({
         'Lada.model.Messstelle',
         'Lada.model.GenericResults',
         'Lada.model.GridColumn',
-        'Lada.model.HelpNode',
         'Lada.model.Query',
         'Lada.model.DownloadQueue',
         'Lada.model.UploadQueue',

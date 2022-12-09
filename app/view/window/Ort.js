@@ -14,6 +14,7 @@ Ext.define('Lada.view.window.Ort', {
     alias: 'window.ort',
     requires: [
         'Lada.model.Ort',
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.form.Ort'
     ],
 

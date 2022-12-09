@@ -13,6 +13,10 @@ Ext.define('Lada.view.window.Probenehmer', {
     extend: 'Lada.view.window.RecordWindow',
     alias: 'widget.probenehmeredit',
 
+    requires: [
+        'Lada.view.window.HelpprintWindow'
+    ],
+
     collapsible: true,
     maximizable: true,
     autoShow: false,

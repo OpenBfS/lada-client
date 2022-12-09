@@ -20,6 +20,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         'Lada.view.grid.PKommentar',
         'Lada.view.grid.Messung',
         'Lada.view.widget.Tag',
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.window.SetTags'
     ],
 

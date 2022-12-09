@@ -14,6 +14,7 @@ Ext.define('Lada.view.window.MessprogrammKategorie', {
     alias: 'widget.mprkatedit',
 
     requires: [
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.form.MessprogrammKategorie'
     ],
 
