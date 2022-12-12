@@ -13,6 +13,10 @@
 Ext.define('Lada.model.Probe', {
     extend: 'Lada.model.LadaBase',
 
+    requires: [
+        'Lada.model.field.NonBlankString'
+    ],
+
     /**
      * Save original record if probe is a copy of another
      */

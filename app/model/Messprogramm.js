@@ -13,6 +13,10 @@
 Ext.define('Lada.model.Messprogramm', {
     extend: 'Lada.model.LadaBase',
 
+    requires: [
+        'Lada.model.field.NonBlankString'
+    ],
+
     hasMany: 'ProbenZusatz',
 
     fields: [{
