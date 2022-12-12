@@ -14,6 +14,7 @@ Ext.define('Lada.view.window.ProbeCreate', {
     alias: 'widget.probecreate',
 
     requires: [
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.form.Probe'
     ],
 

@@ -13,6 +13,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     extend: 'Ext.app.Controller',
     requires: [
         'Lada.view.window.DeleteMultipleItems',
+        'Lada.view.window.ProbeCreate',
         'Lada.view.window.SetTags',
         'Lada.view.window.TagManagement'
     ],

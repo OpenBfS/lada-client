@@ -13,6 +13,7 @@ Ext.define('Lada.view.form.Probe', {
     extend: 'Ext.form.Panel',
     alias: 'widget.probeform',
     requires: [
+        'Lada.util.FunctionScheduler',
         'Lada.view.form.mixins.DeskriptorFieldset',
         'Lada.view.widget.Datenbasis',
         'Lada.view.widget.DatensatzErzeuger',
@@ -30,6 +31,7 @@ Ext.define('Lada.view.form.Probe', {
         'Lada.view.widget.base.Datetime',
         'Lada.view.widget.base.FieldSet',
         'Lada.view.widget.base.DateField',
+        'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.window.MessungCreate',
         'Lada.model.Probe'
     ],
@@ -38,8 +40,6 @@ Ext.define('Lada.view.form.Probe', {
     minWidth: 650,
     margin: 5,
     border: false,
-
-    readOnly: false,
 
     recordId: null,
 
@@ -372,29 +372,27 @@ Ext.define('Lada.view.form.Probe', {
                             type: 'hbox'
                         },
                         items: [{
-                            xtype: 'datefield',
-                            emptyText: ' ',
+                            xtype: 'selectabledisplayfield',
                             fieldLabel: i18n.getMsg('sollVon'),
                             labelWidth: 130,
                             margin: '0, 5, 5, 5',
                             name: 'solldatumBeginn',
-                            format: 'd.m.Y',
-                            formatText: '',
                             width: '50%',
-                            period: 'start',
-                            readOnly: true
+                            renderer: function(v) {
+                                return Lada.util.Date.formatTimestamp(
+                                    v, 'd.m.Y', true);
+                            }
                         }, {
-                            xtype: 'datefield',
-                            emptyText: ' ',
+                            xtype: 'selectabledisplayfield',
                             fieldLabel: i18n.getMsg('sollBis'),
-                            labelWidth: 17,
+                            labelWidth: 25,
                             margin: '0, 5, 5, 5',
                             name: 'solldatumEnde',
-                            format: 'd.m.Y',
-                            formatText: '',
                             width: '50%',
-                            period: 'end',
-                            readOnly: true
+                            renderer: function(v) {
+                                return Lada.util.Date.formatTimestamp(
+                                    v, 'd.m.Y', true);
+                            }
                         }]
                     }, {
                         xtype: 'fset',
@@ -480,16 +478,14 @@ Ext.define('Lada.view.form.Probe', {
                                 margin: '0 5 0 0',
                                 labelWidth: 100,
                                 fieldLabel: i18n.getMsg('mediaDesk'),
-                                editable: false,
-                                readOnly: true
+                                editable: false
                             }, {
                                 xtype: 'textfield',
                                 margin: '0 0 0 5',
                                 name: 'media',
                                 width: '42%',
                                 enforceMaxLength: true,
-                                editable: false,
-                                readOnly: true
+                                editable: false
                             }]
                         }, {
                             xtype: 'fset',
@@ -619,27 +615,8 @@ Ext.define('Lada.view.form.Probe', {
     },
 
     setReadOnly: function(value) {
-        this.readOnly = value;
-        this.down('cbox[name=mstlabor]').setReadOnly(value);
-        this.down('tfield[name=hauptprobenNr]').setReadOnly(value);
-        this.down('cbox[name=reiProgpunktGrpId]').setReadOnly(value);
-        this.down('cbox[name=ktaGruppeId]').setReadOnly(value);
-        this.down('cbox[name=datenbasisId]').setReadOnly(value);
-        this.down('cbox[name=baId]').setReadOnly(value);
-        this.down('chkbox[name=test]').setReadOnly(value);
-        this.down('cbox[name=probenartId]').setReadOnly(value);
-        this.down('cbox[name=erzeugerId]').setReadOnly(value);
-        this.down('cbox[name=umwId]').setReadOnly(value);
-        this.down('datetime[name=probeentnahmeBeginn]').setReadOnly(value);
-        this.down('datetime[name=probeentnahmeEnde]').setReadOnly(value);
-        this.down('datetime[name=ursprungszeit]').setReadOnly(value);
-        this.down('cbox[name=probeNehmerId]').setReadOnly(value);
-        this.down('cbox[name=mplId]').setReadOnly(value);
-        this.readOnly = value;
-
-        //Deskriptoren
-        for (var i = 0; i < 12; i++) {
-            this.down('deskriptor[layer=' + i + ']').setReadOnly(value);
-        }
+        this.getForm().getFields().each(function(field) {
+            field.setReadOnly(value);
+        });
     }
 });

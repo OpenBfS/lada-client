@@ -77,8 +77,8 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             // Handle header checkbox clicks to only send one select event
             onHeaderClick: function() {
                 var selectionCount = this.getCount();
-                var grid = Ext.getCmp('dynamicgridid');
-                var recordCount = grid.getStore().getData().length;
+                var grid = this.view.grid;
+                var recordCount = grid.getStore().getCount();
                 if (recordCount === selectionCount) {
                     this.deselectAll();
                 } else {

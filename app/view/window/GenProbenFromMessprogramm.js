@@ -469,27 +469,13 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         return r;
                     }
                 }, {
+                    xtype: 'datecolumn',
                     header: i18n.getMsg('sollVon'),
-                    dataIndex: 'solldatumBeginn',
-                    renderer: function(value) {
-                        if (!value) {
-                            return '';
-                        }
-                        return Lada.util.Date.formatTimestamp(
-                            value, 'd.m.Y', true
-                        );
-                    }
+                    dataIndex: 'solldatumBeginn'
                 }, {
+                    xtype: 'datecolumn',
                     header: i18n.getMsg('sollBis'),
-                    dataIndex: 'solldatumEnde',
-                    renderer: function(value) {
-                        if (!value) {
-                            return '';
-                        }
-                        return Lada.util.Date.formatTimestamp(
-                            value, 'd.m.Y', true
-                        );
-                    }
+                    dataIndex: 'solldatumEnde'
                 }, {
                     header: i18n.getMsg('messprogramm.form.fieldset.title'),
                     dataIndex: 'mprId'

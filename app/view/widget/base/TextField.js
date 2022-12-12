@@ -42,6 +42,7 @@ Ext.define('Lada.view.widget.base.TextField', {
                 ? true
                 : this.isFormField,
             readOnly: this.readOnly || false,
+            editable: this.editable === undefined ? true : this.editable,
             validator: this.validator,
             listeners: this.listeners,
             type: this.type,

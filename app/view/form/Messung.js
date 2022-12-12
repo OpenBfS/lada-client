@@ -20,6 +20,7 @@ Ext.define('Lada.view.form.Messung', {
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.base.Datetime',
         'Lada.view.widget.base.NumberField',
+        'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.widget.Statuskombi'
     ],
 
@@ -156,7 +157,6 @@ Ext.define('Lada.view.form.Messung', {
                     name: 'statuskombi',
                     width: '100%',
                     padding: '0,5,0,5',
-                    readOnly: true,
                     isFormField: false,
                     fieldLabel: i18n.getMsg('header.statuskombi'),
                     buttonListener: {

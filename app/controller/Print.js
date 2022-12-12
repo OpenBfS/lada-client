@@ -444,6 +444,7 @@ Ext.define('Lada.controller.Print', {
             ) {
                 visibleColumns.push({
                     dataIndex: cols[i].dataIndex,
+                    dataType: cols[i].dataType.name,
                     renderer: (cols[i].renderer.$name === 'defaultRenderer') ?
                         null :
                         cols[i].renderer
@@ -460,7 +461,7 @@ Ext.define('Lada.controller.Print', {
             //Lookup every column and write to data array;
             for (i = 0; i < visibleColumns.length; i++) {
                 var rawData = row[visibleColumns[i].dataIndex];
-                if (visibleColumns[i].renderer) {
+                if (visibleColumns[i].renderer && visibleColumns[i].dataType !== 'textLineBr') {
                     out.push(visibleColumns[i].renderer(rawData));
                 } else {
                     out.push(rawData);

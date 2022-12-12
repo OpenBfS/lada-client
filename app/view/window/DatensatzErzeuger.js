@@ -14,6 +14,7 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
     alias: 'widget.datensatzerzeugeredit',
 
     requires: [
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.form.DatensatzErzeuger'
     ],
 

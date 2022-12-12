@@ -13,6 +13,10 @@
 Ext.define('Lada.model.Messprogramm', {
     extend: 'Lada.model.LadaBase',
 
+    requires: [
+        'Lada.model.field.NonBlankString'
+    ],
+
     hasMany: 'ProbenZusatz',
 
     fields: [{
@@ -43,6 +47,7 @@ Ext.define('Lada.model.Messprogramm', {
         allowNull: true
     }, {
         name: 'mediaDesk',
+        type: 'nonblankstring',
         allowNull: true
     }, {
         name: 'umwId',

@@ -20,6 +20,10 @@ Ext.define('Lada.model.HelpprintModel', {
     extend: 'Ext.app.ViewModel',
     alias: 'viewmodel.k-window-imprint',
 
+    requires: [
+        'Lada.model.HelpNode'
+    ],
+
     formulas: {
         selectionHtml: function(get) {
             var selection = get('treelist.selection'),
@@ -41,6 +45,7 @@ Ext.define('Lada.model.HelpprintModel', {
     stores: {
         imprintNavItems: {
             type: 'tree',
+            model: 'Lada.model.HelpNode',
             root: {
                 children: [{
                     id: 'intro',
