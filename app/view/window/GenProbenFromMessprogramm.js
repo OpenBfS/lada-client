@@ -68,7 +68,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     startDate.getFullYear(),
                     startDate.getMonth(),
                     startDate.getDate());
-                this.startUTC = startDate;
+                this.startUTC = startUTC;
                 var endDate = new Date(
                     me.down('datefield[name=end]').getValue());
                 var endUTC = Date.UTC(
