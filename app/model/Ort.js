@@ -12,6 +12,10 @@
 Ext.define('Lada.model.Ort', {
     extend: 'Lada.model.LadaBase',
 
+    requires: [
+        'Lada.model.field.NonBlankString'
+    ],
+
     fields: [{
         name: 'id',
         type: 'int'
@@ -20,7 +24,8 @@ Ext.define('Lada.model.Ort', {
         type: 'boolean',
         allowNull: true
     }, {
-        name: 'ortId'
+        name: 'ortId',
+        type: 'nonblankstring'
     }, {
         name: 'ktaGruppeId',
         type: 'int',
