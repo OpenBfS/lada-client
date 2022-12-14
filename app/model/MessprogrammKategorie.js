@@ -12,12 +12,17 @@
 Ext.define('Lada.model.MessprogrammKategorie', {
     extend: 'Lada.model.LadaBase',
 
+    requires: [
+        'Lada.model.field.NonBlankString'
+    ],
+
     fields: [{
         name: 'id'
     }, {
         name: 'netzbetreiberId'
     }, {
-        name: 'code'
+        name: 'code',
+        type: 'nonblankstring',
     }, {
         name: 'bezeichnung'
     }, {
