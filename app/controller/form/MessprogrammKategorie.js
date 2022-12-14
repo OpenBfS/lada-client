@@ -97,7 +97,6 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
     },
 
     checkCommitEnabled: function(callingEl, dirty) {
-        debugger;
         var form = callingEl.owner;
         var netzbetr = form.down('netzbetreiber').getValue();
         if (Ext.Array.contains(Lada.funktionen, 4)
