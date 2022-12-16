@@ -44,10 +44,6 @@ Ext.define('Lada.view.window.MessprogrammKategorie', {
             }
         });
 
-        // InitialConfig is the config object passed to the constructor on
-        // creation of this window. We need to pass it throuh to the form as
-        // we need the "modelId" param to load the correct item.
-
         this.tools = [{
             type: 'help',
             tooltip: i18n.getMsg('help.qtip'),

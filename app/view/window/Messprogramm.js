@@ -90,9 +90,6 @@ Ext.define('Lada.view.window.Messprogramm', {
         });
 
         this.height = Ext.getBody().getViewSize().height - 30;
-        // InitialConfig is the config object passed to the constructor on
-        // creation of this window. We need to pass it throuh to the form as
-        // we need the "Id" param to load the correct item.
 
         this.tools = [{
             type: 'help',
