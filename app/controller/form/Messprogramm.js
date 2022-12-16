@@ -395,29 +395,19 @@ Ext.define('Lada.controller.form.Messprogramm', {
     },
 
     /**
-      * The dirtyForm function enables or disables the save and discard
-      * button which are present in the toolbar of the form.
-      * The Buttons are only active if the content of the form was altered
-      * (the form is dirty).
+      * The dirtyForm function enables or disables the
+      * buttons which are present in the toolbar of the form.
       */
     dirtyForm: function(form, dirty) {
-        if (!form.getRecord().get('readonly') && dirty) {
-            form.owner.down('button[action=save]').setDisabled(false);
-            form.owner.down('button[action=discard]').setDisabled(false);
-        } else {
-            form.owner.down('button[action=save]').setDisabled(true);
-            form.owner.down('button[action=discard]').setDisabled(true);
-        }
-        if (form.getRecord().phantom || dirty ||
-            form.getRecord().get('readonly') === true) {
-            form.owner.up('messprogramm').down(
-                'button[action=generateproben]').setDisabled(true);
-            form.owner.down('button[action=copy]').setDisabled(true);
-        } else {
-            form.owner.up('messprogramm').down(
-                'button[action=generateproben]').setDisabled(false);
-            form.owner.down('button[action=copy]').setDisabled(false);
-        }
+        var enableForm = !form.getRecord().get('readonly') && dirty;
+        form.owner.down('button[action=save]').setDisabled(!enableForm);
+        form.owner.down('button[action=discard]').setDisabled(!enableForm);
+
+        var disableActions = form.getRecord().phantom
+            || dirty || form.getRecord().get('readonly');
+        form.owner.up('messprogramm').down(
+            'button[action=generateproben]').setDisabled(disableActions);
+        form.owner.down('button[action=copy]').setDisabled(disableActions);
     },
 
     /**
