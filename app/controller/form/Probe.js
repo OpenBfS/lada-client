@@ -35,7 +35,7 @@ Ext.define('Lada.controller.form.Probe', {
             },
             'probeform': {
                 validitychange: this.checkCommitEnabled,
-                dirtychange: this.handleDirtyChange,
+                dirtychange: this.checkCommitEnabled,
                 save: this.saveHeadless
             },
             'probeform tfield [name=hauptprobenNr]': {
@@ -808,43 +808,6 @@ Ext.define('Lada.controller.form.Probe', {
         if (w === 0 && e === 0 && field.up().clearWarningOrError) {
             field.up().clearWarningOrError();
         }
-    },
-
-    /**
-     * Handle changes of the probe forms dirty state and (de-) activate form
-     * buttons accordingly.
-     * @param {Ext.Component} callingEl Component that fired the event
-     */
-    handleDirtyChange: function(callingEl) {
-        var panel;
-        if (callingEl.up) { //called by a field in the form
-            panel = callingEl.up('probeform');
-        } else { //called by the form
-            panel = callingEl.owner;
-        }
-        if (panel.getRecord().get('readonly')) {
-            panel.down('button[action=save]').setDisabled(true);
-            panel.down('button[action=discard]').setDisabled(true);
-            panel.down('button[action=copy]').setDisabled(true);
-        } else {
-            if (panel.isValid()) {
-                if (panel.isDirty()) {
-                    panel.down('button[action=discard]').setDisabled(false);
-                    panel.down('button[action=save]').setDisabled(false);
-                    panel.down('button[action=copy]').setDisabled(true);
-                } else {
-                    // false keine Veränderung
-                    panel.down('button[action=discard]').setDisabled(true);
-                    panel.down('button[action=copy]').setDisabled(false);
-                    panel.down('button[action=save]').setDisabled(true);
-                }
-            } else {
-                panel.down('button[action=save]').setDisabled(true);
-                panel.down('button[action=copy]').setDisabled(true);
-                panel.down('button[action=discard]').setDisabled(false);
-            }
-        }
-        this.checkCommitEnabled(callingEl);
     },
 
     hauptprobenNrChanged: function(field) {
