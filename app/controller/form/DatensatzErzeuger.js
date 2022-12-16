@@ -47,9 +47,6 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
         }
         record.set('netzbetreiberId',
             formPanel.down('netzbetreiber').getValue()[0]);
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
-        }
         if (record.phantom) {
             record.set('id', null);
         }

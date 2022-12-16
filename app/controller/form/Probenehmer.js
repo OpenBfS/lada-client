@@ -44,9 +44,6 @@ Ext.define('Lada.controller.form.Probenehmer', {
         record.set(formPanel.getForm().getFieldValues(true));
         record.set('netzbetreiberId',
             formPanel.down('netzbetreiber').getValue()[0]);
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
-        }
         if (record.phantom) {
             record.set('id', null);
         }
@@ -112,9 +109,6 @@ Ext.define('Lada.controller.form.Probenehmer', {
         var record = formPanel.getForm().getRecord();
         for (var key in data) {
             record.set(key, data[key]);
-        }
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
         }
         if (record.phantom) {
             record.set('id', null);

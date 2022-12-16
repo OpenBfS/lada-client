@@ -251,9 +251,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
 
         // Update record with values changed in the form
         record.set(formPanel.getForm().getFieldValues(true));
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
-        }
         if (record.phantom) {
             record.set('id', null);
         }
@@ -334,9 +331,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var record = formPanel.getForm().getRecord();
         for (var key in data) {
             record.set(key, data[key]);
-        }
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
         }
         if (record.phantom) {
             record.set('id', null);
