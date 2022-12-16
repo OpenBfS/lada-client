@@ -726,20 +726,6 @@ Ext.define('Lada.controller.form.Probe', {
         }
     },
 
-    enableButtons: function(form) {
-        form.owner.down('button[action=save]').setDisabled(false);
-        form.owner.down('button[action=discard]').setDisabled(false);
-        form.owner.up('window').disableChildren();
-    },
-
-    disableButtons: function(form) {
-        form.owner.down('button[action=save]').setDisabled(true);
-        form.owner.down('button[action=discard]').setDisabled(true);
-
-        // todo this might not be true in all cases
-        form.owner.up('window').enableChildren();
-    },
-
     /**
      * checkDate() is called when a xtype=datetime field was modified
      * It checks for two things:
