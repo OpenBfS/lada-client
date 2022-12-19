@@ -341,9 +341,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
             },
             failure: function(newRecord, response) {
                 var i18n = Lada.getApplication().bundle;
-                var rec = formPanel.getForm().getRecord();
-                rec.dirty = false;
-                formPanel.getForm().loadRecord(rec);
                 if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),

@@ -550,8 +550,6 @@ Ext.define('Lada.controller.form.Probe', {
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                         i18n.getMsg('err.msg.generic.body'));
                 } else {
-                    var rec = formPanel.getForm().getRecord();
-                    rec.dirty = false;
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
                         if (json.message) {
