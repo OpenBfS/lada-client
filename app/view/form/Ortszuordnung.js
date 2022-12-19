@@ -158,7 +158,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     setOrt: function(row, selRecord) {
         if (selRecord) {
             var newOrtId = selRecord.get('id');
-            if (!this.readOnly && newOrtId) {
+            if (!this.getRecord().get('readonly') && newOrtId) {
                 this.getForm().setValues({ortId: newOrtId});
                 this.setOrtInfo(selRecord);
                 this.down('button[action=showort]').setDisabled(false);
@@ -272,7 +272,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     },
 
     setReadOnly: function(value) {
-        this.readOnly = value;
         this.down('tarea[name=ortszusatztext]').setReadOnly(value);
         this.down('ortszusatz [name=ozId]').setReadOnly(value);
         var fieldId = 'textfield[name=ortszuordnungTyp]';
@@ -302,7 +301,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         var win = this.up('ortszuordnungwindow');
         var osg = win.down('ortstammdatengrid');
         var oForm = win.down('ortszuordnungform');
-        if (!this.readOnly) {
+        if (!this.getRecord().get('readonly')) {
             osg.addListener('select', oForm.setOrt, oForm);
             var map = win.down('map');
             if (!map.featureLayer) {
