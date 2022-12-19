@@ -10,7 +10,7 @@
  * Formular to edit a Probe
  */
 Ext.define('Lada.view.form.Probe', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.probeform',
     requires: [
         'Lada.util.FunctionScheduler',
@@ -613,11 +613,5 @@ Ext.define('Lada.view.form.Probe', {
         for (var i = 0; i < 12; i++) {
             this.down('deskriptor[layer=' + i + ']').clearWarningOrError();
         }
-    },
-
-    setReadOnly: function(value) {
-        this.query('field').forEach(function(field) {
-            field.setReadOnly(value);
-        });
     }
 });

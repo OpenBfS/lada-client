@@ -10,7 +10,7 @@
  * Form to edit a Messung
  */
 Ext.define('Lada.view.form.Messung', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.messungform',
     requires: [
         'Ext.layout.container.Table',
@@ -301,14 +301,5 @@ Ext.define('Lada.view.form.Messung', {
         this.down('datetime[name=messzeitpunkt]').clearWarningOrError();
         this.down('numfield[name=messdauer]').clearWarningOrError();
         this.down('chkbox[name=fertig]').clearWarningOrError();
-    },
-
-    setReadOnly: function(value) {
-        this.readOnly = value;
-        this.down('tfield[name=nebenprobenNr]').setReadOnly(value);
-        this.down('messmethode[name=mmtId]').setReadOnly(value);
-        this.down('datetime[name=messzeitpunkt]').setReadOnly(value);
-        this.down('numfield[name=messdauer]').setReadOnly(value);
-        this.down('chkbox[name=fertig]').setReadOnly(value);
     }
 });

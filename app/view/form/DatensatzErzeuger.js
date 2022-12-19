@@ -10,7 +10,7 @@
  * Formular to edit a DatensatzErzeuger
  */
 Ext.define('Lada.view.form.DatensatzErzeuger', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.datensatzerzeugerform',
     requires: [
         'Lada.view.widget.Netzbetreiber',
@@ -192,12 +192,5 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
         this.down('tfield[name=datensatzErzeugerId]').clearWarningOrError();
         //TODO: is not a function
         //this.down('combobox[name=mstId]').clearWarningOrError();
-    },
-
-    setReadOnly: function(value) {
-        this.down('netzbetreiber').setReadOnly(value);
-        this.down('tarea[name=bezeichnung]').setReadOnly(value);
-        this.down('tfield[name=datensatzErzeugerId]').setReadOnly(value);
-        this.down('combobox[name=mstId]').setReadOnly(value);
     }
 });

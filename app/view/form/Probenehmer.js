@@ -10,7 +10,7 @@
  * Formular to edit a Probe
  */
 Ext.define('Lada.view.form.Probenehmer', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.probenehmerform',
     requires: [
         'Lada.view.widget.Netzbetreiber',
@@ -314,21 +314,5 @@ Ext.define('Lada.view.form.Probenehmer', {
         this.down('tfield[name=telefon]').clearWarningOrError();
         this.down('tfield[name=tourenplan]').clearWarningOrError();
         this.down('tfield[name=typ]').clearWarningOrError();
-    },
-
-    setReadOnly: function(value) {
-        this.down('tfield[name=prnId]').setReadOnly(value);
-        this.down('netzbetreiber').setReadOnly(value);
-        this.down('tfield[name=bearbeiter]').setReadOnly(value);
-        this.down('tfield[name=bemerkung]').setReadOnly(value);
-        this.down('tarea[name=bezeichnung]').setReadOnly(value);
-        this.down('tfield[name=kurzBezeichnung]').setReadOnly(value);
-        this.down('tfield[name=betrieb]').setReadOnly(value);
-        this.down('tfield[name=ort]').setReadOnly(value);
-        this.down('tfield[name=plz]').setReadOnly(value);
-        this.down('tfield[name=strasse]').setReadOnly(value);
-        this.down('tfield[name=telefon]').setReadOnly(value);
-        this.down('tfield[name=tourenplan]').setReadOnly(value);
-        this.down('tfield[name=typ]').setReadOnly(value);
     }
 });

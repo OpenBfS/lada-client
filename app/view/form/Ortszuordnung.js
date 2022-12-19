@@ -10,7 +10,7 @@
  * Form to edit the Ortszuordnung of a Probe
  */
 Ext.define('Lada.view.form.Ortszuordnung', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.ortszuordnungform',
 
     requires: [
@@ -269,13 +269,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         this.down('tarea[name=ortszusatztext]').clearWarningOrError();
         this.down('ortszuordnungtyp[name=ortszuordnungTyp]')
             .clearWarningOrError();
-    },
-
-    setReadOnly: function(value) {
-        this.down('tarea[name=ortszusatztext]').setReadOnly(value);
-        this.down('ortszusatz [name=ozId]').setReadOnly(value);
-        var fieldId = 'textfield[name=ortszuordnungTyp]';
-        this.down(fieldId).setReadOnly(value);
     },
 
     /**

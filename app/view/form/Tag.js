@@ -10,7 +10,7 @@
  * Formular to edit a Tag
  */
 Ext.define('Lada.view.form.Tag', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.tagform',
     store: null,
 
@@ -124,15 +124,6 @@ Ext.define('Lada.view.form.Tag', {
 
     setRecord: function(tagRecord) {
         this.getForm().loadRecord(tagRecord);
-        this.setReadOnly();
-    },
-
-    setReadOnly: function() {
-        var ro = this.getForm().getRecord().get('readonly');
-        this.down('textfield[name=tag]').setReadOnly(ro);
-        this.down('messstelle').setReadOnly(ro);
-        this.down('netzbetreiber').setReadOnly(ro);
-        this.down('tagtyp').setReadOnly(ro);
-        this.down('datefield[name=gueltigBis]').setReadOnly(ro);
+        this.setReadOnly(this.getRecord().get('readonly'));
     }
 });

@@ -10,7 +10,7 @@
  * Form to edit a Messprogramm
  */
 Ext.define('Lada.view.form.Messprogramm', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.messprogrammform',
     requires: [
         'Lada.util.FunctionScheduler',
@@ -695,30 +695,5 @@ Ext.define('Lada.view.form.Messprogramm', {
         // Deskriptoren are missing
         this.down('cbox[name=umwId]').clearWarningOrError();
         this.down('cbox[name=mehId]').clearWarningOrError();
-    },
-
-    setReadOnly: function(value) {
-        this.down('cbox[name=mstlabor]').setReadOnly(value);
-        this.down('cbox[name=datenbasisId]').setReadOnly(value);
-        this.down('cbox[name=reiProgpunktGrpId]').setReadOnly(value);
-        this.down('cbox[name=ktaGruppeId]').setReadOnly(value);
-        this.down('cbox[name=baId]').setReadOnly(value);
-        this.down('chkbox[name=test]').setReadOnly(value);
-        this.down('chkbox[name=aktiv]').setReadOnly(value);
-        this.down('cbox[name=probenartId]').setReadOnly(value);
-        this.down('cbox[name=probenintervall]').setReadOnly(value);
-        this.down('numfield[name=teilintervallVon]').setReadOnly(value);
-        this.down('numfield[name=teilintervallBis]').setReadOnly(value);
-        this.down('numfield[name=intervallOffset]').setReadOnly(value);
-        this.down('dayofyear[name=gueltigVon]').setReadOnly(value);
-        this.down('dayofyear[name=gueltigBis]').setReadOnly(value);
-        this.down('cbox[name=umwId]').setReadOnly(value);
-        this.down('cbox[name=mehId]').setReadOnly(value);
-        this.down('cbox[name=probeNehmerId]').setReadOnly(value);
-        this.down('messprogrammland[name=mplId]').setReadOnly(value);
-        this.down('tagfield[name=probenZusatzs]').setReadOnly(value);
-        for (var i = 0; i < 12; i++) {
-            this.down('deskriptor[layer=' + i + ']').setReadOnly(value);
-        }
     }
 });
