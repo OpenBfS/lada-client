@@ -19,6 +19,7 @@ Ext.define('Lada.view.form.Messung', {
         'Lada.view.widget.Messmethode',
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.base.Datetime',
+        'Lada.view.widget.base.DisplayCheckbox',
         'Lada.view.widget.base.NumberField',
         'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.widget.Statuskombi'
@@ -119,9 +120,8 @@ Ext.define('Lada.view.form.Messung', {
                             width: 300,
                             labelWidth: 100
                         }, {
-                            xtype: 'chkbox',
+                            xtype: 'displaycheckbox',
                             name: 'geplant',
-                            readOnly: true,
                             fieldLabel: i18n.getMsg('geplant'),
                             width: 300,
                             labelWidth: 100
@@ -301,7 +301,6 @@ Ext.define('Lada.view.form.Messung', {
         this.down('datetime[name=messzeitpunkt]').clearWarningOrError();
         this.down('numfield[name=messdauer]').clearWarningOrError();
         this.down('chkbox[name=fertig]').clearWarningOrError();
-        this.down('chkbox[name=geplant]').clearWarningOrError();
     },
 
     setReadOnly: function(value) {
