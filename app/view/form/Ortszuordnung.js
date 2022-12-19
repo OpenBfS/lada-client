@@ -276,10 +276,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         this.down('ortszusatz [name=ozId]').setReadOnly(value);
         var fieldId = 'textfield[name=ortszuordnungTyp]';
         this.down(fieldId).setReadOnly(value);
-        if (value) {
-            var button = this.down('button[action=save]');
-            button.setDisabled(true);
-        }
     },
 
     /**
