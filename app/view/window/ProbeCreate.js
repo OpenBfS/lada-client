@@ -171,7 +171,6 @@ Ext.define('Lada.view.window.ProbeCreate', {
             umwId: [631]
         };
         this.down('probeform').setRecord(record);
-        this.down('probeform').setMediaDesk(record);
         this.down('probeform').setMessages(errors, warnings, notifications);
         this.down('probeform').isValid();
     },

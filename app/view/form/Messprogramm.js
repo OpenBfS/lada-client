@@ -628,6 +628,8 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.populateIntervall(messRecord);
 
         this.filterProbenZusatzs(messRecord.get('umwId'));
+
+        this.setMediaDesk(messRecord);
     },
 
     setMediaDesk: function(record) {

@@ -608,7 +608,6 @@ Ext.define('Lada.controller.form.Probe', {
                     } else {
                         // Update form in existing window
                         formPanel.setRecord(newRecord);
-                        formPanel.setMediaDesk(newRecord);
                         formPanel.setMessages(
                             json.errors,
                             json.warnings,

@@ -169,7 +169,6 @@ Ext.define('Lada.view.window.Messprogramm', {
                     }
                 }
 
-                me.down('messprogrammform').setMediaDesk(record);
                 me.setLoading(false);
                 if (me.record === null) {
                     me.setTitle(
@@ -208,7 +207,6 @@ Ext.define('Lada.view.window.Messprogramm', {
             this.record = record;
 
             this.down('messprogrammform').setRecord(record);
-            this.down('messprogrammform').setMediaDesk(record);
 
             this.disableChildren();
             this.down('button[name=reload]').setDisabled(true);

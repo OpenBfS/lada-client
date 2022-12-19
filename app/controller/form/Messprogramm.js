@@ -277,7 +277,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         parentGrid[0].reload();
                     }
                     formPanel.setRecord(rec);
-                    formPanel.setMediaDesk(rec);
                     formPanel.setMessages(json.errors, json.warnings);
                     var win = button.up('window');
                     win.record = rec;

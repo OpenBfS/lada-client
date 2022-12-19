@@ -516,6 +516,8 @@ Ext.define('Lada.view.form.Probe', {
         if (probeRecord.get('owner') && !probeRecord.phantom) {
             this.down('button[action=copy]').setDisabled(false);
         }
+
+        this.setMediaDesk(probeRecord);
     },
 
     setMediaDesk: function(record) {
