@@ -272,9 +272,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
             success: function(rec, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
-                    button.setDisabled(true);
-                    button.up('toolbar').down('button[action=discard]')
-                        .setDisabled(true);
                     var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                     if (parentGrid.length === 1) {
                         parentGrid[0].reload();
@@ -290,9 +287,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
             },
             failure: function(newRecord, response) {
                 var i18n = Lada.getApplication().bundle;
-                button.setDisabled(true);
-                button.up('toolbar').down('button[action=discard]')
-                    .setDisabled(true);
                 var rec = formPanel.getForm().getRecord();
                 rec.dirty = false;
                 formPanel.getForm().loadRecord(newRecord);
