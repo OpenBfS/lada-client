@@ -276,7 +276,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     if (parentGrid.length === 1) {
                         parentGrid[0].reload();
                     }
-                    formPanel.clearMessages();
                     formPanel.setRecord(rec);
                     formPanel.setMediaDesk(rec);
                     formPanel.setMessages(json.errors, json.warnings);

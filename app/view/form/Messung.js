@@ -192,6 +192,7 @@ Ext.define('Lada.view.form.Messung', {
     },
 
     setRecord: function(record) {
+        this.clearMessages();
         this.record = record;
         var me = this;
         var form = me.getForm();

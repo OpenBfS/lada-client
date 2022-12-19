@@ -66,7 +66,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
             success: function(newRecord, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
-                    formPanel.clearMessages();
                     formPanel.setRecord(newRecord);
                     formPanel.setMessages(json.errors, json.warnings);
                     formPanel.up('window').parentWindow.initData();

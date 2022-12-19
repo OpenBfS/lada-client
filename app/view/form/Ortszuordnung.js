@@ -146,6 +146,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     },
 
     setRecord: function(record) {
+        this.clearMessages();
         this.loadRecord(record);
         this.setReadOnly(record.get('readonly'));
     },

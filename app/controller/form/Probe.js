@@ -607,7 +607,6 @@ Ext.define('Lada.controller.form.Probe', {
                         win.setPosition(30);
                     } else {
                         // Update form in existing window
-                        formPanel.clearMessages();
                         formPanel.setRecord(newRecord);
                         formPanel.setMediaDesk(newRecord);
                         formPanel.setMessages(
@@ -649,7 +648,6 @@ Ext.define('Lada.controller.form.Probe', {
                         if (parentGrid.length === 1) {
                             parentGrid[0].reload();
                         }
-                        formPanel.clearMessages();
                         formPanel.setRecord(newRecord);
                         formPanel.setMessages(
                             json.errors,

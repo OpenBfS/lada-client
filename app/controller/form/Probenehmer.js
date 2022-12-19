@@ -57,7 +57,6 @@ Ext.define('Lada.controller.form.Probenehmer', {
                 rec.dirty = false;
                 formPanel.getForm().loadRecord(newRecord);
                 var json = Ext.decode(response.getResponse().responseText);
-                formPanel.clearMessages();
                 formPanel.setRecord(newRecord);
                 formPanel.setMessages(json.errors, json.warnings);
                 button.setDisabled(true);
