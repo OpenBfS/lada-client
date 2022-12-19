@@ -200,7 +200,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 var store = combo.getStore();
                                 store.clearFilter();
                                 var nId = combo.up('fieldset')
-                                    .down('netzbetreiber[name=netzbetreiber]')
+                                    .down('field[name=netzbetreiber]')
                                     .getValue();
                                 if (!nId) {
                                     store.filterBy(function(record) {
@@ -229,7 +229,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 var store = combo.getStore();
                                 store.clearFilter();
                                 var nId = combo.up('fieldset')
-                                    .down('netzbetreiber[name=netzbetreiber]')
+                                    .down('field[name=netzbetreiber]')
                                     .getValue();
                                 if (!nId) {
                                     store.filterBy(function(record) {
@@ -684,7 +684,6 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('chkbox[name=test]').clearWarningOrError();
         this.down('chkbox[name=aktiv]').clearWarningOrError();
         this.down('cbox[name=probenartId]').clearWarningOrError();
-        this.down('netzbetreiber').clearWarningOrError();
         // clear messages in intervall definition
         this.down('fset[name=probenIntervallFieldset]').clearMessages();
         this.down('cbox[name=probenintervall]').clearWarningOrError();
@@ -707,7 +706,6 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.down('chkbox[name=test]').setReadOnly(value);
         this.down('chkbox[name=aktiv]').setReadOnly(value);
         this.down('cbox[name=probenartId]').setReadOnly(value);
-        //         this.down('netzbetreiber').setReadOnly(value);
         this.down('cbox[name=probenintervall]').setReadOnly(value);
         this.down('numfield[name=teilintervallVon]').setReadOnly(value);
         this.down('numfield[name=teilintervallBis]').setReadOnly(value);

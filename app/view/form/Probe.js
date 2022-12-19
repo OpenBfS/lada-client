@@ -218,7 +218,7 @@ Ext.define('Lada.view.form.Probe', {
                                             store.clearFilter();
                                             /*eslint-disable max-len*/
                                             var nId = combo.up('fieldset')
-                                                .down('netzbetreiber[name=netzbetreiber]')
+                                                .down('field[name=netzbetreiber]')
                                                 .getValue();
                                             if (!nId || nId.length === 0) {
                                                 store.filterBy(
@@ -257,7 +257,7 @@ Ext.define('Lada.view.form.Probe', {
                                             store.clearFilter();
                                             /*eslint-disable max-len*/
                                             var nId = combo.up('fieldset')
-                                                .down('netzbetreiber[name=netzbetreiber]')
+                                                .down('field[name=netzbetreiber]')
                                                 .getValue();
                                             var dId = combo.up('fieldset')
                                                 .down('textfield[name=mstId]')
@@ -304,7 +304,7 @@ Ext.define('Lada.view.form.Probe', {
                                         store.clearFilter();
                                         /*eslint-disable max-len*/
                                         var nId = combo.up('fieldset')
-                                            .down('netzbetreiber[name=netzbetreiber]')
+                                            .down('field[name=netzbetreiber]')
                                             .getValue();
                                         if (!nId || nId.length === 0) {
                                             store.filterBy(function(record) {
@@ -599,7 +599,6 @@ Ext.define('Lada.view.form.Probe', {
         this.down('cbox[name=baId]').clearWarningOrError();
         this.down('chkbox[name=test]').clearWarningOrError();
         this.down('cbox[name=probenartId]').clearWarningOrError();
-        this.down('netzbetreiber').clearWarningOrError();
         this.down('cbox[name=erzeugerId]').clearWarningOrError();
         this.down('cbox[name=umwId]').clearWarningOrError();
         this.down('datetime[name=probeentnahmeBeginn]').clearWarningOrError();
