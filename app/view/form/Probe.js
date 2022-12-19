@@ -616,7 +616,7 @@ Ext.define('Lada.view.form.Probe', {
     },
 
     setReadOnly: function(value) {
-        this.getForm().getFields().each(function(field) {
+        this.query('field').forEach(function(field) {
             field.setReadOnly(value);
         });
     }
