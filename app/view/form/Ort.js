@@ -33,8 +33,6 @@ Ext.define('Lada.view.form.Ort', {
 
     trackResetOnLoad: true,
 
-    readOnly: true,
-
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.items = [{
