@@ -12,6 +12,10 @@
 Ext.define('Lada.view.form.Tag', {
     extend: 'Lada.view.form.LadaForm',
     alias: 'widget.tagform',
+    requires: [
+        'Lada.view.widget.base.DateTimeField'
+    ],
+
     store: null,
 
     trackResetOnLoad: true,
@@ -115,7 +119,7 @@ Ext.define('Lada.view.form.Tag', {
                 }
             }, {
                 name: 'gueltigBis',
-                xtype: 'datefield',
+                xtype: 'datetimefield',
                 fieldLabel: i18n.getMsg('tag.gueltigBis')
             }]
         }];
