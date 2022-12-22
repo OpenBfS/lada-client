@@ -10,7 +10,7 @@
  * Formular to edit a MessprogrammKategorie
  */
 Ext.define('Lada.view.form.MessprogrammKategorie', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.mprkatform',
     requires: [
         'Lada.view.widget.Netzbetreiber',
@@ -145,11 +145,5 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
         this.down('netzbetreiber').clearWarningOrError();
         this.down('tarea[name=bezeichnung]').clearWarningOrError();
         this.down('tfield[name=code]').clearWarningOrError();
-    },
-
-    setReadOnly: function(value) {
-        this.down('netzbetreiber').setReadOnly(value);
-        this.down('tarea[name=bezeichnung]').setReadOnly(value);
-        this.down('tfield[name=code]').setReadOnly(value);
     }
 });
