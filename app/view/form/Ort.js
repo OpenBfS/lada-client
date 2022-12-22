@@ -270,41 +270,6 @@ Ext.define('Lada.view.form.Ort', {
         }
     },
 
-    setMessages: function(errors, warnings) {
-        var key;
-        var element;
-        var content;
-        var i18n = Lada.getApplication().bundle;
-        if (warnings) {
-            for (key in warnings) {
-                element = this.down('component[name=' + key + ']');
-                if (!element) {
-                    continue;
-                }
-                content = warnings[key];
-                var warnText = '';
-                for (var i = 0; i < content.length; i++) {
-                    warnText += i18n.getMsg(content[i].toString()) + '\n';
-                }
-                element.showWarnings(warnText);
-            }
-        }
-        if (errors) {
-            for (key in errors) {
-                element = this.down('component[name=' + key + ']');
-                if (!element) {
-                    continue;
-                }
-                content = errors[key];
-                var errorText = '';
-                for (var j = 0; j < content.length; j++) {
-                    errorText += i18n.getMsg(content[j].toString()) + '\n';
-                }
-                element.showErrors(errorText);
-            }
-        }
-    },
-
     clearMessages: function() {
         // TODO: this is a stub
         this.down('tfield[name=koordXExtern]').clearWarningOrError();

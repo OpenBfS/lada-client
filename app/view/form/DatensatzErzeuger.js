@@ -142,50 +142,6 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
         this.getForm().loadRecord(datensatzerzeugerRecord);
     },
 
-    setMessages: function(errors, warnings) {
-        var key;
-        var element;
-        var content;
-        var i18n = Lada.getApplication().bundle;
-        var tmp;
-        if (warnings) {
-            for (key in warnings) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = warnings[key];
-                var warnText = '';
-                for (var i = 0; i < content.length; i++) {
-                    warnText += i18n.getMsg(content[i].toString()) + '\n';
-                }
-                element.showWarnings(warnText);
-            }
-        }
-        if (errors) {
-            for (key in errors) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = errors[key];
-                var errorText = '';
-                for (var j = 0; j < content.length; j++) {
-                    errorText += i18n.getMsg(content[j].toString()) + '\n';
-                }
-                element.showErrors(errorText);
-            }
-        }
-    },
-
     clearMessages: function() {
         this.down('netzbetreiber').clearWarningOrError();
         this.down('tarea[name=bezeichnung]').clearWarningOrError();
