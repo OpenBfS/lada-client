@@ -473,8 +473,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 }, {
                     xtype: 'datecolumn',
                     header: i18n.getMsg('sollVon'),
-                    dataIndex: 'solldatumBeginn',
-                    renderer: this.renderTimestamp
+                    dataIndex: 'solldatumBeginn'
                 }, {
                     xtype: 'datecolumn',
                     header: i18n.getMsg('sollBis'),
