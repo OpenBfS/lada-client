@@ -21,9 +21,9 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
                 click: this.discard
             },
             'mprkatform': {
-                dirtychange: this.checkCommitEnabled
+                dirtychange: this.checkCommitEnabled,
+                validitychange: this.checkCommitEnabled
             }
-
         });
     },
 
@@ -36,9 +36,6 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
         }
         record.set('netzbetreiberId',
             formPanel.down('netzbetreiber').getValue()[0]);
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
-        }
         if (record.phantom) {
             record.set('id', null);
         }
@@ -53,7 +50,6 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
                 formPanel.getForm().loadRecord(newRecord);
                 var json = Ext.decode(response.getResponse().responseText);
                 formPanel.clearMessages();
-                formPanel.setRecord(newRecord);
                 formPanel.setMessages(json.errors, json.warnings);
                 button.setDisabled(true);
                 button.up('toolbar').down('button[action=discard]')

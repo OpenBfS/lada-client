@@ -70,7 +70,6 @@ Ext.define('Lada.controller.form.Messung', {
                     button.setDisabled(true);
                     button.up('toolbar').down('button[action=discard]')
                         .setDisabled(true);
-                    formPanel.clearMessages();
                     formPanel.setRecord(newRecord);
                     formPanel.setMessages(json.errors, json.warnings,
                         json.notifications);
@@ -127,7 +126,6 @@ Ext.define('Lada.controller.form.Messung', {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                 i18n.getMsg('err.msg.generic.body'));
                         }
-                        formPanel.clearMessages();
                         formPanel.setRecord(record);
                         formPanel.setMessages(json.errors, json.warnings,
                             json.notifications);
@@ -141,20 +139,6 @@ Ext.define('Lada.controller.form.Messung', {
             }
         });
     },
-
-    enableButtons: function(form) {
-        form.owner.down('button[action=save]').setDisabled(false);
-        form.owner.down('button[action=discard]').setDisabled(false);
-        form.owner.up('window').disableChildren();
-    },
-
-    disableButtons: function(form) {
-        form.owner.down('button[action=save]').setDisabled(true);
-        form.owner.down('button[action=discard]').setDisabled(true);
-        // todo next line might not be true in all cases (Jan 2020)
-        form.owner.up('window').enableChildren();
-    },
-
 
     /**
      * Saves the current form without manipulating the gui

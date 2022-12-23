@@ -10,7 +10,7 @@
  * Form to edit the Ortszuordnung of a Probe
  */
 Ext.define('Lada.view.form.Ortszuordnung', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.ortszuordnungform',
 
     requires: [
@@ -146,6 +146,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     },
 
     setRecord: function(record) {
+        this.clearMessages();
         this.loadRecord(record);
         this.setReadOnly(record.get('readonly'));
     },
@@ -157,7 +158,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
     setOrt: function(row, selRecord) {
         if (selRecord) {
             var newOrtId = selRecord.get('id');
-            if (!this.readOnly && newOrtId) {
+            if (!this.getRecord().get('readonly') && newOrtId) {
                 this.getForm().setValues({ortId: newOrtId});
                 this.setOrtInfo(selRecord);
                 this.down('button[action=showort]').setDisabled(false);
@@ -229,59 +230,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         }
     },
 
-    setMessages: function(errors, warnings) {
-        var key;
-        var element;
-        var content;
-        var i18n = Lada.getApplication().bundle;
-        if (warnings) {
-            for (key in warnings) {
-                element = this.down('component[name=' + key + ']');
-                if (!element) {
-                    continue;
-                }
-                content = warnings[key];
-                var warnText = '';
-                for (var i = 0; i < content.length; i++) {
-                    warnText += i18n.getMsg(content[i].toString()) + '\n';
-                }
-                element.showWarnings(warnText);
-            }
-        }
-        if (errors) {
-            for (key in errors) {
-                element = this.down('component[name=' + key + ']');
-                if (!element) {
-                    continue;
-                }
-                content = errors[key];
-                var errorText = '';
-                for (var j = 0; j < content.length; j++) {
-                    errorText += i18n.getMsg(content[j].toString()) + '\n';
-                }
-                element.showErrors(errorText);
-            }
-        }
-    },
-
-    clearMessages: function() {
-        this.down('tarea[name=ortszusatztext]').clearWarningOrError();
-        this.down('ortszuordnungtyp[name=ortszuordnungTyp]')
-            .clearWarningOrError();
-    },
-
-    setReadOnly: function(value) {
-        this.readOnly = value;
-        this.down('tarea[name=ortszusatztext]').setReadOnly(value);
-        this.down('ortszusatz [name=ozId]').setReadOnly(value);
-        var fieldId = 'textfield[name=ortszuordnungTyp]';
-        this.down(fieldId).setReadOnly(value);
-        if (value) {
-            var button = this.down('button[action=save]');
-            button.setDisabled(true);
-        }
-    },
-
     /**
      * Helper to trigger the forms' validity check
      */
@@ -301,7 +249,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         var win = this.up('ortszuordnungwindow');
         var osg = win.down('ortstammdatengrid');
         var oForm = win.down('ortszuordnungform');
-        if (!this.readOnly) {
+        if (!this.getRecord().get('readonly')) {
             osg.addListener('select', oForm.setOrt, oForm);
             var map = win.down('map');
             if (!map.featureLayer) {

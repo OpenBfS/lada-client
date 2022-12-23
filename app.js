@@ -62,7 +62,6 @@ Ext.application({
         'Lada.model.DownloadQueue',
         'Lada.model.UploadQueue',
         'Lada.view.widget.TimeZoneButton',
-        'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.window.ElanScenarioWindow',
         'Lada.view.window.TrackedWindow',
         'Lada.util.Date',

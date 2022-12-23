@@ -15,6 +15,7 @@ Ext.define('Lada.view.window.Messprogramm', {
 
     requires: [
         'Lada.view.form.Messprogramm',
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.grid.Messmethoden'
     ],
 
@@ -89,9 +90,6 @@ Ext.define('Lada.view.window.Messprogramm', {
         });
 
         this.height = Ext.getBody().getViewSize().height - 30;
-        // InitialConfig is the config object passed to the constructor on
-        // creation of this window. We need to pass it throuh to the form as
-        // we need the "Id" param to load the correct item.
 
         this.tools = [{
             type: 'help',
@@ -171,7 +169,6 @@ Ext.define('Lada.view.window.Messprogramm', {
                     }
                 }
 
-                me.down('messprogrammform').setMediaDesk(record);
                 me.setLoading(false);
                 if (me.record === null) {
                     me.setTitle(
@@ -210,7 +207,6 @@ Ext.define('Lada.view.window.Messprogramm', {
             this.record = record;
 
             this.down('messprogrammform').setRecord(record);
-            this.down('messprogrammform').setMediaDesk(record);
 
             this.disableChildren();
             this.down('button[name=reload]').setDisabled(true);

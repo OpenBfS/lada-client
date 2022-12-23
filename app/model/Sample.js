@@ -9,6 +9,10 @@
 Ext.define('Lada.model.Sample', {
     extend: 'Lada.model.LadaBase',
 
+    requires: [
+        'Lada.model.field.NonBlankString'
+    ],
+
     /**
      * Save original record if sample is a copy of another
      */
@@ -47,6 +51,7 @@ Ext.define('Lada.model.Sample', {
         allowNull: true
     }, {
         name: 'envDescripDisplay',
+        type: 'nonblankstring',
         allowNull: true
     }, {
         name: 'envDescripName',

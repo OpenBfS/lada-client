@@ -10,11 +10,14 @@
  * Formular to edit a Tag
  */
 Ext.define('Lada.view.form.Tag', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.tagform',
+    requires: [
+        'Lada.view.widget.base.DateTimeField'
+    ],
+
     store: null,
 
-    readOnly: false,
     trackResetOnLoad: true,
 
     initComponent: function() {
@@ -116,7 +119,7 @@ Ext.define('Lada.view.form.Tag', {
                 }
             }, {
                 name: 'gueltigBis',
-                xtype: 'datefield',
+                xtype: 'datetimefield',
                 fieldLabel: i18n.getMsg('tag.gueltigBis')
             }]
         }];
@@ -125,15 +128,6 @@ Ext.define('Lada.view.form.Tag', {
 
     setRecord: function(tagRecord) {
         this.getForm().loadRecord(tagRecord);
-        this.setReadOnly();
-    },
-
-    setReadOnly: function() {
-        var ro = this.getForm().getRecord().get('readonly');
-        this.down('textfield[name=tag]').setReadOnly(ro);
-        this.down('messstelle').setReadOnly(ro);
-        this.down('netzbetreiber').setReadOnly(ro);
-        this.down('tagtyp').setReadOnly(ro);
-        this.down('datefield[name=gueltigBis]').setReadOnly(ro);
+        this.setReadOnly(this.getRecord().get('readonly'));
     }
 });

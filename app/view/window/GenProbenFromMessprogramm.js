@@ -68,7 +68,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     startDate.getFullYear(),
                     startDate.getMonth(),
                     startDate.getDate());
-                this.startUTC = startDate;
+                this.startUTC = startUTC;
                 var endDate = new Date(
                     me.down('datefield[name=end]').getValue());
                 var endUTC = Date.UTC(
@@ -207,9 +207,6 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
             }
         });
 
-        // InitialConfig is the config object passed to the constructor on
-        // creation of this window. We need to pass it throuh to the form as
-        // we need the "Id" param to load the correct item.
         this.items = [{
             border: false,
             width: 340,

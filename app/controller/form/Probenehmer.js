@@ -44,9 +44,6 @@ Ext.define('Lada.controller.form.Probenehmer', {
         record.set(formPanel.getForm().getFieldValues(true));
         record.set('netzbetreiberId',
             formPanel.down('netzbetreiber').getValue()[0]);
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
-        }
         if (record.phantom) {
             record.set('id', null);
         }
@@ -60,7 +57,6 @@ Ext.define('Lada.controller.form.Probenehmer', {
                 rec.dirty = false;
                 formPanel.getForm().loadRecord(newRecord);
                 var json = Ext.decode(response.getResponse().responseText);
-                formPanel.clearMessages();
                 formPanel.setRecord(newRecord);
                 formPanel.setMessages(json.errors, json.warnings);
                 button.setDisabled(true);
@@ -113,9 +109,6 @@ Ext.define('Lada.controller.form.Probenehmer', {
         for (var key in data) {
             record.set(key, data[key]);
         }
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
-        }
         if (record.phantom) {
             record.set('id', null);
         }
@@ -136,8 +129,6 @@ Ext.define('Lada.controller.form.Probenehmer', {
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                         i18n.getMsg('err.msg.generic.body'));
                 } else {
-                    var rec = formPanel.getForm().getRecord();
-                    rec.dirty = false;
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
                         if (json.message) {

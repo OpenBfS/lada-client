@@ -14,6 +14,7 @@ Ext.define('Lada.view.window.MessungCreate', {
     alias: 'widget.messungcreate',
 
     requires: [
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.form.Messung'
     ],
 

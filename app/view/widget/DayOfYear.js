@@ -11,7 +11,7 @@
  * that can be serialized to day of year
  */
 Ext.define('Lada.view.widget.DayOfYear', {
-    extend: 'Ext.panel.Panel',
+    extend: 'Lada.view.widget.base.LadaField',
     alias: 'widget.dayofyear',
 
     layout: {
@@ -82,7 +82,9 @@ Ext.define('Lada.view.widget.DayOfYear', {
          * Add hidden field and visible fields to let the user choose
          * day and month to the panel.
          */
-        this.items = [{
+        this.callParent(arguments);
+        this.insert(0, DOYField);
+        this.insert(1, {
             xtype: 'numberfield',
             isFormField: false,
             fieldLabel: this.fieldLabel,
@@ -102,7 +104,8 @@ Ext.define('Lada.view.widget.DayOfYear', {
                  * change the value. UI events like blur do not track this. */
                 change: { fn: me.setDOY }
             }
-        }, {
+        });
+        this.insert(2, {
             xtype: 'combobox',
             isFormField: false,
             width: 120,
@@ -118,22 +121,7 @@ Ext.define('Lada.view.widget.DayOfYear', {
                 collapse: { fn: me.setDOY },
                 change: { fn: me.checkMaxDay }
             }
-        }, {
-            xtype: 'image',
-            name: 'warnImg',
-            src: 'resources/img/dialog-warning.png',
-            width: 14,
-            height: 14,
-            hidden: true
-        }, {
-            xtype: 'image',
-            name: 'errorImg',
-            src: 'resources/img/emblem-important.png',
-            width: 14,
-            height: 14,
-            hidden: true
-        }, DOYField];
-        this.callParent(arguments);
+        });
         this.down('combobox').getTriggers().clear.hidden = true;
     },
 
@@ -204,45 +192,6 @@ Ext.define('Lada.view.widget.DayOfYear', {
     },
 
 
-    showWarnings: function(warnings) {
-        var img = this.down('image[name=warnImg]');
-        Ext.create('Ext.tip.ToolTip', {
-            target: img.getEl(),
-            html: warnings
-        });
-        img.show();
-        this.down('numberfield[hidden=false]')
-            .invalidCls = 'x-lada-warning-field';
-        this.down('numberfield[hidden=false]').markInvalid('');
-        this.down('combobox').markInvalid('');
-        var fieldset = this.up('fieldset[collapsible=true]');
-        if (fieldset) {
-            var i18n = Lada.getApplication().bundle;
-            var warningText = i18n.getMsg(this.name) + ': ' + warnings;
-            fieldset.showWarningOrError(true, warningText);
-        }
-    },
-
-    showErrors: function(errors) {
-        var img = this.down('image[name=errorImg]');
-        var warnImg = this.down('image[name=warnImg]');
-        warnImg.hide();
-        Ext.create('Ext.tip.ToolTip', {
-            target: img.getEl(),
-            html: errors
-        });
-        this.down('numberfield[hidden=false]').invalidCls = 'x-lada-error';
-        this.down('numberfield[hidden=false]').markInvalid('');
-        this.down('combobox').markInvalid('');
-        img.show();
-        var fieldset = this.up('fieldset[collapsible=true]');
-        if (fieldset) {
-            var i18n = Lada.getApplication().bundle;
-            var errorText = i18n.getMsg(this.name) + ': ' + errors;
-            fieldset.showWarningOrError(false, '', true, errorText);
-        }
-    },
-
     /*
      * When the hidden field is validated as part of a form, make the result
      * user visible.
@@ -257,11 +206,6 @@ Ext.define('Lada.view.widget.DayOfYear', {
             field.up('panel').down('combobox').clearInvalid();
             field.up('panel').down('numberfield[hidden=false]').clearInvalid();
         }
-    },
-
-    clearWarningOrError: function() {
-        this.down('image[name=errorImg]').hide();
-        this.down('image[name=warnImg]').hide();
     },
 
     getValue: function() {

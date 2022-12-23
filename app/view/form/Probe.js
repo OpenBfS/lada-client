@@ -10,9 +10,10 @@
  * Formular to edit a Probe
  */
 Ext.define('Lada.view.form.Probe', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.probeform',
     requires: [
+        'Lada.util.FunctionScheduler',
         'Lada.view.form.mixins.DeskriptorFieldset',
         'Lada.view.widget.Datenbasis',
         'Lada.view.widget.DatensatzErzeuger',
@@ -30,6 +31,7 @@ Ext.define('Lada.view.form.Probe', {
         'Lada.view.widget.base.Datetime',
         'Lada.view.widget.base.FieldSet',
         'Lada.view.widget.base.DateField',
+        'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.window.MessungCreate',
         'Lada.model.Sample'
     ],
@@ -216,7 +218,7 @@ Ext.define('Lada.view.form.Probe', {
                                             store.clearFilter();
                                             /*eslint-disable max-len*/
                                             var nId = combo.up('fieldset')
-                                                .down('netzbetreiber[name=netzbetreiber]')
+                                                .down('field[name=netzbetreiber]')
                                                 .getValue();
                                             if (!nId || nId.length === 0) {
                                                 store.filterBy(
@@ -255,7 +257,7 @@ Ext.define('Lada.view.form.Probe', {
                                             store.clearFilter();
                                             /*eslint-disable max-len*/
                                             var nId = combo.up('fieldset')
-                                                .down('netzbetreiber[name=netzbetreiber]')
+                                                .down('field[name=netzbetreiber]')
                                                 .getValue();
                                             var dId = combo.up('fieldset')
                                                 .down('textfield[name=measFacilId]')
@@ -302,7 +304,7 @@ Ext.define('Lada.view.form.Probe', {
                                         store.clearFilter();
                                         /*eslint-disable max-len*/
                                         var nId = combo.up('fieldset')
-                                            .down('netzbetreiber[name=netzbetreiber]')
+                                            .down('field[name=netzbetreiber]')
                                             .getValue();
                                         if (!nId || nId.length === 0) {
                                             store.filterBy(function(record) {
@@ -370,29 +372,27 @@ Ext.define('Lada.view.form.Probe', {
                             type: 'hbox'
                         },
                         items: [{
-                            xtype: 'datefield',
-                            emptyText: ' ',
+                            xtype: 'selectabledisplayfield',
                             fieldLabel: i18n.getMsg('sollVon'),
                             labelWidth: 130,
                             margin: '0, 5, 5, 5',
                             name: 'schedStartDate',
-                            format: 'd.m.Y',
-                            formatText: '',
                             width: '50%',
-                            period: 'start',
-                            readOnly: true
+                            renderer: function(v) {
+                                return Lada.util.Date.formatTimestamp(
+                                    v, 'd.m.Y', true);
+                            }
                         }, {
-                            xtype: 'datefield',
-                            emptyText: ' ',
+                            xtype: 'selectabledisplayfield',
                             fieldLabel: i18n.getMsg('sollBis'),
-                            labelWidth: 17,
+                            labelWidth: 25,
                             margin: '0, 5, 5, 5',
                             name: 'schedEndDate',
-                            format: 'd.m.Y',
-                            formatText: '',
                             width: '50%',
-                            period: 'end',
-                            readOnly: true
+                            renderer: function(v) {
+                                return Lada.util.Date.formatTimestamp(
+                                    v, 'd.m.Y', true);
+                            }
                         }]
                     }, {
                         xtype: 'fset',
@@ -478,16 +478,14 @@ Ext.define('Lada.view.form.Probe', {
                                 margin: '0 5 0 0',
                                 labelWidth: 100,
                                 fieldLabel: i18n.getMsg('mediaDesk'),
-                                editable: false,
-                                readOnly: true
+                                editable: false
                             }, {
                                 xtype: 'textfield',
                                 margin: '0 0 0 5',
                                 name: 'envDescripName',
                                 width: '42%',
                                 enforceMaxLength: true,
-                                editable: false,
-                                readOnly: true
+                                editable: false
                             }]
                         }, {
                             xtype: 'fset',
@@ -518,6 +516,8 @@ Ext.define('Lada.view.form.Probe', {
         if (probeRecord.get('owner') && !probeRecord.phantom) {
             this.down('button[action=copy]').setDisabled(false);
         }
+
+        this.setMediaDesk(probeRecord);
     },
 
     setMediaDesk: function(record) {
@@ -525,100 +525,5 @@ Ext.define('Lada.view.form.Probe', {
             Lada.view.form.Probe.mediaSnScheduler,
             record
         );
-    },
-
-    setMessages: function(errors, warnings, notifications) {
-        var key;
-        var element;
-        var content;
-        var tmp;
-        var i18n = Lada.getApplication().bundle;
-        if (warnings) {
-            for (key in warnings) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = warnings[key];
-                var warnText = '';
-                for (var i = 0; i < content.length; i++) {
-                    warnText += i18n.getMsg(content[i].toString()) + '\n';
-                }
-                element.showWarnings(warnText);
-            }
-        }
-        if (notifications) {
-            for (key in notifications) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = notifications[key];
-                var notificationText = '';
-                for (var j = 0; j < content.length; j++) {
-                    notificationText += i18n.getMsg(
-                        content[j].toString()) + '\n';
-                }
-                element.showNotifications(notificationText);
-            }
-        }
-        if (errors) {
-            for (key in errors) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = errors[key];
-                var errorText = '';
-                for (var k = 0; k < content.length; k++) {
-                    errorText += i18n.getMsg(content[k].toString()) + '\n';
-                }
-                element.showErrors(errorText);
-            }
-        }
-    },
-
-    clearMessages: function() {
-        this.down('cbox[name=mstlabor]').clearWarningOrError();
-        this.down('tfield[name=mainSampleId]').clearWarningOrError();
-        this.down('cbox[name=reiAgGrId]').clearWarningOrError();
-        this.down('cbox[name=nuclFacilGrId]').clearWarningOrError();
-        this.down('cbox[name=regulationId]').clearWarningOrError();
-        this.down('cbox[name=oprModeId]').clearWarningOrError();
-        this.down('chkbox[name=isTest]').clearWarningOrError();
-        this.down('cbox[name=sampleMethId]').clearWarningOrError();
-        this.down('netzbetreiber').clearWarningOrError();
-        this.down('cbox[name=datasetCreatorId]').clearWarningOrError();
-        this.down('cbox[name=envMediumId]').clearWarningOrError();
-        this.down('datetime[name=sampleStartDate]').clearWarningOrError();
-        this.down('datetime[name=sampleEndDate]').clearWarningOrError();
-        this.down('datetime[name=origDate]').clearWarningOrError();
-        this.down('fset[name=entnahmePeriod]').clearMessages();
-        this.down('fset[name=sollzeitPeriod]').clearMessages();
-        this.down('tfield[name=envDescripDisplay]').clearWarningOrError();
-        this.down('fset[name=deskriptordetails]').clearMessages();
-        this.down('fset[name=ursprung]').clearMessages();
-        //Deskriptoren
-        for (var i = 0; i < 12; i++) {
-            this.down('deskriptor[layer=' + i + ']').clearWarningOrError();
-        }
-    },
-
-    setReadOnly: function(value) {
-        this.getForm().getFields().each(function(field) {
-            field.setReadOnly(value);
-        });
     }
 });

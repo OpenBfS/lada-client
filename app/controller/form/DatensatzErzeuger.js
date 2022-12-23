@@ -47,9 +47,6 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
         }
         record.set('netzbetreiberId',
             formPanel.down('netzbetreiber').getValue()[0]);
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
-        }
         if (record.phantom) {
             record.set('id', null);
         }
@@ -63,7 +60,6 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                 rec.dirty = false;
                 formPanel.getForm().loadRecord(newRecord);
                 var json = Ext.decode(response.getResponse().responseText);
-                formPanel.clearMessages();
                 formPanel.setRecord(newRecord);
                 formPanel.setMessages(json.errors, json.warnings);
                 button.setDisabled(true);

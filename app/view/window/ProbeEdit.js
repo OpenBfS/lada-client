@@ -20,6 +20,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         'Lada.view.grid.PKommentar',
         'Lada.view.grid.Messung',
         'Lada.view.widget.Tag',
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.window.SetTags'
     ],
 
@@ -30,7 +31,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
     constrain: true,
     recordType: 'probe',
     record: null,
-    zStore: null,
 
     /**
      * This function initialises the Window
@@ -62,10 +62,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 this.customizeToolbar();
             }
         });
-
-        // InitialConfig is the config object passed to the constructor on
-        // creation of this window. We need to pass it throuh to the form as
-        // we need the "modelId" param to load the correct item.
 
         this.tools = [{
             type: 'help',
@@ -104,18 +100,15 @@ Ext.define('Lada.view.window.ProbeEdit', {
         var me = this;
         var i18n = Lada.getApplication().bundle;
 
-        var store = Ext.create('Lada.store.Probenzusaetze');
-        var proxy = Ext.clone(store.getProxy());
-        proxy.extraParams = {};
-        store.setProxy(proxy);
-        this.zStore = store;
+        // Store for probenzusatzwertgrid
         var umwId = this.record.get('envMediumId');
+        var params = {};
         if (umwId) {
-            this.zStore.proxy.setExtraParams({
-                umwId: umwId
-            });
+            params['umwId'] = umwId;
         }
-        this.zStore.load();
+        var pzStore = Ext.create('Lada.store.Probenzusaetze').load({
+            params: params
+        });
 
         this.removeAll();
 
@@ -206,7 +199,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 items: [{
                     xtype: 'probenzusatzwertgrid',
                     recordId: this.recordId,
-                    pzStore: this.zStore
+                    pzStore: pzStore
                 }]
             }, {
                 xtype: 'fset',
@@ -286,7 +279,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             if (json) {
                 me.setMessages(json.errors, json.warnings, json.notifications);
             }
-            me.down('probeform').setMediaDesk(record);
+
             // If the Probe is ReadOnly, disable Inputfields and grids
             if (readonly === true || !owner) {
                 me.down('probeform').setReadOnly(true);

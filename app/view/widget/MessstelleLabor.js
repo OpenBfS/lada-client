@@ -15,8 +15,8 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
     alias: 'widget.messstellelabor',
     requires: [
         'Lada.store.MessstellenKombi',
-        'Lada.view.widget.Netzbetreiber',
-        'Lada.view.widget.base.ComboBox'
+        'Lada.view.widget.base.ComboBox',
+        'Lada.view.widget.base.SelectableDisplayField'
     ],
 
     layout: {
@@ -116,9 +116,8 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
                 }
             }
         }, {
-            xtype: 'netzbetreiber',
+            xtype: 'selectabledisplayfield',
             name: 'netzbetreiber',
-            readOnly: true,
             isFormField: false,
             fieldLabel: i18n.getMsg('netzbetreiberId'),
             labelWidth: 80
@@ -167,8 +166,18 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
 
     setNetzbetreiber: function(mstId) {
         var mst = Ext.data.StoreManager.get('messstellen').getById(mstId);
-        var nb = mst ? mst.get('netzbetreiberId') : '';
-        this.down('netzbetreiber').setValue(nb);
+        var nbId = mst.get('netzbetreiberId');
+
+        var nbStore = Ext.data.StoreManager.get('netzbetreiber');
+        if (!nbStore) {
+            nbStore = Ext.create('Lada.store.Netzbetreiber', {
+                storeId: 'netzbetreiber'
+            });
+        }
+        var nb = nbStore.getById(nbId);
+        this.down('field[name=netzbetreiber]').setValue(nb
+            ? nbId + ' - ' + nb.get('netzbetreiber')
+            : '');
     },
 
     setMessstelleLabor: function() {

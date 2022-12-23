@@ -24,7 +24,7 @@ ENV OPENSSL_CONF /etc/ssl/
 #
 
 RUN mkdir -p /usr/share/man/man1/ && apt-get -qq update && apt-get -qq install \
-    curl unzip default-jre-headless git && \
+    curl unzip default-jre-headless git libapache2-mod-shib && \
     apt-get -qq clean && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 80 81 82 83 84

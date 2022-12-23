@@ -21,6 +21,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         'Lada.store.Orte',
         'Lada.view.form.Ort',
         'Lada.view.panel.Map',
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.grid.Orte',
         'Lada.view.grid.Staaten',
         'Lada.view.grid.Verwaltungseinheiten'

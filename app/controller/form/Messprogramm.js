@@ -251,9 +251,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
 
         // Update record with values changed in the form
         record.set(formPanel.getForm().getFieldValues(true));
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
-        }
         if (record.phantom) {
             record.set('id', null);
         }
@@ -275,16 +272,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
             success: function(rec, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
-                    button.setDisabled(true);
-                    button.up('toolbar').down('button[action=discard]')
-                        .setDisabled(true);
                     var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                     if (parentGrid.length === 1) {
                         parentGrid[0].reload();
                     }
-                    formPanel.clearMessages();
                     formPanel.setRecord(rec);
-                    formPanel.setMediaDesk(rec);
                     formPanel.setMessages(json.errors, json.warnings);
                     var win = button.up('window');
                     win.record = rec;
@@ -293,9 +285,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
             },
             failure: function(newRecord, response) {
                 var i18n = Lada.getApplication().bundle;
-                button.setDisabled(true);
-                button.up('toolbar').down('button[action=discard]')
-                    .setDisabled(true);
                 var rec = formPanel.getForm().getRecord();
                 rec.dirty = false;
                 formPanel.getForm().loadRecord(newRecord);
@@ -335,9 +324,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
         for (var key in data) {
             record.set(key, data[key]);
         }
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
-        }
         if (record.phantom) {
             record.set('id', null);
         }
@@ -353,9 +339,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
             },
             failure: function(newRecord, response) {
                 var i18n = Lada.getApplication().bundle;
-                var rec = formPanel.getForm().getRecord();
-                rec.dirty = false;
-                formPanel.getForm().loadRecord(rec);
                 if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -401,29 +384,19 @@ Ext.define('Lada.controller.form.Messprogramm', {
     },
 
     /**
-      * The dirtyForm function enables or disables the save and discard
-      * button which are present in the toolbar of the form.
-      * The Buttons are only active if the content of the form was altered
-      * (the form is dirty).
+      * The dirtyForm function enables or disables the
+      * buttons which are present in the toolbar of the form.
       */
     dirtyForm: function(form, dirty) {
-        if (!form.getRecord().get('readonly') && dirty) {
-            form.owner.down('button[action=save]').setDisabled(false);
-            form.owner.down('button[action=discard]').setDisabled(false);
-        } else {
-            form.owner.down('button[action=save]').setDisabled(true);
-            form.owner.down('button[action=discard]').setDisabled(true);
-        }
-        if (form.getRecord().phantom || dirty ||
-            form.getRecord().get('readonly') === true) {
-            form.owner.up('messprogramm').down(
-                'button[action=generateproben]').setDisabled(true);
-            form.owner.down('button[action=copy]').setDisabled(true);
-        } else {
-            form.owner.up('messprogramm').down(
-                'button[action=generateproben]').setDisabled(false);
-            form.owner.down('button[action=copy]').setDisabled(false);
-        }
+        var enableForm = !form.getRecord().get('readonly') && dirty;
+        form.owner.down('button[action=save]').setDisabled(!enableForm);
+        form.owner.down('button[action=discard]').setDisabled(!enableForm);
+
+        var disableActions = form.getRecord().phantom
+            || dirty || form.getRecord().get('readonly');
+        form.owner.up('messprogramm').down(
+            'button[action=generateproben]').setDisabled(disableActions);
+        form.owner.down('button[action=copy]').setDisabled(disableActions);
     },
 
     /**

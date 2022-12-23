@@ -10,7 +10,7 @@
  * This Widget extends a Panel to create a custom Checkbox
  */
 Ext.define('Lada.view.widget.base.CheckBox', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.widget.base.LadaField',
     alias: 'widget.chkbox',
 
     layout: 'hbox',
@@ -20,7 +20,8 @@ Ext.define('Lada.view.widget.base.CheckBox', {
     margin: '0, 0, 5, 0',
 
     initComponent: function() {
-        this.items = [{
+        this.callParent(arguments);
+        this.insert(0, {
             xtype: 'checkbox',
             uncheckedValue: false,
             flex: 1,
@@ -32,64 +33,7 @@ Ext.define('Lada.view.widget.base.CheckBox', {
             readOnly: this.readOnly,
             msgTarget: 'none',
             tpl: this.tpl
-        }, {
-            xtype: 'image',
-            name: 'warnImg',
-            src: 'resources/img/dialog-warning.png',
-            width: 14,
-            height: 14,
-            hidden: true
-        }, {
-            xtype: 'image',
-            name: 'errorImg',
-            src: 'resources/img/emblem-important.png',
-            width: 14,
-            height: 14,
-            hidden: true
-        }];
-        this.callParent(arguments);
-    },
-
-    showWarnings: function(warnings) {
-        var img = this.down('image[name=warnImg]');
-        Ext.create('Ext.tip.ToolTip', {
-            target: img.getEl(),
-            html: warnings
         });
-        this.down('checkbox').invalidCls = 'x-lada-warning-field';
-        this.down('checkbox').markInvalid('');
-        img.show();
-        var fieldset = this.up('fieldset[collapsible=true]');
-        if (fieldset) {
-            var i18n = Lada.getApplication().bundle;
-            var warningText = i18n.getMsg(this.name) + ': ' + warnings;
-            fieldset.showWarningOrError(true, warningText);
-        }
-    },
-
-    showErrors: function(errors) {
-        var img = this.down('image[name=errorImg]');
-        var warnImg = this.down('image[name=warnImg]');
-        warnImg.hide();
-        Ext.create('Ext.tip.ToolTip', {
-            target: img.getEl(),
-            html: errors
-        });
-        this.down('checkbox').invalidCls = 'x-lada-error-field';
-        this.down('checkbox').markInvalid('');
-        img.show();
-        var fieldset = this.up('fieldset[collapsible=true]');
-        if (fieldset) {
-            var i18n = Lada.getApplication().bundle;
-            var errorText = i18n.getMsg(this.name) + ': ' + errors;
-            fieldset.showWarningOrError(false, '', true, errorText);
-        }
-    },
-
-    clearWarningOrError: function() {
-        this.down('image[name=errorImg]').hide();
-        this.down('image[name=warnImg]').hide();
-        this.down('checkbox').clearInvalid();
     },
 
     getValue: function() {

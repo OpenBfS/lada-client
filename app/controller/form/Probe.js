@@ -35,7 +35,7 @@ Ext.define('Lada.controller.form.Probe', {
             },
             'probeform': {
                 validitychange: this.checkCommitEnabled,
-                dirtychange: this.handleDirtyChange,
+                dirtychange: this.checkCommitEnabled,
                 save: this.saveHeadless
             },
             'probeform tfield [name=mainSampleId]': {
@@ -449,7 +449,8 @@ Ext.define('Lada.controller.form.Probe', {
     },
 
     /**
-     * Called if umweltBereich value has changed. filters reiProgpunktgruppe
+     * Called if umweltBereich value has changed.
+     * Filters reiProgpunktgruppe and probenzusatzwerte
      * values according to the new value.
      */
     umweltChanged: function(combo) {
@@ -477,11 +478,18 @@ Ext.define('Lada.controller.form.Probe', {
             reiStore.proxy.extraParams.umwelt = umwId;
         }
         reiStore.load();
-        if (formPanel.up('window').down('fset[name=probenzusatzwerte]') !== null) {
-            var pzStore = formPanel.up('window').down('fset[name=probenzusatzwerte]').down('probenzusatzwertgrid').pzStore;
-            pzStore.proxy.extraParams = {};
-            pzStore.proxy.extraParams.umwId = umwId;
-            pzStore.load();
+
+        // Filter probenzusatzwerte
+        var pzwFset = formPanel.up('window').down(
+            'fset[name=probenzusatzwerte]');
+        if (pzwFset !== null) {
+            var params = {};
+            if (umwId) {
+                params['umwId'] = umwId;
+            }
+            pzwFset.down('probenzusatzwertgrid').pzStore.load({
+                params: params
+            });
         }
 
     },
@@ -522,9 +530,6 @@ Ext.define('Lada.controller.form.Probe', {
         for (var key in data) {
             record.set(key, data[key]);
         }
-        if (!record.get('lastMod')) {
-            record.set('lastMod', new Date());
-        }
         if (record.phantom) {
             record.set('id', null);
         }
@@ -545,8 +550,6 @@ Ext.define('Lada.controller.form.Probe', {
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                         i18n.getMsg('err.msg.generic.body'));
                 } else {
-                    var rec = formPanel.getForm().getRecord();
-                    rec.dirty = false;
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
                         if (json.message) {
@@ -576,9 +579,6 @@ Ext.define('Lada.controller.form.Probe', {
         var record = formPanel.getForm().getRecord();
         // Update record with values changed in the form
         record.set(formPanel.getForm().getFieldValues(true));
-        if (!record.get('lastMod')) {
-            record.set('lastMod', new Date());
-        }
         if (record.phantom) {
             record.set('id', null);
         }
@@ -607,9 +607,7 @@ Ext.define('Lada.controller.form.Probe', {
                         win.setPosition(30);
                     } else {
                         // Update form in existing window
-                        formPanel.clearMessages();
                         formPanel.setRecord(newRecord);
-                        formPanel.setMediaDesk(newRecord);
                         formPanel.setMessages(
                             json.errors,
                             json.warnings,
@@ -649,7 +647,6 @@ Ext.define('Lada.controller.form.Probe', {
                         if (parentGrid.length === 1) {
                             parentGrid[0].reload();
                         }
-                        formPanel.clearMessages();
                         formPanel.setRecord(newRecord);
                         formPanel.setMessages(
                             json.errors,
@@ -722,20 +719,6 @@ Ext.define('Lada.controller.form.Probe', {
                 }
             }
         }
-    },
-
-    enableButtons: function(form) {
-        form.owner.down('button[action=save]').setDisabled(false);
-        form.owner.down('button[action=discard]').setDisabled(false);
-        form.owner.up('window').disableChildren();
-    },
-
-    disableButtons: function(form) {
-        form.owner.down('button[action=save]').setDisabled(true);
-        form.owner.down('button[action=discard]').setDisabled(true);
-
-        // todo this might not be true in all cases
-        form.owner.up('window').enableChildren();
     },
 
     /**
@@ -820,43 +803,6 @@ Ext.define('Lada.controller.form.Probe', {
         if (w === 0 && e === 0 && field.up().clearWarningOrError) {
             field.up().clearWarningOrError();
         }
-    },
-
-    /**
-     * Handle changes of the probe forms dirty state and (de-) activate form
-     * buttons accordingly.
-     * @param {Ext.Component} callingEl Component that fired the event
-     */
-    handleDirtyChange: function(callingEl) {
-        var panel;
-        if (callingEl.up) { //called by a field in the form
-            panel = callingEl.up('probeform');
-        } else { //called by the form
-            panel = callingEl.owner;
-        }
-        if (panel.getRecord().get('readonly')) {
-            panel.down('button[action=save]').setDisabled(true);
-            panel.down('button[action=discard]').setDisabled(true);
-            panel.down('button[action=copy]').setDisabled(true);
-        } else {
-            if (panel.isValid()) {
-                if (panel.isDirty()) {
-                    panel.down('button[action=discard]').setDisabled(false);
-                    panel.down('button[action=save]').setDisabled(false);
-                    panel.down('button[action=copy]').setDisabled(true);
-                } else {
-                    // false keine Veränderung
-                    panel.down('button[action=discard]').setDisabled(true);
-                    panel.down('button[action=copy]').setDisabled(false);
-                    panel.down('button[action=save]').setDisabled(true);
-                }
-            } else {
-                panel.down('button[action=save]').setDisabled(true);
-                panel.down('button[action=copy]').setDisabled(true);
-                panel.down('button[action=discard]').setDisabled(false);
-            }
-        }
-        this.checkCommitEnabled(callingEl);
     },
 
     mainSampleIdChanged: function(field) {

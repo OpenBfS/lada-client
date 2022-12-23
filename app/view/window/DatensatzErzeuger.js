@@ -14,6 +14,7 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
     alias: 'widget.datensatzerzeugeredit',
 
     requires: [
+        'Lada.view.window.HelpprintWindow',
         'Lada.view.form.DatensatzErzeuger'
     ],
 
@@ -41,10 +42,6 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
                 this.getEl().addCls('window-inactive');
             }
         });
-
-        // InitialConfig is the config object passed to the constructor on
-        // creation of this window. We need to pass it throuh to the form as
-        // we need the "modelId" param to load the correct item.
 
         this.tools = [{
             type: 'help',
