@@ -118,8 +118,9 @@ Ext.define('Lada.view.widget.base.LadaField', {
 
     clearWarningOrError: function() {
         // Remove tooltips
+        var me = this;
         ['notification', 'warning', 'error'].forEach(function(messageClass) {
-            var tt = this[messageClass];
+            var tt = me[messageClass];
             if (tt) {
                 tt.destroy();
             }
