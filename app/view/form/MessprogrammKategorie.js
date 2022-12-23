@@ -95,11 +95,5 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
                 this.down('netzbetreiber').setReadOnly(true);
             }
         }
-    },
-
-    clearMessages: function() {
-        this.down('netzbetreiber').clearWarningOrError();
-        this.down('tarea[name=bezeichnung]').clearWarningOrError();
-        this.down('tfield[name=code]').clearWarningOrError();
     }
 });

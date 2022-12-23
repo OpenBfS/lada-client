@@ -268,19 +268,5 @@ Ext.define('Lada.view.form.Ort', {
             this.down('netzbetreiber').down('combobox').setEditable(false);
             this.down('netzbetreiber').down('combobox').setReadOnly(true);
         }
-    },
-
-    clearMessages: function() {
-        // TODO: this is a stub
-        this.down('tfield[name=koordXExtern]').clearWarningOrError();
-        this.down('tfield[name=koordYExtern]').clearWarningOrError();
-        this.down('verwaltungseinheit[name=gemId]').clearWarningOrError();
-        this.down('orttyp[name=ortTyp]').clearWarningOrError();
-        this.down('staat[name=staatId]').clearWarningOrError();
-        this.down('koordinatenart[name=kdaId]').clearWarningOrError();
-        this.down('fset[name=koordinaten]').clearMessages();
-        this.down('fset[name=reiProperties]').clearMessages();
-        this.down('tfield[name=ortId]').clearWarningOrError();
-        this.down('ktagruppe[name=ktaGruppeId]').clearWarningOrError();
     }
 });

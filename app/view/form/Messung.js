@@ -230,13 +230,5 @@ Ext.define('Lada.view.form.Messung', {
 
     getCurrentStatus: function() {
         return this.currentStatus;
-    },
-
-    clearMessages: function() {
-        this.down('tfield[name=nebenprobenNr]').clearWarningOrError();
-        //this.down('messmethode[name=mmtId]').clearWarningOrError();
-        this.down('datetime[name=messzeitpunkt]').clearWarningOrError();
-        this.down('numfield[name=messdauer]').clearWarningOrError();
-        this.down('chkbox[name=fertig]').clearWarningOrError();
     }
 });

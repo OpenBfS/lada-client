@@ -79,6 +79,15 @@ Ext.define('Lada.view.form.LadaForm', {
         }
     },
 
+    clearMessages: function() {
+        this.query('ladafield').forEach(function(field) {
+            field.clearWarningOrError();
+        });
+        this.query('fset').forEach(function(fset) {
+            fset.clearMessages();
+        });
+    },
+
     /**
      * Set readOnly config of all fields in the component.
      */

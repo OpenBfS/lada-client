@@ -637,28 +637,5 @@ Ext.define('Lada.view.form.Messprogramm', {
             Lada.view.form.Messprogramm.mediaSnScheduler,
             record
         );
-    },
-
-    clearMessages: function() {
-        this.down('cbox[name=mstlabor]').clearWarningOrError();
-        //no clearmsg for probeKommentar
-        this.down('cbox[name=datenbasisId]').clearWarningOrError();
-        this.down('cbox[name=reiProgpunktGrpId]').clearWarningOrError();
-        this.down('cbox[name=ktaGruppeId]').clearWarningOrError();
-        this.down('cbox[name=baId]').clearWarningOrError();
-        this.down('chkbox[name=test]').clearWarningOrError();
-        this.down('chkbox[name=aktiv]').clearWarningOrError();
-        this.down('cbox[name=probenartId]').clearWarningOrError();
-        // clear messages in intervall definition
-        this.down('fset[name=probenIntervallFieldset]').clearMessages();
-        this.down('cbox[name=probenintervall]').clearWarningOrError();
-        this.down('numfield[name=teilintervallVon]').clearWarningOrError();
-        this.down('numfield[name=teilintervallBis]').clearWarningOrError();
-        this.down('dayofyear[name=gueltigVon]').clearWarningOrError();
-        this.down('dayofyear[name=gueltigBis]').clearWarningOrError();
-        //no clear for probeNehmerId
-        // Deskriptoren are missing
-        this.down('cbox[name=umwId]').clearWarningOrError();
-        this.down('cbox[name=mehId]').clearWarningOrError();
     }
 });

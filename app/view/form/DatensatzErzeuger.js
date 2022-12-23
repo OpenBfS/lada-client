@@ -140,13 +140,5 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
     setRecord: function(datensatzerzeugerRecord) {
         this.clearMessages();
         this.getForm().loadRecord(datensatzerzeugerRecord);
-    },
-
-    clearMessages: function() {
-        this.down('netzbetreiber').clearWarningOrError();
-        this.down('tarea[name=bezeichnung]').clearWarningOrError();
-        this.down('tfield[name=datensatzErzeugerId]').clearWarningOrError();
-        //TODO: is not a function
-        //this.down('combobox[name=mstId]').clearWarningOrError();
     }
 });

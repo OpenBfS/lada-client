@@ -525,30 +525,5 @@ Ext.define('Lada.view.form.Probe', {
             Lada.view.form.Probe.mediaSnScheduler,
             record
         );
-    },
-
-    clearMessages: function() {
-        this.down('cbox[name=mstlabor]').clearWarningOrError();
-        this.down('tfield[name=hauptprobenNr]').clearWarningOrError();
-        this.down('cbox[name=reiProgpunktGrpId]').clearWarningOrError();
-        this.down('cbox[name=ktaGruppeId]').clearWarningOrError();
-        this.down('cbox[name=datenbasisId]').clearWarningOrError();
-        this.down('cbox[name=baId]').clearWarningOrError();
-        this.down('chkbox[name=test]').clearWarningOrError();
-        this.down('cbox[name=probenartId]').clearWarningOrError();
-        this.down('cbox[name=erzeugerId]').clearWarningOrError();
-        this.down('cbox[name=umwId]').clearWarningOrError();
-        this.down('datetime[name=probeentnahmeBeginn]').clearWarningOrError();
-        this.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
-        this.down('datetime[name=ursprungszeit]').clearWarningOrError();
-        this.down('fset[name=entnahmePeriod]').clearMessages();
-        this.down('fset[name=sollzeitPeriod]').clearMessages();
-        this.down('tfield[name=mediaDesk]').clearWarningOrError();
-        this.down('fset[name=deskriptordetails]').clearMessages();
-        this.down('fset[name=ursprung]').clearMessages();
-        //Deskriptoren
-        for (var i = 0; i < 12; i++) {
-            this.down('deskriptor[layer=' + i + ']').clearWarningOrError();
-        }
     }
 });

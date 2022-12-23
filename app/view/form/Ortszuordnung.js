@@ -230,12 +230,6 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         }
     },
 
-    clearMessages: function() {
-        this.down('tarea[name=ortszusatztext]').clearWarningOrError();
-        this.down('ortszuordnungtyp[name=ortszuordnungTyp]')
-            .clearWarningOrError();
-    },
-
     /**
      * Helper to trigger the forms' validity check
      */

@@ -254,21 +254,5 @@ Ext.define('Lada.view.form.Probenehmer', {
     setRecord: function(probenehmerRecord) {
         this.clearMessages();
         this.getForm().loadRecord(probenehmerRecord);
-    },
-
-    clearMessages: function() {
-        this.down('tfield[name=prnId]').clearWarningOrError();
-        this.down('netzbetreiber').clearWarningOrError();
-        this.down('tfield[name=bearbeiter]').clearWarningOrError();
-        this.down('tfield[name=bemerkung]').clearWarningOrError();
-        this.down('tarea[name=bezeichnung]').clearWarningOrError();
-        this.down('tfield[name=kurzBezeichnung]').clearWarningOrError();
-        this.down('tfield[name=ort]').clearWarningOrError();
-        this.down('tfield[name=betrieb]').clearWarningOrError();
-        this.down('tfield[name=plz]').clearWarningOrError();
-        this.down('tfield[name=strasse]').clearWarningOrError();
-        this.down('tfield[name=telefon]').clearWarningOrError();
-        this.down('tfield[name=tourenplan]').clearWarningOrError();
-        this.down('tfield[name=typ]').clearWarningOrError();
     }
 });
