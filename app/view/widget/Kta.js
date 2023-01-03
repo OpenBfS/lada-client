@@ -27,9 +27,9 @@ Ext.define('Lada.view.widget.Kta', {
     minChars: 0,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{code} - {bezeichnung}</div></tpl>'),
+            '{extId} - {name}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{code} - {bezeichnung}</tpl>'),
+        '<tpl for=".">{extId} - {name}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
