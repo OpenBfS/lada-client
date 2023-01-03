@@ -13,7 +13,7 @@ Ext.define('Lada.store.Messeinheiten', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.MeasUnit',
     sorters: [{
-        property: 'einheit',
+        property: 'unitSymbol',
         transform: function(val) {
             if (val) {
                 return val.toLowerCase();

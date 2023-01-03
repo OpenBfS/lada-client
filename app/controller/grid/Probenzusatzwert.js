@@ -152,7 +152,7 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
         if (!mehid) {
             editor.up().getRefItems()[4].setValue('');
         } else {
-            editor.up().getRefItems()[4].setValue(mehid.get('einheit'));
+            editor.up().getRefItems()[4].setValue(mehid.get('unitSymbol'));
         }
     }
 });

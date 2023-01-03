@@ -262,10 +262,10 @@ Ext.define('Lada.view.grid.Messwert', {
                 ) {
                     return Ext.data.StoreManager.get('messeinheiten')
                         .findRecord('id', value, 0, false, false, true)
-                        .get('einheit');
+                        .get('unitSymbol');
                 } else {
                     return store.findRecord('id', value, 0, false, false, true)
-                        .get('einheit');
+                        .get('unitSymbol');
                 }
             },
             editor: {
@@ -273,7 +273,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 store: me.mehComboStore,
                 invalidCls: 'x-lada-warning-grid-field',
                 name: 'messeinheit',
-                displayField: 'einheit',
+                displayField: 'unitSymbol',
                 valueField: 'id',
                 allowBlank: false,
                 editable: true,

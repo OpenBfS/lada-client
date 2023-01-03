@@ -151,7 +151,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 if (!record) {
                     return '';
                 }
-                return record.get('einheit');
+                return record.get('unitId');
             }
         }, {
             header: i18n.getMsg('relmessfehler'),

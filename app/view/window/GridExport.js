@@ -928,7 +928,7 @@ Ext.define('Lada.view.window.GridExport', {
                 store = Ext.data.StoreManager.get('messeinheiten');
                 record = store.getById(value);
                 if (record) {
-                    r = record.get('einheit');
+                    r = record.get('unitSymbol');
                     return r || '';
                 }
                 return '';
