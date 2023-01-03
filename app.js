@@ -55,7 +55,7 @@ Ext.application({
         'Lada.store.MessprogrammKategorie',
         'Lada.store.GridColumn',
         'Lada.store.Query',
-        'Lada.model.Messstelle',
+        'Lada.model.MeasFacil',
         'Lada.model.GenericResults',
         'Lada.model.GridColMp',
         'Lada.model.QueryUser',
