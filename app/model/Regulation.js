@@ -9,7 +9,7 @@
 /**
  * Model for Datenbasis Stammdaten.
  */
-Ext.define('Lada.model.Datenbasis', {
+Ext.define('Lada.model.Regulation', {
     extend: 'Lada.model.LadaBase',
 
     /**
@@ -30,7 +30,6 @@ Ext.define('Lada.model.Datenbasis', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/regulation',
         reader: {
             type: 'json',
             rootProperty: 'data'
