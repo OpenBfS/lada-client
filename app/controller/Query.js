@@ -96,7 +96,7 @@ Ext.define('Lada.controller.Query', {
                 columnresize: me.dataChanged,
                 gridreload: me.drawGeometryColumns
             },
-            'querypanel textarea[name=description]': {
+            'querypanel textarea[name=descr]': {
                 change: me.dataChanged
             },
             'querypanel textfield[name=name]': {
@@ -131,14 +131,14 @@ Ext.define('Lada.controller.Query', {
         var qStore = queryBox.getStore();
         qStore.clearFilter();
         var filterFn = function(item) {
-            if (cbOwn && item.get('userId') === Lada.userId) {
+            if (cbOwn && item.get('ladaUserId') === Lada.userId) {
                 return true;
-            } else if ( cbGlobal && item.get('userId') === 0) {
+            } else if ( cbGlobal && item.get('ladaUserId') === 0) {
                 return true;
             } else if (
                 cbAvail &&
-                item.get('userId') !== Lada.userId &&
-                item.get('userId') !== 0
+                item.get('ladaUserId') !== Lada.userId &&
+                item.get('ladaUserId') !== 0
             ) {
                 return true;
             }
@@ -168,10 +168,10 @@ Ext.define('Lada.controller.Query', {
         }
         var messStellesIds = qp.down('cbox[name=messStellesIds]').getValue();
         var newrecord = Ext.create('Lada.model.QueryUser', {
-            baseQuery: cquery.get('baseQuery'),
+            baseQueryId: cquery.get('baseQueryId'),
             name: name,
-            userId: Lada.userId,
-            description: cquery.get('description'),
+            ladaUserId: Lada.userId,
+            descr: cquery.get('descr'),
             messStellesIds: messStellesIds,
             clonedFrom: cquery.get('id')
         });
@@ -282,10 +282,10 @@ Ext.define('Lada.controller.Query', {
         if (!newquery) {
             combobox.clearValue();
             newquery = Ext.create('Lada.model.QueryUser', {
-                baseQuery: null,
+                baseQueryId: null,
                 name: null,
-                userId: null,
-                description: null,
+                ladaUserId: null,
+                descr: null,
                 messStellesIds: null,
                 clonedFrom: 'empty'
             });
@@ -446,7 +446,7 @@ Ext.define('Lada.controller.Query', {
                                 id: 'dynamicgridid',
                                 emptyText: 'query.nodata',
                                 basequery: qp.getForm().getRecord()
-                                    .get('baseQuery'),
+                                    .get('baseQueryId'),
                                 selModel: Ext.create(
                                     'Ext.selection.CheckboxModel', {
                                         checkOnly: true,

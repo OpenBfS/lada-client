@@ -104,7 +104,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                     }]
                 }, {
                     xtype: 'textarea',
-                    name: 'description',
+                    name: 'descr',
                     width: '100%',
                     allowBlank: false,
                     fieldLabel: i18n.getMsg('query.comment'),
@@ -306,7 +306,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
 
                 // Select first query that belongs to the user, if any, ...
                 var hasUserQuery = true;
-                var record0 = this.findRecord('userId', Lada.userId);
+                var record0 = this.findRecord('ladaUserId', Lada.userId);
                 if (!record0) {
                     // ... else select first in store
                     hasUserQuery = false;
@@ -375,7 +375,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
 
             // Server-side filters
             this.gridColumnStore.proxy.extraParams = {
-                'qid': record.get('baseQuery')
+                'qid': record.get('baseQueryId')
             };
             this.gridColumnValueStore.proxy.extraParams = {
                 'qid': qid
@@ -390,7 +390,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
             // Load filter widget columns
             var filterwidget = this.down('cbox[name=activefilters]');
             filterwidget.store.proxy.extraParams = {
-                'qid': record.get('baseQuery')
+                'qid': record.get('baseQueryId')
             };
             filterwidget.store.load();
         }
@@ -478,7 +478,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
         if (query.phantom && (query.get('clonedFrom') === 'empty')) {
             return true;
         }
-        if (Lada.userId === query.get('userId') || query.phantom) {
+        if (Lada.userId === query.get('ladaUserId') || query.phantom) {
             return false;
         }
         return true;
