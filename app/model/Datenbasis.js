@@ -21,16 +21,16 @@ Ext.define('Lada.model.Datenbasis', {
     fields: [{
         name: 'id'
     }, {
-        name: 'beschreibung'
+        name: 'descr'
     }, {
-        name: 'datenbasis'
+        name: 'regulation'
     }],
 
     idProperty: 'id',
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/datenbasis',
+        url: 'lada-server/rest/regulation',
         reader: {
             type: 'json',
             rootProperty: 'data'
