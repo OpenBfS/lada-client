@@ -9,19 +9,19 @@ Ext.define('Lada.model.Deskriptor', {
      *  - ...
      */
     fields: [{
-        name: 'bedeutung',
+        name: 'implication',
         allowNull: true
     }, {
-        name: 'beschreibung',
+        name: 'name',
         allowNull: true
     }, {
-        name: 'ebene',
+        name: 'lev',
         type: 'int',
         allowNull: true
     }, {
         name: 'id'
     }, {
-        name: 'sn',
+        name: 'levVal',
         type: 'int',
         allowNull: true
     }, {
@@ -34,7 +34,7 @@ Ext.define('Lada.model.Deskriptor', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/deskriptor',
+        url: 'lada-server/rest/envdescrip',
         reader: {
             type: 'json',
             rootProperty: 'data',
