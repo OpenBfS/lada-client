@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.store.KoordinatenArt', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.KoordinatenArt',
+    model: 'Lada.model.SpatRefSys',
     sorters: [
         {
             property: 'id',

@@ -9,7 +9,7 @@
 /**
  * Model for KoordinatenArt Stammdaten.
  */
-Ext.define('Lada.model.KoordinatenArt', {
+Ext.define('Lada.model.SpatRefSys', {
     extend: 'Lada.model.LadaBase',
 
     /**
@@ -23,17 +23,6 @@ Ext.define('Lada.model.KoordinatenArt', {
     }, {
         name: 'idfGeoKey'
     }, {
-        name: 'koordinatenart'
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/koordinatenart',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
+        name: 'name'
+    }]
 });
