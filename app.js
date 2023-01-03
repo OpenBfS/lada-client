@@ -360,7 +360,7 @@ Ext.application({
             storeId: 'datensatzerzeuger',
             proxy: {
                 type: 'rest',
-                url: 'lada-server/rest/datensatzerzeuger',
+                url: 'lada-server/rest/datasetcreator',
                 reader: {
                     type: 'json',
                     totalProperty: 'totalCount',

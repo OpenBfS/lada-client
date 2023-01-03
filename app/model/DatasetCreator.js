@@ -36,7 +36,6 @@ Ext.define('Lada.model.DatasetCreator', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/datasetcreator',
         reader: {
             type: 'json',
             totalProperty: 'totalCount',
