@@ -25,18 +25,18 @@ Ext.define('Lada.model.Messstelle', {
         name: 'id',
         persist: true
     }, {
-        name: 'beschreibung',
+        name: 'address',
         allowNull: true
     }, {
-        name: 'netzbetreiberId'
+        name: 'networkId'
     }, {
-        name: 'messStelle',
+        name: 'name',
         allowNull: true
     }, {
-        name: 'mstTyp',
+        name: 'measFacilType',
         allowNull: true
     }, {
-        name: 'amtskennung',
+        name: 'trunkCode',
         allowNull: true
     }],
 
@@ -44,7 +44,7 @@ Ext.define('Lada.model.Messstelle', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/messstelle',
+        url: 'lada-server/rest/measfacil',
         reader: {
             type: 'json',
             rootProperty: 'data'
