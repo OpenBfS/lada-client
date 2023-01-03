@@ -14,13 +14,13 @@ Ext.define('Lada.model.GridColumnValue', {
     fields: [{
         name: 'id'
     }, {
-        name: 'columnIndex',
+        name: 'colIndex',
         type: 'int'
     }, {
-        name: 'filterActive',
+        name: 'isFilterActive',
         type: 'boolean'
     }, {
-        name: 'filterValue',
+        name: 'filterVal',
         allowNull: true
     }, {
         name: 'sort',
@@ -34,26 +34,26 @@ Ext.define('Lada.model.GridColumnValue', {
         type: 'int',
         allowNull: true
     }, {
-        name: 'visible',
+        name: 'isVisible',
         type: 'boolean'
     }, {
         name: 'width',
         type: 'int',
         allowNull: true
     }, {
-        name: 'gridColumnId',
+        name: 'gridColMpId',
         type: 'int'
     }, {
         name: 'dataIndex',
         persist: false
     }, {
-        name: 'filterNegate',
+        name: 'isFilterNegate',
         type: 'boolean'
     }, {
-        name: 'filterRegex',
+        name: 'ísFilterRegex',
         type: 'boolean'
     }, {
-        name: 'filterIsNull',
+        name: 'isFilterNull',
         type: 'boolean'
     }, {
         name: 'name',
@@ -61,7 +61,7 @@ Ext.define('Lada.model.GridColumnValue', {
     }],
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/columnvalue',
+        url: 'lada-server/rest/gridcolconf',
         reader: {
             type: 'json',
             totalProperty: 'totalCount',
