@@ -51,15 +51,15 @@ Ext.define('Lada.view.form.mixins.DeskriptorFieldset', {
                 if (success) {
                     var mediatext;
                     mediatext = cbox.store.findRecord(
-                        'sn', parseInt(media[ndx + 1], 10), 0,
+                        'levVal', parseInt(media[ndx + 1], 10), 0,
                         false, false, true);
                     cbox.select(mediatext);
                     if (mediatext !== null) {
-                        if (mediatext.data.beschreibung !== 'leer'
+                        if (mediatext.data.name !== 'leer'
                             && (ndx <= 3 && media[1] === '01'
                                 || ndx <= 1 && media[1] !== '01')
                            ) {
-                            beschreibung = mediatext.data.beschreibung;
+                            beschreibung = mediatext.data.name;
                         }
                     }
                     var nextNdx = ++ndx;

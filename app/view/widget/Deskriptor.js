@@ -12,10 +12,10 @@
 Ext.define('Lada.view.widget.Deskriptor', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.deskriptor',
-    displayField: 'beschreibung',
+    displayField: 'name',
     valueField: 'id',
     requires: ['Lada.store.Deskriptoren'],
-    searchValueField: 'sn',
+    searchValueField: 'levVal',
     // Enable filtering of comboboxes
     triggerAction: 'all',
     typeAhead: false,
@@ -26,11 +26,11 @@ Ext.define('Lada.view.widget.Deskriptor', {
     forceSelection: true,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-        '<tpl if="sn &gt; 9">{sn} - {beschreibung}</tpl>',
-        '<tpl if="sn &lt; 10">0{sn} - {beschreibung}</tpl></div></tpl>'),
+        '<tpl if="sn &gt; 9">{levVal} - {name}</tpl>',
+        '<tpl if="sn &lt; 10">0{levVal} - {name}</tpl></div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for="."><tpl if="sn &gt; 9">{sn} - {beschreibung}</tpl>',
-        '<tpl if="sn &gt; 0 &amp;&amp;sn &lt; 10">0{sn} - {beschreibung}</tpl>',
+        '<tpl for="."><tpl if="sn &gt; 9">{levVal} - {name}</tpl>',
+        '<tpl if="sn &gt; 0 &amp;&amp;sn &lt; 10">0{levVal} - {name}</tpl>',
         '</tpl>'),
 
     initComponent: function() {
