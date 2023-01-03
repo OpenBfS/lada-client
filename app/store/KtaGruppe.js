@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.store.KtaGruppe', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.KtaGruppe',
+    model: 'Lada.model.NuclFacilGr',
     sorters: [
         {
             property: 'ktaGruppe',

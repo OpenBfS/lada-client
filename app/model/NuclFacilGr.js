@@ -9,29 +9,14 @@
 /**
  * Model class representing a Kta Gruppe
  */
-Ext.define('Lada.model.KtaGruppe', {
+Ext.define('Lada.model.NuclFacilGr', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'
     }, {
-        name: 'ktaGruppe'
+        name: 'name'
     }, {
-        name: 'beschreibung'
+        name: 'extId'
     }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/ktagruppe',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true
-        }
-    }
 });
