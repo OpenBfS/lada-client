@@ -23,16 +23,16 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
             'datensatzerzeugerform button[action=copy]': {
                 click: this.copyDatensatzerzeuger
             },
-            'datensatzerzeugerform [name="datensatzErzeugerId"]': {
+            'datensatzerzeugerform [name="extId"]': {
                 change: this.checkCommitEnabled
             },
-            'datensatzerzeugerform [name="bezeichnung"]': {
+            'datensatzerzeugerform [name="descr"]': {
                 change: this.checkCommitEnabled
             },
-            'datensatzerzeugerform [name="mstId"]': {
+            'datensatzerzeugerform [name="measFacilId"]': {
                 change: this.checkCommitEnabled
             },
-            'datensatzerzeugerform [name="netzbetreiberId"]': {
+            'datensatzerzeugerform [name="networkId"]': {
                 change: this.checkCommitEnabled
             }
         });
@@ -45,7 +45,7 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
         for (var key in data) {
             record.set(key, data[key]);
         }
-        record.set('netzbetreiberId',
+        record.set('networkId',
             formPanel.down('netzbetreiber').getValue()[0]);
         if (record.phantom) {
             record.set('id', null);
@@ -78,7 +78,7 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                         i18n.getMsg('err.msg.generic.body'));
                 } else {
                     formPanel.down(
-                        'tfield[name=datensatzErzeugerId]').setValue();
+                        'tfield[name=extId]').setValue();
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
                         if (json.message) {
@@ -106,7 +106,7 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
     copyDatensatzerzeuger: function(button) {
         var record = button.up('datensatzerzeugerform').getForm().getRecord();
         var copy = record.copy(null);
-        copy.set('datensatzErzeugerId', null);
+        copy.set('extId', null);
         var win = Ext.create('Lada.view.window.DatensatzErzeuger', {
             record: copy,
             mode: 'copy',
@@ -146,7 +146,7 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
         }
         if (
             panel.isValid() &&
-            panel.down('netzbetreiber[name=netzbetreiberId]')
+            panel.down('netzbetreiber[name=networkId]')
                 .getValue().length !== 0
         ) {
             if (panel.isDirty()) {

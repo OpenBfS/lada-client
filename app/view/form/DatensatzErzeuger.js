@@ -79,32 +79,32 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                 },
                 items: [{
                     xtype: 'netzbetreiber',
-                    name: 'netzbetreiberId',
+                    name: 'networkId',
                     readOnly: true,
                     allowBlank: false,
                     filteredStore: true,
                     fieldLabel: i18n.getMsg('netzbetreiberId'),
-                    value: this.record.get('netzbetreiberId')
+                    value: this.record.get('networkId')
                 }, {
                     xtype: 'combobox',
-                    displayField: 'messStelle',
+                    displayField: 'measFacilId',
                     readOnly: true,
                     valueField: 'id',
                     allowBlank: false,
                     queryMode: 'local',
-                    name: 'mstId',
+                    name: 'measFacilId',
                     matchFieldWidth: false,
                     fieldLabel: i18n.getMsg('mst_id')
                 }, {
                     xtype: 'tfield',
-                    name: 'datensatzErzeugerId',
+                    name: 'extId',
                     readOnly: true,
                     allowBlank: false,
                     fieldLabel: i18n.getMsg('daErzeugerId'),
                     maxLength: 2
                 }, {
                     xtype: 'tarea',
-                    name: 'bezeichnung',
+                    name: 'descr',
                     allowBlank: false,
                     readOnly: true,
                     fieldLabel: i18n.getMsg('bezeichnung'),
@@ -122,12 +122,12 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
             property: 'measFacilType',
             value: 'M',
             exactMatch: true});
-        this.down('combobox[name=mstId]').setStore(this.mstTypStore);
+        this.down('combobox[name=measFacilId]').setStore(this.mstTypStore);
         if (
             (!this.record.phantom) ||
-            (this.record.phantom && this.record.get('netzbetreiberId'))
+            (this.record.phantom && this.record.get('networkId'))
         ) {
-            var current = netzstore.getById(this.record.get('netzbetreiberId'));
+            var current = netzstore.getById(this.record.get('networkId'));
             if (current) {
                 this.down('netzbetreiber').setValue(current);
             }
