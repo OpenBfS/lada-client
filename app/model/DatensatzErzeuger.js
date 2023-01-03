@@ -15,15 +15,15 @@ Ext.define('Lada.model.DatensatzErzeuger', {
     fields: [{
         name: 'id'
     }, {
-        name: 'netzbetreiberId'
+        name: 'networkId'
     }, {
-        name: 'datensatzErzeugerId'
+        name: 'extId'
     }, {
-        name: 'mstId'
+        name: 'measFacilId'
     }, {
-        name: 'bezeichnung'
+        name: 'descr'
     }, {
-        name: 'letzteAenderung',
+        name: 'lastMod',
         type: 'date',
         dateFormat: 'time'
     }, {
@@ -36,7 +36,7 @@ Ext.define('Lada.model.DatensatzErzeuger', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/datensatzerzeuger',
+        url: 'lada-server/rest/datasetcreator',
         reader: {
             type: 'json',
             totalProperty: 'totalCount',
