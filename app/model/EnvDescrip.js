@@ -1,7 +1,7 @@
 /**
  *
  */
-Ext.define('Lada.model.Deskriptor', {
+Ext.define('Lada.model.EnvDescrip', {
     extend: 'Lada.model.LadaBase',
 
     /**
@@ -34,7 +34,6 @@ Ext.define('Lada.model.Deskriptor', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/envdescrip',
         reader: {
             type: 'json',
             rootProperty: 'data',
