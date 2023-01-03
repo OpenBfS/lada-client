@@ -14,7 +14,7 @@ Ext.define('Lada.model.Query', {
     autoLoad: true,
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/query',
+        url: 'lada-server/rest/queryuser',
         reader: {
             type: 'json',
             rootProperty: 'data'
@@ -30,12 +30,12 @@ Ext.define('Lada.model.Query', {
     }, {
         name: 'name'
     }, {
-        name: 'userId',
+        name: 'ladaUserId',
         type: 'int'
     }, {
-        name: 'description'
+        name: 'descr'
     }, {
-        name: 'baseQuery',
+        name: 'baseQueryId',
         type: 'int'
     }, {
         name: 'messStellesIds'
