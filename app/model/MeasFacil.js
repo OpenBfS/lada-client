@@ -9,7 +9,7 @@
 /**
  * Model for Messstelle Stammdaten.
  */
-Ext.define('Lada.model.Messstelle', {
+Ext.define('Lada.model.MeasFacil', {
     extend: 'Lada.model.LadaBase',
 
     /**
@@ -44,7 +44,6 @@ Ext.define('Lada.model.Messstelle', {
 
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/measfacil',
         reader: {
             type: 'json',
             rootProperty: 'data'

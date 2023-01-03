@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.store.Messstellen', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Messstelle',
+    model: 'Lada.model.MeasFacil',
     sorters: [{
         property: 'messStelle',
         transform: function(val) {
