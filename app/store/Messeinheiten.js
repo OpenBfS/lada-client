@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.store.Messeinheiten', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Messeinheit',
+    model: 'Lada.model.MeasUnit',
     sorters: [{
         property: 'einheit',
         transform: function(val) {

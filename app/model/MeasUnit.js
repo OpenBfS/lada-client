@@ -9,7 +9,7 @@
 /**
  * Model for Messeinheit Stammdaten.
  */
-Ext.define('Lada.model.Messeinheit', {
+Ext.define('Lada.model.MeasUnit', {
     extend: 'Lada.model.LadaBase',
 
     /**
@@ -24,28 +24,17 @@ Ext.define('Lada.model.Messeinheit', {
     fields: [{
         name: 'id'
     }, {
-        name: 'beschreibung'
+        name: 'name'
     }, {
-        name: 'einheit'
+        name: 'unitSymbol'
     }, {
-        name: 'eudfMesseinheitId'
+        name: 'eudfUnitId'
     }, {
-        name: 'umrechnungsFaktorEudf',
+        name: 'eudfConversFactor',
         type: 'float'
     }, {
         name: 'primary',
         type: 'boolean',
         persist: false
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/messeinheit',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
+    }]
 });
