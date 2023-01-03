@@ -14,7 +14,7 @@ Ext.define('Lada.store.KtaGruppe', {
     model: 'Lada.model.NuclFacilGr',
     sorters: [
         {
-            property: 'ktaGruppe',
+            property: 'extId',
             direction: 'ASC'
         }],
     autoLoad: true,
