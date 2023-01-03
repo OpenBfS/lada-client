@@ -185,14 +185,14 @@ Ext.define('Lada.controller.Query', {
             return new Ext.Promise(function(resolve) {
                 columnValues.each(function(item) {
                     var clonedModel = Ext.create('Lada.model.GridColConf', {
-                        columnIndex: item.get('columnIndex'),
-                        gridColumnId: item.get('gridColumnId'),
-                        visible: item.get('visible'),
+                        colIndex: item.get('colIndex'),
+                        gridColMpId: item.get('gridColMpId'),
+                        isVisible: item.get('isVisible'),
                         sort: item.get('sort'),
                         sortIndex: item.get('sortIndex'),
-                        filterActive: item.get('filterActive'),
-                        filterNegate: item.get('filterNegate'),
-                        filterRegex: item.get('filterRegex'),
+                        isFilterActive: item.get('isFilterActive'),
+                        isFilterNegate: item.get('isFilterNegate'),
+                        ísFilterRegex: item.get('ísFilterRegex'),
                         filterValue: item.get('filterValue'),
                         width: me.getVisibleColumnWidth(item)
                     });
@@ -559,14 +559,14 @@ Ext.define('Lada.controller.Query', {
         var jsonData = {columns: []};
         for (var i = 0; i < csdata.length; i++ ) {
             var columnObj = {
-                gridColumnId: csdata[i].get('gridColumnId'),
-                filterActive: csdata[i].get('filterActive'),
+                gridColMpId: csdata[i].get('gridColMpId'),
+                isFilterActive: csdata[i].get('isFilterActive'),
                 filterValue: csdata[i].get('filterValue') || '',
-                filterRegex: csdata[i].get('filterRegex') || false,
-                filterNegate: csdata[i].get('filterNegate') || false,
-                filterIsNull: csdata[i].get('filterIsNull') || false,
-                visible: csdata[i].get('visible'),
-                columnIndex: csdata[i].get('columnIndex'),
+                ísFilterRegex: csdata[i].get('ísFilterRegex') || false,
+                isFilterNegate: csdata[i].get('isFilterNegate') || false,
+                isFilterNull: csdata[i].get('isFilterNull') || false,
+                isVisible: csdata[i].get('isVisible'),
+                colIndex: csdata[i].get('colIndex'),
                 sortIndex: csdata[i].get('sortIndex'),
                 sort: csdata[i].get('sort')
             };
@@ -599,7 +599,7 @@ Ext.define('Lada.controller.Query', {
                 continue;
             }
             var fixcolumn = fixColumnStore.findRecord('id',
-                recs[i].get('gridColumnId'), false, false, false, true);
+                recs[i].get('gridColMpId'), false, false, false, true);
             if (fixcolumn) {
                 var dt = fixcolumn.get('dataType');
                 var field = null;
@@ -607,13 +607,13 @@ Ext.define('Lada.controller.Query', {
                 var regexCheckbox = false;
                 var options = {
                     name: fixcolumn.get('dataIndex'),
-                    columnIndex: recs[i].get('columnIndex'),
+                    colIndex: recs[i].get('colIndex'),
                     labelWidth: 125,
                     margin: '10,0,0,0',
-                    fieldLabel: fixcolumn.get('name'),
-                    negateValue: recs[i].get('filterNegate'),
-                    regexValue: recs[i].get('filterRegex'),
-                    isNullValue: recs[i].get('filterIsNull'),
+                    fieldLabel: fixcolumn.get('gridCol'),
+                    negateValue: recs[i].get('isFilterNegate'),
+                    regexValue: recs[i].get('ísFilterRegex'),
+                    isNullValue: recs[i].get('isFilterNull'),
                     width: '100%',
                     editable: true,
                     border: false,
@@ -957,8 +957,8 @@ Ext.define('Lada.controller.Query', {
             }
         }
         filters.sort(function(item0, item1) {
-            var a = item0.columnIndex;
-            var b = item1.columnIndex;
+            var a = item0.colIndex;
+            var b = item1.colIndex;
             if (a === -1 || a === null) {
                 if (b === -1 || b === null) {
                     // both no columns; sort alphabetically by dataIndex?
@@ -994,11 +994,11 @@ Ext.define('Lada.controller.Query', {
                 var fixrecord = cs.findRecord('dataIndex', newvalue[j],
                     false, false, false, true);
                 var col = Ext.create('Lada.model.GridColConf', {
-                    gridColumnId: fixrecord.get('id'),
-                    visible: false,
-                    filterActive: true,
+                    gridColMpId: fixrecord.get('id'),
+                    isVisible: false,
+                    isFilterActive: true,
                     dataIndex: fixrecord.get('dataIndex'),
-                    name: fixrecord.get('name')
+                    gridCol: fixrecord.get('gridCol')
                 });
                 store.add(col);
             } else {

@@ -378,7 +378,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 'baseQuery': record.get('baseQueryId')
             };
             this.gridColumnValueStore.proxy.extraParams = {
-                'qid': qid
+                'queryUser': qid
             };
 
             // Actually load stores for gridColumns and gridColumnValues
@@ -426,7 +426,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                     for (var i = 0; i < items.length; i++) {
                         var gridColumn = me.gridColumnStore.findRecord(
                             'id',
-                            items[i].get('gridColumnId'),
+                            items[i].get('gridColMpId'),
                             0,
                             false,
                             false,
@@ -434,7 +434,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                         if (gridColumn) {
                             items[i].set(
                                 'dataIndex', gridColumn.get('dataIndex'));
-                            items[i].set('name', gridColumn.get('name'));
+                            items[i].set('gridCol', gridColumn.get('gridCol'));
                             if (items[i].get('filterActive')) {
                                 activeFilters.push(gridColumn.get('dataIndex'));
                             }

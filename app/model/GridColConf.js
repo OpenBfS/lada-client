@@ -61,7 +61,6 @@ Ext.define('Lada.model.GridColConf', {
     }],
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/gridcolconf',
         reader: {
             type: 'json',
             totalProperty: 'totalCount',

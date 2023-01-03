@@ -78,7 +78,7 @@ Ext.define('Lada.view.widget.ColumnSort', {
                 columns: [{
                     text: '',
                     sortable: false,
-                    dataIndex: 'name',
+                    dataIndex: 'gridCol',
                     flex: 2
                 }, {
                     xtype: 'widgetcolumn',
@@ -213,10 +213,10 @@ Ext.define('Lada.view.widget.ColumnSort', {
             var qf = columnstore.findRecord(
                 'name', nodename, 0, false, false, true);
             var entry = this.store.findRecord(
-                'gridColumnId', qf.get('id'));
+                'gridColMpId', qf.get('id'));
             var orig_entry = me.up(
                 'querypanel').gridColumnValueStore.findRecord(
-                'gridColumnId', qf.get('id'));
+                'gridColMpId', qf.get('id'));
             entry.set('sortIndex', i);
             orig_entry.set('sortIndex', i);
         }
@@ -228,7 +228,7 @@ Ext.define('Lada.view.widget.ColumnSort', {
         if (newStore) {
             this.store.setData(newStore.getData().items);
         }
-        this.store.filter('visible', true);
+        this.store.filter('isVisible', true);
         this.store.sort('sortIndex', 'ASC');
         this.down('grid').setStore(this.store);
         var sorter = this.store.getSorters();

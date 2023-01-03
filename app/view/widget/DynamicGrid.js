@@ -317,17 +317,17 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
         var filterMap = this.getFilterValues();
 
-        current_columns.sort('columnIndex', 'ASC');
+        current_columns.sort('colIndex', 'ASC');
         var cc = current_columns.getData().items;
         for (var i = 0; i < cc.length; i++) {
             var orig_column = fixedColumnStore.findRecord(
-                'id', cc[i].get('gridColumnId'), false, false, false, true);
+                'id', cc[i].get('gridColMpId'), false, false, false, true);
             var dataIndex = orig_column.get('dataIndex');
-            if (cc[i].get('visible') === true) {
+            if (cc[i].get('isVisible') === true) {
                 var col = {
                     dataIndex: dataIndex,
                     dataType: orig_column.get('dataType'),
-                    text: orig_column.get('name'),
+                    text: orig_column.get('gridCol'),
                     width: cc[i].get('width'),
                     sortable: false
                 };
@@ -338,7 +338,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 }
                 var curField = {
                     dataIndex: dataIndex,
-                    name: orig_column.get('name')
+                    name: orig_column.get('gridCol')
                 };
                 switch (datatype.name) {
                     case 'probeId':
@@ -430,21 +430,21 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 col.draggable = false;
                 resultColumns.push(col);
             }
-            if (cc[i].get('filterActive')) {
+            if (cc[i].get('isFilterActive')) {
                 this.currentParams.filters.push({
                     //dataindex
                     name: dataIndex,
                     //Readable name
-                    displayName: cc[i].get('name'),
+                    displayName: cc[i].get('gridCol'),
                     //Filter value
                     filter: cc[i].get('filterValue'),
                     //Readable filter value
                     filterDisplay: filterMap.get(dataIndex) ?
                         filterMap.get(dataIndex) :
                         cc[i].get('filterValue'),
-                    filterRegex: cc[i].get('filterRegex'),
-                    filterNegate: cc[i].get('filterNegate'),
-                    filterIsNull: cc[i].get('filterIsNull')
+                    filterRegex: cc[i].get('isFilterRegex'),
+                    filterNegate: cc[i].get('isFilterNegate'),
+                    filterIsNull: cc[i].get('isFilterIsNull')
                 });
             }
         }

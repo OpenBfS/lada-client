@@ -1138,7 +1138,7 @@ Ext.define('Lada.view.window.GridExport', {
             c.export = false;
             if ( c.columnIndex > -1 && c.visible !== false) {
                 var gridColumn = columnstore.findRecord(
-                    'id', c.gridColumnId, 0, false, false, true
+                    'id', c.gridColMpId, 0, false, false, true
                 );
                 if (
                     allcolumns ||
