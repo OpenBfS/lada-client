@@ -9,7 +9,7 @@
 /**
  * Model for Messgroesse Stammdaten.
  */
-Ext.define('Lada.model.Messgroesse', {
+Ext.define('Lada.model.Measd', {
     extend: 'Lada.model.LadaBase',
 
     /**
@@ -25,29 +25,25 @@ Ext.define('Lada.model.Messgroesse', {
     fields: [{
         name: 'id'
     }, {
-        name: 'beschreibung',
+        name: 'descr',
         allowNull: true
     }, {
-        name: 'messgroesse'
+        name: 'name'
     }, {
-        name: 'defaultFarbe',
+        name: 'defColor',
         allowNull: true
     }, {
-        name: 'idfNuklidKey',
+        name: 'idfExtId',
         allowNull: true
     }, {
-        name: 'istLeitNuklid',
+        name: 'isRefNucl',
         type: 'boolean'
     }, {
-        name: 'eudfNuklidId',
+        name: 'eudfNuclId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'kennungBvl',
+        name: 'bvlFormatId',
         allowNull: true
-    }],
-
-    idProperty: 'id'
-    // other models contain the proxy-configuration at this point.
-    // we don't. You can find the Proxy in in the Store: Lada.store.Messgroessen
+    }]
 });
