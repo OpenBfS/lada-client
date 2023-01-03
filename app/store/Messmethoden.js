@@ -11,13 +11,13 @@
  */
 Ext.define('Lada.store.Messmethoden', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Messmethode',
+    model: 'Lada.model.Mmt',
     sorters: [{
         property: 'id',
         direction: 'ASC'
     },
     {
-        property: 'messmethode',
+        property: 'name',
         direction: 'ASC',
         transform: function(val) {
             if (val) {

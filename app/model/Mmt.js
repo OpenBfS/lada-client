@@ -9,7 +9,7 @@
 /**
  * Model for Messmethode Stammdaten.
  */
-Ext.define('Lada.model.Messmethode', {
+Ext.define('Lada.model.Mmt', {
     extend: 'Lada.model.LadaBase',
 
     /**
@@ -21,26 +21,15 @@ Ext.define('Lada.model.Messmethode', {
     fields: [{
         name: 'id'
     }, {
-        name: 'beschreibung'
+        name: 'descr'
     }, {
-        name: 'messmethode'
+        name: 'name'
     }, {
         name: 'display',
         persist: false,
         convert: function(value, record) {
-            return record.get('id') + ' - ' + record.get('messmethode');
+            return record.get('id') + ' - ' + record.get('name');
         }
 
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/messmethode',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
+    }]
 });
