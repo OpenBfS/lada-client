@@ -24,7 +24,7 @@ Ext.define('Lada.model.GridColMp', {
         // Object with: id, name, parameter, sql, filterType.id,
         // filterType.multiselect, filterType.type
     }, {
-        name: 'name'
+        name: 'gridCol'
     }, {
         name: 'position',
         type: 'int'
