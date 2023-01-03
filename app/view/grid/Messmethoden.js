@@ -111,13 +111,13 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 }
                 var store = me.mmtStore;
                 return value + ' - ' + store.findRecord(
-                    'id', value, 0, false, false, true).get('messmethode');
+                    'id', value, 0, false, false, true).get('name');
             },
             editor: {
                 xtype: 'combobox',
                 store: me.mmtStore,
                 valueField: 'id',
-                displayField: 'messmethode',
+                displayField: 'name',
                 allowBlank: false,
                 editable: true,
                 disableKeyFilter: false,
