@@ -10,7 +10,7 @@
  * Model for fixed Column configuration. Columns are set in the database, and
  * are readonly to the client.
  */
-Ext.define('Lada.model.GridColumn', {
+Ext.define('Lada.model.GridColMp', {
     extend: 'Lada.model.LadaBase',
     fields: [{
         name: 'id'
@@ -35,7 +35,6 @@ Ext.define('Lada.model.GridColumn', {
     idProperty: 'id',
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/column',
         reader: {
             type: 'json',
             totalProperty: 'totalCount',

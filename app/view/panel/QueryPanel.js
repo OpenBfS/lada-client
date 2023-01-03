@@ -202,7 +202,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 // Needs to be different from Ext.getStore('columnstore')
                 // because of extra filters:
                 store: Ext.create('Ext.data.Store', {
-                    model: 'Lada.model.GridColumn',
+                    model: 'Lada.model.GridColMp',
                     autoLoad: false}),
                 valueField: 'dataIndex',
                 displayField: 'name',
