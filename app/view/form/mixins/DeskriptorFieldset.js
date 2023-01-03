@@ -34,7 +34,7 @@ Ext.define('Lada.view.form.mixins.DeskriptorFieldset', {
         var current = this.down('deskriptor[layer=' + ndx + ']');
         var cbox = current.down('combobox');
         cbox.store.proxy.extraParams = {
-            'layer': ndx
+            'lev': ndx
         };
         if (ndx >= 1) {
             var parents = current.getParents(cbox);
@@ -42,7 +42,7 @@ Ext.define('Lada.view.form.mixins.DeskriptorFieldset', {
                 scheduler.finished();
                 return;
             }
-            cbox.store.proxy.extraParams.parents = parents;
+            cbox.store.proxy.extraParams.predId = parents;
         }
 
         var me = this;

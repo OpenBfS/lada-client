@@ -69,8 +69,8 @@ Ext.define('Lada.view.widget.Deskriptor', {
     focusfn: function(field) {
         var deskriptor = field.up('deskriptor');
         deskriptor.store.proxy.extraParams = {
-            layer: deskriptor.layer,
-            parents: deskriptor.getParents(field)
+            lev: deskriptor.layer,
+            predId: deskriptor.getParents(field)
         };
         deskriptor.store.load();
     }
