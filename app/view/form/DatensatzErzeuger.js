@@ -14,10 +14,10 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
     alias: 'widget.datensatzerzeugerform',
     requires: [
         'Lada.view.widget.Netzbetreiber',
-        'Lada.model.DatensatzErzeuger'
+        'Lada.model.DatasetCreator'
     ],
 
-    model: 'Lada.model.DatensatzErzeuger',
+    model: 'Lada.model.DatasetCreator',
     margin: 0,
     border: false,
 

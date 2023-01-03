@@ -70,7 +70,7 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
             scope: this,
             handler: this.handleBeforeClose
         }];
-        this.modelClass = Lada.model.DatensatzErzeuger;
+        this.modelClass = Lada.model.DatasetCreator;
         this.callParent(arguments);
         if (this.record) {
             this.initData(this.record);

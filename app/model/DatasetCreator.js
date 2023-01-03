@@ -9,7 +9,7 @@
 /**
  * Model class for DatensatzErzeuger Stammdaten
  */
-Ext.define('Lada.model.DatensatzErzeuger', {
+Ext.define('Lada.model.DatasetCreator', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{

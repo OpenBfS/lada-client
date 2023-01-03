@@ -384,7 +384,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     break;
                 case 'dsatzerz':
                     win = Ext.create('Lada.view.window.DatensatzErzeuger', {
-                        record: Ext.create('Lada.model.DatensatzErzeuger',
+                        record: Ext.create('Lada.model.DatasetCreator',
                             {readonly: false})
                     });
                     win.show();
