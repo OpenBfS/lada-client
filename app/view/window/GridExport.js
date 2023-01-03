@@ -919,7 +919,7 @@ Ext.define('Lada.view.window.GridExport', {
                 store = Ext.data.StoreManager.get('messgroessen');
                 record = store.getById(value);
                 if (record) {
-                    r = record.get('messgroesse');
+                    r = record.get('name');
                     return r || '';
                 }
                 return '';

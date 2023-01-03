@@ -171,7 +171,7 @@ Ext.define('Lada.view.grid.Messwert', {
             editor: {
                 xtype: 'combobox',
                 store: me.messgroesseStore,
-                displayField: 'messgroesse',
+                displayField: 'name',
                 valueField: 'id',
                 allowBlank: false,
                 editable: true,

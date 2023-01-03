@@ -152,14 +152,14 @@ Ext.define('Lada.view.grid.Messmethoden', {
                         returnvalues = returnvalues + ', ';
                     }
                     var record = store.getById(value[i]);
-                    returnvalues = returnvalues + record.get('messgroesse');
+                    returnvalues = returnvalues + record.get('name');
                 }
                 return returnvalues;
             },
             editor: {
                 xtype: 'tagfield',
                 store: 'messgroessen',
-                displayField: 'messgroesse',
+                displayField: 'name',
                 valueField: 'id',
                 autoSelect: false,
                 queryMode: 'local'
