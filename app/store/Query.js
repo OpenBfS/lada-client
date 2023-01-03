@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.store.Query', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Query',
+    model: 'Lada.model.QueryUser',
 
     sorters: [{
         property: 'name',

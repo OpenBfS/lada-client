@@ -167,7 +167,7 @@ Ext.define('Lada.controller.Query', {
             name = name + '(' + Lada.username + ')';
         }
         var messStellesIds = qp.down('cbox[name=messStellesIds]').getValue();
-        var newrecord = Ext.create('Lada.model.Query', {
+        var newrecord = Ext.create('Lada.model.QueryUser', {
             baseQuery: cquery.get('baseQuery'),
             name: name,
             userId: Lada.userId,
@@ -281,7 +281,7 @@ Ext.define('Lada.controller.Query', {
             true);
         if (!newquery) {
             combobox.clearValue();
-            newquery = Ext.create('Lada.model.Query', {
+            newquery = Ext.create('Lada.model.QueryUser', {
                 baseQuery: null,
                 name: null,
                 userId: null,

@@ -58,7 +58,7 @@ Ext.application({
         'Lada.model.Messstelle',
         'Lada.model.GenericResults',
         'Lada.model.GridColumn',
-        'Lada.model.Query',
+        'Lada.model.QueryUser',
         'Lada.model.DownloadQueue',
         'Lada.model.UploadQueue',
         'Lada.view.widget.TimeZoneButton',

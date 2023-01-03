@@ -9,12 +9,11 @@
 /**
  * Model class for Queries
  */
-Ext.define('Lada.model.Query', {
+Ext.define('Lada.model.QueryUser', {
     extend: 'Lada.model.LadaBase',
     autoLoad: true,
     proxy: {
         type: 'rest',
-        url: 'lada-server/rest/queryuser',
         reader: {
             type: 'json',
             rootProperty: 'data'
