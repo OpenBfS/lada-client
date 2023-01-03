@@ -184,7 +184,7 @@ Ext.define('Lada.controller.Query', {
             var saved = 0;
             return new Ext.Promise(function(resolve) {
                 columnValues.each(function(item) {
-                    var clonedModel = Ext.create('Lada.model.GridColumnValue', {
+                    var clonedModel = Ext.create('Lada.model.GridColConf', {
                         columnIndex: item.get('columnIndex'),
                         gridColumnId: item.get('gridColumnId'),
                         visible: item.get('visible'),
@@ -993,7 +993,7 @@ Ext.define('Lada.controller.Query', {
             if (!nrec) {
                 var fixrecord = cs.findRecord('dataIndex', newvalue[j],
                     false, false, false, true);
-                var col = Ext.create('Lada.model.GridColumnValue', {
+                var col = Ext.create('Lada.model.GridColConf', {
                     gridColumnId: fixrecord.get('id'),
                     visible: false,
                     filterActive: true,

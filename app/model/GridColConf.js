@@ -9,7 +9,7 @@
 /**
  * Model for customized Column configuration
  */
-Ext.define('Lada.model.GridColumnValue', {
+Ext.define('Lada.model.GridColConf', {
     extend: 'Lada.model.LadaBase',
     fields: [{
         name: 'id'

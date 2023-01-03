@@ -57,7 +57,7 @@ Ext.application({
         'Lada.store.Query',
         'Lada.model.Messstelle',
         'Lada.model.GenericResults',
-        'Lada.model.GridColumn',
+        'Lada.model.GridColMp',
         'Lada.model.QueryUser',
         'Lada.model.DownloadQueue',
         'Lada.model.UploadQueue',

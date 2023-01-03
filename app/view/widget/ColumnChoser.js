@@ -211,13 +211,13 @@ Ext.define('Lada.view.widget.ColumnChoser', {
         this.store = store;
         this.fixedcolumnstore = fixedcolumnstore;
         var tstore = new Ext.data.Store({
-            model: 'Lada.model.GridColumnValue',
+            model: 'Lada.model.GridColConf',
             proxy: {
                 type: 'memory',
                 reader: 'array'
             }
         });
-        var sstore = new Ext.data.Store({model: 'Lada.model.GridColumnValue'});
+        var sstore = new Ext.data.Store({model: 'Lada.model.GridColConf'});
         if (store && fixedcolumnstore) {
             // var data = store.getData().items;
             var fixeddata = fixedcolumnstore.getData().items;
@@ -231,7 +231,7 @@ Ext.define('Lada.view.widget.ColumnChoser', {
                         sstore.add(col);
                     }
                 } else {
-                    col = Ext.create('Lada.model.GridColumnValue', {
+                    col = Ext.create('Lada.model.GridColConf', {
                         gridColumnId: fixeddata[i].get('id'),
                         visible: false,
                         filterActive: false,
