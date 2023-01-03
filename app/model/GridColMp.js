@@ -33,12 +33,4 @@ Ext.define('Lada.model.GridColMp', {
         type: 'int'
     }],
     idProperty: 'id',
-    proxy: {
-        type: 'rest',
-        reader: {
-            type: 'json',
-            totalProperty: 'totalCount',
-            rootProperty: 'data'
-        }
-    }
 });

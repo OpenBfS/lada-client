@@ -33,17 +33,4 @@ Ext.define('Lada.model.DatasetCreator', {
     }],
 
     idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        reader: {
-            type: 'json',
-            totalProperty: 'totalCount',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true
-        }
-    }
 });

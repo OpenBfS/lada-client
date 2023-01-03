@@ -59,16 +59,4 @@ Ext.define('Lada.model.GridColConf', {
         name: 'name',
         persist: false
     }],
-    proxy: {
-        type: 'rest',
-        reader: {
-            type: 'json',
-            totalProperty: 'totalCount',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true
-        }
-    }
 });

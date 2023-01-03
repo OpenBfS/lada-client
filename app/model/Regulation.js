@@ -27,12 +27,4 @@ Ext.define('Lada.model.Regulation', {
     }],
 
     idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
 });

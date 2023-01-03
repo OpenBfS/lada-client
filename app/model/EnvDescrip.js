@@ -31,13 +31,4 @@ Ext.define('Lada.model.EnvDescrip', {
     }],
 
     idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        reader: {
-            type: 'json',
-            rootProperty: 'data',
-            totalProperty: 'totalCount'
-        }
-    }
 });
