@@ -50,7 +50,7 @@ Ext.define('Lada.model.GridColConf', {
         name: 'isFilterNegate',
         type: 'boolean'
     }, {
-        name: 'ísFilterRegex',
+        name: 'isFilterRegex',
         type: 'boolean'
     }, {
         name: 'isFilterNull',

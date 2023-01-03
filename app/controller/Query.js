@@ -192,7 +192,7 @@ Ext.define('Lada.controller.Query', {
                         sortIndex: item.get('sortIndex'),
                         isFilterActive: item.get('isFilterActive'),
                         isFilterNegate: item.get('isFilterNegate'),
-                        ísFilterRegex: item.get('ísFilterRegex'),
+                        isFilterRegex: item.get('isFilterRegex'),
                         filterValue: item.get('filterValue'),
                         width: me.getVisibleColumnWidth(item)
                     });
@@ -562,7 +562,7 @@ Ext.define('Lada.controller.Query', {
                 gridColMpId: csdata[i].get('gridColMpId'),
                 isFilterActive: csdata[i].get('isFilterActive'),
                 filterValue: csdata[i].get('filterValue') || '',
-                ísFilterRegex: csdata[i].get('ísFilterRegex') || false,
+                isFilterRegex: csdata[i].get('isFilterRegex') || false,
                 isFilterNegate: csdata[i].get('isFilterNegate') || false,
                 isFilterNull: csdata[i].get('isFilterNull') || false,
                 isVisible: csdata[i].get('isVisible'),
@@ -612,7 +612,7 @@ Ext.define('Lada.controller.Query', {
                     margin: '10,0,0,0',
                     fieldLabel: fixcolumn.get('gridCol'),
                     negateValue: recs[i].get('isFilterNegate'),
-                    regexValue: recs[i].get('ísFilterRegex'),
+                    regexValue: recs[i].get('isFilterRegex'),
                     isNullValue: recs[i].get('isFilterNull'),
                     width: '100%',
                     editable: true,
