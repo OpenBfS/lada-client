@@ -302,7 +302,7 @@ Ext.define('Lada.view.grid.Orte', {
                 if (!record) {
                     return value;
                 }
-                return record.get('koordinatenart');
+                return record.get('name');
             },
             dataIndex: 'kdaId'
         }, {
