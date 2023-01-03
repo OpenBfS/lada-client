@@ -9,7 +9,7 @@
 /**
  * Model for Kta Stammdaten.
  */
-Ext.define('Lada.model.Kta', {
+Ext.define('Lada.model.NuclFacil', {
     extend: 'Lada.model.LadaBase',
 
     /**
@@ -21,19 +21,8 @@ Ext.define('Lada.model.Kta', {
     fields: [{
         name: 'id'
     }, {
-        name: 'bezeichnung'
+        name: 'name'
     }, {
-        name: 'code'
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/kta',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
+        name: 'extId'
+    }]
 });

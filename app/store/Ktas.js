@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.store.Ktas', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Kta',
+    model: 'Lada.model.NuclFacil',
     sorters: [
         {
             property: 'id',
