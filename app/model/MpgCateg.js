@@ -9,7 +9,7 @@
 /**
  * Model class for MessprogrammKategorie Stammdaten
  */
-Ext.define('Lada.model.MessprogrammKategorie', {
+Ext.define('Lada.model.MpgCateg', {
     extend: 'Lada.model.LadaBase',
 
     requires: [
@@ -19,35 +19,19 @@ Ext.define('Lada.model.MessprogrammKategorie', {
     fields: [{
         name: 'id'
     }, {
-        name: 'netzbetreiberId'
+        name: 'networkId'
     }, {
-        name: 'code',
+        name: 'extId',
         type: 'nonblankstring',
     }, {
-        name: 'bezeichnung'
+        name: 'name'
     }, {
-        name: 'letzteAenderung',
+        name: 'lastMod',
         type: 'date',
         dateFormat: 'time'
     }, {
         name: 'readonly',
         type: 'boolean',
         persist: false
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/messprogrammkategorie',
-        reader: {
-            type: 'json',
-            totalProperty: 'totalCount',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true
-        }
-    }
+    }]
 });

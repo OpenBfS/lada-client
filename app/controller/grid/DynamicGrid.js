@@ -391,7 +391,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     break;
                 case 'mprkat':
                     win = Ext.create('Lada.view.window.MessprogrammKategorie', {
-                        record: Ext.create('Lada.model.MessprogrammKategorie',
+                        record: Ext.create('Lada.model.MpgCateg',
                             {readonly: false})
                     });
                     win.show();
