@@ -6,44 +6,25 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * A Messmethoden Messprogramm.
- * This class represents and defines the model of a 'MmtMessprogramm'
- **/
-Ext.define('Lada.model.MmtMessprogramm', {
+Ext.define('Lada.model.MpgMmtMp', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'
     }, {
-        name: 'messprogrammId',
+        name: 'mpgId',
         type: 'int'
     }, {
         name: 'mmtId'
     }, {
-        name: 'messgroessen',
+        name: 'measds',
         defaultValue: []
     }, {
-        name: 'letzteAenderung',
+        name: 'lastMod',
         type: 'date',
         dateFormat: 'time'
     }, {
         name: 'copyOf',
         persist: false
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/messprogrammmmt',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true
-        }
-    }
+    }]
 });

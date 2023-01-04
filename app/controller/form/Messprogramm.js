@@ -175,7 +175,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 }
 
                 for (var i = 0; i < mmtArr.length; i++) {
-                    var copy = Ext.create('Lada.model.MmtMessprogramm',
+                    var copy = Ext.create('Lada.model.MpgMmtMp',
                         mmtArr[i]);
                     copy.set('copyOf', copy.get('id'));
                     copy.set('id', null);
