@@ -11,5 +11,5 @@
  */
 Ext.define('Lada.store.MessstellenKombi', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.MessstellenKombi'
+    model: 'Lada.model.Auth'
 });
