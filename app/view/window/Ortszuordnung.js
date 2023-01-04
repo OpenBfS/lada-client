@@ -15,7 +15,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
     alias: 'widget.ortszuordnungwindow',
 
     requires: [
-        'Lada.model.Ortszuordnung',
+        'Lada.model.Geolocat',
         'Lada.model.OrtszuordnungMp',
         'Lada.view.form.Ortszuordnung',
         'Lada.store.Orte',
@@ -250,7 +250,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         this.down('staatengrid').getStore().clearFilter();
         if (!this.record) {
             if (this.probe) {
-                this.record = Ext.create('Lada.model.Ortszuordnung');
+                this.record = Ext.create('Lada.model.Geolocat');
                 this.record.set('probeId', this.probe.get('id'));
             } else {
                 this.record = Ext.create('Lada.model.OrtszuordnungMp');

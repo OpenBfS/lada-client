@@ -154,7 +154,7 @@ Ext.define('Lada.controller.form.Probe', {
                 }
                 for (var i = 0; i < ortszuordnungArr.length; i++) {
                     var copy = Ext.create(
-                        'Lada.model.Ortszuordnung', ortszuordnungArr[i]);
+                        'Lada.model.Geolocat', ortszuordnungArr[i]);
                     copy.set('id', null);
                     copy.set('probeId', probeCopy.get('id'));
                     copy.phantom = true;
