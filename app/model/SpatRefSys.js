@@ -6,18 +6,9 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model for KoordinatenArt Stammdaten.
- */
 Ext.define('Lada.model.SpatRefSys', {
     extend: 'Lada.model.LadaBase',
 
-    /**
-     * Fields are:
-     *  - id: The unique identifier (Primary key).
-     *  - idfGeoKey: The long description.
-     *  - koordinatenart:
-     */
     fields: [{
         name: 'id'
     }, {

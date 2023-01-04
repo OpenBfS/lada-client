@@ -6,18 +6,9 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model for Messmethode Stammdaten.
- */
 Ext.define('Lada.model.Mmt', {
     extend: 'Lada.model.LadaBase',
 
-    /**
-     * Fields are:
-     *  - id: The unique identifier (Primary key).
-     *  - beschreibung: The long description.
-     *  - messmethode:
-     */
     fields: [{
         name: 'id'
     }, {

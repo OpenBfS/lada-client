@@ -6,10 +6,6 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * A Messprogramm.
- * This class represents and defines the model of a 'Messprogramm'
- **/
 Ext.define('Lada.model.Mpg', {
     extend: 'Lada.model.LadaBase',
 

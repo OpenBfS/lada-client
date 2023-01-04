@@ -6,9 +6,6 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class for MessprogrammKategorie Stammdaten
- */
 Ext.define('Lada.model.MpgCateg', {
     extend: 'Lada.model.LadaBase',
 

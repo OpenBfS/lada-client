@@ -6,9 +6,6 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class for Queries
- */
 Ext.define('Lada.model.QueryUser', {
     extend: 'Lada.model.LadaBase',
     autoLoad: true,

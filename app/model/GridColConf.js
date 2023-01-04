@@ -6,9 +6,6 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model for customized Column configuration
- */
 Ext.define('Lada.model.GridColConf', {
     extend: 'Lada.model.LadaBase',
     fields: [{

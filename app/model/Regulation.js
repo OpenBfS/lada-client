@@ -6,18 +6,9 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model for Datenbasis Stammdaten.
- */
 Ext.define('Lada.model.Regulation', {
     extend: 'Lada.model.LadaBase',
 
-    /**
-     * Fields are:
-     *  - id: The unique identifier (Primary key).
-     *  - beschreibung: The long description.
-     *  - datenbasis:
-     */
     fields: [{
         name: 'id'
     }, {

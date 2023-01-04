@@ -6,21 +6,9 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model for Messeinheit Stammdaten.
- */
 Ext.define('Lada.model.MeasUnit', {
     extend: 'Lada.model.LadaBase',
 
-    /**
-     * Fields are:
-     *  - id: The unique identifier (Primary key).
-     *  - beschreibung: The long description.
-     *  - einheit: The unit.
-     *  - eudfMesseinheitId:
-     *  - umrechnungsFaktorEudf:
-     *  - primary: True if messeinheit is the primary messeinheit
-     */
     fields: [{
         name: 'id'
     }, {

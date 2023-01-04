@@ -6,9 +6,6 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class representing a Kta Gruppe
- */
 Ext.define('Lada.model.NuclFacilGr', {
     extend: 'Lada.model.LadaBase',
 

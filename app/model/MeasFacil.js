@@ -6,21 +6,9 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model for Messstelle Stammdaten.
- */
 Ext.define('Lada.model.MeasFacil', {
     extend: 'Lada.model.LadaBase',
 
-    /**
-     * Fields are:
-     *  - id: The unique identifier (Primary key).
-     *  - beschreibung: The long description.
-     *  - netzbetreiberId:
-     *  - messStelle:
-     *  - mstTyp:
-     *  - amtskennung:
-     */
     fields: [{
         name: 'id',
         persist: true

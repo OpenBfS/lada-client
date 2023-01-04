@@ -6,9 +6,6 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class for DatensatzErzeuger Stammdaten
- */
 Ext.define('Lada.model.DatasetCreator', {
     extend: 'Lada.model.LadaBase',
 

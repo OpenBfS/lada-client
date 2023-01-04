@@ -6,22 +6,9 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model for Messgroesse Stammdaten.
- */
 Ext.define('Lada.model.Measd', {
     extend: 'Lada.model.LadaBase',
 
-    /**
-     * Fields are:
-     *  - id: The unique identifier (Primary key).
-     *  - beschreibung: The long description.
-     *  - defaultFarbe:
-     *  - idfNuklidKey:
-     *  - istLeitNuklid:
-     *  - eudfNuklidId:
-     *  - kennungBvl:
-     */
     fields: [{
         name: 'id'
     }, {

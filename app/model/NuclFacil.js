@@ -6,18 +6,9 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model for Kta Stammdaten.
- */
 Ext.define('Lada.model.NuclFacil', {
     extend: 'Lada.model.LadaBase',
 
-    /**
-     * Fields are:
-     *  - id: The unique identifier (Primary key).
-     *  - bezeichnung: The long description.
-     *  - code: human readable identifer
-     */
     fields: [{
         name: 'id'
     }, {
