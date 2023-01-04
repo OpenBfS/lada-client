@@ -275,7 +275,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         this.ortstore.removeAll();
         var ortId = this.record.get('ortId');
         if (ortId) {
-            Lada.model.Ort.load(ortId, {
+            Lada.model.Site.load(ortId, {
                 success: function(rec) {
                     me.down('ortszuordnungform').setFirstOrt(rec);
                     map.addPreviousOrt(rec);

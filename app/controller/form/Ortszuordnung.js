@@ -137,7 +137,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         } else {
             var record = osg.store.getById(currentOrt);
             if (!record) {
-                Lada.model.Ort.load(currentOrt, {
+                Lada.model.Site.load(currentOrt, {
                     success: function(rec) {
                         form.setFirstOrt(rec);
                     }

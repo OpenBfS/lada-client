@@ -6,10 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class for Ort Stammdaten
- */
-Ext.define('Lada.model.Ort', {
+Ext.define('Lada.model.Site', {
     extend: 'Lada.model.LadaBase',
 
     requires: [
@@ -20,71 +17,71 @@ Ext.define('Lada.model.Ort', {
         name: 'id',
         type: 'int'
     }, {
-        name: 'aktiv',
+        name: 'isReiActive',
         type: 'boolean',
         allowNull: true
     }, {
-        name: 'ortId',
+        name: 'extId',
         type: 'nonblankstring'
     }, {
-        name: 'ktaGruppeId',
+        name: 'reiNuclFacilGrId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'netzbetreiberId'
+        name: 'networkId'
     }, {
-        name: 'gemId',
+        name: 'municId',
         allowNull: true
     }, {
-        name: 'staatId',
+        name: 'stateId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'kdaId',
+        name: 'spatRefSysId',
         type: 'int'
     }, {
-        name: 'ozId',
+        name: 'poiId',
         allowNull: true
     }, {
-        name: 'ortTyp',
+        name: 'siteClassId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'mpArt',
+        name: 'reiOprMode',
         allowNull: true
     }, {
-        name: 'zone',
+        name: 'reiZone',
         allowNull: true
     }, {
-        name: 'sektor',
+        name: 'reiSector',
         allowNull: true
     }, {
-        name: 'zustaendigkeit',
+        name: 'reiCompetence',
         allowNull: true
     }, {
-        name: 'berichtstext',
+        name: 'reiReportText',
         allowNull: true
     }, {
-        name: 'kurztext'
+        name: 'shortText'
     }, {
-        name: 'langtext'
+        name: 'longText'
     }, {
-        name: 'reiProgpunktGrpId',
+        name: 'reiAgGrId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'unscharf',
+        name: 'isFuzzy',
         type: 'boolean'
     }, {
-        name: 'hoeheLand',
+        name: 'alt',
         type: 'float'
     }, {
-        name: 'hoeheUeberNn',
+        name: 'heightAsl',
         type: 'float'
     }, {
-        name: 'koordXExtern'
+        name: 'coordXExt'
     }, {
-        name: 'koordYExtern'
+        name: 'coordYExt'
     }, {
         name: 'longitude',
         type: 'float'
@@ -92,7 +89,7 @@ Ext.define('Lada.model.Ort', {
         name: 'latitude',
         type: 'float'
     }, {
-        name: 'letzteAenderung',
+        name: 'lastMod',
         type: 'date',
         dateFormat: 'time'
     }, {
@@ -107,22 +104,5 @@ Ext.define('Lada.model.Ort', {
     }, {
         name: 'readonly',
         type: 'boolean'
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/ort',
-        timeout: 60000,
-        reader: {
-            type: 'json',
-            totalProperty: 'totalCount',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true
-        }
-    }
+    }]
 });

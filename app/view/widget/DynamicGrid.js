@@ -228,7 +228,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             clone.getGeometry().getCoordinates()[1] * 100000)
             / 100000;
         Ext.create('Lada.view.window.Ort', {
-            record: Ext.create('Lada.model.Ort', {
+            record: Ext.create('Lada.model.Site', {
                 koordXExtern: koord_x.toString(),
                 koordYExtern: koord_y.toString(),
                 kdaId: 4,

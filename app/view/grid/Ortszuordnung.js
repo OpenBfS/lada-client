@@ -130,10 +130,10 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 var store = me.ortstore;
                 var record = store.getById(value);
                 if (!record) {
-                    record = Ext.create('Lada.model.Ort');
+                    record = Ext.create('Lada.model.Site');
                     record.set('id', value);
                     store.add(record);
-                    Lada.model.Ort.load(value, {
+                    Lada.model.Site.load(value, {
                         success: function(rec) {
                             record.beginEdit();
                             for (var key in rec.getData()) {

@@ -201,7 +201,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     createort: function(button) {
         var win = button.up('ortszuordnungwindow');
         var ort = Ext.create('Lada.view.window.Ort', {
-            record: Ext.create('Lada.model.Ort', {
+            record: Ext.create('Lada.model.Site', {
                 ortTyp: 1,
                 netzbetreiberId: win.netzbetreiberId,
                 plausibleReferenceCount: 0,
@@ -218,7 +218,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
      */
     frommap: function(button) {
         var map = button.up('ortszuordnungwindow').down('map');
-        var record = Ext.create('Lada.model.Ort');
+        var record = Ext.create('Lada.model.Site');
         record.set('plausibleReferenceCount', 0);
         record.set('referenceCountMp', 0);
         record.set('referenceCount', 0);
@@ -305,7 +305,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     selectedVerwaltungseinheit: function(grid, record) {
         var win = grid.up('ortszuordnungwindow');
         Ext.create('Lada.view.window.Ort', {
-            record: Ext.create('Lada.model.Ort', {
+            record: Ext.create('Lada.model.Site', {
                 netzbetreiberId: win.netzbetreiberId,
                 gemId: record.get('id'),
                 ortId: record.get('id'),
@@ -327,7 +327,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     selectedStaat: function(grid, record) {
         var win = grid.up('ortszuordnungwindow');
         Ext.create('Lada.view.window.Ort', {
-            record: Ext.create('Lada.model.Ort', {
+            record: Ext.create('Lada.model.Site', {
                 netzbetreiberId: win.netzbetreiberId,
                 staatId: record.get('id'),
                 ortId: 'STAAT_' + record.get('id'),

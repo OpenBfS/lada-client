@@ -201,7 +201,7 @@ Ext.define('Lada.view.panel.Map', {
                 clone.getGeometry().getCoordinates()[1] * 100000)
                 / 100000;
             var ortWin = Ext.create('Lada.view.window.Ort', {
-                record: Ext.create('Lada.model.Ort', {
+                record: Ext.create('Lada.model.Site', {
                     netzbetreiberId: nId,
                     koordXExtern: koord_x.toString(),
                     koordYExtern: koord_y.toString(),

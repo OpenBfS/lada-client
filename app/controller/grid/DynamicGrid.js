@@ -398,7 +398,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     break;
                 case 'ortId':
                     Ext.create('Lada.view.window.Ort', {
-                        record: Ext.create('Lada.model.Ort', {
+                        record: Ext.create('Lada.model.Site', {
                             ortTyp: 1,
                             readonly: false,
                             plausibleReferenceCount: 0,
@@ -418,7 +418,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
 
     activateDraw: function(button) {
         var map = button.up('dynamicgrid').down('map');
-        var record = Ext.create('Lada.model.Ort');
+        var record = Ext.create('Lada.model.Site');
         map.activateDraw(record);
     },
 

@@ -13,7 +13,7 @@ Ext.define('Lada.view.window.Ort', {
     extend: 'Lada.view.window.RecordWindow',
     alias: 'window.ort',
     requires: [
-        'Lada.model.Ort',
+        'Lada.model.Site',
         'Lada.view.window.HelpprintWindow',
         'Lada.view.form.Ort'
     ],
@@ -86,7 +86,7 @@ Ext.define('Lada.view.window.Ort', {
             scope: this,
             handler: this.close
         }];
-        this.modelClass = Lada.model.Ort;
+        this.modelClass = Lada.model.Site;
         this.callParent(arguments);
         if (this.record) {
             this.initData(this.record);
@@ -103,7 +103,7 @@ Ext.define('Lada.view.window.Ort', {
         var me = this;
         this.removeAll();
         if (this.record === null) {
-            this.record = Ext.create('Lada.model.Ort');
+            this.record = Ext.create('Lada.model.Site');
         }
 
         if (this.record.phantom) {
