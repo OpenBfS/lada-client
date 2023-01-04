@@ -29,7 +29,7 @@ Ext.define('Lada.controller.form.Messung', {
                 click: this.showAuditTrail
             },
             'messungform': {
-                dirtychange: this.dirtyForm,
+                dirtychange: this.checkCommitEnabled,
                 save: this.saveHeadless,
                 validitychange: this.checkCommitEnabled
             },
@@ -67,9 +67,6 @@ Ext.define('Lada.controller.form.Messung', {
             success: function(newRecord, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
-                    button.setDisabled(true);
-                    button.up('toolbar').down('button[action=discard]')
-                        .setDisabled(true);
                     formPanel.setRecord(newRecord);
                     formPanel.setMessages(json.errors, json.warnings,
                         json.notifications);
@@ -106,9 +103,6 @@ Ext.define('Lada.controller.form.Messung', {
                 formPanel.setLoading(false);
             },
             failure: function(newRrecord, response) {
-                button.setDisabled(true);
-                button.up('toolbar').down('button[action=discard]')
-                    .setDisabled(true);
                 formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
                 var i18n = Lada.getApplication().bundle;
                 if (response.error) {
@@ -243,34 +237,6 @@ Ext.define('Lada.controller.form.Messung', {
             field.up().clearWarningOrError();
         } else {
             field.up().showWarnings('Wert nicht gesetzt');
-        }
-    },
-
-
-
-    /**
-      * The dirtyForm function enables or disables the save and discard
-      * button which are present in the toolbar of the form.
-      * The Buttons are only active if the content of the form was altered
-      * (the form is dirty).
-      * In Additon it calls the disableChildren() function of the window
-      * embedding the form. Only when the record does not carry the readonly
-      * flag, the function calls the embedding windows enableChilren() function
-      */
-    dirtyForm: function(form, dirty) {
-        if (dirty) {
-            if (form.isValid()) {
-                form.owner.down('button[action=save]').setDisabled(false);
-            }
-            form.owner.down('button[action=discard]').setDisabled(false);
-            form.owner.up('window').disableChildren();
-        } else {
-            form.owner.down('button[action=save]').setDisabled(true);
-            form.owner.down('button[action=discard]').setDisabled(true);
-            //Only enable children if the form was not readOnly
-            if (!form.getRecord().get('readonly')) {
-                form.owner.up('window').enableChildren();
-            }
         }
     },
 
