@@ -6,10 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class for Messungen
- */
-Ext.define('Lada.model.Messung', {
+Ext.define('Lada.model.Measm', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
@@ -26,19 +23,19 @@ Ext.define('Lada.model.Messung', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'probeId',
+        name: 'sampleId',
         type: 'int'
     }, {
         name: 'mmtId'
     }, {
-        name: 'nebenprobenNr',
+        name: 'minSampleId',
         allowNull: true
     }, {
-        name: 'messdauer',
+        name: 'measPd',
         type: 'int',
         allowNull: true
     }, {
-        name: 'messzeitpunkt',
+        name: 'measmStartDate',
         type: 'date',
         dateFormat: 'time'
     }, {
@@ -46,21 +43,21 @@ Ext.define('Lada.model.Messung', {
         type: 'int',
         allowNull: true
     }, {
-        name: 'fertig',
+        name: 'isCompleted',
         type: 'boolean'
     }, {
-        name: 'letzteAenderung',
+        name: 'lastMod',
         type: 'date',
         dateFormat: 'time'
     }, {
-        name: 'geplant',
+        name: 'isScheduled',
         type: 'boolean'
     }, {
-        name: 'externeMessungsId',
+        name: 'extId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'treeModified',
+        name: 'treeMod',
         type: 'date',
         dateFormat: 'time'
     }, {
@@ -85,20 +82,5 @@ Ext.define('Lada.model.Messung', {
     }, {
         name: 'copyOfMessungId',
         persist: false
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/messung',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true
-        }
-    }
+    }]
 });

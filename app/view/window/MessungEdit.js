@@ -93,7 +93,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 }
             }
         }];
-        this.modelClass = Lada.model.Messung;
+        this.modelClass = Lada.model.Measm;
         if (this.record) {
             this.recordId = this.record.get('id');
         }
@@ -292,7 +292,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             me.setLoading(false);
         };
         if (!loadedRecord) {
-            Ext.ClassManager.get('Lada.model.Messung').load(
+            Ext.ClassManager.get('Lada.model.Measm').load(
                 this.record.get('id'), {
                     success: loadCallback,
                     scope: this

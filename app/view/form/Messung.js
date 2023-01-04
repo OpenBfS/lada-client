@@ -25,7 +25,7 @@ Ext.define('Lada.view.form.Messung', {
         'Lada.view.widget.Statuskombi'
     ],
 
-    model: 'Lada.model.Messung',
+    model: 'Lada.model.Measm',
     minWidth: 650,
     margin: 5,
     border: false,

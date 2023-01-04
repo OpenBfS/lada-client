@@ -230,13 +230,13 @@ Ext.define('Lada.controller.form.Probe', {
                 //Reset fields and create records for the copys
                 for (var i = 0; i < messungArr.length; i++) {
                     var messung = messungArr[i];
-                    var messungRec = Ext.create('Lada.model.Messung', messung);
+                    var messungRec = Ext.create('Lada.model.Measm', messung);
                     messung.nebenprobenNr = null;
                     messung.fertig = false;
                     messung.geplant = false;
                     messung.messzeitpunkt = null;
                     messung.messdauer = null;
-                    var cpy = Ext.create('Lada.model.Messung', messung);
+                    var cpy = Ext.create('Lada.model.Measm', messung);
                     cpy.set('probeId', probeCopy.get('id'));
                     cpy.set('copyOfMessungId', messung.id);
                     cpy.set('id', null);
