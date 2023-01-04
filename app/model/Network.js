@@ -6,36 +6,22 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model for Netzbetreiber Stammdaten.
- */
-Ext.define('Lada.model.Netzbetreiber', {
+Ext.define('Lada.model.Network', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'
     }, {
-        name: 'netzbetreiber'
+        name: 'name'
     }, {
-        name: 'idfNetzbetreiber'
+        name: 'idfNetworkId'
     }, {
-        name: 'isBmn',
+        name: 'isFmn',
         type: 'boolean'
     }, {
-        name: 'mailverteiler'
+        name: 'mailList'
     }, {
-        name: 'aktiv',
+        name: 'isActive',
         type: 'boolean'
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/netzbetreiber',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
+    }]
 });

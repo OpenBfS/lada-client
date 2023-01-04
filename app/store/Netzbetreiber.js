@@ -11,9 +11,9 @@
  */
 Ext.define('Lada.store.Netzbetreiber', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Netzbetreiber',
+    model: 'Lada.model.Network',
     sorters: [{
-        property: 'netzbetreiber',
+        property: 'name',
         transform: function(val) {
             if (val) {
                 return val.toLowerCase();
