@@ -343,17 +343,17 @@ Ext.define('Lada.controller.form.Probe', {
                     for (var j = 0; j < messwertArr.length; j++) {
                         var messwert = messwertArr[j];
                         var messwertRec = Ext.create(
-                            'Lada.model.Messwert',
+                            'Lada.model.MeasVal',
                             messwert);
                         messwert.id = null;
-                        messwert.messwert = null;
-                        messwert.nwgZuMesswert = null;
-                        messwert.messwertNwg = null;
-                        messwert.messfehler = null;
-                        messwert.messungsId = messungsIDNew.get(
-                            messwertArr[j].messungsId);
+                        messwert.measVal = null;
+                        messwert.detectLim = null;
+                        messwert.lessThanLOD = null;
+                        messwert.error = null;
+                        messwert.measmId = messungsIDNew.get(
+                            messwertArr[j].measmId);
 
-                        var cpy = Ext.create('Lada.model.Messwert', messwert);
+                        var cpy = Ext.create('Lada.model.MeasVal', messwert);
                         cpy.data['id'] = null;
                         cpy.phantom = true;
                         messwertCopyArr.push(cpy);
@@ -362,7 +362,7 @@ Ext.define('Lada.controller.form.Probe', {
                             // eslint-disable-next-line no-loop-func
                             callback: function(rec, op, success) {
                                 var currentMessungsIDNew = rec.get(
-                                    'messungsId');
+                                    'measmId');
                                 var currentFinishedMesswerte =
                                     messwertFinished.get(currentMessungsIDNew);
                                 var currentNumMesswerte = numMesswert.get(
