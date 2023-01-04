@@ -156,7 +156,7 @@ Ext.define('Lada.controller.form.Probe', {
                     var copy = Ext.create(
                         'Lada.model.Geolocat', ortszuordnungArr[i]);
                     copy.set('id', null);
-                    copy.set('probeId', probeCopy.get('id'));
+                    copy.set('sampleId', probeCopy.get('id'));
                     copy.phantom = true;
                     copy.save({
                         // eslint-disable-next-line no-loop-func

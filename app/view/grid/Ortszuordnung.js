@@ -117,14 +117,14 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             }
         }, {
             header: i18n.getMsg('typ'),
-            dataIndex: 'ortszuordnungTyp',
+            dataIndex: 'typeRegulation',
             width: 30,
             editor: {
                 allowBlank: false
             }
         }, {
             header: i18n.getMsg('orte.ortId'),
-            dataIndex: 'ortId',
+            dataIndex: 'siteId',
             flex: 3,
             renderer: function(value) {
                 var store = me.ortstore;
@@ -150,7 +150,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             }
         }, {
             header: i18n.getMsg('staat'),
-            dataIndex: 'ortId',
+            dataIndex: 'siteId',
             width: 45,
             renderer: function(value) {
                 var store = me.ortstore;
@@ -159,7 +159,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 if (!ortRecord) {
                     return '';
                 }
-                var stId = ortRecord.get('staatId');
+                var stId = ortRecord.get('stateId');
                 if (stId === undefined || stId === null || stId === '') {
                     return '';
                 }
@@ -171,19 +171,19 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             }
         }, {
             header: i18n.getMsg('orte.gemId'),
-            dataIndex: 'ortId',
+            dataIndex: 'siteId',
             width: 80,
             renderer: function(value) {
                 var store = me.ortstore;
                 var record = store.getById(value);
-                if (!record || record.get('gemId') === '') {
+                if (!record || record.get('municId') === '') {
                     return '';
                 }
-                return record.get('gemId');
+                return record.get('municId');
             }
         }, {
             header: i18n.getMsg('orte.verwaltungseinheit'),
-            dataIndex: 'ortId',
+            dataIndex: 'siteId',
             flex: 3,
             renderer: function(value) {
                 var store = me.ortstore;
@@ -193,7 +193,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 if (!record) {
                     return '';
                 }
-                var gemid = record.get('gemId');
+                var gemid = record.get('municId');
                 if (gemid === undefined || gemid === null || gemid === '') {
                     return '';
                 }
@@ -202,7 +202,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             }
         }, {
             header: i18n.getMsg('orte.ozId'),
-            dataIndex: 'ozId',
+            dataIndex: 'poiId',
             width: 80,
             renderer: function(value) {
                 var store = me.ortstore;
@@ -211,7 +211,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 if (!record) {
                     return '';
                 }
-                var ozid = record.get('ozsId');
+                var ozid = record.get('poiId');
                 if (
                     ozid === undefined ||
                     ozid === null ||
@@ -232,7 +232,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 if (!record) {
                     return '';
                 }
-                var ktaGruppeId = record.get('ktaGruppeId');
+                var ktaGruppeId = record.get('reiNuclFacilGrId');
                 if (
                     ktaGruppeId === undefined ||
                     ktaGruppeId === null ||
@@ -241,12 +241,12 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     return '';
                 }
                 var ktaGruppen = Ext.data.StoreManager.get('ktaGruppe');
-                var ktaGruppe = ktaGruppen.getById(record.get('ktaGruppeId'));
+                var ktaGruppe = ktaGruppen.getById(record.get('reiNuclFacilGrId'));
                 return ktaGruppe.get('ktaGruppe');
             }
         }, {
             header: i18n.getMsg('orte.langtext'),
-            dataIndex: 'ortId',
+            dataIndex: 'siteId',
             flex: 4,
             renderer: function(value) {
                 var store = me.ortstore;
@@ -254,7 +254,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 if (!record) {
                     return '';
                 }
-                var langtext = record.get('langtext');
+                var langtext = record.get('longText');
                 if (
                     langtext === '' ||
                     langtext === undefined ||
@@ -298,7 +298,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             this.addLoadingFailureHandler(this.store);
             this.store.load({
                 params: {
-                    probeId: this.recordId
+                    sampleId: this.recordId
                 },
                 callback: function() {
                     me.reiHandling();

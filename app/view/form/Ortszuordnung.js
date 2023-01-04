@@ -86,7 +86,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 labelWidth: 120,
                                 allowBlank: false,
                                 editable: true,
-                                name: 'ortszuordnungTyp',
+                                name: 'typeRegulation',
                                 disableKeyFilter: true,
                                 fieldLabel: i18n.getMsg(
                                     'ortszuordnung.form.field.ortszuordnungtyp')
@@ -95,7 +95,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 labelWidth: 120,
                                 width: 350,
                                 editable: true,
-                                name: 'ozId',
+                                name: 'poiId',
                                 fieldLabel: i18n.getMsg(
                                     'ortszuordnung.form.field.ozId')
                             }, {
@@ -110,7 +110,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 regex: /^[0-9]{1,45}$/,
                                 submitValue: true,
                                 hidden: true,
-                                name: 'ortId',
+                                name: 'siteId',
                                 listeners: {
                                     change: me.changed
                                 }
@@ -132,7 +132,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
                                 labelWidth: 125,
                                 maxLength: 100,
                                 width: 350,
-                                name: 'ortszusatztext',
+                                name: 'addSiteText',
                                 fieldLabel: i18n.getMsg(
                                     'ortszuordnung.form.field.ortszusatztext'),
                                 flex: 1
@@ -159,7 +159,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         if (selRecord) {
             var newOrtId = selRecord.get('id');
             if (!this.getRecord().get('readonly') && newOrtId) {
-                this.getForm().setValues({ortId: newOrtId});
+                this.getForm().setValues({siteId: newOrtId});
                 this.setOrtInfo(selRecord);
                 this.down('button[action=showort]').setDisabled(false);
             }
@@ -174,7 +174,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
      * */
     setFirstOrt: function(record) {
         if (record) {
-            this.getForm().setValues({ortId: record.get('id')});
+            this.getForm().setValues({siteId: record.get('id')});
             this.setOrtInfo(record);
         }
     },
@@ -184,8 +184,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
 
         var dirtyForm = false;
         if (this.down('ortinfo').getForm().getRecord() !== undefined) {
-            if (ortrecord.get('ortId') !==
-                this.down('ortinfo').getForm().getRecord().get('ortId') ) {
+            if (ortrecord.get('extId') !==
+                this.down('ortinfo').getForm().getRecord().get('extId') ) {
                 dirtyForm = true;
             }
         }
@@ -194,7 +194,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         ortinfo.loadRecord(ortrecord);
 
         var verw = Ext.StoreManager.get('verwaltungseinheiten')
-            .getById(ortrecord.get('gemId'));
+            .getById(ortrecord.get('municId'));
         if (verw !== null) {
             ortinfo.setValues({gemeinde: verw.get('bezeichnung')});
         } else {
@@ -202,7 +202,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         }
 
         var staat = Ext.StoreManager.get('staaten')
-            .getById(ortrecord.get('staatId'));
+            .getById(ortrecord.get('stateId'));
         if (staat !== null) {
             ortinfo.setValues({
                 staatISO: staat.get('staatIso'),
@@ -212,17 +212,17 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         }
 
         var ozid = Ext.StoreManager.get('ortszusatz')
-            .getById(ortrecord.get('ozId'));
+            .getById(ortrecord.get('poiId'));
         if (ozid !== null) {
             if (dirtyForm) {
                 this.down('ortszusatz').setValue(ozid.get('ozsId'));
             } else {
-                if (this.getRecord().get('ozId') === undefined) {
+                if (this.getRecord().get('poiId') === undefined) {
                     this.down('ortszusatz').setValue(ozid.get('ozsId'));
                 }
             }
         } else {
-            if (this.getRecord().get('ozId') === undefined
+            if (this.getRecord().get('poiId') === undefined
                 || dirtyForm === true
             ) {
                 this.down('ortszusatz').setValue('');
