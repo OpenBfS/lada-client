@@ -46,7 +46,7 @@ Ext.define('Lada.model.Mpg', {
         type: 'int',
         allowNull: true
     }, {
-        name: 'envDescripId',
+        name: 'envDescripDisplay',
         type: 'nonblankstring',
         allowNull: true
     }, {

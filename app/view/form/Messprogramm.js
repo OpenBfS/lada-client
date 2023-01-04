@@ -112,7 +112,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             maxLength: 20
                         }, {
                             xtype: 'chkbox',
-                            name: 'aktiv',
+                            name: 'isActive',
                             fieldLabel: i18n.getMsg('messprogramm.aktiv'),
                             margin: '0, 5, 5, 5',
                             width: '10%',
@@ -120,7 +120,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             allowBlank: false
                         }, {
                             xtype: 'chkbox',
-                            name: 'test',
+                            name: 'isTest',
                             fieldLabel: i18n.getMsg('test'),
                             margin: '0, 5, 5, 5',
                             width: '10%',
@@ -130,7 +130,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             xtype: 'datenbasis',
                             editable: false,
                             allowBlank: false,
-                            name: 'datenbasisId',
+                            name: 'regulationId',
                             fieldLabel: i18n.getMsg('datenbasisId'),
                             margin: '0, 5, 5, 5',
                             width: '32%',
@@ -164,7 +164,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         items: [{
                             xtype: 'probenart',
                             editable: false,
-                            name: 'probenartId',
+                            name: 'sampleMethId',
                             fieldLabel: i18n.getMsg('probenartId'),
                             margin: '0, 5, 5, 5',
                             width: '50%',
@@ -172,7 +172,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             allowBlank: false
                         }, {
                             xtype: 'betriebsart',
-                            name: 'baId',
+                            name: 'oprModeId',
                             margin: '0, 0, 5, 5',
                             fieldLabel: i18n.getMsg('baId'),
                             width: '50%',
@@ -180,7 +180,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         }]
                     }, {
                         xtype: 'tfield',
-                        name: 'kommentar',
+                        name: 'commMpg',
                         fieldLabel: i18n.getMsg('kommentar'),
                         width: '100%',
                         margin: '0, 0, 5, 5',
@@ -188,7 +188,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     }]
                 }, {
                     xtype: 'probenehmer',
-                    name: 'probeNehmerId',
+                    name: 'sampleId',
                     fieldLabel: i18n.getMsg('probenehmer'),
                     margin: '0, 10, 5, 5',
                     minValue: 0,
@@ -218,7 +218,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     }
                 }, {
                     xtype: 'messprogrammland',
-                    name: 'mplId',
+                    name: 'stateMpgId',
                     fieldLabel: i18n.getMsg('mpl_id'),
                     margin: '0, 10, 5, 5',
                     labelWidth: 140,
@@ -296,14 +296,14 @@ Ext.define('Lada.view.form.Messprogramm', {
                             },
                             items: [{
                                 xtype: 'umwelt',
-                                name: 'umwId',
+                                name: 'envMediumId',
                                 fieldLabel: i18n.getMsg('umwId'),
                                 labelWidth: 100,
                                 width: '58%',
                                 editable: true
                             }, {
                                 xtype: 'messeinheit',
-                                name: 'mehId',
+                                name: 'unitId',
                                 fieldLabel: i18n.getMsg('mehId'),
                                 labelWidth: 75,
                                 width: '42%',
@@ -321,7 +321,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 xtype: 'tfield',
                                 maxLength: 38,
                                 enforceMaxLength: true,
-                                name: 'mediaDesk',
+                                name: 'envDescripId',
                                 width: '58%',
                                 labelWidth: 100,
                                 fieldLabel: i18n.getMsg('mediaDesk'),
@@ -355,7 +355,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     margin: '0, 10, 0, 5',
                     items: [{
                         xtype: 'textfield',
-                        name: 'probenahmeMenge',
+                        name: 'sampleQuant',
                         labelAlign: 'top',
                         fieldLabel: i18n.getMsg('probenahmeMenge'),
                         width: '100%',
@@ -366,7 +366,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     margin: '0, 10, 0, 5',
                     items: [{
                         xtype: 'textarea',
-                        name: 'probeKommentar',
+                        name: 'commSample',
                         labelAlign: 'top',
                         fieldLabel: i18n.getMsg('probeKommentar'),
                         width: '100%',
@@ -401,7 +401,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             margin: '0 10 5 0',
                             labelWidth: 50,
                             width: '40%',
-                            name: 'probenintervall'
+                            name: 'samplePd'
                         }, {
                             xtype: 'numfield',
                             allowDecimals: false,
@@ -411,7 +411,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             labelWidth: 100,
                             minValue: 0,
                             width: '28%',
-                            name: 'teilintervallVon',
+                            name: 'samplePdStartDate',
                             period: 'start'
                         }, {
                             xtype: 'numfield',
@@ -422,7 +422,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             labelWidth: 18,
                             minValue: 0,
                             width: '14%',
-                            name: 'teilintervallBis',
+                            name: 'samplePdEndDate',
                             period: 'end'
                         }, {
                             xtype: 'numfield',
@@ -432,7 +432,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             labelWidth: 40,
                             minValue: 0,
                             width: '17%',
-                            name: 'intervallOffset'
+                            name: 'samplePdOffset'
                         }]
                     }, {
                         xtype: 'fset',
@@ -448,7 +448,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             fieldLabel: i18n.getMsg('gueltigVon'),
                             width: '50%',
                             labelWidth: 90,
-                            name: 'gueltigVon',
+                            name: 'validStartDate',
                             border: false
                         }, {
                             xtype: 'dayofyear',
@@ -456,7 +456,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             fieldLabel: i18n.getMsg('gueltigBis'),
                             width: '50%',
                             labelWidth: 40,
-                            name: 'gueltigBis',
+                            name: 'validEndDate',
                             border: false
                         }]
                     }]
@@ -522,9 +522,9 @@ Ext.define('Lada.view.form.Messprogramm', {
     populateIntervall: function(record, intervall) {
         //intervall is an identifier of a intervall
         // for instance H, M, J, ...
-        var i = this.getForm().findField('intervallOffset');
-        var v = this.getForm().findField('teilintervallVon');
-        var b = this.getForm().findField('teilintervallBis');
+        var i = this.getForm().findField('samplePdOffset');
+        var v = this.getForm().findField('samplePdStartDate');
+        var b = this.getForm().findField('samplePdEndDate');
         var intervallstore = Ext.data.StoreManager.get('Probenintervall');
 
         var svalUpper = null;
@@ -541,28 +541,28 @@ Ext.define('Lada.view.form.Messprogramm', {
         //and the probenintervall was not changed.
         // Load the records in this case
         if (!intervall && record) {
-            intervall = record.get('probenintervall',
+            intervall = record.get('samplePd',
                 0, false, false, true);
 
-            svalUpper = record.get('teilintervallBis');
-            svalLower = record.get('teilintervallVon');
+            svalUpper = record.get('samplePdStartDate');
+            svalLower = record.get('samplePdEndDate');
         }
 
         // subintervall is redundant to validity for yearly samples
         if (intervall === 'J') {
-            svalUpper = record.get('teilintervallBis');
-            svalLower = record.get('teilintervallVon');
-            this.down('dayofyear[name=gueltigBis]').setReadOnly(true);
-            this.down('dayofyear[name=gueltigVon]').setReadOnly(true);
+            svalUpper = record.get('samplePDStartDate');
+            svalLower = record.get('samplePDEndDate');
+            this.down('dayofyear[name=validStartDate]').setReadOnly(true);
+            this.down('dayofyear[name=validEndDate]').setReadOnly(true);
         } else {
             b.setReadOnly(false);
             v.setReadOnly(false);
-            this.down('dayofyear[name=gueltigBis]').setReadOnly(false);
-            this.down('dayofyear[name=gueltigVon]').setReadOnly(false);
+            this.down('dayofyear[name=validStartDate]').setReadOnly(false);
+            this.down('dayofyear[name=validEndDate]').setReadOnly(false);
         }
 
         var intrec = intervallstore
-            .findRecord('probenintervall',
+            .findRecord('samplePd',
                 intervall, 0, false, false, true);
 
         if (intrec) { // in cases when a new messprogramm is
@@ -627,7 +627,7 @@ Ext.define('Lada.view.form.Messprogramm', {
 
         this.populateIntervall(messRecord);
 
-        this.filterProbenZusatzs(messRecord.get('umwId'));
+        this.filterProbenZusatzs(messRecord.get('envMediumId'));
 
         this.setMediaDesk(messRecord);
     },

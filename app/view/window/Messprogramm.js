@@ -197,11 +197,11 @@ Ext.define('Lada.view.window.Messprogramm', {
         } else {
             // Create a new record
             var record = Ext.create('Lada.model.Mpg', {
-                gueltigVon: 1,
-                gueltigBis: 365,
+                validStartDate: 1,
+                validEndDate: 365,
                 owner: true,
-                mstId: Lada.mst[0],
-                laborMstId: Lada.mst[0]
+                measFacilId: Lada.mst[0],
+                appLabId: Lada.mst[0]
             });
             record.set('id', null);
             this.record = record;
