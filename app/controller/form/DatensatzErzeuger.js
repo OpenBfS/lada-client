@@ -23,17 +23,9 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
             'datensatzerzeugerform button[action=copy]': {
                 click: this.copyDatensatzerzeuger
             },
-            'datensatzerzeugerform [name="datensatzErzeugerId"]': {
-                change: this.checkCommitEnabled
-            },
-            'datensatzerzeugerform [name="bezeichnung"]': {
-                change: this.checkCommitEnabled
-            },
-            'datensatzerzeugerform [name="mstId"]': {
-                change: this.checkCommitEnabled
-            },
-            'datensatzerzeugerform [name="netzbetreiberId"]': {
-                change: this.checkCommitEnabled
+            'datensatzerzeugerform': {
+                dirtychange: this.checkCommitEnabled,
+                validitychange: this.checkCommitEnabled
             }
         });
     },
@@ -62,13 +54,6 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                 var json = Ext.decode(response.getResponse().responseText);
                 formPanel.setRecord(newRecord);
                 formPanel.setMessages(json.errors, json.warnings);
-                button.setDisabled(true);
-                button.up('datensatzerzeugeredit')
-                    .down('button[action=discard]')
-                    .setDisabled(true);
-                button.up('datensatzerzeugeredit')
-                    .down('button[action=copy]')
-                    .setDisabled(false);
                 Ext.data.StoreManager.get('datensatzerzeuger').reload();
             },
             failure: function(newRecord, response) {
@@ -95,8 +80,6 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                             i18n.getMsg('err.msg.response.body'));
                     }
-                    button.up('datensatzerzeugeredit').down(
-                        'button[action=discard]').setDisabled(true);
                     formPanel.isValid();
                 }
             }
@@ -123,12 +106,6 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
         formPanel.getForm().isValid();
-        formPanel.up('datensatzerzeugeredit').down(
-            'button[action=discard]').setDisabled(true);
-        formPanel.up('datensatzerzeugeredit').down(
-            'button[action=save]').setDisabled(true);
-        formPanel.up('datensatzerzeugeredit').down(
-            'button[action=copy]').setDisabled(true);
     },
 
     checkCommitEnabled: function(callingEl) {
