@@ -202,11 +202,11 @@ Ext.define('Lada.view.panel.Map', {
                 / 100000;
             var ortWin = Ext.create('Lada.view.window.Ort', {
                 record: Ext.create('Lada.model.Site', {
-                    netzbetreiberId: nId,
-                    koordXExtern: koord_x.toString(),
-                    koordYExtern: koord_y.toString(),
-                    kdaId: 4,
-                    ortTyp: 1,
+                    networkId: nId,
+                    coordXExt: koord_x.toString(),
+                    coordYExt: koord_y.toString(),
+                    spatRefSysId: 4,
+                    siteClassId: 1,
                     plausibleReferenceCount: 0,
                     referenceCountMp: 0,
                     referenceCount: 0

@@ -229,10 +229,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             / 100000;
         Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Site', {
-                koordXExtern: koord_x.toString(),
-                koordYExtern: koord_y.toString(),
-                kdaId: 4,
-                ortTyp: 1,
+                coordXExt: koord_x.toString(),
+                coordYExt: koord_y.toString(),
+                spatRefSysId: 4,
+                siteClassId: 1,
                 plausibleReferenceCount: 0,
                 referenceCountMp: 0,
                 referenceCount: 0

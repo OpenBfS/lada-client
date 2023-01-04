@@ -202,8 +202,8 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var win = button.up('ortszuordnungwindow');
         var ort = Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Site', {
-                ortTyp: 1,
-                netzbetreiberId: win.netzbetreiberId,
+                siteClassId: 1,
+                networkId: win.netzbetreiberId,
                 plausibleReferenceCount: 0,
                 referenceCountMp: 0,
                 referenceCount: 0}),
@@ -328,15 +328,15 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var win = grid.up('ortszuordnungwindow');
         Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Site', {
-                netzbetreiberId: win.netzbetreiberId,
-                staatId: record.get('id'),
-                ortId: 'STAAT_' + record.get('id'),
-                kurztext: ((record.get('staatIso') === null) ?
+                networkId: win.netzbetreiberId,
+                stateId: record.get('id'),
+                extId: 'STAAT_' + record.get('id'),
+                shortText: ((record.get('staatIso') === null) ?
                     'STAAT_' + record.get('id') :
                     'STAAT_' + record.get('staatIso')),
-                langtext: record.get('staat'),
-                berichtstext: record.get('staat'),
-                ortTyp: 5
+                longText: record.get('staat'),
+                reiReportText: record.get('staat'),
+                siteClassId: 5
             }),
             parentWindow: win,
             setOzOnComplete: true

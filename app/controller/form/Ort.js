@@ -45,10 +45,10 @@ Ext.define('Lada.controller.form.Ort', {
             'ortform orttyp combobox': {
                 change: this.checkorttyp
             },
-            'ortform tfield [name=koordXExtern]': {
+            'ortform tfield [name=coordXExt]': {
                 change: this.checkCommitEnabled
             },
-            'ortform tfield [name=koordYExtern]': {
+            'ortform tfield [name=coordYExt]': {
                 change: this.checkCommitEnabled
             },
             'ortform': {
@@ -70,7 +70,7 @@ Ext.define('Lada.controller.form.Ort', {
     copyOrt: function(button) {
         var record = button.up('ortform').getForm().getRecord();
         var copy = record.copy(null);
-        copy.set('ortId', null);
+        copy.set('extId', null);
         copy.set('referenceCount', 0);
         copy.set('plausibleReferenceCount', 0);
         copy.set('referenceCountMp', 0);
@@ -95,7 +95,7 @@ Ext.define('Lada.controller.form.Ort', {
         // Update record with values changed in the form
         record.set(form.getFieldValues(true));
 
-        record.set('netzbetreiberId',
+        record.set('networkId',
             formpanel.down('netzbetreiber').getValue()[0]);
 
         if (record.phantom) {
@@ -248,14 +248,14 @@ Ext.define('Lada.controller.form.Ort', {
             combo.up('ortform').down('fieldset').expand();
         } else {
             var form = combo.up('ortform');
-            form.down('tfield[name=berichtstext]').setValue(null);
-            form.down('reiprogpunktgruppe[name=reiProgpunktGrpId]').setValue(null);
-            form.down('ktagruppe[name=ktaGruppeId]').setValue(null);
-            form.down('tfield[name=zone]').setValue(null);
-            form.down('tfield[name=sektor]').setValue(null);
-            form.down('tfield[name=mpArt]').setValue(null);
-            form.down('tfield[name=zustaendigkeit]').setValue(null);
-            form.down('chkbox[name=aktiv]').setValue(false);
+            form.down('tfield[name=reiReportText]').setValue(null);
+            form.down('reiprogpunktgruppe[name=reiAgGrId]').setValue(null);
+            form.down('ktagruppe[name=reiNuclFacilGrId]').setValue(null);
+            form.down('tfield[name=reiZone]').setValue(null);
+            form.down('tfield[name=reiSector]').setValue(null);
+            form.down('tfield[name=reiOprMode]').setValue(null);
+            form.down('tfield[name=reiCompetence]').setValue(null);
+            form.down('chkbox[name=isReiActive]').setValue(false);
             form.down('fieldset').collapse();
         }
     },
@@ -278,16 +278,16 @@ Ext.define('Lada.controller.form.Ort', {
         }
         if (
             (
-                callingEl.name === 'koordXExtern' ||
-                callingEl.name === 'koordXExtern'
+                callingEl.name === 'coordXExt' ||
+                callingEl.name === 'coordYExt'
             ) &&
             panel.mode === 'copy' &&
             panel.original &&
             panel.form.isDirty() &&
-            panel.getForm().getValues()['koordXExtern'] !== '' &&
-            panel.getForm().getValues()['koordYExtern'] !== ''
+            panel.getForm().getValues()['coordXExt'] !== '' &&
+            panel.getForm().getValues()['coordYExt'] !== ''
         ) {
-            panel.down('verwaltungseinheit[name=gemId]').clearValue();
+            panel.down('verwaltungseinheit[name=municId]').clearValue();
         }
         this.checkKDAchangeEnabled(panel);
         if (panel.mode && panel.mode === 'copy') {
@@ -322,13 +322,13 @@ Ext.define('Lada.controller.form.Ort', {
             return first === second;
         };
         if (
-            equals(formValues['koordXExtern'], original.get('koordXExtern')) &&
-            equals(formValues['koordYExtern'], original.get('koordYExtern'))
+            equals(formValues['coordXExt'], original.get('coordXExt')) &&
+            equals(formValues['coordYExt'], original.get('coordYExt'))
         ) {
             valid = false;
-            errors['koordXExtern'] = [
+            errors['coordXExt'] = [
                 'err.orte.form.copy.duplicatecoordinates'];
-            errors['koordYExtern'] = [
+            errors['coordYExt'] = [
                 'err.orte.form.copy.duplicatecoordinates'];
         }
 
@@ -342,7 +342,7 @@ Ext.define('Lada.controller.form.Ort', {
 
             if (
                 (form.isDirty()) ||
-                (panel.down('netzbetreiber[name=netzbetreiberId]')
+                (panel.down('netzbetreiber[name=networkId]')
                     .getValue().length !== 0)
             ) {
                 panel.down('button[action=revert]').setDisabled(false);
@@ -370,7 +370,7 @@ Ext.define('Lada.controller.form.Ort', {
         }
         if (
             (form.isDirty()) ||
-            (panel.down('netzbetreiber[name=netzbetreiberId]')
+            (panel.down('netzbetreiber[name=networkId]')
                 .getValue().length !== 0)
         ) {
             panel.down('button[action=revert]').setDisabled(false);
@@ -379,18 +379,18 @@ Ext.define('Lada.controller.form.Ort', {
         }
         if (
             (form.isValid()) &&
-            (panel.down('netzbetreiber[name=netzbetreiberId]')
+            (panel.down('netzbetreiber[name=networkId]')
                 .getValue().length !== 0)
         ) {
             //one of three conditions must apply, the first one depending
             // on three fields
             if (
-                (form.findField('kdaId').getValue()
-                    && form.findField('koordYExtern').getValue()
-                    && form.findField('koordXExtern').getValue()
+                (form.findField('spatRefSysId').getValue()
+                    && form.findField('coordYExt').getValue()
+                    && form.findField('coordXExt').getValue()
                 )
-                || form.findField('gemId').getValue() !== null
-                || form.findField('staatId').getValue() !== null
+                || form.findField('municId').getValue() !== null
+                || form.findField('stateId').getValue() !== null
             ) {
                 savebutton.setDisabled(false);
             } else {
@@ -415,8 +415,8 @@ Ext.define('Lada.controller.form.Ort', {
             return;
         }
         if (panel.down('koordinatenart').getValue()
-            && panel.down('tfield[name=koordXExtern]').getValue()
-            && panel.down('tfield[name=koordYExtern]').getValue()
+            && panel.down('tfield[name=coordXExt]').getValue()
+            && panel.down('tfield[name=coordYExt]').getValue()
         ) {
             panel.down('button[action=changeKDA]').setDisabled(false);
         } else {
@@ -445,9 +445,9 @@ Ext.define('Lada.controller.form.Ort', {
         win.down('koordinatenart[name=newKDA]').setValue(
             panel.down('koordinatenart').getValue());
         win.down('selectabledisplayfield[name=originalX]').setValue(
-            panel.down('tfield[name=koordXExtern]').getValue());
+            panel.down('tfield[name=coordXExt]').getValue());
         win.down('selectabledisplayfield[name=originalY]').setValue(
-            panel.down('tfield[name=koordYExtern]').getValue());
+            panel.down('tfield[name=coordYExt]').getValue());
     },
 
     /**
@@ -553,10 +553,10 @@ Ext.define('Lada.controller.form.Ort', {
         win.parentWindow.down('koordinatenart').setValue(
             win.down('koordinatenart[name=newKDA]').getValue()
         );
-        win.parentWindow.down('tfield[name=koordXExtern]').setValue(
+        win.parentWindow.down('tfield[name=coordXExt]').setValue(
             win.down('selectabledisplayfield[name=newX]').getValue()
         );
-        win.parentWindow.down('tfield[name=koordYExtern]').setValue(
+        win.parentWindow.down('tfield[name=coordYExt]').setValue(
             win.down('selectabledisplayfield[name=newY]').getValue()
         );
         win.close();

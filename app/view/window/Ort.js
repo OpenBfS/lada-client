@@ -118,19 +118,19 @@ Ext.define('Lada.view.window.Ort', {
                     this.mode = 'show';
                     this.setTitle(i18n.getMsg('orte.show') + ' - ' +
                         i18n.getMsg('orte.ortId') + ': ' +
-                        this.record.get('ortId'));
+                        this.record.get('extId'));
                 }
             } else {
                 if (this.record.get('readonly') === true) {
                     this.mode = 'show';
                     this.setTitle(i18n.getMsg('orte.show') + ' - ' +
                         i18n.getMsg('orte.ortId') + ': ' +
-                        this.record.get('ortId'));
+                        this.record.get('extId'));
                 } else {
                     this.mode = 'edit';
                     this.setTitle(i18n.getMsg('orte.edit') + ' - ' +
                         i18n.getMsg('orte.ortId') + ': ' +
-                        this.record.get('ortId'));
+                        this.record.get('extId'));
                 }
             }
         }

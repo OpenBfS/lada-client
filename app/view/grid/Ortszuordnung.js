@@ -146,7 +146,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                         }
                     });
                 }
-                return record.get('ortId');
+                return record.get('extId');
             }
         }, {
             header: i18n.getMsg('staat'),
