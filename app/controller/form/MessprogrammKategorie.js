@@ -51,9 +51,6 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
                 var json = Ext.decode(response.getResponse().responseText);
                 formPanel.clearMessages();
                 formPanel.setMessages(json.errors, json.warnings);
-                button.setDisabled(true);
-                button.up('toolbar').down('button[action=discard]')
-                    .setDisabled(true);
             },
             failure: function(newRecord, response) {
                 var i18n = Lada.getApplication().bundle;
@@ -79,9 +76,6 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
                             i18n.getMsg('err.msg.response.body'));
                     }
                 }
-                button.setDisabled(true);
-                button.up('toolbar').down('button[action=discard]')
-                    .setDisabled(true);
             }
         });
     },
@@ -89,21 +83,17 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
-        formPanel.down('button[action=discard]').setDisabled(true);
-        formPanel.down('button[action=save]').setDisabled(true);
     },
 
-    checkCommitEnabled: function(callingEl, dirty) {
+    checkCommitEnabled: function(callingEl) {
         var form = callingEl.owner;
-        var netzbetr = form.down('netzbetreiber').getValue();
         if (Ext.Array.contains(Lada.funktionen, 4)
-        && form.getRecord().get('readonly') === false
-        && netzbetr && dirty) {
-            if (form.isValid()) {
-                form.down('button[action=save]').enable();
-            } else {
-                form.down('button[action=save]').setDisabled(true);
-            }
+            && form.getRecord().get('readonly') === false
+        ) {
+            var isDirty = form.isDirty();
+            form.down('button[action=discard]').setDisabled(!isDirty);
+            var isValid = form.isValid();
+            form.down('button[action=save]').setDisabled(!isValid || !isDirty);
         } else {
             form.down('button[action=discard]').setDisabled(true);
             form.down('button[action=save]').setDisabled(true);

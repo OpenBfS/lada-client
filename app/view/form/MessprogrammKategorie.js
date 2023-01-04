@@ -91,7 +91,6 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
         if (!this.record.phantom) {
             var current = netzstore.getById(this.record.get('netzbetreiberId'));
             if (current) {
-                this.down('netzbetreiber').setValue(current);
                 this.down('netzbetreiber').setReadOnly(true);
             }
         }
