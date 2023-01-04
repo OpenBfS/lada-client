@@ -179,7 +179,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
             this.addLoadingFailureHandler(this.store);
             this.store.load({
                 params: {
-                    messprogrammId: this.recordId
+                    mpgId: this.recordId
                 }
             });
         }
