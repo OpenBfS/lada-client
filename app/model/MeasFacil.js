@@ -38,15 +38,5 @@ Ext.define('Lada.model.MeasFacil', {
     }, {
         name: 'trunkCode',
         allowNull: true
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
+    }]
 });

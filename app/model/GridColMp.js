@@ -31,6 +31,5 @@ Ext.define('Lada.model.GridColMp', {
     }, {
         name: 'baseQuery',
         type: 'int'
-    }],
-    idProperty: 'id',
+    }]
 });

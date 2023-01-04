@@ -28,7 +28,5 @@ Ext.define('Lada.model.EnvDescrip', {
         name: 'sXx',
         type: 'int',
         allowNull: true
-    }],
-
-    idProperty: 'id',
+    }]
 });

@@ -30,7 +30,5 @@ Ext.define('Lada.model.DatasetCreator', {
         name: 'readonly',
         type: 'boolean',
         persist: false
-    }],
-
-    idProperty: 'id',
+    }]
 });

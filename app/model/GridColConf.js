@@ -58,5 +58,5 @@ Ext.define('Lada.model.GridColConf', {
     }, {
         name: 'name',
         persist: false
-    }],
+    }]
 });
