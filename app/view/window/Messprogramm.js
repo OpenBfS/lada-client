@@ -114,7 +114,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                 }
             }
         }];
-        this.modelClass = Lada.model.Messprogramm;
+        this.modelClass = Lada.model.Mpg;
         this.callParent(arguments);
     },
 
@@ -183,7 +183,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                 }
             };
             if (!loadedRecord) {
-                Ext.ClassManager.get('Lada.model.Messprogramm').load(
+                Ext.ClassManager.get('Lada.model.Mpg').load(
                     this.record.get('id'), {
                         failure: function() {
                             me.setLoading(false);
@@ -196,7 +196,7 @@ Ext.define('Lada.view.window.Messprogramm', {
             }
         } else {
             // Create a new record
-            var record = Ext.create('Lada.model.Messprogramm', {
+            var record = Ext.create('Lada.model.Mpg', {
                 gueltigVon: 1,
                 gueltigBis: 365,
                 owner: true,

@@ -25,12 +25,12 @@ Ext.define('Lada.view.form.Messprogramm', {
         'Lada.view.widget.base.TextField',
         'Lada.view.widget.base.NumberField',
         'Lada.view.widget.base.FieldSet',
-        'Lada.model.Messprogramm',
+        'Lada.model.Mpg',
         'Lada.view.widget.Probenintervall',
         'Lada.view.widget.DayOfYear'
     ],
 
-    model: 'Lada.model.Messprogramm',
+    model: 'Lada.model.Mpg',
     margin: 5,
     border: false,
 

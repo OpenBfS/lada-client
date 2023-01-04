@@ -10,7 +10,7 @@
  * A Messprogramm.
  * This class represents and defines the model of a 'Messprogramm'
  **/
-Ext.define('Lada.model.Messprogramm', {
+Ext.define('Lada.model.Mpg', {
     extend: 'Lada.model.LadaBase',
 
     requires: [
@@ -22,77 +22,77 @@ Ext.define('Lada.model.Messprogramm', {
     fields: [{
         name: 'id'
     }, {
-        name: 'test',
+        name: 'isTest',
         type: 'boolean'
     }, {
-        name: 'mstId'
+        name: 'measFacilId'
     }, {
-        name: 'laborMstId'
+        name: 'apprLabId'
     }, {
-        name: 'kommentar',
+        name: 'commMpg',
         allowNull: true
     }, {
-        name: 'datenbasisId',
+        name: 'regulationId',
         type: 'int'
     }, {
-        name: 'mplId',
+        name: 'stateMpgId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'aktiv',
+        name: 'isActive',
         type: 'boolean'
     }, {
-        name: 'baId',
+        name: 'oprModeId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'mediaDesk',
+        name: 'envDescripId',
         type: 'nonblankstring',
         allowNull: true
     }, {
-        name: 'umwId',
+        name: 'envMediumId',
         allowNull: true
     }, {
-        name: 'mehId',
+        name: 'unitId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'probenartId',
+        name: 'sampleMethId',
         type: 'int'
     }, {
-        name: 'probenintervall'
+        name: 'samplePd'
     }, {
-        name: 'teilintervallVon',
+        name: 'samplePdStartDate',
         type: 'int'
     }, {
-        name: 'teilintervallBis',
+        name: 'samplePdEndDate',
         type: 'int'
     }, {
-        name: 'intervallOffset',
+        name: 'samplePdOffset',
         type: 'int'
     }, {
         /* day of year is 0-base in ExtJS, but 1-based in Java.
          * Thus, we expect 1-based values here. */
-        name: 'gueltigVon',
+        name: 'validStartDate',
         type: 'int'
     }, {
-        name: 'gueltigBis',
+        name: 'ValidEndDate',
         type: 'int'
     }, {
-        name: 'probeNehmerId',
+        name: 'samplerId',
         type: 'int',
         allowNull: true
     }, {
-        name: 'probeKommentar',
+        name: 'commSample',
         allowNull: true
     }, {
-        name: 'probenahmeMenge',
+        name: 'sampleQuant',
         allowNull: true
     }, {
         name: 'referenceCount',
         type: 'int'
     }, {
-        name: 'letzteAenderung',
+        name: 'lastMod',
         type: 'date',
         dateFormat: 'time'
     }, {
@@ -106,24 +106,5 @@ Ext.define('Lada.model.Messprogramm', {
         name: 'readonly',
         type: 'boolean',
         persist: false
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/messprogramm',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true,
-            allDataOptions: {
-                persist: true,
-                associated: true
-            }
-        }
-    }
+    }]
 });
