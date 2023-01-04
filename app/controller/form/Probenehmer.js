@@ -24,15 +24,9 @@ Ext.define('Lada.controller.form.Probenehmer', {
                 click: this.copyProbenehmer
             },
             'probenehmerform': {
-                dirtychange: this.handleDirtyChange,
+                dirtychange: this.checkCommitEnabled,
                 validitychange: this.checkCommitEnabled,
                 save: this.saveHeadless
-            },
-            'probenehmerform netzbetreiber combobox': {
-                change: this.checkCommitEnabled
-            },
-            'probenehmerform tfield [name=plz]': {
-                change: this.checkCommitEnabled
             }
         });
     },
@@ -59,9 +53,6 @@ Ext.define('Lada.controller.form.Probenehmer', {
                 var json = Ext.decode(response.getResponse().responseText);
                 formPanel.setRecord(newRecord);
                 formPanel.setMessages(json.errors, json.warnings);
-                button.setDisabled(true);
-                button.up('toolbar').down('button[action=discard]')
-                    .setDisabled(true);
                 Ext.data.StoreManager.get('probenehmer').reload();
             },
             failure: function(newRecord, response) {
@@ -87,9 +78,6 @@ Ext.define('Lada.controller.form.Probenehmer', {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                             i18n.getMsg('err.msg.response.body'));
                     }
-                    button.setDisabled(true);
-                    button.up('toolbar').down('button[action=discard]')
-                        .setDisabled(true);
                 }
             }
         });
@@ -98,8 +86,6 @@ Ext.define('Lada.controller.form.Probenehmer', {
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
-        formPanel.down('button[action=discard]').setDisabled(true);
-        formPanel.down('button[action=save]').setDisabled(true);
     },
 
     saveHeadless: function(panel) {
@@ -212,11 +198,5 @@ Ext.define('Lada.controller.form.Probenehmer', {
                 copybutton.setDisabled(true);
             }
         }
-    },
-
-    handleDirtyChange: function(callingEl) {
-        var form = callingEl.owner;
-        form.down('button[action=discard]').setDisabled(false);
-        this.checkCommitEnabled(callingEl, form.isValid());
     }
 });
