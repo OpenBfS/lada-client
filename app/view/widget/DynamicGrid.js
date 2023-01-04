@@ -523,7 +523,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                         'Lada.view.window.ProbeEdit', {
                                             style: 'z-index: -1;',
                                             recordId: messungRecord.get(
-                                                'probeId')
+                                                'sampleId')
                                         });
                                     if (!probeWin.show()) {
                                         //If there is already a probe window,
@@ -531,7 +531,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                         probeWin.destroy();
                                         probeWin = Ext.ComponentQuery.query(
                                             'probenedit[recordId=' +
-                                            messungRecord.get('probeId') +
+                                            messungRecord.get('sampleId') +
                                             ']')[0];
                                     }
                                     probeWin.addChild(win);
@@ -539,7 +539,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                     probeWin.setPosition(30);
                                     win.setPosition(35 + probeWin.width);
                                     probeWin.loadRecord(
-                                        messungRecord.get('probeId'),
+                                        messungRecord.get('sampleId'),
                                         this,
                                         function(precord) {
                                             probeWin.setRecord(precord);

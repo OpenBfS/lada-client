@@ -255,8 +255,8 @@ Ext.define('Lada.view.window.MessungEdit', {
                 .getById(me.probe.get('measFacilId'));
             var title = '';
             title += 'Messung: ';
-            if (me.record.get('nebenprobenNr')) {
-                title += me.record.get('nebenprobenNr');
+            if (me.record.get('minSampleId')) {
+                title += me.record.get('minSampleId');
             }
             title += ' zu Probe ' + me.probe.get('extId') ;
             if (me.probe.get('mainSampleId')) {

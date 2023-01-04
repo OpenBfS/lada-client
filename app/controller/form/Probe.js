@@ -210,7 +210,7 @@ Ext.define('Lada.controller.form.Probe', {
         var saveErrors = null;
         //Fetch messung objects
         Ext.Ajax.request({
-            url: 'lada-server/rest/messung',
+            url: 'lada-server/rest/measm',
             params: {
                 probeId: probe.get('id')
             },
@@ -231,13 +231,13 @@ Ext.define('Lada.controller.form.Probe', {
                 for (var i = 0; i < messungArr.length; i++) {
                     var messung = messungArr[i];
                     var messungRec = Ext.create('Lada.model.Measm', messung);
-                    messung.nebenprobenNr = null;
-                    messung.fertig = false;
-                    messung.geplant = false;
-                    messung.messzeitpunkt = null;
-                    messung.messdauer = null;
+                    messung.minSampleId = null;
+                    messung.isCompleted = false;
+                    messung.isScheduled = false;
+                    messung.measmStartDate = null;
+                    messung.measPd = null;
                     var cpy = Ext.create('Lada.model.Measm', messung);
-                    cpy.set('probeId', probeCopy.get('id'));
+                    cpy.set('sampleId', probeCopy.get('id'));
                     cpy.set('copyOfMessungId', messung.id);
                     cpy.set('id', null);
                     cpy.phantom = true;

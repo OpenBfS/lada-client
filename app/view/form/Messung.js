@@ -96,7 +96,7 @@ Ext.define('Lada.view.form.Messung', {
                         },
                         items: [{
                             xtype: 'selectabledisplayfield',
-                            name: 'externeMessungsId',
+                            name: 'extId',
                             maxLength: 4,
                             fieldLabel: i18n.getMsg('extMessungsId'),
                             width: 300,
@@ -115,13 +115,13 @@ Ext.define('Lada.view.form.Messung', {
                             enforceMaxLength: true,
                             maxLength: 10,
                             minValue: 0,
-                            name: 'messdauer',
+                            name: 'measPd',
                             fieldLabel: i18n.getMsg('messdauer'),
                             width: 300,
                             labelWidth: 100
                         }, {
                             xtype: 'displaycheckbox',
-                            name: 'geplant',
+                            name: 'isScheduled',
                             fieldLabel: i18n.getMsg('geplant'),
                             width: 300,
                             labelWidth: 100
@@ -132,21 +132,21 @@ Ext.define('Lada.view.form.Messung', {
                         },
                         items: [{
                             xtype: 'tfield',
-                            name: 'nebenprobenNr',
+                            name: 'minSampleId',
                             maxLength: 4,
                             fieldLabel: i18n.getMsg('nebenprobenNr'),
                             width: 300,
                             labelWidth: 100
                         }, {
                             xtype: 'datetime',
-                            name: 'messzeitpunkt',
+                            name: 'measmStartDate',
                             fieldLabel: i18n.getMsg('messzeitpunkt'),
                             width: 300,
                             format: 'd.m.Y H:i',
                             labelWidth: 100
                         }, {
                             xtype: 'chkbox',
-                            name: 'fertig',
+                            name: 'isCOmpleted',
                             fieldLabel: i18n.getMsg('fertig'),
                             width: 300,
                             labelWidth: 100
@@ -206,7 +206,7 @@ Ext.define('Lada.view.form.Messung', {
         }
 
         //Get the connected Probe instance and Datenbasis
-        Lada.model.Sample.load(this.record.get('probeId'), {
+        Lada.model.Sample.load(this.record.get('sampleId'), {
             success: function(proberecord) {
                 me.probe = proberecord;
                 var dbid = proberecord.get('regulationId');

@@ -170,14 +170,14 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                 var messungRecord = newRecord;
                                 var probeWin = Ext.create(
                                     'Lada.view.window.ProbeEdit', {
-                                        recordId: messungRecord.get('probeId'),
+                                        recordId: messungRecord.get('sampleId'),
                                         style: 'z-index: -1;'
                                     });
                                 if (!probeWin.show()) {
                                     probeWin.destroy();
                                     probeWin = Ext.ComponentQuery.query(
                                         'probenedit[recordId='
-                                        + messungRecord.get('probeId')
+                                        + messungRecord.get('sampleId')
                                         + ']')[0];
                                 }
                                 win.parentWindow = probeWin;
@@ -186,7 +186,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                 win.setPosition(35 + probeWin.width);
                                 /* eslint-disable max-len */
                                 probeWin.loadRecord(
-                                    messungRecord.get('probeId'),
+                                    messungRecord.get('sampleId'),
                                     this,
                                     function(precord, poperation) {
                                         if (

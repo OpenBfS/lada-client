@@ -168,7 +168,7 @@ Ext.define('Lada.view.window.MessungCreate', {
     initData: function() {
         this.clearMessages();
         var messung = Ext.create('Lada.model.Measm', {
-            probeId: this.record.get('id')
+            sampleId: this.record.get('id')
         });
         this.down('messungform').setRecord(messung);
         var warnings = { messdauer: [631],
