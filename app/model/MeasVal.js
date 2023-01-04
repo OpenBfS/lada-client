@@ -6,10 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class for Messwerte
- */
-Ext.define('Lada.model.Messwert', {
+Ext.define('Lada.model.MeasVal', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
@@ -22,17 +19,17 @@ Ext.define('Lada.model.Messwert', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'messungsId',
+        name: 'measmId',
         type: 'int'
     }, {
-        name: 'messgroesseId',
+        name: 'measdId',
         type: 'int'
     }, {
-        name: 'messwert',
+        name: 'measVal',
         type: 'float',
         allowNull: true
     }, {
-        name: 'messwertNwg',
+        name: 'lessThanLOD',
         convert: function(v) {
             if (!v) {
                 return null;
@@ -40,22 +37,22 @@ Ext.define('Lada.model.Messwert', {
             return '<';
         }
     }, {
-        name: 'messfehler',
+        name: 'error',
         type: 'float',
         allowNull: true
     }, {
-        name: 'nwgZuMesswert',
+        name: 'detectLim',
         type: 'float',
         allowNull: true
     }, {
-        name: 'mehId',
+        name: 'unitId',
         type: 'int'
     }, {
-        name: 'letzteAenderung',
+        name: 'lastMod',
         type: 'date',
         dateFormat: 'time'
     }, {
-        name: 'treeModified',
+        name: 'treeMod',
         type: 'date',
         dateFormat: 'time'
     }, {
@@ -68,20 +65,5 @@ Ext.define('Lada.model.Messwert', {
     }, {
         name: 'errors',
         persist: false
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/messwert',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true
-        }
-    }
+    }]
 });
