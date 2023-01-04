@@ -65,20 +65,20 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
             },
             items: [{
                 xtype: 'netzbetreiber',
-                name: 'netzbetreiberId',
+                name: 'networkId',
                 editable: true,
                 readOnly: true,
                 filteredStore: true,
                 fieldLabel: i18n.getMsg('netzbetreiberId')
             }, {
                 xtype: 'tfield',
-                name: 'code',
+                name: 'extId',
                 fieldLabel: i18n.getMsg('code'),
                 maxLength: 3,
                 allowBlank: false
             }, {
                 xtype: 'tarea',
-                name: 'bezeichnung',
+                name: 'name',
                 fieldLabel: i18n.getMsg('bezeichnung'),
                 maxLength: 120
             }]
@@ -89,7 +89,7 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
         this.setReadOnly(this.record.get('readonly'));
         var netzstore = this.down('netzbetreiber').store;
         if (!this.record.phantom) {
-            var current = netzstore.getById(this.record.get('netzbetreiberId'));
+            var current = netzstore.getById(this.record.get('networkId'));
             if (current) {
                 this.down('netzbetreiber').setValue(current);
                 this.down('netzbetreiber').setReadOnly(true);

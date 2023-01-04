@@ -72,7 +72,7 @@ Ext.define('Lada.view.window.MessprogrammKategorie', {
             scope: this,
             handler: this.handleBeforeClose
         }];
-        this.modelClass = Lada.model.MessprogrammKategorie;
+        this.modelClass = Lada.model.MpgCateg;
         this.callParent(arguments);
         if (this.record) {
             this.initData(this.record);
