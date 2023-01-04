@@ -587,9 +587,6 @@ Ext.define('Lada.controller.form.Probe', {
             success: function(newRecord, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
-                    button.setDisabled(true);
-                    button.up('toolbar').down('button[action=discard]')
-                        .setDisabled(true);
                     var parentGrid = Ext.ComponentQuery.query(
                         'dynamicgrid');
                     if (parentGrid.length === 1) {
@@ -622,9 +619,6 @@ Ext.define('Lada.controller.form.Probe', {
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                         i18n.getMsg('err.msg.generic.body'));
                 } else {
-                    button.setDisabled(true);
-                    button.up('toolbar').down('button[action=discard]')
-                        .setDisabled(true);
                     var rec = formPanel.getForm().getRecord();
                     rec.dirty = false;
                     formPanel.getForm().loadRecord(newRecord);
@@ -639,9 +633,6 @@ Ext.define('Lada.controller.form.Probe', {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                 i18n.getMsg('err.msg.generic.body'));
                         }
-                        button.setDisabled(true);
-                        button.up('toolbar').down('button[action=discard]')
-                            .setDisabled(true);
                         var parentGrid = Ext.ComponentQuery.query(
                             'dynamicgrid');
                         if (parentGrid.length === 1) {
@@ -683,7 +674,6 @@ Ext.define('Lada.controller.form.Probe', {
         var record = formPanel.getForm().getRecord();
         formPanel.setMediaDesk(record);
         formPanel.getForm().isValid();
-        formPanel.down('button[action=discard]').setDisabled(true);
     },
 
     checkCommitEnabled: function(callingEl) {
