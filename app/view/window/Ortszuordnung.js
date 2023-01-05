@@ -254,7 +254,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 this.record.set('sampleId', this.probe.get('id'));
             } else {
                 this.record = Ext.create('Lada.model.GeolocatMpg');
-                this.record.set('messprogrammId', this.messprogramm.get('id'));
+                this.record.set('mpgId', this.messprogramm.get('id'));
             }
         }
         var mstId = this.probe ?

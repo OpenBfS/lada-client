@@ -288,7 +288,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 this.addLoadingFailureHandler(this.store);
                 this.store.load({
                     params: {
-                        messprogrammId: this.recordId
+                        mpgId: this.recordId
                     }});
             } else {
                 return;

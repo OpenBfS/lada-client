@@ -171,7 +171,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         var ortIdIsDirty = true;
         if (
             form.getRecord().data.ortId ===
-                form.findField('ortId').getValue()
+                form.findField('siteId').getValue()
         ) {
             ortIdIsDirty = false;
         }

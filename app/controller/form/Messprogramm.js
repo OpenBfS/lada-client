@@ -99,7 +99,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var i18n = Lada.getApplication().bundle;
 
         Ext.Ajax.request({
-            url: 'lada-server/rest/ortszuordnungmp',
+            url: 'lada-server/rest/geolocatMpg',
             params: {
                 messprogrammId: mp.get('id')
             },
@@ -118,7 +118,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                         ortszuordnungArr[i]);
                     copy.set('copyOf', copy.get('id'));
                     copy.set('id', null);
-                    copy.set('messprogrammId', mpCopy.get('id'));
+                    copy.set('mpgId', mpCopy.get('id'));
                     copy.phantom = true;
                     copy.save({
                         // eslint-disable-next-line no-loop-func
