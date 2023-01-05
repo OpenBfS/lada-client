@@ -6,17 +6,12 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Store for OrtszuordnungTyp
- */
-Ext.define('Lada.store.OrtszuordnungTyp', {
-    extend: 'Ext.data.Store',
-    model: 'Lada.model.TypeRegulation',
-    sorters: [
-        {
-            property: 'id',
-            direction: 'ASC'
-        }],
-    autoLoad: true,
-    sortOnLoad: true
+Ext.define('Lada.model.TypeRegulation', {
+    extend: 'Lada.model.LadaBase',
+
+    fields: [{
+        name: 'id'
+    }, {
+        name: 'name'
+    }]
 });
