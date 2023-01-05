@@ -13,14 +13,14 @@ Ext.define('Lada.model.Tag', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
-        name: 'tag',
+        name: 'name',
         type: 'string'
     }, {
-        name: 'mstId',
+        name: 'measFacilId',
         type: 'string',
         allowNull: true
     }, {
-        name: 'netzbetreiberId',
+        name: 'networkId',
         type: 'string',
         allowNull: true
     }, {
@@ -28,13 +28,13 @@ Ext.define('Lada.model.Tag', {
         type: 'date',
         dateFormat: 'time'
     }, {
-        name: 'typId',
+        name: 'tagType',
         type: 'string'
     }, {
-        name: 'autoTag',
+        name: 'isAutoTag',
         type: 'boolean'
     }, {
-        name: 'gueltigBis',
+        name: 'valUntil',
         type: 'date',
         dateFormat: 'time'
     }, {
@@ -75,12 +75,12 @@ Ext.define('Lada.model.Tag', {
          * Check whether the user might assign the tag, given as plain object.
          */
         isTagAssignable: function(tag) {
-            switch (tag.typId) {
+            switch (tag.tagType) {
                 case 'netz':
                     return Ext.Array.contains(
-                        Lada.netzbetreiber, tag.netzbetreiberId);
+                        Lada.netzbetreiber, tag.networkId);
                 case 'mst':
-                    return Ext.Array.contains(Lada.mst, tag.mstId);
+                    return Ext.Array.contains(Lada.mst, tag.measFacilId);
                 default:
                     return true;
             }
