@@ -44,15 +44,15 @@ Ext.define('Lada.view.form.Tag', {
                 minWidth: 300
             },
             items: [{
-                name: 'tag',
+                name: 'name',
                 xtype: 'tfield',
                 fieldLabel: i18n.getMsg('name'),
                 allowBlank: false,
                 validator: function(val) {
                     var mstId = me.down('messstelle').getValue();
                     var foundIdx = me.store.findBy(function(obj) {
-                        return val === obj.get('tag')
-                            && mstId === obj.get('mstId')
+                        return val === obj.get('name')
+                            && mstId === obj.get('measFacilId')
                             && me.getRecord().get('id') !== obj.get('id');
                     });
                     if (foundIdx > -1) {
@@ -62,15 +62,15 @@ Ext.define('Lada.view.form.Tag', {
                     return true;
                 }
             }, {
-                name: 'mstId',
+                name: 'measFacilId',
                 xtype: 'messstelle',
                 fieldLabel: i18n.getMsg('mst_id'),
                 validator: function() {
                     var mstId = me.down('messstelle').getValue();
                     var tag = me.down('textfield[name=tag]').getValue();
                     var foundIdx = me.store.findBy(function(obj) {
-                        return mstId === obj.get('mstId')
-                            && tag === obj.get('tag')
+                        return mstId === obj.get('measFacilId')
+                            && tag === obj.get('name')
                             && me.getRecord().get('id') !== obj.get('id');
                     });
                     if (foundIdx > -1) {
@@ -81,12 +81,12 @@ Ext.define('Lada.view.form.Tag', {
                 },
                 filteredStore: true
             }, {
-                name: 'netzbetreiberId',
+                name: 'networkId',
                 xtype: 'netzbetreiber',
                 fieldLabel: i18n.getMsg('netzbetreiberId'),
                 filteredStore: true
             }, {
-                name: 'typId',
+                name: 'tagType',
                 xtype: 'tagtyp',
                 fieldLabel: i18n.getMsg('tagtyp'),
                 allowBlank: false,
@@ -96,29 +96,29 @@ Ext.define('Lada.view.form.Tag', {
                         fn: function(combo, newValue) {
                             var tagtyp = newValue.get('value');
                             if (tagtyp === 'mst') {
-                                if (combo.up('fieldset').down('datefield[name=gueltigBis]').getValue() !== null) {
+                                if (combo.up('fieldset').down('datefield[name=valUntil]').getValue() !== null) {
                                     var dateToday = moment(new Date(), 'DD-MM-YYYY');
-                                    var dateFieldValue = moment(combo.up('fieldset').down('datefield[name=gueltigBis]')
+                                    var dateFieldValue = moment(combo.up('fieldset').down('datefield[name=valUntil]')
                                         .getValue(), 'DD-MM-YYYY');
                                     if (dateFieldValue.diff(dateToday,'days') < i18n.getMsg('tag.defaultValue.gueltigBis')) {
-                                        combo.up('fieldset').down('datefield[name=gueltigBis]')
+                                        combo.up('fieldset').down('datefield[name=valUntil]')
                                             .setValue(moment().add(i18n.getMsg('tag.defaultValue.gueltigBis'),'days'));
                                     }
                                 } else {
                                     combo.up('fieldset').down(
-                                    'datefield[name=gueltigBis]')
+                                    'datefield[name=valUntil]')
                                     .setValue(moment().add(i18n.getMsg('tag.defaultValue.gueltigBis'),'days'));
                                 }
                             }
                             if (tagtyp === 'netz' &&
-                                combo.up('fieldset').down('datefield[name=gueltigBis]').getValue() !== null) {
-                                    combo.up('fieldset').down('datefield[name=gueltigBis]').setValue();
+                                combo.up('fieldset').down('datefield[name=valUntil]').getValue() !== null) {
+                                    combo.up('fieldset').down('datefield[name=valUntil]').setValue();
                             }
                         }
                     }
                 }
             }, {
-                name: 'gueltigBis',
+                name: 'valUntil',
                 xtype: 'datetimefield',
                 fieldLabel: i18n.getMsg('tag.gueltigBis')
             }]

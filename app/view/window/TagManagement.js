@@ -77,8 +77,8 @@ Ext.define('Lada.view.window.TagManagement', {
             this.setTitle(i18n.getMsg('tag.createWindow.title'));
             this.record = Ext.create('Lada.model.Tag', {
                 readonly: false,
-                mstId: Lada.mst[0],
-                netzbetreiberId: Lada.netzbetreiber[0]
+                measFacilId: Lada.mst[0],
+                networkId: Lada.netzbetreiber[0]
             });
             callback();
         } else {

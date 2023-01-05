@@ -18,7 +18,7 @@ Ext.define('Lada.view.widget.Tag', {
         'Lada.store.Tag'
     ],
     store: null,
-    displayField: 'tag',
+    displayField: 'name',
     valueField: 'id',
     // Enable filtering of comboboxes
     autoSelect: false,
@@ -53,21 +53,21 @@ Ext.define('Lada.view.widget.Tag', {
     tpl: Ext.create('Ext.XTemplate',
         '<ul class="x-list-plain"><tpl for=".">',
         '<li role="option" class="x-boundlist-item">',
-        '<tpl if="autoTag">',
-        '<div class="italic-text"> {tag}*</div>',
-        '<tpl elseif="typId === `global`">',
-        '<div class="italic-text bold-text"> {tag}</div>',
-        '<tpl elseif="typId === `netz`">',
-        '<div class="bold-text"> {tag}</div>',
+        '<tpl if="isAutoTag">',
+        '<div class="italic-text"> {name}*</div>',
+        '<tpl elseif="tagType === `global`">',
+        '<div class="italic-text bold-text"> {name}</div>',
+        '<tpl elseif="tagType === `netz`">',
+        '<div class="bold-text"> {name}</div>',
         '<tpl else>',
-        '<div> {tag}</div>',
+        '<div> {name}</div>',
         '</tpl>',
         '</li>',
         '</tpl></ul>'
 
     ),
     //Tagfield
-    labelTpl: Ext.create('Ext.XTemplate', '{tag}<tpl if="autoTag">*</tpl>'),
+    labelTpl: Ext.create('Ext.XTemplate', '{name}<tpl if="isAutoTag">*</tpl>'),
 
     /**
      * Get the component to render the loading/reloading mask to.
@@ -136,10 +136,10 @@ Ext.define('Lada.view.widget.Tag', {
                         result += ' disabled';
                     }
 
-                    if (value.autoTag) {
+                    if (value.isAutoTag) {
                         return result + ' italic-text';
                     }
-                    switch (value.typId) {
+                    switch (value.tagType) {
                         case 'global':
                             return result + ' bold-text italic-text';
                         case 'netz':
@@ -184,10 +184,10 @@ Ext.define('Lada.view.widget.Tag', {
         var params = {};
         switch (recordType) {
             case 'messung':
-                params.mid = ids;
+                params.measmId = ids;
                 break;
             case 'probe':
-                params.pid = ids;
+                params.sampleId = ids;
                 break;
             default:
                 Ext.raise('Unkown record type: ' + recordType);

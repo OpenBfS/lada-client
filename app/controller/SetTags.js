@@ -53,14 +53,14 @@ Ext.define('Lada.controller.SetTags', {
         selection.forEach(function(selected) {
             taglist.forEach(function(tag) {
                 if (win.recordType === 'messung') {
-                    payload.push({messungId: selected, tagId: tag});
+                    payload.push({measmId: selected, tagId: tag});
                 } else {
-                    payload.push({probeId: selected, tagId: tag});
+                    payload.push({sampleId: selected, tagId: tag});
                 }
             });
         });
         Ext.Ajax.request({
-            url: 'lada-server/rest/tag/zuordnung' + (isDelete ? '/delete' : ''),
+            url: 'lada-server/rest/tag/taglink' + (isDelete ? '/delete' : ''),
             method: 'POST',
             jsonData: payload,
             success: function(response) {
