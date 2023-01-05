@@ -222,7 +222,7 @@ Ext.define('Lada.view.grid.Messung', {
         this.addLoadingFailureHandler(this.store);
         this.store.load({
             params: {
-                probeId: this.recordId
+                sampleId: this.recordId
             },
             callback: function() {
                 this.setLoading(false);
