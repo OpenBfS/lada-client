@@ -45,8 +45,7 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
                 if (parentGrid.length === 1) {
                     parentGrid[0].reload();
                 }
-                var rec = formPanel.getForm().getRecord();
-                rec.dirty = false;
+
                 formPanel.getForm().loadRecord(newRecord);
                 var json = Ext.decode(response.getResponse().responseText);
                 formPanel.clearMessages();

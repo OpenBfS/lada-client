@@ -48,12 +48,11 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                 if (parentGrid.length === 1) {
                     parentGrid[0].reload();
                 }
-                var rec = formPanel.getForm().getRecord();
-                rec.dirty = false;
-                formPanel.getForm().loadRecord(newRecord);
+
                 var json = Ext.decode(response.getResponse().responseText);
                 formPanel.setRecord(newRecord);
                 formPanel.setMessages(json.errors, json.warnings);
+
                 Ext.data.StoreManager.get('datensatzerzeuger').reload();
             },
             failure: function(newRecord, response) {
