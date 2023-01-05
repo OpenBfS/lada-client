@@ -6,72 +6,53 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class for Probenehmer Stammdaten
- */
-Ext.define('Lada.model.Probenehmer', {
+Ext.define('Lada.model.Sampler', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'
     }, {
-        name: 'netzbetreiberId'
+        name: 'networkId'
     }, {
-        name: 'prnId'
+        name: 'extId'
     }, {
-        name: 'bearbeiter',
+        name: 'editor',
         allowNull: true
     }, {
-        name: 'bemerkung',
+        name: 'comm',
         allowNull: true
     }, {
-        name: 'bezeichnung'
+        name: 'descr'
     }, {
-        name: 'kurzBezeichnung'
+        name: 'shortText'
     }, {
-        name: 'ort',
+        name: 'city',
         allowNull: true
     }, {
-        name: 'plz',
+        name: 'zip',
         allowNull: true
     }, {
-        name: 'betrieb',
+        name: 'inst',
         allowNull: true
     }, {
-        name: 'strasse',
+        name: 'street',
         allowNull: true
     }, {
-        name: 'telefon',
+        name: 'phone',
         allowNull: true
     }, {
-        name: 'tourenplan',
+        name: 'routePlanning',
         allowNull: true
     }, {
-        name: 'typ',
+        name: 'type',
         allowNull: true
     }, {
-        name: 'letzteAenderung',
+        name: 'lastMod',
         type: 'date',
         dateFormat: 'time'
     }, {
         name: 'readonly',
         type: 'boolean',
         persist: false
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/probenehmer',
-        reader: {
-            type: 'json',
-            totalProperty: 'totalCount',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true
-        }
-    }
+    }]
 });
