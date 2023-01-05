@@ -6,30 +6,16 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class for Staat Stammdaten
- */
-Ext.define('Lada.model.Staat', {
+Ext.define('Lada.model.State', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id',
         type: 'int'
     }, {
-        name: 'staat'
+        name: 'ctry'
     }, {
-        name: 'staatIso',
+        name: 'iso3166',
         allowNull: true
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/staat',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
+    }]
 });
