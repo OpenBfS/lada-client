@@ -37,7 +37,7 @@ Ext.define('Lada.view.grid.Status', {
         this.statusWerteStore = Ext.create('Lada.store.StatusWerte');
         this.statusWerteStore.load({
             params: {
-                messungsId: this.recordId
+                measmId: this.recordId
             }
         });
         this.statusStufeStore = Ext.create('Lada.store.StatusStufe');
@@ -45,7 +45,7 @@ Ext.define('Lada.view.grid.Status', {
 
         this.columns = [{
             header: i18n.getMsg('header.datum'),
-            dataIndex: 'datum',
+            dataIndex: 'date',
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
             width: 110,
@@ -63,7 +63,7 @@ Ext.define('Lada.view.grid.Status', {
             }
         }, {
             header: i18n.getMsg('erzeuger'),
-            dataIndex: 'mstId',
+            dataIndex: 'measFacil',
             renderer: function(value) {
                 var r = '';
                 if (!value || value === '') {
@@ -72,33 +72,33 @@ Ext.define('Lada.view.grid.Status', {
                 var mstore = Ext.data.StoreManager.get('messstellen');
                 var item = mstore.getById(value);
                 if (item) {
-                    r = item.get('messStelle');
+                    r = item.get('name');
                 }
                 return r;
             },
             sortable: false
         }, {
             header: i18n.getMsg('header.statusstufe'),
-            dataIndex: 'statusKombi',
+            dataIndex: 'statusComb',
             renderer: function(value) {
                 var kombi = Ext.data.StoreManager.get('statuskombi');
                 var r = '';
                 var item = kombi.getById(value);
                 if (item) {
-                    r = item.data.statusStufe.stufe;
+                    r = item.data.statusLev.lev;
                 }
                 return r;
             },
             sortable: false
         }, {
             header: i18n.getMsg('header.statuswert'),
-            dataIndex: 'statusKombi',
+            dataIndex: 'statusComb',
             renderer: function(value) {
                 var kombi = Ext.data.StoreManager.get('statuskombi');
                 var r = '';
                 var item = kombi.getById(value);
                 if (item) {
-                    r = item.data.statusWert.wert;
+                    r = item.data.statusVal.val;
                 }
                 return r;
             },
@@ -136,7 +136,7 @@ Ext.define('Lada.view.grid.Status', {
 
         this.store.load({
             params: {
-                messungsId: this.recordId
+                measmId: this.recordId
             }
         });
         Ext.on('timezonetoggled', function() {
