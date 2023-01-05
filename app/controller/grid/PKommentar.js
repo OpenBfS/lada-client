@@ -38,7 +38,7 @@ Ext.define('Lada.controller.grid.PKommentar', {
      * On failure it displays a message
      */
     gridSave: function(editor, context) {
-        context.record.set('datum', new Date());
+        context.record.set('date', new Date());
         if (context.record.phantom) {
             context.record.set('id', null);
         }
@@ -89,9 +89,9 @@ Ext.define('Lada.controller.grid.PKommentar', {
      */
     add: function(button) {
         var record = Ext.create('Lada.model.CommSample');
-        record.data.datum = Lada.util.Date.formatTimestamp(new Date(),
+        record.data.date = Lada.util.Date.formatTimestamp(new Date(),
             'd.m.Y H:i', true);
-        record.set('probeId', button.up('pkommentargrid').recordId);
+        record.set('siteId', button.up('pkommentargrid').recordId);
         button.up('pkommentargrid').store.insert(0, record);
         button.up('pkommentargrid').rowEditing.startEdit(0, 1);
     },

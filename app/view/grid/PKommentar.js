@@ -73,7 +73,7 @@ Ext.define('Lada.view.grid.PKommentar', {
         }];
         this.columns = [{
             header: i18n.getMsg('header.datum'),
-            dataIndex: 'datum',
+            dataIndex: 'date',
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
             width: 110,
@@ -90,7 +90,7 @@ Ext.define('Lada.view.grid.PKommentar', {
             }
         }, {
             header: i18n.getMsg('erzeuger'),
-            dataIndex: 'mstId',
+            dataIndex: 'measFacilId',
             width: 140,
             renderer: function(value) {
                 var r = '';
@@ -107,7 +107,7 @@ Ext.define('Lada.view.grid.PKommentar', {
             editor: {
                 xtype: 'combobox',
                 store: Ext.data.StoreManager.get('messstellenFiltered'),
-                displayField: 'messStelle',
+                displayField: 'name',
                 valueField: 'id',
                 allowBlank: false,
                 matchFieldWidth: false
@@ -145,7 +145,7 @@ Ext.define('Lada.view.grid.PKommentar', {
         this.addLoadingFailureHandler(this.store);
         this.store.load({
             params: {
-                probeId: this.recordId
+                sampleId: this.recordId
             }
         });
         Ext.on('timezonetoggled', function() {
