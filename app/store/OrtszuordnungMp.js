@@ -11,6 +11,6 @@
  */
 Ext.define('Lada.store.OrtszuordnungMp', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.OrtszuordnungMp'
+    model: 'Lada.model.GeolocatMpg'
 });
 

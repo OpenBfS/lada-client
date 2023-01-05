@@ -16,7 +16,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
 
     requires: [
         'Lada.model.Geolocat',
-        'Lada.model.OrtszuordnungMp',
+        'Lada.model.GeolocatMpg',
         'Lada.view.form.Ortszuordnung',
         'Lada.store.Orte',
         'Lada.view.form.Ort',
@@ -253,7 +253,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
                 this.record = Ext.create('Lada.model.Geolocat');
                 this.record.set('sampleId', this.probe.get('id'));
             } else {
-                this.record = Ext.create('Lada.model.OrtszuordnungMp');
+                this.record = Ext.create('Lada.model.GeolocatMpg');
                 this.record.set('messprogrammId', this.messprogramm.get('id'));
             }
         }

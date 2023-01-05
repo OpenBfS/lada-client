@@ -114,7 +114,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 }
 
                 for (var i = 0; i < ortszuordnungArr.length; i++) {
-                    var copy = Ext.create('Lada.model.OrtszuordnungMp',
+                    var copy = Ext.create('Lada.model.GeolocatMpg',
                         ortszuordnungArr[i]);
                     copy.set('copyOf', copy.get('id'));
                     copy.set('id', null);

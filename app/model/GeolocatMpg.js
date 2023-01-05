@@ -6,10 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class for Ortszuordnung of Messprogramme
- */
-Ext.define('Lada.model.OrtszuordnungMp', {
+Ext.define('Lada.model.GeolocatMpg', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
@@ -19,46 +16,31 @@ Ext.define('Lada.model.OrtszuordnungMp', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'ortId',
+        name: 'siteId',
         type: 'int'
     }, {
-        name: 'messprogrammId',
+        name: 'mpgId',
         type: 'int'
     }, {
-        name: 'ortszuordnungTyp',
+        name: 'typeRegulation',
         allowNull: true
     }, {
-        name: 'ortszusatztext',
+        name: 'addSiteText',
         allowNull: true
     }, {
-        name: 'ozId',
+        name: 'poiId',
         allowNull: true
     }, {
-        name: 'letzteAenderung',
+        name: 'lastMod',
         type: 'date',
         dateFormat: 'time'
     }, {
-        name: 'treeModified',
+        name: 'treeMod',
         type: 'date',
         dateFormat: 'time'
     }, {
         name: 'copyOf',
         persist: false
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/ortszuordnungmp',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true
-        }
-    }
+    }]
 });
 
