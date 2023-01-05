@@ -6,17 +6,12 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Store for OrtsZusatz
- */
-Ext.define('Lada.store.OrtsZusatz', {
-    extend: 'Ext.data.Store',
-    model: 'Lada.model.Poi',
-    sorters: [
-        {
-            property: 'ozsId',
-            direction: 'ASC'
-        }],
-    autoLoad: true,
-    sortOnLoad: true
+Ext.define('Lada.model.Poi', {
+    extend: 'Lada.model.LadaBase',
+
+    fields: [{
+        name: 'id'
+    }, {
+        name: 'name'
+    }]
 });
