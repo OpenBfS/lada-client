@@ -6,10 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class for Kommentare
- */
-Ext.define('Lada.model.PKommentar', {
+Ext.define('Lada.model.CommSample', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
@@ -22,30 +19,15 @@ Ext.define('Lada.model.PKommentar', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'probeId',
+        name: 'sampleId',
         type: 'int'
     }, {
-        name: 'mstId'
+        name: 'measFacilId'
     }, {
-        name: 'datum',
+        name: 'date',
         type: 'date',
         dateFormat: 'time'
     }, {
         name: 'text'
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/pkommentar',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true
-        }
-    }
+    }]
 });
