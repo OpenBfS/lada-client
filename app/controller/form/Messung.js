@@ -65,40 +65,39 @@ Ext.define('Lada.controller.form.Messung', {
 
         record.save({
             success: function(newRecord, response) {
+                formPanel.setRecord(newRecord);
                 var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    formPanel.setRecord(newRecord);
-                    formPanel.setMessages(json.errors, json.warnings,
-                        json.notifications);
+                formPanel.setMessages(
+                    json.errors, json.warnings, json.notifications);
 
-                    if (parentWin) {
-                        parentWin.initData();
-                        var messunggrid = parentWin.down('messunggrid');
+                if (parentWin) {
+                    parentWin.initData();
+                    var messunggrid = parentWin.down('messunggrid');
+                    if (messunggrid) {
+                        messunggrid.getStore().reload();
+                    }
+                }
 
-                        if (messunggrid) {
-                            messunggrid.getStore().reload();
-                        }
-                    }
-                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
-                    if (response.action === 'create' && json.success) {
-                        oldWin.close();
-                        var win = Ext.create('Lada.view.window.MessungEdit', {
-                            probe: probe,
-                            parentWindow: parentWin,
-                            grid: oldWin.grid,
-                            record: record
-                        });
-                        win.initData(record);
-                        win.show();
-                        win.setMessages(json.errors, json.warnings,
-                            json.notifications);
-                        win.setPosition(35 + parentWin.width);
-                    } else {
-                        oldWin.down('messwertgrid').getStore().reload();
-                    }
+                var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                if (parentGrid.length === 1) {
+                    parentGrid[0].reload();
+                }
+
+                if (response.action === 'create') {
+                    oldWin.close();
+                    var win = Ext.create('Lada.view.window.MessungEdit', {
+                        probe: probe,
+                        parentWindow: parentWin,
+                        grid: oldWin.grid,
+                        record: record
+                    });
+                    win.initData(record);
+                    win.show();
+                    win.setMessages(json.errors, json.warnings,
+                                    json.notifications);
+                    win.setPosition(35 + parentWin.width);
+                } else {
+                    oldWin.down('messwertgrid').getStore().reload();
                 }
                 formPanel.setLoading(false);
             },

@@ -585,31 +585,29 @@ Ext.define('Lada.controller.form.Probe', {
 
         record.save({
             success: function(newRecord, response) {
+                var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                if (parentGrid.length === 1) {
+                    parentGrid[0].reload();
+                }
+
                 var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    var parentGrid = Ext.ComponentQuery.query(
-                        'dynamicgrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
-                    if (response.action === 'create' && json.success) {
-                        // Close ProbeCreate window and show the new record
-                        // in a new ProbeEdit window
-                        button.up('window').close();
-                        var win = Ext.create('Lada.view.window.ProbeEdit', {
-                            record: newRecord
-                        });
-                        win.initData();
-                        win.show();
-                        win.setPosition(30);
-                    } else {
-                        // Update form in existing window
-                        formPanel.setRecord(newRecord);
-                        formPanel.setMessages(
-                            json.errors,
-                            json.warnings,
-                            json.notifications);
-                    }
+                if (response.action === 'create') {
+                    // Close ProbeCreate window and show the new record
+                    // in a new ProbeEdit window
+                    button.up('window').close();
+                    var win = Ext.create('Lada.view.window.ProbeEdit', {
+                        record: newRecord
+                    });
+                    win.initData();
+                    win.show();
+                    win.setPosition(30);
+                } else {
+                    // Update form in existing window
+                    formPanel.setRecord(newRecord);
+                    formPanel.setMessages(
+                        json.errors,
+                        json.warnings,
+                        json.notifications);
                 }
             },
             failure: function(newRecord, response) {
