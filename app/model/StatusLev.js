@@ -6,30 +6,15 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class for StatusWerte
- */
-Ext.define('Lada.model.StatusStufe', {
+Ext.define('Lada.model.StatusLev', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id',
         persist: false
     }, {
-        name: 'stufe',
+        name: 'lev',
         type: 'string'
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/statusstufe',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
-
+    }]
 });
 

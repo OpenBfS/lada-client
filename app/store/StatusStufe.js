@@ -8,7 +8,7 @@
 
 Ext.define('Lada.store.StatusStufe', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.StatusStufe',
+    model: 'Lada.model.StatusLev',
     autoLoad: false
 });
 
