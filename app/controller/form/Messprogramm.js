@@ -270,18 +270,18 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
         record.save({
             success: function(rec, response) {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
-                    formPanel.setRecord(rec);
-                    formPanel.setMessages(json.errors, json.warnings);
-                    var win = button.up('window');
-                    win.record = rec;
-                    win.enableChildren();
+                var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                if (parentGrid.length === 1) {
+                    parentGrid[0].reload();
                 }
+
+                formPanel.setRecord(rec);
+                var json = Ext.decode(response.getResponse().responseText);
+                formPanel.setMessages(json.errors, json.warnings);
+
+                var win = button.up('window');
+                win.record = rec;
+                win.enableChildren();
             },
             failure: function(newRecord, response) {
                 var i18n = Lada.getApplication().bundle;
