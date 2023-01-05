@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.store.Probenarten', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Probenart',
+    model: 'Lada.model.SampleMeth',
     sorters: [{
         property: 'probenart',
         transform: function(val) {
