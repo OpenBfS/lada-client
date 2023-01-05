@@ -377,7 +377,7 @@ Ext.application({
             storeId: 'messprogrammkategorie',
             proxy: {
                 type: 'rest',
-                url: 'lada-server/rest/messprogrammkategorie',
+                url: 'lada-server/rest/mpgcateg',
                 reader: {
                     type: 'json',
                     totalProperty: 'totalCount',
