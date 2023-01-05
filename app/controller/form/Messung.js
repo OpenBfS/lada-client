@@ -30,7 +30,6 @@ Ext.define('Lada.controller.form.Messung', {
             },
             'messungform': {
                 dirtychange: this.checkCommitEnabled,
-                save: this.saveHeadless,
                 validitychange: this.checkCommitEnabled
             },
             'messungform numfield [name=messdauer]': {
@@ -94,12 +93,16 @@ Ext.define('Lada.controller.form.Messung', {
                                     json.notifications);
                     win.setPosition(35 + parentWin.width);
                 } else {
-                    // Update existing window
-                    formPanel.setRecord(newRecord);
-                    formPanel.setMessages(
-                        json.errors, json.warnings, json.notifications);
-                    oldWin.down('messwertgrid').getStore().reload();
-                    formPanel.setLoading(false);
+                    // Close or update existing window
+                    if (oldWin.closeRequested) {
+                        oldWin.doClose();
+                    } else {
+                        formPanel.setRecord(newRecord);
+                        formPanel.setMessages(
+                            json.errors, json.warnings, json.notifications);
+                        oldWin.down('messwertgrid').getStore().reload();
+                        formPanel.setLoading(false);
+                    }
                 }
             },
             failure: function(newRrecord, response) {
@@ -128,57 +131,6 @@ Ext.define('Lada.controller.form.Messung', {
                     }
                 }
                 formPanel.setLoading(false);
-            }
-        });
-    },
-
-    /**
-     * Saves the current form without manipulating the gui
-     */
-    saveHeadless: function(panel) {
-        var formPanel = panel;
-        var record = formPanel.getForm().getRecord();
-        var data = formPanel.getForm().getFieldValues();
-        for (var key in data) {
-            record.set(key, data[key]);
-        }
-        if (record.phantom) {
-            record.set('id', null);
-        }
-
-        formPanel.getForm().getRecord().save({
-            success: function(newRecord, response) {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    var parentGrid = Ext.ComponentQuery.query('dynamicGrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
-                }
-            },
-            failure: function(newRecord, response) {
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                            + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                    formPanel.setLoading(false);
-                }
             }
         });
     },

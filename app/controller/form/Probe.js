@@ -35,8 +35,7 @@ Ext.define('Lada.controller.form.Probe', {
             },
             'probeform': {
                 validitychange: this.checkCommitEnabled,
-                dirtychange: this.checkCommitEnabled,
-                save: this.saveHeadless
+                dirtychange: this.checkCommitEnabled
             },
             'probeform tfield [name=hauptprobenNr]': {
                 change: this.hauptprobenNrChanged
@@ -521,55 +520,6 @@ Ext.define('Lada.controller.form.Probe', {
     },
 
     /**
-     * Saves the current form without manipulating the GUI.
-     */
-    saveHeadless: function(panel) {
-        var formPanel = panel;
-        var data = formPanel.getForm().getFieldValues(false);
-        var record = formPanel.getForm().getRecord();
-        for (var key in data) {
-            record.set(key, data[key]);
-        }
-        if (record.phantom) {
-            record.set('id', null);
-        }
-        record.save({
-            success: function(newRecord, response) {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
-                }
-            },
-            failure: function(newRecord, response) {
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                }
-            }
-        });
-    },
-
-    /**
      * The save function saves the content of the form.
      * On success it will reload the store,
      * on failure, it will display an error message.
@@ -602,12 +552,15 @@ Ext.define('Lada.controller.form.Probe', {
                     win.show();
                     win.setPosition(30);
                 } else {
-                    // Update form in existing window
-                    formPanel.setRecord(newRecord);
-                    formPanel.setMessages(
-                        json.errors,
-                        json.warnings,
-                        json.notifications);
+                    // Close existing window or update form
+                    var oldWin = button.up('window');
+                    if (oldWin.closeRequested) {
+                        oldWin.doClose();
+                    } else {
+                        formPanel.setRecord(newRecord);
+                        formPanel.setMessages(
+                            json.errors, json.warnings, json.notifications);
+                    }
                 }
             },
             failure: function(newRecord, response) {

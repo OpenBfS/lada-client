@@ -46,10 +46,15 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
                     parentGrid[0].reload();
                 }
 
-                formPanel.getForm().loadRecord(newRecord);
-                var json = Ext.decode(response.getResponse().responseText);
-                formPanel.clearMessages();
-                formPanel.setMessages(json.errors, json.warnings);
+                var win = button.up('window');
+                if (win.closeRequested) {
+                    win.doClose();
+                } else {
+                    formPanel.loadRecord(newRecord);
+                    formPanel.clearMessages();
+                    var json = Ext.decode(response.getResponse().responseText);
+                    formPanel.setMessages(json.errors, json.warnings);
+                }
             },
             failure: function(newRecord, response) {
                 formPanel.loadRecord(record);

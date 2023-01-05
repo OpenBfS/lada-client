@@ -48,12 +48,15 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                 if (parentGrid.length === 1) {
                     parentGrid[0].reload();
                 }
-
-                var json = Ext.decode(response.getResponse().responseText);
-                formPanel.setRecord(newRecord);
-                formPanel.setMessages(json.errors, json.warnings);
-
                 Ext.data.StoreManager.get('datensatzerzeuger').reload();
+                var win = button.up('datensatzerzeugeredit');
+                if (win.closeRequested) {
+                    win.doClose();
+                } else {
+                    formPanel.setRecord(newRecord);
+                    var json = Ext.decode(response.getResponse().responseText);
+                    formPanel.setMessages(json.errors, json.warnings);
+                }
             },
             failure: function(newRecord, response) {
                 formPanel.loadRecord(record);

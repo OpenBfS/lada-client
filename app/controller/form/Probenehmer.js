@@ -25,8 +25,7 @@ Ext.define('Lada.controller.form.Probenehmer', {
             },
             'probenehmerform': {
                 dirtychange: this.checkCommitEnabled,
-                validitychange: this.checkCommitEnabled,
-                save: this.saveHeadless
+                validitychange: this.checkCommitEnabled
             }
         });
     },
@@ -47,12 +46,16 @@ Ext.define('Lada.controller.form.Probenehmer', {
                 if (parentGrid.length === 1) {
                     parentGrid[0].reload();
                 }
-
-                var json = Ext.decode(response.getResponse().responseText);
-                formPanel.setRecord(newRecord);
-                formPanel.setMessages(json.errors, json.warnings);
-
                 Ext.data.StoreManager.get('probenehmer').reload();
+
+                var win = button.up('window');
+                if (win.closeRequested) {
+                    win.doClose();
+                } else {
+                    formPanel.setRecord(newRecord);
+                    var json = Ext.decode(response.getResponse().responseText);
+                    formPanel.setMessages(json.errors, json.warnings);
+                }
             },
             failure: function(newRecord, response) {
                 formPanel.loadRecord(record);
@@ -84,52 +87,6 @@ Ext.define('Lada.controller.form.Probenehmer', {
     discard: function(button) {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
-    },
-
-    saveHeadless: function(panel) {
-        var formPanel = panel;
-        var data = formPanel.getForm().getFieldValues(false);
-        var record = formPanel.getForm().getRecord();
-        for (var key in data) {
-            record.set(key, data[key]);
-        }
-        if (record.phantom) {
-            record.set('id', null);
-        }
-        record.save({
-            success: function(newRecord, response) {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
-                }
-            },
-            failure: function(newRecord, response) {
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                }
-            }
-        });
     },
 
     copyProbenehmer: function(button) {
