@@ -52,9 +52,6 @@ Ext.define('Lada.controller.form.Messung', {
      */
     save: function(button) {
         var formPanel = button.up('form');
-        var oldWin = button.up('window');
-        var parentWin = oldWin.parentWindow;
-        var probe = oldWin.record;
         formPanel.setLoading(true);
         var record = formPanel.getForm().getRecord();
         // Update record with values changed in the form
@@ -65,11 +62,8 @@ Ext.define('Lada.controller.form.Messung', {
 
         record.save({
             success: function(newRecord, response) {
-                formPanel.setRecord(newRecord);
-                var json = Ext.decode(response.getResponse().responseText);
-                formPanel.setMessages(
-                    json.errors, json.warnings, json.notifications);
-
+                var oldWin = button.up('window');
+                var parentWin = oldWin.parentWindow;
                 if (parentWin) {
                     parentWin.initData();
                     var messunggrid = parentWin.down('messunggrid');
@@ -83,10 +77,13 @@ Ext.define('Lada.controller.form.Messung', {
                     parentGrid[0].reload();
                 }
 
+                var json = Ext.decode(response.getResponse().responseText);
                 if (response.action === 'create') {
+                    // Close MessungCreate window and show the new record
+                    // in a new MessungEdit window
                     oldWin.close();
                     var win = Ext.create('Lada.view.window.MessungEdit', {
-                        probe: probe,
+                        probe: oldWin.record,
                         parentWindow: parentWin,
                         grid: oldWin.grid,
                         record: record
@@ -97,9 +94,13 @@ Ext.define('Lada.controller.form.Messung', {
                                     json.notifications);
                     win.setPosition(35 + parentWin.width);
                 } else {
+                    // Update existing window
+                    formPanel.setRecord(newRecord);
+                    formPanel.setMessages(
+                        json.errors, json.warnings, json.notifications);
                     oldWin.down('messwertgrid').getStore().reload();
+                    formPanel.setLoading(false);
                 }
-                formPanel.setLoading(false);
             },
             failure: function(newRrecord, response) {
                 formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
