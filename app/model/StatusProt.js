@@ -6,10 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class for Status
- */
-Ext.define('Lada.model.Status', {
+Ext.define('Lada.model.StatusProt', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
@@ -22,21 +19,21 @@ Ext.define('Lada.model.Status', {
         name: 'owner',
         type: 'boolean'
     }, {
-        name: 'messungsId',
+        name: 'measmId',
         type: 'int'
     }, {
-        name: 'mstId'
+        name: 'measFacilId'
     }, {
-        name: 'statusKombi',
+        name: 'statusComb',
         type: 'int'
     }, {
-        name: 'statusWert',
+        name: 'statusVal',
         persist: false
     }, {
-        name: 'statusStufe',
+        name: 'statusLev',
         persist: false
     }, {
-        name: 'treeModified',
+        name: 'treeMod',
         type: 'date',
         dateFormat: 'time'
     }, {
@@ -44,25 +41,10 @@ Ext.define('Lada.model.Status', {
         type: 'date',
         dateFormat: 'time'
     }, {
-        name: 'datum',
+        name: 'date',
         type: 'date',
         dateFormat: 'time'
     }, {
         name: 'text'
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/status',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true
-        }
-    }
+    }]
 });

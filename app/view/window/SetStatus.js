@@ -187,11 +187,11 @@ Ext.define('Lada.view.window.SetStatus', {
         for (var i = 0; i < this.sendIds.length; i++) {
             if (!done.includes(this.sendIds[i])) {
                 done.push(this.sendIds[i]);
-                data = Ext.create('Lada.model.Status', {
-                    messungsId: this.sendIds[i],
-                    mstId: this.down('combobox').getValue(),
-                    datum: new Date(),
-                    statusKombi: kombi,
+                data = Ext.create('Lada.model.StatusProt', {
+                    measmId: this.sendIds[i],
+                    measFacilId: this.down('combobox').getValue(),
+                    date: new Date(),
+                    statusComb: kombi,
                     text: this.down('textarea').getValue()
                 });
                 data.set('id', null);

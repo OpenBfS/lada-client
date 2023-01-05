@@ -62,7 +62,7 @@ Ext.define('Lada.view.widget.Statuskombi', {
         this.reset = reset !== undefined ? reset : false;
         this.statusEdit = statusEdit !== undefined ? statusEdit : false;
         var me = this;
-        Ext.ClassManager.get('Lada.model.Status').load(value, {
+        Ext.ClassManager.get('Lada.model.StatusProt').load(value, {
             success: function(record) {
                 var statuskombistore = Ext.data.StoreManager.get('statuskombi');
                 var kombi = statuskombistore.getById(record.data.statusKombi);
