@@ -55,10 +55,10 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         }
         var data = formPanel.getForm().getFieldValues(false);
         var record = formPanel.getForm().getRecord();
-        record.set('siteId', data.ortId[0]);
-        record.set('typeRegulation', data.ortszuordnungTyp);
-        record.set('addSiteText', data.ortszusatztext);
-        record.set('poiid', data.ozId);
+        record.set('siteId', data.siteId);
+        record.set('typeRegulation', data.typeRegulation);
+        record.set('addSiteText', data.addSiteText);
+        record.set('poiId', data.poiId);
         if (record.phantom) {
             record.set('id', null);
         }

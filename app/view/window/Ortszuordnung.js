@@ -259,10 +259,10 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         }
         var mstId = this.probe ?
             this.probe.get('measFacilId') :
-            this.messprogramm.get('mstId');
+            this.messprogramm.get('measFacilId');
         var mst = Ext.data.StoreManager.get('messstellen');
         var ndx = mst.findExact('id', mstId);
-        this.netzbetreiberId = mst.getAt(ndx).get('netzbetreiberId');
+        this.netzbetreiberId = mst.getAt(ndx).get('networkId');
         this.down('ortszuordnungform').setRecord(this.record);
         var osg = this.down('ortstammdatengrid');
         var map = this.down('map');
@@ -273,7 +273,7 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         // leave the ortstore empty at begin.
         // TODO check when changing filter method to remote/local
         this.ortstore.removeAll();
-        var ortId = this.record.get('ortId');
+        var ortId = this.record.get('siteId');
         if (ortId) {
             Lada.model.Site.load(ortId, {
                 success: function(rec) {
@@ -323,9 +323,9 @@ Ext.define('Lada.view.window.Ortszuordnung', {
         map.addLocations(this.ortstore);
         var ortId;
         if (this.messprogramm) {
-            ortId = this.record.get('ort');
+            ortId = this.record.get('site');
         } else {
-            ortId = this.record.get('ortId');
+            ortId = this.record.get('siteId');
         }
         var ortrecord = this.ortstore.findRecord('id', ortId);
         if (ortrecord) {

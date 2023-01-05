@@ -14,7 +14,7 @@ Ext.define('Lada.view.widget.OrtszuordnungTyp', {
     alias: 'widget.ortszuordnungtyp',
     requires: ['Lada.store.OrtszuordnungTyp'],
     store: 'ortszuordnungtyp',
-    displayField: 'ortstyp',
+    displayField: 'name',
     valueField: 'id',
     editable: this.editable || false,
     forceSelection: true,

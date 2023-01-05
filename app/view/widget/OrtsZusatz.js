@@ -14,8 +14,8 @@ Ext.define('Lada.view.widget.OrtsZusatz', {
     alias: 'widget.ortszusatz',
     requires: ['Lada.store.OrtsZusatz'],
     store: 'OrtsZusatz',
-    displayField: 'ortszusatz',
-    valueField: 'ozsId',
+    displayField: 'name',
+    valueField: 'id',
     editable: this.editable || false,
     disableKeyFilter: true,
     forceSelection: true,
@@ -27,9 +27,9 @@ Ext.define('Lada.view.widget.OrtsZusatz', {
     minChars: 0,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{ozsId} - {ortszusatz}</div></tpl>'),
+            '{id} - {name}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{ozsId} - {ortszusatz}</tpl>'),
+        '<tpl for=".">{id} - {name}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
