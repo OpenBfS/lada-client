@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.store.OrtTyp', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.OrtTyp',
+    model: 'Lada.model.SiteClass',
     sorters: [
         {
             property: 'id',
