@@ -284,10 +284,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 win.enableChildren();
             },
             failure: function(newRecord, response) {
+                formPanel.loadRecord(record);
                 var i18n = Lada.getApplication().bundle;
-                var rec = formPanel.getForm().getRecord();
-                rec.dirty = false;
-                formPanel.getForm().loadRecord(newRecord);
                 if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -303,7 +301,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                 i18n.getMsg('err.msg.generic.body'));
                         }
-                        formPanel.clearMessages();
                         formPanel.setMessages(json.errors, json.warnings);
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),

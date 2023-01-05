@@ -103,7 +103,7 @@ Ext.define('Lada.controller.form.Messung', {
                 }
             },
             failure: function(newRrecord, response) {
-                formPanel.getForm().loadRecord(formPanel.getForm().getRecord());
+                formPanel.loadRecord(record);
                 var i18n = Lada.getApplication().bundle;
                 if (response.error) {
                     //TODO: check content of error.status (html error code)
@@ -120,15 +120,14 @@ Ext.define('Lada.controller.form.Messung', {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                 i18n.getMsg('err.msg.generic.body'));
                         }
-                        formPanel.setRecord(record);
                         formPanel.setMessages(json.errors, json.warnings,
                             json.notifications);
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                             i18n.getMsg('err.msg.response.body'));
                     }
-                    formPanel.setLoading(false);
                 }
+                formPanel.setLoading(false);
             }
         });
     },

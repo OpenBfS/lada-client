@@ -52,12 +52,12 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
                 formPanel.setMessages(json.errors, json.warnings);
             },
             failure: function(newRecord, response) {
+                formPanel.loadRecord(record);
                 var i18n = Lada.getApplication().bundle;
                 if (response.error) {
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                         i18n.getMsg('err.msg.generic.body'));
                 } else {
-                    formPanel.getForm().reset();
                     var json = Ext.decode(response.getResponse().responseText);
                     if (json) {
                         if (json.message) {
@@ -68,7 +68,6 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                 i18n.getMsg('err.msg.generic.body'));
                         }
-                        formPanel.clearMessages();
                         formPanel.setMessages(json.errors, json.warnings);
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),

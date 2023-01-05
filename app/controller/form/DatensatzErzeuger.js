@@ -56,6 +56,7 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                 Ext.data.StoreManager.get('datensatzerzeuger').reload();
             },
             failure: function(newRecord, response) {
+                formPanel.loadRecord(record);
                 var i18n = Lada.getApplication().bundle;
                 if (response.error) {
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -73,7 +74,6 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                 i18n.getMsg('err.msg.generic.body'));
                         }
-                        formPanel.clearMessages();
                         formPanel.setMessages(json.errors, json.warnings);
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),

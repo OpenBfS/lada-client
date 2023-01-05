@@ -611,15 +611,13 @@ Ext.define('Lada.controller.form.Probe', {
                 }
             },
             failure: function(newRecord, response) {
+                formPanel.loadRecord(record);
                 var i18n = Lada.getApplication().bundle;
                 if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                         i18n.getMsg('err.msg.generic.body'));
                 } else {
-                    var rec = formPanel.getForm().getRecord();
-                    rec.dirty = false;
-                    formPanel.getForm().loadRecord(newRecord);
                     var json = Ext.decode(
                         response.getResponse().responseText);
                     if (json) {
@@ -631,26 +629,10 @@ Ext.define('Lada.controller.form.Probe', {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                 i18n.getMsg('err.msg.generic.body'));
                         }
-                        var parentGrid = Ext.ComponentQuery.query(
-                            'dynamicgrid');
-                        if (parentGrid.length === 1) {
-                            parentGrid[0].reload();
-                        }
-                        formPanel.setRecord(newRecord);
                         formPanel.setMessages(
                             json.errors,
                             json.warnings,
                             json.notifications);
-                        if (response.action === 'create' && json.success) {
-                            button.up('window').close();
-                            var win = Ext.create(
-                                'Lada.view.window.ProbeEdit', {
-                                    record: newRecord
-                                });
-                            win.setPosition(30);
-                            win.show();
-                            win.initData();
-                        }
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                             i18n.getMsg('err.msg.response.body'));
