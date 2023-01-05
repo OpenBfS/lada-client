@@ -11,6 +11,6 @@
  */
 Ext.define('Lada.store.StatusWerte', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.StatusWerte',
+    model: 'Lada.model.StatusVal',
     autoLoad: false
 });
