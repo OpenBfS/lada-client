@@ -37,10 +37,10 @@ Ext.define('Lada.view.grid.Staaten', {
                 }
                 return value;
             },
-            dataIndex: 'staatIso'
+            dataIndex: 'iso3166'
         }, {
             header: i18n.getMsg('name'),
-            dataIndex: 'staat',
+            dataIndex: 'ctry',
             flex: 1,
             align: 'start'
         }];
