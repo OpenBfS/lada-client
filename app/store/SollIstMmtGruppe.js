@@ -12,7 +12,7 @@
 
 Ext.define('Lada.store.SollIstMmtGruppe', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.SollIstMmtGruppe',
+    model: 'Lada.model.TargActMmtGr',
     sorters: [{
         property: 'id',
         direction: 'ASC'

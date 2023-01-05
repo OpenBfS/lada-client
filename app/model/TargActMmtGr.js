@@ -6,29 +6,15 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class representing a SollIstMmtGruppe
- */
-Ext.define('Lada.model.SollIstMmtGruppe', {
+Ext.define('Lada.model.TargActMmtGr', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'
     }, {
-        name: 'bezeichnung'
+        name: 'name'
     }, {
-        name: 'beschreibung'
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/sollistmmtgruppe',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
+        name: 'descr'
+    }]
 });
 
