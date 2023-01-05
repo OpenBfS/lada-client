@@ -15,5 +15,5 @@ Ext.define('Lada.store.Probenzusatzwerte', {
         property: 'beschreibung'
     }],
     autoLoad: true,
-    model: 'Lada.model.ProbenZusatz'
+    model: 'Lada.model.SampleSpecif'
 });
