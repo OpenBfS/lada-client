@@ -341,7 +341,7 @@ Ext.application({
             storeId: 'probenehmer',
             proxy: {
                 type: 'rest',
-                url: 'lada-server/rest/probenehmer',
+                url: 'lada-server/rest/sampler',
                 reader: {
                     type: 'json',
                     totalProperty: 'totalCount',

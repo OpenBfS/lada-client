@@ -77,7 +77,7 @@ Ext.define('Lada.view.window.Probenehmer', {
             scope: this,
             handler: this.handleBeforeClose
         }];
-        this.modelClass = Lada.model.Probenehmer;
+        this.modelClass = Lada.model.Sampler;
         this.callParent(arguments);
         if (this.record) {
             this.initData(this.record);

@@ -42,7 +42,7 @@ Ext.define('Lada.controller.form.Probenehmer', {
         var record = formPanel.getForm().getRecord();
         // Update record with values changed in the form
         record.set(formPanel.getForm().getFieldValues(true));
-        record.set('netzbetreiberId',
+        record.set('networkId',
             formPanel.down('netzbetreiber').getValue()[0]);
         if (record.phantom) {
             record.set('id', null);
@@ -151,7 +151,7 @@ Ext.define('Lada.controller.form.Probenehmer', {
     copyProbenehmer: function(button) {
         var record = button.up('probenehmerform').getForm().getRecord();
         var copy = record.copy(null);
-        copy.set('prnId', null);
+        copy.set('extId', null);
         var win = Ext.create('Lada.view.window.Probenehmer', {
             record: copy,
             mode: 'copy',

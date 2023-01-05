@@ -13,9 +13,9 @@ Ext.define('Lada.view.widget.Probenehmer', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.probenehmer',
     store: 'Probenehmer',
-    displayField: 'prnId',
+    displayField: 'extId',
     valueField: 'id',
-    searchValueField: 'kurzBezeichnung',
+    searchValueField: 'shortText',
 
     //additional actions to be taken after initComponent
     extraParams: this.extraParams || null,
@@ -28,18 +28,18 @@ Ext.define('Lada.view.widget.Probenehmer', {
     typeAhead: false,
     minChars: 0,
     labelTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{kurzBezeichnung}</tpl>'),
+        '<tpl for=".">{shortText}</tpl>'),
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{prnId} - {kurzBezeichnung}</div></tpl>'),
+            '{extId} - {shortText}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{kurzBezeichnung}</tpl>'),
+        '<tpl for=".">{shortText}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.probenehmer');
         this.store = Ext.create('Lada.store.Probenehmer');
-        this.store.sort('kurzBezeichnung', 'ASC');
+        this.store.sort('shortText', 'ASC');
         this.callParent(arguments);
         if (this.extraParams) {
             this.extraParams();
