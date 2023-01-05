@@ -123,7 +123,6 @@ Ext.define('Lada.controller.form.Messung', {
                         formPanel.setRecord(record);
                         formPanel.setMessages(json.errors, json.warnings,
                             json.notifications);
-                        formPanel.up('window').initData();
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                             i18n.getMsg('err.msg.response.body'));
