@@ -6,28 +6,14 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class representing a SollIstUmwGruppe
- */
-Ext.define('Lada.model.SollIstUmwGruppe', {
+Ext.define('Lada.model.TargEnvGr', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'
     }, {
-        name: 'bezeichnung'
+        name: 'name'
     }, {
-        name: 'beschreibung'
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/sollistumwgruppe',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
+        name: 'targEnvGrDispl'
+    }]
 });
