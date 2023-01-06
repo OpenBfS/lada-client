@@ -205,16 +205,16 @@ Ext.define('Lada.view.panel.QueryPanel', {
                     model: 'Lada.model.GridColMp',
                     autoLoad: false}),
                 valueField: 'dataIndex',
-                displayField: 'name',
+                displayField: 'gridCol',
                 fieldLabel: i18n.getMsg('title.filter'),
                 tpl: Ext.create(
                     'Ext.XTemplate',
                     '<tpl for=".">' +
                     '<div class="x-combo-list-item  x-boundlist-item" >' +
-                    '{name}</div></tpl>'),
+                    '{gridCol}</div></tpl>'),
                 displayTpl: Ext.create(
                     'Ext.XTemplate',
-                    '<tpl for=".">{name}</tpl>'),
+                    '<tpl for=".">{gridCol}</tpl>'),
                 persist: false
 
             }, {
