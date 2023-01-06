@@ -13,7 +13,7 @@
  */
 Ext.define('Lada.store.Bundesland', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Verwaltungseinheit',
+    model: 'Lada.model.AdminUnit',
     proxy: {
         type: 'memory',
         reader: {

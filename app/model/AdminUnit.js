@@ -6,38 +6,35 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class for Verwaltungseinheit Stammdaten.
- */
-Ext.define('Lada.model.Verwaltungseinheit', {
+Ext.define('Lada.model.AdminUnit', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
         name: 'id'
     }, {
-        name: 'bundesland'
+        name: 'stateId'
     }, {
-        name: 'kreis',
+        name: 'ruralDistId',
         allowNull: true
     }, {
-        name: 'regbezirk',
+        name: 'govDistId',
         allowNull: true
     }, {
-        name: 'bezeichnung'
+        name: 'name'
     }, {
-        name: 'isBundeland',
+        name: 'isState',
         type: 'boolean'
     }, {
-        name: 'isGemeinde',
+        name: 'isMunic',
         type: 'boolean'
     }, {
-        name: 'isLandkreis',
+        name: 'isRuralDist',
         type: 'boolean'
     }, {
-        name: 'isRegbezirk',
+        name: 'isGovDist',
         type: 'boolean'
     }, {
-        name: 'plz',
+        name: 'zip',
         allowNull: true
     }, {
         name: 'longitude',
@@ -47,16 +44,5 @@ Ext.define('Lada.model.Verwaltungseinheit', {
         name: 'latitude',
         type: 'float',
         allowNull: true
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/verwaltungseinheit',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        }
-    }
+    }]
 });
