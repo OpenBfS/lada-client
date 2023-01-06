@@ -14,7 +14,7 @@ Ext.define('Lada.view.widget.Datenbasis', {
     alias: 'widget.datenbasis',
     requires: ['Lada.store.Datenbasis'],
     store: null,
-    displayField: 'datenbasis',
+    displayField: 'regulation',
     valueField: 'id',
     // Enable filtering of comboboxes
     queryMode: 'local',
