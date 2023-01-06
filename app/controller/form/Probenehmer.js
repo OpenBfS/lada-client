@@ -31,7 +31,7 @@ Ext.define('Lada.controller.form.Probenehmer', {
             'probenehmerform netzbetreiber combobox': {
                 change: this.checkCommitEnabled
             },
-            'probenehmerform tfield [name=plz]': {
+            'probenehmerform tfield [name=zip]': {
                 change: this.checkCommitEnabled
             }
         });
@@ -187,7 +187,7 @@ Ext.define('Lada.controller.form.Probenehmer', {
         }
         if (
             form.isValid() &&
-            form.down('netzbetreiber[name=netzbetreiberId]')
+            form.down('netzbetreiber[name=networkId]')
                 .getValue().length !== 0
         ) {
             if (form.isDirty()) {
