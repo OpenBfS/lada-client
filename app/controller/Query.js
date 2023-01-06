@@ -574,8 +574,8 @@ Ext.define('Lada.controller.Query', {
                 jsonData.columns.push(columnObj);
                 continue;
             }
-            if (csdata[i].get('visible') === true ||
-                csdata[i].get('filterActive') === true ) {
+            if (csdata[i].get('isVisible') === true ||
+                csdata[i].get('isFilterActive') === true ) {
                 jsonData.columns.push(columnObj);
             }
         }
