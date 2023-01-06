@@ -179,7 +179,6 @@ Ext.define('Lada.controller.form.Ort', {
 
     discard: function(button) {
         button.up('panel').getForm().reset();
-        button.up('panel').down('netzbetreiber').down('combobox').reset();
     },
 
     checkorttyp: function(combo) {
@@ -222,18 +221,16 @@ Ext.define('Lada.controller.form.Ort', {
         var panel = callingEl.owner;
         var record = panel.getRecord();
         var form = panel.getForm();
-        var nbIsSet = panel.down('netzbetreiber[name=netzbetreiberId]')
-            .getValue().length !== 0;
         var readonly = record.get('readonly');
 
         panel.down('button[action=copy]').setDisabled(
             readonly || form.isDirty() && !record.phantom);
 
         panel.down('button[action=revert]').setDisabled(
-            readonly || !(form.isDirty() || nbIsSet));
+            readonly || !form.isDirty());
 
         panel.down('button[action=save]').setDisabled(
-            readonly || !(form.isValid() && nbIsSet)
+            readonly || !form.isValid()
             || !(form.findField('kdaId').getValue()
                  && form.findField('koordYExtern').getValue()
                  && form.findField('koordXExtern').getValue()
