@@ -147,7 +147,7 @@ Ext.define('Lada.view.form.Ort', {
         }, {
             xtype: 'fset',
             collapsible: true,
-            name: 'koordinaten',
+            name: 'coordinates',
             items: [{
                 xtype: 'koordinatenart',
                 labelWidth: 125,

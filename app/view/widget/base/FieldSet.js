@@ -20,6 +20,18 @@ Ext.define('Lada.view.widget.base.FieldSet', {
     notificationText: '',
     tooltip: null,
 
+    showNotifications: function(notification) {
+        this.showWarningOrError(false, '', false, '', true, notification);
+    },
+
+    showWarnings: function(warning) {
+        this.showWarningOrError(true, warning, false, '', false, '');
+    },
+
+    showErrors: function(error) {
+        this.showWarningOrError(false, '', true, error, false, '');
+    },
+
     /**
      * Show warnings or errors for this fieldset.
      * If this component is not rendered, the warnings will be shown after
