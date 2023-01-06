@@ -53,7 +53,7 @@ Ext.define('Lada.controller.form.Ort', {
             },
             'ortform': {
                 validitychange: this.checkCommitEnabled,
-                dirtychange: this.handleDirtyChange
+                dirtychange: this.checkCommitEnabled
             },
             'ortform button[action=changeKDA]': {
                 click: this.openChangeKDA
@@ -186,21 +186,6 @@ Ext.define('Lada.controller.form.Ort', {
         }
     },
 
-    handleDirtyChange: function(callingEl, dirty) {
-        var panel;
-        if (callingEl.up) { //called by a field in the form
-            panel = callingEl.up('ortform');
-        } else { //called by the form
-            panel = callingEl.owner;
-        }
-
-        var record = callingEl.getRecord();
-        panel.down('button[action=copy]').setDisabled(
-            dirty && !record.phantom || record.get('readOnly'));
-
-        this.checkCommitEnabled(callingEl);
-    },
-
     discard: function(button) {
         button.up('panel').getForm().reset();
         button.up('panel').down('netzbetreiber').down('combobox').reset();
@@ -260,6 +245,9 @@ Ext.define('Lada.controller.form.Ort', {
         var form = panel.getForm();
         var nbIsSet = panel.down('netzbetreiber[name=netzbetreiberId]')
             .getValue().length !== 0;
+
+        panel.down('button[action=copy]').setDisabled(
+            form.isDirty() && !record.phantom || record.get('readOnly'));
 
         panel.down('button[action=revert]').setDisabled(
             !(form.isDirty() || nbIsSet));
