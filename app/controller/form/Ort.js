@@ -186,6 +186,7 @@ Ext.define('Lada.controller.form.Ort', {
             doSave();
         }
     },
+
     handleDirtyChange: function(callingEl, dirty) {
         var panel;
         if (callingEl.up) { //called by a field in the form
@@ -203,38 +204,6 @@ Ext.define('Lada.controller.form.Ort', {
             copybutton.setDisabled(false);
         }
         this.checkCommitEnabled(callingEl);
-    },
-    /**
-     * Callbacks after a Ort has been saved
-     */
-    afterSave: function(form, json) {
-        var i18n = Lada.getApplication().bundle;
-        var ozw = form.up('panel').parentWindow;
-        var osg = ozw.down('ortstammdatengrid');
-        var id = json.data.id;
-        var record = ozw.ortstore.getById(id);
-        if (record) {
-            if (ozw.down('tabpanel')) {
-                ozw.down('tabpanel').setActiveTab(0);
-            }
-            var selmod = osg.getView().getSelectionModel();
-            selmod.select(record);
-        }
-        var resulttext;
-        if (json) {
-            if (json.message === '201') {
-                resulttext = i18n.getMsg('orte.new.notunique');
-            }
-            if (json.message === '200') {
-                resulttext = i18n.getMsg('orte.new.success');
-            }
-        }
-        Ext.Msg.show({
-            title: i18n.getMsg('success'),
-            autoScroll: true,
-            msg: resulttext,
-            buttons: Ext.Msg.OK
-        });
     },
 
     discard: function(button) {
