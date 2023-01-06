@@ -91,7 +91,7 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
      * This function adds a new row to add a Probenzusatzwert
      */
     add: function(button) {
-        var record = Ext.create('Lada.model.Zusatzwert', {
+        var record = Ext.create('Lada.model.SampleSpecifMeasVal', {
             probeId: button.up('probenzusatzwertgrid').recordId
         });
         //Remove generated id id to prevent sending invalid ids to the server

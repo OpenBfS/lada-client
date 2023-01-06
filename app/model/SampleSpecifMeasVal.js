@@ -6,10 +6,7 @@
  * the documentation coming with IMIS-Labordaten-Application for details.
  */
 
-/**
- * Model class for Zusatzwerte
- */
-Ext.define('Lada.model.Zusatzwert', {
+Ext.define('Lada.model.SampleSpecifMeasVal', {
     extend: 'Lada.model.LadaBase',
 
     fields: [{
@@ -23,12 +20,12 @@ Ext.define('Lada.model.Zusatzwert', {
         type: 'boolean',
         persist: false
     }, {
-        name: 'probeId',
+        name: 'sampleId',
         type: 'int'
     }, {
-        name: 'pzsId'
+        name: 'sampleSpecifId'
     }, {
-        name: 'kleinerAls',
+        name: 'smallerThan',
         convert: function(v) {
             if (!v) {
                 return null;
@@ -36,39 +33,24 @@ Ext.define('Lada.model.Zusatzwert', {
             return '<';
         }
     }, {
-        name: 'messwertPzs',
+        name: 'measVal',
         type: 'float',
         allowNull: true
     }, {
-        name: 'messfehler',
+        name: 'error',
         type: 'float',
         allowNull: true
     }, {
-        name: 'letzteAenderung',
+        name: 'lastMod',
         type: 'date',
         dateFormat: 'time'
     }, {
-        name: 'treeModified',
+        name: 'treeMod',
         type: 'date',
         dateFormat: 'time'
     }, {
         name: 'parentModified',
         type: 'date',
         dateFormat: 'time'
-    }],
-
-    idProperty: 'id',
-
-    proxy: {
-        type: 'rest',
-        url: 'lada-server/rest/zusatzwert',
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        },
-        writer: {
-            type: 'json',
-            writeAllFields: true
-        }
-    }
+    }]
 });

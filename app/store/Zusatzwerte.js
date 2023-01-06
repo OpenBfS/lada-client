@@ -11,5 +11,5 @@
  */
 Ext.define('Lada.store.Zusatzwerte', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Zusatzwert'
+    model: 'Lada.model.SampleSpecifMeasVal'
 });
