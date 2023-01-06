@@ -195,13 +195,9 @@ Ext.define('Lada.controller.form.Ort', {
         }
 
         var record = callingEl.getRecord();
+        panel.down('button[action=copy]').setDisabled(
+            dirty && !record.phantom || record.get('readOnly'));
 
-        var copybutton = panel.down('button[action=copy]');
-        if (dirty && !record.phantom || record.get('readOnly')) {
-            copybutton.setDisabled(true);
-        } else {
-            copybutton.setDisabled(false);
-        }
         this.checkCommitEnabled(callingEl);
     },
 
@@ -256,43 +252,25 @@ Ext.define('Lada.controller.form.Ort', {
                      && panel.down('tfield[name=koordYExtern]').getValue()));
 
         var savebutton = panel.down('button[action=save]');
-
-        var form = panel.getForm();
-        if (!form.getRecord().phantom && form.getRecord().get('readonly')) {
+        if (!record.phantom && record.get('readonly')) {
             savebutton.setDisabled(true);
             return;
         }
-        if (
-            (form.isDirty()) ||
-            (panel.down('netzbetreiber[name=netzbetreiberId]')
-                .getValue().length !== 0)
-        ) {
-            panel.down('button[action=revert]').setDisabled(false);
-        } else {
-            panel.down('button[action=revert]').setDisabled(true);
-        }
-        if (
-            (form.isValid()) &&
-            (panel.down('netzbetreiber[name=netzbetreiberId]')
-                .getValue().length !== 0)
-        ) {
-            //one of three conditions must apply, the first one depending
-            // on three fields
-            if (
-                (form.findField('kdaId').getValue()
-                    && form.findField('koordYExtern').getValue()
-                    && form.findField('koordXExtern').getValue()
-                )
-                || form.findField('gemId').getValue() !== null
-                || form.findField('staatId').getValue() !== null
-            ) {
-                savebutton.setDisabled(false);
-            } else {
-                savebutton.setDisabled(true);
-            }
-        } else { //form invalid
-            savebutton.setDisabled(true);
-        }
+
+        var form = panel.getForm();
+        var nbIsSet = panel.down('netzbetreiber[name=netzbetreiberId]')
+            .getValue().length !== 0;
+
+        panel.down('button[action=revert]').setDisabled(
+            !(form.isDirty() || nbIsSet));
+
+        savebutton.setDisabled(
+            !(form.isValid() && nbIsSet)
+            || !(form.findField('kdaId').getValue()
+                 && form.findField('koordYExtern').getValue()
+                 && form.findField('koordXExtern').getValue()
+                 || form.findField('gemId').getValue() !== null
+                 || form.findField('staatId').getValue() !== null));
     },
 
     /**
