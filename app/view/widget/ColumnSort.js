@@ -211,7 +211,7 @@ Ext.define('Lada.view.widget.ColumnSort', {
             var nodename = nodes[i].innerText;
             nodename = nodename.trim();
             var qf = columnstore.findRecord(
-                'name', nodename, 0, false, false, true);
+                'gridCol', nodename, 0, false, false, true);
             var entry = this.store.findRecord(
                 'gridColMpId', qf.get('id'));
             var orig_entry = me.up(
