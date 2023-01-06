@@ -166,7 +166,7 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
 
     setNetzbetreiber: function(mstId) {
         var mst = Ext.data.StoreManager.get('messstellen').getById(mstId);
-        var nbId = mst.get('netzbetreiberId');
+        var nbId = mst.get('networkId');
 
         var nbStore = Ext.data.StoreManager.get('netzbetreiber');
         if (!nbStore) {
@@ -189,8 +189,8 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
         var cbox = this.down('combobox[name=' + this.name + ']');
         var selection = cbox.getStore().queryBy(
             function(rec) {
-                return rec.get('mstId') === mstId
-                    && rec.get('laborMstId') === laborMstId;
+                return rec.get('measFacilId') === mstId
+                    && rec.get('apprLabId') === laborMstId;
             }).getAt(0);
         cbox.setValue(selection);
     }
