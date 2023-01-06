@@ -256,14 +256,14 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
 
         //Update selected ProbeZusatz objects
-        var pzwField = formPanel.down('tagfield[name=probenZusatzs]');
+        var pzwField = formPanel.down('tagfield[name=sampleSpecifs]');
         var pzwStore = Ext.getStore('probenzusaetze');
         var selectedPZW = pzwField.getValue();
         var selectObjects = [];
         Ext.Array.forEach(selectedPZW, function(item) {
             selectObjects.push(pzwStore.getById(item));
         });
-        var asocStore = record.probenZusatzs();
+        var asocStore = record.sampleSpecifs();
         asocStore.clearData();
         if (selectObjects.length > 0) {
             asocStore.add(selectObjects);
@@ -379,7 +379,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         formPanel.setMediaDesk(record);
 
         var field = formPanel.down('tagfield[name=probenZusatzs]');
-        field.value = record.probenZusatzs().getData().items;
+        field.value = record.sampleSpecifs().getData().items;
         formPanel.filterProbenZusatzs(record.get('umwId'));
     },
 

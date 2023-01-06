@@ -188,7 +188,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     }]
                 }, {
                     xtype: 'probenehmer',
-                    name: 'sampleId',
+                    name: 'samplerId',
                     fieldLabel: i18n.getMsg('probenehmer'),
                     margin: '0, 10, 5, 5',
                     minValue: 0,
@@ -205,11 +205,11 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 if (!nId) {
                                     store.filterBy(function(record) {
                                         return Lada.netzbetreiber.indexOf(
-                                            record.get('netzbetreiberId')) > -1;
+                                            record.get('networkId')) > -1;
                                     });
                                 } else {
                                     store.filter({
-                                        property: 'netzbetreiberId',
+                                        property: 'networkId',
                                         value: nId,
                                         exactMatch: true});
                                 }
@@ -234,11 +234,11 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 if (!nId) {
                                     store.filterBy(function(record) {
                                         return Lada.netzbetreiber.indexOf(
-                                            record.get('netzbetreiberId')) > -1;
+                                            record.get('networkId')) > -1;
                                     });
                                 } else {
                                     store.filter({
-                                        property: 'netzbetreiberId',
+                                        property: 'networkId',
                                         value: nId,
                                         exactMatch: true
                                     });
@@ -479,7 +479,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         autoSelect: false,
                         queryMode: 'local',
                         width: '100%',
-                        name: 'probenZusatzs',
+                        name: 'sampleSpecifs',
                         emptyText: i18n.getMsg('emptytext.pzw.widget'),
                         store: Ext.create('Lada.store.Probenzusaetze'),
                         valueField: 'id',
@@ -487,16 +487,16 @@ Ext.define('Lada.view.form.Messprogramm', {
                             'Ext.XTemplate',
                             '<ul class="x-list-plain"><tpl for=".">',
                             '<li role="option" class="x-boundlist-item">',
-                            '{id} - {beschreibung}',
+                            '{id} - {name}',
                             '</li>',
                             '</tpl></ul>'
                         ),
                         labelTpl: Ext.create(
                             'Ext.XTemplate',
-                            '<tpl for=".">{id} - {beschreibung}</tpl>'),
+                            '<tpl for=".">{id} - {name}</tpl>'),
                         // See Lada.override.FilteredComboBox:
                         displayField: 'id',
-                        searchValueField: 'beschreibung'
+                        searchValueField: 'name'
                     }]
                 }]
             }]
@@ -514,7 +514,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         if (umwId) {
             params['umwId'] = umwId;
         }
-        this.down('tagfield[name=probenZusatzs]').getStore().load({
+        this.down('tagfield[name=sampleSpecifs]').getStore().load({
             params: params
         });
     },
@@ -622,7 +622,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         // dirtychange events from occurring once any value has been chosen
         // in the tagfield.
         messRecord.set(
-            'probenZusatzs', messRecord.probenZusatzs().getRange());
+            'sampleSpecifs', messRecord.sampleSpecifs().getRange());
         this.getForm().loadRecord(messRecord);
 
         this.populateIntervall(messRecord);

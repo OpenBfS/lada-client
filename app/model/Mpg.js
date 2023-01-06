@@ -13,7 +13,7 @@ Ext.define('Lada.model.Mpg', {
         'Lada.model.field.NonBlankString'
     ],
 
-    hasMany: 'ProbenZusatz',
+    hasMany: 'SampleSpecif',
 
     fields: [{
         name: 'id'
