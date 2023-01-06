@@ -193,7 +193,7 @@ Ext.define('Lada.controller.Query', {
                         isFilterActive: item.get('isFilterActive'),
                         isFilterNegate: item.get('isFilterNegate'),
                         isFilterRegex: item.get('isFilterRegex'),
-                        filterValue: item.get('filterValue'),
+                        filterValue: item.get('filterVal'),
                         width: me.getVisibleColumnWidth(item)
                     });
                     clonedModel.set('id', null);
@@ -561,7 +561,7 @@ Ext.define('Lada.controller.Query', {
             var columnObj = {
                 gridColMpId: csdata[i].get('gridColMpId'),
                 isFilterActive: csdata[i].get('isFilterActive'),
-                filterValue: csdata[i].get('filterValue') || '',
+                filterVal: csdata[i].get('filterVal') || '',
                 isFilterRegex: csdata[i].get('isFilterRegex') || false,
                 isFilterNegate: csdata[i].get('isFilterNegate') || false,
                 isFilterNull: csdata[i].get('isFilterNull') || false,
@@ -1171,7 +1171,7 @@ Ext.define('Lada.controller.Query', {
     },
 
     getFilterValueMulti: function(record) {
-        var filterValue = record.get('filterValue');
+        var filterValue = record.get('filterVal');
         if (!filterValue) {
             return null;
         } else {
