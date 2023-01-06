@@ -95,7 +95,6 @@ Ext.define('Lada.controller.form.Probenehmer', {
         copy.set('prnId', null);
         var win = Ext.create('Lada.view.window.Probenehmer', {
             record: copy,
-            mode: 'copy',
             original: record
         });
         var pos = button.up('probenehmerform').up().getPosition();

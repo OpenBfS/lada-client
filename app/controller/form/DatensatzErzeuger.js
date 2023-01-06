@@ -94,7 +94,6 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
         copy.set('datensatzErzeugerId', null);
         var win = Ext.create('Lada.view.window.DatensatzErzeuger', {
             record: copy,
-            mode: 'copy',
             original: record
         });
         var pos = button.up('datensatzerzeugerform').up().getPosition();
