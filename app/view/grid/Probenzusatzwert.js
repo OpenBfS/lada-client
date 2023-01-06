@@ -78,11 +78,11 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
         }];
         this.columns = [{
             header: i18n.getMsg('pzs_id'),
-            dataIndex: 'pzsId',
+            dataIndex: 'sampleSpecifId',
             flex: 1
         }, {
             header: i18n.getMsg('pzw'),
-            dataIndex: 'pzsId',
+            dataIndex: 'sampleSpecifId',
             flex: 3,
             renderer: function(value) {
                 if (!value || value === '') {
@@ -90,13 +90,13 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 }
                 var store = Ext.data.StoreManager.get('probenzusaetze');
                 var record = store.getById(value);
-                return record.get('beschreibung');
+                return record.get('name');
             },
             editor: {
                 xtype: 'combobox',
                 store: this.pzStore,
-                displayField: 'beschreibung',
-                name: 'beschreibung',
+                displayField: 'name',
+                name: 'name',
                 valueField: 'id',
                 allowBlank: false,
                 editable: true,
@@ -108,7 +108,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
         }, {
             header: i18n.getMsg('pzwKleinerALs'),
             width: 50,
-            dataIndex: 'kleinerAls',
+            dataIndex: 'smallerThan',
             editor: {
                 xtype: 'checkbox',
                 uncheckedValue: false,
@@ -116,7 +116,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             }
         }, {
             header: i18n.getMsg('messwert'),
-            dataIndex: 'messwertPzs',
+            dataIndex: 'measVal',
             flex: 1,
             editor: {
                 xtype: 'expnumberfield'
@@ -137,7 +137,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             }
         }, {
             header: i18n.getMsg('mehId'),
-            dataIndex: 'pzsId',
+            dataIndex: 'sampleSpecifId',
             flex: 1,
             renderer: function(value) {
                 if (!value || value === '') {
@@ -155,7 +155,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
             }
         }, {
             header: i18n.getMsg('relmessfehler'),
-            dataIndex: 'messfehler',
+            dataIndex: 'error',
             xtype: 'numbercolumn',
             format: '0000.0',
             flex: 1,
@@ -192,7 +192,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
         this.addLoadingFailureHandler(this.store);
         this.store.load({
             params: {
-                probeId: this.recordId
+                sampleId: this.recordId
             }
         });
     },
