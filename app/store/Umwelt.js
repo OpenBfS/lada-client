@@ -11,7 +11,7 @@
  */
 Ext.define('Lada.store.Umwelt', {
     extend: 'Ext.data.Store',
-    model: 'Lada.model.Umwelt',
+    model: 'Lada.model.EnvMedium',
     sorters: [{
         property: 'id',
         direction: 'ASC'
