@@ -87,7 +87,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                     value: this.record.get('networkId')
                 }, {
                     xtype: 'combobox',
-                    displayField: 'measFacilId',
+                    displayField: 'name',
                     readOnly: true,
                     valueField: 'id',
                     allowBlank: false,
