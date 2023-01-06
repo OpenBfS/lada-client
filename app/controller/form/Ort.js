@@ -258,7 +258,17 @@ Ext.define('Lada.controller.form.Ort', {
         ) {
             panel.down('verwaltungseinheit[name=gemId]').clearValue();
         }
-        this.checkKDAchangeEnabled(panel);
+
+        // Check if the KDA change dialog can be used
+        var record = panel.getRecord();
+        panel.down('button[action=changeKDA]').setDisabled(
+            record.get('readonly')
+                || record.get('plausibleReferenceCount') > 0
+                || record.get('referenceCountMp') > 0
+                || !(panel.down('koordinatenart').getValue()
+                     && panel.down('tfield[name=koordXExtern]').getValue()
+                     && panel.down('tfield[name=koordYExtern]').getValue()));
+
         if (panel.mode && panel.mode === 'copy') {
             this.checkCommitOnCopyPanel(panel);
         } else {
@@ -367,29 +377,6 @@ Ext.define('Lada.controller.form.Ort', {
             }
         } else { //form invalid
             savebutton.setDisabled(true);
-        }
-    },
-
-    /**
-     * Checks if the KDA change dialog can be used from a form with coordinate
-     * fields (some coordinates set; form is not readonly)
-     * @param panel the panel around the form to check
-     */
-    checkKDAchangeEnabled: function(panel) {
-        var form = panel.getForm();
-        if (form.getRecord().get('readonly') ||
-                form.getRecord().get('plausibleReferenceCount') > 0 ||
-                form.getRecord().get('referenceCountMp') > 0) {
-            panel.down('button[action=changeKDA]').setDisabled(true);
-            return;
-        }
-        if (panel.down('koordinatenart').getValue()
-            && panel.down('tfield[name=koordXExtern]').getValue()
-            && panel.down('tfield[name=koordYExtern]').getValue()
-        ) {
-            panel.down('button[action=changeKDA]').setDisabled(false);
-        } else {
-            panel.down('button[action=changeKDA]').setDisabled(true);
         }
     },
 
