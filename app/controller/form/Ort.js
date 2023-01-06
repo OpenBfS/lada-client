@@ -30,15 +30,6 @@ Ext.define('Lada.controller.form.Ort', {
             'ortform button[action=copy]': {
                 click: this.copyOrt
             },
-            'ortform staat combobox': {
-                change: this.checkCommitEnabled
-            },
-            'ortform verwaltungseinheit combobox': {
-                change: this.checkCommitEnabled
-            },
-            'ortform netzbetreiber combobox': {
-                change: this.checkCommitEnabled
-            },
             'ortform koordinatenart combobox': {
                 change: this.checkCommitEnabled
             },
