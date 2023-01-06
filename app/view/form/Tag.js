@@ -67,7 +67,7 @@ Ext.define('Lada.view.form.Tag', {
                 fieldLabel: i18n.getMsg('mst_id'),
                 validator: function() {
                     var mstId = me.down('messstelle').getValue();
-                    var tag = me.down('textfield[name=tag]').getValue();
+                    var tag = me.down('textfield[name=name]').getValue();
                     var foundIdx = me.store.findBy(function(obj) {
                         return mstId === obj.get('measFacilId')
                             && tag === obj.get('name')
