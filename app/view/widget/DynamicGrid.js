@@ -437,14 +437,14 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     //Readable name
                     displayName: cc[i].get('gridCol'),
                     //Filter value
-                    filter: cc[i].get('filterValue'),
+                    filterVal: cc[i].get('filterValue'),
                     //Readable filter value
                     filterDisplay: filterMap.get(dataIndex) ?
                         filterMap.get(dataIndex) :
                         cc[i].get('filterValue'),
-                    filterRegex: cc[i].get('isFilterRegex'),
-                    filterNegate: cc[i].get('isFilterNegate'),
-                    filterIsNull: cc[i].get('isFilterIsNull')
+                    isFilterRegex: cc[i].get('isFilterRegex'),
+                    isFilterNegate: cc[i].get('isFilterNegate'),
+                    isFilterNull: cc[i].get('isFilterNull')
                 });
             }
         }

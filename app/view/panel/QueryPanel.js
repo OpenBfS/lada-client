@@ -435,7 +435,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                             items[i].set(
                                 'dataIndex', gridColumn.get('dataIndex'));
                             items[i].set('gridCol', gridColumn.get('gridCol'));
-                            if (items[i].get('filterActive')) {
+                            if (items[i].get('isFilterActive')) {
                                 activeFilters.push(gridColumn.get('dataIndex'));
                             }
                         }

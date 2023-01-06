@@ -595,7 +595,7 @@ Ext.define('Lada.controller.Query', {
         var recs = panel.gridColumnValueStore.getData().items;
         var filters = [];
         for (var i = 0; i < recs.length; i++) {
-            if (recs[i].get('filterActive') !== true) {
+            if (recs[i].get('isFilterActive') !== true) {
                 continue;
             }
             var fixcolumn = fixColumnStore.findRecord('id',
@@ -983,7 +983,7 @@ Ext.define('Lada.controller.Query', {
                 var rec = store.findRecord('dataIndex', oldvalue[i],
                     false, false, false, true);
                 if (rec) {
-                    rec.set('filterActive', false);
+                    rec.set('isFilterActive', false);
                 }
             }
         }
@@ -1002,7 +1002,7 @@ Ext.define('Lada.controller.Query', {
                 });
                 store.add(col);
             } else {
-                nrec.set('filterActive', true);
+                nrec.set('isFilterActive', true);
             }
         }
         this.showFilter(box);
@@ -1039,9 +1039,9 @@ Ext.define('Lada.controller.Query', {
                 newvalue = newvalue.join(',');
             }
             if (newvalue === '') {
-                rec.set('filterValue', null);
+                rec.set('filterVal', null);
             } else {
-                rec.set('filterValue', newvalue);
+                rec.set('filterVal', newvalue);
             }
         }
         this.dataChanged();
@@ -1071,11 +1071,11 @@ Ext.define('Lada.controller.Query', {
         var dataIndex = checkbox.name.slice(0, checkbox.name.lastIndexOf('_'));
         var model = checkbox.name.slice(checkbox.name.lastIndexOf('_') + 1 );
         if (
-            ['filterNegate', 'filterRegex', 'filterIsNull']
+            ['isFilterNegate', 'isFilterRegex', 'isFilterNull']
                 .indexOf(model) >= 0
         ) {
             if (
-                model === 'filterIsNull' &&
+                model === 'isFilterNull' &&
                 checkbox.getValue() === true
             ) {
                 var field = checkbox.up('querypanel')
@@ -1220,7 +1220,7 @@ Ext.define('Lada.controller.Query', {
             checkboxRow.add(
                 Ext.create('Ext.form.field.Checkbox', {
 
-                    name: options.name + '_filterNegate',
+                    name: options.name + '_isFilterNegate',
                     boxLabel: i18n.getMsg('query.negate'),
                     value: options.negateValue
                 })
@@ -1229,7 +1229,7 @@ Ext.define('Lada.controller.Query', {
         if (regexBox) {
             checkboxRow.add(
                 Ext.create('Ext.form.field.Checkbox', {
-                    name: options.name + '_filterRegex',
+                    name: options.name + '_isFilterRegex',
                     boxLabel: i18n.getMsg('query.regex'),
                     value: options.regexValue
                 })
@@ -1237,7 +1237,7 @@ Ext.define('Lada.controller.Query', {
         }
         checkboxRow.add(
             Ext.create('Ext.form.field.Checkbox', {
-                name: options.name + '_filterIsNull',
+                name: options.name + '_isFilterNull',
                 boxLabel: i18n.getMsg('query.isNull'),
                 value: options.isNullValue
             })
