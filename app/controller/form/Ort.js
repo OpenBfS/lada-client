@@ -30,17 +30,17 @@ Ext.define('Lada.controller.form.Ort', {
             'ortform button[action=copy]': {
                 click: this.copyOrt
             },
-            'ortform koordinatenart combobox': {
-                change: this.checkCommitEnabled
-            },
             'ortform orttyp combobox': {
                 change: this.checkorttyp
             },
+            'ortform koordinatenart combobox': {
+                change: this.enableChangeKDA
+            },
             'ortform tfield [name=koordXExtern]': {
-                change: this.checkCommitEnabled
+                change: this.enableChangeKDA
             },
             'ortform tfield [name=koordYExtern]': {
-                change: this.checkCommitEnabled
+                change: this.enableChangeKDA
             },
             'ortform': {
                 validitychange: this.checkCommitEnabled,
@@ -201,23 +201,10 @@ Ext.define('Lada.controller.form.Ort', {
     },
 
     /**
-     * checks if the Messpunkt can be committed.
-     * Disables the save button if false
+     * Set disabled state of button to open coordinate transformation dialogue.
      */
-    checkCommitEnabled: function(callingEl) {
-        var panel;
-        if (//called by a field in the form
-            callingEl.up &&
-            callingEl.up('ortform')
-        ) {
-            panel = callingEl.up('ortform');
-        } else if (callingEl.owner) { //called by the form
-            panel = callingEl.owner;
-        } else {
-            panel = callingEl; //called by the formpanel itself
-        }
-
-        // Check if the KDA change dialog can be used
+    enableChangeKDA: function(field) {
+        var panel = field.up('ortform');
         var record = panel.getRecord();
         panel.down('button[action=changeKDA]').setDisabled(
             record.get('readonly')
@@ -226,6 +213,14 @@ Ext.define('Lada.controller.form.Ort', {
                 || !(panel.down('koordinatenart').getValue()
                      && panel.down('tfield[name=koordXExtern]').getValue()
                      && panel.down('tfield[name=koordYExtern]').getValue()));
+    },
+
+    /**
+     * checks if the Messpunkt can be committed.
+     */
+    checkCommitEnabled: function(callingEl) {
+        var panel = callingEl.owner;
+        var record = panel.getRecord();
 
         var savebutton = panel.down('button[action=save]');
         if (!record.phantom && record.get('readonly')) {
