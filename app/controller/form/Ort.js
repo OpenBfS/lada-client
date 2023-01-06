@@ -221,25 +221,19 @@ Ext.define('Lada.controller.form.Ort', {
     checkCommitEnabled: function(callingEl) {
         var panel = callingEl.owner;
         var record = panel.getRecord();
-
-        var savebutton = panel.down('button[action=save]');
-        if (!record.phantom && record.get('readonly')) {
-            savebutton.setDisabled(true);
-            return;
-        }
-
         var form = panel.getForm();
         var nbIsSet = panel.down('netzbetreiber[name=netzbetreiberId]')
             .getValue().length !== 0;
+        var readonly = record.get('readonly');
 
         panel.down('button[action=copy]').setDisabled(
-            form.isDirty() && !record.phantom || record.get('readOnly'));
+            readonly || form.isDirty() && !record.phantom);
 
         panel.down('button[action=revert]').setDisabled(
-            !(form.isDirty() || nbIsSet));
+            readonly || !(form.isDirty() || nbIsSet));
 
-        savebutton.setDisabled(
-            !(form.isValid() && nbIsSet)
+        panel.down('button[action=save]').setDisabled(
+            readonly || !(form.isValid() && nbIsSet)
             || !(form.findField('kdaId').getValue()
                  && form.findField('koordYExtern').getValue()
                  && form.findField('koordXExtern').getValue()
