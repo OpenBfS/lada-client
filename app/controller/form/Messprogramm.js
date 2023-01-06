@@ -571,14 +571,14 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var umwStore = formPanel.down('umwelt').down('combobox').store;
         umwStore.getModel().load(umwId, {
             success: function(rec) {
-                var defaultMehId = rec.get('mehId');
-                var secMehId = rec.get('secMehId');
+                var defaultMehId = rec.get('unit1');
+                var secMehId = rec.get('unit2');
                 var params = {};
                 if (defaultMehId) {
-                    params['mehId'] = defaultMehId;
+                    params['measUnitId'] = defaultMehId;
                 }
                 if (secMehId) {
-                    params['secMehId'] = secMehId;
+                    params['secMeasUnitId'] = secMehId;
                 }
                 masseinheitStore.load({
                     scope: this,

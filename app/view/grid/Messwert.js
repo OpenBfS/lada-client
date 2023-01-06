@@ -371,13 +371,13 @@ Ext.define('Lada.view.grid.Messwert', {
             umwStore.getModel().load(this.umwId, {
                 scope: this,
                 success: function(rec) {
-                    this.defaultMehId = rec.get('mehId');
-                    this.secMehId = rec.get('secMehId');
+                    this.defaultMehId = rec.get('unit1');
+                    this.secMehId = rec.get('unit2');
                     var params = {
-                        mehId: this.defaultMehId
+                        measUnitId: this.defaultMehId
                     };
                     if (this.secMehId) {
-                        params['secMehId'] = this.secMehId;
+                        params['secMeasUnitId'] = this.secMehId;
                     }
                     //Filter messeinheiten comboboxes
                     this.mehComboStore.load({
@@ -410,13 +410,13 @@ Ext.define('Lada.view.grid.Messwert', {
             umwStore.getModel().load(this.umwId, {
                 scope: this,
                 success: function(rec) {
-                    this.defaultMehId = rec.get('mehId');
-                    this.secMehId = rec.get('secMehId');
+                    this.defaultMehId = rec.get('unit1');
+                    this.secMehId = rec.get('unit2');
                     var params = {
-                        mehId: this.defaultMehId
+                        measUnitId: this.defaultMehId
                     };
                     if (this.secMehId) {
-                        params['secMehId'] = this.secMehId;
+                        params['secMeasUnitId'] = this.secMehId;
                     }
                     //Filter messeinheiten comboboxes
                     this.mehComboStore.load({
