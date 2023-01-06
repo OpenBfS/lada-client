@@ -600,15 +600,15 @@ Ext.define('Lada.controller.form.Messprogramm', {
             .down('container[name=reiComboContainer]');
         if ( datenbasis === 'REI-E' || datenbasis === 'REI-I') {
             reiComboContainer.down(
-                'reiprogpunktgruppe[name=reiProgpunktGrpId]').setHidden(false);
-            reiComboContainer.down('ktagruppe[name=ktaGruppeId]').show();
+                'reiprogpunktgruppe[name=reiAgGrId]').setHidden(false);
+            reiComboContainer.down('ktagruppe[name=nuclFacilGrId]').show();
         } else {
             var reiCombo = reiComboContainer.down(
-                'reiprogpunktgruppe[name=reiProgpunktGrpId]');
+                'reiprogpunktgruppe[name=reiAgGrId]');
             reiCombo.setHidden(true);
             reiCombo.setValue(null);
             var ktaCombo = reiComboContainer.down(
-                'ktagruppe[name=ktaGruppeId]');
+                'ktagruppe[name=nuclFacilGrId]');
             ktaCombo.hide();
             ktaCombo.setValue(null);
         }

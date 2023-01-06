@@ -256,7 +256,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                     },
                     items: [{
                         xtype: 'reiprogpunktgruppe',
-                        name: 'reiProgpunktGrpId',
+                        name: 'reiAgGrId',
                         width: '50%',
                         labelWidth: 140,
                         fieldLabel: i18n.getMsg('reiProgpunktGrpId'),
@@ -266,7 +266,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                         hidden: true
                     }, {
                         xtype: 'ktagruppe',
-                        name: 'ktaGruppeId',
+                        name: 'nuclFacilGrId',
                         width: '50%',
                         labelWidth: 140,
                         fieldLabel: i18n.getMsg('ktaGruppeId'),
