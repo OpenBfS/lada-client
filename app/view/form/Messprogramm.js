@@ -321,14 +321,14 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 xtype: 'tfield',
                                 maxLength: 38,
                                 enforceMaxLength: true,
-                                name: 'envDescripId',
+                                name: 'envDescripDisplay',
                                 width: '58%',
                                 labelWidth: 100,
                                 fieldLabel: i18n.getMsg('mediaDesk'),
                                 editable: false
                             }, {
                                 xtype: 'textfield',
-                                name: 'media',
+                                name: 'envDescripName',
                                 margin: '0, 0, 5, 10',
                                 width: '42%',
                                 enforceMaxLength: true,
