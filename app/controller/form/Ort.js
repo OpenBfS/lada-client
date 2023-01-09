@@ -79,15 +79,10 @@ Ext.define('Lada.controller.form.Ort', {
     save: function(button) {
         var i18n = Lada.getApplication().bundle;
         var formpanel = button.up('ortform');
-        var form = formpanel.getForm();
-        var record = form.getRecord();
+        var record = formpanel.getRecord();
 
         // Update record with values changed in the form
-        record.set(form.getFieldValues(true));
-
-        record.set('netzbetreiberId',
-            formpanel.down('netzbetreiber').getValue()[0]);
-
+        record.set(formpanel.getForm().getFieldValues(true));
         if (record.phantom) {
             record.set('id', null);
         }
@@ -95,7 +90,7 @@ Ext.define('Lada.controller.form.Ort', {
         var doSave = function() {
             record.save({
                 success: function(newrecord, response) {
-                    form.loadRecord(newrecord);
+                    formpanel.loadRecord(newrecord);
                     formpanel.down('verwaltungseinheit').store.clearFilter();
                     formpanel.down('staat').store.clearFilter();
                     if (formpanel.up('window').setOzOnComplete === true ) {
@@ -106,14 +101,13 @@ Ext.define('Lada.controller.form.Ort', {
                         }
                     }
                     var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        formpanel.clearMessages();
-                        formpanel.setMessages(json.errors, json.warnings);
-                    }
+                    formpanel.setMessages(json.errors, json.warnings);
+
                     var dynamicgrid = Ext.getCmp('dynamicgridid');
                     if (dynamicgrid) {
                         dynamicgrid.reload();
                     }
+
                     var ozw = formpanel.up('panel').parentWindow;
                     if (ozw && ozw.down('tabpanel')) {
                         var ortgrid = ozw.down('tabpanel')
@@ -126,11 +120,10 @@ Ext.define('Lada.controller.form.Ort', {
                             ortgrid.store.reload();
                         }
                     }
-                    formpanel.down('button[action=revert]').setDisabled(true);
-                    formpanel.down('button[action=save]').setDisabled(true);
                     formpanel.up('window').setMode('edit');
                 },
                 failure: function(newRecord, response) {
+                    formpanel.loadRecord(record);
                     if (response.error) {
                         //TODO: check content of error.status (html error code)
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -147,7 +140,6 @@ Ext.define('Lada.controller.form.Ort', {
                                 Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                     i18n.getMsg('err.msg.generic.body'));
                             }
-                            formpanel.clearMessages();
                             formpanel.setMessages(json.errors, json.warnings);
                         } else {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
