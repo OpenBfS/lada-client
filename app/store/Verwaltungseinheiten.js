@@ -13,7 +13,7 @@ Ext.define('Lada.store.Verwaltungseinheiten', {
     extend: 'Lada.store.LocalPagingStore',
     model: 'Lada.model.AdminUnit',
     sorters: [{
-        property: 'bezeichnung',
+        property: 'name',
         direction: 'ASC'
     }],
     autoLoad: true
