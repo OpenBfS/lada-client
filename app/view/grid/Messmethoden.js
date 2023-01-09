@@ -130,16 +130,16 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 tpl: Ext.create('Ext.XTemplate',
                     '<tpl for=".">' +
                     '<div class="x-combo-list-item  x-boundlist-item" >' +
-                    '{id} - {messmethode}</div></tpl>'),
+                    '{id} - {name}</div></tpl>'),
                 displayTpl: Ext.create('Ext.XTemplate',
-                    '<tpl for=".">{id} - {messmethode}</tpl>'),
+                    '<tpl for=".">{id} - {name}</tpl>'),
                 listeners: {
                     change: me.setNuklide
                 }
             }
         }, {
             header: i18n.getMsg('nuklide'),
-            dataIndex: 'messgroessen',
+            dataIndex: 'measds',
             flex: 2,
             renderer: function(value) {
                 if (!value || value === '') {
