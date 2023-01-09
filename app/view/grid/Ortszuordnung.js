@@ -164,10 +164,10 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     return '';
                 }
                 var record = staaten.getById(stId);
-                if (!record.get('staatIso')) {
+                if (!record.get('iso3166')) {
                     return record.get('id');
                 }
-                return record.get('staatIso');
+                return record.get('iso3166');
             }
         }, {
             header: i18n.getMsg('orte.gemId'),
@@ -198,7 +198,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     return '';
                 }
                 var record2 = gemeinden.getById(gemid);
-                return record2.get('bezeichnung');
+                return record2.get('name');
             }
         }, {
             header: i18n.getMsg('orte.ozId'),
@@ -211,7 +211,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 if (!record) {
                     return '';
                 }
-                var ozid = record.get('poiId');
+                var ozid = record.get('id');
                 if (
                     ozid === undefined ||
                     ozid === null ||
@@ -220,11 +220,11 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     return '';
                 }
                 var record2 = ozs.getById(ozid);
-                return value + '<br>' + record2.get('ortszusatz');
+                return value + '<br>' + record2.get('name');
             }
         }, {
             header: i18n.getMsg('orte.anlageId'),
-            dataIndex: 'ortId',
+            dataIndex: 'siteId',
             width: 60,
             renderer: function(value) {
                 var store = me.ortstore;
@@ -242,7 +242,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 }
                 var ktaGruppen = Ext.data.StoreManager.get('ktaGruppe');
                 var ktaGruppe = ktaGruppen.getById(record.get('reiNuclFacilGrId'));
-                return ktaGruppe.get('ktaGruppe');
+                return ktaGruppe.get('name');
             }
         }, {
             header: i18n.getMsg('orte.langtext'),
