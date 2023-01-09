@@ -63,7 +63,7 @@ Ext.define('Lada.view.grid.Status', {
             }
         }, {
             header: i18n.getMsg('erzeuger'),
-            dataIndex: 'measFacil',
+            dataIndex: 'measFacilId',
             renderer: function(value) {
                 var r = '';
                 if (!value || value === '') {
