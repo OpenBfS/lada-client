@@ -33,7 +33,7 @@ Ext.define('Lada.view.grid.Verwaltungseinheiten', {
             dataIndex: 'id'
         }, {
             header: i18n.getMsg('name'),
-            dataIndex: 'bezeichnung',
+            dataIndex: 'name',
             flex: 1
         }];
         if (this.store) {
