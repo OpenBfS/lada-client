@@ -227,7 +227,7 @@ Ext.define('Lada.controller.form.Ort', {
             readonly || !form.isDirty());
 
         panel.down('button[action=save]').setDisabled(
-            readonly || !form.isValid());
+            readonly || !form.isValid() || !form.isDirty());
     },
 
     /**
