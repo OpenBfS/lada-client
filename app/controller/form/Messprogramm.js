@@ -27,7 +27,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 click: this.copy
             },
             'messprogrammform': {
-                dirtychange: this.dirtyForm
+                dirtychange: this.dirtyForm,
+                validitychange: this.dirtyForm
             },
             'messprogrammform numfield numberfield': {
                 change: this.checkPeriod
@@ -337,13 +338,14 @@ Ext.define('Lada.controller.form.Messprogramm', {
       * The dirtyForm function enables or disables the
       * buttons which are present in the toolbar of the form.
       */
-    dirtyForm: function(form, dirty) {
-        var enableForm = !form.getRecord().get('readonly') && dirty;
-        form.owner.down('button[action=save]').setDisabled(!enableForm);
+    dirtyForm: function(form) {
+        var enableForm = !form.getRecord().get('readonly') && form.isDirty();
+        form.owner.down('button[action=save]').setDisabled(
+            !enableForm || !form.isValid());
         form.owner.down('button[action=discard]').setDisabled(!enableForm);
 
         var disableActions = form.getRecord().phantom
-            || dirty || form.getRecord().get('readonly');
+            || form.isDirty() || form.getRecord().get('readonly');
         form.owner.up('messprogramm').down(
             'button[action=generateproben]').setDisabled(disableActions);
         form.owner.down('button[action=copy]').setDisabled(disableActions);
