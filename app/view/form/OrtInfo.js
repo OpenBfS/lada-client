@@ -34,15 +34,15 @@ Ext.define('Lada.view.form.OrtInfo', {
             },
             items: [{
                 fieldLabel: i18n.getMsg('orte.ortId'),
-                name: 'ortId'
+                name: 'extId'
             }, {
                 fieldLabel: i18n.getMsg('orte.kurztext'),
-                name: 'kurztext'
+                name: 'shortText'
             }, {
                 fieldLabel: i18n.getMsg('orte.langtext'),
                 xtype: 'displayfield',
                 labelWidth: 120,
-                name: 'langtext',
+                name: 'longText',
                 maxWidth: 300,
                 cls: 'text-wrapper'
             }, {
@@ -53,7 +53,7 @@ Ext.define('Lada.view.form.OrtInfo', {
             }, {
                 xtype: 'ortinforow',
                 label: i18n.getMsg('orte.verwaltungseinheit'),
-                firstitem: 'gemId',
+                firstitem: 'municId',
                 seconditem: 'gemeinde'
             }]
         }];

@@ -196,7 +196,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         var verw = Ext.StoreManager.get('verwaltungseinheiten')
             .getById(ortrecord.get('municId'));
         if (verw !== null) {
-            ortinfo.setValues({gemeinde: verw.get('bezeichnung')});
+            ortinfo.setValues({gemeinde: verw.get('name')});
         } else {
             ortinfo.setValues({gemeinde: ''});
         }
@@ -205,8 +205,8 @@ Ext.define('Lada.view.form.Ortszuordnung', {
             .getById(ortrecord.get('stateId'));
         if (staat !== null) {
             ortinfo.setValues({
-                staatISO: staat.get('staatIso'),
-                staat: staat.get('staat')});
+                staatISO: staat.get('iso3166'),
+                staat: staat.get('ctry')});
         } else {
             ortinfo.setValues({staat: '', staatISO: ''});
         }
@@ -215,10 +215,10 @@ Ext.define('Lada.view.form.Ortszuordnung', {
             .getById(ortrecord.get('poiId'));
         if (ozid !== null) {
             if (dirtyForm) {
-                this.down('ortszusatz').setValue(ozid.get('ozsId'));
+                this.down('ortszusatz').setValue(ozid.get('id'));
             } else {
                 if (this.getRecord().get('poiId') === undefined) {
-                    this.down('ortszusatz').setValue(ozid.get('ozsId'));
+                    this.down('ortszusatz').setValue(ozid.get('id'));
                 }
             }
         } else {
