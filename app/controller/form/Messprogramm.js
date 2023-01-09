@@ -61,13 +61,17 @@ Ext.define('Lada.controller.form.Messprogramm', {
      */
     copy: function(button) {
         var me = this;
-        var origRecord = button.up('messprogrammform').getRecord();
+
         var pos = button.up('messprogrammform').up().getPosition();
         pos[0] += 10;
         pos[1] += 10;
 
+        var origRecord = button.up('messprogrammform').getRecord();
         var copy = origRecord.copy(null);
         copy.set('id', null);
+        // Associated data are not automatically included in copy
+        copy.probenZusatzs().add(origRecord.probenZusatzs().getRange());
+
         copy.save({
             callback: function(rec, op, success) {
                 if (success) {
