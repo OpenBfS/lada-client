@@ -214,9 +214,6 @@ Ext.define('Lada.controller.form.Ort', {
                      && panel.down('tfield[name=koordYExtern]').getValue()));
     },
 
-    /**
-     * checks if the Messpunkt can be committed.
-     */
     checkCommitEnabled: function(callingEl) {
         var panel = callingEl.owner;
         var record = panel.getRecord();
@@ -230,12 +227,7 @@ Ext.define('Lada.controller.form.Ort', {
             readonly || !form.isDirty());
 
         panel.down('button[action=save]').setDisabled(
-            readonly || !form.isValid()
-            || !(form.findField('kdaId').getValue()
-                 && form.findField('koordYExtern').getValue()
-                 && form.findField('koordXExtern').getValue()
-                 || form.findField('gemId').getValue() !== null
-                 || form.findField('staatId').getValue() !== null));
+            readonly || !form.isValid());
     },
 
     /**

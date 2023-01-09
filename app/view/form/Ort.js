@@ -35,6 +35,7 @@ Ext.define('Lada.view.form.Ort', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        var me = this;
         this.items = [{
             xtype: 'netzbetreiber',
             name: 'netzbetreiberId',
@@ -79,11 +80,25 @@ Ext.define('Lada.view.form.Ort', {
             labelWidth: 125,
             fieldLabel: i18n.getMsg('staat'),
             name: 'staatId',
+            validator: function(val) {
+                var hasMinFields = Boolean(
+                    me.down('field[name=kdaId]').getValue()
+                        || me.down('field[name=gemId]').getValue()
+                        || val);
+                return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+            },
             forceSelection: true
         }, {
             xtype: 'verwaltungseinheit',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.verwaltungseinheit'),
+            validator: function(val) {
+                var hasMinFields = Boolean(
+                    me.down('field[name=kdaId]').getValue()
+                        || val
+                        || me.down('field[name=staatId]').getValue());
+                return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+            },
             forceSelection: true,
             name: 'gemId'
         }, {
@@ -149,11 +164,26 @@ Ext.define('Lada.view.form.Ort', {
                 xtype: 'koordinatenart',
                 labelWidth: 125,
                 fieldLabel: i18n.getMsg('orte.kda'),
+                validator: function(val) {
+                    var hasMinFields = Boolean(
+                        val
+                            || me.down('field[name=gemId]').getValue()
+                            || me.down('field[name=staatId]').getValue());
+                    return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+                },
                 name: 'kdaId'
             }, {
                 xtype: 'tfield',
                 labelWidth: 125,
                 fieldLabel: i18n.getMsg('orte.koordx'),
+                validator: function(val) {
+                    var kda = me.down('field[name=kdaId]').getValue();
+                    var hasMinFields = Boolean(
+                        !kda || kda
+                            && me.down('field[name=koordYExtern]').getValue()
+                            && val);
+                    return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+                },
                 regex: /^[noeswNOESW\d\.,-]+$/,
                 name: 'koordXExtern',
                 maxLength: 22
@@ -162,6 +192,14 @@ Ext.define('Lada.view.form.Ort', {
                 labelWidth: 125,
                 fieldLabel: i18n.getMsg('orte.koordy'),
                 name: 'koordYExtern',
+                validator: function(val) {
+                    var kda = me.down('field[name=kdaId]').getValue();
+                    var hasMinFields = Boolean(
+                        !kda || kda
+                            && val
+                            && me.down('field[name=koordXExtern]').getValue());
+                    return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+                },
                 regex: /^[noeswNOESW\d\.,-]+$/,
                 maxLength: 22
             }]
