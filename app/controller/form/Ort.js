@@ -90,18 +90,14 @@ Ext.define('Lada.controller.form.Ort', {
         var doSave = function() {
             record.save({
                 success: function(newrecord, response) {
-                    formpanel.loadRecord(newrecord);
-                    formpanel.down('verwaltungseinheit').store.clearFilter();
-                    formpanel.down('staat').store.clearFilter();
-                    if (formpanel.up('window').setOzOnComplete === true ) {
+                    var win = formpanel.up('window');
+                    if (win.setOzOnComplete === true ) {
                         var ozf = Ext.ComponentQuery
                             .query('ortszuordnungform')[0];
                         if (ozf) {
                             ozf.setOrt(null, newrecord);
                         }
                     }
-                    var json = Ext.decode(response.getResponse().responseText);
-                    formpanel.setMessages(json.errors, json.warnings);
 
                     var dynamicgrid = Ext.getCmp('dynamicgridid');
                     if (dynamicgrid) {
@@ -120,7 +116,18 @@ Ext.define('Lada.controller.form.Ort', {
                             ortgrid.store.reload();
                         }
                     }
-                    formpanel.up('window').setMode('edit');
+
+                    if (win.closeRequested) {
+                        win.doClose();
+                    } else {
+                        formpanel.loadRecord(newrecord);
+                        formpanel.down('verwaltungseinheit').store.clearFilter();
+                        formpanel.down('staat').store.clearFilter();
+                        var json = Ext.decode(
+                            response.getResponse().responseText);
+                        formpanel.setMessages(json.errors, json.warnings);
+                        win.setMode('edit');
+                    }
                 },
                 failure: function(newRecord, response) {
                     formpanel.loadRecord(record);
