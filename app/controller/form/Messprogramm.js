@@ -268,6 +268,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         if (selectObjects.length > 0) {
             asocStore.add(selectObjects);
         }
+
         record.save({
             success: function(rec, response) {
                 var parentGrid = Ext.ComponentQuery.query('dynamicgrid');

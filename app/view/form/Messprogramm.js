@@ -607,8 +607,6 @@ Ext.define('Lada.view.form.Messprogramm', {
 
 
     setRecord: function(messRecord) {
-        this.down('button[action=copy]').setDisabled(
-            messRecord.get('readonly'));
         this.clearMessages();
 
         // Add probenZusatzs as an array of model instances to the record.
