@@ -165,11 +165,11 @@ Ext.define('Lada.view.form.Messung', {
                                 if ((this.probedatenbasis === 'REI-E' ||
                                         this.probedatenbasis === 'REI-I') &&
                                     (this.probe.get(
-                                        'reiprogpunktgruppe') === null ||
+                                        'reiAgGrId') === null ||
                                         this.probe.get(
-                                            'reiprogpunktgruppe') === '') &&
-                                    (this.probe.get('ktagruppe') === null ||
-                                        this.probe.get('ktagruppe') === '')
+                                            'reiAgGrId') === '') &&
+                                    (this.probe.get('nuclFacilGrId') === null ||
+                                        this.probe.get('nuclFacilGrId') === '')
                                 ) {
                                     Ext.Msg.alert(
                                         i18n.getMsg('err.msg.status.title'),
