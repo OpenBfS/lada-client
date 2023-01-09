@@ -38,14 +38,11 @@ Ext.define('Lada.view.form.Ort', {
         this.items = [{
             xtype: 'netzbetreiber',
             name: 'netzbetreiberId',
-            submitValue: true,
             border: false,
             fieldLabel: i18n.getMsg('netzbetreiberId'),
             labelWidth: 125,
             filteredStore: true,
-            editable: true,
-            allowBlank: false,
-            value: this.record.get('netzbetreiberId')
+            allowBlank: false
         }, {
             xtype: 'tfield',
             name: 'ortId',
