@@ -13,7 +13,7 @@ Ext.define('Lada.store.Messstellen', {
     extend: 'Ext.data.Store',
     model: 'Lada.model.MeasFacil',
     sorters: [{
-        property: 'messStelle',
+        property: 'name',
         transform: function(val) {
             if (val) {
                 return val.toLowerCase();
