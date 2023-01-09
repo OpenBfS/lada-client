@@ -225,13 +225,13 @@ Ext.define('Lada.view.form.Probe', {
                                                     function(record) {
                                                         return Lada.netzbetreiber
                                                             .indexOf(
-                                                                record.get('netzbetreiberId'))
+                                                                record.get('networkId'))
                                                             > -1;
                                                     });
                                                 /*eslint-enable max-len*/
                                             } else {
                                                 store.filter({
-                                                    property: 'netzbetreiberId',
+                                                    property: 'networkId',
                                                     value: nId,
                                                     exactMatch: true
                                                 });
@@ -265,18 +265,18 @@ Ext.define('Lada.view.form.Probe', {
                                             if (!nId || nId.length === 0) {
                                                 store.filterBy(function(record) {
                                                     return Lada.netzbetreiber.indexOf(
-                                                        record.get('netzbetreiberId'))
+                                                        record.get('networkId'))
                                                         > -1;
                                                 });
                                             /*eslint-enable max-len*/
                                             } else {
                                                 store.filter([
                                                     {
-                                                        property: 'netzbetreiberId',
+                                                        property: 'networkId',
                                                         value: nId,
                                                         exactMatch: true
                                                     }, {
-                                                        property: 'mstId',
+                                                        property: 'measFacilId',
                                                         value: dId,
                                                         exactMatch: true
                                                     }
@@ -309,12 +309,12 @@ Ext.define('Lada.view.form.Probe', {
                                         if (!nId || nId.length === 0) {
                                             store.filterBy(function(record) {
                                                 return Lada.netzbetreiber.indexOf(
-                                                    record.get('netzbetreiberId')) > -1;
+                                                    record.get('networkId')) > -1;
                                             });
                                         /*eslint-enable max-len*/
                                         } else {
                                             store.filter({
-                                                property: 'netzbetreiberId',
+                                                property: 'networkId',
                                                 value: nId,
                                                 exactMatch: true
                                             });
