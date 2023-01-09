@@ -99,14 +99,14 @@ Ext.define('Lada.view.grid.Messung', {
             }
         }, {
             header: i18n.getMsg('extMessungsId'),
-            dataIndex: 'externeMessungsId',
+            dataIndex: 'extId',
             flex: 0.7,
             editor: {
                 allowBlank: false
             }
         }, {
             header: i18n.getMsg('nebenprobenNr'),
-            dataIndex: 'nebenprobenNr',
+            dataIndex: 'minSampleId',
             flex: 0.8,
             editor: {
                 allowBlank: false
@@ -120,7 +120,7 @@ Ext.define('Lada.view.grid.Messung', {
             }
         }, {
             header: i18n.getMsg('messzeitpunkt'),
-            dataIndex: 'messzeitpunkt',
+            dataIndex: 'measmStartDate',
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
             flex: 2,
@@ -159,13 +159,13 @@ Ext.define('Lada.view.grid.Messung', {
                 }
                 var kombis = Ext.data.StoreManager.get('statuskombi');
                 var kombi = kombis.getById(value);
-                var st = kombi.get('statusStufe').stufe + ' - '
-                            + kombi.get('statusWert').wert;
+                var st = kombi.get('statusLev').lev + ' - '
+                            + kombi.get('statusVal').val;
                 return st;
             }
         }, {
             header: i18n.getMsg('header.fertig'),
-            dataIndex: 'fertig',
+            dataIndex: 'isCompleted',
             flex: 0.8,
             renderer: function(value) {
                 if (value) {
@@ -268,7 +268,7 @@ Ext.define('Lada.view.grid.Messung', {
         });
         statusStore.load({
             params: {
-                messungsId: value
+                measmId: value
             }
         });
     },
@@ -283,7 +283,7 @@ Ext.define('Lada.view.grid.Messung', {
             {record: record, type: 'messwerteCount'});*/
         messwerte.load({
             params: {
-                messungsId: id
+                measmId: id
             },
             callback: function(records, operation, success) {
                 me.updateColumn(
@@ -325,7 +325,7 @@ Ext.define('Lada.view.grid.Messung', {
         } else {
             var rec = sstore.getById(opts.statusId);
             if (rec) {
-                value = rec.get('statusKombi');
+                value = rec.get('statusComb');
                 //add the determined statuswert to the record.
                 // this is necessary to let the controller determine
                 // which actions are allowed.
