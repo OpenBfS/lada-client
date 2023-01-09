@@ -272,7 +272,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
         verwaltungseinheiten.clearFilter(true);
         verwaltungseinheiten.filter({
-            property: 'bezeichnung',
+            property: 'name',
             anyMatch: true,
             value: filter,
             caseSensitive: false
@@ -282,7 +282,7 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
 
 
         staaten.filter({
-            property: 'staat',
+            property: 'ctry',
             anyMatch: true,
             value: filter,
             caseSensitive: false
@@ -309,9 +309,9 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 netzbetreiberId: win.netzbetreiberId,
                 gemId: record.get('id'),
                 ortId: record.get('id'),
-                kurztext: record.get('bezeichnung'),
-                langtext: record.get('bezeichnung'),
-                berichtstext: record.get('bezeichnung'),
+                kurztext: record.get('name'),
+                langtext: record.get('name'),
+                berichtstext: record.get('name'),
                 ortTyp: 4
             }),
             parentWindow: win,
@@ -331,11 +331,11 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
                 networkId: win.netzbetreiberId,
                 stateId: record.get('id'),
                 extId: 'STAAT_' + record.get('id'),
-                shortText: ((record.get('staatIso') === null) ?
+                shortText: ((record.get('iso3166') === null) ?
                     'STAAT_' + record.get('id') :
-                    'STAAT_' + record.get('staatIso')),
-                longText: record.get('staat'),
-                reiReportText: record.get('staat'),
+                    'STAAT_' + record.get('iso3166')),
+                longText: record.get('ctry'),
+                reiReportText: record.get('ctry'),
                 siteClassId: 5
             }),
             parentWindow: win,
@@ -376,15 +376,15 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
             netzfilter = ozw.probe.get('measFacilId');
 
         } else if (ozw.messprogramm) {
-            netzfilter = ozw.messprogramm.get('mstId');
+            netzfilter = ozw.messprogramm.get('measFacilId');
         }
         var extraParams = {};
         if (netzfilter !== null) {
             var item_mst = mst_store.findRecord(
                 'id', netzfilter, false, false, false, true);
-            var nid = item_mst.get('netzbetreiberId');
+            var nid = item_mst.get('networkId');
             if (nid !== null) {
-                extraParams.netzbetreiberId = nid;
+                extraParams.networkId = nid;
             }
         }
         if (filterstring) {
