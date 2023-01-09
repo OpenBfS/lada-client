@@ -65,13 +65,13 @@ Ext.define('Lada.view.widget.Statuskombi', {
         Ext.ClassManager.get('Lada.model.StatusProt').load(value, {
             success: function(record) {
                 var statuskombistore = Ext.data.StoreManager.get('statuskombi');
-                var kombi = statuskombistore.getById(record.data.statusKombi);
-                var text = kombi.get('statusStufe').stufe + ' - ' +
-                        kombi.get('statusWert').wert;
+                var kombi = statuskombistore.getById(record.data.statusComb);
+                var text = kombi.get('statusLev').lev + ' - ' +
+                        kombi.get('statusVal').val;
 
                 me.currentValue = {
-                    statusStufe: kombi.get('statusStufe'),
-                    statusWert: kombi.get('statusWert')
+                    statusStufe: kombi.get('statusLev'),
+                    statusWert: kombi.get('statusVal')
                 };
                 //Try updating the view
                 try {
