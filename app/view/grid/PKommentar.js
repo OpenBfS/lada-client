@@ -100,7 +100,7 @@ Ext.define('Lada.view.grid.PKommentar', {
                 var store = Ext.data.StoreManager.get('messstellen');
                 var record = store.getById(value);
                 if (record) {
-                    r = record.get('messStelle');
+                    r = record.get('name');
                 }
                 return r;
             },

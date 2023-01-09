@@ -91,7 +91,7 @@ Ext.define('Lada.controller.grid.PKommentar', {
         var record = Ext.create('Lada.model.CommSample');
         record.data.date = Lada.util.Date.formatTimestamp(new Date(),
             'd.m.Y H:i', true);
-        record.set('siteId', button.up('pkommentargrid').recordId);
+        record.set('sampleId', button.up('pkommentargrid').recordId);
         button.up('pkommentargrid').store.insert(0, record);
         button.up('pkommentargrid').rowEditing.startEdit(0, 1);
     },
