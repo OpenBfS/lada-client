@@ -209,9 +209,9 @@ Ext.define('Lada.controller.form.Ort', {
             record.get('readonly')
                 || record.get('plausibleReferenceCount') > 0
                 || record.get('referenceCountMp') > 0
-                || !(panel.down('koordinatenart').getValue()
-                     && panel.down('tfield[name=koordXExtern]').getValue()
-                     && panel.down('tfield[name=koordYExtern]').getValue()));
+                || !(panel.down('koordinatenart').isValid()
+                     && panel.down('tfield[name=koordXExtern]').isValid()
+                     && panel.down('tfield[name=koordYExtern]').isValid()));
     },
 
     checkCommitEnabled: function(callingEl) {
