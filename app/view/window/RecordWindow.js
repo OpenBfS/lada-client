@@ -77,6 +77,47 @@ Ext.define('Lada.view.window.RecordWindow', {
             //loaded
             this.items = [this.placeholder];
         }
+
+        /**
+         * If form is dirty, show confirmation dialogue that allows the
+         * user to save changes.
+         * It's up to the handler of saving to actually close the
+         * window if saving is requested. Therefore, the property
+         * 'closeRequested' is set to true.
+         */
+        this.onBefore('beforeclose', function() {
+            var form = this.down('form');
+            if (form && !form.getRecord().get('readonly') && form.isDirty()) {
+                var i18n = Lada.getApplication().bundle;
+                var me = this;
+                Ext.Msg.show({
+                    title: i18n.getMsg('form.saveonclosetitle'),
+                    message: i18n.getMsg('form.saveonclosequestion'),
+                    modal: true,
+                    buttons: Ext.Msg.YESNOCANCEL,
+                    fn: function(btn) {
+                        switch (btn) {
+                            case 'no':
+                                // Continue closing the window
+                                me.doClose();
+                                break;
+                            case 'yes':
+                                // Leave closing up to the save-handler
+                                me.closeRequested = true;
+                                me.down('form').down('button[action=save]')
+                                    .click();
+                            default:
+                                // Cancel
+                        }
+                    }
+                });
+                // Intercept closing the window
+                return false;
+            }
+            // Just process closing the window without interception
+            return true;
+        });
+
         this.callParent(arguments);
     },
 
@@ -189,9 +230,9 @@ Ext.define('Lada.view.window.RecordWindow', {
     },
 
     /**
-     * If a request is still pending, abort and close this window
+     * If a request is still pending, abort and close this window.
      */
-    close: function() {
+    doClose: function() {
         if (this.childWindows) {
             for (var key in this.childWindows) {
                 if (this.childWindows[key] && this.childWindows[key].close) {

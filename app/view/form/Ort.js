@@ -35,17 +35,15 @@ Ext.define('Lada.view.form.Ort', {
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        var me = this;
         this.items = [{
             xtype: 'netzbetreiber',
             name: 'networkId',
-            submitValue: true,
             border: false,
             fieldLabel: i18n.getMsg('netzbetreiberId'),
             labelWidth: 125,
             filteredStore: true,
-            editable: true,
-            allowBlank: false,
-            value: this.record.get('netzbetreiberId')
+            allowBlank: false
         }, {
             xtype: 'tfield',
             name: 'extId',
@@ -82,11 +80,25 @@ Ext.define('Lada.view.form.Ort', {
             labelWidth: 125,
             fieldLabel: i18n.getMsg('staat'),
             name: 'stateId',
+            validator: function(val) {
+                var hasMinFields = Boolean(
+                    me.down('field[name=spatRefSysId]').getValue()
+                        || me.down('field[name=municId]').getValue()
+                        || val);
+                return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+            },
             forceSelection: true
         }, {
             xtype: 'verwaltungseinheit',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.verwaltungseinheit'),
+            validator: function(val) {
+                var hasMinFields = Boolean(
+                    me.down('field[name=spatRefSysId]').getValue()
+                        || val
+                        || me.down('field[name=stateId]').getValue());
+                return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+            },
             forceSelection: true,
             name: 'municId'
         }, {
@@ -147,16 +159,31 @@ Ext.define('Lada.view.form.Ort', {
         }, {
             xtype: 'fset',
             collapsible: true,
-            name: 'koordinaten',
+            name: 'coordinates',
             items: [{
                 xtype: 'koordinatenart',
                 labelWidth: 125,
                 fieldLabel: i18n.getMsg('orte.kda'),
+                validator: function(val) {
+                    var hasMinFields = Boolean(
+                        val
+                            || me.down('field[name=municId]').getValue()
+                            || me.down('field[name=stateId]').getValue());
+                    return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+                },
                 name: 'spatRefSysId'
             }, {
                 xtype: 'tfield',
                 labelWidth: 125,
                 fieldLabel: i18n.getMsg('orte.koordx'),
+                validator: function(val) {
+                    var kda = me.down('field[name=spatRefSysId]').getValue();
+                    var hasMinFields = Boolean(
+                        !kda || kda
+                            && me.down('field[name=coordYExt]').getValue()
+                            && val);
+                    return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+                },
                 regex: /^[noeswNOESW\d\.,-]+$/,
                 name: 'coordXExt',
                 maxLength: 22
@@ -165,6 +192,14 @@ Ext.define('Lada.view.form.Ort', {
                 labelWidth: 125,
                 fieldLabel: i18n.getMsg('orte.koordy'),
                 name: 'coordYExt',
+                validator: function(val) {
+                    var kda = me.down('field[name=spatRefSysId]').getValue();
+                    var hasMinFields = Boolean(
+                        !kda || kda
+                            && val
+                            && me.down('field[name=coordXExt]').getValue());
+                    return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+                },
                 regex: /^[noeswNOESW\d\.,-]+$/,
                 maxLength: 22
             }]
@@ -220,9 +255,7 @@ Ext.define('Lada.view.form.Ort', {
                 action: 'copy',
                 qtip: i18n.getMsg('copy.qtip', i18n.getMsg('ort')),
                 icon: 'resources/img/dialog-ok-apply.png',
-                disabled: !this.record.phantom && !this.record.get('readonly') ?
-                    false :
-                    true
+                disabled: true
             },
             '->',
             {

@@ -27,8 +27,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 click: this.copy
             },
             'messprogrammform': {
-                dirtychange: this.dirtyForm,
-                save: this.saveHeadless
+                dirtychange: this.dirtyForm
             },
             'messprogrammform numfield numberfield': {
                 change: this.checkPeriod
@@ -270,24 +269,26 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
         record.save({
             success: function(rec, response) {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
+                var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                if (parentGrid.length === 1) {
+                    parentGrid[0].reload();
+                }
+
+                var win = button.up('window');
+                if (win.closeRequested) {
+                    win.doClose();
+                } else {
                     formPanel.setRecord(rec);
+                    var json = Ext.decode(response.getResponse().responseText);
                     formPanel.setMessages(json.errors, json.warnings);
-                    var win = button.up('window');
+
                     win.record = rec;
                     win.enableChildren();
                 }
             },
             failure: function(newRecord, response) {
+                formPanel.loadRecord(record);
                 var i18n = Lada.getApplication().bundle;
-                var rec = formPanel.getForm().getRecord();
-                rec.dirty = false;
-                formPanel.getForm().loadRecord(newRecord);
                 if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -303,7 +304,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                 i18n.getMsg('err.msg.generic.body'));
                         }
-                        formPanel.clearMessages();
                         formPanel.setMessages(json.errors, json.warnings);
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -313,56 +313,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
             }
         });
     },
-
-    /**
-     * Saves the current form content without manipulating the gui.
-     */
-    saveHeadless: function(panel) {
-        var formPanel = panel;
-        var data = formPanel.getForm().getFieldValues(false);
-        var record = formPanel.getForm().getRecord();
-        for (var key in data) {
-            record.set(key, data[key]);
-        }
-        if (record.phantom) {
-            record.set('id', null);
-        }
-        record.save({
-            success: function(newRecord, response) {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    var parentGrid = Ext.ComponentQuery.query('dynamicGrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
-                }
-            },
-            failure: function(newRecord, response) {
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                }
-            }
-        });
-    },
-
 
     /**
       * The discard function resets the form

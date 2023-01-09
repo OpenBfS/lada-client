@@ -68,7 +68,7 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
         this.buttons = [{
             text: i18n.getMsg('close'),
             scope: this,
-            handler: this.handleBeforeClose
+            handler: this.close
         }];
         this.modelClass = Lada.model.DatasetCreator;
         this.callParent(arguments);
@@ -109,51 +109,5 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
      */
     clearMessages: function() {
         this.down('datensatzerzeugerform').clearMessages();
-    },
-
-    /**
-     * Called before closing the form window. Shows confirmation dialogue
-     * window to save the form if dirty*/
-    handleBeforeClose: function() {
-        var me = this;
-        var i18n = Lada.getApplication().bundle;
-        var item = me.down('form');
-        if (item && item.isDirty()) {
-            var confWin = Ext.create('Ext.window.Window', {
-                title: i18n.getMsg('form.saveonclosetitle'),
-                modal: true,
-                layout: 'vbox',
-                items: [{
-                    xtype: 'container',
-                    html: i18n.getMsg('form.saveonclosequestion'),
-                    margin: '10, 5, 5, 5'
-                }, {
-                    xtype: 'container',
-                    layout: 'hbox',
-                    items: [{
-                        xtype: 'button',
-                        text: i18n.getMsg('form.yes'),
-                        margin: '5, 0, 5, 5',
-
-                        handler: function() {
-                            me.down('form').fireEvent('save', me.down('form'));
-                            confWin.close();
-                        }
-                    }, {
-                        xtype: 'button',
-                        text: i18n.getMsg('form.no'),
-                        margin: '5, 5, 5, 5',
-
-                        handler: function() {
-                            confWin.close();
-                        }
-                    }]
-                }]
-            });
-            confWin.on('close', me.close, me);
-            confWin.show();
-        } else {
-            me.close();
-        }
     }
 });

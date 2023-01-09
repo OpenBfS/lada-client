@@ -53,7 +53,7 @@ Ext.define('Lada.view.window.MessungEdit', {
         }, '->', {
             text: i18n.getMsg('close'),
             scope: this,
-            handler: this.handleBeforeClose
+            handler: this.close
         }];
 
         this.on({
@@ -62,9 +62,6 @@ Ext.define('Lada.view.window.MessungEdit', {
             },
             deactivate: function() {
                 this.getEl().addCls('window-inactive');
-            },
-            afterRender: function() {
-                this.customizeToolbar();
             }
         });
 
@@ -303,21 +300,6 @@ Ext.define('Lada.view.window.MessungEdit', {
     },
 
     /**
-     * Adds new event handler to the toolbar close button to add a save
-     * confirmation dialogue if a dirty form is closed
-     */
-    customizeToolbar: function() {
-        var tools = this.tools;
-        for (var i = 0; i < tools.length; i++) {
-            if (tools[i].type === 'close') {
-                var closeButton = tools[i];
-                closeButton.handler = null;
-                closeButton.callback = this.handleBeforeClose;
-            }
-        }
-    },
-
-    /**
      * Reload MessungEdit Window
      */
     reload: function() {
@@ -383,7 +365,6 @@ Ext.define('Lada.view.window.MessungEdit', {
         this.enableStatusEdit();
     },
 
-
     /**
      * Enable to edit the statusgrid
      */
@@ -396,66 +377,6 @@ Ext.define('Lada.view.window.MessungEdit', {
      */
     disableStatusEdit: function() {
         this.down('statuskombi').setReadOnly(true);
-    },
-
-    /**
-     * Called before closing the form window. Shows confirmation dialogue
-     * window to save the form if dirty*/
-    handleBeforeClose: function() {
-        var me = this;
-        var i18n = Lada.getApplication().bundle;
-        var item;
-        try {
-            item = me.down('messungform');
-        } catch (e) {
-            Ext.log({
-                msg: 'Closing uninitialized messung window: ' + e,
-                level: 'warn'});
-            return;
-        }
-        if (!item) {
-            //Form may not be initialized yet
-            me.close();
-            return;
-        }
-        if (item.isDirty()) {
-            var confWin = Ext.create('Ext.window.Window', {
-                title: i18n.getMsg('form.saveonclosetitle'),
-                modal: true,
-                layout: 'vbox',
-                items: [{
-                    xtype: 'container',
-                    html: i18n.getMsg('form.saveonclosequestion'),
-                    margin: '10, 5, 5, 5'
-                }, {
-                    xtype: 'container',
-                    layout: 'hbox',
-                    items: [{
-                        xtype: 'button',
-                        text: i18n.getMsg('form.yes'),
-                        margin: '5, 0, 5, 5',
-
-                        handler: function() {
-                            me.down('messungform').fireEvent(
-                                'save', me.down('messungform'));
-                            confWin.close();
-                        }
-                    }, {
-                        xtype: 'button',
-                        text: i18n.getMsg('form.no'),
-                        margin: '5, 5, 5, 5',
-
-                        handler: function() {
-                            confWin.close();
-                        }
-                    }]
-                }]
-            });
-            confWin.on('close', me.close, me);
-            confWin.show();
-        } else {
-            me.close();
-        }
     },
 
     /**

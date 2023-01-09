@@ -23,17 +23,9 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
             'datensatzerzeugerform button[action=copy]': {
                 click: this.copyDatensatzerzeuger
             },
-            'datensatzerzeugerform [name="extId"]': {
-                change: this.checkCommitEnabled
-            },
-            'datensatzerzeugerform [name="descr"]': {
-                change: this.checkCommitEnabled
-            },
-            'datensatzerzeugerform [name="measFacilId"]': {
-                change: this.checkCommitEnabled
-            },
-            'datensatzerzeugerform [name="networkId"]': {
-                change: this.checkCommitEnabled
+            'datensatzerzeugerform': {
+                dirtychange: this.checkCommitEnabled,
+                validitychange: this.checkCommitEnabled
             }
         });
     },
@@ -56,22 +48,18 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                 if (parentGrid.length === 1) {
                     parentGrid[0].reload();
                 }
-                var rec = formPanel.getForm().getRecord();
-                rec.dirty = false;
-                formPanel.getForm().loadRecord(newRecord);
-                var json = Ext.decode(response.getResponse().responseText);
-                formPanel.setRecord(newRecord);
-                formPanel.setMessages(json.errors, json.warnings);
-                button.setDisabled(true);
-                button.up('datensatzerzeugeredit')
-                    .down('button[action=discard]')
-                    .setDisabled(true);
-                button.up('datensatzerzeugeredit')
-                    .down('button[action=copy]')
-                    .setDisabled(false);
                 Ext.data.StoreManager.get('datensatzerzeuger').reload();
+                var win = button.up('datensatzerzeugeredit');
+                if (win.closeRequested) {
+                    win.doClose();
+                } else {
+                    formPanel.setRecord(newRecord);
+                    var json = Ext.decode(response.getResponse().responseText);
+                    formPanel.setMessages(json.errors, json.warnings);
+                }
             },
             failure: function(newRecord, response) {
+                formPanel.loadRecord(record);
                 var i18n = Lada.getApplication().bundle;
                 if (response.error) {
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -89,14 +77,11 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                 i18n.getMsg('err.msg.generic.body'));
                         }
-                        formPanel.clearMessages();
                         formPanel.setMessages(json.errors, json.warnings);
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                             i18n.getMsg('err.msg.response.body'));
                     }
-                    button.up('datensatzerzeugeredit').down(
-                        'button[action=discard]').setDisabled(true);
                     formPanel.isValid();
                 }
             }
@@ -109,7 +94,6 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
         copy.set('extId', null);
         var win = Ext.create('Lada.view.window.DatensatzErzeuger', {
             record: copy,
-            mode: 'copy',
             original: record
         });
         var pos = button.up('datensatzerzeugerform').up().getPosition();
@@ -123,12 +107,6 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
         var formPanel = button.up('form');
         formPanel.getForm().reset();
         formPanel.getForm().isValid();
-        formPanel.up('datensatzerzeugeredit').down(
-            'button[action=discard]').setDisabled(true);
-        formPanel.up('datensatzerzeugeredit').down(
-            'button[action=save]').setDisabled(true);
-        formPanel.up('datensatzerzeugeredit').down(
-            'button[action=copy]').setDisabled(true);
     },
 
     checkCommitEnabled: function(callingEl) {

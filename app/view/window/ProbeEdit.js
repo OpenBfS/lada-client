@@ -46,7 +46,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
         }, '->', {
             text: i18n.getMsg('close'),
             scope: this,
-            handler: this.handleBeforeClose
+            handler: this.close
         }];
         this.width = 700;
         this.height = Ext.getBody().getViewSize().height - 30;
@@ -57,9 +57,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
             },
             deactivate: function() {
                 this.getEl().addCls('window-inactive');
-            },
-            afterRender: function() {
-                this.customizeToolbar();
             }
         });
 
@@ -218,21 +215,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
     },
 
     /**
-     * Adds new event handler to the toolbar close button to add a save
-     * confirmation dialogue if a dirty form is closed
-     */
-    customizeToolbar: function() {
-        var tools = this.tools;
-        for (var i = 0; i < tools.length; i++) {
-            if (tools[i].type === 'close') {
-                var closeButton = tools[i];
-                closeButton.handler = null;
-                closeButton.callback = this.handleBeforeClose;
-            }
-        }
-    },
-
-    /**
       * Initialise the Data of this Window
       * @param {Object}loadedRecord if given, it is assumed that this is a
       * freshly loaded record, not requiring a reload from server
@@ -305,67 +287,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 });
         } else {
             loadCallBack(loadedRecord);
-        }
-    },
-
-    /**
-     * Called before closing the form window. Shows confirmation dialogue
-     * window to save the form if dirty
-     */
-    handleBeforeClose: function() {
-        var me = this;
-        var i18n = Lada.getApplication().bundle;
-        var item;
-        try {
-            item = me.items.items[0].items.get(0);
-        } catch (e) {
-            Ext.log({
-                msg: 'Closing uninitialized messung window: ' + e,
-                level: 'warn'});
-            item = null;
-        }
-        if (!item) {
-            //Form may not be initialized yet
-            me.close();
-            return;
-        }
-        if (item.isDirty()) {
-            var confWin = Ext.create('Ext.window.Window', {
-                title: i18n.getMsg('form.saveonclosetitle'),
-                modal: true,
-                layout: 'vbox',
-                items: [{
-                    xtype: 'container',
-                    html: i18n.getMsg('form.saveonclosequestion'),
-                    margin: '10, 5, 5, 5'
-                }, {
-                    xtype: 'container',
-                    layout: 'hbox',
-                    items: [{
-                        xtype: 'button',
-                        text: i18n.getMsg('form.yes'),
-                        margin: '5, 0, 5, 5',
-
-                        handler: function() {
-                            me.down('probeform').fireEvent(
-                                'save', me.down('probeform'));
-                            confWin.close();
-                        }
-                    }, {
-                        xtype: 'button',
-                        text: i18n.getMsg('form.no'),
-                        margin: '5, 5, 5, 5',
-
-                        handler: function() {
-                            confWin.close();
-                        }
-                    }]
-                }]
-            });
-            confWin.on('close', me.close, me);
-            confWin.show();
-        } else {
-            me.close();
         }
     },
 

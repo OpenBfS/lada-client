@@ -17,6 +17,8 @@ Ext.define('Lada.view.form.LadaForm', {
      * LADA-Server at components having the respective show* methods.
      */
     setMessages: function(errors, warnings, notifications) {
+        this.clearMessages();
+
         var key;
         var element;
         var content;
