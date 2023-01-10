@@ -72,7 +72,7 @@ Ext.define('Lada.view.window.SetStatus', {
                 items: [{
                     xtype: 'combobox',
                     store: Ext.data.StoreManager.get('messstellenFiltered'),
-                    displayField: 'messStelle',
+                    displayField: 'name',
                     valueField: 'id',
                     allowBlank: false,
                     queryMode: 'local',
@@ -357,7 +357,7 @@ Ext.define('Lada.view.window.SetStatus', {
                                 out.push('<hr>');
                                 // Add generated HTML to overall output
                                 me.addLogItem(
-                                    out.join(''), record.get('messungsId'));
+                                    out.join(''), record.get('measmId'));
                             }
                         } else {
                             me.addLogItem(
@@ -366,7 +366,7 @@ Ext.define('Lada.view.window.SetStatus', {
                                     '</dd><dd><ul><li>' +
                                     i18n.getMsg('err.msg.generic.body') +
                                     '</li></ul></dd></dl><hr>',
-                                record.get('messungsId')
+                                record.get('measmId')
                             );
                         }
 
@@ -395,7 +395,7 @@ Ext.define('Lada.view.window.SetStatus', {
     getPossibleStatus: function(ids) {
         var me = this;
         Ext.Ajax.request({
-            url: 'lada-server/rest/statuskombi/getbyids',
+            url: 'lada-server/rest/statusmp/getbyids',
             jsonData: JSON.stringify(ids),
             method: 'POST',
             success: function(response) {
@@ -419,7 +419,7 @@ Ext.define('Lada.view.window.SetStatus', {
                 this.selection, function(it) {
                     return it.get(this.dataId) === id;
                 }, this);
-            if (item.get('nebenprobenNr') === undefined) {
+            if (item.get('minSampleId') === undefined) {
                 var probenumber = item.get('hpNr')
                     ? '<strong>' + i18n.getMsg('mainSampleId') + '</strong> '
                     + item.get('hpNr')
