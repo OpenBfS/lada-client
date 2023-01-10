@@ -1132,11 +1132,11 @@ Ext.define('Lada.view.window.GridExport', {
             return [];
         }
         cols = cols.sort(function(a, b) {
-            return a.columnIndex - b.columnIndex;
+            return a.colIndex - b.colIndex;
         });
         return Ext.Array.map(cols, function(c) {
             c.export = false;
-            if ( c.columnIndex > -1 && c.visible !== false) {
+            if ( c.colIndex > -1 && c.isVisible !== false) {
                 var gridColumn = columnstore.findRecord(
                     'id', c.gridColMpId, 0, false, false, true
                 );
@@ -1147,7 +1147,7 @@ Ext.define('Lada.view.window.GridExport', {
                     c.export = true;
                 }
             }
-            delete c.visible;
+            delete c.isVisible;
             return c;
         });
     },
