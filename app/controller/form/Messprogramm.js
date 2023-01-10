@@ -70,7 +70,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var copy = origRecord.copy(null);
         copy.set('id', null);
         // Associated data are not automatically included in copy
-        copy.probenZusatzs().add(origRecord.probenZusatzs().getRange());
+        copy.sampleSpecifs().add(origRecord.sampleSpecifs().getRange());
 
         copy.save({
             callback: function(rec, op, success) {
@@ -234,11 +234,11 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var intervall = form.down('probenintervall').down('combobox')
             .getValue();
         if (intervall === 'J') {
-            if (field.getName() === 'gueltigVon') {
-                form.down('[name=teilintervallVon]')
+            if (field.getName() === 'validStartDate') {
+                form.down('[name=samplePdStartDate]')
                     .setValue(field.getValue());
             } else {
-                form.down('[name=teilintervallBis]')
+                form.down('[name=samplePdEndDate]')
                     .setValue(field.getValue());
             }
         }
@@ -334,9 +334,9 @@ Ext.define('Lada.controller.form.Messprogramm', {
         formPanel.getForm().owner.populateIntervall(record);
         formPanel.setMediaDesk(record);
 
-        var field = formPanel.down('tagfield[name=probenZusatzs]');
+        var field = formPanel.down('tagfield[name=sampleSpecifs]');
         field.value = record.sampleSpecifs().getData().items;
-        formPanel.filterProbenZusatzs(record.get('umwId'));
+        formPanel.filterProbenZusatzs(record.get('envMediumId'));
     },
 
     /**
@@ -381,7 +381,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
     },
 
     deskriptorSelect: function(field, records) {
-        field.up('messprogrammform').down('umwelt[name="umwId"]').clearValue();
+        field.up('messprogrammform').down('umwelt[name="envMediumId"]').clearValue();
         var desk = field.up('deskriptor');
         var media = field.up('messprogrammform')
             .down('textfield[name="mediaDesk"]');
@@ -425,7 +425,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
             current.splice(0, 1);
         }
         var mediatext = field.up('messprogrammform')
-            .down('textfield[name="media"]');
+            .down('textfield[name="envDescripName"]');
 
         if ( (desk.layer === 0 ) && (records.get('sn') === 0) ) {
             media.setValue('');

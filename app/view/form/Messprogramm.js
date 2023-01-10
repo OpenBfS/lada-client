@@ -544,21 +544,21 @@ Ext.define('Lada.view.form.Messprogramm', {
             intervall = record.get('samplePd',
                 0, false, false, true);
 
-            svalUpper = record.get('samplePdStartDate');
-            svalLower = record.get('samplePdEndDate');
+            svalUpper = record.get('samplePdEndDate');
+            svalLower = record.get('samplePdStartDate');
         }
 
         // subintervall is redundant to validity for yearly samples
         if (intervall === 'J') {
-            svalUpper = record.get('samplePDStartDate');
-            svalLower = record.get('samplePDEndDate');
+            svalUpper = record.get('samplePdEndDate');
+            svalLower = record.get('samplePdStartDate');
             this.down('dayofyear[name=validStartDate]').setReadOnly(true);
             this.down('dayofyear[name=validEndDate]').setReadOnly(true);
         } else {
             b.setReadOnly(false);
             v.setReadOnly(false);
-            this.down('dayofyear[name=validStartDate]').setReadOnly(false);
             this.down('dayofyear[name=validEndDate]').setReadOnly(false);
+            this.down('dayofyear[name=validStartDate]').setReadOnly(false);
         }
 
         var intrec = intervallstore
@@ -612,8 +612,8 @@ Ext.define('Lada.view.form.Messprogramm', {
         this.getForm().loadRecord(messRecord);
 
         // Set associated data in tag field
-        var pzwField = this.down('field[name=probenZusatzs]');
-        pzwField.setValue(messRecord.probenZusatzs().getRange());
+        var pzwField = this.down('field[name=sampleSpecifs]');
+        pzwField.setValue(messRecord.sampleSpecifs().getRange());
         pzwField.resetOriginalValue();
 
         this.populateIntervall(messRecord);
