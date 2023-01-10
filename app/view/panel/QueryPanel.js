@@ -340,7 +340,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 for ( var i = 0; i < records.length; i++) {
                     groupstore.add({
                         messStellesIds: records[i].get('id'),
-                        mst_name: records[i].get('messStelle')
+                        mst_name: records[i].get('name')
                     });
                 }
             }
