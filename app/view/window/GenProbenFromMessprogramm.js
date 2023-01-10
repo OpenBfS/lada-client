@@ -301,7 +301,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
     genResultWindow: function(umwStore, data, genTagName, request) {
         var i18n = Lada.getApplication().bundle;
         var me = this;
-        var dbIdentifier = 'externeProbeId';
+        var dbIdentifier = 'extId';
         var newStore = Ext.create('Lada.store.Proben', {data: data});
         var hidebuttons = ['genericadd', 'assigntags', 'gridexport'];
         if (request.dryrun) {
@@ -395,7 +395,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     }
                 }, {
                     header: i18n.getMsg('extProbeId'),
-                    dataIndex: 'externeProbeId'
+                    dataIndex: 'extId'
                 }, {
                     header: i18n.getMsg('gpfm.pepstatus'),
                     dataIndex: 'found',
@@ -407,7 +407,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     }
                 }, {
                     header: i18n.getMsg('mstId'),
-                    dataIndex: 'mstId',
+                    dataIndex: 'measFacilId',
                     renderer: function(value) {
                         var r = '';
                         if (!value || value === '') {
@@ -416,13 +416,13 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         var store = Ext.data.StoreManager.get('messstellen');
                         var record = store.getById(value);
                         if (record) {
-                            r = record.get('messStelle');
+                            r = record.get('name');
                         }
                         return r;
                     }
                 }, {
                     header: i18n.getMsg('datenbasisId'),
-                    dataIndex: 'datenbasisId',
+                    dataIndex: 'regulationId',
                     renderer: function(value) {
                         var r = '';
                         if (!value || value === '') {
@@ -431,13 +431,13 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         var store = Ext.data.StoreManager.get('datenbasis');
                         var record = store.getById(value);
                         if (record) {
-                            r = record.get('datenbasis');
+                            r = record.get('regulation');
                         }
                         return r;
                     }
                 }, {
                     header: i18n.getMsg('baId'),
-                    dataIndex: 'baId',
+                    dataIndex: 'oprModeId',
                     renderer: function(value) {
                         var r = '';
                         if (!value || value === '') {
@@ -454,7 +454,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     }
                 }, {
                     header: i18n.getMsg('probenartId'),
-                    dataIndex: 'probenartId',
+                    dataIndex: 'sampleMethId',
                     renderer: function(value) {
                         var r = '';
                         if (!value || value === '') {
@@ -463,28 +463,28 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         var store = Ext.data.StoreManager.get('probenarten');
                         var record = store.getById(value);
                         if (record) {
-                            r = record.get('probenart');
+                            r = record.get('extId');
                         }
                         return r;
                     }
                 }, {
                     xtype: 'datecolumn',
                     header: i18n.getMsg('sollVon'),
-                    dataIndex: 'solldatumBeginn'
+                    dataIndex: 'schedStartDate'
                 }, {
                     xtype: 'datecolumn',
                     header: i18n.getMsg('sollBis'),
-                    dataIndex: 'solldatumEnde'
+                    dataIndex: 'schedEndDate'
                 }, {
                     header: i18n.getMsg('messprogramm.form.fieldset.title'),
-                    dataIndex: 'mprId'
+                    dataIndex: 'mpgId'
                 }, {
                     header: i18n.getMsg('mediaDesk'),
-                    dataIndex: 'mediaDesk'
+                    dataIndex: 'envDescripDisplay'
                 }, {
                     //TODO: load description
                     header: i18n.getMsg('umwId'),
-                    dataIndex: 'umwId',
+                    dataIndex: 'envMediumId',
                     renderer: function(value) {
                         if (!value) {
                             return '';
@@ -492,7 +492,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         var store = umwStore;
                         var model = store.getById(value);
                         if (model) {
-                            return value + ' - ' + model.get('umweltBereich');
+                            return value + ' - ' + model.get('name');
                         } else {
                             return value;
                         }
@@ -524,7 +524,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     }
                 }, {
                     header: i18n.getMsg('probenehmer'),
-                    dataIndex: 'probeNehmerId'
+                    dataIndex: 'samplerId'
                 }],
                 plugins: request.dryrun ? false : Ext.create(
                     'Lada.view.plugin.GridRowExpander', {
