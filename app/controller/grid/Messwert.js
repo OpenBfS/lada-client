@@ -31,7 +31,7 @@ Ext.define('Lada.controller.grid.Messwert', {
             'messwertgrid checkbox': {
                 change: this.handleItem
             },
-            'messwertgrid expnumberfield[dataIndex=messwert]': {
+            'messwertgrid expnumberfield[dataIndex=measVal]': {
                 change: this.changeValue
             },
             'messwertgrid combobox[name=messeinheit]': {
@@ -43,35 +43,35 @@ Ext.define('Lada.controller.grid.Messwert', {
     handleItem: function(editor, context) {
         var e = editor.up();
         if (context === true) {
-            e.down('expnumberfield[dataIndex=messwert]').setValue(null);
-            e.down('expnumberfield[dataIndex=messwert]').allowBlank = true;
-            e.down('expnumberfield[dataIndex=messwert]').setReadOnly(true);
+            e.down('expnumberfield[dataIndex=measVal]').setValue(null);
+            e.down('expnumberfield[dataIndex=measVal]').allowBlank = true;
+            e.down('expnumberfield[dataIndex=measVal]').setReadOnly(true);
             e.down('formatnumberfield').setValue(null);
             e.down('formatnumberfield').allowBlank = true;
             e.down('formatnumberfield').setReadOnly(true);
-            e.down('expnumberfield[dataIndex=nwgZuMesswert]')
+            e.down('expnumberfield[dataIndex=detectLim]')
                 .allowBlank = false;
-            e.down('expnumberfield[dataIndex=nwgZuMesswert]').setReadOnly(
+            e.down('expnumberfield[dataIndex=detectLim]').setReadOnly(
                 false);
             e.form.isValid();
         } else {
-            e.down('expnumberfield[dataIndex=messwert]').allowBlank = false;
-            e.down('expnumberfield[dataIndex=messwert]').setReadOnly(false);
-            e.down('expnumberfield[dataIndex=nwgZuMesswert]').allowBlank = true;
-            e.down('expnumberfield[dataIndex=nwgZuMesswert]').setReadOnly(
+            e.down('expnumberfield[dataIndex=measVal]').allowBlank = false;
+            e.down('expnumberfield[dataIndex=measVal]').setReadOnly(false);
+            e.down('expnumberfield[dataIndex=detectLim]').allowBlank = true;
+            e.down('expnumberfield[dataIndex=detectLim]').setReadOnly(
                 false);
             e.down('formatnumberfield').allowBlank = false;
             e.down('formatnumberfield').setReadOnly(false);
             e.down('formatnumberfield').validateValue(
                 e.down('formatnumberfield').getValue());
-            e.down('expnumberfield[dataIndex=messwert]').validateValue(
-                e.down('expnumberfield[dataIndex=messwert]').getValue());
+            e.down('expnumberfield[dataIndex=measVal]').validateValue(
+                e.down('expnumberfield[dataIndex=measVal]').getValue());
             e.form.isValid();
         }
     },
 
     changeValue: function(editor) {
-        var e = editor.up().down('expnumberfield[dataIndex=nwgZuMesswert]');
+        var e = editor.up().down('expnumberfield[dataIndex=detectLim]');
         e.allowBlank = true;
         e.setReadOnly(false);
         e.validateValue(e.getValue());

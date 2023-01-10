@@ -156,17 +156,17 @@ Ext.define('Lada.view.grid.Messwert', {
         }];
         this.columns = [{
             header: i18n.getMsg('messgroesseId'),
-            dataIndex: 'messgroesseId',
+            dataIndex: 'measdId',
             width: 118,
             renderer: function(value, metaData, record) {
-                this.setValidationResults(metaData, record, 'messgroesseId');
+                this.setValidationResults(metaData, record, 'measdId');
                 if (!value || value === '') {
                     return '';
                 }
                 var store = Ext.data.StoreManager.get('messgroessen');
                 return store.findRecord(
                     'id', value, 0, false, false, true)
-                    .get('messgroesse');
+                    .get('name');
             },
             editor: {
                 xtype: 'combobox',
@@ -308,7 +308,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 hideTrigger: true
             },
             renderer: function(value, metaData, record) {
-                this.setValidationResults(metaData, record, 'error');
+                this.setValidationResults(metaData, record, 'messfehler');
                 if (!value || value === '') {
                     return '';
                 }
