@@ -218,8 +218,8 @@ Ext.define('Lada.view.form.Probe', {
                                             store.clearFilter();
                                             /*eslint-disable max-len*/
                                             var nId = combo.up('fieldset')
-                                                .down('field[name=netzbetreiber]')
-                                                .getValue();
+                                                .down('messstellelabor')
+                                                .getNetworkId();
                                             if (!nId || nId.length === 0) {
                                                 store.filterBy(
                                                     function(record) {
@@ -257,8 +257,8 @@ Ext.define('Lada.view.form.Probe', {
                                             store.clearFilter();
                                             /*eslint-disable max-len*/
                                             var nId = combo.up('fieldset')
-                                                .down('field[name=netzbetreiber]')
-                                                .getValue();
+                                                .down('messstellelabor')
+                                                .getNetworkId();
                                             var dId = combo.up('fieldset')
                                                 .down('textfield[name=mstId]')
                                                 .getValue();
@@ -304,8 +304,8 @@ Ext.define('Lada.view.form.Probe', {
                                         store.clearFilter();
                                         /*eslint-disable max-len*/
                                         var nId = combo.up('fieldset')
-                                            .down('field[name=netzbetreiber]')
-                                            .getValue();
+                                            .down('messstellelabor')
+                                            .getNetworkId();
                                         if (!nId || nId.length === 0) {
                                             store.filterBy(function(record) {
                                                 return Lada.netzbetreiber.indexOf(

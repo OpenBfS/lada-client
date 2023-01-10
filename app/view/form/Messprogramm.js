@@ -200,8 +200,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 var store = combo.getStore();
                                 store.clearFilter();
                                 var nId = combo.up('fieldset')
-                                    .down('field[name=netzbetreiber]')
-                                    .getValue();
+                                    .down('messstellelabor')
+                                    .getNetworkId();
                                 if (!nId) {
                                     store.filterBy(function(record) {
                                         return Lada.netzbetreiber.indexOf(
@@ -229,8 +229,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 var store = combo.getStore();
                                 store.clearFilter();
                                 var nId = combo.up('fieldset')
-                                    .down('field[name=netzbetreiber]')
-                                    .getValue();
+                                    .down('messstellelabor')
+                                    .getNetworkId();
                                 if (!nId) {
                                     store.filterBy(function(record) {
                                         return Lada.netzbetreiber.indexOf(
