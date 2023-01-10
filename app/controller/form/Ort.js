@@ -209,8 +209,8 @@ Ext.define('Lada.controller.form.Ort', {
                 || record.get('plausibleReferenceCount') > 0
                 || record.get('referenceCountMp') > 0
                 || !(panel.down('koordinatenart').isValid()
-                     && panel.down('tfield[name=koordXExtern]').isValid()
-                     && panel.down('tfield[name=koordYExtern]').isValid()));
+                     && panel.down('tfield[name=coordXExt]').isValid()
+                     && panel.down('tfield[name=coordYExt]').isValid()));
     },
 
     checkCommitEnabled: function(callingEl) {
@@ -284,7 +284,7 @@ Ext.define('Lada.controller.form.Ort', {
             win.setLoading(true);
             win.down('koordinatenart[name=newKDA]').setReadOnly(true);
             Ext.Ajax.request({
-                url: 'lada-server/rest/koordinatenart',
+                url: 'lada-server/rest/spatrefsys',
                 method: 'POST',
                 jsonData: {
                     'from': win.down('koordinatenart[name=originalKDA]')

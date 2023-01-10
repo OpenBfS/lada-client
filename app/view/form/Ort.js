@@ -296,8 +296,8 @@ Ext.define('Lada.view.form.Ort', {
             this.down('fieldset').expand();
             this.down('ortszusatz').setHidden(false);
         }
-        if (this.record.get('netzbetreiberId') &&
-            this.record.get('netzbetreiberId') !== '') {
+        if (this.record.get('networkId') &&
+            this.record.get('networkId') !== '') {
             this.down('netzbetreiber').down('combobox').setEditable(false);
             this.down('netzbetreiber').down('combobox').setReadOnly(true);
         }
