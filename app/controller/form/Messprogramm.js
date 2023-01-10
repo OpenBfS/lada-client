@@ -27,7 +27,8 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 click: this.copy
             },
             'messprogrammform': {
-                dirtychange: this.dirtyForm
+                dirtychange: this.dirtyForm,
+                validitychange: this.dirtyForm
             },
             'messprogrammform numfield numberfield': {
                 change: this.checkPeriod
@@ -60,13 +61,17 @@ Ext.define('Lada.controller.form.Messprogramm', {
      */
     copy: function(button) {
         var me = this;
-        var origRecord = button.up('messprogrammform').getRecord();
+
         var pos = button.up('messprogrammform').up().getPosition();
         pos[0] += 10;
         pos[1] += 10;
 
+        var origRecord = button.up('messprogrammform').getRecord();
         var copy = origRecord.copy(null);
         copy.set('id', null);
+        // Associated data are not automatically included in copy
+        copy.probenZusatzs().add(origRecord.probenZusatzs().getRange());
+
         copy.save({
             callback: function(rec, op, success) {
                 if (success) {
@@ -267,6 +272,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         if (selectObjects.length > 0) {
             asocStore.add(selectObjects);
         }
+
         record.save({
             success: function(rec, response) {
                 var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
@@ -337,13 +343,14 @@ Ext.define('Lada.controller.form.Messprogramm', {
       * The dirtyForm function enables or disables the
       * buttons which are present in the toolbar of the form.
       */
-    dirtyForm: function(form, dirty) {
-        var enableForm = !form.getRecord().get('readonly') && dirty;
-        form.owner.down('button[action=save]').setDisabled(!enableForm);
+    dirtyForm: function(form) {
+        var enableForm = !form.getRecord().get('readonly') && form.isDirty();
+        form.owner.down('button[action=save]').setDisabled(
+            !enableForm || !form.isValid());
         form.owner.down('button[action=discard]').setDisabled(!enableForm);
 
         var disableActions = form.getRecord().phantom
-            || dirty || form.getRecord().get('readonly');
+            || form.isDirty() || form.getRecord().get('readonly');
         form.owner.up('messprogramm').down(
             'button[action=generateproben]').setDisabled(disableActions);
         form.owner.down('button[action=copy]').setDisabled(disableActions);
