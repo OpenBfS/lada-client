@@ -156,7 +156,7 @@ Ext.define('Lada.view.form.Probe', {
                             focusFilters: [
                                 function(item) {
                                     return Ext.Array.contains(
-                                        Lada.userroles, item.get('ldapGroup'));
+                                        Lada.userroles, item.get('ldapGr'));
                                 }
                             ]
                         }]
