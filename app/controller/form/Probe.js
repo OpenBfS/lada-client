@@ -750,10 +750,10 @@ Ext.define('Lada.controller.form.Probe', {
                 if (i === 0) {
                     current.push('D:');
                 } else if (i === desk.layer + 1) {
-                    if (records.get('sn') < 10) {
-                        value = '0' + records.get('sn');
+                    if (records.get('levVal') < 10) {
+                        value = '0' + records.get('levVal');
                     } else {
-                        value = records.get('sn');
+                        value = records.get('levVal');
                     }
                     current.push(value);
                 } else {
@@ -761,10 +761,10 @@ Ext.define('Lada.controller.form.Probe', {
                 }
             }
         } else {
-            if (records.get('sn') < 10) {
-                value = '0' + records.get('sn');
+            if (records.get('levVal') < 10) {
+                value = '0' + records.get('levVal');
             } else {
-                value = records.get('sn');
+                value = records.get('levVal');
             }
             current[desk.layer + 1] = value;
             if (desk.layer < 2) {
@@ -789,21 +789,21 @@ Ext.define('Lada.controller.form.Probe', {
         } else {
             if ( current[1] === '01') {
                 if ( (current[4] !== '00') && (desk.layer === 3) ) {
-                    mediatext.setValue(records.get('beschreibung'));
+                    mediatext.setValue(records.get('name'));
                 } else if ( (current[3] !== '00') && (desk.layer === 2) ) {
-                    mediatext.setValue(records.get('beschreibung'));
+                    mediatext.setValue(records.get('name'));
                 } else if ( (current[2] !== '00') && (desk.layer === 1) ) {
-                    mediatext.setValue(records.get('beschreibung'));
+                    mediatext.setValue(records.get('name'));
                 } else if ( (current[1] !== '00') && (desk.layer === 0 )) {
-                    mediatext.setValue(records.get('beschreibung'));
+                    mediatext.setValue(records.get('name'));
                 }
             }
 
             if ( current[1] !== '01') {
                 if ((current[2] !== '00') && (desk.layer === 1 )) {
-                    mediatext.setValue(records.get('beschreibung'));
+                    mediatext.setValue(records.get('name'));
                 } else if ((current[1] !== '00') && (desk.layer === 0 )) {
-                    mediatext.setValue(records.get('beschreibung'));
+                    mediatext.setValue(records.get('name'));
                 }
             }
         }
