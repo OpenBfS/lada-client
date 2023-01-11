@@ -317,13 +317,13 @@ Ext.application({
                     var recr = [];
                     this.each(function(rr) {
                         rec.push(rr.copy());
-                        if (rr.get('isBundesland')) {
+                        if (rr.get('isState')) {
                             recb.push(rr.copy());
                         }
-                        if (rr.get('isLandkreis')) {
+                        if (rr.get('isRuralDist')) {
                             recl.push(rr.copy());
                         }
-                        if (rr.get('isRegbezirk')) {
+                        if (rr.get('isGovDist')) {
                             recr.push(rr.copy());
                         }
                     });
