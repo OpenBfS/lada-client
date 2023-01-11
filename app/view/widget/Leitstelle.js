@@ -13,7 +13,7 @@ Ext.define('Lada.view.widget.Leitstelle', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.leitstelle',
     store: 'leitstellenwidget',
-    displayField: 'messStelle',
+    displayField: 'name',
     valueField: 'id',
     editable: this.editable || false,
     forceSelection: true,
@@ -25,11 +25,11 @@ Ext.define('Lada.view.widget.Leitstelle', {
     minChars: 0,
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{id} - {messStelle}</div></tpl>'),
+            '{id} - {name}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{id} - {messStelle}</tpl>'),
+        '<tpl for=".">{id} - {name}</tpl>'),
     labelTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{id} - {messStelle}</tpl>'),
+        '<tpl for=".">{id} - {name}</tpl>'),
 
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
