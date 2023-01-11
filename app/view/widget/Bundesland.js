@@ -13,7 +13,7 @@ Ext.define('Lada.view.widget.Bundesland', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.bundesland',
     store: 'bundeslandwidget',
-    displayField: 'bezeichnung',
+    displayField: 'name',
     valueField: 'id',
     hideTrigger: true,
     // Enable filtering of comboboxes
@@ -23,12 +23,12 @@ Ext.define('Lada.view.widget.Bundesland', {
     typeAhead: false,
     minChars: 2,
     labelTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{id} - {bezeichnung}</tpl>'),
+        '<tpl for=".">{id} - {name}</tpl>'),
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for="."><div class="x-combo-list-item  x-boundlist-item" >' +
-            '{id} - {bezeichnung}</div></tpl>'),
+            '{id} - {name}</div></tpl>'),
     displayTpl: Ext.create('Ext.XTemplate',
-        '<tpl for=".">{id} - {bezeichnung}</tpl>'),
+        '<tpl for=".">{id} - {name}</tpl>'),
     forceSelection: this.forceSelection || false,
 
     initComponent: function() {
