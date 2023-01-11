@@ -384,7 +384,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         field.up('messprogrammform').down('umwelt[name="envMediumId"]').clearValue();
         var desk = field.up('deskriptor');
         var media = field.up('messprogrammform')
-            .down('textfield[name="mediaDesk"]');
+            .down('textfield[name="envDescripDisplay"]');
         var current = media.getValue().split(' ');
         var value;
         if (current.length < 12) {
