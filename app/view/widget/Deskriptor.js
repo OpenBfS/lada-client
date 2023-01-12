@@ -39,7 +39,7 @@ Ext.define('Lada.view.widget.Deskriptor', {
         this.setStore(Ext.create('Lada.store.Deskriptoren'));
         this.store.on('load', function() {
             // Entry to be selected by clear handler
-            this.insert(0, {sn: 0, beschreibung: 'leer'});
+            this.insert(0, {levVal: 0, name: 'leer'});
         }, this.store);
 
         var combobox = this.down('combobox');
