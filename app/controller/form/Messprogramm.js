@@ -28,7 +28,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
             },
             'messprogrammform': {
                 dirtychange: this.dirtyForm,
-                save: this.saveHeadless
+                validitychange: this.dirtyForm
             },
             'messprogrammform numfield numberfield': {
                 change: this.checkPeriod
@@ -61,13 +61,17 @@ Ext.define('Lada.controller.form.Messprogramm', {
      */
     copy: function(button) {
         var me = this;
-        var origRecord = button.up('messprogrammform').getRecord();
+
         var pos = button.up('messprogrammform').up().getPosition();
         pos[0] += 10;
         pos[1] += 10;
 
+        var origRecord = button.up('messprogrammform').getRecord();
         var copy = origRecord.copy(null);
         copy.set('id', null);
+        // Associated data are not automatically included in copy
+        copy.probenZusatzs().add(origRecord.probenZusatzs().getRange());
+
         copy.save({
             callback: function(rec, op, success) {
                 if (success) {
@@ -251,9 +255,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
 
         // Update record with values changed in the form
         record.set(formPanel.getForm().getFieldValues(true));
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
-        }
         if (record.phantom) {
             record.set('id', null);
         }
@@ -271,34 +272,29 @@ Ext.define('Lada.controller.form.Messprogramm', {
         if (selectObjects.length > 0) {
             asocStore.add(selectObjects);
         }
+
         record.save({
             success: function(rec, response) {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    button.setDisabled(true);
-                    button.up('toolbar').down('button[action=discard]')
-                        .setDisabled(true);
-                    var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
-                    formPanel.clearMessages();
+                var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
+                if (parentGrid.length === 1) {
+                    parentGrid[0].reload();
+                }
+
+                var win = button.up('window');
+                if (win.closeRequested) {
+                    win.doClose();
+                } else {
                     formPanel.setRecord(rec);
-                    formPanel.setMediaDesk(rec);
+                    var json = Ext.decode(response.getResponse().responseText);
                     formPanel.setMessages(json.errors, json.warnings);
-                    var win = button.up('window');
+
                     win.record = rec;
                     win.enableChildren();
                 }
             },
             failure: function(newRecord, response) {
+                formPanel.loadRecord(record);
                 var i18n = Lada.getApplication().bundle;
-                button.setDisabled(true);
-                button.up('toolbar').down('button[action=discard]')
-                    .setDisabled(true);
-                var rec = formPanel.getForm().getRecord();
-                rec.dirty = false;
-                formPanel.getForm().loadRecord(newRecord);
                 if (response.error) {
                     //TODO: check content of error.status (html error code)
                     Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -314,7 +310,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
                             Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
                                 i18n.getMsg('err.msg.generic.body'));
                         }
-                        formPanel.clearMessages();
                         formPanel.setMessages(json.errors, json.warnings);
                     } else {
                         Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
@@ -324,62 +319,6 @@ Ext.define('Lada.controller.form.Messprogramm', {
             }
         });
     },
-
-    /**
-     * Saves the current form content without manipulating the gui.
-     */
-    saveHeadless: function(panel) {
-        var formPanel = panel;
-        var data = formPanel.getForm().getFieldValues(false);
-        var record = formPanel.getForm().getRecord();
-        for (var key in data) {
-            record.set(key, data[key]);
-        }
-        if (!record.get('letzteAenderung')) {
-            record.set('letzteAenderung', new Date());
-        }
-        if (record.phantom) {
-            record.set('id', null);
-        }
-        record.save({
-            success: function(newRecord, response) {
-                var json = Ext.decode(response.getResponse().responseText);
-                if (json) {
-                    var parentGrid = Ext.ComponentQuery.query('dynamicGrid');
-                    if (parentGrid.length === 1) {
-                        parentGrid[0].reload();
-                    }
-                }
-            },
-            failure: function(newRecord, response) {
-                var i18n = Lada.getApplication().bundle;
-                var rec = formPanel.getForm().getRecord();
-                rec.dirty = false;
-                formPanel.getForm().loadRecord(rec);
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                }
-            }
-        });
-    },
-
 
     /**
       * The discard function resets the form
@@ -401,29 +340,20 @@ Ext.define('Lada.controller.form.Messprogramm', {
     },
 
     /**
-      * The dirtyForm function enables or disables the save and discard
-      * button which are present in the toolbar of the form.
-      * The Buttons are only active if the content of the form was altered
-      * (the form is dirty).
+      * The dirtyForm function enables or disables the
+      * buttons which are present in the toolbar of the form.
       */
-    dirtyForm: function(form, dirty) {
-        if (!form.getRecord().get('readonly') && dirty) {
-            form.owner.down('button[action=save]').setDisabled(false);
-            form.owner.down('button[action=discard]').setDisabled(false);
-        } else {
-            form.owner.down('button[action=save]').setDisabled(true);
-            form.owner.down('button[action=discard]').setDisabled(true);
-        }
-        if (form.getRecord().phantom || dirty ||
-            form.getRecord().get('readonly') === true) {
-            form.owner.up('messprogramm').down(
-                'button[action=generateproben]').setDisabled(true);
-            form.owner.down('button[action=copy]').setDisabled(true);
-        } else {
-            form.owner.up('messprogramm').down(
-                'button[action=generateproben]').setDisabled(false);
-            form.owner.down('button[action=copy]').setDisabled(false);
-        }
+    dirtyForm: function(form) {
+        var enableForm = !form.getRecord().get('readonly') && form.isDirty();
+        form.owner.down('button[action=save]').setDisabled(
+            !enableForm || !form.isValid());
+        form.owner.down('button[action=discard]').setDisabled(!enableForm);
+
+        var disableActions = form.getRecord().phantom
+            || form.isDirty() || form.getRecord().get('readonly');
+        form.owner.up('messprogramm').down(
+            'button[action=generateproben]').setDisabled(disableActions);
+        form.owner.down('button[action=copy]').setDisabled(disableActions);
     },
 
     /**

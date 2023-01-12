@@ -10,7 +10,7 @@
  * Formular to edit a Probe
  */
 Ext.define('Lada.view.form.Probe', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.probeform',
     requires: [
         'Lada.util.FunctionScheduler',
@@ -218,8 +218,8 @@ Ext.define('Lada.view.form.Probe', {
                                             store.clearFilter();
                                             /*eslint-disable max-len*/
                                             var nId = combo.up('fieldset')
-                                                .down('netzbetreiber[name=netzbetreiber]')
-                                                .getValue();
+                                                .down('messstellelabor')
+                                                .getNetworkId();
                                             if (!nId || nId.length === 0) {
                                                 store.filterBy(
                                                     function(record) {
@@ -257,8 +257,8 @@ Ext.define('Lada.view.form.Probe', {
                                             store.clearFilter();
                                             /*eslint-disable max-len*/
                                             var nId = combo.up('fieldset')
-                                                .down('netzbetreiber[name=netzbetreiber]')
-                                                .getValue();
+                                                .down('messstellelabor')
+                                                .getNetworkId();
                                             var dId = combo.up('fieldset')
                                                 .down('textfield[name=mstId]')
                                                 .getValue();
@@ -304,8 +304,8 @@ Ext.define('Lada.view.form.Probe', {
                                         store.clearFilter();
                                         /*eslint-disable max-len*/
                                         var nId = combo.up('fieldset')
-                                            .down('netzbetreiber[name=netzbetreiber]')
-                                            .getValue();
+                                            .down('messstellelabor')
+                                            .getNetworkId();
                                         if (!nId || nId.length === 0) {
                                             store.filterBy(function(record) {
                                                 return Lada.netzbetreiber.indexOf(
@@ -516,6 +516,8 @@ Ext.define('Lada.view.form.Probe', {
         if (probeRecord.get('owner') && !probeRecord.phantom) {
             this.down('button[action=copy]').setDisabled(false);
         }
+
+        this.setMediaDesk(probeRecord);
     },
 
     setMediaDesk: function(record) {
@@ -523,100 +525,5 @@ Ext.define('Lada.view.form.Probe', {
             Lada.view.form.Probe.mediaSnScheduler,
             record
         );
-    },
-
-    setMessages: function(errors, warnings, notifications) {
-        var key;
-        var element;
-        var content;
-        var tmp;
-        var i18n = Lada.getApplication().bundle;
-        if (warnings) {
-            for (key in warnings) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = warnings[key];
-                var warnText = '';
-                for (var i = 0; i < content.length; i++) {
-                    warnText += i18n.getMsg(content[i].toString()) + '\n';
-                }
-                element.showWarnings(warnText);
-            }
-        }
-        if (notifications) {
-            for (key in notifications) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = notifications[key];
-                var notificationText = '';
-                for (var j = 0; j < content.length; j++) {
-                    notificationText += i18n.getMsg(
-                        content[j].toString()) + '\n';
-                }
-                element.showNotifications(notificationText);
-            }
-        }
-        if (errors) {
-            for (key in errors) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = errors[key];
-                var errorText = '';
-                for (var k = 0; k < content.length; k++) {
-                    errorText += i18n.getMsg(content[k].toString()) + '\n';
-                }
-                element.showErrors(errorText);
-            }
-        }
-    },
-
-    clearMessages: function() {
-        this.down('cbox[name=mstlabor]').clearWarningOrError();
-        this.down('tfield[name=hauptprobenNr]').clearWarningOrError();
-        this.down('cbox[name=reiProgpunktGrpId]').clearWarningOrError();
-        this.down('cbox[name=ktaGruppeId]').clearWarningOrError();
-        this.down('cbox[name=datenbasisId]').clearWarningOrError();
-        this.down('cbox[name=baId]').clearWarningOrError();
-        this.down('chkbox[name=test]').clearWarningOrError();
-        this.down('cbox[name=probenartId]').clearWarningOrError();
-        this.down('netzbetreiber').clearWarningOrError();
-        this.down('cbox[name=erzeugerId]').clearWarningOrError();
-        this.down('cbox[name=umwId]').clearWarningOrError();
-        this.down('datetime[name=probeentnahmeBeginn]').clearWarningOrError();
-        this.down('datetime[name=probeentnahmeEnde]').clearWarningOrError();
-        this.down('datetime[name=ursprungszeit]').clearWarningOrError();
-        this.down('fset[name=entnahmePeriod]').clearMessages();
-        this.down('fset[name=sollzeitPeriod]').clearMessages();
-        this.down('tfield[name=mediaDesk]').clearWarningOrError();
-        this.down('fset[name=deskriptordetails]').clearMessages();
-        this.down('fset[name=ursprung]').clearMessages();
-        //Deskriptoren
-        for (var i = 0; i < 12; i++) {
-            this.down('deskriptor[layer=' + i + ']').clearWarningOrError();
-        }
-    },
-
-    setReadOnly: function(value) {
-        this.getForm().getFields().each(function(field) {
-            field.setReadOnly(value);
-        });
     }
 });

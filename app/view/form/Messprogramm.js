@@ -10,7 +10,7 @@
  * Form to edit a Messprogramm
  */
 Ext.define('Lada.view.form.Messprogramm', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.messprogrammform',
     requires: [
         'Lada.util.FunctionScheduler',
@@ -200,8 +200,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 var store = combo.getStore();
                                 store.clearFilter();
                                 var nId = combo.up('fieldset')
-                                    .down('netzbetreiber[name=netzbetreiber]')
-                                    .getValue();
+                                    .down('messstellelabor')
+                                    .getNetworkId();
                                 if (!nId) {
                                     store.filterBy(function(record) {
                                         return Lada.netzbetreiber.indexOf(
@@ -229,8 +229,8 @@ Ext.define('Lada.view.form.Messprogramm', {
                                 var store = combo.getStore();
                                 store.clearFilter();
                                 var nId = combo.up('fieldset')
-                                    .down('netzbetreiber[name=netzbetreiber]')
-                                    .getValue();
+                                    .down('messstellelabor')
+                                    .getNetworkId();
                                 if (!nId) {
                                     store.filterBy(function(record) {
                                         return Lada.netzbetreiber.indexOf(
@@ -607,27 +607,20 @@ Ext.define('Lada.view.form.Messprogramm', {
 
 
     setRecord: function(messRecord) {
-        this.down('button[action=copy]').setDisabled(
-            messRecord.get('readonly'));
         this.clearMessages();
 
-        // Add probenZusatzs as an array of model instances to the record.
-        // This is necessary, because loadRecord() calls setValue() on
-        // matching fields internally and that won't work for the matching
-        // tagfield if probenZusatzs is just an array of ordinary objects
-        // (such as returned by `messRecord.getData(true)') or just
-        // internally available as associated data.
-        // Note that setting the value directly at the tagfield, e.g. using
-        // setValue(), is not an option because that prevents any
-        // dirtychange events from occurring once any value has been chosen
-        // in the tagfield.
-        messRecord.set(
-            'probenZusatzs', messRecord.probenZusatzs().getRange());
         this.getForm().loadRecord(messRecord);
+
+        // Set associated data in tag field
+        var pzwField = this.down('field[name=probenZusatzs]');
+        pzwField.setValue(messRecord.probenZusatzs().getRange());
+        pzwField.resetOriginalValue();
 
         this.populateIntervall(messRecord);
 
         this.filterProbenZusatzs(messRecord.get('umwId'));
+
+        this.setMediaDesk(messRecord);
     },
 
     setMediaDesk: function(record) {
@@ -635,90 +628,5 @@ Ext.define('Lada.view.form.Messprogramm', {
             Lada.view.form.Messprogramm.mediaSnScheduler,
             record
         );
-    },
-
-    setMessages: function(errors, warnings) {
-        var key;
-        var element;
-        var content;
-        var i18n = Lada.getApplication().bundle;
-        if (warnings) {
-            for (key in warnings) {
-                element = this.down('component[name=' + key + ']');
-                if (!element) {
-                    continue;
-                }
-                content = warnings[key];
-                var warnText = '';
-                for (var i = 0; i < content.length; i++) {
-                    warnText += i18n.getMsg(content[i].toString()) + '\n';
-                }
-                element.showWarnings(warnText);
-            }
-        }
-        if (errors) {
-            for (key in errors) {
-                element = this.down('component[name=' + key + ']');
-                if (!element) {
-                    continue;
-                }
-                content = errors[key];
-                var errorText = '';
-                for (var j = 0; j < content.length; j++) {
-                    errorText += i18n.getMsg(content[j].toString()) + '\n';
-                }
-                element.showErrors(errorText);
-            }
-        }
-    },
-
-    clearMessages: function() {
-        this.down('cbox[name=mstlabor]').clearWarningOrError();
-        //no clearmsg for probeKommentar
-        this.down('cbox[name=datenbasisId]').clearWarningOrError();
-        this.down('cbox[name=reiProgpunktGrpId]').clearWarningOrError();
-        this.down('cbox[name=ktaGruppeId]').clearWarningOrError();
-        this.down('cbox[name=baId]').clearWarningOrError();
-        this.down('chkbox[name=test]').clearWarningOrError();
-        this.down('chkbox[name=aktiv]').clearWarningOrError();
-        this.down('cbox[name=probenartId]').clearWarningOrError();
-        this.down('netzbetreiber').clearWarningOrError();
-        // clear messages in intervall definition
-        this.down('fset[name=probenIntervallFieldset]').clearMessages();
-        this.down('cbox[name=probenintervall]').clearWarningOrError();
-        this.down('numfield[name=teilintervallVon]').clearWarningOrError();
-        this.down('numfield[name=teilintervallBis]').clearWarningOrError();
-        this.down('dayofyear[name=gueltigVon]').clearWarningOrError();
-        this.down('dayofyear[name=gueltigBis]').clearWarningOrError();
-        //no clear for probeNehmerId
-        // Deskriptoren are missing
-        this.down('cbox[name=umwId]').clearWarningOrError();
-        this.down('cbox[name=mehId]').clearWarningOrError();
-    },
-
-    setReadOnly: function(value) {
-        this.down('cbox[name=mstlabor]').setReadOnly(value);
-        this.down('cbox[name=datenbasisId]').setReadOnly(value);
-        this.down('cbox[name=reiProgpunktGrpId]').setReadOnly(value);
-        this.down('cbox[name=ktaGruppeId]').setReadOnly(value);
-        this.down('cbox[name=baId]').setReadOnly(value);
-        this.down('chkbox[name=test]').setReadOnly(value);
-        this.down('chkbox[name=aktiv]').setReadOnly(value);
-        this.down('cbox[name=probenartId]').setReadOnly(value);
-        //         this.down('netzbetreiber').setReadOnly(value);
-        this.down('cbox[name=probenintervall]').setReadOnly(value);
-        this.down('numfield[name=teilintervallVon]').setReadOnly(value);
-        this.down('numfield[name=teilintervallBis]').setReadOnly(value);
-        this.down('numfield[name=intervallOffset]').setReadOnly(value);
-        this.down('dayofyear[name=gueltigVon]').setReadOnly(value);
-        this.down('dayofyear[name=gueltigBis]').setReadOnly(value);
-        this.down('cbox[name=umwId]').setReadOnly(value);
-        this.down('cbox[name=mehId]').setReadOnly(value);
-        this.down('cbox[name=probeNehmerId]').setReadOnly(value);
-        this.down('messprogrammland[name=mplId]').setReadOnly(value);
-        this.down('tagfield[name=probenZusatzs]').setReadOnly(value);
-        for (var i = 0; i < 12; i++) {
-            this.down('deskriptor[layer=' + i + ']').setReadOnly(value);
-        }
     }
 });

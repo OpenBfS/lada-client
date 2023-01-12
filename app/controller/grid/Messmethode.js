@@ -97,9 +97,6 @@ Ext.define('Lada.controller.grid.Messmethode', {
      */
     add: function(button) {
         var record = Ext.create('Lada.model.MmtMessprogramm');
-        if (!record.get('letzteAenderung')) {
-            record.data.letzteAenderung = new Date();
-        }
         record.set(
             'messprogrammId',
             button.up('messprogramm').down('messprogrammform')

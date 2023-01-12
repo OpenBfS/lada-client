@@ -10,7 +10,7 @@
  * Form to create a new Messpunkt
  */
 Ext.define('Lada.view.form.Ort', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.ortform',
     requires: [
         'Lada.view.widget.Verwaltungseinheit',
@@ -33,21 +33,17 @@ Ext.define('Lada.view.form.Ort', {
 
     trackResetOnLoad: true,
 
-    readOnly: true,
-
     initComponent: function() {
         var i18n = Lada.getApplication().bundle;
+        var me = this;
         this.items = [{
             xtype: 'netzbetreiber',
             name: 'netzbetreiberId',
-            submitValue: true,
             border: false,
             fieldLabel: i18n.getMsg('netzbetreiberId'),
             labelWidth: 125,
             filteredStore: true,
-            editable: true,
-            allowBlank: false,
-            value: this.record.get('netzbetreiberId')
+            allowBlank: false
         }, {
             xtype: 'tfield',
             name: 'ortId',
@@ -84,11 +80,25 @@ Ext.define('Lada.view.form.Ort', {
             labelWidth: 125,
             fieldLabel: i18n.getMsg('staat'),
             name: 'staatId',
+            validator: function(val) {
+                var hasMinFields = Boolean(
+                    me.down('field[name=kdaId]').getValue()
+                        || me.down('field[name=gemId]').getValue()
+                        || val);
+                return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+            },
             forceSelection: true
         }, {
             xtype: 'verwaltungseinheit',
             labelWidth: 125,
             fieldLabel: i18n.getMsg('orte.verwaltungseinheit'),
+            validator: function(val) {
+                var hasMinFields = Boolean(
+                    me.down('field[name=kdaId]').getValue()
+                        || val
+                        || me.down('field[name=staatId]').getValue());
+                return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+            },
             forceSelection: true,
             name: 'gemId'
         }, {
@@ -149,16 +159,31 @@ Ext.define('Lada.view.form.Ort', {
         }, {
             xtype: 'fset',
             collapsible: true,
-            name: 'koordinaten',
+            name: 'coordinates',
             items: [{
                 xtype: 'koordinatenart',
                 labelWidth: 125,
                 fieldLabel: i18n.getMsg('orte.kda'),
+                validator: function(val) {
+                    var hasMinFields = Boolean(
+                        val
+                            || me.down('field[name=gemId]').getValue()
+                            || me.down('field[name=staatId]').getValue());
+                    return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+                },
                 name: 'kdaId'
             }, {
                 xtype: 'tfield',
                 labelWidth: 125,
                 fieldLabel: i18n.getMsg('orte.koordx'),
+                validator: function(val) {
+                    var kda = me.down('field[name=kdaId]').getValue();
+                    var hasMinFields = Boolean(
+                        !kda || kda
+                            && me.down('field[name=koordYExtern]').getValue()
+                            && val);
+                    return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+                },
                 regex: /^[noeswNOESW\d\.,-]+$/,
                 name: 'koordXExtern',
                 maxLength: 22
@@ -167,6 +192,14 @@ Ext.define('Lada.view.form.Ort', {
                 labelWidth: 125,
                 fieldLabel: i18n.getMsg('orte.koordy'),
                 name: 'koordYExtern',
+                validator: function(val) {
+                    var kda = me.down('field[name=kdaId]').getValue();
+                    var hasMinFields = Boolean(
+                        !kda || kda
+                            && val
+                            && me.down('field[name=koordXExtern]').getValue());
+                    return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
+                },
                 regex: /^[noeswNOESW\d\.,-]+$/,
                 maxLength: 22
             }]
@@ -222,9 +255,7 @@ Ext.define('Lada.view.form.Ort', {
                 action: 'copy',
                 qtip: i18n.getMsg('copy.qtip', i18n.getMsg('ort')),
                 icon: 'resources/img/dialog-ok-apply.png',
-                disabled: !this.record.phantom && !this.record.get('readonly') ?
-                    false :
-                    true
+                disabled: true
             },
             '->',
             {
@@ -270,79 +301,5 @@ Ext.define('Lada.view.form.Ort', {
             this.down('netzbetreiber').down('combobox').setEditable(false);
             this.down('netzbetreiber').down('combobox').setReadOnly(true);
         }
-    },
-
-    setMessages: function(errors, warnings) {
-        var key;
-        var element;
-        var content;
-        var i18n = Lada.getApplication().bundle;
-        if (warnings) {
-            for (key in warnings) {
-                element = this.down('component[name=' + key + ']');
-                if (!element) {
-                    continue;
-                }
-                content = warnings[key];
-                var warnText = '';
-                for (var i = 0; i < content.length; i++) {
-                    warnText += i18n.getMsg(content[i].toString()) + '\n';
-                }
-                element.showWarnings(warnText);
-            }
-        }
-        if (errors) {
-            for (key in errors) {
-                element = this.down('component[name=' + key + ']');
-                if (!element) {
-                    continue;
-                }
-                content = errors[key];
-                var errorText = '';
-                for (var j = 0; j < content.length; j++) {
-                    errorText += i18n.getMsg(content[j].toString()) + '\n';
-                }
-                element.showErrors(errorText);
-            }
-        }
-    },
-
-    clearMessages: function() {
-        // TODO: this is a stub
-        this.down('tfield[name=koordXExtern]').clearWarningOrError();
-        this.down('tfield[name=koordYExtern]').clearWarningOrError();
-        this.down('verwaltungseinheit[name=gemId]').clearWarningOrError();
-        this.down('orttyp[name=ortTyp]').clearWarningOrError();
-        this.down('staat[name=staatId]').clearWarningOrError();
-        this.down('koordinatenart[name=kdaId]').clearWarningOrError();
-        this.down('fset[name=koordinaten]').clearMessages();
-        this.down('fset[name=reiProperties]').clearMessages();
-        this.down('tfield[name=ortId]').clearWarningOrError();
-        this.down('ktagruppe[name=ktaGruppeId]').clearWarningOrError();
-    },
-
-    setReadOnly: function(value) {
-        this.down('netzbetreiber').setReadOnly(value);
-        this.down('tfield[name=ortId]').setReadOnly(value);
-        this.down('ortszusatz[name=ozId]').setReadOnly(value);
-        this.down('orttyp[name=ortTyp]').setReadOnly(value);
-        this.down('tfield[name=kurztext]').setReadOnly(value);
-        this.down('tfield[name=langtext]').setReadOnly(value);
-        this.down('staat[name=staatId]').setReadOnly(value);
-        this.down('verwaltungseinheit[name=gemId]').setReadOnly(value);
-        this.down('koordinatenart[name=kdaId]').setReadOnly(value);
-        this.down('tfield[name=koordXExtern]').setReadOnly(value);
-        this.down('tfield[name=koordYExtern]').setReadOnly(value);
-        this.down('tfield[name=berichtstext]').setReadOnly(value);
-        this.down('reiprogpunktgruppe[name=reiProgpunktGrpId]').setReadOnly(value);
-        this.down('ktagruppe[name=ktaGruppeId]').setReadOnly(value);
-        this.down('tfield[name=zone]').setReadOnly(value);
-        this.down('tfield[name=sektor]').setReadOnly(value);
-        this.down('tfield[name=zustaendigkeit]').setReadOnly(value);
-        this.down('tfield[name=mpArt]').setReadOnly(value);
-        this.down('chkbox[name=unscharf]').setReadOnly(value);
-        this.down('chkbox[name=aktiv]').setReadOnly(value);
-        this.down('numfield[name=hoeheLand]').setReadOnly(value);
-        this.down('numfield[name=hoeheUeberNn]').setReadOnly(value);
     }
 });

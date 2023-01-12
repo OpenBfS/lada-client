@@ -10,7 +10,7 @@
  * Formular to edit a Probe
  */
 Ext.define('Lada.view.form.Probenehmer', {
-    extend: 'Ext.form.Panel',
+    extend: 'Lada.view.form.LadaForm',
     alias: 'widget.probenehmerform',
     requires: [
         'Lada.view.widget.Netzbetreiber',
@@ -254,81 +254,5 @@ Ext.define('Lada.view.form.Probenehmer', {
     setRecord: function(probenehmerRecord) {
         this.clearMessages();
         this.getForm().loadRecord(probenehmerRecord);
-    },
-
-    setMessages: function(errors, warnings) {
-        var key;
-        var element;
-        var content;
-        var tmp;
-        var i18n = Lada.getApplication().bundle;
-        if (warnings) {
-            for (key in warnings) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = warnings[key];
-                var warnText = '';
-                for (var i = 0; i < content.length; i++) {
-                    warnText += i18n.getMsg(content[i].toString()) + '\n';
-                }
-                element.showWarnings(warnText);
-            }
-        }
-        if (errors) {
-            for (key in errors) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = errors[key];
-                var errorText = '';
-                for (var j = 0; j < content.length; j++) {
-                    errorText += i18n.getMsg(content[j].toString()) + '\n';
-                }
-                element.showErrors(errorText);
-            }
-        }
-    },
-
-    clearMessages: function() {
-        this.down('tfield[name=prnId]').clearWarningOrError();
-        this.down('netzbetreiber').clearWarningOrError();
-        this.down('tfield[name=bearbeiter]').clearWarningOrError();
-        this.down('tfield[name=bemerkung]').clearWarningOrError();
-        this.down('tarea[name=bezeichnung]').clearWarningOrError();
-        this.down('tfield[name=kurzBezeichnung]').clearWarningOrError();
-        this.down('tfield[name=ort]').clearWarningOrError();
-        this.down('tfield[name=betrieb]').clearWarningOrError();
-        this.down('tfield[name=plz]').clearWarningOrError();
-        this.down('tfield[name=strasse]').clearWarningOrError();
-        this.down('tfield[name=telefon]').clearWarningOrError();
-        this.down('tfield[name=tourenplan]').clearWarningOrError();
-        this.down('tfield[name=typ]').clearWarningOrError();
-    },
-
-    setReadOnly: function(value) {
-        this.down('tfield[name=prnId]').setReadOnly(value);
-        this.down('netzbetreiber').setReadOnly(value);
-        this.down('tfield[name=bearbeiter]').setReadOnly(value);
-        this.down('tfield[name=bemerkung]').setReadOnly(value);
-        this.down('tarea[name=bezeichnung]').setReadOnly(value);
-        this.down('tfield[name=kurzBezeichnung]').setReadOnly(value);
-        this.down('tfield[name=betrieb]').setReadOnly(value);
-        this.down('tfield[name=ort]').setReadOnly(value);
-        this.down('tfield[name=plz]').setReadOnly(value);
-        this.down('tfield[name=strasse]').setReadOnly(value);
-        this.down('tfield[name=telefon]').setReadOnly(value);
-        this.down('tfield[name=tourenplan]').setReadOnly(value);
-        this.down('tfield[name=typ]').setReadOnly(value);
     }
 });
