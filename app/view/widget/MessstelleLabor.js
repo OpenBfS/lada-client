@@ -96,7 +96,7 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
                         });
 
                         // Set Netzbetreiber
-                        me.setNetzbetreiber(newValue.get('mstId'));
+                        me.setNetzbetreiber(newValue.get('measFacilId'));
 
                         // Set related fields, if existent
                         var fieldset = combo.up('fieldset');
