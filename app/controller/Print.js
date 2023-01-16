@@ -728,25 +728,25 @@ Ext.define('Lada.controller.Print', {
         for (var i in data) {
             var probe = data[i];
             var deskriptoren = probe.deskriptoren;
-            var messstelle = probe.messstelle;
-            var labormessstelle = probe.labormessstelle;
-            var ortszuordnung = probe.ortszuordnung;
+            var messstelle = probe.measFacil;
+            var labormessstelle = probe.apprLab;
+            var ortszuordnung = probe.geolocat;
 
             if (messstelle !== null) {
-                prep[i].messstelle = [];
-                prep[i].messstelle[0] = messstelle;
-                prep[i]['messstelle.messStelle'] = messstelle.messStelle;
+                prep[i].measFacil = [];
+                prep[i].measFacil[0] = messstelle;
+                prep[i]['measFacil.name'] = messstelle.name;
             } else {
-                prep[i].messstelle = [];
-                prep[i].messstelle[0] = emptyMessstelle;
-                prep[i]['messstelle.messStelle'] = '';
+                prep[i].measFacil = [];
+                prep[i].measFacil[0] = emptyMessstelle;
+                prep[i]['measFacil.name'] = '';
             }
 
             if (labormessstelle !== null) {
-                prep[i]['labormessstelle.messStelle'] =
+                prep[i]['apprLab.name'] =
                     labormessstelle.messStelle;
             } else {
-                prep[i]['labormessstelle.messStelle'] = '';
+                prep[i]['apprLab.name'] = '';
             }
             if ((deskriptoren)) {
                 prep[i].deskriptoren = [];
@@ -760,8 +760,8 @@ Ext.define('Lada.controller.Print', {
             for (var o in ortszuordnung) {
                 var oz = ortszuordnung[o];
                 for (var e in oz.ort) {
-                    prep[i].ortszuordnung[o]['ort'] = null;
-                    prep[i].ortszuordnung[o]['ort.' + e] = oz.ort[e];
+                    prep[i].geolocat[o]['site'] = null;
+                    prep[i].geolocat[o]['site.' + e] = oz.site[e];
                 }
             }
         }
