@@ -31,11 +31,11 @@ Ext.define('Lada.view.window.AuditTrail', {
     pendingRequest: null,
 
     dateItems: [
-        'probeentnahme_beginn',
-        'probeentnahme_ende',
-        'solldatum_beginn',
-        'solldatum_ende',
-        'messzeitpunkt',
+        'sample_start_date',
+        'sample_end_date',
+        'sched_start_date',
+        'sched_end_date',
+        'measm_start_date',
         'ursprungszeit',
         'datum'
     ],
@@ -225,7 +225,7 @@ Ext.define('Lada.view.window.AuditTrail', {
         for (var key in audit.changedFields) {
             var value = '';
             if (Ext.Array.contains(this.dateItems, key)) {
-                if (key === 'solldatum_beginn' || key === 'solldatum_ende') {
+                if (key === 'sched_start_date' || key === 'sched_end_date') {
                     value = Lada.util.Date.formatTimestamp(
                         audit.changedFields[key], 'd.m.Y', true);
                 } else {
@@ -241,9 +241,8 @@ Ext.define('Lada.view.window.AuditTrail', {
                 value = i18n.getMsg('true');
             } else if (value === false) {
                 value = i18n.getMsg('false');
-            } else if (key === 'messwert' ||
-                key === 'messwert_pzs' ||
-                key === 'nwg_zu_messwert'
+            } else if (key === 'meas_val' ||
+                key === 'detect_lim'
             ) {
                 var strValue = Lada.getApplication().toExponentialString(
                     value, 2)
@@ -258,11 +257,11 @@ Ext.define('Lada.view.window.AuditTrail', {
             if (key === 'ext_id') {
                 switch (audit.type) {
                     case 'probe':
-                        html += '' + i18n.getMsg('extProbeId') + ': ' +
+                        html += '' + i18n.getMsg('sample.ext_id') + ': ' +
                             value + '<br>';
                         break;
                     case 'messung':
-                        html += '' + i18n.getMsg('extMessungsId') + ': ' +
+                        html += '' + i18n.getMsg('measm.ext_id') + ': ' +
                             value + '<br>';
                         break;
                 }
