@@ -41,7 +41,8 @@ Ext.define('Lada.model.Ort', {
         allowNull: true
     }, {
         name: 'kdaId',
-        type: 'int'
+        type: 'int',
+        allowNull: true
     }, {
         name: 'ozId',
         allowNull: true
