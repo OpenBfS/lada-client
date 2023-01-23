@@ -33,6 +33,7 @@ Ext.define('Lada.view.window.AuditTrail', {
     dateItems: [
         'probeentnahme_beginn',
         'probeentnahme_ende',
+        'mitte_sammelzeitraum',
         'solldatum_beginn',
         'solldatum_ende',
         'messzeitpunkt',
