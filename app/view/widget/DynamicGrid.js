@@ -1036,7 +1036,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     addOrtButtons: function() {
         if (Ext.Array.contains(Lada.funktionen, 4) && !this.tbuttonExists(
-            'addMap')
+            'addMap') && this.showMap
         ) {
             this.toolbarbuttons.push({
                 text: this.i18n.getMsg('orte.frommap'),
