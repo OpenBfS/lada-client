@@ -527,7 +527,7 @@ Ext.define('Lada.controller.Print', {
         var probenAttribute = null;
         for (var i = 0; i < attributes.length; i++) {
             var attribute = attributes[i];
-            if (attribute.name === 'proben') {
+            if (attribute.name === 'samples') {
                 probenAttribute = attribute;
             }
         }
@@ -535,7 +535,7 @@ Ext.define('Lada.controller.Print', {
         if (probenAttribute
             && probenAttribute.clientParams.attributes.some(
                 function(p) {
-                    return p.name === 'messungen';
+                    return p.name === 'measms';
                 })
         ) {
             //TODO: preset fields are ignored here as they are no longer needed
@@ -667,7 +667,7 @@ Ext.define('Lada.controller.Print', {
                 layout: 'A4 portrait',
                 outputFormat: format,
                 attributes: {
-                    proben: data,
+                    samples: data,
                     // TODO: hard coded submission of time zone data.
                     // Not elegant, but required because of separate
                     // Erfassungsbogen handling
@@ -727,7 +727,7 @@ Ext.define('Lada.controller.Print', {
 
         for (var i in data) {
             var probe = data[i];
-            var deskriptoren = probe.deskriptoren;
+            var deskriptoren = probe.envDescrip;
             var messstelle = probe.measFacil;
             var labormessstelle = probe.apprLab;
             var ortszuordnung = probe.geolocat;
@@ -744,16 +744,16 @@ Ext.define('Lada.controller.Print', {
 
             if (labormessstelle !== null) {
                 prep[i]['apprLab.name'] =
-                    labormessstelle.messStelle;
+                    labormessstelle.name;
             } else {
                 prep[i]['apprLab.name'] = '';
             }
             if ((deskriptoren)) {
-                prep[i].deskriptoren = [];
-                prep[i].deskriptoren[0] = deskriptoren;
+                prep[i].envDescrip = [];
+                prep[i].envDescrip[0] = deskriptoren;
             } else {
-                prep[i].deskriptoren = [];
-                prep[i].deskriptoren[0] = emptyDeskriptor;
+                prep[i].envDescrip = [];
+                prep[i].envDescrip[0] = emptyDeskriptor;
             }
 
             // Flatten the Ortszuodnung Array
