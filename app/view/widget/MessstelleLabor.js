@@ -51,7 +51,7 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
             }),
             allowBlank: false,
             isFormField: false,
-            fieldLabel: i18n.getMsg('labor_mst_id'),
+            fieldLabel: i18n.getMsg('appr_lab_id'),
             labelWidth: 100,
 
             // Enable filtering of combobox
