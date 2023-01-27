@@ -83,7 +83,7 @@ Ext.define('Lada.view.form.Ort', {
             validator: function(val) {
                 var hasMinFields = Boolean(
                     me.down('field[name=spatRefSysId]').getValue()
-                        || me.down('field[name=municId]').getValue()
+                        || me.down('field[name=adminUnitId]').getValue()
                         || val);
                 return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
             },
@@ -100,7 +100,7 @@ Ext.define('Lada.view.form.Ort', {
                 return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
             },
             forceSelection: true,
-            name: 'municId'
+            name: 'adminUnitId'
         }, {
             xtype: 'fset',
             collapsible: true,
@@ -124,7 +124,7 @@ Ext.define('Lada.view.form.Ort', {
                 xtype: 'ktagruppe',
                 labelWidth: 125,
                 maxLength: 100,
-                name: 'reiNuclFacilGrId',
+                name: 'nuclFacilGrId',
                 fieldLabel: i18n.getMsg('orte.anlageId')
             }, {
                 xtype: 'tfield',
@@ -167,7 +167,7 @@ Ext.define('Lada.view.form.Ort', {
                 validator: function(val) {
                     var hasMinFields = Boolean(
                         val
-                            || me.down('field[name=municId]').getValue()
+                            || me.down('field[name=adminUnitId]').getValue()
                             || me.down('field[name=stateId]').getValue());
                     return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
                 },

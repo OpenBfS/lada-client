@@ -31,7 +31,7 @@ Ext.define('Lada.model.Mpg', {
         name: 'regulationId',
         type: 'int'
     }, {
-        name: 'stateMpgId',
+        name: 'mpgCategId',
         type: 'int',
         allowNull: true
     }, {
@@ -49,7 +49,7 @@ Ext.define('Lada.model.Mpg', {
         name: 'envMediumId',
         allowNull: true
     }, {
-        name: 'unitId',
+        name: 'measUnitId',
         type: 'int',
         allowNull: true
     }, {

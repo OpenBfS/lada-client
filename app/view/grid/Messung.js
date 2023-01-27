@@ -98,7 +98,7 @@ Ext.define('Lada.view.grid.Messung', {
                 }
             }
         }, {
-            header: i18n.getMsg('extMessungsId'),
+            header: i18n.getMsg('measm.ext_id'),
             dataIndex: 'extId',
             flex: 0.7,
             editor: {
@@ -119,7 +119,7 @@ Ext.define('Lada.view.grid.Messung', {
                 allowBlank: false
             }
         }, {
-            header: i18n.getMsg('messzeitpunkt'),
+            header: i18n.getMsg('measm_start_date'),
             dataIndex: 'measmStartDate',
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
@@ -325,7 +325,7 @@ Ext.define('Lada.view.grid.Messung', {
         } else {
             var rec = sstore.getById(opts.statusId);
             if (rec) {
-                value = rec.get('statusComb');
+                value = rec.get('statusMpId');
                 //add the determined statuswert to the record.
                 // this is necessary to let the controller determine
                 // which actions are allowed.

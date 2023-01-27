@@ -24,13 +24,13 @@ Ext.define('Lada.model.Site', {
         name: 'extId',
         type: 'nonblankstring'
     }, {
-        name: 'reiNuclFacilGrId',
+        name: 'nuclFacilGrId',
         type: 'int',
         allowNull: true
     }, {
         name: 'networkId'
     }, {
-        name: 'municId',
+        name: 'adminUnitId',
         allowNull: true
     }, {
         name: 'stateId',

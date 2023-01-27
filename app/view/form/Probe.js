@@ -289,7 +289,7 @@ Ext.define('Lada.view.form.Probe', {
                         }]
                     }, {
                         xtype: 'messprogrammland',
-                        name: 'stateMpgId',
+                        name: 'mpgCategId',
                         fieldLabel: i18n.getMsg('mpl_id'),
                         margin: '0, 5, 5, 5',
                         width: '100%',

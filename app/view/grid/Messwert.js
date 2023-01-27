@@ -122,7 +122,7 @@ Ext.define('Lada.view.grid.Messwert', {
                         }
                         //Preselect Messeinheit
                         if (this.defaultMehId && o.record.phantom) {
-                            o.record.set('unitId', this.defaultMehId);
+                            o.record.set('measUnitId', this.defaultMehId);
                         }
                         return true;
                     }
@@ -224,7 +224,7 @@ Ext.define('Lada.view.grid.Messwert', {
                     + Math.abs(exponent).toString();
             }
         }, {
-            header: i18n.getMsg('messwert_nwg'),
+            header: i18n.getMsg('detect_lim'),
             dataIndex: 'detectLim',
             width: 140,
             editor: {
@@ -248,10 +248,10 @@ Ext.define('Lada.view.grid.Messwert', {
             }
         }, {
             header: i18n.getMsg('mehId'),
-            dataIndex: 'unitId',
+            dataIndex: 'measUnitId',
             width: 120,
             renderer: function(value, metaData, record) {
-                this.setValidationResults(metaData, record, 'unitId');
+                this.setValidationResults(metaData, record, 'measUnitId');
                 if (!value || value === '') {
                     return '';
                 }

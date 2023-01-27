@@ -79,7 +79,7 @@ Ext.define('Lada.view.grid.Status', {
             sortable: false
         }, {
             header: i18n.getMsg('header.statusstufe'),
-            dataIndex: 'statusComb',
+            dataIndex: 'statusMpId',
             renderer: function(value) {
                 var kombi = Ext.data.StoreManager.get('statuskombi');
                 var r = '';
@@ -92,7 +92,7 @@ Ext.define('Lada.view.grid.Status', {
             sortable: false
         }, {
             header: i18n.getMsg('header.statuswert'),
-            dataIndex: 'statusComb',
+            dataIndex: 'statusMpId',
             renderer: function(value) {
                 var kombi = Ext.data.StoreManager.get('statuskombi');
                 var r = '';

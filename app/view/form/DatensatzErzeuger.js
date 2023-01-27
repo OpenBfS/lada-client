@@ -94,7 +94,7 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
                     queryMode: 'local',
                     name: 'measFacilId',
                     matchFieldWidth: false,
-                    fieldLabel: i18n.getMsg('mst_id')
+                    fieldLabel: i18n.getMsg('meas_facil_id')
                 }, {
                     xtype: 'tfield',
                     name: 'extId',

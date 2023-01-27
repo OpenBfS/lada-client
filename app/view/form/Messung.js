@@ -98,7 +98,7 @@ Ext.define('Lada.view.form.Messung', {
                             xtype: 'selectabledisplayfield',
                             name: 'extId',
                             maxLength: 4,
-                            fieldLabel: i18n.getMsg('extMessungsId'),
+                            fieldLabel: i18n.getMsg('measm.ext_id'),
                             width: 300,
                             labelWidth: 100
                         }, {
@@ -140,7 +140,7 @@ Ext.define('Lada.view.form.Messung', {
                         }, {
                             xtype: 'datetime',
                             name: 'measmStartDate',
-                            fieldLabel: i18n.getMsg('messzeitpunkt'),
+                            fieldLabel: i18n.getMsg('measm_start_date'),
                             width: 300,
                             format: 'd.m.Y H:i',
                             labelWidth: 100

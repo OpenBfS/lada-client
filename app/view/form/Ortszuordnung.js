@@ -194,7 +194,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
         ortinfo.loadRecord(ortrecord);
 
         var verw = Ext.StoreManager.get('verwaltungseinheiten')
-            .getById(ortrecord.get('municId'));
+            .getById(ortrecord.get('adminUnitId'));
         if (verw !== null) {
             ortinfo.setValues({gemeinde: verw.get('name')});
         } else {

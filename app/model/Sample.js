@@ -84,7 +84,7 @@ Ext.define('Lada.model.Sample', {
         type: 'int',
         allowNull: true
     }, {
-        name: 'stateMpgId',
+        name: 'mpgCategId',
         type: 'int',
         allowNull: true
     }, {

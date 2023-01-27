@@ -27,7 +27,7 @@ Ext.define('Lada.model.GridColConf', {
         type: 'int',
         allowNull: true
     }, {
-        name: 'userId',
+        name: 'ladaUserId',
         type: 'int',
         allowNull: true
     }, {

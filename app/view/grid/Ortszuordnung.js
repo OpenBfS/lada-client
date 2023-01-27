@@ -176,10 +176,10 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             renderer: function(value) {
                 var store = me.ortstore;
                 var record = store.getById(value);
-                if (!record || record.get('municId') === '') {
+                if (!record || record.get('adminUnitId') === '') {
                     return '';
                 }
-                return record.get('municId');
+                return record.get('adminUnitId');
             }
         }, {
             header: i18n.getMsg('orte.verwaltungseinheit'),
@@ -193,7 +193,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 if (!record) {
                     return '';
                 }
-                var gemid = record.get('municId');
+                var gemid = record.get('adminUnitId');
                 if (gemid === undefined || gemid === null || gemid === '') {
                     return '';
                 }
@@ -232,7 +232,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 if (!record) {
                     return '';
                 }
-                var ktaGruppeId = record.get('reiNuclFacilGrId');
+                var ktaGruppeId = record.get('nuclFacilGrId');
                 if (
                     ktaGruppeId === undefined ||
                     ktaGruppeId === null ||
@@ -241,7 +241,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     return '';
                 }
                 var ktaGruppen = Ext.data.StoreManager.get('ktaGruppe');
-                var ktaGruppe = ktaGruppen.getById(record.get('reiNuclFacilGrId'));
+                var ktaGruppe = ktaGruppen.getById(record.get('nuclFacilGrId'));
                 return ktaGruppe.get('name');
             }
         }, {

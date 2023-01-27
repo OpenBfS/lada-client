@@ -65,7 +65,7 @@ Ext.define('Lada.view.widget.Statuskombi', {
         Ext.ClassManager.get('Lada.model.StatusProt').load(value, {
             success: function(record) {
                 var statuskombistore = Ext.data.StoreManager.get('statuskombi');
-                var kombi = statuskombistore.getById(record.data.statusComb);
+                var kombi = statuskombistore.getById(record.data.statusMpId);
                 var text = kombi.get('statusLev').lev + ' - ' +
                         kombi.get('statusVal').val;
 

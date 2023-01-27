@@ -188,7 +188,7 @@ Ext.define('Lada.controller.form.Ort', {
             var form = combo.up('ortform');
             form.down('tfield[name=reiReportText]').setValue(null);
             form.down('reiprogpunktgruppe[name=reiAgGrId]').setValue(null);
-            form.down('ktagruppe[name=reiNuclFacilGrId]').setValue(null);
+            form.down('ktagruppe[name=nuclFacilGrId]').setValue(null);
             form.down('tfield[name=reiZone]').setValue(null);
             form.down('tfield[name=reiSector]').setValue(null);
             form.down('tfield[name=reiOprMode]').setValue(null);

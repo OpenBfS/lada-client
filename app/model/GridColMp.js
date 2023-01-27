@@ -17,7 +17,7 @@ Ext.define('Lada.model.GridColMp', {
     }, {
         name: 'dataIndex'
     }, {
-        name: 'dataType'
+        name: 'disp'
     }, {
         name: 'filter'
         // TODO: use proper model class

@@ -53,7 +53,7 @@ Ext.define('Lada.view.form.OrtInfo', {
             }, {
                 xtype: 'ortinforow',
                 label: i18n.getMsg('orte.verwaltungseinheit'),
-                firstitem: 'municId',
+                firstitem: 'adminUnitId',
                 seconditem: 'gemeinde'
             }]
         }];

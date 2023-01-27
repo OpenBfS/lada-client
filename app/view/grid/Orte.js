@@ -152,7 +152,7 @@ Ext.define('Lada.view.grid.Orte', {
             dataIndex: 'longText'
         }, {
             header: i18n.getMsg('orte.verwaltungseinheit'),
-            dataIndex: 'municId',
+            dataIndex: 'adminUnitId',
             width: 200,
             filter: {
                 type: 'string',
@@ -241,7 +241,7 @@ Ext.define('Lada.view.grid.Orte', {
                 }
                 return record.get('name');
             },
-            dataIndex: 'reiNuclFacilGrId'
+            dataIndex: 'nuclFacilGrId'
         }, {
             header: i18n.getMsg('orte.mpArt'),
             filter: {

@@ -191,7 +191,7 @@ Ext.define('Lada.view.window.SetStatus', {
                     measmId: this.sendIds[i],
                     measFacilId: this.down('combobox').getValue(),
                     date: new Date(),
-                    statusComb: kombi,
+                    statusMpId: kombi,
                     text: this.down('textarea').getValue()
                 });
                 data.set('id', null);
@@ -432,7 +432,7 @@ Ext.define('Lada.view.window.SetStatus', {
                     ? '<strong>' + i18n.getMsg('nebenprobenNr') + '</strong> '
                     + item.get('npNr')
                     : item.get('externeMessungsId')
-                    ? '<strong>' + i18n.getMsg('extMessungsId') + '</strong> '
+                    ? '<strong>' + i18n.getMsg('measm.ext_id') + '</strong> '
                     + item.get('externeMessungsId')
                     : '<strong>' + i18n.getMsg('nebenprobenNr')
                     + ' nicht definiert</strong> ';

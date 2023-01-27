@@ -375,7 +375,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
 
             // Server-side filters
             this.gridColumnStore.proxy.extraParams = {
-                'baseQuery': record.get('baseQueryId')
+                'baseQueryId': record.get('baseQueryId')
             };
             this.gridColumnValueStore.proxy.extraParams = {
                 'queryUser': qid
@@ -390,7 +390,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
             // Load filter widget columns
             var filterwidget = this.down('cbox[name=activefilters]');
             filterwidget.store.proxy.extraParams = {
-                'baseQuery': record.get('baseQueryId')
+                'baseQueryId': record.get('baseQueryId')
             };
             filterwidget.store.load();
         }

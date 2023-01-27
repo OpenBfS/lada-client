@@ -24,7 +24,7 @@ Ext.define('Lada.model.StatusProt', {
     }, {
         name: 'measFacilId'
     }, {
-        name: 'statusComb',
+        name: 'statusMpId',
         type: 'int'
     }, {
         name: 'statusVal',

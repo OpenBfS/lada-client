@@ -198,7 +198,7 @@ Ext.define('Lada.controller.Query', {
                     });
                     clonedModel.set('id', null);
                     clonedModel.set('queryUserId', savedQuery.get('id'));
-                    clonedModel.set('userId', null);
+                    clonedModel.set('ladaUserId', null);
                     clonedModel.save({
                         success: function() {
                             saved++;
@@ -222,7 +222,7 @@ Ext.define('Lada.controller.Query', {
         if (!query) {
             return;
         }
-        if ( (Lada.userId === query.get('userId'))) {
+        if ( (Lada.userId === query.get('ladaUserId'))) {
             var i18n = Lada.getApplication().bundle;
             var me = this;
             Ext.MessageBox.confirm(i18n.getMsg('delete'),
@@ -601,7 +601,7 @@ Ext.define('Lada.controller.Query', {
             var fixcolumn = fixColumnStore.findRecord('id',
                 recs[i].get('gridColMpId'), false, false, false, true);
             if (fixcolumn) {
-                var dt = fixcolumn.get('dataType');
+                var dt = fixcolumn.get('disp');
                 var field = null;
                 var negateCheckbox = false;
                 var regexCheckbox = false;
@@ -1121,15 +1121,15 @@ Ext.define('Lada.controller.Query', {
         };
         var csdata = Ext.getStore('columnstore').getData().items;
         for (var i = 0; i < csdata.length; i++ ) {
-            if (csdata[i].get('dataType').name === 'probeId') {
+            if (csdata[i].get('disp').name === 'probeId') {
                 result.probeIdentifier = csdata[i].get('dataIndex');
             }
-            if (csdata[i].get('dataType').name === 'messungId') {
+            if (csdata[i].get('disp').name === 'messungId') {
                 result.messungIdentifier = csdata[i].get('dataIndex');
             }
-            var idx = rowHierarchy.indexOf(csdata[i].get('dataType').name);
+            var idx = rowHierarchy.indexOf(csdata[i].get('disp').name);
             if (idx > -1 && idx < result.idx) {
-                result.dataType = csdata[i].get('dataType').name;
+                result.dataType = csdata[i].get('disp').name;
                 result.dataIndex = csdata[i].get('dataIndex');
                 result.idx = idx;
             }

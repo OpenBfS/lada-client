@@ -326,13 +326,13 @@ Ext.define('Lada.view.widget.DynamicGrid', {
             if (cc[i].get('isVisible') === true) {
                 var col = {
                     dataIndex: dataIndex,
-                    dataType: orig_column.get('dataType'),
+                    dataType: orig_column.get('disp'),
                     text: orig_column.get('gridCol'),
                     width: cc[i].get('width'),
                     sortable: false
                 };
                 //Check column type and set to string if unknown
-                var datatype = orig_column.get('dataType');
+                var datatype = orig_column.get('disp');
                 if (!datatype) {
                     datatype = {name: 'text'};
                 }
@@ -657,7 +657,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     generateDateColumns: function(orig_column, col) {
         col.xtype = 'datecolumn';
-        col.format = orig_column.get('dataType').format;
+        col.format = orig_column.get('disp').format;
         col.renderer = function(value) {
             // Convert string representing milliseconds since epoch
             return Lada.util.Date.formatTimestamp(
@@ -667,7 +667,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
 
     generateNumberColumns: function(orig_column, col) {
         col.xtype = 'numbercolumn';
-        col.format = orig_column.get('dataType').format;
+        col.format = orig_column.get('disp').format;
         col.renderer = function(value) {
             if (value === null) {
                 return '';

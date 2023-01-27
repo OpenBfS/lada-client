@@ -45,7 +45,7 @@ Ext.define('Lada.model.MeasVal', {
         type: 'float',
         allowNull: true
     }, {
-        name: 'unitId',
+        name: 'measUnitId',
         type: 'int'
     }, {
         name: 'lastMod',
