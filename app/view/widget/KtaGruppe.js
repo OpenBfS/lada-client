@@ -14,7 +14,7 @@ Ext.define('Lada.view.widget.KtaGruppe', {
     alias: 'widget.ktagruppe',
     requires: ['Lada.store.KtaGruppe'],
     store: null,
-    displayField: 'beschreibung',
+    displayField: 'name',
     valueField: 'id',
     //editable: this.editable || false,
     disableKeyFilter: true,
