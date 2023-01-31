@@ -401,7 +401,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                         col.xtype = 'gridcolumn';
                         col.renderer = function(value) {
                             if (value === 0 || value === null) {
-                                return '';
+                                return null;
                             }
                             return '<div style="white-space: normal !important;">' +
                                 value + '</div>' || '';
@@ -410,7 +410,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     default:
                         col.xtype = 'gridcolumn';
                         col.renderer = function(value) {
-                            if (value === 0)  {
+                            if (value === 0 || value === null)  {
                                 return value;
                             }
                             return value || '';
