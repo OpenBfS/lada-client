@@ -178,10 +178,7 @@ Ext.define('Lada.view.form.Ort', {
                 fieldLabel: i18n.getMsg('orte.koordx'),
                 validator: function(val) {
                     var kda = me.down('field[name=kdaId]').getValue();
-                    var hasMinFields = Boolean(
-                        !kda || kda
-                            && me.down('field[name=koordYExtern]').getValue()
-                            && val);
+                    var hasMinFields = Boolean(!kda || kda && val);
                     return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
                 },
                 regex: /^[noeswNOESW\d\.,-]+$/,
@@ -194,10 +191,7 @@ Ext.define('Lada.view.form.Ort', {
                 name: 'koordYExtern',
                 validator: function(val) {
                     var kda = me.down('field[name=kdaId]').getValue();
-                    var hasMinFields = Boolean(
-                        !kda || kda
-                            && val
-                            && me.down('field[name=koordXExtern]').getValue());
+                    var hasMinFields = Boolean(!kda || kda && val);
                     return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
                 },
                 regex: /^[noeswNOESW\d\.,-]+$/,
