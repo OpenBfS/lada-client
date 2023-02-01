@@ -532,18 +532,13 @@ Ext.define('Lada.controller.Print', {
             }
         }
         var qitem = this.addQueueItem(filename, 'lada-print');
-        if (probenAttribute
-            && probenAttribute.clientParams.attributes.some(
-                function(p) {
-                    return p.name === 'measms';
-                })
-        ) {
+        if (probenAttribute) {
             //TODO: preset fields are ignored here as they are no longer needed
             // see printSelection, prepareData, createSheetData
             // (moved without major adaption)
-
             this.printSelection(
-                grid, filename, format, callbackFn, isIrix, qitem
+                grid, filename, format, callbackFn, isIrix, qitem,
+                capabilities.app, capabilities.layouts[layout].name
             );
         } else {
             var selection;
@@ -655,7 +650,9 @@ Ext.define('Lada.controller.Print', {
         format,
         callbackFn,
         isIrix,
-        queueitem
+        queueitem,
+        templateName,
+        layout
     ) {
         // The Data is loaded from the server again, so we need
         // to be a little bit asynchronous here...
@@ -664,7 +661,7 @@ Ext.define('Lada.controller.Print', {
             // Wraps all messstellen and deskriptoren objects into an array
             data = this.prepareData(data);
             var printData = {
-                layout: 'A4 portrait',
+                layout: layout,
                 outputFormat: format,
                 attributes: {
                     samples: data,
@@ -676,7 +673,7 @@ Ext.define('Lada.controller.Print', {
 
             this.sendRequest(
                 printData,
-                'lada_erfassungsbogen',
+                templateName,
                 filename,
                 callbackFn,
                 isIrix,
@@ -762,6 +759,9 @@ Ext.define('Lada.controller.Print', {
                 for (var e in oz.ort) {
                     prep[i].geolocat[o]['site'] = null;
                     prep[i].geolocat[o]['site.' + e] = oz.site[e];
+                }
+                if (oz.typeRegulation === 'E') {
+                    prep[i].adminUnit = oz.site.adminUnit;
                 }
             }
         }
