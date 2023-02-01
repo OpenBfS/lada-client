@@ -29,8 +29,6 @@ Ext.define('Lada.view.form.Ort', {
 
     record: null,
 
-    original: null,
-
     trackResetOnLoad: true,
 
     initComponent: function() {

@@ -66,8 +66,7 @@ Ext.define('Lada.controller.form.Ort', {
         copy.set('plausibleReferenceCount', 0);
         copy.set('referenceCountMp', 0);
         var win = Ext.create('Lada.view.window.Ort', {
-            record: copy,
-            original: record
+            record: copy
         });
         var pos = button.up('ortform').up().getPosition();
         pos[0] += 10;

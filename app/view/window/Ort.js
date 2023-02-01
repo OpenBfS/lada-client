@@ -48,12 +48,6 @@ Ext.define('Lada.view.window.Ort', {
 
     recordType: 'ort',
 
-    /**
-     * Original record if record is a copy. Will only be set if the copy is
-     * created.
-     */
-    original: null,
-
     parentWindow: null,
 
     initComponent: function() {
@@ -138,7 +132,6 @@ Ext.define('Lada.view.window.Ort', {
         this.add([
             Ext.create('Lada.view.form.Ort', {
                 record: me.record,
-                original: me.original,
                 mode: this.mode,
                 listeners: {
                     destroy: {fn: function() {
