@@ -94,7 +94,6 @@ Ext.define('Lada.view.window.Ort', {
 
     initializeUi: function() {
         var i18n = Lada.getApplication().bundle;
-        var me = this;
         this.removeAll();
         if (this.record === null) {
             this.record = Ext.create('Lada.model.Ort');
@@ -129,17 +128,11 @@ Ext.define('Lada.view.window.Ort', {
             }
         }
 
-        this.add([
-            Ext.create('Lada.view.form.Ort', {
-                record: me.record,
-                mode: this.mode,
-                listeners: {
-                    destroy: {fn: function() {
-                        me.close();
-                    }}
-                }
-            })
-        ]);
+        this.add([{
+            xtype: 'ortform',
+            record: this.record,
+            mode: this.mode
+        }]);
     },
 
     setMode: function(mode) {
