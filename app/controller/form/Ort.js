@@ -125,7 +125,7 @@ Ext.define('Lada.controller.form.Ort', {
                         var json = Ext.decode(
                             response.getResponse().responseText);
                         formpanel.setMessages(json.errors, json.warnings);
-                        win.setMode('edit');
+                        win.setTitleAndReadOnly();
                     }
                 },
                 failure: function(newRecord, response) {

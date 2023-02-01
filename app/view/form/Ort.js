@@ -23,8 +23,6 @@ Ext.define('Lada.view.form.Ort', {
 
     scrollable: true,
 
-    mode: null,
-
     border: false,
 
     record: null,
@@ -266,12 +264,6 @@ Ext.define('Lada.view.form.Ort', {
         }];
         this.callParent(arguments);
         this.getForm().loadRecord(this.record);
-
-        if (this.mode === 'show') {
-            this.setReadOnly(true);
-        } else {
-            this.setReadOnly(false);
-        }
 
         //If plausible probe instances reference this ort, disable coordinate
         // fields, verwaltungseinheit, staat, koordiantenart, button change kda
