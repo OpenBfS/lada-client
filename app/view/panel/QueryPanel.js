@@ -333,15 +333,22 @@ Ext.define('Lada.view.panel.QueryPanel', {
         var mst_store = Ext.data.StoreManager.get('messstellen');
         mst_store.load({
             scope: this,
-            callback: function(records) {
-                var qp = this;
-                var groupstore = qp.down('cbox[name=messStellesIds]').down(
-                    'tagfield').getStore();
-                for ( var i = 0; i < records.length; i++) {
-                    groupstore.add({
-                        messStellesIds: records[i].get('id'),
-                        mst_name: records[i].get('name')
-                    });
+            callback: function(records, op, success) {
+                if (success) {
+                    var qp = this;
+                    var groupstore = qp.down('cbox[name=messStellesIds]').down(
+                        'tagfield').getStore();
+                    for ( var i = 0; i < records.length; i++) {
+                        groupstore.add({
+                            messStellesIds: records[i].get('id'),
+                            mst_name: records[i].get('name')
+                        });
+                    }
+                } else {
+                    Ext.Msg.alert(
+                        i18n.getMsg('err.msg.generic.title'),
+                        i18n.getMsg('err.msg.generic.body')
+                    );
                 }
             }
         });
