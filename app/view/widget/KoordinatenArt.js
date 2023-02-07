@@ -12,7 +12,6 @@
 Ext.define('Lada.view.widget.KoordinatenArt', {
     extend: 'Lada.view.widget.base.ComboBox',
     alias: 'widget.koordinatenart',
-    store: 'KoordinatenArt',
     requires: ['Lada.store.KoordinatenArt'],
     displayField: 'id',
     valueField: 'id',
