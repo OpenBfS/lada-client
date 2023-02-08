@@ -96,20 +96,9 @@ Ext.define('Lada.controller.Query', {
                 columnresize: me.dataChanged,
                 gridreload: me.drawGeometryColumns
             },
-            'querypanel textarea[name=description]': {
-                change: me.dataChanged
-            },
-            'querypanel textfield[name=name]': {
-                change: me.dataChanged
-            },
-            'querypanel combobox[name=messStellesIds]': {
-                change: me.dataChanged
-            },
-            'querypanel columnchoser': {
-                change: me.dataChanged
-            },
-            'querypanel columnsort': {
-                change: me.dataChanged
+            'querypanel': {
+                validitychange: me.dataChanged,
+                dirtychange: me.dataChanged
             }
 
         });
@@ -295,13 +284,11 @@ Ext.define('Lada.controller.Query', {
         qp.down('button[action=newquery]').setDisabled(newquery.phantom);
         qp.down('button[action=delquery]').setDisabled(
             qp.isQueryReadonly());
-        qp.down('button[action=save]').setDisabled(true);
         Lada.view.window.PrintGrid.getInstance().parentGrid = null;
     },
 
     handleSaveClicked: function(button) {
         this.showLoadingMask();
-        button.setDisabled(true);
 
         var query = button.up('querypanel').getForm().getRecord();
         var me = this;
@@ -1184,14 +1171,12 @@ Ext.define('Lada.controller.Query', {
 
     dataChanged: function() {
         var qp = Ext.ComponentQuery.query('querypanel')[0];
-        var savedisabled = qp.isQueryReadonly();
-        if (qp.isValid()) {
-            qp.down('button[action=save]').setDisabled(savedisabled);
-            qp.down('button[action=newquery]').setDisabled(false);
-        } else {
-            qp.down('button[action=save]').setDisabled(true);
-            qp.down('button[action=newquery]').setDisabled(true);
-        }
+        var isValid = qp.isValid();
+        qp.down('button[action=save]').setDisabled(
+            // TODO: Saving includes more fields than form fields,
+            // thus dirty state of the form cannot be used here.
+            !isValid || qp.isQueryReadonly());
+        qp.down('button[action=newquery]').setDisabled(!isValid);
     },
 
 

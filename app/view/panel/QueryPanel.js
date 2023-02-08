@@ -461,9 +461,6 @@ Ext.define('Lada.view.panel.QueryPanel', {
                 me.down('cbox[name=messStellesIds]').setValue(
                     record.get('messStellesIds'));
 
-                me.down('button[action=save]').setDisabled(
-                    me.isQueryReadonly());
-
                 if (record.get('clonedFrom') !== 'empty' || !record.phantom) {
                     me.down('button[name=search]').setDisabled(false);
                     me.down('button[action=showsql]').setDisabled(false);
