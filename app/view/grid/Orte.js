@@ -18,7 +18,6 @@ Ext.define('Lada.view.grid.Orte', {
         'Lada.store.KoordinatenArt',
         'Lada.store.OrtTyp',
         'Lada.view.widget.KoordinatenArt',
-        'Lada.view.widget.Kta',
         'Lada.view.widget.OrtsZusatz',
         'Lada.view.widget.OrtTyp',
         'Lada.view.window.Ort',
