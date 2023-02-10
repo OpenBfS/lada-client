@@ -178,8 +178,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                     }]
                 }),
                 valueField: 'messStellesIds',
-                displayField: 'messStellesIds',
-                searchValueField: 'mst_name',
+                displayField: 'mst_name',
                 tpl: Ext.create(
                     'Ext.XTemplate',
                     '<tpl for=".">' +
