@@ -19,7 +19,7 @@ Ext.define('Lada.view.widget.Probenintervall', {
         'Lada.store.Probenintervall'
     ],
     store: 'Probenintervall',
-    displayField: 'probenintervall',
+    displayField: 'piTexti18nId',
     valueField: 'probenintervall',
     forceSelection: true,
     //editable: this.editable || false,
