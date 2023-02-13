@@ -14,11 +14,12 @@ Ext.define('Lada.view.window.Ort', {
     alias: 'window.ort',
     requires: [
         'Lada.model.Site',
+        'Lada.view.panel.SiteImages',
         'Lada.view.window.HelpprintWindow',
         'Lada.view.form.Ort'
     ],
 
-    minWidth: 440,
+    minWidth: 640,
 
     maxHeight: 700,
 
@@ -30,7 +31,10 @@ Ext.define('Lada.view.window.Ort', {
 
     bodyStyle: {background: '#fff'},
 
-    layout: 'fit',
+    layout: {
+        type: 'hbox',
+        align: 'stretch'
+    },
 
     mode: null,
 
@@ -145,6 +149,10 @@ Ext.define('Lada.view.window.Ort', {
                         me.close();
                     }}
                 }
+            }),
+            Ext.create('Lada.view.panel.SiteImages', {
+                site: me.record,
+                mode: me.mode
             })
         ]);
     },
