@@ -102,6 +102,25 @@ Ext.define('Lada.view.form.Ort', {
             forceSelection: true,
             name: 'adminUnitId'
         }, {
+            xtype: 'chkbox',
+            labelWidth: 125,
+            name: 'isReiActive',
+            fieldLabel: i18n.getMsg('orte.aktiv')
+        }, {
+            xtype: 'tfield',
+            labelWidth: 125,
+            readOnly: true,
+            maxLength: 10,
+            name: 'route',
+            fieldLabel: i18n.getMsg('orte.route')
+        }, {
+            xtype: 'tfield',
+            labelWidth: 125,
+            readOnly: true,
+            maxLength: 10,
+            name: 'lastMod',
+            fieldLabel: i18n.getMsg('letzteAenderung')
+        }, {
             xtype: 'fset',
             collapsible: true,
             collapsed: true,
@@ -150,11 +169,6 @@ Ext.define('Lada.view.form.Ort', {
                 maxLength: 10,
                 name: 'reiOprMode',
                 fieldLabel: i18n.getMsg('orte.mpArt')
-            }, {
-                xtype: 'chkbox',
-                labelWidth: 125,
-                name: 'isReiActive',
-                fieldLabel: i18n.getMsg('orte.aktiv')
             }]
         }, {
             xtype: 'fset',
