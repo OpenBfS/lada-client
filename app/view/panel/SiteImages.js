@@ -164,11 +164,15 @@ Ext.define('Lada.view.panel.SiteImages', {
             },
             failure: function (response) {
                 var i18n = Lada.getApplication().bundle;
-                var msg;
+                var msg = 'err.msg.generic.body';
                 if (response.status === 502 || response.status === 413) {
                     msg = 'form.site.error.uploadsize';
                 }
-                Ext.Msg.alert(i18n.getMsg('form.site.error.uploadtitle'), i18n.getMsg(msg), Ext.emptyFn);
+                if (response.status === 401) {
+                    msg = 'http-401'
+                }
+                Ext.Msg.alert(i18n.getMsg('form.site.error.uploadtitle'),
+                        i18n.getMsg(msg), Ext.emptyFn);
             }
         });
     },
@@ -179,6 +183,15 @@ Ext.define('Lada.view.panel.SiteImages', {
             method: 'DELETE',
             success: function () {
                 component.setSrc(null);
+            },
+            failure: function (response) {
+                var i18n = Lada.getApplication().bundle;
+                var msg = 'err.msg.generic.body';
+                if (response.status === 401) {
+                    msg = 'http-401'
+                }
+                Ext.Msg.alert(i18n.getMsg('form.site.error.deletetitle'),
+                        i18n.getMsg(msg), Ext.emptyFn);
             }
         });
     },
