@@ -11,7 +11,7 @@ Ext.define('Lada.view.panel.SiteImages', {
     name: 'siteimages',
     layout: 'vbox',
     baseUrl: 'lada-server/rest/site/',
-    photoPath: '/photo',
+    imgPath: '/img',
     mapPath: '/map',
     site: null,
     width: '100%',
@@ -21,7 +21,7 @@ Ext.define('Lada.view.panel.SiteImages', {
         this.initUI();
         this.callParent(arguments);
         var siteId = this.site.get('id');
-        this.down('image[name=imageImg]').setSrc(this.baseUrl + siteId + this.photoPath);
+        this.down('image[name=imageImg]').setSrc(this.baseUrl + siteId + this.imgPath);
         this.down('image[name=mapImg]').setSrc(this.baseUrl + siteId + this.mapPath);
         this.setReadonly(this.mode === 'show');
     },
@@ -63,7 +63,7 @@ Ext.define('Lada.view.panel.SiteImages', {
                             var widget = button.up('siteimages');
                             var fileField = widget.down('filefield[name=photofile]');
                             var imgCmp = widget.down('image[name=imageImg]');
-                            widget.uploadFile(fileField.binData, widget.photoPath, imgCmp);
+                            widget.uploadFile(fileField.binData, widget.imgPath, imgCmp);
                         }
                     }, {
                         xtype: 'button',
@@ -72,7 +72,7 @@ Ext.define('Lada.view.panel.SiteImages', {
                         handler: function (button) {
                             var widget = button.up('siteimages');
                             var imgCmp = widget.down('image[name=imageImg]');
-                            widget.deleteImage(widget.photoPath, imgCmp);
+                            widget.deleteImage(widget.imgPath, imgCmp);
                         }
                     }],
                     items: [{
