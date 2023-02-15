@@ -107,8 +107,7 @@ Ext.define('Lada.view.window.Ort', {
             record: this.record
         }, {
             xtype: 'siteimages',
-            site: this.record,
-            mode: this.mode
+            site: this.record
         }]);
 
         this.setTitleAndReadOnly();

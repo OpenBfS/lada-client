@@ -23,7 +23,7 @@ Ext.define('Lada.view.panel.SiteImages', {
         var siteId = this.site.get('id');
         this.down('image[name=imageImg]').setSrc(this.baseUrl + siteId + this.imgPath);
         this.down('image[name=mapImg]').setSrc(this.baseUrl + siteId + this.mapPath);
-        this.setReadonly(this.mode === 'show');
+        this.setReadonly(this.site.get('readonly'));
     },
 
     initUI: function () {
