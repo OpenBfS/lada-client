@@ -17,16 +17,18 @@ Ext.define('Lada.view.panel.SiteImages', {
     width: '100%',
     height: 600,
 
-    initComponent: function () {
+    initComponent: function() {
         this.initUI();
         this.callParent(arguments);
         var siteId = this.site.get('id');
-        this.down('image[name=imageImg]').setSrc(this.baseUrl + siteId + this.imgPath);
-        this.down('image[name=mapImg]').setSrc(this.baseUrl + siteId + this.mapPath);
+        this.down('image[name=imageImg]')
+            .setSrc(this.baseUrl + siteId + this.imgPath);
+        this.down('image[name=mapImg]')
+            .setSrc(this.baseUrl + siteId + this.mapPath);
         this.setReadonly(this.site.get('readonly'));
     },
 
-    initUI: function () {
+    initUI: function() {
         var i18n = Lada.getApplication().bundle;
         this.items =
             [{
@@ -44,11 +46,12 @@ Ext.define('Lada.view.panel.SiteImages', {
                         xtype: 'filefield',
                         name: 'photofile',
                         listeners: {
-                            change: function (field) {
+                            change: function(field) {
                                 var widget = field.up('siteimages');
-                                this.up('panel').down('button[name=uploadPhoto]')
+                                this.up('panel')
+                                    .down('button[name=uploadPhoto]')
                                     .setDisabled(false);
-                                widget.readFile(field)
+                                widget.readFile(field);
                             }
                         }
 
@@ -59,17 +62,19 @@ Ext.define('Lada.view.panel.SiteImages', {
                         name: 'uploadPhoto',
                         disabled: true,
                         text: i18n.getMsg('form.site.button.upload'),
-                        handler: function (button) {
+                        handler: function(button) {
                             var widget = button.up('siteimages');
-                            var fileField = widget.down('filefield[name=photofile]');
+                            var fileField = widget
+                                .down('filefield[name=photofile]');
                             var imgCmp = widget.down('image[name=imageImg]');
-                            widget.uploadFile(fileField.binData, widget.imgPath, imgCmp);
+                            widget.uploadFile(
+                                fileField.binData, widget.imgPath, imgCmp);
                         }
                     }, {
                         xtype: 'button',
                         name: 'clearPhoto',
                         text: i18n.getMsg('form.site.button.clear'),
-                        handler: function (button) {
+                        handler: function(button) {
                             var widget = button.up('siteimages');
                             var imgCmp = widget.down('image[name=imageImg]');
                             widget.deleteImage(widget.imgPath, imgCmp);
@@ -78,7 +83,7 @@ Ext.define('Lada.view.panel.SiteImages', {
                     items: [{
                         xtype: 'image',
                         name: 'imageImg'
-                    }],
+                    }]
                 }, {
                     xtype: 'panel',
                     margin: 5,
@@ -91,11 +96,11 @@ Ext.define('Lada.view.panel.SiteImages', {
                         xtype: 'filefield',
                         name: 'mapfile',
                         listeners: {
-                            change: function (field) {
+                            change: function(field) {
                                 var widget = field.up('siteimages');
                                 this.up('panel').down('button[name=uploadMap]')
                                     .setDisabled(false);
-                                widget.readFile(field)
+                                widget.readFile(field);
                             }
                         }
                     }, {
@@ -105,17 +110,20 @@ Ext.define('Lada.view.panel.SiteImages', {
                         name: 'uploadMap',
                         disabled: true,
                         text: i18n.getMsg('form.site.button.upload'),
-                        handler: function (button) {
+                        handler: function(button) {
                             var widget = button.up('siteimages');
-                            var fileField = widget.down('filefield[name=mapfile]');
-                            var imgCmp = widget.down('image[name=mapImg]');
-                            widget.uploadFile(fileField.binData, widget.mapPath, imgCmp);
+                            var fileField = widget
+                                .down('filefield[name=mapfile]');
+                            var imgCmp = widget
+                                .down('image[name=mapImg]');
+                            widget.uploadFile(
+                                fileField.binData, widget.mapPath, imgCmp);
                         }
                     }, {
                         xtype: 'button',
                         name: 'clearMap',
                         text: i18n.getMsg('form.site.button.clear'),
-                        handler: function (button) {
+                        handler: function(button) {
                             var widget = button.up('siteimages');
                             var imgCmp = widget.down('image[name=mapImg]');
                             widget.deleteImage(widget.mapPath, imgCmp);
@@ -124,16 +132,16 @@ Ext.define('Lada.view.panel.SiteImages', {
                     items: [{
                         xtype: 'image',
                         name: 'mapImg'
-                    }],
+                    }]
                 }]
             }];
     },
 
-    readFile: function (fileInput) {
+    readFile: function(fileInput) {
         var reader = new FileReader();
         var file = fileInput.fileInputEl.dom.files[0];
-        reader.onload = function (evt) {
-            if (evt.target.readyState == FileReader.DONE) {
+        reader.onload = function(evt) {
+            if (evt.target.readyState === FileReader.DONE) {
                 var fileByteArray = [];
                 var arrayBuffer = evt.target.result,
                     array = new Uint8Array(arrayBuffer);
@@ -142,11 +150,11 @@ Ext.define('Lada.view.panel.SiteImages', {
                 }
                 fileInput.binData = fileByteArray;
             }
-        }
+        };
         reader.readAsArrayBuffer(file);
     },
 
-    uploadFile: function (binFile, path, component) {
+    uploadFile: function(binFile, path, component) {
         if (!binFile) {
             return;
         }
@@ -158,40 +166,40 @@ Ext.define('Lada.view.panel.SiteImages', {
             },
             scope: this,
             binaryData: binFile,
-            success: function () {
+            success: function() {
                 component.setSrc(null);
                 component.setSrc(this.baseUrl + this.site.get('id') + path);
             },
-            failure: function (response) {
+            failure: function(response) {
                 var i18n = Lada.getApplication().bundle;
                 var msg = 'err.msg.generic.body';
                 if (response.status === 502 || response.status === 413) {
                     msg = 'form.site.error.uploadsize';
                 }
                 if (response.status === 401) {
-                    msg = 'http-401'
+                    msg = 'http-401';
                 }
                 Ext.Msg.alert(i18n.getMsg('form.site.error.uploadtitle'),
-                        i18n.getMsg(msg), Ext.emptyFn);
+                    i18n.getMsg(msg), Ext.emptyFn);
             }
         });
     },
 
-    deleteImage: function (path, component) {
+    deleteImage: function(path, component) {
         Ext.Ajax.request({
             url: this.baseUrl + this.site.get('id') + path,
             method: 'DELETE',
-            success: function () {
+            success: function() {
                 component.setSrc(null);
             },
-            failure: function (response) {
+            failure: function(response) {
                 var i18n = Lada.getApplication().bundle;
                 var msg = 'err.msg.generic.body';
                 if (response.status === 401) {
-                    msg = 'http-401'
+                    msg = 'http-401';
                 }
                 Ext.Msg.alert(i18n.getMsg('form.site.error.deletetitle'),
-                        i18n.getMsg(msg), Ext.emptyFn);
+                    i18n.getMsg(msg), Ext.emptyFn);
             }
         });
     },
