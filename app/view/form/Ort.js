@@ -23,13 +23,9 @@ Ext.define('Lada.view.form.Ort', {
 
     scrollable: true,
 
-    mode: null,
-
     border: false,
 
     record: null,
-
-    original: null,
 
     trackResetOnLoad: true,
 
@@ -178,10 +174,7 @@ Ext.define('Lada.view.form.Ort', {
                 fieldLabel: i18n.getMsg('orte.koordx'),
                 validator: function(val) {
                     var kda = me.down('field[name=spatRefSysId]').getValue();
-                    var hasMinFields = Boolean(
-                        !kda || kda
-                            && me.down('field[name=coordYExt]').getValue()
-                            && val);
+                    var hasMinFields = Boolean(!kda || kda && val);
                     return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
                 },
                 regex: /^[noeswNOESW\d\.,-]+$/,
@@ -194,10 +187,7 @@ Ext.define('Lada.view.form.Ort', {
                 name: 'coordYExt',
                 validator: function(val) {
                     var kda = me.down('field[name=spatRefSysId]').getValue();
-                    var hasMinFields = Boolean(
-                        !kda || kda
-                            && val
-                            && me.down('field[name=coordXExt]').getValue());
+                    var hasMinFields = Boolean(!kda || kda && val);
                     return hasMinFields || i18n.getMsg('orte.hasNotMinFields');
                 },
                 regex: /^[noeswNOESW\d\.,-]+$/,
@@ -274,12 +264,6 @@ Ext.define('Lada.view.form.Ort', {
         }];
         this.callParent(arguments);
         this.getForm().loadRecord(this.record);
-
-        if (this.mode === 'show') {
-            this.setReadOnly(true);
-        } else {
-            this.setReadOnly(false);
-        }
 
         //If plausible probe instances reference this ort, disable coordinate
         // fields, verwaltungseinheit, staat, koordiantenart, button change kda

@@ -442,13 +442,23 @@ Ext.define('Lada.controller.Print', {
                 cols[i].text &&
                 (ignored.indexOf(cols[i].dataIndex) === -1)
             ) {
-                visibleColumns.push({
-                    dataIndex: cols[i].dataIndex,
-                    dataType: cols[i].dataType.name,
-                    renderer: (cols[i].renderer.$name === 'defaultRenderer') ?
-                        null :
-                        cols[i].renderer
-                });
+                if (cols[i].dataType === undefined) {
+                    visibleColumns.push({
+                        dataIndex: cols[i].dataIndex,
+                        dataType: 'text',
+                        renderer: (cols[i].renderer.$name === 'defaultRenderer') ?
+                            null :
+                            cols[i].renderer
+                    });
+                } else {
+                    visibleColumns.push({
+                        dataIndex: cols[i].dataIndex,
+                        dataType: cols[i].dataType.name,
+                        renderer: (cols[i].renderer.$name === 'defaultRenderer') ?
+                            null :
+                            cols[i].renderer
+                    });
+                }
                 columnNames.push(cols[i].text);
             }
         }

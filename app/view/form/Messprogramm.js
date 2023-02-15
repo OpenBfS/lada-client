@@ -482,7 +482,6 @@ Ext.define('Lada.view.form.Messprogramm', {
                         name: 'sampleSpecifs',
                         emptyText: i18n.getMsg('emptytext.pzw.widget'),
                         store: Ext.create('Lada.store.Probenzusaetze'),
-                        valueField: 'id',
                         tpl: Ext.create(
                             'Ext.XTemplate',
                             '<ul class="x-list-plain"><tpl for=".">',

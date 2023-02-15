@@ -38,7 +38,8 @@ Ext.define('Lada.model.Site', {
         allowNull: true
     }, {
         name: 'spatRefSysId',
-        type: 'int'
+        type: 'int',
+        allowNull: true
     }, {
         name: 'poiId',
         allowNull: true
