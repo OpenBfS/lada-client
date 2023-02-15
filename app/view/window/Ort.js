@@ -124,7 +124,7 @@ Ext.define('Lada.view.window.Ort', {
                 title = i18n.getMsg('orte.edit');
             }
             title += ' - ' + i18n.getMsg('orte.ortId') + ': ' +
-                this.record.get('ortId');
+                this.record.get('extId');
         }
 
         this.setTitle(title);
