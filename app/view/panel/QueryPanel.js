@@ -178,8 +178,7 @@ Ext.define('Lada.view.panel.QueryPanel', {
                     }]
                 }),
                 valueField: 'messStellesIds',
-                displayField: 'messStellesIds',
-                searchValueField: 'mst_name',
+                displayField: 'mst_name',
                 tpl: Ext.create(
                     'Ext.XTemplate',
                     '<tpl for=".">' +
@@ -467,9 +466,6 @@ Ext.define('Lada.view.panel.QueryPanel', {
 
                 me.down('cbox[name=messStellesIds]').setValue(
                     record.get('messStellesIds'));
-
-                me.down('button[action=save]').setDisabled(
-                    me.isQueryReadonly());
 
                 if (record.get('clonedFrom') !== 'empty' || !record.phantom) {
                     me.down('button[name=search]').setDisabled(false);

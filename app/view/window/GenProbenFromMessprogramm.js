@@ -470,11 +470,23 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 }, {
                     xtype: 'datecolumn',
                     header: i18n.getMsg('sollVon'),
-                    dataIndex: 'schedStartDate'
+                    dataIndex: 'schedStartDate',
+                    renderer : function(value) {
+                        var dt = '';
+                        var format = 'd.m.Y';
+                        dt = Lada.util.Date.formatTimestamp(value, format, true);
+                        return dt;
+                    }
                 }, {
                     xtype: 'datecolumn',
                     header: i18n.getMsg('sollBis'),
-                    dataIndex: 'schedEndDate'
+                    dataIndex: 'schedEndDate',
+                    renderer : function(value) {
+                        var dt = '';
+                        var format = 'd.m.Y';
+                        dt = Lada.util.Date.formatTimestamp(value, format, true);
+                        return dt;
+                    }
                 }, {
                     header: i18n.getMsg('messprogramm.form.fieldset.title'),
                     dataIndex: 'mpgId'
@@ -578,8 +590,8 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
         }
         resultHtml += i18n.getMsg(
             'gpfm.window.result.period',
-            Lada.util.Date.formatTimestamp(request.start, 'd.m.Y H:i', true),
-            Lada.util.Date.formatTimestamp(request.end, 'd.m.Y H:i', true)
+            Lada.util.Date.formatTimestamp(request.start, 'd.m.Y', true),
+            Lada.util.Date.formatTimestamp(request.end, 'd.m.Y', true)
         );
         resultHtml += '<br>';
         if (genTagName.length !== 0) {

@@ -52,12 +52,6 @@ Ext.define('Lada.view.window.Ort', {
 
     recordType: 'ort',
 
-    /**
-     * Original record if record is a copy. Will only be set if the copy is
-     * created.
-     */
-    original: null,
-
     parentWindow: null,
 
     initComponent: function() {
@@ -103,79 +97,44 @@ Ext.define('Lada.view.window.Ort', {
     },
 
     initializeUi: function() {
-        var i18n = Lada.getApplication().bundle;
-        var me = this;
         this.removeAll();
         if (this.record === null) {
             this.record = Ext.create('Lada.model.Site');
         }
 
-        if (this.record.phantom) {
-            this.mode = 'new';
-            this.setTitle(i18n.getMsg('orte.new'));
-        } else {
-            if (this.parentWindow !== null) {
-                if (
-                    this.parentWindow.xtype === 'ortszuordnungwindow' ||
-                    this.parentWindow.xtype === 'ortstammdatengrid'
-                ) {
-                    this.mode = 'show';
-                    this.setTitle(i18n.getMsg('orte.show') + ' - ' +
-                        i18n.getMsg('orte.ortId') + ': ' +
-                        this.record.get('extId'));
-                }
-            } else {
-                if (this.record.get('readonly') === true) {
-                    this.mode = 'show';
-                    this.setTitle(i18n.getMsg('orte.show') + ' - ' +
-                        i18n.getMsg('orte.ortId') + ': ' +
-                        this.record.get('extId'));
-                } else {
-                    this.mode = 'edit';
-                    this.setTitle(i18n.getMsg('orte.edit') + ' - ' +
-                        i18n.getMsg('orte.ortId') + ': ' +
-                        this.record.get('extId'));
-                }
-            }
-        }
+        this.add([{
+            xtype: 'ortform',
+            record: this.record
+        }, {
+            xtype: 'siteimages',
+            site: this.record,
+            mode: this.mode
+        }]);
 
-        this.add([
-            Ext.create('Lada.view.form.Ort', {
-                record: me.record,
-                original: me.original,
-                mode: this.mode,
-                listeners: {
-                    destroy: {fn: function() {
-                        me.close();
-                    }}
-                }
-            }),
-            Ext.create('Lada.view.panel.SiteImages', {
-                site: me.record,
-                mode: me.mode
-            })
-        ]);
+        this.setTitleAndReadOnly();
     },
 
-    setMode: function(mode) {
+    setTitleAndReadOnly: function() {
         var i18n = Lada.getApplication().bundle;
-        this.mode = mode;
-        if (this.mode) {
-            this.setTitle(
-                this.record.phantom ?
-                    i18n.getMsg('orte.new') :
-                    this.record.get('readonly') ?
-                        i18n.getMsg('orte.show') + ' - ' +
-                         i18n.getMsg('orte.ortId') + ': ' +
-                         this.record.get('ortId') :
-                        (i18n.getMsg('orte.edit') + ' - '
-                    + i18n.getMsg('orte.ortId') + ': '
-                    + this.record.get('ortId'))
-            );
+
+        var title = '';
+        if (this.record.phantom) {
+            title = i18n.getMsg('orte.new');
         } else {
-            this.title = this.record.phantom ?
-                i18n.getMsg('orte.new') :
-                i18n.getMsg('orte.edit');
+            if (this.parentWindow !== null
+                && (this.parentWindow.xtype === 'ortszuordnungwindow'
+                    || this.parentWindow.xtype === 'ortstammdatengrid')
+                || this.record.get('readonly')
+            ) {
+                this.down('ortform').setReadOnly(true);
+                title = i18n.getMsg('orte.show');
+            } else {
+                title = i18n.getMsg('orte.edit');
+            }
+            title += ' - ' + i18n.getMsg('orte.ortId') + ': ' +
+                this.record.get('ortId');
         }
+
+        this.setTitle(title);
     }
 });
