@@ -162,7 +162,7 @@ Ext.define('Lada.view.panel.SiteImages', {
             url: this.baseUrl + this.site.get('id') + path,
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/octet-stream'
             },
             scope: this,
             binaryData: binFile,
