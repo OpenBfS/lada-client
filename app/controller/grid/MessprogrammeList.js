@@ -12,7 +12,6 @@
 Ext.define('Lada.controller.grid.MessprogrammeList', {
     extend: 'Ext.app.Controller',
     requires: [
-        'Lada.view.window.Messprogramm',
         'Lada.view.window.GenProbenFromMessprogramm'
     ],
 
@@ -21,9 +20,6 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
      */
     init: function() {
         this.control({
-            'dynamicgrid toolbar button[action=addMessprogramm]': {
-                click: this.addMessprogrammItem
-            },
             'dynamicgrid toolbar button[action=genProbenFromMessprogramm]': {
                 click: this.genProbenFromMessprogramm
             },
@@ -35,16 +31,6 @@ Ext.define('Lada.controller.grid.MessprogrammeList', {
             }
         });
         this.callParent(arguments);
-    },
-
-    /**
-     * This function opens a new window to create a Messprogramm
-     * {@link Lada.view.window.Messprogramm}
-     */
-    addMessprogrammItem: function() {
-        var win = Ext.create('Lada.view.window.Messprogramm');
-        win.initData();
-        win.show();
     },
 
     /**
