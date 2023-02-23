@@ -510,7 +510,6 @@ Ext.application({
     // Define the controllers of the application. They will be initialized
     // first before the application "launch" function is called.
     controllers: [
-        'Lada.controller.grid.ProbeList',
         'Lada.controller.grid.MessprogrammeList',
         'Lada.controller.grid.MessungList',
         'Lada.controller.form.DatensatzErzeuger',
