@@ -241,6 +241,7 @@ Ext.define('Lada.view.form.Probenehmer', {
                         xtype: 'tfield',
                         name: 'email',
                         margin: '5 10 5 10',
+                        vtype: 'email',
                         fieldLabel: i18n.getMsg('email'),
                         labelWidth: 100,
                         readOnly: true,

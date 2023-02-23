@@ -48,7 +48,8 @@ Ext.define('Lada.view.widget.base.TextField', {
             listeners: this.listeners,
             type: this.type,
             triggers: this.triggers || null,
-            value: this.value || null
+            value: this.value || null,
+            vtype: this.vtype || null
         });
         if (this.regex) {
             Ext.apply(this.down('textfield'), {regex: this.regex});
