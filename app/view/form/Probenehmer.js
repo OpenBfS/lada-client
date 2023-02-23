@@ -229,6 +229,22 @@ Ext.define('Lada.view.form.Probenehmer', {
                         labelWidth: 100,
                         readOnly: true,
                         maxLength: 20
+                    }, {
+                        xtype: 'tfield',
+                        name: 'phoneMobile',
+                        margin: '5 10 5 10',
+                        fieldLabel: i18n.getMsg('telefon_mobil'),
+                        labelWidth: 100,
+                        readOnly: true,
+                        maxLength: 20
+                    }, {
+                        xtype: 'tfield',
+                        name: 'email',
+                        margin: '5 10 5 10',
+                        fieldLabel: i18n.getMsg('email'),
+                        labelWidth: 100,
+                        readOnly: true,
+                        maxLength: 20
                     }]
                 }]
             }]

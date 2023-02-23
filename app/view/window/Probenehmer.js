@@ -25,7 +25,7 @@ Ext.define('Lada.view.window.Probenehmer', {
     constrain: true,
 
     width: 650,
-    height: 510,
+    height: 580,
 
     record: null,
     recordType: 'probenehmer',

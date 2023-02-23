@@ -41,6 +41,12 @@ Ext.define('Lada.model.Sampler', {
         name: 'phone',
         allowNull: true
     }, {
+        name: 'phoneMobile',
+        allowNull: true
+    }, {
+        name: 'email',
+        allowNull: true
+    }, {
         name: 'routePlanning',
         allowNull: true
     }, {
