@@ -280,28 +280,17 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     },
 
     initData: function() {
-        var me = this;
-        if (this.isMessprogramm) {
-            this.store = Ext.create('Lada.store.OrtszuordnungMp');
-            if (this.recordId) {
-                this.addLoadingFailureHandler(this.store);
-                this.store.load({
-                    params: {
-                        messprogrammId: this.recordId
-                    }});
-            } else {
-                return;
-            }
-        } else {
-            this.store = Ext.create('Lada.store.Ortszuordnung');
+        this.store = this.isMessprogramm
+            ? Ext.create('Lada.store.OrtszuordnungMp')
+            : Ext.create('Lada.store.Ortszuordnung');
+        if (this.recordId) {
             this.addLoadingFailureHandler(this.store);
+            var paramKey = this.isMessprogramm ? 'messprogrammId' : 'probeId';
+            var me = this;
             this.store.load({
-                params: {
-                    probeId: this.recordId
-                },
-                callback: function() {
-                    me.reiHandling();
-                }
+                params: {[paramKey]: this.recordId},
+                scope: this,
+                callback: me.reiHandling
             });
         }
     },
