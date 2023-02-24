@@ -205,7 +205,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             dataIndex: 'ozId',
             width: 80,
             renderer: function(value) {
-                var store = me.ortstore;
                 var ozs = me.ozsstore;
                 var record = ozs.getById(value);
                 if (!record) {
