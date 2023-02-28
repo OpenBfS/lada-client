@@ -211,11 +211,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                             return;
                                         }
                                         /* eslint-enable max-len */
-                                        var pjson = poperation ?
-                                            Ext.decode(
-                                                poperation.getResponse()
-                                                    .responseText) :
-                                            null;
+                                        var pjson = Ext.decode(
+                                            poperation.getResponse()
+                                                .responseText);
                                         probeWin.setRecord(precord);
                                         probeWin.initData(precord);
                                         probeWin.setMessages(
@@ -225,11 +223,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                                         win.setProbe(precord);
                                         win.setRecord(messungRecord);
                                         win.initData(messungRecord);
-                                        var json = operation ?
-                                            Ext.decode(
-                                                operation.getResponse()
-                                                    .responseText) :
-                                            null;
+                                        var json = Ext.decode(
+                                            operation.getResponse()
+                                                .responseText);
                                         win.setMessages(
                                             json.errors,
                                             json.warnings,
@@ -253,10 +249,8 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                             if (success) {
                                 win.setRecord(newRecord);
                                 win.initData(newRecord);
-                                var json = operation ?
-                                    Ext.decode(
-                                        operation.getResponse().responseText) :
-                                    null;
+                                var json = Ext.decode(
+                                    operation.getResponse().responseText);
                                 win.setMessages(
                                     json.errors,
                                     json.warnings,
