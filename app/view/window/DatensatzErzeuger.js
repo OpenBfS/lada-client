@@ -99,6 +99,7 @@ Ext.define('Lada.view.window.DatensatzErzeuger', {
      * @param errors These Errors shall be shown
      * @param warnings These Warning shall be shown
      */
+    // TODO: This is never called
     setMessages: function(errors, warnings) {
         this.down('datensatzerzeugerform').setMessages(errors, warnings);
     },
