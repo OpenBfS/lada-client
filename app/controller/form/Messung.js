@@ -10,7 +10,8 @@
  * This is a controller for a Messung form
  */
 Ext.define('Lada.controller.form.Messung', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.messungform',
     requires: ['Lada.view.window.SetStatus'],
 
     /**
@@ -60,6 +61,7 @@ Ext.define('Lada.controller.form.Messung', {
         }
 
         record.save({
+            scope: this,
             success: function(newRecord, response) {
                 var oldWin = button.up('window');
                 var parentWin = oldWin.parentWindow;
@@ -105,33 +107,7 @@ Ext.define('Lada.controller.form.Messung', {
                     }
                 }
             },
-            failure: function(newRrecord, response) {
-                formPanel.loadRecord(record);
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                            + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                        formPanel.setMessages(json.errors, json.warnings,
-                            json.notifications);
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                }
-                formPanel.setLoading(false);
-            }
+            failure: this.handleSaveFailure
         });
     },
 

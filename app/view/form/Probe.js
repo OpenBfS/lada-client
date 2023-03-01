@@ -13,6 +13,7 @@ Ext.define('Lada.view.form.Probe', {
     extend: 'Lada.view.form.LadaForm',
     alias: 'widget.probeform',
     requires: [
+        'Lada.controller.form.Probe',
         'Lada.util.FunctionScheduler',
         'Lada.view.form.mixins.DeskriptorFieldset',
         'Lada.view.widget.Datenbasis',
@@ -35,6 +36,8 @@ Ext.define('Lada.view.form.Probe', {
         'Lada.view.window.MessungCreate',
         'Lada.model.Probe'
     ],
+
+    controller: 'probeform',
 
     model: 'Lada.model.Probe',
     minWidth: 650,

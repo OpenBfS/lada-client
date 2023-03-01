@@ -14,6 +14,7 @@ Ext.define('Lada.view.form.Messung', {
     alias: 'widget.messungform',
     requires: [
         'Ext.layout.container.Table',
+        'Lada.controller.form.Messung',
         'Lada.view.widget.Datenbasis',
         'Lada.view.widget.base.CheckBox',
         'Lada.view.widget.Messmethode',
@@ -24,6 +25,8 @@ Ext.define('Lada.view.form.Messung', {
         'Lada.view.widget.base.SelectableDisplayField',
         'Lada.view.widget.Statuskombi'
     ],
+
+    controller: 'messungform',
 
     model: 'Lada.model.Messung',
     minWidth: 650,
