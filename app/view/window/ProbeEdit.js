@@ -227,8 +227,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
             me.record = record;
             me.recordId = record.get('id');
             me.down('probeform').setRecord(record);
-            var owner = record.get('owner');
-            var readonly = record.get('readonly');
             var messstelle = Ext.data.StoreManager.get('messstellen')
                 .getById(record.get('mstId'));
             var datenbasis = Ext.data.StoreManager.get('datenbasis')
@@ -258,13 +256,9 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }
 
             // If the Probe is ReadOnly, disable Inputfields and grids
-            if (readonly === true || !owner) {
-                me.down('probeform').setReadOnly(true);
-                me.disableChildren();
-            } else {
-                me.down('probeform').setReadOnly(false);
-                me.enableChildren();
-            }
+            var readonly = record.get('readonly') || !record.get('owner');
+            me.down('probeform').setReadOnly(readonly);
+            me.disableChildren(readonly);
 
             // Initialize Tag widget
             me.down('tagwidget').setTagged([record.get('id')], 'probe');
@@ -306,37 +300,15 @@ Ext.define('Lada.view.window.ProbeEdit', {
     },
 
     /**
-     * Disable the Childelements of this window
+     * Disable or enable grids in fieldsets in this window
      */
-    disableChildren: function() {
-        if (!this.record.get('owner')) {
-            // Disable only when the User is not the owner of the Probe
-            // Works in symbiosis with success callback some lines above.
-            this.down('fset[name=messungen]').down('messunggrid').setReadOnly(
-                true);
-            this.down('fset[name=messungen]').down(
-                'messunggrid').readOnly = true;
-        }
-        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(
-            true);
-        this.down('fset[name=probenzusatzwerte]').down(
-            'probenzusatzwertgrid').setReadOnly(true);
-        this.down('fset[name=pkommentare]').down(
-            'pkommentargrid').setReadOnly(true);
-    },
-
-    /**
-     * Enable the Childelements of this window
-     */
-    enableChildren: function() {
-        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(
-            false);
-        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(
-            false);
-        this.down('fset[name=probenzusatzwerte]').down(
-            'probenzusatzwertgrid').setReadOnly(false);
-        this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(
-            false);
+    disableChildren: function(disable) {
+        this.query('fset').forEach(function(fset) {
+            var grid = fset.down('basegrid');
+            if (grid) {
+                grid.setReadOnly(disable);
+            }
+        });
     },
 
     /**

@@ -17,7 +17,7 @@
  */
 Ext.define('Lada.view.grid.BaseGrid', {
     extend: 'Ext.grid.Panel',
-    alias: 'basegrid',
+    alias: 'widget.basegrid',
     requires: [
         'Lada.view.window.ReloadMask'
     ],
