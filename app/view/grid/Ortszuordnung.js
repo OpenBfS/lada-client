@@ -283,8 +283,8 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
         this.store = this.isMessprogramm
             ? Ext.create('Lada.store.OrtszuordnungMp')
             : Ext.create('Lada.store.Ortszuordnung');
+        this.addLoadingFailureHandler(this.store);
         if (this.recordId) {
-            this.addLoadingFailureHandler(this.store);
             var paramKey = this.isMessprogramm ? 'messprogrammId' : 'probeId';
             var me = this;
             this.store.load({
