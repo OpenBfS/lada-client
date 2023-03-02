@@ -156,6 +156,7 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
                                 });
                             }
                         }
+                        me.down('combobox').validate();
                     }
                 }
             }
