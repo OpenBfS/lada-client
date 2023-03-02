@@ -172,18 +172,22 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
 
     setNetzbetreiber: function(mstId) {
         var mst = Ext.data.StoreManager.get('messstellen').getById(mstId);
-        var nbId = mst.get('netzbetreiberId');
+        var fieldValue = '';
+        if (mst) {
+            var nbId = mst.get('netzbetreiberId');
 
-        var nbStore = Ext.data.StoreManager.get('netzbetreiber');
-        if (!nbStore) {
-            nbStore = Ext.create('Lada.store.Netzbetreiber', {
-                storeId: 'netzbetreiber'
-            });
+            var nbStore = Ext.data.StoreManager.get('netzbetreiber');
+            if (!nbStore) {
+                nbStore = Ext.create('Lada.store.Netzbetreiber', {
+                    storeId: 'netzbetreiber'
+                });
+            }
+            var nb = nbStore.getById(nbId);
+            if (nb) {
+                fieldValue = nbId + ' - ' + nb.get('netzbetreiber');
+            }
         }
-        var nb = nbStore.getById(nbId);
-        this.down('field[name=netzbetreiber]').setValue(nb
-            ? nbId + ' - ' + nb.get('netzbetreiber')
-            : '');
+        this.down('field[name=netzbetreiber]').setValue(fieldValue);
     },
 
     setMessstelleLabor: function() {
