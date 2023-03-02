@@ -250,11 +250,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }
             me.setTitle(title);
 
-            if (owner) {
-                //Always allow to Add Messungen.
-                me.enableAddMessungen();
-            }
-
             var json = response ?
                 Ext.decode(response.getResponse().responseText) :
                 null;
@@ -308,14 +303,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
         } else {
             callback(form);
         }
-    },
-
-    /**
-     * Enable the Messungengrid
-     */
-    enableAddMessungen: function() {
-        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(
-            false);
     },
 
     /**
