@@ -15,7 +15,8 @@ Ext.define('Lada.view.grid.Status', {
 
     requires: [
         'Ext.grid.filters.Filters',
-        'Lada.store.Status'],
+        'Lada.store.Status'
+    ],
     plugins: 'gridfilters',
 
     maxHeight: 350,
@@ -31,6 +32,13 @@ Ext.define('Lada.view.grid.Status', {
     statusStufeStore: null,
 
     initComponent: function() {
+        this.store = Ext.create('Lada.store.Status', {
+            sorters: [{
+                property: 'id',
+                direction: 'DESC'
+            }]
+        });
+
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.statusgrid');
 
@@ -121,19 +129,6 @@ Ext.define('Lada.view.grid.Status', {
     },
 
     initData: function() {
-        if (this.store) {
-            this.store.removeAll();
-        } else {
-            this.store = Ext.create('Lada.store.Status', {
-                sorters: [{
-                    property: 'id',
-                    direction: 'DESC'
-                }]
-            });
-        }
-
-        this.addLoadingFailureHandler(this.store);
-
         this.store.load({
             params: {
                 messungsId: this.recordId
@@ -155,10 +150,6 @@ Ext.define('Lada.view.grid.Status', {
      * Reload this grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-            return;
-        }
         this.hideReloadMask();
         this.store.reload();
     }

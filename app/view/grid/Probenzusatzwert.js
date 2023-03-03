@@ -34,6 +34,8 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
     pzStore: null,
 
     initComponent: function() {
+        this.store = Ext.create('Lada.store.Zusatzwerte');
+
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.zusatzwerte');
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -188,8 +190,6 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
     },
 
     initData: function() {
-        this.store = Ext.create('Lada.store.Zusatzwerte');
-        this.addLoadingFailureHandler(this.store);
         this.store.load({
             params: {
                 probeId: this.recordId
@@ -201,10 +201,6 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
      * Reload the grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-            return;
-        }
         this.hideReloadMask();
         this.store.reload();
     },

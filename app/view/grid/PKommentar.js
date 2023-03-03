@@ -29,6 +29,8 @@ Ext.define('Lada.view.grid.PKommentar', {
     allowDeselect: true,
 
     initComponent: function() {
+        this.store = Ext.create('Lada.store.PKommentare');
+
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.kommentare');
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -141,8 +143,6 @@ Ext.define('Lada.view.grid.PKommentar', {
     },
 
     initData: function() {
-        this.store = Ext.create('Lada.store.PKommentare');
-        this.addLoadingFailureHandler(this.store);
         this.store.load({
             params: {
                 probeId: this.recordId
@@ -164,10 +164,6 @@ Ext.define('Lada.view.grid.PKommentar', {
      * Reload the grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-            return;
-        }
         this.hideReloadMask();
         this.store.reload();
     },

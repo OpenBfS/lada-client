@@ -25,6 +25,8 @@ Ext.define('Lada.view.grid.MKommentar', {
     allowDeselect: true,
 
     initComponent: function() {
+        this.store = Ext.create('Lada.store.MKommentare');
+
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.kommentare');
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -138,12 +140,6 @@ Ext.define('Lada.view.grid.MKommentar', {
     },
 
     initData: function() {
-        if (this.store) {
-            this.store.removeAll();
-        } else {
-            this.store = Ext.create('Lada.store.MKommentare');
-        }
-        this.addLoadingFailureHandler(this.store);
         this.store.load({
             params: {
                 messungsId: this.recordId
@@ -165,9 +161,6 @@ Ext.define('Lada.view.grid.MKommentar', {
      * Reload the grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-        }
         this.hideReloadMask();
         this.store.reload();
     },

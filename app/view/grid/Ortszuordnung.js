@@ -42,6 +42,10 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     ortstore: null,
 
     initComponent: function() {
+        this.store = this.isMessprogramm
+            ? Ext.create('Lada.store.OrtszuordnungMp')
+            : Ext.create('Lada.store.Ortszuordnung');
+
         var ortstore = Ext.data.StoreManager.get('orte');
         if (!ortstore) {
             Ext.create('Lada.store.Orte', {
@@ -280,10 +284,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     },
 
     initData: function() {
-        this.store = this.isMessprogramm
-            ? Ext.create('Lada.store.OrtszuordnungMp')
-            : Ext.create('Lada.store.Ortszuordnung');
-        this.addLoadingFailureHandler(this.store);
         if (this.recordId) {
             var paramKey = this.isMessprogramm ? 'messprogrammId' : 'probeId';
             var me = this;
@@ -299,10 +299,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
      * Reload the grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-            return;
-        }
         this.hideReloadMask();
         this.store.reload();
     },

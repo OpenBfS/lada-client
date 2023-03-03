@@ -37,6 +37,8 @@ Ext.define('Lada.view.grid.Messwert', {
     bottomBar: true,
 
     initComponent: function() {
+        this.store = Ext.create('Lada.store.Messwerte');
+
         var i18n = Lada.getApplication().bundle;
         this.emptyText= i18n.getMsg('emptytext.messwerte');
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -360,11 +362,6 @@ Ext.define('Lada.view.grid.Messwert', {
     },
 
     initData: function() {
-        if (this.store) {
-            this.store.removeAll();
-        } else {
-            this.store = Ext.create('Lada.store.Messwerte');
-        }
         if (this.umwId) {
             var umwStore = Ext.create('Lada.store.Umwelt');
             this.addLoadingFailureHandler(umwStore);
@@ -387,7 +384,6 @@ Ext.define('Lada.view.grid.Messwert', {
                 }
             });
         }
-        this.addLoadingFailureHandler(this.store);
         this.store.load({
             scope: this,
             params: {
@@ -400,10 +396,6 @@ Ext.define('Lada.view.grid.Messwert', {
      * Reload this grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-        }
-
         this.hideReloadMask();
         if (this.umwId) {
             var umwStore = Ext.create('Lada.store.Umwelt');

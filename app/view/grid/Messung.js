@@ -40,6 +40,8 @@ Ext.define('Lada.view.grid.Messung', {
     messwerteLoading: false,
 
     initComponent: function() {
+        this.store = Ext.create('Lada.store.Messungen');
+
         var i18n = Lada.getApplication().bundle;
         var me = this;
         this.emptyText = i18n.getMsg('emptytext.messungen');
@@ -218,8 +220,6 @@ Ext.define('Lada.view.grid.Messung', {
 
     initData: function() {
         this.setLoading(true);
-        this.store = Ext.create('Lada.store.Messungen');
-        this.addLoadingFailureHandler(this.store);
         this.store.load({
             params: {
                 probeId: this.recordId
@@ -245,10 +245,6 @@ Ext.define('Lada.view.grid.Messung', {
      * Reload this grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-            return;
-        }
         this.hideReloadMask();
         this.store.reload();
     },
