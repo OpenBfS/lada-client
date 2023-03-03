@@ -224,14 +224,15 @@ Ext.define('Lada.view.window.ProbeEdit', {
         var me = this;
         var loadCallBack = function(record, response) {
             me.initializeUI();
+
             me.record = record;
             me.recordId = record.get('id');
             me.down('probeform').setRecord(record);
-            var messstelle = Ext.data.StoreManager.get('messstellen')
-                .getById(record.get('mstId'));
+
+            // Set title
+            var title = '';
             var datenbasis = Ext.data.StoreManager.get('datenbasis')
                 .getById(record.get('datenbasisId'));
-            var title = '';
             if (datenbasis) {
                 title += datenbasis.get('datenbasis');
                 title += ' ';
@@ -242,12 +243,15 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 //title += ' - extPID/Hauptprobennr.: ';
                 title += ' / ' + record.get('hauptprobenNr');
             }
+            var messstelle = Ext.data.StoreManager.get('messstellen')
+                .getById(record.get('mstId'));
             if (messstelle) {
                 title += '    -    Mst: ';
                 title += messstelle.get('messStelle');
             }
             me.setTitle(title);
 
+            // Set messages
             var json = response ?
                 Ext.decode(response.getResponse().responseText) :
                 null;
