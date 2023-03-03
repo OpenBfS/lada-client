@@ -373,9 +373,10 @@ Ext.define('Lada.view.grid.Messwert', {
                 success: function(rec) {
                     this.defaultMehId = rec.get('mehId');
                     this.secMehId = rec.get('secMehId');
-                    var params = {
-                        mehId: this.defaultMehId
-                    };
+                    var params = {};
+                    if (this.defaultMehId) {
+                        params['mehId'] = this.defaultMehId;
+                    }
                     if (this.secMehId) {
                         params['secMehId'] = this.secMehId;
                     }
