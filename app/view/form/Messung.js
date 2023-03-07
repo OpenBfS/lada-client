@@ -33,8 +33,6 @@ Ext.define('Lada.view.form.Messung', {
     margin: 5,
     border: false,
 
-    recordId: null,
-
     record: null,
     //The probe model instance connected to this messung
     probe: null,

@@ -118,8 +118,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             border: false,
             autoScroll: true,
             items: [{
-                xtype: 'probeform',
-                recordId: this.recordId
+                xtype: 'probeform'
             }, {
                 // Tags
                 xtype: 'fieldset',

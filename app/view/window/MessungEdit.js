@@ -127,8 +127,7 @@ Ext.define('Lada.view.window.MessungEdit', {
             autoScroll: true,
             items: [{
                 xtype: 'messungform',
-                margin: 5,
-                recordId: this.record.get('id')
+                margin: 5
             }, {
                 // Tags
                 xtype: 'fieldset',

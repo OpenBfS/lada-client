@@ -221,8 +221,7 @@ Ext.define('Lada.view.window.Messprogramm', {
             border: false,
             autoScroll: true,
             items: [{
-                xtype: 'messprogrammform',
-                recordId: this.record ? this.record.get('id') : null
+                xtype: 'messprogrammform'
             }, {
                 xtype: 'fset',
                 name: 'orte',

@@ -23,8 +23,6 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
     margin: 0,
     border: false,
 
-    recordId: null,
-
     trackResetOnLoad: true,
 
     initComponent: function() {

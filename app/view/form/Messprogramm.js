@@ -36,8 +36,6 @@ Ext.define('Lada.view.form.Messprogramm', {
     margin: 5,
     border: false,
 
-    recordId: null,
-
     trackResetOnLoad: true,
 
     statics: {
