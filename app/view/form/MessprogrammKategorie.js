@@ -13,10 +13,12 @@ Ext.define('Lada.view.form.MessprogrammKategorie', {
     extend: 'Lada.view.form.LadaForm',
     alias: 'widget.mprkatform',
     requires: [
+        'Lada.controller.form.MessprogrammKategorie',
         'Lada.view.widget.Netzbetreiber',
         'Lada.model.MessprogrammKategorie'
     ],
 
+    controller: 'mprkatform',
     model: 'Lada.model.MessprogrammKategorie',
     border: false,
     layout: {
