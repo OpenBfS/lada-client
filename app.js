@@ -511,7 +511,6 @@ Ext.application({
     // first before the application "launch" function is called.
     controllers: [
         'Lada.controller.grid.MessungList',
-        'Lada.controller.form.Probenehmer',
         'Lada.controller.grid.Probenzusatzwert',
         'Lada.controller.grid.PKommentar',
         'Lada.controller.grid.MKommentar',
