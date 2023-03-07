@@ -20,7 +20,6 @@ Ext.define('Lada.view.grid.MKommentar', {
         deferEmptyText: false
     },
 
-    recordId: null,
     readOnly: true,
     allowDeselect: true,
 
@@ -134,17 +133,19 @@ Ext.define('Lada.view.grid.MKommentar', {
                 scope: this
             }
         };
-        this.initData();
         this.callParent(arguments);
         this.setReadOnly(true); //Grid is always initialised as RO
     },
 
     initData: function() {
-        this.store.load({
-            params: {
-                messungsId: this.recordId
-            }
-        });
+        var parentId = this.getParentRecordId();
+        if (parentId) {
+            this.store.load({
+                params: {
+                    messungsId: parentId
+                }
+            });
+        }
         Ext.on('timezonetoggled', function() {
             var grid = Ext.ComponentQuery.query('mkommentargrid');
             for (i=0; i<grid.length; i++) {

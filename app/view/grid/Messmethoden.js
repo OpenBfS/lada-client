@@ -27,7 +27,6 @@ Ext.define('Lada.view.grid.Messmethoden', {
     },
     margin: '0, 5, 5, 5',
 
-    recordId: null,
     allowDeselect: true,
     mmtStore: null,
     mmtUnfilteredStore: null,
@@ -95,8 +94,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
             items: ['->', {
                 text: i18n.getMsg('add'),
                 icon: 'resources/img/list-add.png',
-                action: 'add',
-                recordId: this.recordId
+                action: 'add'
             }, {
                 text: i18n.getMsg('delete'),
                 icon: 'resources/img/list-remove.png',
@@ -167,14 +165,15 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 queryMode: 'local'
             }
         }];
-        this.initData();
         this.callParent(arguments);
     },
+
     initData: function() {
-        if (this.recordId) {
+        var parentId = this.getParentRecordId();
+        if (parentId) {
             this.store.load({
                 params: {
-                    messprogrammId: this.recordId
+                    messprogrammId: parentId
                 }
             });
         }

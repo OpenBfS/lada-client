@@ -28,7 +28,7 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
 
     warnings: null,
     errors: null,
-    recordId: null,
+
     readOnly: true,
     allowDeselect: true,
     pzStore: null,
@@ -184,17 +184,19 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 scope: this
             }
         };
-        this.initData();
         this.callParent(arguments);
         this.setReadOnly(true); //Grid is always initialised as RO
     },
 
     initData: function() {
-        this.store.load({
-            params: {
-                probeId: this.recordId
-            }
-        });
+        var parentId = this.getParentRecordId();
+        if (parentId) {
+            this.store.load({
+                params: {
+                    probeId: parentId
+                }
+            });
+        }
     },
 
     /**

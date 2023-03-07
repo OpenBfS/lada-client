@@ -146,7 +146,7 @@ Ext.define('Lada.controller.grid.Messwert', {
      */
     add: function(button) {
         var record = Ext.create('Lada.model.Messwert', {
-            messungsId: button.up('messwertgrid').recordId
+            messungsId: button.up('messwertgrid').getParentRecordId()
         });
         record.set('id', null);
         button.up('messwertgrid').store.insert(0, record);

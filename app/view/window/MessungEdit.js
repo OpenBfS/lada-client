@@ -180,7 +180,6 @@ Ext.define('Lada.view.window.MessungEdit', {
                 items: [{
                     xtype: 'messwertgrid',
                     minHeight: 130,
-                    recordId: this.record.get('id'),
                     umwId: this.probe.get('umwId'),
                     messgroesseStore: this.mStore
                 }]
@@ -191,8 +190,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 padding: '5, 5',
                 margin: 5,
                 items: [{
-                    xtype: 'statusgrid',
-                    recordId: this.record.get('id')
+                    xtype: 'statusgrid'
                 }]
             }, {
                 xtype: 'fset',
@@ -201,8 +199,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                 padding: '5, 5',
                 margin: 5,
                 items: [{
-                    xtype: 'mkommentargrid',
-                    recordId: this.record.get('id')
+                    xtype: 'mkommentargrid'
                 }]
             }]
         }]);
@@ -284,6 +281,11 @@ Ext.define('Lada.view.window.MessungEdit', {
 
             // Initialize Tag widget
             me.down('tagwidget').setTagged([record.get('id')], 'messung');
+
+            // Initialize grids
+            me.query('basegrid').forEach(function(grid) {
+                grid.initData();
+            });
 
             me.setLoading(false);
         };

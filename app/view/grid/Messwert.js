@@ -27,7 +27,6 @@ Ext.define('Lada.view.grid.Messwert', {
         deferEmptyText: false
     },
     margin: '0, 5, 5, 5',
-    recordId: null,
     umwId: null,
     defaultMehId: null,
     secMehId: null,
@@ -327,7 +326,6 @@ Ext.define('Lada.view.grid.Messwert', {
                 scope: this
             }
         };
-        this.initData();
         this.callParent(arguments);
         this.setReadOnly(true); //Grid is always initialised as RO
         if (!me.bottomBar) {
@@ -384,12 +382,14 @@ Ext.define('Lada.view.grid.Messwert', {
                 }
             });
         }
-        this.store.load({
-            scope: this,
-            params: {
-                messungsId: this.recordId
-            }
-        });
+        var parentId = this.getParentRecordId();
+        if (parentId) {
+            this.store.load({
+                params: {
+                    messungsId: parentId
+                }
+            });
+        }
     },
 
     /**

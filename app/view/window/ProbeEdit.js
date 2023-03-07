@@ -169,8 +169,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 padding: '5, 5',
                 margin: 5,
                 items: [{
-                    xtype: 'ortszuordnunggrid',
-                    recordId: this.recordId
+                    xtype: 'ortszuordnunggrid'
                 }]
             }, {
                 xtype: 'fset',
@@ -181,8 +180,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 collapsible: false,
                 collapsed: false,
                 items: [{
-                    xtype: 'messunggrid',
-                    recordId: this.recordId
+                    xtype: 'messunggrid'
                 }]
             }, {
                 xtype: 'fset',
@@ -194,7 +192,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 collapsed: false,
                 items: [{
                     xtype: 'probenzusatzwertgrid',
-                    recordId: this.recordId,
                     pzStore: pzStore
                 }]
             }, {
@@ -206,8 +203,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 collapsible: true,
                 collapsed: false,
                 items: [{
-                    xtype: 'pkommentargrid',
-                    recordId: this.recordId
+                    xtype: 'pkommentargrid'
                 }]
             }]
         }]);
@@ -265,6 +261,11 @@ Ext.define('Lada.view.window.ProbeEdit', {
 
             // Initialize Tag widget
             me.down('tagwidget').setTagged([record.get('id')], 'probe');
+
+            // Initialize grids
+            me.query('basegrid').forEach(function(grid) {
+                grid.initData();
+            });
 
             me.setLoading(false);
             me.down('probeform').isValid();

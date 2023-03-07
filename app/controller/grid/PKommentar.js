@@ -88,10 +88,11 @@ Ext.define('Lada.controller.grid.PKommentar', {
      * This function adds a new row to add a PKommentar
      */
     add: function(button) {
-        var record = Ext.create('Lada.model.PKommentar');
+        var record = Ext.create('Lada.model.PKommentar', {
+            probeId: button.up('pkommentargrid').getParentRecordId()
+        });
         record.data.datum = Lada.util.Date.formatTimestamp(new Date(),
             'd.m.Y H:i', true);
-        record.set('probeId', button.up('pkommentargrid').recordId);
         button.up('pkommentargrid').store.insert(0, record);
         button.up('pkommentargrid').rowEditing.startEdit(0, 1);
     },

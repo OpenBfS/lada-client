@@ -27,8 +27,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     },
     margin: '0, 5, 5, 5',
 
-    recordId: null,
-
     isMessprogramm: false,
 
     warnings: null,
@@ -279,16 +277,16 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 scope: this
             }
         };
-        this.initData();
         this.callParent(arguments);
     },
 
     initData: function() {
-        if (this.recordId) {
+        var parentId = this.getParentRecordId();
+        if (parentId) {
             var paramKey = this.isMessprogramm ? 'messprogrammId' : 'probeId';
             var me = this;
             this.store.load({
-                params: {[paramKey]: this.recordId},
+                params: {[paramKey]: parentId},
                 scope: this,
                 callback: me.reiHandling
             });

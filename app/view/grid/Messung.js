@@ -25,8 +25,6 @@ Ext.define('Lada.view.grid.Messung', {
     },
     margin: '0, 5, 15, 5',
 
-    recordId: null,
-
     warnings: null,
     errors: null,
     readOnly: true,
@@ -210,7 +208,6 @@ Ext.define('Lada.view.grid.Messung', {
                 scope: this
             }
         };
-        this.initData();
         this.callParent(arguments);
         if (!this.bottomBar) {
             this.down('toolbar[dock=bottom]').hide();
@@ -220,15 +217,18 @@ Ext.define('Lada.view.grid.Messung', {
 
     initData: function() {
         this.setLoading(true);
-        this.store.load({
-            params: {
-                probeId: this.recordId
-            },
-            callback: function() {
-                this.setLoading(false);
-            },
-            scope: this
-        });
+        var parentId = this.getParentRecordId();
+        if (parentId) {
+            this.store.load({
+                params: {
+                    probeId: parentId
+                },
+                callback: function() {
+                    this.setLoading(false);
+                },
+                scope: this
+            });
+        }
         Ext.on('timezonetoggled', function() {
             var grid = Ext.ComponentQuery.query('messunggrid');
             for (i=0; i<grid.length; i++) {

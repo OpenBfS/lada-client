@@ -25,7 +25,6 @@ Ext.define('Lada.view.grid.Status', {
         deferEmptyText: false
     },
 
-    recordId: null,
     readOnly: true,
     allowDeselect: true,
     statusWerteStore: null,
@@ -41,15 +40,6 @@ Ext.define('Lada.view.grid.Status', {
 
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.statusgrid');
-
-        this.statusWerteStore = Ext.create('Lada.store.StatusWerte');
-        this.statusWerteStore.load({
-            params: {
-                messungsId: this.recordId
-            }
-        });
-        this.statusStufeStore = Ext.create('Lada.store.StatusStufe');
-        this.statusStufeStore.load();
 
         this.columns = [{
             header: i18n.getMsg('header.datum'),
@@ -124,16 +114,29 @@ Ext.define('Lada.view.grid.Status', {
                 value + '</div>';
             }
         }];
-        this.initData();
         this.callParent(arguments);
     },
 
     initData: function() {
-        this.store.load({
-            params: {
-                messungsId: this.recordId
-            }
-        });
+        this.statusStufeStore = Ext.create('Lada.store.StatusStufe');
+        this.statusStufeStore.load();
+
+        this.statusWerteStore = Ext.create('Lada.store.StatusWerte');
+
+        var parentId = this.getParentRecordId();
+        if (parentId) {
+            this.statusWerteStore.load({
+                params: {
+                    messungsId: parentId
+                }
+            });
+
+            this.store.load({
+                params: {
+                    messungsId: parentId
+                }
+            });
+        }
         Ext.on('timezonetoggled', function() {
             var grid = Ext.ComponentQuery.query('statusgrid');
             for (i=0; i<grid.length; i++) {

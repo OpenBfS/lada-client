@@ -96,12 +96,10 @@ Ext.define('Lada.controller.grid.Messmethode', {
      * This function adds a new row
      */
     add: function(button) {
-        var record = Ext.create('Lada.model.MmtMessprogramm');
-        record.set(
-            'messprogrammId',
-            button.up('messprogramm').down('messprogrammform')
-                .getRecord().get('id'));
         var grid = button.up('messmethodengrid');
+        var record = Ext.create('Lada.model.MmtMessprogramm', {
+            messprogrammId: grid.getParentRecordId()
+        });
         grid.store.insert(0, record);
         grid.rowEditing.startEdit(0, 0);
         var mp_win = grid.up('messprogramm');

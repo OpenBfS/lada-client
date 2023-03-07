@@ -55,6 +55,11 @@ Ext.define('Lada.view.grid.BaseGrid', {
         }
     },
 
+    getParentRecordId: function() {
+        var record = this.up('window').down('form').getRecord();
+        return record ? record.get('id') : null;
+    },
+
     /**
      * Adds a handler to the given store to show an error mask if the store
      * failed to load.
