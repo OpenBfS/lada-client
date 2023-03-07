@@ -13,6 +13,7 @@ Ext.define('Lada.view.form.Messprogramm', {
     extend: 'Lada.view.form.LadaForm',
     alias: 'widget.messprogrammform',
     requires: [
+        'Lada.controller.form.Messprogramm',
         'Lada.util.FunctionScheduler',
         'Lada.view.form.mixins.DeskriptorFieldset',
         'Lada.view.widget.Datenbasis',
@@ -30,6 +31,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         'Lada.view.widget.DayOfYear'
     ],
 
+    controller: 'messprogrammform',
     model: 'Lada.model.Messprogramm',
     margin: 5,
     border: false,

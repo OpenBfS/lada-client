@@ -10,7 +10,8 @@
  * A Controller for a Messprogramm form
  */
 Ext.define('Lada.controller.form.Messprogramm', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.messprogrammform',
 
     /**
      * Initialize the Controller
@@ -274,6 +275,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
         }
 
         record.save({
+            scope: this,
             success: function(rec, response) {
                 var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                 if (parentGrid.length === 1) {
@@ -293,29 +295,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                 }
             },
             failure: function(newRecord, response) {
-                formPanel.loadRecord(record);
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                        formPanel.setMessages(json.errors, json.warnings);
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                }
+                this.handleSaveFailure(newRecord, response);
             }
         });
     },

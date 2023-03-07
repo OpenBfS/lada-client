@@ -520,7 +520,6 @@ Ext.application({
         'Lada.controller.grid.Messwert',
         'Lada.controller.grid.Ortszuordnung',
         'Lada.controller.form.Ortszuordnung',
-        'Lada.controller.form.Messprogramm',
         'Lada.controller.form.MessprogrammKategorie',
         'Lada.controller.grid.Messmethode',
         'Lada.controller.GridExport',
