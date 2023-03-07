@@ -804,7 +804,7 @@ Ext.define('Lada.controller.form.Probe', {
             autoShow: true,
             closeAction: 'destroy',
             type: 'probe',
-            objectId: button.up('form').recordId,
+            objectId: button.up('form').getRecord().get('id'),
             titleText: titleText
         });
         button.up('window').addChild(trail);

@@ -60,7 +60,7 @@ Ext.define('Lada.view.form.Messung', {
                     qtip: i18n.getMsg('qtip.audit'),
                     icon: 'resources/img/distribute-vertical-center.png',
                     action: 'audit',
-                    disabled: this.recordId === null
+                    disabled: true
                 }, {
                     text: i18n.getMsg('save'),
                     qtip: i18n.getMsg('save.qtip'),
@@ -207,6 +207,7 @@ Ext.define('Lada.view.form.Messung', {
             //remove the Statuskombi field from the form
             me.down('statuskombi').hide();
         }
+        this.down('button[action=audit]').setDisabled(false);
 
         //Get the connected Probe instance and Datenbasis
         Lada.model.Probe.load(this.record.get('probeId'), {

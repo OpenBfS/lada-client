@@ -87,7 +87,7 @@ Ext.define('Lada.view.form.Probe', {
                         qtip: i18n.getMsg('qtip.audit'),
                         icon: 'resources/img/distribute-vertical-center.png',
                         action: 'audit',
-                        disabled: this.recordId === null
+                        disabled: true
                     }, {
                         text: i18n.getMsg('save'),
                         qtip: i18n.getMsg('save.qtip'),
@@ -521,6 +521,7 @@ Ext.define('Lada.view.form.Probe', {
         }
 
         this.setMediaDesk(probeRecord);
+        this.down('button[action=audit]').setDisabled(false);
     },
 
     setMediaDesk: function(record) {

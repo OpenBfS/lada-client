@@ -172,7 +172,7 @@ Ext.define('Lada.controller.form.Messung', {
             autoShow: true,
             closeAction: 'destroy',
             type: 'messung',
-            objectId: button.up('form').recordId,
+            objectId: button.up('form').getRecord().get('id'),
             titleText: titleText[0]
         });
         button.up('window').addChild(trail);
