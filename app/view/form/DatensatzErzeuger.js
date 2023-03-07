@@ -13,10 +13,12 @@ Ext.define('Lada.view.form.DatensatzErzeuger', {
     extend: 'Lada.view.form.LadaForm',
     alias: 'widget.datensatzerzeugerform',
     requires: [
+        'Lada.controller.form.DatensatzErzeuger',
         'Lada.view.widget.Netzbetreiber',
         'Lada.model.DatensatzErzeuger'
     ],
 
+    controller: 'datensatzerzeugerform',
     model: 'Lada.model.DatensatzErzeuger',
     margin: 0,
     border: false,
