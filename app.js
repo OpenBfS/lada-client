@@ -512,7 +512,6 @@ Ext.application({
     controllers: [
         'Lada.controller.grid.MessungList',
         'Lada.controller.form.Probenehmer',
-        'Lada.controller.form.Ort',
         'Lada.controller.grid.Probenzusatzwert',
         'Lada.controller.grid.PKommentar',
         'Lada.controller.grid.MKommentar',

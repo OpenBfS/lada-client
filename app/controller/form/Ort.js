@@ -10,7 +10,8 @@
  * This is a controller for an Ort Form
  */
 Ext.define('Lada.controller.form.Ort', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.ortform',
     requires: [
         'Lada.view.window.ChangeKDA',
         'Lada.store.Orte'
@@ -76,6 +77,7 @@ Ext.define('Lada.controller.form.Ort', {
     },
 
     save: function(button) {
+        var me = this;
         var i18n = Lada.getApplication().bundle;
         var formpanel = button.up('ortform');
         var record = formpanel.getRecord();
@@ -88,6 +90,7 @@ Ext.define('Lada.controller.form.Ort', {
 
         var doSave = function() {
             record.save({
+                scope: me,
                 success: function(newrecord, response) {
                     var win = formpanel.up('window');
                     if (win.setOzOnComplete === true ) {
@@ -129,29 +132,7 @@ Ext.define('Lada.controller.form.Ort', {
                     }
                 },
                 failure: function(newRecord, response) {
-                    formpanel.loadRecord(record);
-                    if (response.error) {
-                        //TODO: check content of error.status (html error code)
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.generic.body'));
-                    } else {
-                        var json = Ext.decode(
-                            response.getResponse().responseText);
-                        if (json) {
-                            if (json.message) {
-                                Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                + ' #' + json.message,
-                                i18n.getMsg(json.message));
-                            } else {
-                                Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                    i18n.getMsg('err.msg.generic.body'));
-                            }
-                            formpanel.setMessages(json.errors, json.warnings);
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.response.body'));
-                        }
-                    }
+                    this.handleSaveFailure(newRecord, response);
                 }
             });
         };
