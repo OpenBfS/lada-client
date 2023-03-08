@@ -294,9 +294,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
                     win.enableChildren();
                 }
             },
-            failure: function(newRecord, response) {
-                this.handleSaveFailure(newRecord, response);
-            }
+            failure: this.handleSaveFailure
         });
     },
 

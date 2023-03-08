@@ -58,9 +58,7 @@ Ext.define('Lada.controller.form.MessprogrammKategorie', {
                     formPanel.setMessages(json.errors, json.warnings);
                 }
             },
-            failure: function(newRecord, response) {
-                this.handleSaveFailure(newRecord, response);
-            }
+            failure: this.handleSaveFailure
         });
     },
 
