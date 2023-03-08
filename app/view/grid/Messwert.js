@@ -497,71 +497,30 @@ Ext.define('Lada.view.grid.Messwert', {
      */
     setValidationResults: function(metaData, record, dataIndex) {
         var i18n = Lada.getApplication().bundle;
-        var errors = record.get('errors');
-        var warnings = record.get('warnings');
-        var notifications = record.get('notifications');
-        var validationResult = '';
+        var validationResult = [];
         var validationResultCls = null;
-        if (warnings && (warnings[dataIndex] ||
-            Object.keys(warnings).filter(item => item.toString().startsWith(dataIndex))[0])) {
-            if (warnings[dataIndex]) {
-                validationResult += i18n.getMsg(warnings[dataIndex]) + '<br>';
-                validationResultCls = 'x-lada-warning-grid-field';
-            } else {
-                var tmp;
-                for (var key in warnings) {
-                    tmp = key;
+        ['notification', 'warning', 'error'].forEach(function(msgCat) {
+            var messages = record.get(msgCat + 's');
+            if (messages) {
+                var candidateKeys = Object.keys(messages).filter(
+                    key => key.startsWith(dataIndex));
+                for (var key of candidateKeys) {
+                    var tmp = key;
                     if (tmp.indexOf('#') > 0) {
                         tmp = tmp.split('#')[0];
                     }
-                }
-                if (tmp === dataIndex) {
-                    validationResult += i18n.getMsg(warnings[key]);
-                    validationResultCls = 'x-lada-warning-grid-field';
-                }
-            }
-        }
-        if (errors && (errors[dataIndex] ||
-            Object.keys(errors).filter(item => item.toString().startsWith(dataIndex))[0])) {
-            if (errors[dataIndex]) {
-                validationResult += i18n.getMsg(errors[dataIndex]) + '<br>';
-                validationResultCls = 'x-lada-error-grid-field';
-            } else {
-                var tmp2;
-                for (var key2 in errors) {
-                    tmp2 = key2;
-                    if (tmp2.indexOf('#') > 0) {
-                        tmp2 = tmp2.split('#')[0];
+                    if (tmp === dataIndex) {
+                        validationResult.push(i18n.getMsg(messages[key]));
+                        validationResultCls =
+                            'x-lada-' + msgCat + '-grid-field';
                     }
                 }
-                if (tmp2 === dataIndex) {
-                    validationResult += i18n.getMsg(errors[key]);
-                    validationResultCls = 'x-lada-error-grid-field';
-                }
             }
-        }
-        if (notifications && (notifications[dataIndex] ||
-            Object.keys(notifications).filter(item => item.toString().startsWith(dataIndex))[0])) {
-            if (notifications[dataIndex]) {
-                validationResult += i18n.getMsg(notifications[dataIndex]) + '<br>';
-                validationResultCls = 'x-lada-notification-grid-field';
-            } else {
-                var tmp3;
-                for (var key3 in notifications) {
-                    tmp3 = key3;
-                    if (tmp3.indexOf('#') > 0) {
-                        tmp3 = tmp.split('#')[0];
-                    }
-                }
-                if (tmp3 === dataIndex) {
-                    validationResult += i18n.getMsg(notifications[key]);
-                    validationResultCls = 'x-lada-notification-grid-field';
-                }
-            }
-        }
+        });
         if (validationResultCls) {
             metaData.tdCls = validationResultCls;
-            metaData.tdAttr = 'data-qtip="' + validationResult + '"';
+            metaData.tdAttr =
+                'data-qtip="' + validationResult.join('<br>') + '"';
         }
     }
 });
