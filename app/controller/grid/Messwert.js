@@ -102,7 +102,6 @@ Ext.define('Lada.controller.grid.Messwert', {
                 // If you don't do the resets above, the grid will only contain
                 // one row in cases in when autocompletion was used!
                 context.grid.getSelectionModel().clearSelections();
-                context.grid.store.reload();
                 context.grid.up('window').initData();
             },
             failure: function(request, response) {
