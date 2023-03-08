@@ -236,10 +236,7 @@ Ext.define('Lada.view.form.Ortszuordnung', {
      * Helper to trigger the forms' validity check
      */
     changed: function() {
-        var controller = Lada.app.getController(
-            'Lada.controller.form.Ortszuordnung');
-        var form = this.up('form').getForm();
-        controller.validityChange(form, form.isValid());
+        this.fireEvent('validitychange', this, this.isValid());
     },
 
     /**
