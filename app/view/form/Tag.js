@@ -13,8 +13,10 @@ Ext.define('Lada.view.form.Tag', {
     extend: 'Lada.view.form.LadaForm',
     alias: 'widget.tagform',
     requires: [
+        'Lada.controller.form.Tag',
         'Lada.view.widget.base.DateTimeField'
     ],
+    controller: 'tagform',
 
     store: null,
 
