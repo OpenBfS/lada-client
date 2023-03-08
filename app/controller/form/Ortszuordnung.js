@@ -63,6 +63,10 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         if (record.phantom) {
             record.set('id', null);
         }
+        button.setDisabled(true);
+        button.up('ortszuordnungform').form.owner
+            .down('button[action=revert]')
+            .setDisabled(true);
         record.save({
             scope: this,
             success: function(newRecord, response) {
@@ -71,9 +75,6 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                     formPanel.setRecord(newRecord);
                     formPanel.setMessages(json.errors, json.warnings);
                     formPanel.up('window').parentWindow.initData();
-                    button.setDisabled(true);
-                    button.up('toolbar').down(
-                        'button[action=revert]').setDisabled(true);
                 }
                 //try to refresh the Grid of the Probe
                 if (
@@ -88,13 +89,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                         .down('ortszuordnunggrid').store.reload();
                 }
             },
-            failure: function(newRecord, response) {
-                button.setDisabled(true);
-                button.up('ortszuordnungform').form.owner
-                    .down('button[action=revert]')
-                    .setDisabled(true);
-                this.handleSaveFailure(newRecord, response);
-            }
+            failure: this.handleSaveFailure
         });
     },
 
