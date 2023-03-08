@@ -21,28 +21,26 @@ Ext.define('Lada.controller.form.BaseFormController', {
         var form = this.getView();
         form.loadRecord(record);
         var i18n = Lada.getApplication().bundle;
-        if (response.error) {
-            //TODO: check content of error.status (html error code)
-            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                          i18n.getMsg('err.msg.generic.body'));
+        var err = response.getError();
+        var msg = i18n.getMsg('err.msg.generic.body');
+        if (err) {
+            if (err instanceof String) {
+                msg = err;
+            } else {
+                msg = err.response.responseText;
+                if (!msg && err.response.timedout) {
+                    msg = i18n.getMsg('err.msg.timeout');
+                }
+            }
         } else {
             var json = Ext.decode(response.getResponse().responseText);
-            if (json) {
-                if (json.message) {
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                  + ' #' + json.message,
-                                  i18n.getMsg(json.message));
-                } else {
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                  i18n.getMsg('err.msg.generic.body'));
-                }
-                form.setMessages(
-                    json.errors, json.warnings, json.notifications);
-            } else {
-                Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                              i18n.getMsg('err.msg.response.body'));
+            if (json.message) {
+                msg = i18n.getMsg(json.message);
             }
+            form.setMessages(
+                json.errors, json.warnings, json.notifications);
         }
+        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'), msg);
         form.setLoading(false);
     }
 });
