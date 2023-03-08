@@ -52,6 +52,9 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
             'dynamicgrid toolbar button [action=setActiveYes]': {
                 click: this.setActiveYes
             },
+            'dynamicgrid toolbar button[action=setstatus]': {
+                click: this.setStatus
+            },
             'button[action=addMap]': {
                 click: this.activateDraw
             }
@@ -531,6 +534,21 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 }
             });
         }
+    },
+
+    /**
+     * Sets the Status on Bulk
+     **/
+    setStatus: function(button) {
+        var i18n = Lada.getApplication().bundle;
+        var grid = button.up('grid');
+        var win = Ext.create('Lada.view.window.SetStatus', {
+            title: i18n.getMsg('statusSetzen.win.title'),
+            grid: grid,
+            modal: true,
+            selection: grid.getView().getSelectionModel().getSelection()
+        });
+        win.show();
     },
 
     activateDraw: function(button) {
