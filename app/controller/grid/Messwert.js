@@ -122,6 +122,15 @@ Ext.define('Lada.controller.grid.Messwert', {
                     if (json.message) {
                         msg = i18n.getMsg(json.message);
                     }
+
+                    // Set response messages at record for display in grid
+                    ['errors', 'warnings', 'notifications'].forEach(
+                        function(msgKey) {
+                            var msgs = json[msgKey];
+                            if (msgs) {
+                                context.record.set(msgKey, msgs);
+                            }
+                        });
                 }
                 Ext.Msg.alert(i18n.getMsg('err.msg.save.title'), msg);
             }
