@@ -15,7 +15,8 @@ Ext.define('Lada.view.grid.Status', {
 
     requires: [
         'Ext.grid.filters.Filters',
-        'Lada.store.Status'],
+        'Lada.store.Status'
+    ],
     plugins: 'gridfilters',
 
     maxHeight: 350,
@@ -24,24 +25,21 @@ Ext.define('Lada.view.grid.Status', {
         deferEmptyText: false
     },
 
-    recordId: null,
     readOnly: true,
     allowDeselect: true,
     statusWerteStore: null,
     statusStufeStore: null,
 
     initComponent: function() {
+        this.store = Ext.create('Lada.store.Status', {
+            sorters: [{
+                property: 'id',
+                direction: 'DESC'
+            }]
+        });
+
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.statusgrid');
-
-        this.statusWerteStore = Ext.create('Lada.store.StatusWerte');
-        this.statusWerteStore.load({
-            params: {
-                measmId: this.recordId
-            }
-        });
-        this.statusStufeStore = Ext.create('Lada.store.StatusStufe');
-        this.statusStufeStore.load();
 
         this.columns = [{
             header: i18n.getMsg('header.datum'),
@@ -116,29 +114,29 @@ Ext.define('Lada.view.grid.Status', {
                 value + '</div>';
             }
         }];
-        this.initData();
         this.callParent(arguments);
     },
 
     initData: function() {
-        if (this.store) {
-            this.store.removeAll();
-        } else {
-            this.store = Ext.create('Lada.store.Status', {
-                sorters: [{
-                    property: 'id',
-                    direction: 'DESC'
-                }]
+        this.statusStufeStore = Ext.create('Lada.store.StatusStufe');
+        this.statusStufeStore.load();
+
+        this.statusWerteStore = Ext.create('Lada.store.StatusWerte');
+
+        var parentId = this.getParentRecordId();
+        if (parentId) {
+            this.statusWerteStore.load({
+                params: {
+                    measmId: parentId
+                }
+            });
+
+            this.store.load({
+                params: {
+                    measmId: parentId
+                }
             });
         }
-
-        this.addLoadingFailureHandler(this.store);
-
-        this.store.load({
-            params: {
-                measmId: this.recordId
-            }
-        });
         Ext.on('timezonetoggled', function() {
             var grid = Ext.ComponentQuery.query('statusgrid');
             for (i=0; i<grid.length; i++) {
@@ -155,10 +153,6 @@ Ext.define('Lada.view.grid.Status', {
      * Reload this grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-            return;
-        }
         this.hideReloadMask();
         this.store.reload();
     }

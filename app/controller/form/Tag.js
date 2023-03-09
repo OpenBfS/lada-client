@@ -10,14 +10,15 @@
 * This is a controller for Tag management, create and edit form
 */
 Ext.define('Lada.controller.form.Tag', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.tagform',
 
     init: function() {
         this.control({
-            'tagmanagementwindow button[action=save]': {
+            'tagform button[action=save]': {
                 click: this.saveTag
             },
-            'tagmanagementwindow button[action=delete]': {
+            'tagform button[action=delete]': {
                 click: this.deleteTag
             },
             'tagform': {
@@ -42,12 +43,13 @@ Ext.define('Lada.controller.form.Tag', {
         record.set(win.down('tagform').getForm().getFieldValues());
         var me = this;
         record.save({
+            scope: this,
             success: function(rec) {
                 me.reloadParentGrid();
                 Ext.getStore('tags').add(rec);
                 win.close();
             },
-            failure: this.handleTagFailure
+            failure: this.handleSaveFailure
         });
     },
 
@@ -106,7 +108,7 @@ Ext.define('Lada.controller.form.Tag', {
         } else { //called by the form
             form = callingEl.owner;
         }
-        form.up('tagmanagementwindow').down('button[action=save]')
+        form.down('button[action=save]')
             .setDisabled(
                 !form.isDirty()
                     || !form.isValid()

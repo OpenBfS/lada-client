@@ -156,6 +156,7 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
                                 });
                             }
                         }
+                        me.down('combobox').validate();
                     }
                 }
             }
@@ -172,18 +173,22 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
 
     setNetzbetreiber: function(mstId) {
         var mst = Ext.data.StoreManager.get('messstellen').getById(mstId);
-        var nbId = mst.get('networkId');
+        var fieldValue = '';
+        if (mst) {
+            var nbId = mst.get('networkId');
 
-        var nbStore = Ext.data.StoreManager.get('netzbetreiber');
-        if (!nbStore) {
-            nbStore = Ext.create('Lada.store.Netzbetreiber', {
-                storeId: 'netzbetreiber'
-            });
+            var nbStore = Ext.data.StoreManager.get('netzbetreiber');
+            if (!nbStore) {
+                nbStore = Ext.create('Lada.store.Netzbetreiber', {
+                    storeId: 'netzbetreiber'
+                });
+            }
+            var nb = nbStore.getById(nbId);
+            if (nb) {
+                fieldValue = nbId + ' - ' + nb.get('netzbetreiber');
+            }
         }
-        var nb = nbStore.getById(nbId);
-        this.down('field[name=netzbetreiber]').setValue(nb
-            ? nbId + ' - ' + nb.get('name')
-            : '');
+        this.down('field[name=netzbetreiber]').setValue(fieldValue);
     },
 
     setMessstelleLabor: function() {

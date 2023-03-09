@@ -28,12 +28,14 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
 
     warnings: null,
     errors: null,
-    recordId: null,
+
     readOnly: true,
     allowDeselect: true,
     pzStore: null,
 
     initComponent: function() {
+        this.store = Ext.create('Lada.store.Zusatzwerte');
+
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.zusatzwerte');
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -182,29 +184,25 @@ Ext.define('Lada.view.grid.Probenzusatzwert', {
                 scope: this
             }
         };
-        this.initData();
         this.callParent(arguments);
         this.setReadOnly(true); //Grid is always initialised as RO
     },
 
     initData: function() {
-        this.store = Ext.create('Lada.store.Zusatzwerte');
-        this.addLoadingFailureHandler(this.store);
-        this.store.load({
-            params: {
-                sampleId: this.recordId
-            }
-        });
+        var parentId = this.getParentRecordId();
+        if (parentId) {
+            this.store.load({
+                params: {
+                    sampleId: parentId
+                }
+            });
+        }
     },
 
     /**
      * Reload the grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-            return;
-        }
         this.hideReloadMask();
         this.store.reload();
     },

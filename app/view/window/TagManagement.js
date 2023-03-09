@@ -25,36 +25,9 @@ Ext.define('Lada.view.window.TagManagement', {
      * This function initialises the Window
      */
     initComponent: function() {
-        var i18n = Lada.getApplication().bundle;
-        var me = this;
-        this.items = [
-            {
-                xtype: 'tagform'
-            }, {
-                xtype: 'container',
-                layout: 'hbox',
-                items: [{
-                    xtype: 'button',
-                    text: i18n.getMsg('save'),
-                    action: 'save',
-                    margin: '5 5 5 5',
-                    disabled: true
-                }, {
-                    xtype: 'button',
-                    action: 'delete',
-                    text: i18n.getMsg('delete'),
-                    margin: '5 5 5 5',
-                    disabled: true
-                }, {
-                    xtype: 'button',
-                    text: i18n.getMsg('cancel'),
-                    margin: '5 5 5 5',
-                    handler: function() {
-                        me.close();
-                    }
-                }]
-            }
-        ];
+        this.items = [{
+            xtype: 'tagform'
+        }];
         this.callParent(arguments);
         this.initData();
 
@@ -65,8 +38,9 @@ Ext.define('Lada.view.window.TagManagement', {
         var me = this;
         var callback = function() {
             if (me.record) {
-                me.down('tagform').setRecord(me.record);
-                me.down('button[action=delete]').setDisabled(
+                var form = me.down('tagform');
+                form.setRecord(me.record);
+                form.down('button[action=delete]').setDisabled(
                     me.record.get('readonly') || me.record.phantom);
                 // See controller/form/Tag for save button enabling
             }

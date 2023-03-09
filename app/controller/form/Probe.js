@@ -10,7 +10,8 @@
  * A Controller for a Probe form
  */
 Ext.define('Lada.controller.form.Probe', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.probeform',
 
     requires: [
         'Lada.view.window.AuditTrail'
@@ -534,6 +535,7 @@ Ext.define('Lada.controller.form.Probe', {
         }
 
         record.save({
+            scope: this,
             success: function(newRecord, response) {
                 var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                 if (parentGrid.length === 1) {
@@ -563,35 +565,7 @@ Ext.define('Lada.controller.form.Probe', {
                     }
                 }
             },
-            failure: function(newRecord, response) {
-                formPanel.loadRecord(record);
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(
-                        response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                        formPanel.setMessages(
-                            json.errors,
-                            json.warnings,
-                            json.notifications);
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                }
-            }
+            failure: this.handleSaveFailure
         });
     },
 
@@ -830,7 +804,7 @@ Ext.define('Lada.controller.form.Probe', {
             autoShow: true,
             closeAction: 'destroy',
             type: 'probe',
-            objectId: button.up('form').recordId,
+            objectId: button.up('form').getRecord().get('id'),
             titleText: titleText
         });
         button.up('window').addChild(trail);

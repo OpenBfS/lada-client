@@ -13,10 +13,12 @@ Ext.define('Lada.view.form.Ort', {
     extend: 'Lada.view.form.LadaForm',
     alias: 'widget.ortform',
     requires: [
+        'Lada.controller.form.Ort',
         'Lada.view.widget.Verwaltungseinheit',
         'Lada.view.widget.Staat',
         'Lada.view.widget.KoordinatenArt'
     ],
+    controller: 'ortform',
     model: null,
 
     margin: 5,

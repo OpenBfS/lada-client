@@ -143,11 +143,21 @@ Ext.define('Lada.controller.Query', {
     },
 
     cloneQuery: function(button) {
-        this.showLoadingMask();
-
+        var i18n = Lada.getApplication().bundle;
         // Create new query record
         var qp = button.up('querypanel');
         var cbox = qp.down('combobox[name=selectedQuery]');
+        var query = qp.getForm().getRecord();
+        if (!cbox.getSelection()) {
+            Ext.Msg.alert(
+                i18n.getMsg('query.error.search.title'),
+                i18n.getMsg(
+                    'err.msg.clonequery.noquery')
+            );
+            qp.down('combobox[name=selectedQuery]').setValue();
+            return;
+        }
+        this.showLoadingMask();
         var cquery = cbox.getSelection();
         var name = qp.down('textfield[name=name]').getValue();
         if (name.length > 70) {

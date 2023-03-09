@@ -20,11 +20,12 @@ Ext.define('Lada.view.grid.MKommentar', {
         deferEmptyText: false
     },
 
-    recordId: null,
     readOnly: true,
     allowDeselect: true,
 
     initComponent: function() {
+        this.store = Ext.create('Lada.store.MKommentare');
+
         var i18n = Lada.getApplication().bundle;
         this.emptyText = i18n.getMsg('emptytext.kommentare');
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
@@ -132,23 +133,19 @@ Ext.define('Lada.view.grid.MKommentar', {
                 scope: this
             }
         };
-        this.initData();
         this.callParent(arguments);
         this.setReadOnly(true); //Grid is always initialised as RO
     },
 
     initData: function() {
-        if (this.store) {
-            this.store.removeAll();
-        } else {
-            this.store = Ext.create('Lada.store.MKommentare');
+        var parentId = this.getParentRecordId();
+        if (parentId) {
+            this.store.load({
+                params: {
+                    measmId: parentId
+                }
+            });
         }
-        this.addLoadingFailureHandler(this.store);
-        this.store.load({
-            params: {
-                measmId: this.recordId
-            }
-        });
         Ext.on('timezonetoggled', function() {
             var grid = Ext.ComponentQuery.query('mkommentargrid');
             for (i=0; i<grid.length; i++) {
@@ -165,9 +162,6 @@ Ext.define('Lada.view.grid.MKommentar', {
      * Reload the grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-        }
         this.hideReloadMask();
         this.store.reload();
     },

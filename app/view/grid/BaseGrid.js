@@ -14,10 +14,12 @@
  * to add a handler to a store that shows an error mask if the store failed to
  * load. This mask contains a button to call
  * the reload function that must be implemented by extending classes.
+ * In case the grid store is already created during the grids initComponent,
+ * the loading failure handler is added automatically.
  */
 Ext.define('Lada.view.grid.BaseGrid', {
     extend: 'Ext.grid.Panel',
-    alias: 'basegrid',
+    alias: 'widget.basegrid',
     requires: [
         'Lada.view.window.ReloadMask'
     ],
@@ -48,6 +50,14 @@ Ext.define('Lada.view.grid.BaseGrid', {
             });
         }
         this.callParent(arguments);
+        if (this.store) {
+            this.addLoadingFailureHandler(this.store);
+        }
+    },
+
+    getParentRecordId: function() {
+        var record = this.up('window').down('form').getRecord();
+        return record ? record.get('id') : null;
     },
 
     /**

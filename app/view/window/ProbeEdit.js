@@ -118,8 +118,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             border: false,
             autoScroll: true,
             items: [{
-                xtype: 'probeform',
-                recordId: this.recordId
+                xtype: 'probeform'
             }, {
                 // Tags
                 xtype: 'fieldset',
@@ -170,8 +169,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 padding: '5, 5',
                 margin: 5,
                 items: [{
-                    xtype: 'ortszuordnunggrid',
-                    recordId: this.recordId
+                    xtype: 'ortszuordnunggrid'
                 }]
             }, {
                 xtype: 'fset',
@@ -182,8 +180,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 collapsible: false,
                 collapsed: false,
                 items: [{
-                    xtype: 'messunggrid',
-                    recordId: this.recordId
+                    xtype: 'messunggrid'
                 }]
             }, {
                 xtype: 'fset',
@@ -195,7 +192,6 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 collapsed: false,
                 items: [{
                     xtype: 'probenzusatzwertgrid',
-                    recordId: this.recordId,
                     pzStore: pzStore
                 }]
             }, {
@@ -207,8 +203,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 collapsible: true,
                 collapsed: false,
                 items: [{
-                    xtype: 'pkommentargrid',
-                    recordId: this.recordId
+                    xtype: 'pkommentargrid'
                 }]
             }]
         }]);
@@ -224,16 +219,15 @@ Ext.define('Lada.view.window.ProbeEdit', {
         var me = this;
         var loadCallBack = function(record, response) {
             me.initializeUI();
+
             me.record = record;
             me.recordId = record.get('id');
             me.down('probeform').setRecord(record);
-            var owner = record.get('owner');
-            var readonly = record.get('readonly');
-            var messstelle = Ext.data.StoreManager.get('messstellen')
-                .getById(record.get('measFacilId'));
+
+            // Set title
+            var title = '';
             var datenbasis = Ext.data.StoreManager.get('datenbasis')
                 .getById(record.get('regulationId'));
-            var title = '';
             if (datenbasis) {
                 title += datenbasis.get('datenbasis');
                 title += ' ';
@@ -244,17 +238,15 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 //title += ' - extPID/Hauptprobennr.: ';
                 title += ' / ' + record.get('mainSampleId');
             }
+            var messstelle = Ext.data.StoreManager.get('messstellen')
+                .getById(record.get('mstId'));
             if (messstelle) {
                 title += '    -    Mst: ';
                 title += messstelle.get('messStelle');
             }
             me.setTitle(title);
 
-            if (owner) {
-                //Always allow to Add Messungen.
-                me.enableAddMessungen();
-            }
-
+            // Set messages
             var json = response ?
                 Ext.decode(response.getResponse().responseText) :
                 null;
@@ -263,16 +255,17 @@ Ext.define('Lada.view.window.ProbeEdit', {
             }
 
             // If the Probe is ReadOnly, disable Inputfields and grids
-            if (readonly === true || !owner) {
-                me.down('probeform').setReadOnly(true);
-                me.disableChildren();
-            } else {
-                me.down('probeform').setReadOnly(false);
-                me.enableChildren();
-            }
+            var readonly = record.get('readonly') || !record.get('owner');
+            me.down('probeform').setReadOnly(readonly);
+            me.disableChildren(readonly);
 
             // Initialize Tag widget
             me.down('tagwidget').setTagged([record.get('id')], 'probe');
+
+            // Initialize grids
+            me.query('basegrid').forEach(function(grid) {
+                grid.initData();
+            });
 
             me.setLoading(false);
             me.down('probeform').isValid();
@@ -311,45 +304,15 @@ Ext.define('Lada.view.window.ProbeEdit', {
     },
 
     /**
-     * Enable the Messungengrid
+     * Disable or enable grids in fieldsets in this window
      */
-    enableAddMessungen: function() {
-        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(
-            false);
-    },
-
-    /**
-     * Disable the Childelements of this window
-     */
-    disableChildren: function() {
-        if (!this.record.get('owner')) {
-            // Disable only when the User is not the owner of the Probe
-            // Works in symbiosis with success callback some lines above.
-            this.down('fset[name=messungen]').down('messunggrid').setReadOnly(
-                true);
-            this.down('fset[name=messungen]').down(
-                'messunggrid').readOnly = true;
-        }
-        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(
-            true);
-        this.down('fset[name=probenzusatzwerte]').down(
-            'probenzusatzwertgrid').setReadOnly(true);
-        this.down('fset[name=pkommentare]').down(
-            'pkommentargrid').setReadOnly(true);
-    },
-
-    /**
-     * Enable the Childelements of this window
-     */
-    enableChildren: function() {
-        this.down('fset[name=messungen]').down('messunggrid').setReadOnly(
-            false);
-        this.down('fset[name=orte]').down('ortszuordnunggrid').setReadOnly(
-            false);
-        this.down('fset[name=probenzusatzwerte]').down(
-            'probenzusatzwertgrid').setReadOnly(false);
-        this.down('fset[name=pkommentare]').down('pkommentargrid').setReadOnly(
-            false);
+    disableChildren: function(disable) {
+        this.query('fset').forEach(function(fset) {
+            var grid = fset.down('basegrid');
+            if (grid) {
+                grid.setReadOnly(disable);
+            }
+        });
     },
 
     /**

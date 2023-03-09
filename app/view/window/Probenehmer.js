@@ -100,7 +100,6 @@ Ext.define('Lada.view.window.Probenehmer', {
                 record: this.record
             }]
         }]);
-        this.setMessages();
     },
 
     /**
@@ -108,6 +107,7 @@ Ext.define('Lada.view.window.Probenehmer', {
      * @param errors These Errors shall be shown
      * @param warnings These Warning shall be shown
      */
+    // TODO: This is never called
     setMessages: function(errors, warnings) {
         this.down('probenehmerform').setMessages(errors, warnings);
     },

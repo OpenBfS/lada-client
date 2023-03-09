@@ -168,6 +168,11 @@ Ext.define('Lada.view.window.Messprogramm', {
                     }
                 }
 
+                // Initialize grids
+                me.query('basegrid').forEach(function(grid) {
+                    grid.initData();
+                });
+
                 me.setLoading(false);
                 if (me.record === null) {
                     me.setTitle(
@@ -215,14 +220,12 @@ Ext.define('Lada.view.window.Messprogramm', {
 
     initializeUi: function() {
         var i18n = Lada.getApplication().bundle;
-        var me = this;
         this.removeAll();
         this.add([{
             border: false,
             autoScroll: true,
             items: [{
-                xtype: 'messprogrammform',
-                recordId: this.record ? this.record.get('id') : null
+                xtype: 'messprogrammform'
             }, {
                 xtype: 'fset',
                 name: 'orte',
@@ -231,7 +234,6 @@ Ext.define('Lada.view.window.Messprogramm', {
                 margin: 5,
                 items: [{
                     xtype: 'ortszuordnunggrid',
-                    recordId: me.record ? me.record.get('id') : null,
                     isMessprogramm: true
                 }]
             }, {
@@ -245,7 +247,6 @@ Ext.define('Lada.view.window.Messprogramm', {
                 },
                 items: [{
                     xtype: 'messmethodengrid',
-                    recordId: this.record ? this.record.get('id') : null,
                     flex: 1
                 }]
             }]

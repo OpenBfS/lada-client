@@ -27,12 +27,13 @@ Ext.define('Lada.view.grid.Messmethoden', {
     },
     margin: '0, 5, 5, 5',
 
-    recordId: null,
     allowDeselect: true,
     mmtStore: null,
     mmtUnfilteredStore: null,
 
     initComponent: function() {
+        this.store = Ext.create('Lada.store.MmtMessprogramm');
+
         var mmtstore = Ext.data.StoreManager.get('messmethoden');
         if (!mmtstore) {
             Ext.create('Lada.store.Messmethoden', {storeId: 'messmethoden'});
@@ -93,8 +94,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
             items: ['->', {
                 text: i18n.getMsg('add'),
                 icon: 'resources/img/list-add.png',
-                action: 'add',
-                recordId: this.recordId
+                action: 'add'
             }, {
                 text: i18n.getMsg('delete'),
                 icon: 'resources/img/list-remove.png',
@@ -165,21 +165,15 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 queryMode: 'local'
             }
         }];
-        this.initData();
         this.callParent(arguments);
     },
+
     initData: function() {
-        if (this.store) {
-            this.store.removeAll();
-        } else {
-            this.store = Ext.create('Lada.store.MmtMessprogramm');
-        }
-        // Only load the Store when a Record ID is Present
-        if (this.recordId) {
-            this.addLoadingFailureHandler(this.store);
+        var parentId = this.getParentRecordId();
+        if (parentId) {
             this.store.load({
                 params: {
-                    mpgId: this.recordId
+                    mpgId: parentId
                 }
             });
         }
@@ -189,10 +183,6 @@ Ext.define('Lada.view.grid.Messmethoden', {
      * Reload this grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-            return;
-        }
         this.hideReloadMask();
         this.store.reload();
     },

@@ -45,7 +45,6 @@ Ext.define('Lada.controller.grid.PKommentar', {
         context.record.save({
             success: function() {
                 context.grid.getSelectionModel().clearSelections();
-                context.grid.store.reload();
                 context.grid.up('window').initData();
             },
             failure: function(request, response) {
@@ -88,7 +87,9 @@ Ext.define('Lada.controller.grid.PKommentar', {
      * This function adds a new row to add a PKommentar
      */
     add: function(button) {
-        var record = Ext.create('Lada.model.CommSample');
+        var record = Ext.create('Lada.model.CommSample', {
+            sampleId: button.up('pkommentargrid').getParentRecordId()
+        });
         record.data.date = Lada.util.Date.formatTimestamp(new Date(),
             'd.m.Y H:i', true);
         record.set('sampleId', button.up('pkommentargrid').recordId);

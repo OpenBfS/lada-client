@@ -10,7 +10,8 @@
  * This is a controller for a Datensatzerzeuger Stammdaten forms
  */
 Ext.define('Lada.controller.form.DatensatzErzeuger', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.datensatzerzeugerform',
 
     init: function() {
         this.control({
@@ -43,6 +44,7 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
             record.set('id', null);
         }
         record.save({
+            scope: this,
             success: function(newRecord, response) {
                 var parentGrid = Ext.ComponentQuery.query('dynamicgrid');
                 if (parentGrid.length === 1) {
@@ -59,31 +61,8 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                 }
             },
             failure: function(newRecord, response) {
-                formPanel.loadRecord(record);
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    formPanel.down(
-                        'tfield[name=extId]').setValue();
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                        formPanel.setMessages(json.errors, json.warnings);
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                    formPanel.isValid();
-                }
+                this.handleSaveFailure(newRecord, response);
+                formPanel.isValid();
             }
         });
     },

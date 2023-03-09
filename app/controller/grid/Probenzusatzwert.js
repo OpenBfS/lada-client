@@ -47,7 +47,6 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
         context.record.save({
             success: function() {
                 context.grid.getSelectionModel().clearSelections();
-                context.grid.store.reload();
                 context.grid.up('window').initData();
             },
             failure: function(record, response) {
@@ -92,7 +91,7 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
      */
     add: function(button) {
         var record = Ext.create('Lada.model.SampleSpecifMeasVal', {
-            sampleId: button.up('probenzusatzwertgrid').recordId
+            sampleId: button.up('probenzusatzwertgrid').getParentRecordId()
         });
         //Remove generated id id to prevent sending invalid ids to the server
         record.set('id', null);

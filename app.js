@@ -510,23 +510,12 @@ Ext.application({
     // Define the controllers of the application. They will be initialized
     // first before the application "launch" function is called.
     controllers: [
-        'Lada.controller.grid.ProbeList',
-        'Lada.controller.grid.MessprogrammeList',
-        'Lada.controller.grid.MessungList',
-        'Lada.controller.form.DatensatzErzeuger',
-        'Lada.controller.form.Probenehmer',
-        'Lada.controller.form.Probe',
-        'Lada.controller.form.Messung',
-        'Lada.controller.form.Ort',
         'Lada.controller.grid.Probenzusatzwert',
         'Lada.controller.grid.PKommentar',
         'Lada.controller.grid.MKommentar',
         'Lada.controller.grid.Messung',
         'Lada.controller.grid.Messwert',
         'Lada.controller.grid.Ortszuordnung',
-        'Lada.controller.form.Ortszuordnung',
-        'Lada.controller.form.Messprogramm',
-        'Lada.controller.form.MessprogrammKategorie',
         'Lada.controller.grid.Messmethode',
         'Lada.controller.GridExport',
         'Lada.controller.grid.DynamicGrid',
@@ -535,7 +524,6 @@ Ext.application({
         'Lada.controller.Print',
         'Lada.controller.ElanScenario',
         'Lada.controller.grid.Downloads',
-        'Lada.controller.SetTags',
-        'Lada.controller.form.Tag'
+        'Lada.controller.SetTags'
     ]
 });

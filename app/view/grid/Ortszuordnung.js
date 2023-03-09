@@ -27,8 +27,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     },
     margin: '0, 5, 5, 5',
 
-    recordId: null,
-
     isMessprogramm: false,
 
     warnings: null,
@@ -42,6 +40,10 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     ortstore: null,
 
     initComponent: function() {
+        this.store = this.isMessprogramm
+            ? Ext.create('Lada.store.OrtszuordnungMp')
+            : Ext.create('Lada.store.Ortszuordnung');
+
         var ortstore = Ext.data.StoreManager.get('orte');
         if (!ortstore) {
             Ext.create('Lada.store.Orte', {
@@ -205,7 +207,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             dataIndex: 'poiId',
             width: 80,
             renderer: function(value) {
-                var store = me.ortstore;
                 var ozs = me.ozsstore;
                 var record = ozs.getById(value);
                 if (!record) {
@@ -276,33 +277,18 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 scope: this
             }
         };
-        this.initData();
         this.callParent(arguments);
     },
 
     initData: function() {
-        var me = this;
-        if (this.isMessprogramm) {
-            this.store = Ext.create('Lada.store.OrtszuordnungMp');
-            if (this.recordId) {
-                this.addLoadingFailureHandler(this.store);
-                this.store.load({
-                    params: {
-                        mpgId: this.recordId
-                    }});
-            } else {
-                return;
-            }
-        } else {
-            this.store = Ext.create('Lada.store.Ortszuordnung');
-            this.addLoadingFailureHandler(this.store);
+        var parentId = this.getParentRecordId();
+        if (parentId) {
+            var paramKey = this.isMessprogramm ? 'mpgId' : 'sampleId';
+            var me = this;
             this.store.load({
-                params: {
-                    sampleId: this.recordId
-                },
-                callback: function() {
-                    me.reiHandling();
-                }
+                params: {[paramKey]: parentId},
+                scope: this,
+                callback: me.reiHandling
             });
         }
     },
@@ -311,10 +297,6 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
      * Reload the grid
      */
     reload: function() {
-        if (!this.store) {
-            this.initData();
-            return;
-        }
         this.hideReloadMask();
         this.store.reload();
     },

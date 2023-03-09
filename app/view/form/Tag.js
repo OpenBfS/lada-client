@@ -13,8 +13,10 @@ Ext.define('Lada.view.form.Tag', {
     extend: 'Lada.view.form.LadaForm',
     alias: 'widget.tagform',
     requires: [
+        'Lada.controller.form.Tag',
         'Lada.view.widget.base.DateTimeField'
     ],
+    controller: 'tagform',
 
     store: null,
 
@@ -33,7 +35,31 @@ Ext.define('Lada.view.form.Tag', {
         var i18n = Lada.getApplication().bundle;
         var me = this;
         this.items = [{
-            xtype: 'fieldset',
+            dockedItems: [{
+                xtype: 'toolbar',
+                dock: 'bottom',
+                items: [{
+                    xtype: 'button',
+                    text: i18n.getMsg('save'),
+                    action: 'save',
+                    margin: '5 5 5 5',
+                    disabled: true
+                }, {
+                    xtype: 'button',
+                    action: 'delete',
+                    text: i18n.getMsg('delete'),
+                    margin: '5 5 5 5',
+                    disabled: true
+                }, {
+                    xtype: 'button',
+                    text: i18n.getMsg('cancel'),
+                    margin: '5 5 5 5',
+                    handler: function() {
+                        me.up('window').close();
+                    }
+                }]
+
+            }],
             layout: {
                 type: 'vbox',
                 align: 'stretch'

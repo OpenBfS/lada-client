@@ -10,7 +10,8 @@
  * This is a controller for an Ortszuordnung Form
  */
 Ext.define('Lada.controller.form.Ortszuordnung', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.form.BaseFormController',
+    alias: 'controller.ortszuordnungform',
 
     /**
      * Initialize the Controller with 4 listeners
@@ -62,16 +63,18 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
         if (record.phantom) {
             record.set('id', null);
         }
+        button.setDisabled(true);
+        button.up('ortszuordnungform').form.owner
+            .down('button[action=revert]')
+            .setDisabled(true);
         record.save({
+            scope: this,
             success: function(newRecord, response) {
                 var json = Ext.decode(response.getResponse().responseText);
                 if (json) {
                     formPanel.setRecord(newRecord);
                     formPanel.setMessages(json.errors, json.warnings);
                     formPanel.up('window').parentWindow.initData();
-                    button.setDisabled(true);
-                    button.up('toolbar').down(
-                        'button[action=revert]').setDisabled(true);
                 }
                 //try to refresh the Grid of the Probe
                 if (
@@ -86,39 +89,7 @@ Ext.define('Lada.controller.form.Ortszuordnung', {
                         .down('ortszuordnunggrid').store.reload();
                 }
             },
-            failure: function(newRecord, response) {
-                var i18n = Lada.getApplication().bundle;
-                button.setDisabled(true);
-                button.up('ortszuordnungform').form.owner
-                    .down('button[action=revert]')
-                    .setDisabled(true);
-                formPanel.getForm().loadRecord(
-                    formPanel.getForm().getRecord());
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (Object.keys(json.errors).length > 0 ||
-                            Object.keys(json.warnings).length > 0) {
-                            formPanel.setMessages(json.errors, json.warnings);
-                        }
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                                + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                }
-            }
+            failure: this.handleSaveFailure
         });
     },
 

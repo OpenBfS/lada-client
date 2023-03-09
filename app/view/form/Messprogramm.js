@@ -13,6 +13,7 @@ Ext.define('Lada.view.form.Messprogramm', {
     extend: 'Lada.view.form.LadaForm',
     alias: 'widget.messprogrammform',
     requires: [
+        'Lada.controller.form.Messprogramm',
         'Lada.util.FunctionScheduler',
         'Lada.view.form.mixins.DeskriptorFieldset',
         'Lada.view.widget.Datenbasis',
@@ -31,10 +32,9 @@ Ext.define('Lada.view.form.Messprogramm', {
     ],
 
     model: 'Lada.model.Mpg',
+    controller: 'messprogrammform',
     margin: 5,
     border: false,
-
-    recordId: null,
 
     trackResetOnLoad: true,
 

@@ -44,7 +44,6 @@ Ext.define('Lada.controller.grid.Messmethode', {
         }
         context.record.save({
             success: function() {
-                context.grid.initData();
                 context.grid.up('window').initData();
                 var mp_win = context.grid.up('messprogramm');
                 if (mp_win) {
