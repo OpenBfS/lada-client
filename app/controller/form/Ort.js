@@ -131,7 +131,7 @@ Ext.define('Lada.controller.form.Ort', {
                         win.setTitleAndReadOnly();
                     }
                 },
-                failure: this.handleSaveFailure
+                failure: me.handleSaveFailure
             });
         };
         var plausibleRefs = record.get('plausibleReferenceCount');

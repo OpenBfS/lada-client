@@ -122,23 +122,23 @@ Ext.define('Lada.view.form.Tag', {
                         fn: function(combo, newValue) {
                             var tagtyp = newValue.get('value');
                             if (tagtyp === 'mst') {
-                                if (combo.up('fieldset').down('datefield[name=valUntil]').getValue() !== null) {
+                                if (combo.up('tagform').down('datefield[name=valUntil]').getValue() !== null) {
                                     var dateToday = moment(new Date(), 'DD-MM-YYYY');
-                                    var dateFieldValue = moment(combo.up('fieldset').down('datefield[name=valUntil]')
+                                    var dateFieldValue = moment(combo.up('tagform').down('datefield[name=valUntil]')
                                         .getValue(), 'DD-MM-YYYY');
                                     if (dateFieldValue.diff(dateToday,'days') < i18n.getMsg('tag.defaultValue.gueltigBis')) {
-                                        combo.up('fieldset').down('datefield[name=valUntil]')
+                                        combo.up('tagform').down('datefield[name=valUntil]')
                                             .setValue(moment().add(i18n.getMsg('tag.defaultValue.gueltigBis'),'days'));
                                     }
                                 } else {
-                                    combo.up('fieldset').down(
+                                    combo.up('tagform').down(
                                     'datefield[name=valUntil]')
                                     .setValue(moment().add(i18n.getMsg('tag.defaultValue.gueltigBis'),'days'));
                                 }
                             }
                             if (tagtyp === 'netz' &&
-                                combo.up('fieldset').down('datefield[name=valUntil]').getValue() !== null) {
-                                    combo.up('fieldset').down('datefield[name=valUntil]').setValue();
+                                combo.up('tagform').down('datefield[name=valUntil]').getValue() !== null) {
+                                    combo.up('tagform').down('datefield[name=valUntil]').setValue();
                             }
                         }
                     }

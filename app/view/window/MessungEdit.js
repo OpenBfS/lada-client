@@ -262,7 +262,6 @@ Ext.define('Lada.view.window.MessungEdit', {
                 Ext.decode(response.getResponse().responseText) :
                 null;
             if (json) {
-                me.clearMessages();
                 me.setMessages(json.errors, json.warnings, json.notifications);
             }
             if (me.record.get('readonly') === true ||
