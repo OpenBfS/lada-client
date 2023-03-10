@@ -185,7 +185,7 @@ Ext.define('Lada.view.widget.MessstelleLabor', {
             }
             var nb = nbStore.getById(nbId);
             if (nb) {
-                fieldValue = nbId + ' - ' + nb.get('netzbetreiber');
+                fieldValue = nbId + ' - ' + nb.get('name');
             }
         }
         this.down('field[name=netzbetreiber]').setValue(fieldValue);
