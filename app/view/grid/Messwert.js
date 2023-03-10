@@ -201,7 +201,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 inputValue: '<'
             },
             renderer: function(value, metaData, record) {
-                this.setValidationResults(metaData, record, 'messwertNwg');
+                this.setValidationResults(metaData, record, 'lessThanLOD');
                 return value;
             }
         }, {
@@ -213,7 +213,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 allowBlank: false
             },
             renderer: function(value, metaData, record) {
-                this.setValidationResults(metaData, record, 'messwert');
+                this.setValidationResults(metaData, record, 'measVal');
                 if (!value || value === '') {
                     return value;
                 }
@@ -312,7 +312,7 @@ Ext.define('Lada.view.grid.Messwert', {
                 hideTrigger: true
             },
             renderer: function(value, metaData, record) {
-                this.setValidationResults(metaData, record, 'messfehler');
+                this.setValidationResults(metaData, record, 'error');
                 if (!value || value === '') {
                     return '';
                 }
