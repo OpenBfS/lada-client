@@ -62,7 +62,7 @@ Ext.define('Lada.controller.form.Tag', {
                 Ext.getStore('tags').remove(rec);
                 win.close();
             },
-            failure: this.handleTagFailure
+            failure: this.handleServiceFailure
         });
     },
 
@@ -73,29 +73,6 @@ Ext.define('Lada.controller.form.Tag', {
         ) {
             parentGrid[0].reload();
         }
-    },
-
-    /**
-     * Failure callback for Model's save() and erase().
-     */
-    handleTagFailure: function(record, operation) {
-        var i18n = Lada.getApplication().bundle;
-        var err = operation.getError();
-        var msg = i18n.getMsg('err.msg.generic.body');
-        if (err) {
-            if (err instanceof String) {
-                msg = err;
-            } else {
-                msg = err.response.responseText;
-                if (!msg && err.response.timedout) {
-                    msg = i18n.getMsg('err.msg.timeout');
-                }
-            }
-        } else {
-            msg = i18n.getMsg(
-                Ext.decode(operation.getResponse().responseText).message);
-        }
-        Ext.Msg.alert(i18n.getMsg('err.msg.generic.title'), msg);
     },
 
     /**

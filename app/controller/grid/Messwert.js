@@ -10,7 +10,8 @@
  * This is a Controller for a Messwert Grid
  */
 Ext.define('Lada.controller.grid.Messwert', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.grid.BaseGridController',
+    alias: 'controller.messwertgrid',
 
     /**
      * Inhitialize the controller
@@ -90,6 +91,7 @@ Ext.define('Lada.controller.grid.Messwert', {
             context.record.set('id', null);
         }
         context.record.save({
+            scope: this,
             success: function() {
                 if (Ext.data.StoreManager.get('messeinheiten')) {
                     Ext.data.StoreManager.get('messeinheiten').clearFilter();
@@ -104,35 +106,8 @@ Ext.define('Lada.controller.grid.Messwert', {
                 context.grid.getSelectionModel().clearSelections();
                 context.grid.up('window').initData();
             },
-            failure: function(request, response) {
-                var i18n = Lada.getApplication().bundle;
-                var err = response.getError();
-                var msg = i18n.getMsg('err.msg.generic.body');
-                if (err) {
-                    if (err instanceof String) {
-                        msg = err;
-                    } else {
-                        msg = err.response.responseText;
-                        if (!msg && err.response.timedout) {
-                            msg = i18n.getMsg('err.msg.timeout');
-                        }
-                    }
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json.message) {
-                        msg = i18n.getMsg(json.message);
-                    }
-
-                    // Set response messages at record for display in grid
-                    ['errors', 'warnings', 'notifications'].forEach(
-                        function(msgKey) {
-                            var msgs = json[msgKey];
-                            if (msgs) {
-                                context.record.set(msgKey, msgs);
-                            }
-                        });
-                }
-                Ext.Msg.alert(i18n.getMsg('err.msg.save.title'), msg);
+            failure: function(record, response) {
+                this.handleSaveFailure(record, response, context.record);
             }
         });
     },
