@@ -38,7 +38,7 @@ Ext.define('Lada.view.form.LadaForm', {
                 }
                 var content = '';
                 for (var msg of messages[key]) {
-                    content += i18n.getMsg(msg.toString()) + '\n';
+                    content += i18n.getMsg(msg.toString()) + '<br>';
                 }
                 element.showMessage(content, msgCat);
             }
