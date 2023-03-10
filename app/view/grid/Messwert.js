@@ -14,6 +14,7 @@ Ext.define('Lada.view.grid.Messwert', {
     alias: 'widget.messwertgrid',
 
     requires: [
+        'Lada.controller.grid.Messwert',
         'Lada.view.form.ExpNumberField',
         'Lada.view.form.FormatNumberField',
         'Lada.view.widget.Messgroesse',
@@ -21,6 +22,8 @@ Ext.define('Lada.view.grid.Messwert', {
         'Lada.store.Umwelt',
         'Lada.store.Messwerte'
     ],
+
+    controller: 'messwertgrid',
 
     minHeight: 44,
     viewConfig: {

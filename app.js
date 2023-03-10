@@ -514,7 +514,6 @@ Ext.application({
         'Lada.controller.grid.PKommentar',
         'Lada.controller.grid.MKommentar',
         'Lada.controller.grid.Messung',
-        'Lada.controller.grid.Messwert',
         'Lada.controller.grid.Ortszuordnung',
         'Lada.controller.grid.Messmethode',
         'Lada.controller.GridExport',
