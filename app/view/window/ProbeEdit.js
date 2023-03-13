@@ -229,7 +229,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
             var datenbasis = Ext.data.StoreManager.get('datenbasis')
                 .getById(record.get('regulationId'));
             if (datenbasis) {
-                title += datenbasis.get('datenbasis');
+                title += datenbasis.get('regulation');
                 title += ' ';
             }
             title += 'Probe: ';
@@ -239,10 +239,10 @@ Ext.define('Lada.view.window.ProbeEdit', {
                 title += ' / ' + record.get('mainSampleId');
             }
             var messstelle = Ext.data.StoreManager.get('messstellen')
-                .getById(record.get('mstId'));
+                .getById(record.get('measFacilId'));
             if (messstelle) {
                 title += '    -    Mst: ';
-                title += messstelle.get('messStelle');
+                title += messstelle.get('name');
             }
             me.setTitle(title);
 
