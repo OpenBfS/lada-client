@@ -165,7 +165,7 @@ Ext.define('Lada.view.window.AuditTrail', {
                         audit[i].timestamp, 'd.m.Y H:i', true) +
                     '</b>';
                 if (!Ext.isObject(audit[i].identifier)) {
-                    if (audit[i].type !== 'probe') {
+                    if (audit[i].type !== 'sample') {
                         html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
                         html += audit[i].identifier === '(deleted)' ?
                             i18n.getMsg('deleted') :
@@ -173,7 +173,7 @@ Ext.define('Lada.view.window.AuditTrail', {
                     }
                 } else {
                     html += '<br>' + i18n.getMsg('messung') + ': ' +
-                        audit[i].identifier.messung + ' -> ' +
+                        audit[i].identifier.measm + ' -> ' +
                         i18n.getMsg(audit[i].type) + ': ' +
                         audit[i].identifier.identifier;
 
@@ -205,7 +205,7 @@ Ext.define('Lada.view.window.AuditTrail', {
                     Lada.util.Date.formatTimestamp(
                         audit[i].timestamp, 'd.m.Y H:i', true) +
                     '</b>';
-                if (audit[i].type !== 'messung') {
+                if (audit[i].type !== 'measm') {
                     html += '<br>' + i18n.getMsg(audit[i].type) + ': ';
                     html += audit[i].identifier === '(deleted)' ?
                         i18n.getMsg('deleted') :
