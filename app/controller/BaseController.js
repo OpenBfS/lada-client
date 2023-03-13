@@ -30,9 +30,27 @@ Ext.define('Lada.controller.BaseController', {
             if (err instanceof String) {
                 msg = err;
             } else {
-                msg = err.response.responseText;
-                if (!msg && err.response.timedout) {
-                    msg = i18n.getMsg('err.msg.timeout');
+                var response = err.response;
+                if (response.getResponseHeader('validation-exception')) {
+                    // Translate RESTEasy validation violation report
+                    var violations = Ext.decode(response.responseText)
+                        .parameterViolations;
+                    var errors = {};
+                    for (var violation of violations) {
+                        var key = violation.path.split('\.').pop();
+                        if (errors[key]) {
+                            errors[key].push(violation.message);
+                        } else {
+                            errors[key] = [violation.message];
+                        }
+                    }
+                    msg = i18n.getMsg('604');
+                    responseJson = { errors: errors };
+                } else {
+                    msg = response.responseText;
+                    if (!msg && response.timedout) {
+                        msg = i18n.getMsg('err.msg.timeout');
+                    }
                 }
             }
         } else {

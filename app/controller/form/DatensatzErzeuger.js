@@ -60,10 +60,7 @@ Ext.define('Lada.controller.form.DatensatzErzeuger', {
                     formPanel.setMessages(json.errors, json.warnings);
                 }
             },
-            failure: function(newRecord, response) {
-                this.handleSaveFailure(newRecord, response);
-                formPanel.isValid();
-            }
+            failure: this.handleSaveFailure
         });
     },
 

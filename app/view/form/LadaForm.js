@@ -19,64 +19,28 @@ Ext.define('Lada.view.form.LadaForm', {
     setMessages: function(errors, warnings, notifications) {
         this.clearMessages();
 
-        var key;
-        var element;
-        var content;
-        var tmp;
+        var allMessages = {
+            notification: notifications,
+            warning: warnings,
+            error: errors
+        };
         var i18n = Lada.getApplication().bundle;
-        if (warnings) {
-            for (key in warnings) {
-                tmp = key;
+        for (var msgCat in allMessages) {
+            var messages = allMessages[msgCat];
+            for (var key in messages) {
+                var tmp = key;
                 if (tmp.indexOf('#') > 0) {
                     tmp = tmp.split('#')[0];
                 }
-                element = this.down('component[name=' + tmp + ']');
+                var element = this.down('component[name=' + tmp + ']');
                 if (!element) {
                     continue;
                 }
-                content = warnings[key];
-                var warnText = '';
-                for (var i = 0; i < content.length; i++) {
-                    warnText += i18n.getMsg(content[i].toString()) + '\n';
+                var content = '';
+                for (var msg of messages[key]) {
+                    content += i18n.getMsg(msg.toString()) + '<br>';
                 }
-                element.showWarnings(warnText);
-            }
-        }
-        if (notifications) {
-            for (key in notifications) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = notifications[key];
-                var notificationText = '';
-                for (var j = 0; j < content.length; j++) {
-                    notificationText += i18n.getMsg(
-                        content[j].toString()) + '\n';
-                }
-                element.showNotifications(notificationText);
-            }
-        }
-        if (errors) {
-            for (key in errors) {
-                tmp = key;
-                if (tmp.indexOf('#') > 0) {
-                    tmp = tmp.split('#')[0];
-                }
-                element = this.down('component[name=' + tmp + ']');
-                if (!element) {
-                    continue;
-                }
-                content = errors[key];
-                var errorText = '';
-                for (var k = 0; k < content.length; k++) {
-                    errorText += i18n.getMsg(content[k].toString()) + '\n';
-                }
-                element.showErrors(errorText);
+                element.showMessage(content, msgCat);
             }
         }
     },
