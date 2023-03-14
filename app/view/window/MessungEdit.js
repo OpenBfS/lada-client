@@ -236,7 +236,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                         } else {
                             me.record.set(
                                 'treeModified', me.probe.get('treeModified'));
-                            me.disableForm();
+                            me.disableChildren(true);
                         }
                     }
                 });
@@ -264,19 +264,12 @@ Ext.define('Lada.view.window.MessungEdit', {
             if (json) {
                 me.setMessages(json.errors, json.warnings, json.notifications);
             }
-            if (me.record.get('readonly') === true ||
-                me.record.get('owner') === false
-            ) {
-                me.disableForm();
-            } else {
-                me.enableForm();
-            }
+
+            me.disableChildren(
+                me.record.get('readonly') || !me.record.get('owner'));
+
             //Check if it is allowed to edit Status
-            if (me.record.get('statusEdit') === true) {
-                me.enableStatusEdit();
-            } else {
-                me.disableStatusEdit();
-            }
+            me.disableStatusEdit(!me.record.get('statusEdit'));
 
             // Initialize Tag widget
             me.down('tagwidget').setTagged([record.get('id')], 'messung');
@@ -320,63 +313,24 @@ Ext.define('Lada.view.window.MessungEdit', {
     },
 
     /**
-     * Disable the Forms in this Window.
-     * Also disable this Windows Children
+     * Disable or enable child components
      */
-    disableForm: function() {
-        this.down('messungform').setReadOnly(true);
-        this.disableChildren();
+    disableChildren: function(disable) {
+        this.down('messungform').setReadOnly(disable);
+        for (var fset of this.query('fset')) {
+            var grid = fset.down('basegrid');
+            if (grid && grid.setReadOnly) {
+                grid.setReadOnly(disable);
+            }
+        }
+        this.disableStatusEdit(disable);
     },
 
     /**
-     * Enable the Forms in this Window.
-     * Also enble this Windows Children
+     * Set disabled state to edit the statusgrid
      */
-    enableForm: function() {
-        this.down('messungform').setReadOnly(false);
-        this.enableChildren();
-    },
-
-    /**
-     * Disable the Chilelements of this window
-     */
-    disableChildren: function() {
-        this.down('fset[name=messwerte]').down('messwertgrid')
-            .setReadOnly(true);
-        this.down('fset[name=messwerte]').down('messwertgrid').readOnly = true;
-        this.down('fset[name=messungskommentare]').down('mkommentargrid')
-            .setReadOnly(true);
-        this.down('fset[name=messungskommentare]').down('mkommentargrid')
-            .readOnly = true;
-        this.disableStatusEdit();
-    },
-
-    /**
-     * Enable the Childelements of this window
-     */
-    enableChildren: function() {
-        this.down('fset[name=messwerte]').down('messwertgrid')
-            .setReadOnly(false);
-        this.down('fset[name=messwerte]').down('messwertgrid').readOnly = false;
-        this.down('fset[name=messungskommentare]').down('mkommentargrid')
-            .setReadOnly(false);
-        this.down('fset[name=messungskommentare]').down('mkommentargrid')
-            .readOnly = false;
-        this.enableStatusEdit();
-    },
-
-    /**
-     * Enable to edit the statusgrid
-     */
-    enableStatusEdit: function() {
-        this.down('statuskombi').setReadOnly(false);
-    },
-
-    /**
-     * Disable to edit the statusgrid
-     */
-    disableStatusEdit: function() {
-        this.down('statuskombi').setReadOnly(true);
+    disableStatusEdit: function(disable) {
+        this.down('statuskombi').setReadOnly(disable);
     },
 
     /**
