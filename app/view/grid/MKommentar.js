@@ -125,11 +125,15 @@ Ext.define('Lada.view.grid.MKommentar', {
         }];
         this.listeners = {
             select: {
-                fn: this.activateRemoveButton,
+                fn: function() {
+                    this.activateRemoveButton(true);
+                },
                 scope: this
             },
             deselect: {
-                fn: this.deactivateRemoveButton,
+                fn: function() {
+                    this.activateRemoveButton(false);
+                },
                 scope: this
             }
         };
@@ -184,24 +188,14 @@ Ext.define('Lada.view.grid.MKommentar', {
             this.down('button[action=add]').enable();
         }
     },
+
     /**
-     * Activate the Remove Button
+     * De-/Activate the Remove Button
      */
-    activateRemoveButton: function() {
-        var grid = this;
-        //only enable the remove buttone, when the grid is editable.
-        if (! grid.readOnly) {
-            grid.down('button[action=delete]').enable();
-        }
-    },
-    /**
-     * Activate the Remove Button
-     */
-    deactivateRemoveButton: function() {
-        var grid = this;
-        //only enable the remove buttone, when the grid is editable.
-        if (! grid.readOnly) {
-            grid.down('button[action=delete]').disable();
+    activateRemoveButton: function(activate) {
+        // Only enable the remove buttone, if the grid is editable.
+        if (!this.readOnly) {
+            this.down('button[action=delete]').setDisabled(!activate);
         }
     }
 });
