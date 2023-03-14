@@ -37,7 +37,6 @@ Ext.define('Lada.view.grid.Orte', {
 
     warnings: null,
     errors: null,
-    readOnly: true,
     allowDeselect: true,
     plugins: 'gridfilters',
 
