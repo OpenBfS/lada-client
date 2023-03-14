@@ -20,6 +20,19 @@ Ext.define('Lada.view.widget.base.FieldSet', {
     notificationText: '',
     tooltip: null,
 
+    showMessage: function(message, msgCat) {
+        switch (msgCat) {
+            case 'error':
+                this.showErrors(message);
+                break;
+            case 'warning':
+                this.showWarnings(message);
+                break;
+            case 'notification':
+                this.showNotifications(message);
+        }
+    },
+
     showNotifications: function(notification) {
         this.showWarningOrError(false, '', false, '', true, notification);
     },
