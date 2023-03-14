@@ -80,7 +80,7 @@ Ext.define('Lada.controller.form.Probe', {
         pos[1] += 10;
         this.copyProbe(record, function(probe) {
             var probeWin = Ext.create(
-                'Lada.view.window.ProbeEdit', {
+                'Lada.view.window.Probe', {
                     record: probe,
                     style: 'z-index: -1;'
                 });

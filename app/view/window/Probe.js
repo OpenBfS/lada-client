@@ -9,7 +9,7 @@
 /**
  * Window to edit a Probe
  */
-Ext.define('Lada.view.window.ProbeEdit', {
+Ext.define('Lada.view.window.Probe', {
     extend: 'Lada.view.window.RecordWindow',
     alias: 'widget.probenedit',
 
@@ -314,7 +314,7 @@ Ext.define('Lada.view.window.ProbeEdit', {
     },
 
     /**
-     * Reload ProbeEdit Window
+     * Reload Probe Window
      */
     reload: function() {
         this.setLoading(true);

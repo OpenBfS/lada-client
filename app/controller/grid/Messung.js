@@ -70,7 +70,7 @@ Ext.define('Lada.controller.grid.Messung', {
         } else {
             Lada.model.Probe.load(record.get('probeId'), {
                 success: function(precord) {
-                    var probeWin = Ext.create('Lada.view.window.ProbeEdit', {
+                    var probeWin = Ext.create('Lada.view.window.Probe', {
                         record: precord,
                         style: 'z-index: -1;'
                     });
