@@ -96,7 +96,8 @@ Ext.define('Lada.view.widget.Statuskombi', {
     },
 
 
-    /**Checks if the current value is unresetable
+    /**
+     * Checks if the current value is unresetable
      * @return True if state is resetable, else false
      */
     checkResetableState: function() {
@@ -113,21 +114,11 @@ Ext.define('Lada.view.widget.Statuskombi', {
     },
 
     setReadOnly: function(readonly) {
-        var button = this.down('button[action=newstatus]');
-        if (!readonly) {
-            button.setDisabled(false);
-        } else {
-            button.setDisabled(true);
-        }
+        this.down('button[action=newstatus]').setDisabled(readonly);
     },
 
     setResetable: function(resetable) {
-        var button = this.down('button[action=resetstatus]');
-        if (resetable) {
-            button.setDisabled(false);
-        } else {
-            button.setDisabled(true);
-        }
+        this.down('button[action=resetstatus]').setDisabled(!resetable);
     }
 
 });
