@@ -542,27 +542,21 @@ Ext.define('Lada.controller.form.Probe', {
                     parentGrid[0].reload();
                 }
 
-                var json = Ext.decode(response.getResponse().responseText);
-                if (response.action === 'create') {
-                    // Close ProbeCreate window and show the new record
-                    // in a new ProbeEdit window
-                    button.up('window').close();
-                    var win = Ext.create('Lada.view.window.ProbeEdit', {
-                        record: newRecord
-                    });
-                    win.initData();
-                    win.show();
-                    win.setPosition(30);
+                // Close existing window or update form
+                var win = button.up('window');
+                if (win.closeRequested) {
+                    win.doClose();
                 } else {
-                    // Close existing window or update form
-                    var oldWin = button.up('window');
-                    if (oldWin.closeRequested) {
-                        oldWin.doClose();
-                    } else {
-                        formPanel.setRecord(newRecord);
-                        formPanel.setMessages(
-                            json.errors, json.warnings, json.notifications);
-                    }
+                    win.setRecord(newRecord);
+                    win.setTitle(win.createTitle());
+                    formPanel.setRecord(newRecord);
+                    win.down('button[action=tagedit]').setDisabled(false);
+                    win.down('button[name=reload]').setDisabled(false);
+                    win.disableChildren(
+                        newRecord.get('readonly') || !newRecord.get('owner'));
+                    var json = Ext.decode(response.getResponse().responseText);
+                    win.setMessages(
+                        json.errors, json.warnings, json.notifications);
                 }
             },
             failure: this.handleSaveFailure
