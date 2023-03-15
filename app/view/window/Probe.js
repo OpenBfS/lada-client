@@ -102,9 +102,10 @@ Ext.define('Lada.view.window.Probe', {
         // Store for probenzusatzwertgrid
         var params = {};
         if (this.record) {
-            var umwId = this.record.get('envMediumId');
+            var paramKey = 'envMediumId';
+            var umwId = this.record.get(paramKey);
             if (umwId) {
-                params['umwId'] = umwId;
+                params[paramKey] = umwId;
             }
         }
         var pzStore = Ext.create('Lada.store.Probenzusaetze').load({
@@ -266,18 +267,18 @@ Ext.define('Lada.view.window.Probe', {
         } else if (!loadedRecord) {
             // Create new sample
             var mst = Ext.getStore('messstellenFiltered').getData().getAt(0);
-            var record = Ext.create('Lada.model.Probe', {
+            var record = Ext.create('Lada.model.Sample', {
                 readonly: false,
                 owner: true,
-                mstId: mst ? mst.get('messStelle') : null,
-                laborMstId: mst ? mst.get('laborMst') : null
+                measFacilId: mst ? mst.get('messStelle') : null,
+                apprLabId: mst ? mst.get('laborMst') : null
             });
             record.set('id', null);
             loadCallBack(record);
             this.down('probeform').setMessages(
                 [],
-                { probeentnahmeBeginn: [631], umwId: [631] },
-                { hauptprobenNr: [631] }
+                { sampleStartDate: [631], envMediumId: [631] },
+                { mainSampleId: [631] }
             );
         } else {
             loadCallBack(loadedRecord);
@@ -288,27 +289,28 @@ Ext.define('Lada.view.window.Probe', {
         var i18n = Lada.getApplication().bundle;
         var title = '';
         var datenbasis = Ext.data.StoreManager.get('datenbasis')
-            .getById(this.record.get('datenbasisId'));
+            .getById(this.record.get('regulationId'));
         if (datenbasis) {
-            title += datenbasis.get('datenbasis');
+            title += datenbasis.get('regulation');
             title += ' ';
         }
         title += i18n.getMsg('probe') + ': ';
-        var extId = this.record.get('externeProbeId');
+        var extId = this.record.get('extId');
         if (extId) {
             title += extId;
         } else {
             title += i18n.getMsg('probe.new.title');
         }
-        if (this.record.get('hauptprobenNr')) {
+        var mainSampleId = this.record.get('mainSampleId');
+        if (mainSampleId) {
             //title += ' - extPID/Hauptprobennr.: ';
-            title += ' / ' + this.record.get('hauptprobenNr');
+            title += ' / ' + mainSampleId;
         }
         var messstelle = Ext.data.StoreManager.get('messstellen')
-            .getById(this.record.get('mstId'));
+            .getById(this.record.get('measFacilId'));
         if (messstelle) {
             title += '    -    Mst: ';
-            title += messstelle.get('messStelle');
+            title += messstelle.get('name');
         }
         return title;
     },
