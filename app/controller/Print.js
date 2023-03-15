@@ -766,7 +766,7 @@ Ext.define('Lada.controller.Print', {
             // Flatten the Ortszuodnung Array
             for (var o in ortszuordnung) {
                 var oz = ortszuordnung[o];
-                for (var e in oz.ort) {
+                for (var e in oz.site) {
                     prep[i].geolocat[o]['site'] = null;
                     prep[i].geolocat[o]['site.' + e] = oz.site[e];
                 }
