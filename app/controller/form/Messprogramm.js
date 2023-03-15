@@ -292,6 +292,7 @@ Ext.define('Lada.controller.form.Messprogramm', {
 
                     win.record = rec;
                     win.enableChildren();
+                    win.down('button[name=reload]').setDisabled(false);
                 }
             },
             failure: this.handleSaveFailure

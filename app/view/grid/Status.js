@@ -25,7 +25,6 @@ Ext.define('Lada.view.grid.Status', {
         deferEmptyText: false
     },
 
-    readOnly: true,
     allowDeselect: true,
     statusWerteStore: null,
     statusStufeStore: null,

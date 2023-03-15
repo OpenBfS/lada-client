@@ -468,7 +468,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                 click: function(button) {
                     var id = Number(button.text);
                     button.getEl().swallowEvent(['click', 'dblclick'], true);
-                    var win = Ext.create('Lada.view.window.ProbeEdit', {
+                    var win = Ext.create('Lada.view.window.Probe', {
                         style: 'z-index: -1;',
                         recordId: id
                     });
@@ -520,7 +520,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                                 if (success) {
                                     var messungRecord = record;
                                     var probeWin = Ext.create(
-                                        'Lada.view.window.ProbeEdit', {
+                                        'Lada.view.window.Probe', {
                                             style: 'z-index: -1;',
                                             recordId: messungRecord.get(
                                                 'sampleId')

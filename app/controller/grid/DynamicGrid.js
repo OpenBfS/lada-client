@@ -14,7 +14,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
     requires: [
         'Lada.view.window.DeleteMultipleItems',
         'Lada.view.window.GenProbenFromMessprogramm',
-        'Lada.view.window.ProbeCreate',
+        'Lada.view.window.Probe',
         'Lada.view.window.SetTags',
         'Lada.view.window.TagManagement'
     ],
@@ -182,7 +182,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                             if (success) {
                                 var messungRecord = newRecord;
                                 var probeWin = Ext.create(
-                                    'Lada.view.window.ProbeEdit', {
+                                    'Lada.view.window.Probe', {
                                         recordId: messungRecord.get('sampleId'),
                                         style: 'z-index: -1;'
                                     });
@@ -239,7 +239,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                 }
                 break;
             case 'probeId':
-                win = Ext.create('Lada.view.window.ProbeEdit', {
+                win = Ext.create('Lada.view.window.Probe', {
                     style: 'z-index: -1;',
                     recordId: id
                 });
@@ -378,7 +378,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
                     win.show();
                     break;
                 case 'probeId':
-                    win = Ext.create('Lada.view.window.ProbeCreate');
+                    win = Ext.create('Lada.view.window.Probe');
                     win.initData();
                     win.show();
                     win.setPosition(30);
