@@ -710,11 +710,11 @@ Ext.define('Lada.controller.Print', {
 
         var emptyMessstelle = {
             'id': null,
-            'amtskennung': null,
-            'beschreibung': null,
-            'messStelle': null,
-            'mstTyp': null,
-            'netzbetreiberId': null
+            'trunkCode': null,
+            'address': null,
+            'name': null,
+            'measFacilType': null,
+            'networkId': null
         };
 
         var emptyDeskriptor = {
