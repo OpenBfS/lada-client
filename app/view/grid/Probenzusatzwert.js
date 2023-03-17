@@ -12,10 +12,12 @@
 Ext.define('Lada.view.grid.Probenzusatzwert', {
     extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.probenzusatzwertgrid',
+    controller: 'probenzusatzwertgrid',
     requires: [
         'Lada.view.form.ExpNumberField',
         'Lada.view.form.FormatNumberField',
         'Lada.store.Zusatzwerte',
+        'Lada.controller.grid.Probenzusatzwert',
         'Lada.view.widget.Probenzusatzwert'
     ],
 
