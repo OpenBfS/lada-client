@@ -511,15 +511,11 @@ Ext.define('Lada.view.form.Probe', {
     setRecord: function(probeRecord) {
         this.clearMessages();
         this.getForm().loadRecord(probeRecord);
-        if (!probeRecord.data || probeRecord.data.id === null) {
-            return;
-        }
-        if (probeRecord.get('owner') && !probeRecord.phantom) {
-            this.down('button[action=copy]').setDisabled(false);
-        }
-
         this.setMediaDesk(probeRecord);
-        this.down('button[action=audit]').setDisabled(false);
+
+        this.down('button[action=copy]').setDisabled(
+            !probeRecord.get('owner') || probeRecord.phantom);
+        this.down('button[action=audit]').setDisabled(probeRecord.phantom);
     },
 
     setMediaDesk: function(record) {
