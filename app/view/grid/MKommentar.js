@@ -71,13 +71,13 @@ Ext.define('Lada.view.grid.MKommentar', {
                 action: 'delete'
             }]
         }];
-        this.columns = [{
+        var columns = [{
             header: i18n.getMsg('header.datum'),
             dataIndex: 'date',
             xtype: 'datecolumn',
             format: 'd.m.Y H:i',
             width: 110,
-            renderer: function(value) {
+            renderer: function(value, metaData, record) {
                 if (!value || value === '') {
                     return '';
                 }
@@ -86,12 +86,12 @@ Ext.define('Lada.view.grid.MKommentar', {
                 if (!isNaN(value)) {
                     dt = Lada.util.Date.formatTimestamp(value, format, true);
                 }
-                return dt;
+                return this.validationResultRenderer(dt, metaData, record);
             }
         }, {
             header: i18n.getMsg('erzeuger'),
             dataIndex: 'measFacilId',
-            renderer: function(value) {
+            renderer: function(value, metaData, gridRec) {
                 var r = '';
                 if (!value || value === '') {
                     r = 'Error';
@@ -101,7 +101,7 @@ Ext.define('Lada.view.grid.MKommentar', {
                 if (record) {
                     r = record.get('name');
                 }
-                return r;
+                return this.validationResultRenderer(r, metaData, gridRec);
             },
             editor: {
                 xtype: 'combobox',
@@ -116,9 +116,10 @@ Ext.define('Lada.view.grid.MKommentar', {
             header: i18n.getMsg('text'),
             dataIndex: 'text',
             flex: 1,
-            renderer: function(value) {
-                return '<div style="white-space: normal !important;">' +
+            renderer: function(value, metaData, record) {
+                var val = '<div style="white-space: normal !important;">' +
                 value + '</div>';
+                return this.validationResultRenderer(val, metaData, record);
             },
             editor: {
                 xtype: 'textfield',
@@ -127,6 +128,7 @@ Ext.define('Lada.view.grid.MKommentar', {
                 enforceMaxLength: true
             }
         }];
+        this.setGridColumns(columns);
         this.listeners = {
             select: {
                 fn: function() {
