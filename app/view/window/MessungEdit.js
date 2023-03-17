@@ -235,7 +235,7 @@ Ext.define('Lada.view.window.MessungEdit', {
                             me.parentWindow.initData();
                         } else {
                             me.record.set(
-                                'treeModified', me.probe.get('treeMod'));
+                                'treeMod', me.probe.get('treeMod'));
                             me.disableChildren(true);
                         }
                     }
