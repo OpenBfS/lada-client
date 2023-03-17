@@ -561,7 +561,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         }
 
         var intrec = intervallstore
-            .findRecord('samplePd',
+            .findRecord('probenintervall',
                 intervall, 0, false, false, true);
 
         if (intrec) { // in cases when a new messprogramm is
