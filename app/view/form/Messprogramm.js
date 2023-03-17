@@ -149,7 +149,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             focusFilters: [
                                 function(item) {
                                     var functions = Lada.netzbetreiberFunktionen[
-                                        item.get('netzbetreiberId')];
+                                        item.get('networkId')];
                                     return functions
                                         && Ext.Array.contains(functions, 4);
                                 }
