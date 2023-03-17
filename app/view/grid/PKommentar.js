@@ -12,9 +12,10 @@
 Ext.define('Lada.view.grid.PKommentar', {
     extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.pkommentargrid',
-
+    controller: 'pkommentargrid',
     requires: [
         'Ext.toolbar.Toolbar',
+        'Lada.controller.grid.PKommentar',
         'Lada.store.PKommentare'
     ],
 

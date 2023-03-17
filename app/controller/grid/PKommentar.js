@@ -10,7 +10,8 @@
  * This is a controller for a grid of Pkommentare
  */
 Ext.define('Lada.controller.grid.PKommentar', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.grid.BaseGridController',
+    alias: 'controller.pkommentargrid',
 
     /**
      * Initialize the Controller with
@@ -43,32 +44,13 @@ Ext.define('Lada.controller.grid.PKommentar', {
             context.record.set('id', null);
         }
         context.record.save({
+            scope: this,
             success: function() {
                 context.grid.getSelectionModel().clearSelections();
                 context.grid.up('window').initData();
             },
-            failure: function(request, response) {
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                            + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                }
+            failure: function(record, response) {
+                this.handleSaveFailure(record, response, context.record);
             }
         });
     },
