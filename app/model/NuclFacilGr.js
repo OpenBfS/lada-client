@@ -15,5 +15,5 @@ Ext.define('Lada.model.NuclFacilGr', {
         name: 'name'
     }, {
         name: 'extId'
-    }],
+    }]
 });

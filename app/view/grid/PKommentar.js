@@ -151,7 +151,7 @@ Ext.define('Lada.view.grid.PKommentar', {
         }
         Ext.on('timezonetoggled', function() {
             var grid = Ext.ComponentQuery.query('pkommentargrid');
-            for (i=0; i<grid.length; i++) {
+            for (i = 0; i < grid.length; i++) {
                 grid[i].reload(function() {
                     Ext.ComponentQuery.query(
                         'timezonebutton[action=toggletimezone]')[0]

@@ -793,7 +793,7 @@ Ext.define('Lada.controller.Print', {
             if (selection[item].get(grid.rowtarget.probeIdentifier)) {
                 var Id = selection[item].get(grid.rowtarget.probeIdentifier);
             } else {
-                var Id = selection[item].get(grid.rowtarget.messungIdentifier)
+                var Id = selection[item].get(grid.rowtarget.messungIdentifier);
             }
 
             // avoids printing more than one sheet per probe
@@ -804,7 +804,7 @@ Ext.define('Lada.controller.Print', {
         //basically, thats the same as the downloadFile
         // code does.
         if (selection[item].get(grid.rowtarget.probeIdentifier)) {
-             var data = '{ "proben": [' + ids.toString() + '] }';
+            var data = '{ "proben": [' + ids.toString() + '] }';
         } else {
             var data = '{ "messungen": [' + ids.toString() + '] }';
         }

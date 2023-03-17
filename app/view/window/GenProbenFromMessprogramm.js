@@ -471,7 +471,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     xtype: 'datecolumn',
                     header: i18n.getMsg('sollVon'),
                     dataIndex: 'schedStartDate',
-                    renderer : function(value) {
+                    renderer: function(value) {
                         var dt = '';
                         var format = 'd.m.Y';
                         dt = Lada.util.Date.formatTimestamp(value, format, true);
@@ -481,7 +481,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                     xtype: 'datecolumn',
                     header: i18n.getMsg('sollBis'),
                     dataIndex: 'schedEndDate',
-                    renderer : function(value) {
+                    renderer: function(value) {
                         var dt = '';
                         var format = 'd.m.Y';
                         dt = Lada.util.Date.formatTimestamp(value, format, true);

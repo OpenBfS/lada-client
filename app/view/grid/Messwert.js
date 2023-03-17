@@ -42,7 +42,7 @@ Ext.define('Lada.view.grid.Messwert', {
         this.store = Ext.create('Lada.store.Messwerte');
 
         var i18n = Lada.getApplication().bundle;
-        this.emptyText= i18n.getMsg('emptytext.messwerte');
+        this.emptyText = i18n.getMsg('emptytext.messwerte');
         this.rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
             clicksToMoveEditor: 1,
             errorSummary: false,
