@@ -77,7 +77,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 action: 'delete'
             }]
         }];
-        this.columns = [{
+        var columns = [{
             xtype: 'actioncolumn',
             text: '',
             dataIndex: 'readonly',
@@ -128,7 +128,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
             header: i18n.getMsg('orte.ortId'),
             dataIndex: 'siteId',
             flex: 3,
-            renderer: function(value) {
+            renderer: function(value, metaData, gridRec) {
                 var store = me.ortstore;
                 var record = store.getById(value);
                 if (!record) {
@@ -148,13 +148,14 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                         }
                     });
                 }
-                return record.get('extId');
+                var val = record.get('extId');
+                return this.validationResultRenderer(val, metaData, gridRec);
             }
         }, {
             header: i18n.getMsg('staat'),
             dataIndex: 'siteId',
             width: 45,
-            renderer: function(value) {
+            renderer: function(value, metaData, gridRec) {
                 var store = me.ortstore;
                 var staaten = Ext.data.StoreManager.get('staaten');
                 var ortRecord = store.getById(value);
@@ -169,25 +170,27 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 if (!record.get('iso3166')) {
                     return record.get('id');
                 }
-                return record.get('iso3166');
+                var val = record.get('iso3166');
+                return this.validationResultRenderer(val, metaData, gridRec);
             }
         }, {
             header: i18n.getMsg('orte.gemId'),
             dataIndex: 'siteId',
             width: 80,
-            renderer: function(value) {
+            renderer: function(value, metaData, gridRec) {
                 var store = me.ortstore;
                 var record = store.getById(value);
                 if (!record || record.get('adminUnitId') === '') {
                     return '';
                 }
-                return record.get('adminUnitId');
+                var val = record.get('adminUnitId');
+                return this.validationResultRenderer(val, metaData, gridRec);
             }
         }, {
             header: i18n.getMsg('orte.verwaltungseinheit'),
             dataIndex: 'siteId',
             flex: 3,
-            renderer: function(value) {
+            renderer: function(value, metaData, gridRec) {
                 var store = me.ortstore;
                 var gemeinden =
                     Ext.data.StoreManager.get('verwaltungseinheiten');
@@ -200,13 +203,14 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     return '';
                 }
                 var record2 = gemeinden.getById(gemid);
-                return record2.get('name');
+                var val = record2.get('name');
+                return this.validationResultRenderer(val, metaData, gridRec);
             }
         }, {
             header: i18n.getMsg('orte.ozId'),
             dataIndex: 'poiId',
             width: 80,
-            renderer: function(value) {
+            renderer: function(value, metaData, gridRec) {
                 var ozs = me.ozsstore;
                 var record = ozs.getById(value);
                 if (!record) {
@@ -221,7 +225,8 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     return '';
                 }
                 var record2 = ozs.getById(ozid);
-                return value + '<br>' + record2.get('name');
+                var val = value + '<br>' + record2.get('name');
+                return this.validationResultRenderer(val, metaData, gridRec);
             }
         }, {
             header: i18n.getMsg('orte.anlageId'),
@@ -267,6 +272,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                                            langtext + '</div>';
             }
         }];
+        this.setGridColumn(columns);
         this.listeners = {
             select: {
                 fn: this.activateRemoveButton,
