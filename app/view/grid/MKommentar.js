@@ -12,7 +12,11 @@
 Ext.define('Lada.view.grid.MKommentar', {
     extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.mkommentargrid',
-    requires: ['Lada.store.MKommentare'],
+    controller: 'mkommentargrid',
+    requires: [
+        'Lada.controller.grid.MKommentar',
+        'Lada.store.MKommentare'
+    ],
 
     maxHeight: 350,
     minHeight: 130,

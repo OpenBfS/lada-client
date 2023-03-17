@@ -512,7 +512,6 @@ Ext.application({
     controllers: [
         'Lada.controller.grid.Probenzusatzwert',
         'Lada.controller.grid.PKommentar',
-        'Lada.controller.grid.MKommentar',
         'Lada.controller.grid.Messung',
         'Lada.controller.grid.Ortszuordnung',
         'Lada.controller.grid.Messmethode',
