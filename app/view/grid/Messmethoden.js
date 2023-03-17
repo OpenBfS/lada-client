@@ -12,11 +12,13 @@
 Ext.define('Lada.view.grid.Messmethoden', {
     extend: 'Lada.view.grid.BaseGrid',
     alias: 'widget.messmethodengrid',
+    controller: 'messmethodengrid',
 
     requires: [
         'Lada.store.MmtMessprogramm',
         'Lada.store.Messmethoden',
         'Lada.store.Messgroessen',
+        'Lada.controller.grid.Messmethode',
         'Lada.view.widget.Messmethode'
     ],
 

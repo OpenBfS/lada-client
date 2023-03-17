@@ -512,7 +512,6 @@ Ext.application({
     controllers: [
         'Lada.controller.grid.Messung',
         'Lada.controller.grid.Ortszuordnung',
-        'Lada.controller.grid.Messmethode',
         'Lada.controller.GridExport',
         'Lada.controller.grid.DynamicGrid',
         'Lada.controller.Query',

@@ -10,7 +10,8 @@
  * This is a controller for a grid of Messmethode
  */
 Ext.define('Lada.controller.grid.Messmethode', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.grid.BaseGridController',
+    alias: 'controller.messmethodengrid',
     record: null,
 
     /**
@@ -43,6 +44,7 @@ Ext.define('Lada.controller.grid.Messmethode', {
             context.record.set('id', null);
         }
         context.record.save({
+            scope: this,
             success: function() {
                 context.grid.up('window').initData();
                 var mp_win = context.grid.up('messprogramm');
@@ -50,28 +52,8 @@ Ext.define('Lada.controller.grid.Messmethode', {
                     mp_win.toggleGenProben();
                 }
             },
-            failure: function(request, response) {
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                            + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                    } else {
-                        Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.response.body'));
-                    }
-                }
+            failure: function(record, response) {
+                this.handleSaveFailure(record, response, context.record);
             }
         });
     },
