@@ -179,7 +179,7 @@ Ext.define('Lada.view.form.Probe', {
                         }, {
                             xtype: 'betriebsart',
                             name: 'oprModeId',
-                            fieldLabel: i18n.getMsg('baId'),
+                            fieldLabel: i18n.getMsg('oprModeId'),
                             margin: '0, 5, 5, 5',
                             width: '35%',
                             allowBlank: false,

@@ -436,7 +436,7 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                         return r;
                     }
                 }, {
-                    header: i18n.getMsg('baId'),
+                    header: i18n.getMsg('oprModeId'),
                     dataIndex: 'oprModeId',
                     renderer: function(value) {
                         var r = '';
