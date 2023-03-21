@@ -113,14 +113,8 @@ Ext.define('Lada.view.window.MessungEdit', {
             return;
         }
 
-        //Clone proxy instance as it seems to be shared between store instances
-        var store = Ext.create('Lada.store.Messgroessen');
-        var proxy = Ext.clone(store.getProxy());
-        proxy.extraParams = {};
-        store.setProxy(proxy);
-        this.mStore = store;
-        this.mStore.proxy.extraParams = {mmtId: this.record.get('mmtId')};
-        this.mStore.load();
+        this.mStore = Ext.create('Lada.store.Messgroessen');
+
         this.removeAll();
         this.add([{
             border: false,
@@ -215,8 +209,15 @@ Ext.define('Lada.view.window.MessungEdit', {
         var me = this;
         var loadCallback = function(record, response) {
             me.intializeUI();
-            me.mStore.proxy.extraParams = {mmtId: record.get('mmtId')};
-            me.mStore.load();
+
+            const mmtIdKey = 'mmtId';
+            var mmtId = record.get(mmtIdKey), params = {};
+            if (mmtId) {
+                params[mmtIdKey] = mmtId;
+            }
+            me.mStore.load({
+                params: params
+            });
             if (
                 me.parentWindow &&
                 me.parentWindow.record.get('treeMod') <
