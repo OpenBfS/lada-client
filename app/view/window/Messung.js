@@ -9,7 +9,7 @@
 /**
  * Window to edit a Messung
  */
-Ext.define('Lada.view.window.MessungEdit', {
+Ext.define('Lada.view.window.Messung', {
     extend: 'Lada.view.window.RecordWindow',
     alias: 'widget.messungedit',
 
@@ -327,7 +327,7 @@ Ext.define('Lada.view.window.MessungEdit', {
     },
 
     /**
-     * Reload MessungEdit Window
+     * Reload Messung window
      */
     reload: function() {
         this.setLoading(true);

@@ -163,7 +163,7 @@ Ext.define('Lada.controller.grid.DynamicGrid', {
         switch (row.grid.rowtarget.dataType) {
             case 'messungId':
                 win = Ext.create(
-                    'Lada.view.window.MessungEdit', {
+                    'Lada.view.window.Messung', {
                         recordId: id,
                         style: 'z-index: -1;'
                     });

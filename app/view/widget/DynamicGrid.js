@@ -509,7 +509,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
                     var id = Number(button.text);
                     button.getEl().swallowEvent(['click', 'dblclick'], true);
                     var win = Ext.create(
-                        'Lada.view.window.MessungEdit', {
+                        'Lada.view.window.Messung', {
                             style: 'z-index: -1;',
                             recordId: id
                         });

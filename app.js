@@ -246,7 +246,7 @@ Ext.application({
         });
 
         // Used in: widget.Messstelle, form.Messprogramm, form.Datensatzerzeuger,
-        // form.Probe, window.Messprogramm, window.MessungEdit,
+        // form.Probe, window.Messprogramm, window.Messung,
         // window.Ortszuordnung, window.GenProbenFromMessprogramm,
         // window.Probe, panel.Map, panel.QueryPanel,
         // grid.PKommentar, ...

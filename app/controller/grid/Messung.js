@@ -13,7 +13,7 @@ Ext.define('Lada.controller.grid.Messung', {
     extend: 'Ext.app.Controller',
 
     requires: [
-        'Lada.view.window.MessungEdit'
+        'Lada.view.window.Messung'
     ],
 
     /**
@@ -35,7 +35,7 @@ Ext.define('Lada.controller.grid.Messung', {
     },
 
     /**
-     * This function opens a new {@link Lada.view.window.MessungEdit}
+     * This function opens a new {@link Lada.view.window.Messung}
      * Window.
      */
     editItem: function(grid, record) {
@@ -48,7 +48,7 @@ Ext.define('Lada.controller.grid.Messung', {
             probeRecord,
             messungRecord
         ) {
-            var win = Ext.create('Lada.view.window.MessungEdit', {
+            var win = Ext.create('Lada.view.window.Messung', {
                 parentWindow: probeWindow,
                 probe: probeRecord,
                 record: messungRecord
@@ -88,7 +88,7 @@ Ext.define('Lada.controller.grid.Messung', {
      */
     add: function(button) {
         var probeWin = button.up('window');
-        var win = Ext.create('Lada.view.window.MessungEdit', {
+        var win = Ext.create('Lada.view.window.Messung', {
             parentWindow: probeWin,
             probe: probeWin.record
         });
