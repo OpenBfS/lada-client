@@ -248,7 +248,7 @@ Ext.application({
         // Used in: widget.Messstelle, form.Messprogramm, form.Datensatzerzeuger,
         // form.Probe, window.Messprogramm, window.MessungEdit,
         // window.Ortszuordnung, window.GenProbenFromMessprogramm,
-        // window.Probe, window.MessungCreate, panel.Map, panel.QueryPanel,
+        // window.Probe, panel.Map, panel.QueryPanel,
         // grid.PKommentar, ...
         // Load-callback here fills data into store 'leitstellenwidget'.
         // Server service: MessstelleService via model.Messstelle

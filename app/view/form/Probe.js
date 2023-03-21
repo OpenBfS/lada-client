@@ -33,7 +33,6 @@ Ext.define('Lada.view.form.Probe', {
         'Lada.view.widget.base.FieldSet',
         'Lada.view.widget.base.DateField',
         'Lada.view.widget.base.SelectableDisplayField',
-        'Lada.view.window.MessungCreate',
         'Lada.model.Sample'
     ],
 
