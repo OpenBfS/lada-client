@@ -596,6 +596,12 @@ Ext.define('Lada.view.window.GridExport', {
                                 realdata.coordinates;
                             iresult.geometry['type'] = realdata.type;
                         }
+                    } else if (c.dataType.name === 'date') {
+                        var value = Lada.util.Date.formatTimestamp(
+                            parseInt(data[row].get(c.dataIndex), 10), c.format, true);
+                        if (value !== undefined) {
+                            iresult.properties[c.text] = value;
+                        }
                     } else {
                         var value = this.formatValue(
                             data[row].get(c.dataIndex), c, true);
