@@ -147,7 +147,6 @@ Ext.define('Lada.controller.Query', {
         // Create new query record
         var qp = button.up('querypanel');
         var cbox = qp.down('combobox[name=selectedQuery]');
-        var query = qp.getForm().getRecord();
         if (!cbox.getSelection()) {
             Ext.Msg.alert(
                 i18n.getMsg('query.error.search.title'),
