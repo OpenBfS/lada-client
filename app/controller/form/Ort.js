@@ -195,16 +195,18 @@ Ext.define('Lada.controller.form.Ort', {
         var panel = callingEl.owner;
         var record = panel.getRecord();
         var form = panel.getForm();
+
         var readonly = record.get('readonly');
+        var dirty = form.isDirty();
 
         panel.down('button[action=copy]').setDisabled(
-            readonly || form.isDirty() && !record.phantom);
+            readonly || dirty && !record.phantom);
 
-        panel.down('button[action=revert]').setDisabled(
-            readonly || !form.isDirty());
+        panel.down('button[action=revert]').setDisabled(readonly || !dirty);
 
+        // Enable saving of dirty and phantom records
         panel.down('button[action=save]').setDisabled(
-            readonly || !form.isValid() || !form.isDirty());
+            readonly || !form.isValid() || !(dirty || record.phantom));
     },
 
     /**
