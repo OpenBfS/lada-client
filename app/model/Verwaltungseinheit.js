@@ -25,7 +25,7 @@ Ext.define('Lada.model.Verwaltungseinheit', {
     }, {
         name: 'bezeichnung'
     }, {
-        name: 'isBundeland',
+        name: 'isBundesland',
         type: 'boolean'
     }, {
         name: 'isGemeinde',
