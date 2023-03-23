@@ -200,11 +200,9 @@ Ext.define('Lada.view.form.Messung', {
         if (record.getId()) {
             me.down('statuskombi').setValue(
                 record.get('status'), false, record.get('statusEdit'));
-        } else {
-            //remove the Statuskombi field from the form
-            me.down('statuskombi').hide();
         }
-        this.down('button[action=audit]').setDisabled(false);
+
+        this.down('button[action=audit]').setDisabled(record.phantom);
 
         //Get the connected Probe instance and Datenbasis
         Lada.model.Sample.load(this.record.get('sampleId'), {

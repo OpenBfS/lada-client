@@ -63,8 +63,8 @@ Ext.define('Lada.controller.form.Messung', {
         record.save({
             scope: this,
             success: function(newRecord, response) {
-                var oldWin = button.up('window');
-                var parentWin = oldWin.parentWindow;
+                var win = button.up('window');
+                var parentWin = win.parentWindow;
                 if (parentWin) {
                     parentWin.initData();
                     var messunggrid = parentWin.down('messunggrid');
@@ -78,33 +78,25 @@ Ext.define('Lada.controller.form.Messung', {
                     parentGrid[0].reload();
                 }
 
-                var json = Ext.decode(response.getResponse().responseText);
-                if (response.action === 'create') {
-                    // Close MessungCreate window and show the new record
-                    // in a new MessungEdit window
-                    oldWin.close();
-                    var win = Ext.create('Lada.view.window.MessungEdit', {
-                        probe: oldWin.record,
-                        parentWindow: parentWin,
-                        grid: oldWin.grid,
-                        record: record
-                    });
-                    win.initData(record);
-                    win.show();
-                    win.setMessages(json.errors, json.warnings,
-                                    json.notifications);
-                    win.setPosition(35 + parentWin.width);
+                // Close existing window or update form
+                if (win.closeRequested) {
+                    win.doClose();
                 } else {
-                    // Close or update existing window
-                    if (oldWin.closeRequested) {
-                        oldWin.doClose();
-                    } else {
-                        formPanel.setRecord(newRecord);
-                        formPanel.setMessages(
-                            json.errors, json.warnings, json.notifications);
-                        oldWin.down('messwertgrid').getStore().reload();
-                        formPanel.setLoading(false);
+                    win.setRecord(newRecord);
+                    win.setTitle(win.createTitle());
+                    formPanel.setRecord(newRecord);
+                    win.down('button[action=tagedit]').setDisabled(false);
+                    win.down('button[name=reload]').setDisabled(false);
+                    win.disableChildren(
+                        newRecord.get('readonly') || !newRecord.get('owner'));
+                    var json = Ext.decode(response.getResponse().responseText);
+                    win.setMessages(
+                        json.errors, json.warnings, json.notifications);
+                    var messwertStore = win.down('messwertgrid').getStore();
+                    if (messwertStore.isLoaded()) {
+                        messwertStore.reload();
                     }
+                    formPanel.setLoading(false);
                 }
             },
             failure: this.handleSaveFailure

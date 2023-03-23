@@ -131,7 +131,7 @@ Ext.define('Lada.view.window.AuditTrail', {
                 this.setTitle(title);
             }
         }
-        Ext.ComponentQuery.query('panel#'+this.down('panel')
+        Ext.ComponentQuery.query('panel#' + this.down('panel')
             .getId())[0].loadingMask.hide();
     },
 

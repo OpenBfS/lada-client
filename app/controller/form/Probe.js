@@ -138,9 +138,10 @@ Ext.define('Lada.controller.form.Probe', {
         var saveErrors = null;
 
         Ext.Ajax.request({
-            url: 'lada-server/rest/ortszuordnung',
+            url: Lada.model.LadaBase.schema.getUrlPrefix() + '/'
+                + Lada.model.Geolocat.entityName.toLowerCase(),
             params: {
-                probeId: probe.get('id')
+                sampleId: probe.get('id')
             },
             method: 'GET',
             success: function(response) {
@@ -212,7 +213,7 @@ Ext.define('Lada.controller.form.Probe', {
         Ext.Ajax.request({
             url: 'lada-server/rest/measm',
             params: {
-                probeId: probe.get('id')
+                sampleId: probe.get('id')
             },
             method: 'GET',
             success: function(response) {
@@ -305,9 +306,10 @@ Ext.define('Lada.controller.form.Probe', {
         for (var i2 = 0; i2 < messungen.length; i2++) {
             var messung = messungen[i2];
             Ext.Ajax.request({
-                url: 'lada-server/rest/messwert',
+                url: Lada.model.LadaBase.schema.getUrlPrefix() + '/'
+                    + Lada.model.MeasVal.entityName.toLowerCase(),
                 params: {
-                    messungsId: messung.get('copyOfMessungId')
+                    measmId: messung.get('copyOfMessungId')
                 },
                 method: 'GET',
                 // eslint-disable-next-line no-loop-func

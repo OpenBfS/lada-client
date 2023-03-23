@@ -138,7 +138,7 @@ Ext.define('Lada.view.grid.Status', {
         }
         Ext.on('timezonetoggled', function() {
             var grid = Ext.ComponentQuery.query('statusgrid');
-            for (i=0; i<grid.length; i++) {
+            for (i = 0; i < grid.length; i++) {
                 grid[i].reload(function() {
                     Ext.ComponentQuery.query(
                         'timezonebutton[action=toggletimezone]')[0]

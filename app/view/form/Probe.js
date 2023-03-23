@@ -33,7 +33,6 @@ Ext.define('Lada.view.form.Probe', {
         'Lada.view.widget.base.FieldSet',
         'Lada.view.widget.base.DateField',
         'Lada.view.widget.base.SelectableDisplayField',
-        'Lada.view.window.MessungCreate',
         'Lada.model.Sample'
     ],
 
@@ -179,7 +178,7 @@ Ext.define('Lada.view.form.Probe', {
                         }, {
                             xtype: 'betriebsart',
                             name: 'oprModeId',
-                            fieldLabel: i18n.getMsg('baId'),
+                            fieldLabel: i18n.getMsg('oprModeId'),
                             margin: '0, 5, 5, 5',
                             width: '35%',
                             allowBlank: false,
@@ -511,15 +510,11 @@ Ext.define('Lada.view.form.Probe', {
     setRecord: function(probeRecord) {
         this.clearMessages();
         this.getForm().loadRecord(probeRecord);
-        if (!probeRecord.data || probeRecord.data.id === null) {
-            return;
-        }
-        if (probeRecord.get('owner') && !probeRecord.phantom) {
-            this.down('button[action=copy]').setDisabled(false);
-        }
-
         this.setMediaDesk(probeRecord);
-        this.down('button[action=audit]').setDisabled(false);
+
+        this.down('button[action=copy]').setDisabled(
+            !probeRecord.get('owner') || probeRecord.phantom);
+        this.down('button[action=audit]').setDisabled(probeRecord.phantom);
     },
 
     setMediaDesk: function(record) {

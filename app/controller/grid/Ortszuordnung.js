@@ -306,13 +306,13 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
         var win = grid.up('ortszuordnungwindow');
         Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Site', {
-                netzbetreiberId: win.netzbetreiberId,
-                gemId: record.get('id'),
-                ortId: record.get('id'),
-                kurztext: record.get('name'),
-                langtext: record.get('name'),
-                berichtstext: record.get('name'),
-                ortTyp: 4
+                networkId: win.netzbetreiberId,
+                adminUnitId: record.get('id'),
+                extId: record.get('id'),
+                shortText: record.get('name'),
+                longText: record.get('name'),
+                reiReportText: record.get('name'),
+                siteClassId: 4
             }),
             parentWindow: win,
             setOzOnComplete: true

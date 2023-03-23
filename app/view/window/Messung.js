@@ -9,7 +9,7 @@
 /**
  * Window to edit a Messung
  */
-Ext.define('Lada.view.window.MessungEdit', {
+Ext.define('Lada.view.window.Messung', {
     extend: 'Lada.view.window.RecordWindow',
     alias: 'widget.messungedit',
 
@@ -34,7 +34,6 @@ Ext.define('Lada.view.window.MessungEdit', {
     parentWindow: null,
     record: null,
     recordType: 'messung',
-    grid: null,
     mStore: null,
 
     /**
@@ -47,8 +46,10 @@ Ext.define('Lada.view.window.MessungEdit', {
 
         this.buttons = [{
             text: i18n.getMsg('reload'),
+            name: 'reload',
             handler: this.reload,
             scope: this,
+            disabled: true,
             icon: 'resources/img/view-refresh.png'
         }, '->', {
             text: i18n.getMsg('close'),
@@ -104,24 +105,15 @@ Ext.define('Lada.view.window.MessungEdit', {
         var me = this;
         var i18n = Lada.getApplication().bundle;
 
-        if (this.record === null) {
-            Ext.Msg.alert(i18n.getMsg('err.msg.messung.noselect'));
-            return;
-        }
         if (this.probe === null) {
             Ext.Msg.alert(i18n.getMsg('err.msg.messung.noprobe'));
             return;
         }
 
-        //Clone proxy instance as it seems to be shared between store instances
-        var store = Ext.create('Lada.store.Messgroessen');
-        var proxy = Ext.clone(store.getProxy());
-        proxy.extraParams = {};
-        store.setProxy(proxy);
-        this.mStore = store;
-        this.mStore.proxy.extraParams = {mmtId: this.record.get('mmtId')};
-        this.mStore.load();
+        this.mStore = Ext.create('Lada.store.Messgroessen');
+
         this.removeAll();
+
         this.add([{
             border: false,
             autoScroll: true,
@@ -152,11 +144,11 @@ Ext.define('Lada.view.window.MessungEdit', {
                     width: 150,
                     height: 25,
                     xtype: 'button',
+                    action: 'tagedit',
                     margin: '5 5 5 0',
                     text: i18n.getMsg('tag.toolbarbutton.assigntags'),
                     iconCls: 'x-fa fa-tag',
-                    // Only users with associated Messstelle can (un)assign tags
-                    disabled: Lada.mst.length === 0,
+                    disabled: true,
                     handler: function() {
                         var win = Ext.create('Lada.view.window.SetTags', {
                             title: i18n.getMsg(
@@ -215,8 +207,16 @@ Ext.define('Lada.view.window.MessungEdit', {
         var me = this;
         var loadCallback = function(record, response) {
             me.intializeUI();
-            me.mStore.proxy.extraParams = {mmtId: record.get('mmtId')};
-            me.mStore.load();
+
+            const mmtIdKey = 'mmtId';
+            var mmtId = record.get(mmtIdKey), params = {};
+            if (mmtId) {
+                params[mmtIdKey] = mmtId;
+            }
+            me.mStore.load({
+                params: params
+            });
+
             if (
                 me.parentWindow &&
                 me.parentWindow.record.get('treeMod') <
@@ -235,7 +235,8 @@ Ext.define('Lada.view.window.MessungEdit', {
                             me.parentWindow.initData();
                         } else {
                             me.record.set(
-                                'treeModified', me.probe.get('treeMod'));
+                                'treeMod', me.probe.get('treeMod'));
+                            me.down('messungform').setReadOnly(true);
                             me.disableChildren(true);
                         }
                     }
@@ -244,20 +245,9 @@ Ext.define('Lada.view.window.MessungEdit', {
             me.down('messwertgrid').messgroesseStore = me.mStore;
             me.down('messungform').setRecord(record);
             me.record = record;
-            var messstelle = Ext.data.StoreManager.get('messstellen')
-                .getById(me.probe.get('measFacilId'));
-            var title = '';
-            title += 'Messung: ';
-            if (me.record.get('minSampleId')) {
-                title += me.record.get('minSampleId');
-            }
-            title += ' zu Probe ' + me.probe.get('extId') ;
-            if (me.probe.get('mainSampleId')) {
-                title += ' / ' + me.probe.get('mainSampleId');
-            }
-            title += ' -  Mst: ' + messstelle.get('messStelle') +
-                ' editieren.';
-            me.setTitle(title);
+
+            me.setTitle(me.createTitle());
+
             var json = response ?
                 Ext.decode(response.getResponse().responseText) :
                 null;
@@ -265,35 +255,79 @@ Ext.define('Lada.view.window.MessungEdit', {
                 me.setMessages(json.errors, json.warnings, json.notifications);
             }
 
+            // Set disabled state of sub-components
             me.disableChildren(
                 me.record.get('readonly') || !me.record.get('owner'));
-
-            //Check if it is allowed to edit Status
             me.disableStatusEdit(!me.record.get('statusEdit'));
+            me.down('button[name=reload]').setDisabled(record.phantom);
 
             // Initialize Tag widget
-            me.down('tagwidget').setTagged([record.get('id')], 'messung');
+            if (me.recordId) {
+                me.down('tagwidget').setTagged([me.recordId], 'messung');
+                me.down('button[action=tagedit]').setDisabled(
+                    Lada.mst.length === 0);
+            }
 
             // Initialize grids
             me.query('basegrid').forEach(function(grid) {
                 grid.initData();
             });
 
+            me.down('messungform').isValid();
             me.setLoading(false);
         };
-        if (!loadedRecord) {
+        if (!loadedRecord && this.record) {
             Ext.ClassManager.get('Lada.model.Measm').load(
                 this.record.get('id'), {
                     success: loadCallback,
                     scope: this
                 });
+        } else if (!loadedRecord) {
+            // Create new measm
+            var record = Ext.create('Lada.model.Measm', {
+                sampleId: this.parentWindow.record.get('id')
+            });
+            record.set('id', null);
+            loadCallback(record);
+            this.setMessages(
+                [],
+                { messdauer: [631], nebenprobenNr: [631] },
+                []);
         } else {
             loadCallback(loadedRecord);
         }
     },
 
+    createTitle: function() {
+        var i18n = Lada.getApplication().bundle;
+        var title = '';
+        var messstelle = Ext.data.StoreManager.get('messstellen')
+            .getById(this.probe.get('measFacilId'));
+        if (this.record.phantom) {
+            title = i18n.getMsg(
+                'messung.new.title',
+                this.probe.get('extId'),
+                this.probe.get('mainSampleId'),
+                messstelle.get('name'));
+        } else {
+            title += i18n.getMsg('messung') + ': ';
+            var minSampleId = this.record.get('minSampleId');
+            if (minSampleId) {
+                title += minSampleId;
+            }
+            title += ' zu Probe ' + this.probe.get('extId') ;
+            var mainSampleId = this.probe.get('mainSampleId');
+            if (mainSampleId) {
+                title += ' / ' + mainSampleId;
+            }
+            title += ' -  Mst: ' + messstelle.get('name') +
+                ' editieren.';
+        }
+        return title;
+    },
+
     /**
-     * Reload MessungEdit Window
+     * Reload Messung window
      */
     reload: function() {
         this.setLoading(true);
@@ -316,7 +350,6 @@ Ext.define('Lada.view.window.MessungEdit', {
      * Disable or enable child components
      */
     disableChildren: function(disable) {
-        this.down('messungform').setReadOnly(disable);
         for (var fset of this.query('fset')) {
             var grid = fset.down('basegrid');
             if (grid && grid.setReadOnly) {

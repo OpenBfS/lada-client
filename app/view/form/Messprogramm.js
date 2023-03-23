@@ -174,7 +174,7 @@ Ext.define('Lada.view.form.Messprogramm', {
                             xtype: 'betriebsart',
                             name: 'oprModeId',
                             margin: '0, 0, 5, 5',
-                            fieldLabel: i18n.getMsg('baId'),
+                            fieldLabel: i18n.getMsg('oprModeId'),
                             width: '50%',
                             labelWidth: 80
                         }]
@@ -561,7 +561,7 @@ Ext.define('Lada.view.form.Messprogramm', {
         }
 
         var intrec = intervallstore
-            .findRecord('samplePd',
+            .findRecord('probenintervall',
                 intervall, 0, false, false, true);
 
         if (intrec) { // in cases when a new messprogramm is
