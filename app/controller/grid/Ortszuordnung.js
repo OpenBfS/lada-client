@@ -303,13 +303,27 @@ Ext.define('Lada.controller.grid.Ortszuordnung', {
     },
 
     selectedVerwaltungseinheit: function(grid, record) {
+        var record = grid.getStore().findRecord('id', record.get('id'));
+        var ortId;
+        if (record.get('isBundesland')) {
+            ortId = 'BL_' + record.get('id');
+        }
+        if (record.get('isRegbezirk')) {
+            ortId =  'RB_' + record.get('id');
+        }
+        if (record.get('isLandkreis')) {
+            ortId =  'LK_' + record.get('id');
+        }
+        if (record.get('isGemeinde')) {
+            ortId = 'GEM_' + record.get('id');
+        }
         var win = grid.up('ortszuordnungwindow');
         Ext.create('Lada.view.window.Ort', {
             record: Ext.create('Lada.model.Ort', {
                 netzbetreiberId: win.netzbetreiberId,
                 gemId: record.get('id'),
-                ortId: record.get('id'),
-                kurztext: record.get('bezeichnung'),
+                ortId: ortId,
+                kurztext: ortId,
                 langtext: record.get('bezeichnung'),
                 berichtstext: record.get('bezeichnung'),
                 ortTyp: 4
