@@ -141,5 +141,48 @@ Ext.define('Lada.view.grid.BaseGrid', {
         } else {
             this.showReloadMask();
         }
+    },
+
+    /**
+     * Renderer which sets the validation results
+     * in the metadata of a grid column.
+     *
+     * Note: The value is returned unaltered
+     * @param value Column value
+     * @param metaData Rendering metaData
+     * @param record Record
+     */
+    validationResultRenderer: function(value, metaData, record) {
+        if (!metaData.column) {
+            return value;
+        }
+        var dataIndex = metaData.column.dataIndex;
+        var i18n = Lada.getApplication().bundle;
+        var validationResult = [];
+        var validationResultCls = null;
+        ['notification', 'warning', 'error'].forEach(function(msgCat) {
+            var messages = record.get(msgCat + 's');
+            if (messages) {
+                var candidateKeys = Object.keys(messages).filter(
+                    key => key.startsWith(dataIndex));
+                for (var key of candidateKeys) {
+                    var tmp = key;
+                    if (tmp.indexOf('#') > 0) {
+                        tmp = tmp.split('#')[0];
+                    }
+                    if (tmp === dataIndex) {
+                        validationResult.push(i18n.getMsg(messages[key]));
+                        validationResultCls =
+                            'x-lada-' + msgCat + '-grid-field';
+                    }
+                }
+            }
+        });
+        if (validationResultCls) {
+            metaData.tdCls = validationResultCls;
+            metaData.tdAttr =
+                'data-qtip="' + validationResult.join('<br>') + '"';
+        }
+        return value;
     }
 });
