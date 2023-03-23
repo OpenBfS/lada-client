@@ -71,62 +71,72 @@ Ext.define('Lada.view.grid.MKommentar', {
                 action: 'delete'
             }]
         }];
-        this.columns = [{
-            header: i18n.getMsg('header.datum'),
-            dataIndex: 'date',
-            xtype: 'datecolumn',
-            format: 'd.m.Y H:i',
-            width: 110,
-            renderer: function(value) {
-                if (!value || value === '') {
-                    return '';
+        this.columns = {
+            items: [{
+                header: i18n.getMsg('header.datum'),
+                dataIndex: 'date',
+                xtype: 'datecolumn',
+                format: 'd.m.Y H:i',
+                width: 110,
+                renderer: function(value, metaData, record) {
+                    this.validationResultRenderer(value, metaData, record);
+                    if (!value || value === '') {
+                        return '';
+                    }
+                    var format = 'd.m.Y H:i';
+                    var dt = '';
+                    if (!isNaN(value)) {
+                        dt = Lada.util.Date.formatTimestamp(
+                            value, format, true);
+                    }
+                    return dt;
                 }
-                var format = 'd.m.Y H:i';
-                var dt = '';
-                if (!isNaN(value)) {
-                    dt = Lada.util.Date.formatTimestamp(value, format, true);
+            }, {
+                header: i18n.getMsg('erzeuger'),
+                dataIndex: 'measFacilId',
+                renderer: function(value, metaData, gridRec) {
+                    this.validationResultRenderer(value, metaData, gridRec);
+                    var r = '';
+                    if (!value || value === '') {
+                        r = 'Error';
+                    }
+                    var store = Ext.data.StoreManager.get('messstellen');
+                    var record = store.getById(value);
+                    if (record) {
+                        r = record.get('name');
+                    }
+                    return r;
+                },
+                editor: {
+                    xtype: 'combobox',
+                    store: Ext.data.StoreManager.get('messstellenFiltered'),
+                    displayField: 'name',
+                    valueField: 'id',
+                    allowBlank: false,
+                    editable: false,
+                    matchFieldWidth: false
                 }
-                return dt;
+            }, {
+                header: i18n.getMsg('text'),
+                dataIndex: 'text',
+                flex: 1,
+                renderer: function(value, metaData, record) {
+                    var val = '<div style="white-space: normal !important;">' +
+                    value + '</div>';
+                    this.validationResultRenderer(val, metaData, record);
+                    return val;
+                },
+                editor: {
+                    xtype: 'textfield',
+                    allowBlank: false,
+                    maxLength: 1000,
+                    enforceMaxLength: true
+                }
+            }],
+            defaults: {
+                renderer: this.validationResultRenderer
             }
-        }, {
-            header: i18n.getMsg('erzeuger'),
-            dataIndex: 'measFacilId',
-            renderer: function(value) {
-                var r = '';
-                if (!value || value === '') {
-                    r = 'Error';
-                }
-                var store = Ext.data.StoreManager.get('messstellen');
-                var record = store.getById(value);
-                if (record) {
-                    r = record.get('name');
-                }
-                return r;
-            },
-            editor: {
-                xtype: 'combobox',
-                store: Ext.data.StoreManager.get('messstellenFiltered'),
-                displayField: 'name',
-                valueField: 'id',
-                allowBlank: false,
-                editable: false,
-                matchFieldWidth: false
-            }
-        }, {
-            header: i18n.getMsg('text'),
-            dataIndex: 'text',
-            flex: 1,
-            renderer: function(value) {
-                return '<div style="white-space: normal !important;">' +
-                value + '</div>';
-            },
-            editor: {
-                xtype: 'textfield',
-                allowBlank: false,
-                maxLength: 1000,
-                enforceMaxLength: true
-            }
-        }];
+        };
         this.listeners = {
             select: {
                 fn: function() {
