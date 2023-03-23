@@ -103,19 +103,17 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 action: 'delete'
             }]
         }];
-        var columns = [{
+        this.columns = [{
             header: i18n.getMsg('messmethode'),
             dataIndex: 'mmtId',
             flex: 1,
-            renderer: function(value, metaData, record) {
+            renderer: function(value) {
                 if (!value || value === '') {
                     return '';
                 }
                 var store = me.mmtStore;
-                var val = value + ' - ' + store.findRecord(
+                return value + ' - ' + store.findRecord(
                     'id', value, 0, false, false, true).get('name');
-
-                return this.validationResultRenderer(val, metaData, record);
             },
             editor: {
                 xtype: 'combobox',
@@ -145,7 +143,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
             header: i18n.getMsg('nuklide'),
             dataIndex: 'measds',
             flex: 2,
-            renderer: function(value, metaData, gridRec) {
+            renderer: function(value) {
                 if (!value || value === '') {
                     return '';
                 }
@@ -158,8 +156,7 @@ Ext.define('Lada.view.grid.Messmethoden', {
                     var record = store.getById(value[i]);
                     returnvalues = returnvalues + record.get('name');
                 }
-                return this.validationResultRenderer(
-                    returnvalues, metaData, gridRec);
+                return returnvalues;
             },
             editor: {
                 xtype: 'tagfield',
@@ -170,7 +167,6 @@ Ext.define('Lada.view.grid.Messmethoden', {
                 queryMode: 'local'
             }
         }];
-        this.setGridColumns(columns);
         this.callParent(arguments);
     },
 
