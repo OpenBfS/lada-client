@@ -659,9 +659,10 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         col.xtype = 'datecolumn';
         col.format = orig_column.get('disp').format;
         col.renderer = function(value) {
+            var date = Ext.Date.parse(value, Lada.util.Date.dateFormat);
             // Convert string representing milliseconds since epoch
             return Lada.util.Date.formatTimestamp(
-                parseInt(value, 10), col.format, true);
+                parseInt(Ext.Date.format(date, 'time'), 10), col.format, true);
         };
     },
 
