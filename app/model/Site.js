@@ -91,8 +91,7 @@ Ext.define('Lada.model.Site', {
         type: 'float'
     }, {
         name: 'lastMod',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'referenceCount',
         type: 'int'

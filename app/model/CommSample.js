@@ -25,8 +25,7 @@ Ext.define('Lada.model.CommSample', {
         name: 'measFacilId'
     }, {
         name: 'date',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'text'
     }]

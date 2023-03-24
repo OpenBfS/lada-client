@@ -36,8 +36,7 @@ Ext.define('Lada.model.Measm', {
         allowNull: true
     }, {
         name: 'measmStartDate',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'status',
         type: 'int',
@@ -47,8 +46,7 @@ Ext.define('Lada.model.Measm', {
         type: 'boolean'
     }, {
         name: 'lastMod',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'isScheduled',
         type: 'boolean'
@@ -58,12 +56,10 @@ Ext.define('Lada.model.Measm', {
         allowNull: true
     }, {
         name: 'treeMod',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'parentModified',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'statusWert',
         persist: false

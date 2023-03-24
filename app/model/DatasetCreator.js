@@ -21,8 +21,7 @@ Ext.define('Lada.model.DatasetCreator', {
         name: 'descr'
     }, {
         name: 'lastMod',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'readonly',
         type: 'boolean',

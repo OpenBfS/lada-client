@@ -25,8 +25,7 @@ Ext.define('Lada.model.Tag', {
         allowNull: true
     }, {
         name: 'createdAt',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'tagType',
         type: 'string'
@@ -35,8 +34,7 @@ Ext.define('Lada.model.Tag', {
         type: 'boolean'
     }, {
         name: 'valUntil',
-        type: 'date',
-        dateFormat: 'time'
+        type: 'date'
     }, {
         name: 'readonly',
         type: 'boolean'
