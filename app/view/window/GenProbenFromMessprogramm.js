@@ -98,8 +98,10 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 this.down('panel').setLoading(true);
                 var reqJsondata = {
                     ids: me.ids,
-                    start: startUTC,
-                    end: endUTC,
+                    start: Ext.Date.format(
+                        new Date(this.startUTC), Lada.util.Date.dateFormat),
+                    end: Ext.Date.format(
+                        new Date(this.endUTC), Lada.util.Date.dateFormat),
                     dryrun: dryrun
                 };
                 Ext.Ajax.request({
