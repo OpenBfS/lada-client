@@ -7,9 +7,7 @@
  */
 
 /**
- * Overrides the definition of "start" and "end" in columns, because in
- * ExtJS 6.2.0 the new rtl fucntionality was inserted so that it always
- * overwrites the ltr definitions.
+ * Overrides the dateFormat used in model date fields.
  */
 Ext.define('Lada.override.DateField', (function() {
     return {
