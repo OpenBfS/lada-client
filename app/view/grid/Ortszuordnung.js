@@ -340,7 +340,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
     activateRemoveButton: function() {
         var grid = this;
         //only enable the remove buttone, when the grid is editable.
-        if (! grid.readOnly) {
+        if (!grid.readOnly) {
             grid.down('button[action=delete]').enable();
         }
     },
@@ -349,10 +349,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
      */
     deactivateRemoveButton: function() {
         var grid = this;
-        //only enable the remove buttone, when the grid is editable.
-        if (grid.readOnly) {
-            grid.down('button[action=delete]').disable();
-        }
+        grid.down('button[action=delete]').disable();
     },
 
     reiHandling: function() {
@@ -382,7 +379,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 }
                 if (this.store.getCount() > 0 && !readonly) {
                     this.down('button[action=add]').disable();
-                    this.down('button[action=delete]').enable();
+                    this.down('button[action=delete]').disable();
                     //TODO error handling/Warning)
                 }
             } else {
@@ -391,7 +388,7 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                     this.down('button[action=delete]').disable();
                 } else {
                     this.down('button[action=add]').enable();
-                    this.down('button[action=delete]').enable();
+                    this.down('button[action=delete]').disable();
                 }
             }
         }

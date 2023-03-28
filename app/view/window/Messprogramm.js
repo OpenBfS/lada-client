@@ -167,6 +167,7 @@ Ext.define('Lada.view.window.Messprogramm', {
                             'dayofyear[name=gueltigVon]').setReadOnly(true);
                     }
                 }
+                me.down('fset[name=orte]').down('button[action=delete]').disable();
 
                 me.setLoading(false);
                 if (me.record === null) {
