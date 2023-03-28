@@ -659,7 +659,7 @@ Ext.define('Lada.view.widget.DynamicGrid', {
         col.xtype = 'datecolumn';
         col.format = orig_column.get('disp').format;
         col.renderer = function(value) {
-            var date = Ext.Date.parse(value, Lada.util.Date.dateFormat);
+            var date = Ext.Date.parse(value, Ext.data.field.Date.DATE_FORMAT);
             return Lada.util.Date.formatTimestamp(date, col.format, true);
         };
     },

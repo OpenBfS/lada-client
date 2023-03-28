@@ -8,11 +8,18 @@
 
 /**
  * Overrides the dateFormat used in model date fields.
+ *
+ * The date format is set as default for date fields and as a static for
+ * usage outside of models.
  */
 Ext.define('Lada.override.DateField', (function() {
+    var dateFormat = 'C';
     return {
         override: 'Ext.data.field.Date',
-        dateFormat: 'C'
+        dateFormat: dateFormat,
+        statics: {
+            DATE_FORMAT: dateFormat
+        }
     };
 }())
 );

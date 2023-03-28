@@ -14,11 +14,6 @@ Ext.define('Lada.util.Date', {
 
     statics: {
 
-        /**
-         * Date format to send to/receive by the server
-         */
-        dateFormat: 'C',
-
         /*
          * Toggled if time should be displayed in UTC
          */

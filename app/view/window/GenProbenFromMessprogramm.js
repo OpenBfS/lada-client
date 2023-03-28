@@ -99,9 +99,9 @@ Ext.define('Lada.view.window.GenProbenFromMessprogramm', {
                 var reqJsondata = {
                     ids: me.ids,
                     start: Ext.Date.format(
-                        new Date(this.startUTC), Lada.util.Date.dateFormat),
+                        new Date(this.startUTC), Ext.data.field.Date.DATE_FORMAT),
                     end: Ext.Date.format(
-                        new Date(this.endUTC), Lada.util.Date.dateFormat),
+                        new Date(this.endUTC), Ext.data.field.Date.DATE_FORMAT),
                     dryrun: dryrun
                 };
                 Ext.Ajax.request({
