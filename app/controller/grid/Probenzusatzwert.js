@@ -10,7 +10,8 @@
  * This is a controller for a grid of Probenzusatzwert
  */
 Ext.define('Lada.controller.grid.Probenzusatzwert', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.grid.BaseGridController',
+    alias: 'controller.probenzusatzwertgrid',
 
     /**
      * Initialize the Controller with
@@ -45,33 +46,13 @@ Ext.define('Lada.controller.grid.Probenzusatzwert', {
             context.record.set('id', null);
         }
         context.record.save({
+            scope: this,
             success: function() {
                 context.grid.getSelectionModel().clearSelections();
                 context.grid.up('window').initData();
             },
             failure: function(record, response) {
-                var i18n = Lada.getApplication().bundle;
-                var json = null;
-                if (response.getResponse()) {
-                    json = response.getResponse().responseText;
-                }
-                if (json) {
-                    if (json.message) {
-                        Ext.Msg.alert(
-                            i18n.getMsg('err.msg.save.title')
-                                + ' #'
-                                + json.message,
-                            i18n.getMsg(json.message));
-                    } else {
-                        Ext.Msg.alert(
-                            i18n.getMsg('err.msg.save.title'),
-                            i18n.getMsg('err.msg.generic.body'));
-                    }
-                } else {
-                    Ext.Msg.alert(
-                        i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.response.body'));
-                }
+                this.handleSaveFailure(record, response, context.record);
             }
         });
     },

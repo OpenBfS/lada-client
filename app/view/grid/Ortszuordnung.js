@@ -77,196 +77,209 @@ Ext.define('Lada.view.grid.Ortszuordnung', {
                 action: 'delete'
             }]
         }];
-        this.columns = [{
-            xtype: 'actioncolumn',
-            text: '',
-            dataIndex: 'readonly',
-            sortable: false,
-            width: 30,
-            getClass: function(val, meta, rec) {
-                if (rec.get('readonly') === false) {
-                    return 'edit';
-                }
-                return 'noedit';
-            },
-            handler: function(grid, rowIndex, colIndex, item, event) {
-                var eventInst = event.browserEvent;
-                var rec = grid.getStore().getAt(rowIndex);
-                //Check if event is a pointer event
-                if (eventInst instanceof PointerEvent) {
-                    //We are using IE11
-                    var lastTimeStamp = me.lastClickTime;
-                    me.lastClickTime = eventInst.timeStamp;
-                    if (
-                        (eventInst.timeStamp - lastTimeStamp) >
-                            Lada.$application.dblClickTimeout
-                    ) {
-                        grid.fireEvent('itemdblclick', grid, rec);
-                    } else {
-                        grid.ignoreNextDblClick = true;
+        this.columns = {
+            items: [{
+                xtype: 'actioncolumn',
+                text: '',
+                dataIndex: 'readonly',
+                sortable: false,
+                width: 30,
+                getClass: function(val, meta, rec) {
+                    if (rec.get('readonly') === false) {
+                        return 'edit';
                     }
-                } else if (eventInst instanceof MouseEvent) {
+                    return 'noedit';
+                },
+                handler: function(grid, rowIndex, colIndex, item, event) {
+                    var eventInst = event.browserEvent;
+                    var rec = grid.getStore().getAt(rowIndex);
+                    //Check if event is a pointer event
+                    if (eventInst instanceof PointerEvent) {
+                    //We are using IE11
+                        var lastTimeStamp = me.lastClickTime;
+                        me.lastClickTime = eventInst.timeStamp;
+                        if (
+                            (eventInst.timeStamp - lastTimeStamp) >
+                            Lada.$application.dblClickTimeout
+                        ) {
+                            grid.fireEvent('itemdblclick', grid, rec);
+                        } else {
+                            grid.ignoreNextDblClick = true;
+                        }
+                    } else if (eventInst instanceof MouseEvent) {
                     //We are in chrome/firefox etc.
                     //Check if its not the second click of a doubleclick
-                    if (event.browserEvent.detail === 1) {
-                        grid.fireEvent('itemdblclick', grid, rec);
-                    } else if (event.browserEvent.detail) {
+                        if (event.browserEvent.detail === 1) {
+                            grid.fireEvent('itemdblclick', grid, rec);
+                        } else if (event.browserEvent.detail) {
                         // else tell the grid to ignore the next doubleclick
                         // as the edit window should already be open
-                        grid.ignoreNextDblClick = true;
+                            grid.ignoreNextDblClick = true;
+                        }
                     }
                 }
-            }
-        }, {
-            header: i18n.getMsg('typ'),
-            dataIndex: 'typeRegulation',
-            width: 30,
-            editor: {
-                allowBlank: false
-            }
-        }, {
-            header: i18n.getMsg('orte.ortId'),
-            dataIndex: 'siteId',
-            flex: 3,
-            renderer: function(value) {
-                var store = me.ortstore;
-                var record = store.getById(value);
-                if (!record) {
-                    record = Ext.create('Lada.model.Site');
-                    record.set('id', value);
-                    store.add(record);
-                    Lada.model.Site.load(value, {
-                        success: function(rec) {
-                            record.beginEdit();
-                            for (var key in rec.getData()) {
-                                record.set(key, rec.getData()[key]);
+            }, {
+                header: i18n.getMsg('typ'),
+                dataIndex: 'typeRegulation',
+                width: 30,
+                editor: {
+                    allowBlank: false
+                }
+            }, {
+                header: i18n.getMsg('orte.ortId'),
+                dataIndex: 'siteId',
+                flex: 3,
+                renderer: function(value, metaData, gridRec) {
+                    this.validationResultRenderer(value, metaData, gridRec);
+                    var store = me.ortstore;
+                    var record = store.getById(value);
+                    if (!record) {
+                        record = Ext.create('Lada.model.Site');
+                        record.set('id', value);
+                        store.add(record);
+                        Lada.model.Site.load(value, {
+                            success: function(rec) {
+                                record.beginEdit();
+                                for (var key in rec.getData()) {
+                                    record.set(key, rec.getData()[key]);
+                                }
+                                record.endEdit();
+                                if (me.isVisible() === true) {
+                                    me.getView().refresh();
+                                }
                             }
-                            record.endEdit();
-                            if (me.isVisible() === true) {
-                                me.getView().refresh();
-                            }
-                        }
-                    });
+                        });
+                    }
+                    return record.get('extId');
                 }
-                return record.get('extId');
-            }
-        }, {
-            header: i18n.getMsg('staat'),
-            dataIndex: 'siteId',
-            width: 45,
-            renderer: function(value) {
-                var store = me.ortstore;
-                var staaten = Ext.data.StoreManager.get('staaten');
-                var ortRecord = store.getById(value);
-                if (!ortRecord) {
-                    return '';
+            }, {
+                header: i18n.getMsg('staat'),
+                dataIndex: 'siteId',
+                width: 45,
+                renderer: function(value, metaData, gridRec) {
+                    this.validationResultRenderer(value, metaData, gridRec);
+                    var store = me.ortstore;
+                    var staaten = Ext.data.StoreManager.get('staaten');
+                    var ortRecord = store.getById(value);
+                    if (!ortRecord) {
+                        return '';
+                    }
+                    var stId = ortRecord.get('stateId');
+                    if (stId === undefined || stId === null || stId === '') {
+                        return '';
+                    }
+                    var record = staaten.getById(stId);
+                    if (!record.get('iso3166')) {
+                        return record.get('id');
+                    }
+                    return record.get('iso3166');
                 }
-                var stId = ortRecord.get('stateId');
-                if (stId === undefined || stId === null || stId === '') {
-                    return '';
+            }, {
+                header: i18n.getMsg('orte.gemId'),
+                dataIndex: 'siteId',
+                width: 80,
+                renderer: function(value, metaData, gridRec) {
+                    this.validationResultRenderer(value, metaData, gridRec);
+                    var store = me.ortstore;
+                    var record = store.getById(value);
+                    if (!record || record.get('adminUnitId') === '') {
+                        return '';
+                    }
+                    return record.get('adminUnitId');
                 }
-                var record = staaten.getById(stId);
-                if (!record.get('iso3166')) {
-                    return record.get('id');
-                }
-                return record.get('iso3166');
-            }
-        }, {
-            header: i18n.getMsg('orte.gemId'),
-            dataIndex: 'siteId',
-            width: 80,
-            renderer: function(value) {
-                var store = me.ortstore;
-                var record = store.getById(value);
-                if (!record || record.get('adminUnitId') === '') {
-                    return '';
-                }
-                return record.get('adminUnitId');
-            }
-        }, {
-            header: i18n.getMsg('orte.verwaltungseinheit'),
-            dataIndex: 'siteId',
-            flex: 3,
-            renderer: function(value) {
-                var store = me.ortstore;
-                var gemeinden =
+            }, {
+                header: i18n.getMsg('orte.verwaltungseinheit'),
+                dataIndex: 'siteId',
+                flex: 3,
+                renderer: function(value, metaData, gridRec) {
+                    this.validationResultRenderer(value, metaData, gridRec);
+                    var store = me.ortstore;
+                    var gemeinden =
                     Ext.data.StoreManager.get('verwaltungseinheiten');
-                var record = store.getById(value);
-                if (!record) {
-                    return '';
+                    var record = store.getById(value);
+                    if (!record) {
+                        return '';
+                    }
+                    var gemid = record.get('adminUnitId');
+                    if (gemid === undefined || gemid === null || gemid === '') {
+                        return '';
+                    }
+                    var record2 = gemeinden.getById(gemid);
+                    return record2.get('name');
                 }
-                var gemid = record.get('adminUnitId');
-                if (gemid === undefined || gemid === null || gemid === '') {
-                    return '';
-                }
-                var record2 = gemeinden.getById(gemid);
-                return record2.get('name');
-            }
-        }, {
-            header: i18n.getMsg('orte.ozId'),
-            dataIndex: 'poiId',
-            width: 80,
-            renderer: function(value) {
-                var ozs = me.ozsstore;
-                var record = ozs.getById(value);
-                if (!record) {
-                    return '';
-                }
-                var ozid = record.get('id');
-                if (
-                    ozid === undefined ||
+            }, {
+                header: i18n.getMsg('orte.ozId'),
+                dataIndex: 'poiId',
+                width: 80,
+                renderer: function(value, metaData, gridRec) {
+                    this.validationResultRenderer(value, metaData, gridRec);
+                    var ozs = me.ozsstore;
+                    var record = ozs.getById(value);
+                    if (!record) {
+                        return '';
+                    }
+                    var ozid = record.get('id');
+                    if (
+                        ozid === undefined ||
                     ozid === null ||
                     ozid === ''
-                ) {
-                    return '';
+                    ) {
+                        return '';
+                    }
+                    var record2 = ozs.getById(ozid);
+                    return value + '<br>' + record2.get('name');
                 }
-                var record2 = ozs.getById(ozid);
-                return value + '<br>' + record2.get('name');
-            }
-        }, {
-            header: i18n.getMsg('orte.anlageId'),
-            dataIndex: 'siteId',
-            width: 60,
-            renderer: function(value) {
-                var store = me.ortstore;
-                var record = store.getById(value);
-                if (!record) {
-                    return '';
-                }
-                var ktaGruppeId = record.get('nuclFacilGrId');
-                if (
-                    ktaGruppeId === undefined ||
+            }, {
+                header: i18n.getMsg('orte.anlageId'),
+                dataIndex: 'siteId',
+                width: 60,
+                renderer: function(value, metaData, gridRec) {
+                    this.validationResultRenderer(value, metaData, gridRec);
+                    var store = me.ortstore;
+                    var record = store.getById(value);
+                    if (!record) {
+                        return '';
+                    }
+                    var ktaGruppeId = record.get('nuclFacilGrId');
+                    if (
+                        ktaGruppeId === undefined ||
                     ktaGruppeId === null ||
                     ktaGruppeId === ''
-                ) {
-                    return '';
+                    ) {
+                        return '';
+                    }
+                    var ktaGruppen = Ext.data.StoreManager.get('ktaGruppe');
+                    var ktaGruppe = ktaGruppen.getById(
+                        record.get('nuclFacilGrId'));
+                    return ktaGruppe.get('name');
                 }
-                var ktaGruppen = Ext.data.StoreManager.get('ktaGruppe');
-                var ktaGruppe = ktaGruppen.getById(record.get('nuclFacilGrId'));
-                return ktaGruppe.get('name');
-            }
-        }, {
-            header: i18n.getMsg('orte.langtext'),
-            dataIndex: 'siteId',
-            flex: 4,
-            renderer: function(value) {
-                var store = me.ortstore;
-                var record = store.getById(value);
-                if (!record) {
-                    return '';
-                }
-                var langtext = record.get('longText');
-                if (
-                    langtext === '' ||
+            }, {
+                header: i18n.getMsg('orte.langtext'),
+                dataIndex: 'siteId',
+                flex: 4,
+                renderer: function(value, metaData, gridRec) {
+                    this.validationResultRenderer(value, metaData, gridRec);
+                    var store = me.ortstore;
+                    var record = store.getById(value);
+                    if (!record) {
+                        return '';
+                    }
+                    var langtext = record.get('longText');
+                    if (
+                        langtext === '' ||
                     langtext === undefined ||
                     langtext === null
-                ) {
-                    return '';
-                }
-                return '<div style="white-space: normal !important;">' +
+                    ) {
+                        return '';
+                    }
+                    return '<div style="white-space: normal !important;">' +
                                            langtext + '</div>';
+                }
+            }],
+            defaults: {
+                renderer: this.validationResultRenderer
             }
-        }];
+        };
         this.listeners = {
             select: {
                 fn: this.activateRemoveButton,

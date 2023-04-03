@@ -510,12 +510,8 @@ Ext.application({
     // Define the controllers of the application. They will be initialized
     // first before the application "launch" function is called.
     controllers: [
-        'Lada.controller.grid.Probenzusatzwert',
-        'Lada.controller.grid.PKommentar',
-        'Lada.controller.grid.MKommentar',
         'Lada.controller.grid.Messung',
         'Lada.controller.grid.Ortszuordnung',
-        'Lada.controller.grid.Messmethode',
         'Lada.controller.GridExport',
         'Lada.controller.grid.DynamicGrid',
         'Lada.controller.Query',

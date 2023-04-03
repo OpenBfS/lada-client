@@ -158,167 +158,168 @@ Ext.define('Lada.view.grid.Messwert', {
                 text: i18n.getMsg('button.normalize')
             }]
         }];
-        this.columns = [{
-            header: i18n.getMsg('messgroesseId'),
-            dataIndex: 'measdId',
-            width: 118,
-            renderer: function(value, metaData, record) {
-                this.setValidationResults(metaData, record, 'measdId');
-                if (!value || value === '') {
-                    return '';
+        this.columns = {
+            items: [{
+                header: i18n.getMsg('messgroesseId'),
+                dataIndex: 'measdId',
+                width: 118,
+                renderer: function(value, metaData, record) {
+                    this.validationResultRenderer(value, metaData, record);
+                    if (!value || value === '') {
+                        return '';
+                    }
+                    var store = Ext.data.StoreManager.get('messgroessen');
+                    return store.findRecord(
+                        'id', value, 0, false, false, true)
+                        .get('name');
+                },
+                editor: {
+                    xtype: 'combobox',
+                    store: me.messgroesseStore,
+                    displayField: 'name',
+                    valueField: 'id',
+                    allowBlank: false,
+                    editable: true,
+                    forceSelection: true,
+                    autoSelect: true,
+                    queryMode: 'local',
+                    minChars: 0,
+                    typeAhead: false,
+                    triggers: {
+                        clear: {
+                            extraCls: 'x-form-clear-trigger'
+                        }
+                    },
+                    triggerAction: 'all'
                 }
-                var store = Ext.data.StoreManager.get('messgroessen');
-                return store.findRecord(
-                    'id', value, 0, false, false, true)
-                    .get('name');
-            },
-            editor: {
-                xtype: 'combobox',
-                store: me.messgroesseStore,
-                displayField: 'name',
-                valueField: 'id',
-                allowBlank: false,
-                editable: true,
-                forceSelection: true,
-                autoSelect: true,
-                queryMode: 'local',
-                minChars: 0,
-                typeAhead: false,
-                triggers: {
-                    clear: {
-                        extraCls: 'x-form-clear-trigger'
+            }, {
+                header: i18n.getMsg('messwertEG'),
+                width: 50,
+                dataIndex: 'lessThanLOD',
+                editor: {
+                    xtype: 'checkbox',
+                    uncheckedValue: false,
+                    inputValue: '<'
+                }
+            }, {
+                header: i18n.getMsg('messwert'),
+                dataIndex: 'measVal',
+                width: 80,
+                editor: {
+                    xtype: 'expnumberfield',
+                    allowBlank: false
+                },
+                renderer: function(value, metaData, record) {
+                    this.validationResultRenderer(value, metaData, record);
+                    if (!value || value === '') {
+                        return value;
+                    }
+                    var strValue = Lada.getApplication().toExponentialString(
+                        parseFloat(value), 2).replace(
+                        '.', Ext.util.Format.decimalSeparator);
+                    var splitted = strValue.split('e');
+                    var exponent = parseInt(splitted[1], 10);
+                    return splitted[0] + 'e'
+                        + ((exponent < 0) ? '-' : '+')
+                        + ((Math.abs(exponent) < 10) ? '0' : '')
+                        + Math.abs(exponent).toString();
+                }
+            }, {
+                header: i18n.getMsg('detect_lim'),
+                dataIndex: 'detectLim',
+                width: 140,
+                editor: {
+                    xtype: 'expnumberfield',
+                    allowBlank: false
+                },
+                renderer: function(value, metaData, record) {
+                    this.validationResultRenderer(value, metaData, record);
+                    if (!value || value === '') {
+                        return value;
+                    }
+                    var strValue = Lada.getApplication().toExponentialString(
+                        value, 2)
+                        .replace('.', Ext.util.Format.decimalSeparator);
+                    var splitted = strValue.split('e');
+                    var exponent = parseInt(splitted[1], 10);
+                    return splitted[0] + 'e'
+                        + ((exponent < 0) ? '-' : '+')
+                        + ((Math.abs(exponent) < 10) ? '0' : '')
+                        + Math.abs(exponent).toString();
+                }
+            }, {
+                header: i18n.getMsg('mehId'),
+                dataIndex: 'measUnitId',
+                width: 120,
+                renderer: function(value, metaData, record) {
+                    this.validationResultRenderer(value, metaData, record);
+                    if (!value || value === '') {
+                        return '';
+                    }
+                    var store = me.mehComboStore;
+                    if (
+                        store.findRecord(
+                            'id', value, 0, false, false, true) === null
+                    ) {
+                        return Ext.data.StoreManager.get('messeinheiten')
+                            .findRecord('id', value, 0, false, false, true)
+                            .get('unitSymbol');
+                    } else {
+                        return store.findRecord('id', value, 0, false, false, true)
+                            .get('unitSymbol');
                     }
                 },
-                triggerAction: 'all'
-            }
-        }, {
-            header: i18n.getMsg('messwertEG'),
-            width: 50,
-            dataIndex: 'lessThanLOD',
-            editor: {
-                xtype: 'checkbox',
-                uncheckedValue: false,
-                inputValue: '<'
-            },
-            renderer: function(value, metaData, record) {
-                this.setValidationResults(metaData, record, 'lessThanLOD');
-                return value;
-            }
-        }, {
-            header: i18n.getMsg('messwert'),
-            dataIndex: 'measVal',
-            width: 80,
-            editor: {
-                xtype: 'expnumberfield',
-                allowBlank: false
-            },
-            renderer: function(value, metaData, record) {
-                this.setValidationResults(metaData, record, 'measVal');
-                if (!value || value === '') {
-                    return value;
+                editor: {
+                    xtype: 'combobox',
+                    store: me.mehComboStore,
+                    invalidCls: 'x-lada-warning-grid-field',
+                    name: 'messeinheit',
+                    displayField: 'unitSymbol',
+                    valueField: 'id',
+                    allowBlank: false,
+                    editable: true,
+                    forceSelection: true,
+                    autoSelect: true,
+                    queryMode: 'local',
+                    minChars: 0,
+                    typeAhead: false,
+                    triggers: {
+                        clear: {
+                            extraCls: 'x-form-clear-trigger'
+                        }
+                    },
+                    triggerAction: 'all'
                 }
-                var strValue = Lada.getApplication().toExponentialString(
-                    parseFloat(value), 2).replace(
-                    '.', Ext.util.Format.decimalSeparator);
-                var splitted = strValue.split('e');
-                var exponent = parseInt(splitted[1], 10);
-                return splitted[0] + 'e'
-                    + ((exponent < 0) ? '-' : '+')
-                    + ((Math.abs(exponent) < 10) ? '0' : '')
-                    + Math.abs(exponent).toString();
-            }
-        }, {
-            header: i18n.getMsg('detect_lim'),
-            dataIndex: 'detectLim',
-            width: 140,
-            editor: {
-                xtype: 'expnumberfield',
-                allowBlank: false
-            },
-            renderer: function(value, metaData, record) {
-                this.setValidationResults(metaData, record, 'detectLim');
-                if (!value || value === '') {
-                    return value;
-                }
-                var strValue = Lada.getApplication().toExponentialString(
-                    value, 2)
-                    .replace('.', Ext.util.Format.decimalSeparator);
-                var splitted = strValue.split('e');
-                var exponent = parseInt(splitted[1], 10);
-                return splitted[0] + 'e'
-                    + ((exponent < 0) ? '-' : '+')
-                    + ((Math.abs(exponent) < 10) ? '0' : '')
-                    + Math.abs(exponent).toString();
-            }
-        }, {
-            header: i18n.getMsg('mehId'),
-            dataIndex: 'measUnitId',
-            width: 120,
-            renderer: function(value, metaData, record) {
-                this.setValidationResults(metaData, record, 'measUnitId');
-                if (!value || value === '') {
-                    return '';
-                }
-                var store = me.mehComboStore;
-                if (
-                    store.findRecord(
-                        'id', value, 0, false, false, true) === null
-                ) {
-                    return Ext.data.StoreManager.get('messeinheiten')
-                        .findRecord('id', value, 0, false, false, true)
-                        .get('unitSymbol');
-                } else {
-                    return store.findRecord('id', value, 0, false, false, true)
-                        .get('unitSymbol');
-                }
-            },
-            editor: {
-                xtype: 'combobox',
-                store: me.mehComboStore,
-                invalidCls: 'x-lada-warning-grid-field',
-                name: 'messeinheit',
-                displayField: 'unitSymbol',
-                valueField: 'id',
-                allowBlank: false,
-                editable: true,
-                forceSelection: true,
-                autoSelect: true,
-                queryMode: 'local',
-                minChars: 0,
-                typeAhead: false,
-                triggers: {
-                    clear: {
-                        extraCls: 'x-form-clear-trigger'
-                    }
+            }, {
+                header: i18n.getMsg('relMessunsicherheit'),
+                dataIndex: 'error',
+                xtype: 'numbercolumn',
+                format: '0000.0',
+                flex: 1,
+                editor: {
+                    xtype: 'formatnumberfield',
+                    allowBlank: false,
+                    maxLength: 8,
+                    minValue: 0,
+                    maxValue: 1000,
+                    decimalPrecision: 1,
+                    allowDecimals: true,
+                    allowExponential: false,
+                    enforceMaxLength: true,
+                    hideTrigger: true
                 },
-                triggerAction: 'all'
-            }
-        }, {
-            header: i18n.getMsg('relMessunsicherheit'),
-            dataIndex: 'error',
-            xtype: 'numbercolumn',
-            format: '0000.0',
-            flex: 1,
-            editor: {
-                xtype: 'formatnumberfield',
-                allowBlank: false,
-                maxLength: 8,
-                minValue: 0,
-                maxValue: 1000,
-                decimalPrecision: 1,
-                allowDecimals: true,
-                allowExponential: false,
-                enforceMaxLength: true,
-                hideTrigger: true
-            },
-            renderer: function(value, metaData, record) {
-                this.setValidationResults(metaData, record, 'error');
-                if (!value || value === '') {
-                    return '';
+                renderer: function(value, metaData, record) {
+                    this.validationResultRenderer(value, metaData, record);
+                    if (!value || value === '') {
+                        return '';
+                    }
+                    return parseFloat(value).toString().replace('.', ',');
                 }
-                return parseFloat(value).toString().replace('.', ',');
+            }],
+            defaults: {
+                renderer: this.validationResultRenderer
             }
-        }];
+        };
         this.listeners = {
             select: {
                 fn: this.activateRemoveButton,
@@ -488,46 +489,6 @@ Ext.define('Lada.view.grid.Messwert', {
         //only enable the remove buttone, when the grid is editable.
         if (! grid.readOnly) {
             grid.down('button[action=delete]').disable();
-        }
-    },
-
-    /**
-     * @private
-     * Set validation results in the metadata of a grid column
-     * @param metaData Rendering metaData
-     * @param record Record
-     * @param dataIndex Column data index
-     */
-    setValidationResults: function(metaData, record, dataIndex) {
-        var i18n = Lada.getApplication().bundle;
-        var validationResult = [];
-        var validationResultCls = null;
-        const msgNotFound = /\.undefined$/;
-        ['notification', 'warning', 'error'].forEach(function(msgCat) {
-            var messages = record.get(msgCat + 's');
-            if (messages) {
-                var candidateKeys = Object.keys(messages).filter(
-                    key => key.startsWith(dataIndex));
-                for (var key of candidateKeys) {
-                    var tmp = key;
-                    if (tmp.indexOf('#') > 0) {
-                        tmp = tmp.split('#')[0];
-                    }
-                    if (tmp === dataIndex) {
-                        // If key not found, assume message translated by server
-                        validationResult.push(
-                            i18n.getMsg(messages[key]).replace(msgNotFound, '')
-                        );
-                        validationResultCls =
-                            'x-lada-' + msgCat + '-grid-field';
-                    }
-                }
-            }
-        });
-        if (validationResultCls) {
-            metaData.tdCls = validationResultCls;
-            metaData.tdAttr =
-                'data-qtip="' + validationResult.join('<br>') + '"';
         }
     }
 });

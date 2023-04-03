@@ -12,7 +12,8 @@
  * Measurement
  */
 Ext.define('Lada.controller.grid.MKommentar', {
-    extend: 'Ext.app.Controller',
+    extend: 'Lada.controller.grid.BaseGridController',
+    alias: 'controller.mkommentargrid',
 
     /**
      * Inhitialize the controller
@@ -45,29 +46,13 @@ Ext.define('Lada.controller.grid.MKommentar', {
             context.record.set('id', null);
         }
         context.record.save({
+            scope: this,
             success: function() {
                 context.grid.getSelectionModel().clearSelections();
                 context.grid.up('window').initData();
             },
             failure: function(record, response) {
-                var i18n = Lada.getApplication().bundle;
-                if (response.error) {
-                    //TODO: check content of error.status (html error code)
-                    Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                        i18n.getMsg('err.msg.generic.body'));
-                } else {
-                    var json = Ext.decode(response.getResponse().responseText);
-                    if (json) {
-                        if (json.message) {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title')
-                            + ' #' + json.message,
-                            i18n.getMsg(json.message));
-                        } else {
-                            Ext.Msg.alert(i18n.getMsg('err.msg.save.title'),
-                                i18n.getMsg('err.msg.generic.body'));
-                        }
-                    }
-                }
+                this.handleSaveFailure(record, response, context.record);
             }
         });
     },

@@ -193,31 +193,31 @@ Ext.define('Lada.view.window.DeleteMultipleItems', {
                 datatype = 'Probe ';
                 break;
             case 'messungId':
-                url += 'messung';
+                url += Lada.model.Measm.entityName.toLowerCase();
                 datatype = 'Messung ';
                 break;
             case 'mpId':
-                url += 'messprogramm';
+                url += Lada.model.Mpg.entityName.toLowerCase();
                 datatype = i18n.getMsg('messprogramm');
                 break;
             case 'probenehmer':
-                url += 'probenehmer';
+                url += Lada.model.Sampler.entityName.toLowerCase();
                 datatype = i18n.getMsg('probenehmer');
                 break;
             case 'dsatzerz':
-                url += 'datensatzerzeuger';
+                url += Lada.model.DatasetCreator.entityName.toLowerCase();
                 datatype = i18n.getMsg('datensatzerzeuger');
                 break;
             case 'mprkat':
-                url += 'messprogrammkategorie';
+                url += Lada.model.MpgCateg.entityName.toLowerCase();
                 datatype = i18n.getMsg('messprogrammkategorie');
                 break;
             case 'ortId':
-                url += 'ort';
+                url += Lada.model.Site.entityName.toLowerCase();
                 datatype = 'Ort';
                 break;
             case 'tagId':
-                url += 'tag';
+                url += Lada.model.Tag.entityName.toLowerCase();
                 datatype = 'Tag';
                 break;
         }
