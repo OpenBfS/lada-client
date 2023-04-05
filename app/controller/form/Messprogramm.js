@@ -104,9 +104,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var i18n = Lada.getApplication().bundle;
 
         Ext.Ajax.request({
-            url: 'lada-server/rest/geolocatMpg',
+            url: Lada.model.LadaBase.schema.getUrlPrefix()
+                + Lada.model.GeolocatMpg.entityName.toLowerCase(),
             params: {
-                messprogrammId: mp.get('id')
+                mpgId: mp.get('id')
             },
             method: 'GET',
             success: function(response) {
@@ -164,9 +165,10 @@ Ext.define('Lada.controller.form.Messprogramm', {
         var i18n = Lada.getApplication().bundle;
 
         Ext.Ajax.request({
-            url: 'lada-server/rest/messprogrammmmt',
+            url: Lada.model.LadaBase.schema.getUrlPrefix()
+                + Lada.model.MpgMmtMp.entityName.toLowerCase(),
             params: {
-                messprogrammId: mp.get('id')
+                mpgId: mp.get('id')
             },
             method: 'GET',
             success: function(response) {
