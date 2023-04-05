@@ -27,7 +27,10 @@ Ext.define('Lada.model.LadaBase', {
             },
             writer: {
                 type: 'json',
-                writeAllFields: true
+                writeAllFields: true,
+                allDataOptions: {
+                    associated: true
+                }
             }
         }
     }
